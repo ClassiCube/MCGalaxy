@@ -42,11 +42,12 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             PerformUndo(p, ref saveLevel);
             bool foundUser = false;
             Vec3S32[] bounds = { Min, Max };
             UndoFile.UndoPlayer(p, who.name.ToLower(), bounds, Start, ref foundUser);
+            yield break;
         }
         
         void PerformUndo(Player p, ref Level saveLvl) {
@@ -106,9 +107,10 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3S32[] bounds = { Min, Max };
             UndoFile.UndoPlayer(p, whoName.ToLower(), bounds, Start, ref foundUser);
+            yield break;
         }
     }
     
@@ -120,7 +122,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             if (lvl.UndoBuffer.Count != Server.physUndo) {
                 int count = lvl.currentUndo;
                 for (int i = count; i >= 0; i--) {
@@ -141,6 +143,7 @@ namespace MCGalaxy.Drawing.Ops {
                     } catch { }
                 }
             }
+            yield break;
         }
         
         bool CheckBlockPhysics(Player p, Level lvl, long seconds, int i) {

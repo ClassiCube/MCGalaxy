@@ -35,10 +35,10 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             UndoCache cache = p.UndoBuffer;
             UndoCacheNode node = cache.Tail;
-            if (node == null) return;
+            if (node == null) yield break;
             int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             
             while (node != null) {
@@ -56,7 +56,7 @@ namespace MCGalaxy.Drawing.Ops {
                     
                     DateTime time = node.BaseTime.AddTicks(item.TimeDelta * TimeSpan.TicksPerSecond);
                     if (time > End) continue;
-                    if (time < Start) { buffer.CheckIfSend(true); return; }
+                    if (time < Start) { buffer.CheckIfSend(true); yield break; }
                     
                     byte tile, extTile;
                     item.GetBlock(out tile, out extTile);
@@ -68,6 +68,7 @@ namespace MCGalaxy.Drawing.Ops {
                 buffer.CheckIfSend(true);
                 node = node.Prev;
             }
+            yield break;
         }
     }
 }

@@ -52,7 +52,6 @@ namespace MCGalaxy {
                 treeDrawer = new TreeDrawOp();
                 treeDrawer.Level = Lvl;
                 treeDrawer.random = rand;
-                treeDrawer.method = DrawOp.M_SetTile;
                 treeCoords = new Vec3S32[1];
             }
             
@@ -149,7 +148,9 @@ namespace MCGalaxy {
                                 treeDrawer.Type = genParams.UseCactus ? TreeDrawOp.T_Cactus : TreeDrawOp.T_Tree;
                                 treeCoords[0].X = x; treeCoords[0].Y = (ushort)(y + 1); treeCoords[0].Z = z;
                                 treeDrawer.SetMarks(treeCoords);
-                                treeDrawer.Perform(treeCoords, null, Lvl, null);
+                                
+                                foreach (var block in treeDrawer.Perform(treeCoords, null, Lvl, null))
+                                    Lvl.SetTile(block.X, block.Y, block.Z, block.Type);
                             }
                         }
                     }

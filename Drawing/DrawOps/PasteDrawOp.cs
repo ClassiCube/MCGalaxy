@@ -31,7 +31,7 @@ namespace MCGalaxy.Drawing.Ops {
             return CopyState.UsedBlocks;
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;
             // Adjust for the fact that paste origin may be outside the map.
@@ -48,7 +48,7 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 bool place = lvl.InBound(x, y, z) && (b != type || (b == Block.custom_block && extB != extType));
                 if ((b != Block.air || pasteAir) && place)
-                    PlaceBlock(p, lvl, x, y, z, b, extB);
+                    yield return Place(x, y, z, b, extB);
             }
         }
     }
@@ -64,7 +64,7 @@ namespace MCGalaxy.Drawing.Ops {
             return CopyState.UsedBlocks;
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
         	Vec3U16 p1 = Clamp(marks[0]);
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;
@@ -92,14 +92,14 @@ namespace MCGalaxy.Drawing.Ops {
                         }
                     }
                     if (!place) continue;
-                    PlaceBlock(p, lvl, x, y, z, b, extB);
+                    yield return Place(x, y, z, b, extB);
                 }
                 
                 if (include != null) {
                     for (int j = 0; j < include.Length; j++) {
                         ExtBlock block = include[j];
                         if (b == block.Type && (b != Block.custom_block || extB == block.ExtType)) {
-                            PlaceBlock(p, lvl, x, y, z, b, extB); break;
+                            yield return Place(x, y, z, b, extB); break;
                         }
                     }
                 }

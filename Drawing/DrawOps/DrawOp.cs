@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy {
@@ -28,6 +29,11 @@ namespace MCGalaxy {
         public ExtBlock(byte type, byte extType) {
             Type = type; ExtType = extType;
         }
+    }
+    
+    public struct DrawOpBlock {
+        public ushort X, Y, Z;
+        public byte Type, ExtType;
     }
 }
 
@@ -50,7 +56,8 @@ namespace MCGalaxy.Drawing.Ops {
         public Vec3S32 Origin;
         
         /// <summary> Coordinates of the current block being processed by the drawing command. </summary>
-        public Vec3U16 Coords;
+        /// <remarks> Note: You should treat this as coordinates, it is a DrawOpBlock struct for performance reasons. </remarks>
+        public DrawOpBlock Coords;
         
         /// <summary> Level the draw operation is being performed upon. </summary>
         public Level Level;
@@ -62,7 +69,7 @@ namespace MCGalaxy.Drawing.Ops {
         /// Note that this estimate assumes that all possibly affected blocks will be changed by the drawing command. </summary>
         public abstract long GetBlocksAffected(Level lvl, Vec3S32[] marks);
         
-        public abstract void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush);
+        public abstract IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush);
         
         public virtual bool CanDraw(Vec3S32[] marks, Player p, out long affected) {
             affected = GetBlocksAffected(Level, marks);
@@ -72,16 +79,6 @@ namespace MCGalaxy.Drawing.Ops {
                 return false;
             }
             return true;
-        }
-        
-        public virtual bool DetermineDrawOpMethod(Level lvl, long affected) {
-            if (affected > Server.DrawReloadLimit) {
-                method = M_PSetTile;
-                return true;
-            } else {
-                method = lvl.bufferblocks ? M_PBlockQueue : M_PBlockChange;
-                return false;
-            }
         }
         
         public virtual void SetMarks(Vec3S32[] marks) {
@@ -97,62 +94,20 @@ namespace MCGalaxy.Drawing.Ops {
             TotalModified = 0;
         }
         
-        protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, Brush brush) {
+        protected DrawOpBlock Place(ushort x, ushort y, ushort z, Brush brush) {
             Coords.X = x; Coords.Y = y; Coords.Z = z;
-            byte type = brush.NextBlock(this);
-            if (type == Block.Zero) return;
-            PlaceBlock(p, lvl, x, y, z, type, brush.NextExtBlock(this));
+            Coords.Type = brush.NextBlock(this);
+            
+            if (Coords.Type != Block.Zero)
+                Coords.ExtType = brush.NextExtBlock(this);
+            return Coords;
         }
         
-        protected void PlaceBlock(Player p, Level lvl, ushort x, ushort y, ushort z, byte type, byte extType) {
-            Level.BlockPos bP = default(Level.BlockPos);            
-            switch (method) {
-                case M_PBlockQueue:
-                    if (!lvl.DoBlockchange(p, x, y, z, type, extType)) return;
-                    bP.name = p.name;
-                    bP.index = lvl.PosToInt(x, y, z);
-                    bP.SetData(type, extType, type == 0);
-                    
-                    if (lvl.UseBlockDB)
-                        lvl.blockCache.Add(bP);
-                    BlockQueue.Addblock(p, bP.index, type, extType);
-                    TotalModified++;
-                    break; 
-                case M_PBlockChange:
-                    if (!lvl.DoBlockchange(p, x, y, z, type, extType)) return;
-                    bP.name = p.name;
-                    bP.index = lvl.PosToInt(x, y, z);
-                    
-                    bP.SetData(type, extType, type == 0);
-                    if (lvl.UseBlockDB)
-                        lvl.blockCache.Add(bP);
-                    Player.GlobalBlockchange(lvl, x, y, z, type, extType);
-                    TotalModified++;
-                    break;                    
-                case M_PSetTile:
-                    byte old = lvl.GetTile(x, y, z);
-                    if (old == Block.Zero || !lvl.CheckAffectPermissions(p, x, y, z, old, type))
-                        return;
-                    lvl.SetTile(x, y, z, type, p, extType);
-                    p.loginBlocks++;
-                    p.overallBlocks++;
-                    TotalModified++;
-                    break;
-                case M_BlockChange:
-                    lvl.Blockchange(x, y, z, type, extType);
-                    TotalModified++;
-                    break;
-                case M_SetTile:
-                    lvl.SetTile(x, y, z, type);
-                    if (type == Block.custom_block)
-                        lvl.SetExtTile(x, y, z, extType);
-                    TotalModified++;
-                    break;
-            }
+        protected DrawOpBlock Place(ushort x, ushort y, ushort z, byte type, byte extType) {
+            Coords.X = x; Coords.Y = y; Coords.Z = z;
+            Coords.Type = type; Coords.ExtType = extType;
+            return Coords;
         }
-        
-        internal const int M_PBlockQueue = 0, M_PBlockChange = 1, M_PSetTile = 2;
-        internal const int M_BlockChange = 3, M_SetTile = 4;
         
         protected Vec3U16 Clamp(Vec3S32 pos) {
             pos.X = Math.Max(0, Math.Min(pos.X, Level.Width - 1));

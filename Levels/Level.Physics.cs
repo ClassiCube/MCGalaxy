@@ -153,7 +153,7 @@ namespace MCGalaxy {
                     for (int i = 0; i < ListCheck.Count; i++) {
                         Check C = ListCheck.Items[i];
                         IntToPos(C.b, out x, out y, out z);
-                        try {
+                        //try {
                             if (PhysicsUpdate != null)
                                 PhysicsUpdate(x, y, z,  C.data, this);
                             if (OnPhysicsUpdateEvent.events.Count > 0)
@@ -167,10 +167,10 @@ namespace MCGalaxy {
                                     C.data.Data = 255;
                             }
                             ListCheck.Items[i] = C;
-                        } catch {
-                            listCheckExists.Set(x, y, z, false);
-                            ListCheck.RemoveAt(i);
-                        }
+                        //} catch {
+                        //    listCheckExists.Set(x, y, z, false);
+                       //     ListCheck.RemoveAt(i);
+                       // }
                     }
                 }
                 RemoveExpiredChecks();
@@ -181,14 +181,14 @@ namespace MCGalaxy {
                 
                 for (int i = 0; i < ListUpdate.Count; i++) {
                     Update C = ListUpdate.Items[i];
-                    try {
+                    //try {
                         byte type = C.data.Data;
                         C.data.Data = 0;
                         if (DoPhysicsBlockchange(C.b, type, false, C.data, 0, true))
                             bulkSender.Add(C.b, type, 0);
-                    } catch {
-                        Server.s.Log("Phys update issue");
-                    }
+                    //} catch {
+                    //    Server.s.Log("Phys update issue");
+                   // }
                     bulkSender.CheckIfSend(false);
                 }
                 if (bulkSender != null)

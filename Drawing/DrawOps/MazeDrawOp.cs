@@ -39,7 +39,7 @@ namespace MCGalaxy.Drawing.Ops {
             return lenX * lenZ * 3;
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             width = Max.X - Min.X;
             if (width % 2 != 0) { width++; Min.X--; }
             width -= 2;
@@ -48,7 +48,7 @@ namespace MCGalaxy.Drawing.Ops {
             length -= 2;
             
             if (width <= 0 || length <= 0) {
-                Player.Message(p, "The corners of the maze need to be further apart."); return;
+                Player.Message(p, "The corners of the maze need to be further apart."); yield break;
             }
             Player.Message(p, "Generating maze... this could take a while");
             //substract 2 cause we will just make the inner. the outer wall is made seperately
@@ -89,22 +89,30 @@ namespace MCGalaxy.Drawing.Ops {
                 for (ushort zz = 0; zz <= length; zz++)
                     if (wall[xx, zz])
             {
-                PlaceBlock(p, lvl, (ushort)(xx + min.X + 1), y, (ushort)(zz + min.Z + 1), Block.staircasefull, 0);
-                PlaceBlock(p, lvl, (ushort)(xx + min.X + 1), (ushort)(y + 1), (ushort)(zz + min.Z + 1), Block.leaf, 0);
-                PlaceBlock(p, lvl, (ushort)(xx + min.X + 1), (ushort)(y + 2), (ushort)(zz + min.Z + 1), Block.leaf, 0);
+                yield return Place((ushort)(xx + min.X + 1), y, (ushort)(zz + min.Z + 1), Block.staircasefull, 0);
+                yield return Place((ushort)(xx + min.X + 1), (ushort)(y + 1), (ushort)(zz + min.Z + 1), Block.leaf, 0);
+                yield return Place((ushort)(xx + min.X + 1), (ushort)(y + 2), (ushort)(zz + min.Z + 1), Block.leaf, 0);
             }
             
             brush = new SolidBrush(Block.staircasefull, 0);
-            QuadX(min.X, y, min.Z, y, max.Z, p, lvl, brush);
-            QuadX(max.X, y, min.Z, y, max.Z, p, lvl, brush);
-            QuadZ(min.Z, y, min.X, y, max.X, p, lvl, brush);
-            QuadZ(max.Z, y, min.X, y, max.X, p, lvl, brush);
+            foreach (var block in QuadX(min.X, y, min.Z, y, max.Z, brush))
+                yield return block;
+            foreach (var block in QuadX(max.X, y, min.Z, y, max.Z, brush))
+                yield return block;
+            foreach (var block in QuadZ(min.Z, y, min.X, y, max.X, brush))
+                yield return block;
+            foreach (var block in QuadZ(max.Z, y, min.X, y, max.X, brush))
+                yield return block;
             
             brush = new SolidBrush(Block.leaf, 0);
-            QuadX(min.X, (ushort)(y + 1), min.Z, (ushort)(y + 2), max.Z, p, lvl, brush);
-            QuadX(max.X, (ushort)(y + 1), min.Z, (ushort)(y + 2), max.Z, p, lvl, brush);
-            QuadZ(min.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, p, lvl, brush);
-            QuadZ(max.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, p, lvl, brush);
+            foreach (var block in QuadX(min.X, (ushort)(y + 1), min.Z, (ushort)(y + 2), max.Z, brush))
+                yield return block;
+            foreach (var block in QuadX(max.X, (ushort)(y + 1), min.Z, (ushort)(y + 2), max.Z, brush))
+                yield return block;
+            foreach (var block in QuadZ(min.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, brush))
+                yield return block;
+            foreach (var block in QuadZ(max.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, brush))
+                yield return block;
             
             Player.Message(p, "Maze painted. Build the entrance and exit yourself");
             randomizer = 0;

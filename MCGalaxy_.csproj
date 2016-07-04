@@ -476,7 +476,6 @@
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Props.cs" />
     <Compile Include="Generator\ImprovedNoise.cs" />
-    <Compile Include="Levels\BufferedBlockSender.cs" />
     <Compile Include="Generator\MapGen.cs" />
     <Compile Include="Generator\NoiseGen.cs" />
     <Compile Include="Generator\MapGenParams.cs" />
@@ -579,6 +578,7 @@
     <Compile Include="Server\Server.Threads.cs" />
     <Compile Include="Server\Updater.cs" />
     <Compile Include="API\WebServer.cs" />
+    <Compile Include="util\BufferedBlockSender.cs" />
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\App.cs" />
     <Compile Include="util\LineWrapper.cs" />

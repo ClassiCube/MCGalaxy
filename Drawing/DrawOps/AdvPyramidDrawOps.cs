@@ -21,6 +21,7 @@
 //
 // ~Merlin33069
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
@@ -34,7 +35,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (R * R * H) / 3;
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
 
@@ -52,7 +53,7 @@ namespace MCGalaxy.Drawing.Ops {
                     continue;
                 byte ctile = lvl.GetTile(x, y, z);
                 if (ctile != 0) continue;
-                PlaceBlock(p, lvl, x, y, z, brush);
+                yield return Place(x, y, z, brush);
             }
         }
     }
@@ -68,7 +69,7 @@ namespace MCGalaxy.Drawing.Ops {
             return outer - inner;
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
@@ -88,7 +89,7 @@ namespace MCGalaxy.Drawing.Ops {
 
                 byte ctile = lvl.GetTile(x, y, z);
                 if (ctile != 0) continue;
-                PlaceBlock(p, lvl, x, y, z, brush);
+                yield return Place(x, y, z, brush);
             }
         }
     }

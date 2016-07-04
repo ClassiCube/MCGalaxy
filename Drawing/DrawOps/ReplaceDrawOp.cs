@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
@@ -34,7 +35,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
         	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
@@ -44,7 +45,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
                 
                 if (tile == Include.Type && (tile != Block.custom_block || extTile == Include.ExtType))
-                    PlaceBlock(p, lvl, x, y, z, brush);
+                    yield return Place(x, y, z, brush);
             }
         }
     }
@@ -63,7 +64,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
         	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
@@ -72,9 +73,8 @@ namespace MCGalaxy.Drawing.Ops {
                 byte tile = lvl.GetTile(x, y, z), extTile = 0;
                 if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
                 
-                if (tile != Exclude.Type || (tile == Block.custom_block && extTile != Exclude.ExtType)) {
-                    PlaceBlock(p, lvl, x, y, z, brush);
-                }
+                if (tile != Exclude.Type || (tile == Block.custom_block && extTile != Exclude.ExtType))
+                    yield return Place(x, y, z, brush);
             }
         }
     }

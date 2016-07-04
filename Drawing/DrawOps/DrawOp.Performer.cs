@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.BlockPhysics;
 using MCGalaxy.Commands;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
@@ -41,9 +42,9 @@ namespace MCGalaxy.Drawing.Ops {
             return DoDrawOp(op, brush, p, marks);
         }
         
-        public static bool DoDrawOp(DrawOp op, Brush brush, Player p, 
-		                            Vec3S32[] marks, bool checkLimit = true) {
-			op.SetMarks(marks);
+        public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
+                                    Vec3S32[] marks, bool checkLimit = true) {
+            op.SetMarks(marks);
             op.Level = p == null ? null : p.level;
             if (op.Level != null && !op.Level.DrawingAllowed) {
                 Player.Message(p, "Drawing commands are turned off on this map.");
@@ -66,8 +67,13 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         static void AppendDrawOp(Player p, DrawOp op, Brush brush, Vec3S32[] marks, long affected) {
-			if (p == null) { op.Perform(marks, p, op.Level, brush); return; }
-			
+            if (p == null) {
+                foreach (var block in op.Perform(marks, p, op.Level, brush))
+                    op.Level.Blockchange(block.X, block.Y, block.Z, block.Type,
+                                         false, default(PhysicsArgs), block.ExtType);
+                return;
+            }
+            
             PendingDrawOp item = new PendingDrawOp();
             item.Op = op;
             item.Brush = brush;
@@ -107,23 +113,62 @@ namespace MCGalaxy.Drawing.Ops {
                 int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
                 entry.Start = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
                 
-                bool needReveal = item.Op.DetermineDrawOpMethod(item.Level, item.Affected);
-                if (item.Brush != null)
-                    item.Brush.Configure(item.Op, p);
-                item.Op.Perform(item.Marks, p, item.Level, item.Brush);
+                if (item.Brush != null) item.Brush.Configure(item.Op, p);
+                DoDrawOp(item, p);
                 timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
                 entry.End = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
                 
                 p.DrawOps.Add(entry);
                 if (p.DrawOps.Count > 200)
                     p.DrawOps.RemoveFirst();
-                DoReload(p, item.Level, needReveal);
+                if (item.Affected > Server.DrawReloadLimit)
+                    DoReload(p, item.Level);
             }
         }
         
-        static void DoReload(Player p, Level lvl, bool needReveal) {
-            if (!needReveal) return;
+        static void DoDrawOp(PendingDrawOp item, Player p) {
+            Level lvl = item.Level;
+            Level.BlockPos bP = default(Level.BlockPos);
             
+            if (item.Affected > Server.DrawReloadLimit) {
+                foreach (var b in item.Op.Perform(item.Marks, p, lvl, item.Brush)) {
+            		if (b.Type == Block.Zero) continue;
+                    byte old = lvl.GetTile(b.X, b.Y, b.Z);
+                    if (old == Block.Zero || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Type))
+                        continue;
+                    
+                    lvl.SetTile(b.X, b.Y, b.Z, b.Type, p, b.ExtType);
+                    p.loginBlocks++;
+                    p.overallBlocks++;
+                }
+            } else if (item.Level.bufferblocks) {
+                foreach (var b in item.Op.Perform(item.Marks, p, lvl, item.Brush)) {
+            		if (b.Type == Block.Zero) continue;
+                    if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Type, b.ExtType)) continue;
+                    bP.name = p.name;
+                    bP.index = lvl.PosToInt(b.X, b.Y, b.Z);
+                    bP.SetData(b.Type, b.ExtType, b.Type == 0);
+                    
+                    if (lvl.UseBlockDB)
+                        lvl.blockCache.Add(bP);
+                    BlockQueue.Addblock(p, bP.index, b.Type, b.ExtType);
+                }
+            } else {
+                foreach (var b in item.Op.Perform(item.Marks, p, item.Level, item.Brush)) {
+            	    if (b.Type == Block.Zero) continue;
+                    if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Type, b.ExtType)) continue;
+                    bP.name = p.name;
+                    bP.index = lvl.PosToInt(b.X, b.Y, b.Z);
+                    
+                    bP.SetData(b.Type, b.ExtType, b.Type == 0);
+                    if (lvl.UseBlockDB)
+                        lvl.blockCache.Add(bP);
+                    Player.GlobalBlockchange(lvl, b.X, b.Y, b.Z, b.Type, b.ExtType);
+                }
+            }
+        }
+        
+        static void DoReload(Player p, Level lvl) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level.name.CaselessEq(lvl.name))

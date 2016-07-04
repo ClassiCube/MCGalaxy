@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
@@ -28,13 +29,13 @@ namespace MCGalaxy.Drawing.Ops {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                PlaceBlock(p, lvl, x, y, z, brush);
+                yield return Place(x, y, z, brush);
             }
         }
     }
@@ -51,47 +52,50 @@ namespace MCGalaxy.Drawing.Ops {
             return xQuadsVol + yQuadsVol + zQuadzVol;
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             int lenX = (p2.X - p1.X + 1), lenY = (p2.Y - p1.Y + 1);
-            QuadY(p1.Y, p1.X, p1.Z, p2.X, p2.Z, p, lvl, brush);
-            QuadY(p2.Y, p1.X, p1.Z, p2.X, p2.Z, p, lvl, brush);
+            foreach (var block in QuadY(p1.Y, p1.X, p1.Z, p2.X, p2.Z, brush))
+                yield return block;
+            foreach (var block in QuadY(p2.Y, p1.X, p1.Z, p2.X, p2.Z, brush))
+                yield return block;
             if (lenY > 2) {
-                QuadX(p1.X, (ushort)(p1.Y + 1), p1.Z, (ushort)(p2.Y - 1), p2.Z, p, lvl, brush);
-                QuadX(p2.X, (ushort)(p1.Y + 1), p1.Z, (ushort)(p2.Y - 1), p2.Z, p, lvl, brush);
+                foreach (var block in QuadX(p1.X, (ushort)(p1.Y + 1), p1.Z, (ushort)(p2.Y - 1), p2.Z, brush))
+                    yield return block;
+                foreach (var block in QuadX(p2.X, (ushort)(p1.Y + 1), p1.Z, (ushort)(p2.Y - 1), p2.Z, brush))
+                    yield return block;
             }
             if (lenX > 2 && lenY > 2) {
-                QuadZ(p1.Z, (ushort)(p1.Y + 1), (ushort)(p1.X + 1), 
-                      (ushort)(p2.Y - 1), (ushort)(p2.X - 1), p, lvl, brush);
-                QuadZ(p2.Z, (ushort)(p1.Y + 1), (ushort)(p1.X + 1), 
-                      (ushort)(p2.Y - 1), (ushort)(p2.X - 1), p, lvl, brush);
+                foreach (var block in QuadZ(p1.Z, (ushort)(p1.Y + 1), (ushort)(p1.X + 1),
+                                            (ushort)(p2.Y - 1), (ushort)(p2.X - 1), brush))
+                    yield return block;
+                foreach (var block in QuadZ(p2.Z, (ushort)(p1.Y + 1), (ushort)(p1.X + 1),
+                                            (ushort)(p2.Y - 1), (ushort)(p2.X - 1), brush))
+                    yield return block;
             }
         }
         
-        protected void QuadX(ushort x, ushort y1, ushort z1, ushort y2, ushort z2,
-                             Player p, Level lvl, Brush brush) {
+        protected IEnumerable<DrawOpBlock> QuadX(ushort x, ushort y1, ushort z1, ushort y2, ushort z2, Brush brush) {
             for (ushort y = y1; y <= y2; y++)
                 for (ushort z = z1; z <= z2; z++)
             {
-                PlaceBlock(p, lvl, x, y, z, brush);
+                yield return Place(x, y, z, brush);
             }
         }
         
-        protected void QuadY(ushort y, ushort x1, ushort z1, ushort x2, ushort z2,
-                             Player p, Level lvl, Brush brush) {
+        protected IEnumerable<DrawOpBlock> QuadY(ushort y, ushort x1, ushort z1, ushort x2, ushort z2, Brush brush) {
             for (ushort z = z1; z <= z2; z++)
                 for (ushort x = x1; x <= x2; x++)
             {
-                PlaceBlock(p, lvl, x, y, z, brush);
+                yield return Place(x, y, z, brush);
             }
         }
         
-        protected void QuadZ(ushort z, ushort y1, ushort x1, ushort y2, ushort x2,
-                             Player p, Level lvl, Brush brush) {
+        protected IEnumerable<DrawOpBlock> QuadZ(ushort z, ushort y1, ushort x1, ushort y2, ushort x2, Brush brush) {
             for (ushort y = y1; y <= y2; y++)
                 for (ushort x = x1; x <= x2; x++)
             {
-                PlaceBlock(p, lvl, x, y, z, brush);
+                yield return Place(x, y, z, brush);
             }
         }
     }
@@ -107,15 +111,19 @@ namespace MCGalaxy.Drawing.Ops {
             return xQuadsVol + zQuadsVol;
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             int lenX = (p2.X - p1.X + 1);
-            QuadX(p1.X, p1.Y, p1.Z, p2.Y, p2.Z, p, lvl, brush);
-            QuadX(p2.X, p1.Y, p1.Z, p2.Y, p2.Z, p, lvl, brush);
-            if (lenX > 2) {
-                QuadZ(p1.Z, p1.Y, (ushort)(p1.X + 1), p2.Y, (ushort)(p2.X - 1), p, lvl, brush);
-                QuadZ(p2.Z, p1.Y, (ushort)(p1.X + 1), p2.Y, (ushort)(p2.X - 1), p, lvl, brush);
-            }
+            foreach (var block in QuadX(p1.X, p1.Y, p1.Z, p2.Y, p2.Z, brush))
+                yield return block;
+            foreach (var block in QuadX(p2.X, p1.Y, p1.Z, p2.Y, p2.Z, brush))
+                yield return block;
+            
+            if (lenX <= 2) yield break;
+            foreach (var block in QuadZ(p1.Z, p1.Y, (ushort)(p1.X + 1), p2.Y, (ushort)(p2.X - 1), brush))
+                yield return block;
+            foreach (var block in QuadZ(p2.Z, p1.Y, (ushort)(p1.X + 1), p2.Y, (ushort)(p2.X - 1), brush))
+                yield return block;
         }
     }
     
@@ -130,27 +138,27 @@ namespace MCGalaxy.Drawing.Ops {
             return horSidesvol + verSidesVol;
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++ ) {
-                PlaceBlock(p, lvl, p1.X, y, p1.Z, brush);
-                PlaceBlock(p, lvl, p2.X, y, p1.Z, brush);
-                PlaceBlock(p, lvl, p1.X, y, p2.Z, brush);
-                PlaceBlock(p, lvl, p2.X, y, p2.Z, brush);
+                yield return Place(p1.X, y, p1.Z, brush);
+                yield return Place(p2.X, y, p1.Z, brush);
+                yield return Place(p1.X, y, p2.Z, brush);
+                yield return Place(p2.X, y, p2.Z, brush);
             }
 
             for (ushort z = p1.Z; z <= p2.Z; z++) {
-                PlaceBlock(p, lvl, p1.X, p1.Y, z, brush);
-                PlaceBlock(p, lvl, p2.X, p1.Y, z, brush);
-                PlaceBlock(p, lvl, p1.X, p2.Y, z, brush);
-                PlaceBlock(p, lvl, p2.X, p2.Y, z, brush);
+                yield return Place(p1.X, p1.Y, z, brush);
+                yield return Place(p2.X, p1.Y, z, brush);
+                yield return Place(p1.X, p2.Y, z, brush);
+                yield return Place(p2.X, p2.Y, z, brush);
             }
             
             for (ushort x = p1.X; x <= p2.X; x++) {
-                PlaceBlock(p, lvl, x, p1.Y, p1.Z, brush);
-                PlaceBlock(p, lvl, x, p1.Y, p2.Z, brush);
-                PlaceBlock(p, lvl, x, p2.Y, p1.Z, brush);
-                PlaceBlock(p, lvl, x, p2.Y, p2.Z, brush);
+                yield return Place(x, p1.Y, p1.Z, brush);
+                yield return Place(x, p1.Y, p2.Z, brush);
+                yield return Place(x, p2.Y, p1.Z, brush);
+                yield return Place(x, p2.Y, p2.Z, brush);
             }
         }
     }

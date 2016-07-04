@@ -43,21 +43,26 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         int dirX, dirZ;
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        Vec3U16 pos;
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
         	Vec3U16 p1 = Clamp(marks[0]), p2 = Clamp(marks[1]);
             if (Math.Abs(p2.X - p1.X) > Math.Abs(p2.Z - p1.Z))
                 dirX = p2.X > p1.X? 1 : -1;
             else
                 dirZ = p2.Z > p1.Z ? 1 : -1;
-            foreach (char c in Text)
-                DrawLetter(p, lvl, c, ref p1.X, p1.Y, ref p1.Z, brush);
+            pos = p1;
+            
+            foreach (char c in Text) {
+            	foreach (var block in DrawLetter(p, lvl, c, brush))
+            	    yield return block;
+            }
         }
         
-        void DrawLetter(Player p, Level lvl, char c, ref ushort x, ushort y, ref ushort z, Brush brush) {
+        IEnumerable<DrawOpBlock> DrawLetter(Player p, Level lvl, char c, Brush brush) {
             if ((int)c >= 256 || letters[(int)c] == null) {
                 Player.Message(p, "\"" + c + "\" is not currently supported, replacing with space.");
-                x = (ushort)(x + dirX * 4 * Scale);
-                z = (ushort)(z + dirZ * 4 * Scale);
+                pos.X = (ushort)(pos.X + dirX * 4 * Scale);
+                pos.Z = (ushort)(pos.Z + dirZ * 4 * Scale);
             } else {
                 byte[] flags = letters[(int)c];
                 for (int i = 0; i < flags.Length; i++) {
@@ -68,16 +73,16 @@ namespace MCGalaxy.Drawing.Ops {
                         for (int ver = 0; ver < Scale; ver++)
                             for (int hor = 0; hor < Scale; hor++) 
                         {
-                            int xx = x + dirX * hor, yy = y + j * Scale + ver, zz = z + dirZ * hor;
-                            PlaceBlock(p, lvl, (ushort)xx, (ushort)yy, (ushort)zz, brush);
+                            int x = pos.X + dirX * hor, y = pos.Y + j * Scale + ver, z = pos.Z + dirZ * hor;
+                            yield return Place((ushort)x, (ushort)y, (ushort)z, brush);
                         }
                     }
-                    x = (ushort)(x + dirX * Scale);
-                    z = (ushort)(z + dirZ * Scale);
+                    pos.X = (ushort)(pos.X + dirX * Scale);
+                    pos.Z = (ushort)(pos.Z + dirZ * Scale);
                 }
             }
-            x = (ushort)(x + dirX * Spacing);
-            z = (ushort)(z + dirZ * Spacing);
+            pos.X = (ushort)(pos.X + dirX * Spacing);
+            pos.Z = (ushort)(pos.Z + dirZ * Spacing);
         }
         
         static int HighestBit(int value) {

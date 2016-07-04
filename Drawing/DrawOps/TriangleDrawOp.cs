@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
@@ -33,7 +34,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (int)Math.Sqrt(s * (s - a) * (s - b) * (s - c));
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3F32 V1 = marks[0], V2 = marks[1], V3 = marks[2];
             Vec3F32 N = Vec3F32.Cross(V2 - V1, V3 - V1);
             N = Vec3F32.Normalise(N);
@@ -64,9 +65,9 @@ namespace MCGalaxy.Drawing.Ops {
                 float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
                 if (u >= 0 && v >= 0 && u + v <= 1) {
-                    PlaceBlock(p, lvl, xx, yy, zz, brush);
+                    yield return Place(xx, yy, zz, brush);
                 } else if (Axis(P, V1, V2) || Axis(P, V1, V3) || Axis(P, V2, V3)) {
-                    PlaceBlock(p, lvl, xx, yy, zz, brush);
+                    yield return Place(xx, yy, zz, brush);
                 }
             }
         }

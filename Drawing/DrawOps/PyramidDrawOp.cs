@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
@@ -27,10 +28,6 @@ namespace MCGalaxy.Drawing.Ops {
         public PyramidDrawOp(DrawOp baseOp, int yDir) {
             this.baseOp = baseOp;
             this.yDir = yDir;
-        }
-        
-        public override bool DetermineDrawOpMethod(Level lvl, long affected) {
-            return baseOp.DetermineDrawOpMethod(lvl, affected);
         }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
@@ -52,14 +49,16 @@ namespace MCGalaxy.Drawing.Ops {
             return total;
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3S32 p1 = Min, p2 = Max;
             baseOp.Level = Level;
             
             while (true) {
-                baseOp.Perform(marks, p, lvl, brush);
+                foreach (var block in baseOp.Perform(marks, p, lvl, brush))
+                    yield return block;
                 if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
-                    break;
+                    yield break;
+                
                 p1.X++; p2.X--;
                 p1.Z++; p2.Z--;
                 p1.Y = (ushort)(p1.Y + yDir); p2.Y = p1.Y;
@@ -95,22 +94,25 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Pyramid reverse"; } }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             wallOp.Min = Min; wallOp.Max = Max;
             baseOp.Min = Min; baseOp.Max = Max;
             wallOp.Level = Level; baseOp.Level = Level;
             
             while (true) {
-                wallOp.Perform(marks, p, lvl, brush);
+                foreach (var block in wallOp.Perform(marks, p, lvl, brush))
+                    yield return block;
                 if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
-                    break;
+                    yield break;
+                
                 p1.X++; p2.X--;
                 p1.Z++; p2.Z--;
                 wallOp.Min = p1; wallOp.Max = p2;
                 baseOp.Min = p1; baseOp.Max = p2;
                 
-                baseOp.Perform(marks, p, lvl, airBrush);
+                foreach (var block in baseOp.Perform(marks, p, lvl, airBrush))
+                    yield return block;
                 p1.Y = (ushort)(p1.Y + yDir); p2.Y = p1.Y;
                 wallOp.Min = p1; wallOp.Max = p2;
                 baseOp.Min = p1; baseOp.Max = p2;
