@@ -50,15 +50,7 @@ namespace MCGalaxy.Commands {
                 p.MakeSelection(2, args[1], AddZone);
             } else if (args[0].CaselessEq("del") && args.Length > 1 && args[1].CaselessEq("all")) {
                 if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, "can delete all zones.", 2); return; }
-                
-                for (int i = 0; i < p.level.ZoneList.Count; i++) {
-                    Level.Zone Zn = p.level.ZoneList[i];
-                    LevelDB.DeleteZone(p.level.name, Zn);
-                    Player.Message(p, "Zone deleted for &b" + Zn.Owner);
-                    p.level.ZoneList.Remove(p.level.ZoneList[i]);
-                    if (i == p.level.ZoneList.Count) { Player.Message(p, "Finished removing all zones"); return; }
-                    i--;
-                }
+                DeleteAll(p);
             } else if (args[0].CaselessEq("del")) {
                 if (!CheckExtraPerm(p, 1)) { MessageNeedExtra(p, "can delete zones.", 1); return; }
                 
@@ -72,6 +64,17 @@ namespace MCGalaxy.Commands {
                 }
             } else {
                 Help(p);
+            }
+        }
+        
+        internal static void DeleteAll(Player p) {
+            for (int i = 0; i < p.level.ZoneList.Count; i++) {
+                Level.Zone Zn = p.level.ZoneList[i];
+                LevelDB.DeleteZone(p.level.name, Zn);
+                Player.Message(p, "Zone deleted for &b" + Zn.Owner);
+                p.level.ZoneList.Remove(p.level.ZoneList[i]);
+                if (i == p.level.ZoneList.Count) { Player.Message(p, "Finished removing all zones"); return; }
+                i--;
             }
         }
         
@@ -96,8 +99,7 @@ namespace MCGalaxy.Commands {
             else
                 Player.Message(p, "This zone belongs to &b{0}.", owners.Remove(0, 2));
             return true;
-        }
-        
+        }        
 
         bool DeleteZone(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             Level lvl = p.level;

@@ -157,7 +157,7 @@ namespace MCGalaxy.Games
                 File.Delete("levels/ctf.lvl");
             File.Copy("CTF/maps/" + mapname + ".lvl", "levels/ctf.lvl");
             Command.all.Find("load").Use(null, "ctf");
-            mainlevel = LevelInfo.Find("ctf");
+            mainlevel = LevelInfo.FindExact("ctf");
         }
         
         void LineProcessor(string key, string value) {
@@ -241,7 +241,7 @@ namespace MCGalaxy.Games
             tagging.Dispose();
             mainlevel = null;
             started = false;
-            if (LevelInfo.Find("ctf") != null)
+            if (LevelInfo.FindExact("ctf") != null)
                 Command.all.Find("unload").Use(null, "ctf");
         }
         
@@ -335,7 +335,7 @@ tags     MEDIUMINT UNSIGNED{1});";
         /// <summary> Start the CTF game </summary>
         public void Start()
         {
-            if (LevelInfo.Find("ctf") != null)
+            if (LevelInfo.FindExact("ctf") != null)
             {
                 Command.all.Find("unload").Use(null, "ctf");
                 Thread.Sleep(1000);

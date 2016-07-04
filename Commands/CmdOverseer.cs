@@ -148,14 +148,7 @@ namespace MCGalaxy.Commands
                     if (osPerm == LevelPermission.Nobody)
                         osPerm = GrpCommands.MinPerm(this);
                     
-                    Level.Zone zn = default(Level.Zone);
-                    zn.bigX = (ushort)(lvl.Width - 1);
-                    zn.bigY = (ushort)(lvl.Height - 1);
-                    zn.bigZ = (ushort)(lvl.Length - 1);
-                    zn.Owner = p.name;
-                    lvl.ZoneList.Add(zn);
-                    LevelDB.CreateZone(lvl.name, zn);
-                    
+                    ZoneAll(lvl, p.name);                 
                     Group grp = Group.findPerm(osPerm);
                     if (grp != null) {
                         Command.all.Find("perbuild").Use(null, lvl.name + " " + grp.name);
@@ -165,7 +158,7 @@ namespace MCGalaxy.Commands
                 }
             } else if (cmd == "PHYSICS") {
                 if (value == "0" || value == "1" || value == "2" || value == "3" || value == "4" || value == "5")
-                    Command.all.Find("physics").Use(p, p.level.name + " " + value);
+                    CmdPhysics.SetPhysics(p.level, int.Parse(value));
                 else
                     Player.Message(p, "Accepted numbers are: 0, 1, 2, 3, 4 or 5");
             } else if (cmd == "DELETE") {
@@ -250,24 +243,19 @@ namespace MCGalaxy.Commands
         
         void HandleZoneCommand(Player p, string cmd, string value) {
             if (cmd == "LIST") {
-                // List zones on a single block(dont need to touch this :) )
                 Command.all.Find("zone").Use(p, "");
             } else if (cmd == "ADD") {
-                // Add Zone to your personal map(took a while to get it to work(it was a big derp))
-                if (value != "") {
-                    Command.all.Find("ozone").Use(p, value);
-                    Player.Message(p, value + " has been allowed building on your map.");
-                } else {
-                    Player.Message(p, "You did not specify a name to allow building on your map.");
+                if (value == "") {
+                	Player.Message(p, "You did not specify a name to allow building on your map."); return;
                 }
+                
+                ZoneAll(p.level, value);
+                Player.Message(p, "Added zone for &b" + value);
+                Player.Message(p, value + " has been allowed building on your map.");
             } else if (cmd == "DEL") {
-                // I need to add the ability to delete a single zone, I need help!
-                if (value == "ALL" || value == "") {
-                    Command zone = Command.all.Find("zone");
-                    Command click = Command.all.Find("mark");
-                    zone.Use(p, "del all");
-                    click.Use(p, "0 0 0");
-                }
+                // TODO: Delete zone by name
+                if (value == "ALL" || value == "")
+                    CmdZone.DeleteAll(p);
             } else if (cmd == "BLOCK") {
                 if (value == "") {
                     Player.Message(p, "You did not specify a name to blacklist from your map."); return;
@@ -330,6 +318,17 @@ namespace MCGalaxy.Commands
             } else {
                 Player.MessageLines(p, zoneHelp);
             }
+        }
+        
+        static void ZoneAll(Level lvl, string owner) {
+            Level.Zone zn = default(Level.Zone);
+            zn.bigX = (ushort)(lvl.Width - 1);
+            zn.bigY = (ushort)(lvl.Height - 1);
+            zn.bigZ = (ushort)(lvl.Length - 1);
+            zn.Owner = owner;
+            
+            lvl.ZoneList.Add(zn);
+            LevelDB.CreateZone(lvl.name, zn);
         }
         
         static void EnsureFileExists(string path) {

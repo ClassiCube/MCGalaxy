@@ -27,10 +27,8 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "You must provide a level name when using this command from console.");
                 return;
             }
-            Level level = args.Length == 1 ? p.level : LevelInfo.Find(args[0]);
-            if (level == null) {
-                Player.Message(p, "There is no level \"" + args[0] + "\" loaded."); return;
-            }
+            Level level = args.Length == 1 ? p.level : LevelInfo.FindMatches(p, args[0]);
+            if (level == null) return;
             
             string rank = args.Length == 1 ? args[0] : args[1];
             LevelPermission newRank = Level.PermissionFromName(rank);
