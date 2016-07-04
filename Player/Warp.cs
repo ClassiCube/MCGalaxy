@@ -42,8 +42,8 @@ namespace MCGalaxy {
             return null;
         }
         
-        public void Goto(string waypoint, Player p) {
-            Warp wp = Find(waypoint);
+        public void Goto(string warp, Player p) {
+            Warp wp = Find(warp);
             if (wp == null) return;
             
             Level lvl = LevelInfo.FindExact(wp.lvlname);
@@ -52,37 +52,37 @@ namespace MCGalaxy {
             
             if (p.level.name.CaselessEq(wp.lvlname)) {
                 p.SendPos(0xFF, wp.x, wp.y, wp.z, wp.rotx, wp.roty);
-                Player.Message(p, "Sent you to waypoint");
+                Player.Message(p, "Sent you to waypoint/warp");
             } else {
                 Player.Message(p, "Unable to send you to the warp as the map it is on is not loaded.");
             }
         }
 
-        public void Create(string waypoint, Player p) {
+        public void Create(string warp, Player p) {
             Warp wp = new Warp();
             wp.x = p.pos[0]; wp.y = p.pos[1]; wp.z = p.pos[2];
             wp.rotx = p.rot[0]; wp.roty = p.rot[1];
-            wp.name = waypoint;
+            wp.name = warp;
             wp.lvlname = p.level.name;
             Items.Add(wp);
             Save(p);
         }
 
-        public void Update(string waypoint, Player p) {
-            Warp wp = Find(waypoint);
+        public void Update(string warp, Player p) {
+            Warp wp = Find(warp);
             Items.Remove(wp);
-            Create(waypoint, p);
+            Create(warp, p);
         }
 
-        public void Remove(string waypoint, Player p) {
-            Warp wp = Find(waypoint);
+        public void Remove(string warp, Player p) {
+            Warp wp = Find(warp);
             Items.Remove(wp);
             Save(p);
         }
 
-        public bool Exists(string waypoint) {
+        public bool Exists(string warp) {
             foreach (Warp wp in Items) {
-                if (wp.name.CaselessEq(waypoint)) return true;
+                if (wp.name.CaselessEq(warp)) return true;
             }
             return false;
         }
