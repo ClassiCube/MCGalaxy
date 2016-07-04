@@ -156,8 +156,7 @@ namespace MCGalaxy {
         
         public static void SendChatFrom(Player from, string message) { SendChatFrom(from, message, true); }
         public static void SendChatFrom(Player from, string message, bool showname) {
-            if (from == null) return; // So we don't fucking derp the hell out!
-            
+            if (from == null) return;            
             if (Last50Chat.Count == 50) Last50Chat.RemoveAt(0);
             var chatmessage = new ChatMessage();
             chatmessage.text = message;
@@ -165,22 +164,27 @@ namespace MCGalaxy {
             chatmessage.time = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
             Last50Chat.Add(chatmessage);
             
-            string messageLite = message;
+            string msg_NT = message, msg_NN = message, msg_NNNT = message;
             if (showname) {
-                string prefix = from.group.prefix == "" ? "" : "&f" + from.group.prefix;
-                messageLite = from.voicestring + prefix + from.ColoredName + ": &f" + message;
-                message = from.voicestring + from.FullName + ": &f" + message;
+                string msg = ": &f" + message;
+                string pre = from.voicestring + from.color + from.prefix;     
+                message = pre + from.DisplayName + msg; // Titles + Nickname
+                msg_NN = pre + from.truename + msg; // Titles + Account name
+                
+                pre = from.voicestring + (from.group.prefix == "" ? "" : "&f" + from.group.prefix);
+                msg_NT = pre + from.color + from.DisplayName + msg; // Nickname
+                msg_NNNT = pre + from.color + from.truename + msg; // Account name
             }
             
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
-                if (p.level.worldChat && p.Chatroom == null) {
-                    if (from != null && p.listignored.Contains(from.name)) continue;
-                    
-                    string msg = p.ignoreTitles ? messageLite : message;
-                    if (!p.ignoreAll || (from != null && from == p))
-                        Player.Message(p, msg);
-                }
+                if (p.Chatroom != null || p.listignored.Contains(from.name)) continue;
+                if (!p.level.worldChat || (p.ignoreAll && p != from)) continue;
+                
+                if (p.ignoreNicks && p.ignoreTitles) Player.Message(p, msg_NNNT);
+                else if (p.ignoreNicks) Player.Message(p, msg_NN);
+                else if (p.ignoreTitles) Player.Message(p, msg_NT);
+                else Player.Message(p, message);
             }
         }
 
@@ -529,6 +533,7 @@ Next: continue;
                     if (ignoreGlobal) w.WriteLine("&global");
                     if (ignoreIRC) w.WriteLine("&irc");
                     if (ignoreTitles) w.WriteLine("&titles");
+                    if (ignoreNicks) w.WriteLine("&nicks");
                     
                     foreach (string line in listignored)
                         w.WriteLine(line);
@@ -550,6 +555,7 @@ Next: continue;
                     else if (line == "&all") ignoreAll = true;
                     else if (line == "&irc") ignoreIRC = true;
                     else if (line == "&titles") ignoreTitles = true;
+                    else if (line == "&nicks") ignoreNicks = true;
                     else listignored.Add(line);
                 }
             } catch (Exception ex) {
@@ -557,7 +563,8 @@ Next: continue;
                 Server.s.Log("Failed to load ignore list for: " + name);
             }
             
-            if (ignoreAll || ignoreGlobal || ignoreIRC || ignoreTitles || listignored.Count > 0)
+            if (ignoreAll || ignoreGlobal || ignoreIRC 
+                || ignoreTitles || ignoreNicks || listignored.Count > 0)
                 SendMessage("&cType &a/ignore list &cto see who you are still ignoring");
         }
         

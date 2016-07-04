@@ -53,6 +53,11 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "{0} show before names in chat", 
                                p.ignoreTitles ? "&cPlayer titles no longer" : "&aPlayer titles now");
                 CreateIgnoreFile(p); return;
+            } else if (action == "nicks") {
+                p.ignoreNicks = !p.ignoreNicks;
+                Player.Message(p, "{0} show in chat", 
+                               p.ignoreNicks ? "&cCustom player nicks no longer" : "&aCustom player nicks");
+                CreateIgnoreFile(p); return;
             } else if (action == "list") {
                 Player.Message(p, "&cCurrently ignoring the following players:");
                 string names = p.listignored.Concatenate();
@@ -61,6 +66,7 @@ namespace MCGalaxy.Commands {
                 if (p.ignoreIRC) Player.Message(p, "&cIgnoring IRC chat");
                 if (p.ignoreGlobal) Player.Message(p, "&cIgnoring global chat");
                 if (p.ignoreTitles) Player.Message(p, "&cPlayer titles do not show before names in chat.");
+                if (p.ignoreNicks) Player.Message(p, "&cCustom player nicks do not show in chat.");
                 return;
             }
             
@@ -107,6 +113,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%H If name is \"global\", MCGalaxy global chat is ignored.");
             Player.Message(p, "%H If name is \"irc\", IRC chat is ignored.");
             Player.Message(p, "%H If name is \"titles\", player titles before names are ignored.");
+            Player.Message(p, "%H If name is \"nicks\", custom player nicks do not show in chat.");
             Player.Message(p, "%HOtherwise, all chat from the player with [name] is ignored.");
         }
     }
