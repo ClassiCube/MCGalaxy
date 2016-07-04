@@ -305,7 +305,6 @@
     <Compile Include="Commands\Moderation\CmdMute.cs" />
     <Compile Include="Commands\Moderation\CmdNotes.cs" />
     <Compile Include="Commands\Moderation\CmdOhide.cs" />
-    <Compile Include="Commands\Moderation\CmdOZone.cs" />
     <Compile Include="Commands\Moderation\CmdP2P.cs" />
     <Compile Include="Commands\Moderation\CmdPass.cs" />
     <Compile Include="Commands\Moderation\CmdPatrol.cs" />

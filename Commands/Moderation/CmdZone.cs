@@ -31,6 +31,9 @@ namespace MCGalaxy.Commands {
                     new CommandPerm(LevelPermission.Operator, "+ can create zones"),
                 }; }
         }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("ozone", "map"), new CommandAlias("oz", "map") }; }
+        }
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
@@ -38,16 +41,16 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Place a block where you would like to check for zones.");
                 p.MakeSelection(1, null, CheckZone);
             } else if (args[0].CaselessEq("add")) {
-                if (!CheckExtraPerm(p, 3)) { MessageNeedExtra(p, "can create zones.", 3); return; }
-                if (args.Length == 1) { Help(p); return; }
-                
-                if (Group.Find(args[1]) != null)
-                    args[1] = "grp" + Group.Find(args[1]).name;
-                if (!ValidName(p,  args[1], "player or rank")) return;
+                if (!CheckAdd(p, args)) return;
 
                 Player.Message(p, "Place two blocks to determine the edges.");
                 Player.Message(p, "Zone for: &b" + args[1] + ".");
                 p.MakeSelection(2, args[1], AddZone);
+            } else if (args[0].CaselessEq("map")) {
+                if (!CheckAdd(p, args)) return;
+
+                ZoneAll(p.level, args[1]);
+                Player.Message(p, "Added zone for &b" + args[1]);
             } else if (args[0].CaselessEq("del") && args.Length > 1 && args[1].CaselessEq("all")) {
                 if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, "can delete all zones.", 2); return; }
                 DeleteAll(p);
@@ -67,6 +70,17 @@ namespace MCGalaxy.Commands {
             }
         }
         
+        internal static void ZoneAll(Level lvl, string owner) {
+            Level.Zone zn = default(Level.Zone);
+            zn.bigX = (ushort)(lvl.Width - 1);
+            zn.bigY = (ushort)(lvl.Height - 1);
+            zn.bigZ = (ushort)(lvl.Length - 1);
+            zn.Owner = owner;
+            
+            lvl.ZoneList.Add(zn);
+            LevelDB.CreateZone(lvl.name, zn);
+        }
+        
         internal static void DeleteAll(Player p) {
             for (int i = 0; i < p.level.ZoneList.Count; i++) {
                 Level.Zone Zn = p.level.ZoneList[i];
@@ -76,6 +90,16 @@ namespace MCGalaxy.Commands {
                 if (i == p.level.ZoneList.Count) { Player.Message(p, "Finished removing all zones"); return; }
                 i--;
             }
+        }
+        
+        bool CheckAdd(Player p, string[] args) {
+            if (!CheckExtraPerm(p, 3)) { MessageNeedExtra(p, "can create zones.", 3); return false; }
+            if (args.Length == 1) { Help(p); return false; }
+            
+            if (Group.Find(args[1]) != null)
+                args[1] = "grp" + Group.Find(args[1]).name;
+            if (!ValidName(p,  args[1], "player or rank")) return false;
+            return true;
         }
         
         bool CheckZone(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
@@ -148,6 +172,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/zone add [name] %H- Creates a zone only [name] can build in");
             Player.Message(p, "%T/zone add [rank] %H- Creates a zone only [rank]+ can build in");
+            Player.Message(p, "%T/zone map [name/rank] %H- /zone add across the entire map");       
             Player.Message(p, "%T/zone del %H- Deletes the zone clicked");
         }
     }

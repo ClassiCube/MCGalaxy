@@ -148,7 +148,7 @@ namespace MCGalaxy.Commands
                     if (osPerm == LevelPermission.Nobody)
                         osPerm = GrpCommands.MinPerm(this);
                     
-                    ZoneAll(lvl, p.name);                 
+                    CmdZone.ZoneAll(lvl, p.name);                 
                     Group grp = Group.findPerm(osPerm);
                     if (grp != null) {
                         Command.all.Find("perbuild").Use(null, lvl.name + " " + grp.name);
@@ -249,7 +249,7 @@ namespace MCGalaxy.Commands
                 	Player.Message(p, "You did not specify a name to allow building on your map."); return;
                 }
                 
-                ZoneAll(p.level, value);
+                CmdZone.ZoneAll(p.level, value);
                 Player.Message(p, "Added zone for &b" + value);
                 Player.Message(p, value + " has been allowed building on your map.");
             } else if (cmd == "DEL") {
@@ -318,17 +318,6 @@ namespace MCGalaxy.Commands
             } else {
                 Player.MessageLines(p, zoneHelp);
             }
-        }
-        
-        static void ZoneAll(Level lvl, string owner) {
-            Level.Zone zn = default(Level.Zone);
-            zn.bigX = (ushort)(lvl.Width - 1);
-            zn.bigY = (ushort)(lvl.Height - 1);
-            zn.bigZ = (ushort)(lvl.Length - 1);
-            zn.Owner = owner;
-            
-            lvl.ZoneList.Add(zn);
-            LevelDB.CreateZone(lvl.name, zn);
         }
         
         static void EnsureFileExists(string path) {
