@@ -143,21 +143,21 @@ namespace MCGalaxy.Commands {
         }
         
         static void PrintHelpForGroup(Player p, string sort, 
-                                      string typeName, string typeTitle) {
+                                      string type, string category) {
             List<Command> cmds = new List<Command>();
             foreach (Command c in Command.all.commands) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
-                if (p == null || p.group.CanExecute(c) && disabled == null) {
-                    if (!c.type.Contains(typeName) || c.name == null) continue;
+                if ((p == null || p.group.CanExecute(c)) && disabled == null) {
+                    if (!c.type.Contains(type) || c.name == null) continue;
                     cmds.Add(c);
                 }
             }
             
             StringBuilder list = FormatCommands(cmds, sort);
             if (list.Length == 0) {
-                Player.Message(p, "You cannot use any of the " + typeTitle + " commands.");
+                Player.Message(p, "You cannot use any of the " + category + " commands.");
             } else {
-                Player.Message(p, typeTitle + " commands you may use:");
+                Player.Message(p, category + " commands you may use:");
                 Player.Message(p, list.ToString(2, list.Length - 2) + ".");
             }
         }
