@@ -146,9 +146,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/zone [add] [name] - Creates a zone only [name] can build in");
-            Player.Message(p, "/zone [add] [rank] - Creates a zone only [rank]+ can build in");
-            Player.Message(p, "/zone del - Deletes the zone clicked");
+            Player.Message(p, "%T/zone add [name] %H- Creates a zone only [name] can build in");
+            Player.Message(p, "%T/zone add [rank] %H- Creates a zone only [rank]+ can build in");
+            Player.Message(p, "%T/zone del %H- Deletes the zone clicked");
         }
     }
 }

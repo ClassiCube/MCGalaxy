@@ -1,7 +1,7 @@
 using System;
 
-namespace MCGalaxy.Commands.Building {	
-	public sealed class CmdCenter : Command {
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdCenter : Command {
         public override string name { get { return "center"; } }
         public override string shortcut { get { return "centre"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -16,15 +16,33 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool DoCentre(Player p, Vec3S32[] m, object state, byte type, byte extType) {
-        	int xCen = (m[0].X + m[1].X) / 2, yCen = (m[0].Y + m[1].Y) / 2, zCen = (m[0].Z + m[1].Z) / 2;
-            p.level.UpdateBlock(p, (ushort)xCen, (ushort)yCen, (ushort)zCen, Block.goldsolid, 0);
-            Player.Message(p, "A gold block was placed at ({0}, {1}, {2}).", xCen, yCen, zCen);
+            int lenX = m[0].X + m[1].X, lenY = m[0].Y + m[1].Y, lenZ = m[0].Z + m[1].Z;
+            int x = lenX / 2, y = lenY / 2, z = lenZ / 2;
+            
+            Place(p, x, y, z);
+            if ((lenX & 1) == 1) Place(p, x + 1, y, z);
+            if ((lenZ & 1) == 1) Place(p, x, y, z + 1);
+            if ((lenX & 1) == 1 && (lenZ & 1) == 1) Place(p, x + 1, y, z + 1);
+            
+            // Top layer blocks
+            if ((lenY & 1) == 1) {
+                Place(p, x, y + 1, z);
+                if ((lenX & 1) == 1) Place(p, x + 1, y + 1, z);
+                if ((lenZ & 1) == 1) Place(p, x, y + 1, z + 1);
+                if ((lenX & 1) == 1 && (lenZ & 1) == 1) Place(p, x + 1, y + 1, z + 1);
+            }
+            
+            Player.Message(p, "Gold blocks were placed at ({0}, {1}, {2}).", x, y, z);
             return false;
+        }
+        
+        static void Place(Player p, int x, int y, int z) {
+            p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, Block.goldsolid, 0);
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/center");
-            Player.Message(p, "%HPlaces a block at the center of your selection");
+            Player.Message(p, "%HPlaces gold blocks at the center of your selection");
         }
     }
 }
