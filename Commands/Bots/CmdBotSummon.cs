@@ -15,6 +15,8 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
+using MCGalaxy.Bots;
+
 namespace MCGalaxy.Commands {
     public sealed class CmdBotSummon : Command {
         public override string name { get { return "botsummon"; } }
@@ -34,10 +36,11 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, who.name + " is in a different level."); return; 
             }
             who.SetPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
+            BotsFile.UpdateBot(who);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/botsummon <name>");
+            Player.Message(p, "%T/botsummon [name]");
             Player.Message(p, "%HSummons a bot to your position.");
         }
     }
