@@ -97,16 +97,19 @@ namespace MCGalaxy {
         
         
         /// <summary> Deletes the .lvl (and related) files and database tables. 
-        /// Does not perform any unloading. </summary>
+        /// Unloads a level (if present) which exactly matches name. </summary>
         public static void Delete(string name) {
+            Level lvl = LevelInfo.FindExact(name);
+            if (lvl != null) lvl.Unload();
+            
             if (!Directory.Exists("levels/deleted")) 
                 Directory.CreateDirectory("levels/deleted");
             
             if (File.Exists("levels/deleted/" + name + ".lvl")) {
-                int currentNum = 0;
-                while (File.Exists("levels/deleted/" + name + currentNum + ".lvl")) currentNum++;
+                int num = 0;
+                while (File.Exists("levels/deleted/" + name + num + ".lvl")) num++;
 
-                File.Move(LevelInfo.LevelPath(name), "levels/deleted/" + name + currentNum + ".lvl");
+                File.Move(LevelInfo.LevelPath(name), "levels/deleted/" + name + num + ".lvl");
             } else {
                 File.Move(LevelInfo.LevelPath(name), "levels/deleted/" + name + ".lvl");
             }

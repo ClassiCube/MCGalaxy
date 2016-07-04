@@ -19,8 +19,8 @@ using System;
 using System.IO;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands.World {    
-    public sealed class CmdDeleteLvl : Command {        
+namespace MCGalaxy.Commands.World {
+    public sealed class CmdDeleteLvl : Command {
         public override string name { get { return "deletelvl"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }
@@ -29,25 +29,20 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             if (message == "" || message.Split(' ').Length > 1) { Help(p); return; }
-            Level lvl = LevelInfo.Find(message);
-            if (lvl != null) {
-                if (p != null && lvl.permissionbuild > p.group.Permission) {
-                    Player.Message(p, "%cYou can't delete levels with a perbuild rank higher than yours!");
-                    return;
-                }
-                lvl.Unload();
-            }
-            
             if (!ValidName(p, message, "level")) return;
-            if (lvl == Server.mainLevel) { Player.Message(p, "Cannot delete the main level."); return; }
-
             string map = LevelInfo.FindMapMatches(p, message);
             if (map == null) return;
+            
+            Level lvl = LevelInfo.FindExact(map);
+            if (lvl != null && p != null && lvl.permissionbuild > p.group.Permission) {
+                Player.Message(p, "%cYou can't delete levels with a perbuild rank higher than yours!"); return;
+            }
+            if (lvl == Server.mainLevel) { Player.Message(p, "Cannot delete the main level."); return; }
+            
             LevelPermission perbuild = GetPerBuildPermission(map);
             if (p != null && perbuild > p.group.Permission) {
                 Player.Message(p, "%cYou can't delete levels with a perbuild rank higher than yours!"); return;
             }
-
             Player.Message(p, "Created backup.");
             LevelActions.Delete(map.ToLower());
         }
@@ -60,8 +55,8 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-        	Player.Message(p, "%T/deletelvl [map]");
-        	Player.Message(p, "%HCompletely deletes [map] (portals, MBs, everything");
+            Player.Message(p, "%T/deletelvl [map]");
+            Player.Message(p, "%HCompletely deletes [map] (portals, MBs, everything");
             Player.Message(p, "%HA backup of the map will be placed in the levels/deleted folder");
         }
     }

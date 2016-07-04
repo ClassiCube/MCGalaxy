@@ -17,10 +17,8 @@
  */
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdTp : Command {
-        
+namespace MCGalaxy.Commands {  
+    public sealed class CmdTp : Command {        
         public override string name { get { return "tp"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }

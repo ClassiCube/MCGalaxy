@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
                 foreach (Level l in loaded) {
                     try {
                 		if (l.ShouldSaveChanges()) l.Save();
-                        else { Server.s.Log("The level \"" + l.name + "\" is running a game, not saving."); }
+                        else { Server.s.Log("Level \"" + l.name + "\" is running a game, skipping save."); }
                 	} catch (Exception ex) {
                 		Server.ErrorLog(ex);
                 	}
@@ -46,17 +46,13 @@ namespace MCGalaxy.Commands {
             } else {
                 string[] args = message.Split(' ');
                 if (message == "") {
-                    if (p == null)
-                        Use(p, "all");
-                    else
-                        Save(p, p.level, "");
+                    if (p == null) Use(p, "all");
+                    else Save(p, p.level, "");
                 } else if (args.Length <= 2) {
-                    Level lvl = LevelInfo.Find(args[0]);
+                    Level lvl = LevelInfo.FindMatches(p, args[0]);
+                    if (lvl == null) return;
                     string restore = args.Length > 1 ? args[1].ToLower() : "";
-                    if (lvl != null)
-                        Save(p, lvl, restore);
-                    else
-                        Player.Message(p, "Could not find level specified");
+                    Save(p, lvl, restore);
                 } else {
                     Help(p);
                 }
