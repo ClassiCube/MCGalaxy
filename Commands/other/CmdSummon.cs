@@ -17,10 +17,8 @@
 */
 using System;
 using System.Threading;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdSummon : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdSummon : Command {
         public override string name { get { return "summon"; } }
         public override string shortcut { get { return "s"; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -31,12 +29,11 @@ namespace MCGalaxy.Commands
         }
         public CmdSummon() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            if (message.ToLower() == "all")
-            {
+            
+            if (message.CaselessEq("all")) {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl.level == p.level && pl != p && p.group.Permission > pl.group.Permission) {
@@ -54,8 +51,7 @@ namespace MCGalaxy.Commands
                 MessageTooHighRank(p, "summon", true); return;
             }
             
-            if (p.level != who.level)
-            {
+            if (p.level != who.level) {
                 Player.Message(p, who.ColoredName + " %Sis in a different Level. Forcefetching has started!");
                 PlayerActions.ChangeMap(who, p.level.name);
                 Thread.Sleep(1000);
@@ -70,7 +66,7 @@ namespace MCGalaxy.Commands
             Player.Message(p, "%T/summon <player>");
             Player.Message(p, "%HSummons a player to your position.");
             Player.Message(p, "%T/summon all");
-            Player.Message(p, "%HSummons all players in the map");
+            Player.Message(p, "%HSummons all players in your map");
         }
     }
 }

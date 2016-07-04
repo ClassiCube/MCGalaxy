@@ -78,9 +78,9 @@ namespace MCGalaxy.Commands {
                 case "timespent":
                     SetTimespan(p, args, "TimeSpent", who, v => who.time = v.ParseDBTime()); break;
                 case "color":
-                    SetColor(p, args, "color", who, v => who.color = (v == "" ? who.group.color : Colors.Parse(v))); break;
+                    SetColor(p, args, "color", who, v => who.color = (v == "" ? who.group.color : v)); break;
                 case "titlecolor":
-                    SetColor(p, args, "title_color", who, v => who.titlecolor = (v == "" ? "" : Colors.Parse(v))); break;
+                    SetColor(p, args, "title_color", who, v => who.titlecolor = (v == "" ? "" : v)); break;
                 default:
                     Player.Message(p, Colors.red + "Invalid type.");
                     MessageValidTypes(p); break;
@@ -92,18 +92,17 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Color format: color name, or \"null\" to reset to default color."); return;
             }
             
-            if (args[2] == "null") {
-                args[2] = "";
-            } else if (Colors.Parse(args[2]) == "") {
+        	string col = args[2] == "null" ? "" : Colors.Parse(args[2]);
+        	if (col == "" && args[2] != "null") {
                 Player.Message(p, "There is no color \"" + args[2] + "\"."); return;
             }
             
             if (who != null) {
-                setter(args[2]);
+                setter(col);
                 who.SetPrefix();
-            } else {
-                UpdateDB(p, args[0], args[1], args[2], column);
+                args[0] = who.name;
             }
+            UpdateDB(p, args[0], args[1], col, column);
             MessageDataChanged(p, args[0], args[1], args[2]);
         }
         

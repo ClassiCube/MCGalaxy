@@ -16,27 +16,26 @@
 	permissions and limitations under the Licenses.
 */
 using System.IO;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdPLoad : Command
-    {
+
+namespace MCGalaxy.Commands {
+    public sealed class CmdPLoad : Command {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool museumUsable { get { return true; } }
         public override string name { get { return "pload"; } }
         public override string shortcut { get { return ""; } }
-       public override string type { get { return CommandTypes.Moderation; } }
-        public override void Use(Player p, string message)
-        {
+        public override string type { get { return CommandTypes.Moderation; } }
+        public CmdPLoad() { }
+        
+        public override void Use(Player p, string message) {
             if (File.Exists("plugins/" + message + ".dll"))
                 Plugin.Load(message + ".dll", false);
             else
                 Player.Message(p, "Plugin not found!");
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.Message(p, "%T/pload <filename>");
             Player.Message(p, "%HLoad a plugin in your plugins folder!");
-        }
-        public CmdPLoad() { }
+        }  
     }
 }

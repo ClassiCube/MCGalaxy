@@ -35,7 +35,7 @@ namespace MCGalaxy {
             
             return "&port=" + Server.port +
                 "&max=" + Server.players +
-                "&name=" + Heart.EncodeUrl(name) +
+                "&name=" + Uri.EscapeDataString(name) +
                 "&public=" + Server.pub +
                 "&version=7" +
                 "&salt=" + Server.salt +

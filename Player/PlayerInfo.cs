@@ -123,17 +123,9 @@ namespace MCGalaxy {
             if (p.title != "")
                 p.title = p.title.Replace("[", "").Replace("]", "");
             
-            p.titlecolor = row["title_color"].ToString().Trim();
-            if (p.titlecolor != "")
-                p.titlecolor = Colors.Parse(p.titlecolor);
-            else
-                p.titlecolor = "";
-            
-            p.color = row["color"].ToString().Trim();
-            if (p.color != "")
-                p.color = Colors.Parse(p.color);
-            else
-                p.color = p.group.color;
+            p.titlecolor = ParseColor(row["title_color"]);           
+            p.color = ParseColor(row["color"]);
+            if (p.color == "") p.color = p.group.color;
             
             p.overallDeath = int.Parse(row["TotalDeaths"].ToString());
             p.overallBlocks = long.Parse(row["totalBlocks"].ToString().Trim());
@@ -227,8 +219,8 @@ namespace MCGalaxy {
             if (!fullStats) return pl;
             
             pl.title = row["Title"].ToString().Trim();
-            pl.titleColor = Colors.Parse(row["title_color"].ToString().Trim());
-            pl.color = Colors.Parse(row["color"].ToString().Trim());
+            pl.titleColor = ParseColor(row["title_color"]);
+            pl.color = ParseColor(row["color"]);
             
             pl.money = row["Money"].ToString();
             pl.deaths = row["TotalDeaths"].ToString();
@@ -236,6 +228,16 @@ namespace MCGalaxy {
             pl.logins = row["totalLogin"].ToString();
             pl.kicks = row["totalKicked"].ToString();
             return pl;
+        }
+        
+        static string ParseColor(object value) {
+            string col = value.ToString().Trim();
+            if (col == "") return col;
+            
+            // Try parse color name, then color code
+            string parsed = Colors.Parse(col);
+            if (parsed != "") return parsed;        
+            return Colors.Name(col) == "" ? "" : col;
         }
     }
     

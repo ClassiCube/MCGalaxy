@@ -15,8 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
- using MCGalaxy.Games;
- 
+using MCGalaxy.Games;
+
 namespace MCGalaxy.Commands {
     
     public sealed class CmdTp : Command {
@@ -29,41 +29,63 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
-            if (args.Length > 1) { Help(p); return; }
+            if (args.Length > 2) { Help(p); return; }
             
-            Player target = PlayerInfo.FindMatches(p, message);
-            if (target == null) return;
-            if (target.level.IsMuseum) {
-                Player.Message(p, "Player \"" + message + "\" is in a museum!"); return;
+            Player target = null;
+            PlayerBot bot = null;
+            if (args.Length == 1) {
+                target = PlayerInfo.FindMatches(p, args[0]);
+                if (target == null) return;
+                if (!CheckPlayer(p, target)) return;
+            } else if (args[0].CaselessEq("bot")) {
+                bot = PlayerBot.FindMatches(p, args[1]);
+                if (bot == null) return;
+            } else {
+                Help(p); return;
             }
+            
+            p.beforeTeleportMap = p.level.name;
+            p.beforeTeleportPos = p.pos;            
+            Level lvl = bot != null ? bot.level : target.level;
+            
+            if (bot != null && lvl == null) {
+                Player.Message(p, bot.ColoredName + " %Sis on an unloaded map."); return;
+            }
+            if (p.level != lvl) PlayerActions.ChangeMap(p, lvl.name);
+            if (target != null && target.Loading) {
+                Player.Message(p, "Waiting for " + target.ColoredName + " %Sto spawn..");
+                target.BlockUntilLoad(10);
+            }
+            
+            ushort[] pos = bot != null ? bot.pos : target.pos;
+            byte[] rot = bot != null ? bot.rot : target.rot;
+            p.BlockUntilLoad(10);  //Wait for player to spawn in new map
+            p.SendOwnHeadPos(pos[0], pos[1], pos[2], rot[0], 0);
+        }
         
+        static bool CheckPlayer(Player p, Player target) {
+            if (target.level.IsMuseum) {
+                Player.Message(p, target.ColoredName + " %Sis in a museum."); return false;
+            }
+            
             if (!Server.higherranktp && p.group.Permission < target.group.Permission) {
-                MessageTooHighRank(p, "teleport to", true); return;
+                MessageTooHighRank(p, "teleport to", true); return false;
             }
             
             IGame game = target.level.CurrentGame();
             if (!p.Game.Referee && game != null && !game.TeleportAllowed) {
                 Player.Message(p, "You can only teleport to players who are " +
-                                   "playing a game when you are in referee mode."); return;
+                               "playing a game when you are in referee mode."); return false;
             }
-            
-            p.beforeTeleportMap = p.level.name;
-            p.beforeTeleportPos = p.pos;
-            
-            if (p.level != target.level)
-                PlayerActions.ChangeMap(p, target.level.name);
-            if (target.Loading) {
-                Player.Message(p, "Waiting for " + target.ColoredName + " %Sto spawn...");
-                target.BlockUntilLoad(10);
-            }
-            p.BlockUntilLoad(10);  //Wait for player to spawn in new map
-            p.SendOwnHeadPos(target.pos[0], target.pos[1], target.pos[2], target.rot[0], 0);
+            return true;
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/tp [target]");
+            Player.Message(p, "%T/tp [player]");
             Player.Message(p, "%HTeleports yourself to that player.");
-            Player.Message(p, "%H  Use /p2p to teleport a given player to a different player.");
+            Player.Message(p, "%T/tp bot [name]");
+            Player.Message(p, "%HTeleports yourself to that bot.");
+            Player.Message(p, "%H Use /p2p to teleport a given player to a different player.");
         }
     }
 }

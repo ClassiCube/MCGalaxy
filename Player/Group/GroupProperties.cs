@@ -110,7 +110,7 @@ namespace MCGalaxy {
                         grp = null;
                     } break;
                 case "filename":
-                    if (value.Contains("\\") || value.Contains("/")) {                        
+                    if (value.Contains("\\") || value.Contains("/")) {
                         Server.s.Log("Invalid filename on " + s);
                         grp = null;
                     } else {

@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands {
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.color = color;
                 
-                query.AddParam("@Color", Colors.Name(color));
+                query.AddParam("@Color", color);
                 query.AddParam("@Name", who.name);
                 Database.executeQuery(query, "UPDATE Players SET color = @Color WHERE name = @Name");
             }
