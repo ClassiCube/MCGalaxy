@@ -1,3 +1,25 @@
+v 1.8.7.4
+Added: /server backup table [name], for only backing up a particular table in the database
+Added: /server backup lite, which backs up everything except undo and blockdb files
+Added: Can use + before a skin name in /skin to retrieve skin from minecraft.net's skin server instead
+Added: Can change colour and display name of bots with /color bot [name] and /nick bot [name]
+Added: /ignore titles and /ignore nicks for chat
+Added: Add /sphere circle which draws a circle
+Fixed: /highlight not showing changes after the player has previously been undone
+Fixed: Being unable to use spaces in team name
+Fixed: Failing to backup one file in /server backup crashing the whole server
+Fixed: /color not updating your own name tag colour
+Fixed: rank/rankup item vanishing from economy after server restart
+Fixed: Custom colours > 6 characters being truncated in database on mysql backend
+Fixed: Being unable to do certain /os sub-commands when the perbuild is higher than your rank
+Improved: Level sending optimised to be more responsive after /goto is first done
+Improved: Help for /os cleaned up
+Improved: Can use command aliases from IRC and console now
+Improved: Show relative time in /seen in addition to absolute time
+Improved: /centre places multiple blocks if axis length is even.
+Removed: /setpass and /resetpass, they are now part of /pass with /pass set and /pass reset
+Removed: /ozone, made it part of /zone with /zone map.
+
 v 1.8.7.3
 Added: Review queue shows to appropriate staff on joining
 Added: Multiple commands in a single /mb block
