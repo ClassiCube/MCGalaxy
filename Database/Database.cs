@@ -106,7 +106,7 @@ namespace MCGalaxy.SQL {
 	
 	public static class SQLite {
         
-        static string connStringFormat = "Data Source =" + Server.apppath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =1000;";
+        static string connStringFormat = "Data Source =" + Server.apppath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =300;";
         public static string connString { get { return String.Format(connStringFormat, Server.DatabasePooling); } }       
         internal static ParameterisedQuery query = new SQLiteParameterisedQuery();
 

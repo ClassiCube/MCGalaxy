@@ -32,8 +32,8 @@ namespace MCGalaxy.SQL {
                     foreach (var param in parameters)
                         cmd.Parameters.AddWithValue(param.Key, param.Value);
                     cmd.ExecuteNonQuery();
-                    conn.Close();
                 }
+                conn.Close();
             }
         }
 
@@ -45,6 +45,7 @@ namespace MCGalaxy.SQL {
                     foreach (var param in parameters)
                         da.SelectCommand.Parameters.AddWithValue(param.Key, param.Value);
                     da.Fill(toReturn);
+                    da.SelectCommand.Dispose();
                 }
                 conn.Close();
             }
