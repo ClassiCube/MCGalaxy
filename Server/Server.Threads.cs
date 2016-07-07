@@ -38,8 +38,8 @@ namespace MCGalaxy {
         
         void DoLocationChecks() {
             while (true) {
-			    Player[] players = PlayerInfo.Online.Items;
-			    Thread.Sleep(players.Length == 0 ? 16 : 3);
+                Player[] players = PlayerInfo.Online.Items;
+                Thread.Sleep(players.Length == 0 ? 16 : 3);
                 players = PlayerInfo.Online.Items;
                 
                 for (int i = 0; i < players.Length; i++) {

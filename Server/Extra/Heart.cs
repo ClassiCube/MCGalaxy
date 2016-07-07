@@ -1,7 +1,7 @@
 /*
     Copyright 2012 MCForge
     
-    Dual-licensed under the	Educational Community License, Version 2.0 and
+    Dual-licensed under the    Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -26,139 +26,85 @@ namespace MCGalaxy {
 
     public static class Heart {
 
-        /// <summary>
-        /// The max number of retries it runs for a beat
-        /// </summary>
+        /// <summary> The max number of retries it runs for a beat </summary>
         public const int MAX_RETRIES = 3;
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance can beat.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance can beat; otherwise, <c>false</c>.
-        /// </value>
+        /// <summary> Gets or sets a value indicating whether this instance can beat. </summary>
+        /// <value> <c>true</c> if this instance can beat; otherwise, <c>false</c>. </value>
         public static bool CanBeat { get; set; }
 
-        static Timer Timer;
-        static object Lock = new object();
+        static Timer timer;
 
-
-        private readonly static IBeat[] Beats = {
-
-            //Keep in this order.
+        readonly static IBeat[] Beats = {         
             new ClassiCubeBeat()
-        };
-
-
-
+        }; //Keep these in order
 
         static Heart() {
-            Thread t = new Thread(new ThreadStart(() => {
-                Timer = new Timer(OnBeat, null,
-#if DEBUG
+            timer = new Timer(
+                OnBeat, null,
+                #if DEBUG
                 6000, 6000
-#else
+                #else
                 45000, 45000
-#endif
-                );
-            }));
-        	t.Name = "MCG_Heartbeat";
-        	t.Start();
+                #endif
+            );
         }
 
-        private static void OnBeat(object state) {
-            for ( int i = 0; i < Beats.Length; i++ ) {
-                if ( Beats[i].Persistance )
-                    Pump(Beats[i]);
+        static void OnBeat(object state) {
+            for (int i = 0; i < Beats.Length; i++) {
+                if (Beats[i].Persistance) Pump(Beats[i]);
             }
         }
 
-
-
-        /// <summary>
-        /// Inits this instance.
-        /// </summary>
+        /// <summary> Inits this instance. </summary>
         public static void Init() {
-            if ( Server.logbeat ) {
-                if ( !File.Exists("heartbeat.log") ) {
-                    using ( File.Create("heartbeat.log") ) { }
-                }
+            if (Server.logbeat && !File.Exists("heartbeat.log")) {
+                using (File.Create("heartbeat.log")) { }
             }
             
-            CanBeat = true;
-            
-            for ( int i = 0; i < Beats.Length; i++ )
+            CanBeat = true;            
+            for (int i = 0; i < Beats.Length; i++)
                 Pump(Beats[i]);
         }
 
-        /// <summary>
-        /// Pumps the specified beat.
-        /// </summary>
+        /// <summary> Pumps the specified beat. </summary>
         /// <param name="beat">The beat.</param>
         /// <returns></returns>
         public static void Pump(IBeat beat) {
-            
-            if(!CanBeat)
-                return;
-
+            if(!CanBeat) return;
             byte[] data = Encoding.ASCII.GetBytes(beat.Prepare());
 
-            for ( int i = 0; i < MAX_RETRIES; i++ ) {
+            for (int i = 0; i < MAX_RETRIES; i++) {
                 try {
-                    var request = WebRequest.Create(beat.URL) as HttpWebRequest;
-                    request.Method = "POST";
-                    request.ContentType = "application/x-www-form-urlencoded";
-                    request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-                    request.Timeout = 15000;
-                    request.ContentLength = data.Length;
+                    var req = WebRequest.Create(beat.URL) as HttpWebRequest;
+                    req.Method = "POST";
+                    req.ContentType = "application/x-www-form-urlencoded";
+                    req.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+                    req.Timeout = 15000;
+                    req.ContentLength = data.Length;
 
-                    using ( var writer = request.GetRequestStream() ) {
-                        writer.Write(data, 0, data.Length);
+                    using (var w = req.GetRequestStream()) {
+                        w.Write(data, 0, data.Length);
 
-                        if ( Server.logbeat )
+                        if (Server.logbeat)
                             Server.s.Log("Beat " + beat.ToString() + " was sent");
                     }
 
-                    using ( var reader = new StreamReader(request.GetResponse().GetResponseStream()) ) {
-                        string read = reader.ReadToEnd().Trim();
+                    using (var r = new StreamReader(req.GetResponse().GetResponseStream())) {
+                        string read = r.ReadToEnd().Trim();
                         beat.OnResponse(read);
 
-                        if ( Server.logbeat )
+                        if (Server.logbeat)
                             Server.s.Log("Beat: \"" + read + "\" was recieved");
                     }
                     return;
-                }
-                catch {
+                } catch {
                     continue;
                 }
             }
 
-            if ( Server.logbeat )
+            if (Server.logbeat)
                 Server.s.Log("Beat: " + beat.ToString() + " failed.");
         }
-
-        /// <summary>
-        /// Encodes the URL.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>An encoded url</returns>
-        public static string EncodeUrl(string input) {
-            StringBuilder output = new StringBuilder();
-            for ( int i = 0; i < input.Length; i++ ) {
-                if ( ( input[i] >= '0' && input[i] <= '9' ) ||
-                    ( input[i] >= 'a' && input[i] <= 'z' ) ||
-                    ( input[i] >= 'A' && input[i] <= 'Z' ) ||
-                    input[i] == '-' || input[i] == '_' || input[i] == '.' || input[i] == '~' ) {
-                    output.Append(input[i]);
-                }
-                else if ( Array.IndexOf<char>(ReservedChars, input[i]) != -1 ) {
-                    output.Append('%').Append(( (int)input[i] ).ToString("X"));
-                }
-            }
-            return output.ToString();
-        }
-
-        public static readonly char[] ReservedChars = { ' ', '!', '*', '\'', '(', ')', ';', ':', '@', '&', '=', '+', '$', ',', '/', '?', '%', '#', '[', ']' };
     }
-
 }
