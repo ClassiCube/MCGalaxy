@@ -220,6 +220,9 @@ namespace MCGalaxy.Commands
             } else if (cmd == "PERVISIT") {
                 string rank = value == "" ? Server.defaultRank : value;
                 Command.all.Find("pervisit").Use(p, rank);
+            } else if (cmd == "PERBUILD") {
+                string rank = value == "" ? Server.defaultRank : value;
+                Command.all.Find("perbuild").Use(p, rank);
             } else if (cmd == "TEXTURE") {
                 if (value == "") {
                     Command.all.Find("texture").Use(p, "level normal");
@@ -374,6 +377,7 @@ namespace MCGalaxy.Commands
             " Motd: If message is not given, server default is used.",
             "%T/os map guns %H- Toggles if guns can be used on your map",
             "%T/os map pervisit [rank] %H- Sets the pervisit of you map",
+            "%T/os map perbuild [rank] %H- Sets the perbuild of you map",
             "%T/os map texture [url] %H- Sets terrain.png for your map",
             "%T/os map texturezip [url] %H- Sets texture .zip for your map",
             "%T/os map buildable %H- Sets whether any blocks can be placed",
