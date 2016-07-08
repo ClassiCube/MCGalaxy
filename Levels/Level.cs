@@ -395,11 +395,9 @@ namespace MCGalaxy
             if (LevelUnload != null)
                 LevelUnload(this);
             OnLevelUnloadEvent.Call(this);
-            if (cancelunload)
-            {
+            if (cancelunload) {
                 Server.s.Log("Unload canceled by Plugin! (Map: " + name + ")");
-                cancelunload = false;
-                return false;
+                cancelunload = false; return false;
             }
             MovePlayersToMain();
 

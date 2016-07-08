@@ -37,8 +37,8 @@ namespace MCGalaxy.Bots {
                 SavedBots = new List<BotProperties>(bots);
                 
                 foreach (BotProperties bot in SavedBots) {
-                	if (String.IsNullOrEmpty(bot.DisplayName))
-                	    bot.DisplayName = bot.Name;
+                    if (String.IsNullOrEmpty(bot.DisplayName))
+                        bot.DisplayName = bot.Name;
                 }
             }
         }
@@ -46,7 +46,12 @@ namespace MCGalaxy.Bots {
         static void Save() {
             var bots = SavedBots.ToArray();
             string json = JsonConvert.SerializeObject(bots);
-            File.WriteAllText("extra/bots.json", json);
+            try {
+                File.WriteAllText("extra/bots.json", json);
+            } catch (Exception ex) {
+                Server.s.Log("Error when trying to save bots.");
+                Server.ErrorLog(ex);
+            }
         }
 
         public static void LoadBots(Level lvl) {
@@ -63,7 +68,7 @@ namespace MCGalaxy.Bots {
                     try {
                         ScriptFile.Parse(null, bot, "bots/" + props.AI);
                     } catch (Exception ex)  {
-                    	Server.ErrorLog(ex);
+                        Server.ErrorLog(ex);
                     }
                 }
             }
@@ -78,24 +83,6 @@ namespace MCGalaxy.Bots {
                 }
                 Save();
             }
-        }
-        
-        public static void UpdateBot(PlayerBot bot) {
-            lock (locker) DoUpdateBot(bot, true);
-        }
-        
-        static void DoUpdateBot(PlayerBot bot, bool save) {
-            foreach (BotProperties props in SavedBots) {
-                if (bot.name != props.Name || bot.level.name != props.Level) continue;
-                props.FromBot(bot);
-                if (save) Save();
-                return;
-            }
-            
-            BotProperties newProps = new BotProperties();
-            newProps.FromBot(bot);
-            SavedBots.Add(newProps);
-            if (save) Save();
         }
         
         public static void RemoveBot(PlayerBot bot) {
@@ -119,6 +106,50 @@ namespace MCGalaxy.Bots {
                 }
                 Save();
             }
+        }
+        
+        public static void DeleteBots(string level) {
+            lock (locker) {
+                int removed = 0;
+                for (int i = 0; i < SavedBots.Count; i++) {
+                    BotProperties props = SavedBots[i];
+                    if (!props.Level.CaselessEq(level)) continue;
+                    
+                    SavedBots.RemoveAt(i); 
+                    removed++; i--;
+                }
+                if (removed > 0) Save();
+            }
+        }
+        
+        public static void MoveBots(string srcLevel, string dstLevel) {
+            lock (locker) {
+                int moved = 0;
+                for (int i = 0; i < SavedBots.Count; i++) {
+                    BotProperties props = SavedBots[i];
+                    if (!props.Level.CaselessEq(srcLevel)) continue;                    
+                    props.Level = dstLevel; moved++;
+                }
+                if (moved > 0) Save();
+            }
+        }
+        
+        public static void UpdateBot(PlayerBot bot) {
+            lock (locker) DoUpdateBot(bot, true);
+        }
+        
+        static void DoUpdateBot(PlayerBot bot, bool save) {
+            foreach (BotProperties props in SavedBots) {
+                if (bot.name != props.Name || bot.level.name != props.Level) continue;
+                props.FromBot(bot);
+                if (save) Save();
+                return;
+            }
+            
+            BotProperties newProps = new BotProperties();
+            newProps.FromBot(bot);
+            SavedBots.Add(newProps);
+            if (save) Save();
         }
     }
     

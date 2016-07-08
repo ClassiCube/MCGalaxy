@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Bots;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {
@@ -52,6 +53,7 @@ namespace MCGalaxy {
                 MoveBackups(src, dst);
             } catch {
             }
+            BotsFile.MoveBots(src, dst);
 
             //safe against SQL injections because foundLevel is being checked and,
             //newName is being split and partly checked on illegal characters reserved for Windows.
@@ -120,6 +122,7 @@ namespace MCGalaxy {
                 if (File.Exists("blockdefs/lvl_" + name + ".json"))
                     File.Delete("blockdefs/lvl_" + name + ".json");
             } catch {}
+            BotsFile.DeleteBots(name);
 
             //safe against SQL injections because the levelname (message) is first being checked if it exists
             Database.executeQuery("DROP TABLE `Block" + name + "`");
