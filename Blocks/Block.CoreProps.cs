@@ -196,6 +196,9 @@ namespace MCGalaxy {
             Aliases["odoor7"] = odoor7; Aliases["odoor8"] = odoor8;
             Aliases["odoor9"] = odoor9; Aliases["odoor10"] = odoor10;
             Aliases["odoor11"] = odoor11; Aliases["odoor12"] = odoor12;
+            
+            Aliases["steps"] = staircasestep; Aliases["double_steps"] = staircasefull;
+            Aliases["step"] = staircasestep; Aliases["double_step"] = staircasefull;
         }
     }
 }
