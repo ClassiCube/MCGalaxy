@@ -30,19 +30,20 @@ namespace MCGalaxy.Commands.CPE {
 			if (message == "") { Help(p); return; }
 			
 			float dist;
-			if( !float.TryParse(message, out dist)) {
-				Player.Message(p, "\"" + message + "\", is not a valid distance."); return;
+			if (!float.TryParse(message, out dist)) {
+				Player.Message(p, "\"{0}\" is not a valid distance.", message); return;
 			}
 			int packedDist = (int)(dist * 32);
 			if (packedDist < 0) packedDist = 160;
 			
 			if (packedDist > short.MaxValue) {
-				Player.Message(p, "\"" + message + "\", is too long a reach distance. Max is 1023 blocks.");
+				Player.Message(p, "\"{0}\", is too long a reach distance. Max is 1023 blocks.", message);
 			} else if (!p.HasCpeExt(CpeExt.ClickDistance)) {
 				Player.Message(p, "Your client doesn't support changing your reach distance.");
 			} else {		
 				p.SendClickDistance((short)packedDist);
 				p.ReachDistance = packedDist / 32f;
+		        Player.Message(p, "Set your reach distance to {0} blocks.", dist); return;
 			}
 		}
 		
