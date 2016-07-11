@@ -34,25 +34,18 @@ namespace MCGalaxy.Gui
         delegate void StringCallback(string s);
         delegate void PlayerListCallback(List<Player> players);
         delegate void VoidDelegate();
-        public static bool fileexists = false;
         bool mapgen = false;
 
         PlayerCollection pc = new PlayerCollection();
         LevelCollection lc = new LevelCollection();
-
-        //public static event EventHandler Minimize;
         public NotifyIcon notifyIcon1 = new NotifyIcon();
-        //  public static bool Minimized = false;
-
-        Level prpertiesoflvl;
         Player curPlayer;
 
         internal static Server s;
 
         readonly System.Timers.Timer UpdateListTimer = new System.Timers.Timer(10000);
 
-        public Window()
-        {
+        public Window() {
             InitializeComponent();
         }
 
@@ -343,32 +336,26 @@ namespace MCGalaxy.Gui
 
         /// <summary> Places the server's URL at the top of the window </summary>
         /// <param name="s">The URL to display</param>
-        public void UpdateUrl(string s)
-        {
-            if (this.InvokeRequired)
-            {
+        public void UpdateUrl(string s) {
+            if (InvokeRequired) {
                 StringCallback d = UpdateUrl;
-                this.Invoke(d, new object[] { s });
-            }
-            else
+                Invoke(d, new object[] { s });
+        	} else {
                 txtUrl.Text = s;
+        	}
         }
 
-        private void Window_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (e.CloseReason == CloseReason.WindowsShutDown)
-            {
+        void Window_FormClosing(object sender, FormClosingEventArgs e) {
+            if (e.CloseReason == CloseReason.WindowsShutDown) {
                 MCGalaxy.Gui.App.ExitProgram(false);
+                notifyIcon1.Dispose();
             }
-            if (Server.shuttingDown || MessageBox.Show("Really Shutdown the Server? All Connections will break!", "Exit", MessageBoxButtons.OKCancel) == DialogResult.OK)
-            {
-                if (!Server.shuttingDown)
-                {
+            if (Server.shuttingDown || MessageBox.Show("Really Shutdown the Server? All Connections will break!", "Exit", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+                if (!Server.shuttingDown) {
                     MCGalaxy.Gui.App.ExitProgram(false);
+                    notifyIcon1.Dispose();
                 }
-            }
-            else
-            {
+            } else {
                 // Prevents form from closing when user clicks the X and then hits 'cancel'
                 e.Cancel = true;
             }

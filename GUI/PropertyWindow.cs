@@ -32,25 +32,25 @@ namespace MCGalaxy.Gui {
         ZombieSettings zSettings = new ZombieSettings();
 
         public PropertyWindow() {
-        	InitializeComponent();
-        	this.propsZG.SelectedObject = zSettings;
-        	this.zSettings.LoadFromServer();
-        	this.propsZG.Invalidate();
-            SystemEvents.UserPreferenceChanged += new UserPreferenceChangedEventHandler(SystemEvents_UserPreferenceChanged);
-            this.Font = SystemFonts.IconTitleFont;
+            InitializeComponent();
+            propsZG.SelectedObject = zSettings;
+            zSettings.LoadFromServer();
+            propsZG.Invalidate();
+            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+            Font = SystemFonts.IconTitleFont;
         }
 
-        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e) {
+        void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e) {
             if (e.Category == UserPreferenceCategory.Window) {
                 this.Font = SystemFonts.IconTitleFont;
             }
         }
 
-        private void PropertyWindow_FormClosing(object sender, FormClosingEventArgs e) {
-            SystemEvents.UserPreferenceChanged -= new UserPreferenceChangedEventHandler(SystemEvents_UserPreferenceChanged);
+        void PropertyWindow_FormClosing(object sender, FormClosingEventArgs e) {
+            SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
         }
 
-        private void PropertyWindow_Load(object sender, EventArgs e) {
+        void PropertyWindow_Load(object sender, EventArgs e) {
         	List<string> colors = new List<string>() { "black", "navy", "green", "teal", "maroon", 
         		"purple", "gold", "silver", "gray", "blue", "lime", "aqua", "red", "pink", "yellow", "white" };
         	for (int i = 0; i < 256; i++) {
