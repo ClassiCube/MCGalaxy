@@ -91,11 +91,8 @@ namespace MCGalaxy
         public bool cancelsave1;
         public bool cancelunload;
         public bool changed;
-        public bool physicschanged
-        {
-            get { return ListCheck.Count > 0; }
-        }
-        public bool countdowninprogress;
+        public bool physicschanged { get { return ListCheck.Count > 0; } }
+        
         public bool ctfmode;
         public int currentUndo;
         public ushort Width, Height, Length;
@@ -401,10 +398,9 @@ namespace MCGalaxy
             }
             MovePlayersToMain();
 
-            if (changed && ShouldSaveChanges()) {
-                Save(false, true);
-                saveChanges();
-            }
+            if (changed && ShouldSaveChanges()) Save(false, true);
+            if (ShouldSaveChanges()) saveChanges();
+            
             if (TntWarsGame.Find(this) != null)
             {
                 foreach (TntWarsGame.player pl in TntWarsGame.Find(this).Players)
@@ -683,7 +679,11 @@ namespace MCGalaxy
             return false;
         }
         
-        public void saveChanges() { LevelDB.SaveBlockDB(this); }
+        readonly object dbLock = new object();
+        public void saveChanges() {
+            lock (dbLock)
+        	    LevelDB.SaveBlockDB(this); 
+        }
 
         public List<Player> getPlayers() {
             Player[] players = PlayerInfo.Online.Items; 

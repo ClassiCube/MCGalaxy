@@ -104,7 +104,6 @@ namespace MCGalaxy.Games {
             } else {
                 SendFreezeMessages();
                 MessageAll("&bPlayers Frozen");
-                mapon.countdowninprogress = true;
                 gamestatus = CountdownGameStatus.InProgress;
                 foreach (Player pl in players)
                     pl.countdownsettemps = true;
@@ -239,7 +238,6 @@ namespace MCGalaxy.Games {
             Cuboid(maxX - 4, 4, 4, maxX - 4, 4, maxZ - 4, Block.air, mapon);
 
             if (!freezemode) {
-                mapon.countdowninprogress = true;
                 gamestatus = CountdownGameStatus.InProgress;
             }
         }
