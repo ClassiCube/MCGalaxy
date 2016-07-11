@@ -28,21 +28,27 @@ namespace MCGalaxy.SQL.Native {
         public string ConnectionString { get; set; }
         public int ConnectionTimeout { get { return 0; } }
         public string Database { get { return ""; } }
-        public ConnectionState State { get { return ConnectionState.Open; } }       
+        public ConnectionState State { get { return ConnectionState.Open; } }
         public IDbTransaction BeginTransaction() { return BeginTransaction(IsolationLevel.Unspecified); }
         public void ChangeDatabase(string databaseName) { }
         
-        public IDbTransaction BeginTransaction(IsolationLevel il) { 
-        	return new NativeTransaction(this);
+        public IDbTransaction BeginTransaction(IsolationLevel il) {
+            return new NativeTransaction(this);
         }
         
         public void Close() {
+            IntPtr stmt = IntPtr.Zero;
+            do {
+                stmt = Interop.sqlite3_next_stmt(DB, stmt);
+                if (stmt != IntPtr.Zero) Interop.sqlite3_reset(stmt);
+            } while (stmt != IntPtr.Zero);
+
             int code = Interop.sqlite3_close(DB);
             DB = IntPtr.Zero;
             if (code > 0) throw new NativeException(code);
         }
         
-        public IDbCommand CreateCommand() { 
+        public IDbCommand CreateCommand() {
             IDbCommand cmd = new NativeCommand();
             cmd.Connection = this;
             return cmd;
@@ -55,22 +61,22 @@ namespace MCGalaxy.SQL.Native {
         
         string path;
         public void Open() {
-        	ParseConnectionString();
+            ParseConnectionString();
             byte[] filename = Interop.MakeUTF8(path);
             int code = Interop.sqlite3_open_v2(filename, out DB, 0x2, IntPtr.Zero);
             if (code > 0) throw new NativeException(code);
         }
         
         void ParseConnectionString() {
-        	string[] args = ConnectionString.Split(';');
+            string[] args = ConnectionString.Split(';');
             foreach (string kvp in args) {
-            	int sepIndex = kvp.IndexOf('=');
-            	if (sepIndex < 0) continue;
-            	string key = kvp.Substring(0, sepIndex).Trim();
-            	string value = kvp.Substring(sepIndex + 1).Trim();
+                int sepIndex = kvp.IndexOf('=');
+                if (sepIndex < 0) continue;
+                string key = kvp.Substring(0, sepIndex).Trim();
+                string value = kvp.Substring(sepIndex + 1).Trim();
 
-            	if (key == "Data Source") path = value;
+                if (key == "Data Source") path = value;
             }
-        }        
+        }
     }
 }

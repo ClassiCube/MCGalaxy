@@ -682,7 +682,7 @@ namespace MCGalaxy
         readonly object dbLock = new object();
         public void saveChanges() {
             lock (dbLock)
-        	    LevelDB.SaveBlockDB(this); 
+                LevelDB.SaveBlockDB(this); 
         }
 
         public List<Player> getPlayers() {

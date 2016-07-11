@@ -129,6 +129,9 @@ namespace MCGalaxy.SQL.Native {
         
         [DllImport("sqlite3", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
         public static extern int sqlite3_step(IntPtr stmt);
+
+        [DllImport("sqlite3", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
+        public static extern IntPtr sqlite3_next_stmt(IntPtr db, IntPtr stmt);
         
 
         [DllImport("sqlite3", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
