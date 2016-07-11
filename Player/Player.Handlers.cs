@@ -91,11 +91,10 @@ namespace MCGalaxy {
 
             if (group.Permission == LevelPermission.Banned) return;
             if (checkPlaceDist && group.Permission == LevelPermission.Guest) {
-            	int Diff = Math.Abs(((short)pos[0] / 32) - x) + Math.Abs(((short)pos[1] / 32) - y) 
-            	    + Math.Abs(((short)pos[2] / 32) - z);
-
-                if (Diff > ReachDistance + 4) {
-                    Server.s.Log(name + " attempted to build with a " + Diff + " distance offset");
+            	int dx = ((short)pos[0] / 32) - x, dy = ((short)pos[1] / 32) - y, dz = ((short)pos[2] / 32) - z;
+            	int diff = (int)Math.Sqrt(dx * dx + dy * dy + dz * dz);
+                if (diff > ReachDistance + 4) {
+                    Server.s.Log(name + " attempted to build with a " + diff + " distance offset");
                     SendMessage("You can't build that far away.");
                     RevertBlock(x, y, z); return;
                 }

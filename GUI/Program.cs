@@ -18,24 +18,20 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using MCGalaxy;
 
-namespace MCGalaxy.Gui
-{
-    public static class Program
-    {
-        public static DateTime startTime;
+namespace MCGalaxy.Gui {
+    public static class Program {
 
         [DllImport("kernel32")]
-        public static extern IntPtr GetConsoleWindow();
+        static extern IntPtr GetConsoleWindow();
         [DllImport("user32.dll")]
-        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-        public static void GlobalExHandler(object sender, UnhandledExceptionEventArgs e) {
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        
+        static void GlobalExHandler(object sender, UnhandledExceptionEventArgs e) {
             Exception ex = (Exception)e.ExceptionObject;
             Server.ErrorLog(ex);
             Thread.Sleep(500);
@@ -44,7 +40,7 @@ namespace MCGalaxy.Gui
                 App.ExitProgram(true);
         }
 
-        public static void ThreadExHandler(object sender, ThreadExceptionEventArgs e) {
+        static void ThreadExHandler(object sender, ThreadExceptionEventArgs e) {
             Exception ex = e.Exception;
             Server.ErrorLog(ex);
             Thread.Sleep(500);
@@ -71,20 +67,8 @@ namespace MCGalaxy.Gui
             Application.ThreadException += ThreadExHandler;
             useConsole = false; useHighQualityGui = false;
 
-            try
-            {
-                if (!File.Exists("Viewmode.cfg")) {
-                    using (StreamWriter SW = new StreamWriter("Viewmode.cfg")) {
-                        SW.WriteLine("#This file controls how the console window is shown to the server host");
-                        SW.WriteLine("#cli: True or False (Determines whether a CLI interface is used) (Set True if on Mono)");
-                        SW.WriteLine("#high-quality: True or false (Determines whether the GUI interface uses higher quality objects)");
-                        SW.WriteLine();
-                        SW.WriteLine("cli = false");
-                        SW.WriteLine("high-quality = true");
-                    }
-                }
-                PropertiesFile.Read("Viewmode.cfg", ViewmodeLineProcessor);
-            	
+            try {
+            	ReadViewmode();
                 if (useConsole) {
                     Server s = new Server();
                     s.OnLog += WriteToConsole;
@@ -94,7 +78,7 @@ namespace MCGalaxy.Gui
 
                     Console.Title = Server.name + " - MCGalaxy " + Server.Version;
                     MCGalaxy.Gui.App.usingConsole = true;
-                    handleComm();
+                    ConsoleLoop();
                     //Application.Run();
                 } else {
                     IntPtr hConsole = GetConsoleWindow();
@@ -114,6 +98,20 @@ namespace MCGalaxy.Gui
             }
             catch (Exception e) { Server.ErrorLog(e); }
         }
+        
+        static void ReadViewmode() {
+            if (!File.Exists("Viewmode.cfg")) {
+                using (StreamWriter w = new StreamWriter("Viewmode.cfg")) {
+                    w.WriteLine("#This file controls how the console window is shown to the server host");
+                    w.WriteLine("#cli: True or False (Determines whether a CLI interface is used) (Set True if on Mono)");
+                    w.WriteLine("#high-quality: True or false (Determines whether the GUI interface uses higher quality objects)");
+                    w.WriteLine();
+                    w.WriteLine("cli = false");
+                    w.WriteLine("high-quality = true");
+                }
+            }
+            PropertiesFile.Read("Viewmode.cfg", ViewmodeLineProcessor);
+        }
 
         static void ViewmodeLineProcessor(string key, string value) {
             switch (key.ToLower()) {
@@ -130,16 +128,16 @@ namespace MCGalaxy.Gui
             Console.WriteLine();
         }
 
-        public static void handleComm() {
+        static void ConsoleLoop() {
             while (true) {
                 try {
-                    string s = Console.ReadLine().Trim(); // Make sure we have no whitespace!
-                    if (s.Length > 0 && s[0] == '/') {
-                        s = s.Remove(0, 1);
-                        Thread t = Handlers.HandleCommand(s, Console.WriteLine);
-                        if (s.CaselessEq("restart")) { t.Join(); break; }
+                    string msg = Console.ReadLine().Trim(); // Make sure we have no whitespace!
+                    if (msg.Length > 0 && msg[0] == '/') {
+                        msg = msg.Remove(0, 1);
+                        Thread t = Handlers.HandleCommand(msg, Console.WriteLine);
+                        if (msg.CaselessEq("restart")) { t.Join(); break; }
                     } else {
-                        Handlers.HandleChat(s, WriteToConsole);
+                        Handlers.HandleChat(msg, WriteToConsole);
                     }
                 } catch (Exception ex) {
                     Server.ErrorLog(ex);

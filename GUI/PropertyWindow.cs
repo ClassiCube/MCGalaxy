@@ -19,7 +19,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Windows.Forms;
 using MCGalaxy.Games;
 using MCGalaxy.Gui.Popups;
@@ -42,7 +41,7 @@ namespace MCGalaxy.Gui {
 
         void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e) {
             if (e.Category == UserPreferenceCategory.Window) {
-                this.Font = SystemFonts.IconTitleFont;
+                Font = SystemFonts.IconTitleFont;
             }
         }
 
