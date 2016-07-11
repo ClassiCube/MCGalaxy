@@ -18,6 +18,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System;
+ 
 namespace MCGalaxy.Commands {
     
     public sealed class CmdHackRank : Command {
@@ -44,10 +46,7 @@ namespace MCGalaxy.Commands {
         }
 
         void DoFakeRank(Player p, Group newRank) {
-            string color = newRank.color;
-            string oldrank = p.group.name;
             p.color = newRank.color;
-
             p.hackrank = true;
             Player.GlobalMessage(p.ColoredName + "%S's rank was set to " + newRank.ColoredName + "%S. (Congratulations!)");
             p.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
@@ -56,17 +55,21 @@ namespace MCGalaxy.Commands {
 
         void DoKick(Player p, Group newRank) {
             if (!Server.hackrank_kick) return;
-            string oldCol = p.color;
-            System.Timers.Timer messageTimer = new System.Timers.Timer(Server.hackrank_kick_time * 1000);
-            messageTimer.Start();
-            messageTimer.Elapsed += delegate
-            {
-                p.Leave("You have been kicked for hacking the rank " + newRank.ColoredName);
-                p.color = oldCol;
-                messageTimer.Stop();
-                messageTimer.Dispose();
-            };
+            HackRankArgs args;
+            args.name = p.name; args.newRank = newRank;
+            
+            TimeSpan delay = TimeSpan.FromSeconds(Server.hackrank_kick_time);
+            Server.MainScheduler.QueueOnce(HackRankCallback, args, delay);
         }
+        
+        void HackRankCallback(SchedulerTask task) {
+        	HackRankArgs args = (HackRankArgs)task.State;
+        	Player who = PlayerInfo.FindExact(args.name);
+            if (who == null) return;            
+            who.Leave("You have been kicked for hacking the rank " + args.newRank.ColoredName);
+        }
+        
+        struct HackRankArgs { public string name; public Group newRank; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/hackrank [rank] %H- Hacks a rank");

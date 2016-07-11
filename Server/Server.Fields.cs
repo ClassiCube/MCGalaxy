@@ -72,8 +72,6 @@ namespace MCGalaxy {
 
         public static Socket listen;
         public static System.Timers.Timer updateTimer = new System.Timers.Timer(100);
-        //static System.Timers.Timer heartbeatTimer = new System.Timers.Timer(60000); //Every 45 seconds
-        static System.Timers.Timer messageTimer = new System.Timers.Timer(60000 * 5); //Every 5 mins
 
         //Chatrooms
         public static List<string> Chatrooms = new List<string>();

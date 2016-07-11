@@ -22,7 +22,7 @@ using System.Threading;
 namespace MCGalaxy {
     public sealed partial class Scheduler {
 
-        readonly Queue<SchedulerTask> tasks = new Queue<SchedulerTask>();
+        readonly List<SchedulerTask> tasks = new List<SchedulerTask>();
         readonly AutoResetEvent handle = new AutoResetEvent(false);
         readonly Thread thread;
         readonly object taskLock = new object();
@@ -33,23 +33,62 @@ namespace MCGalaxy {
             thread.IsBackground = true;
             thread.Start();
         }
+        
+        /// <summary> Queues an action that is asynchronously executed one time, as soon as possible. </summary>
+        public void QueueOnce(Action callback) {
+            EnqueueTask(new SchedulerTask(obj => callback(), null, TimeSpan.Zero, false));
+        }
+        
+        /// <summary> Queues an action that is asynchronously executed one time, after a certain delay. </summary>
+        public void QueueOnce(Action<SchedulerTask> callback, object state, TimeSpan delay) {
+            EnqueueTask(new SchedulerTask(callback, state, delay, false));
+        }
+        
+         /// <summary> Queues an action that is asynchronously executed repeatedly, after a certain delay. </summary>
+        public void QueueRepeat(Action<SchedulerTask> callback, object state, TimeSpan delay) {
+            EnqueueTask(new SchedulerTask(callback, state, delay, true));
+        }
+        
+        void EnqueueTask(SchedulerTask task) {
+            lock (taskLock) {
+                tasks.Add(task);
+                handle.Set();
+            }
+        }
 
         void Loop() {
             while (true) {
-                SchedulerTask task = default(SchedulerTask);
-                lock (taskLock) {
-                    if (tasks.Count > 0) task = tasks.Dequeue();
-                }
-
-                if (task.Callback != null) {
-                    try {
-                        task.Callback(task.State);
-                    } catch (Exception ex) {
-                        MCGalaxy.Server.ErrorLog(ex);
-                    }
-                }                
+                SchedulerTask task = GetNextTask();
+                if (task != null) DoTask(task);
                 handle.WaitOne(GetWaitTime(), false);
             }
+        }
+        
+        
+        SchedulerTask GetNextTask() {
+            DateTime now = DateTime.UtcNow;
+            lock (taskLock) {
+                for (int i = 0; i < tasks.Count; i++) {
+                    SchedulerTask task = tasks[i];
+                    if (task.NextRun < now) {
+                        tasks.RemoveAt(i); return task;
+                    }
+                }
+            }
+            return null;
+        }
+        
+        void DoTask(SchedulerTask task) {
+            try {
+                task.Callback(task);
+            } catch (Exception ex) {
+                MCGalaxy.Server.ErrorLog(ex);
+            }
+            if (!task.Repeating) return;
+            
+            task.NextRun = DateTime.UtcNow.Add(task.Delay);
+            lock (taskLock)
+                tasks.Add(task);
         }
         
         int GetWaitTime() {
@@ -57,8 +96,9 @@ namespace MCGalaxy {
             DateTime now = DateTime.UtcNow;
             
             lock (taskLock) {
-                foreach (SchedulerTask task in tasks) {
-                    int remaining = (int)(task.NextRun - now).TotalMilliseconds;
+                for (int i = 0; i < tasks.Count; i++) {
+                    SchedulerTask task = tasks[i];
+                    int remaining = (int)(task.NextRun - now).TotalMilliseconds;                    
                     // minimum wait time is 10 milliseconds
                     remaining = Math.Max(10, remaining);
                     wait = Math.Min(wait, remaining);
@@ -66,32 +106,10 @@ namespace MCGalaxy {
             }
             return wait == int.MaxValue ? -1 : wait;
         }
-        
-        /// <summary> Queues an action that is asynchronously executed one time, as soon as possible. </summary>
-        public void QueueOnce(Action callback) {
-            EnqueueTask(new SchedulerTask(obj => callback(), null, TimeSpan.Zero));
-        }
-        
-        /// <summary> Queues an action that is asynchronously executed one time, as soon as possible. </summary>
-        public void QueueOnce(Action<object> callback, object state) {
-            EnqueueTask(new SchedulerTask(callback, state, TimeSpan.Zero));
-        }
-        
-        /// <summary> Queues an action that is asynchronously executed one time, after a certain delay. </summary>
-        public void QueueOnce(Action<object> callback, object state, TimeSpan delay) {
-            EnqueueTask(new SchedulerTask(callback, state, delay));
-        }
-        
-        void EnqueueTask(SchedulerTask task) {
-            lock (taskLock) {
-                tasks.Enqueue(task);
-                handle.Set();
-            }
-        }
     }
-    
-    public struct SchedulerTask {
-        public Action<object> Callback;
+
+    public class SchedulerTask {
+        public Action<SchedulerTask> Callback;
         public object State;
         
         /// <summary> Interval between executions of this task. </summary>
@@ -100,11 +118,16 @@ namespace MCGalaxy {
         /// <summary> Point in time this task should next be executed. </summary>
         public DateTime NextRun;
         
-        public SchedulerTask(Action<object> callback, object state, TimeSpan delay) {
+        /// <summary> Whether this task should continue repeating. </summary>
+        public bool Repeating;
+        
+        public SchedulerTask(Action<SchedulerTask> callback, object state, 
+                             TimeSpan delay, bool repeating) {
             Callback = callback;
             State = state;
             Delay = delay;
             NextRun = DateTime.UtcNow.Add(delay);
+            Repeating = repeating;
         }
     }
 }

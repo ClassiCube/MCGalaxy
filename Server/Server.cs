@@ -353,14 +353,14 @@ namespace MCGalaxy {
             if (ServerError != null) ServerError(ex);
             OnServerErrorEvent.Call(ex);
             Logger.WriteError(ex);
-            try
-            {
+            
+            try {
                 s.Log("!!!Error! See " + Logger.ErrorLogPath + " for more information.");
+            } catch { 
             }
-            catch { }
         }
 
-        public static void RandomMessage() {
+        static void RandomMessage(SchedulerTask task) {
             if (Player.number != 0 && messages.Count > 0)
                 Player.GlobalMessage(messages[new Random().Next(0, messages.Count)]);
         }

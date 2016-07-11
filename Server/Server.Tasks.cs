@@ -178,17 +178,13 @@ namespace MCGalaxy {
                 PlayerBot.GlobalUpdatePosition();
             };
             updateTimer.Start();
-            
-            messageTimer.Elapsed += delegate {
-                RandomMessage();
-            };
-            messageTimer.Start();
 
             if (File.Exists("text/messages.txt")) {
                 messages = CP437Reader.ReadAllLines("text/messages.txt");
             } else {
                 File.Create("text/messages.txt").Close();
             }
+            Server.MainScheduler.QueueRepeat(RandomMessage, null, TimeSpan.FromMinutes(5));
         }
         
         void InitRest() {
