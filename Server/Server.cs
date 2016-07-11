@@ -106,20 +106,20 @@ namespace MCGalaxy {
             foreach (Level l in loaded)
                 l.Unload();
             
-            MainScheduler.QueueOnce(LoadMainLevel);
+            Background.QueueOnce(LoadMainLevel);
             Plugin.Load();
-            MainScheduler.QueueOnce(LoadPlayerLists);
-            MainScheduler.QueueOnce(LoadAutoloadCommands);
-            MainScheduler.QueueOnce(MovePreviousLevelFiles);
-            MainScheduler.QueueOnce(SetupSocket);
+            Background.QueueOnce(LoadPlayerLists);
+            Background.QueueOnce(LoadAutoloadCommands);
+            Background.QueueOnce(MovePreviousLevelFiles);
+            Background.QueueOnce(SetupSocket);
 
-            MainScheduler.QueueOnce(InitTimers);
-            MainScheduler.QueueOnce(InitRest);
-            MainScheduler.QueueOnce(InitHeartbeat);
+            Background.QueueOnce(InitTimers);
+            Background.QueueOnce(InitRest);
+            Background.QueueOnce(InitHeartbeat);
             
             Devs.Clear();
             Mods.Clear();
-            Server.MainScheduler.QueueOnce(UpdateStaffListTask);
+            Background.QueueOnce(UpdateStaffListTask);
             
             Background.QueueRepeat(AutoSaveTask, 1, 
                                           TimeSpan.FromSeconds(Server.backupInterval));

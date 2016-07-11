@@ -15,10 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdVote : Command
-    {
+using System;
+
+namespace MCGalaxy.Commands {
+    public sealed class CmdVote : Command {
         public override string name { get { return "vote"; } }
         public override string shortcut { get { return "vo"; } }
         public override string type { get { return CommandTypes.Chat; } }
@@ -36,8 +36,10 @@ namespace MCGalaxy.Commands
             Server.voting = true;
             Server.NoVotes = 0; Server.YesVotes = 0;
             Player.GlobalMessage(Colors.green + " VOTE: %S" + message + "%S(" + Colors.green + "Yes" + " %S/ " + Colors.red + "No" + "%S)");
-            System.Threading.Thread.Sleep(15000);
-            
+            Server.MainScheduler.QueueOnce(VoteCallback, null, TimeSpan.FromSeconds(15));
+        }
+        
+        void VoteCallback(SchedulerTask task) {
             Server.voting = false;
             Player.GlobalMessage("The votes are in! " + Colors.green + "Y: " + Server.YesVotes + Colors.red + " N: " + Server.NoVotes);
             Player[] players = PlayerInfo.Online.Items;

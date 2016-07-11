@@ -56,57 +56,25 @@ namespace MCGalaxy.Gui
             InitializeComponent();
         }
 
-        private void Window_Load(object sender, EventArgs e)
-        {
+        void Window_Load(object sender, EventArgs e) {
             btnProperties.Enabled = false;
-            //thisWindow = this;
             MaximizeBox = false;
-            this.Text = "Starting MCGalaxy...";
-            this.Show();
-            this.BringToFront();
+            Text = "Starting MCGalaxy...";
+            Show();
+            BringToFront();
             WindowState = FormWindowState.Normal;
-            Thread loadThread = new Thread(() =>
-            {
-                s = new Server();
-                s.OnLog += WriteLine;
-                s.OnCommand += newCommand;
-                s.OnError += newError;
-                s.OnSystem += newSystem;
-                s.OnAdmin += WriteAdmin;
-                s.OnOp += WriteOp;
-
-
-                s.HeartBeatFail += HeartBeatFail;
-                s.OnURLChange += UpdateUrl;
-                s.OnPlayerListChange += UpdateClientList;
-                s.OnSettingsUpdate += SettingsUpdate;
-                s.Start();
-
-                Player.PlayerConnect += Player_PlayerConnect;
-                Player.PlayerDisconnect += Player_PlayerDisconnect;
-
-                Level.LevelLoaded += Level_LevelLoaded;
-                Level.LevelUnload += Level_LevelUnload;
-
-                RunOnUiThread(() => btnProperties.Enabled = true);
-
-            });
-            loadThread.Name = "MCG_ServerSetup";
-            loadThread.Start();
-
+            
+            InitServer();
 
             notifyIcon1.Text = ("MCGalaxy Server: " + Server.name).Truncate(64);
+            notifyIcon1.ContextMenuStrip = this.iconContext;
+            notifyIcon1.Icon = this.Icon;
+            notifyIcon1.Visible = true;
+            notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(notifyIcon1_MouseClick);
 
-            this.notifyIcon1.ContextMenuStrip = this.iconContext;
-            this.notifyIcon1.Icon = this.Icon;
-            this.notifyIcon1.Visible = true;
-            this.notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseClick);
-
-            if (File.Exists("Changelog.txt"))
-            {
+            if (File.Exists("Changelog.txt")) {
                 txtChangelog.Text = "Changelog for " + Server.Version + ":";
-                foreach (string line in File.ReadAllLines("Changelog.txt"))
-                {
+                foreach (string line in File.ReadAllLines("Changelog.txt")) {
                     txtChangelog.AppendText("\r\n           " + line);
                 }
             }
@@ -130,128 +98,117 @@ namespace MCGalaxy.Gui
             }; UpdateListTimer.Start();
 
         }
+        
+        void InitServer() {
+            s = new Server();
+            s.OnLog += WriteLine;
+            s.OnCommand += newCommand;
+            s.OnError += newError;
+            s.OnSystem += newSystem;
+            s.OnAdmin += WriteAdmin;
+            s.OnOp += WriteOp;
 
-        public void RunOnUiThread(Action act)
-        {
-            var d = new VoidDelegate(() => Invoke(new VoidDelegate(act)));  //SOME ADVANCED STUFF RIGHT HERR
-            d.Invoke();
+            s.HeartBeatFail += HeartBeatFail;
+            s.OnURLChange += UpdateUrl;
+            s.OnPlayerListChange += UpdateClientList;
+            s.OnSettingsUpdate += SettingsUpdate;
+            Server.Background.QueueOnce(InitServerTask);
         }
-        void Player_PlayerConnect(Player p)
-        {
+        
+        void InitServerTask() {
+            s.Start();
+
+            Player.PlayerConnect += Player_PlayerConnect;
+            Player.PlayerDisconnect += Player_PlayerDisconnect;
+
+            Level.LevelLoaded += Level_LevelLoaded;
+            Level.LevelUnload += Level_LevelUnload;
+
+            RunOnUiThread(() => btnProperties.Enabled = true);
+        }
+
+        public void RunOnUiThread(Action act) { Invoke(act); }
+        
+        void Player_PlayerConnect(Player p) {
             UpdatePlyersListBox();
         }
-        void Player_PlayerDisconnect(Player p, string reason)
-        {
+        
+        void Player_PlayerDisconnect(Player p, string reason) {
             UpdatePlyersListBox();
         }
-        void Level_LevelUnload(Level l)
-        {
-            RunOnUiThread(() =>
-            {
+        
+        void Level_LevelUnload(Level l) {
+            RunOnUiThread(() => {
                 UpdateMapList();
                 UpdatePlayerMapCombo();
                 UpdateUnloadedList();
-
             });
-
         }
-        void Level_LevelLoaded(Level l)
-        {
-            RunOnUiThread(() =>
-            {
+        
+        void Level_LevelLoaded(Level l) {
+            RunOnUiThread(() => {
                 UpdatePlayerMapCombo();
                 UpdateUnloadedList();
-
             });
         }
 
-        void SettingsUpdate()
-        {
+        void SettingsUpdate() {
             if (Server.shuttingDown) return;
-            if (txtLog.InvokeRequired)
-            {
-                this.Invoke(new VoidDelegate(SettingsUpdate));
-            }
-            else
-            {
-                this.Text = Server.name + " - MCGalaxy " + Server.VersionString;
+            
+            if (txtLog.InvokeRequired) {
+                Invoke(new VoidDelegate(SettingsUpdate));
+            } else {
+                Text = Server.name + " - MCGalaxy " + Server.VersionString;
                 notifyIcon1.Text = ("MCGalaxy Server: " + Server.name).Truncate(64);
             }
         }
 
-        void HeartBeatFail()
-        {
+        void HeartBeatFail() {
             WriteLine("Recent Heartbeat Failed");
         }
 
-        void newError(string message)
-        {
-            try
-            {
-                if (txtErrors.InvokeRequired)
-                {
-                    this.Invoke(new LogDelegate(newError), new object[] { message });
-                }
-                else
-                {
+        void newError(string message) {
+            try {
+                if (txtErrors.InvokeRequired) {
+                    Invoke(new LogDelegate(newError), new object[] { message });
+                } else {
                     txtErrors.AppendText(Environment.NewLine + message);
                 }
-            }
-            catch { }
+            } catch { 
+        	}
         }
-        void newSystem(string message)
-        {
-            try
-            {
-                if (txtSystem.InvokeRequired)
-                {
-                    this.Invoke(new LogDelegate(newSystem), new object[] { message });
-                }
-                else
-                {
+        
+        void newSystem(string message) {
+            try {
+                if (txtSystem.InvokeRequired) {
+                    Invoke(new LogDelegate(newSystem), new object[] { message });
+                } else {
                     txtSystem.AppendText(Environment.NewLine + message);
                 }
-            }
-            catch { }
+            } catch { 
+        	}
         }
 
         delegate void LogDelegate(string message);
 
         /// <summary> Does the same as Console.WriteLine() only in the form </summary>
         /// <param name="s">The line to write</param>
-        public void WriteLine(string s)
-        {
+        public void WriteLine(string s) {
             if (Server.shuttingDown) return;
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new LogDelegate(WriteLine), new object[] { s });
-            }
-            else
-            {
-
-                string cleaned = s;
+            
+            if (InvokeRequired) {
+                Invoke(new LogDelegate(WriteLine), new object[] { s });
+            } else {
                 //Begin substring of crappy date stamp
-
-                int substr = s.IndexOf(')');
-                if (substr == -1)
-                {
-                    cleaned = s;
-                }
-                else
-                {
-                    cleaned = s.Substring(substr + 1);
-                }
-
+                int index = s.IndexOf(')');
+                s = index == -1 ? s : s.Substring(index + 1);;
                 //end substring
 
-                txtLog.AppendLog(cleaned + Environment.NewLine);
-                // ColorBoxes(txtLog);
+                txtLog.AppendLog(s + Environment.NewLine);
             }
         }
 
-
-        public void WriteOp(string s)
-        {
+        public void WriteOp(string s) {
             if (Server.shuttingDown) return;
             if (this.InvokeRequired)
             {
@@ -264,8 +221,7 @@ namespace MCGalaxy.Gui
             }
         }
 
-        public void WriteAdmin(string s)
-        {
+        public void WriteAdmin(string s) {
             if (Server.shuttingDown) return;
             if (this.InvokeRequired)
             {

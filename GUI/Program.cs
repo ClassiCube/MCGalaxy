@@ -56,7 +56,7 @@ namespace MCGalaxy.Gui
         static bool useConsole, useHighQualityGui;
         [STAThread]
         public static void Main(string[] args) {
-            startTime = DateTime.Now;
+            DateTime startTime = DateTime.Now;
             Process[] duplicates = Process.GetProcessesByName("MCGalaxy");
             if (duplicates.Length != 1) {
                 Process proc = Process.GetCurrentProcess();
@@ -108,7 +108,7 @@ namespace MCGalaxy.Gui
                     }
 
                     App.updateTimer.Elapsed += delegate { App.UpdateCheck(); }; App.updateTimer.Start();
-                    Application.Run(new MCGalaxy.Gui.Window());
+                    Application.Run(new Window());
                 }
                 WriteToConsole("Completed in " + (DateTime.Now - startTime).Milliseconds + "ms");
             }
