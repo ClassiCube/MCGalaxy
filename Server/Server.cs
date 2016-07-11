@@ -30,6 +30,7 @@ namespace MCGalaxy {
        
         public Server() {
             MainScheduler = new Scheduler("MCG_MainScheduler");
+            Background = new Scheduler("MCG_BackgroundScheduler");
             Server.s = this;
         }
 		
@@ -115,7 +116,15 @@ namespace MCGalaxy {
             MainScheduler.QueueOnce(InitTimers);
             MainScheduler.QueueOnce(InitRest);
             MainScheduler.QueueOnce(InitHeartbeat);
-            UpdateStaffList();
+            
+            Devs.Clear();
+            Mods.Clear();
+            Server.MainScheduler.QueueOnce(UpdateStaffListTask);
+            
+            Background.QueueRepeat(AutoSaveTask, 1, 
+                                          TimeSpan.FromSeconds(Server.backupInterval));
+            Background.QueueRepeat(BlockUpdatesTask, null,
+                                          TimeSpan.FromSeconds(Server.blockInterval));
         }
         
         void EnsureFilesExist() {

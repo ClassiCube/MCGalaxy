@@ -118,7 +118,7 @@ namespace MCGalaxy {
         public static LavaSurvival lava;       
         public static CountdownGame Countdown;
         
-        public static Scheduler MainScheduler;
+        public static Scheduler MainScheduler, Background;
         public static Server s;
 
         public const byte version = 7;

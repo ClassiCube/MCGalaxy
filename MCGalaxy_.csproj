@@ -545,7 +545,6 @@
     <Compile Include="Player\Alias.cs" />
     <Compile Include="API\API.cs" />
     <Compile Include="Scripting\Scripting.cs" />
-    <Compile Include="Server\AutoSaver.cs" />
     <Compile Include="Player\Ban.cs" />
     <Compile Include="Levels\BlockDefinitions.cs" />
     <Compile Include="API\ChatMessage.cs" />
@@ -573,8 +572,8 @@
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\Server.DB.cs" />
     <Compile Include="Server\Server.Fields.cs" />
+    <Compile Include="Server\Server.Init.cs" />
     <Compile Include="Server\Server.Tasks.cs" />
-    <Compile Include="Server\Server.Threads.cs" />
     <Compile Include="Server\Updater.cs" />
     <Compile Include="API\WebServer.cs" />
     <Compile Include="util\BufferedBlockSender.cs" />
