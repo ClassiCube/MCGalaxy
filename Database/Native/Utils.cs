@@ -131,35 +131,6 @@ namespace MCGalaxy.SQL.Native {
         public static extern int sqlite3_step(IntPtr stmt);
 
         [DllImport("sqlite3", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
-        public static extern IntPtr sqlite3_next_stmt(IntPtr db, IntPtr stmt);
-        
-
-        [DllImport("sqlite3", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
-        public static extern int sqlite3_column_count(IntPtr stmt);
-
-        [DllImport("sqlite3", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
-        public static extern int sqlite3_column_type(IntPtr stmt, int iCol);
-        
-        [DllImport("sqlite3", CallingConvention = conv), SuppressUnmanagedCodeSecurity] 
-        public static extern IntPtr sqlite3_column_name(IntPtr stmt, int iCol);
-        
-
-        [DllImport("sqlite3", CallingConvention = conv), SuppressUnmanagedCodeSecurity]      
-        public static extern double sqlite3_column_double(IntPtr stmt, int iCol);
-
-        [DllImport("sqlite3", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
-        public static extern int sqlite3_column_int(IntPtr stmt, int iCol);
-
-        [DllImport("sqlite3", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
-        public static extern long sqlite3_column_int64(IntPtr stmt, int iCol);
-
-        [DllImport("sqlite3", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
-        public static extern IntPtr sqlite3_column_text(IntPtr stmt, int iCol);
-        
-        [DllImport("sqlite3", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
-        public static extern IntPtr sqlite3_column_blob(IntPtr stmt, int iCol);
-        
-        [DllImport("sqlite3", CallingConvention = conv), SuppressUnmanagedCodeSecurity]
-        public static extern int sqlite3_column_bytes(IntPtr stmt, int iCol);        
+        public static extern IntPtr sqlite3_next_stmt(IntPtr db, IntPtr stmt);    
     }
 }

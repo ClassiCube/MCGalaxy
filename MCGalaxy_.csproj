@@ -402,9 +402,7 @@
     <Compile Include="Database\BlockDB.cs" />
     <Compile Include="Database\MySQL\MySQLBulkTransaction.cs" />
     <Compile Include="Database\MySQL\MySQLParameterisedQuery.cs" />
-    <Compile Include="Database\Native\NativeParameterisedQuery.cs" />
     <Compile Include="Database\Native\NativeParamsList.cs" />
-    <Compile Include="Database\Native\NativeReader.cs" />
     <Compile Include="Database\ParameterisedQuery.cs" />
     <Compile Include="Database\Native\NativeConnection.cs" />
     <Compile Include="Database\Native\Utils.cs" />
