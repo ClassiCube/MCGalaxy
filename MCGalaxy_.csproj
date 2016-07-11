@@ -558,6 +558,7 @@
     <Compile Include="Server\Backup.cs" />
     <Compile Include="Server\BackupDB.cs" />
     <Compile Include="Server\Extra\Checktimer.cs" />
+    <Compile Include="Server\Extra\Scheduler.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Network\IBeat.cs" />
@@ -606,7 +607,6 @@
     <Compile Include="util\ExtrasCollection.cs" />
     <Compile Include="Network\ClassiCube.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
-    <Compile Include="queue\MainLoop.cs" />
     <Compile Include="util\Extensions.cs" />
     <Compile Include="util\Hasher.cs" />
     <Compile Include="util\MathHelper.cs" />

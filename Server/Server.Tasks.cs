@@ -239,7 +239,7 @@ namespace MCGalaxy {
         void UpdateStaffList() {
             Devs.Clear();
             Mods.Clear();
-            ml.Queue(UpdateStaffListTask);
+            Server.MainScheduler.QueueOnce(UpdateStaffListTask);
         }
         
         void UpdateStaffListTask() {

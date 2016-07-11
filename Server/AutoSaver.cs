@@ -38,7 +38,7 @@ namespace MCGalaxy
         static void AutoSaveLoop() {
             while (true) {
                 Thread.Sleep(_interval);
-                Server.ml.Queue(Run);
+                Server.MainScheduler.QueueOnce(Run);
 
                 Player[] players = PlayerInfo.Online.Items;
                 if (players.Length <= 0) continue;

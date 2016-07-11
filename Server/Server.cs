@@ -23,14 +23,13 @@ using System.Net;
 using System.Net.Sockets;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
-using MonoTorrent.Client;
 using Newtonsoft.Json;
 
 namespace MCGalaxy {
     public sealed partial class Server {
        
         public Server() {
-            ml = new MainLoop("MCG_Scheduler");
+            MainScheduler = new Scheduler("MCG_MainScheduler");
             Server.s = this;
         }
 		
@@ -105,16 +104,17 @@ namespace MCGalaxy {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level l in loaded)
                 l.Unload();
-            ml.Queue(LoadMainLevel);
+            
+            MainScheduler.QueueOnce(LoadMainLevel);
             Plugin.Load();
-            ml.Queue(LoadPlayerLists);
-            ml.Queue(LoadAutoloadCommands);
-            ml.Queue(MovePreviousLevelFiles);
-            ml.Queue(SetupSocket);
+            MainScheduler.QueueOnce(LoadPlayerLists);
+            MainScheduler.QueueOnce(LoadAutoloadCommands);
+            MainScheduler.QueueOnce(MovePreviousLevelFiles);
+            MainScheduler.QueueOnce(SetupSocket);
 
-            ml.Queue(InitTimers);
-            ml.Queue(InitRest);
-            ml.Queue(InitHeartbeat);
+            MainScheduler.QueueOnce(InitTimers);
+            MainScheduler.QueueOnce(InitRest);
+            MainScheduler.QueueOnce(InitHeartbeat);
             UpdateStaffList();
         }
         

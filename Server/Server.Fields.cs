@@ -24,7 +24,6 @@ using System.Threading;
 using System.Windows.Forms;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
-using MonoTorrent.Client;
 
 namespace MCGalaxy {
     public sealed partial class Server {
@@ -121,7 +120,7 @@ namespace MCGalaxy {
         public static LavaSurvival lava;       
         public static CountdownGame Countdown;
         
-        public static MainLoop ml;
+        public static Scheduler MainScheduler;
         public static Server s;
 
         public const byte version = 7;
