@@ -52,7 +52,7 @@ namespace MCGalaxy.Gui {
         static bool useConsole, useHighQualityGui;
         [STAThread]
         public static void Main(string[] args) {
-            DateTime startTime = DateTime.Now;
+            DateTime startTime = DateTime.UtcNow;
             Process[] duplicates = Process.GetProcessesByName("MCGalaxy");
             if (duplicates.Length != 1) {
                 Process proc = Process.GetCurrentProcess();
@@ -94,7 +94,7 @@ namespace MCGalaxy.Gui {
                     App.updateTimer.Elapsed += delegate { App.UpdateCheck(); }; App.updateTimer.Start();
                     Application.Run(new Window());
                 }
-                WriteToConsole("Completed in " + (DateTime.Now - startTime).Milliseconds + "ms");
+                WriteToConsole("Completed in " + (DateTime.UtcNow - startTime).Milliseconds + "ms");
             }
             catch (Exception e) { Server.ErrorLog(e); }
         }

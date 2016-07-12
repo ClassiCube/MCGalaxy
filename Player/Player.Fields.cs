@@ -235,7 +235,7 @@ namespace MCGalaxy {
         public int fallCount = 0, drownCount = 0;
 
         //Games
-        public DateTime lastDeath = DateTime.Now;
+        public DateTime lastDeath = DateTime.UtcNow;
 
         public byte modeType;
         public byte[] bindings = new byte[128];

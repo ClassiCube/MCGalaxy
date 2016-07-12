@@ -23,13 +23,16 @@ namespace MCGalaxy {
         
         public static string Shorten(this TimeSpan value, bool seconds = false) {
             string time = "";
+            bool negate = value.TotalSeconds < 0;
+            if (negate) value = -value;
+            
             Add(ref time, value.Days, 'd');
             Add(ref time, value.Hours, 'h');
             Add(ref time, value.Minutes, 'm');          
             if (seconds) Add(ref time, value.Seconds, 's');
             
             if (time == "") time = seconds ? "0s" : "0m";
-            return time;
+            return negate ? "-" + time : time;
         }
         
         public static TimeSpan ParseShort(this string value, char defUnit) {

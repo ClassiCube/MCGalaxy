@@ -826,7 +826,7 @@ return;
             if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) )
                 return;
             
-            if ( immediate || lastDeath.AddSeconds(2) < DateTime.Now ) {
+            if ( immediate || lastDeath.AddSeconds(2) < DateTime.UtcNow ) {
 
                 if ( level.Killer && !invincible && !hidden ) {
 
@@ -890,7 +890,7 @@ return;
                     if (Server.deathcount && (overallDeath > 0 && overallDeath % 10 == 0))
                         Chat.GlobalChatLevel(this, ColoredName + " %Shas died &3" + overallDeath + " times", false);
                 }
-                lastDeath = DateTime.Now;
+                lastDeath = DateTime.UtcNow;
 
             }
         }
