@@ -21,15 +21,16 @@ using System.Linq;
 namespace MCGalaxy {
     public static class TimeUtils {
         
-        public static string Shorten(this TimeSpan value, bool seconds = false) {
+        public static string Shorten(this TimeSpan value, 
+                                     bool seconds = false, bool spaces = true) {
             string time = "";
             bool negate = value.TotalSeconds < 0;
             if (negate) value = -value;
             
-            Add(ref time, value.Days, 'd');
-            Add(ref time, value.Hours, 'h');
-            Add(ref time, value.Minutes, 'm');          
-            if (seconds) Add(ref time, value.Seconds, 's');
+            Add(ref time, value.Days, 'd', spaces);
+            Add(ref time, value.Hours, 'h', spaces);
+            Add(ref time, value.Minutes, 'm', spaces);        
+            if (seconds) Add(ref time, value.Seconds, 's', spaces);
             
             if (time == "") time = seconds ? "0s" : "0m";
             return negate ? "-" + time : time;
@@ -83,10 +84,13 @@ namespace MCGalaxy {
                                 int.Parse(parts[2]), int.Parse(parts[3]));
         }
         
-        static void Add(ref string time, int amount, char suffix) {
+        static void Add(ref string time, int amount, char suffix, bool spaces) {
             if (amount == 0) return;
-            if (time == "") time = "" + amount + suffix;
-            else time = time + " " + amount + suffix;
+            
+            if (time == "") 
+                time = "" + amount + suffix;
+            else 
+            	time = time + (spaces ? " " : "") + amount + suffix;
         }
         
         static long GetTicks(int num, char unit) {
