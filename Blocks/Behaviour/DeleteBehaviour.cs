@@ -25,33 +25,33 @@ namespace MCGalaxy.BlockBehaviour {
         internal static bool RocketStart(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics < 2 || p.level.physics == 5) { p.RevertBlock(x, y, z); return true; }
             
-            int newZ = 0, newX = 0, newY = 0;
+            int dx = 0, dy = 0, dz = 0;
             p.RevertBlock(x, y, z);
             if ( p.rot[0] < 48 || p.rot[0] > ( 256 - 48 ) )
-                newZ = -1;
+                dz = -1;
             else if ( p.rot[0] > ( 128 - 48 ) && p.rot[0] < ( 128 + 48 ) )
-                newZ = 1;
+                dz = 1;
 
             if ( p.rot[0] > ( 64 - 48 ) && p.rot[0] < ( 64 + 48 ) )
-                newX = 1;
+                dx = 1;
             else if ( p.rot[0] > ( 192 - 48 ) && p.rot[0] < ( 192 + 48 ) )
-                newX = -1;
+                dx = -1;
 
             if ( p.rot[1] >= 192 && p.rot[1] <= ( 192 + 32 ) )
-                newY = 1;
+                dy = 1;
             else if ( p.rot[1] <= 64 && p.rot[1] >= 32 )
-                newY = -1;
+                dy = -1;
 
-            if ( 192 <= p.rot[1] && p.rot[1] <= 196 || 60 <= p.rot[1] && p.rot[1] <= 64 ) { newX = 0; newZ = 0; }
+            if ( 192 <= p.rot[1] && p.rot[1] <= 196 || 60 <= p.rot[1] && p.rot[1] <= 64 ) { dx = 0; dz = 0; }
 
-            byte b1 = p.level.GetTile((ushort)( x + newX * 2 ), (ushort)( y + newY * 2 ), (ushort)( z + newZ * 2 ));
-            byte b2 = p.level.GetTile((ushort)( x + newX ), (ushort)( y + newY ), (ushort)( z + newZ ));
-            if ( b1 == Block.air && b2 == Block.air && p.level.CheckClear((ushort)( x + newX * 2 ), (ushort)( y + newY * 2 ), (ushort)( z + newZ * 2 )) 
-                && p.level.CheckClear((ushort)( x + newX ), (ushort)( y + newY ), (ushort)( z + newZ )) ) {
-                p.level.Blockchange((ushort)( x + newX * 2 ), (ushort)( y + newY * 2 ), (ushort)( z + newZ * 2 ), Block.rockethead);
-                p.level.Blockchange((ushort)( x + newX ), (ushort)( y + newY ), (ushort)( z + newZ ), Block.fire);
+            byte b1 = p.level.GetTile((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ));
+            byte b2 = p.level.GetTile((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz ));
+            if ( b1 == Block.air && b2 == Block.air && p.level.CheckClear((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 )) 
+                && p.level.CheckClear((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz )) ) {
+                p.level.Blockchange((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ), Block.rockethead);
+                p.level.Blockchange((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz ), Block.fire);
             }
-            return false;
+            return true;
         }
         
         internal static bool Firework(Player p, byte block, ushort x, ushort y, ushort z) {
@@ -71,7 +71,7 @@ namespace MCGalaxy.BlockBehaviour {
                 args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 100;
                 p.level.Blockchange(x2, (ushort)(y + 1), z2, Block.lavastill, false, args);
             }
-            p.RevertBlock(x, y, z); return false;
+            p.RevertBlock(x, y, z); return true;
         }
         
         internal static bool C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
@@ -87,7 +87,7 @@ namespace MCGalaxy.BlockBehaviour {
         
         internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics != 0) {
-				p.level.Blockchange(x, y, z, Block.Properties[block].DoorAirId, 0); return false;
+				p.level.Blockchange(x, y, z, Block.Properties[block].DoorAirId, 0); return true;
             } else {
                 p.RevertBlock(x, y, z); return true;
             }
@@ -95,7 +95,7 @@ namespace MCGalaxy.BlockBehaviour {
         
         internal static bool ODoor(Player p, byte block, ushort x, ushort y, ushort z) {
             if (block == Block.odoor8 || block == Block.odoor8_air) {
-				p.level.Blockchange(x, y, z, Block.Properties[block].ODoorId, 0); return false;
+				p.level.Blockchange(x, y, z, Block.Properties[block].ODoorId, 0); return true;
             } else {
                 p.RevertBlock(x, y, z); return true;
             }
