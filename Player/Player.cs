@@ -486,24 +486,24 @@ Next: continue;
         }
 
         public void TntAtATime() {
-            new Thread(() => {
-                CurrentAmountOfTnt += 1;
-                switch ( TntWarsGame.GetTntWarsGame(this).GameDifficulty ) {
-                    case TntWarsGame.TntWarsDifficulty.Easy:
-                        Thread.Sleep(3250);
-                        break;
+            CurrentAmountOfTnt++;
+            int delay = 0;
 
-                    case TntWarsGame.TntWarsDifficulty.Normal:
-                        Thread.Sleep(2250);
-                        break;
-
-                    case TntWarsGame.TntWarsDifficulty.Hard:
-                    case TntWarsGame.TntWarsDifficulty.Extreme:
-                        Thread.Sleep(1250);
-                        break;
-                }
-                CurrentAmountOfTnt -= 1;
-            }).Start();
+            switch (TntWarsGame.GetTntWarsGame(this).GameDifficulty) {
+                case TntWarsGame.TntWarsDifficulty.Easy:
+                    delay = 3250; break;
+                case TntWarsGame.TntWarsDifficulty.Normal:
+                    delay = 2250; break;
+                case TntWarsGame.TntWarsDifficulty.Hard:
+                case TntWarsGame.TntWarsDifficulty.Extreme:
+                    delay = 1250; break;
+            }
+            Server.MainScheduler.QueueOnce(AllowMoreTntTask, null, 
+                                           TimeSpan.FromMilliseconds(delay));
+        }
+        
+        void AllowMoreTntTask(SchedulerTask task) {
+            CurrentAmountOfTnt--;
         }
         
         public static bool BlacklistCheck(string name, string foundLevel) {

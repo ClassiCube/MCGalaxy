@@ -116,7 +116,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "The chatoom '{0}' already exists", room);
             } else {
                 Server.Chatrooms.Add(room);
-                Player.GlobalMessage("A new chat room '{0}' has been created", room);
+                Player.GlobalMessage("A new chat room '" + room + "' has been created");
             }
         }
         
