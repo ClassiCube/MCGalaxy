@@ -40,12 +40,22 @@ namespace MCGalaxy.Commands.World {
                 
                 string map = LevelInfo.FindMapMatches(p, message);
                 if (map == null) return;
+                Level oldMain = Server.mainLevel;
                 
-                Server.level = map;
-                Server.mainLevel = Level.Load(map);
+                Level match = LevelInfo.FindExact(map);
+                if (match != null) {
+                    Server.mainLevel = match;
+                } else {
+                    Server.mainLevel = Level.Load(map);
+                    LevelInfo.Loaded.Add(Server.mainLevel);
+                }
+                
+                oldMain.unload = true;
                 Server.mainLevel.unload = false;
-                SrvProperties.Save();
-                Player.Message(p, "Set main level to \"{0}\"", map);
+                Server.level = map;     
+                
+                SrvProperties.Save();                
+                Player.Message(p, "Set main level to \"{0}\"", map);              
             }
         }
         
