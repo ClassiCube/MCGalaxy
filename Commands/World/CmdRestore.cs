@@ -58,23 +58,21 @@ namespace MCGalaxy.Commands {
         
         static void DoRestore(Level lvl, string backup) {
             File.Copy(LevelInfo.BackupPath(lvl.name, backup), LevelInfo.LevelPath(lvl.name), true);
-            Level temp = Level.Load(lvl.name);
-            temp.StartPhysics();
-            
-            if (temp != null) {
-                lvl.spawnx = temp.spawnx;
-                lvl.spawny = temp.spawny;
-                lvl.spawnz = temp.spawnz;
-                
-                lvl.Width = temp.Width; lvl.width = temp.Width;
-                lvl.Height = temp.Height; lvl.depth = temp.Height;
-                lvl.Length = temp.Length; lvl.length = temp.Length; lvl.height = temp.Length;
-                
-                lvl.blocks = temp.blocks;
-                lvl.CustomBlocks = temp.CustomBlocks;
+            Level restore = Level.Load(lvl.name);
+            if (restore != null) {
+                LevelInfo.Loaded.Remove(lvl);
+                LevelInfo.Loaded.Add(restore);
+
+                restore.StartPhysics();
                 lvl.setPhysics(0);
                 lvl.ClearPhysics();
-                Command.all.Find("reveal").Use(null, "all " + lvl.name);
+                
+                Player[] players = PlayerInfo.Online.Items;
+                foreach (Player pl in players) {
+                    if (pl.level != lvl) continue;
+                    pl.level = restore;
+                    CmdReload.ReloadMap(null, pl, false);
+                }
             } else {
                 Server.s.Log("Restore nulled");
                 File.Copy(LevelInfo.LevelPath(lvl.name) + ".backup", LevelInfo.LevelPath(lvl.name), true);
