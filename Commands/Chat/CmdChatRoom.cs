@@ -84,8 +84,8 @@ namespace MCGalaxy.Commands {
             if (parts.Length > 1 && Server.Chatrooms.Contains(parts[1])) {
                 string room = parts[1];
                 if (p.spyChatRooms.Contains(room)) {
-                    Player.Message(p, "The chat room '" + room + "' has been removed " +
-                                       "from your spying list because you are joining the room.");
+                    Player.Message(p, "The chat room '{0}' has been removed " +
+                                      "from your spying list because you are joining the room.", room);
                     p.spyChatRooms.Remove(room);
                 }
                 
@@ -113,10 +113,10 @@ namespace MCGalaxy.Commands {
             
             string room = parts[1];
             if (Server.Chatrooms.Contains(parts[1])) {
-                Player.Message(p, "The chatoom '" + room + "' already exists");
+                Player.Message(p, "The chatoom '{0}' already exists", room);
             } else {
                 Server.Chatrooms.Add(room);
-                Player.GlobalMessage("A new chat room '" + room + "' has been created");
+                Player.GlobalMessage("A new chat room '{0}' has been created", room);
             }
         }
         
@@ -134,16 +134,14 @@ namespace MCGalaxy.Commands {
             }
 
             if (!Server.Chatrooms.Contains(room)) {
-                Player.Message(p, "There is no chatroom with the name '" + room + "'");
-                return;
+                Player.Message(p, "There is no chatroom with the name '{0}'", room); return;
             }
             
             if (!canDeleteForce) {
                 Player[] players = PlayerInfo.Online.Items; 
                 foreach (Player pl in players) {
                     if (pl != p && pl.Chatroom == room) {
-                        Player.Message(p, "Sorry, someone else is in the chatroom");
-                        return;
+                        Player.Message(p, "Sorry, someone else is in the chatroom"); return;
                     }
                 }
             }
@@ -157,7 +155,7 @@ namespace MCGalaxy.Commands {
             foreach (Player pl in online) {
                 if (pl.Chatroom == room) {
                     pl.Chatroom = null;
-                    Player.Message(pl, "You left the chatroom '" + room + "' because it is being deleted");
+                    Player.Message(pl, "You left the chatroom '{0}' because it is being deleted", room);
                 }
                 
                 if (pl.spyChatRooms.Contains(room)) {
@@ -172,8 +170,7 @@ namespace MCGalaxy.Commands {
         void HandleSpy(Player p, string[] parts) {
             if (!CheckExtraPerm(p, 4)) { MessageNeedExtra(p, "can spy on a chatroom.", 4); return; }
             if (parts.Length <= 1) {
-                Player.Message(p, "You need to provide a chatroom name to spy on.");
-                return;
+                Player.Message(p, "You need to provide a chatroom name to spy on."); return;
             }
             
             string room = parts[1];
@@ -183,43 +180,40 @@ namespace MCGalaxy.Commands {
                 }
                 
                 if (p.spyChatRooms.Contains(room)) {
-                    Player.Message(p, "'" + room + "' is already in your spying list.");
+                    Player.Message(p, "'{0}' is already in your spying list.", room);
                 } else {
                     p.spyChatRooms.Add(room);
-                    Player.Message(p, "'" + room + "' has been added to your chat room spying list");
+                    Player.Message(p, "'{0}' has been added to your chat room spying list", room);
                 }
             } else {
-                Player.Message(p, "There is no chatroom with the name '" + room + "'");
+                Player.Message(p, "There is no chatroom with the name '{0}'", room);
             }
         }
         
         void HandleForceJoin(Player p, string[] parts) {
             if (!CheckExtraPerm(p, 5)) { MessageNeedExtra(p, "can force players to join a chatroom.", 5); return; }
             if (parts.Length <= 2) {
-                Player.Message(p, "You need to provide a player name, then a chatroom name.");
-                return;
+                Player.Message(p, "You need to provide a player name, then a chatroom name."); return;
             }
             
             string name = parts[1], room = parts[2];
             Player pl = PlayerInfo.FindMatches(p, name);
             if (pl == null) return;
             if (!Server.Chatrooms.Contains(room)) {
-                Player.Message(p, "There is no chatroom with the name '" + room + "'");
-                return;
+                Player.Message(p, "There is no chatroom with the name '{0}'", room); return;
             }
-            if (pl.group.Permission >= p.group.Permission) {
-                MessageTooHighRank(p, "force-join", false); return;
-            }
+            if (pl.Rank >= p.Rank) { MessageTooHighRank(p, "force-join", false); return;}
             
             if (pl.spyChatRooms.Contains(room)) {
-                Player.Message(pl, "The chat room '" + room + "' has been removed from your spying list " +
-                                   "because you are force joining the room '" + room + "'");
+            	Player.Message(pl, "The chat room '{0}' has been removed from your spying list " +
+                                   "because you are force joining the room '{0}'", room);
                 pl.spyChatRooms.Remove(room);
             }
-            Player.Message(pl, "You've been forced to join the chat room '" + room + "'");
+            
+            Player.Message(pl, "You've been forced to join the chat room '{0}'", room);
             Chat.ChatRoom(pl, pl.ColoredName + " %Shas force joined your chat room", false, room);
             pl.Chatroom = room;
-            Player.Message(p, pl.ColoredName + " %Swas forced to join the chatroom '" + room + "' by you");
+            Player.Message(p, pl.ColoredName + " %Swas forced to join the chatroom '{0}' by you", room);
         }
         
         void HandleKick(Player p, string[] parts) {
@@ -232,7 +226,7 @@ namespace MCGalaxy.Commands {
             string name = parts[1];
             Player pl = PlayerInfo.FindMatches(p, name);
             if (pl == null) return;
-            if (pl.group.Permission >= p.group.Permission) {
+            if (pl.Rank >= p.Rank) {
             	MessageTooHighRank(p, "kick from a chatroom", false); return;
             }
             

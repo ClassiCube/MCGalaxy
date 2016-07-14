@@ -34,13 +34,13 @@ namespace MCGalaxy.Commands.World {
             if (map == null) return;
             
             Level lvl = LevelInfo.FindExact(map);
-            if (lvl != null && p != null && lvl.permissionbuild > p.group.Permission) {
+            if (lvl != null && p != null && lvl.permissionbuild > p.Rank) {
                 Player.Message(p, "%cYou can't delete levels with a perbuild rank higher than yours!"); return;
             }
             if (lvl == Server.mainLevel) { Player.Message(p, "Cannot delete the main level."); return; }
             
             LevelPermission perbuild = GetPerBuildPermission(map);
-            if (p != null && perbuild > p.group.Permission) {
+            if (p != null && perbuild > p.Rank) {
                 Player.Message(p, "%cYou can't delete levels with a perbuild rank higher than yours!"); return;
             }
             Player.Message(p, "Created backup.");

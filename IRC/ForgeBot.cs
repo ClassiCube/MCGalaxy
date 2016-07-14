@@ -197,7 +197,7 @@ namespace MCGalaxy {
         
         void Player_PlayerDisconnect(Player p, string reason) {
             if (!IsConnected()) return;
-            if (!Server.guestLeaveNotify && p.group.Permission <= LevelPermission.Guest) return;
+            if (!Server.guestLeaveNotify && p.Rank <= LevelPermission.Guest) return;
             
             string msg = p.DisplayName + " %Sleft the game (" + reason + ")";
             msg = ConvertMessage(msg, true);
@@ -206,7 +206,7 @@ namespace MCGalaxy {
 
         void Player_PlayerConnect(Player p) {
             if (!IsConnected()) return;
-            if (!Server.guestJoinNotify && p.group.Permission <= LevelPermission.Guest) return;
+            if (!Server.guestJoinNotify && p.Rank <= LevelPermission.Guest) return;
             
             string msg = p.DisplayName + " %Sjoined the game";
             msg = ConvertMessage(msg, true);

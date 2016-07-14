@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (who == null) { WarnOffline(p, args); return; }
             if (who == p) { Player.Message(p, "you can't warn yourself"); return; }
-            if (p != null && p.group.Permission <= who.group.Permission) {
+            if (p != null && p.Rank <= who.Rank) {
                 MessageTooHighRank(p, "warn", false); return;
             }           
             

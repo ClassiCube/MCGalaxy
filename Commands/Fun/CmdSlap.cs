@@ -39,12 +39,12 @@ namespace MCGalaxy.Commands {
                 
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
-                    if (pl.level == lvl && pl.group.Permission < p.group.Permission)
+                    if (pl.level == lvl && pl.Rank < p.Rank)
                         DoSlap(p, pl);
                 }
                 return;
             }
-            if (p != null && who.group.Permission > p.group.Permission) {
+            if (p != null && who.Rank > p.Rank) {
                 MessageTooHighRank(p, "slap", true); return;
             }
             DoSlap(p, who);

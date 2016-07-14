@@ -74,10 +74,10 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "&cYou cannot assign yourself a temporary rank."); return;
             }
             Group pGroup = who != null ? who.group : Group.findPlayerGroup(player);
-            if (p != null && pGroup.Permission >= p.group.Permission) {
+            if (p != null && pGroup.Permission >= p.Rank) {
                 Player.Message(p, "Cannot change the temporary rank of someone equal or higher to yourself."); return;
             }
-            if (p != null && group.Permission >= p.group.Permission) {
+            if (p != null && group.Permission >= p.Rank) {
                 Player.Message(p, "Cannot change the temporary rank to a higher rank than yourself."); return;
             }
 

@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (group.Permission == LevelPermission.Banned) {
                 Player.Message(p, name + " is already banned."); return false;
             }
-            if (p != null && group.Permission >= p.group.Permission) {
+            if (p != null && group.Permission >= p.Rank) {
         	    MessageTooHighRank(p, "ban", false); return false;
             }
             

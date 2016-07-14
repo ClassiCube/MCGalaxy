@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
             
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
-            if (p != null && who.group.Permission > p.group.Permission) {
+            if (p != null && who.Rank > p.Rank) {
                 MessageTooHighRank(p, "change the title of", true); return;
             }
             if (who != p && !CheckExtraPerm(p)) { MessageNeedExtra(p, "can change the title of others."); return; }

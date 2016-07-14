@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             else message = "You were kicked by " + p.DisplayName + ".";
 
             if (p != null && p == who) { Player.Message(p, "You cannot kick yourself."); return; }
-            if (p != null && who.group.Permission >= p.group.Permission) {
+            if (p != null && who.Rank >= p.Rank) {
                 Player.SendChatFrom(p, p.ColoredName + "%S tried to kick " 
                                     + who.ColoredName + "%S but failed.", false);
                 return;

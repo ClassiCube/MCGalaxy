@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.Moderation {
                 who.SetPrefix();
 
                 who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
-                who.SendUserType(Block.canPlace(who.group.Permission, Block.blackrock));
+                who.SendUserType(Block.canPlace(who.Rank, Block.blackrock));
                 Entities.SpawnEntities(who, false);
             }
             Server.IRC.Say(rankMsg);
@@ -83,10 +83,10 @@ namespace MCGalaxy.Commands.Moderation {
             if (group == banned || newRank == banned) {
                 Player.Message(p, "Cannot change the rank to or from \"" + banned.name + "\"."); return false;
             }
-            if (p != null && (group.Permission >= p.group.Permission || newRank.Permission >= p.group.Permission)) {
+            if (p != null && (group.Permission >= p.Rank || newRank.Permission >= p.Rank)) {
                 MessageTooHighRank(p, "change the rank of", false); return false;
             }
-            if (p != null && (newRank.Permission >= p.group.Permission)) {
+            if (p != null && (newRank.Permission >= p.Rank)) {
                 Player.Message(p, "Cannot change the rank of a player to a rank equal or higher to yours."); return false;
             }
             

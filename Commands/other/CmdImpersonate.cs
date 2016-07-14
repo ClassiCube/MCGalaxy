@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             if (who == null || message == "") {Help(p); return; }
             if (who.muted) { Player.Message(p, "Cannot impersonate a muted player"); return; }
             
-            if (p == null || p == who || p.group.Permission > who.group.Permission) {
+            if (p == null || p == who || p.Rank > who.Rank) {
                 Player.SendChatFrom(who, args[1]);
             } else {
                 MessageTooHighRank(p, "impersonate", false); return;

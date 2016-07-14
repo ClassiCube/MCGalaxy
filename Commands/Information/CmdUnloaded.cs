@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands {
                 bool loadOnGoto;
                 RetrieveProps(level, out visitP, out buildP, out loadOnGoto);
                 
-                string visit = loadOnGoto && (p == null || p.group.Permission >= visitP) ? "%aYes" : "%cNo";
+                string visit = loadOnGoto && (p == null || p.Rank >= visitP) ? "%aYes" : "%cNo";
                 builder.Append(", ").Append(Group.findPerm(buildP).color + level + " &b[" + visit + "&b]");
             }
             return builder;

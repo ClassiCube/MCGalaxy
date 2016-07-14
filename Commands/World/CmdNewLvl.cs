@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.World {
             }
 
             if (p != null) {
-                int limit = p.group.Permission < LevelPermission.Admin ? 
+                int limit = p.Rank < LevelPermission.Admin ? 
                     Server.MapGenLimit : Server.MapGenLimitAdmin;
                 if ((long)x * y * z > limit ) {
                     string text = "You cannot create a map with over ";

@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
             Player muter = PlayerInfo.FindMatches(p, args[0]);
             if (muter == null) return;
 
-            if (p != null && muter.group.Permission > p.group.Permission) {
+            if (p != null && muter.group.Permission > p.Rank) {
                 MessageTooHighRank(p, "xmute", true); return;
             }
             if (p == muter) {

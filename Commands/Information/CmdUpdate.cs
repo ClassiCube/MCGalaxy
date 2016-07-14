@@ -28,10 +28,10 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message) {
             if (message.ToLower() != "force") {
-                if (p == null || p.group.Permission > defaultRank) MCGalaxy.Gui.App.UpdateCheck(false, p);
+                if (p == null || p.Rank > defaultRank) MCGalaxy.Gui.App.UpdateCheck(false, p);
                 else Player.Message(p, "Ask an " + Group.findPerm(defaultRank).name + "+ to do it!");
             } else {
-                if (p == null || p.group.Permission > defaultRank) MCGalaxy.Gui.App.PerformUpdate();
+                if (p == null || p.Rank > defaultRank) MCGalaxy.Gui.App.PerformUpdate();
                 else Player.Message(p, "Ask an " + Group.findPerm(defaultRank).name + "+ to do it!");
             }
         }

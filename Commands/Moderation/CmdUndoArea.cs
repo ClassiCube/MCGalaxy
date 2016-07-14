@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
         }
         
         void UndoOnlinePlayer(Player p, Player who, UndoArgs args, Vec3S32[] marks) {
-            if (p != who && who.group.Permission >= p.group.Permission) {
+            if (p != who && who.Rank >= p.Rank) {
                 MessageTooHighRank(p, "undo", false); return;
             }
             
@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands {
         
         void UndoOfflinePlayer(Player p, string whoName, UndoArgs args, Vec3S32[] marks) {
             Group group = Group.findPlayerGroup(whoName);
-            if (group.Permission >= p.group.Permission) {
+            if (group.Permission >= p.Rank) {
                 MessageTooHighRank(p, "undo", false); return;
             }
             

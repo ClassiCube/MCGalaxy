@@ -77,10 +77,10 @@ namespace MCGalaxy.Commands {
                     
                     Group grp = Group.FindOrShowMatches(p, parts[1]);
                     if (grp == null) return;                  
-                    if (p != null && Server.ircControllerRank > p.group.Permission) {
+                    if (p != null && Server.ircControllerRank > p.Rank) {
                         Player.Message(p, "Cannot change the IRC controllers rank, as it is currently a rank higher than yours."); return;
                     }
-                    if (p != null && grp.Permission > p.group.Permission) {
+                    if (p != null && grp.Permission > p.Rank) {
                         Player.Message(p, "Cannot set the IRC controllers rank to a rank higher than yours."); return;
                     }
                     

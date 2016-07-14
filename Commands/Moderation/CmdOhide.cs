@@ -33,12 +33,12 @@ namespace MCGalaxy.Commands
             string[] args = message.Split(' ');           
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
-            if (who.group.Permission >= p.group.Permission) {
+            if (who.Rank >= p.Rank) {
                 MessageTooHighRank(p, "hide", false); return;
             }
             
             if (args.Length >= 2 && args[1].CaselessEq("myrank")) {
-                who.oHideRank = p.group.Permission;
+                who.oHideRank = p.Rank;
                 Command.all.Find("hide").Use(who, "myrank");
                 Player.Message(p, "Used /hide myrank on " + who.ColoredName + "%S.");
             } else {

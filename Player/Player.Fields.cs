@@ -283,6 +283,7 @@ namespace MCGalaxy {
         public WarpList Waypoints = new WarpList(true);
 
         public Random random = new Random();
+        public LevelPermission Rank { get { return group.Permission; } }
 
         //Global Chat
         public bool loggedIn;

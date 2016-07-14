@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             string canVisit = "", canBuild = "";
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
-                if (p == null || lvl.permissionvisit <= p.group.Permission) {
+                if (p == null || lvl.permissionvisit <= p.Rank) {
                     if (Group.findPerm(lvl.permissionbuild) != null)
                         canVisit += ", " + Group.findPerm(lvl.permissionbuild).color + lvl.name + " &b[&f" + lvl.physics + "&b]";
                     else

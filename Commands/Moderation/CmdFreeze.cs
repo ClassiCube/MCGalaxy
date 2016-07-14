@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             if (p == who) { Player.Message(p, "Cannot freeze yourself."); return; }
-            if (p != null && who.group.Permission >= p.group.Permission) { 
+            if (p != null && who.Rank >= p.Rank) { 
                 MessageTooHighRank(p, "freeze", false); return; 
             }
             

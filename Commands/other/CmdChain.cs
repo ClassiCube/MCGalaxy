@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            if (p.level.permissionbuild > p.group.Permission) {
+            if (p.level.permissionbuild > p.Rank) {
                 Player.Message(p, "You cannot build on this map!"); return;
             }
             

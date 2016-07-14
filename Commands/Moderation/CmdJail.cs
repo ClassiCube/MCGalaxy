@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
             if (who == null) return;
             
             if (!who.jailed) {
-                if (p != null &&who.group.Permission >= p.group.Permission) { 
+                if (p != null &&who.Rank >= p.Rank) { 
                     MessageTooHighRank(p, "jail", false); return;
                 }
                 Player.Message(p, "You jailed " + who.DisplayName);

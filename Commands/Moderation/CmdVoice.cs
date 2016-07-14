@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
             if (message == "" && p == null) { Help(p); return; }
             Player who = message == "" ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
-            if (p != null && who.group.Permission > p.group.Permission) {
+            if (p != null && who.Rank > p.Rank) {
                 MessageTooHighRank(p, "voice", true); return;
             }
             

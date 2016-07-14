@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands {
             } else {
                 Player who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
-                if (who.group.Permission >= p.group.Permission) {
+                if (who.Rank >= p.Rank) {
                     MessageTooHighRank(p, "possess", false); return;
                 }
                 

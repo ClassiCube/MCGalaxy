@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.Building {
         bool CheckCommand(Player p, string message) {
             bool allCmds = CheckExtraPerm(p);
             foreach (Command cmd in Command.all.commands) {
-                if (cmd.defaultRank <= p.group.Permission && (allCmds || !cmd.type.Contains("mod"))) continue;
+                if (cmd.defaultRank <= p.Rank && (allCmds || !cmd.type.Contains("mod"))) continue;
                 
                 if (IsCommand(message, cmd.name)) {
                     p.SendMessage("You cannot use that command in a messageblock."); return false;

@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "This command can only be used if agree-to-rules-on-entry is enabled in the console!");
                 return;
             }
-            if (p.group.Permission > LevelPermission.Guest) {
+            if (p.Rank > LevelPermission.Guest) {
                 Player.Message(p, "Your awesomeness prevents you from using this command"); return;
             }
             p.Leave("If you don't agree with the rules, consider playing elsewhere.");

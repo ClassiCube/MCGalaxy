@@ -183,7 +183,7 @@ namespace MCGalaxy {
         
         bool CheckZonePerms(Player p, ushort x, ushort y, ushort z,
                         ref bool AllowBuild, ref bool inZone, ref string Owners) {
-            if (p.group.Permission < LevelPermission.Admin) {
+            if (p.Rank < LevelPermission.Admin) {
             	bool foundDel = FindZones(p, x, y, z, ref inZone, ref AllowBuild, ref Owners);
                 if (!AllowBuild) {
                     if (p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
@@ -212,7 +212,7 @@ namespace MCGalaxy {
                 inZone = true;
                 if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
                     string grpName = zn.Owner.Substring(3);
-                    if (Group.Find(grpName).Permission <= p.group.Permission) {
+                    if (Group.Find(grpName).Permission <= p.Rank) {
                         AllowBuild = true; break;
                     }
                     AllowBuild = false;
@@ -229,7 +229,7 @@ namespace MCGalaxy {
         }
         
         bool CheckRank(Player p, bool AllowBuild, bool inZone) {
-            if (p.group.Permission < permissionbuild && (!inZone || !AllowBuild)) {
+            if (p.Rank < permissionbuild && (!inZone || !AllowBuild)) {
                 if (p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
                     Player.Message(p, "Must be at least " + PermissionToName(permissionbuild) + " to build here");
                     p.ZoneSpam = DateTime.UtcNow;
@@ -237,7 +237,7 @@ namespace MCGalaxy {
                 return false;
             }
             
-            if (p.group.Permission > perbuildmax && (!inZone || !AllowBuild) && !p.group.CanExecute("perbuildmax")) {
+            if (p.Rank > perbuildmax && (!inZone || !AllowBuild) && !p.group.CanExecute("perbuildmax")) {
                 if (p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
                     Player.Message(p, "Your rank must be " + perbuildmax + " or lower to build here!");
                     p.ZoneSpam = DateTime.UtcNow;

@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
 
             Group grp = Group.FindOrShowMatches(p, args[1]);
             if (grp == null) return;
-            if (p != null && grp.Permission > p.group.Permission) { 
+            if (p != null && grp.Permission > p.Rank) { 
                 Player.Message(p, "Cannot set permissions to a rank higher than yours."); return; 
             }
 
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands {
                     allowed.allow.Add(grp.Permission);
                 UpdatePermissions(cmd, p, " can now be used by " + grp.ColoredName);
             } else if (args[2].CaselessEq("disallow")) {
-                if (p != null && p.group.Permission == grp.Permission) {
+                if (p != null && p.Rank == grp.Permission) {
                     Player.Message(p, "You cannot disallow your own rank from using a command."); return;
                 }
                 

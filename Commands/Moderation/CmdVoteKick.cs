@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
 
-            if (who.group.Permission >= p.group.Permission) {
+            if (who.Rank >= p.Rank) {
                 Player.SendChatFrom(p, p.ColoredName + " %Stried to votekick " + who.ColoredName + " %Sbut failed!", false);
                 return;
             }

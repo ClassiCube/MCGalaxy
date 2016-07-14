@@ -62,7 +62,7 @@ namespace MCGalaxy {
         }
         
         protected bool CheckExtraPerm(Player p, int num = 1) {
-            return p == null || (int)p.group.Permission >= CommandOtherPerms.GetPerm(this, num);
+            return p == null || (int)p.Rank >= CommandOtherPerms.GetPerm(this, num);
         }
         
         protected void MessageNeedExtra(Player p, string action, int num = 1) {
@@ -97,7 +97,7 @@ namespace MCGalaxy {
         
         internal void MessageCannotUse(Player p) {
             var perms = GrpCommands.allowedCommands.Find(C => C.commandName == name);
-            if (perms.disallow.Contains(p.group.Permission)) {
+            if (perms.disallow.Contains(p.Rank)) {
                 Player.Message(p, "Your rank cannot use /%T" + name); return;
             }
             

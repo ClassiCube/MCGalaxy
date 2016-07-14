@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Not a valid rank"); return;
             }
 
-            if (p != null && getter(level) > p.group.Permission) {
+            if (p != null && getter(level) > p.Rank) {
                 if (skipNobodyPerm || (getter(level) != LevelPermission.Nobody)) {
                     Player.Message(p, "You cannot change the " + target + " of a level " +
                                        "with a " + target + " higher than your rank.");
@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.World {
                 }
             }
             
-            if (p != null && newRank > p.group.Permission) {
+            if (p != null && newRank > p.Rank) {
                 if (skipNobodyPerm || (newRank != LevelPermission.Nobody)) {
                     Player.Message(p, "You cannot change the " + target + " of a level " +
                                        "to a " + target + " higher than your rank.");
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "You cannot " + mode + " yourself."); return;
             }
             
-            if (p != null && getter(level) > p.group.Permission) {
+            if (p != null && getter(level) > p.Rank) {
                 Player.Message(p, "You cannot change the " + target + " " + mode +
                                    " permissions for a player higher than your rank."); return;
             }
@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "You cannot change " + target + " " +
                                    "permissions as you are blacklisted."); return;
             }
-            if (p != null && PlayerInfo.GetGroup(name).Permission > p.group.Permission) {
+            if (p != null && PlayerInfo.GetGroup(name).Permission > p.Rank) {
                 Player.Message(p, "You cannot whitelist/blacklist players of a higher rank."); return;
             }
             

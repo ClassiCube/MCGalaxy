@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             if (message.CaselessEq("all")) {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
-                    if (pl.level == p.level && pl != p && p.group.Permission > pl.group.Permission) {
+                    if (pl.level == p.level && pl != p && p.Rank > pl.Rank) {
                         pl.SendOwnHeadPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
                         pl.SendMessage("You were summoned by " + p.ColoredName + "%S.");
                     }
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
 
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
-            if (p.group.Permission < who.group.Permission) {
+            if (p.Rank < who.Rank) {
                 MessageTooHighRank(p, "summon", true); return;
             }
             

@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
             else who = PlayerInfo.FindMatches(p, args[0]);
             if (pBot == null && who == null) return;
             
-            if (p != null && who != null && who.group.Permission > p.group.Permission) {
+            if (p != null && who != null && who.Rank > p.Rank) {
                 MessageTooHighRank(p, "change the nick of", true); return;
             }
             if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedExtra(p, "can change the nick of others."); return; }

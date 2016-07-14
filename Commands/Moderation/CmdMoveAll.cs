@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
             
             Player[] players = PlayerInfo.Online.Items;           
             foreach (Player pl in players) { 
-                if (p == null || pl.group.Permission < p.group.Permission)
+                if (p == null || pl.Rank < p.Rank)
                     PlayerActions.ChangeMap(pl, level.name);
                 else
                     Player.Message(p, "You cannot move " + pl.ColoredName + " %Sbecause they are of equal or higher rank"); 

@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, target.ColoredName + " %Sis in a museum."); return false;
             }
             
-            if (!Server.higherranktp && p.group.Permission < target.group.Permission) {
+            if (!Server.higherranktp && p.Rank < target.group.Permission) {
                 MessageTooHighRank(p, "teleport to", true); return false;
             }
             

@@ -73,7 +73,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%cYou cannot provide a rank name, use %a/buy rank %cto buy the NEXT rank."); return;
             }
             Group maxrank = Group.Find(MaxRank);
-            if (p.group.Permission >= maxrank.Permission) {
+            if (p.Rank >= maxrank.Permission) {
                 Player.Message(p, "%cYou cannot buy anymore ranks, because you passed the max buyable rank: " + maxrank.color + maxrank.name);
                 return;
             }
@@ -111,7 +111,7 @@ namespace MCGalaxy.Eco {
                 case "maximumrank":
                     Group grp = Group.Find(args[2]);
                     if (grp == null) { Player.Message(p, "%cThat wasn't a rank!"); return; }
-                    if (p != null && p.group.Permission < grp.Permission) { Player.Message(p, "%cCan't set a maxrank that is higher than yours!"); return; }
+                    if (p != null && p.Rank < grp.Permission) { Player.Message(p, "%cCan't set a maxrank that is higher than yours!"); return; }
                     MaxRank = args[2].ToLower();
                     Player.Message(p, "%aSuccessfully set max rank to: " + grp.ColoredName);
                     UpdatePrices();
@@ -123,7 +123,7 @@ namespace MCGalaxy.Eco {
 
         protected internal override void OnStoreOverview(Player p) {
             Group maxrank = Group.Find(MaxRank);
-            if (p == null || p.group.Permission >= maxrank.Permission) {
+            if (p == null || p.Rank >= maxrank.Permission) {
                 Player.Message(p, "Rankup - &calready at max rank."); return;
             }
             Rank rnk = NextRank(p);

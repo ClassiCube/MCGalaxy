@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands {
                 if (who == null) return;
 
                 if (!who.jailed) {
-                    if (p != null && who.group.Permission >= p.group.Permission) {
+                    if (p != null && who.Rank >= p.Rank) {
                         Player.Message(p, "Cannot lock down someone of equal or greater rank."); return;
                     }
                     if (p != null && who.level != p.level) {

@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
             if (message != "") {
                 who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
-                if (p != null && p.group.Permission < who.group.Permission) {
+                if (p != null && p.Rank < who.Rank) {
                     MessageTooHighRank(p, "send /oprules", false); return;
                 }
             }

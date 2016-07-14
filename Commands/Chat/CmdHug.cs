@@ -47,10 +47,10 @@ namespace MCGalaxy.Commands {
             }
             
             if (type == "deadly") {
-                if (p != null && p.group.Permission < LevelPermission.Operator) {
+                if (p != null && p.Rank < LevelPermission.Operator) {
                     Player.Message(p, "You cannot %cdeath-hug %Sat your current rank."); return;
                 }
-                if (p != null && who.group.Permission > p.group.Permission) {
+                if (p != null && who.Rank > p.Rank) {
                     MessageTooHighRank(p, "&cdeath-hug%S", true); return;
                 }
                 who.HandleDeath(Block.rock, " died from a %cdeadly hug.");

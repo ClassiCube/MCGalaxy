@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
                 Player who = PlayerInfo.FindMatches(p, args[0]);
                 Level where = LevelInfo.FindMatches(p, args[1]);
                 if (who == null || where == null) return;
-                if (p != null && who.group.Permission > p.group.Permission) { 
+                if (p != null && who.Rank > p.Rank) { 
                     MessageTooHighRank(p, "move", true); return;
                 }
 
@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands
                 if (args.Length == 4) {
                     who = PlayerInfo.FindMatches(p, args[0]);
                     if (who == null) return;
-                    if (p != null && who.group.Permission > p.group.Permission) { 
+                    if (p != null && who.Rank > p.Rank) { 
                         MessageTooHighRank(p, "move", true); return; 
                     }
                     offset = 1;

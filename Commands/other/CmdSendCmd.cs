@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
             string[] parts = message.SplitSpaces(3);
             Player target = PlayerInfo.FindMatches(p, parts[0]);
             if (target == null) return;        
-            if (p != null && p.group.Permission < target.group.Permission) {
+            if (p != null && p.Rank < target.group.Permission) {
                 MessageTooHighRank(p, "send commands for", true); return;
             }
             if (parts.Length == 1) {

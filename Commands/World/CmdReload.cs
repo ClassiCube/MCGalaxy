@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
             } else {
                 Player who = PlayerInfo.FindMatches(p, parts[0]);
                 if (who == null) return;
-                if (p != null && who.group.Permission > p.group.Permission) {
+                if (p != null && who.Rank > p.Rank) {
                     MessageTooHighRank(p, "reload the map for", true); return;
                 }
                 ReloadMap(p, who, true);

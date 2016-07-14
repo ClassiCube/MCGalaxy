@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands {
                                    + "%S, and is currently &aonline");
             
             Player.Message(p, "  Logged in &a{0} %Stimes, &c{1} %Sof which ended in a kick", who.Logins, who.Kicks);        
-            if (who.Group.Permission == LevelPermission.Banned) {
+            if (who.Rank == LevelPermission.Banned) {
                 string[] data = Ban.GetBanData(who.Name);
                 if (data != null)
                     Player.Message(p, "  is banned for " + data[1] + " by " + data[0]);

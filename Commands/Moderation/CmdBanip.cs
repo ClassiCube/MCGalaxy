@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.Moderation {
                 foreach (string opname in opNamesWithThatIP) {
                     // If one of these guys matches a player with a higher rank don't allow the ipban to proceed!
                     Group grp = Group.findPlayerGroup(opname);
-                    if (grp == null || grp.Permission < p.group.Permission) continue;
+                    if (grp == null || grp.Permission < p.Rank) continue;
                     
                     Player.Message(p, "You can only ipban IPs used by players with a lower rank.");
                     Player.Message(p, opname + "(" + grp.ColoredName + "%S) uses that IP.");

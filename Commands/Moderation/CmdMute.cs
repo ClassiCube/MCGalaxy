@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.SendChatFrom(who, who.ColoredName + " %Swas &bun-muted", false);
                 Server.muted.Remove(who.name);
             } else  {
-                if (p != null && who.group.Permission >= p.group.Permission) { 
+                if (p != null && who.Rank >= p.Rank) { 
                     MessageTooHighRank(p, "mute", false); return;
                 }
                 who.muted = true;

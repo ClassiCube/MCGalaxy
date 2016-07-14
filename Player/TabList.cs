@@ -29,7 +29,7 @@ namespace MCGalaxy {
         /// <summary> Adds the given player to that player's tab list (if their client supports it). </summary>
         public static void Add(Player dst, Player p, byte id) {
             if (!dst.hasExtList) return;
-            byte grpPerm = (byte)(offset - p.group.Permission);
+            byte grpPerm = (byte)(offset - p.Rank);
             if (!Server.TablistRankSorted) grpPerm = 0;
             
             string name, group;

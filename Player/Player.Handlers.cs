@@ -397,7 +397,7 @@ namespace MCGalaxy {
             if (foundGrp.Permission > LevelPermission.Guest) return true;
             
             online = PlayerInfo.Online.Items;
-            int curGuests = online.Count(pl => pl.group.Permission <= LevelPermission.Guest);
+            int curGuests = online.Count(pl => pl.Rank <= LevelPermission.Guest);
             if (curGuests < Server.maxGuests) return true;
             
             if (Server.guestLimitNotify) Chat.GlobalMessageOps("Guest " + DisplayName + " couldn't log in - too many guests.");

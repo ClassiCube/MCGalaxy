@@ -147,7 +147,7 @@ namespace MCGalaxy.Commands.Building {
         
         bool CheckUndoPerms(Player p, Group grp) {
              if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "can undo other players."); return false; }
-             if (grp.Permission > p.group.Permission) { MessageTooHighRank(p, "undo", true); return false; }
+             if (grp.Permission > p.Rank) { MessageTooHighRank(p, "undo", true); return false; }
              return true;
         }
         

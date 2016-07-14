@@ -362,7 +362,7 @@ namespace MCGalaxy
 
         public static bool canPlace(Player p, byte type) { 
             Blocks b = BlockList[type];
-            LevelPermission perm = p.group.Permission;
+            LevelPermission perm = p.Rank;
             return (perm >= b.lowestRank || (b.allow != null && b.allow.Contains(perm))) 
             	&& (b.disallow == null || !b.disallow.Contains(perm));
         }

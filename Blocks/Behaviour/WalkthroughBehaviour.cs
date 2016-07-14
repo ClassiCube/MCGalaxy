@@ -38,7 +38,7 @@ namespace MCGalaxy.BlockBehaviour {
                 DataRow row = Portals.Rows[last];
                 string map = row["ExitMap"].ToString();
                 if (p.level.name != map) {
-                    if (p.level.permissionvisit > p.group.Permission) {
+                    if (p.level.permissionvisit > p.Rank) {
                         Player.Message(p, "You do not have the adequate rank to visit this map!"); return true;
                     }
                     

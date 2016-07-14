@@ -98,8 +98,8 @@ namespace MCGalaxy.Eco {
                 Thread.Sleep(250);
                 
                 Level level = LevelInfo.Find(name);
-                if (level.permissionbuild > p.group.Permission) { level.permissionbuild = p.group.Permission; }
-                if (level.permissionvisit > p.group.Permission) { level.permissionvisit = p.group.Permission; }
+                if (level.permissionbuild > p.Rank) { level.permissionbuild = p.Rank; }
+                if (level.permissionvisit > p.Rank) { level.permissionvisit = p.Rank; }
                 PlayerActions.ChangeMap(p, name);
 
                 Player.Message(p, "%aSuccessfully created your map: '%f" + name + "%a'");

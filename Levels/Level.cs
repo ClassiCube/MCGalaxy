@@ -373,10 +373,10 @@ namespace MCGalaxy
             }
             
             bool whitelisted = VisitWhitelist.CaselessContains(p.name);
-            if (!p.ignorePermission && !whitelisted && p.group.Permission < permissionvisit) {
+            if (!p.ignorePermission && !whitelisted && p.Rank < permissionvisit) {
                 Player.Message(p, "You are not allowed to go to {0}.", name); return false;
             }
-            if (!p.ignorePermission && !whitelisted && p.group.Permission > pervisitmax && !p.group.CanExecute("pervisitmax")) {
+            if (!p.ignorePermission && !whitelisted && p.Rank > pervisitmax && !p.group.CanExecute("pervisitmax")) {
                 Player.Message(p, "Your rank must be ranked {1} or lower to go to {0}.", name, pervisitmax); return false;
             }
             if (File.Exists("text/lockdown/map/" + name)) {
@@ -648,7 +648,7 @@ namespace MCGalaxy
         	Player[] players = PlayerInfo.Online.Items; 
             foreach (Player pl in players) {
             	if (pl.level != this) continue;
-            	if (pl.group.Permission < minPerm) continue;
+            	if (pl.Rank < minPerm) continue;
                 pl.SendMessage(message);
             }
         }

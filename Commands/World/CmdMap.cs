@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands.World {
                         break;
                     case "overload":
                         if (int.Parse(message.Split(' ')[1]) < 500) { Player.Message(p, "Cannot go below 500 (default is 1500)"); return; }
-                        if (p != null && p.group.Permission < LevelPermission.Admin && int.Parse(message.Split(' ')[1]) > 2500) { Player.Message(p, "Only SuperOPs may set higher than 2500"); return; }
+                        if (p != null && p.Rank < LevelPermission.Admin && int.Parse(message.Split(' ')[1]) > 2500) { Player.Message(p, "Only SuperOPs may set higher than 2500"); return; }
                         lvl.overload = int.Parse(message.Split(' ')[1]);
                         lvl.ChatLevel("Physics overload: &b" + lvl.overload);
                         break;

@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Moderation {
             string target = who == null ? args[0] : who.name;
             if (!ValidName(p, target, "player")) return;
             Group grp = who == null ? PlayerInfo.GetGroup(target) : who.group;
-            if (p != null && grp.Permission >= p.group.Permission) {
+            if (p != null && grp.Permission >= p.Rank) {
                 MessageTooHighRank(p, "temp ban", false); return;
             }
             

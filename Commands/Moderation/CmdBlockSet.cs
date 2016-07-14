@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands
             if (foundBlock == Block.Zero) { Player.Message(p, "Could not find block entered"); return; }
             LevelPermission newPerm = Level.PermissionFromName(message.Split(' ')[1]);
             if (newPerm == LevelPermission.Null) { Player.Message(p, "Could not find rank specified"); return; }
-            if (p != null && newPerm > p.group.Permission) { Player.Message(p, "Cannot set to a rank higher than yourself."); return; }
+            if (p != null && newPerm > p.Rank) { Player.Message(p, "Cannot set to a rank higher than yourself."); return; }
 
             if (p != null && !Block.canPlace(p, foundBlock)) { Player.Message(p, "Cannot modify a block set for a higher rank"); return; }
 

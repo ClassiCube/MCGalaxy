@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands
 				Server.lava.AnnounceTimeLeft(!Server.lava.flooded, true, p, p == null);
 				return;
 			}
-			if (p == null || p.group.Permission >= Server.lava.controlRank)
+			if (p == null || p.Rank >= Server.lava.controlRank)
 			{
 				if (s[0] == "start")
 				{
@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands
 					return;
 				}
 			}
-			if (p == null || p.group.Permission >= Server.lava.setupRank)
+			if (p == null || p.Rank >= Server.lava.setupRank)
 			{
 				if (s[0] == "setup")
 				{
@@ -309,13 +309,13 @@ namespace MCGalaxy.Commands
 			Player.Message(p, "The following params are available:");
 			Player.Message(p, "go - Join the fun!");
 			Player.Message(p, "info - View the current round info and time.");
-			if (p == null || p.group.Permission >= Server.lava.controlRank)
+			if (p == null || p.Rank >= Server.lava.controlRank)
 			{
 				Player.Message(p, "start [map] - Start the Lava Survival game, optionally on the specified map.");
 				Player.Message(p, "stop - Stop the current Lava Survival game.");
 				Player.Message(p, "end - End the current round or vote.");
 			}
-			if (p == null || p.group.Permission >= Server.lava.setupRank)
+			if (p == null || p.Rank >= Server.lava.setupRank)
 			{
 				Player.Message(p, "setup - Setup lava survival, use it for more info.");
 			}

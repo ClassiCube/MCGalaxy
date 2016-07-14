@@ -78,7 +78,7 @@ namespace MCGalaxy {
         public static void GlobalMessageMinPerms(string message, LevelPermission minPerm) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p.group.Permission >= minPerm)
+                if (p.Rank >= minPerm)
                     Player.Message(p, message);
             }
         }
@@ -210,7 +210,7 @@ namespace MCGalaxy {
                 string displayName = p == null ? "(console)" : p.ColoredName;
                 string name = p == null ? "(console)" : p.name;
                 Chat.GlobalMessageOps("To Ops &f-" + displayName + "&f- " + text);
-                if (p != null && p.group.Permission < Server.opchatperm )
+                if (p != null && p.Rank < Server.opchatperm )
                     p.SendMessage("To Ops &f-" + displayName + "&f- " + text);
                 
                 Server.s.Log("(OPs): " + name + ": " + text);
@@ -223,7 +223,7 @@ namespace MCGalaxy {
                 string displayName = p == null ? "(console)" : p.ColoredName;
                 string name = p == null ? "(console)" : p.name;
                 Chat.GlobalMessageAdmins("To Admins &f-" + displayName + "&f- " + text);
-                if (p != null && p.group.Permission < Server.adminchatperm)
+                if (p != null && p.Rank < Server.adminchatperm)
                     p.SendMessage("To Admins &f-" + displayName + "&f- " + text);
                 
                 Server.s.Log("(Admins): " + name + ": " + text);

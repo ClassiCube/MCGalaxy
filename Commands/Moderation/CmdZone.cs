@@ -137,10 +137,10 @@ namespace MCGalaxy.Commands {
                 
                 if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
                     string grpName = zn.Owner.Substring(3);
-                    if (p.group.Permission < Group.Find(grpName).Permission) continue;
+                    if (p.Rank < Group.Find(grpName).Permission) continue;
                 } else if (zn.Owner != "" && !zn.Owner.CaselessEq(p.name)) {
                     Group group = Group.findPlayerGroup(zn.Owner);
-                    if (p.group.Permission < group.Permission) continue;
+                    if (p.Rank < group.Permission) continue;
                 }
                 
                 LevelDB.DeleteZone(lvl.name, zn);
