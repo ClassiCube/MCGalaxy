@@ -241,9 +241,9 @@ namespace MCGalaxy {
         }
 
         void DoJoinLeaveMessage(string who, string verb, string channel) {
-            Server.s.Log(String.Format("{0} has {1} channel {2}", who, verb, channel));
+            Server.s.Log(String.Format("{0} {1} channel {2}", who, verb, channel));
             string which = channel.CaselessEq(opchannel) ? " operator" : "";
-            Player.GlobalIRCMessage(String.Format("%I[IRC] {0} has {1} the{2} channel", who, verb, which));
+            Player.GlobalIRCMessage(String.Format("%I[IRC] {0} {1} the{2} channel", who, verb, which));
         }
 
         void Listener_OnQuit(UserInfo user, string reason) {
@@ -252,8 +252,8 @@ namespace MCGalaxy {
             
             RemoveNick(user.Nick);
             if (user.Nick == nick) return;
-            Server.s.Log(user.Nick + " has left IRC");
-            Player.GlobalIRCMessage("%I[IRC] " + user.Nick + " has left");
+            Server.s.Log(user.Nick + " left IRC");
+            Player.GlobalIRCMessage("%I[IRC] " + user.Nick + " left");
         }
 
         void Listener_OnError(ReplyCode code, string message) {
@@ -467,8 +467,8 @@ namespace MCGalaxy {
         void Listener_OnKick(UserInfo user, string channel, string kickee, string reason) {
             List<string> chanNicks = GetNicks(channel);
             RemoveNick(user.Nick, chanNicks);
-            Server.s.Log(kickee + " kicked " + user.Nick + " from IRC");
-            Player.GlobalIRCMessage("%I[IRC] " + kickee + " kicked " + user.Nick);           
+            Server.s.Log(user.Nick + " kicked " + kickee + " from IRC");
+            Player.GlobalIRCMessage("%I[IRC] " + user.Nick + " kicked " + kickee);           
         }
         
         void Listener_OnKill(UserInfo user, string nick, string reason) {
