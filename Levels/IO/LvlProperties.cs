@@ -19,7 +19,6 @@ using System;
 using System.IO;
 
 namespace MCGalaxy.Levels.IO {
-
     public static class LvlProperties {
         
         public static void Save(Level level, string path) {

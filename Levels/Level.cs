@@ -398,8 +398,8 @@ namespace MCGalaxy
             }
             MovePlayersToMain();
 
-            if (changed && ShouldSaveChanges()) Save(false, true);
-            if (ShouldSaveChanges()) saveChanges();
+            if (save && changed && ShouldSaveChanges()) Save(false, true);
+            if (save && ShouldSaveChanges()) saveChanges();
             
             if (TntWarsGame.Find(this) != null)
             {

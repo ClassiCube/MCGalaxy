@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.World {
                 for (int i = 0; i < loaded.Length; i++) {
                     Level lvl = loaded[i];
                     if (lvl.HasPlayers()) continue;
-                    lvl.Unload(true, true);
+                    lvl.Unload(true);
                 }
             } else {
                 Level level = LevelInfo.Find(name);

@@ -47,18 +47,7 @@ namespace MCGalaxy.Commands.World {
             if (LevelInfo.ExistsOffline(name)) {
                 Player.Message(p, "Level \"" + name + "\" already exists!"); return;
             }
-
-            if (p != null) {
-                int limit = p.Rank < LevelPermission.Admin ? 
-                    Server.MapGenLimit : Server.MapGenLimitAdmin;
-                if ((long)x * y * z > limit ) {
-                    string text = "You cannot create a map with over ";
-                    if (limit > 1000 * 1000) text += (limit / (1000 * 1000)) + " million blocks";
-                    else if (limit > 1000) text += (limit / 1000) + " thousand blocks";
-                    else text += limit + " blocks";
-                    Player.Message(p, text); return;
-                }
-            }
+            if (!CheckMapSize(p, x, y, z)) return;
 
             try {
                 using (Level lvl = new Level(name, x, y, z, args[4], seed)) {
@@ -72,10 +61,20 @@ namespace MCGalaxy.Commands.World {
             }
             
             string format = seed != "" ? "Level \"{0}\" created with seed \"{1}\"" : "Level \"{0}\" created";
-            if (seed != "")
-               Player.GlobalMessage(String.Format(format, name, seed));
-            else
-                Player.GlobalMessage(String.Format(format, name));
+            Player.GlobalMessage(String.Format(format, name, seed));
+        }
+        
+        internal static bool CheckMapSize(Player p, int x, int y, int z) {
+            if (p == null) return true;
+            int limit = p.Rank < LevelPermission.Admin ? Server.MapGenLimit : Server.MapGenLimitAdmin;
+            if ((long)x * y * z <= limit ) return true;
+            
+            string text = "You cannot create a map with over ";
+            if (limit > 1000 * 1000) text += (limit / (1000 * 1000)) + " million blocks";
+            else if (limit > 1000) text += (limit / 1000) + " thousand blocks";
+            else text += limit + " blocks";
+            Player.Message(p, text);
+            return false;
         }
         
         public override void Help(Player p) {

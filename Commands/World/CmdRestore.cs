@@ -73,6 +73,7 @@ namespace MCGalaxy.Commands {
                     pl.level = restore;
                     CmdReload.ReloadMap(null, pl, false);
                 }
+                lvl.Unload(true, false);
             } else {
                 Server.s.Log("Restore nulled");
                 File.Copy(LevelInfo.LevelPath(lvl.name) + ".backup", LevelInfo.LevelPath(lvl.name), true);
