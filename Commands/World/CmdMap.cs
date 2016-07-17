@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.World {
         static bool IsMapOption(string[] args) {
             string opt = args[0].ToLower();
             const string opts = "theme|finite|ai|edge|grass|ps|physicspeed|overload|motd|death|killer|fall"
-                + "|drown|unload|chat|load|loadongoto|flow|randomflow|tree|growtrees|buildable|deletable";
+                + "|drown|unload|chat|load|loadongoto|leaf|leafdecay|flow|randomflow|tree|growtrees|buildable|deletable";
             if (!opts.Contains(opt)) return false;
             
             bool optHasArg = opt == "ps" || opt == "physicspeed" || opt == "overload" || opt == "fall" || opt == "drown";
@@ -125,30 +125,37 @@ namespace MCGalaxy.Commands.World {
             Level.SaveSettings(lvl);
         }
         
-        static void PrintMapInfo(Player p, Level lvl) {
-            Player.Message(p, "MOTD: &b" + lvl.motd);
-            Player.Message(p, "Finite mode: " + GetBool(lvl.finite));
-            Player.Message(p, "Random flow: " + GetBool(lvl.randomFlow));
-            Player.Message(p, "Animal AI: " + GetBool(lvl.ai));
-            Player.Message(p, "Edge water: " + GetBool(lvl.edgeWater));
-            Player.Message(p, "Grass growing: " + GetBool(lvl.GrassGrow));
-            Player.Message(p, "Tree growing: " + GetBool(lvl.growTrees));
-            Player.Message(p, "Leaf decay: " + GetBool(lvl.leafDecay));
-            Player.Message(p, "Physics speed: &b" + lvl.speedPhysics);
-            Player.Message(p, "Physics overload: &b" + lvl.overload);
-            Player.Message(p, "Survival death: " + GetBool(lvl.Death) + "(Fall: " + lvl.fall + ", Drown: " + lvl.drown + ")");
-            Player.Message(p, "Killer blocks: " + GetBool(lvl.Killer));
-            Player.Message(p, "Unload: " + GetBool(lvl.unload));
-            Player.Message(p, "Load on /goto: " + GetBool(lvl.loadOnGoto));
-            Player.Message(p, "Roleplay (level only) chat: " + GetBool(!lvl.worldChat));
-            Player.Message(p, "Guns: " + GetBool(lvl.guns));
-            Player.Message(p, "Buildable: " + GetBool(lvl.Buildable));
-            Player.Message(p, "Deletable: " + GetBool(lvl.Deletable));
+        static void PrintMapInfo(Player p, Level lvl) {            
+            Player.Message(p, "%TPhysics settings:");
+            Player.Message(p, "  Finite mode: {0}%S, Random flow: {1}", 
+                           GetBool(lvl.finite), GetBool(lvl.randomFlow));
+            Player.Message(p, "  Animal AI: {0}%S, Edge water: {1}", 
+                           GetBool(lvl.ai), GetBool(lvl.edgeWater));
+            Player.Message(p, "  Grass growing: {0}%S, Tree growing: {1}", 
+                           GetBool(lvl.GrassGrow), GetBool(lvl.growTrees));
+            Player.Message(p, "  Leaf decay: {0}%S, Physics overload: {1}", 
+                           GetBool(lvl.leafDecay), lvl.overload);
+            Player.Message(p, "  Physics speed: &b{0} %Smilliseconds between ticks", 
+                           lvl.speedPhysics);
+            
+            Player.Message(p, "%TSurvival settings:");
+            Player.Message(p, "  Survival death: {0}%S(Fall: {1}, Drown: {2})",
+                           GetBool(lvl.Death), lvl.fall, lvl.drown);
+            Player.Message(p, "  Guns: {0}, Killer blocks: {1}",
+                           GetBool(lvl.guns), GetBool(lvl.Killer));
+            
+            Player.Message(p, "%TGeneral settings:");
+            Player.Message(p, "  MOTD: &b" + lvl.motd);
+            Player.Message(p, "  Roleplay (level only) chat: " + GetBool(!lvl.worldChat));
+            Player.Message(p, "  Load on /goto: {0}%S, Auto unload: {1}", 
+                           GetBool(lvl.loadOnGoto), GetBool(lvl.unload));
+            Player.Message(p, "  Buildable: {0}%S, Deletable: {1}", 
+                           GetBool(lvl.Buildable), GetBool(lvl.Deletable));
         }
         
         
         static bool PhysicsSpeedValidator(Player p, int raw) {
-            if (raw < 10) { Player.Message(p, "Physics speed cannot be below 10 seconds."); return false; }
+            if (raw < 10) { Player.Message(p, "Physics speed cannot be below 10 milliseconds."); return false; }
             return true;
         }
         
