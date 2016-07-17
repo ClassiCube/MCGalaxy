@@ -199,7 +199,7 @@ namespace MCGalaxy {
                 Server.s.Log("Failed to start local API server");
             }
 
-            IRC = new ForgeBot(Server.ircChannel, Server.ircOpChannel, Server.ircNick, Server.ircServer);
+            IRC = new IRCBot();
             if (Server.irc) IRC.Connect();
 
             locationChecker = new Thread(DoLocationChecks);

@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.Building {
             return DrawOp.DoDrawOp(op, brush, p, marks);
         }
         
-        struct WriteArgs { public byte scale, spacing; public ushort x, y, z; public string message; }
+        struct WriteArgs { public byte scale, spacing; public string message; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/wrt [scale] [spacing] [message]");

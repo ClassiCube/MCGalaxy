@@ -510,6 +510,7 @@
     <Compile Include="Levels\Physics\TrainPhysics.cs" />
     <Compile Include="Levels\Physics\TntPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
+    <Compile Include="Network\IRCBot.cs" />
     <Compile Include="Network\LevelChunkStream.cs" />
     <Compile Include="Player\Entities.cs" />
     <Compile Include="Player\Group\Group.cs" />
@@ -552,7 +553,6 @@
     <Compile Include="Database\BulkTransaction.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Games\CTF\Auto_CTF.cs" />
-    <Compile Include="IRC\ForgeBot.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Server\Backup.cs" />
     <Compile Include="Server\BackupDB.cs" />

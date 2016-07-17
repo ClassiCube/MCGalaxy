@@ -26,57 +26,97 @@ namespace MCGalaxy {
     
     public enum IRCControllerVerify { None, HalfOp, OpChannel };
     
-    public sealed class ForgeBot {
-        public static readonly string ResetSignal = "\x0F\x03";
-        private Connection connection;
-        private List<string> banCmd;
-        private string channel, opchannel;
-        private string nick;
-        private string server;
-        private bool reset = false;
-        private byte retries = 0;
+    public sealed class IRCBot {
+        public const string ResetSignal = "\x0F\x03";
+        Connection connection;
+        List<string> banCmd;
+        string channel, opchannel;
+        string nick, server;
+        bool reset = false;
+        byte retries = 0;
         Dictionary<string, List<string>> users = new Dictionary<string, List<string>>();
         static char[] trimChars = { ' ' };
+        ConnectionArgs args;
         
-        public ForgeBot(string channel, string opchannel, string nick, string server) {
-            this.channel = channel.Trim(); 
-            this.opchannel = opchannel.Trim(); 
-            this.nick = nick.Replace(" ", ""); 
-            this.server = server;
+        public IRCBot() {
+            UpdateState();         
+            if (!Server.irc) return;
+            connection = new Connection(new UTF8Encoding(false), args);
+            LoadBannedCommands();
+        }
+
+        public void Say(string message, bool opchat = false, bool color = true) {
+            if (!Server.irc ||!IsConnected()) return;
+            message = ConvertMessage(message, color);
             
-            if (Server.irc) {
-                ConnectionArgs args = new ConnectionArgs(nick, server);
-                args.Port = Server.ircPort;
-                args.ServerPassword = Server.ircIdentify && Server.ircPassword != "" ? Server.ircPassword : "*";
-                connection = new Connection(new UTF8Encoding(false), args);
-                HookEvents();
-                LoadBannedCommands();
+            string chan = opchat ? opchannel : channel;
+            if (!String.IsNullOrEmpty(chan))
+                connection.Sender.PublicMessage(chan, message);
+        }
+        
+        public void Pm(string user, string message, bool color = true) {
+            if (!Server.irc ||!IsConnected()) return;
+            message = ConvertMessage(message, color);
+            connection.Sender.PrivateMessage(user, message);
+        }
+        
+        public void Reset() {
+            if (!Server.irc) return;
+            reset = true;
+            retries = 0;
+            Disconnect("IRC Bot resetting...");
+            Connect();
+        }
+        
+        public void Connect() {
+            if (!Server.irc || Server.shuttingDown) return;
+            if (!hookedEvents) HookEvents();
+            
+            Server.s.Log("Connecting to IRC...");
+            UpdateState();
+            connection.connectionArgs = args;
+            
+            try { 
+                connection.Connect(); 
+            } catch (Exception e) {
+                Server.s.Log("Failed to connect to IRC!");
+                Server.ErrorLog(e);
             }
         }
         
-        void HookEvents() {
-            // Register events for outgoing
-            Player.PlayerChat += Player_PlayerChat;
-            Player.PlayerConnect += Player_PlayerConnect;
-            Player.PlayerDisconnect += Player_PlayerDisconnect;
-            Player.DoPlayerAction += Player_PlayerAction;
-
-            // Regster events for incoming
-            connection.Listener.OnNick += Listener_OnNick;
-            connection.Listener.OnRegistered += Listener_OnRegistered;
-            connection.Listener.OnAction += Listener_OnAction;
-            connection.Listener.OnPublic += Listener_OnPublic;
-            connection.Listener.OnPrivate += Listener_OnPrivate;
-            connection.Listener.OnError += Listener_OnError;
-            connection.Listener.OnQuit += Listener_OnQuit;
-            connection.Listener.OnJoin += Listener_OnJoin;
-            connection.Listener.OnPart += Listener_OnPart;
-            connection.Listener.OnDisconnected += Listener_OnDisconnected;
-            connection.Listener.OnChannelModeChange += Listener_OnChannelModeChange;
-            connection.Listener.OnNames += Listener_OnNames;
-            connection.Listener.OnKick += Listener_OnKick;
-            connection.Listener.OnKill += Listener_OnKill;
-            connection.Listener.OnPrivateNotice += Listener_OnPrivateNotice;
+        public void Disconnect(string reason) {
+            if (!IsConnected()) return;
+            if (hookedEvents) UnhookEvents();
+            
+            connection.Disconnect(reason); 
+            Server.s.Log("Disconnected from IRC!");
+            users.Clear();
+        }
+        
+        public bool IsConnected() {  return connection != null && connection.Connected; }
+        
+        
+        static string ConvertMessage(string message, bool color) {
+            if (String.IsNullOrEmpty(message.Trim()))
+                message = ".";
+            message = EmotesHandler.Replace(message);
+            message = FullCP437Handler.Replace(message);
+            message = CP437Writer.ConvertToUnicode(message);
+            
+            if (color)
+                message = Colors.MinecraftToIrcColors(message.Replace("%S", ResetSignal));
+            return message;
+        }
+        
+        void UpdateState() {
+            channel = Server.ircChannel.Trim();
+            opchannel = Server.ircOpChannel.Trim();
+            nick = Server.ircNick.Replace(" ", "");
+            server = Server.ircServer;
+            
+            args = new ConnectionArgs(nick, server);
+            args.Port = Server.ircPort;
+            args.ServerPassword = Server.ircIdentify && Server.ircPassword != "" ? Server.ircPassword : "*";
         }
         
         void LoadBannedCommands() {
@@ -99,84 +139,15 @@ namespace MCGalaxy {
                     if (line[0] != '#') banCmd.Add(line);
             }
         }
-
-        public void Say(string message, bool opchat = false, bool color = true) {
-            if (!IsConnected()) return;
-            message = ConvertMessage(message, color);
-            
-            string chan = opchat ? opchannel : channel;
-            if (!String.IsNullOrEmpty(chan))
-                connection.Sender.PublicMessage(chan, message);
-        }
         
-        public void Pm(string user, string message, bool color = true) {
-            if (!IsConnected()) return;
-            message = ConvertMessage(message, color);
-            connection.Sender.PrivateMessage(user, message);
-        }
-        
-        static string ConvertMessage(string message, bool color) {
-            if (String.IsNullOrEmpty(message.Trim()))
-                message = ".";
-            message = EmotesHandler.Replace(message);
-            message = FullCP437Handler.Replace(message);
-            message = CP437Writer.ConvertToUnicode(message);
-            
-            if (color)
-                message = Colors.MinecraftToIrcColors(message.Replace("%S", ResetSignal));
-            return message;
-        }
-        
-        public void Reset() {
-            channel = Server.ircChannel.Trim();
-            opchannel = Server.ircOpChannel.Trim();
-            nick = Server.ircNick.Replace(" ", "");
-            server = Server.ircServer;
-            
-            connection.connectionArgs.Port = Server.ircPort;
-            connection.connectionArgs.Hostname = Server.ircServer;
-            connection.connectionArgs.Nick = Server.ircNick;
-            connection.connectionArgs.ServerPassword = Server.ircIdentify 
-                && Server.ircPassword != "" ? Server.ircPassword : "*";
-            
-            if (!Server.irc) return;
-            reset = true;
-            retries = 0;
-            Disconnect("IRC Bot resetting...");
-            Connect();
-        }
-        
-        public void Connect() {
-            if (!Server.irc || Server.shuttingDown) return;
-
-            Server.s.Log("Connecting to IRC...");
-            connection.connectionArgs.Nick = nick;
-            
-            try { 
-                connection.Connect(); 
-            } catch (Exception e) {
-                Server.s.Log("Failed to connect to IRC!");
-                Server.ErrorLog(e);
-            }
-        }
-        
-        public void Disconnect(string reason) {
-            if (!IsConnected()) return; 
-            connection.Disconnect(reason); 
-            Server.s.Log("Disconnected from IRC!");
-            users.Clear();
-        }
-        
-        public bool IsConnected() { 
-            return Server.irc && connection != null && connection.Connected; 
-        }
         
         #region In-game event handlers
         
         void Player_PlayerAction(Player p, PlayerAction action, 
                                       string message, bool stealth) {
-            if (!IsConnected()) return;
+            if (!Server.irc ||!IsConnected()) return;
             string msg = null;
+            
             if (action == PlayerAction.AFK)
                 msg = p.ColoredName + " %Sis AFK " + message;
             else if (action == PlayerAction.UnAFK)
@@ -196,7 +167,7 @@ namespace MCGalaxy {
         }
         
         void Player_PlayerDisconnect(Player p, string reason) {
-            if (!IsConnected()) return;
+            if (!Server.irc ||!IsConnected()) return;
             if (!Server.guestLeaveNotify && p.Rank <= LevelPermission.Guest) return;
             
             string msg = p.DisplayName + " %Sleft the game (" + reason + ")";
@@ -205,7 +176,7 @@ namespace MCGalaxy {
         }
 
         void Player_PlayerConnect(Player p) {
-            if (!IsConnected()) return;
+            if (!Server.irc ||!IsConnected()) return;
             if (!Server.guestJoinNotify && p.Rank <= LevelPermission.Guest) return;
             
             string msg = p.DisplayName + " %Sjoined the game";
@@ -213,14 +184,15 @@ namespace MCGalaxy {
             if (!p.hidden) connection.Sender.PublicMessage(channel, msg);
         }
         
-        void Player_PlayerChat(Player p, string message) {    	
+        void Player_PlayerChat(Player p, string message) {
+            if (!Server.irc ||!IsConnected()) return;
             if (String.IsNullOrEmpty(message.Trim(trimChars))) return;
-            if (!IsConnected()) return;
             
             string name = Server.ircPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;
             Say(name + "%S: " + message, p.opchat);
         }        
         #endregion
+        
         
         #region IRC event handlers
         
@@ -567,6 +539,63 @@ namespace MCGalaxy {
             }
         }
         
+        #endregion
+        
+        
+        #region Event hooks
+        
+        volatile bool hookedEvents = false;
+        void HookEvents() {
+            hookedEvents = true;
+            // Register events for outgoing
+            Player.PlayerChat += Player_PlayerChat;
+            Player.PlayerConnect += Player_PlayerConnect;
+            Player.PlayerDisconnect += Player_PlayerDisconnect;
+            Player.DoPlayerAction += Player_PlayerAction;
+
+            // Regster events for incoming
+            connection.Listener.OnNick += Listener_OnNick;
+            connection.Listener.OnRegistered += Listener_OnRegistered;
+            connection.Listener.OnAction += Listener_OnAction;
+            connection.Listener.OnPublic += Listener_OnPublic;
+            connection.Listener.OnPrivate += Listener_OnPrivate;
+            connection.Listener.OnError += Listener_OnError;
+            connection.Listener.OnQuit += Listener_OnQuit;
+            connection.Listener.OnJoin += Listener_OnJoin;
+            connection.Listener.OnPart += Listener_OnPart;
+            connection.Listener.OnDisconnected += Listener_OnDisconnected;
+            connection.Listener.OnChannelModeChange += Listener_OnChannelModeChange;
+            connection.Listener.OnNames += Listener_OnNames;
+            connection.Listener.OnKick += Listener_OnKick;
+            connection.Listener.OnKill += Listener_OnKill;
+            connection.Listener.OnPrivateNotice += Listener_OnPrivateNotice;
+        }
+        
+        void UnhookEvents() {
+            hookedEvents = false;
+             // Register events for outgoing
+            Player.PlayerChat -= Player_PlayerChat;
+            Player.PlayerConnect -= Player_PlayerConnect;
+            Player.PlayerDisconnect -= Player_PlayerDisconnect;
+            Player.DoPlayerAction -= Player_PlayerAction;
+
+            // Regster events for incoming
+            connection.Listener.OnNick -= Listener_OnNick;
+            connection.Listener.OnRegistered -= Listener_OnRegistered;
+            connection.Listener.OnAction -= Listener_OnAction;
+            connection.Listener.OnPublic -= Listener_OnPublic;
+            connection.Listener.OnPrivate -= Listener_OnPrivate;
+            connection.Listener.OnError -= Listener_OnError;
+            connection.Listener.OnQuit -= Listener_OnQuit;
+            connection.Listener.OnJoin -= Listener_OnJoin;
+            connection.Listener.OnPart -= Listener_OnPart;
+            connection.Listener.OnDisconnected -= Listener_OnDisconnected;
+            connection.Listener.OnChannelModeChange -= Listener_OnChannelModeChange;
+            connection.Listener.OnNames -= Listener_OnNames;
+            connection.Listener.OnKick -= Listener_OnKick;
+            connection.Listener.OnKill -= Listener_OnKill;
+            connection.Listener.OnPrivateNotice -= Listener_OnPrivateNotice;
+        }
         #endregion
     }
 }

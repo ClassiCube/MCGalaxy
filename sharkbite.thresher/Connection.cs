@@ -470,10 +470,7 @@ namespace Sharkbite.Irc
 		{
 			lock ( this )
 			{
-				if( connected )
-				{
-					throw new Exception("Connection with IRC server already opened.");
-				}
+				if( connected ) throw new InvalidOperationException("Connection with IRC server already opened.");
 				Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceInfo,"[" + Thread.CurrentThread.Name +"] Connection::Connect()");
 				client = new TcpClient();
 				client.Connect( connectionArgs.Hostname, connectionArgs.Port );
@@ -499,10 +496,7 @@ namespace Sharkbite.Irc
 		{
 			lock ( this )
 			{
-				if( !connected )
-				{
-					throw new Exception("Not connected to IRC server.");
-				}
+				if( !connected ) throw new InvalidOperationException("Not connected to IRC server.");
 				Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceInfo,"[" + Thread.CurrentThread.Name +"] Connection::Disconnect()");
 				listener.Disconnecting();
 				sender.Quit( reason );
@@ -518,7 +512,7 @@ namespace Sharkbite.Irc
 		/// <returns>The Name property</returns>
 		public override string ToString()
 		{
-			return this.Name;
+			return Name;
 		}
 
 		/// <summary>

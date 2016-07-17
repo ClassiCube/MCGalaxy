@@ -49,7 +49,7 @@ namespace MCGalaxy {
         public event PlayerListHandler OnPlayerListChange;
         public event VoidHandler OnSettingsUpdate;
         
-        public static ForgeBot IRC;
+        public static IRCBot IRC;
         public static Thread locationChecker, blockThread;
         public static WebServer APIServer, InfoServer;
         public static DateTime StartTime, StartTimeLocal;

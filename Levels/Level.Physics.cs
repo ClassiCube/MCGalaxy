@@ -325,7 +325,6 @@ namespace MCGalaxy {
             }
 
             try {
-                if (!(C.data is PhysicsArgs)) return;
                 PhysicsArgs args = (PhysicsArgs)C.data;
                 if (args.Type1 == PhysicsArgs.Revert)
                     Blockchange(x, y, z, args.Value1, true);
