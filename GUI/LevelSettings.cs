@@ -33,7 +33,7 @@ namespace MCGalaxy.Gui {
         [Category("General")]
         public string MOTD { get { return lvl.motd; } set { lvl.motd = value == "" ? "ignore" : value; } }
         
-        [Description("Whether this map automatically loads when the server as started.")]
+        [Description("Whether this map automatically loads when the server is started.")]
         [Category("General")]
         public bool AutoLoad { get { return GetAutoload(); } set { SetAutoload(value); } }
         

@@ -98,8 +98,6 @@ namespace MCGalaxy.Gui
             s.OnCommand += newCommand;
             s.OnError += newError;
             s.OnSystem += newSystem;
-            s.OnAdmin += WriteAdmin;
-            s.OnOp += WriteOp;
 
             s.HeartBeatFail += HeartBeatFail;
             s.OnURLChange += UpdateUrl;
@@ -198,32 +196,6 @@ namespace MCGalaxy.Gui
                 //end substring
 
                 txtLog.AppendLog(s + Environment.NewLine);
-            }
-        }
-
-        public void WriteOp(string s) {
-            if (Server.shuttingDown) return;
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new LogDelegate(WriteOp), new object[] { s });
-            }
-            else
-            {
-                //txtLog.AppendText(Environment.NewLine + s);
-                txtOpLog.AppendTextAndScroll(s);
-            }
-        }
-
-        public void WriteAdmin(string s) {
-            if (Server.shuttingDown) return;
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new LogDelegate(WriteAdmin), new object[] { s });
-            }
-            else
-            {
-                //txtLog.AppendText(Environment.NewLine + s);
-                txtAdminLog.AppendTextAndScroll(s);
             }
         }
 
@@ -994,33 +966,6 @@ namespace MCGalaxy.Gui
         #endregion
 
         #endregion
-
-        private void txtOpInput_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                if (txtOpInput.Text == null || txtOpInput.Text.Trim() == "") { return; }
-                string optext = txtOpInput.Text.Trim();
-                string opnewtext = optext;
-                MCGalaxy.Chat.GlobalMessageOps("To Ops &f-" + Server.DefaultColor + "Console [&a" + Server.ZallState + Server.DefaultColor + "]&f- " + opnewtext);
-                Server.s.OpLog("(OPs): Console: " + opnewtext);
-                txtOpInput.Clear();
-            }
-
-        }
-
-        private void txtAdminInput_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                if (txtAdminInput.Text == null || txtAdminInput.Text.Trim() == "") { return; }
-                string admintext = txtAdminInput.Text.Trim();
-                string adminnewtext = admintext;
-                MCGalaxy.Chat.GlobalMessageAdmins("To Admins &f-" + Server.DefaultColor + "Console [&a" + Server.ZallState + Server.DefaultColor + "]&f- " + adminnewtext);
-                Server.s.AdminLog("(Admins): Console: " + adminnewtext);
-                txtAdminInput.Clear();
-            }
-        }
 
         private void button_saveall_Click(object sender, EventArgs e)
         {

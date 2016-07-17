@@ -193,15 +193,6 @@ namespace MCGalaxy.Gui
             this.label14 = new System.Windows.Forms.Label();
             this.NameTxtPlayersTab = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.Chat = new System.Windows.Forms.TabPage();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label32 = new System.Windows.Forms.Label();
-            this.txtAdminLog = new MCGalaxy.Gui.AutoScrollTextBox();
-            this.txtAdminInput = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.txtOpInput = new System.Windows.Forms.TextBox();
-            this.txtOpLog = new MCGalaxy.Gui.AutoScrollTextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.gbMap_Props = new System.Windows.Forms.GroupBox();
             this.pgMaps = new System.Windows.Forms.PropertyGrid();
@@ -242,9 +233,6 @@ namespace MCGalaxy.Gui
             this.tabControl1.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.panel4.SuspendLayout();
-            this.Chat.SuspendLayout();  
-            this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbMap_Props.SuspendLayout();
             this.gbMap_Lded.SuspendLayout();
@@ -1056,7 +1044,6 @@ namespace MCGalaxy.Gui
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage7);
-            this.tabControl1.Controls.Add(this.Chat);
             this.tabControl1.Cursor = System.Windows.Forms.Cursors.Default;
             this.tabControl1.Font = new System.Drawing.Font("Calibri", 8.25F);
             this.tabControl1.Location = new System.Drawing.Point(1, 11);
@@ -1654,106 +1641,6 @@ namespace MCGalaxy.Gui
             this.label12.TabIndex = 39;
             this.label12.Text = "Name:";
             // 
-            // Chat
-            // 
-        	this.Chat.BackColor = System.Drawing.SystemColors.Control;
-        	this.Chat.Controls.Add(this.groupBox2);
-        	this.Chat.Controls.Add(this.groupBox1);
-        	this.Chat.Location = new System.Drawing.Point(4, 22);
-        	this.Chat.Name = "Chat";
-        	this.Chat.Padding = new System.Windows.Forms.Padding(3);
-        	this.Chat.Size = new System.Drawing.Size(767, 488);
-        	this.Chat.TabIndex = 8;
-        	this.Chat.Text = "Chat";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.label32);
-            this.groupBox2.Controls.Add(this.txtAdminLog);
-            this.groupBox2.Controls.Add(this.txtAdminInput);
-            this.groupBox2.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(8, 166);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(753, 155);
-            this.groupBox2.TabIndex = 36;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = " Admin Chat";
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(7, 131);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(62, 13);
-            this.label32.TabIndex = 32;
-            this.label32.Text = "AdminChat:";
-            // 
-            // txtAdminLog
-            // 
-            this.txtAdminLog.BackColor = System.Drawing.SystemColors.Window;
-            this.txtAdminLog.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtAdminLog.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtAdminLog.Location = new System.Drawing.Point(6, 20);
-            this.txtAdminLog.Multiline = true;
-            this.txtAdminLog.Name = "txtAdminLog";
-            this.txtAdminLog.ReadOnly = true;
-            this.txtAdminLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtAdminLog.Size = new System.Drawing.Size(741, 102);
-            this.txtAdminLog.TabIndex = 2;
-            // 
-            // txtAdminInput
-            // 
-            this.txtAdminInput.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtAdminInput.Location = new System.Drawing.Point(75, 128);
-            this.txtAdminInput.Name = "txtAdminInput";
-            this.txtAdminInput.Size = new System.Drawing.Size(672, 21);
-            this.txtAdminInput.TabIndex = 28;
-            this.txtAdminInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtAdminInput_KeyDown);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label33);
-            this.groupBox1.Controls.Add(this.txtOpInput);
-            this.groupBox1.Controls.Add(this.txtOpLog);
-            this.groupBox1.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(8, 5);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(753, 155);
-            this.groupBox1.TabIndex = 35;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Op Chat";
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(7, 131);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(44, 13);
-            this.label33.TabIndex = 31;
-            this.label33.Text = "OpChat:";
-            // 
-            // txtOpInput
-            // 
-            this.txtOpInput.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtOpInput.Location = new System.Drawing.Point(57, 128);
-            this.txtOpInput.Name = "txtOpInput";
-            this.txtOpInput.Size = new System.Drawing.Size(690, 21);
-            this.txtOpInput.TabIndex = 30;
-            this.txtOpInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtOpInput_KeyDown);
-            // 
-            // txtOpLog
-            // 
-            this.txtOpLog.BackColor = System.Drawing.SystemColors.Window;
-            this.txtOpLog.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtOpLog.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtOpLog.Location = new System.Drawing.Point(6, 26);
-            this.txtOpLog.Multiline = true;
-            this.txtOpLog.Name = "txtOpLog";
-            this.txtOpLog.ReadOnly = true;
-            this.txtOpLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtOpLog.Size = new System.Drawing.Size(741, 96);
-            this.txtOpLog.TabIndex = 29;
-            // 
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
@@ -2044,11 +1931,6 @@ namespace MCGalaxy.Gui
             this.tabPage7.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
-            this.Chat.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.gbMap_Props.ResumeLayout(false);
             this.gbMap_Lded.ResumeLayout(false);
@@ -2185,15 +2067,6 @@ namespace MCGalaxy.Gui
         private Button SendRulesTxt;
         private AutoScrollTextBox PlayersTextBox;
         private ListBox PlyersListBox;
-        private TabPage Chat;
-        private GroupBox groupBox2;
-        private Label label32;
-        private AutoScrollTextBox txtAdminLog;
-        private TextBox txtAdminInput;
-        private GroupBox groupBox1;
-        private Label label33;
-        private TextBox txtOpInput;
-        private AutoScrollTextBox txtOpLog;
         private Button button_saveall;
         private Button Unloadempty_button;
         private Button killphysics_button;
