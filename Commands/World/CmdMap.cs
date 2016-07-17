@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System;
+
 namespace MCGalaxy.Commands.World {
     public sealed class CmdMap : Command {
         public override string name { get { return "map"; } }
@@ -39,15 +41,15 @@ namespace MCGalaxy.Commands.World {
             if (IsMapOption(args)) {
                 if (Player.IsSuper(p)) { SuperRequiresArgs(p, "level"); return; }
                 
-                lvl = p.level; opt = args[0];             
+                lvl = p.level; opt = args[0];
                 args = message.SplitSpaces(2);
                 value = args.Length > 1 ? args[1] : "";
             } else {
                 lvl = LevelInfo.FindMatches(p, args[0]);
-                if (lvl == null) return;                
+                if (lvl == null) return;
                 if (args.Length == 1) { PrintMapInfo(p, lvl); return; }
                 
-                opt = args[1]; 
+                opt = args[1];
                 value = args.Length > 2 ? args[2] : "";
             }
             
@@ -80,16 +82,9 @@ namespace MCGalaxy.Commands.World {
                     SetBool(p, lvl, ref lvl.GrassGrow, "Growing grass: "); break;
                 case "ps":
                 case "physicspeed":
-                    if (int.Parse(value) < 10) { Player.Message(p, "Cannot go below 10"); return; }
-                    lvl.speedPhysics = int.Parse(value);
-                    lvl.ChatLevel("Physics speed: &b" + lvl.speedPhysics);
-                    break;
+                    SetInt(p, lvl, ref lvl.speedPhysics, value, "Physics speed", PhysicsSpeedValidator); break;
                 case "overload":
-                    if (int.Parse(value) < 500) { Player.Message(p, "Cannot go below 500 (default is 1500)"); return; }
-                    if (p != null && p.Rank < LevelPermission.Admin && int.Parse(value) > 2500) { Player.Message(p, "Only SuperOPs may set higher than 2500"); return; }
-                    lvl.overload = int.Parse(value);
-                    lvl.ChatLevel("Physics overload: &b" + lvl.overload);
-                    break;
+                    SetInt(p, lvl, ref lvl.overload, value, "Physics overload", PhysicsOverloadValidator); break;
                 case "motd":
                     lvl.motd = value == "" ? "ignore" : value;
                     lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.motd);
@@ -99,11 +94,9 @@ namespace MCGalaxy.Commands.World {
                 case "killer":
                     SetBool(p, lvl, ref lvl.Killer, "Killer blocks: "); break;
                 case "fall":
-                    lvl.fall = int.Parse(value);
-                    lvl.ChatLevel("Fall distance: &b" + lvl.fall); break;
+                    SetInt(p, lvl, ref lvl.fall, value, "Fall distance", null); break;
                 case "drown":
-                    lvl.drown = int.Parse(value);
-                    lvl.ChatLevel("Drown time: &b" + ((float)lvl.drown / 10)); break;
+                    SetInt(p, lvl, ref lvl.drown, value, "Drown time (in tenths of a second)", null); break;
                 case "unload":
                     SetBool(p, lvl, ref lvl.unload, "Auto unload: "); break;
                 case "chat":
@@ -153,13 +146,40 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "Deletable: " + GetBool(lvl.Deletable));
         }
         
-        static void SetBool(Player p, Level lvl, ref bool target, string message, bool negate = false) {
+        
+        static bool PhysicsSpeedValidator(Player p, int raw) {
+            if (raw < 10) { Player.Message(p, "Physics speed cannot be below 10 seconds."); return false; }
+            return true;
+        }
+        
+        static bool PhysicsOverloadValidator(Player p, int raw) {
+            if (raw < 500) { 
+                Player.Message(p, "Physics overload cannot go below 500 (default is 1500)"); return false; 
+            }
+            if (p != null && p.Rank < LevelPermission.Admin && raw > 2500) { 
+                Player.Message(p, "Only SuperOPs may set physics overload higher than 2500"); return false; 
+            }
+            return true;
+        }
+        
+        static void SetBool(Player p, Level lvl, ref bool target, string name, bool negate = false) {
             target = !target;
             bool display = negate ? !target : target;
-            lvl.ChatLevel(message + GetBool(display));
+            lvl.ChatLevel(name + GetBool(display));
             
             if (p == null || p.level != lvl)
-                Player.Message(p, message + GetBool(display, p == null));
+                Player.Message(p, name + GetBool(display, p == null));
+        }
+        
+        static void SetInt(Player p, Level lvl, ref int target, string value, string name,
+                           Func<Player, int, bool> validator) {
+            if (value == "") { Player.Message(p, "You must provide an integer."); return; }
+            int raw;
+            if (!int.TryParse(value, out raw)) { Player.Message(p, "\"{0}\" is not a valid integer.", value); return; }
+            
+            if (validator != null && !validator(p, raw)) return;
+            target = raw;
+            lvl.ChatLevel(name + ": &b" + target);
         }
         
         static string GetBool(bool value, bool console = false) {
