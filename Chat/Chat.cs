@@ -26,13 +26,13 @@ namespace MCGalaxy {
         public static void GlobalChatLevel(Player from, string message, bool showname) {
             if (showname)
                 message = "<Level>" + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
-			Player[] players = PlayerInfo.Online.Items;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level == from.level && p.Chatroom == null)
                     SendMessage(p, from, message);
             }
         }
-		
+        
         [Obsolete("Use GlobalChatLevel instead, this method has been removed.")]
         public static void GlobalChatWorld(Player from, string message, bool showname) {
             GlobalChatLevel(from, message, showname);
@@ -66,7 +66,7 @@ namespace MCGalaxy {
             }
             Server.s.Log("<ChatRoom " + chatroom + ">" + from.name + ": " + rawMessage);
         }
-		
+        
         public static void GlobalMessageLevel(Level l, string message) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
@@ -206,31 +206,37 @@ namespace MCGalaxy {
             
             if (text[0] == '#' || (p != null && p.opchat)) {
                 if (text[0] == '#') text = text.Remove(0, 1).Trim();
-
-                string displayName = p == null ? "(console)" : p.ColoredName;
-                string name = p == null ? "(console)" : p.name;
-                Chat.GlobalMessageOps("To Ops &f-" + displayName + "&f- " + text);
-                if (p != null && p.Rank < Server.opchatperm )
-                    p.SendMessage("To Ops &f-" + displayName + "&f- " + text);
-                
-                Server.s.Log("(OPs): " + name + ": " + text);
-                Server.IRC.Say(displayName + "%S: " + text, true);
+                MessageOps(p, text);
                 return true;
             }
             if (text[0] == '+' || (p != null && p.adminchat)) {
                 if (text[0] == '+') text = text.Remove(0, 1).Trim();
-
-                string displayName = p == null ? "(console)" : p.ColoredName;
-                string name = p == null ? "(console)" : p.name;
-                Chat.GlobalMessageAdmins("To Admins &f-" + displayName + "&f- " + text);
-                if (p != null && p.Rank < Server.adminchatperm)
-                    p.SendMessage("To Admins &f-" + displayName + "&f- " + text);
-                
-                Server.s.Log("(Admins): " + name + ": " + text);
-                Server.IRC.Say(displayName + "%S: " + text, true);
+                MessageAdmins(p, text);
                 return true;
             }
             return false;
+        }
+        
+        public static void MessageOps(Player p, string message) {
+            string displayName = p == null ? "(console)" : p.ColoredName;
+            string name = p == null ? "(console)" : p.name;
+            GlobalMessageOps("To Ops &f-" + displayName + "&f- " + message);
+            if (p != null && p.Rank < Server.opchatperm )
+                p.SendMessage("To Ops &f-" + displayName + "&f- " + message);
+            
+            Server.s.Log("(OPs): " + name + ": " + message);
+            Server.IRC.Say(displayName + "%S: " + message, true);
+        }
+
+        public static void MessageAdmins(Player p, string message) {
+            string displayName = p == null ? "(console)" : p.ColoredName;
+            string name = p == null ? "(console)" : p.name;
+            Chat.GlobalMessageAdmins("To Admins &f-" + displayName + "&f- " + message);
+            if (p != null && p.Rank < Server.adminchatperm)
+                p.SendMessage("To Admins &f-" + displayName + "&f- " + message);
+            
+            Server.s.Log("(Admins): " + name + ": " + message);
+            Server.IRC.Say(displayName + "%S: " + message, true);
         }
         
         static void HandleWhisper(Player p, string target, string message) {

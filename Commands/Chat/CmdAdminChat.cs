@@ -22,12 +22,16 @@ namespace MCGalaxy.Commands {
         public CmdAdminChat() { }
 
         public override void Use(Player p, string message) {
+            if (message != "") { Chat.MessageAdmins(p, message); return; }
+            
             p.adminchat = !p.adminchat;
             if (p.adminchat) Player.Message(p, "All messages will now be sent to Admins only");
             else Player.Message(p, "Admin chat turned off");
         }
         
         public override void Help(Player p) {
+            Player.Message(p, "%T/adminchat [message]");
+            Player.Message(p, "%HSends a message to online Admins");
             Player.Message(p, "%T/adminchat");
             Player.Message(p, "%HMakes all messages sent go to Admins by default");
         }
