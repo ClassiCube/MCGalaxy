@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 namespace MCGalaxy.Commands.World {
     public sealed class CmdMap : Command {
         public override string name { get { return "map"; } }
@@ -27,63 +27,40 @@ namespace MCGalaxy.Commands.World {
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ps", "ps") }; }
-        }        
+        }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message == "") message = p.level.name;
             Level lvl;
+            string[] parts = message.SplitSpaces(3);
+            string opt = parts[0].ToLower();
+            string value = "";
 
-            if (message.IndexOf(' ') == -1)
-            {
-                lvl = LevelInfo.Find(message);
-                if (lvl == null)
-                {
-                    if (p != null)
-                        lvl = p.level;
+            if (parts.Length == 1) {
+                lvl = LevelInfo.Find(opt);
+                if (lvl == null) {
+                    if (p != null) lvl = p.level;
+                } else {
+                    PrintMapInfo(p, lvl); return;
                 }
-                else
-                {
-                    Player.Message(p, "MOTD: &b" + lvl.motd);
-                    Player.Message(p, "Finite mode: " + GetBool(lvl.finite));
-                    Player.Message(p, "Random flow: " + GetBool(lvl.randomFlow));
-                    Player.Message(p, "Animal AI: " + GetBool(lvl.ai));
-                    Player.Message(p, "Edge water: " + GetBool(lvl.edgeWater));
-                    Player.Message(p, "Grass growing: " + GetBool(lvl.GrassGrow));
-                    Player.Message(p, "Tree growing: " + GetBool(lvl.growTrees));
-                    Player.Message(p, "Leaf decay: " + GetBool(lvl.leafDecay));
-                    Player.Message(p, "Physics speed: &b" + lvl.speedPhysics);
-                    Player.Message(p, "Physics overload: &b" + lvl.overload);
-                    Player.Message(p, "Survival death: " + GetBool(lvl.Death) + "(Fall: " + lvl.fall + ", Drown: " + lvl.drown + ")");
-                    Player.Message(p, "Killer blocks: " + GetBool(lvl.Killer));
-                    Player.Message(p, "Unload: " + GetBool(lvl.unload));
-                    Player.Message(p, "Load on /goto: " + GetBool(lvl.loadOnGoto));
-                    Player.Message(p, "Roleplay (level only) chat: " + GetBool(!lvl.worldChat));
-                    Player.Message(p, "Guns: " + GetBool(lvl.guns));
-                    Player.Message(p, "Buildable: " + GetBool(lvl.Buildable));
-                    Player.Message(p, "Deletable: " + GetBool(lvl.Deletable));
-                    return;
+            } else {
+                lvl = LevelInfo.Find(opt);
+                if (lvl == null || opt == "ps" || opt == "rp") {
+                    lvl = p.level;
+                    value = parts[1];
+                } else {
+                    opt = parts[1];
+                    value = parts.Length > 2 ? parts[2] : "";
                 }
-            }
-            else
-            {
-                lvl = LevelInfo.Find(message.Split(' ')[0]);
-
-                if (lvl == null || message.Split(' ')[0].ToLower() == "ps" || message.Split(' ')[0].ToLower() == "rp") lvl = p.level;
-                else message = message.Substring(message.IndexOf(' ') + 1);
             }
             if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "can set map options."); return; }
 
-            string foundStart;
-            if (message.IndexOf(' ') == -1) foundStart = message.ToLower();
-            else foundStart = message.Split(' ')[0].ToLower();
-
-            try
-            {
+            try {
                 if (lvl == null) Player.Message(p, "derp");
-                switch (foundStart)
-                {
-                    case "theme": lvl.theme = message.Substring(message.IndexOf(' ') + 1); lvl.ChatLevel("Map theme: &b" + lvl.theme); break;
+                switch (opt) {
+                    case "theme":
+                        lvl.theme = value;
+                        lvl.ChatLevel("Map theme: &b" + lvl.theme); break;
                     case "finite":
                         SetBool(p, lvl, ref lvl.finite, "Finite mode: "); break;
                     case "ai":
@@ -94,27 +71,30 @@ namespace MCGalaxy.Commands.World {
                         SetBool(p, lvl, ref lvl.GrassGrow, "Growing grass: "); break;
                     case "ps":
                     case "physicspeed":
-                        if (int.Parse(message.Split(' ')[1]) < 10) { Player.Message(p, "Cannot go below 10"); return; }
-                        lvl.speedPhysics = int.Parse(message.Split(' ')[1]);
+                        if (int.Parse(value) < 10) { Player.Message(p, "Cannot go below 10"); return; }
+                        lvl.speedPhysics = int.Parse(value);
                         lvl.ChatLevel("Physics speed: &b" + lvl.speedPhysics);
                         break;
                     case "overload":
-                        if (int.Parse(message.Split(' ')[1]) < 500) { Player.Message(p, "Cannot go below 500 (default is 1500)"); return; }
-                        if (p != null && p.Rank < LevelPermission.Admin && int.Parse(message.Split(' ')[1]) > 2500) { Player.Message(p, "Only SuperOPs may set higher than 2500"); return; }
-                        lvl.overload = int.Parse(message.Split(' ')[1]);
+                        if (int.Parse(value) < 500) { Player.Message(p, "Cannot go below 500 (default is 1500)"); return; }
+                        if (p != null && p.Rank < LevelPermission.Admin && int.Parse(value) > 2500) { Player.Message(p, "Only SuperOPs may set higher than 2500"); return; }
+                        lvl.overload = int.Parse(value);
                         lvl.ChatLevel("Physics overload: &b" + lvl.overload);
                         break;
                     case "motd":
-                        if (message.Split(' ').Length == 1) lvl.motd = "ignore";
-                        else lvl.motd = message.Substring(message.IndexOf(' ') + 1);
+                        lvl.motd = value == "" ? "ignore" : value;
                         lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.motd);
                         break;
                     case "death":
                         SetBool(p, lvl, ref lvl.Death, "Survival death: "); break;
                     case "killer":
                         SetBool(p, lvl, ref lvl.Killer, "Killer blocks: "); break;
-                    case "fall": lvl.fall = int.Parse(message.Split(' ')[1]); lvl.ChatLevel("Fall distance: &b" + lvl.fall); break;
-                    case "drown": lvl.drown = int.Parse(message.Split(' ')[1]); lvl.ChatLevel("Drown time: &b" + ((float)lvl.drown / 10)); break;
+                    case "fall":
+                        lvl.fall = int.Parse(value);
+                        lvl.ChatLevel("Fall distance: &b" + lvl.fall); break;
+                    case "drown":
+                        lvl.drown = int.Parse(value);
+                        lvl.ChatLevel("Drown time: &b" + ((float)lvl.drown / 10)); break;
                     case "unload":
                         SetBool(p, lvl, ref lvl.unload, "Auto unload: "); break;
                     case "chat":
@@ -133,12 +113,12 @@ namespace MCGalaxy.Commands.World {
                     case "growtrees":
                         SetBool(p, lvl, ref lvl.growTrees, "Tree growing: "); break;
                     case "buildable":
-                        SetBool(p, lvl, ref lvl.Buildable, "Buildable: "); 
+                        SetBool(p, lvl, ref lvl.Buildable, "Buildable: ");
                         lvl.UpdateBlockPermissions(); break;
                     case "deletable":
-                        SetBool(p, lvl, ref lvl.Deletable, "Deletable: "); 
+                        SetBool(p, lvl, ref lvl.Deletable, "Deletable: ");
                         lvl.UpdateBlockPermissions(); break;
-                    
+                        
                     default:
                         Player.Message(p, "Could not find option entered."); return;
                 }
@@ -148,14 +128,35 @@ namespace MCGalaxy.Commands.World {
             catch { Player.Message(p, "INVALID INPUT"); }
         }
         
+        void PrintMapInfo(Player p, Level lvl) {
+            Player.Message(p, "MOTD: &b" + lvl.motd);
+            Player.Message(p, "Finite mode: " + GetBool(lvl.finite));
+            Player.Message(p, "Random flow: " + GetBool(lvl.randomFlow));
+            Player.Message(p, "Animal AI: " + GetBool(lvl.ai));
+            Player.Message(p, "Edge water: " + GetBool(lvl.edgeWater));
+            Player.Message(p, "Grass growing: " + GetBool(lvl.GrassGrow));
+            Player.Message(p, "Tree growing: " + GetBool(lvl.growTrees));
+            Player.Message(p, "Leaf decay: " + GetBool(lvl.leafDecay));
+            Player.Message(p, "Physics speed: &b" + lvl.speedPhysics);
+            Player.Message(p, "Physics overload: &b" + lvl.overload);
+            Player.Message(p, "Survival death: " + GetBool(lvl.Death) + "(Fall: " + lvl.fall + ", Drown: " + lvl.drown + ")");
+            Player.Message(p, "Killer blocks: " + GetBool(lvl.Killer));
+            Player.Message(p, "Unload: " + GetBool(lvl.unload));
+            Player.Message(p, "Load on /goto: " + GetBool(lvl.loadOnGoto));
+            Player.Message(p, "Roleplay (level only) chat: " + GetBool(!lvl.worldChat));
+            Player.Message(p, "Guns: " + GetBool(lvl.guns));
+            Player.Message(p, "Buildable: " + GetBool(lvl.Buildable));
+            Player.Message(p, "Deletable: " + GetBool(lvl.Deletable));
+        }
+        
         void SetBool(Player p, Level lvl, ref bool target, string message, bool negate = false) {
             target = !target;
             Level.SaveSettings(lvl);
             bool display = negate ? !target : target;
             lvl.ChatLevel(message + GetBool(display));
             
-            if (p == null) 
-                Player.Message(p, message + GetBool(display, true));
+            if (p == null || p.level != lvl)
+                Player.Message(p, message + GetBool(display, p == null));
         }
         
         string GetBool(bool value, bool console = false) {
@@ -165,7 +166,7 @@ namespace MCGalaxy.Commands.World {
         public override void Help(Player p) {
             Player.Message(p, "/map [level] [toggle] - Sets [toggle] on [level]");
             Player.Message(p, "Possible toggles: theme, finite, randomflow, ai, edge, grass, growtrees, leafdecay, ps, overload, motd, " +
-                               "death, fall, drown, unload, loadongoto, rp, killer, chat, buildable, deletable, levelonlydeath");
+                           "death, fall, drown, unload, loadongoto, rp, killer, chat, buildable, deletable, levelonlydeath");
             Player.Message(p, "Edge will cause edge water to flow.");
             Player.Message(p, "Grass will make grass not grow without physics.");
             Player.Message(p, "Tree growing will make saplings grow into trees after a while.");
