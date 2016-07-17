@@ -29,71 +29,46 @@ using MCGalaxy.Gui.Utils;
 
 namespace MCGalaxy.Gui.Components {
 
-    /// <summary>
-    /// A rich text box, that can parse Minecraft/MCGalaxy color codes.
-    /// </summary>
+    /// <summary> A rich text box, that can parse Minecraft/MCGalaxy color codes. </summary>
     public partial class ColoredTextBox : RichTextBox {
 
-        private bool _nightMode = false;
-        private bool _colorize = true;
-        private bool _showDateStamp = true;
-        private bool _autoScroll = true;
+        bool _nightMode = false, _colorize = true;
+        bool _showDateStamp = true, _autoScroll = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether to scroll automaticly
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if [auto scroll]; otherwise, <c>false</c>.
-        /// </value>
+        /// <value> <c>true</c> if [auto scroll]; otherwise, <c>false</c>. </value>
         [Browsable(true)]
         [Category("MCGalaxy")]
         [DefaultValue(true)]
         public bool AutoScroll {
-            get {
-                return _autoScroll;
-            }
+            get { return _autoScroll; }
             set {
                 _autoScroll = value;
-                if ( value )
-                    ScrollToEnd(0);
+                if ( value ) ScrollToEnd(0);
             }
         }
 
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="ColoredTextBox"/> is colorized.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if colorized; otherwise, <c>false</c>.
-        /// </value>
+        /// <summary> Gets or sets a value indicating whether this <see cref="ColoredTextBox"/> is colorized. </summary>
+        /// <value> <c>true</c> if colorized; otherwise, <c>false</c>. </value>
         [Browsable(true)]
         [Category("MCGalaxy")]
         [DefaultValue(true)]
         public bool Colorize {
-            get {
-                return _colorize;
-            }
-            set {
-                _colorize = value;
-            }
+            get { return _colorize; }
+            set { _colorize = value; }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether it will include a date stamp in the log
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [date stamp]; otherwise, <c>false</c>.
-        /// </value>
+        /// <summary> Gets or sets a value indicating whether it will include a date stamp in the log </summary>
+        /// <value> <c>true</c> if [date stamp]; otherwise, <c>false</c>. </value>
         [Browsable(true)]
         [Category("MCGalaxy")]
         [DefaultValue(true)]
         public bool DateStamp {
-            get {
-                return _showDateStamp;
-            }
-            set {
-                _showDateStamp = value;
-            }
+            get { return _showDateStamp; }
+            set { _showDateStamp = value; }
         }
 
         /// <summary>
@@ -106,44 +81,33 @@ namespace MCGalaxy.Gui.Components {
         [Category("MCGalaxy")]
         [DefaultValue(false)]
         public bool NightMode {
-            get {
-                return _nightMode;
-            }
+            get { return _nightMode; }
             set {
                 _nightMode = value;
-
                 Clear();
 
                 ForeColor = value ? Color.Black : Color.White;
                 BackColor = value ? Color.White : Color.Black;
-
                 Invalidate();
             }
         }
 
 
-        private string dateStamp {
-            get {
-                return "[" + DateTime.Now.ToString("T") + "] ";
-            }
-        }
+       string CurrentDate { get { return "[" + DateTime.Now.ToString("T") + "] "; } }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ColoredTextBox"/> class.
-        /// </summary>
-        public ColoredTextBox()
-            : base() {
+        /// <summary> Initializes a new instance of the <see cref="ColoredTextBox"/> class. </summary>
+        public ColoredTextBox() : base() {
             InitializeComponent();
         }
 
         /// <summary> Appends the log. </summary>
         /// <param name="text">The text to log.</param>
-        public void AppendLog(string text, Color foreColor) {
+        public void AppendLog(string text, Color foreColor, bool dateStamp) {
             if (InvokeRequired) {
-                Invoke((MethodInvoker)(() => AppendLog(text, foreColor)));
+                Invoke((MethodInvoker)(() => AppendLog(text, foreColor, dateStamp)));
                 return;
             }
-            if (DateStamp) Append(dateStamp, Color.Gray);
+            if (dateStamp) Append(CurrentDate, Color.Gray);
             int line = GetLineFromCharIndex(Math.Max(0, TextLength - 1));
             
             if (!Colorize) {                
@@ -158,7 +122,7 @@ namespace MCGalaxy.Gui.Components {
         /// <summary> Appends the log. </summary>
         /// <param name="text">The text to log.</param>
         public void AppendLog(string text) {
-            AppendLog(text, ForeColor);
+            AppendLog(text, ForeColor, DateStamp);
         }
 
         /// <summary> Appends the log. </summary>
@@ -226,11 +190,9 @@ namespace MCGalaxy.Gui.Components {
             }
         }
 
-        private void CalculateSize(ref Message m) {
+        void CalculateSize(ref Message m) {
             base.WndProc(ref m);
-
-            if ( !Natives.CanRender() )
-                return;
+            if (!Natives.CanRender()) return;
 
             Natives.NCCALCSIZE_PARAMS par = new Natives.NCCALCSIZE_PARAMS();
 
@@ -274,10 +236,7 @@ namespace MCGalaxy.Gui.Components {
 
         private void RenderStyle(ref Message m) {
             base.WndProc(ref m);
-
-            if ( !Natives.CanRender() ) {
-                return;
-            }
+            if (!Natives.CanRender()) return;
 
             int partId = Natives.EP_EDITTEXT;
 
@@ -317,18 +276,14 @@ namespace MCGalaxy.Gui.Components {
         }
 
         protected override CreateParams CreateParams {
-
             get {
                 CreateParams p = base.CreateParams;
 
                 if ( Natives.CanRender() && ( p.ExStyle & Natives.WS_EX_CLIENTEDGE ) == Natives.WS_EX_CLIENTEDGE )
                     p.ExStyle ^= Natives.WS_EX_CLIENTEDGE;
-
                 return p;
             }
-
         }
-
         #endregion
     }
 }

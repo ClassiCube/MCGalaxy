@@ -41,8 +41,6 @@ namespace MCGalaxy.Gui
         public NotifyIcon notifyIcon1 = new NotifyIcon();
         Player curPlayer;
 
-        internal static Server s;
-
         readonly System.Timers.Timer UpdateListTimer = new System.Timers.Timer(10000);
 
         public Window() {
@@ -79,10 +77,8 @@ namespace MCGalaxy.Gui
             dgvMaps.DataSource = new LevelCollection();
             dgvMaps.Font = new Font("Calibri", 8.25f);
 
-            UpdateListTimer.Elapsed += delegate
-            {
-                try
-                {
+            UpdateListTimer.Elapsed += delegate {
+                try {
                     UpdateClientList(PlayerInfo.players);
                     UpdateMapList();
                 }
@@ -93,9 +89,9 @@ namespace MCGalaxy.Gui
         }
         
         void InitServer() {
-            s = new Server();
+            Server s = new Server();
             s.OnLog += WriteLine;
-            s.OnCommand += newCommand;
+            s.OnCommand += WriteCommand;
             s.OnError += newError;
             s.OnSystem += newSystem;
 
@@ -107,7 +103,7 @@ namespace MCGalaxy.Gui
         }
         
         void InitServerTask() {
-            s.Start();
+            Server.s.Start();
 
             Player.PlayerConnect += Player_PlayerConnect;
             Player.PlayerDisconnect += Player_PlayerDisconnect;
@@ -192,32 +188,35 @@ namespace MCGalaxy.Gui
             } else {
                 //Begin substring of crappy date stamp
                 int index = s.IndexOf(')');
-                s = index == -1 ? s : s.Substring(index + 1);;
+                s = index == -1 ? s : s.Substring(index + 1);
                 //end substring
 
                 txtLog.AppendLog(s + Environment.NewLine);
             }
         }
+        
+        void WriteCommand(string s) {
+            if (Server.shuttingDown) return;
+            
+            if (InvokeRequired) {
+                Invoke(new LogDelegate(WriteCommand), new object[] { s });
+            } else {
+                txtLog.AppendLog(s + Environment.NewLine, txtLog.ForeColor, false);
+            }
+        }
 
         /// <summary> Updates the list of client names in the window </summary>
         /// <param name="players">The list of players to add</param>
-        public void UpdateClientList(List<Player> players)
-        {
-
-            if (InvokeRequired)
-            {
+        public void UpdateClientList(List<Player> players) {
+            if (InvokeRequired) {
                 Invoke(new PlayerListCallback(UpdateClientList), players);
-            }
-            else
-            {
-
+            } else {
                 if (dgvPlayers.DataSource == null)
                     dgvPlayers.DataSource = pc;
 
                 // Try to keep the same selection on update
                 string selected = null;
-                if (pc.Count > 0 && dgvPlayers.SelectedRows.Count > 0)
-                {
+                if (pc.Count > 0 && dgvPlayers.SelectedRows.Count > 0) {
                     selected = (from DataGridViewRow row in dgvPlayers.Rows where row.Selected select pc[row.Index]).First().name;
                 }
 
@@ -244,27 +243,23 @@ namespace MCGalaxy.Gui
 
         }
 
-        public void PopupNotify(string message, ToolTipIcon icon = ToolTipIcon.Info)
-        {
+        public void PopupNotify(string message, ToolTipIcon icon = ToolTipIcon.Info) {
             notifyIcon1.ShowBalloonTip(3000, Server.name, message, icon);
         }
 
         public delegate void UpdateList();
 
-        public void UpdateMapList()
-        {
-            if (InvokeRequired)
+        public void UpdateMapList() {
+        	if (InvokeRequired) {
                 Invoke(new UpdateList(UpdateMapList));
-            else
-            {
+        	} else {
 
                 if (dgvMaps.DataSource == null)
                     dgvMaps.DataSource = lc;
 
                 // Try to keep the same selection on update
                 string selected = null;
-                if (lc.Count > 0 && dgvMaps.SelectedRows.Count > 0)
-                {
+                if (lc.Count > 0 && dgvMaps.SelectedRows.Count > 0) {
                     selected = (from DataGridViewRow row in dgvMaps.Rows where row.Selected select lc[row.Index]).First().name;
                 }
 
@@ -292,8 +287,7 @@ namespace MCGalaxy.Gui
                 dgvMaps.DataSource = null;
                 dgvMaps.DataSource = lc;
                 // Reselect map
-                if (selected != null)
-                {
+                if (selected != null) {
                     foreach (DataGridViewRow row in Server.levels.SelectMany(l => dgvMaps.Rows.Cast<DataGridViewRow>().Where(row => (string)row.Cells[0].Value == selected)))
                         row.Selected = true;
                 }
@@ -345,78 +339,49 @@ namespace MCGalaxy.Gui
             if (e.KeyCode != Keys.Enter) return;
             e.Handled = true;
             e.SuppressKeyPress = true;
-            Handlers.HandleCommand(txtCommands.Text, newCommand);
+            Handlers.HandleCommand(txtCommands.Text, WriteCommand);
             txtCommands.Clear();
         }
 
         void btnClose_Click_1(object sender, EventArgs e) { Close(); }
 
-        public void newCommand(string p)
-        {
-            if (txtCommandsUsed.InvokeRequired)
-            {
-                LogDelegate d = newCommand;
-                this.Invoke(d, new object[] { p });
-            }
-            else
-            {
-                txtCommandsUsed.AppendTextAndScroll(p);
-            }
-        }
-
-        private void btnProperties_Click_1(object sender, EventArgs e)
-        {
+        void btnProperties_Click_1(object sender, EventArgs e) {
             if (!prevLoaded) { PropertyForm = new PropertyWindow(); prevLoaded = true; }
             PropertyForm.Show();
-            if (!PropertyForm.Focused)
-            {
-                PropertyForm.Focus();
-            }
+            if (!PropertyForm.Focused) PropertyForm.Focus();
         }
 
         public static bool prevLoaded = false;
         Form PropertyForm;
 
-        private void Window_Resize(object sender, EventArgs e)
-        {
-            this.ShowInTaskbar = (this.WindowState != FormWindowState.Minimized);
+        void Window_Resize(object sender, EventArgs e) {
+            ShowInTaskbar = WindowState != FormWindowState.Minimized;
         }
 
-        private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
-        {
-            this.Show();
-            this.BringToFront();
+        void notifyIcon1_MouseClick(object sender, MouseEventArgs e) {
+            Show();
+            BringToFront();
             WindowState = FormWindowState.Normal;
         }
 
-        private void openConsole_Click(object sender, EventArgs e)
-        {
-            this.Show();
-            this.BringToFront();
+        void openConsole_Click(object sender, EventArgs e) {
+            Show();
+            BringToFront();
             WindowState = FormWindowState.Normal;
         }
 
-        private void shutdownServer_Click(object sender, EventArgs e)
-        {
+        void shutdownServer_Click(object sender, EventArgs e) {
             Close();
         }
 
-        private Player GetSelectedPlayer()
-        {
-
-            if (this.dgvPlayers.SelectedRows.Count <= 0)
-                return null;
-
-            return (Player)(this.dgvPlayers.SelectedRows[0].DataBoundItem);
+        Player GetSelectedPlayer() {
+            if (dgvPlayers.SelectedRows.Count <= 0) return null;
+            return (Player)(dgvPlayers.SelectedRows[0].DataBoundItem);
         }
 
-        private Level GetSelectedLevel()
-        {
-
-            if (this.dgvMaps.SelectedRows.Count <= 0)
-                return null;
-
-            return (Level)(this.dgvMaps.SelectedRows[0].DataBoundItem);
+        Level GetSelectedLevel() {
+            if (dgvMaps.SelectedRows.Count <= 0) return null;
+            return (Level)(dgvMaps.SelectedRows[0].DataBoundItem);
         }
 
         private void clonesToolStripMenuItem_Click(object sender, EventArgs e)

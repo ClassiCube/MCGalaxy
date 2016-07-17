@@ -115,10 +115,7 @@ namespace MCGalaxy.Gui
             this.Unloadempty_button = new System.Windows.Forms.Button();
             this.killphysics_button = new System.Windows.Forms.Button();
             this.button_saveall = new System.Windows.Forms.Button();
-            this.gBCommands = new System.Windows.Forms.GroupBox();
-            this.txtCommandsUsed = new MCGalaxy.Gui.AutoScrollTextBox();
             this.dgvMaps = new System.Windows.Forms.DataGridView();
-            this.gBChat = new System.Windows.Forms.GroupBox();
             this.txtLog = new MCGalaxy.Gui.Components.ColoredTextBox();
             this.txtLogMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.nightModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -225,9 +222,7 @@ namespace MCGalaxy.Gui
             this.tabLog_Sys.SuspendLayout();
             this.tabLog_Chg.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.gBCommands.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMaps)).BeginInit();
-            this.gBChat.SuspendLayout();
             this.txtLogMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlayers)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -774,9 +769,8 @@ namespace MCGalaxy.Gui
             this.tabPage1.Controls.Add(this.Unloadempty_button);
             this.tabPage1.Controls.Add(this.killphysics_button);
             this.tabPage1.Controls.Add(this.button_saveall);
-            this.tabPage1.Controls.Add(this.gBCommands);
             this.tabPage1.Controls.Add(this.dgvMaps);
-            this.tabPage1.Controls.Add(this.gBChat);
+            this.tabPage1.Controls.Add(this.txtLog);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.txtCommands);
             this.tabPage1.Controls.Add(this.txtInput);
@@ -826,30 +820,6 @@ namespace MCGalaxy.Gui
             this.button_saveall.UseVisualStyleBackColor = true;
             this.button_saveall.Click += new System.EventHandler(this.button_saveall_Click);
             // 
-            // gBCommands
-            // 
-            this.gBCommands.Controls.Add(this.txtCommandsUsed);
-            this.gBCommands.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gBCommands.Location = new System.Drawing.Point(13, 326);
-            this.gBCommands.Name = "gBCommands";
-            this.gBCommands.Size = new System.Drawing.Size(493, 123);
-            this.gBCommands.TabIndex = 34;
-            this.gBCommands.TabStop = false;
-            this.gBCommands.Text = "Commands";
-            // 
-            // txtCommandsUsed
-            // 
-            this.txtCommandsUsed.BackColor = System.Drawing.Color.White;
-            this.txtCommandsUsed.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtCommandsUsed.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCommandsUsed.Location = new System.Drawing.Point(9, 16);
-            this.txtCommandsUsed.Multiline = true;
-            this.txtCommandsUsed.Name = "txtCommandsUsed";
-            this.txtCommandsUsed.ReadOnly = true;
-            this.txtCommandsUsed.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtCommandsUsed.Size = new System.Drawing.Size(478, 100);
-            this.txtCommandsUsed.TabIndex = 0;
-            // 
             // dgvMaps
             // 
             this.dgvMaps.AllowUserToAddRows = false;
@@ -867,27 +837,16 @@ namespace MCGalaxy.Gui
             this.dgvMaps.Size = new System.Drawing.Size(246, 150);
             this.dgvMaps.TabIndex = 38;
             // 
-            // gBChat
-            // 
-            this.gBChat.Controls.Add(this.txtLog);
-            this.gBChat.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gBChat.Location = new System.Drawing.Point(13, 33);
-            this.gBChat.Name = "gBChat";
-            this.gBChat.Size = new System.Drawing.Size(493, 287);
-            this.gBChat.TabIndex = 32;
-            this.gBChat.TabStop = false;
-            this.gBChat.Text = "Chat";
-            // 
             // txtLog
             // 
             this.txtLog.BackColor = System.Drawing.SystemColors.Window;
             this.txtLog.ContextMenuStrip = this.txtLogMenuStrip;
             this.txtLog.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLog.Location = new System.Drawing.Point(7, 20);
+            this.txtLog.Location = new System.Drawing.Point(13, 38);
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
             this.txtLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.txtLog.Size = new System.Drawing.Size(480, 261);
+            this.txtLog.Size = new System.Drawing.Size(493, 404);
             this.txtLog.TabIndex = 0;
             this.txtLog.Text = "";
             // 
@@ -1920,10 +1879,7 @@ namespace MCGalaxy.Gui
             this.tabLog_Chg.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            this.gBCommands.ResumeLayout(false);
-            this.gBCommands.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMaps)).EndInit();
-            this.gBChat.ResumeLayout(false);
             this.txtLogMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlayers)).EndInit();
             this.tabControl1.ResumeLayout(false);
@@ -1996,10 +1952,7 @@ namespace MCGalaxy.Gui
         private TextBox txtChangelog;
         private TextBox txtSystem;
         private TabPage tabPage1;
-        private GroupBox gBCommands;
-        private AutoScrollTextBox txtCommandsUsed;
         private DataGridView dgvMaps;
-        private GroupBox gBChat;
         private Label label2;
         private TextBox txtCommands;
         private TextBox txtInput;
