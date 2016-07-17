@@ -1,7 +1,7 @@
 /*
     Copyright 2011 MCForge
         
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -30,105 +30,109 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Use(Player p, string message) {
+            if (CheckSuper(p, message, "level name")) return;
             if (message == "") message = p.level.name;
-            Level lvl;
-            string[] parts = message.SplitSpaces(3);
-            string opt = parts[0].ToLower();
-            string value = "";
-
-            if (parts.Length == 1) {
-                lvl = LevelInfo.Find(opt);
-                if (lvl == null) {
-                    if (p != null) lvl = p.level;
-                } else {
-                    PrintMapInfo(p, lvl); return;
-                }
+            string[] args = message.SplitSpaces(3);
+            Level lvl = null;
+            string opt = null, value = null;
+            
+            if (IsMapOption(args)) {
+                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "level"); return; }
+                
+                lvl = p.level; opt = args[0];             
+                args = message.SplitSpaces(2);
+                value = args.Length > 1 ? args[1] : "";
             } else {
-                lvl = LevelInfo.Find(opt);
-                if (lvl == null || opt == "ps" || opt == "rp") {
-                    lvl = p.level;
-                    value = parts[1];
-                } else {
-                    opt = parts[1];
-                    value = parts.Length > 2 ? parts[2] : "";
-                }
+                lvl = LevelInfo.FindMatches(p, args[0]);
+                if (lvl == null) return;                
+                if (args.Length == 1) { PrintMapInfo(p, lvl); return; }
+                
+                opt = args[1]; 
+                value = args.Length > 2 ? args[2] : "";
             }
+            
             if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "can set map options."); return; }
-
-            try {
-                if (lvl == null) Player.Message(p, "derp");
-                switch (opt) {
-                    case "theme":
-                        lvl.theme = value;
-                        lvl.ChatLevel("Map theme: &b" + lvl.theme); break;
-                    case "finite":
-                        SetBool(p, lvl, ref lvl.finite, "Finite mode: "); break;
-                    case "ai":
-                        SetBool(p, lvl, ref lvl.ai, "Animal AI: "); break;
-                    case "edge":
-                        SetBool(p, lvl, ref lvl.edgeWater, "Edge water: "); break;
-                    case "grass":
-                        SetBool(p, lvl, ref lvl.GrassGrow, "Growing grass: "); break;
-                    case "ps":
-                    case "physicspeed":
-                        if (int.Parse(value) < 10) { Player.Message(p, "Cannot go below 10"); return; }
-                        lvl.speedPhysics = int.Parse(value);
-                        lvl.ChatLevel("Physics speed: &b" + lvl.speedPhysics);
-                        break;
-                    case "overload":
-                        if (int.Parse(value) < 500) { Player.Message(p, "Cannot go below 500 (default is 1500)"); return; }
-                        if (p != null && p.Rank < LevelPermission.Admin && int.Parse(value) > 2500) { Player.Message(p, "Only SuperOPs may set higher than 2500"); return; }
-                        lvl.overload = int.Parse(value);
-                        lvl.ChatLevel("Physics overload: &b" + lvl.overload);
-                        break;
-                    case "motd":
-                        lvl.motd = value == "" ? "ignore" : value;
-                        lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.motd);
-                        break;
-                    case "death":
-                        SetBool(p, lvl, ref lvl.Death, "Survival death: "); break;
-                    case "killer":
-                        SetBool(p, lvl, ref lvl.Killer, "Killer blocks: "); break;
-                    case "fall":
-                        lvl.fall = int.Parse(value);
-                        lvl.ChatLevel("Fall distance: &b" + lvl.fall); break;
-                    case "drown":
-                        lvl.drown = int.Parse(value);
-                        lvl.ChatLevel("Drown time: &b" + ((float)lvl.drown / 10)); break;
-                    case "unload":
-                        SetBool(p, lvl, ref lvl.unload, "Auto unload: "); break;
-                    case "chat":
-                        SetBool(p, lvl, ref lvl.worldChat, "Roleplay (level only) chat: ", true); break;
-                    case "load":
-                    case "autoload":
-                    case "loadongoto":
-                        SetBool(p, lvl, ref lvl.loadOnGoto, "Load on goto: "); break;
-                    case "leaf":
-                    case "leafdecay":
-                        SetBool(p, lvl, ref lvl.leafDecay, "Leaf deacy: "); break;
-                    case "flow":
-                    case "randomflow":
-                        SetBool(p, lvl, ref lvl.randomFlow, "Random flow: "); break;
-                    case "tree":
-                    case "growtrees":
-                        SetBool(p, lvl, ref lvl.growTrees, "Tree growing: "); break;
-                    case "buildable":
-                        SetBool(p, lvl, ref lvl.Buildable, "Buildable: ");
-                        lvl.UpdateBlockPermissions(); break;
-                    case "deletable":
-                        SetBool(p, lvl, ref lvl.Deletable, "Deletable: ");
-                        lvl.UpdateBlockPermissions(); break;
-                        
-                    default:
-                        Player.Message(p, "Could not find option entered."); return;
-                }
-                lvl.changed = true;
-                if (p != null && p.level != lvl) Player.Message(p, "/map finished!");
-            }
-            catch { Player.Message(p, "INVALID INPUT"); }
+            SetMapOption(p, lvl, opt, value);
         }
         
-        void PrintMapInfo(Player p, Level lvl) {
+        static bool IsMapOption(string[] args) {
+            string opt = args[0].ToLower();
+            const string opts = "theme|finite|ai|edge|grass|ps|physicspeed|overload|motd|death|killer|fall"
+                + "|drown|unload|chat|load|loadongoto|flow|randomflow|tree|growtrees|buildable|deletable";
+            if (!opts.Contains(opt)) return false;
+            
+            bool optHasArg = opt == "ps" || opt == "physicspeed" || opt == "overload" || opt == "fall" || opt == "drown";
+            return args.Length == (optHasArg ? 2 : 1);
+        }
+        
+        static void SetMapOption(Player p, Level lvl, string opt, string value) {
+            switch (opt.ToLower()) {
+                case "theme":
+                    lvl.theme = value;
+                    lvl.ChatLevel("Map theme: &b" + lvl.theme); break;
+                case "finite":
+                    SetBool(p, lvl, ref lvl.finite, "Finite mode: "); break;
+                case "ai":
+                    SetBool(p, lvl, ref lvl.ai, "Animal AI: "); break;
+                case "edge":
+                    SetBool(p, lvl, ref lvl.edgeWater, "Edge water: "); break;
+                case "grass":
+                    SetBool(p, lvl, ref lvl.GrassGrow, "Growing grass: "); break;
+                case "ps":
+                case "physicspeed":
+                    if (int.Parse(value) < 10) { Player.Message(p, "Cannot go below 10"); return; }
+                    lvl.speedPhysics = int.Parse(value);
+                    lvl.ChatLevel("Physics speed: &b" + lvl.speedPhysics);
+                    break;
+                case "overload":
+                    if (int.Parse(value) < 500) { Player.Message(p, "Cannot go below 500 (default is 1500)"); return; }
+                    if (p != null && p.Rank < LevelPermission.Admin && int.Parse(value) > 2500) { Player.Message(p, "Only SuperOPs may set higher than 2500"); return; }
+                    lvl.overload = int.Parse(value);
+                    lvl.ChatLevel("Physics overload: &b" + lvl.overload);
+                    break;
+                case "motd":
+                    lvl.motd = value == "" ? "ignore" : value;
+                    lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.motd);
+                    break;
+                case "death":
+                    SetBool(p, lvl, ref lvl.Death, "Survival death: "); break;
+                case "killer":
+                    SetBool(p, lvl, ref lvl.Killer, "Killer blocks: "); break;
+                case "fall":
+                    lvl.fall = int.Parse(value);
+                    lvl.ChatLevel("Fall distance: &b" + lvl.fall); break;
+                case "drown":
+                    lvl.drown = int.Parse(value);
+                    lvl.ChatLevel("Drown time: &b" + ((float)lvl.drown / 10)); break;
+                case "unload":
+                    SetBool(p, lvl, ref lvl.unload, "Auto unload: "); break;
+                case "chat":
+                    SetBool(p, lvl, ref lvl.worldChat, "Roleplay (level only) chat: ", true); break;
+                case "load":
+                case "loadongoto":
+                    SetBool(p, lvl, ref lvl.loadOnGoto, "Load on goto: "); break;
+                case "leaf":
+                case "leafdecay":
+                    SetBool(p, lvl, ref lvl.leafDecay, "Leaf deacy: "); break;
+                case "flow":
+                case "randomflow":
+                    SetBool(p, lvl, ref lvl.randomFlow, "Random flow: "); break;
+                case "tree":
+                case "growtrees":
+                    SetBool(p, lvl, ref lvl.growTrees, "Tree growing: "); break;
+                case "buildable":
+                    SetBool(p, lvl, ref lvl.Buildable, "Buildable: ");
+                    lvl.UpdateBlockPermissions(); break;
+                case "deletable":
+                    SetBool(p, lvl, ref lvl.Deletable, "Deletable: ");
+                    lvl.UpdateBlockPermissions(); break;
+                default:
+                    Player.Message(p, "Could not find option entered."); return;
+            }
+            Level.SaveSettings(lvl);
+        }
+        
+        static void PrintMapInfo(Player p, Level lvl) {
             Player.Message(p, "MOTD: &b" + lvl.motd);
             Player.Message(p, "Finite mode: " + GetBool(lvl.finite));
             Player.Message(p, "Random flow: " + GetBool(lvl.randomFlow));
@@ -149,9 +153,8 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "Deletable: " + GetBool(lvl.Deletable));
         }
         
-        void SetBool(Player p, Level lvl, ref bool target, string message, bool negate = false) {
+        static void SetBool(Player p, Level lvl, ref bool target, string message, bool negate = false) {
             target = !target;
-            Level.SaveSettings(lvl);
             bool display = negate ? !target : target;
             lvl.ChatLevel(message + GetBool(display));
             
@@ -159,7 +162,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, message + GetBool(display, p == null));
         }
         
-        string GetBool(bool value, bool console = false) {
+        static string GetBool(bool value, bool console = false) {
             return console ? (value ? "ON" : "OFF") : (value ? "&aON" : "&cOFF");
         }
 
