@@ -183,6 +183,7 @@ namespace MCGalaxy {
         public bool voted = false;
         public bool flipHead = false;
         public GameProps Game = new GameProps();
+        public const int SessionIDMask = (1 << 23) - 1;
         public int SessionID;
 
         //Countdown

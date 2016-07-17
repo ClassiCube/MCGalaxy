@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Building {
             p.DefaultBrushArgs = "";
             
             lock (p.level.queueLock)
-                p.level.blockqueue.RemoveAll(b => b.SessionID == p.SessionID);
+            	p.level.blockqueue.RemoveAll(b => (int)((b >> 9) & Player.SessionIDMask) == p.SessionID);
             Player.Message(p, "Every toggle or action was aborted.");
         }
         

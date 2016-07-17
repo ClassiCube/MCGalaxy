@@ -65,14 +65,14 @@ namespace MCGalaxy {
             name = playername;
             truename = playername;
             DisplayName = playername;
-            SessionID = Interlocked.Increment(ref sessionCounter);
+            SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
         }
 
         public Player(Socket s) {
             try {
                 socket = s;
                 ip = socket.RemoteEndPoint.ToString().Split(':')[0];
-                SessionID = Interlocked.Increment(ref sessionCounter);
+                SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
                 Server.s.Log(ip + " connected to the server.");
 
                 for (byte i = 0; i < 128; i++) bindings[i] = i;

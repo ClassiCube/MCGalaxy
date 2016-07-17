@@ -52,11 +52,18 @@ namespace MCGalaxy {
 
         public static void Addblock(Player p, int index, byte type, byte extType = 0) {
         	if (index == -1) return;
-            QueuedBlock item;
-            item.SessionID = p.SessionID; item.Index = index;
-            item.Type = type; item.ExtType = extType;
+        	// Bit packing format
+        	// 32-63: index
+        	// 9-31: session ID
+        	// 8: is ext block or not
+        	// 0-7: raw type
+        	ulong flags = (ulong)index << 32;
+        	flags |= (ulong)p.SessionID << 9;
+        	flags |= (type == Block.custom_block ? 0x100UL : 0x000UL);
+        	flags |= (type == Block.custom_block ? extType : type);
+        	
             lock (p.level.queueLock)
-                p.level.blockqueue.Add(item);
+                p.level.blockqueue.Add(flags);
         }
         
         static void ProcessLevelBlocks(Level lvl) {
@@ -67,9 +74,13 @@ namespace MCGalaxy {
                 if (lvl.blockqueue.Count < blockupdates || !lvl.HasPlayers())
                     count = lvl.blockqueue.Count;
 
-                for (int c = 0; c < count; c++) {
-                    QueuedBlock item = lvl.blockqueue[c];
-                    bulkSender.Add(item.Index, item.Type, item.ExtType);
+                for (int i = 0; i < count; i++) {
+                	ulong flags = lvl.blockqueue[i];
+                	int index = (int)(flags >> 32);                	
+                	byte type = (flags & 0x100) != 0 ? Block.custom_block : (byte)flags;
+                	byte extType = (flags & 0x100) != 0 ? (byte)flags : Block.air;
+                	
+                    bulkSender.Add(index, type, extType);
                     bulkSender.CheckIfSend(false);
                 }
                 bulkSender.CheckIfSend(true);
@@ -80,7 +91,5 @@ namespace MCGalaxy {
                 lvl.blockqueue.Clear();
             }
         }
-
-        public struct QueuedBlock { public int SessionID, Index; public byte Type, ExtType; }
     }
 }

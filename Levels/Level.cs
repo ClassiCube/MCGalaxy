@@ -235,7 +235,7 @@ namespace MCGalaxy
         
         public bool bufferblocks = Server.bufferblocks;
         internal readonly object queueLock = new object(), saveLock = new object(), savePropsLock = new object();
-        public List<BlockQueue.QueuedBlock> blockqueue = new List<BlockQueue.QueuedBlock>();
+        public List<ulong> blockqueue = new List<ulong>();
         readonly object physThreadLock = new object();
         BufferedBlockSender bulkSender;
 
