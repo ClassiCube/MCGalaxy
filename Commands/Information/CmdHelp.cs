@@ -85,73 +85,11 @@ namespace MCGalaxy.Commands {
             
             if (args.Length == 1) {
                 cmd.Help(p);
-                PrintCommandInfo(p, cmd);
+                Formatter.PrintCommandInfo(p, cmd);
             } else {
                 cmd.Help(p, args[1]);
             }
             return true;
-        }
-        
-        internal static void PrintCommandInfo(Player p, Command cmd) {
-            var perms = GrpCommands.allowedCommands.Find(C => C.commandName == cmd.name);
-            StringBuilder builder = new StringBuilder();
-            builder.Append("Usable by: ");
-            if (perms == null) {
-                builder.Append(GetColoredRank(cmd.defaultRank) + "%S+");
-            } else {
-                builder.Append(GetColoredRank(perms.lowestRank) + "%S+");
-                if (perms.allow.Count > 0) {
-                    foreach (LevelPermission perm in perms.allow)
-                        builder.Append(", " + GetColoredRank(perm) + "%S");
-                }
-                
-                if (perms.disallow.Count > 0) {
-                    builder.Append( " (but not ");
-                    foreach (LevelPermission perm in perms.disallow)
-                        builder.Append(GetColoredRank(perm) + "%S, ");
-                    builder.Remove(builder.Length - 2, 2);
-                    builder.Append(")");
-                }
-            }
-            Player.Message(p, builder.ToString());
-            
-            PrintAliases(p, cmd);
-            CommandPerm[] addPerms = cmd.AdditionalPerms;
-            if (addPerms == null) return;
-            
-            Player.Message(p, "%TExtra permissions:");
-            for (int i = 0; i < addPerms.Length; i++) {
-                var extra = CommandOtherPerms.Find(cmd, i + 1);
-                LevelPermission perm = (LevelPermission)extra.Permission;
-                Player.Message(p, "{0}) {1}%S{2}", i + 1, GetColoredRank(perm), extra.Description);
-            }
-        }
-        
-        static void PrintAliases(Player p, Command cmd) {
-            StringBuilder dst = new StringBuilder("Shortcuts: ");
-            if (!String.IsNullOrEmpty(cmd.shortcut)) {
-                dst.Append('/').Append(cmd.shortcut).Append(", ");
-            }
-            FindAliases(Alias.coreAliases, cmd, dst);
-            FindAliases(Alias.aliases, cmd, dst);
-            
-            if (dst.Length == "Shortcuts: ".Length) return;
-            Player.Message(p, dst.ToString(0, dst.Length - 2));
-        }
-        
-        static void FindAliases(List<Alias> aliases, Command cmd, StringBuilder dst) {
-            foreach (Alias a in aliases) {
-                if (!a.Target.CaselessEq(cmd.name)) continue;
-                
-                dst.Append('/').Append(a.Trigger);
-                string args = a.Prefix == null ? a.Suffix : a.Prefix;
-                if (args != null) {
-                    string name = String.IsNullOrEmpty(cmd.shortcut)
-                        ? cmd.name : cmd.shortcut;
-                    dst.Append(" for /").Append(name + " " + args);
-                }
-                dst.Append(", ");
-            }
         }
         
         bool ParseBlock(Player p, string message) {
@@ -247,12 +185,6 @@ namespace MCGalaxy.Commands {
             LevelPermission perm = GrpCommands.MinPerm(cmd);
             Group grp = Group.findPerm(perm);
             return grp == null ? "&f" : grp.color;
-        }
-        
-        static string GetColoredRank(LevelPermission perm) {
-            Group grp = Group.findPerm(perm);
-            string col = grp == null ? "&f" : grp.color;
-            return col + Level.PermissionToName(perm);
         }
 
         public override void Help(Player p) {

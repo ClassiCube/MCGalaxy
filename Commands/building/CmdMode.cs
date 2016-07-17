@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System.Text;
+
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMode : Command {
         public override string name { get { return "mode"; } }
@@ -35,26 +37,33 @@ namespace MCGalaxy.Commands.Building {
                 return;
             }
             
-            byte b = Block.Byte(message);
-            if (b == Block.Zero) { Player.Message(p, "Could not find block given."); return; }
-            if (b == Block.air) { Player.Message(p, "Cannot use Air Mode."); return; }
+            byte block = Block.Byte(message);
+            if (block == Block.Zero) { Player.Message(p, "Could not find block given."); return; }
+            if (block == Block.air) { Player.Message(p, "Cannot use Air Mode."); return; }
 
-            if (!p.allowTnt && (b == Block.tnt || b == Block.bigtnt || b == Block.smalltnt
-                                || b == Block.nuketnt || b == Block.tntexplosion)) {
+            if (!p.allowTnt && (block == Block.tnt || block == Block.bigtnt || block == Block.smalltnt
+                                || block == Block.nuketnt || block == Block.tntexplosion)) {
                 Player.Message(p, "Tnt usage is not allowed at the moment"); return;
             }
-            if (!p.allowTnt && b == Block.fire) {
+            if (!p.allowTnt && block == Block.fire) {
                 Player.Message(p, "Tnt usage is not allowed at the moment, fire is a lighter for tnt and is also disabled"); return;
             }
             
-            if (!Block.canPlace(p, b)) { Player.Message(p, "Cannot place this block at your rank."); return; }
+            string name = Block.Name(block).Capitalize();
+            if (!Block.canPlace(p, block)) {
+                StringBuilder builder = new StringBuilder("Only ");
+                Block.Blocks perms = Block.BlockList[block];
+                Formatter.PrintRanks(perms.lowestRank, perms.allow, perms.disallow, builder);
+                builder.Append( " %Scan place ").Append(name).Append(".");
+                Player.Message(p, builder.ToString()); return;
+            }
 
-            if (p.modeType == b) {
-                Player.Message(p, "&b{0} %Smode: &cOFF", Block.Name(p.modeType).Capitalize());
+            if (p.modeType == block) {
+                Player.Message(p, "&b{0} %Smode: &cOFF", name);
                 p.modeType = 0;
             } else {
-                p.modeType = b;
-                Player.Message(p, "&b{0} %Smode: &aON", Block.Name(p.modeType).Capitalize());
+                p.modeType = block;
+                Player.Message(p, "&b{0} %Smode: &aON", name);
             }
         }
         

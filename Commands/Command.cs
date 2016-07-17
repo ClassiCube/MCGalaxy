@@ -31,7 +31,7 @@ namespace MCGalaxy {
         public abstract LevelPermission defaultRank { get; }
         public abstract void Use(Player p, string message);
         public abstract void Help(Player p);
-        public virtual void Help(Player p, string message) { Help(p); CmdHelp.PrintCommandInfo(p, this); }
+        public virtual void Help(Player p, string message) { Help(p); Formatter.PrintCommandInfo(p, this); }
         public virtual CommandPerm[] AdditionalPerms { get { return null; } }
         public virtual CommandEnable Enabled { get { return CommandEnable.Always; } }
         public virtual CommandAlias[] Aliases { get { return null; } }

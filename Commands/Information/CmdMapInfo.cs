@@ -92,9 +92,9 @@ namespace MCGalaxy.Commands {
             List<string> blacklist = data.VisitBlacklist;
             GetBlacklistedPlayers(data.Name, blacklist);
             if (whitelist.Count > 0)
-                Player.Message(p, "  Visit whitelist: &a" + String.Join("%S, &a", whitelist));
+            	Player.Message(p, "  Visit whitelist: &a" + whitelist.Concatenate("%S, &a"));
             if (blacklist.Count > 0)
-                Player.Message(p, "  Visit blacklist: &c" + String.Join("%S, &c", blacklist));
+                Player.Message(p, "  Visit blacklist: &c" + blacklist.Concatenate("%S, &c"));
         }
         
         void GetBlacklistedPlayers(string l, List<string> blacklist) {

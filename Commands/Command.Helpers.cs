@@ -97,28 +97,8 @@ namespace MCGalaxy {
         
         internal void MessageCannotUse(Player p) {
             var perms = GrpCommands.allowedCommands.Find(C => C.commandName == name);
-            if (perms.disallow.Contains(p.Rank)) {
-                Player.Message(p, "Your rank cannot use /%T" + name); return;
-            }
-            
-            StringBuilder builder = new StringBuilder("Only ");            
-            if (perms.allow.Count > 0) {
-                foreach (LevelPermission perm in perms.allow) {
-                    Group grp = Group.findPermInt((int)perm);
-                    if (grp == null) continue;
-                    builder.Append(grp.ColoredName).Append("%S, ");
-                }
-                if (builder.Length > "Only ".Length) {
-                    builder.Remove(builder.Length - 2, 2);
-                    builder.Append(", and ");
-                }
-            }
-            
-            Group minGrp = Group.findPermInt((int)perms.lowestRank);
-            if (minGrp == null)
-                builder.Append("ranks with permissions greater than &a" + (int)perms.lowestRank + "%S");
-            else
-                builder.Append(minGrp.ColoredName + "%S+");
+            StringBuilder builder = new StringBuilder("Only ");
+            Formatter.PrintRanks(perms.lowestRank, perms.allow, perms.disallow, builder);
             builder.Append(" can use %T/" + name);
             Player.Message(p, builder.ToString());
         }

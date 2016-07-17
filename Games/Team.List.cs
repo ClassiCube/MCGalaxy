@@ -53,7 +53,7 @@ namespace MCGalaxy.Games {
                 w.WriteLine("Name=" + pair.Value.Name);
                 w.WriteLine("Color=" + pair.Value.Color);
                 w.WriteLine("Owner=" + pair.Value.Owner);
-                string list = String.Join(",", pair.Value.Members);
+                string list = pair.Value.Members.Concatenate(",");
                 w.WriteLine("Members=" + list);
                 w.WriteLine("");
             }
