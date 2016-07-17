@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
                 if (p != null && who.Rank > p.Rank) {
                     MessageTooHighRank(p, "reload the map for", true); return;
                 }
-                ReloadMap(p, who, true);
+                LevelActions.ReloadMap(p, who, true);
             }
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -64,22 +64,9 @@ namespace MCGalaxy.Commands {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player who in players) {
                 if (who.level == lvl)
-                    ReloadMap(p, who, true);
+                    LevelActions.ReloadMap(p, who, true);
             }
             return true;
-        }
-        
-        internal static void ReloadMap(Player p, Player who, bool showMessage) {
-            who.Loading = true;
-            Entities.DespawnEntities(who);
-            who.SendUserMOTD(); who.SendMap(who.level);
-            Entities.SpawnEntities(who);
-            who.Loading = false;
-
-            if (!showMessage) return;
-            if (p != null && !p.hidden) { who.SendMessage("&bMap reloaded by " + p.name); }
-            if (p != null && p.hidden) { who.SendMessage("&bMap reloaded"); }
-            Player.Message(p, "&4Finished reloading for " + who.name);
         }
         
         public override void Help(Player p) {

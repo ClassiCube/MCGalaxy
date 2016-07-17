@@ -130,5 +130,35 @@ namespace MCGalaxy {
             Database.executeQuery("DROP TABLE `Messages" + name + "`");
             Database.executeQuery("DROP TABLE `Zone" + name + "`");
         }
+        
+        public static void Replace(Level old, Level lvl) {
+            LevelInfo.Loaded.Remove(old);
+            LevelInfo.Loaded.Add(lvl);
+            
+            old.setPhysics(0);
+            old.ClearPhysics();
+            lvl.StartPhysics();
+            
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level != old) continue;
+                pl.level = lvl;
+                ReloadMap(null, pl, false);
+            }
+            old.Unload(true, false);
+        }
+        
+        public static void ReloadMap(Player p, Player who, bool showMessage) {
+            who.Loading = true;
+            Entities.DespawnEntities(who);
+            who.SendUserMOTD(); who.SendMap(who.level);
+            Entities.SpawnEntities(who);
+            who.Loading = false;
+
+            if (!showMessage) return;
+            if (p != null && !p.hidden) { who.SendMessage("&bMap reloaded by " + p.name); }
+            if (p != null && p.hidden) { who.SendMessage("&bMap reloaded"); }
+            Player.Message(p, "&4Finished reloading for " + who.name);
+        }
     }
 }

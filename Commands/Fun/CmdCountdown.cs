@@ -21,6 +21,7 @@ using System;
 using System.Net;
 using System.Threading;
 using MCGalaxy.Games;
+using MCGalaxy.Commands.World;
 
 namespace MCGalaxy.Commands {
     
@@ -46,11 +47,11 @@ namespace MCGalaxy.Commands {
             string cmd = args[0], arg1 = "", arg2 = "", arg3 = "";
             if (args.Length > 1) arg1 = args[1];
             if (args.Length > 2) arg2 = args[2];
-            if (args.Length > 3) arg3 = args[3]; 
+            if (args.Length > 3) arg3 = args[3];
             
             switch (cmd) {
                 case "help":
-            		Help(p); return;
+                    Help(p); return;
                 case "goto":
                     PlayerActions.ChangeMap(p, "countdown"); return;
                 case "join":
@@ -154,7 +155,7 @@ namespace MCGalaxy.Commands {
                 case CountdownGameStatus.AboutToStart:
                     Player.Message(p, "Players who are about to play:");
                     foreach (Player plya in Server.Countdown.players)
-                    	Player.Message(p, plya.ColoredName);
+                        Player.Message(p, plya.ColoredName);
                     break;
 
                 case CountdownGameStatus.InProgress:
@@ -176,7 +177,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleRules(Player p, string target) {
-        	bool hasPerm = CheckExtraPerm(p, 1);
+            bool hasPerm = CheckExtraPerm(p, 1);
             if (target == "" || !hasPerm) {
                 Player.Message(p, "The aim of the game is to stay alive the longest.");
                 Player.Message(p, "Don't fall in the lava!!");
@@ -204,7 +205,7 @@ namespace MCGalaxy.Commands {
                 Player who = PlayerInfo.FindMatches(p, target);
                 if (who == null) return;
                 if (p.Rank < who.Rank) {
-                    MessageTooHighRank(p, "send countdown rules", true); return;                	
+                    MessageTooHighRank(p, "send countdown rules", true); return;
                 } else {
                     Player.Message(who, "Countdown rules sent to you by " + p.ColoredName);
                     Player.Message(who, "The aim of the game is to stay alive the longest.");
@@ -224,24 +225,26 @@ namespace MCGalaxy.Commands {
             if (width < 32 || !MapGen.OkayAxis(width)) width = 32;
             if (height < 32 || !MapGen.OkayAxis(height)) height = 32;
             if (length < 32 || !MapGen.OkayAxis(length)) length = 32;
-
-            Level oldLevel = LevelInfo.FindExact("countdown");
-            if (oldLevel != null) {
-                oldLevel.permissionbuild = LevelPermission.Guest;
-                LevelActions.Delete("countdown");
-            }
+            if (!CmdNewLvl.CheckMapSize(p, width, height, length)) return;
+            
             Level lvl = CountdownMapGen.Generate(width, height, length);
+            lvl.Deletable = false;
+            lvl.Buildable = false;
+            lvl.permissionbuild = LevelPermission.Nobody;
+            lvl.motd = "Welcome to the Countdown map! -hax";
+            
+            Level oldLvl = LevelInfo.FindExact("countdown");
+            if (oldLvl != null) LevelActions.Replace(oldLvl, lvl);
+            else LevelInfo.Loaded.Add(lvl);
+            
             lvl.Save();
             if (Server.Countdown.gamestatus != CountdownGameStatus.Disabled)
-            	Server.Countdown.mapon = lvl;
+                Server.Countdown.mapon = lvl;
             
             const string format = "Generated map ({0}x{1}x{2}), sending you to it..";
             Player.Message(p, format, width, height, length);
-            Command.all.Find("load").Use(p, "countdown");
             PlayerActions.ChangeMap(p, "countdown");
-
-            p.level.permissionbuild = LevelPermission.Nobody;
-            p.level.motd = "Welcome to the Countdown map!!!! -hax";
+            
             const ushort x = 8 * 32 + 16;
             const ushort y = 23 * 32 + 32;
             const ushort z = 17 * 32 + 16;
@@ -252,11 +255,17 @@ namespace MCGalaxy.Commands {
             if (Server.Countdown.gamestatus == CountdownGameStatus.Disabled) {
                 Command.all.Find("load").Use(null, "countdown");
                 Server.Countdown.mapon = LevelInfo.FindExact("countdown");
-                if (Server.Countdown.mapon == null ) {
+                
+                if (Server.Countdown.mapon == null) {
                     Player.Message(p, "countdown level not found, generating..");
                     HandleGenerate(p, "", "", "");
                     Server.Countdown.mapon = LevelInfo.FindExact("countdown");
                 }
+                
+                Server.Countdown.mapon.Deletable = false;
+                Server.Countdown.mapon.Buildable = false;
+                Server.Countdown.mapon.permissionbuild = LevelPermission.Nobody;
+                Server.Countdown.mapon.motd = "Welcome to the Countdown map! -hax";
                 
                 Server.Countdown.gamestatus = CountdownGameStatus.Enabled;
                 Player.GlobalMessage("Countdown has been enabled!!");

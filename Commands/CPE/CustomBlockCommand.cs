@@ -440,7 +440,7 @@ namespace MCGalaxy.Commands.CPE {
                 if (pl.level == null || !pl.level.HasCustomBlocks) continue;
                 if (!pl.outdatedClient) continue;
                 
-                CmdReload.ReloadMap(p, pl, true);
+                LevelActions.ReloadMap(p, pl, true);
             }
         }
         

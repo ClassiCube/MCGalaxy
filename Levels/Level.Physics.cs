@@ -39,9 +39,7 @@ namespace MCGalaxy {
         
         public void StartPhysics() {
             lock (physThreadLock) {
-                if (physThread != null) {
-                    if (physThread.ThreadState == System.Threading.ThreadState.Running) return;
-                }
+                if (physThread != null && physThread.ThreadState == ThreadState.Running) return;
                 if (ListCheck.Count == 0 || physicssate) return;
                 
                 physThread = new Thread(PhysicsLoop);

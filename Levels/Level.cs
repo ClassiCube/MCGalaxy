@@ -440,7 +440,7 @@ namespace MCGalaxy
         void MovePlayersToMain() {
         	Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
-                if (p.level.name.ToLower() == name.ToLower()) {
+                if (p.level == this) {
                     Player.Message(p, "You were moved to the main level as " + name + " was unloaded.");
                     PlayerActions.ChangeMap(p, Server.mainLevel.name);
                 }
@@ -562,26 +562,24 @@ namespace MCGalaxy
             }
         }
 
-        public static Level Load(string givenName) {
-            return Load(givenName, 0);
-        }
+        public static Level Load(string name) { return Load(name, 0); }
 
         //givenName is safe against SQL injections, it gets checked in CmdLoad.cs
-        public static Level Load(string givenName, byte phys) {
-            if (LevelLoad != null) LevelLoad(givenName);
-            OnLevelLoadEvent.Call(givenName);
+        public static Level Load(string name, byte phys) {
+            if (LevelLoad != null) LevelLoad(name);
+            OnLevelLoadEvent.Call(name);
             if (cancelload) { cancelload = false; return null; }
-            LevelDB.CreateTables(givenName);
+            LevelDB.CreateTables(name);
 
-            string path = LevelInfo.LevelPath(givenName);
+            string path = LevelInfo.LevelPath(name);
             if (File.Exists(path))
             {
                 try
                 {
-                    Level level = LvlFile.Load(givenName, path);
+                    Level level = LvlFile.Load(name, path);
                     level.setPhysics(phys);
                     level.backedup = true;
-                    LevelDB.LoadZones(level, givenName);
+                    LevelDB.LoadZones(level, name);
 
                     level.jailx = (ushort)(level.spawnx * 32);
                     level.jaily = (ushort)(level.spawny * 32);
@@ -591,7 +589,7 @@ namespace MCGalaxy
                     level.StartPhysics();
 
                     try {
-                    	LevelDB.LoadMetadata(level, givenName);
+                    	LevelDB.LoadMetadata(level, name);
                     } catch (Exception e) {
                         Server.ErrorLog(e);
                     }
