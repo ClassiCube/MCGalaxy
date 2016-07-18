@@ -80,7 +80,7 @@ namespace MCGalaxy.BlockPhysics {
                     
                     if (unblocked) {
                         lvl.AddUpdate(b1, Block.rockethead);
-                        lvl.AddUpdate(b2, Block.fire);
+                        lvl.AddUpdate(b2, Block.lava_fire);
                     }
                 } else if (b == Block.firework) {
                     int b1 = lvl.IntOffset(C.b, xx, yy + 1, zz);

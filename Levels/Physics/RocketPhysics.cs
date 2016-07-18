@@ -34,7 +34,7 @@ namespace MCGalaxy.BlockPhysics {
                     for (int cz = -dirZ; cz != 2 * dirZ; cz += dirZ)
             {                
                 byte rocketTail = lvl.GetTile((ushort)(x + cx), (ushort)(y + cy), (ushort)(z + cz));
-                if (rocketTail != Block.fire) continue;
+                if (rocketTail != Block.lava_fire) continue;
                 
                 int headIndex = lvl.PosToInt((ushort)(x - cx), (ushort)(y - cy), (ushort)(z - cz));
                 byte rocketHead = headIndex < 0 ? Block.Zero : lvl.blocks[headIndex];                
@@ -43,13 +43,13 @@ namespace MCGalaxy.BlockPhysics {
                 
                 if (unblocked && (rocketHead == Block.air || rocketHead == Block.rocketstart)) {
                     lvl.AddUpdate(headIndex, Block.rockethead);
-                    lvl.AddUpdate(C.b, Block.fire);
-                } else if (rocketHead == Block.fire) {
+                    lvl.AddUpdate(C.b, Block.lava_fire);
+                } else if (rocketHead == Block.lava_fire) {
                 } else {
                     if (lvl.physics > 2)
                         lvl.MakeExplosion(x, y, z, 2);
                     else
-                        lvl.AddUpdate(C.b, Block.fire);
+                        lvl.AddUpdate(C.b, Block.lava_fire);
                 }
             }
         }

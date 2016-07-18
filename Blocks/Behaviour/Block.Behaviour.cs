@@ -133,6 +133,7 @@ namespace MCGalaxy {
             physicsHandlers[Block.leaf] = LeafPhysics.DoLeaf;
             physicsHandlers[Block.shrub] = OtherPhysics.DoShrub;
             physicsHandlers[Block.fire] = FirePhysics.Do;
+            physicsHandlers[Block.lava_fire] = FirePhysics.Do;
             physicsHandlers[Block.sand] = OtherPhysics.DoFalling;
             physicsHandlers[Block.gravel] = OtherPhysics.DoFalling;
             physicsHandlers[Block.cobblestoneslab] = OtherPhysics.DoStairs;

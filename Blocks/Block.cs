@@ -97,38 +97,7 @@ namespace MCGalaxy
 
         public static bool OPBlocks(byte type) { return Props[type].OPBlock; }
 
-        public static bool Death(byte type)
-        {
-            switch (type)
-            {
-                case tntexplosion:
-
-                case deathwater:
-                case deathlava:
-                case deathair:
-                case activedeathlava:
-                case activedeathwater:
-                case fastdeathlava:
-
-                case magma:
-                case geyser:
-
-                case birdkill:
-                case fishshark:
-                case fishlavashark:
-
-                case train:
-                case snake:
-                case lava_fire:
-                case rockethead:
-
-                case creeper:
-                case zombiebody:
-                    //case zombiehead:
-                    return true;
-            }
-            return false;
-        }
+        public static bool Death(byte type) { return Props[type].CollisionDeath; }
 
         public static bool BuildIn(byte type) {
             if (type == op_water || type == op_lava || portal(type) || mb(type)) return false;

@@ -817,7 +817,6 @@ return;
         }
 
         public void HandleDeath(byte b, string customMessage = "", bool explode = false, bool immediate = false) {
-            ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);
             if (OnDeath != null) OnDeath(this, b);
             if (PlayerDeath != null) PlayerDeath(this, b);
             OnPlayerDeathEvent.Call(this, b);
@@ -825,7 +824,8 @@ return;
             if (Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this)) return;
             if (!immediate && lastDeath.AddSeconds(2) > DateTime.UtcNow) return;
             if (!level.Killer || invincible || hidden) return;
-            
+
+            ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);            
             string deathMsg = Block.Props[b].DeathMessage;
             if (deathMsg != null) Chat.GlobalChatLevel(this, String.Format(deathMsg, ColoredName), false);            
             if (b == Block.rockethead) level.MakeExplosion(x, y, z, 0);

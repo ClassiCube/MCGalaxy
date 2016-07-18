@@ -94,7 +94,7 @@ namespace MCGalaxy {
             Props[leaf].LavaKills = true;
             Props[red].IsRails = true; Props[op_air].IsRails = true;
             SetupDefaultNames();
-            SetupDeathMessages();
+            SetupDefaultDeaths();
         }
         
         static void Door(byte doorId, byte airId, bool saveConvert = true) {
@@ -202,27 +202,35 @@ namespace MCGalaxy {
             Aliases["step"] = staircasestep; Aliases["double_step"] = staircasefull;
         }
         
-        static void SetupDeathMessages() {
-            Props[Block.tntexplosion].DeathMessage = "{0} %S&cblew into pieces.";
-            Props[Block.deathair].DeathMessage = "{0} %Swalked into &cnerve gas and suffocated.";
-            Props[Block.deathwater].DeathMessage = "{0} %Sstepped in &dcold water and froze.";
-            Props[Block.activedeathwater].DeathMessage = Props[Block.deathwater].DeathMessage;
-            Props[Block.deathlava].DeathMessage = "{0} %Sstood in &cmagma and melted.";
-            Props[Block.activedeathlava].DeathMessage = Props[Block.deathlava].DeathMessage;
-            Props[Block.fastdeathlava].DeathMessage = Props[Block.deathlava].DeathMessage;
-            Props[Block.magma].DeathMessage = "{0} %Swas hit by &cflowing magma and melted.";
-            Props[Block.geyser].DeathMessage = "{0} %Swas hit by &cboiling water and melted.";
-            Props[Block.birdkill].DeathMessage = "{0} %Swas hit by a &cphoenix and burnt.";
-            Props[Block.train].DeathMessage = "{0} %Swas hit by a &ctrain.";
-            Props[Block.fishshark].DeathMessage = "{0} %Swas eaten by a &cshark.";
-            Props[Block.fire].DeathMessage = "{0} %Sburnt to a &ccrisp.";
-            Props[Block.rockethead].DeathMessage = "{0} %Swas &cin a fiery explosion.";
-            Props[Block.zombiebody].DeathMessage = "{0} %Sdied due to lack of &5brain.";
-            Props[Block.creeper].DeathMessage = "{0} %Swas killed &cb-SSSSSSSSSSSSSS";
-            Props[Block.air].DeathMessage = "{0} %Shit the floor &chard.";
-            Props[Block.water].DeathMessage = "{0} %S&cdrowned.";
-            Props[Block.Zero].DeathMessage = "{0} %Swas &cterminated";
-            Props[Block.fishlavashark].DeathMessage = "{0} %Swas eaten by a ... LAVA SHARK?!";
+        static void SetupDefaultDeaths() {
+            SetDeath(Block.tntexplosion, "{0} %S&cblew into pieces.");
+            SetDeath(Block.deathair, "{0} %Swalked into &cnerve gas and suffocated.");
+            SetDeath(Block.deathwater, "{0} %Sstepped in &dcold water and froze.");
+            SetDeath(Block.activedeathwater, Props[Block.deathwater].DeathMessage);
+            SetDeath(Block.deathlava, "{0} %Sstood in &cmagma and melted.");
+            SetDeath(Block.activedeathlava, Props[Block.deathlava].DeathMessage);
+            SetDeath(Block.fastdeathlava, Props[Block.deathlava].DeathMessage);
+            
+            SetDeath(Block.magma, "{0} %Swas hit by &cflowing magma and melted.");
+            SetDeath(Block.geyser, "{0} %Swas hit by &cboiling water and melted.");
+            SetDeath(Block.birdkill, "{0} %Swas hit by a &cphoenix and burnt.");
+            SetDeath(Block.train, "{0} %Swas hit by a &ctrain.");
+            SetDeath(Block.fishshark, "{0} %Swas eaten by a &cshark.");
+            SetDeath(Block.lava_fire, "{0} %Sburnt to a &ccrisp.");
+            SetDeath(Block.rockethead, "{0} %Swas &cin a fiery explosion.");
+            SetDeath(Block.zombiebody, "{0} %Sdied due to lack of &5brain.");
+            SetDeath(Block.creeper, "{0} %Swas killed &cb-SSSSSSSSSSSSSS");
+            SetDeath(Block.fishlavashark, "{0} %Swas eaten by a ... LAVA SHARK?!");
+            SetDeath(Block.snake, "{0} %Swas bit by a deadly snake.");
+            
+            SetDeath(Block.air, "{0} %Shit the floor &chard.", false);
+            SetDeath(Block.water, "{0} %S&cdrowned.", false);
+            SetDeath(Block.Zero, "{0} %Swas &cterminated.", false);
+        }
+        
+        static void SetDeath(byte block, string message, bool collideKill = true) {
+        	Props[block].DeathMessage = message;
+        	Props[block].CollisionDeath = collideKill;
         }
     }
 }

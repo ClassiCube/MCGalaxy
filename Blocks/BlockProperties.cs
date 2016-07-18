@@ -33,7 +33,11 @@ namespace MCGalaxy.Blocks {
         /// <summary> Block name used for in commands. </summary>
         public string Name;
         
+        /// <summary> Message shown to the level when the player is killed by this block. Can be null. </summary>
         public string DeathMessage;
+        
+        /// <summary> Whether colliding with this block kills the player. </summary>
+        public bool CollisionDeath;
         
         /// <summary> Whether this block is considered a tdoor. </summary>
         public bool IsTDoor;
