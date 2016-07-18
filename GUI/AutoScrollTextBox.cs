@@ -19,18 +19,16 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace MCGalaxy.Gui
-{
-	public class AutoScrollTextBox : System.Windows.Forms.TextBox
-	{
+namespace MCGalaxy.Gui {
+	public class AutoScrollTextBox : TextBox {
 		// Constants for extern calls to various scrollbar functions
-		private const int SB_HORZ = 0x0;
-		private const int SB_VERT = 0x1;
-		private const int WM_HSCROLL = 0x114;
-		private const int WM_VSCROLL = 0x115;
-		private const int SB_THUMBPOSITION = 4;
-		private const int SB_BOTTOM = 7;
-		private const int SB_OFFSET = 13;
+		const int SB_HORZ = 0x0;
+		const int SB_VERT = 0x1;
+		const int WM_HSCROLL = 0x114;
+		const int WM_VSCROLL = 0x115;
+		const int SB_THUMBPOSITION = 4;
+		const int SB_BOTTOM = 7;
+		const int SB_OFFSET = 13;
 
 		delegate void LogDelegate(string message);
 
@@ -43,43 +41,33 @@ namespace MCGalaxy.Gui
 		[DllImport("user32.dll")]
 		static extern bool GetScrollRange(IntPtr hWnd, int nBar, out int lpMinPos, out int lpMaxPos);
 
-		public void AppendTextAndScroll(string text)
-		{
+		public void AppendTextAndScroll(string text) {
 			bool bottomFlag = false;
-			int VSmin;
-			int VSmax;
-			int sbOffset;
-			int savedVpos;
+			int VSmin, VSmax;
 			// Make sure this is done in the UI thread
 
-			if (this.InvokeRequired)
-			{
+			if (InvokeRequired) {
 				LogDelegate d = new LogDelegate(AppendTextAndScroll);
-				this.Invoke(d, new object[] { text, true });
-			}
-
-			else
-			{
+				Invoke(d, new object[] { text, true });
+			} else {
 				// Win32 magic to keep the textbox scrolling to the newest append to the textbox unless
 				// the user has moved the scrollbox up
-				sbOffset = (int)((this.ClientSize.Height - SystemInformation.HorizontalScrollBarHeight) / (this.Font.Height));
-				savedVpos = GetScrollPos(this.Handle, SB_VERT);
-				GetScrollRange(this.Handle, SB_VERT, out VSmin, out VSmax);
+				int sbOffset = (int)((ClientSize.Height - SystemInformation.HorizontalScrollBarHeight) / Font.Height);
+				int savedVpos = GetScrollPos(Handle, SB_VERT);
+				GetScrollRange(Handle, SB_VERT, out VSmin, out VSmax);
 				if (savedVpos >= (VSmax - sbOffset - 1))
 					bottomFlag = true;
-				this.AppendText(text + Environment.NewLine);
-				if (bottomFlag)
-				{
-					GetScrollRange(this.Handle, SB_VERT, out VSmin, out VSmax);
+				AppendText(text + Environment.NewLine);
+
+				if (bottomFlag) {
+					GetScrollRange(Handle, SB_VERT, out VSmin, out VSmax);
 					savedVpos = VSmax - sbOffset;
 					bottomFlag = false;
 				}
 				SetScrollPos(this.Handle, SB_VERT, savedVpos, true);
 				PostMessageA(this.Handle, WM_VSCROLL, SB_THUMBPOSITION + 0x10000 * savedVpos, 0);
 			}
-			this.Text = ReturnLast250Lines(this.Text);
-
-
+			Text = ReturnLast250Lines(this.Text);
 		}
 
 		public string ReturnLast250Lines(string text)  //NOT WORKIN!

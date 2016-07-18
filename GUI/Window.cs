@@ -1,7 +1,7 @@
-/*	
+/*    
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
-    Dual-licensed under the	Educational Community License, Version 2.0 and
+    Dual-licensed under the    Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -162,7 +162,7 @@ namespace MCGalaxy.Gui
                     txtErrors.AppendText(Environment.NewLine + message);
                 }
             } catch { 
-        	}
+            }
         }
         
         void newSystem(string message) {
@@ -173,7 +173,7 @@ namespace MCGalaxy.Gui
                     txtSystem.AppendText(Environment.NewLine + message);
                 }
             } catch { 
-        	}
+            }
         }
 
         delegate void LogDelegate(string message);
@@ -250,9 +250,9 @@ namespace MCGalaxy.Gui
         public delegate void UpdateList();
 
         public void UpdateMapList() {
-        	if (InvokeRequired) {
+            if (InvokeRequired) {
                 Invoke(new UpdateList(UpdateMapList));
-        	} else {
+            } else {
 
                 if (dgvMaps.DataSource == null)
                     dgvMaps.DataSource = lc;
@@ -306,9 +306,9 @@ namespace MCGalaxy.Gui
             if (InvokeRequired) {
                 StringCallback d = UpdateUrl;
                 Invoke(d, new object[] { s });
-        	} else {
+            } else {
                 txtUrl.Text = s;
-        	}
+            }
         }
 
         void Window_FormClosing(object sender, FormClosingEventArgs e) {
@@ -330,17 +330,18 @@ namespace MCGalaxy.Gui
         void txtInput_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode != Keys.Enter) return;
             e.Handled = true;
-            e.SuppressKeyPress = true;
-            Handlers.HandleChat(txtInput.Text, WriteLine);
+            e.SuppressKeyPress = true;            
+            string text = txtInput.Text;
+            if (text.Length == 0) return;
+            
+            if (text[0] == '/' && text.Length > 1 && text[1] == '/') {
+                Handlers.HandleChat(text.Substring(1), WriteLine);
+            } else if (text[0] == '/') {
+                Handlers.HandleCommand(text.Substring(1), WriteCommand);
+            } else {
+                Handlers.HandleChat(text, WriteLine);
+            }
             txtInput.Clear();
-        }
-
-        void txtCommands_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode != Keys.Enter) return;
-            e.Handled = true;
-            e.SuppressKeyPress = true;
-            Handlers.HandleCommand(txtCommands.Text, WriteCommand);
-            txtCommands.Clear();
         }
 
         void btnClose_Click_1(object sender, EventArgs e) { Close(); }
@@ -740,7 +741,7 @@ namespace MCGalaxy.Gui
             }
             try {
                 if (ImpersonateORSendCmdTxt.Text.StartsWith("/")) {
-                	string[] args = ImpersonateORSendCmdTxt.Text.Trim().SplitSpaces(2);
+                    string[] args = ImpersonateORSendCmdTxt.Text.Trim().SplitSpaces(2);
                     Command cmd = Command.all.Find(args[0].Replace("/", ""));
                     if (cmd == null) {
                         PlayersTextBox.AppendTextAndScroll("That isn't a command!!"); return;
@@ -748,7 +749,7 @@ namespace MCGalaxy.Gui
                     
                     cmd.Use(curPlayer, args.Length > 1 ? args[1] : "");
                     if (args.Length > 1) {
-                    	PlayersTextBox.AppendTextAndScroll("Used command '" + args[0] + "' with parameters '" + args[1] + "' as player");
+                        PlayersTextBox.AppendTextAndScroll("Used command '" + args[0] + "' with parameters '" + args[1] + "' as player");
                     } else {
                         PlayersTextBox.AppendTextAndScroll("Used command '" + args[0] + "' with no parameters as player");
                     }
@@ -1134,8 +1135,8 @@ namespace MCGalaxy.Gui
             {
                 mapgen = true;
                 try {
-                	string args = name + " " + x + " " + y + " " + z + " " + type;
-                	if (!String.IsNullOrEmpty(seed)) args += " " + seed;
+                    string args = name + " " + x + " " + y + " " + z + " " + type;
+                    if (!String.IsNullOrEmpty(seed)) args += " " + seed;
                     Command.all.Find("newlvl").Use(null, args);
                 } catch {
                     MessageBox.Show("Level Creation Failed. Are  you sure you didn't leave a box empty?");
@@ -1162,14 +1163,14 @@ namespace MCGalaxy.Gui
                 Command.all.Find("load").Use(null, lbMap_Unld.SelectedItem.ToString());
             } catch { 
             }
-        	UpdateUnloadedList();
-        	UpdateMapList();
+            UpdateUnloadedList();
+            UpdateMapList();
         }
         
         string last = null;
         void UpdateSelectedMap(object sender, EventArgs e) {
             if (lbMap_Lded.SelectedItem == null) {
-        		if (pgMaps.SelectedObject == null) return;
+                if (pgMaps.SelectedObject == null) return;
                 pgMaps.SelectedObject = null; last = null;
                 gbMap_Props.Text = "Properties for (none selected)"; return;
             }
@@ -1177,7 +1178,7 @@ namespace MCGalaxy.Gui
             string name = lbMap_Lded.SelectedItem.ToString();
             Level lvl = LevelInfo.FindExact(name);
             if (lvl == null) {
-            	if (pgMaps.SelectedObject == null) return;
+                if (pgMaps.SelectedObject == null) return;
                 pgMaps.SelectedObject = null; last = null;
                 gbMap_Props.Text = "Properties for (none selected)"; return;
             }
@@ -1193,7 +1194,7 @@ namespace MCGalaxy.Gui
         {
             RunOnUiThread(() =>
             {
-        	    string selectedLvl = null;
+                string selectedLvl = null;
                 if (lbMap_Unld.SelectedItem != null)
                     selectedLvl = lbMap_Unld.SelectedItem.ToString();
                 

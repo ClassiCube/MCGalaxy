@@ -127,12 +127,9 @@ namespace MCGalaxy.Gui
             this.copyAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtCommands = new System.Windows.Forms.TextBox();
             this.txtInput = new System.Windows.Forms.TextBox();
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.dgvPlayers = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage7 = new System.Windows.Forms.TabPage();
             this.PlayersTextBox = new MCGalaxy.Gui.AutoScrollTextBox();
@@ -212,6 +209,7 @@ namespace MCGalaxy.Gui
             this.cmbMap_X = new System.Windows.Forms.ComboBox();
             this.lblMap_Name = new System.Windows.Forms.Label();
             this.txtMap_Name = new System.Windows.Forms.TextBox();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.mapsStrip.SuspendLayout();
             this.playerStrip.SuspendLayout();
             this.iconContext.SuspendLayout();
@@ -234,6 +232,15 @@ namespace MCGalaxy.Gui
             this.gbMap_Unld.SuspendLayout();
             this.gbMap_New.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // toolTip
+            // 
+            this.toolTip.AutoPopDelay = 8000;
+            this.toolTip.InitialDelay = 500;
+            this.toolTip.IsBalloon = true;
+            this.toolTip.ReshowDelay = 100;
+            this.toolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.toolTip.ToolTipTitle = "Information";
             // 
             // mapsStrip
             // 
@@ -771,12 +778,9 @@ namespace MCGalaxy.Gui
             this.tabPage1.Controls.Add(this.button_saveall);
             this.tabPage1.Controls.Add(this.dgvMaps);
             this.tabPage1.Controls.Add(this.txtLog);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.txtCommands);
             this.tabPage1.Controls.Add(this.txtInput);
             this.tabPage1.Controls.Add(this.txtUrl);
             this.tabPage1.Controls.Add(this.dgvPlayers);
-            this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -842,11 +846,11 @@ namespace MCGalaxy.Gui
             this.txtLog.BackColor = System.Drawing.SystemColors.Window;
             this.txtLog.ContextMenuStrip = this.txtLogMenuStrip;
             this.txtLog.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLog.Location = new System.Drawing.Point(13, 38);
+            this.txtLog.Location = new System.Drawing.Point(8, 38);
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
             this.txtLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.txtLog.Size = new System.Drawing.Size(493, 404);
+            this.txtLog.Size = new System.Drawing.Size(498, 404);
             this.txtLog.TabIndex = 0;
             this.txtLog.Text = "";
             // 
@@ -930,43 +934,26 @@ namespace MCGalaxy.Gui
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(512, 462);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
-            this.label2.TabIndex = 29;
-            this.label2.Text = "Command:";
-            // 
-            // txtCommands
-            // 
-            this.txtCommands.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCommands.Location = new System.Drawing.Point(575, 459);
-            this.txtCommands.Name = "txtCommands";
-            this.txtCommands.Size = new System.Drawing.Size(183, 21);
-            this.txtCommands.TabIndex = 28;
-            this.txtCommands.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCommands_KeyDown);
-            // 
             // txtInput
             // 
             this.txtInput.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtInput.Location = new System.Drawing.Point(57, 459);
+            this.txtInput.Location = new System.Drawing.Point(8, 454);
             this.txtInput.Name = "txtInput";
-            this.txtInput.Size = new System.Drawing.Size(449, 21);
+            this.txtInput.Size = new System.Drawing.Size(750, 21);
             this.txtInput.TabIndex = 27;
             this.txtInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtInput_KeyDown);
+            this.toolTip.SetToolTip(this.txtInput, "To send chat to players, just type the message in.\nTo enter a command, put a / before it. (e.g. /help commands)");
             // 
             // txtUrl
             // 
             this.txtUrl.Cursor = System.Windows.Forms.Cursors.Default;
             this.txtUrl.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtUrl.Location = new System.Drawing.Point(13, 7);
+            this.txtUrl.Location = new System.Drawing.Point(8, 7);
             this.txtUrl.Name = "txtUrl";
             this.txtUrl.ReadOnly = true;
-            this.txtUrl.Size = new System.Drawing.Size(493, 21);
+            this.txtUrl.Size = new System.Drawing.Size(498, 21);
             this.txtUrl.TabIndex = 25;
+            this.txtUrl.Text = "Finding classicube.net url..";
             this.txtUrl.DoubleClick += new System.EventHandler(this.txtUrl_DoubleClick);
             // 
             // dgvPlayers
@@ -986,16 +973,6 @@ namespace MCGalaxy.Gui
             this.dgvPlayers.Size = new System.Drawing.Size(246, 250);
             this.dgvPlayers.TabIndex = 37;
             this.dgvPlayers.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dgvPlayers_RowPrePaint);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(19, 462);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(31, 13);
-            this.label1.TabIndex = 26;
-            this.label1.Text = "Chat:";
             // 
             // tabControl1
             // 
@@ -1953,12 +1930,9 @@ namespace MCGalaxy.Gui
         private TextBox txtSystem;
         private TabPage tabPage1;
         private DataGridView dgvMaps;
-        private Label label2;
-        private TextBox txtCommands;
         private TextBox txtInput;
         private TextBox txtUrl;
         private DataGridView dgvPlayers;
-        private Label label1;
         private TabControl tabControl1;
         private ToolStripMenuItem promoteToolStripMenuItem;
         private ToolStripMenuItem demoteToolStripMenuItem;
@@ -2060,5 +2034,6 @@ namespace MCGalaxy.Gui
         private ToolStripMenuItem dateStampToolStripMenuItem;
         private ToolStripMenuItem autoScrollToolStripMenuItem;
         private Button btnProperties;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }

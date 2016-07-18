@@ -145,7 +145,7 @@ namespace MCGalaxy {
         public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, byte type, byte extType) {
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) { 
-                if (p.level == level) p.SendBlockchange(x, y, z, type, extType); 
+                if (p.level == level) p.SendBlockchange(x, y, z, type, extType);
             }
         }
 
