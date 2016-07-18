@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands
                     {
                         Player.Message(p, "&bComplex information for \"" + message + "\":");
                         Player.Message(p, "&cBlock will appear as a \"" + Block.Name(Block.Convert(b)) + "\" block");
-                        BlockProps props = Block.Properties[b];
+                        BlockProperties props = Block.Props[b];
 
                         if (Block.LightPass(b, 0, BlockDefinition.GlobalDefs))
                             Player.Message(p, "Block will allow light through");

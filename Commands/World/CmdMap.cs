@@ -141,7 +141,7 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "%TSurvival settings:");
             Player.Message(p, "  Survival death: {0}%S(Fall: {1}, Drown: {2})",
                            GetBool(lvl.Death), lvl.fall, lvl.drown);
-            Player.Message(p, "  Guns: {0}, Killer blocks: {1}",
+            Player.Message(p, "  Guns: {0}%S, Killer blocks: {1}",
                            GetBool(lvl.guns), GetBool(lvl.Killer));
             
             Player.Message(p, "%TGeneral settings:");

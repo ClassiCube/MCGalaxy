@@ -23,47 +23,47 @@ namespace MCGalaxy {
     
     public sealed partial class Block {
         
-        public static BlockProps[] Properties = new BlockProps[256];
+        public static BlockProperties[] Props = new BlockProperties[256];
         public static Dictionary<string, byte> Aliases = new Dictionary<string, byte>();
         
         static void SetCoreProperties() {
             for (int i = 0; i < 256; i++)
-                Properties[i] = new BlockProps((byte)i);
+                Props[i] = new BlockProperties((byte)i);
             for (int i = 0; i < 256; i++) {
                 // Fallback for unrecognised physics blocks
-                if (i >= CpeCount) Properties[i].ConvertId = Block.orange;
+                if (i >= CpeCount) Props[i].ConvertId = Block.orange;
                 
                 if ((i >= op_glass && i <= op_lava) || i == Zero || i == rocketstart || i == blackrock)
-                    Properties[i].OPBlock = true;
+                    Props[i].OPBlock = true;
                 
                 if ((i >= tdoor && i <= tdoor8) || (i >= tdoor9 && i <= tdoor13))
-                    Properties[i].IsTDoor = true;
+                    Props[i].IsTDoor = true;
                 
                 if (i >= MsgWhite && i <= MsgLava)
-                    Properties[i].IsMessageBlock = true;
+                    Props[i].IsMessageBlock = true;
                 
                 if (i == blue_portal || i == orange_portal || (i >= air_portal && i <= lava_portal))
-                    Properties[i].IsPortal = true;
+                    Props[i].IsPortal = true;
                 
                 // ODoor blocks
                 if (i >= odoor1 && i <= odoor7)
-                    Properties[i].ODoorId = (byte)(odoor1_air + (i - odoor1));
+                    Props[i].ODoorId = (byte)(odoor1_air + (i - odoor1));
                 if (i >= odoor8 && i <= odoor12)
-                    Properties[i].ODoorId = (byte)(odoor8_air + (i - odoor8));
+                    Props[i].ODoorId = (byte)(odoor8_air + (i - odoor8));
                 if (i >= odoor1_air && i <= odoor7_air) {
-                    Properties[i].ODoorId = (byte)(odoor1 + (i - odoor1_air));
-                    Properties[i].SaveConvertId = Properties[i].ODoorId;
+                    Props[i].ODoorId = (byte)(odoor1 + (i - odoor1_air));
+                    Props[i].SaveConvertId = Props[i].ODoorId;
                 }                    
                 if (i >= odoor8_air && i <= odoor12_air) {
-                    Properties[i].ODoorId = (byte)(odoor8 + (i - odoor8_air));
-                    Properties[i].SaveConvertId = Properties[i].ODoorId;
+                    Props[i].ODoorId = (byte)(odoor8 + (i - odoor8_air));
+                    Props[i].SaveConvertId = Props[i].ODoorId;
                 }
                 
                 if ((i >= red && i <= white) || (i >= lightpink && i <= turquoise))
-                    Properties[i].LavaKills = true;
+                    Props[i].LavaKills = true;
                 if (i == air || i == shrub || (i >= yellowflower && i <= redmushroom)) {
-                    Properties[i].LavaKills = true;
-                    Properties[i].WaterKills = true;
+                    Props[i].LavaKills = true;
+                    Props[i].WaterKills = true;
                 }
                 
                 // Door blocks
@@ -85,22 +85,23 @@ namespace MCGalaxy {
             Door(lava_door, lava_door_air);
             
             // Block specific properties
-            Properties[air_flood].SaveConvertId = air;
-            Properties[air_flood_down].SaveConvertId = air;
-            Properties[air_flood_layer].SaveConvertId = air;
-            Properties[air_flood_up].SaveConvertId = air;
-            Properties[wood].LavaKills = true; Properties[trunk].LavaKills = true;
-            Properties[sponge].LavaKills = true; Properties[bookcase].LavaKills = true;
-            Properties[leaf].LavaKills = true;
-            Properties[red].IsRails = true; Properties[op_air].IsRails = true;
+            Props[air_flood].SaveConvertId = air;
+            Props[air_flood_down].SaveConvertId = air;
+            Props[air_flood_layer].SaveConvertId = air;
+            Props[air_flood_up].SaveConvertId = air;
+            Props[wood].LavaKills = true; Props[trunk].LavaKills = true;
+            Props[sponge].LavaKills = true; Props[bookcase].LavaKills = true;
+            Props[leaf].LavaKills = true;
+            Props[red].IsRails = true; Props[op_air].IsRails = true;
             SetupDefaultNames();
+            SetupDeathMessages();
         }
         
         static void Door(byte doorId, byte airId, bool saveConvert = true) {
-            Properties[doorId].DoorAirId = airId;
-            Properties[airId].DoorId = doorId;
+            Props[doorId].DoorAirId = airId;
+            Props[airId].DoorId = doorId;
             if (saveConvert)
-                Properties[airId].SaveConvertId = doorId;
+                Props[airId].SaveConvertId = doorId;
         }
         
         static void SetupDefaultNames() {
@@ -148,7 +149,7 @@ namespace MCGalaxy {
                 "goldfish", "sea_sponge", "shark", "salmon", "betta_fish", "lava_shark", "snake", 
                 "snake_tail", "door_gold", "door_gold_air", "unknown" };
             for (int i = 0; i < names.Length; i++) {
-                Properties[i].Name = names[i];
+                Props[i].Name = names[i];
                 if (names[i] != "unknown") 
                     Aliases[names[i]] = (byte)i;               
                 if (names[i].IndexOf('_') >= 0)
@@ -199,6 +200,29 @@ namespace MCGalaxy {
             
             Aliases["steps"] = staircasestep; Aliases["double_steps"] = staircasefull;
             Aliases["step"] = staircasestep; Aliases["double_step"] = staircasefull;
+        }
+        
+        static void SetupDeathMessages() {
+            Props[Block.tntexplosion].DeathMessage = "{0} %S&cblew into pieces.";
+            Props[Block.deathair].DeathMessage = "{0} %Swalked into &cnerve gas and suffocated.";
+            Props[Block.deathwater].DeathMessage = "{0} %Sstepped in &dcold water and froze.";
+            Props[Block.activedeathwater].DeathMessage = Props[Block.deathwater].DeathMessage;
+            Props[Block.deathlava].DeathMessage = "{0} %Sstood in &cmagma and melted.";
+            Props[Block.activedeathlava].DeathMessage = Props[Block.deathlava].DeathMessage;
+            Props[Block.fastdeathlava].DeathMessage = Props[Block.deathlava].DeathMessage;
+            Props[Block.magma].DeathMessage = "{0} %Swas hit by &cflowing magma and melted.";
+            Props[Block.geyser].DeathMessage = "{0} %Swas hit by &cboiling water and melted.";
+            Props[Block.birdkill].DeathMessage = "{0} %Swas hit by a &cphoenix and burnt.";
+            Props[Block.train].DeathMessage = "{0} %Swas hit by a &ctrain.";
+            Props[Block.fishshark].DeathMessage = "{0} %Swas eaten by a &cshark.";
+            Props[Block.fire].DeathMessage = "{0} %Sburnt to a &ccrisp.";
+            Props[Block.rockethead].DeathMessage = "{0} %Swas &cin a fiery explosion.";
+            Props[Block.zombiebody].DeathMessage = "{0} %Sdied due to lack of &5brain.";
+            Props[Block.creeper].DeathMessage = "{0} %Swas killed &cb-SSSSSSSSSSSSSS";
+            Props[Block.air].DeathMessage = "{0} %Shit the floor &chard.";
+            Props[Block.water].DeathMessage = "{0} %S&cdrowned.";
+            Props[Block.Zero].DeathMessage = "{0} %Swas &cterminated";
+            Props[Block.fishlavashark].DeathMessage = "{0} %Swas eaten by a ... LAVA SHARK?!";
         }
     }
 }

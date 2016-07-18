@@ -21,7 +21,7 @@ namespace MCGalaxy
 {
     public sealed partial class Block
     {
-        public static string Name(byte type) { return Properties[type].Name; }
+        public static string Name(byte type) { return Props[type].Name; }
         
         public static byte Byte(string type) {
             byte block;
@@ -264,6 +264,6 @@ namespace MCGalaxy
             }
         }
         
-        public static byte SaveConvert(byte b) { return Properties[b].SaveConvertId; }
+        public static byte SaveConvert(byte b) { return Props[b].SaveConvertId; }
     }
 }

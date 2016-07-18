@@ -110,7 +110,7 @@
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\Block.ID.cs" />
     <Compile Include="Blocks\Block.Permissions.cs" />
-    <Compile Include="Blocks\BlockProps.cs" />
+    <Compile Include="Blocks\BlockProperties.cs" />
     <Compile Include="Bots\BotsFile.cs" />
     <Compile Include="Bots\Instructions.cs" />
     <Compile Include="Bots\PlayerBot.cs" />

@@ -95,7 +95,7 @@ namespace MCGalaxy
             return type >= water && type <= lavastill;			
         }
 
-        public static bool OPBlocks(byte type) { return Properties[type].OPBlock; }
+        public static bool OPBlocks(byte type) { return Props[type].OPBlock; }
 
         public static bool Death(byte type)
         {
@@ -138,11 +138,11 @@ namespace MCGalaxy
 
         public static bool Mover(byte type) { return walkthroughHandlers[type] != null; }
 
-        public static bool FireKill(byte type) { return type != air && Properties[type].LavaKills; }
+        public static bool FireKill(byte type) { return type != air && Props[type].LavaKills; }
         
-        public static bool LavaKill(byte type) { return Properties[type].LavaKills; }
+        public static bool LavaKill(byte type) { return Props[type].LavaKills; }
 		
-        public static bool WaterKill(byte type) { return Properties[type].WaterKills; }
+        public static bool WaterKill(byte type) { return Props[type].WaterKills; }
 
         public static bool LightPass(byte type, byte extType, BlockDefinition[] defs) {
             switch (Convert(type)) {
@@ -202,9 +202,9 @@ namespace MCGalaxy
             return false;
         }
 
-        public static bool portal(byte type) { return Properties[type].IsPortal; }
+        public static bool portal(byte type) { return Props[type].IsPortal; }
         
-        public static bool mb(byte type) { return Properties[type].IsMessageBlock; }
+        public static bool mb(byte type) { return Props[type].IsMessageBlock; }
 
         public static bool Physics(byte type)   //returns false if placing block cant actualy cause any physics to happen
         {
@@ -311,10 +311,10 @@ namespace MCGalaxy
             }
         }
         
-        public static byte DoorAirs(byte b) { return Properties[b].DoorAirId; }
+        public static byte DoorAirs(byte b) { return Props[b].DoorAirId; }
 
-        public static bool tDoor(byte type) { return Properties[type].IsTDoor; }
+        public static bool tDoor(byte type) { return Props[type].IsTDoor; }
 
-        public static byte odoor(byte type) { return Properties[type].ODoorId; }
+        public static byte odoor(byte type) { return Props[type].ODoorId; }
     }
 }

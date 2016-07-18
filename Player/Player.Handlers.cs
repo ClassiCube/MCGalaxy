@@ -818,81 +818,49 @@ return;
 
         public void HandleDeath(byte b, string customMessage = "", bool explode = false, bool immediate = false) {
             ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);
-            if ( OnDeath != null )
-                OnDeath(this, b);
-            if ( PlayerDeath != null )
-                PlayerDeath(this, b);
+            if (OnDeath != null) OnDeath(this, b);
+            if (PlayerDeath != null) PlayerDeath(this, b);
             OnPlayerDeathEvent.Call(this, b);
-            if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) )
-                return;
             
-            if ( immediate || lastDeath.AddSeconds(2) < DateTime.UtcNow ) {
-
-                if ( level.Killer && !invincible && !hidden ) {
-
-                    switch ( b ) {
-                        case Block.tntexplosion: Chat.GlobalChatLevel(this, ColoredName + " %S&cblew into pieces.", false); break;
-                        case Block.deathair: Chat.GlobalChatLevel(this, ColoredName + " %Swalked into &cnerve gas and suffocated.", false); break;
-                        case Block.deathwater:
-                        case Block.activedeathwater: Chat.GlobalChatLevel(this, ColoredName + " %Sstepped in &dcold water and froze.", false); break;
-                        case Block.deathlava:
-                        case Block.activedeathlava:
-                        case Block.fastdeathlava: Chat.GlobalChatLevel(this, ColoredName + " %Sstood in &cmagma and melted.", false); break;
-                        case Block.magma: Chat.GlobalChatLevel(this, ColoredName + " %Swas hit by &cflowing magma and melted.", false); break;
-                        case Block.geyser: Chat.GlobalChatLevel(this, ColoredName + " %Swas hit by &cboiling water and melted.", false); break;
-                        case Block.birdkill: Chat.GlobalChatLevel(this, ColoredName + " %Swas hit by a &cphoenix and burnt.", false); break;
-                        case Block.train: Chat.GlobalChatLevel(this, ColoredName + " %Swas hit by a &ctrain.", false); break;
-                        case Block.fishshark: Chat.GlobalChatLevel(this, ColoredName + " %Swas eaten by a &cshark.", false); break;
-                        case Block.fire: Chat.GlobalChatLevel(this, ColoredName + " %Sburnt to a &ccrisp.", false); break;
-                        case Block.rockethead: Chat.GlobalChatLevel(this, ColoredName + " %Swas &cin a fiery explosion.", false); level.MakeExplosion(x, y, z, 0); break;
-                        case Block.zombiebody: Chat.GlobalChatLevel(this, ColoredName + " %Sdied due to lack of &5brain.", false); break;
-                        case Block.creeper: Chat.GlobalChatLevel(this, ColoredName + " %Swas killed &cb-SSSSSSSSSSSSSS", false); level.MakeExplosion(x, y, z, 1); break;
-                        case Block.air: Chat.GlobalChatLevel(this, ColoredName + " %Shit the floor &chard.", false); break;
-                        case Block.water: Chat.GlobalChatLevel(this, ColoredName + " %S&cdrowned.", false); break;
-                        case Block.Zero: Chat.GlobalChatLevel(this, ColoredName + " %Swas &cterminated", false); break;
-                        case Block.fishlavashark: Chat.GlobalChatLevel(this, ColoredName + " %Swas eaten by a ... LAVA SHARK?!", false); break;
-                        case Block.rock:
-                            if ( explode ) level.MakeExplosion(x, y, z, 1);
-                            SendChatFrom(this, ColoredName + "%S" + customMessage, false);
-                            break;
-                        case Block.stone:
-                            if ( explode ) level.MakeExplosion(x, y, z, 1);
-                            Chat.GlobalChatLevel(this, ColoredName + "%S" + customMessage, false);
-                            break;
-                    }
-                    if ( Game.team != null && this.level.ctfmode ) {
-                        //if (carryingFlag)
-                        //{
-                        // level.ctfgame.DropFlag(this, hasflag);
-                        //}
-                        Game.team.SpawnPlayer(this);
-                        //this.health = 100;
-                    }
-                    else if ( Server.Countdown.playersleftlist.Contains(this) ) {
-                        Server.Countdown.Death(this);
-                        Command.all.Find("spawn").Use(this, "");
-                    }
-                    else if ( PlayingTntWars ) {
-                        TntWarsKillStreak = 0;
-                        TntWarsScoreMultiplier = 1f;
-                    }
-                    else if ( Server.lava.active && Server.lava.HasPlayer(this) ) {
-                        if ( !Server.lava.IsPlayerDead(this) ) {
-                            Server.lava.KillPlayer(this);
-                            Command.all.Find("spawn").Use(this, "");
-                        }
-                    }
-                    else {
-                        Command.all.Find("spawn").Use(this, "");
-                        overallDeath++;
-                    }
-
-                    if (Server.deathcount && (overallDeath > 0 && overallDeath % 10 == 0))
-                        Chat.GlobalChatLevel(this, ColoredName + " %Shas died &3" + overallDeath + " times", false);
-                }
-                lastDeath = DateTime.UtcNow;
-
+            if (Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this)) return;
+            if (!immediate && lastDeath.AddSeconds(2) > DateTime.UtcNow) return;
+            if (!level.Killer || invincible || hidden) return;
+            
+            string deathMsg = Block.Props[b].DeathMessage;
+            if (deathMsg != null) Chat.GlobalChatLevel(this, String.Format(deathMsg, ColoredName), false);            
+            if (b == Block.rockethead) level.MakeExplosion(x, y, z, 0);
+            if (b == Block.creeper) level.MakeExplosion(x, y, z, 1);
+            if (b == Block.rock || b == Block.stone) {
+                if (explode) level.MakeExplosion(x, y, z, 1);
+                SendChatFrom(this, ColoredName + "%S" + customMessage, false);
             }
+            
+            if ( Game.team != null && this.level.ctfmode ) {
+                //if (carryingFlag)
+                //{
+                // level.ctfgame.DropFlag(this, hasflag);
+                //}
+                Game.team.SpawnPlayer(this);
+                //this.health = 100;
+            } else if ( Server.Countdown.playersleftlist.Contains(this) ) {
+                Server.Countdown.Death(this);
+                Command.all.Find("spawn").Use(this, "");
+            } else if ( PlayingTntWars ) {
+                TntWarsKillStreak = 0;
+                TntWarsScoreMultiplier = 1f;
+            } else if ( Server.lava.active && Server.lava.HasPlayer(this) ) {
+                if (!Server.lava.IsPlayerDead(this)) {
+                    Server.lava.KillPlayer(this);
+                    Command.all.Find("spawn").Use(this, "");
+                }
+            } else {
+                Command.all.Find("spawn").Use(this, "");
+                overallDeath++;
+            }
+
+            if (Server.deathcount && (overallDeath > 0 && overallDeath % 10 == 0))
+                Chat.GlobalChatLevel(this, ColoredName + " %Shas died &3" + overallDeath + " times", false);
+            lastDeath = DateTime.UtcNow;
         }
 
         /* void HandleFly(Player p, ushort x, ushort y, ushort z) {

@@ -19,7 +19,7 @@ using System;
 
 namespace MCGalaxy.Blocks {
     
-    public struct BlockProps {
+    public struct BlockProperties {
         
         /// <summary> ID of block these properties are associated with. </summary>
         public byte BlockId;
@@ -32,6 +32,8 @@ namespace MCGalaxy.Blocks {
         
         /// <summary> Block name used for in commands. </summary>
         public string Name;
+        
+        public string DeathMessage;
         
         /// <summary> Whether this block is considered a tdoor. </summary>
         public bool IsTDoor;
@@ -58,8 +60,8 @@ namespace MCGalaxy.Blocks {
         /// <summary> Whether this block should allow trains to go over them. </summary>
         public bool IsRails;
         
-        public BlockProps(byte type) {
-            this = default(BlockProps);
+        public BlockProperties(byte type) {
+            this = default(BlockProperties);
             BlockId = type;
             ConvertId = type;
             SaveConvertId = type;

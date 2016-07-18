@@ -61,12 +61,12 @@ namespace MCGalaxy {
             walkthroughHandlers[Block.lava_door] = WalkthroughBehaviour.Door;
             
             for (int i = 0; i < 256; i++) {
-                if (Properties[i].IsMessageBlock) {
+                if (Props[i].IsMessageBlock) {
                     walkthroughHandlers[i] = (p, block, x, y, z) => 
                         WalkthroughBehaviour.MessageBlock(p, block, x, y, z, true);
                     deleteHandlers[i] = (p, block, x, y, z) => 
                         WalkthroughBehaviour.MessageBlock(p, block, x, y, z, false);
-                } else if (Properties[i].IsPortal) {
+                } else if (Props[i].IsPortal) {
                     walkthroughHandlers[i] = (p, block, x, y, z) => 
                         WalkthroughBehaviour.Portal(p, block, x, y, z, true);
                     deleteHandlers[i] = (p, block, x, y, z) => 
@@ -74,7 +74,7 @@ namespace MCGalaxy {
                 }
                 
                 byte doorAir = Block.DoorAirs((byte)i); // if not 0, means i is a door block
-                if (Block.Properties[i].IsTDoor) {
+                if (Block.Props[i].IsTDoor) {
                     deleteHandlers[i] = DeleteBehaviour.RevertDoor;
                 } else if (Block.odoor((byte)i) != Block.Zero) {
                     deleteHandlers[i] = DeleteBehaviour.ODoor;
