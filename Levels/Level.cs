@@ -80,14 +80,16 @@ namespace MCGalaxy
         
         [ConfigBool("UseBlockDB", "Other", null, true)]
         public bool UseBlockDB = true;
-
+        [ConfigString("RealmOwner", "Other", null, "", true)]
+        public string RealmOwner = "";
+        
         [ConfigInt("Weather", "Env", null, 0, 0, 2)]        
         public int Weather;
         [ConfigString("Texture", "Env", null, "", true)]
         public string terrainUrl = "";
         [ConfigString("TexturePack", "Env", null, "", true)]
         public string texturePackUrl = "";
-
+        
         public bool cancelsave1;
         public bool cancelunload;
         public bool changed;

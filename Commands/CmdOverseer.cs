@@ -44,9 +44,8 @@ namespace MCGalaxy.Commands
             
             bool mapOnly = cmd == "SPAWN" || cmd == "PRESET" || cmd == "WEATHER" || cmd == "ENV" ||
                 cmd == "KICK" || cmd == "KICKALL" || cmd == "ZONE" || cmd == "LB" || cmd == "LEVELBLOCK";
-            if (mapOnly && !p.level.name.CaselessStarts(p.name)) {
-                Player.Message(p, "You may only perform that action on your own map.");
-                return;
+            if (mapOnly && !OwnsMap(p, p.level)) {
+                Player.Message(p, "You may only perform that action on your own map."); return;
             }
 
             if (cmd == "GO" || cmd == "GOTO") {
@@ -109,9 +108,8 @@ namespace MCGalaxy.Commands
         void HandleMapCommand(Player p, string message, string cmd, string value) {
             bool mapOnly = cmd == "PHYSICS" || cmd == "MOTD" || cmd == "GUNS" || cmd == "CHAT" || cmd == "RESTORE" ||
                 cmd == "PERVISIT" || cmd == "TEXTURE" || cmd == "BUILDABLE" || cmd == "DELETEABLE";
-            if (mapOnly && !p.level.name.CaselessStarts(p.name)) {
-                Player.Message(p, "You may only perform that action on your own map.");
-                return;
+            if (mapOnly && !OwnsMap(p, p.level)) {
+                Player.Message(p, "You may only perform that action on your own map."); return;
             }
             byte mapNum = 0;
             
@@ -340,6 +338,10 @@ namespace MCGalaxy.Commands
             if (LevelInfo.ExistsOffline(p.name.ToLower() + "00"))
                 return p.name.ToLower() + "00";
             return p.name.ToLower();
+        }
+        
+        static bool OwnsMap(Player p, Level lvl) {
+            return lvl.RealmOwner.CaselessEq(p.name) || p.level.name.CaselessEq(p.name);
         }
         
         public override void Help(Player p) {

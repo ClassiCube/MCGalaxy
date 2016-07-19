@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.World {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] AdditionalPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can edit map options") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can edit map options"),
+                  new CommandPerm(LevelPermission.Admin, "+ can set realm owners") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ps", "ps") }; }
@@ -59,15 +60,16 @@ namespace MCGalaxy.Commands.World {
         
         static bool IsMapOption(string[] args) {
             string opt = args[0].ToLower();
-            const string opts = "theme|finite|ai|edge|grass|ps|physicspeed|overload|motd|death|killer|fall"
-                + "|drown|unload|chat|load|loadongoto|leaf|leafdecay|flow|randomflow|tree|growtrees|buildable|deletable";
+            const string opts = "theme|finite|ai|edge|grass|ps|physicspeed|overload|motd|death|killer|fall|drown|unload"
+                + "|realmowner|chat|load|loadongoto|leaf|leafdecay|flow|randomflow|tree|growtrees|buildable|deletable";
             if (!opts.Contains(opt)) return false;
             
-            bool optHasArg = opt == "ps" || opt == "physicspeed" || opt == "overload" || opt == "fall" || opt == "drown";
+            bool optHasArg = opt == "ps" || opt == "physicspeed" || opt == "overload" 
+                || opt == "fall" || opt == "drown" || opt == "realmowner";
             return args.Length == (optHasArg ? 2 : 1);
         }
         
-        static void SetMapOption(Player p, Level lvl, string opt, string value) {
+        void SetMapOption(Player p, Level lvl, string opt, string value) {
             switch (opt.ToLower()) {
                 case "theme":
                     lvl.theme = value;
@@ -119,13 +121,19 @@ namespace MCGalaxy.Commands.World {
                 case "deletable":
                     SetBool(p, lvl, ref lvl.Deletable, "Deletable: ");
                     lvl.UpdateBlockPermissions(); break;
+                case "realmowner":
+                    if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, "can set personal realm owners.", 2); return; }
+                    lvl.RealmOwner = value;
+                    if (value == "") Player.Message(p, "Removed realm owner for this level.");
+                    else Player.Message(p, "Set realm owner of this level to {0}.", value);
+                    break;
                 default:
                     Player.Message(p, "Could not find option entered."); return;
             }
             Level.SaveSettings(lvl);
         }
         
-        static void PrintMapInfo(Player p, Level lvl) {            
+        static void PrintMapInfo(Player p, Level lvl) {
             Player.Message(p, "%TPhysics settings:");
             Player.Message(p, "  Finite mode: {0}%S, Random flow: {1}", 
                            GetBool(lvl.finite), GetBool(lvl.randomFlow));
@@ -139,7 +147,7 @@ namespace MCGalaxy.Commands.World {
                            lvl.speedPhysics);
             
             Player.Message(p, "%TSurvival settings:");
-            Player.Message(p, "  Survival death: {0}%S(Fall: {1}, Drown: {2})",
+            Player.Message(p, "  Survival death: {0} %S(Fall: {1}, Drown: {2})",
                            GetBool(lvl.Death), lvl.fall, lvl.drown);
             Player.Message(p, "  Guns: {0}%S, Killer blocks: {1}",
                            GetBool(lvl.guns), GetBool(lvl.Killer));
@@ -195,8 +203,8 @@ namespace MCGalaxy.Commands.World {
 
         public override void Help(Player p) {
             Player.Message(p, "/map [level] [toggle] - Sets [toggle] on [level]");
-            Player.Message(p, "Possible toggles: theme, finite, randomflow, ai, edge, grass, growtrees, leafdecay, ps, overload, motd, " +
-                           "death, fall, drown, unload, loadongoto, rp, killer, chat, buildable, deletable, levelonlydeath");
+            Player.Message(p, "Possible toggles: Theme, Finite, RandomFlow, AI, Edge, Grass, GrowTrees, LeafDecay, ps, Overload, motd, " +
+                           "Death, Fall, Drown, Unload, LoadOnGoto, Killer, Chat, Buildable, Deletable, RealmOwner");
             Player.Message(p, "Edge will cause edge water to flow.");
             Player.Message(p, "Grass will make grass not grow without physics.");
             Player.Message(p, "Tree growing will make saplings grow into trees after a while.");
@@ -215,6 +223,7 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "Load on /goto sets whether the map can be loaded when some uses /goto. Only works if the load on /goto server option is enabled.");
             Player.Message(p, "Buildable sets whether any blocks can be placed by any player");
             Player.Message(p, "Deletable sets whether any blocks can be deleted by any player");
+            Player.Message(p, "RealmOwner allows that person to use /os commands in the map.");
         }
     }
 }
