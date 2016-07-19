@@ -148,39 +148,39 @@ namespace MCGalaxy.Gui
             this.label27 = new System.Windows.Forms.Label();
             this.IPtxt = new System.Windows.Forms.TextBox();
             this.label26 = new System.Windows.Forms.Label();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.SpawnBt = new System.Windows.Forms.Button();
-            this.UndoTxt = new System.Windows.Forms.TextBox();
-            this.UndoBt = new System.Windows.Forms.Button();
-            this.SlapBt = new System.Windows.Forms.Button();
-            this.SendRulesTxt = new System.Windows.Forms.Button();
-            this.ImpersonateORSendCmdTxt = new System.Windows.Forms.TextBox();
-            this.ImpersonateORSendCmdBt = new System.Windows.Forms.Button();
-            this.KillBt = new System.Windows.Forms.Button();
-            this.JailBt = new System.Windows.Forms.Button();
-            this.DemoteBt = new System.Windows.Forms.Button();
-            this.PromoteBt = new System.Windows.Forms.Button();
-            this.LoginTxt = new System.Windows.Forms.TextBox();
-            this.LogoutTxt = new System.Windows.Forms.TextBox();
-            this.TitleTxt = new System.Windows.Forms.TextBox();
-            this.ColorCombo = new System.Windows.Forms.ComboBox();
-            this.ColorBt = new System.Windows.Forms.Button();
-            this.TitleBt = new System.Windows.Forms.Button();
-            this.LogoutBt = new System.Windows.Forms.Button();
-            this.LoginBt = new System.Windows.Forms.Button();
-            this.FreezeBt = new System.Windows.Forms.Button();
-            this.VoiceBt = new System.Windows.Forms.Button();
-            this.JokerBt = new System.Windows.Forms.Button();
-            this.WarnBt = new System.Windows.Forms.Button();
-            this.MessageBt = new System.Windows.Forms.Button();
-            this.PLayersMessageTxt = new System.Windows.Forms.TextBox();
-            this.HideBt = new System.Windows.Forms.Button();
-            this.IPBanBt = new System.Windows.Forms.Button();
-            this.BanBt = new System.Windows.Forms.Button();
-            this.KickBt = new System.Windows.Forms.Button();
-            this.MapCombo = new System.Windows.Forms.ComboBox();
-            this.MapBt = new System.Windows.Forms.Button();
-            this.MuteBt = new System.Windows.Forms.Button();
+            this.pl_actions = new System.Windows.Forms.Panel();
+            this.pl_btnSpawn = new System.Windows.Forms.Button();
+            this.pl_txtUndo = new System.Windows.Forms.TextBox();
+            this.pl_btnUndo = new System.Windows.Forms.Button();
+            this.pl_btnSlap = new System.Windows.Forms.Button();
+            this.pl_btnRules = new System.Windows.Forms.Button();
+            this.pl_txtImpersonate = new System.Windows.Forms.TextBox();
+            this.pl_btnImpersonate = new System.Windows.Forms.Button();
+            this.pl_btnKill = new System.Windows.Forms.Button();
+            this.pl_btnJail = new System.Windows.Forms.Button();
+            this.pl_btnDemote = new System.Windows.Forms.Button();
+            this.pl_btnPromote = new System.Windows.Forms.Button();
+            this.pl_txtLogin = new System.Windows.Forms.TextBox();
+            this.pl_txtLogout = new System.Windows.Forms.TextBox();
+            this.pl_txtTitle = new System.Windows.Forms.TextBox();
+            this.pl_cmbColor = new System.Windows.Forms.ComboBox();
+            this.pl_btnColor = new System.Windows.Forms.Button();
+            this.pl_btnTitle = new System.Windows.Forms.Button();
+            this.pl_btnLogout = new System.Windows.Forms.Button();
+            this.pl_btnLogin = new System.Windows.Forms.Button();
+            this.pl_btnFreeze = new System.Windows.Forms.Button();
+            this.pl_btnVoice = new System.Windows.Forms.Button();
+            this.pl_btnJoker = new System.Windows.Forms.Button();
+            this.pl_btnWarn = new System.Windows.Forms.Button();
+            this.pl_btnMessage = new System.Windows.Forms.Button();
+            this.pl_txtMessage = new System.Windows.Forms.TextBox();
+            this.pl_btnHide = new System.Windows.Forms.Button();
+            this.pl_btnBanIP = new System.Windows.Forms.Button();
+            this.pl_btnBan = new System.Windows.Forms.Button();
+            this.pl_btnKick = new System.Windows.Forms.Button();
+            this.pl_cmbMap = new System.Windows.Forms.ComboBox();
+            this.pl_btnMap = new System.Windows.Forms.Button();
+            this.pl_btnMute = new System.Windows.Forms.Button();
             this.RankTxt = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
             this.MapTxt = new System.Windows.Forms.TextBox();
@@ -225,7 +225,7 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.main_Players)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tp_Players.SuspendLayout();
-            this.panel4.SuspendLayout();
+            this.pl_actions.SuspendLayout();
             this.tp_Maps.SuspendLayout();
             this.gbMap_Props.SuspendLayout();
             this.gbMap_Lded.SuspendLayout();
@@ -469,7 +469,6 @@ namespace MCGalaxy.Gui
             this.actiondToolStripMenuItem.Name = "actiondToolStripMenuItem";
             this.actiondToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.actiondToolStripMenuItem.Text = "Actions";
-            this.actiondToolStripMenuItem.Click += new System.EventHandler(this.actiondToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
@@ -1007,7 +1006,7 @@ namespace MCGalaxy.Gui
             this.tp_Players.Controls.Add(this.label27);
             this.tp_Players.Controls.Add(this.IPtxt);
             this.tp_Players.Controls.Add(this.label26);
-            this.tp_Players.Controls.Add(this.panel4);
+            this.tp_Players.Controls.Add(this.pl_actions);
             this.tp_Players.Controls.Add(this.RankTxt);
             this.tp_Players.Controls.Add(this.label24);
             this.tp_Players.Controls.Add(this.MapTxt);
@@ -1162,180 +1161,180 @@ namespace MCGalaxy.Gui
             this.label26.TabIndex = 48;
             this.label26.Text = "IP:";
             // 
-            // panel4
+            // pl_actions
             // 
-            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Controls.Add(this.SpawnBt);
-            this.panel4.Controls.Add(this.UndoTxt);
-            this.panel4.Controls.Add(this.UndoBt);
-            this.panel4.Controls.Add(this.SlapBt);
-            this.panel4.Controls.Add(this.SendRulesTxt);
-            this.panel4.Controls.Add(this.ImpersonateORSendCmdTxt);
-            this.panel4.Controls.Add(this.ImpersonateORSendCmdBt);
-            this.panel4.Controls.Add(this.KillBt);
-            this.panel4.Controls.Add(this.JailBt);
-            this.panel4.Controls.Add(this.DemoteBt);
-            this.panel4.Controls.Add(this.PromoteBt);
-            this.panel4.Controls.Add(this.LoginTxt);
-            this.panel4.Controls.Add(this.LogoutTxt);
-            this.panel4.Controls.Add(this.TitleTxt);
-            this.panel4.Controls.Add(this.ColorCombo);
-            this.panel4.Controls.Add(this.ColorBt);
-            this.panel4.Controls.Add(this.TitleBt);
-            this.panel4.Controls.Add(this.LogoutBt);
-            this.panel4.Controls.Add(this.LoginBt);
-            this.panel4.Controls.Add(this.FreezeBt);
-            this.panel4.Controls.Add(this.VoiceBt);
-            this.panel4.Controls.Add(this.JokerBt);
-            this.panel4.Controls.Add(this.WarnBt);
-            this.panel4.Controls.Add(this.MessageBt);
-            this.panel4.Controls.Add(this.PLayersMessageTxt);
-            this.panel4.Controls.Add(this.HideBt);
-            this.panel4.Controls.Add(this.IPBanBt);
-            this.panel4.Controls.Add(this.BanBt);
-            this.panel4.Controls.Add(this.KickBt);
-            this.panel4.Controls.Add(this.MapCombo);
-            this.panel4.Controls.Add(this.MapBt);
-            this.panel4.Controls.Add(this.MuteBt);
-            this.panel4.Location = new System.Drawing.Point(8, 59);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(753, 235);
-            this.panel4.TabIndex = 47;
+            this.pl_actions.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pl_actions.Controls.Add(this.pl_btnSpawn);
+            this.pl_actions.Controls.Add(this.pl_txtUndo);
+            this.pl_actions.Controls.Add(this.pl_btnUndo);
+            this.pl_actions.Controls.Add(this.pl_btnSlap);
+            this.pl_actions.Controls.Add(this.pl_btnRules);
+            this.pl_actions.Controls.Add(this.pl_txtImpersonate);
+            this.pl_actions.Controls.Add(this.pl_btnImpersonate);
+            this.pl_actions.Controls.Add(this.pl_btnKill);
+            this.pl_actions.Controls.Add(this.pl_btnJail);
+            this.pl_actions.Controls.Add(this.pl_btnDemote);
+            this.pl_actions.Controls.Add(this.pl_btnPromote);
+            this.pl_actions.Controls.Add(this.pl_txtLogin);
+            this.pl_actions.Controls.Add(this.pl_txtLogout);
+            this.pl_actions.Controls.Add(this.pl_txtTitle);
+            this.pl_actions.Controls.Add(this.pl_cmbColor);
+            this.pl_actions.Controls.Add(this.pl_btnColor);
+            this.pl_actions.Controls.Add(this.pl_btnTitle);
+            this.pl_actions.Controls.Add(this.pl_btnLogout);
+            this.pl_actions.Controls.Add(this.pl_btnLogin);
+            this.pl_actions.Controls.Add(this.pl_btnFreeze);
+            this.pl_actions.Controls.Add(this.pl_btnVoice);
+            this.pl_actions.Controls.Add(this.pl_btnJoker);
+            this.pl_actions.Controls.Add(this.pl_btnWarn);
+            this.pl_actions.Controls.Add(this.pl_btnMessage);
+            this.pl_actions.Controls.Add(this.pl_txtMessage);
+            this.pl_actions.Controls.Add(this.pl_btnHide);
+            this.pl_actions.Controls.Add(this.pl_btnBanIP);
+            this.pl_actions.Controls.Add(this.pl_btnBan);
+            this.pl_actions.Controls.Add(this.pl_btnKick);
+            this.pl_actions.Controls.Add(this.pl_cmbMap);
+            this.pl_actions.Controls.Add(this.pl_btnMap);
+            this.pl_actions.Controls.Add(this.pl_btnMute);
+            this.pl_actions.Location = new System.Drawing.Point(8, 59);
+            this.pl_actions.Name = "pl_actions";
+            this.pl_actions.Size = new System.Drawing.Size(753, 235);
+            this.pl_actions.TabIndex = 47;
             // 
-            // SpawnBt
+            // pl_btnSpawn
             // 
-            this.SpawnBt.Location = new System.Drawing.Point(627, 149);
-            this.SpawnBt.Name = "SpawnBt";
-            this.SpawnBt.Size = new System.Drawing.Size(122, 23);
-            this.SpawnBt.TabIndex = 43;
-            this.SpawnBt.Text = "Spawn";
-            this.SpawnBt.UseVisualStyleBackColor = true;
-            this.SpawnBt.Click += new System.EventHandler(this.SpawnBt_Click);
+            this.pl_btnSpawn.Location = new System.Drawing.Point(627, 149);
+            this.pl_btnSpawn.Name = "pl_btnSpawn";
+            this.pl_btnSpawn.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnSpawn.TabIndex = 43;
+            this.pl_btnSpawn.Text = "Spawn";
+            this.pl_btnSpawn.UseVisualStyleBackColor = true;
+            this.pl_btnSpawn.Click += new System.EventHandler(this.SpawnBt_Click);
             // 
-            // UndoTxt
+            // pl_txtUndo
             // 
-            this.UndoTxt.Location = new System.Drawing.Point(131, 148);
-            this.UndoTxt.Name = "UndoTxt";
-            this.UndoTxt.Size = new System.Drawing.Size(234, 21);
-            this.UndoTxt.TabIndex = 42;
-            this.UndoTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UndoTxt_KeyDown);
+            this.pl_txtUndo.Location = new System.Drawing.Point(131, 148);
+            this.pl_txtUndo.Name = "pl_txtUndo";
+            this.pl_txtUndo.Size = new System.Drawing.Size(234, 21);
+            this.pl_txtUndo.TabIndex = 42;
+            this.pl_txtUndo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UndoTxt_KeyDown);
             // 
-            // UndoBt
+            // pl_btnUndo
             // 
-            this.UndoBt.Location = new System.Drawing.Point(4, 148);
-            this.UndoBt.Name = "UndoBt";
-            this.UndoBt.Size = new System.Drawing.Size(121, 23);
-            this.UndoBt.TabIndex = 41;
-            this.UndoBt.Text = "Undo:";
-            this.UndoBt.UseVisualStyleBackColor = true;
-            this.UndoBt.Click += new System.EventHandler(this.UndoBt_Click);
+            this.pl_btnUndo.Location = new System.Drawing.Point(4, 148);
+            this.pl_btnUndo.Name = "pl_btnUndo";
+            this.pl_btnUndo.Size = new System.Drawing.Size(121, 23);
+            this.pl_btnUndo.TabIndex = 41;
+            this.pl_btnUndo.Text = "Undo:";
+            this.pl_btnUndo.UseVisualStyleBackColor = true;
+            this.pl_btnUndo.Click += new System.EventHandler(this.UndoBt_Click);
             // 
-            // SlapBt
+            // pl_btnSlap
             // 
-            this.SlapBt.Location = new System.Drawing.Point(371, 146);
-            this.SlapBt.Name = "SlapBt";
-            this.SlapBt.Size = new System.Drawing.Size(122, 23);
-            this.SlapBt.TabIndex = 40;
-            this.SlapBt.Text = "Slap";
-            this.SlapBt.UseVisualStyleBackColor = true;
-            this.SlapBt.Click += new System.EventHandler(this.SlapBt_Click);
+            this.pl_btnSlap.Location = new System.Drawing.Point(371, 146);
+            this.pl_btnSlap.Name = "pl_btnSlap";
+            this.pl_btnSlap.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnSlap.TabIndex = 40;
+            this.pl_btnSlap.Text = "Slap";
+            this.pl_btnSlap.UseVisualStyleBackColor = true;
+            this.pl_btnSlap.Click += new System.EventHandler(this.SlapBt_Click);
             // 
-            // SendRulesTxt
+            // pl_btnRules
             // 
-            this.SendRulesTxt.Location = new System.Drawing.Point(627, 120);
-            this.SendRulesTxt.Name = "SendRulesTxt";
-            this.SendRulesTxt.Size = new System.Drawing.Size(122, 23);
-            this.SendRulesTxt.TabIndex = 39;
-            this.SendRulesTxt.Text = "Send Rules";
-            this.SendRulesTxt.UseVisualStyleBackColor = true;
-            this.SendRulesTxt.Click += new System.EventHandler(this.SendRulesTxt_Click);
+            this.pl_btnRules.Location = new System.Drawing.Point(627, 120);
+            this.pl_btnRules.Name = "pl_btnRules";
+            this.pl_btnRules.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnRules.TabIndex = 39;
+            this.pl_btnRules.Text = "Send Rules";
+            this.pl_btnRules.UseVisualStyleBackColor = true;
+            this.pl_btnRules.Click += new System.EventHandler(this.SendRulesTxt_Click);
             // 
-            // ImpersonateORSendCmdTxt
+            // pl_txtImpersonate
             // 
-            this.ImpersonateORSendCmdTxt.Location = new System.Drawing.Point(132, 207);
-            this.ImpersonateORSendCmdTxt.Name = "ImpersonateORSendCmdTxt";
-            this.ImpersonateORSendCmdTxt.Size = new System.Drawing.Size(616, 21);
-            this.ImpersonateORSendCmdTxt.TabIndex = 38;
-            this.ImpersonateORSendCmdTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImpersonateORSendCmdTxt_KeyDown);
+            this.pl_txtImpersonate.Location = new System.Drawing.Point(132, 207);
+            this.pl_txtImpersonate.Name = "pl_txtImpersonate";
+            this.pl_txtImpersonate.Size = new System.Drawing.Size(616, 21);
+            this.pl_txtImpersonate.TabIndex = 38;
+            this.pl_txtImpersonate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImpersonateORSendCmdTxt_KeyDown);
             // 
-            // ImpersonateORSendCmdBt
+            // pl_btnImpersonate
             // 
-            this.ImpersonateORSendCmdBt.Location = new System.Drawing.Point(3, 206);
-            this.ImpersonateORSendCmdBt.Name = "ImpersonateORSendCmdBt";
-            this.ImpersonateORSendCmdBt.Size = new System.Drawing.Size(122, 23);
-            this.ImpersonateORSendCmdBt.TabIndex = 37;
-            this.ImpersonateORSendCmdBt.Text = "Impersonate/Cmd:";
-            this.ImpersonateORSendCmdBt.UseVisualStyleBackColor = true;
-            this.ImpersonateORSendCmdBt.Click += new System.EventHandler(this.ImpersonateORSendCmdBt_Click);
+            this.pl_btnImpersonate.Location = new System.Drawing.Point(3, 206);
+            this.pl_btnImpersonate.Name = "pl_btnImpersonate";
+            this.pl_btnImpersonate.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnImpersonate.TabIndex = 37;
+            this.pl_btnImpersonate.Text = "Impersonate/Cmd:";
+            this.pl_btnImpersonate.UseVisualStyleBackColor = true;
+            this.pl_btnImpersonate.Click += new System.EventHandler(this.ImpersonateORSendCmdBt_Click);
             // 
-            // KillBt
+            // pl_btnKill
             // 
-            this.KillBt.Location = new System.Drawing.Point(499, 120);
-            this.KillBt.Name = "KillBt";
-            this.KillBt.Size = new System.Drawing.Size(122, 23);
-            this.KillBt.TabIndex = 36;
-            this.KillBt.Text = "Kill";
-            this.KillBt.UseVisualStyleBackColor = true;
-            this.KillBt.Click += new System.EventHandler(this.KillBt_Click);
+            this.pl_btnKill.Location = new System.Drawing.Point(499, 120);
+            this.pl_btnKill.Name = "pl_btnKill";
+            this.pl_btnKill.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnKill.TabIndex = 36;
+            this.pl_btnKill.Text = "Kill";
+            this.pl_btnKill.UseVisualStyleBackColor = true;
+            this.pl_btnKill.Click += new System.EventHandler(this.KillBt_Click);
             // 
-            // JailBt
+            // pl_btnJail
             // 
-            this.JailBt.Location = new System.Drawing.Point(499, 149);
-            this.JailBt.Name = "JailBt";
-            this.JailBt.Size = new System.Drawing.Size(122, 23);
-            this.JailBt.TabIndex = 34;
-            this.JailBt.Text = "Jail";
-            this.JailBt.UseVisualStyleBackColor = true;
-            this.JailBt.Click += new System.EventHandler(this.JailBt_Click);
+            this.pl_btnJail.Location = new System.Drawing.Point(499, 149);
+            this.pl_btnJail.Name = "pl_btnJail";
+            this.pl_btnJail.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnJail.TabIndex = 34;
+            this.pl_btnJail.Text = "Jail";
+            this.pl_btnJail.UseVisualStyleBackColor = true;
+            this.pl_btnJail.Click += new System.EventHandler(this.JailBt_Click);
             // 
-            // DemoteBt
+            // pl_btnDemote
             // 
-            this.DemoteBt.Location = new System.Drawing.Point(371, 87);
-            this.DemoteBt.Name = "DemoteBt";
-            this.DemoteBt.Size = new System.Drawing.Size(122, 23);
-            this.DemoteBt.TabIndex = 33;
-            this.DemoteBt.Text = "Demote";
-            this.DemoteBt.UseVisualStyleBackColor = true;
-            this.DemoteBt.Click += new System.EventHandler(this.DemoteBt_Click);
+            this.pl_btnDemote.Location = new System.Drawing.Point(371, 87);
+            this.pl_btnDemote.Name = "pl_btnDemote";
+            this.pl_btnDemote.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnDemote.TabIndex = 33;
+            this.pl_btnDemote.Text = "Demote";
+            this.pl_btnDemote.UseVisualStyleBackColor = true;
+            this.pl_btnDemote.Click += new System.EventHandler(this.DemoteBt_Click);
             // 
-            // PromoteBt
+            // pl_btnPromote
             // 
-            this.PromoteBt.Location = new System.Drawing.Point(371, 58);
-            this.PromoteBt.Name = "PromoteBt";
-            this.PromoteBt.Size = new System.Drawing.Size(122, 23);
-            this.PromoteBt.TabIndex = 32;
-            this.PromoteBt.Text = "Promote";
-            this.PromoteBt.UseVisualStyleBackColor = true;
-            this.PromoteBt.Click += new System.EventHandler(this.PromoteBt_Click);
+            this.pl_btnPromote.Location = new System.Drawing.Point(371, 58);
+            this.pl_btnPromote.Name = "pl_btnPromote";
+            this.pl_btnPromote.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnPromote.TabIndex = 32;
+            this.pl_btnPromote.Text = "Promote";
+            this.pl_btnPromote.UseVisualStyleBackColor = true;
+            this.pl_btnPromote.Click += new System.EventHandler(this.PromoteBt_Click);
             // 
-            // LoginTxt
+            // pl_txtLogin
             // 
-            this.LoginTxt.Location = new System.Drawing.Point(131, 3);
-            this.LoginTxt.Name = "LoginTxt";
-            this.LoginTxt.Size = new System.Drawing.Size(362, 21);
-            this.LoginTxt.TabIndex = 31;
-            this.LoginTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LoginTxt_KeyDown);
+            this.pl_txtLogin.Location = new System.Drawing.Point(131, 3);
+            this.pl_txtLogin.Name = "pl_txtLogin";
+            this.pl_txtLogin.Size = new System.Drawing.Size(362, 21);
+            this.pl_txtLogin.TabIndex = 31;
+            this.pl_txtLogin.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LoginTxt_KeyDown);
             // 
-            // LogoutTxt
+            // pl_txtLogout
             // 
-            this.LogoutTxt.Location = new System.Drawing.Point(131, 31);
-            this.LogoutTxt.Name = "LogoutTxt";
-            this.LogoutTxt.Size = new System.Drawing.Size(362, 21);
-            this.LogoutTxt.TabIndex = 30;
-            this.LogoutTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LogoutTxt_KeyDown);
+            this.pl_txtLogout.Location = new System.Drawing.Point(131, 31);
+            this.pl_txtLogout.Name = "pl_txtLogout";
+            this.pl_txtLogout.Size = new System.Drawing.Size(362, 21);
+            this.pl_txtLogout.TabIndex = 30;
+            this.pl_txtLogout.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LogoutTxt_KeyDown);
             // 
-            // TitleTxt
+            // pl_txtTitle
             // 
-            this.TitleTxt.Location = new System.Drawing.Point(131, 60);
-            this.TitleTxt.Name = "TitleTxt";
-            this.TitleTxt.Size = new System.Drawing.Size(234, 21);
-            this.TitleTxt.TabIndex = 29;
-            this.TitleTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TitleTxt_KeyDown);
+            this.pl_txtTitle.Location = new System.Drawing.Point(131, 60);
+            this.pl_txtTitle.Name = "pl_txtTitle";
+            this.pl_txtTitle.Size = new System.Drawing.Size(234, 21);
+            this.pl_txtTitle.TabIndex = 29;
+            this.pl_txtTitle.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TitleTxt_KeyDown);
             // 
-            // ColorCombo
+            // pl_cmbColor
             // 
-            this.ColorCombo.FormattingEnabled = true;
-            this.ColorCombo.Items.AddRange(new object[] {
+            this.pl_cmbColor.FormattingEnabled = true;
+            this.pl_cmbColor.Items.AddRange(new object[] {
             "",
             "Black",
             "Navy",
@@ -1353,178 +1352,178 @@ namespace MCGalaxy.Gui
             "Pink",
             "Yellow",
             "White"});
-            this.ColorCombo.Location = new System.Drawing.Point(131, 89);
-            this.ColorCombo.Name = "ColorCombo";
-            this.ColorCombo.Size = new System.Drawing.Size(234, 21);
-            this.ColorCombo.TabIndex = 28;
-            this.ColorCombo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ColorCombo_KeyDown);
+            this.pl_cmbColor.Location = new System.Drawing.Point(131, 89);
+            this.pl_cmbColor.Name = "pl_cmbColor";
+            this.pl_cmbColor.Size = new System.Drawing.Size(234, 21);
+            this.pl_cmbColor.TabIndex = 28;
+            this.pl_cmbColor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ColorCombo_KeyDown);
             // 
-            // ColorBt
+            // pl_btnColor
             // 
-            this.ColorBt.Location = new System.Drawing.Point(3, 89);
-            this.ColorBt.Name = "ColorBt";
-            this.ColorBt.Size = new System.Drawing.Size(122, 23);
-            this.ColorBt.TabIndex = 27;
-            this.ColorBt.Text = "Color:";
-            this.ColorBt.UseVisualStyleBackColor = true;
-            this.ColorBt.Click += new System.EventHandler(this.ColorBt_Click);
+            this.pl_btnColor.Location = new System.Drawing.Point(3, 89);
+            this.pl_btnColor.Name = "pl_btnColor";
+            this.pl_btnColor.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnColor.TabIndex = 27;
+            this.pl_btnColor.Text = "Color:";
+            this.pl_btnColor.UseVisualStyleBackColor = true;
+            this.pl_btnColor.Click += new System.EventHandler(this.ColorBt_Click);
             // 
-            // TitleBt
+            // pl_btnTitle
             // 
-            this.TitleBt.Location = new System.Drawing.Point(3, 60);
-            this.TitleBt.Name = "TitleBt";
-            this.TitleBt.Size = new System.Drawing.Size(122, 23);
-            this.TitleBt.TabIndex = 26;
-            this.TitleBt.Text = "Title:";
-            this.TitleBt.UseVisualStyleBackColor = true;
-            this.TitleBt.Click += new System.EventHandler(this.TitleBt_Click);
+            this.pl_btnTitle.Location = new System.Drawing.Point(3, 60);
+            this.pl_btnTitle.Name = "pl_btnTitle";
+            this.pl_btnTitle.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnTitle.TabIndex = 26;
+            this.pl_btnTitle.Text = "Title:";
+            this.pl_btnTitle.UseVisualStyleBackColor = true;
+            this.pl_btnTitle.Click += new System.EventHandler(this.TitleBt_Click);
             // 
-            // LogoutBt
+            // pl_btnLogout
             // 
-            this.LogoutBt.Location = new System.Drawing.Point(3, 31);
-            this.LogoutBt.Name = "LogoutBt";
-            this.LogoutBt.Size = new System.Drawing.Size(122, 23);
-            this.LogoutBt.TabIndex = 25;
-            this.LogoutBt.Text = "Logout:";
-            this.LogoutBt.UseVisualStyleBackColor = true;
-            this.LogoutBt.Click += new System.EventHandler(this.LogoutBt_Click);
+            this.pl_btnLogout.Location = new System.Drawing.Point(3, 31);
+            this.pl_btnLogout.Name = "pl_btnLogout";
+            this.pl_btnLogout.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnLogout.TabIndex = 25;
+            this.pl_btnLogout.Text = "Logout:";
+            this.pl_btnLogout.UseVisualStyleBackColor = true;
+            this.pl_btnLogout.Click += new System.EventHandler(this.LogoutBt_Click);
             // 
-            // LoginBt
+            // pl_btnLogin
             // 
-            this.LoginBt.Location = new System.Drawing.Point(3, 3);
-            this.LoginBt.Name = "LoginBt";
-            this.LoginBt.Size = new System.Drawing.Size(122, 23);
-            this.LoginBt.TabIndex = 24;
-            this.LoginBt.Text = "Login:";
-            this.LoginBt.UseVisualStyleBackColor = true;
-            this.LoginBt.Click += new System.EventHandler(this.LoginBt_Click);
+            this.pl_btnLogin.Location = new System.Drawing.Point(3, 3);
+            this.pl_btnLogin.Name = "pl_btnLogin";
+            this.pl_btnLogin.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnLogin.TabIndex = 24;
+            this.pl_btnLogin.Text = "Login:";
+            this.pl_btnLogin.UseVisualStyleBackColor = true;
+            this.pl_btnLogin.Click += new System.EventHandler(this.LoginBt_Click);
             // 
-            // FreezeBt
+            // pl_btnFreeze
             // 
-            this.FreezeBt.Location = new System.Drawing.Point(499, 32);
-            this.FreezeBt.Name = "FreezeBt";
-            this.FreezeBt.Size = new System.Drawing.Size(122, 23);
-            this.FreezeBt.TabIndex = 14;
-            this.FreezeBt.Text = "Freeze";
-            this.FreezeBt.UseVisualStyleBackColor = true;
-            this.FreezeBt.Click += new System.EventHandler(this.FreezeBt_Click);
+            this.pl_btnFreeze.Location = new System.Drawing.Point(499, 32);
+            this.pl_btnFreeze.Name = "pl_btnFreeze";
+            this.pl_btnFreeze.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnFreeze.TabIndex = 14;
+            this.pl_btnFreeze.Text = "Freeze";
+            this.pl_btnFreeze.UseVisualStyleBackColor = true;
+            this.pl_btnFreeze.Click += new System.EventHandler(this.FreezeBt_Click);
             // 
-            // VoiceBt
+            // pl_btnVoice
             // 
-            this.VoiceBt.Location = new System.Drawing.Point(499, 90);
-            this.VoiceBt.Name = "VoiceBt";
-            this.VoiceBt.Size = new System.Drawing.Size(122, 23);
-            this.VoiceBt.TabIndex = 12;
-            this.VoiceBt.Text = "Voice";
-            this.VoiceBt.UseVisualStyleBackColor = true;
-            this.VoiceBt.Click += new System.EventHandler(this.VoiceBt_Click);
+            this.pl_btnVoice.Location = new System.Drawing.Point(499, 90);
+            this.pl_btnVoice.Name = "pl_btnVoice";
+            this.pl_btnVoice.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnVoice.TabIndex = 12;
+            this.pl_btnVoice.Text = "Voice";
+            this.pl_btnVoice.UseVisualStyleBackColor = true;
+            this.pl_btnVoice.Click += new System.EventHandler(this.VoiceBt_Click);
             // 
-            // JokerBt
+            // pl_btnJoker
             // 
-            this.JokerBt.Location = new System.Drawing.Point(499, 3);
-            this.JokerBt.Name = "JokerBt";
-            this.JokerBt.Size = new System.Drawing.Size(122, 23);
-            this.JokerBt.TabIndex = 11;
-            this.JokerBt.Text = "Joker";
-            this.JokerBt.UseVisualStyleBackColor = true;
-            this.JokerBt.Click += new System.EventHandler(this.JokerBt_Click);
+            this.pl_btnJoker.Location = new System.Drawing.Point(499, 3);
+            this.pl_btnJoker.Name = "pl_btnJoker";
+            this.pl_btnJoker.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnJoker.TabIndex = 11;
+            this.pl_btnJoker.Text = "Joker";
+            this.pl_btnJoker.UseVisualStyleBackColor = true;
+            this.pl_btnJoker.Click += new System.EventHandler(this.JokerBt_Click);
             // 
-            // WarnBt
+            // pl_btnWarn
             // 
-            this.WarnBt.Location = new System.Drawing.Point(627, 3);
-            this.WarnBt.Name = "WarnBt";
-            this.WarnBt.Size = new System.Drawing.Size(122, 23);
-            this.WarnBt.TabIndex = 10;
-            this.WarnBt.Text = "Warn";
-            this.WarnBt.UseVisualStyleBackColor = true;
-            this.WarnBt.Click += new System.EventHandler(this.WarnBt_Click);
+            this.pl_btnWarn.Location = new System.Drawing.Point(627, 3);
+            this.pl_btnWarn.Name = "pl_btnWarn";
+            this.pl_btnWarn.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnWarn.TabIndex = 10;
+            this.pl_btnWarn.Text = "Warn";
+            this.pl_btnWarn.UseVisualStyleBackColor = true;
+            this.pl_btnWarn.Click += new System.EventHandler(this.WarnBt_Click);
             // 
-            // MessageBt
+            // pl_btnMessage
             // 
-            this.MessageBt.Location = new System.Drawing.Point(3, 177);
-            this.MessageBt.Name = "MessageBt";
-            this.MessageBt.Size = new System.Drawing.Size(122, 23);
-            this.MessageBt.TabIndex = 9;
-            this.MessageBt.Text = "Message:";
-            this.MessageBt.UseVisualStyleBackColor = true;
-            this.MessageBt.Click += new System.EventHandler(this.MessageBt_Click);
+            this.pl_btnMessage.Location = new System.Drawing.Point(3, 177);
+            this.pl_btnMessage.Name = "pl_btnMessage";
+            this.pl_btnMessage.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnMessage.TabIndex = 9;
+            this.pl_btnMessage.Text = "Message:";
+            this.pl_btnMessage.UseVisualStyleBackColor = true;
+            this.pl_btnMessage.Click += new System.EventHandler(this.MessageBt_Click);
             // 
-            // PLayersMessageTxt
+            // pl_txtMessage
             // 
-            this.PLayersMessageTxt.Location = new System.Drawing.Point(131, 179);
-            this.PLayersMessageTxt.Name = "PLayersMessageTxt";
-            this.PLayersMessageTxt.Size = new System.Drawing.Size(617, 21);
-            this.PLayersMessageTxt.TabIndex = 8;
-            this.PLayersMessageTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PLayersMessageTxt_KeyDown);
+            this.pl_txtMessage.Location = new System.Drawing.Point(131, 179);
+            this.pl_txtMessage.Name = "pl_txtMessage";
+            this.pl_txtMessage.Size = new System.Drawing.Size(617, 21);
+            this.pl_txtMessage.TabIndex = 8;
+            this.pl_txtMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PLayersMessageTxt_KeyDown);
             // 
-            // HideBt
+            // pl_btnHide
             // 
-            this.HideBt.Location = new System.Drawing.Point(371, 117);
-            this.HideBt.Name = "HideBt";
-            this.HideBt.Size = new System.Drawing.Size(122, 23);
-            this.HideBt.TabIndex = 7;
-            this.HideBt.Text = "Hide";
-            this.HideBt.UseVisualStyleBackColor = true;
-            this.HideBt.Click += new System.EventHandler(this.HideBt_Click);
+            this.pl_btnHide.Location = new System.Drawing.Point(371, 117);
+            this.pl_btnHide.Name = "pl_btnHide";
+            this.pl_btnHide.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnHide.TabIndex = 7;
+            this.pl_btnHide.Text = "Hide";
+            this.pl_btnHide.UseVisualStyleBackColor = true;
+            this.pl_btnHide.Click += new System.EventHandler(this.HideBt_Click);
             // 
-            // IPBanBt
+            // pl_btnBanIP
             // 
-            this.IPBanBt.Location = new System.Drawing.Point(627, 90);
-            this.IPBanBt.Name = "IPBanBt";
-            this.IPBanBt.Size = new System.Drawing.Size(122, 23);
-            this.IPBanBt.TabIndex = 6;
-            this.IPBanBt.Text = "IP Ban";
-            this.IPBanBt.UseVisualStyleBackColor = true;
-            this.IPBanBt.Click += new System.EventHandler(this.IPBanBt_Click);
+            this.pl_btnBanIP.Location = new System.Drawing.Point(627, 90);
+            this.pl_btnBanIP.Name = "pl_btnBanIP";
+            this.pl_btnBanIP.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnBanIP.TabIndex = 6;
+            this.pl_btnBanIP.Text = "IP Ban";
+            this.pl_btnBanIP.UseVisualStyleBackColor = true;
+            this.pl_btnBanIP.Click += new System.EventHandler(this.IPBanBt_Click);
             // 
-            // BanBt
+            // pl_btnBan
             // 
-            this.BanBt.Location = new System.Drawing.Point(627, 61);
-            this.BanBt.Name = "BanBt";
-            this.BanBt.Size = new System.Drawing.Size(122, 23);
-            this.BanBt.TabIndex = 5;
-            this.BanBt.Text = "Ban";
-            this.BanBt.UseVisualStyleBackColor = true;
-            this.BanBt.Click += new System.EventHandler(this.BanBt_Click);
+            this.pl_btnBan.Location = new System.Drawing.Point(627, 61);
+            this.pl_btnBan.Name = "pl_btnBan";
+            this.pl_btnBan.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnBan.TabIndex = 5;
+            this.pl_btnBan.Text = "Ban";
+            this.pl_btnBan.UseVisualStyleBackColor = true;
+            this.pl_btnBan.Click += new System.EventHandler(this.BanBt_Click);
             // 
-            // KickBt
+            // pl_btnKick
             // 
-            this.KickBt.Location = new System.Drawing.Point(627, 32);
-            this.KickBt.Name = "KickBt";
-            this.KickBt.Size = new System.Drawing.Size(122, 23);
-            this.KickBt.TabIndex = 4;
-            this.KickBt.Text = "Kick";
-            this.KickBt.UseVisualStyleBackColor = true;
-            this.KickBt.Click += new System.EventHandler(this.KickBt_Click);
+            this.pl_btnKick.Location = new System.Drawing.Point(627, 32);
+            this.pl_btnKick.Name = "pl_btnKick";
+            this.pl_btnKick.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnKick.TabIndex = 4;
+            this.pl_btnKick.Text = "Kick";
+            this.pl_btnKick.UseVisualStyleBackColor = true;
+            this.pl_btnKick.Click += new System.EventHandler(this.KickBt_Click);
             // 
-            // MapCombo
+            // pl_cmbMap
             // 
-            this.MapCombo.FormattingEnabled = true;
-            this.MapCombo.Location = new System.Drawing.Point(131, 119);
-            this.MapCombo.Name = "MapCombo";
-            this.MapCombo.Size = new System.Drawing.Size(234, 21);
-            this.MapCombo.TabIndex = 3;
-            this.MapCombo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MapCombo_KeyDown);
+            this.pl_cmbMap.FormattingEnabled = true;
+            this.pl_cmbMap.Location = new System.Drawing.Point(131, 119);
+            this.pl_cmbMap.Name = "pl_cmbMap";
+            this.pl_cmbMap.Size = new System.Drawing.Size(234, 21);
+            this.pl_cmbMap.TabIndex = 3;
+            this.pl_cmbMap.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MapCombo_KeyDown);
             // 
-            // MapBt
+            // pl_btnMap
             // 
-            this.MapBt.Location = new System.Drawing.Point(3, 119);
-            this.MapBt.Name = "MapBt";
-            this.MapBt.Size = new System.Drawing.Size(122, 23);
-            this.MapBt.TabIndex = 2;
-            this.MapBt.Text = "Map:";
-            this.MapBt.UseVisualStyleBackColor = true;
-            this.MapBt.Click += new System.EventHandler(this.MapBt_Click);
+            this.pl_btnMap.Location = new System.Drawing.Point(3, 119);
+            this.pl_btnMap.Name = "pl_btnMap";
+            this.pl_btnMap.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnMap.TabIndex = 2;
+            this.pl_btnMap.Text = "Map:";
+            this.pl_btnMap.UseVisualStyleBackColor = true;
+            this.pl_btnMap.Click += new System.EventHandler(this.MapBt_Click);
             // 
-            // MuteBt
+            // pl_btnMute
             // 
-            this.MuteBt.Location = new System.Drawing.Point(499, 61);
-            this.MuteBt.Name = "MuteBt";
-            this.MuteBt.Size = new System.Drawing.Size(122, 23);
-            this.MuteBt.TabIndex = 13;
-            this.MuteBt.Text = "Mute";
-            this.MuteBt.UseVisualStyleBackColor = true;
-            this.MuteBt.Click += new System.EventHandler(this.MuteBt_Click);
+            this.pl_btnMute.Location = new System.Drawing.Point(499, 61);
+            this.pl_btnMute.Name = "pl_btnMute";
+            this.pl_btnMute.Size = new System.Drawing.Size(122, 23);
+            this.pl_btnMute.TabIndex = 13;
+            this.pl_btnMute.Text = "Mute";
+            this.pl_btnMute.UseVisualStyleBackColor = true;
+            this.pl_btnMute.Click += new System.EventHandler(this.MuteBt_Click);
             // 
             // RankTxt
             // 
@@ -1862,8 +1861,8 @@ namespace MCGalaxy.Gui
             this.tabControl1.ResumeLayout(false);
             this.tp_Players.ResumeLayout(false);
             this.tp_Players.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
+            this.pl_actions.ResumeLayout(false);
+            this.pl_actions.PerformLayout();
             this.tp_Maps.ResumeLayout(false);
             this.gbMap_Props.ResumeLayout(false);
             this.gbMap_Lded.ResumeLayout(false);
@@ -1939,23 +1938,23 @@ namespace MCGalaxy.Gui
         private TabPage tp_Players;
         internal RichTextBox logs_txtGeneral;
         private DateTimePicker logs_dateGeneral;
-        private Panel panel4;
+        private Panel pl_actions;
         private TextBox RankTxt;
         private Label label24;
         private TextBox MapTxt;
         private Label label14;
         private TextBox NameTxtPlayersTab;
         private Label label12;
-        private Button IPBanBt;
-        private Button BanBt;
-        private Button KickBt;
-        private ComboBox MapCombo;
-        private Button MapBt;
+        private Button pl_btnBanIP;
+        private Button pl_btnBan;
+        private Button pl_btnKick;
+        private ComboBox pl_cmbMap;
+        private Button pl_btnMap;
         private TextBox IPtxt;
         private Label label26;
-        private Button MessageBt;
-        private TextBox PLayersMessageTxt;
-        private Button HideBt;
+        private Button pl_btnMessage;
+        private TextBox pl_txtMessage;
+        private Button pl_btnHide;
         private Label label30;
         private TextBox TimesLoggedInTxt;
         private Label label29;
@@ -1966,32 +1965,32 @@ namespace MCGalaxy.Gui
         private TextBox LoggedinForTxt;
         private Label label31;
         private TextBox Kickstxt;
-        private Button WarnBt;
-        private Button VoiceBt;
-        private Button JokerBt;
-        private Button MuteBt;
-        private Button FreezeBt;
-        private Button LogoutBt;
-        private Button LoginBt;
-        private TextBox LoginTxt;
-        private TextBox LogoutTxt;
-        private TextBox TitleTxt;
-        private ComboBox ColorCombo;
-        private Button ColorBt;
-        private Button TitleBt;
-        private Button JailBt;
-        private Button DemoteBt;
-        private Button PromoteBt;
-        private Button KillBt;
+        private Button pl_btnWarn;
+        private Button pl_btnVoice;
+        private Button pl_btnJoker;
+        private Button pl_btnMute;
+        private Button pl_btnFreeze;
+        private Button pl_btnLogout;
+        private Button pl_btnLogin;
+        private TextBox pl_txtLogin;
+        private TextBox pl_txtLogout;
+        private TextBox pl_txtTitle;
+        private ComboBox pl_cmbColor;
+        private Button pl_btnColor;
+        private Button pl_btnTitle;
+        private Button pl_btnJail;
+        private Button pl_btnDemote;
+        private Button pl_btnPromote;
+        private Button pl_btnKill;
         private TextBox StatusTxt;
         private Label label25;
-        private TextBox ImpersonateORSendCmdTxt;
-        private Button ImpersonateORSendCmdBt;
-        private Button SpawnBt;
-        private TextBox UndoTxt;
-        private Button UndoBt;
-        private Button SlapBt;
-        private Button SendRulesTxt;
+        private TextBox pl_txtImpersonate;
+        private Button pl_btnImpersonate;
+        private Button pl_btnSpawn;
+        private TextBox pl_txtUndo;
+        private Button pl_btnUndo;
+        private Button pl_btnSlap;
+        private Button pl_btnRules;
         private AutoScrollTextBox PlayersTextBox;
         private ListBox PlyersListBox;
         private Button main_btnSaveAll;

@@ -20,16 +20,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using System.Threading;
+using System.Windows.Forms;
 
-using System.Net;
-
-namespace MCGalaxy.Gui
-{
-    public partial class Window : Form
-    {
+namespace MCGalaxy.Gui {
+    public partial class Window : Form {
         // for cross thread use
         delegate void StringCallback(string s);
         delegate void PlayerListCallback(List<Player> players);
@@ -428,12 +423,10 @@ namespace MCGalaxy.Gui
             catch { }
             try { UpdatePlyersListBox(); }
             catch { }
-            try
-            {
+            
+            try {
                 if (logs_txtGeneral.Text == "")
-                {
                     logs_dateGeneral.Value = DateTime.Now;
-                }
             }
             catch { }
             foreach (TextBox txtBox in (from TabPage tP in tabControl1.TabPages from Control ctrl in tP.Controls select ctrl).OfType<TextBox>())
@@ -443,17 +436,13 @@ namespace MCGalaxy.Gui
             tabControl1.Update();
         }
 
-        private void Restart_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Are you sure you want to restart?", "Restart", MessageBoxButtons.OKCancel) == DialogResult.OK)
-            {
+        void Restart_Click(object sender, EventArgs e) {
+            if (MessageBox.Show("Are you sure you want to restart?", "Restart", MessageBoxButtons.OKCancel) == DialogResult.OK) {
                 MCGalaxy.Gui.App.ExitProgram(true);
             }
-
         }
 
-        private void restartServerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        void restartServerToolStripMenuItem_Click(object sender, EventArgs e) {
             Restart_Click(sender, e);
         }
 
@@ -473,222 +462,163 @@ namespace MCGalaxy.Gui
             }
         }
 
-        private void txtUrl_DoubleClick(object sender, EventArgs e)
-        {
+        void txtUrl_DoubleClick(object sender, EventArgs e) {
             main_txtUrl.SelectAll();
         }
 
-        private void dgvPlayers_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
-        {
+        void dgvPlayers_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e) {
             e.PaintParts &= ~DataGridViewPaintParts.Focus;
         }
 
-        private void promoteToolStripMenuItem_Click(object sender, EventArgs e) {
+        void promoteToolStripMenuItem_Click(object sender, EventArgs e) {
             PlayerCmd("rank", "+up ", "");
         }
 
-        private void demoteToolStripMenuItem_Click(object sender, EventArgs e) {
+        void demoteToolStripMenuItem_Click(object sender, EventArgs e) {
             PlayerCmd("rank", "-down ", "");
         }
 
         #region Tabs
         #region playersTab
-        private void LoadPLayerTabDetails(object sender, EventArgs e)
-        {
+        void LoadPLayerTabDetails(object sender, EventArgs e) {
             Player p = PlayerInfo.Find(PlyersListBox.Text);
-            if (p != null)
-            {
-                PlayersTextBox.AppendTextAndScroll("==" + p.name + "==");
-                { //Top Stuff
-                    curPlayer = p;
-                    NameTxtPlayersTab.Text = p.name;
-                    MapTxt.Text = p.level.name;
-                    RankTxt.Text = p.group.name;
-                    StatusTxt.Text = Player.CheckPlayerStatus(p);
-                    IPtxt.Text = p.ip;
-                    DeathsTxt.Text = p.fallCount.ToString();
-                    Blockstxt.Text = p.overallBlocks.ToString();
-                    TimesLoggedInTxt.Text = p.totalLogins.ToString();
-                    LoggedinForTxt.Text = Convert.ToDateTime(DateTime.Now.Subtract(p.timeLogged).ToString()).ToString("HH:mm:ss");
-                    Kickstxt.Text = p.totalKicked.ToString();
+            if (p == null) return;
+            PlayersTextBox.AppendTextAndScroll("==" + p.name + "==");
+            //Top Stuff
+            curPlayer = p;
+            NameTxtPlayersTab.Text = p.name;
+            MapTxt.Text = p.level.name;
+            RankTxt.Text = p.group.name;
+            StatusTxt.Text = Player.CheckPlayerStatus(p);
+            IPtxt.Text = p.ip;
+            DeathsTxt.Text = p.fallCount.ToString();
+            Blockstxt.Text = p.overallBlocks.ToString();
+            TimesLoggedInTxt.Text = p.totalLogins.ToString();
+            LoggedinForTxt.Text = Convert.ToDateTime(DateTime.Now.Subtract(p.timeLogged).ToString()).ToString("HH:mm:ss");
+            Kickstxt.Text = p.totalKicked.ToString();
+            
+            //Check buttons
+            if (p.joker) { pl_btnJoker.Text = "UnJoker"; } else { pl_btnJoker.Text = "Joker"; }
+            if (p.frozen) { pl_btnFreeze.Text = "UnFreeze"; } else { pl_btnFreeze.Text = "Freeze"; }
+            if (p.muted) { pl_btnMute.Text = "UnMute"; } else { pl_btnMute.Text = "Mute"; }
+            if (p.voice) { pl_btnVoice.Text = "UnVoice"; } else { pl_btnVoice.Text = "Voice"; }
+            if (p.hidden) { pl_btnHide.Text = "UnHide"; } else { pl_btnHide.Text = "Hide"; }
+            if (p.jailed) { pl_btnJail.Text = "UnJail"; } else { pl_btnJail.Text = "Jail"; }
+            
+            //Text box stuff
+            pl_txtLogin.Text = PlayerDB.GetLoginMessage(p);
+            pl_txtLogout.Text = PlayerDB.GetLogoutMessage(p);
+            pl_txtTitle.Text = p.title;
+            pl_cmbColor.SelectedText = Colors.Name(p.color).Capitalize();
+            
+            //Map
+            try {
+                try {
+                    UpdatePlayerMapCombo();
+                } catch { }
+                
+                foreach (Object obj in pl_cmbMap.Items) {
+                    if (LevelInfo.Find(obj.ToString()) == null) continue;
+                    
+                    if (p.level == LevelInfo.Find(obj.ToString()))
+                        pl_cmbMap.SelectedItem = obj;
                 }
-                { //Check buttons
-                    if (p.joker) { JokerBt.Text = "UnJoker"; } else { JokerBt.Text = "Joker"; }
-                    if (p.frozen) { FreezeBt.Text = "UnFreeze"; } else { FreezeBt.Text = "Freeze"; }
-                    if (p.muted) { MuteBt.Text = "UnMute"; } else { MuteBt.Text = "Mute"; }
-                    if (p.voice) { VoiceBt.Text = "UnVoice"; } else { VoiceBt.Text = "Voice"; }
-                    if (p.hidden) { HideBt.Text = "UnHide"; } else { HideBt.Text = "Hide"; }
-                    if (p.jailed) { JailBt.Text = "UnJail"; } else { JailBt.Text = "Jail"; }
-                }
-                { //Text box stuff
-                    LoginTxt.Text = PlayerDB.GetLoginMessage(p);
-                    LogoutTxt.Text = PlayerDB.GetLogoutMessage(p);
-                    TitleTxt.Text = p.title;
-                    ColorCombo.SelectedText = Colors.Name(p.color).Capitalize();
-                    //Map
-                    {
-                        try
-                        {
-                            try
-                            {
-                                UpdatePlayerMapCombo();
-                            }
-                            catch { }
-                            foreach (Object obj in MapCombo.Items)
-                            {
-                                if (LevelInfo.Find(obj.ToString()) != null)
-                                {
-                                    if (p.level == LevelInfo.Find(obj.ToString()))
-                                    {
-                                        MapCombo.SelectedItem = obj;
-                                    }
-                                }
-                            }
-                        }
-                        catch { }
-                    }
-                }
-
-            }
+            } catch { }
         }
 
-        public void UpdatePlayerMapCombo()
-        {
-            int selected = MapCombo.SelectedIndex;
-            MapCombo.Items.Clear();
-            foreach (Level level in Server.levels)
-            {
-                MapCombo.Items.Add(level.name);
+        void UpdatePlayerMapCombo() {
+            int selected = pl_cmbMap.SelectedIndex;
+            pl_cmbMap.Items.Clear();
+            foreach (Level level in Server.levels) {
+                pl_cmbMap.Items.Add(level.name);
             }
-            MapCombo.SelectedIndex = selected;
+            pl_cmbMap.SelectedIndex = selected;
         }
 
-        private void LoginBt_Click(object sender, EventArgs e)
-        {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
+        void LoginBt_Click(object sender, EventArgs e) {
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            CP437Writer.WriteAllText("text/login/" + curPlayer.name + ".txt", null);
-            CP437Writer.WriteAllText("text/login/" + curPlayer.name + ".txt", LoginTxt.Text);
+            CP437Writer.WriteAllText("text/login/" + curPlayer.name + ".txt", pl_txtLogin.Text);
             PlayersTextBox.AppendTextAndScroll("The login message has been saved!");
         }
 
-        private void LogoutBt_Click(object sender, EventArgs e)
-        {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
+        void LogoutBt_Click(object sender, EventArgs e) {
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            CP437Writer.WriteAllText("text/logout/" + curPlayer.name + ".txt", null);
-            CP437Writer.WriteAllText("text/logout/" + curPlayer.name + ".txt", LogoutTxt.Text);
+            CP437Writer.WriteAllText("text/logout/" + curPlayer.name + ".txt", pl_txtLogout.Text);
             PlayersTextBox.AppendTextAndScroll("The logout message has been saved!");
         }
 
-        private void TitleBt_Click(object sender, EventArgs e)
-        {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
+        void TitleBt_Click(object sender, EventArgs e) {
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            if (TitleTxt.Text.Length > 17) { PlayersTextBox.AppendTextAndScroll("Title must be under 17 letters."); return; }
-            curPlayer.prefix = "[" + TitleTxt.Text + "]";
+            if (pl_txtTitle.Text.Length > 17) { PlayersTextBox.AppendTextAndScroll("Title must be under 17 letters."); return; }
+            curPlayer.prefix = "[" + pl_txtTitle.Text + "]";
             PlayersTextBox.AppendTextAndScroll("The title has been saved");
         }
 
-        private void ColorBt_Click(object sender, EventArgs e)
-        {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
+        void ColorBt_Click(object sender, EventArgs e) {
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            curPlayer.color = Colors.Parse(ColorCombo.Text);
-            PlayersTextBox.AppendTextAndScroll("Set color to " + ColorCombo.Text);
+            curPlayer.color = Colors.Parse(pl_cmbColor.Text);
+            PlayersTextBox.AppendTextAndScroll("Set color to " + pl_cmbColor.Text);
         }
 
-        private void MapBt_Click(object sender, EventArgs e)
-        {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
+        void MapBt_Click(object sender, EventArgs e) {
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            if (MapCombo.Text.ToLower() == curPlayer.level.name.ToLower())
-            {
-                PlayersTextBox.AppendTextAndScroll("The player is already on that map");
-                return;
+            if (pl_cmbMap.Text.ToLower() == curPlayer.level.name.ToLower()) {
+                PlayersTextBox.AppendTextAndScroll("The player is already on that map"); return;
             }
-            if (!Server.levels.Contains(LevelInfo.Find(MapCombo.Text)))
-            {
-                PlayersTextBox.AppendTextAndScroll("That map doesn't exist!!");
-                return;
+            if (!Server.levels.Contains(LevelInfo.Find(pl_cmbMap.Text))) {
+                PlayersTextBox.AppendTextAndScroll("That map doesn't exist!!"); return;
             }
-            else
-            {
-                try
-                {
-                    Command.all.Find("goto").Use(curPlayer, MapCombo.Text);
-                    PlayersTextBox.AppendTextAndScroll("Sent player to " + MapCombo.Text);
-                }
-                catch
-                {
-                    PlayersTextBox.AppendTextAndScroll("Something went wrong!!");
-                    return;
-                }
+
+            try {
+                Command.all.Find("goto").Use(curPlayer, pl_cmbMap.Text);
+                PlayersTextBox.AppendTextAndScroll("Sent player to " + pl_cmbMap.Text);
+            } catch {
+                PlayersTextBox.AppendTextAndScroll("Something went wrong!!");
             }
         }
 
-        private void UndoBt_Click(object sender, EventArgs e)
-        {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
+        void UndoBt_Click(object sender, EventArgs e) {
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            if (UndoTxt.Text.Trim() == "")
-            {
-                PlayersTextBox.AppendTextAndScroll("You didn't specify a time");
-                return;
+            if (pl_txtUndo.Text.Trim() == "")  {
+                PlayersTextBox.AppendTextAndScroll("You didn't specify a time"); return;
             }
-            else
-            {
-                try
-                {
-                    Command.core.Find("undo").Use(null, curPlayer.name + " " + UndoTxt.Text);
-                    PlayersTextBox.AppendTextAndScroll("Undid player for " + UndoTxt.Text + " Seconds");
-                }
-                catch
-                {
-                    PlayersTextBox.AppendTextAndScroll("Something went wrong!!");
-                    return;
-                }
+
+            try {
+                Command.core.Find("undo").Use(null, curPlayer.name + " " + pl_txtUndo.Text);
+                PlayersTextBox.AppendTextAndScroll("Undid player for " + pl_txtUndo.Text + " Seconds");
+            } catch {
+                PlayersTextBox.AppendTextAndScroll("Something went wrong!!");
             }
         }
 
-        private void MessageBt_Click(object sender, EventArgs e)
-        {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer))
-            {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected");
-                return;
+        void MessageBt_Click(object sender, EventArgs e) {
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
-            Player.SendMessage(curPlayer, "<CONSOLE> " + PLayersMessageTxt.Text);
-            PlayersTextBox.AppendTextAndScroll("Sent player message '<CONSOLE> " + PLayersMessageTxt.Text + "'");
-            PLayersMessageTxt.Text = "";
+            Player.SendMessage(curPlayer, "<CONSOLE> " + pl_txtMessage.Text);
+            PlayersTextBox.AppendTextAndScroll("Sent player message '<CONSOLE> " + pl_txtMessage.Text + "'");
+            pl_txtMessage.Text = "";
         }
 
-        private void ImpersonateORSendCmdBt_Click(object sender, EventArgs e)
-        {
+        void ImpersonateORSendCmdBt_Click(object sender, EventArgs e) {
             if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             try {
-                if (ImpersonateORSendCmdTxt.Text.StartsWith("/")) {
-                    string[] args = ImpersonateORSendCmdTxt.Text.Trim().SplitSpaces(2);
+                if (pl_txtImpersonate.Text.StartsWith("/")) {
+                    string[] args = pl_txtImpersonate.Text.Trim().SplitSpaces(2);
                     Command cmd = Command.all.Find(args[0].Replace("/", ""));
                     if (cmd == null) {
                         PlayersTextBox.AppendTextAndScroll("That isn't a command!!"); return;
@@ -701,60 +631,56 @@ namespace MCGalaxy.Gui
                         PlayersTextBox.AppendTextAndScroll("Used command '" + args[0] + "' with no parameters as player");
                     }
                 } else {
-                    Command.all.Find("impersonate").Use(null, curPlayer.name + " " + ImpersonateORSendCmdTxt.Text);
-                    PlayersTextBox.AppendTextAndScroll("Sent Message '" + ImpersonateORSendCmdTxt.Text + "' as player");
+                    Command.all.Find("impersonate").Use(null, curPlayer.name + " " + pl_txtImpersonate.Text);
+                    PlayersTextBox.AppendTextAndScroll("Sent Message '" + pl_txtImpersonate.Text + "' as player");
                 }
-                ImpersonateORSendCmdTxt.Text = "";
+                pl_txtImpersonate.Text = "";
             } catch {
                 PlayersTextBox.AppendTextAndScroll("Something went wrong");
             }
         }
 
-        void PromoteBt_Click(object sender, EventArgs e) { DoSimple("promote", "Promoted"); }
-
-        void DemoteBt_Click(object sender, EventArgs e) { DoSimple("demote", "Demoted"); }
-
         void HideBt_Click(object sender, EventArgs e) {
-            DoToggle("ohide", HideBt, "Hide", p => p.hidden, "Hid");
+            DoToggle("ohide", pl_btnHide, "Hide", p => p.hidden, "Hid");
         }
-
-        void SlapBt_Click(object sender, EventArgs e) { DoSimple("slap", "Slapped"); }
-
         void JokerBt_Click(object sender, EventArgs e) {
-            DoToggle("joker", JokerBt, "Joker", p => p.joker, "Jokered");
+            DoToggle("joker", pl_btnJoker, "Joker", p => p.joker, "Jokered");
         }
-
         void FreezeBt_Click(object sender, EventArgs e) {
-            DoToggle("freeze", FreezeBt, "Freeze", p => p.frozen, "Froze");
+            DoToggle("freeze", pl_btnFreeze, "Freeze", p => p.frozen, "Froze");
         }
-
         void MuteBt_Click(object sender, EventArgs e) {
-            DoToggle("mute", MuteBt, "Mute", p => p.muted, "Muted");
+            DoToggle("mute", pl_btnMute, "Mute", p => p.muted, "Muted");
         }
-
         void VoiceBt_Click(object sender, EventArgs e) {
-            DoToggle("voice", VoiceBt, "Voice", p => p.voice, "Voiced");
+            DoToggle("voice", pl_btnVoice, "Voice", p => p.voice, "Voiced");
         }
-
-        void KillBt_Click(object sender, EventArgs e) { DoSimple("kill", "Killed"); }
-
         void JailBt_Click(object sender, EventArgs e) {
-            DoToggle("jail", JailBt, "Jail", p => p.jailed, "Jailed");
+            DoToggle("jail", pl_btnJail, "Jail", p => p.jailed, "Jailed");
         }
 
-        void WarnBt_Click(object sender, EventArgs e) { DoSimple("warn", "Warned"); }
-
-        void KickBt_Click(object sender, EventArgs e) { DoSimple("kick", "Kicked"); }
-
-        void BanBt_Click(object sender, EventArgs e) { DoSimple("ban", "Banned"); }
-
-        void IPBanBt_Click(object sender, EventArgs e) { DoSimple("banip", "IP-Banned"); }
+        void PromoteBt_Click(object sender, EventArgs e) { DoCmd("rank", "Promoted", "+up "); }
+        void DemoteBt_Click(object sender, EventArgs e) { DoCmd("rank", "Demoted", "-down "); }
+        void SlapBt_Click(object sender, EventArgs e) { DoCmd("slap", "Slapped"); }
+        void KillBt_Click(object sender, EventArgs e) { DoCmd("kill", "Killed"); }
+        void WarnBt_Click(object sender, EventArgs e) { DoCmd("warn", "Warned"); }
+        void KickBt_Click(object sender, EventArgs e) { DoCmd("kick", "Kicked"); }
+        void BanBt_Click(object sender, EventArgs e) { DoCmd("ban", "Banned"); }
+        void IPBanBt_Click(object sender, EventArgs e) { DoCmd("banip", "IP-Banned"); }
         
-        void DoSimple(string cmdName, string action) {
+        void DoCmd(string cmdName, string action) {
             if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             Command.all.Find(cmdName).Use(null, curPlayer.name);
+            PlayersTextBox.AppendTextAndScroll(action + " player");
+        }
+        
+        void DoCmd(string cmdName, string action, string prefix) {
+            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
+            }
+            Command.all.Find(cmdName).Use(null, prefix + curPlayer.name);
             PlayersTextBox.AppendTextAndScroll(action + " player");
         }
         
@@ -774,7 +700,7 @@ namespace MCGalaxy.Gui
             }
         }
 
-        private void SendRulesTxt_Click(object sender, EventArgs e) {
+        void SendRulesTxt_Click(object sender, EventArgs e) {
             if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
@@ -782,7 +708,7 @@ namespace MCGalaxy.Gui
             PlayersTextBox.AppendTextAndScroll("Sent rules to player");
         }
 
-        private void SpawnBt_Click(object sender, EventArgs e) {
+        void SpawnBt_Click(object sender, EventArgs e) {
             if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
@@ -808,202 +734,77 @@ namespace MCGalaxy.Gui
 
         }
 
-        private void PlyersListBox_Click(object sender, EventArgs e)
-        {
+        void PlyersListBox_Click(object sender, EventArgs e) {
             LoadPLayerTabDetails(sender, e);
         }
 
-        private void ImpersonateORSendCmdTxt_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                ImpersonateORSendCmdBt_Click(sender, e);
-            }
+        void ImpersonateORSendCmdTxt_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) ImpersonateORSendCmdBt_Click(sender, e);
         }
-
-        private void LoginTxt_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                LoginBt_Click(sender, e);
-            }
+        void LoginTxt_KeyDown(object sender, KeyEventArgs e){
+            if (e.KeyCode == Keys.Enter) LoginBt_Click(sender, e);
         }
-
-        private void LogoutTxt_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                LogoutBt_Click(sender, e);
-            }
+        void LogoutTxt_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) LogoutBt_Click(sender, e);
         }
-
-        private void TitleTxt_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                TitleBt_Click(sender, e);
-            }
+        void TitleTxt_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) TitleBt_Click(sender, e);
         }
-
-        private void UndoTxt_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                UndoBt_Click(sender, e);
-            }
+        void UndoTxt_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) UndoBt_Click(sender, e);
         }
-
-        private void PLayersMessageTxt_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                MessageBt_Click(sender, e);
-            }
+        void PLayersMessageTxt_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) MessageBt_Click(sender, e);
         }
-
-        private void ColorCombo_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                ColorBt_Click(sender, e);
-            }
+        void ColorCombo_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) ColorBt_Click(sender, e);
         }
-
-        private void MapCombo_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                MapBt_Click(sender, e);
-            }
+        void MapCombo_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) MapBt_Click(sender, e);
         }
         #endregion
 
         #endregion
 
-        private void button_saveall_Click(object sender, EventArgs e)
-        {
+        void button_saveall_Click(object sender, EventArgs e) {
             Command.all.Find("save").Use(null, "all");
         }
 
-        private void killphysics_button_Click(object sender, EventArgs e)
-        {
+        void killphysics_button_Click(object sender, EventArgs e) {
             Command.all.Find("physics").Use(null, "kill");
             try { UpdateMapList(); }
             catch { }
         }
 
-        private void Unloadempty_button_Click(object sender, EventArgs e)
-        {
+        void Unloadempty_button_Click(object sender, EventArgs e) {
             Command.all.Find("unload").Use(null, "empty");
             try { UpdateMapList(); }
             catch { }
         }
 
-        private void loadOngotoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LevelCmd("map", " loadongoto");
-        }
-
-        private void instantBuildingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LevelCmd("map", " instant");
-        }
-
-        private void autpPhysicsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LevelCmd("map", " restartphysics");
-        }
-
-        private void gunsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LevelCmd("allowguns");
-        }
-
-        private void unloadToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            LevelCmd("map", " unload");
-        }
-
-        private void infoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LevelCmd("map");
-            LevelCmd("mapinfo");
-        }
-
-        private void actiondToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void moveAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LevelCmd("moveall");
-        }
-
-        private void toolStripMenuItem2_Click_1(object sender, EventArgs e)
-        {
-            LevelCmd("physics", " 0");
-        }
-
-        private void toolStripMenuItem3_Click_1(object sender, EventArgs e)
-        {
-            LevelCmd("physics", " 1");
-        }
-
-        private void toolStripMenuItem4_Click_1(object sender, EventArgs e)
-        {
-            LevelCmd("physics", " 2");
-        }
-
-        private void toolStripMenuItem5_Click_1(object sender, EventArgs e)
-        {
-            LevelCmd("physics", " 3");
-        }
-
-        private void toolStripMenuItem6_Click_1(object sender, EventArgs e)
-        {
-            LevelCmd("physics", " 4");
-        }
-
-        private void toolStripMenuItem7_Click_1(object sender, EventArgs e)
-        {
-            LevelCmd("physics", " 5");
-        }
-
-        private void saveToolStripMenuItem_Click_1(object sender, EventArgs e)
-        {
-            LevelCmd("save");
-        }
-
-        private void unloadToolStripMenuItem_Click_1(object sender, EventArgs e)
-        {
-            LevelCmd("unload");
-        }
-
-        private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LevelCmd("reload");
-        }
-
-        private void leafDecayToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LevelCmd("map", " leafdecay");
-        }
-
-        private void randomFlowToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LevelCmd("map", " randomflow");
-        }
-
-        private void treeGrowingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LevelCmd("map", " growtrees");
-        }
+        void loadOngotoToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " loadongoto"); }
+        void instantBuildingToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " instant"); }
+        void autpPhysicsToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " restartphysics"); }
+        void gunsToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("allowguns"); }
+        void unloadToolStripMenuItem1_Click(object sender, EventArgs e) { LevelCmd("map", " unload"); }
+        void infoToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map"); LevelCmd("mapinfo"); }
+        void moveAllToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("moveall"); }
+        void toolStripMenuItem2_Click_1(object sender, EventArgs e) { LevelCmd("physics", " 0"); }
+        void toolStripMenuItem3_Click_1(object sender, EventArgs e) { LevelCmd("physics", " 1"); }
+        void toolStripMenuItem4_Click_1(object sender, EventArgs e) { LevelCmd("physics", " 2"); }
+        void toolStripMenuItem5_Click_1(object sender, EventArgs e) { LevelCmd("physics", " 3"); }
+        void toolStripMenuItem6_Click_1(object sender, EventArgs e) { LevelCmd("physics", " 4"); }
+        void toolStripMenuItem7_Click_1(object sender, EventArgs e) { LevelCmd("physics", " 5"); }
+        void saveToolStripMenuItem_Click_1(object sender, EventArgs e) { LevelCmd("save"); }
+        void unloadToolStripMenuItem_Click_1(object sender, EventArgs e) { LevelCmd("unload"); }
+        void reloadToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("reload"); }
+        void leafDecayToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " leafdecay"); }
+        void randomFlowToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " randomflow"); }
+        void treeGrowingToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " growtrees"); }
 
         #region Colored Reader Context Menu
 
-        private void nightModeToolStripMenuItem_Click_1(object sender, EventArgs e)
-        {
+        void nightModeToolStripMenuItem_Click_1(object sender, EventArgs e) {
             if (MessageBox.Show("Changing to and from night mode will clear your logs. Do you still want to change?", "You sure?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
                 return;
 
@@ -1011,39 +812,32 @@ namespace MCGalaxy.Gui
             nightModeToolStripMenuItem.Checked = !nightModeToolStripMenuItem.Checked;
         }
 
-        private void colorsToolStripMenuItem_Click_1(object sender, EventArgs e)
-        {
+        void colorsToolStripMenuItem_Click_1(object sender, EventArgs e) {
             main_txtLog.Colorize = !colorsToolStripMenuItem.Checked;
             colorsToolStripMenuItem.Checked = !colorsToolStripMenuItem.Checked;
         }
 
-        private void dateStampToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        void dateStampToolStripMenuItem_Click(object sender, EventArgs e) {
             main_txtLog.DateStamp = !dateStampToolStripMenuItem.Checked;
             dateStampToolStripMenuItem.Checked = !dateStampToolStripMenuItem.Checked;
         }
 
-        private void autoScrollToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        void autoScrollToolStripMenuItem_Click(object sender, EventArgs e) {
             main_txtLog.AutoScroll = !autoScrollToolStripMenuItem.Checked;
             autoScrollToolStripMenuItem.Checked = !autoScrollToolStripMenuItem.Checked;
         }
 
-        private void copySelectedToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (String.IsNullOrEmpty(main_txtLog.SelectedText))
-                return;
-
+        void copySelectedToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (String.IsNullOrEmpty(main_txtLog.SelectedText)) return;
             Clipboard.SetText(main_txtLog.SelectedText, TextDataFormat.Text);
         }
-        private void copyAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        
+        void copyAllToolStripMenuItem_Click(object sender, EventArgs e) {
             Clipboard.SetText(main_txtLog.Text, TextDataFormat.Text);
         }
-        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Are you sure you want to clear logs?", "You sure?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
-            {
+        
+        void clearToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (MessageBox.Show("Are you sure you want to clear logs?", "You sure?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
                 main_txtLog.Clear();
             }
         }
