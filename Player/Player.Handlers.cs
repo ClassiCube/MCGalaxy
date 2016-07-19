@@ -304,7 +304,10 @@ namespace MCGalaxy {
                 string verify = enc.GetString(message, 65, 32).Trim();
                 verifiedName = false;
                 if (Server.verify) {
-                    byte[] hash = md5.ComputeHash(enc.GetBytes(Server.salt + truename));
+                    byte[] hash = null;
+                    lock (md5Lock)
+                        hash = md5.ComputeHash(enc.GetBytes(Server.salt + truename));
+                    
                     string hashHex = BitConverter.ToString(hash);
                     if (!verify.CaselessEq(hashHex.Replace("-", ""))) {
                         if (!IPInPrivateRange(ip)) {

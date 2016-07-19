@@ -40,13 +40,13 @@ namespace MCGalaxy.Commands.Building {
             cpos.message = null;
             string[] args = message.SplitSpaces(2);
             switch (args[0].ToLower()) {
-                    case "air": cpos.type = Block.MsgAir; break;
-                    case "water": cpos.type = Block.MsgWater; break;
-                    case "lava": cpos.type = Block.MsgLava; break;
-                    case "black": cpos.type = Block.MsgBlack; break;
-                    case "white": cpos.type = Block.MsgWhite; break;
-                    case "show": ShowMessageBlocks(p); return;
-                    default: cpos.type = Block.MsgWhite; cpos.message = message; break;
+                case "air": cpos.type = Block.MsgAir; break;
+                case "water": cpos.type = Block.MsgWater; break;
+                case "lava": cpos.type = Block.MsgLava; break;
+                case "black": cpos.type = Block.MsgBlack; break;
+                case "white": cpos.type = Block.MsgWhite; break;
+                case "show": ShowMessageBlocks(p); return;
+                default: cpos.type = Block.MsgWhite; cpos.message = message; break;
             }
             if (args.Length == 1) {
                 Player.Message(p, "You need to provide text to put in the messageblock."); return;

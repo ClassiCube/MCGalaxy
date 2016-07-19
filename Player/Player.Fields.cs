@@ -51,8 +51,10 @@ namespace MCGalaxy {
         public static List<string> emoteList = new List<string>();
         public List<string> listignored = new List<string>();
         public static byte number { get { return (byte)PlayerInfo.Online.Count; } }
+        
         static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
         static MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
+        static object md5Lock = new object();
         public static string lastMSG = "";
         
         //TpA

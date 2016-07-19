@@ -402,7 +402,7 @@ namespace MCGalaxy.Gui
 
         private void kickToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            playerselect("kick", " You have been kicked by the console.");
+            playerselect("kick", "", " You have been kicked by the console.");
         }
 
 
@@ -416,10 +416,10 @@ namespace MCGalaxy.Gui
             if (GetSelectedPlayer() != null)
                 Command.all.Find(com).Use(null, GetSelectedPlayer().name);
         }
-        private void playerselect(string com, string args)
+        private void playerselect(string com, string prefix, string suffix)
         {
             if (GetSelectedPlayer() != null)
-                Command.all.Find(com).Use(null, GetSelectedPlayer().name + args);
+                Command.all.Find(com).Use(null, prefix + GetSelectedPlayer().name + suffix);
         }
 
         private void finiteModeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -537,11 +537,11 @@ namespace MCGalaxy.Gui
         }
 
         private void promoteToolStripMenuItem_Click(object sender, EventArgs e) {
-            playerselect("promote");
+            playerselect("rank", "+up ", "");
         }
 
         private void demoteToolStripMenuItem_Click(object sender, EventArgs e) {
-            playerselect("demote");
+            playerselect("rank", "-down ", "");
         }
 
         #region Tabs

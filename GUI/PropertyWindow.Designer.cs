@@ -3953,6 +3953,7 @@ namespace MCGalaxy.Gui
             this.propsZG.Name = "propsZG";
             this.propsZG.Size = new System.Drawing.Size(456, 464);
             this.propsZG.TabIndex = 42;
+            this.propsZG.ToolbarVisible = false;
             // 
             // pageSecurity
             // 
