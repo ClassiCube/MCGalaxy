@@ -48,7 +48,7 @@ namespace MCGalaxy.Gui
         }
 
         void Window_Load(object sender, EventArgs e) {
-            btnProperties.Enabled = false;
+            main_btnProps.Enabled = false;
             MaximizeBox = false;
             Text = "Starting MCGalaxy...";
             Show();
@@ -64,18 +64,18 @@ namespace MCGalaxy.Gui
             notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(notifyIcon1_MouseClick);
 
             if (File.Exists("Changelog.txt")) {
-                txtChangelog.Text = "Changelog for " + Server.Version + ":";
+                logs_txtChangelog.Text = "Changelog for " + Server.Version + ":";
                 foreach (string line in File.ReadAllLines("Changelog.txt")) {
-                    txtChangelog.AppendText("\r\n           " + line);
+                    logs_txtChangelog.AppendText("\r\n           " + line);
                 }
             }
 
             // Bind player list
-            dgvPlayers.DataSource = pc;
-            dgvPlayers.Font = new Font("Calibri", 8.25f);
+            main_Players.DataSource = pc;
+            main_Players.Font = new Font("Calibri", 8.25f);
 
-            dgvMaps.DataSource = new LevelCollection();
-            dgvMaps.Font = new Font("Calibri", 8.25f);
+            main_Maps.DataSource = new LevelCollection();
+            main_Maps.Font = new Font("Calibri", 8.25f);
 
             UpdateListTimer.Elapsed += delegate {
                 try {
@@ -111,7 +111,7 @@ namespace MCGalaxy.Gui
             Level.LevelLoaded += Level_LevelLoaded;
             Level.LevelUnload += Level_LevelUnload;
 
-            RunOnUiThread(() => btnProperties.Enabled = true);
+            RunOnUiThread(() => main_btnProps.Enabled = true);
         }
 
         public void RunOnUiThread(Action act) { Invoke(act); }
@@ -142,7 +142,7 @@ namespace MCGalaxy.Gui
         void SettingsUpdate() {
             if (Server.shuttingDown) return;
             
-            if (txtLog.InvokeRequired) {
+            if (main_txtLog.InvokeRequired) {
                 Invoke(new VoidDelegate(SettingsUpdate));
             } else {
                 Text = Server.name + " - MCGalaxy " + Server.VersionString;
@@ -156,10 +156,10 @@ namespace MCGalaxy.Gui
 
         void newError(string message) {
             try {
-                if (txtErrors.InvokeRequired) {
+                if (logs_txtError.InvokeRequired) {
                     Invoke(new LogDelegate(newError), new object[] { message });
                 } else {
-                    txtErrors.AppendText(Environment.NewLine + message);
+                    logs_txtError.AppendText(Environment.NewLine + message);
                 }
             } catch { 
             }
@@ -167,10 +167,10 @@ namespace MCGalaxy.Gui
         
         void newSystem(string message) {
             try {
-                if (txtSystem.InvokeRequired) {
+                if (logs_txtSystem.InvokeRequired) {
                     Invoke(new LogDelegate(newSystem), new object[] { message });
                 } else {
-                    txtSystem.AppendText(Environment.NewLine + message);
+                    logs_txtSystem.AppendText(Environment.NewLine + message);
                 }
             } catch { 
             }
@@ -191,7 +191,7 @@ namespace MCGalaxy.Gui
                 s = index == -1 ? s : s.Substring(index + 1);
                 //end substring
 
-                txtLog.AppendLog(s + Environment.NewLine);
+                main_txtLog.AppendLog(s + Environment.NewLine);
             }
         }
         
@@ -201,7 +201,7 @@ namespace MCGalaxy.Gui
             if (InvokeRequired) {
                 Invoke(new LogDelegate(WriteCommand), new object[] { s });
             } else {
-                txtLog.AppendLog(s + Environment.NewLine, txtLog.ForeColor, false);
+                main_txtLog.AppendLog(s + Environment.NewLine, main_txtLog.ForeColor, false);
             }
         }
 
@@ -211,13 +211,13 @@ namespace MCGalaxy.Gui
             if (InvokeRequired) {
                 Invoke(new PlayerListCallback(UpdateClientList), players);
             } else {
-                if (dgvPlayers.DataSource == null)
-                    dgvPlayers.DataSource = pc;
+                if (main_Players.DataSource == null)
+                    main_Players.DataSource = pc;
 
                 // Try to keep the same selection on update
                 string selected = null;
-                if (pc.Count > 0 && dgvPlayers.SelectedRows.Count > 0) {
-                    selected = (from DataGridViewRow row in dgvPlayers.Rows where row.Selected select pc[row.Index]).First().name;
+                if (pc.Count > 0 && main_Players.SelectedRows.Count > 0) {
+                    selected = (from DataGridViewRow row in main_Players.Rows where row.Selected select pc[row.Index]).First().name;
                 }
 
                 // Update the data source and control
@@ -227,17 +227,17 @@ namespace MCGalaxy.Gui
                 PlayerInfo.players.ForEach(p => pc.Add(p));
 
                 //dgvPlayers.Invalidate();
-                dgvPlayers.DataSource = pc;
+                main_Players.DataSource = pc;
                 // Reselect player
                 if (selected != null)
                 {
                     foreach (Player t in PlayerInfo.players)
-                        for (int j = 0; j < dgvPlayers.Rows.Count; j++)
-                            if (Equals(dgvPlayers.Rows[j].Cells[0].Value, selected))
-                                dgvPlayers.Rows[j].Selected = true;
+                        for (int j = 0; j < main_Players.Rows.Count; j++)
+                            if (Equals(main_Players.Rows[j].Cells[0].Value, selected))
+                                main_Players.Rows[j].Selected = true;
                 }
 
-                dgvPlayers.Refresh();
+                main_Players.Refresh();
                 //dgvPlayers.ResumeLayout();
             }
 
@@ -254,13 +254,13 @@ namespace MCGalaxy.Gui
                 Invoke(new UpdateList(UpdateMapList));
             } else {
 
-                if (dgvMaps.DataSource == null)
-                    dgvMaps.DataSource = lc;
+                if (main_Maps.DataSource == null)
+                    main_Maps.DataSource = lc;
 
                 // Try to keep the same selection on update
                 string selected = null;
-                if (lc.Count > 0 && dgvMaps.SelectedRows.Count > 0) {
-                    selected = (from DataGridViewRow row in dgvMaps.Rows where row.Selected select lc[row.Index]).First().name;
+                if (lc.Count > 0 && main_Maps.SelectedRows.Count > 0) {
+                    selected = (from DataGridViewRow row in main_Maps.Rows where row.Selected select lc[row.Index]).First().name;
                 }
 
                 // Update the data source and control
@@ -284,15 +284,15 @@ namespace MCGalaxy.Gui
                 UpdateSelectedMap(null, null);
 
                 //dgvPlayers.Invalidate();
-                dgvMaps.DataSource = null;
-                dgvMaps.DataSource = lc;
+                main_Maps.DataSource = null;
+                main_Maps.DataSource = lc;
                 // Reselect map
                 if (selected != null) {
-                    foreach (DataGridViewRow row in Server.levels.SelectMany(l => dgvMaps.Rows.Cast<DataGridViewRow>().Where(row => (string)row.Cells[0].Value == selected)))
+                    foreach (DataGridViewRow row in Server.levels.SelectMany(l => main_Maps.Rows.Cast<DataGridViewRow>().Where(row => (string)row.Cells[0].Value == selected)))
                         row.Selected = true;
                 }
 
-                dgvMaps.Refresh();
+                main_Maps.Refresh();
                 //dgvPlayers.ResumeLayout();
 
                 // Update the data source and control
@@ -307,7 +307,7 @@ namespace MCGalaxy.Gui
                 StringCallback d = UpdateUrl;
                 Invoke(d, new object[] { s });
             } else {
-                txtUrl.Text = s;
+                main_txtUrl.Text = s;
             }
         }
 
@@ -331,7 +331,7 @@ namespace MCGalaxy.Gui
             if (e.KeyCode != Keys.Enter) return;
             e.Handled = true;
             e.SuppressKeyPress = true;            
-            string text = txtInput.Text;
+            string text = main_txtInput.Text;
             if (text.Length == 0) return;
             
             if (text[0] == '/' && text.Length > 1 && text[1] == '/') {
@@ -341,7 +341,7 @@ namespace MCGalaxy.Gui
             } else {
                 Handlers.HandleChat(text, WriteLine);
             }
-            txtInput.Clear();
+            main_txtInput.Clear();
         }
 
         void btnClose_Click_1(object sender, EventArgs e) { Close(); }
@@ -375,111 +375,64 @@ namespace MCGalaxy.Gui
             Close();
         }
 
+        void clonesToolStripMenuItem_Click(object sender, EventArgs e) { PlayerCmd("clones"); }
+        void voiceToolStripMenuItem_Click(object sender, EventArgs e) { PlayerCmd("voice"); }
+        void whoisToolStripMenuItem_Click(object sender, EventArgs e) { PlayerCmd("whois"); }       
+        void banToolStripMenuItem_Click(object sender, EventArgs e) { PlayerCmd("ban"); }
+        void kickToolStripMenuItem_Click(object sender, EventArgs e) {
+            PlayerCmd("kick", "", " You have been kicked by the console.");
+        }
+
         Player GetSelectedPlayer() {
-            if (dgvPlayers.SelectedRows.Count <= 0) return null;
-            return (Player)(dgvPlayers.SelectedRows[0].DataBoundItem);
+            if (main_Players.SelectedRows.Count <= 0) return null;
+            return (Player)(main_Players.SelectedRows[0].DataBoundItem);
         }
-
-        Level GetSelectedLevel() {
-            if (dgvMaps.SelectedRows.Count <= 0) return null;
-            return (Level)(dgvMaps.SelectedRows[0].DataBoundItem);
-        }
-
-        private void clonesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            playerselect("clones");
-        }
-
-        private void voiceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            playerselect("voice");
-        }
-
-        private void whoisToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            playerselect("whois");
-        }
-
-        private void kickToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            playerselect("kick", "", " You have been kicked by the console.");
-        }
-
-
-        private void banToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            playerselect("ban");
-        }
-
-        private void playerselect(string com)
-        {
+        
+        void PlayerCmd(string com) {
             if (GetSelectedPlayer() != null)
                 Command.all.Find(com).Use(null, GetSelectedPlayer().name);
         }
-        private void playerselect(string com, string prefix, string suffix)
-        {
+        
+        void PlayerCmd(string com, string prefix, string suffix) {
             if (GetSelectedPlayer() != null)
                 Command.all.Find(com).Use(null, prefix + GetSelectedPlayer().name + suffix);
         }
+        
 
-        private void finiteModeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            levelcommand("map", " finite");
+        void finiteModeToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " finite"); }
+        void animalAIToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " ai"); }
+        void edgeWaterToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " edge"); }
+        void growingGrassToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " grass"); }
+        void survivalDeathToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " death"); }
+        void killerBlocksToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " killer"); }
+        void rPChatToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " chat"); }
+        
+        Level GetSelectedLevel() {
+            if (main_Maps.SelectedRows.Count <= 0) return null;
+            return (Level)(main_Maps.SelectedRows[0].DataBoundItem);
         }
-
-        private void animalAIToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            levelcommand("map", " ai");
-        }
-
-        private void edgeWaterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            levelcommand("map", " edge");
-        }
-
-        private void growingGrassToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            levelcommand("map", " grass");
-        }
-
-        private void survivalDeathToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            levelcommand("map", " death");
-        }
-
-        private void killerBlocksToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            levelcommand("map", " killer");
-        }
-
-        private void rPChatToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            levelcommand("map", " chat");
-        }
-
-        private void levelcommand(string com)
-        {
+        
+        void LevelCmd(string com) {
             if (GetSelectedLevel() != null)
                 Command.all.Find(com).Use(null, GetSelectedLevel().name);
         }
 
-        private void levelcommand(string com, string args)
-        {
+        void LevelCmd(string com, string args) {
             if (GetSelectedLevel() != null)
                 Command.all.Find(com).Use(null, GetSelectedLevel().name + args);
         }
+        
 
-        private void tabControl1_Click(object sender, EventArgs e)
-        {
+       void tabControl1_Click(object sender, EventArgs e)  {
             try { UpdateUnloadedList(); }
             catch { }
             try { UpdatePlyersListBox(); }
             catch { }
             try
             {
-                if (LogsTxtBox.Text == "")
+                if (logs_txtGeneral.Text == "")
                 {
-                    dateTimePicker1.Value = DateTime.Now;
+                    logs_dateGeneral.Value = DateTime.Now;
                 }
             }
             catch { }
@@ -504,31 +457,25 @@ namespace MCGalaxy.Gui
             Restart_Click(sender, e);
         }
 
-        private void DatePicker1_ValueChanged(object sender, EventArgs e)
-        {
-            string dayofmonth = dateTimePicker1.Value.Day.ToString().PadLeft(2, '0');
-            string year = dateTimePicker1.Value.Year.ToString();
-            string month = dateTimePicker1.Value.Month.ToString().PadLeft(2, '0');
+        void DatePicker1_ValueChanged(object sender, EventArgs e) {
+            string dayofmonth = logs_dateGeneral.Value.Day.ToString().PadLeft(2, '0');
+            string year = logs_dateGeneral.Value.Year.ToString();
+            string month = logs_dateGeneral.Value.Month.ToString().PadLeft(2, '0');
 
             string ymd = year + "-" + month + "-" + dayofmonth;
             string filename = ymd + ".txt";
 
-            if (!File.Exists(Path.Combine("logs/", filename)))
-            {
-                //MessageBox.Show("Sorry, the log for " + ymd + " doesn't exist, please select another one");
-                LogsTxtBox.Text = "No logs found for: " + ymd;
+            if (!File.Exists(Path.Combine("logs/", filename))) {
+                logs_txtGeneral.Text = "No logs found for: " + ymd;
+            } else {
+                logs_txtGeneral.Text = null;
+                logs_txtGeneral.Text = File.ReadAllText(Path.Combine("logs/", filename));
             }
-            else
-            {
-                LogsTxtBox.Text = null;
-                LogsTxtBox.Text = File.ReadAllText(Path.Combine("logs/", filename));
-            }
-
         }
 
         private void txtUrl_DoubleClick(object sender, EventArgs e)
         {
-            txtUrl.SelectAll();
+            main_txtUrl.SelectAll();
         }
 
         private void dgvPlayers_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
@@ -537,11 +484,11 @@ namespace MCGalaxy.Gui
         }
 
         private void promoteToolStripMenuItem_Click(object sender, EventArgs e) {
-            playerselect("rank", "+up ", "");
+            PlayerCmd("rank", "+up ", "");
         }
 
         private void demoteToolStripMenuItem_Click(object sender, EventArgs e) {
-            playerselect("rank", "-down ", "");
+            PlayerCmd("rank", "-down ", "");
         }
 
         #region Tabs
@@ -954,33 +901,33 @@ namespace MCGalaxy.Gui
 
         private void loadOngotoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            levelcommand("map", " loadongoto");
+            LevelCmd("map", " loadongoto");
         }
 
         private void instantBuildingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            levelcommand("map", " instant");
+            LevelCmd("map", " instant");
         }
 
         private void autpPhysicsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            levelcommand("map", " restartphysics");
+            LevelCmd("map", " restartphysics");
         }
 
         private void gunsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            levelcommand("allowguns");
+            LevelCmd("allowguns");
         }
 
         private void unloadToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            levelcommand("map", " unload");
+            LevelCmd("map", " unload");
         }
 
         private void infoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            levelcommand("map");
-            levelcommand("mapinfo");
+            LevelCmd("map");
+            LevelCmd("mapinfo");
         }
 
         private void actiondToolStripMenuItem_Click(object sender, EventArgs e)
@@ -990,67 +937,67 @@ namespace MCGalaxy.Gui
 
         private void moveAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            levelcommand("moveall");
+            LevelCmd("moveall");
         }
 
         private void toolStripMenuItem2_Click_1(object sender, EventArgs e)
         {
-            levelcommand("physics", " 0");
+            LevelCmd("physics", " 0");
         }
 
         private void toolStripMenuItem3_Click_1(object sender, EventArgs e)
         {
-            levelcommand("physics", " 1");
+            LevelCmd("physics", " 1");
         }
 
         private void toolStripMenuItem4_Click_1(object sender, EventArgs e)
         {
-            levelcommand("physics", " 2");
+            LevelCmd("physics", " 2");
         }
 
         private void toolStripMenuItem5_Click_1(object sender, EventArgs e)
         {
-            levelcommand("physics", " 3");
+            LevelCmd("physics", " 3");
         }
 
         private void toolStripMenuItem6_Click_1(object sender, EventArgs e)
         {
-            levelcommand("physics", " 4");
+            LevelCmd("physics", " 4");
         }
 
         private void toolStripMenuItem7_Click_1(object sender, EventArgs e)
         {
-            levelcommand("physics", " 5");
+            LevelCmd("physics", " 5");
         }
 
         private void saveToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            levelcommand("save");
+            LevelCmd("save");
         }
 
         private void unloadToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            levelcommand("unload");
+            LevelCmd("unload");
         }
 
         private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            levelcommand("reload");
+            LevelCmd("reload");
         }
 
         private void leafDecayToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            levelcommand("map", " leafdecay");
+            LevelCmd("map", " leafdecay");
         }
 
         private void randomFlowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            levelcommand("map", " randomflow");
+            LevelCmd("map", " randomflow");
         }
 
         private void treeGrowingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            levelcommand("map", " growtrees");
+            LevelCmd("map", " growtrees");
         }
 
         #region Colored Reader Context Menu
@@ -1060,45 +1007,44 @@ namespace MCGalaxy.Gui
             if (MessageBox.Show("Changing to and from night mode will clear your logs. Do you still want to change?", "You sure?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
                 return;
 
-            txtLog.NightMode = nightModeToolStripMenuItem.Checked;
+            main_txtLog.NightMode = nightModeToolStripMenuItem.Checked;
             nightModeToolStripMenuItem.Checked = !nightModeToolStripMenuItem.Checked;
         }
 
         private void colorsToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            txtLog.Colorize = !colorsToolStripMenuItem.Checked;
+            main_txtLog.Colorize = !colorsToolStripMenuItem.Checked;
             colorsToolStripMenuItem.Checked = !colorsToolStripMenuItem.Checked;
-
         }
 
         private void dateStampToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            txtLog.DateStamp = !dateStampToolStripMenuItem.Checked;
+            main_txtLog.DateStamp = !dateStampToolStripMenuItem.Checked;
             dateStampToolStripMenuItem.Checked = !dateStampToolStripMenuItem.Checked;
         }
 
         private void autoScrollToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            txtLog.AutoScroll = !autoScrollToolStripMenuItem.Checked;
+            main_txtLog.AutoScroll = !autoScrollToolStripMenuItem.Checked;
             autoScrollToolStripMenuItem.Checked = !autoScrollToolStripMenuItem.Checked;
         }
 
         private void copySelectedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(txtLog.SelectedText))
+            if (String.IsNullOrEmpty(main_txtLog.SelectedText))
                 return;
 
-            Clipboard.SetText(txtLog.SelectedText, TextDataFormat.Text);
+            Clipboard.SetText(main_txtLog.SelectedText, TextDataFormat.Text);
         }
         private void copyAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(txtLog.Text, TextDataFormat.Text);
+            Clipboard.SetText(main_txtLog.Text, TextDataFormat.Text);
         }
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Are you sure you want to clear logs?", "You sure?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
             {
-                txtLog.Clear();
+                main_txtLog.Clear();
             }
         }
         #endregion

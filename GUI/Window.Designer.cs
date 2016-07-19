@@ -96,27 +96,27 @@ namespace MCGalaxy.Gui
             this.openConsole = new System.Windows.Forms.ToolStripMenuItem();
             this.shutdownServer = new System.Windows.Forms.ToolStripMenuItem();
             this.restartServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnProperties = new System.Windows.Forms.Button();
-            this.btnClose = new System.Windows.Forms.Button();
-            this.Restart = new System.Windows.Forms.Button();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.tabsLogs = new System.Windows.Forms.TabControl();
-            this.tabLog_Err = new System.Windows.Forms.TabPage();
-            this.txtErrors = new System.Windows.Forms.TextBox();
-            this.tabLog_Gen = new System.Windows.Forms.TabPage();
-            this.label3 = new System.Windows.Forms.Label();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.LogsTxtBox = new System.Windows.Forms.RichTextBox();
+            this.main_btnProps = new System.Windows.Forms.Button();
+            this.main_btnClose = new System.Windows.Forms.Button();
+            this.main_btnRestart = new System.Windows.Forms.Button();
+            this.logs_tp = new System.Windows.Forms.TabPage();
+            this.logs_tab = new System.Windows.Forms.TabControl();
+            this.logs_tabErr = new System.Windows.Forms.TabPage();
+            this.logs_txtError = new System.Windows.Forms.TextBox();
+            this.logs_tabGen = new System.Windows.Forms.TabPage();
+            this.logs_lblGeneral = new System.Windows.Forms.Label();
+            this.logs_dateGeneral = new System.Windows.Forms.DateTimePicker();
+            this.logs_txtGeneral = new System.Windows.Forms.RichTextBox();
             this.tabLog_Sys = new System.Windows.Forms.TabPage();
-            this.txtSystem = new System.Windows.Forms.TextBox();
+            this.logs_txtSystem = new System.Windows.Forms.TextBox();
             this.tabLog_Chg = new System.Windows.Forms.TabPage();
-            this.txtChangelog = new System.Windows.Forms.TextBox();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.Unloadempty_button = new System.Windows.Forms.Button();
-            this.killphysics_button = new System.Windows.Forms.Button();
-            this.button_saveall = new System.Windows.Forms.Button();
-            this.dgvMaps = new System.Windows.Forms.DataGridView();
-            this.txtLog = new MCGalaxy.Gui.Components.ColoredTextBox();
+            this.logs_txtChangelog = new System.Windows.Forms.TextBox();
+            this.tp_Main = new System.Windows.Forms.TabPage();
+            this.main_btnUnloadEmpty = new System.Windows.Forms.Button();
+            this.main_btnKillPhysics = new System.Windows.Forms.Button();
+            this.main_btnSaveAll = new System.Windows.Forms.Button();
+            this.main_Maps = new System.Windows.Forms.DataGridView();
+            this.main_txtLog = new MCGalaxy.Gui.Components.ColoredTextBox();
             this.txtLogMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.nightModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -127,11 +127,11 @@ namespace MCGalaxy.Gui
             this.copyAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtInput = new System.Windows.Forms.TextBox();
-            this.txtUrl = new System.Windows.Forms.TextBox();
-            this.dgvPlayers = new System.Windows.Forms.DataGridView();
+            this.main_txtInput = new System.Windows.Forms.TextBox();
+            this.main_txtUrl = new System.Windows.Forms.TextBox();
+            this.main_Players = new System.Windows.Forms.DataGridView();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.tp_Players = new System.Windows.Forms.TabPage();
             this.PlayersTextBox = new MCGalaxy.Gui.AutoScrollTextBox();
             this.PlyersListBox = new System.Windows.Forms.ListBox();
             this.StatusTxt = new System.Windows.Forms.TextBox();
@@ -187,7 +187,7 @@ namespace MCGalaxy.Gui
             this.label14 = new System.Windows.Forms.Label();
             this.NameTxtPlayersTab = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tp_Maps = new System.Windows.Forms.TabPage();
             this.gbMap_Props = new System.Windows.Forms.GroupBox();
             this.pgMaps = new System.Windows.Forms.PropertyGrid();
             this.gbMap_Lded = new System.Windows.Forms.GroupBox();
@@ -213,20 +213,20 @@ namespace MCGalaxy.Gui
             this.mapsStrip.SuspendLayout();
             this.playerStrip.SuspendLayout();
             this.iconContext.SuspendLayout();
-            this.tabPage5.SuspendLayout();
-            this.tabsLogs.SuspendLayout();
-            this.tabLog_Err.SuspendLayout();
-            this.tabLog_Gen.SuspendLayout();
+            this.logs_tp.SuspendLayout();
+            this.logs_tab.SuspendLayout();
+            this.logs_tabErr.SuspendLayout();
+            this.logs_tabGen.SuspendLayout();
             this.tabLog_Sys.SuspendLayout();
             this.tabLog_Chg.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvMaps)).BeginInit();
+            this.tp_Main.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.main_Maps)).BeginInit();
             this.txtLogMenuStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvPlayers)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.main_Players)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.tabPage7.SuspendLayout();
+            this.tp_Players.SuspendLayout();
             this.panel4.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.tp_Maps.SuspendLayout();
             this.gbMap_Props.SuspendLayout();
             this.gbMap_Lded.SuspendLayout();
             this.gbMap_Unld.SuspendLayout();
@@ -603,131 +603,131 @@ namespace MCGalaxy.Gui
             this.restartServerToolStripMenuItem.Text = "Restart Server";
             this.restartServerToolStripMenuItem.Click += new System.EventHandler(this.restartServerToolStripMenuItem_Click);
             // 
-            // btnProperties
+            // main_btnProps
             // 
-            this.btnProperties.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnProperties.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnProperties.Location = new System.Drawing.Point(501, 5);
-            this.btnProperties.Name = "btnProperties";
-            this.btnProperties.Size = new System.Drawing.Size(80, 23);
-            this.btnProperties.TabIndex = 34;
-            this.btnProperties.Text = "Properties";
-            this.btnProperties.UseVisualStyleBackColor = true;
-            this.btnProperties.Click += new System.EventHandler(this.btnProperties_Click_1);
+            this.main_btnProps.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.main_btnProps.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main_btnProps.Location = new System.Drawing.Point(501, 5);
+            this.main_btnProps.Name = "main_btnProps";
+            this.main_btnProps.Size = new System.Drawing.Size(80, 23);
+            this.main_btnProps.TabIndex = 34;
+            this.main_btnProps.Text = "Properties";
+            this.main_btnProps.UseVisualStyleBackColor = true;
+            this.main_btnProps.Click += new System.EventHandler(this.btnProperties_Click_1);
             // 
-            // btnClose
+            // main_btnClose
             // 
-            this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnClose.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.Location = new System.Drawing.Point(675, 5);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(88, 23);
-            this.btnClose.TabIndex = 35;
-            this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click_1);
+            this.main_btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.main_btnClose.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main_btnClose.Location = new System.Drawing.Point(675, 5);
+            this.main_btnClose.Name = "main_btnClose";
+            this.main_btnClose.Size = new System.Drawing.Size(88, 23);
+            this.main_btnClose.TabIndex = 35;
+            this.main_btnClose.Text = "Close";
+            this.main_btnClose.UseVisualStyleBackColor = true;
+            this.main_btnClose.Click += new System.EventHandler(this.btnClose_Click_1);
             // 
-            // Restart
+            // main_btnRestart
             // 
-            this.Restart.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Restart.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Restart.Location = new System.Drawing.Point(584, 5);
-            this.Restart.Name = "Restart";
-            this.Restart.Size = new System.Drawing.Size(88, 23);
-            this.Restart.TabIndex = 36;
-            this.Restart.Text = "Restart";
-            this.Restart.UseVisualStyleBackColor = true;
-            this.Restart.Click += new System.EventHandler(this.Restart_Click);
+            this.main_btnRestart.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.main_btnRestart.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main_btnRestart.Location = new System.Drawing.Point(584, 5);
+            this.main_btnRestart.Name = "main_btnRestart";
+            this.main_btnRestart.Size = new System.Drawing.Size(88, 23);
+            this.main_btnRestart.TabIndex = 36;
+            this.main_btnRestart.Text = "Restart";
+            this.main_btnRestart.UseVisualStyleBackColor = true;
+            this.main_btnRestart.Click += new System.EventHandler(this.Restart_Click);
             // 
-            // tabPage5
+            // logs_tp
             // 
-            this.tabPage5.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage5.Controls.Add(this.tabsLogs);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(767, 488);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Logs";
+            this.logs_tp.BackColor = System.Drawing.SystemColors.Control;
+            this.logs_tp.Controls.Add(this.logs_tab);
+            this.logs_tp.Location = new System.Drawing.Point(4, 22);
+            this.logs_tp.Name = "logs_tp";
+            this.logs_tp.Padding = new System.Windows.Forms.Padding(3);
+            this.logs_tp.Size = new System.Drawing.Size(767, 488);
+            this.logs_tp.TabIndex = 4;
+            this.logs_tp.Text = "Logs";
             // 
-            // tabsLogs
+            // logs_tab
             // 
-            this.tabsLogs.Controls.Add(this.tabLog_Err);
-            this.tabsLogs.Controls.Add(this.tabLog_Gen);
-            this.tabsLogs.Controls.Add(this.tabLog_Sys);
-            this.tabsLogs.Controls.Add(this.tabLog_Chg);
-            this.tabsLogs.Location = new System.Drawing.Point(-1, 1);
-            this.tabsLogs.Name = "tabsLogs";
-            this.tabsLogs.SelectedIndex = 0;
-            this.tabsLogs.Size = new System.Drawing.Size(775, 491);
-            this.tabsLogs.TabIndex = 0;
+            this.logs_tab.Controls.Add(this.logs_tabErr);
+            this.logs_tab.Controls.Add(this.logs_tabGen);
+            this.logs_tab.Controls.Add(this.tabLog_Sys);
+            this.logs_tab.Controls.Add(this.tabLog_Chg);
+            this.logs_tab.Location = new System.Drawing.Point(-1, 1);
+            this.logs_tab.Name = "logs_tab";
+            this.logs_tab.SelectedIndex = 0;
+            this.logs_tab.Size = new System.Drawing.Size(775, 491);
+            this.logs_tab.TabIndex = 0;
             // 
-            // tabLog_Err
+            // logs_tabErr
             // 
-            this.tabLog_Err.Controls.Add(this.txtErrors);
-            this.tabLog_Err.Location = new System.Drawing.Point(4, 22);
-            this.tabLog_Err.Name = "tabLog_Err";
-            this.tabLog_Err.Size = new System.Drawing.Size(767, 465);
-            this.tabLog_Err.TabIndex = 2;
-            this.tabLog_Err.Text = "Errors";
-            this.tabLog_Err.UseVisualStyleBackColor = true;
+            this.logs_tabErr.Controls.Add(this.logs_txtError);
+            this.logs_tabErr.Location = new System.Drawing.Point(4, 22);
+            this.logs_tabErr.Name = "logs_tabErr";
+            this.logs_tabErr.Size = new System.Drawing.Size(767, 465);
+            this.logs_tabErr.TabIndex = 2;
+            this.logs_tabErr.Text = "Errors";
+            this.logs_tabErr.UseVisualStyleBackColor = true;
             // 
-            // txtErrors
+            // logs_txtError
             // 
-            this.txtErrors.BackColor = System.Drawing.Color.White;
-            this.txtErrors.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtErrors.Location = new System.Drawing.Point(-2, 0);
-            this.txtErrors.Multiline = true;
-            this.txtErrors.Name = "txtErrors";
-            this.txtErrors.ReadOnly = true;
-            this.txtErrors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtErrors.Size = new System.Drawing.Size(765, 465);
-            this.txtErrors.TabIndex = 2;
+            this.logs_txtError.BackColor = System.Drawing.Color.White;
+            this.logs_txtError.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.logs_txtError.Location = new System.Drawing.Point(-2, 0);
+            this.logs_txtError.Multiline = true;
+            this.logs_txtError.Name = "logs_txtError";
+            this.logs_txtError.ReadOnly = true;
+            this.logs_txtError.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.logs_txtError.Size = new System.Drawing.Size(765, 465);
+            this.logs_txtError.TabIndex = 2;
             // 
-            // tabLog_Gen
+            // logs_tabGen
             // 
-            this.tabLog_Gen.Controls.Add(this.label3);
-            this.tabLog_Gen.Controls.Add(this.dateTimePicker1);
-            this.tabLog_Gen.Controls.Add(this.LogsTxtBox);
-            this.tabLog_Gen.Location = new System.Drawing.Point(4, 22);
-            this.tabLog_Gen.Name = "tabLog_Gen";
-            this.tabLog_Gen.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLog_Gen.Size = new System.Drawing.Size(767, 465);
-            this.tabLog_Gen.TabIndex = 0;
-            this.tabLog_Gen.Text = "General";
-            this.tabLog_Gen.UseVisualStyleBackColor = true;
+            this.logs_tabGen.Controls.Add(this.logs_lblGeneral);
+            this.logs_tabGen.Controls.Add(this.logs_dateGeneral);
+            this.logs_tabGen.Controls.Add(this.logs_txtGeneral);
+            this.logs_tabGen.Location = new System.Drawing.Point(4, 22);
+            this.logs_tabGen.Name = "logs_tabGen";
+            this.logs_tabGen.Padding = new System.Windows.Forms.Padding(3);
+            this.logs_tabGen.Size = new System.Drawing.Size(767, 465);
+            this.logs_tabGen.TabIndex = 0;
+            this.logs_tabGen.Text = "General";
+            this.logs_tabGen.UseVisualStyleBackColor = true;
             // 
-            // label3
+            // logs_lblGeneral
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(78, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "View logs from:";
+            this.logs_lblGeneral.AutoSize = true;
+            this.logs_lblGeneral.Location = new System.Drawing.Point(3, 9);
+            this.logs_lblGeneral.Name = "logs_lblGeneral";
+            this.logs_lblGeneral.Size = new System.Drawing.Size(78, 13);
+            this.logs_lblGeneral.TabIndex = 6;
+            this.logs_lblGeneral.Text = "View logs from:";
             // 
-            // dateTimePicker1
+            // logs_dateGeneral
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(87, 4);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePicker1.TabIndex = 5;
-            this.dateTimePicker1.Value = new System.DateTime(2011, 7, 20, 18, 31, 50, 0);
-            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.DatePicker1_ValueChanged);
+            this.logs_dateGeneral.Location = new System.Drawing.Point(87, 4);
+            this.logs_dateGeneral.Name = "logs_dateGeneral";
+            this.logs_dateGeneral.Size = new System.Drawing.Size(200, 21);
+            this.logs_dateGeneral.TabIndex = 5;
+            this.logs_dateGeneral.Value = new System.DateTime(2011, 7, 20, 18, 31, 50, 0);
+            this.logs_dateGeneral.ValueChanged += new System.EventHandler(this.DatePicker1_ValueChanged);
             // 
-            // LogsTxtBox
+            // logs_txtGeneral
             // 
-            this.LogsTxtBox.BackColor = System.Drawing.SystemColors.Window;
-            this.LogsTxtBox.Location = new System.Drawing.Point(-2, 30);
-            this.LogsTxtBox.Name = "LogsTxtBox";
-            this.LogsTxtBox.ReadOnly = true;
-            this.LogsTxtBox.Size = new System.Drawing.Size(765, 436);
-            this.LogsTxtBox.TabIndex = 4;
-            this.LogsTxtBox.Text = "";
+            this.logs_txtGeneral.BackColor = System.Drawing.SystemColors.Window;
+            this.logs_txtGeneral.Location = new System.Drawing.Point(-2, 30);
+            this.logs_txtGeneral.Name = "logs_txtGeneral";
+            this.logs_txtGeneral.ReadOnly = true;
+            this.logs_txtGeneral.Size = new System.Drawing.Size(765, 436);
+            this.logs_txtGeneral.TabIndex = 4;
+            this.logs_txtGeneral.Text = "";
             // 
             // tabLog_Sys
             // 
-            this.tabLog_Sys.Controls.Add(this.txtSystem);
+            this.tabLog_Sys.Controls.Add(this.logs_txtSystem);
             this.tabLog_Sys.Location = new System.Drawing.Point(4, 22);
             this.tabLog_Sys.Name = "tabLog_Sys";
             this.tabLog_Sys.Padding = new System.Windows.Forms.Padding(3);
@@ -736,21 +736,21 @@ namespace MCGalaxy.Gui
             this.tabLog_Sys.Text = "System";
             this.tabLog_Sys.UseVisualStyleBackColor = true;
             // 
-            // txtSystem
+            // logs_txtSystem
             // 
-            this.txtSystem.BackColor = System.Drawing.Color.White;
-            this.txtSystem.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtSystem.Location = new System.Drawing.Point(-2, 0);
-            this.txtSystem.Multiline = true;
-            this.txtSystem.Name = "txtSystem";
-            this.txtSystem.ReadOnly = true;
-            this.txtSystem.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtSystem.Size = new System.Drawing.Size(765, 465);
-            this.txtSystem.TabIndex = 2;
+            this.logs_txtSystem.BackColor = System.Drawing.Color.White;
+            this.logs_txtSystem.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.logs_txtSystem.Location = new System.Drawing.Point(-2, 0);
+            this.logs_txtSystem.Multiline = true;
+            this.logs_txtSystem.Name = "logs_txtSystem";
+            this.logs_txtSystem.ReadOnly = true;
+            this.logs_txtSystem.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.logs_txtSystem.Size = new System.Drawing.Size(765, 465);
+            this.logs_txtSystem.TabIndex = 2;
             // 
             // tabLog_Chg
             // 
-            this.tabLog_Chg.Controls.Add(this.txtChangelog);
+            this.tabLog_Chg.Controls.Add(this.logs_txtChangelog);
             this.tabLog_Chg.Location = new System.Drawing.Point(4, 22);
             this.tabLog_Chg.Name = "tabLog_Chg";
             this.tabLog_Chg.Size = new System.Drawing.Size(767, 465);
@@ -758,101 +758,101 @@ namespace MCGalaxy.Gui
             this.tabLog_Chg.Text = "Changelog";
             this.tabLog_Chg.UseVisualStyleBackColor = true;
             // 
-            // txtChangelog
+            // logs_txtChangelog
             // 
-            this.txtChangelog.BackColor = System.Drawing.Color.White;
-            this.txtChangelog.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtChangelog.Location = new System.Drawing.Point(-2, 0);
-            this.txtChangelog.Multiline = true;
-            this.txtChangelog.Name = "txtChangelog";
-            this.txtChangelog.ReadOnly = true;
-            this.txtChangelog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtChangelog.Size = new System.Drawing.Size(765, 465);
-            this.txtChangelog.TabIndex = 1;
+            this.logs_txtChangelog.BackColor = System.Drawing.Color.White;
+            this.logs_txtChangelog.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.logs_txtChangelog.Location = new System.Drawing.Point(-2, 0);
+            this.logs_txtChangelog.Multiline = true;
+            this.logs_txtChangelog.Name = "logs_txtChangelog";
+            this.logs_txtChangelog.ReadOnly = true;
+            this.logs_txtChangelog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.logs_txtChangelog.Size = new System.Drawing.Size(765, 465);
+            this.logs_txtChangelog.TabIndex = 1;
             // 
-            // tabPage1
+            // tp_Main
             // 
-            this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage1.Controls.Add(this.Unloadempty_button);
-            this.tabPage1.Controls.Add(this.killphysics_button);
-            this.tabPage1.Controls.Add(this.button_saveall);
-            this.tabPage1.Controls.Add(this.dgvMaps);
-            this.tabPage1.Controls.Add(this.txtLog);
-            this.tabPage1.Controls.Add(this.txtInput);
-            this.tabPage1.Controls.Add(this.txtUrl);
-            this.tabPage1.Controls.Add(this.dgvPlayers);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(767, 488);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Main";
+            this.tp_Main.BackColor = System.Drawing.SystemColors.Control;
+            this.tp_Main.Controls.Add(this.main_btnUnloadEmpty);
+            this.tp_Main.Controls.Add(this.main_btnKillPhysics);
+            this.tp_Main.Controls.Add(this.main_btnSaveAll);
+            this.tp_Main.Controls.Add(this.main_Maps);
+            this.tp_Main.Controls.Add(this.main_txtLog);
+            this.tp_Main.Controls.Add(this.main_txtInput);
+            this.tp_Main.Controls.Add(this.main_txtUrl);
+            this.tp_Main.Controls.Add(this.main_Players);
+            this.tp_Main.Location = new System.Drawing.Point(4, 22);
+            this.tp_Main.Name = "tp_Main";
+            this.tp_Main.Padding = new System.Windows.Forms.Padding(3);
+            this.tp_Main.Size = new System.Drawing.Size(767, 488);
+            this.tp_Main.TabIndex = 0;
+            this.tp_Main.Text = "Main";
             // 
-            // Unloadempty_button
+            // main_btnUnloadEmpty
             // 
-            this.Unloadempty_button.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Unloadempty_button.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Unloadempty_button.Location = new System.Drawing.Point(676, 263);
-            this.Unloadempty_button.Name = "Unloadempty_button";
-            this.Unloadempty_button.Size = new System.Drawing.Size(81, 23);
-            this.Unloadempty_button.TabIndex = 41;
-            this.Unloadempty_button.Text = "Unload Empty";
-            this.Unloadempty_button.UseVisualStyleBackColor = true;
-            this.Unloadempty_button.Click += new System.EventHandler(this.Unloadempty_button_Click);
+            this.main_btnUnloadEmpty.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.main_btnUnloadEmpty.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main_btnUnloadEmpty.Location = new System.Drawing.Point(676, 263);
+            this.main_btnUnloadEmpty.Name = "main_btnUnloadEmpty";
+            this.main_btnUnloadEmpty.Size = new System.Drawing.Size(81, 23);
+            this.main_btnUnloadEmpty.TabIndex = 41;
+            this.main_btnUnloadEmpty.Text = "Unload Empty";
+            this.main_btnUnloadEmpty.UseVisualStyleBackColor = true;
+            this.main_btnUnloadEmpty.Click += new System.EventHandler(this.Unloadempty_button_Click);
             // 
-            // killphysics_button
+            // main_btnKillPhysics
             // 
-            this.killphysics_button.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.killphysics_button.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.killphysics_button.Location = new System.Drawing.Point(582, 263);
-            this.killphysics_button.Name = "killphysics_button";
-            this.killphysics_button.Size = new System.Drawing.Size(88, 23);
-            this.killphysics_button.TabIndex = 40;
-            this.killphysics_button.Text = "Kill All Physics";
-            this.killphysics_button.UseVisualStyleBackColor = true;
-            this.killphysics_button.Click += new System.EventHandler(this.killphysics_button_Click);
+            this.main_btnKillPhysics.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.main_btnKillPhysics.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main_btnKillPhysics.Location = new System.Drawing.Point(582, 263);
+            this.main_btnKillPhysics.Name = "main_btnKillPhysics";
+            this.main_btnKillPhysics.Size = new System.Drawing.Size(88, 23);
+            this.main_btnKillPhysics.TabIndex = 40;
+            this.main_btnKillPhysics.Text = "Kill All Physics";
+            this.main_btnKillPhysics.UseVisualStyleBackColor = true;
+            this.main_btnKillPhysics.Click += new System.EventHandler(this.killphysics_button_Click);
             // 
-            // button_saveall
+            // main_btnSaveAll
             // 
-            this.button_saveall.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button_saveall.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_saveall.Location = new System.Drawing.Point(513, 263);
-            this.button_saveall.Name = "button_saveall";
-            this.button_saveall.Size = new System.Drawing.Size(63, 23);
-            this.button_saveall.TabIndex = 39;
-            this.button_saveall.Text = "Save All";
-            this.button_saveall.UseVisualStyleBackColor = true;
-            this.button_saveall.Click += new System.EventHandler(this.button_saveall_Click);
+            this.main_btnSaveAll.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.main_btnSaveAll.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main_btnSaveAll.Location = new System.Drawing.Point(513, 263);
+            this.main_btnSaveAll.Name = "main_btnSaveAll";
+            this.main_btnSaveAll.Size = new System.Drawing.Size(63, 23);
+            this.main_btnSaveAll.TabIndex = 39;
+            this.main_btnSaveAll.Text = "Save All";
+            this.main_btnSaveAll.UseVisualStyleBackColor = true;
+            this.main_btnSaveAll.Click += new System.EventHandler(this.button_saveall_Click);
             // 
-            // dgvMaps
+            // main_Maps
             // 
-            this.dgvMaps.AllowUserToAddRows = false;
-            this.dgvMaps.AllowUserToDeleteRows = false;
-            this.dgvMaps.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dgvMaps.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dgvMaps.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvMaps.ContextMenuStrip = this.mapsStrip;
-            this.dgvMaps.Location = new System.Drawing.Point(512, 292);
-            this.dgvMaps.MultiSelect = false;
-            this.dgvMaps.Name = "dgvMaps";
-            this.dgvMaps.ReadOnly = true;
-            this.dgvMaps.RowHeadersVisible = false;
-            this.dgvMaps.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvMaps.Size = new System.Drawing.Size(246, 150);
-            this.dgvMaps.TabIndex = 38;
+            this.main_Maps.AllowUserToAddRows = false;
+            this.main_Maps.AllowUserToDeleteRows = false;
+            this.main_Maps.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.main_Maps.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.main_Maps.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.main_Maps.ContextMenuStrip = this.mapsStrip;
+            this.main_Maps.Location = new System.Drawing.Point(512, 292);
+            this.main_Maps.MultiSelect = false;
+            this.main_Maps.Name = "main_Maps";
+            this.main_Maps.ReadOnly = true;
+            this.main_Maps.RowHeadersVisible = false;
+            this.main_Maps.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.main_Maps.Size = new System.Drawing.Size(246, 150);
+            this.main_Maps.TabIndex = 38;
             // 
-            // txtLog
+            // main_txtLog
             // 
-            this.txtLog.BackColor = System.Drawing.SystemColors.Window;
-            this.txtLog.ContextMenuStrip = this.txtLogMenuStrip;
-            this.txtLog.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLog.Location = new System.Drawing.Point(8, 38);
-            this.txtLog.Name = "txtLog";
-            this.txtLog.ReadOnly = true;
-            this.txtLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.txtLog.Size = new System.Drawing.Size(498, 404);
-            this.txtLog.TabIndex = 0;
-            this.txtLog.Text = "";
+            this.main_txtLog.BackColor = System.Drawing.SystemColors.Window;
+            this.main_txtLog.ContextMenuStrip = this.txtLogMenuStrip;
+            this.main_txtLog.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main_txtLog.Location = new System.Drawing.Point(8, 38);
+            this.main_txtLog.Name = "main_txtLog";
+            this.main_txtLog.ReadOnly = true;
+            this.main_txtLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.main_txtLog.Size = new System.Drawing.Size(498, 404);
+            this.main_txtLog.TabIndex = 0;
+            this.main_txtLog.Text = "";
             // 
             // txtLogMenuStrip
             // 
@@ -934,52 +934,52 @@ namespace MCGalaxy.Gui
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
-            // txtInput
+            // main_txtInput
             // 
-            this.txtInput.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtInput.Location = new System.Drawing.Point(8, 454);
-            this.txtInput.Name = "txtInput";
-            this.txtInput.Size = new System.Drawing.Size(750, 21);
-            this.txtInput.TabIndex = 27;
-            this.txtInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtInput_KeyDown);
-            this.toolTip.SetToolTip(this.txtInput, "To send chat to players, just type the message in.\nTo enter a command, put a / before it. (e.g. /help commands)");
+            this.main_txtInput.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main_txtInput.Location = new System.Drawing.Point(8, 454);
+            this.main_txtInput.Name = "main_txtInput";
+            this.main_txtInput.Size = new System.Drawing.Size(750, 21);
+            this.main_txtInput.TabIndex = 27;
+            this.main_txtInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtInput_KeyDown);
+            this.toolTip.SetToolTip(this.main_txtInput, "To send chat to players, just type the message in.\nTo enter a command, put a / before it. (e.g. /help commands)");
             // 
-            // txtUrl
+            // main_txtUrl
             // 
-            this.txtUrl.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtUrl.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtUrl.Location = new System.Drawing.Point(8, 7);
-            this.txtUrl.Name = "txtUrl";
-            this.txtUrl.ReadOnly = true;
-            this.txtUrl.Size = new System.Drawing.Size(498, 21);
-            this.txtUrl.TabIndex = 25;
-            this.txtUrl.Text = "Finding classicube.net url..";
-            this.txtUrl.DoubleClick += new System.EventHandler(this.txtUrl_DoubleClick);
+            this.main_txtUrl.Cursor = System.Windows.Forms.Cursors.Default;
+            this.main_txtUrl.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main_txtUrl.Location = new System.Drawing.Point(8, 7);
+            this.main_txtUrl.Name = "main_txtUrl";
+            this.main_txtUrl.ReadOnly = true;
+            this.main_txtUrl.Size = new System.Drawing.Size(498, 21);
+            this.main_txtUrl.TabIndex = 25;
+            this.main_txtUrl.Text = "Finding classicube.net url..";
+            this.main_txtUrl.DoubleClick += new System.EventHandler(this.txtUrl_DoubleClick);
             // 
-            // dgvPlayers
+            // main_Players
             // 
-            this.dgvPlayers.AllowUserToAddRows = false;
-            this.dgvPlayers.AllowUserToDeleteRows = false;
-            this.dgvPlayers.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dgvPlayers.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dgvPlayers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvPlayers.ContextMenuStrip = this.playerStrip;
-            this.dgvPlayers.Location = new System.Drawing.Point(512, 7);
-            this.dgvPlayers.MultiSelect = false;
-            this.dgvPlayers.Name = "dgvPlayers";
-            this.dgvPlayers.ReadOnly = true;
-            this.dgvPlayers.RowHeadersVisible = false;
-            this.dgvPlayers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvPlayers.Size = new System.Drawing.Size(246, 250);
-            this.dgvPlayers.TabIndex = 37;
-            this.dgvPlayers.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dgvPlayers_RowPrePaint);
+            this.main_Players.AllowUserToAddRows = false;
+            this.main_Players.AllowUserToDeleteRows = false;
+            this.main_Players.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.main_Players.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.main_Players.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.main_Players.ContextMenuStrip = this.playerStrip;
+            this.main_Players.Location = new System.Drawing.Point(512, 7);
+            this.main_Players.MultiSelect = false;
+            this.main_Players.Name = "main_Players";
+            this.main_Players.ReadOnly = true;
+            this.main_Players.RowHeadersVisible = false;
+            this.main_Players.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.main_Players.Size = new System.Drawing.Size(246, 250);
+            this.main_Players.TabIndex = 37;
+            this.main_Players.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dgvPlayers_RowPrePaint);
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage7);
+            this.tabControl1.Controls.Add(this.tp_Main);
+            this.tabControl1.Controls.Add(this.logs_tp);
+            this.tabControl1.Controls.Add(this.tp_Maps);
+            this.tabControl1.Controls.Add(this.tp_Players);
             this.tabControl1.Cursor = System.Windows.Forms.Cursors.Default;
             this.tabControl1.Font = new System.Drawing.Font("Calibri", 8.25F);
             this.tabControl1.Location = new System.Drawing.Point(1, 11);
@@ -989,37 +989,37 @@ namespace MCGalaxy.Gui
             this.tabControl1.TabIndex = 2;
             this.tabControl1.Click += new System.EventHandler(this.tabControl1_Click);
             //
-            // tabPage7
+            // tp_Players
             // 
-            this.tabPage7.Controls.Add(this.PlayersTextBox);
-            this.tabPage7.Controls.Add(this.PlyersListBox);
-            this.tabPage7.Controls.Add(this.StatusTxt);
-            this.tabPage7.Controls.Add(this.label25);
-            this.tabPage7.Controls.Add(this.LoggedinForTxt);
-            this.tabPage7.Controls.Add(this.label31);
-            this.tabPage7.Controls.Add(this.Kickstxt);
-            this.tabPage7.Controls.Add(this.label30);
-            this.tabPage7.Controls.Add(this.TimesLoggedInTxt);
-            this.tabPage7.Controls.Add(this.label29);
-            this.tabPage7.Controls.Add(this.Blockstxt);
-            this.tabPage7.Controls.Add(this.label28);
-            this.tabPage7.Controls.Add(this.DeathsTxt);
-            this.tabPage7.Controls.Add(this.label27);
-            this.tabPage7.Controls.Add(this.IPtxt);
-            this.tabPage7.Controls.Add(this.label26);
-            this.tabPage7.Controls.Add(this.panel4);
-            this.tabPage7.Controls.Add(this.RankTxt);
-            this.tabPage7.Controls.Add(this.label24);
-            this.tabPage7.Controls.Add(this.MapTxt);
-            this.tabPage7.Controls.Add(this.label14);
-            this.tabPage7.Controls.Add(this.NameTxtPlayersTab);
-            this.tabPage7.Controls.Add(this.label12);
-            this.tabPage7.Location = new System.Drawing.Point(4, 22);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(767, 488);
-            this.tabPage7.TabIndex = 7;
-            this.tabPage7.Text = "Players";
+            this.tp_Players.Controls.Add(this.PlayersTextBox);
+            this.tp_Players.Controls.Add(this.PlyersListBox);
+            this.tp_Players.Controls.Add(this.StatusTxt);
+            this.tp_Players.Controls.Add(this.label25);
+            this.tp_Players.Controls.Add(this.LoggedinForTxt);
+            this.tp_Players.Controls.Add(this.label31);
+            this.tp_Players.Controls.Add(this.Kickstxt);
+            this.tp_Players.Controls.Add(this.label30);
+            this.tp_Players.Controls.Add(this.TimesLoggedInTxt);
+            this.tp_Players.Controls.Add(this.label29);
+            this.tp_Players.Controls.Add(this.Blockstxt);
+            this.tp_Players.Controls.Add(this.label28);
+            this.tp_Players.Controls.Add(this.DeathsTxt);
+            this.tp_Players.Controls.Add(this.label27);
+            this.tp_Players.Controls.Add(this.IPtxt);
+            this.tp_Players.Controls.Add(this.label26);
+            this.tp_Players.Controls.Add(this.panel4);
+            this.tp_Players.Controls.Add(this.RankTxt);
+            this.tp_Players.Controls.Add(this.label24);
+            this.tp_Players.Controls.Add(this.MapTxt);
+            this.tp_Players.Controls.Add(this.label14);
+            this.tp_Players.Controls.Add(this.NameTxtPlayersTab);
+            this.tp_Players.Controls.Add(this.label12);
+            this.tp_Players.Location = new System.Drawing.Point(4, 22);
+            this.tp_Players.Name = "tp_Players";
+            this.tp_Players.Padding = new System.Windows.Forms.Padding(3);
+            this.tp_Players.Size = new System.Drawing.Size(767, 488);
+            this.tp_Players.TabIndex = 7;
+            this.tp_Players.Text = "Players";
             // 
             // PlayersTextBox
             // 
@@ -1577,18 +1577,18 @@ namespace MCGalaxy.Gui
             this.label12.TabIndex = 39;
             this.label12.Text = "Name:";
             // 
-            // tabPage2
+            // tp_Maps
             // 
-            this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage2.Controls.Add(this.gbMap_Props);
-            this.tabPage2.Controls.Add(this.gbMap_Lded);
-            this.tabPage2.Controls.Add(this.gbMap_Unld);
-            this.tabPage2.Controls.Add(this.gbMap_New);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(767, 488);
-            this.tabPage2.TabIndex = 9;
-            this.tabPage2.Text = "Maps";
+            this.tp_Maps.BackColor = System.Drawing.SystemColors.Control;
+            this.tp_Maps.Controls.Add(this.gbMap_Props);
+            this.tp_Maps.Controls.Add(this.gbMap_Lded);
+            this.tp_Maps.Controls.Add(this.gbMap_Unld);
+            this.tp_Maps.Controls.Add(this.gbMap_New);
+            this.tp_Maps.Location = new System.Drawing.Point(4, 22);
+            this.tp_Maps.Name = "tp_Maps";
+            this.tp_Maps.Size = new System.Drawing.Size(767, 488);
+            this.tp_Maps.TabIndex = 9;
+            this.tp_Maps.Text = "Maps";
             // 
             // gbMap_Props
             // 
@@ -1830,9 +1830,9 @@ namespace MCGalaxy.Gui
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(775, 523);
-            this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.btnProperties);
-            this.Controls.Add(this.Restart);
+            this.Controls.Add(this.main_btnClose);
+            this.Controls.Add(this.main_btnProps);
+            this.Controls.Add(this.main_btnRestart);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1844,27 +1844,27 @@ namespace MCGalaxy.Gui
             this.mapsStrip.ResumeLayout(false);
             this.playerStrip.ResumeLayout(false);
             this.iconContext.ResumeLayout(false);
-            this.tabPage5.ResumeLayout(false);
-            this.tabsLogs.ResumeLayout(false);
-            this.tabLog_Err.ResumeLayout(false);
-            this.tabLog_Err.PerformLayout();
-            this.tabLog_Gen.ResumeLayout(false);
-            this.tabLog_Gen.PerformLayout();
+            this.logs_tp.ResumeLayout(false);
+            this.logs_tab.ResumeLayout(false);
+            this.logs_tabErr.ResumeLayout(false);
+            this.logs_tabErr.PerformLayout();
+            this.logs_tabGen.ResumeLayout(false);
+            this.logs_tabGen.PerformLayout();
             this.tabLog_Sys.ResumeLayout(false);
             this.tabLog_Sys.PerformLayout();
             this.tabLog_Chg.ResumeLayout(false);
             this.tabLog_Chg.PerformLayout();
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvMaps)).EndInit();
+            this.tp_Main.ResumeLayout(false);
+            this.tp_Main.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.main_Maps)).EndInit();
             this.txtLogMenuStrip.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvPlayers)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.main_Players)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage7.ResumeLayout(false);
-            this.tabPage7.PerformLayout();
+            this.tp_Players.ResumeLayout(false);
+            this.tp_Players.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
+            this.tp_Maps.ResumeLayout(false);
             this.gbMap_Props.ResumeLayout(false);
             this.gbMap_Lded.ResumeLayout(false);
             this.gbMap_Unld.ResumeLayout(false);
@@ -1893,16 +1893,16 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox gbMap_Lded;
         private System.Windows.Forms.PropertyGrid pgMaps;
         private System.Windows.Forms.GroupBox gbMap_Props;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tp_Main;
         private System.Windows.Forms.TabPage tabLog_Chg;
         private System.Windows.Forms.TabPage tabLog_Sys;
-        private System.Windows.Forms.TabPage tabLog_Err;
-        private System.Windows.Forms.TabPage tabLog_Gen;
-        private System.Windows.Forms.TabControl tabsLogs;
+        private System.Windows.Forms.TabPage logs_tabErr;
+        private System.Windows.Forms.TabPage logs_tabGen;
+        private System.Windows.Forms.TabControl logs_tab;
 
         #endregion
 
-        private Button btnClose;
+        private Button main_btnClose;
         private ContextMenuStrip iconContext;
         private ToolStripMenuItem openConsole;
         private ToolStripMenuItem shutdownServer;
@@ -1921,24 +1921,24 @@ namespace MCGalaxy.Gui
         private ToolStripMenuItem killerBlocksToolStripMenuItem;
         private ToolStripMenuItem rPChatToolStripMenuItem;
         private ToolStripMenuItem clonesToolStripMenuItem;
-        private Button Restart;
+        private Button main_btnRestart;
         private ToolStripMenuItem restartServerToolStripMenuItem;
-        private TabPage tabPage5;
-        private Label label3;
-        private TextBox txtErrors;
-        private TextBox txtChangelog;
-        private TextBox txtSystem;
-        private TabPage tabPage1;
-        private DataGridView dgvMaps;
-        private TextBox txtInput;
-        private TextBox txtUrl;
-        private DataGridView dgvPlayers;
+        private TabPage logs_tp;
+        private Label logs_lblGeneral;
+        private TextBox logs_txtError;
+        private TextBox logs_txtChangelog;
+        private TextBox logs_txtSystem;
+        private TabPage tp_Maps;
+        private DataGridView main_Maps;
+        private TextBox main_txtInput;
+        private TextBox main_txtUrl;
+        private DataGridView main_Players;
         private TabControl tabControl1;
         private ToolStripMenuItem promoteToolStripMenuItem;
         private ToolStripMenuItem demoteToolStripMenuItem;
-        private TabPage tabPage7;
-        internal RichTextBox LogsTxtBox;
-        private DateTimePicker dateTimePicker1;
+        private TabPage tp_Players;
+        internal RichTextBox logs_txtGeneral;
+        private DateTimePicker logs_dateGeneral;
         private Panel panel4;
         private TextBox RankTxt;
         private Label label24;
@@ -1994,9 +1994,9 @@ namespace MCGalaxy.Gui
         private Button SendRulesTxt;
         private AutoScrollTextBox PlayersTextBox;
         private ListBox PlyersListBox;
-        private Button button_saveall;
-        private Button Unloadempty_button;
-        private Button killphysics_button;
+        private Button main_btnSaveAll;
+        private Button main_btnUnloadEmpty;
+        private Button main_btnKillPhysics;
         private ToolStripMenuItem unloadToolStripMenuItem1;
         private ToolStripMenuItem loadOngotoToolStripMenuItem;
         private ToolStripMenuItem autpPhysicsToolStripMenuItem;
@@ -2022,7 +2022,7 @@ namespace MCGalaxy.Gui
         private ToolStripMenuItem loadingToolStripMenuItem;
         private ToolStripMenuItem miscToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
-        private Components.ColoredTextBox txtLog;
+        private Components.ColoredTextBox main_txtLog;
         private ContextMenuStrip txtLogMenuStrip;
         private ToolStripMenuItem nightModeToolStripMenuItem;
         private ToolStripMenuItem colorsToolStripMenuItem;
@@ -2033,7 +2033,7 @@ namespace MCGalaxy.Gui
         private ToolStripMenuItem clearToolStripMenuItem;
         private ToolStripMenuItem dateStampToolStripMenuItem;
         private ToolStripMenuItem autoScrollToolStripMenuItem;
-        private Button btnProperties;
+        private Button main_btnProps;
         private System.Windows.Forms.ToolTip toolTip;
     }
 }
