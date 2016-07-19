@@ -37,7 +37,9 @@ namespace MCGalaxy.SQL {
         public static BulkTransaction CreateNative() {
             try {
                 if (Server.useMySQL) return new MySQLBulkTransaction(MySQL.connString);
-                else return new Native.NativeBulkTransaction();
+                else return new SQLiteBulkTransaction(SQLite.connString);
+                // TODO: Use NativeTransaction once I can figure out how to synchronise 
+                // System.Data.Sqlite and Native sqlite connection/command disposing.
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 return null;

@@ -1,3 +1,21 @@
+v 1.8.7.5
+Fix issue with database handles being left open on sqlite backend. This fixes the main memory leak in MCGalaxy.
+Fix issue with some sqlite connections rarely not being closed, which caused all other database calls to fail (preventing people from joining).
+It is highly recommended you update for the above two fixes.
+Added: /os map perbuild
+Added: /map [level] realmowner [player], which allows [player] to use /os on that map.
+Fixed: /deletelvl and /renamelvl not deleting/moving blocks.
+Fixed: Rare case where level blockdb is not auto-saved.
+Fixed: Taskbar icon not disappearing when server is closed.
+Fixed: Getting 'cannot build that far away' when clicking on edge of reach.
+Fixed: Kicker/kickee being incorrectly swapped in IRC kick event handler.
+Improved: LocationChecker sleeps a bit longer when 0 players online, to reduce CPU usage.
+Improved: 2 Scheduler threads (1 for simple tasks, 1 for long running ones), reducing threads created.
+Improved: /binfo now uses relative times, using physics blocks no longer adds an entry to BlockDB.
+Improved: /map [level] output is cleaner.
+Improved: Now rank(s) required is shown when you cannot place a block.
+Improved: Main tab of gui cleaned up to be more visually concise.
+
 v 1.8.7.4
 Added: /server backup table [name], for only backing up a particular table in the database
 Added: /server backup lite, which backs up everything except undo and blockdb files

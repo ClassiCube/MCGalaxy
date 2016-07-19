@@ -69,7 +69,7 @@ namespace MCGalaxy.Gui {
             main_Players.DataSource = pc;
             main_Players.Font = new Font("Calibri", 8.25f);
 
-            main_Maps.DataSource = lc;
+            main_Maps.DataSource = new LevelCollection(); // Otherwise "-1 does not have a value" exception when clicking a row
             main_Maps.Font = new Font("Calibri", 8.25f);
 
             UpdateListTimer.Elapsed += delegate {
