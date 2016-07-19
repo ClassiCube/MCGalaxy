@@ -38,12 +38,6 @@ namespace MCGalaxy {
                 new MethodDescriptor<Player>("Name", p => p.name, typeof(string)),
                 new MethodDescriptor<Player>("Map", p => p.level.name, typeof(string)),
                 new MethodDescriptor<Player>("Rank", p => p.group.name, typeof(string)),
-                new MethodDescriptor<Player>(
-                    "Status", p => {
-                        if (p.hidden) return "hidden";
-                        if (p.IsAfk) return "afk";
-                        return "active";
-                    }, typeof(string)),
             };
         }
     }

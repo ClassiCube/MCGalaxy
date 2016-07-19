@@ -67,6 +67,7 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             model = model.ToLower();
+            model = model.Replace(':', '|'); // since many assume : is for scale instead of |.
             if (p != null && who != null && who.Rank > p.Rank) {
                 MessageTooHighRank(p, "change the model of", true); return;
             }
