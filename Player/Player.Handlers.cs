@@ -1212,7 +1212,7 @@ return;
             //DO NOT REMOVE THE TWO COMMANDS BELOW, /PONY AND /RAINBOWDASHLIKESCOOLTHINGS. -EricKilla
             if (cmd == "pony") {
                 if (ponycount < 2) {
-                    GlobalMessage(color + DisplayName + " %Sjust so happens to be a proud brony! Everyone give " + color + cmd + " %Sa brohoof!");
+                    GlobalMessage(color + DisplayName + " %Sjust so happens to be a proud brony! Everyone give " + color + DisplayName + " %Sa brohoof!");
                     ponycount++;
                 } else {
                     SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
