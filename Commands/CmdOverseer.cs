@@ -341,7 +341,7 @@ namespace MCGalaxy.Commands
         }
         
         static bool OwnsMap(Player p, Level lvl) {
-            return lvl.RealmOwner.CaselessEq(p.name) || p.level.name.CaselessEq(p.name);
+            return lvl.RealmOwner.CaselessEq(p.name) || p.level.name.CaselessStarts(p.name);
         }
         
         public override void Help(Player p) {
