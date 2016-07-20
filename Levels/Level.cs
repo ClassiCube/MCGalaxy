@@ -94,6 +94,7 @@ namespace MCGalaxy
         public bool cancelunload;
         public bool changed;
         public bool physicschanged { get { return ListCheck.Count > 0; } }
+        internal bool saveLevel = true;
         
         public bool ctfmode;
         public int currentUndo;
@@ -288,7 +289,6 @@ namespace MCGalaxy
         }
         
         void Init(string n, ushort x, ushort y, ushort z) {
-            //onLevelSave += null;
             Width = x;
             Height = y;
             Length = z;
@@ -321,10 +321,7 @@ namespace MCGalaxy
             listUpdateExists = new SparseBitSet(Width, Height, Length);
         }
 
-        public List<Player> players
-        {
-            get { return getPlayers(); }
-        }
+        public List<Player> players { get { return getPlayers(); } }
 
         #region IDisposable Members
 
@@ -351,6 +348,7 @@ namespace MCGalaxy
         /// <summary> Whether block changes made on this level should be 
         /// saved to the BlockDB and .lvl files. </summary>
         public bool ShouldSaveChanges() {
+            if (!saveLevel) return false;
         	if (Server.zombie.Running && !ZombieGame.SaveLevelBlockchanges &&
         	    (name.CaselessEq(Server.zombie.CurLevelName)
         	     || name.CaselessEq(Server.zombie.LastLevelName))) return false;
@@ -387,8 +385,7 @@ namespace MCGalaxy
             return true;
         }
         
-        public bool Unload(bool silent = false, bool save = true)
-        {
+        public bool Unload(bool silent = false, bool save = true) {
             if (Server.mainLevel == this || IsMuseum) return false;
             if (Server.lava.active && Server.lava.map == this) return false;
             if (LevelUnload != null)
@@ -403,10 +400,8 @@ namespace MCGalaxy
             if (save && changed && ShouldSaveChanges()) Save(false, true);
             if (save && ShouldSaveChanges()) saveChanges();
             
-            if (TntWarsGame.Find(this) != null)
-            {
-                foreach (TntWarsGame.player pl in TntWarsGame.Find(this).Players)
-                {
+            if (TntWarsGame.Find(this) != null) {
+                foreach (TntWarsGame.player pl in TntWarsGame.Find(this).Players) {
                     pl.p.CurrentTntGameNumber = -1;
                     Player.Message(pl.p, "TNT Wars: The TNT Wars game you are currently playing has been deleted!");
                     pl.p.PlayingTntWars = false;
@@ -574,59 +569,57 @@ namespace MCGalaxy
             LevelDB.CreateTables(name);
 
             string path = LevelInfo.LevelPath(name);
-            if (File.Exists(path))
-            {
-                try
-                {
-                    Level level = LvlFile.Load(name, path);
-                    level.setPhysics(phys);
-                    level.backedup = true;
-                    LevelDB.LoadZones(level, name);
-
-                    level.jailx = (ushort)(level.spawnx * 32);
-                    level.jaily = (ushort)(level.spawny * 32);
-                    level.jailz = (ushort)(level.spawnz * 32);
-                    level.jailrotx = level.rotx;
-                    level.jailroty = level.roty;
-                    level.StartPhysics();
-
-                    try {
-                    	LevelDB.LoadMetadata(level, name);
-                    } catch (Exception e) {
-                        Server.ErrorLog(e);
-                    }
-
-                    try {
-                        string propsPath = LevelInfo.FindPropertiesFile(level.name);
-                        if (propsPath != null)
-                            LvlProperties.Load(level, propsPath);
-                        else
-                            Server.s.Log(".properties file for level " + level.name + " was not found.");
-                        LvlProperties.LoadEnv(level, level.name);
-                    } catch (Exception e) {
-                        Server.ErrorLog(e);
-                    }
-                    
-                    BlockDefinition[] defs = BlockDefinition.Load(false, level);
-                    for (int i = 0; i < defs.Length; i++) {
-                        if (defs[i] == null) continue;
-                        level.CustomBlockDefs[i] = defs[i];
-                    }
-                    
-                    Bots.BotsFile.LoadBots(level);
-
-                    Server.s.Log(string.Format("Level \"{0}\" loaded.", level.name));
-                    if (LevelLoaded != null)
-                        LevelLoaded(level);
-                    OnLevelLoadedEvent.Call(level);
-                    return level;
-                } catch (Exception ex) {
-                    Server.ErrorLog(ex);
-                    return null;
-                }
+            if (!File.Exists(path)) {
+                Server.s.Log("Attempted to load " + name + ", but the level file does not exist.");
+                return null;
             }
-            Server.s.Log("ERROR loading level.");
-            return null;
+            
+            try {
+                Level level = LvlFile.Load(name, path);
+                level.setPhysics(phys);
+                level.backedup = true;
+                LevelDB.LoadZones(level, name);
+
+                level.jailx = (ushort)(level.spawnx * 32);
+                level.jaily = (ushort)(level.spawny * 32);
+                level.jailz = (ushort)(level.spawnz * 32);
+                level.jailrotx = level.rotx;
+                level.jailroty = level.roty;
+                level.StartPhysics();
+
+                try {
+                    LevelDB.LoadMetadata(level, name);
+                } catch (Exception e) {
+                    Server.ErrorLog(e);
+                }
+
+                try {
+                    string propsPath = LevelInfo.FindPropertiesFile(level.name);
+                    if (propsPath != null)
+                        LvlProperties.Load(level, propsPath);
+                    else
+                        Server.s.Log(".properties file for level " + level.name + " was not found.");
+                    LvlProperties.LoadEnv(level, level.name);
+                } catch (Exception e) {
+                    Server.ErrorLog(e);
+                }
+                
+                BlockDefinition[] defs = BlockDefinition.Load(false, level);
+                for (int i = 0; i < defs.Length; i++) {
+                    if (defs[i] == null) continue;
+                    level.CustomBlockDefs[i] = defs[i];
+                }
+                Bots.BotsFile.LoadBots(level);
+
+                Server.s.Log(string.Format("Level \"{0}\" loaded.", level.name));
+                if (LevelLoaded != null)
+                    LevelLoaded(level);
+                OnLevelLoadedEvent.Call(level);
+                return level;
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                return null;
+            }
         }
 
         public static bool CheckLoadOnGoto(string givenName) {

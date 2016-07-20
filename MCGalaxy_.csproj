@@ -385,6 +385,7 @@
     <Compile Include="Commands\World\CmdPermissions.cs" />
     <Compile Include="Commands\World\CmdPhysics.cs" />
     <Compile Include="Commands\World\CmdRenameLvl.cs" />
+    <Compile Include="Commands\World\CmdResizeLvl.cs" />
     <Compile Include="Commands\World\CmdRestore.cs" />
     <Compile Include="Commands\World\CmdReload.cs" />
     <Compile Include="Commands\World\CmdSave.cs" />

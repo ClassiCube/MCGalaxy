@@ -39,15 +39,15 @@ namespace MCGalaxy.Commands.World {
             }
             
             string seed = args.Length == 6 ? args[5] : "";
-            if (!MapGen.OkayAxis(x)) { Player.Message(p, "width must divisible by 16, and >= 16"); return; }
+            if (!MapGen.OkayAxis(x)) { Player.Message(p, "width must be divisible by 16, and >= 16"); return; }
             if (!MapGen.OkayAxis(y)) { Player.Message(p, "height must be divisible by 16, and >= 16"); return; }
-            if (!MapGen.OkayAxis(z)) { Player.Message(p, "length must be divisible by 16, and >= to 16."); return; }
-
+            if (!MapGen.OkayAxis(z)) { Player.Message(p, "length must be divisible by 16, and >= 16."); return; }
+            if (!CheckMapSize(p, x, y, z)) return;
+ 
             if (!ValidName(p, name, "level")) return;
             if (LevelInfo.ExistsOffline(name)) {
-                Player.Message(p, "Level \"" + name + "\" already exists!"); return;
-            }
-            if (!CheckMapSize(p, x, y, z)) return;
+                Player.Message(p, "Level \"{0}\" already exists", name); return;
+            }           
 
             try {
                 using (Level lvl = new Level(name, x, y, z, args[4], seed)) {

@@ -16,21 +16,20 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
-using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdRenameLvl : Command {
         public override string name { get { return "renamelvl"; } }
         public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdRenameLvl() { }
 
         public override void Use(Player p, string message) {
-            if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }
             string[] args = message.Split(' ');
+            if (args.Length != 2) { Help(p); return; }
+            
             Level lvl = LevelInfo.FindMatches(p, args[0]);
             if (lvl == null) return;
             string newName = args[1];
