@@ -93,8 +93,9 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "  %HType %T/help newlvl themes %Hto see a list of themes.");
             Player.Message(p, "%HSeed is optional, and controls how the level is generated.");
             Player.Message(p, "  %HFlat theme: Seed specifies the grass height.");
-            Player.Message(p, "  %HOther themes: Seed affects how terrain is generated.");
-            Player.Message(p, "%HIf the seed is the same, the generated level will be the same.");
+            Player.Message(p, "  %HHeightmap theme: Seed specifies url of heightmap image.");            
+            Player.Message(p, "  %HOther themes: Seed affects how terrain is generated. " +
+                           "If seed is the same, the generated level will be the same.");
         }
         
         public override void Help(Player p, string message) {

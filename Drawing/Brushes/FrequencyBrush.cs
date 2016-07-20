@@ -43,10 +43,10 @@ namespace MCGalaxy.Drawing.Brushes {
                 byte extType = 0;
                 int sepIndex = parts[i].IndexOf('/');
                 string block = sepIndex >= 0 ? parts[i].Substring(0, sepIndex) : parts[i];
-                byte type = DrawCmd.GetBlock(p, block, out extType);
-                if (type == Block.Zero) return null;
+                int type = DrawCmd.GetBlock(p, block, out extType);
+                if (type == -1) return null;
                 
-                blocks[j].Type = type; blocks[j].ExtType = extType;
+                blocks[j].Type = (byte)type; blocks[j].ExtType = extType;
                 if (sepIndex < 0) { j++; continue; }
                 
                 int chance;

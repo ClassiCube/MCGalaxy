@@ -44,9 +44,10 @@ namespace MCGalaxy.Commands.Building {
 			string[] parts = ((string)state).SplitSpaces(3);
 			if (parts.Length < 2) { Help(p); return false; }
 			
-			byte extTile = 0;
-			byte tile = DrawCmd.GetBlock(p, parts[0], out extTile);
-			if (tile == Block.Zero) return false;
+			byte extBlock = 0;
+			int block = DrawCmd.GetBlock(p, parts[0], out extBlock);
+			if (block == -1) return false;
+			
 			string brushName = CmdBrush.FindBrush(parts[1]);
 			if (brushName == null) {
 				Player.Message(p, "No brush found with name \"" + parts[1] + "\".");
@@ -60,8 +61,8 @@ namespace MCGalaxy.Commands.Building {
 			if (brush == null) return false;
 			
 			DrawOp drawOp = null;
-			if (ReplaceNot) drawOp = new ReplaceNotDrawOp(tile, extTile);
-			else drawOp = new ReplaceDrawOp(tile, extTile);			
+			if (ReplaceNot) drawOp = new ReplaceNotDrawOp((byte)block, extBlock);
+			else drawOp = new ReplaceDrawOp((byte)block, extBlock);
 			return DrawOp.DoDrawOp(drawOp, brush, p, marks);
 		}
 		

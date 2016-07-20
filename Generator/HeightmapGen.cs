@@ -84,7 +84,7 @@ namespace MCGalaxy.Generator {
                     for (int y = 0; y < height - 1; y++)
                         lvl.blocks[index + oneY * y] = Block.dirt;
                     if (height > 0) 
-                        lvl.blocks[index + oneY * (height -1)] = Block.grass;
+                        lvl.blocks[index + oneY * (height - 1)] = Block.grass;
                     index++;
                 }
             }

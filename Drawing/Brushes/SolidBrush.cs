@@ -42,10 +42,10 @@ namespace MCGalaxy.Drawing.Brushes {
         public static Brush Process(BrushArgs args) {
             if (args.Message == "")
                 return new SolidBrush(args.Type, args.ExtType);
-            byte extType;
-            byte type = DrawCmd.GetBlock(args.Player, args.Message, out extType);
-            if (type == Block.Zero) return null;
-            return new SolidBrush(type, extType);
+            byte extBlock;
+            int block = DrawCmd.GetBlock(args.Player, args.Message, out extBlock);
+            if (block == -1) return null;
+            return new SolidBrush((byte)block, extBlock);
         }
         
         public override byte NextBlock(DrawOp op) { return type; }

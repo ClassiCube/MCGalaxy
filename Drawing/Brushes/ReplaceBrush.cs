@@ -41,16 +41,24 @@ namespace MCGalaxy.Drawing.Brushes {
         };
         
         public static Brush Process(BrushArgs args) {
-            string[] parts = args.Message.Split(' ');
+        	return ProcessReplace(args, false);
+        }
+        
+        internal static Brush ProcessReplace(BrushArgs args, bool not) {
+        	string[] parts = args.Message.Split(' ');
             if (parts.Length < 2) {
                 args.Player.SendMessage("You need to provide a target block, and at least one block to replace."); return null;
             }
-
             ExtBlock[] toAffect = GetBlocks(args.Player, 0, parts.Length - 1, parts);
+            if (toAffect == null) return null;
+            
             ExtBlock target;
-            target.Type = DrawCmd.GetBlock(args.Player, parts[parts.Length - 1], out target.ExtType);
-            if (target.Type == Block.Zero) return null;
-            return target.Type == Block.Zero ? null : new ReplaceBrush(toAffect, target);
+            int block = DrawCmd.GetBlock(args.Player, parts[parts.Length - 1], out target.ExtType);
+            if (block == -1) return null;
+            
+            target.Type = (byte)block;
+            if (not) return new ReplaceNotBrush(toAffect, target);
+            return new ReplaceBrush(toAffect, target);
         }
         
         internal static ExtBlock[] GetBlocks(Player p, int start, int max, string[] parts) {
@@ -58,10 +66,10 @@ namespace MCGalaxy.Drawing.Brushes {
             for (int i = 0; i < blocks.Length; i++)
                 blocks[i].Type = Block.Zero;
             for (int i = 0; start < max; start++, i++ ) {
-                byte extType = 0;
-                byte type = DrawCmd.GetBlock(p, parts[start], out extType);
-                if (type == Block.Zero) continue;
-                blocks[i].Type = type; blocks[i].ExtType = extType;
+                byte extBlock = 0;
+                int block = DrawCmd.GetBlock(p, parts[start], out extBlock);
+                if (block == -1) return null;
+                blocks[i].Type = (byte)block; blocks[i].ExtType = extBlock;
             }
             return blocks;
         }
@@ -103,16 +111,7 @@ namespace MCGalaxy.Drawing.Brushes {
         };
         
         public static Brush Process(BrushArgs args) {
-            string[] parts = args.Message.Split(' ');
-            if (parts.Length < 2) {
-                args.Player.SendMessage("You need to provide a target block, and at least one block to replace."); return null;
-            }
-
-            ExtBlock[] toAffect = ReplaceBrush.GetBlocks(args.Player, 0, parts.Length - 1, parts);
-            ExtBlock target;
-            target.Type = DrawCmd.GetBlock(args.Player, parts[parts.Length - 1], out target.ExtType);
-            if (target.Type == Block.Zero) return null;
-            return target.Type == Block.Zero ? null : new ReplaceNotBrush(toAffect, target);
+            return ReplaceBrush.ProcessReplace(args, true);
         }
         
         public override byte NextBlock(DrawOp op) {

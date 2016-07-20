@@ -59,7 +59,7 @@ namespace MCGalaxy.Drawing.Ops {
     public class OutlineDrawOp : CuboidDrawOp {
         
         public override string Name { get { return "Outline"; } }
-        public byte Type, ExtType, NewType, NewExtType;
+        public byte Block, ExtBlock, NewBlock, NewExtBlock;
         
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
@@ -76,14 +76,14 @@ namespace MCGalaxy.Drawing.Ops {
                 outline |= Check(lvl, x, (ushort)(y + 1), z);
 
                 if (outline && !Check(lvl, x, y, z))
-                    yield return Place(x, y, z, NewType, NewExtType);
+                    yield return Place(x, y, z, NewBlock, NewExtBlock);
             }
         }
         
         bool Check(Level lvl, ushort x, ushort y, ushort z) {
             byte tile = lvl.GetTile(x, y, z);
-            if (tile != Type) return false;
-            return tile != Block.custom_block || lvl.GetExtTile(x, y, z) == ExtType;
+            if (tile != Block) return false;
+            return tile != MCGalaxy.Block.custom_block || lvl.GetExtTile(x, y, z) == ExtBlock;
         }
     }
     

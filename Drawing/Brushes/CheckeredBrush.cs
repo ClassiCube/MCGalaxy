@@ -45,16 +45,17 @@ namespace MCGalaxy.Drawing.Brushes {
             if (args.Message == "")
                 return new CheckeredBrush(args.Type, args.ExtType, 0, 0);
             string[] parts = args.Message.Split(' ');
-            byte extType1;
-            byte type1 = DrawCmd.GetBlock(args.Player, parts[0], out extType1);
-            if (type1 == Block.Zero) return null;
-            if (parts.Length == 1)
-                return new CheckeredBrush(type1, extType1, Block.Zero, 0);
             
-            byte extType2;
-            byte type2 = DrawCmd.GetBlock(args.Player, parts[1], out extType2);
-            if (type2 == Block.Zero) return null;
-            return new CheckeredBrush(type1, extType1, type2, extType2);
+            byte extBlock1;
+            int block1 = DrawCmd.GetBlock(args.Player, parts[0], out extBlock1);
+            if (block1 == -1) return null;
+            if (parts.Length == 1)
+            	return new CheckeredBrush((byte)block1, extBlock1, Block.Zero, 0);
+            
+            byte extBlock2;
+            int block2 = DrawCmd.GetBlock(args.Player, parts[1], out extBlock2);
+            if (block2 == -1) return null;
+            return new CheckeredBrush((byte)block1, extBlock1, (byte)block2, extBlock2);
         }
         
         public override byte NextBlock(DrawOp op) {

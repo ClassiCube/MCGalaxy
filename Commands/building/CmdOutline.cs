@@ -32,10 +32,13 @@ namespace MCGalaxy.Commands.Building {
             if (args.Length != 2) { Help(p); return; }
             DrawArgs dArgs = default(DrawArgs);           
             
-            dArgs.type = DrawCmd.GetBlock(p, args[0], out dArgs.extType);
-            if (dArgs.type == Block.Zero) return;
-            dArgs.newType = DrawCmd.GetBlock(p, args[1], out dArgs.newExtType);
-            if (dArgs.newType == Block.Zero) return;
+            int block = DrawCmd.GetBlock(p, args[0], out dArgs.extBlock);
+            if (block == -1) return;
+            dArgs.block = (byte)block;
+            
+            int newBlock = DrawCmd.GetBlock(p, args[1], out dArgs.newExtBlock);
+            if (newBlock == -1) return;
+            dArgs.newBlock = (byte)block;
 
             Player.Message(p, "Place two blocks to determine the edges.");
             p.MakeSelection(2, dArgs, DoOutline);
@@ -44,11 +47,11 @@ namespace MCGalaxy.Commands.Building {
         bool DoOutline(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             DrawArgs dArgs = (DrawArgs)state;
             OutlineDrawOp op = new OutlineDrawOp();
-            op.Type = dArgs.type; op.ExtType = dArgs.extType;
-            op.NewType = dArgs.newType; op.NewExtType = dArgs.newExtType;
+            op.Block = dArgs.block; op.ExtBlock = dArgs.extBlock;
+            op.NewBlock = dArgs.newBlock; op.NewExtBlock = dArgs.newExtBlock;
             return DrawOp.DoDrawOp(op, null, p, marks);
         }
-        struct DrawArgs { public byte type, extType, newType, newExtType; }
+        struct DrawArgs { public byte block, extBlock, newBlock, newExtBlock; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/outline [type] [type2]");

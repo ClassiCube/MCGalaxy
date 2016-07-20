@@ -50,23 +50,25 @@ namespace MCGalaxy.Commands.Building {
         	return message == "" ? DrawMode.normal : ParseMode(parts[parts.Length - 1]);
         }
         
-        internal static byte GetBlock(Player p, string msg, out byte extType, bool checkPlacePerm = true) {
+        internal static int GetBlock(Player p, string msg, out byte extType, bool checkPlacePerm = true) {
             byte type = Block.Byte(msg);
             extType = 0;
+            if (msg.CaselessEq("skip") || msg.CaselessEq("none")) return Block.Zero;
+            
             if (type == Block.Zero) {
             	// try treat as a block definition id.
             	type = BlockDefinition.GetBlock(msg, p);
             	if (type == Block.Zero) {
-            		Player.Message(p, "There is no block \"" + msg + "\".");
-            		return Block.Zero;
+            		Player.Message(p, "There is no block \"{0}\".", msg);
+            		return -1;
             	}
             	extType = type;
             	return Block.custom_block;
             }
             
             if (checkPlacePerm && !Block.canPlace(p, type)) {
-                Player.Message(p, "Cannot place the block \"" + msg + "\".");
-                return Block.Zero;
+                Player.Message(p, "Cannot place the block \"{0}\".", msg);
+                return -1;
             }
             return type;
         }

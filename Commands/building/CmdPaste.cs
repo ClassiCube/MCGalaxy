@@ -20,15 +20,15 @@ using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands.Building {    
-    public sealed class CmdPaste : Command {        
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdPaste : Command {
         public override string name { get { return "paste"; } }
         public override string shortcut { get { return "v"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
-        	get { return new[] { new CommandAlias("pastenot", "not"), new CommandAlias("pn", "not") }; }
+            get { return new[] { new CommandAlias("pastenot", "not"), new CommandAlias("pn", "not") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -38,25 +38,29 @@ namespace MCGalaxy.Commands.Building {
         }
 
         bool DoPaste(Player p, Vec3S32[] m, object state, byte type, byte extType) {
-        	string message = (string)state;
-        	m[0] += p.copyoffset;
+            string message = (string)state;
+            m[0] += p.copyoffset;
             CopyState cState = p.CopyBuffer;
             if (cState.X != cState.OriginX) m[0].X -= (cState.Width - 1);
             if (cState.Y != cState.OriginY) m[0].Y -= (cState.Height - 1);
             if (cState.Z != cState.OriginZ) m[0].Z -= (cState.Length - 1);
 
-            DrawOp op;
             if (message == "") {
-                op = new SimplePasteDrawOp();
-                ((SimplePasteDrawOp)op).CopyState = p.CopyBuffer;
+                SimplePasteDrawOp simpleOp = new SimplePasteDrawOp();
+                simpleOp.CopyState = p.CopyBuffer;
+                return DrawOp.DoDrawOp(simpleOp, null, p, m);
+            }
+            
+            PasteDrawOp op = new PasteDrawOp();
+            op.CopyState = p.CopyBuffer;
+            string[] args = message.Split(' ');
+            
+            if (args[0].CaselessEq("not")) {
+                op.Exclude = ReplaceBrush.GetBlocks(p, 1, args.Length, args);
+                if (op.Exclude == null) return false;
             } else {
-                op = new PasteDrawOp();
-                ((PasteDrawOp)op).CopyState = p.CopyBuffer;
-                string[] args = message.Split(' ');
-                if (args[0].CaselessEq("not"))
-                    ((PasteDrawOp)op).Exclude = ReplaceBrush.GetBlocks(p, 1, args.Length, args);
-                else
-                    ((PasteDrawOp)op).Include = ReplaceBrush.GetBlocks(p, 0, args.Length, args);
+                op.Include = ReplaceBrush.GetBlocks(p, 0, args.Length, args);
+                if (op.Include == null) return false;
             }
             return DrawOp.DoDrawOp(op, null, p, m);
         }

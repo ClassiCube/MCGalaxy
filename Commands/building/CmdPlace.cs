@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Building {
         public CmdPlace() { }
 
         public override void Use(Player p, string message) {
-            byte type = Block.Zero, extType = 0;
+            int type = -1;
+            byte extType = 0;
             ushort x = p.pos[0], y = (ushort)(p.pos[1] - 32), z = p.pos[2];
 
             try {
@@ -53,12 +54,12 @@ namespace MCGalaxy.Commands.Building {
             	Player.Message(p, "Invalid parameters"); return; 
             }
 
-            if (type == Block.Zero) return;
-            if (!Block.canPlace(p, type)) { Player.Message(p, "Cannot place that block type."); return; }
+            if (type == -1 || type == Block.Zero) return;
+            if (!Block.canPlace(p, (byte)type)) { Player.Message(p, "Cannot place that block type."); return; }
             Vec3U16 P = Vec3U16.ClampPos(x, y, z, p.level);
             
             P.X /= 32; P.Y /= 32; P.Z /= 32;
-            p.level.UpdateBlock(p, P.X, P.Y, P.Z, type, extType);
+            p.level.UpdateBlock(p, P.X, P.Y, P.Z, (byte)type, extType);
             Player.Message(p, "A block was placed at (" + P.X + ", " + P.Y + ", " + P.Z + ").");
         }
         
