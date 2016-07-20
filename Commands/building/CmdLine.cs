@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Building {
 
         protected override bool DoDraw(Player p, Vec3S32[] m, object state, byte type, byte extType) {
             DrawArgs cpos = (DrawArgs)state;
-            cpos.type = type; cpos.extType = extType;
+            cpos.block = type; cpos.extBlock = extType;
 
             if (cpos.mode == DrawMode.straight) { 
             	int dx = Math.Abs(m[0].X - m[1].X), dy = Math.Abs(m[0].Y - m[1].Y), dz = Math.Abs(m[0].Z - m[1].Z);

@@ -42,7 +42,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
         	Vec3U16 p1 = Clamp(marks[0]), p2 = Clamp(marks[1]);
-            List<FillPos> buffer = new List<FillPos>();
+            List<Vec3U16> buffer = new List<Vec3U16>();
             DrawLine(p1.X, p1.Y, p1.Z, MaxLength, p2.X, p2.Y, p2.Z, buffer);
             if (WallsMode) {
                 ushort yy1 = p1.Y, yy2 = p2.Y;
@@ -50,7 +50,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
             
             for (int i = 0; i < buffer.Count; i++) {
-                FillPos pos = buffer[i];
+                Vec3U16 pos = buffer[i];
                 if (WallsMode) {
                     for (ushort yy = p1.Y; yy <= p2.Y; yy++)
                         yield return Place(pos.X, yy, pos.Z, brush);
@@ -61,7 +61,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         internal static void DrawLine(ushort x1, ushort y1, ushort z1, int maxLen,
-                                      ushort x2, ushort y2, ushort z2, List<FillPos> buffer) {
+                                      ushort x2, ushort y2, ushort z2, List<Vec3U16> buffer) {
             Line lx, ly, lz;
             int[] pixel = { x1, y1, z1 };
             int dx = x2 - x1, dy = y2 - y1, dz = z2 - z1;
@@ -78,7 +78,7 @@ namespace MCGalaxy.Drawing.Ops {
             else
                 DoLine(ly, lx, lz, zLen, pixel, maxLen, buffer);
             
-            FillPos pos;
+            Vec3U16 pos;
             pos.X = (ushort)pixel[0]; pos.Y = (ushort)pixel[1]; pos.Z = (ushort)pixel[2];
             buffer.Add(pos);
         }
@@ -86,9 +86,9 @@ namespace MCGalaxy.Drawing.Ops {
         struct Line { public int dx2, inc, index; }
         
         static void DoLine(Line l1, Line l2, Line l3, int len, 
-                           int[] pixel, int maxLen, List<FillPos> buffer) {
+                           int[] pixel, int maxLen, List<Vec3U16> buffer) {
             int err_1 = l1.dx2 - len, err_2 = l2.dx2 - len;
-            FillPos pos;
+            Vec3U16 pos;
             for (int i = 0; i < len && i < (maxLen - 1); i++) {
                 pos.X = (ushort)pixel[0]; pos.Y = (ushort)pixel[1]; pos.Z = (ushort)pixel[2];
                 buffer.Add(pos);

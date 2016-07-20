@@ -46,7 +46,7 @@ namespace MCGalaxy.Drawing.Brushes {
                 int type = DrawCmd.GetBlock(p, block, out extType);
                 if (type == -1) return null;
                 
-                blocks[j].Type = (byte)type; blocks[j].ExtType = extType;
+                blocks[j].Block = (byte)type; blocks[j].Ext = extType;
                 if (sepIndex < 0) { j++; continue; }
                 
                 int chance;

@@ -69,8 +69,8 @@ namespace MCGalaxy.Drawing.Ops {
         static void AppendDrawOp(Player p, DrawOp op, Brush brush, Vec3S32[] marks, long affected) {
             if (p == null) {
                 foreach (var block in op.Perform(marks, p, op.Level, brush))
-                    op.Level.Blockchange(block.X, block.Y, block.Z, block.Type,
-                                         false, default(PhysicsArgs), block.ExtType);
+                    op.Level.Blockchange(block.X, block.Y, block.Z, block.Block,
+                                         false, default(PhysicsArgs), block.ExtBlock);
                 return;
             }
             
@@ -132,38 +132,38 @@ namespace MCGalaxy.Drawing.Ops {
             
             if (item.Affected > Server.DrawReloadLimit) {
                 foreach (var b in item.Op.Perform(item.Marks, p, lvl, item.Brush)) {
-            		if (b.Type == Block.Zero) continue;
+            		if (b.Block == Block.Zero) continue;
                     byte old = lvl.GetTile(b.X, b.Y, b.Z);
-                    if (old == Block.Zero || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Type))
+                    if (old == Block.Zero || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block))
                         continue;
                     
-                    lvl.SetTile(b.X, b.Y, b.Z, b.Type, p, b.ExtType);
+                    lvl.SetTile(b.X, b.Y, b.Z, b.Block, p, b.ExtBlock);
                     p.loginBlocks++;
                     p.overallBlocks++;
                 }
             } else if (item.Level.bufferblocks) {
                 foreach (var b in item.Op.Perform(item.Marks, p, lvl, item.Brush)) {
-            		if (b.Type == Block.Zero) continue;
-                    if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Type, b.ExtType)) continue;
+            		if (b.Block == Block.Zero) continue;
+                    if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock)) continue;
                     bP.name = p.name;
                     bP.index = lvl.PosToInt(b.X, b.Y, b.Z);
-                    bP.SetData(b.Type, b.ExtType, b.Type == 0);
+                    bP.SetData(b.Block, b.ExtBlock, b.Block == 0);
                     
                     if (lvl.UseBlockDB)
                         lvl.blockCache.Add(bP);
-                    BlockQueue.Addblock(p, bP.index, b.Type, b.ExtType);
+                    BlockQueue.Addblock(p, bP.index, b.Block, b.ExtBlock);
                 }
             } else {
                 foreach (var b in item.Op.Perform(item.Marks, p, item.Level, item.Brush)) {
-            	    if (b.Type == Block.Zero) continue;
-                    if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Type, b.ExtType)) continue;
+            	    if (b.Block == Block.Zero) continue;
+                    if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock)) continue;
                     bP.name = p.name;
                     bP.index = lvl.PosToInt(b.X, b.Y, b.Z);
                     
-                    bP.SetData(b.Type, b.ExtType, b.Type == 0);
+                    bP.SetData(b.Block, b.ExtBlock, b.Block == 0);
                     if (lvl.UseBlockDB)
                         lvl.blockCache.Add(bP);
-                    Player.GlobalBlockchange(lvl, b.X, b.Y, b.Z, b.Type, b.ExtType);
+                    Player.GlobalBlockchange(lvl, b.X, b.Y, b.Z, b.Block, b.ExtBlock);
                 }
             }
         }

@@ -59,11 +59,11 @@ namespace MCGalaxy.Drawing.Brushes {
             n = (n >> 13) ^ n;
             int raw = (n * (n * n * 60493 + 19990303) + 1376312589) & mask;
             next = (int)Math.Floor((raw / (double)mask) * blocks.Length);
-            return blocks[next].Type;
+            return blocks[next].Block;
         }
         
         public override byte NextExtBlock(DrawOp op) {
-            return blocks[next].ExtType;
+            return blocks[next].Ext;
         }
     }
 }

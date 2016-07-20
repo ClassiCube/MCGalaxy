@@ -85,13 +85,13 @@ namespace MCGalaxy.Commands.Building {
         	if (end >= 0) brushMsg = dArgs.message.Substring(0, end);
         	if (brushMsg == "") brushMsg = p.DefaultBrushArgs;
         	if (constructor == null) constructor = Brush.Brushes[p.BrushName];
-        	BrushArgs args = new BrushArgs(p, brushMsg, dArgs.type, dArgs.extType);
+        	BrushArgs args = new BrushArgs(p, brushMsg, dArgs.block, dArgs.extBlock);
         	return constructor(args);
         }
         
         protected struct DrawArgs {
             public DrawMode mode;
-            public byte type, extType;
+            public byte block, extBlock;
             public object data;
             public string message;
         }

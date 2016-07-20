@@ -85,36 +85,36 @@ namespace MCGalaxy
             return false;
         }
 
-        public static bool Placable(byte type) {
-        	return !(type == blackrock || (type >= water && type <= lavastill))
-			    && type < CpeCount;
+        public static bool Placable(byte block) {
+        	return !(block == blackrock || (block >= water && block <= lavastill))
+			    && block < CpeCount;
         }
 
-        public static bool RightClick(byte type, bool countAir = false) {
-            if (countAir && type == air) return true;
-            return type >= water && type <= lavastill;			
+        public static bool RightClick(byte block, bool countAir = false) {
+            if (countAir && block == air) return true;
+            return block >= water && block <= lavastill;			
         }
 
-        public static bool OPBlocks(byte type) { return Props[type].OPBlock; }
+        public static bool OPBlocks(byte block) { return Props[block].OPBlock; }
 
-        public static bool Death(byte type) { return Props[type].CollisionDeath; }
+        public static bool Death(byte block) { return Props[block].CollisionDeath; }
 
-        public static bool BuildIn(byte type) {
-            if (type == op_water || type == op_lava || portal(type) || mb(type)) return false;
-			type = Convert(type);
-			return type >= water && type <= lavastill;
+        public static bool BuildIn(byte block) {
+            if (block == op_water || block == op_lava || portal(block) || mb(block)) return false;
+			block = Convert(block);
+			return block >= water && block <= lavastill;
         }
 
-        public static bool Mover(byte type) { return walkthroughHandlers[type] != null; }
+        public static bool Mover(byte block) { return walkthroughHandlers[block] != null; }
 
-        public static bool FireKill(byte type) { return type != air && Props[type].LavaKills; }
+        public static bool FireKill(byte block) { return block != air && Props[block].LavaKills; }
         
-        public static bool LavaKill(byte type) { return Props[type].LavaKills; }
+        public static bool LavaKill(byte block) { return Props[block].LavaKills; }
 		
-        public static bool WaterKill(byte type) { return Props[type].WaterKills; }
+        public static bool WaterKill(byte block) { return Props[block].WaterKills; }
 
-        public static bool LightPass(byte type, byte extType, BlockDefinition[] defs) {
-            switch (Convert(type)) {
+        public static bool LightPass(byte block, byte extBlock, BlockDefinition[] defs) {
+            switch (Convert(block)) {
                 case air:
                 case glass:
                 case leaf:
@@ -126,16 +126,16 @@ namespace MCGalaxy
                 case rope:
                     return true;
                 case custom_block:
-                    BlockDefinition def = defs[extType];
+                    BlockDefinition def = defs[extBlock];
                     return def == null ? false : !def.BlocksLight;
                 default:
                     return false;
             }
         }
 
-        public static bool NeedRestart(byte type)
+        public static bool NeedRestart(byte block)
         {
-            switch (type)
+            switch (block)
             {
                 case train:
 
@@ -171,13 +171,13 @@ namespace MCGalaxy
             return false;
         }
 
-        public static bool portal(byte type) { return Props[type].IsPortal; }
+        public static bool portal(byte block) { return Props[block].IsPortal; }
         
-        public static bool mb(byte type) { return Props[type].IsMessageBlock; }
+        public static bool mb(byte block) { return Props[block].IsMessageBlock; }
 
-        public static bool Physics(byte type)   //returns false if placing block cant actualy cause any physics to happen
+        public static bool Physics(byte block)   //returns false if placing block cant actualy cause any physics to happen
         {
-            switch (type)
+            switch (block)
             {
                 case rock:
                 case stone:
@@ -280,10 +280,10 @@ namespace MCGalaxy
             }
         }
         
-        public static byte DoorAirs(byte b) { return Props[b].DoorAirId; }
+        public static byte DoorAirs(byte block) { return Props[block].DoorAirId; }
 
-        public static bool tDoor(byte type) { return Props[type].IsTDoor; }
+        public static bool tDoor(byte block) { return Props[block].IsTDoor; }
 
-        public static byte odoor(byte type) { return Props[type].ODoorId; }
+        public static byte odoor(byte block) { return Props[block].ODoorId; }
     }
 }

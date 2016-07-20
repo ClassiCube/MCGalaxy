@@ -188,11 +188,11 @@ namespace MCGalaxy {
         internal OnBlockChangeEvent(Player.BlockchangeEventHandler method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
-        public static void Call(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        public static void Call(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock) {
             events.ForEach(
                 pl => {
                     try {
-                        pl.method(p, x, y, z, type, extType);
+                        pl.method(p, x, y, z, block, extBlock);
                     } catch (Exception e) {
                         Server.s.Log("Plugin " + pl.plugin.name + " errored calling BlockChange Event."); Server.ErrorLog(e);
                     }

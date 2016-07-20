@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
             Vec3U16 pos = MakePos(p);
 
             int total = 0;
-            List<FillPos> buffer = new List<FillPos>(2);
+            List<Vec3U16> buffer = new List<Vec3U16>(2);
             while (true) {
                 Vec3U16 start = MakePos(p);
                 total++;
@@ -131,9 +131,9 @@ namespace MCGalaxy.Commands {
             return pos;
         }
         
-        void FindNext(Vec3U16 lookedAt, ref Vec3U16 pos, List<FillPos> buffer) {
+        void FindNext(Vec3U16 lookedAt, ref Vec3U16 pos, List<Vec3U16> buffer) {
             LineDrawOp.DrawLine(pos.X, pos.Y, pos.Z, 2, lookedAt.X, lookedAt.Y, lookedAt.Z, buffer);
-            FillPos end = buffer[buffer.Count - 1];
+            Vec3U16 end = buffer[buffer.Count - 1];
             pos.X = end.X; pos.Y = end.Y; pos.Z = end.Z;
             buffer.Clear();
         }

@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Building {
             if (oldType == Block.custom_block)
                 oldExtType = p.level.GetExtTile(x, y, z);
 
-            cpos.type = type; cpos.extType = extType;
+            cpos.block = type; cpos.extBlock = extType;
             if (!Block.canPlace(p, oldType) && !Block.BuildIn(oldType)) { 
             	Player.Message(p, "Cannot fill with that."); return false;
             }
@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands.Building {
             return true;
         }
 
-        void FloodFill(Player p, ushort x, ushort y, ushort z, byte oldType, byte oldExtType, DrawMode fillType,
+        void FloodFill(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock, DrawMode fillType,
                        SparseBitSet bits, List<int> buffer, List<int> origins, int depth) {
             if (bits.Get(x, y, z) || buffer.Count > p.group.maxBlocks) return;
             int index = p.level.PosToInt(x, y, z);
@@ -81,38 +81,38 @@ namespace MCGalaxy.Commands.Building {
             buffer.Add(index);
 
             if (fillType != DrawMode.verticalX) { // x
-                if (CheckTile(p, (ushort)(x + 1), y, z, oldType, oldExtType))
-                    FloodFill(p, (ushort)(x + 1), y, z, oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
-                if (CheckTile(p, (ushort)(x - 1), y, z, oldType, oldExtType))
-                    FloodFill(p, (ushort)(x - 1), y, z, oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
+                if (CheckTile(p, (ushort)(x + 1), y, z, block, extBlock))
+                    FloodFill(p, (ushort)(x + 1), y, z, block, extBlock, fillType, bits, buffer, origins, depth + 1);
+                if (CheckTile(p, (ushort)(x - 1), y, z, block, extBlock))
+                    FloodFill(p, (ushort)(x - 1), y, z, block, extBlock, fillType, bits, buffer, origins, depth + 1);
             }
 
             if (fillType != DrawMode.verticalZ) { // z
-                if (CheckTile(p, x, y, (ushort)(z + 1), oldType, oldExtType))
-                    FloodFill(p, x, y, (ushort)(z + 1), oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
-                if (CheckTile(p, x, y, (ushort)(z - 1), oldType, oldExtType))
-                    FloodFill(p, x, y, (ushort)(z - 1), oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
+                if (CheckTile(p, x, y, (ushort)(z + 1), block, extBlock))
+                    FloodFill(p, x, y, (ushort)(z + 1), block, extBlock, fillType, bits, buffer, origins, depth + 1);
+                if (CheckTile(p, x, y, (ushort)(z - 1), block, extBlock))
+                    FloodFill(p, x, y, (ushort)(z - 1), block, extBlock, fillType, bits, buffer, origins, depth + 1);
             }
 
             if (!(fillType == DrawMode.down || fillType == DrawMode.layer)) { // y up
-                if (CheckTile(p, x, (ushort)(y + 1), z, oldType, oldExtType))
-                    FloodFill(p, x, (ushort)(y + 1), z, oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
+                if (CheckTile(p, x, (ushort)(y + 1), z, block, extBlock))
+                    FloodFill(p, x, (ushort)(y + 1), z, block, extBlock, fillType, bits, buffer, origins, depth + 1);
             }
 
             if (!(fillType == DrawMode.up || fillType == DrawMode.layer)) { // y down
-                if (CheckTile(p, x, (ushort)(y - 1), z, oldType, oldExtType))
-                    FloodFill(p, x, (ushort)(y - 1), z, oldType, oldExtType, fillType, bits, buffer, origins, depth + 1);
+                if (CheckTile(p, x, (ushort)(y - 1), z, block, extBlock))
+                    FloodFill(p, x, (ushort)(y - 1), z, block, extBlock, fillType, bits, buffer, origins, depth + 1);
             }
         }
         
-        bool CheckTile(Player p, ushort x, ushort y, ushort z, byte oldTile, byte oldExtTile) {
-            byte tile = p.level.GetTile(x, y, z);
+        bool CheckTile(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock) {
+            byte curBlock = p.level.GetTile(x, y, z);
 
-            if (tile == oldTile && tile == Block.custom_block) {
-                byte extTile = p.level.GetExtTile(x, y, z);
-                return extTile == oldExtTile;
+            if (curBlock == block && curBlock == Block.custom_block) {
+                byte curExtBlock = p.level.GetExtTile(x, y, z);
+                return curExtBlock == extBlock;
             }
-            return tile == oldTile;
+            return curBlock == block;
         }
         
         public override void Help(Player p) {

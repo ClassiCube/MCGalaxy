@@ -173,11 +173,11 @@ namespace MCGalaxy.Drawing.Brushes {
             for (int i = 0; i < thresholds.Length; i++) {
                 if (N <= thresholds[i]) { next = i; break; }
             }
-            return blocks[next].Type;
+            return blocks[next].Block;
         }
         
         public override byte NextExtBlock(DrawOp op) {
-            return blocks[next].ExtType;
+            return blocks[next].Ext;
         }
     }
     

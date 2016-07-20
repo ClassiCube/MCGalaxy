@@ -44,30 +44,28 @@ namespace MCGalaxy {
             }
         }
         
-        public void ManualChange(ushort x, ushort y, ushort z, byte action, byte type, byte extType = 0) {
-            ManualChange(x, y, z, action, type, extType, true);
+        public void ManualChange(ushort x, ushort y, ushort z, byte action, byte block, byte extBlock = 0) {
+            ManualChange(x, y, z, action, block, extBlock, true);
         }
         
         public void ManualChange(ushort x, ushort y, ushort z, byte action, 
-                                 byte type, byte extType, bool checkPlaceDist) {
-            byte b = level.GetTile(x, y, z);
-            if ( b == Block.Zero ) { return; }
-            if ( jailed || !agreed ) { RevertBlock(x, y, z); return; }
-            if ( level.IsMuseum && Blockchange == null ) { return; }
+                                 byte block, byte extBlock, bool checkPlaceDist) {
+            byte old = level.GetTile(x, y, z);
+            if (old == Block.Zero) return;
+            if (jailed || !agreed || !canBuild) { RevertBlock(x, y, z); return; }
+            if (level.IsMuseum && Blockchange == null) return;
 
-            if ( !deleteMode ) {
+            if (!deleteMode) {
                 PhysicsArgs args = level.foundInfo(x, y, z);
                 if (args.HasWait) return;
             }
-
-            if ( !canBuild ) { RevertBlock(x, y, z); return; }
 
             if (Server.verifyadmins && adminpen) {
                 SendMessage("&cYou must first verify with %T/pass [Password]");
                 RevertBlock(x, y, z); return;
             }
 
-            if (Server.zombie.Running && Server.zombie.HandlesManualChange(this, x, y, z, action, type, b)) 
+            if (Server.zombie.Running && Server.zombie.HandlesManualChange(this, x, y, z, action, block, old)) 
                 return;
 
             if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) ) {
@@ -78,15 +76,15 @@ namespace MCGalaxy {
             Level.BlockPos bP = default(Level.BlockPos);
             bP.name = name;
             bP.index = level.PosToInt(x, y, z);
-            bP.SetData(type, extType, false);
+            bP.SetData(block, extBlock, false);
 
             lastClick.X = x; lastClick.Y = y; lastClick.Z = z;
             if (Blockchange != null) {
-                Blockchange(this, x, y, z, type, extType); return;
+                Blockchange(this, x, y, z, block, extBlock); return;
             }
             if (PlayerBlockChange != null)
-                PlayerBlockChange(this, x, y, z, type, extType);
-            OnBlockChangeEvent.Call(this, x, y, z, type, extType);
+                PlayerBlockChange(this, x, y, z, block, extBlock);
+            OnBlockChangeEvent.Call(this, x, y, z, block, extBlock);
             if ( cancelBlock ) { cancelBlock = false; return; }
 
             if (group.Permission == LevelPermission.Banned) return;
@@ -100,44 +98,44 @@ namespace MCGalaxy {
                 }
             }
 
-            if (!Block.canPlace(this, b) && !Block.BuildIn(b) && !Block.AllowBreak(b)) {
+            if (!Block.canPlace(this, old) && !Block.BuildIn(old) && !Block.AllowBreak(old)) {
                 SendMessage("Cannot build here!");
                 RevertBlock(x, y, z); return;
             }
 
-            if (!Block.canPlace(this, type)) {
+            if (!Block.canPlace(this, block)) {
                 SendMessage("You can't place this block type!");
                 RevertBlock(x, y, z); return;
             }
 
-            if (b >= 200 && b < 220) {
+            if (old >= 200 && old < 220) {
                 SendMessage("Block is active, you cant disturb it!");
                 RevertBlock(x, y, z); return;
             }
 
             if (action > 1 ) { Leave("Unknown block action!", true); return; }
-            byte oldType = type;
-            if (type < 128) type = bindings[type];
+            byte oldType = block;
+            if (block < 128) block = bindings[block];
             
             //Ignores updating blocks that are the same and send block only to the player
-            byte newBlock = (painting || action == 1) ? type : (byte)0;
-            if (b == newBlock && (painting || oldType != type)) {
-                if (b != Block.custom_block || extType == level.GetExtTile(x, y, z)) {
+            byte newBlock = (painting || action == 1) ? block : (byte)0;
+            if (old == newBlock && (painting || oldType != block)) {
+                if (old != Block.custom_block || extBlock == level.GetExtTile(x, y, z)) {
                     RevertBlock(x, y, z); return;
                 }
             }
             //else
             if (!painting && action == 0) {
                 bP.flags |= 1;
-                if (DeleteBlock(b, x, y, z, type, extType) && level.UseBlockDB)
+                if (DeleteBlock(old, x, y, z, block, extBlock) && level.UseBlockDB)
                     level.blockCache.Add(bP);
             } else {
-                if (PlaceBlock(b, x, y, z, type, extType) && level.UseBlockDB)
+                if (PlaceBlock(old, x, y, z, block, extBlock) && level.UseBlockDB)
                     level.blockCache.Add(bP);
             }
         }
         
-        bool DeleteBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
+        bool DeleteBlock(byte b, ushort x, ushort y, ushort z, byte block, byte extBlock) {
             if (deleteMode) { return ChangeBlock(x, y, z, Block.air, 0); }
             bool changed = true;
 
@@ -153,29 +151,29 @@ namespace MCGalaxy {
             return changed;
         }
 
-        bool PlaceBlock(byte b, ushort x, ushort y, ushort z, byte type, byte extType) {
+        bool PlaceBlock(byte b, ushort x, ushort y, ushort z, byte block, byte extBlock) {
             if (modeType != 0) {
                 if (b == modeType) SendBlockchange(x, y, z, b);
                 else ChangeBlock(x, y, z, modeType, 0);
                 return true;
             }
             
-            Block.HandlePlace handler = Block.placeHandlers[type];
+            Block.HandlePlace handler = Block.placeHandlers[block];
             if (handler != null) {
                 if (handler(this, b, x, y, z)) return false;
             } else {
-                return ChangeBlock(x, y, z, type, extType);
+                return ChangeBlock(x, y, z, block, extBlock);
             }
             return true;
         }
         
         /// <summary> Updates the block at the given position, also turning the block below to dirt if the block above blocks light. </summary>
-        internal bool ChangeBlock(ushort x, ushort y, ushort z, byte type, byte extType) {
-            if (!level.DoBlockchange(this, x, y, z, type, extType)) return false;
-            Player.GlobalBlockchange(level, x, y, z, type, extType);
+        internal bool ChangeBlock(ushort x, ushort y, ushort z, byte block, byte extBlock) {
+            if (!level.DoBlockchange(this, x, y, z, block, extBlock)) return false;
+            Player.GlobalBlockchange(level, x, y, z, block, extBlock);
             
             if (level.GetTile(x, (ushort)(y - 1), z) == Block.grass && level.GrassDestroy 
-                && !Block.LightPass(type, extType, level.CustomBlockDefs)) {
+                && !Block.LightPass(block, extBlock, level.CustomBlockDefs)) {
                 level.Blockchange(this, x, (ushort)(y - 1), z, Block.dirt);
             }
             return true;

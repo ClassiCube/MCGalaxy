@@ -68,17 +68,17 @@ namespace MCGalaxy.Commands.Building {
             return DrawOp.DoDrawOp(op, brush, p, marks);
         }
         
-        static Brush ParseBrush(string brushMsg, Player p, byte type, byte extType) {
-            string[] parts = brushMsg.SplitSpaces(2);
+        static Brush ParseBrush(string raw, Player p, byte block, byte extBlock) {
+            string[] parts = raw.SplitSpaces(2);
             string brushName = CmdBrush.FindBrush(parts[0]);
             if (brushName == null) {
-                Player.Message(p, "No brush found with name \"" + parts[0] + "\".");
+                Player.Message(p, "No brush found with name \"{0}\".", parts[0]);
                 Player.Message(p, "Available brushes: " + CmdBrush.AvailableBrushes);
                 return null;
             }
 
-            string brushMessage = parts.Length >= 2 ? parts[1].ToLower() : "";
-            BrushArgs args = new BrushArgs(p, brushMessage, type, extType);
+            string brushArgs = parts.Length >= 2 ? parts[1].ToLower() : "";
+            BrushArgs args = new BrushArgs(p, brushArgs, block, extBlock);
             return Brush.Brushes[brushName](args);
         }
         

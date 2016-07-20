@@ -523,7 +523,7 @@ namespace MCGalaxy {
             SendRaw(Opcode.SetPermission, op ? (byte)100 : (byte)0);
         }
         
-        public void SendBlockchange(ushort x, ushort y, ushort z, byte type) {
+        public void SendBlockchange(ushort x, ushort y, ushort z, byte block) {
             //if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
 
@@ -533,20 +533,20 @@ namespace MCGalaxy {
             NetUtils.WriteU16(y, buffer, 3);
             NetUtils.WriteU16(z, buffer, 5);
             
-            if (type == Block.custom_block) {
+            if (block == Block.custom_block) {
                 buffer[7] = hasBlockDefs ? level.GetExtTile(x, y, z) 
                     : level.GetFallbackExtTile(x, y, z);
                 if (!hasCustomBlocks) buffer[7] = Block.ConvertCPE(buffer[7]);
             } else if (hasCustomBlocks) {
-                buffer[7] = Block.Convert(type);
+                buffer[7] = Block.Convert(block);
             } else {
-                buffer[7] = Block.Convert(Block.ConvertCPE(type));
+                buffer[7] = Block.Convert(Block.ConvertCPE(block));
             }
             SendRaw(buffer);
         }
         
         // Duplicated as this packet needs to have maximum optimisation.
-        public void SendBlockchange(ushort x, ushort y, ushort z, byte type, byte extType) {
+        public void SendBlockchange(ushort x, ushort y, ushort z, byte block, byte extBlock) {
             //if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
 
@@ -556,13 +556,13 @@ namespace MCGalaxy {
             NetUtils.WriteU16(y, buffer, 3);
             NetUtils.WriteU16(z, buffer, 5);
             
-            if (type == Block.custom_block) {
-                buffer[7] = hasBlockDefs ? extType : level.GetFallback(extType);
+            if (block == Block.custom_block) {
+                buffer[7] = hasBlockDefs ? extBlock : level.GetFallback(extBlock);
                 if (!hasCustomBlocks) buffer[7] = Block.ConvertCPE(buffer[7]);
             } else if (hasCustomBlocks) {
-                buffer[7] = Block.Convert(type);
+                buffer[7] = Block.Convert(block);
             } else {
-                buffer[7] = Block.Convert(Block.ConvertCPE(type));
+                buffer[7] = Block.Convert(Block.ConvertCPE(block));
             }
             SendRaw(buffer);
         }

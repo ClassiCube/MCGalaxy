@@ -73,7 +73,7 @@ namespace MCGalaxy.CTF
             if (cache.ContainsKey(p))
                 cache.Remove(p);
         }
-        void blockuse(Player p, ushort x, ushort y, ushort z, byte type, byte extType)
+        void blockuse(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock)
         {
             if (cache.ContainsKey(p))
             {

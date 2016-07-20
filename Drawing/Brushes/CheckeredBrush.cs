@@ -23,11 +23,11 @@ using MCGalaxy.Drawing.Ops;
 namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class CheckeredBrush : Brush {
-        readonly byte type1, extType1, type2, extType2;
+        readonly byte block1, extBlock1, block2, extBlock2;
         
-        public CheckeredBrush(byte type1, byte extType1, byte type2, byte extType2) {
-            this.type1 = type1; this.extType1 = extType1;
-            this.type2 = type2; this.extType2 = extType2;
+        public CheckeredBrush(byte block1, byte extBlock1, byte block2, byte extBlock2) {
+            this.block1 = block1; this.extBlock1 = extBlock1;
+            this.block2 = block2; this.extBlock2 = extBlock2;
         }
         
         public override string Name { get { return "Checkered"; } }
@@ -59,11 +59,11 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         public override byte NextBlock(DrawOp op) {
-            return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? type1 : type2;
+            return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? block1 : block2;
         }
         
         public override byte NextExtBlock(DrawOp op) {
-            return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? extType1 : extType2;
+            return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? extBlock1 : extBlock2;
         }
     }
 }

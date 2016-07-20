@@ -53,10 +53,10 @@ namespace MCGalaxy.Drawing.Brushes {
             if (toAffect == null) return null;
             
             ExtBlock target;
-            int block = DrawCmd.GetBlock(args.Player, parts[parts.Length - 1], out target.ExtType);
+            int block = DrawCmd.GetBlock(args.Player, parts[parts.Length - 1], out target.Ext);
             if (block == -1) return null;
             
-            target.Type = (byte)block;
+            target.Block = (byte)block;
             if (not) return new ReplaceNotBrush(toAffect, target);
             return new ReplaceBrush(toAffect, target);
         }
@@ -64,12 +64,12 @@ namespace MCGalaxy.Drawing.Brushes {
         internal static ExtBlock[] GetBlocks(Player p, int start, int max, string[] parts) {
             ExtBlock[] blocks = new ExtBlock[max - start];
             for (int i = 0; i < blocks.Length; i++)
-                blocks[i].Type = Block.Zero;
+                blocks[i].Block = Block.Zero;
             for (int i = 0; start < max; start++, i++ ) {
                 byte extBlock = 0;
                 int block = DrawCmd.GetBlock(p, parts[start], out extBlock);
                 if (block == -1) return null;
-                blocks[i].Type = (byte)block; blocks[i].ExtType = extBlock;
+                blocks[i].Block = (byte)block; blocks[i].Ext = extBlock;
             }
             return blocks;
         }
@@ -81,14 +81,14 @@ namespace MCGalaxy.Drawing.Brushes {
             
             for (int i = 0; i < include.Length; i++) {
                 ExtBlock block = include[i];
-                if (tile == block.Type && (tile != Block.custom_block || extTile == block.ExtType))
-                    return target.Type;
+                if (tile == block.Block && (tile != Block.custom_block || extTile == block.Ext))
+                    return target.Block;
             }
             return Block.Zero;
         }
         
         public override byte NextExtBlock(DrawOp op) {
-            return target.ExtType;
+            return target.Ext;
         }
     }
     
@@ -121,14 +121,14 @@ namespace MCGalaxy.Drawing.Brushes {
             
             for (int i = 0; i < exclude.Length; i++) {
                 ExtBlock block = exclude[i];
-                if (tile == block.Type && (tile != Block.custom_block || extTile == block.ExtType))
+                if (tile == block.Block && (tile != Block.custom_block || extTile == block.Ext))
                     return Block.Zero;
             }
-            return target.Type;
+            return target.Block;
         }
         
         public override byte NextExtBlock(DrawOp op) {
-            return target.ExtType;
+            return target.Ext;
         }
     }
 }

@@ -27,23 +27,23 @@ namespace MCGalaxy.Commands.Building {
         public CmdPlace() { }
 
         public override void Use(Player p, string message) {
-            int type = -1;
-            byte extType = 0;
+            int block = -1;
+            byte extBlock = 0;
             ushort x = p.pos[0], y = (ushort)(p.pos[1] - 32), z = p.pos[2];
 
             try {
             	string[] parts = message.Split(' ');
                 switch (parts.Length) {
-                    case 1: type = message == "" ? Block.rock :
-                        DrawCmd.GetBlock(p, parts[0], out extType); break;
+                    case 1: block = message == "" ? Block.rock :
+                        DrawCmd.GetBlock(p, parts[0], out extBlock); break;
                     case 3:
-                        type = Block.rock;
+                        block = Block.rock;
                         x = (ushort)(Convert.ToUInt16(parts[0]) * 32);
                         y = (ushort)(Convert.ToUInt16(parts[1]) * 32);
                         z = (ushort)(Convert.ToUInt16(parts[2]) * 32);
                         break;
                     case 4:
-                        type = DrawCmd.GetBlock(p, parts[0], out extType);
+                        block = DrawCmd.GetBlock(p, parts[0], out extBlock);
                         x = (ushort)(Convert.ToUInt16(parts[1]) * 32);
                         y = (ushort)(Convert.ToUInt16(parts[2]) * 32);
                         z = (ushort)(Convert.ToUInt16(parts[3]) * 32);
@@ -54,12 +54,12 @@ namespace MCGalaxy.Commands.Building {
             	Player.Message(p, "Invalid parameters"); return; 
             }
 
-            if (type == -1 || type == Block.Zero) return;
-            if (!Block.canPlace(p, (byte)type)) { Player.Message(p, "Cannot place that block type."); return; }
+            if (block == -1 || block == Block.Zero) return;
+            if (!Block.canPlace(p, (byte)block)) { Player.Message(p, "Cannot place that block type."); return; }
             Vec3U16 P = Vec3U16.ClampPos(x, y, z, p.level);
             
             P.X /= 32; P.Y /= 32; P.Z /= 32;
-            p.level.UpdateBlock(p, P.X, P.Y, P.Z, (byte)type, extType);
+            p.level.UpdateBlock(p, P.X, P.Y, P.Z, (byte)block, extBlock);
             Player.Message(p, "A block was placed at (" + P.X + ", " + P.Y + ", " + P.Z + ").");
         }
         

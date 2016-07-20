@@ -21,19 +21,17 @@ using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy {
     
-    public struct FillPos { public ushort X, Y, Z; }
-    
     public struct ExtBlock {
-        public byte Type, ExtType;
+        public byte Block, Ext;
 
-        public ExtBlock(byte type, byte extType) {
-            Type = type; ExtType = extType;
+        public ExtBlock(byte block, byte extBlock) {
+            Block = block; Ext = extBlock;
         }
     }
     
     public struct DrawOpBlock {
         public ushort X, Y, Z;
-        public byte Type, ExtType;
+        public byte Block, ExtBlock;
     }
 }
 
@@ -96,16 +94,16 @@ namespace MCGalaxy.Drawing.Ops {
         
         protected DrawOpBlock Place(ushort x, ushort y, ushort z, Brush brush) {
             Coords.X = x; Coords.Y = y; Coords.Z = z;
-            Coords.Type = brush.NextBlock(this);
+            Coords.Block = brush.NextBlock(this);
             
-            if (Coords.Type != Block.Zero)
-                Coords.ExtType = brush.NextExtBlock(this);
+            if (Coords.Block != Block.Zero)
+                Coords.ExtBlock = brush.NextExtBlock(this);
             return Coords;
         }
         
         protected DrawOpBlock Place(ushort x, ushort y, ushort z, byte type, byte extType) {
             Coords.X = x; Coords.Y = y; Coords.Z = z;
-            Coords.Type = type; Coords.ExtType = extType;
+            Coords.Block = type; Coords.ExtBlock = extType;
             return Coords;
         }
         

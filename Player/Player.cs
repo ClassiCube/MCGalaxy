@@ -136,16 +136,16 @@ namespace MCGalaxy {
 
         #region == GLOBAL MESSAGES ==
         
-        public static void GlobalBlockchange(Level level, int b, byte type, byte extType) {
+        public static void GlobalBlockchange(Level level, int b, byte block, byte extBlock) {
             ushort x, y, z;
             level.IntToPos(b, out x, out y, out z);
-            GlobalBlockchange(level, x, y, z, type, extType);
+            GlobalBlockchange(level, x, y, z, block, extBlock);
         }
         
-        public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, byte type, byte extType) {
+        public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, byte block, byte extBlock) {
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) { 
-                if (p.level == level) p.SendBlockchange(x, y, z, type, extType);
+                if (p.level == level) p.SendBlockchange(x, y, z, block, extBlock);
             }
         }
 

@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands
         }
         
         void DoChain(Player p, ushort x, ushort y, ushort z, int dirX, int dirZ) {
-            FillPos cur, next, target;
+            Vec3U16 cur, next, target;
             cur.X = next.X = target.X = x;
             cur.Y = next.Y = target.Y = y;
             cur.Z = next.Z = target.Z = z;
@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands
             }
         }
         
-        void PullBack(Player p, FillPos cur, FillPos target, int dirX, int dirZ) {
+        void PullBack(Player p, Vec3U16 cur, Vec3U16 target, int dirX, int dirZ) {
             byte type = p.level.GetTile(cur.X, cur.Y, cur.Z), extType = 0;
             if (type == Block.custom_block)
                 extType = p.level.GetExtTile(cur.X, cur.Y, cur.Z);

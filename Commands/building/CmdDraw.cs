@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Building {
         
         protected override bool DoDraw(Player p, Vec3S32[] m, object state, byte type, byte extType) {
             DrawArgs cpos = (DrawArgs)state;
-            cpos.type = type; cpos.extType = extType;
+            cpos.block = type; cpos.extBlock = extType;
             AdvDrawOp op = null;
             switch (cpos.mode) {
                 case DrawMode.cone:

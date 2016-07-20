@@ -148,7 +148,7 @@ namespace MCGalaxy.Generator {
                                 treeDrawer.SetMarks(treeCoords);
                                 
                                 foreach (var block in treeDrawer.Perform(treeCoords, null, Lvl, null))
-                                    Lvl.SetTile(block.X, block.Y, block.Z, block.Type);
+                                    Lvl.SetTile(block.X, block.Y, block.Z, block.Block);
                             }
                         }
                     }

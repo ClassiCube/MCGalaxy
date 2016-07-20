@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing.Ops {
                 byte tile = lvl.GetTile(x, y, z), extTile = 0;
                 if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
                 
-                if (tile == Include.Type && (tile != Block.custom_block || extTile == Include.ExtType))
+                if (tile == Include.Block && (tile != Block.custom_block || extTile == Include.Ext))
                     yield return Place(x, y, z, brush);
             }
         }
@@ -73,7 +73,7 @@ namespace MCGalaxy.Drawing.Ops {
                 byte tile = lvl.GetTile(x, y, z), extTile = 0;
                 if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
                 
-                if (tile != Exclude.Type || (tile == Block.custom_block && extTile != Exclude.ExtType))
+                if (tile != Exclude.Block || (tile == Block.custom_block && extTile != Exclude.Ext))
                     yield return Place(x, y, z, brush);
             }
         }
