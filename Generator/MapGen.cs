@@ -21,6 +21,7 @@ using System.Collections.Generic;
 namespace MCGalaxy.Generator {
     
     public struct MapGenArgs {
+        public Player Player;
         public Level Level;
         public string Theme, RawArgs;
         public bool UseSeed;
@@ -43,36 +44,36 @@ namespace MCGalaxy.Generator {
             return len >= 16 && len <= 8192 && (len % 16) == 0;
         }
 
-        public static bool Generate(Level lvl, string theme, string args) {
+        public static bool Generate(Level lvl, string theme, string args, Player p) {
             MapGenArgs genArgs = new MapGenArgs();
-            genArgs.Level = lvl; genArgs.Theme = theme;
-            genArgs.RawArgs = args;
+            genArgs.Level = lvl; genArgs.Player = p;
+            genArgs.Theme = theme; genArgs.RawArgs = args;
             
             genArgs.UseSeed = args != "";
             if (genArgs.UseSeed && !int.TryParse(args, out genArgs.Seed))
                 genArgs.Seed = args.GetHashCode();
-            Action<MapGenArgs> generator = null;
+            Func<MapGenArgs, bool> generator = null;
             
             simpleGens.TryGetValue(theme, out generator);
-            if (generator != null) { generator(genArgs); return true; }
+            if (generator != null) return generator(genArgs);
             advGens.TryGetValue(theme, out generator);
-            if (generator != null) { generator(genArgs); return true; }
+            if (generator != null) return generator(genArgs);
             return false;
         }
         
         
-        static Dictionary<string, Action<MapGenArgs>> simpleGens, advGens;        
-        public static void RegisterSimpleGen(string theme, Action<MapGenArgs> gen) {
+        static Dictionary<string, Func<MapGenArgs, bool>> simpleGens, advGens;        
+        public static void RegisterSimpleGen(string theme, Func<MapGenArgs, bool> gen) {
             simpleGens[theme.ToLower()] = gen;
         }
         
-        public static void RegisterAdvancedGen(string theme, Action<MapGenArgs> gen) {
+        public static void RegisterAdvancedGen(string theme, Func<MapGenArgs, bool> gen) {
             advGens[theme.ToLower()] = gen;
         }
         
         static MapGen() {
-            simpleGens = new Dictionary<string, Action<MapGenArgs>>();
-            advGens = new Dictionary<string, Action<MapGenArgs>>();
+            simpleGens = new Dictionary<string, Func<MapGenArgs, bool>>();
+            advGens = new Dictionary<string, Func<MapGenArgs, bool>>();
             SimpleGen.RegisterGenerators();
             AdvNoiseGen.RegisterGenerators();
         }

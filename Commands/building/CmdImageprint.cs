@@ -21,6 +21,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using MCGalaxy.Drawing;
+using MCGalaxy.Generator;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdImageprint : Command {
@@ -77,22 +78,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool DownloadWebFile(string url, Player p) {
-            if (!(url.StartsWith("http://") || url.StartsWith("https://")))
-                url = "http://" + url;
-            
-            try {
-                using (WebClient web = new WebClient()) {
-                    Player.Message(p, "Downloading file from: &f" + url);
-                    web.DownloadFile(url, "extra/images/tempImage_" + p.name + ".bmp");
-                }
-                Player.Message(p, "Finished downloading image.");
-                return true;
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                Player.Message(p, "&cFailed to download the image from the given url.");
-                Player.Message(p, "&cThe url may need to end with its extension (such as .jpg).");
-                return false;
-            }
+        	return HeightmapGen.DownloadImage(url, "extra/images/", p);
         }
         
         bool DoImage(Player p, Vec3S32[] m, object state, byte type, byte extType) {

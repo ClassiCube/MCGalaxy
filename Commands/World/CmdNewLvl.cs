@@ -51,7 +51,8 @@ namespace MCGalaxy.Commands.World {
             }           
 
             try {
-                using (Level lvl = new Level(name, x, y, z, args[4], seed)) {
+                using (Level lvl = new Level(name, x, y, z)) {
+                    if (!MapGen.Generate(lvl, args[4], seed, p)) return;
                     LevelDB.CreateTables(name);
                     lvl.Save(true);
                     lvl.Dispose();

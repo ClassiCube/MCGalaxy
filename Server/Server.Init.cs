@@ -22,6 +22,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using MCGalaxy.Games;
+using MCGalaxy.Generator;
 
 namespace MCGalaxy {
     
@@ -37,21 +38,22 @@ namespace MCGalaxy {
                             Log("Attempting to load backup of " + level + ".");
                             File.Copy(LevelInfo.LevelPath(level) + ".backup", LevelInfo.LevelPath(level), true);
                             mainLevel = Level.Load(level);
-                            if (mainLevel == null)
-                            {
+                            if (mainLevel == null) {
                                 Log("BACKUP FAILED!");
                                 Console.ReadLine(); return;
                             }
                         } else {
                             Log("mainlevel not found");
-                            mainLevel = new Level(level, 128, 64, 128, "flat");
+                            mainLevel = new Level(level, 128, 64, 128);
+                            MapGen.Generate(mainLevel, "flat", "", null);
                             mainLevel.Save();
                             LevelDB.CreateTables(level);
                         }
                     }
                 } else {
                     Log("mainlevel not found");
-                    mainLevel = new Level(level, 128, 64, 128, "flat");
+                    mainLevel = new Level(level, 128, 64, 128);
+                    MapGen.Generate(mainLevel, "flat", "", null);
                     mainLevel.Save();
                     LevelDB.CreateTables(level);
                 }

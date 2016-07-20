@@ -35,7 +35,7 @@ namespace MCGalaxy.Generator {
             MapGen.RegisterSimpleGen("hell", GenHell);
         }
         
-        unsafe static void GenFlat(MapGenArgs args) {
+        unsafe static bool GenFlat(MapGenArgs args) {
             Level lvl = args.Level;
             int grassHeight = lvl.Height / 2;
             if (args.UseSeed && args.Seed >= 0 && args.Seed < lvl.Height) {
@@ -49,6 +49,7 @@ namespace MCGalaxy.Generator {
                 if (grassHeight < lvl.Height)
                     MapSet(lvl.Width, lvl.Length, ptr, grassHeight, grassHeight, Block.grass);
             }
+            return true;
         }
         
         unsafe static void MapSet(int width, int length, byte* ptr, int yStart, int yEnd, byte block) {
@@ -57,7 +58,7 @@ namespace MCGalaxy.Generator {
             Extensions.memset((IntPtr)ptr, block, start, end - start + 1);
         }
         
-        static void GenPixel(MapGenArgs args) {
+        static bool GenPixel(MapGenArgs args) {
             int width = args.Level.Width, height = args.Level.Height, length = args.Level.Length;
             int index = 0;
             byte[] blocks = args.Level.blocks;
@@ -72,9 +73,10 @@ namespace MCGalaxy.Generator {
                     blocks[index] = Block.white;
                 index++;
             }
+            return true;
         }
 
-        static void GenEmpty(MapGenArgs args) {
+        static bool GenEmpty(MapGenArgs args) {
             int width = args.Level.Width, length = args.Level.Length;
             int index = 0;
             byte[] blocks = args.Level.blocks;
@@ -84,9 +86,10 @@ namespace MCGalaxy.Generator {
             {
                 blocks[index++] = Block.blackrock;
             }
+            return true;
         }
         
-        static void GenSpace(MapGenArgs args) {
+        static bool GenSpace(MapGenArgs args) {
             Random rand = args.UseSeed ? new Random(args.Seed) : new Random();
             int width = args.Level.Width, height = args.Level.Height, length = args.Level.Length;
             int index = 0;
@@ -102,9 +105,10 @@ namespace MCGalaxy.Generator {
                     blocks[index] = rand.Next(100) == 0 ? Block.iron : Block.obsidian;
                 index++;
             }
+            return true;
         }
         
-        static void GenRainbow(MapGenArgs args) {
+        static bool GenRainbow(MapGenArgs args) {
             Random rand = args.UseSeed ? new Random(args.Seed) : new Random();
             int width = args.Level.Width, height = args.Level.Height, length = args.Level.Length;
             int index = 0;
@@ -118,9 +122,10 @@ namespace MCGalaxy.Generator {
                     blocks[index] = (byte)rand.Next(Block.red, Block.white);
                 index++;
             }
+            return true;
         }
         
-        static void GenHell(MapGenArgs args) {
+        static bool GenHell(MapGenArgs args) {
             Random rand = args.UseSeed ? new Random(args.Seed) : new Random();
             int width = args.Level.Width, height = args.Level.Height, length = args.Level.Length;
             int index = 0;
@@ -145,12 +150,11 @@ namespace MCGalaxy.Generator {
                 }
                 index++;
             }
-            GenSimple(args);
+            return GenSimple(args);
         }
         
-        static void GenSimple(MapGenArgs args) {
-            RealisticMapGen gen = new RealisticMapGen();
-            gen.GenerateMap(args.Level, args.Theme, args.Seed, args.UseSeed);
+        static bool GenSimple(MapGenArgs args) {
+            return new RealisticMapGen().GenerateMap(args);
         }
     }
 }

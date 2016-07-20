@@ -39,34 +39,35 @@ namespace MCGalaxy.Generator {
         TreeDrawOp treeDrawer;
         Vec3S32[] treeCoords;
         
-        public bool GenerateMap(Level Lvl, string type, int seed = 0, bool useSeed = false) {
-            DateTime startTime = DateTime.UtcNow;
+        public bool GenerateMap(MapGenArgs args) {
+            DateTime start = DateTime.UtcNow;
             Server.s.Log("Attempting map gen");
-            rand = useSeed ? new System.Random(seed) : new System.Random();
-            if (!RealisticGenParams.Themes.TryGetValue(type, out genParams))
+            rand = args.UseSeed ? new Random(args.Seed) : new Random();
+            Level lvl = args.Level;
+            
+            if (!RealisticGenParams.Themes.TryGetValue(args.Theme, out genParams))
                 genParams = new RealisticGenParams();
             if (genParams.GenTrees) {
                 treeDrawer = new TreeDrawOp();
-                treeDrawer.Level = Lvl;
+                treeDrawer.Level = lvl;
                 treeDrawer.random = rand;
                 treeCoords = new Vec3S32[1];
             }
             
-            try
-            {
-                terrain = new float[Lvl.Width * Lvl.Length];
-                overlay = new float[Lvl.Width * Lvl.Length];
-                if (genParams.GenTrees) overlay2 = new float[Lvl.Width * Lvl.Length];
-                LiquidLevel = genParams.GetLiquidLevel(Lvl.Height);
+            try {
+                terrain = new float[lvl.Width * lvl.Length];
+                overlay = new float[lvl.Width * lvl.Length];
+                if (genParams.GenTrees) overlay2 = new float[lvl.Width * lvl.Length];
+                LiquidLevel = genParams.GetLiquidLevel(lvl.Height);
 
-                GenerateFault(terrain, Lvl, rand);
-                FilterAverage(Lvl);
+                GenerateFault(terrain, lvl, rand);
+                FilterAverage(lvl);
                 Server.s.Log("Creating overlay");
-                GeneratePerlinNoise(overlay, Lvl, rand);
+                GeneratePerlinNoise(overlay, lvl, rand);
 
                 if (genParams.GenerateOverlay2) {
                     Server.s.Log("Planning trees");
-                    GeneratePerlinNoise(overlay2, Lvl, rand);
+                    GeneratePerlinNoise(overlay2, lvl, rand);
                 }
 
                 Server.s.Log("Converting height map, and applying overlays");
@@ -77,25 +78,25 @@ namespace MCGalaxy.Generator {
 
                 //loops though evey X/Z coordinate
                 for (int index = 0; index < terrain.Length; index++) {
-                    ushort x = (ushort)(index % Lvl.Width);
-                    ushort z = (ushort)(index / Lvl.Width);
+                    ushort x = (ushort)(index % lvl.Width);
+                    ushort z = (ushort)(index / lvl.Width);
                     ushort y;
                     if (genParams.FalloffEdges) {
-                        float offset = NegateEdge(x, z, Lvl);
-                        y = Evaluate(Lvl, Range(terrain[index], rangeLo - offset, rangeHi - offset));
+                        float offset = NegateEdge(x, z, lvl);
+                        y = Evaluate(lvl, Range(terrain[index], rangeLo - offset, rangeHi - offset));
                     } else {
-                        y = Evaluate(Lvl, Range(terrain[index], rangeLo, rangeHi));
+                        y = Evaluate(lvl, Range(terrain[index], rangeLo, rangeHi));
                     }
                     
                     if (!genParams.UseLavaLiquid)
-                        GenNonLavaColumn(x, y, z, Lvl, index);
+                        GenNonLavaColumn(x, y, z, lvl, index);
                     else
-                        GenLavaColumn(x, y, z, Lvl, index);
+                        GenLavaColumn(x, y, z, lvl, index);
                 }
-                Server.s.Log("Total time was " + (DateTime.UtcNow - startTime).TotalSeconds.ToString() + " seconds.");
+                Server.s.Log("Total time was " + (DateTime.UtcNow - start).TotalSeconds + " seconds.");
             } catch (Exception e) {
                 Server.ErrorLog(e);
-                Server.s.Log("Gen Fail");
+                Player.Message(args.Player, "Generation failed.");
                 return false;
             }
             return true;

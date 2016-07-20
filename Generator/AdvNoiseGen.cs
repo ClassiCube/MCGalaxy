@@ -38,63 +38,63 @@ namespace MCGalaxy.Generator {
         
         #region Implementations
         
-        static void GenBillow2D(MapGenArgs args) {
+        static bool GenBillow2D(MapGenArgs args) {
             Billow billow2D = new Billow();
             billow2D.Seed = args.UseSeed ? args.Seed : new Random().Next();
-            Gen2D(args, billow2D);
+            return Gen2D(args, billow2D);
         }
         
-        static void GenRidged2D(MapGenArgs args) {
+        static bool GenRidged2D(MapGenArgs args) {
             RidgedMultifractal ridged2D = new RidgedMultifractal();
             ridged2D.Seed = args.UseSeed ? args.Seed : new Random().Next();
-            Gen2D(args, ridged2D);
+            return Gen2D(args, ridged2D);
         }
         
-        static void GenPerlin2D(MapGenArgs args) {
+        static bool GenPerlin2D(MapGenArgs args) {
             Perlin perlin2D = new Perlin();
             perlin2D.Seed = args.UseSeed ? args.Seed : new Random().Next();
-            Gen2D(args, perlin2D);
+            return Gen2D(args, perlin2D);
         }
         
-        static void GenCheckerboard(MapGenArgs args) {
-            Gen2D(args, new Checkerboard());
+        static bool GenCheckerboard(MapGenArgs args) {
+            return Gen2D(args, new Checkerboard());
         }
         
-        static void GenSpheres(MapGenArgs args) {
-            Gen2D(args, new Spheres());
+        static bool GenSpheres(MapGenArgs args) {
+            return Gen2D(args, new Spheres());
         }
         
-        static void GenCylinders(MapGenArgs args) {
-            Gen2D(args, new Cylinders());
+        static bool GenCylinders(MapGenArgs args) {
+            return Gen2D(args, new Cylinders());
         }
         
-        static void GenVoronoi(MapGenArgs args) {
+        static bool GenVoronoi(MapGenArgs args) {
             Voronoi voronoi2D = new Voronoi();
             voronoi2D.Seed = args.UseSeed ? args.Seed : new Random().Next();
-            Gen2D(args, voronoi2D);
+            return Gen2D(args, voronoi2D);
         }
         
-        static void GenPerlin3D(MapGenArgs args) {
+        static bool GenPerlin3D(MapGenArgs args) {
             Perlin perlin3D = new Perlin();
             perlin3D.Seed = args.UseSeed ? args.Seed : new Random().Next();
-            Gen3D(args, perlin3D);
+            return Gen3D(args, perlin3D);
         }
         
-        static void GenPerlin3DYAdjust(MapGenArgs args) {
+        static bool GenPerlin3DYAdjust(MapGenArgs args) {
             Perlin adjNoise = new Perlin();
             adjNoise.Seed = args.UseSeed ? args.Seed : new Random().Next();
-            Gen3DYAdjust(args, adjNoise);
+            return Gen3DYAdjust(args, adjNoise);
         }
         
-        static void GenBillow3D(MapGenArgs args) {
+        static bool GenBillow3D(MapGenArgs args) {
             Billow billow3D = new Billow();
             billow3D.Seed = args.UseSeed ? args.Seed : new Random().Next();
-            Gen3D(args, billow3D);
+            return Gen3D(args, billow3D);
         }
         
         #endregion
         
-        static void Gen2D(MapGenArgs args, IModule module) {
+        static bool Gen2D(MapGenArgs args, IModule module) {
             Level lvl = args.Level;
             int width = lvl.Width, length = lvl.Length, half = lvl.Height / 2;
             int waterHeight = half - 1;
@@ -117,9 +117,10 @@ namespace MCGalaxy.Generator {
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, block);
                 }
             }
+            return true;
         }
         
-        static void Gen3D(MapGenArgs args, IModule module) {
+        static bool Gen3D(MapGenArgs args, IModule module) {
             Level lvl = args.Level;
             int width = lvl.Width, height = lvl.Height, length = lvl.Length;
             for (int y = 0; y < height; y++)
@@ -130,9 +131,10 @@ namespace MCGalaxy.Generator {
                 if (value > 20)
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.grass);
             }
+            return true;
         }
         
-        static void Gen3DYAdjust(MapGenArgs args, IModule module) {
+        static bool Gen3DYAdjust(MapGenArgs args, IModule module) {
             Level lvl = args.Level;
             int width = lvl.Width, height = lvl.Height, length = lvl.Length;
             for (int y = 0; y < height; y++)
@@ -143,6 +145,7 @@ namespace MCGalaxy.Generator {
                 if (value > 30 * y / height)
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.grass);
             }
+            return true;
         }
     }
 }

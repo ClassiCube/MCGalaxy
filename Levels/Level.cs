@@ -269,19 +269,19 @@ namespace MCGalaxy
             get { return RoundsPlayed == 0 ? 100 : (RoundsHumanWon * 100) / RoundsPlayed; }
         }
         
-        public Level(string n, ushort x, ushort y, ushort z) {
-            Init(n, x, y, z);
-        }
+        public Level(string n, ushort x, ushort y, ushort z) { Init(n, x, y, z); }
         
+        [Obsolete("Use MapGen.Generate instead")]
         public Level(string n, ushort x, ushort y, ushort z, string theme, int seed = 0, bool useSeed = false) {
             Init(n, x, y, z);
             string args = useSeed ? seed.ToString() : "";
-            MapGen.Generate(this, theme, args);
+            MapGen.Generate(this, theme, args, null);
         }
         
+        [Obsolete("Use MapGen.Generate instead")]
         public Level(string n, ushort x, ushort y, ushort z, string theme, string genArgs) {
             Init(n, x, y, z);
-            MapGen.Generate(this, theme, genArgs);
+            MapGen.Generate(this, theme, genArgs, null);
         }
         
         void Init(string n, ushort x, ushort y, ushort z) {
