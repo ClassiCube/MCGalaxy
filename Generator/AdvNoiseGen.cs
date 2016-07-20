@@ -31,11 +31,13 @@ namespace MCGalaxy.Generator {
             { "perlin3dyadjust", GenPerlin3DYAdjust }, { "billow3d", GenBillow3D }
         };
 
-        public static void Generate(MapGenArgs args) {
+        public static bool Generate(MapGenArgs args) {
             Action<MapGenArgs> generator;
             generators.TryGetValue(args.Type, out generator);
             if (generator != null) generator(args);
-        }        
+            return generator != null;
+        } 
+        
         
         #region Implementations
         
