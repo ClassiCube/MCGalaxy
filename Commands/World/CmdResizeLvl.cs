@@ -16,8 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
-using MCGalaxy.SQL;
+using MCGalaxy.Generator;
 using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Commands.World {

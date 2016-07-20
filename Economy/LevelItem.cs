@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using MCGalaxy.Generator;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Eco {

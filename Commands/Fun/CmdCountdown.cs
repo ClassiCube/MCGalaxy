@@ -22,6 +22,7 @@ using System.Net;
 using System.Threading;
 using MCGalaxy.Games;
 using MCGalaxy.Commands.World;
+using MCGalaxy.Generator;
 
 namespace MCGalaxy.Commands {
     

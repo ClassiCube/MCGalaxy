@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Generator;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdNewLvl : Command {

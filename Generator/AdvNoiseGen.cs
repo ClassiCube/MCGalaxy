@@ -16,51 +16,87 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using LibNoise;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Generator {
     public static class AdvNoiseGen {
         
-        public unsafe static void Generate(Level lvl, string type, bool useSeed, int seed) {
-            switch (type) {
-                case "billow":
-                    Billow billow2D = new Billow();
-                    billow2D.Seed = useSeed ? seed : new Random().Next();
-                    Generate2D(lvl, billow2D); break;
-                case "ridgedmultifractal":
-                    RidgedMultifractal ridged2D = new RidgedMultifractal();
-                    ridged2D.Seed = useSeed ? seed : new Random().Next();
-                    Generate2D(lvl, ridged2D); break;
-                case "perlin":
-                    Perlin perlin2D = new Perlin();
-                    perlin2D.Seed = useSeed ? seed : new Random().Next();
-                    Generate2D(lvl, perlin2D); break;
-                case "checkerboard":
-                    Generate2D(lvl, new Checkerboard()); break;
-                case "spheres":
-                    Generate2D(lvl, new Spheres()); break;
-                case "cylinders":
-                    Generate2D(lvl, new Cylinders()); break;
-                case "voronoi":
-                    Voronoi voronoi2D = new Voronoi();
-                    voronoi2D.Seed = useSeed ? seed : new Random().Next();
-                    Generate2D(lvl, voronoi2D); break;
-                case "perlin3d":
-                    Perlin perlin3D = new Perlin();
-                    perlin3D.Seed = useSeed ? seed : new Random().Next();
-                    Generate3D(lvl, perlin3D); break;
-                case "perlin3dyadjust":
-                    Perlin adjNoise = new Perlin();
-                    adjNoise.Seed = useSeed ? seed : new Random().Next();
-                    Generate3DYAdjust(lvl, adjNoise); break;
-                case "billow3d":
-                    Billow billow3D = new Billow();
-                    billow3D.Seed = useSeed ? seed : new Random().Next();
-                    Generate3D(lvl, billow3D); break;
-            }
+        static Dictionary<string, Action<MapGenArgs>> generators
+            = new Dictionary<string, Action<MapGenArgs>>{
+            { "billow", GenBillow2D }, { "ridgedmultifractal", GenRidged2D },
+            { "perlin", GenPerlin2D }, { "checkerboard", GenCheckerboard },
+            { "spheres", GenSpheres }, { "cylinders", GenCylinders },
+            { "voronoi", GenVoronoi }, { "perlin3d", GenPerlin3D },
+            { "perlin3dyadjust", GenPerlin3DYAdjust }, { "billow3d", GenBillow3D }
+        };
+
+        public static void Generate(MapGenArgs args) {
+            Action<MapGenArgs> generator;
+            generators.TryGetValue(args.Type, out generator);
+            if (generator != null) generator(args);
+        }        
+        
+        #region Implementations
+        
+        static void GenBillow2D(MapGenArgs args) {
+            Billow billow2D = new Billow();
+            billow2D.Seed = args.UseSeed ? args.Seed : new Random().Next();
+            Gen2D(args, billow2D);
         }
         
-        static void Generate2D(Level lvl, IModule module) {
+        static void GenRidged2D(MapGenArgs args) {
+            RidgedMultifractal ridged2D = new RidgedMultifractal();
+            ridged2D.Seed = args.UseSeed ? args.Seed : new Random().Next();
+            Gen2D(args, ridged2D);
+        }
+        
+        static void GenPerlin2D(MapGenArgs args) {
+            Perlin perlin2D = new Perlin();
+            perlin2D.Seed = args.UseSeed ? args.Seed : new Random().Next();
+            Gen2D(args, perlin2D);
+        }
+        
+        static void GenCheckerboard(MapGenArgs args) {
+            Gen2D(args, new Checkerboard());
+        }
+        
+        static void GenSpheres(MapGenArgs args) {
+            Gen2D(args, new Spheres());
+        }
+        
+        static void GenCylinders(MapGenArgs args) {
+            Gen2D(args, new Cylinders());
+        }
+        
+        static void GenVoronoi(MapGenArgs args) {
+            Voronoi voronoi2D = new Voronoi();
+            voronoi2D.Seed = args.UseSeed ? args.Seed : new Random().Next();
+            Gen2D(args, voronoi2D);
+        }
+        
+        static void GenPerlin3D(MapGenArgs args) {
+            Perlin perlin3D = new Perlin();
+            perlin3D.Seed = args.UseSeed ? args.Seed : new Random().Next();
+            Gen3D(args, perlin3D);
+        }
+        
+        static void GenPerlin3DYAdjust(MapGenArgs args) {
+            Perlin adjNoise = new Perlin();
+            adjNoise.Seed = args.UseSeed ? args.Seed : new Random().Next();
+            Gen3DYAdjust(args, adjNoise);
+        }
+        
+        static void GenBillow3D(MapGenArgs args) {
+            Billow billow3D = new Billow();
+            billow3D.Seed = args.UseSeed ? args.Seed : new Random().Next();
+            Gen3D(args, billow3D);
+        }
+        
+        #endregion
+        
+        static void Gen2D(MapGenArgs args, IModule module) {
+            Level lvl = args.Level;
             int width = lvl.Width, length = lvl.Length, half = lvl.Height / 2;
             int waterHeight = half - 1;
             
@@ -84,7 +120,8 @@ namespace MCGalaxy {
             }
         }
         
-        static void Generate3D(Level lvl, IModule module) {
+        static void Gen3D(MapGenArgs args, IModule module) {
+            Level lvl = args.Level;
             int width = lvl.Width, height = lvl.Height, length = lvl.Length;
             for (int y = 0; y < height; y++)
                 for (int z = 0; z < length; ++z)
@@ -96,7 +133,8 @@ namespace MCGalaxy {
             }
         }
         
-        static void Generate3DYAdjust(Level lvl, IModule module) {
+        static void Gen3DYAdjust(MapGenArgs args, IModule module) {
+            Level lvl = args.Level;
             int width = lvl.Width, height = lvl.Height, length = lvl.Length;
             for (int y = 0; y < height; y++)
                 for (int z = 0; z < length; ++z)

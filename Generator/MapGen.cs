@@ -16,8 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Generator {
     public static class MapGen {
         public static bool IsRecognisedTheme(string s) {
             s = s.ToLower();
@@ -35,7 +36,7 @@ namespace MCGalaxy {
         }
         
         public static bool OkayAxis(int len) {
-			return len >= 16 && len <= 8192 && (len % 16) == 0;
+            return len >= 16 && len <= 8192 && (len % 16) == 0;
         }
         
         unsafe static void MapSet(int width, int length, byte* ptr, int yStart, int yEnd, byte block) {
@@ -54,6 +55,11 @@ namespace MCGalaxy {
             bool useSeed = args != "";
             if (useSeed && !int.TryParse(args, out seed))
                 seed = args.GetHashCode();
+            
+            MapGenArgs genArgs = new MapGenArgs();
+            genArgs.Level = lvl; genArgs.Type = type;
+            genArgs.RawArgs = args;
+            genArgs.UseSeed = useSeed; genArgs.Seed = seed;
             
             switch (type) {
                 case "flat":
@@ -138,7 +144,15 @@ namespace MCGalaxy {
                 case "desert":
                     generator.GenerateMap(lvl, type, seed, useSeed); return;
             }
-            AdvNoiseGen.Generate(lvl, type, useSeed, seed);
+            AdvNoiseGen.Generate(genArgs);
         }
+    }
+    
+    public struct MapGenArgs {
+        public Level Level;
+        public string Type;
+        public string RawArgs;
+        public bool UseSeed;
+        public int Seed;
     }
 }

@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy {   
+namespace MCGalaxy.Generator {   
     public sealed class RealisticGenParams {        
         public float RangeLow = 0.2f;
         public float RangeHigh = 0.8f;
