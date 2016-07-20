@@ -20,24 +20,20 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Generator { 
     public static class SimpleGen {
-        
-        static Dictionary<string, Action<MapGenArgs>> generators
-            = new Dictionary<string, Action<MapGenArgs>>{
-            { "island", GenSimple }, { "mountains", GenSimple },
-            { "forest", GenSimple }, { "ocean", GenSimple }, 
-            { "flat", GenFlat }, { "pixel", GenPixel },
-            { "empty", GenEmpty }, { "desert", GenSimple },
-            { "space", GenSpace }, { "rainbow", GenRainbow }, 
-            { "hell", GenHell },
-        };
-        
-        public static bool Generate(MapGenArgs args) {
-            Action<MapGenArgs> generator;
-            generators.TryGetValue(args.Type, out generator);
-            if (generator != null) generator(args);
-            return generator != null;
+
+        public static void RegisterGenerators() {
+            MapGen.RegisterSimpleGen("island", GenSimple);
+            MapGen.RegisterSimpleGen("mountains", GenSimple);
+            MapGen.RegisterSimpleGen("forest", GenSimple);
+            MapGen.RegisterSimpleGen("ocean", GenSimple);            
+            MapGen.RegisterSimpleGen("flat", GenFlat);
+            MapGen.RegisterSimpleGen("pixel", GenPixel);
+            MapGen.RegisterSimpleGen("empty", GenEmpty);            
+            MapGen.RegisterSimpleGen("desert", GenSimple);
+            MapGen.RegisterSimpleGen("space", GenSpace);
+            MapGen.RegisterSimpleGen("rainbow", GenRainbow);
+            MapGen.RegisterSimpleGen("hell", GenHell);
         }
-        
         
         unsafe static void GenFlat(MapGenArgs args) {
             Level lvl = args.Level;
@@ -154,7 +150,7 @@ namespace MCGalaxy.Generator {
         
         static void GenSimple(MapGenArgs args) {
             RealisticMapGen gen = new RealisticMapGen();
-            gen.GenerateMap(args.Level, args.Type, args.Seed, args.UseSeed);
+            gen.GenerateMap(args.Level, args.Theme, args.Seed, args.UseSeed);
         }
     }
 }

@@ -21,22 +21,19 @@ using LibNoise;
 
 namespace MCGalaxy.Generator {
     public static class AdvNoiseGen {
-        
-        static Dictionary<string, Action<MapGenArgs>> generators
-            = new Dictionary<string, Action<MapGenArgs>>{
-            { "billow", GenBillow2D }, { "ridgedmultifractal", GenRidged2D },
-            { "perlin", GenPerlin2D }, { "checkerboard", GenCheckerboard },
-            { "spheres", GenSpheres }, { "cylinders", GenCylinders },
-            { "voronoi", GenVoronoi }, { "perlin3d", GenPerlin3D },
-            { "perlin3dyadjust", GenPerlin3DYAdjust }, { "billow3d", GenBillow3D }
-        };
 
-        public static bool Generate(MapGenArgs args) {
-            Action<MapGenArgs> generator;
-            generators.TryGetValue(args.Type, out generator);
-            if (generator != null) generator(args);
-            return generator != null;
-        } 
+        public static void RegisterGenerators() {
+            MapGen.RegisterAdvancedGen("billow", GenBillow2D);
+            MapGen.RegisterAdvancedGen("ridgedmultifractal", GenRidged2D);
+            MapGen.RegisterAdvancedGen("perlin", GenPerlin2D);
+            MapGen.RegisterAdvancedGen("checkerboard", GenCheckerboard);          
+            MapGen.RegisterAdvancedGen("spheres", GenSpheres);
+            MapGen.RegisterAdvancedGen("cylinders", GenCylinders);
+            MapGen.RegisterAdvancedGen("voronoi", GenVoronoi);            
+            MapGen.RegisterAdvancedGen("perlin3d", GenPerlin3D);
+            MapGen.RegisterAdvancedGen("perlin3dyadjust", GenPerlin3DYAdjust);
+            MapGen.RegisterAdvancedGen("billow3d", GenBillow3D);
+        }
         
         
         #region Implementations

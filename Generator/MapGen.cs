@@ -22,42 +22,59 @@ namespace MCGalaxy.Generator {
     
     public struct MapGenArgs {
         public Level Level;
-        public string Type, RawArgs;
+        public string Theme, RawArgs;
         public bool UseSeed;
         public int Seed;
     }
     
     public static class MapGen {
+        
         public static bool IsRecognisedTheme(string s) {
             s = s.ToLower();
-            return Array.IndexOf<string>(types, s) >= 0 || Array.IndexOf<string>(advTypes, s) >= 0;
+            return simpleGens.ContainsKey(s) || advGens.ContainsKey(s);
         }
         
-        static string[] types = { "island", "mountains", "forest", "ocean", "flat",
-            "pixel", "empty", "desert", "space", "rainbow", "hell" };
-        static string[] advTypes = { "billow", "perlin", "checkerboard", "spheres", "cylinders",
-            "voronoi", "ridgedmultifractal", "perlin3d", "perlin3dyadjust" };
-
         public static void PrintThemes(Player p) {
-            Player.Message(p, "Simple themes: " + String.Join(", ", types));
-            Player.Message(p, "Advanced themes: " + String.Join(", ", advTypes));
+            Player.Message(p, "Simple themes: " + simpleGens.Keys.Concatenate(", "));
+            Player.Message(p, "Advanced themes: " + advGens.Keys.Concatenate(", "));
         }
         
         public static bool OkayAxis(int len) {
             return len >= 16 && len <= 8192 && (len % 16) == 0;
         }
 
-        public unsafe static void Generate(Level lvl, string type, string args) {
+        public static bool Generate(Level lvl, string theme, string args) {
             MapGenArgs genArgs = new MapGenArgs();
-            genArgs.Level = lvl; genArgs.Type = type;
+            genArgs.Level = lvl; genArgs.Theme = theme;
             genArgs.RawArgs = args;
             
             genArgs.UseSeed = args != "";
             if (genArgs.UseSeed && !int.TryParse(args, out genArgs.Seed))
                 genArgs.Seed = args.GetHashCode();
+            Action<MapGenArgs> generator = null;
             
-            if (!SimpleGen.Generate(genArgs))
-                AdvNoiseGen.Generate(genArgs);
+            simpleGens.TryGetValue(theme, out generator);
+            if (generator != null) { generator(genArgs); return true; }
+            advGens.TryGetValue(theme, out generator);
+            if (generator != null) { generator(genArgs); return true; }
+            return false;
+        }
+        
+        
+        static Dictionary<string, Action<MapGenArgs>> simpleGens, advGens;        
+        public static void RegisterSimpleGen(string theme, Action<MapGenArgs> gen) {
+            simpleGens[theme.ToLower()] = gen;
+        }
+        
+        public static void RegisterAdvancedGen(string theme, Action<MapGenArgs> gen) {
+            advGens[theme.ToLower()] = gen;
+        }
+        
+        static MapGen() {
+            simpleGens = new Dictionary<string, Action<MapGenArgs>>();
+            advGens = new Dictionary<string, Action<MapGenArgs>>();
+            SimpleGen.RegisterGenerators();
+            AdvNoiseGen.RegisterGenerators();
         }
     }
 }
