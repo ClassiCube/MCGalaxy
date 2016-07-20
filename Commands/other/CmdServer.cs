@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
     public sealed class CmdServer : Command {
         public override string name { get { return "server"; } }
         public override string shortcut { get { return "serv"; } }
-        public override string type { get { return CommandTypes.Other; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdServer() { }

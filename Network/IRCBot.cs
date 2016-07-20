@@ -93,7 +93,7 @@ namespace MCGalaxy {
             users.Clear();
         }
         
-        public bool IsConnected() {  return connection != null && connection.Connected; }
+        public bool IsConnected() { return connection != null && connection.Connected; }
         
         
         static string ConvertMessage(string message, bool color) {

@@ -75,14 +75,16 @@ namespace MCGalaxy.Generator {
                 return false;
             }
 
-            int index = 0, oneY = lvl.Width * lvl.Height;
+            int index = 0, oneY = lvl.Width * lvl.Length;
             using (bmp) {
                 for (int z = 0; z < bmp.Height; z++)
                     for (int x = 0; x < bmp.Width; x++)
                 {
                     int height = bmp.GetPixel(x, z).R * lvl.Height / 255;
-                    for (int y = 0; y < height; y++)
-                        lvl.blocks[index + oneY * y] = Block.stone;
+                    for (int y = 0; y < height - 1; y++)
+                        lvl.blocks[index + oneY * y] = Block.dirt;
+                    if (height > 0) 
+                        lvl.blocks[index + oneY * (height -1)] = Block.grass;
                     index++;
                 }
             }
