@@ -25,10 +25,8 @@ Ideas, concepts, and code were used from the following two sources:
 
  */
 using System;
-namespace MCGalaxy {
-    
-    public sealed class NoiseGen {
-
+namespace MCGalaxy {    
+    public static class NoiseGen {
         public static void GenerateNormalized(float[] array, float persistence, int octaves, int width, int height, int seed, float zoom) {
             float min = float.MaxValue, max = float.MinValue;
 

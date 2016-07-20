@@ -16,12 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using LibNoise;
 
 namespace MCGalaxy {
-    
     public static class MapGen {
-        
         public static bool IsRecognisedTheme(string s) {
             s = s.ToLower();
             return Array.IndexOf<string>(types, s) >= 0 || Array.IndexOf<string>(advTypes, s) >= 0;
@@ -52,7 +49,6 @@ namespace MCGalaxy {
             byte[] blocks = lvl.blocks;
             int half = height / 2;
             RealisticMapGen generator = new RealisticMapGen();
-            IModule module2D = null, module3D = null;
             
             int seed = 0; 
             bool useSeed = args != "";
@@ -135,42 +131,6 @@ namespace MCGalaxy {
                         }
                         index++;
                     } generator.GenerateMap(lvl, type, seed, useSeed); return;
-                case "billow":
-                    module2D = new Billow();
-                    ((Billow)module2D).Seed = useSeed ? seed : new Random().Next(); break;
-                case "ridgedmultifractal":
-                    module2D = new RidgedMultifractal();
-                    ((RidgedMultifractal)module2D).Seed = useSeed ? seed : new Random().Next(); break;
-                case "perlin":
-                    module2D = new Perlin();
-                    ((Perlin)module2D).Seed = useSeed ? seed : new Random().Next(); break;
-                case "checkerboard":
-                    module2D = new Checkerboard(); break;
-                case "spheres":
-                    module2D = new Spheres(); break;
-                case "cylinders":
-                    module2D = new Cylinders(); break;
-                case "voronoi":
-                    module2D = new Voronoi();
-                    ((Voronoi)module2D).Seed = useSeed ? seed : new Random().Next(); break;
-                case "perlin3d":
-                    module3D = new Perlin();
-                    ((Perlin)module3D).Seed = useSeed ? seed : new Random().Next(); break;
-                case "perlin3dyadjust":
-                    Perlin adjNoise = new Perlin();
-                    adjNoise.Seed = useSeed ? seed : new Random().Next();
-                    for (int y = 0; y < height; y++)
-                        for (int z = 0; z < length; ++z)
-                            for (int x = 0; x < width; ++x)
-                    {                        
-                        double value = System.Math.Floor((adjNoise.GetValue(x / 100.0, y / 100.0, z / 100.0) + 2) * 10);
-                        if (value > 30 * y / height)
-                            lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.grass);
-                    }
-                    break;
-                case "billow3d":
-                    module3D = new Billow();
-                    ((Billow)module3D).Seed = useSeed ? seed : new Random().Next(); break;
                 case "island":
                 case "mountains":
                 case "ocean":
@@ -178,39 +138,7 @@ namespace MCGalaxy {
                 case "desert":
                     generator.GenerateMap(lvl, type, seed, useSeed); return;
             }
-            
-            if (module2D != null) {
-                int waterlvl = half - 1;
-                for (int z = 0; z < length; ++z)
-                    for (int x = 0; x < width; ++x)
-                {
-                    double noise = module2D.GetValue(x / 100.0, 0.1, z / 100.0);
-                    int height2D = (int)System.Math.Floor((noise + 2) * 10) + (half-20);
-                    int height2Dtex01 = (int)System.Math.Floor((noise + 2) * 15) + (half- 30);
-                    byte topBlock = height2D < height2Dtex01 ? Block.grass : Block.sand;
-                    lvl.SetTile((ushort)x, (ushort)height2D, (ushort)z, topBlock);
-                    
-                    if (height2D < waterlvl) {
-                        for (int y = waterlvl; y >= height2D; y--)
-                            lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.water);
-                    }
-                    for (int y = height2D - 1; y >= 0; y--) {
-                        byte block = (y > height2D * 3 / 4) ? Block.dirt : Block.rock;
-                        lvl.SetTile((ushort)x, (ushort)y, (ushort)z, block);
-                    }
-                }
-            }
-            
-            if (module3D != null) {
-                for (int y = 0; y < height; y++)
-                    for (int z = 0; z < length; ++z)
-                        for (int x = 0; x < width; ++x)
-                {
-                    double value = System.Math.Floor((module3D.GetValue(x / 100.0, y / 100.0, z / 100.0) + 2) * 10);
-                    if (value > 20)
-                        lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.grass);
-                }
-            }
+            AdvNoiseGen.Generate(lvl, type, useSeed, seed);
         }
     }
 }

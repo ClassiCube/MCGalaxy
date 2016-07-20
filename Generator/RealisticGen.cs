@@ -28,17 +28,14 @@ using System;
 using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy {
-    
-    public sealed class RealisticMapGen {
-        
+namespace MCGalaxy {    
+    public sealed class RealisticMapGen {        
         float[] terrain, overlay, overlay2;
-
         float treeDens;
         short treeDist;
         Random rand;
         ushort LiquidLevel;
-        MapGenParams genParams;
+        RealisticGenParams genParams;
         TreeDrawOp treeDrawer;
         Vec3S32[] treeCoords;
         
@@ -46,8 +43,8 @@ namespace MCGalaxy {
             DateTime startTime = DateTime.UtcNow;
             Server.s.Log("Attempting map gen");
             rand = useSeed ? new System.Random(seed) : new System.Random();
-            if (!MapGenParams.Themes.TryGetValue(type, out genParams))
-                genParams = new MapGenParams();
+            if (!RealisticGenParams.Themes.TryGetValue(type, out genParams))
+                genParams = new RealisticGenParams();
             if (genParams.GenTrees) {
                 treeDrawer = new TreeDrawOp();
                 treeDrawer.Level = Lvl;

@@ -474,11 +474,12 @@
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Props.cs" />
+    <Compile Include="Generator\AdvNoiseGen.cs" />
     <Compile Include="Generator\ImprovedNoise.cs" />
     <Compile Include="Generator\MapGen.cs" />
     <Compile Include="Generator\NoiseGen.cs" />
-    <Compile Include="Generator\MapGenParams.cs" />
-    <Compile Include="Generator\RealisticMapGen.cs" />
+    <Compile Include="Generator\RealisticGenParams.cs" />
+    <Compile Include="Generator\RealisticGen.cs" />
     <Compile Include="Levels\IO\DatFile.cs" />
     <Compile Include="Levels\IO\FcmFile.cs" />
     <Compile Include="Levels\IO\LvlFile.cs" />

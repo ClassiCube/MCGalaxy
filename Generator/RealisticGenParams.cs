@@ -18,10 +18,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy {
-    
-    public sealed class MapGenParams {
-        
+namespace MCGalaxy {   
+    public sealed class RealisticGenParams {        
         public float RangeLow = 0.2f;
         public float RangeHigh = 0.8f;
         public bool SimpleColumns = false, IslandColumns = false;
@@ -41,25 +39,25 @@ namespace MCGalaxy {
         public float DisplacementMax = 0.01f;
         public float DisplacementStep = -0.0025f;
         
-        public static Dictionary<string, MapGenParams> Themes = new Dictionary<string, MapGenParams>() {
-            { "hell", new MapGenParams() { RangeLow = 0.3f, RangeHigh = 1.3f,
+        public static Dictionary<string, RealisticGenParams> Themes = new Dictionary<string, RealisticGenParams>() {
+            { "hell", new RealisticGenParams() { RangeLow = 0.3f, RangeHigh = 1.3f,
                     DisplacementMax = 0.02f, StartHeight = 0.04f, UseLavaLiquid = true,
                     GetLiquidLevel = (height) => 5 }
             },
-            { "island", new MapGenParams() { RangeLow = 0.4f, RangeHigh = 0.75f,
+            { "island", new RealisticGenParams() { RangeLow = 0.4f, RangeHigh = 0.75f,
                     FalloffEdges = true, IslandColumns = true }
             },
-            { "forest", new MapGenParams() { RangeLow = 0.45f, RangeHigh = 0.8f,
+            { "forest", new RealisticGenParams() { RangeLow = 0.45f, RangeHigh = 0.8f,
                     TreeDens = 0.7f, TreeDist = 2 }
             },
-            { "mountains", new MapGenParams() { RangeLow = 0.3f, RangeHigh = 0.9f,
+            { "mountains", new RealisticGenParams() { RangeLow = 0.3f, RangeHigh = 0.9f,
                     TreeDist = 4, DisplacementMax = 0.02f, StartHeight = 0.6f }
             },
-            { "ocean", new MapGenParams() { RangeLow = 0.1f, RangeHigh = 0.6f,
+            { "ocean", new RealisticGenParams() { RangeLow = 0.1f, RangeHigh = 0.6f,
                     GenTrees = false, GenerateOverlay2 = false,
                     GetLiquidLevel = (height) => (ushort)(height * 0.85f) }
             },
-            { "desert", new MapGenParams() { RangeLow = 0.5f, RangeHigh = 0.85f,
+            { "desert", new RealisticGenParams() { RangeLow = 0.5f, RangeHigh = 0.85f,
                     TreeDist = 24, GenFlowers = false, GenerateOverlay2 = false, 
                     UseCactus = true, SimpleColumns = true,
                     GetLiquidLevel = (height) => 0 }
