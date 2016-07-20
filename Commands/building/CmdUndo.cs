@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public override CommandPerm[] AdditionalPerms {
+        public override CommandPerm[] ExtraPerms {
             get { return new[] {
                     new CommandPerm(LevelPermission.Operator, "+ can undo other players"),
                     new CommandPerm(LevelPermission.AdvBuilder, "+ can undo physics"),

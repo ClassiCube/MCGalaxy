@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public override CommandPerm[] AdditionalPerms {
+        public override CommandPerm[] ExtraPerms {
             get { return new[] {
                     new CommandPerm(LevelPermission.Operator, "+ can send the countdown rules to everybody"),
                     new CommandPerm(LevelPermission.Operator, "+ can setup countdown (download/start/restart/enable/disable/cancel)"),

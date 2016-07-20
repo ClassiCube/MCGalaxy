@@ -14,14 +14,18 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
+using System.Drawing;
+using System.IO;
 using System.Net;
 
 namespace MCGalaxy.Generator {
     public static class HeightmapGen {
         
         public static bool DownloadImage(string url, string dir, Player p) {
+            if (!Directory.Exists(dir)) 
+                Directory.CreateDirectory(dir);
             if (!url.StartsWith("http://") && !url.StartsWith("https://"))
                 url = "http://" + url;
             
@@ -38,6 +42,51 @@ namespace MCGalaxy.Generator {
                 Player.Message(p, "&cThe url may need to end with its extension (such as .jpg).");
                 return false;
             }
+        }
+        
+        public static Bitmap ReadBitmap(string name, string dir, Player p) {
+            Bitmap bmp = null;
+            try {
+                bmp = new Bitmap(dir + name + ".bmp");
+                int width = bmp.Width; 
+                // sometimes Mono will return an invalid bitmap instance that throws ArgumentNullException,
+                // so we make sure to check for that here rather than later.
+                return bmp;
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                if (bmp != null) bmp.Dispose();
+                Player.Message(p, "&cThere was an error reading the downloaded image.");
+                Player.Message(p, "&cThe url may need to end with its extension (such as .jpg).");
+                return null;
+            }
+        }
+        
+        public static bool Generate(MapGenArgs args) {
+            Player p = args.Player;
+            Level lvl = args.Level;
+            if (args.Args == "") { Player.Message(p, "You need to provide a url for the image."); return false; }
+            
+            if (!DownloadImage(args.Args, "extra/heightmap/", p )) return false;
+            Bitmap bmp = ReadBitmap("tempImage_" + p.name, "extra/heightmap/", p);
+            if (bmp == null) return false;
+            if (lvl.Width != bmp.Width || lvl.Length != bmp.Height) {
+                Player.Message(p, "The size of the heightmap is {0} by {1}.", bmp.Width, bmp.Height);
+                Player.Message(p, "The width and length of the new level must match that size.");
+                return false;
+            }
+
+            int index = 0, oneY = lvl.Width * lvl.Height;
+            using (bmp) {
+                for (int z = 0; z < bmp.Height; z++)
+                    for (int x = 0; x < bmp.Width; x++)
+                {
+                    int height = bmp.GetPixel(x, z).R * lvl.Height / 255;
+                    for (int y = 0; y < height; y++)
+                        lvl.blocks[index + oneY * y] = Block.stone;
+                    index++;
+                }
+            }
+            return true;
         }
     }
 }

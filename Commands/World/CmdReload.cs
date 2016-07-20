@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
         public override CommandAlias[] Aliases {
             get { return new [] { new CommandAlias("rejoin"), new CommandAlias("rd") }; }
         }
-        public override CommandPerm[] AdditionalPerms {
+        public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can reload for other players") }; }
         }
 

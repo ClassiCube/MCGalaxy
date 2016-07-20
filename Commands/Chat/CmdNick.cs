@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override CommandPerm[] AdditionalPerms {
+        public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the nick of other players") }; }
         }
         public override CommandAlias[] Aliases {

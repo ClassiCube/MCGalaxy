@@ -51,7 +51,7 @@ namespace MCGalaxy {
             Player.Message(p, builder.ToString());
             
             PrintAliases(p, cmd);
-            CommandPerm[] addPerms = cmd.AdditionalPerms;
+            CommandPerm[] addPerms = cmd.ExtraPerms;
             if (addPerms == null) return;
             
             Player.Message(p, "%TExtra permissions:");

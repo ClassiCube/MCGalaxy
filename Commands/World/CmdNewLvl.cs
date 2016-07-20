@@ -26,6 +26,9 @@ namespace MCGalaxy.Commands.World {
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can generate maps with advanced themes") }; }
+        }
         public CmdNewLvl() { }
 
         public override void Use(Player p, string message) {
@@ -48,7 +51,10 @@ namespace MCGalaxy.Commands.World {
             if (!ValidName(p, name, "level")) return;
             if (LevelInfo.ExistsOffline(name)) {
                 Player.Message(p, "Level \"{0}\" already exists", name); return;
-            }           
+            }
+            if (!MapGen.IsSimpleTheme(args[4]) && !CheckExtraPerm(p)) { 
+                MessageNeedExtra(p, "can generate maps with advanced themes."); return;
+            }
 
             try {
                 using (Level lvl = new Level(name, x, y, z)) {

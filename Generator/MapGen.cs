@@ -23,7 +23,7 @@ namespace MCGalaxy.Generator {
     public struct MapGenArgs {
         public Player Player;
         public Level Level;
-        public string Theme, RawArgs;
+        public string Theme, Args;
         public bool UseSeed;
         public int Seed;
     }
@@ -33,6 +33,10 @@ namespace MCGalaxy.Generator {
         public static bool IsRecognisedTheme(string s) {
             s = s.ToLower();
             return simpleGens.ContainsKey(s) || advGens.ContainsKey(s);
+        }
+        
+        public static bool IsSimpleTheme(string s) {
+            return simpleGens.ContainsKey(s.ToLower());
         }
         
         public static void PrintThemes(Player p) {
@@ -47,7 +51,7 @@ namespace MCGalaxy.Generator {
         public static bool Generate(Level lvl, string theme, string args, Player p) {
             MapGenArgs genArgs = new MapGenArgs();
             genArgs.Level = lvl; genArgs.Player = p;
-            genArgs.Theme = theme; genArgs.RawArgs = args;
+            genArgs.Theme = theme; genArgs.Args = args;
             
             genArgs.UseSeed = args != "";
             if (genArgs.UseSeed && !int.TryParse(args, out genArgs.Seed))
@@ -76,6 +80,7 @@ namespace MCGalaxy.Generator {
             advGens = new Dictionary<string, Func<MapGenArgs, bool>>();
             SimpleGen.RegisterGenerators();
             AdvNoiseGen.RegisterGenerators();
+            RegisterAdvancedGen("heightmap", HeightmapGen.Generate);
         }
     }
 }

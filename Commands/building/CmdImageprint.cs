@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.Building {
             
             DrawArgs dArgs = default(DrawArgs);
             dArgs.layer = layer;
-            dArgs.bitmapLoc = bitmapLoc;
+            dArgs.name = bitmapLoc;
             dArgs.popType = popType;
             Player.Message(p, "Place two blocks to determine direction.");
             p.MakeSelection(2, dArgs, DoImage);
@@ -97,15 +97,13 @@ namespace MCGalaxy.Commands.Building {
         }
         
         void DoDrawImage(Player p, Vec3S32 p0, DrawArgs dArgs, int direction) {
-            Bitmap bmp = null;
+            Bitmap bmp = HeightmapGen.ReadBitmap(dArgs.name, "extra/images/", p);
+            if (bmp == null) return;
             try {
-                bmp = new Bitmap("extra/images/" + dArgs.bitmapLoc + ".bmp");
                 bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
-                if (bmp != null) bmp.Dispose();
-                Player.Message(p, "&cThere was an error reading the downloaded image.");
-                Player.Message(p, "&cThe url may need to end with its extension (such as .jpg).");
+                bmp.Dispose();
                 return;
             }
             
@@ -171,7 +169,7 @@ namespace MCGalaxy.Commands.Building {
                 p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, cur.type, 0);
             }
             
-            if (dArgs.bitmapLoc == "tempImage_" + p.name)
+            if (dArgs.name == "tempImage_" + p.name)
                 File.Delete("extra/images/tempImage_" + p.name + ".bmp");
             Player.Message(p, "Finished printing image using " + ImagePalette.Names[popType]);
         }
@@ -186,7 +184,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "Use switch (&flayer%S) or (&fl%S) to print horizontally.");
         }
 
-        struct DrawArgs { public bool layer; public byte popType; public string bitmapLoc; }
+        struct DrawArgs { public bool layer; public byte popType; public string name; }
     }
 }
 
