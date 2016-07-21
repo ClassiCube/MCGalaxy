@@ -21,68 +21,49 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 
-namespace MCGalaxy
-{
-    /// <summary>
-    /// This class provides for more advanced modification to MCGalaxy
-    /// </summary>
-    public abstract partial class Plugin
-    {
+namespace MCGalaxy {
+    /// <summary> This class provides for more advanced modification to MCGalaxy </summary>
+    public abstract partial class Plugin {
         #region Static Variables
-        /// <summary>
-        /// List of all plugins.
-        /// </summary>
+        /// <summary> List of all plugins. </summary>
         public static List<Plugin> all = new List<Plugin>();
-        /// <summary>
-        /// List of all simple plugins.
-        /// </summary>
+        /// <summary> List of all simple plugins. </summary>
         public static List<Plugin_Simple> all_simple = new List<Plugin_Simple>();
         #endregion
 
         #region Abstract
-        /// <summary>
-        /// Use this to load all your events and everything you need.
-        /// </summary>
+        /// <summary> Use this to load all your events and everything you need. </summary>
         /// <param name="startup">True if this was used from the server startup and not loaded from the command.</param>
         public abstract void Load(bool startup);
-        /// <summary>
-        /// Use this method to dispose of everything you used.
-        /// </summary>
+        
+        /// <summary> Use this method to dispose of everything you used. </summary>
         /// <param name="shutdown">True if this was used by the server shutting down and not a command.</param>
         public abstract void Unload(bool shutdown);
-        /// <summary>
-        /// This method is runned when a player does /help <pluginame>
-        /// Use it to show player's what this command is about.
-        /// </summary>
+        
+        /// <summary> This method is runned when a player does /help <pluginame>
+        /// Use it to show player's what this command is about. </summary>
         /// <param name="p">Player who runned this command.</param>
         public abstract void Help(Player p);
-        /// <summary>
-        /// Name of the plugin.
-        /// </summary>
+        
+        /// <summary> Name of the plugin. </summary>
         public abstract string name { get; }
-        /// <summary>
-        /// Your website.
-        /// </summary>
+        
+        /// <summary> Your website. </summary>
         public abstract string website { get; }
-        /// <summary>
-        /// Oldest version of MCGalaxy the plugin is compatible with.
-        /// </summary>
+        
+        /// <summary> Oldest version of MCGalaxy the plugin is compatible with. </summary>
         public abstract string MCGalaxy_Version { get; }
-        /// <summary>
-        /// Version of your plugin.
-        /// </summary>
+        
+        /// <summary> Version of your plugin. </summary>
         public abstract int build { get; }
-        /// <summary>
-        /// Message to display once plugin is loaded.
-        /// </summary>
+        
+        /// <summary> Message to display once plugin is loaded. </summary>
         public abstract string welcome { get; }
-        /// <summary>
-        /// The creator/author of this plugin. (Your name)
-        /// </summary>
+        
+        /// <summary> The creator/author of this plugin. (Your name) </summary>
         public abstract string creator { get; }
-        /// <summary>
-        /// Whether or not to load this plugin at startup.
-        /// </summary>
+        
+        /// <summary> Whether or not to load this plugin at startup. </summary>
         public abstract bool LoadAtStartup { get; }
         #endregion
 
@@ -90,8 +71,7 @@ namespace MCGalaxy
         /// <summary> Look to see if a plugin is loaded </summary>
         /// <param name="name">The name of the plugin</param>
         /// <returns>Returns the plugin (returns null if non is found)</returns>
-        public static Plugin Find(string name)
-        {
+        public static Plugin Find(string name) {
             List<Plugin> tempList = new List<Plugin>();
             tempList.AddRange(all);
             Plugin match = null; int matches = 0;
@@ -108,16 +88,13 @@ namespace MCGalaxy
         #endregion
 
         #region Loading/Unloading
-        /// <summary>
-        /// Load a plugin
-        /// </summary>
+        
+        /// <summary> Load a plugin </summary>
         /// <param name="pluginname">The file path of the dll file</param>
         /// <param name="startup">Is this startup?</param>
-        public static void Load(string pluginname, bool startup)
-        {
-            String creator = "";
-            try
-            {
+        public static void Load(string pluginname, bool startup){
+            string creator = "";
+            try {
                 Plugin instance = null;
                 Assembly lib = null;
                 using (FileStream fs = File.Open(pluginname, FileMode.Open))
@@ -173,24 +150,14 @@ namespace MCGalaxy
                     Server.s.Log("Plugin: " + instance.name + " was not loaded, you can load it with /pload");
                 Server.s.Log(instance.welcome);
                 return;
-            }
-            catch (FileNotFoundException)
-            {
+            } catch (FileNotFoundException) {
                 Plugin_Simple.Load(pluginname, startup);
-            }
-            catch (BadImageFormatException)
-            {
+            } catch (BadImageFormatException) {
                 Plugin_Simple.Load(pluginname, startup);
-            }
-            catch (PathTooLongException)
-            {
-            }
-            catch (FileLoadException)
-            {
+            } catch (PathTooLongException) {
+            } catch (FileLoadException) {
                 Plugin_Simple.Load(pluginname, startup);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 try { Server.s.Log("Attempting a simple plugin!"); if (Plugin_Simple.Load(pluginname, startup)) return; }
                 catch { }
                 Server.ErrorLog(e);
@@ -200,18 +167,14 @@ namespace MCGalaxy
                 Thread.Sleep(1000);
             }
         }
-        /// <summary>
-        /// Unload a plugin
-        /// </summary>
+        
+        /// <summary> Unload a plugin </summary>
         /// <param name="p">The plugin to unload</param>
         /// <param name="shutdown">Is this shutdown?</param>
-        public static void Unload(Plugin p, bool shutdown)
-        {
-            try
-            {
+        public static void Unload(Plugin p, bool shutdown) {
+            try {
                 p.Unload(shutdown);
                 all.Remove(p);
-
                 Server.s.Log(p.name + " was unloaded.");
             }
             catch { Server.s.Log("An error occurred while unloading a plugin."); }
@@ -219,33 +182,24 @@ namespace MCGalaxy
         #endregion
 
         #region Global Loading/Unloading
-        /// <summary>
-        /// Unload all plugins
-        /// </summary>
-        public static void Unload()
-        {
-            all.ForEach(delegate(Plugin p)
-            {
+        /// <summary> Unload all plugins </summary>
+        public static void Unload() {
+            all.ForEach(delegate(Plugin p) {
                 Unload(p, true);
             });
         }
-        /// <summary>
-        /// Load all plugins
-        /// </summary>
-        public static void Load()
-        {
-            if (Directory.Exists("plugins"))
-            {
-                foreach (string file in Directory.GetFiles("plugins", "*.dll"))
-                {
+        
+        /// <summary> Load all plugins </summary>
+        public static void Load() {
+            if (Directory.Exists("plugins")) {
+                foreach (string file in Directory.GetFiles("plugins", "*.dll")) {
                     Load(file, true);
                 }
-            }
-            else
+        	} else {
                 Directory.CreateDirectory("plugins");
-            /*
-             ===Load Internal Plugins===
-             */
+        	}
+        	
+            // Load Internal Plugins
             CTF.Setup temp = new CTF.Setup();
             temp.Load(true);
             Plugin.all_simple.Add(temp);

@@ -15,20 +15,16 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy
-{
-	public partial class Plugin
-	{
-        /// <summary>
-        /// Check to see if a Player event is stopped
-        /// </summary>
+
+namespace MCGalaxy {
+	public partial class Plugin {
+		
+        /// <summary> Check to see if a Player event is stopped </summary>
         /// <param name="e">The event to check</param>
         /// <param name="p">The Player that event is related to</param>
         /// <returns>This returns true or false, true means its stopped, false means its not</returns>
-        public static bool IsPlayerEventCanceled(PlayerEvents e, Player p)
-        {
-            switch (e)
-            {
+        public static bool IsPlayerEventCanceled(PlayerEvents e, Player p) {
+            switch (e) {
                 case PlayerEvents.BlockChange:
                     return p.cancelBlock;
                 case PlayerEvents.PlayerChat:
@@ -47,90 +43,64 @@ namespace MCGalaxy
                     return false;
             }
         }
-        /// <summary>
-        /// Cancel a server event
-        /// </summary>
+        
+        /// <summary> Cancel a server event </summary>
         /// <param name="e">The event you want to cancel</param>
-        public static void CancelServerEvent(ServerEvents e)
-        {
-            switch (e)
-            {
+        public static void CancelServerEvent(ServerEvents e) {
+            switch (e) {
                 case ServerEvents.ConsoleCommand:
-                    Server.cancelcommand = true;
-                    break;
+                    Server.cancelcommand = true; break;
                 case ServerEvents.ServerAdminLog:
-                    Server.canceladmin = true;
-                    break;
+                    Server.canceladmin = true; break;
                 case ServerEvents.ServerLog:
-                    Server.cancellog = true;
-                    break;
+                    Server.cancellog = true; break;
                 case ServerEvents.ServerOpLog:
-                    Server.canceloplog = true;
-                    break;
+                    Server.canceloplog = true; break;
             }
         }
-        /// <summary>
-        /// Cancel Level event
-        /// </summary>
+        
+        /// <summary> Cancel Level event </summary>
         /// <param name="e">The event to cancel</param>
         /// <param name="l">The level to cancel the event on</param>
-        public static void CancelLevelEvent(LevelEvents e, Level l)
-        {
-            switch (e)
-            {
+        public static void CancelLevelEvent(LevelEvents e, Level l) {
+            switch (e) {
                 case LevelEvents.LevelUnload:
-                    l.cancelunload = true;
-                    break;
+                    l.cancelunload = true; break;
                 case LevelEvents.LevelSave:
-                    l.cancelsave1 = true;
-                    break;
-
+                    l.cancelsave1 = true; break;
             }
         }
-        /// <summary>
-        /// Check to see if a level event is canceled
-        /// </summary>
+        
+        /// <summary> Check to see if a level event is canceled </summary>
         /// <param name="e">The event you want to check</param>
         /// <param name="l">The level to check the event on</param>
         /// <returns></returns>
-        public static bool IsLevelEventCancel(LevelEvents e, Level l)
-        {
-            switch (e)
-            {
+        public static bool IsLevelEventCancel(LevelEvents e, Level l) {
+            switch (e) {
                 case LevelEvents.LevelUnload:
                     return l.cancelunload;
                 case LevelEvents.LevelSave:
                     return l.cancelsave1;
                 default:
                     return false;
-
             }
         }
-        /// <summary>
-        /// Cancel Global Level Event
-        /// </summary>
+        
+        /// <summary> Cancel Global Level Event </summary>
         /// <param name="e">The event you want to cancel</param>
-        public static void CancelGlobalLevelEvent(GlobalLevelEvents e)
-        {
-            switch (e)
-            {
+        public static void CancelGlobalLevelEvent(GlobalLevelEvents e) {
+            switch (e) {
                 case GlobalLevelEvents.LevelLoad:
-                    Level.cancelload = true;
-                    break;
+                    Level.cancelload = true; break;
                 case GlobalLevelEvents.LevelSave:
-                    Level.cancelsave = true;
-                    break;
+                    Level.cancelsave = true; break;
             }
         }
-        /// <summary>
-        /// Check to see if global level event is canceled
-        /// </summary>
+        
+        /// <summary> Check to see if global level event is canceled </summary>
         /// <param name="e">The event to check</param>
-        /// <returns></returns>
-        public static bool IsGlobalLevelEventCanceled(GlobalLevelEvents e)
-        {
-            switch (e)
-            {
+        public static bool IsGlobalLevelEventCanceled(GlobalLevelEvents e){
+            switch (e) {
                 case GlobalLevelEvents.LevelLoad:
                     return Level.cancelload;
                 case GlobalLevelEvents.LevelSave:
@@ -139,37 +109,27 @@ namespace MCGalaxy
                     return false;
             }
         }
-        /// <summary>
-        /// Cancel a player event
-        /// </summary>
+        
+        /// <summary> Cancel a player event </summary>
         /// <param name="e">The event that you want to cancel</param>
         /// <param name="p">The Player that event is related to</param>
         public static void CancelPlayerEvent(PlayerEvents e, Player p) {
-            //TODO
-            //Add some more events to be canceled
-            switch (e)
-            {
+            // TODO Add some more events to be canceled
+            switch (e) {
                 case PlayerEvents.BlockChange:
-                    p.cancelBlock = true;
-                    break;
+                    p.cancelBlock = true; break;
                 case PlayerEvents.PlayerChat:
-                    p.cancelchat = true;
-                    break;
+                    p.cancelchat = true; break;
                 case PlayerEvents.PlayerCommand:
-                    p.cancelcommand = true;
-                    break;
+                    p.cancelcommand = true; break;
                 case PlayerEvents.PlayerMove:
-                    p.cancelmove = true;
-                    break;
+                    p.cancelmove = true; break;
                 case PlayerEvents.MYSQLSave:
-                    p.cancelmysql = true;
-                    break;
+                    p.cancelmysql = true; break;
                 case PlayerEvents.PlayerRankChange:
-                    Group.cancelrank = true;
-                    break;
+                    Group.cancelrank = true; break;
                 case PlayerEvents.MessageRecieve:
-                    p.cancelmessage = true;
-                    break;
+                    p.cancelmessage = true; break;
             }
         }
 	}
