@@ -618,7 +618,11 @@ namespace MCGalaxy {
             int spaceIndex = appName.IndexOf(' ');
             string version = appName.Substring(spaceIndex, appName.Length - spaceIndex);
             Version ver;
-            if (!Version.TryParse(version, out ver)) return;
+            try {
+                ver = Version.Parse(version);
+            } catch {
+                return;
+            }
             
             if (ver < new Version("0.98.6")) {
                 SendMessage("%aYou are using an outdated version of ClassicalSharp.");

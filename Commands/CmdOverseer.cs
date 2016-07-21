@@ -295,9 +295,13 @@ namespace MCGalaxy.Commands
                 }
                 
                 try {
-                    var oldLines = File.ReadAllLines(path);
-                    var newLines = oldLines.Where(line => !line.Contains(value));
-                    File.WriteAllLines(path, newLines);
+                    string[] lines = File.ReadAllLines(path);
+                    using (StreamWriter w = new StreamWriter(path)) {
+                        foreach (string line in lines) {
+                            if (line.Contains(value)) continue;
+                            w.WriteLine(line);
+                        }
+                    }
                 } catch {
                     Server.s.Log("Error saving level unblock");
                 }
