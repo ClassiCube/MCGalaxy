@@ -44,15 +44,17 @@ namespace MCGalaxy {
 
         #region Loading
         /// <summary> Load a simple plugin </summary>
-        /// <param name="pluginname">The filepath to load</param>
+        /// <param name="name">The name of the plugin.</param>
         /// <param name="startup">Whether the server is starting up or not</param>
         /// <returns>Whether the plugin loaded or not</returns>
-        public static bool Load(string pluginname, bool startup)
+        public static bool Load(string name, bool startup)
         {
             string creator = "";
             object instance = null;
             Assembly lib = null;
-            using (FileStream fs = File.Open(pluginname, FileMode.Open))
+            string path = "plugins/" + name + ".dll";
+            
+            using (FileStream fs = File.Open(path, FileMode.Open))
             {
                 using (MemoryStream ms = new MemoryStream())
                 {
@@ -64,8 +66,6 @@ namespace MCGalaxy {
                     ms.Close();
                     ms.Dispose();
                 }
-                fs.Close();
-                fs.Dispose();
             }
             try
             {
@@ -81,7 +81,7 @@ namespace MCGalaxy {
             catch { }
             if (instance == null)
             {
-                Server.s.Log("The plugin " + pluginname + " couldn't be loaded!");
+                Server.s.Log("The plugin " + name + " couldn't be loaded!");
                 return false;
             }
             String plugin_version = ((Plugin_Simple)instance).MCGalaxy_Version;

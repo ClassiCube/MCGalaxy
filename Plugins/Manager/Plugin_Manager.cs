@@ -90,17 +90,16 @@ namespace MCGalaxy {
         #region Loading/Unloading
         
         /// <summary> Load a plugin </summary>
-        /// <param name="pluginname">The file path of the dll file</param>
+        /// <param name="name">The name of the plugin.</param>
         /// <param name="startup">Is this startup?</param>
-        public static void Load(string pluginname, bool startup){
+        public static void Load(string name, bool startup){
             string creator = "";
-            try {
+            string path = "plugins/" + name + ".dll";
+            try {                throw new Exception();
                 Plugin instance = null;
                 Assembly lib = null;
-                using (FileStream fs = File.Open(pluginname, FileMode.Open))
-                {
-                    using (MemoryStream ms = new MemoryStream())
-                    {
+                using (FileStream fs = File.Open(path, FileMode.Open)) {
+                    using (MemoryStream ms = new MemoryStream()) {
                         byte[] buffer = new byte[1024];
                         int read = 0;
                         while ((read = fs.Read(buffer, 0, 1024)) > 0)
@@ -122,7 +121,7 @@ namespace MCGalaxy {
                 catch { }
                 if (instance == null)
                 {
-                    Server.s.Log("The plugin " + pluginname + " couldn't be loaded!");
+                    Server.s.Log("The plugin " + name + " couldn't be loaded!");
                     return;
                 }
                 String plugin_version = instance.MCGalaxy_Version;
@@ -151,17 +150,17 @@ namespace MCGalaxy {
                 Server.s.Log(instance.welcome);
                 return;
             } catch (FileNotFoundException) {
-                Plugin_Simple.Load(pluginname, startup);
+                Plugin_Simple.Load(name, startup);
             } catch (BadImageFormatException) {
-                Plugin_Simple.Load(pluginname, startup);
+                Plugin_Simple.Load(name, startup);
             } catch (PathTooLongException) {
             } catch (FileLoadException) {
-                Plugin_Simple.Load(pluginname, startup);
+                Plugin_Simple.Load(name, startup);
             } catch (Exception e) {
-                try { Server.s.Log("Attempting a simple plugin!"); if (Plugin_Simple.Load(pluginname, startup)) return; }
+                try { Server.s.Log("Attempting a simple plugin!"); if (Plugin_Simple.Load(name, startup)) return; }
                 catch { }
                 Server.ErrorLog(e);
-                Server.s.Log("The plugin " + pluginname + " failed to load!");
+                Server.s.Log("The plugin " + name + " failed to load!");
                 if (creator != "")
                     Server.s.Log("You can go bug " + creator + " about it.");
                 Thread.Sleep(1000);
@@ -192,8 +191,9 @@ namespace MCGalaxy {
         /// <summary> Load all plugins </summary>
         public static void Load() {
             if (Directory.Exists("plugins")) {
-                foreach (string file in Directory.GetFiles("plugins", "*.dll")) {
-                    Load(file, true);
+                foreach (string path in Directory.GetFiles("plugins", "*.dll")) {
+                    string name = Path.GetFileNameWithoutExtension(path);
+                    Load(name, true);
                 }
         	} else {
                 Directory.CreateDirectory("plugins");

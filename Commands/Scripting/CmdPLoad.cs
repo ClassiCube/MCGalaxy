@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (File.Exists("plugins/" + message + ".dll"))
-                Plugin.Load(message + ".dll", false);
+                Plugin.Load(message, false);
             else
                 Player.Message(p, "Plugin not found!");
         }
