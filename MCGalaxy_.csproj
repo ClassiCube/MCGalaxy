@@ -543,8 +543,8 @@
     <Compile Include="Plugins\Events\ServerEvents.cs" />
     <Compile Include="Plugins\IPluginEvent.cs" />
     <Compile Include="Plugins\Manager\Plugin.Events.cs" />
-    <Compile Include="Plugins\Manager\Plugin_Manager.cs" />
-    <Compile Include="Plugins\Manager\Plugin_Simple.cs" />
+    <Compile Include="Plugins\Manager\PluginManager.cs" />
+    <Compile Include="Plugins\Manager\Plugin.cs" />
     <Compile Include="Network\NetUtils.cs" />
     <Compile Include="Network\Opcode.cs" />
     <Compile Include="Network\Player.Networking.cs" />
