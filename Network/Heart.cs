@@ -1,7 +1,7 @@
 /*
     Copyright 2012 MCForge
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -63,16 +63,16 @@ namespace MCGalaxy {
             }
             
             CanBeat = true;            
-            for (int i = 0; i < Beats.Length; i++)
+            for (int i = 0; i < Beats.Length; i++) {
+                Beats[i].Init();
                 Pump(Beats[i]);
+            }
         }
 
         /// <summary> Pumps the specified beat. </summary>
-        /// <param name="beat">The beat.</param>
-        /// <returns></returns>
         public static void Pump(IBeat beat) {
-            if(!CanBeat) return;
-            byte[] data = Encoding.ASCII.GetBytes(beat.Prepare());
+            if (!CanBeat) return;
+            byte[] data = Encoding.ASCII.GetBytes(beat.PrepareBeat());
 
             for (int i = 0; i < MAX_RETRIES; i++) {
                 try {
@@ -82,20 +82,18 @@ namespace MCGalaxy {
                     req.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
                     req.Timeout = 15000;
                     req.ContentLength = data.Length;
+                    beat.OnRequest(req);
 
                     using (var w = req.GetRequestStream()) {
                         w.Write(data, 0, data.Length);
-
-                        if (Server.logbeat)
-                            Server.s.Log("Beat " + beat.ToString() + " was sent");
+                        if (Server.logbeat) Server.s.Log("Beat " + beat + " was sent");
                     }
 
                     using (var r = new StreamReader(req.GetResponse().GetResponseStream())) {
                         string read = r.ReadToEnd().Trim();
                         beat.OnResponse(read);
 
-                        if (Server.logbeat)
-                            Server.s.Log("Beat: \"" + read + "\" was recieved");
+                        if (Server.logbeat) Server.s.Log("Beat: \"" + read + "\" was recieved");
                     }
                     return;
                 } catch {
@@ -103,8 +101,7 @@ namespace MCGalaxy {
                 }
             }
 
-            if (Server.logbeat)
-                Server.s.Log("Beat: " + beat.ToString() + " failed.");
+            if (Server.logbeat) Server.s.Log("Beat: " + beat + " failed.");
         }
     }
 }

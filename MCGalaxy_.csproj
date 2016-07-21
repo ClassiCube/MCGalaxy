@@ -514,6 +514,7 @@
     <Compile Include="Levels\Physics\TrainPhysics.cs" />
     <Compile Include="Levels\Physics\TntPhysics.cs" />
     <Compile Include="Levels\Physics\ZombiePhysics.cs" />
+    <Compile Include="Network\Heart.cs" />
     <Compile Include="Network\IRCBot.cs" />
     <Compile Include="Network\LevelChunkStream.cs" />
     <Compile Include="Player\Entities.cs" />
@@ -566,7 +567,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Network\IBeat.cs" />
     <Compile Include="Levels\Level.cs" />
-    <Compile Include="Server\Extra\Heart.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Server\Extra\ProfanityFilter.cs">

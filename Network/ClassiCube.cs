@@ -1,7 +1,7 @@
 /*
     Copyright 2012 MCForge
  
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -17,17 +17,48 @@
  */
 using System;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using Newtonsoft.Json;
 
 namespace MCGalaxy {
     
     public sealed class ClassiCubeBeat : IBeat {
         
-        public string URL { get { return "http://www.classicube.net/heartbeat.jsp"; } }
+		string url = "http://www.classicube.net/heartbeat.jsp";
+        public string URL { get { return url; } }
 
         public bool Persistance { get { return true; } }
+        
+        public void Init() {
+            try {
+                IPAddress[] addresses = Dns.GetHostAddresses("www.classicube.net");
+                EnsureIPv4Url(addresses);
+            } catch (Exception ex) {
+                Server.s.Log("Error while trying to retrieve DNS information for classicube.net");
+                Server.ErrorLog(ex);
+            }
+        }
+        
+        // classicube.net only supports ipv4 servers, so we need to make
+        // sure we are using its ipv4 address when POSTing heartbeats
+        void EnsureIPv4Url(IPAddress[] addresses) {
+            bool useIPv6 = false;
+            IPAddress firstIPv4 = null;
+            
+            foreach (IPAddress ip in addresses) {
+                AddressFamily family = ip.AddressFamily;
+                if (family == AddressFamily.InterNetworkV6)
+                    useIPv6 = true;
+                if (family == AddressFamily.InterNetwork && firstIPv4 == null)
+                    firstIPv4 = ip;
+            }
+            
+            if (!useIPv6 || firstIPv4 == null) return;
+            url = "http://"  + firstIPv4 + ":80/heartbeat.jsp";
+        }
 
-        public string Prepare()  {
+        public string PrepareBeat()  {
             string name = Server.name;
             Server.zombie.OnHeartbeat(ref name);
             Server.lava.OnHeartbeat(ref name);
@@ -50,6 +81,10 @@ namespace MCGalaxy {
             }
             return count;
         }
+        
+        public void OnRequest(HttpWebRequest request) {
+            request.Host = "www.classicube.net";
+        }   
         
         bool foundUrl = false;
         public void OnResponse(string line) {
@@ -80,9 +115,9 @@ namespace MCGalaxy {
         }        
         
         class Response {
-        	public string[][] errors;
-        	public string response;
-        	public string status;
+            public string[][] errors;
+            public string response;
+            public string status;
         }
     }
 }
