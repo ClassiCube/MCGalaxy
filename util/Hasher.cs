@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.IO;
 using System.Linq;
@@ -55,10 +55,14 @@ namespace MCGalaxy.Util {
 
         internal static bool MatchesPass(string salt, string plainText) {
             if (!File.Exists(string.Format(path, salt))) return false;
-
+            
             byte[] hashed = File.ReadAllBytes(string.Format(path, salt));
             byte[] computed = Compute(salt, plainText);
-            if (hashed.Length != computed.Length) return false;
+            // Old passwords stored UTF8 string instead of just the raw 16 byte hashes
+            // We need to support both since this behaviour was accidentally changed
+            if (hashed.Length != computed.Length) {
+                return Encoding.UTF8.GetString(hashed) == Encoding.UTF8.GetString(computed);
+            }             
             
             for (int i = 0; i < hashed.Length; i++) {
                 if (hashed[i] != computed[i]) return false;
