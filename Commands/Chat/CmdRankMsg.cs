@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             string[] args = message.SplitSpaces(2);
             string rank = args.Length == 1 ? p.group.name : args[0];
             string text = args[args.Length - 1];            
-            Group grp = Group.FindOrShowMatches(p, rank);
+            Group grp = Group.FindMatches(p, rank);
             if (grp == null) return;
             
             Player[] players = PlayerInfo.Online.Items;

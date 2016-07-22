@@ -122,7 +122,7 @@ namespace MCGalaxy.Commands.Moderation {
         static Group TargetRank(Player p, string name, Group curGroup) {
             if (name == "+up") return NextRankUp(p, curGroup);
             if (name == "-down") return NextRankDown(p, curGroup);
-            return Group.FindOrShowMatches(p, name);
+            return Group.FindMatches(p, name);
         }
         
         static Group NextRankDown(Player p, Group curGroup) {

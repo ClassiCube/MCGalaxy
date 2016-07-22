@@ -279,6 +279,33 @@ namespace MCGalaxy
             }
         }
         
+        public static bool canPlace(Player p, byte block) { 
+            Blocks b = BlockList[block];
+            LevelPermission perm = p.Rank;
+            return (perm >= b.lowestRank || (b.allow != null && b.allow.Contains(perm))) 
+                && (b.disallow == null || !b.disallow.Contains(perm));
+        }
+        
+        public static bool canPlace(LevelPermission perm, byte block) {
+            Blocks b = BlockList[block];
+            return (perm >= b.lowestRank || (b.allow != null && b.allow.Contains(perm))) 
+                && (b.disallow == null || !b.disallow.Contains(perm));
+        }
+        
+        public static void ResendBlockPermissions(byte block) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (!pl.HasCpeExt(CpeExt.BlockPermissions)) continue;
+                
+                int count = pl.hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
+                if (block < count) {
+                    bool canAffect = Block.canPlace(pl, block);
+                    pl.SendSetBlockPermission(block, canAffect, canAffect);
+                }
+            }
+        }
+        
+        
         static void LoadVersion2(string[] lines) {
             string[] colon = new string[] { " : " };
             foreach (string line in lines) {
@@ -314,18 +341,18 @@ namespace MCGalaxy
         }
         
         static void LoadVersion1(string[] lines) {
-            foreach (string s in lines) {
-                if (s[0] == '#') continue;
+            foreach (string line in lines) {
+                if (line == "" || line[0] == '#') continue;
                 
                 try {
-                    byte type = Block.Byte(s.Split(' ')[0]);
-                    LevelPermission lowestRank = Level.PermissionFromName(s.Split(' ')[2]);
+                    byte type = Block.Byte(line.Split(' ')[0]);
+                    LevelPermission lowestRank = Level.PermissionFromName(line.Split(' ')[2]);
                     if (lowestRank != LevelPermission.Null)
                         BlockList[type].lowestRank = lowestRank;
                     else
-                        throw new InvalidDataException("Line " + s + " is invalid.");
+                        throw new InvalidDataException("Line " + line + " is invalid.");
                 }
-                catch { Server.s.Log("Could not find the rank given on " + s + ". Using default"); }
+                catch { Server.s.Log("Could not find the rank given on " + line + ". Using default"); }
             }
         }
         
@@ -358,19 +385,6 @@ namespace MCGalaxy
                     }
                 }
             }
-        }
-
-        public static bool canPlace(Player p, byte type) { 
-            Blocks b = BlockList[type];
-            LevelPermission perm = p.Rank;
-            return (perm >= b.lowestRank || (b.allow != null && b.allow.Contains(perm))) 
-            	&& (b.disallow == null || !b.disallow.Contains(perm));
-        }
-        
-        public static bool canPlace(LevelPermission perm, byte type) {
-            Blocks b = BlockList[type];
-            return (perm >= b.lowestRank || (b.allow != null && b.allow.Contains(perm))) 
-            	&& (b.disallow == null || !b.disallow.Contains(perm));
         }
     }
 }

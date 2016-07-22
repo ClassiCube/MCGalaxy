@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands {
                 }
             } else if (message.CaselessStarts("set ")) {
                 string[] args = message.SplitSpaces(3);
-                Group grp = Group.FindOrShowMatches(p, args[1]);
+                Group grp = Group.FindMatches(p, args[1]);
                 if (grp == null) return;
                 
                 string path = "text/rankreqs/" + grp.name + ".txt";
@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "Updated rank requirements for " + grp.ColoredName + "%S.");
                 }
             } else {
-                Group grp = Group.FindOrShowMatches(p, message);
+                Group grp = Group.FindMatches(p, message);
                 if (grp == null) return;
                 ShowRequirements(p, grp);
             }

@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Moderation {
                 player = who.name;
             }
             
-            Group group = Group.FindOrShowMatches(p, rank);
+            Group group = Group.FindMatches(p, rank);
             if (group == null) return;
             int periodTime;
             if (!Int32.TryParse(period, out periodTime)) {

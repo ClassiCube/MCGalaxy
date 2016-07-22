@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands
             string[] args = message.Split(' ');
             if (message == "" || args.Length < 2) { Help(p); return; }
             Player who = PlayerInfo.FindMatches(p, args[0]);
-            Group grp = Group.FindOrShowMatches(p, args[1]);            
+            Group grp = Group.FindMatches(p, args[1]);            
             if (who == null || grp == null) return;
             
             if (grp.Permission == LevelPermission.Banned) {

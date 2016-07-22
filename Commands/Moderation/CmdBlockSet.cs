@@ -15,49 +15,38 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdBlockSet : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdBlockSet : Command {
         public override string name { get { return "blockset"; } }
         public override string shortcut { get { return ""; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdBlockSet() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }
+        public override void Use(Player p, string message) {
+            string[] args = message.Split(' ');
+            if (args.Length < 2) { Help(p); return; }
 
-            byte foundBlock = Block.Byte(message.Split(' ')[0]);
-            if (foundBlock == Block.Zero) { Player.Message(p, "Could not find block entered"); return; }
-            LevelPermission newPerm = Level.PermissionFromName(message.Split(' ')[1]);
-            if (newPerm == LevelPermission.Null) { Player.Message(p, "Could not find rank specified"); return; }
-            if (p != null && newPerm > p.Rank) { Player.Message(p, "Cannot set to a rank higher than yourself."); return; }
+            byte block = Block.Byte(args[0]);
+            if (block == Block.Zero) { Player.Message(p, "Could not find block entered"); return; }
+            Group grp = Group.FindMatches(p, args[1]);
+            if (grp == null) return;
+            
+            if (p != null && grp.Permission > p.Rank) { Player.Message(p, "Cannot set to a rank higher than yourself."); return; }
+            if (p != null && !Block.canPlace(p, block)) { Player.Message(p, "Cannot modify a block set for a higher rank"); return; }
 
-            if (p != null && !Block.canPlace(p, foundBlock)) { Player.Message(p, "Cannot modify a block set for a higher rank"); return; }
-
-            Block.BlockList[foundBlock].lowestRank = newPerm;
+            Block.BlockList[block].lowestRank = grp.Permission;
             Block.SaveBlocks(Block.BlockList);
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (!pl.HasCpeExt(CpeExt.BlockPermissions)) continue;
-                
-                int count = pl.hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
-                if (foundBlock < count) {
-                    bool canAffect = Block.canPlace(pl, foundBlock);
-                    pl.SendSetBlockPermission(foundBlock, canAffect, canAffect);
-                }
-            }
+            Block.ResendBlockPermissions(block);
+            // TODO: custom blocks permissions
 
-            Player.GlobalMessage("&d" + Block.Name(foundBlock) + "%S's permission was changed to " + Level.PermissionToName(newPerm));
+            Player.GlobalMessage("&d" + Block.Name(block) + "%S's permission was changed to " + grp.ColoredName);
             if (p == null)
-                Player.Message(p, Block.Name(foundBlock) + "'s permission was changed to " + Level.PermissionToName(newPerm));
+                Player.Message(p, Block.Name(block) + "'s permission was changed to " + grp.ColoredName);
         }
         
-        public override void Help(Player p)
-        {
+        public override void Help(Player p) {
             Player.Message(p, "/blockset [block] [rank] - Changes [block] rank to [rank]");
             Player.Message(p, "Only blocks you can use can be modified");
             Player.Message(p, "Available ranks: " + Group.concatList());

@@ -176,7 +176,7 @@ namespace MCGalaxy
         }
         
         /// <summary> Find the group(s) which contain the given name. </summary>
-        public static Group FindOrShowMatches(Player p, string name) {
+        public static Group FindMatches(Player p, string name) {
         	int matches = 0; return FindMatches(p, name, out matches);
         }
         

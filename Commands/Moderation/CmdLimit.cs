@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands {
             }
 
             if (args.Length == 2) { Player.Message(p, "You need to provide a rank name for this type."); return; }
-            Group grp = Group.FindOrShowMatches(p, args[2]);
+            Group grp = Group.FindMatches(p, args[2]);
             if (grp == null) return;
 
             switch (args[0].ToLower()) {
