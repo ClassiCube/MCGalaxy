@@ -186,16 +186,11 @@ namespace MCGalaxy {
             string name = Path.GetFileNameWithoutExtension(envFile);
             string propFile = LevelInfo.FindPropertiesFile(name);
             List<string> lines = new List<string>();
-            string line = null;
-            
-            if (propFile != null) {
-                using (StreamReader r = new StreamReader(propFile)) {
-                    while ((line = r.ReadLine()) != null)
-                        lines.Add(line);
-                }
-            }
+            if (propFile != null)
+                lines = CP437Reader.ReadAllLines(propFile);
             
             using (StreamReader r = new StreamReader(envFile)) {
+                string line = null;
                 while ((line = r.ReadLine()) != null)
                     lines.Add(line);
             }

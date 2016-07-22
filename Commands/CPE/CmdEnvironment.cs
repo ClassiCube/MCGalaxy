@@ -173,6 +173,7 @@ namespace MCGalaxy.Commands {
             p.level.LightColor = preset.Sun;
             
             Level.SaveSettings(p.level);
+            return true;
         }
         
         class EnvPreset {

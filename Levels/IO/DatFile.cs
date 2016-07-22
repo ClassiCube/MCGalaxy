@@ -36,12 +36,10 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 
-namespace MCGalaxy.Levels.IO {
-    
-    public static class DatFile {
-        
-        public static Level Load(Stream stream, string name)
-        {
+namespace MCGalaxy.Levels.IO {    
+    public static class DatFile {    
+		
+        public static Level Load(Stream stream, string name) {
             byte[] temp = new byte[8];
             using (Level lvl = new Level(name, 0, 0, 0))
             {

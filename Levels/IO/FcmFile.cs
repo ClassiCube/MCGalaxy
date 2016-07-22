@@ -18,11 +18,9 @@
 using System;
 using System.IO;
 using System.IO.Compression;
-using System.Net;
 using System.Text;
 
-namespace MCGalaxy.Levels.IO {
-    
+namespace MCGalaxy.Levels.IO {   
     public static class FcmFile {
 
 		public static Level Load(Stream stream, string name) {

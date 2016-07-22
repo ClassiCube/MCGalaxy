@@ -488,6 +488,7 @@
     <Compile Include="Levels\IO\LvlProperties.cs" />
     <Compile Include="Levels\IO\McfFile.cs" />
     <Compile Include="Levels\Level.Blocks.cs" />
+    <Compile Include="Levels\Level.Fields.cs" />
     <Compile Include="Levels\LevelDB.cs" />
     <Compile Include="Levels\Level.Physics.cs" />
     <Compile Include="Levels\LevelActions.cs" />

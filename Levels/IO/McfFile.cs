@@ -23,8 +23,7 @@ using System;
 using System.IO;
 using System.IO.Compression;
 
-namespace MCGalaxy.Levels.IO {
-    
+namespace MCGalaxy.Levels.IO {    
     public static class McfFile {
         
         public static Level Load(Stream stream, string name) {
