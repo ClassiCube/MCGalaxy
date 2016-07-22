@@ -92,8 +92,6 @@ namespace MCGalaxy {
 
         public List<Player> players { get { return getPlayers(); } }
 
-        #region IDisposable Members
-
         public void Dispose() {
             Extras.Clear();
             liquids.Clear();
@@ -111,8 +109,6 @@ namespace MCGalaxy {
                 CustomBlocks = null;
             }
         }
-
-        #endregion
 
         /// <summary> Whether block changes made on this level should be 
         /// saved to the BlockDB and .lvl files. </summary>

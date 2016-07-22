@@ -40,13 +40,13 @@ namespace MCGalaxy {
         public void StartPhysics() {
             lock (physThreadLock) {
                 if (physThread != null && physThread.ThreadState == ThreadState.Running) return;
-                if (ListCheck.Count == 0 || physicssate) return;
+                if (ListCheck.Count == 0 || physThreadStarted) return;
                 
                 physThread = new Thread(PhysicsLoop);
                 physThread.Name = "MCG_Physics";
                 PhysicsEnabled = true;
                 physThread.Start();
-                physicssate = true;
+                physThreadStarted = true;
             }
         }
 
@@ -104,7 +104,7 @@ namespace MCGalaxy {
                     wait = speedPhysics;
                 }
             }
-            physicssate = false;
+            physThreadStarted = false;
             physThread.Abort();
         }
 
@@ -220,7 +220,7 @@ namespace MCGalaxy {
                     }
                     //Dont need to check physics here because if the list is active, then physics is active :)
                 }
-                if (!physicssate && physics > 0)
+                if (!physThreadStarted && physics > 0)
                     StartPhysics();
             } catch {
                 //s.Log("Warning-PhysicsCheck");
@@ -254,7 +254,7 @@ namespace MCGalaxy {
                 }
                 
                 ListUpdate.Add(new Update(b, (byte)type, data));
-                if (!physicssate && physics > 0)
+                if (!physThreadStarted && physics > 0)
                     StartPhysics();
                 return true;
             } catch {
