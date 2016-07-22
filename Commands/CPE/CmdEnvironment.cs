@@ -158,24 +158,21 @@ namespace MCGalaxy.Commands {
                 string text = File.ReadAllText("presets/" + value.ToLower() + ".env");
                 string[] parts = text.Split(' ');
                 preset = new EnvPreset(parts[0], parts[1], parts[2], parts[3], parts[4]);
-            }
+            }            
+            if (preset == null) { SendPresetsMessage(p); return false; }
             
-            if( preset != null ) {
-                LevelEnv.SendEnvColorPackets(p, 0, preset.Sky);
-                p.level.SkyColor = preset.Sky;
-                LevelEnv.SendEnvColorPackets(p, 1, preset.Clouds);
-                p.level.CloudColor = preset.Clouds;
-                LevelEnv.SendEnvColorPackets(p, 2, preset.Fog);
-                p.level.FogColor = preset.Fog;
-                LevelEnv.SendEnvColorPackets(p, 3, preset.Shadow);
-                p.level.ShadowColor = preset.Shadow;
-                LevelEnv.SendEnvColorPackets(p, 4, preset.Sun);
-                p.level.LightColor = preset.Sun;
-                return true;
-            } else {
-                SendPresetsMessage(p);
-                return false;
-            }
+            LevelEnv.SendEnvColorPackets(p, 0, preset.Sky);
+            p.level.SkyColor = preset.Sky;
+            LevelEnv.SendEnvColorPackets(p, 1, preset.Clouds);
+            p.level.CloudColor = preset.Clouds;
+            LevelEnv.SendEnvColorPackets(p, 2, preset.Fog);
+            p.level.FogColor = preset.Fog;
+            LevelEnv.SendEnvColorPackets(p, 3, preset.Shadow);
+            p.level.ShadowColor = preset.Shadow;
+            LevelEnv.SendEnvColorPackets(p, 4, preset.Sun);
+            p.level.LightColor = preset.Sun;
+            
+            Level.SaveSettings(p.level);
         }
         
         class EnvPreset {
