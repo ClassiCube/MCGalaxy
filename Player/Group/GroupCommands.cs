@@ -73,33 +73,31 @@ namespace MCGalaxy {
             string[] colon = new[] { " : " };
             foreach (string line in lines) {
                 if (line == "" || line[0] == '#') continue;
-                rankAllowance allowVar = new rankAllowance();
+                rankAllowance perms = new rankAllowance();
                 //Name : Lowest : Disallow : Allow
-                string[] command = line.Split(colon, StringSplitOptions.None);
+                string[] args = line.Split(colon, StringSplitOptions.None);
 
-                if (!foundCommands.Contains(command[0])) {
-                    Server.s.Log("Incorrect command name: " + command[0]); continue;
+                if (!foundCommands.Contains(args[0])) {
+                    Server.s.Log("Incorrect command name: " + args[0]); continue;
                 }
-                allowVar.commandName = command[0];
+                perms.commandName = args[0];
 
                 string[] disallow = new string[0];
-                if (command[2] != "")
-                    disallow = command[2].Split(',');
+                if (args[2] != "") disallow = args[2].Split(',');
                 string[] allow = new string[0];
-                if (command[3] != "")
-                    allow = command[3].Split(',');
+                if (args[3] != "") allow = args[3].Split(',');
 
                 try {
-                    allowVar.lowestRank = (LevelPermission)int.Parse(command[1]);
-                    foreach (string s in disallow) { allowVar.disallow.Add((LevelPermission)int.Parse(s)); }
-                    foreach (string s in allow) { allowVar.allow.Add((LevelPermission)int.Parse(s)); }
+                    perms.lowestRank = (LevelPermission)int.Parse(args[1]);
+                    foreach (string s in disallow) { perms.disallow.Add((LevelPermission)int.Parse(s)); }
+                    foreach (string s in allow) { perms.allow.Add((LevelPermission)int.Parse(s)); }
                 } catch {
                     Server.s.Log("Hit an error on the command " + line); continue;
                 }
 
                 for (int i = 0; i < allowedCommands.Count; i++) {
-                    if (command[0] == allowedCommands[i].commandName) {
-                        allowedCommands[i] = allowVar; break;
+                    if (args[0] == allowedCommands[i].commandName) {
+                        allowedCommands[i] = perms; break;
                     }
                 }
             }
@@ -108,7 +106,7 @@ namespace MCGalaxy {
         static void ReadVersion1(string[] lines) {
             foreach (string line in lines) {
                 if (line == "" || line[0] == '#') continue;
-                rankAllowance allowVar = new rankAllowance();
+                rankAllowance perms = new rankAllowance();
                 string key = line.Split('=')[0].Trim().ToLower();
                 string value = line.Split('=')[1].Trim().ToLower();
 
@@ -117,12 +115,12 @@ namespace MCGalaxy {
                 } else if (Level.PermissionFromName(value) == LevelPermission.Null) {
                     Server.s.Log("Incorrect value given for " + key + ", using default value.");
                 } else{
-                    allowVar.commandName = key;
-                    allowVar.lowestRank = Level.PermissionFromName(value);
+                    perms.commandName = key;
+                    perms.lowestRank = Level.PermissionFromName(value);
 
                     for (int i = 0; i < allowedCommands.Count; i++) {
-                        if (key == allowedCommands[i].commandName) {
-                            allowedCommands[i] = allowVar; break;
+                        if (allowedCommands[i].commandName == key) {
+                            allowedCommands[i] = perms; break;
                         }
                     }
                 }

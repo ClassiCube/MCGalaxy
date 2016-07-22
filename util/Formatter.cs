@@ -91,8 +91,8 @@ namespace MCGalaxy {
         
         static string GetColoredRank(LevelPermission perm) {
             Group grp = Group.findPerm(perm);
-            string col = grp == null ? "&f" : grp.color;
-            return col + Level.PermissionToName(perm);
+            if (grp != null) return grp.ColoredName;
+            return "&f" + (int)perm;
         }
     }
 }

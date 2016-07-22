@@ -1,7 +1,7 @@
 /*
     Copyright 2011 MCForge
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -18,10 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdFly : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdFly : Command {
         public override string name { get { return "fly"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -29,16 +27,20 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdFly() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (p.level.ctfmode) {
-                Player.Message(p, "You can not fly while playing CTF, that is cheating!");
-                p.isFlying = false;
-                return;
+        public override void Use(Player p, string message) {
+            bool serverMotd = p.level == Server.mainLevel || p.level.motd == "ignore";
+            string motd = serverMotd ? Server.motd : p.level.motd;
+            bool noFly = motd.Contains("-hax") || p.level.ctfmode || p.level.CurrentGame() != null;
+            if (noFly && p.Rank >= LevelPermission.Operator && motd.Contains("+ophax"))
+                noFly = false;
+            
+            if (noFly) {
+                Player.Message(p, "You cannot use /fly on this map.");
+                p.isFlying = false; return;
             }
+            
             p.isFlying = !p.isFlying;
             if (!p.isFlying) return;
-
             Player.Message(p, "You are now flying. &cJump!");
 
             Thread flyThread = new Thread(new ThreadStart(
@@ -96,9 +98,12 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
+        	string name = Group.findPerm(LevelPermission.Operator).ColoredName;
             Player.Message(p, "%T/fly");
             Player.Message(p, "%HThe old method of flight before custom clients.");
             Player.Message(p, "%HMay not work at all depending on your connection.");
+            Player.Message(p, "%H  Does not work on maps which have -hax in their motd. " +
+                           "(unless you are {0}%H+ and the motd also has +ophax)", name);
         }
     }
 }
