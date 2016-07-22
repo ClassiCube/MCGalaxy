@@ -159,7 +159,7 @@ namespace MCGalaxy
         
         string lastUrl = "";
         public void SendCurrentMapAppearance() {
-            byte side = level.EdgeBlock, edge = level.HorizonBlock;
+        	byte side = (byte)level.EdgeBlock, edge = (byte)level.HorizonBlock;
             if (side >= Block.CpeCount && !hasBlockDefs)
                 side = level.GetFallback(side);
             if (edge >= Block.CpeCount && !hasBlockDefs)

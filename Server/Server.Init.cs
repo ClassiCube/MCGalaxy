@@ -161,6 +161,50 @@ namespace MCGalaxy {
             }
         }
         
+        void CombineEnvFiles() {
+            if (!Directory.Exists("levels/level properties")) return;
+            try {
+                string[] files = Directory.GetFiles("levels/level properties", "*.env");
+                if (files.Length == 0) return;
+                
+                Server.s.Log("Combining " + files.Length + " .env and .properties files..");
+                foreach (string envFile in files) {
+                    try {
+                        Combine(envFile);
+                    } catch (Exception ex) {
+                        Server.s.Log("Error while trying to combine .env and .properties file");
+                        Server.ErrorLog(ex);
+                    }
+                }
+                Server.s.Log("Finished combining .env and .properties files.");
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+            }
+        }
+        
+        static void Combine(string envFile) {
+            string name = Path.GetFileNameWithoutExtension(envFile);
+            string propFile = LevelInfo.FindPropertiesFile(name);
+            List<string> lines = new List<string>();
+            string line = null;
+            
+            if (propFile != null) {
+                using (StreamReader r = new StreamReader(propFile)) {
+                    while ((line = r.ReadLine()) != null)
+                        lines.Add(line);
+                }
+            }
+            
+            using (StreamReader r = new StreamReader(envFile)) {
+                while ((line = r.ReadLine()) != null)
+                    lines.Add(line);
+            }
+            
+            propFile = LevelInfo.PropertiesPath(name);
+            CP437Writer.WriteAllLines(propFile, lines.ToArray());
+            File.Delete(envFile);
+        }
+        
         void SetupSocket() {
             Log("Creating listening socket on port " + port + "... ");
             Setup();

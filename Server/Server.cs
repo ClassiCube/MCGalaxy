@@ -105,14 +105,15 @@ namespace MCGalaxy {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level l in loaded)
                 l.Unload();
-            
+
+            Background.QueueOnce(CombineEnvFiles);            
             Background.QueueOnce(LoadMainLevel);
             Plugin.Load();
             Background.QueueOnce(LoadPlayerLists);
             Background.QueueOnce(LoadAutoloadCommands);
             Background.QueueOnce(MovePreviousLevelFiles);
-            Background.QueueOnce(SetupSocket);
 
+            Background.QueueOnce(SetupSocket);
             Background.QueueOnce(InitTimers);
             Background.QueueOnce(InitRest);
             Background.QueueOnce(InitHeartbeat);

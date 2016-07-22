@@ -117,31 +117,39 @@ namespace MCGalaxy {
         public bool growTrees;
         [ConfigBool("Guns", "General", null, false)]
         public bool guns = false;
-        
         public byte jailrotx, jailroty;
+        
         /// <summary> Color of the clouds (RGB packed into an int). Set to -1 to use client defaults. </summary>
-        public string CloudColor = null;
+        [ConfigString("CloudColor", "Env", null, "", true)]
+        public string CloudColor = "";
 
         /// <summary> Color of the fog (RGB packed into an int). Set to -1 to use client defaults. </summary>
-        public string FogColor = null;
+        [ConfigString("FogColor", "Env", null, "", true)] 
+        public string FogColor = "";
 
         /// <summary> Color of the sky (RGB packed into an int). Set to -1 to use client defaults. </summary>
-        public string SkyColor = null;
+        [ConfigString("SkyColor", "Env", null, "", true)]
+        public string SkyColor = "";
 
         /// <summary> Color of the blocks in shadows (RGB packed into an int). Set to -1 to use client defaults. </summary>
-        public string ShadowColor = null;
+        [ConfigString("ShadowColor", "Env", null, "", true)] 
+        public string ShadowColor = "";
 
         /// <summary> Color of the blocks in the light (RGB packed into an int). Set to -1 to use client defaults. </summary>
-        public string LightColor = null;
+        [ConfigString("LightColor", "Env", null, "", true)]
+        public string LightColor = "";
 
         /// <summary> Elevation of the "ocean" that surrounds maps. Default is map height / 2. </summary>
+        [ConfigInt("EdgeLevel", "Env", null, -1, short.MinValue, short.MaxValue)]
         public int EdgeLevel;
         
         /// <summary> Elevation of the clouds. Default is map height + 2. </summary>
+        [ConfigInt("CloudsHeight", "Env", null, -1, short.MinValue, short.MaxValue)]
         public int CloudsHeight;
         
         /// <summary> Max fog distance the client can see. 
         /// Default is 0, meaning use the client-side defined maximum fog distance. </summary>
+        [ConfigInt("MaxFog", "Env", null, 0, short.MinValue, short.MaxValue)]
         public int MaxFogDistance;
         
         /// <summary> Clouds speed, in units of 256ths. Default is 256 (1 speed). </summary>
@@ -157,12 +165,15 @@ namespace MCGalaxy {
         public int WeatherFade = 128;
 
         /// <summary> The block which will be displayed on the horizon. </summary>
-        public byte HorizonBlock = Block.water;
+        [ConfigInt("HorizonBlock", "Env", null, Block.water, 0, 255)]
+        public int HorizonBlock = Block.water;
 
         /// <summary> The block which will be displayed on the edge of the map. </summary>
-        public byte EdgeBlock = Block.blackrock;
+        [ConfigInt("EdgeBlock", "Env", null, Block.blackrock, 0, 255)]
+        public int EdgeBlock = Block.blackrock;
         
         public BlockDefinition[] CustomBlockDefs;
+        
         
         [ConfigInt("JailX", "Jail", null, 0, 0, 65535)]
         public int jailx;
@@ -594,7 +605,8 @@ namespace MCGalaxy {
                         LvlProperties.Load(level, propsPath);
                     else
                         Server.s.Log(".properties file for level " + level.name + " was not found.");
-                    LvlProperties.LoadEnv(level, level.name);
+                    // Backwards compatibility for older levels which had .env files.
+                    LvlProperties.LoadEnv(level);
                 } catch (Exception e) {
                     Server.ErrorLog(e);
                 }

@@ -50,7 +50,7 @@ namespace MCGalaxy {
         public event VoidHandler OnSettingsUpdate;
         
         public static IRCBot IRC;
-        public static Thread locationChecker, blockThread;
+        public static Thread locationChecker;
         public static WebServer APIServer, InfoServer;
         public static DateTime StartTime, StartTimeLocal;
         

@@ -185,7 +185,7 @@ namespace MCGalaxy.Commands {
                 EdgeLevel = lvl.EdgeLevel; CloudsHeight = lvl.CloudsHeight;
                 MaxFog = lvl.MaxFogDistance;
                 CloudsSpeed = lvl.CloudsSpeed; WeatherSpeed = lvl.WeatherSpeed;
-                EdgeBlock = lvl.EdgeBlock; HorizonBlock = lvl.HorizonBlock;
+                EdgeBlock = (byte)lvl.EdgeBlock; HorizonBlock = (byte)lvl.HorizonBlock;
                 WeatherFade = lvl.WeatherFade;
                 
                 TerrainUrl = lvl.terrainUrl != "" ?
@@ -205,52 +205,46 @@ namespace MCGalaxy.Commands {
                 string path = LevelInfo.FindPropertiesFile(name);
                 if (path != null)
                     PropertiesFile.Read(path, ParseProperty, '=');
-                
-                path = "levels/level properties/" + name + ".env";
-                if (File.Exists(path))
-                    PropertiesFile.Read(path, ParseEnv, '=');
                 if (Authors == null) Authors = "";
             }
             
             void ParseProperty(string key, string value) {
                 switch (key.ToLower()) {
-                        case "physics": Physics = int.Parse(value); break;
-                        case "guns": Guns = bool.Parse(value); break;
-                        case "texture": TerrainUrl = value; break;
-                        case "texturepack": TextureUrl = value; break;
-                        case "clouds-speed": CloudsSpeed = int.Parse(value); break;
-                        case "weather-speed": WeatherSpeed = int.Parse(value); break;
-                        case "weather-fade": WeatherFade = int.Parse(value); break;
-                        case "useblockdb": blockDB = bool.Parse(value); break;
-                        case "realmowner": RealmOwner = value; break;
-                        
-                        case "perbuild": build = GetPerm(value); break;
-                        case "pervisit": visit = GetPerm(value); break;
-                        case "perbuildmax": buildmax = GetPerm(value); break;
-                        case "pervisitmax": visitmax = GetPerm(value); break;
-                        case "visitwhitelist": VisitWhitelist = Parse(value); break;
-                        case "visitblacklist": VisitBlacklist = Parse(value); break;
-                        
-                        case "authors": Authors = value; break;
-                        case "roundsplayed": TotalRounds = int.Parse(value); break;
-                        case "RoundsHumanWon": HumanRounds = int.Parse(value); break;
-                        case "likes": Likes = int.Parse(value); break;
-                        case "dislikes": Dislikes = int.Parse(value); break;
-                }
-            }
-            
-            void ParseEnv(string key, string value) {
-                switch (key.ToLower()) {
-                        case "cloudcolor": Clouds = value; break;
-                        case "fogcolor": Fog = value; break;
-                        case "skycolor": Sky = value; break;
-                        case "shadowcolor": Shadow = value; break;
-                        case "lightcolor": Light = value; break;
-                        case "edgeblock": EdgeBlock = byte.Parse(value); break;
-                        case "edgelevel": EdgeLevel = short.Parse(value); break;
-                        case "cloudsheight": CloudsHeight = short.Parse(value); break;
-                        case "maxfog": MaxFog = short.Parse(value); break;
-                        case "horizonblock": HorizonBlock = byte.Parse(value); break;
+                    case "physics": Physics = int.Parse(value); break;
+                    case "guns": Guns = bool.Parse(value); break;
+                    case "useblockdb": blockDB = bool.Parse(value); break;
+                    case "realmowner": RealmOwner = value; break;
+                    
+                    case "perbuild": build = GetPerm(value); break;
+                    case "pervisit": visit = GetPerm(value); break;
+                    case "perbuildmax": buildmax = GetPerm(value); break;
+                    case "pervisitmax": visitmax = GetPerm(value); break;
+                    case "visitwhitelist": VisitWhitelist = Parse(value); break;
+                    case "visitblacklist": VisitBlacklist = Parse(value); break;
+                    
+                    case "authors": Authors = value; break;
+                    case "roundsplayed": TotalRounds = int.Parse(value); break;
+                    case "RoundsHumanWon": HumanRounds = int.Parse(value); break;
+                    case "likes": Likes = int.Parse(value); break;
+                    case "dislikes": Dislikes = int.Parse(value); break;
+                    
+                    case "cloudcolor": Clouds = value; break;
+                    case "fogcolor": Fog = value; break;
+                    case "skycolor": Sky = value; break;
+                    case "shadowcolor": Shadow = value; break;
+                    case "lightcolor": Light = value; break;
+                    
+                    case "edgeblock": EdgeBlock = byte.Parse(value); break;
+                    case "edgelevel": EdgeLevel = short.Parse(value); break;
+                    case "horizonblock": HorizonBlock = byte.Parse(value); break;
+                    case "cloudsheight": CloudsHeight = short.Parse(value); break;
+                    case "maxfog": MaxFog = short.Parse(value); break;
+                    
+                    case "texture": TerrainUrl = value; break;
+                    case "texturepack": TextureUrl = value; break;
+                    case "clouds-speed": CloudsSpeed = int.Parse(value); break;
+                    case "weather-speed": WeatherSpeed = int.Parse(value); break;
+                    case "weather-fade": WeatherFade = int.Parse(value); break;
                 }
             }
             

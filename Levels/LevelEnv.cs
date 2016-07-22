@@ -49,7 +49,7 @@ namespace MCGalaxy {
         }
         
         public static void SetBlock(Player p, string value, EnvProp prop,
-                                    string variable, byte defValue, ref byte target) {
+                                    string variable, byte defValue, ref int target) {
             if (IsResetString(value)) {
                 Player.Message(p, "Reset {0} for {0}%S to normal", variable, p.level.name);
                 target = defValue;
@@ -93,7 +93,7 @@ namespace MCGalaxy {
             SendEnvColorPackets(p, envType, value);
         }
         
-        static bool CheckBlock(Player p, string value, string variable, ref byte modify) {
+        static bool CheckBlock(Player p, string value, string variable, ref int modify) {
             byte extBlock = 0;
             int block = DrawCmd.GetBlock(p, value, out extBlock, false);
             if (block == -1 || block == Block.Zero) return false;

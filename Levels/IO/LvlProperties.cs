@@ -30,15 +30,6 @@ namespace MCGalaxy.Levels.IO {
                 Logger.WriteError(ex);
                 return;
             }
-            
-			path = Path.ChangeExtension(path, ".env");
-            try {
-                using (CP437Writer writer = new CP437Writer(path))
-                    WriteEnvProperties(level, writer);
-            } catch (Exception ex) {
-                Server.s.Log("Failed to save environment properties");
-                Logger.WriteError(ex);
-            }
         }
         
         static void WriteLevelProperties(Level level, CP437Writer w) {
@@ -48,32 +39,13 @@ namespace MCGalaxy.Levels.IO {
             ConfigElement.Serialise(Server.levelConfig, " settings", w, level);
         }
         
-        static void WriteEnvProperties(Level level, StreamWriter writer) {
-            if(level.CloudColor != null)
-                writer.WriteLine("CloudColor = " + level.CloudColor);
-            if (level.SkyColor != null)
-                writer.WriteLine("SkyColor = " + level.SkyColor);
-            if (level.LightColor != null)
-                writer.WriteLine("LightColor = " + level.LightColor);
-            if (level.ShadowColor != null)
-                writer.WriteLine("ShadowColor = " + level.ShadowColor);
-            if (level.FogColor != null)
-                writer.WriteLine("FogColor = " + level.FogColor);
-            
-            writer.WriteLine("EdgeLevel = " + level.EdgeLevel);
-            writer.WriteLine("CloudsHeight = " + level.CloudsHeight);
-            writer.WriteLine("MaxFog = " + level.MaxFogDistance);
-            writer.WriteLine("EdgeBlock = " + level.EdgeBlock);
-            writer.WriteLine("HorizonBlock = " + level.HorizonBlock);
-        }
-        
         
         public static void Load(Level level, string path) {
             PropertiesFile.Read(path, ref level, PropLineProcessor);
         }
         
-        public static void LoadEnv(Level level, string name) {
-            string path = "levels/level properties/" + name + ".env";
+        public static void LoadEnv(Level level) {
+            string path = "levels/level properties/" + level.name + ".env";
             PropertiesFile.Read(path, ref level, EnvLineProcessor);
         }
         
