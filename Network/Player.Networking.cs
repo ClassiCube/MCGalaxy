@@ -298,47 +298,36 @@ namespace MCGalaxy {
             }
         }
         
-        public void SendMotd() {
+        public void SendMotd() { SendMapMotd(true); }
+
+        public void SendUserMOTD() { SendMapMotd(false); }
+
+        void SendMapMotd(bool ignoreLevelMotd) {
             byte[] buffer = new byte[131];
             buffer[0] = Opcode.Handshake;
-            buffer[1] = (byte)8;
+            buffer[1] = Server.version;
             bool cp437 = HasCpeExt(CpeExt.FullCP437);
             
-            NetUtils.Write(Server.name, buffer, 2, cp437);
-            if (!String.IsNullOrEmpty(group.MOTD))
-                NetUtils.Write(group.MOTD, buffer, 66, cp437);
-            else
-                NetUtils.Write(Server.motd, buffer, 66, cp437);
+            if (ignoreLevelMotd || level.motd == "ignore") {
+                NetUtils.Write(Server.name, buffer, 2, cp437);
+                if (!String.IsNullOrEmpty(group.MOTD) )
+                    NetUtils.Write(group.MOTD, buffer, 66, cp437);
+                else
+                    NetUtils.Write(Server.motd, buffer, 66, cp437);
+            } else if (level.motd.Length > 64) {
+                NetUtils.Write(level.motd, buffer, 2, cp437);
+                NetUtils.Write(level.motd.Substring(64), buffer, 66, cp437);
+            } else {
+                NetUtils.Write(Server.name, buffer, 2, cp437);
+                NetUtils.Write(level.motd, buffer, 66, cp437);
+            }
 
             bool canPlace = Block.canPlace(this, Block.blackrock);
             buffer[130] = canPlace ? (byte)100 : (byte)0;
             if (OnSendMOTD != null) OnSendMOTD(this, buffer);
             SendRaw(buffer);
         }
-
-        public void SendUserMOTD() {
-            byte[] buffer = new byte[131];
-            buffer[0] = Opcode.Handshake;
-            buffer[1] = Server.version;
-            bool cp437 = HasCpeExt(CpeExt.FullCP437);
-            
-            if (level.motd == "ignore") {
-                NetUtils.Write(Server.name, buffer, 2, cp437);
-                if (!String.IsNullOrEmpty(group.MOTD) )
-                    NetUtils.Write(group.MOTD, buffer, 66, cp437);
-                else
-                    NetUtils.Write(Server.motd, buffer, 66, cp437);
-            } else {
-                NetUtils.Write(level.motd, buffer, 2, cp437);
-                if (level.motd.Length > 64)
-                    NetUtils.Write(level.motd.Substring(64), buffer, 66, cp437);
-            }
-
-            bool canPlace = Block.canPlace(this, Block.blackrock);
-            buffer[130] = canPlace ? (byte)100 : (byte)0;
-            SendRaw(buffer);
-        }
-
+        
         public void SendMap(Level oldLevel) { SendRawMap(oldLevel, level); }
         
         public bool SendRawMap(Level oldLevel, Level level) {
