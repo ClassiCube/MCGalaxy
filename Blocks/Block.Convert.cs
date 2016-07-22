@@ -192,7 +192,7 @@ namespace MCGalaxy
                 case door_tree_air:
                 case air_flood_layer:
                 case air_flood_down:
-                   case air_flood_up:
+                case air_flood_up:
                 case door_obsidian_air:
                 case door_glass_air:
                 case door_stone_air:

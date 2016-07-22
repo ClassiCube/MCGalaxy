@@ -15,10 +15,8 @@
 	or implied. See the Licenses for the specific language governing
 	permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdDescend : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdDescend : Command {
         public override string name { get { return "descend"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -26,38 +24,34 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public CmdDescend() { }
 
-        public override void Use(Player p, string message)
-        {
-            ushort posy = (ushort)((p.pos[1] / 32) - 1);
-            bool found = false;
-            ushort xpos = (ushort)(p.pos[0] / 32);
-            ushort zpos = (ushort)(p.pos[2] / 32);
-            while (!found && posy > 0)
-            {
-                posy = (ushort)(posy - 1);
-                byte block = p.level.GetTile(xpos, posy, zpos);
-                if (block == Block.air || block == Block.air_door || block == Block.air_switch || block == Block.Zero)
-                {
-                    ushort blockabove = (ushort)(posy + 1);
-                    ushort blockunder = (ushort)(posy - 1);
-                    if (p.level.GetTile(xpos, blockabove, zpos) == Block.air || p.level.GetTile(xpos, blockabove, zpos) == Block.air_door || p.level.GetTile(xpos, blockabove, zpos) == Block.air_switch || p.level.GetTile(xpos, blockabove, zpos) == Block.Zero)
-                    {
-                        if (p.level.GetTile(xpos, blockunder, zpos) != Block.air && p.level.GetTile(xpos, blockunder, zpos) != Block.air_switch && p.level.GetTile(xpos, blockunder, zpos) != Block.air_door && p.level.GetTile(xpos, blockunder, zpos) != Block.air_flood && p.level.GetTile(xpos, blockunder, zpos) != Block.air_flood_down && p.level.GetTile(xpos, blockunder, zpos) != Block.air_flood_layer && p.level.GetTile(xpos, blockunder, zpos) != Block.air_flood_up && p.level.GetTile(xpos, blockunder, zpos) != Block.air_portal && p.level.GetTile(xpos, blockunder, zpos) != Block.redflower && p.level.GetTile(xpos, blockunder, zpos) != Block.yellowflower && p.level.GetTile(xpos, blockunder, zpos) != Block.finiteWater && p.level.GetTile(xpos, blockunder, zpos) != Block.finiteLava && p.level.GetTile(xpos, blockunder, zpos) != Block.fire && p.level.GetTile(xpos, blockunder, zpos) != Block.water && p.level.GetTile(xpos, blockunder, zpos) != Block.water_door && p.level.GetTile(xpos, blockunder, zpos) != Block.water_portal && p.level.GetTile(xpos, blockunder, zpos) != Block.WaterDown && p.level.GetTile(xpos, blockunder, zpos) != Block.WaterFaucet && p.level.GetTile(xpos, blockunder, zpos) != Block.lava && p.level.GetTile(xpos, blockunder, zpos) != Block.lava_door && p.level.GetTile(xpos, blockunder, zpos) != Block.lava_fast && p.level.GetTile(xpos, blockunder, zpos) != Block.lava_portal && p.level.GetTile(xpos, blockunder, zpos) != Block.LavaDown && p.level.GetTile(xpos, blockunder, zpos) != Block.lavastill && p.level.GetTile(xpos, blockunder, zpos) != Block.Zero)
-                        {
-                            Player.Message(p, "Teleported you down!");
-                            p.SendPos(0xFF, p.pos[0], (ushort)((posy + 1) * 32), p.pos[2], p.rot[0], p.rot[1]);
-                            found = true;
-                        }
-                    }
+        public override void Use(Player p, string message) {
+            if (p.pos[1] < 51 + 4) { Player.Message(p, "No free spaces found below you."); return; }
+        	// Move starting position down half a block since players are a little bit above the ground.
+        	ushort x = (ushort)(p.pos[0] / 32), y = (ushort)((p.pos[1] - 51 - 4) / 32), z = (ushort)(p.pos[2] / 32);
+            
+            while (y > 0) {
+                y--;
+                byte block = p.level.GetTile(x, y, z);
+                if (!(Block.Convert(block) == Block.air || block == Block.Zero)) continue;               
+                byte above = p.level.GetTile(x, (ushort)(y + 1), z);             
+                if (!(Block.Convert(above) == Block.air || above == Block.Zero)) continue;
+                
+                byte below = p.level.GetTile(x, (ushort)(y - 1), z);
+                if (Solid(Block.Convert(below))) {
+                    Player.Message(p, "Teleported you down.");
+                    p.SendPos(0xFF, p.pos[0], (ushort)((y + 1) * 32), p.pos[2], p.rot[0], p.rot[1]);
+                    return;
                 }
             }
-            if (!found)
-            {
-                Player.Message(p, "No free spaces found below you");
-            }
+            Player.Message(p, "No free spaces found below you.");
         }
-        public override void Help(Player p)
-        {
+        
+        static bool Solid(byte b) {
+        	return b != Block.air && (b < Block.water || b > Block.lavastill) && b != Block.Zero
+            	&& b != Block.shrub && (b < Block.yellowflower || b > Block.redmushroom);
+        }
+        
+        public override void Help(Player p) {
             Player.Message(p, "%T/descend");
             Player.Message(p, "%HTeleports you to the first free space below you.");
         }
