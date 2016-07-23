@@ -18,10 +18,8 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdRankInfo : Command {
-        
+namespace MCGalaxy.Commands {   
+    public sealed class CmdRankInfo : Command {        
         public override string name { get { return "rankinfo"; } }
         public override string shortcut { get { return "ri"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -39,6 +37,9 @@ namespace MCGalaxy.Commands {
             foreach (string line in Server.RankInfo.Find(target)) {
                 string[] parts = line.Split(' ');                
                 Group newRank = Group.Find(parts[7]), oldRank = Group.Find(parts[8]);
+                string newRankName = newRank == null ? parts[7] : newRank.ColoredName;
+                string oldRankName = oldRank == null ? parts[8] : oldRank.ColoredName;
+                
                 int minutes = Convert.ToInt32(parts[2]), hours = Convert.ToInt32(parts[3]);
                 int days = Convert.ToInt32(parts[4]), months = Convert.ToInt32(parts[5]);
                 int years = Convert.ToInt32(parts[6]);
@@ -47,7 +48,7 @@ namespace MCGalaxy.Commands {
                     CP437Reader.ConvertToRaw(parts[9].Replace("%20", " "));
                
                 Player.Message(p, "&aFrom {0} &ato {1} &aon %S{2}", 
-                               oldRank.ColoredName, newRank.ColoredName, timeRanked);
+                               oldRankName, newRankName, timeRanked);
                 Player.Message(p, "&aBy %S{0} &a, reason: %S{1}", parts[1], reason);
                 found = true;
             }

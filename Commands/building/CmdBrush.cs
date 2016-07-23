@@ -64,13 +64,13 @@ namespace MCGalaxy.Commands.Building {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/brush [name] <default brush args>");
-            Player.Message(p, "%HSets your current brush to the brush with the given name.");
+            Player.Message(p, "%HSets your current brush to the brush with that name.");
             Player.Message(p, "%T/help brush [name]");
-            Player.Message(p, "%HOutputs the help for the brush with the given name.");
+            Player.Message(p, "%HOutputs the help for the brush with that name.");
             Player.Message(p, "%HAvailable brushes: %S" + AvailableBrushes);
-            Player.Message(p, "%H  The default brush takes one argument specifying the block to draw with. " +
+            Player.Message(p, "%H- The default brush takes one argument specifying the block to draw with. " +
                            "If no arguments are given, draws with your currently held block.");
-            Player.Message(p, "%H  If \"skip\" is used for a block name, " +
+            Player.Message(p, "%H- If \"skip\" is used for a block name, " +
                            "existing blocks in the map will not be replaced by this block.");
         }
         
