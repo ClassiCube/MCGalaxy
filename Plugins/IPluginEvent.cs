@@ -22,7 +22,7 @@ namespace MCGalaxy {
     // NOTE: You must use a different delegate type for each subclass
     // This is because the static events are unique to each generic instantiation, not each subclass.
     public class IPluginEvent<IMethod> {
-        internal static List<IPluginEvent<IMethod>> handlers = new List<IPluginEvent<IMethod>>();
+        protected internal static List<IPluginEvent<IMethod>> handlers = new List<IPluginEvent<IMethod>>();
         protected internal Plugin plugin;
         protected internal IMethod method;
         protected internal Priority priority;

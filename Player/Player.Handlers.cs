@@ -1090,13 +1090,13 @@ return;
                     //IRCBot.Say("<" + name + "> " + newtext);
                     if (OnChat != null) OnChat(this, text);
                     if (PlayerChat != null) PlayerChat(this, text);
-                    if (OnPlayerChatEvent.handlers.Count > 0) OnPlayerChatEvent.Call(this, text);
+                    OnPlayerChatEvent.Call(this, text);
                     return;
                 }
                 Server.s.Log("<" + name + "> " + text);
                 if (OnChat != null) OnChat(this, text);
                 if (PlayerChat != null) PlayerChat(this, text);
-                if (OnPlayerChatEvent.handlers.Count > 0) OnPlayerChatEvent.Call(this, text);
+                OnPlayerChatEvent.Call(this, text);
                 
                 if (cancelchat) {
                     cancelchat = false; return;
