@@ -34,6 +34,8 @@ namespace MCGalaxy.Commands {
 
             Player.Message(p, "&1Rank information for " + target);
             bool found = false;
+            DateTime now = DateTime.Now;
+            
             foreach (string line in Server.RankInfo.Find(target)) {
                 string[] parts = line.Split(' ');                
                 Group newRank = Group.Find(parts[7]), oldRank = Group.Find(parts[8]);
@@ -44,12 +46,14 @@ namespace MCGalaxy.Commands {
                 int days = Convert.ToInt32(parts[4]), months = Convert.ToInt32(parts[5]);
                 int years = Convert.ToInt32(parts[6]);
                 DateTime timeRanked = new DateTime(years, months, days, hours, minutes, 0);
+                
                 string reason = parts.Length <= 9 ? "(no reason given)" :
                     CP437Reader.ConvertToRaw(parts[9].Replace("%20", " "));
+                TimeSpan delta = now - timeRanked;
                
-                Player.Message(p, "&aFrom {0} &ato {1} &aon %S{2}", 
-                               oldRankName, newRankName, timeRanked);
-                Player.Message(p, "&aBy %S{0} &a, reason: %S{1}", parts[1], reason);
+                Player.Message(p, "&aFrom {0} &ato {1} &a{2} ago", 
+                               oldRankName, newRankName, delta.Shorten(true, false));
+                Player.Message(p, "&aBy %S{0}&a, reason: %S{1}", parts[1], reason);
                 found = true;
             }
             if (!found)

@@ -29,8 +29,7 @@ namespace MCGalaxy.Commands {
         public CmdTime() { }
 
         public override void Use(Player p, string message) {
-            string time = DateTime.Now.ToString("HH:mm:ss"); //DateTime.Now.ToString();
-            Player.Message(p, "Server time is " + time);
+            Player.Message(p, "Server time: {0:HH:mm:ss} on {0:d}", DateTime.Now);
             if (!Server.zombie.Running) return;
             
             int delta = (int)(Server.zombie.RoundEnd - DateTime.UtcNow).TotalSeconds;
