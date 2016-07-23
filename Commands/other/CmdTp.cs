@@ -23,9 +23,10 @@ namespace MCGalaxy.Commands {
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
+        	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] args = message.Split(' ');
             if (args.Length > 2) { Help(p); return; }
             

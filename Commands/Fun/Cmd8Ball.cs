@@ -16,38 +16,51 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Threading;
+using System.Text;
 
 namespace MCGalaxy.Commands {
     public sealed class Cmd8Ball : Command {
+		private static bool canUse = true;
         public override string name { get { return "8ball"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public Cmd8Ball() { }
-        static string[] answers = { "Not likely." , "Very likely." , "Impossible!" , "Probably." , "Ask again later." , "No." , "Maybe." };
-        DateTime nextUse;
+        string[] messages = { "Not likely." , "Very likely." , "Impossible!" , "No." , "Yes." , "Definitely!" , "Do some more thinking." };
         
         public override void Use(Player p, string message) {
-            if (String.IsNullOrEmpty(message)) { Help(p); return; }
-            if (p.joker || p.muted) { Player.Message(p, "Cannot use 8ball while muted or jokered."); return; }
-            
-            TimeSpan delta = nextUse - DateTime.UtcNow;
-            if (delta.TotalSeconds > 0) {
-                Player.Message(p, "The 8-ball is still recharging, wait another {0} seconds.",
-                               (int)Math.Ceiling(delta.TotalSeconds));
+        	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
+			if (Server.chatmod || p.muted) {
+                Player.SendMessage(p, "Cannot use 8-ball while muted.");
                 return;
+            }	
+			if (canUse == false) {Player.SendMessage(p, "Must wait 10 seconds from the last time the command was used to use it again!"); return;}
+            if (message == "") { Help(p); return; }
+			canUse = false;	
+           
+            StringBuilder builder = new StringBuilder(message.Length);
+            foreach (char c in message) {
+                if (ValidChar(c)) builder.Append(c);
             }
-            nextUse = DateTime.UtcNow.AddSeconds(10);
-            
-            Random random = new Random();
-            Chat.GlobalChatLevel(p, p.color + "*" + Colors.StripColors(p.DisplayName) + " asked the question " + message, false);
-            Chat.GlobalChatLevel(p, p.color + "*" + "The answer was " + answers[random.Next(answers.Length)], false);
+           
+            string final = builder.ToString();
+            Random random = new Random(final.ToLower().GetHashCode());
+            Player.GlobalMessage(p.color + p.DisplayName + "%s asked the %b8-Ball: %f" + message);
+            Thread.Sleep(2000);
+            Player.GlobalMessage("The %b8-Ball %ssays:%f " + messages[random.Next(messages.Length)]);
+			Thread.Sleep(10000);
+			canUse = true;
+        }
+       
+        bool ValidChar(char c) {
+            return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/8ball (message)");
-            Player.Message(p, "%HGives you a meaningless response to a question.");
+            Player.Message(p, "%T/8ball [yes or no question]");
+            Player.Message(p, "%HGet an answer from the all-knowing 8-Ball!");
         }
     }
 }
