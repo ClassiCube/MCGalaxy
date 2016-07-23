@@ -62,6 +62,7 @@ namespace MCGalaxy.Commands {
                 pBot.DisplayName = pBot.name;
                 Player.GlobalMessage("Bot " + pBot.ColoredName + "'s %Sreverted to their original name.");
             } else {
+            	if (newName.ToLower() == "empty") { newName = ""; }
                 if (newName.Length >= 30) { Player.Message(p, "Name must be under 30 letters."); return; }                
                 Player.GlobalMessage("Bot " + pBot.ColoredName + "'s %Sname was set to " + newName + "%S.");
                 pBot.DisplayName = newName;
@@ -94,6 +95,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%HIf no [nick] is given, reverts player's nick to their original name.");
             Player.Message(p, "%T/nick bot [bot] [name]");
             Player.Message(p, "%HSets the name shown above that bot in game.");
+            Player.Message(p, "%HIf bot's [name] is \"empty\", then bots name becomes blank.");
         }
     }
 }
