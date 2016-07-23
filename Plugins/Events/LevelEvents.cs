@@ -21,71 +21,43 @@ using MCGalaxy.BlockPhysics;
 
 namespace MCGalaxy {
     
-    public sealed class OnLevelLoadedEvent : IPluginEvent<Level.OnLevelLoaded> {
-        
+    public sealed class OnLevelLoadedEvent : IPluginEvent<Level.OnLevelLoaded> {        
         internal OnLevelLoadedEvent(Level.OnLevelLoaded method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
         public static void Call(Level l) {
-            events.ForEach(
-                pl => {
-                    try {
-                        pl.method(l);
-                    } catch (Exception e) {
-                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling LevelLoaded Event."); Server.ErrorLog(e);
-                    }
-                });
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(l));
         }
     }
     
-    public sealed class OnLevelLoadEvent : IPluginEvent<Level.OnLevelLoad> {
-        
+    public sealed class OnLevelLoadEvent : IPluginEvent<Level.OnLevelLoad> {        
         internal OnLevelLoadEvent(Level.OnLevelLoad method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
         public static void Call(string name) {
-            events.ForEach(
-                pl => {
-                    try {
-                        pl.method(name);
-                    } catch (Exception e) {
-                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling LevelLoad Event."); Server.ErrorLog(e);
-                    }
-                });
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(name));
         }
     }
     
-    public sealed class OnLevelSaveEvent : IPluginEvent<Level.OnLevelSave> {
-        
+    public sealed class OnLevelSaveEvent : IPluginEvent<Level.OnLevelSave> {       
         internal OnLevelSaveEvent(Level.OnLevelSave method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
         public static void Call(Level l) {
-            events.ForEach(
-                pl => {
-                    try {
-                        pl.method(l);
-                    } catch (Exception e) {
-                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling LevelSave Event."); Server.ErrorLog(e);
-                    }
-                });
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(l));
         }
     }
     
-    public sealed class OnLevelUnloadEvent : IPluginEvent<Level.OnLevelUnload> {
-        
+    public sealed class OnLevelUnloadEvent : IPluginEvent<Level.OnLevelUnload> {        
         internal OnLevelUnloadEvent(Level.OnLevelUnload method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
         public static void Call(Level l) {
-            events.ForEach(
-                pl => {
-                    try {
-                        pl.method(l);
-                    } catch (Exception e) {
-                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling LevelUnload Event."); Server.ErrorLog(e);
-                    }
-                });
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(l));
         }
     }
     
@@ -95,14 +67,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(ushort x, ushort y, ushort z, PhysicsArgs extraInfo, Level l) {
-            events.ForEach(
-                pl => {
-                    try {
-                        pl.method(x, y, z, extraInfo, l);
-                    } catch (Exception e) {
-                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling PhysicsUpdate Event."); Server.ErrorLog(e);
-                    }
-                });
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(x, y, z, extraInfo, l));
         }
     }
 }

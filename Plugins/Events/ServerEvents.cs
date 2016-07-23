@@ -20,54 +20,33 @@ using System.Collections.Generic;
 
 namespace MCGalaxy {
     
-    public sealed class OnConsoleCommandEvent : IPluginEvent<Server.OnConsoleCommand> {
-        
+    public sealed class OnConsoleCommandEvent : IPluginEvent<Server.OnConsoleCommand> {       
         internal OnConsoleCommandEvent(Server.OnConsoleCommand method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
         public static void Call(string cmd, string message) {
-            events.ForEach(
-                pl => {
-                    try {
-                        pl.method(cmd, message);
-                    } catch (Exception e) {
-                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling ConsoleCommand Event."); Server.ErrorLog(e);
-                    }
-                });
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(cmd, message));
         }
     }
     
-    public sealed class OnServerErrorEvent : IPluginEvent<Server.OnServerError> {
-        
+    public sealed class OnServerErrorEvent : IPluginEvent<Server.OnServerError> {        
         internal OnServerErrorEvent(Server.OnServerError method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
         public static void Call(Exception ex) {
-            events.ForEach(
-                pl => {
-                    try {
-                        pl.method(ex);
-                    } catch (Exception e) {
-                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling ServerError Event."); Server.ErrorLog(e);
-                    }
-                });
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(ex));
         }
     }
     
     public sealed class OnServerLogEvent : IPluginEvent<Server.OnServerLog> {
-        
         internal OnServerLogEvent(Server.OnServerLog method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
         public static void Call(string message) {
-            events.ForEach(
-                pl => {
-                    try {
-                        pl.method(message);
-                    } catch (Exception e) { 
-                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling the Server LogEvent."); Server.ErrorLog(e); 
-                    }
-                });
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(message));
         }
     }
 }

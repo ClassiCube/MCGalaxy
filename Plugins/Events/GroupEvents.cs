@@ -26,14 +26,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(Group g) {
-            events.ForEach(
-                pl => {
-                    try {
-                        pl.method(g);
-                    } catch (Exception e) {
-                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling GroupLoaded Event."); Server.ErrorLog(e);
-                    }
-                });
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(g));
         }
     }
     
@@ -43,14 +37,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call() {
-            events.ForEach(
-                pl => {
-                    try {
-                        pl.method();
-                    } catch (Exception e) {
-                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling GroupLoad Event."); Server.ErrorLog(e);
-                    }
-                });
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl());
         }
     }
     
@@ -60,14 +48,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call() {
-            events.ForEach(
-                pl => {
-                    try {
-                        pl.method();
-                    } catch (Exception e) {
-                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling GroupSave Event."); Server.ErrorLog(e);
-                    }
-                });
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl());
         }
     }
     
@@ -77,14 +59,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(Player p, Group newRank) {
-            events.ForEach(
-                pl => {
-                    try {
-                        pl.method(p, newRank);
-                    } catch (Exception e) {
-                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling PlayerRankSet Event."); Server.ErrorLog(e);
-                    }
-                });
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p, newRank));
         }
     }
 }

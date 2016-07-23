@@ -18,13 +18,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy
-{
-	// NOTE: You must use a different delegate type for each subclass
-	// This is because the static events are unique to each generic instantiation, not each subclass.
-    public class IPluginEvent<IMethod>
-    {
-        internal static List<IPluginEvent<IMethod>> events = new List<IPluginEvent<IMethod>>();
+namespace MCGalaxy {
+    // NOTE: You must use a different delegate type for each subclass
+    // This is because the static events are unique to each generic instantiation, not each subclass.
+    public class IPluginEvent<IMethod> {
+        internal static List<IPluginEvent<IMethod>> handlers = new List<IPluginEvent<IMethod>>();
         protected internal Plugin plugin;
         protected internal IMethod method;
         protected internal Priority priority;
@@ -33,18 +31,6 @@ namespace MCGalaxy
             this.plugin = plugin; 
             this.priority = priority; 
             this.method = method; 
-        }
-
-        protected static void Organize() {
-            events.Sort((a, b) => b.priority.CompareTo(a.priority));
-        }
-
-        public static IPluginEvent<IMethod> Find(Plugin plugin) {
-            foreach (var p in events) {
-                if (p.plugin == plugin)
-                    return p;
-            }
-            return null;
         }
         
         /// <summary> Register this event </summary>
@@ -55,7 +41,7 @@ namespace MCGalaxy
         public static void Register(IMethod method, Priority priority, Plugin plugin, bool bypass = false) {
             if (Find(plugin) != null && !bypass)
                 throw new ArgumentException("The user tried to register 2 of the same event!");
-            events.Add(new IPluginEvent<IMethod>(method, priority, plugin));
+            handlers.Add(new IPluginEvent<IMethod>(method, priority, plugin));
             Organize();
         }
         
@@ -65,7 +51,35 @@ namespace MCGalaxy
             if (Find(plugin) == null)
                 throw new ArgumentException("This plugin doesnt have this event registered!");
             else
-                events.Remove(Find(plugin));
+                handlers.Remove(Find(plugin));
+        }
+        
+        public static IPluginEvent<IMethod> Find(Plugin plugin) {
+            foreach (var p in handlers) {
+                if (p.plugin == plugin) return p;
+            }
+            return null;
+        }
+        
+        
+        protected static void Organize() {
+            handlers.Sort((a, b) => b.priority.CompareTo(a.priority));
+        }
+        
+        protected static void CallImpl(Action<IMethod> action) {
+            try {
+                foreach (var pl in handlers) {
+                    try {
+                        action(pl.method);
+                    } catch (Exception ex) {
+                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling " + typeof(IMethod).Name + " event"); 
+                        Server.ErrorLog(ex);
+                    }
+                }
+            } catch (Exception ex) {
+                Server.s.Log("Error when calling " + typeof(IMethod).Name + " event"); 
+                Server.ErrorLog(ex);
+            }
         }
     }
 }

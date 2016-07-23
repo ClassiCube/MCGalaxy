@@ -732,11 +732,11 @@ return;
             
             if (OnMove != null) OnMove(this, x, y, z);
             if (PlayerMove != null) PlayerMove(this, x, y, z);
-            if (PlayerMoveEvent.events.Count > 0) PlayerMoveEvent.Call(this, x, y, z);
+            PlayerMoveEvent.Call(this, x, y, z);
 
             if (OnRotate != null) OnRotate(this, rot);
             if (PlayerRotate != null) PlayerRotate(this, rot);
-            if (PlayerRotateEvent.events.Count > 0) PlayerRotateEvent.Call(this, rot);
+            PlayerRotateEvent.Call(this, rot);
             
             if (cancelmove) {
                 SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]); return;
@@ -1090,13 +1090,13 @@ return;
                     //IRCBot.Say("<" + name + "> " + newtext);
                     if (OnChat != null) OnChat(this, text);
                     if (PlayerChat != null) PlayerChat(this, text);
-                    if (OnPlayerChatEvent.events.Count > 0) OnPlayerChatEvent.Call(this, text);
+                    if (OnPlayerChatEvent.handlers.Count > 0) OnPlayerChatEvent.Call(this, text);
                     return;
                 }
                 Server.s.Log("<" + name + "> " + text);
                 if (OnChat != null) OnChat(this, text);
                 if (PlayerChat != null) PlayerChat(this, text);
-                if (OnPlayerChatEvent.events.Count > 0) OnPlayerChatEvent.Call(this, text);
+                if (OnPlayerChatEvent.handlers.Count > 0) OnPlayerChatEvent.Call(this, text);
                 
                 if (cancelchat) {
                     cancelchat = false; return;

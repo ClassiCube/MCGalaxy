@@ -153,7 +153,7 @@ namespace MCGalaxy {
                         //try {
                             if (PhysicsUpdate != null)
                                 PhysicsUpdate(x, y, z,  C.data, this);
-                            if (OnPhysicsUpdateEvent.events.Count > 0)
+                            if (OnPhysicsUpdateEvent.handlers.Count > 0)
                                 OnPhysicsUpdateEvent.Call(x, y, z, C.data, this);
                             
                             if ((C.data.Raw & mask) == 0 || ExtraInfoPhysics.DoComplex(this, ref C)) {
