@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
-        	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] args = message.Split(' ');
             if (args.Length > 2) { Help(p); return; }
             
