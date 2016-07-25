@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.World {
             bool confirmed = args.Length > 4 && args[4].CaselessEq("confirm");
             if (!confirmed && (x < lvl.Width || y < lvl.Height || z < lvl.Length)) {
                 Player.Message(p, "New level dimensions are smaller than the current dimensions, &cyou will lose blocks%S.");
-                Player.Message(p, "Type %T/resizelvl {0} {1} {2} {3} confirm %Sif you are sure.", args[0], x, y, z);
+                Player.Message(p, "Type %T/resizelvl {0} {1} {2} {3} confirm %Sif you're sure.", args[0], x, y, z);
                 return;
             }
             

@@ -145,7 +145,10 @@ namespace MCGalaxy {
                 pl.level = lvl;
                 ReloadMap(null, pl, false);
             }
+            
             old.Unload(true, false);
+            if (old == Server.mainLevel)
+                Server.mainLevel = lvl;
         }
         
         public static void ReloadMap(Player p, Player who, bool showMessage) {
