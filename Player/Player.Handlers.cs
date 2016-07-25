@@ -104,7 +104,7 @@ namespace MCGalaxy {
             }
 
             if (!Block.canPlace(this, block)) {
-                SendMessage("You can't place this block type!");
+            	Formatter.MessageBlock(this, "place ", block);
                 RevertBlock(x, y, z); return;
             }
 

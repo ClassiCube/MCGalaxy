@@ -55,12 +55,12 @@ namespace MCGalaxy.Commands.Building {
             }
 
             if (block == -1 || block == Block.Zero) return;
-            if (!Block.canPlace(p, (byte)block)) { Player.Message(p, "Cannot place that block type."); return; }
+            if (!Block.canPlace(p, (byte)block)) { Formatter.MessageBlock(p, "place ", (byte)block); return; }
             Vec3U16 P = Vec3U16.ClampPos(x, y, z, p.level);
             
             P.X /= 32; P.Y /= 32; P.Z /= 32;
             p.level.UpdateBlock(p, P.X, P.Y, P.Z, (byte)block, extBlock);
-            Player.Message(p, "A block was placed at (" + P.X + ", " + P.Y + ", " + P.Z + ").");
+            Player.Message(p, "A block was placed at ({0}, {1}, {2}).", P.X, P.Y, P.Z);
         }
         
         public override void Help(Player p) {

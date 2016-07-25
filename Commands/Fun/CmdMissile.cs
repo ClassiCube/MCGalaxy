@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
                 p.aiming = false;
             }
             p.RevertBlock(x, y, z);
-            if (!Block.canPlace(p, type)) { Player.Message(p, "You cannot place this block."); return; }
+            if (!Block.canPlace(p, type)) { Formatter.MessageBlock(p, "place ", type); return; }
 
             Thread gunThread = new Thread(() => DoShoot(p, type, extType));
             gunThread.Name = "MCG_Missile";

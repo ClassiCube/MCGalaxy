@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
         
         protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             p.RevertBlock(x, y, z);
-            if (!Block.canPlace(p, type)) { Player.Message(p, "You cannot place this block."); return; }
+            if (!Block.canPlace(p, type)) { Formatter.MessageBlock(p, "place ", type); return; }
 
             Thread gunThread = new Thread(() => DoShoot(p, type, extType));
             gunThread.Name = "MCG_Gun";

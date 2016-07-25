@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Building {
 
             cpos.block = type; cpos.extBlock = extType;
             if (!Block.canPlace(p, oldType) && !Block.BuildIn(oldType)) { 
-            	Player.Message(p, "Cannot fill with that."); return false;
+                Formatter.MessageBlock(p, "fill over ", oldType); return false;
             }
 
             SparseBitSet bits = new SparseBitSet(p.level.Width, p.level.Height, p.level.Length);

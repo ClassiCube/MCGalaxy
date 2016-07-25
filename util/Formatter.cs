@@ -22,7 +22,7 @@ using System.Text;
 namespace MCGalaxy {
     public static class Formatter {
         
-        internal static void PrintRanks(LevelPermission minRank, List<LevelPermission> allowed,
+        public static void PrintRanks(LevelPermission minRank, List<LevelPermission> allowed,
                                         List<LevelPermission> disallowed, StringBuilder builder) {
             builder.Append(GetColoredRank(minRank) + "%S+");
             if (allowed != null && allowed.Count > 0) {
@@ -39,7 +39,7 @@ namespace MCGalaxy {
             }
         }
         
-        internal static void PrintCommandInfo(Player p, Command cmd) {
+        public static void PrintCommandInfo(Player p, Command cmd) {
             var perms = GrpCommands.allowedCommands.Find(C => C.commandName == cmd.name);
             StringBuilder builder = new StringBuilder();
             builder.Append("Usable by: ");
@@ -93,6 +93,17 @@ namespace MCGalaxy {
             Group grp = Group.findPerm(perm);
             if (grp != null) return grp.ColoredName;
             return "&f" + (int)perm;
+        }
+		
+		
+		public static void MessageBlock(Player p, string action, byte block) {
+            StringBuilder builder = new StringBuilder("Only ");
+            Block.Blocks perms = Block.BlockList[block];
+            Formatter.PrintRanks(perms.lowestRank, perms.allow, perms.disallow, builder);
+            
+            builder.Append( " %Scan ").Append(action);
+            builder.Append(Block.Name(block)).Append(".");
+            Player.Message(p, builder.ToString());
         }
     }
 }

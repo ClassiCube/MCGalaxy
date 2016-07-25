@@ -47,17 +47,10 @@ namespace MCGalaxy.Commands.Building {
             }
             if (!p.allowTnt && block == Block.fire) {
                 Player.Message(p, "Tnt usage is not allowed at the moment, fire is a lighter for tnt and is also disabled"); return;
-            }
+            }          
+            if (!Block.canPlace(p, block)) { Formatter.MessageBlock(p, "place ", block); return; }
             
             string name = Block.Name(block).Capitalize();
-            if (!Block.canPlace(p, block)) {
-                StringBuilder builder = new StringBuilder("Only ");
-                Block.Blocks perms = Block.BlockList[block];
-                Formatter.PrintRanks(perms.lowestRank, perms.allow, perms.disallow, builder);
-                builder.Append( " %Scan place ").Append(name).Append(".");
-                Player.Message(p, builder.ToString()); return;
-            }
-
             if (p.modeType == block) {
                 Player.Message(p, "&b{0} %Smode: &cOFF", name);
                 p.modeType = 0;
