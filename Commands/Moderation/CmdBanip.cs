@@ -1,25 +1,23 @@
 /*
-	Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using MCGalaxy.SQL;
+using System.Net;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdBanip : Command {
@@ -49,57 +47,40 @@ namespace MCGalaxy.Commands.Moderation {
                 if (who != null) message = who.ip;
             }
 
-            if (message.Equals("127.0.0.1")) { Player.Message(p, "You can't ip-ban the server!"); return; }
-            if (message.IndexOf('.') == -1) { Player.Message(p, "Invalid IP!"); return; }
-            if (message.Split('.').Length != 4) { Player.Message(p, "Invalid IP!"); return; }
-            if (p != null && p.ip == message) { Player.Message(p, "You can't ip-ban yourself.!"); return; }
-            if (Server.bannedIP.Contains(message)) { Player.Message(p, message + " is already ip-banned."); return; }
+            IPAddress ip;
+            if (!IPAddress.TryParse(message, out ip)) { Player.Message(p, "\"{0}\" is not a valid IP.", message); return; }
+            if (IPAddress.IsLoopback(ip)) { Player.Message(p, "You cannot ip-ban the server."); return; }
+            if (p != null && p.ip == message) { Player.Message(p, "You cannot ip-ban yourself."); return; }
+            if (Server.bannedIP.Contains(message)) { Player.Message(p, "{0} is already ip-banned.", message); return; }
+            // Check if IP is shared by any other higher ranked accounts
+            if (!CheckIP(p, message)) return;
 
-            // Check if IP belongs to an op+
-            // First get names of active ops+ with that ip
-            List<string> opNamesWithThatIP = (from pl in PlayerInfo.players where (pl.ip == message && pl.@group.Permission >= LevelPermission.Operator) select pl.name).ToList();
-            // Next, add names from the database
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@IP", message);
-            DataTable dbnames = Database.fillData(query, "SELECT Name FROM Players WHERE IP = @IP");
-
-            foreach (DataRow row in dbnames.Rows) {
-                opNamesWithThatIP.Add(row[0].ToString());
-            }
-            dbnames.Dispose();
-
-            if (p != null && opNamesWithThatIP != null && opNamesWithThatIP.Count > 0) {
-                // We have at least one op+ with a matching IP
-                // Check permissions of everybody who matched that IP
-                foreach (string opname in opNamesWithThatIP) {
-                    // If one of these guys matches a player with a higher rank don't allow the ipban to proceed!
-                    Group grp = Group.findPlayerGroup(opname);
-                    if (grp == null || grp.Permission < p.Rank) continue;
-                    
-                    Player.Message(p, "You can only ipban IPs used by players with a lower rank.");
-                    Player.Message(p, opname + "(" + grp.ColoredName + "%S) uses that IP.");
-                    Server.s.Log(p.name + "failed to ipban " + message + " - IP is also used by: " + opname + "(" + grp.name + ")");
-                    return;
-                }
-            }
-
-            if (p != null) {
-                Server.IRC.Say(message.ToLower() + " was ip-banned by " + p.name + ".");
-                Server.s.Log("IP-BANNED: " + message.ToLower() + " by " + p.name + ".");
-                Player.GlobalMessage(message + " was &8ip-banned %Sby " + p.color + p.name + "%S.");
-            } else {
-                Server.IRC.Say(message.ToLower() + " was ip-banned by console.");
-                Server.s.Log("IP-BANNED: " + message.ToLower() + " by console.");
-                Player.GlobalMessage(message + " was &8ip-banned %S by (console).");
-            }
+            string banner = p == null ? "(console)" : p.ColoredName;
+            Server.IRC.Say(message.ToLower() + " was ip-banned by " + banner + "%S.");
+            Server.s.Log("IP-BANNED: " + message.ToLower() + " by " + banner + ".");
+            Player.GlobalMessage(message + " was &8ip-banned %Sby " + banner + "%S.");
+            
             Server.bannedIP.Add(message);
             Server.bannedIP.Save();
-
-            /*
-            foreach (Player pl in PlayerInfo.players) {
-                if (message == pl.ip) { pl.Kick("Kicked by ipban"); }
-            }*/
         }
+        
+        static bool CheckIP(Player p, string ip) {
+            if (p == null) return true;
+            List<string> alts = PlayerInfo.FindAccounts(ip);
+            if (alts == null || alts.Count == 0) return true;
+            
+            foreach (string name in alts) {
+                Group grp = Group.findPlayerGroup(name);
+                if (grp == null || grp.Permission < p.Rank) continue;
+                
+                Player.Message(p, "You can only ipban IPs used by players with a lower rank.");
+                Player.Message(p, name + "(" + grp.ColoredName + "%S) uses that IP.");
+                Server.s.Log(p.name + "failed to ipban " + ip + " - IP is also used by: " + name + "(" + grp.name + ")");
+                return false;
+            }
+            return true;
+        }
+        
         public override void Help(Player p) {
             Player.Message(p, "%T/banip <ip/name>");
             Player.Message(p, "%HBans an ip. Also accepts a player name when you use @ before the name.");
