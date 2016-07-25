@@ -113,8 +113,8 @@ namespace MCGalaxy.Commands.Building {
                 if (popType == 1) popType = 2;
                 if (popType == 3) popType = 4;
             }
-            ColorBlock[] palette = ImagePalette.GetPalette(popType);
-            ColorBlock cur = default(ColorBlock);
+            PaletteEntry[] palette = ImagePalette.GetPalette(popType);
+            PaletteEntry cur = default(PaletteEntry);
             Vec3S32 P;
             
             IPalette selector = null;
@@ -148,9 +148,9 @@ namespace MCGalaxy.Commands.Building {
                 }
 
                 Color col = bmp.GetPixel(xx, yy);
-                cur.r = col.R; cur.g = col.G; cur.b = col.B; cur.a = col.A;
+                cur.r = col.R; cur.g = col.G; cur.b = col.B;
                 int position;
-                cur.type = selector.BestMatch(cur, out position);
+                cur.block = selector.BestMatch(cur, out position);
                 if (popType == 1 || popType == 3) {
                     int threshold = popType == 1 ? 20 : 3;
                     if (position <= threshold) {
@@ -165,8 +165,8 @@ namespace MCGalaxy.Commands.Building {
                     }
                 }
 
-                if (cur.a < 20) cur.type = Block.air;
-                p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, cur.type, 0);
+                if (col.A < 20) cur.block = Block.air;
+                p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, cur.block, 0);
             }
             
             if (dArgs.name == "tempImage_" + p.name)
