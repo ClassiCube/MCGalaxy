@@ -20,10 +20,19 @@ using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.BlockBehaviour {
-    
+namespace MCGalaxy.BlockBehaviour {    
     internal static class WalkthroughBehaviour {
 
+        internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
+            p.level.Blockchange(x, y, z, Block.DoorAirs(block));
+            return true;
+        }
+        
+        internal static bool Train(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (!p.onTrain) p.HandleDeath(Block.train);
+            return true;
+        }
+		
         internal static bool Portal(Player p, byte block, ushort x, ushort y, ushort z, bool checkPos) {
             if (checkPos && p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
             p.RevertBlock(x, y, z);
@@ -104,11 +113,6 @@ namespace MCGalaxy.BlockBehaviour {
                 p.SpawnEntity(p, 0xFF, p.pos[0], (ushort)sendY, p.pos[2], p.rot[0], p.rot[1]);
                 p.lastCheckpointIndex = index;
             }
-            return true;
-        }
-        
-        internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
-            p.level.Blockchange(x, y, z, Block.DoorAirs(block));
             return true;
         }
         

@@ -830,6 +830,7 @@ return;
             if (!immediate && lastDeath.AddSeconds(2) > DateTime.UtcNow) return;
             if (!level.Killer || invincible || hidden) return;
 
+            onTrain = false; trainGrab = false;
             ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);            
             string deathMsg = Block.Props[b].DeathMessage;
             if (deathMsg != null) Chat.GlobalChatLevel(this, String.Format(deathMsg, ColoredName), false);            

@@ -59,6 +59,7 @@ namespace MCGalaxy {
             walkthroughHandlers[Block.air_switch] = WalkthroughBehaviour.Door;
             walkthroughHandlers[Block.water_door] = WalkthroughBehaviour.Door;
             walkthroughHandlers[Block.lava_door] = WalkthroughBehaviour.Door;
+            walkthroughHandlers[Block.train] = WalkthroughBehaviour.Train;
             
             for (int i = 0; i < 256; i++) {
                 if (Props[i].IsMessageBlock) {

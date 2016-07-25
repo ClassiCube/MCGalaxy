@@ -16,10 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System.Threading;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdRide : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdRide : Command {
         public override string name { get { return "ride"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -48,7 +46,7 @@ namespace MCGalaxy.Commands
                         for (ushort zz = (ushort)(z - 1); zz <= z + 1; zz++)
                 {
                     if (p.level.GetTile(xx, yy, zz) != Block.train) continue;
-                    p.invincible = true; p.trainGrab = true;
+                    p.trainGrab = true;
                     byte yaw = 0, pitch = 0;
 
                     if (y - yy == -1) pitch = 240;
@@ -76,7 +74,6 @@ namespace MCGalaxy.Commands
                 }
 
                 Thread.Sleep(3);
-                p.invincible = false;
                 p.trainGrab = false;
             skip:
                 ;
@@ -84,8 +81,8 @@ namespace MCGalaxy.Commands
 
             Player.Message(p, "Dismounted");
             Thread.Sleep(1000);
-            p.invincible = false;
             p.trainGrab = false;
+            p.onTrain = false;
         }
         
         public override void Help(Player p) {
