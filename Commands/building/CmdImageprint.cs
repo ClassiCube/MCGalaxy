@@ -148,9 +148,9 @@ namespace MCGalaxy.Commands.Building {
                 }
 
                 Color col = bmp.GetPixel(xx, yy);
-                cur.r = col.R; cur.g = col.G; cur.b = col.B;
+                cur.R = col.R; cur.G = col.G; cur.B = col.B;
                 int position;
-                cur.block = selector.BestMatch(cur, out position);
+                cur.Block = selector.BestMatch(cur, out position);
                 if (popType == 1 || popType == 3) {
                     int threshold = popType == 1 ? 20 : 3;
                     if (position <= threshold) {
@@ -165,8 +165,8 @@ namespace MCGalaxy.Commands.Building {
                     }
                 }
 
-                if (col.A < 20) cur.block = Block.air;
-                p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, cur.block, 0);
+                if (col.A < 20) cur.Block = Block.air;
+                p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, cur.Block, 0);
             }
             
             if (dArgs.name == "tempImage_" + p.name)

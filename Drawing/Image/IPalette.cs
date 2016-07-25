@@ -35,7 +35,7 @@ namespace MCGalaxy.Drawing {
         public void SetAvailableBlocks(PaletteEntry[] blocks) { }
         
         public byte BestMatch(PaletteEntry cur, out int position) {
-            int brightness = (cur.r + cur.g + cur.b) / 3; position = -1;
+            int brightness = (cur.R + cur.G + cur.B) / 3; position = -1;
             if (brightness < (256 / 4))
                 return Block.obsidian;
             else if (brightness >= (256 / 4) && brightness < (256 / 4) * 2)
@@ -58,15 +58,15 @@ namespace MCGalaxy.Drawing {
             int minimum = int.MaxValue; position = 0;
             for (int i = 0; i < palette.Length; i++) {
                 PaletteEntry pixel = palette[i];
-                int dist = (cur.r - pixel.r) * (cur.r - pixel.r)
-                    + (cur.g - pixel.g) * (cur.g - pixel.g)
-                    + (cur.b - pixel.b) * (cur.b - pixel.b);
+                int dist = (cur.R - pixel.R) * (cur.R - pixel.R)
+                    + (cur.G - pixel.G) * (cur.G - pixel.G)
+                    + (cur.B - pixel.B) * (cur.B - pixel.B);
                 
                 if (dist < minimum) {
                     minimum = dist; position = i;
                 }
             }
-            return palette[position].block;
+            return palette[position].Block;
         }
     }
     
@@ -104,7 +104,7 @@ namespace MCGalaxy.Drawing {
         
         LabColor RgbToLab(PaletteEntry block) {
             // First convert RGB to CIE-XYZ
-            double R = block.r / 255.0, G = block.g / 255.0, B = block.b / 255.0;
+            double R = block.R / 255.0, G = block.G / 255.0, B = block.B / 255.0;
             if (R > 0.04045) R = Math.Pow((R + 0.055) / 1.055, 2.4);
             else R = R / 12.92;
             if (G > 0.04045) G = Math.Pow((G + 0.055) / 1.055, 2.4);
@@ -131,7 +131,7 @@ namespace MCGalaxy.Drawing {
             lab.L = 116 * Y - 16;
             lab.A = 500 * (X - Y);
             lab.B = 200 * (Y - Z);
-            lab.Block = block.block;
+            lab.Block = block.Block;
             return lab;
         }
     }

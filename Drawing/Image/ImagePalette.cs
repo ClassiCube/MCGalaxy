@@ -137,10 +137,10 @@ namespace MCGalaxy.Drawing {
     }
     
     public struct PaletteEntry  {
-        public byte block, r, g, b;
+        public byte R, G, B, Block;
         
         public PaletteEntry(byte r, byte g, byte b, byte block) {
-            this.r = r; this.g = g; this.b = b; this.block = block;
+            R = r; G = g; B = b; Block = block;
         }
     }
 }
