@@ -29,7 +29,7 @@ namespace MCGalaxy.BlockPhysics {
             lvl.IntToPos(C.b, out x, out y, out z);
             int index = C.b;
             bool movedDown = false;
-            byte type = lvl.blocks[C.b];
+            byte block = lvl.blocks[C.b];
             
             do {
                 index = lvl.IntOffset(index, 0, -1, 0); //Get block below each loop
@@ -60,9 +60,9 @@ namespace MCGalaxy.BlockPhysics {
             if (movedDown) {
                 lvl.AddUpdate(C.b, Block.air);
                 if (lvl.physics > 1)
-                    lvl.AddUpdate(index, type);
+                    lvl.AddUpdate(index, block);
                 else
-                    lvl.AddUpdate(lvl.IntOffset(index, 0, 1, 0), type);
+                    lvl.AddUpdate(lvl.IntOffset(index, 0, 1, 0), block);
                 
                 AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x + 1), y, z));
                 AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x - 1), y, z));
@@ -135,11 +135,11 @@ namespace MCGalaxy.BlockPhysics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             if (C.data.Data > 20) {
-                byte type = lvl.GetTile(x, (ushort)(y + 1), z), extType = 0;
-                if (type == Block.custom_block)
-                    extType = lvl.GetExtTile(x, (ushort)(y + 1), z);
+                byte block = lvl.GetTile(x, (ushort)(y + 1), z), extBlock = 0;
+                if (block == Block.custom_block)
+                    extBlock = lvl.GetExtTile(x, (ushort)(y + 1), z);
                 
-                if (Block.LightPass(type, extType, lvl.CustomBlockDefs))
+                if (Block.LightPass(block, extBlock, lvl.CustomBlockDefs))
                     lvl.AddUpdate(C.b, Block.grass);
                 C.data.Data = 255;
             } else {

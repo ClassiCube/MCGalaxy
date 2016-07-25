@@ -594,10 +594,10 @@ namespace MCGalaxy {
             SendRaw(Opcode.CpeCustomBlockSupportLevel, level);
         }
         
-        void SendHoldThis( byte type, byte locked ) { // if locked is on 1, then the player can't change their selected block.
+        void SendHoldThis( byte block, byte locked ) { // if locked is on 1, then the player can't change their selected block.
             byte[] buffer = new byte[3];
             buffer[0] = Opcode.CpeHoldThis;
-            buffer[1] = type;
+            buffer[1] = block;
             buffer[2] = locked;
             SendRaw(buffer);
         }

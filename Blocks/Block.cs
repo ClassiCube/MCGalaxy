@@ -22,15 +22,13 @@ namespace MCGalaxy
 {
     public sealed partial class Block
     {
-        public static bool Walkthrough(byte type) {
-			return type == air || type == shrub || (type >= water && type <= lavastill) 
-			    || (type >= yellowflower && type <= redmushroom) || type == rope;
+        public static bool Walkthrough(byte block) {
+			return block == air || block == shrub || (block >= water && block <= lavastill) 
+			    || (block >= yellowflower && block <= redmushroom) || block == rope;
         }
 
-        public static bool AllowBreak(byte type)
-        {	
-            switch (type)
-            {
+        public static bool AllowBreak(byte block) {	
+            switch (block) {
                 case blue_portal:
                 case orange_portal:
 

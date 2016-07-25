@@ -64,11 +64,11 @@ namespace MCGalaxy.Blocks {
         /// <summary> Whether this block should allow trains to go over them. </summary>
         public bool IsRails;
         
-        public BlockProperties(byte type) {
+        public BlockProperties(byte block) {
             this = default(BlockProperties);
-            BlockId = type;
-            ConvertId = type;
-            SaveConvertId = type;
+            BlockId = block;
+            ConvertId = block;
+            SaveConvertId = block;
             Name = "unknown";
             ODoorId = Block.Zero;
         }

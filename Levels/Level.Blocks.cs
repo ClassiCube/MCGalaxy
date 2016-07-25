@@ -356,28 +356,28 @@ namespace MCGalaxy {
             Blockchange(PosToInt(x, y, z), type, false, default(PhysicsArgs), extType); //Block change made by physics
         }
         
-        internal bool DoPhysicsBlockchange(int b, byte type, bool overRide = false, 
+        internal bool DoPhysicsBlockchange(int b, byte block, bool overRide = false, 
                                            PhysicsArgs data = default(PhysicsArgs), 
-                                           byte extType = 0, bool addUndo = true) {
+                                           byte extBlock = 0, bool addUndo = true) {
             if (b < 0 || b >= blocks.Length || blocks == null) return false;
-            byte oldBlock = blocks[b];
-            byte oldExtType = oldBlock == Block.custom_block ? GetExtTile(b) : (byte)0;
+            byte old = blocks[b];
+            byte oldExt = old == Block.custom_block ? GetExtTile(b) : (byte)0;
             try
             {
                 if (!overRide)
-                    if (Block.Props[oldBlock].OPBlock || (Block.Props[type].OPBlock && data.Raw != 0)) 
+                    if (Block.Props[old].OPBlock || (Block.Props[block].OPBlock && data.Raw != 0)) 
                         return false;
 
-                if (b == Block.sponge && physics > 0 && type != Block.sponge)
+                if (b == Block.sponge && physics > 0 && block != Block.sponge)
                     OtherPhysics.DoSpongeRemoved(this, b);
 
-                if (b == Block.lava_sponge && physics > 0 && type != Block.lava_sponge)
+                if (b == Block.lava_sponge && physics > 0 && block != Block.lava_sponge)
                     OtherPhysics.DoSpongeRemoved(this, b, true);
 
                 if (addUndo) {
                     UndoPos uP = default(UndoPos);
                     uP.index = b;
-                    uP.SetData(oldBlock, oldExtType, type, extType);
+                    uP.SetData(old, oldExt, block, extBlock);
 
                     if (UndoBuffer.Count < Server.physUndo) {
                         UndoBuffer.Add(uP);
@@ -389,33 +389,34 @@ namespace MCGalaxy {
                     currentUndo++;
                 }
 
-                blocks[b] = type;
-                if (type == Block.custom_block) {
+                blocks[b] = block;
+                if (block == Block.custom_block) {
                     ushort x, y, z;
                     IntToPos(b, out x, out y, out z);
-                    SetExtTileNoCheck(x, y, z, extType);
-                } else if (oldBlock == Block.custom_block) {
+                    SetExtTileNoCheck(x, y, z, extBlock);
+                } else if (old == Block.custom_block) {
                     ushort x, y, z;
                     IntToPos(b, out x, out y, out z);
                     RevertExtTileNoCheck(x, y, z);
                 }                
-                if (physics > 0 && ((Block.Physics(type) || data.Raw != 0)))
+                if (physics > 0 && (Block.Physics(block) || data.Raw != 0))
                     AddCheck(b, false, data);
                 
                 // Save bandwidth sending identical looking blocks, like air/op_air changes.
-                bool diffBlock = Block.Convert(oldBlock) != Block.Convert(type);
-                if (!diffBlock && oldBlock == Block.custom_block)
-                    diffBlock = oldExtType != extType;
+                bool diffBlock = Block.Convert(old) != Block.Convert(block);
+                if (!diffBlock && old == Block.custom_block)
+                    diffBlock = oldExt != extBlock;
                 return diffBlock;
             } catch {
-                blocks[b] = type;
+                blocks[b] = block;
                 return false;
             }
         }
 
         public int PosToInt(ushort x, ushort y, ushort z) {
-            if (x < 0 || x >= Width || y < 0 || y >= Height || z < 0 || z >= Length)
-                return -1;
+            //if (x < 0 || x >= Width || y < 0 || y >= Height || z < 0 || z >= Length)
+            //    return -1;
+            if (x >= Width || y >= Height || z >= Length) return -1;
             return x + Width * (z + y * Length);
         }
 

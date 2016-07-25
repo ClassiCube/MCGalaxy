@@ -73,7 +73,7 @@ namespace MCGalaxy {
         protected static void MessageNeedMinPerm(Player p, string action, int perm) {
             Group grp = Group.findPermInt(perm);
             if (grp == null)
-                Player.Message(p, "Only ranks with permissions greater than &a{0}%Scan {1}", perm, action);
+                Player.Message(p, "Only {0}%S+ can {1}", perm, action);
             else
                 Player.Message(p, "Only {0}%S+ can {1}", grp.ColoredName, action);
         }

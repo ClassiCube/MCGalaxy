@@ -21,7 +21,7 @@ namespace MCGalaxy
 {
     public sealed partial class Block
     {
-        public static string Name(byte type) { return Props[type].Name; }
+        public static string Name(byte block) { return Props[block].Name; }
         
         public static byte Byte(string type) {
             byte block;
@@ -32,8 +32,8 @@ namespace MCGalaxy
             return Block.Zero;
         }
         
-        public static byte ConvertCPE( byte b ) {
-            switch ( b ) {
+        public static byte ConvertCPE(byte block) {
+            switch (block) {
                 case cobblestoneslab: return staircasestep;
                 case rope: return mushroom;
                 case sandstone: return sand;
@@ -50,15 +50,12 @@ namespace MCGalaxy
                 case pillar: return white;
                 case crate: return wood;
                 case stonebrick: return rock;
-                default:
-                return b;
+                default: return block;
             }
         }
         
-        public static byte Convert(byte b)
-        {
-            switch (b)
-            {
+        public static byte Convert(byte block) {
+            switch (block) {
                 case flagbase: return mushroom;
                 case op_glass: return glass;
                 case opsidian: return obsidian;
@@ -260,7 +257,7 @@ namespace MCGalaxy
                 
                 case custom_block: return custom_block;
                 default:
-                    return b < CpeCount ? b : orange;
+                    return block < CpeCount ? block : orange;
             }
         }
         

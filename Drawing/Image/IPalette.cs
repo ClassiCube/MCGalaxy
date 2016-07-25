@@ -94,12 +94,12 @@ namespace MCGalaxy.Drawing {
                     minimum = dist; position = i;
                 }
             }
-            return palette[position].Type;
+            return palette[position].Block;
         }
         
         struct LabColor {
             public double L, A, B;
-            public byte Type;
+            public byte Block;
         }
         
         LabColor RgbToLab(ColorBlock block) {
@@ -131,7 +131,7 @@ namespace MCGalaxy.Drawing {
             lab.L = 116 * Y - 16;
             lab.A = 500 * (X - Y);
             lab.B = 200 * (Y - Z);
-            lab.Type = block.type;
+            lab.Block = block.type;
             return lab;
         }
     }

@@ -345,10 +345,10 @@ namespace MCGalaxy
                 if (line == "" || line[0] == '#') continue;
                 
                 try {
-                    byte type = Block.Byte(line.Split(' ')[0]);
+                    byte block = Block.Byte(line.Split(' ')[0]);
                     LevelPermission lowestRank = Level.PermissionFromName(line.Split(' ')[2]);
                     if (lowestRank != LevelPermission.Null)
-                        BlockList[type].lowestRank = lowestRank;
+                        BlockList[block].lowestRank = lowestRank;
                     else
                         throw new InvalidDataException("Line " + line + " is invalid.");
                 }
