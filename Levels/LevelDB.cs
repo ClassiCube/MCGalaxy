@@ -158,8 +158,8 @@ namespace MCGalaxy {
         }
         
         public static void CreateZone(string level, Level.Zone zn) {
-            Database.Execute("INSERT INTO `Zone" + level +  "` (Owner, SmallX, SmallY, SmallZ, " +
-			                 "BigX, BigY, BigZ, Owner) VALUES (@0, @1, @2, @3, @4, @5, @6)",
+            Database.Execute("INSERT INTO `Zone" + level +  "` (Owner, SmallX, SmallY, " +
+			                 "SmallZ, BigX, BigY, BigZ) VALUES (@0, @1, @2, @3, @4, @5, @6)",
                              zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
         }
         

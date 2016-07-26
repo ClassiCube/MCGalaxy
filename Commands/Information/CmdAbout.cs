@@ -50,7 +50,8 @@ namespace MCGalaxy.Commands {
             bool foundOne = false;
             
             //safe against SQL injections because no user input is given here
-            DataTable Blocks = Database.fillData("SELECT * FROM `Block" + p.level.name + "` WHERE X=" + (int)x + " AND Y=" + (int)y + " AND Z=" + (int)z);
+            DataTable Blocks = Database.Fill("SELECT * FROM `Block" + p.level.name + 
+                                             "` WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
             for (int i = 0; i < Blocks.Rows.Count; i++) {
                 foundOne = true;
                 DataRow row = Blocks.Rows[i];

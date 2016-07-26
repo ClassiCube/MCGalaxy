@@ -56,13 +56,13 @@ namespace MCGalaxy.SQL {
         }
         
         [Obsolete("Use Fill() method instead.")]
-        public static DataTable fillData(string queryString) {
+        public static DataTable fillData(string queryString, bool skipError = false) {
             ParameterisedQuery query = Server.useMySQL ? MySQL.query : SQLite.query;
             return Fill(query, queryString, null);
         }
         
         [Obsolete("Use Fill() method instead.")]
-        public static DataTable fillData(ParameterisedQuery query, string queryString) {
+        public static DataTable fillData(ParameterisedQuery query, string queryString, bool skipError = false) {
             return Fill(query, queryString, null);
         }
         

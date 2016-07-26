@@ -91,17 +91,14 @@ namespace MCGalaxy.Commands.Building {
 
             foreach (PortalPos pos in bp.entries) {
                 //safe against SQL injections because no user input is given here
-                DataTable Portals = Database.fillData("SELECT * FROM `Portals" + pos.mapName + "` WHERE EntryX=" + (int)pos.x + " AND EntryY=" + (int)pos.y + " AND EntryZ=" + (int)pos.z);
+                DataTable Portals = Database.Fill("SELECT * FROM `Portals" + pos.mapName + 
+                                                  "` WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", pos.x, pos.y, pos.z);
                 Portals.Dispose();
-
-                if (Portals.Rows.Count == 0) {//safe against SQL injections because no user input is given here
-                    Database.executeQuery("INSERT INTO `Portals" + pos.mapName + "` (EntryX, EntryY, EntryZ, ExitMap, ExitX, ExitY, ExitZ) VALUES (" 
-                                          + (int)pos.x + ", " + (int)pos.y + ", " + (int)pos.z + ", '" + p.level.name + "', " + (int)x + ", " + (int)y + ", " + (int)z + ")");
-                } else {//safe against SQL injections because no user input is given here
-                    Database.executeQuery("UPDATE `Portals" + pos.mapName + "` SET ExitMap='" + p.level.name + "', ExitX=" + (int)x + ", ExitY=" + (int)y + ", ExitZ=" + 
-                                          (int)z + " WHERE EntryX=" + (int)pos.x + " AND EntryY=" + (int)pos.y + " AND EntryZ=" + (int)pos.z);
-                }
-                //DB
+                
+                string syntax = Portals.Rows.Count == 0 ?
+                    "INSERT INTO `Portals" + pos.mapName + "` (EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap) VALUES (@0, @1, @2, @3, @4, @5, @6)"
+                    : "UPDATE `Portals" + pos.mapName + "` SET ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5 WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2";
+                Database.Execute(syntax, pos.x, pos.y, pos.z, x, y, z, p.level.name);
 
                 if (pos.mapName == p.level.name) 
                     p.SendBlockchange(pos.x, pos.y, pos.z, bp.type);
@@ -120,7 +117,7 @@ namespace MCGalaxy.Commands.Building {
         void ShowPortals(Player p) {
             p.showPortals = !p.showPortals;
             //safe against SQL injections because no user input is given here
-            DataTable Portals = Database.fillData("SELECT * FROM `Portals" + p.level.name + "`");
+            DataTable Portals = Database.Fill("SELECT * FROM `Portals" + p.level.name + "`");
 
             if (p.showPortals) {
                 foreach (DataRow row in Portals.Rows) {

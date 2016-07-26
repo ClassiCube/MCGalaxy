@@ -113,11 +113,9 @@ namespace MCGalaxy {
         }
 
         public static EcoStats RetrieveEcoStats(string playername) {
-            EcoStats es;
+        	EcoStats es = default(EcoStats);
             es.playerName = playername;
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@Name", playername);
-            using (DataTable eco = Database.fillData(query, "SELECT * FROM Economy WHERE player=@Name")) {
+            using (DataTable eco = Database.Fill("SELECT * FROM Economy WHERE player=@0", playername)) {
                 if (eco.Rows.Count >= 1) {
                     es.money = int.Parse(eco.Rows[0]["money"].ToString());
                     es.totalSpent = int.Parse(eco.Rows[0]["total"].ToString());
@@ -126,8 +124,6 @@ namespace MCGalaxy {
                     es.salary = eco.Rows[0]["salary"].ToString();
                     es.fine = eco.Rows[0]["fine"].ToString();
                 } else {
-                    es.money = 0;
-                    es.totalSpent = 0;
                     es.purchase = "%cNone";
                     es.payment = "%cNone";
                     es.salary = "%cNone";

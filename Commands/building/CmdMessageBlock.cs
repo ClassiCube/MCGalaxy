@@ -106,16 +106,13 @@ namespace MCGalaxy.Commands.Building {
             cpos.message = cpos.message.Replace("'", "\\'");
             cpos.message = Colors.EscapeColors(cpos.message);
             //safe against SQL injections because no user input is given here
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            DataTable Messages = Database.fillData(query, "SELECT * FROM `Messages" + p.level.name + "` WHERE X=" + x + " AND Y=" + y + " AND Z=" + z);
-            
-            query.AddParam("@Message", cpos.message);
-            if (Messages.Rows.Count == 0)
-                Database.executeQuery(query, "INSERT INTO `Messages" + p.level.name + "` (X, Y, Z, Message) VALUES (" + x + ", " + y + ", " + z + ", @Message)");
-            else
-                Database.executeQuery(query, "UPDATE `Messages" + p.level.name + "` SET Message=@Message WHERE X=" + x + " AND Y=" + y + " AND Z=" + z);
-            
+            DataTable Messages = Database.Fill("SELECT * FROM `Messages" + p.level.name + "` WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
             Messages.Dispose();
+            
+            string syntax = Messages.Rows.Count == 0 ?
+                "INSERT INTO `Messages" + p.level.name + "` (X, Y, Z, Message) VALUES (@0, @1, @2, @3)"
+                : "UPDATE `Messages" + p.level.name + "` SET X=@0, Y=@1, Z=@2, Message=@3";
+            Database.Execute(syntax, x, y, z, cpos.message);
         }
 
         struct CatchPos { public string message; public byte type; }
