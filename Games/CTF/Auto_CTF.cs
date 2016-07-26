@@ -370,7 +370,7 @@ tags     MEDIUMINT UNSIGNED{1});";
             string prim1 = Server.useMySQL ? "" : "PRIMARY KEY ";
             string prim2 = Server.useMySQL ? ", PRIMARY KEY (ID)" : "";
             string autoI = Server.useMySQL ? "AUTO_" : "AUTO";
-            Database.executeQuery(String.Format(createSyntax, prim1, prim2, autoI));
+            Database.Execute(String.Format(createSyntax, prim1, prim2, autoI));
         }
         
         string Vote()

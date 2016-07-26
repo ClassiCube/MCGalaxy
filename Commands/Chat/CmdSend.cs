@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
                 message = message.Remove(0, 255);
             }
             //safe against SQL injections because whoTo is checked for illegal characters
-            Database.executeQuery("CREATE TABLE if not exists `Inbox" + whoTo + "` (PlayerFrom CHAR(20), TimeSent DATETIME, Contents VARCHAR(255));");
+            Database.Execute("CREATE TABLE if not exists `Inbox" + whoTo + "` (PlayerFrom CHAR(20), TimeSent DATETIME, Contents VARCHAR(255));");
             ParameterisedQuery query = ParameterisedQuery.Create();
             query.AddParam("@From", fromname);
             query.AddParam("@Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));

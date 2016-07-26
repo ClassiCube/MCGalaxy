@@ -60,7 +60,7 @@ namespace MCGalaxy {
             sql.WriteLine();
             List<string[]> tableSchema = WriteTableSchema(tableName, sql);
             
-            using (DataTable data = Database.fillData("SELECT * FROM `" + tableName + "`")) {
+            using (DataTable data = Database.Fill("SELECT * FROM `" + tableName + "`")) {
                 if (data.Rows.Count == 0) {
                     sql.WriteLine("-- No data in table `{0}`!", tableName);
                     sql.WriteLine();
@@ -114,7 +114,7 @@ namespace MCGalaxy {
                 string[] rowParams;
                 string pri;
                 sql.WriteLine("CREATE TABLE IF NOT EXISTS `{0}` (", tableName);
-                using (DataTable schema = Database.fillData("DESCRIBE `" + tableName + "`")) {
+                using (DataTable schema = Database.Fill("DESCRIBE `" + tableName + "`")) {
                     rowParams = new string[schema.Columns.Count];
                     pri = "";
                     foreach (DataRow row in schema.Rows) {
@@ -189,7 +189,7 @@ namespace MCGalaxy {
         static List<string> GetTables() {
             List<string> tableNames = new List<string>();
             string syntax = Server.useMySQL ? "SHOW TABLES" : "SELECT * FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'";
-            using (DataTable tables = Database.fillData(syntax)) {
+            using (DataTable tables = Database.Fill(syntax)) {
                 foreach (DataRow row in tables.Rows) {
                     string tableName = row.Field<string>((Server.useMySQL ? 0 : 1));
                     tableNames.Add(tableName);
@@ -206,7 +206,7 @@ namespace MCGalaxy {
             //Delete old
             List<string> tables = GetTables();
             foreach (string name in tables)
-                Database.executeQuery(String.Format("DROP TABLE `{0}`", name));
+                Database.Execute("DROP TABLE `" + name + "`");
             
             //Make new
             string script = new StreamReader(stream).ReadToEnd();

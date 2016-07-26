@@ -108,7 +108,7 @@ namespace MCGalaxy.Commands {
             }
             
             const string query = "SELECT distinct {0}, {1} from {2} order by {3} {4} limit {5}";
-            DataTable db = Database.fillData(
+            DataTable db = Database.Fill(
                 string.Format(query, select, columnName.ToLower(), table,
                               columnName.ToLower(), order, limit));
             

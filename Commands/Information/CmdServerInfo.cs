@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands {
             // Use fast path if possible  TODO: fast path for mysql
             int count = 0;
             if (!Server.useMySQL) {                
-                DataTable maxTable = Database.fillData("SELECT MAX(_ROWID_) FROM Players LIMIT 1;");
+                DataTable maxTable = Database.Fill("SELECT MAX(_ROWID_) FROM Players LIMIT 1;");
                 if (maxTable.Rows.Count > 0) {
                 	 string row = maxTable.Rows[0]["MAX(_ROWID_)"].ToString();
                      maxTable.Dispose();
@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands {
                 }             
             }
             
-            DataTable table = Database.fillData("SELECT COUNT(id) FROM Players");
+            DataTable table = Database.Fill("SELECT COUNT(id) FROM Players");
             count = int.Parse(table.Rows[0]["COUNT(id)"].ToString());
             table.Dispose();
             return count;

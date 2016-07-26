@@ -66,11 +66,11 @@ SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE {0};";
             string prim1 = useMySQL ? "" : "PRIMARY KEY ";
             string prim2 = useMySQL ? ", PRIMARY KEY (ID)" : "";
             string autoI = useMySQL ? "AUTO_" : "AUTO";
-            Database.executeQuery(string.Format(createPlayers, prim1, prim2, autoI));
-            Database.executeQuery(string.Format(createOpstats, prim1, prim2, autoI));
+            Database.Execute(string.Format(createPlayers, prim1, prim2, autoI));
+            Database.Execute(string.Format(createOpstats, prim1, prim2, autoI));
             if (!File.Exists("extra/alter.txt") && useMySQL) {
-                Database.executeQuery("ALTER TABLE Players MODIFY Name TEXT");
-                Database.executeQuery("ALTER TABLE Opstats MODIFY Name TEXT");
+                Database.Execute("ALTER TABLE Players MODIFY Name TEXT");
+                Database.Execute("ALTER TABLE Opstats MODIFY Name TEXT");
                 File.Create("extra/alter.txt");
             }
             
@@ -78,32 +78,32 @@ SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE {0};";
             //if Playercmds exists copy-filter to Ostats and remove Playercmds
             if (Database.TableExists("Playercmds")) {
                 foreach (string cmd in Server.Opstats)
-                    Database.executeQuery(string.Format(insertSyntax, "cmd = '" + cmd + "'"));
-                Database.executeQuery(string.Format(insertSyntax, "cmd = 'review' AND cmdmsg = 'next'"));
-                Database.executeQuery("DROP TABLE Playercmds");
+                    Database.Execute(string.Format(insertSyntax, "cmd = '" + cmd + "'"));
+                Database.Execute(string.Format(insertSyntax, "cmd = 'review' AND cmdmsg = 'next'"));
+                Database.Execute("DROP TABLE Playercmds");
             }
 
             // Here, since SQLite is a NEW thing from 5.3.0.0, we do not have to check for existing tables in SQLite.
             if (!useMySQL) return;
             // Check if the color column exists.
-            DataTable colorExists = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='color'");
+            DataTable colorExists = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='color'");
             if (colorExists.Rows.Count == 0)
-                Database.executeQuery("ALTER TABLE Players ADD COLUMN color VARCHAR(6) AFTER totalKicked");
+                Database.Execute("ALTER TABLE Players ADD COLUMN color VARCHAR(6) AFTER totalKicked");
             colorExists.Dispose();
 
-            DataTable tcolorExists = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='title_color'");
+            DataTable tcolorExists = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='title_color'");
             if (tcolorExists.Rows.Count == 0)
-                Database.executeQuery("ALTER TABLE Players ADD COLUMN title_color VARCHAR(6) AFTER color");
+                Database.Execute("ALTER TABLE Players ADD COLUMN title_color VARCHAR(6) AFTER color");
             tcolorExists.Dispose();
 
-            DataTable timespent = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='TimeSpent'");
+            DataTable timespent = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='TimeSpent'");
             if (timespent.Rows.Count == 0)
-                Database.executeQuery("ALTER TABLE Players ADD COLUMN TimeSpent VARCHAR(20) AFTER totalKicked");
+                Database.Execute("ALTER TABLE Players ADD COLUMN TimeSpent VARCHAR(20) AFTER totalKicked");
             timespent.Dispose();
 
-            DataTable totalCuboided = Database.fillData("SHOW COLUMNS FROM Players WHERE `Field`='totalCuboided'");
+            DataTable totalCuboided = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='totalCuboided'");
             if (totalCuboided.Rows.Count == 0)
-                Database.executeQuery("ALTER TABLE Players ADD COLUMN totalCuboided BIGINT AFTER totalBlocks");
+                Database.Execute("ALTER TABLE Players ADD COLUMN totalCuboided BIGINT AFTER totalBlocks");
             totalCuboided.Dispose();
         }
     }

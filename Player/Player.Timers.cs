@@ -61,7 +61,7 @@ namespace MCGalaxy {
                 if (!nobody.commands.Contains("inbox") && !nobody.commands.Contains("send") 
             	    && Database.TableExists("Inbox" + name) ) {
                     //safe against SQL injections because no user input is given here
-                    DataTable Inbox = Database.fillData("SELECT * FROM `Inbox" + name + "`");
+                    DataTable Inbox = Database.Fill("SELECT * FROM `Inbox" + name + "`");
 
                     SendMessage("&cYou have &f" + Inbox.Rows.Count + " &cmessages in /inbox");
                     Inbox.Dispose();

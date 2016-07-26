@@ -123,7 +123,7 @@ namespace MCGalaxy.Commands.Building {
         void ShowMessageBlocks(Player p) {
             p.showMBs = !p.showMBs;
             //safe against SQL injections because no user input is given here
-            using (DataTable Messages = Database.fillData("SELECT * FROM `Messages" + p.level.name + "`")) {
+            using (DataTable Messages = Database.Fill("SELECT * FROM `Messages" + p.level.name + "`")) {
                 if (p.showMBs) {
                     for (int i = 0; i < Messages.Rows.Count; i++) {
                         DataRow row = Messages.Rows[i];

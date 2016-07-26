@@ -245,7 +245,7 @@ Additional4 INT{2});"; // reserve space for possible future additions
             string primKey = Server.useMySQL ? "" : "PRIMARY KEY ";
             string autoInc = Server.useMySQL ? "AUTO_INCREMENT" : "AUTOINCREMENT";
             string primKey2 = Server.useMySQL ? ", PRIMARY KEY (ID)" : "";
-            Database.executeQuery(string.Format(createSyntax, primKey, autoInc, primKey2));
+            Database.Execute(string.Format(createSyntax, primKey, autoInc, primKey2));
         }
         
         public ZombieStats LoadZombieStats(string name) {

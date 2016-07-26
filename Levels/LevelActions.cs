@@ -58,10 +58,10 @@ namespace MCGalaxy {
             //safe against SQL injections because foundLevel is being checked and,
             //newName is being split and partly checked on illegal characters reserved for Windows.
             if (Server.useMySQL)
-                Database.executeQuery(String.Format("RENAME TABLE `Block{0}` TO `Block{1}`, " +
-                                                    "`Portals{0}` TO `Portals{1}`, " +
-                                                    "`Messages{0}` TO `Messages{1}`, " +
-                                                    "`Zone{0}` TO `Zone{1}`", src, dst));
+                Database.Excecute(String.Format("RENAME TABLE `Block{0}` TO `Block{1}`, " +
+                                                "`Portals{0}` TO `Portals{1}`, " +
+                                                "`Messages{0}` TO `Messages{1}`, " +
+                                                "`Zone{0}` TO `Zone{1}`", src, dst));
             else {
                 using (BulkTransaction helper = SQLiteBulkTransaction.Create()) { // ensures that it's either all work, or none work.
                     helper.Execute(String.Format("ALTER TABLE `Block{0}` RENAME TO `Block{1}`", src, dst));
@@ -125,10 +125,10 @@ namespace MCGalaxy {
             BotsFile.DeleteBots(name);
 
             //safe against SQL injections because the levelname (message) is first being checked if it exists
-            Database.executeQuery("DROP TABLE `Block" + name + "`");
-            Database.executeQuery("DROP TABLE `Portals" + name + "`");
-            Database.executeQuery("DROP TABLE `Messages" + name + "`");
-            Database.executeQuery("DROP TABLE `Zone" + name + "`");
+            Database.Execute("DROP TABLE `Block" + name + "`");
+            Database.Execute("DROP TABLE `Portals" + name + "`");
+            Database.Execute("DROP TABLE `Messages" + name + "`");
+            Database.Execute("DROP TABLE `Zone" + name + "`");
         }
         
         public static void Replace(Level old, Level lvl) {

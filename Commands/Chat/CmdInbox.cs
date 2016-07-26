@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands {
                 }
                 
                 //safe against SQL injections because no user input is given here
-                using (DataTable Inbox = Database.fillData("SELECT * FROM `Inbox" + p.name + "` ORDER BY TimeSent")) {
+                using (DataTable Inbox = Database.Fill("SELECT * FROM `Inbox" + p.name + "` ORDER BY TimeSent")) {
                     if (num != -1 && num >= Inbox.Rows.Count) {
                         Player.Message(p, "\"" + num + "\" does not exist."); return;
                     }

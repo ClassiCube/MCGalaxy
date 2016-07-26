@@ -57,16 +57,16 @@ namespace MCGalaxy {
 
         public static void LoadDatabase() {
         retry:
-            Database.executeQuery(createTable); //create database
-            DataTable eco = Database.fillData("SELECT * FROM Economy");
+            Database.Execute(createTable); //create database
+            DataTable eco = Database.Fill("SELECT * FROM Economy");
             try {
-                DataTable players = Database.fillData("SELECT * FROM Players");
+                DataTable players = Database.Fill("SELECT * FROM Players");
                 if (players.Rows.Count == eco.Rows.Count) { } //move along, nothing to do here
                 else if (eco.Rows.Count == 0) { //if first time, copy content from player to economy
-                    Database.executeQuery("INSERT INTO Economy (player, money) SELECT Players.Name, Players.Money FROM Players");
+                    Database.Execute("INSERT INTO Economy (player, money) SELECT Players.Name, Players.Money FROM Players");
                 } else {
                     //this will only be needed when the server shuts down while it was copying content (or some other error)
-                    Database.executeQuery("DROP TABLE Economy");
+                    Database.Execute("DROP TABLE Economy");
                     goto retry;
                 }
                 players.Dispose(); eco.Dispose();

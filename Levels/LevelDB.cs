@@ -102,14 +102,14 @@ namespace MCGalaxy {
         }
         
         public static void CreateTables(string givenName) {
-            Database.executeQuery(String.Format(createBlock, givenName, Server.useMySQL ? "BOOL" : "INT"));
-            Database.executeQuery(String.Format(createPortals, givenName));
-            Database.executeQuery(String.Format(createMessages, givenName));
-            Database.executeQuery(String.Format(createZones, givenName));
+            Database.Execute(String.Format(createBlock, givenName, Server.useMySQL ? "BOOL" : "INT"));
+            Database.Execute(String.Format(createPortals, givenName));
+            Database.Execute(String.Format(createMessages, givenName));
+            Database.Execute(String.Format(createZones, givenName));
         }
         
         internal static void LoadZones(Level level, string name) {
-            using (DataTable table = Database.fillData("SELECT * FROM `Zone" + name + "`")) {
+            using (DataTable table = Database.Fill("SELECT * FROM `Zone" + name + "`")) {
                 Level.Zone Zn;
                 foreach (DataRow row in table.Rows) {
                     Zn.smallX = ushort.Parse(row["SmallX"].ToString());
@@ -125,7 +125,7 @@ namespace MCGalaxy {
         }
         
         internal static void LoadMetadata(Level level, string name) {
-            using (DataTable table = Database.fillData("SELECT * FROM `Portals" + name + "`")) {
+            using (DataTable table = Database.Fill("SELECT * FROM `Portals" + name + "`")) {
                 foreach (DataRow row in table.Rows) {
                     byte tile = level.GetTile(ushort.Parse(row["EntryX"].ToString()),
                                               ushort.Parse(row["EntryY"].ToString()),
@@ -137,7 +137,7 @@ namespace MCGalaxy {
                 }
             }
             
-            using (DataTable table = Database.fillData("SELECT * FROM `Messages" + name + "`")) {
+            using (DataTable table = Database.Fill("SELECT * FROM `Messages" + name + "`")) {
                 foreach (DataRow row in table.Rows) {
                     byte tile = level.GetTile(ushort.Parse(row["X"].ToString()),
                                               ushort.Parse(row["Y"].ToString()),
