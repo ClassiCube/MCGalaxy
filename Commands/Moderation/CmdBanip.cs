@@ -29,23 +29,9 @@ namespace MCGalaxy.Commands.Moderation {
         public CmdBanip() { }
 
         public override void Use(Player p, string message) {
-            if (String.IsNullOrEmpty(message.Trim())) { Help(p); return; }
-            message = Colors.EscapeColors(message);
-            if (message[0] == '@') {
-                message = message.Remove(0, 1).Trim();
-                Player who = PlayerInfo.Find(message);
-
-                if (who == null) {
-                    OfflinePlayer target = PlayerInfo.FindOfflineMatches(p, message);
-                    if (target == null) return;
-                    message = target.ip;
-                } else {
-                    message = who.ip;
-                }
-            } else {
-                Player who = PlayerInfo.Find(message);
-                if (who != null) message = who.ip;
-            }
+            if (message == "") { Help(p); return; }
+            message = GetIP(p, message, true);
+            if (message == null) return;
 
             IPAddress ip;
             if (!IPAddress.TryParse(message, out ip)) { Player.Message(p, "\"{0}\" is not a valid IP.", message); return; }
@@ -62,6 +48,29 @@ namespace MCGalaxy.Commands.Moderation {
             
             Server.bannedIP.Add(message);
             Server.bannedIP.Save();
+        }
+        
+        internal static string GetIP(Player p, string message, bool ban) {
+            IPAddress ip;
+            // TryParse returns "0.0.0.123" for "123", we do not want that behaviour
+            if (IPAddress.TryParse(message, out ip) && message.Split('.').Length == 4) {
+            	string account = Server.ClassicubeAccountPlus ? message + "+" : message;
+                if (PlayerInfo.FindName(account) == null) return message;
+
+                // Some classicube.net accounts can be parsed as valid IPs, so warn in this case.
+                Player.Message(p, "Note: \"{0}\" is an IP, but is also an account name. "
+                               + "If you meant to {1} the account, use %T/{2} @{0}",
+                               message, ban ? "ip-ban" : "un-ip-ban", ban ? "banip" : "unbanip");
+                return message;
+            }
+            
+            if (message[0] == '@') message = message.Remove(0, 1);
+            Player who = PlayerInfo.FindMatches(p, message);
+            if (who != null) return who.ip;
+            
+            Player.Message(p, "Searching PlayerDB..");
+            OfflinePlayer target = PlayerInfo.FindOfflineMatches(p, message);
+            return target == null ? null : target.ip;
         }
         
         static bool CheckIP(Player p, string ip) {
@@ -82,8 +91,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/banip <ip/name>");
-            Player.Message(p, "%HBans an ip. Also accepts a player name when you use @ before the name.");
+            Player.Message(p, "%T/banip <ip/player>");
+            Player.Message(p, "%HBans an IP, or the IP the given player is on.");
         }
     }
 }

@@ -16,8 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Net;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdUnbanip : Command {
         public override string name { get { return "unbanip"; } }
         public override string shortcut { get { return ""; } }
@@ -28,34 +29,26 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            if (message[0] == '@') {
-                message = message.Remove(0, 1).Trim();
-                Player who = PlayerInfo.Find(message);
-                if (who == null) {
-                    string ip = PlayerInfo.FindIP(message);
-                    if (ip == null) { Player.Message(p, "Unable to find an IP address for that user."); return; }
-                    message = ip;
-                } else {
-                    message = who.ip;
-                }
-            }
+            message = CmdBanip.GetIP(p, message, false);
+            if (message == null) return;
 
-            if (message.IndexOf('.') == -1) { Player.Message(p, "Not a valid ip!"); return; }
-            if (p != null) if (p.ip == message) { Player.Message(p, "You shouldn't be able to use this command..."); return; }
+            IPAddress ip;
+            if (!IPAddress.TryParse(message, out ip)) { Player.Message(p, "\"{0}\" is not a valid IP.", message); return; }
+            if (p != null && p.ip == message) { Player.Message(p, "You cannot un-ip-ban yourself."); return; }
             if (!Server.bannedIP.Contains(message)) { Player.Message(p, message + " is not a banned IP."); return; }
+
+            string unbanner = p == null ? "(console)" : p.ColoredName;
+            Server.IRC.Say(message.ToLower() + " was un-ip-banned by " + unbanner + ".");
+            Server.s.Log("IP-UNBANNED: " + message.ToLower() + " by " + unbanner + ".");
+            Player.GlobalMessage(message + " was &8un-ip-banned %Sby " + unbanner + "%S.");
+            
             Server.bannedIP.Remove(message);
             Server.bannedIP.Save();
-
-            string name = p == null ? "(console)" : p.name;
-            string fullName = p == null ? "(console)" : p.ColoredName;
-            Server.IRC.Say(message.ToLower() + " was un-ip-banned by " + name + ".");
-            Server.s.Log("IP-UNBANNED: " + message.ToLower() + " by " + name + ".");
-            Player.GlobalMessage(message + " was &8un-ip-banned %Sby " + fullName + "%S.");
         }
         
         public override void Help(Player p)  {
             Player.Message(p, "%T/unbanip <ip/player>");
-            Player.Message(p, "%HUn-bans an ip. Also accepts a player name when you use @ before the name.");
+            Player.Message(p, "%HUn-bans an IP, or the IP the given player is on.");
         }
     }
 }
