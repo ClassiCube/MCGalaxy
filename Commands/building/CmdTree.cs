@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%T/tree [type] %H- Draws a tree.");
             Player.Message(p, "%HTypes - &fFern/1, Cactus/2, Notch/3, Swamp/4");
             Player.Message(p, "%T/tree [type] [brush name] <brush args>");
-			Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
         }
     }
 }

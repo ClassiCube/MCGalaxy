@@ -46,7 +46,7 @@ namespace MCGalaxy
         }
 
         public static void SetBlocks() {
-        	SetCoreProperties();
+            SetCoreProperties();
             SetupCoreHandlers();          
             InitDefaults();
             
@@ -325,11 +325,11 @@ namespace MCGalaxy
                 try {
                     newBlock.lowestRank = (LevelPermission)int.Parse(block[1]);
                     if (disallow != null) {
-                    	newBlock.disallow = new List<LevelPermission>();
-                    	foreach (string s in disallow) { newBlock.disallow.Add((LevelPermission)int.Parse(s)); }
+                        newBlock.disallow = new List<LevelPermission>();
+                        foreach (string s in disallow) { newBlock.disallow.Add((LevelPermission)int.Parse(s)); }
                     }                    
                     if (allow != null) {
-                    	newBlock.allow = new List<LevelPermission>();
+                        newBlock.allow = new List<LevelPermission>();
                         foreach (string s in allow) { newBlock.allow.Add((LevelPermission)int.Parse(s)); }
                     }
                 } catch {

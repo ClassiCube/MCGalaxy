@@ -57,21 +57,21 @@ namespace MCGalaxy.Bots {
         
        static bool DoWait(PlayerBot bot) {
             if (bot.countdown == 0) {
-        		bot.countdown = bot.Waypoints[bot.cur].seconds;
-        		return true;
-        	}
-        	
-        	bot.countdown--;
-        	if (bot.countdown == 0) { bot.NextInstruction(); return false; }
+                bot.countdown = bot.Waypoints[bot.cur].seconds;
+                return true;
+            }
+            
+            bot.countdown--;
+            if (bot.countdown == 0) { bot.NextInstruction(); return false; }
             return true;
         }
         
         static bool DoNod(PlayerBot bot) {
             if (bot.countdown == 0) {
-        		bot.countdown = bot.Waypoints[bot.cur].seconds;
-        		return true;
-        	}
-        	bot.countdown--;
+                bot.countdown = bot.Waypoints[bot.cur].seconds;
+                return true;
+            }
+            bot.countdown--;
 
             byte speed = (byte)bot.Waypoints[bot.cur].rotspeed;
             if (bot.nodUp) {
@@ -90,24 +90,24 @@ namespace MCGalaxy.Bots {
                 }
             }
 
-        	if (bot.countdown == 0) { bot.NextInstruction(); return false; }
+            if (bot.countdown == 0) { bot.NextInstruction(); return false; }
             return true;
         }
         
         static bool DoSpin(PlayerBot bot) {
             if (bot.countdown == 0) {
-        		bot.countdown = bot.Waypoints[bot.cur].seconds;
-        		return true;
-        	}
-        	bot.countdown--;
+                bot.countdown = bot.Waypoints[bot.cur].seconds;
+                return true;
+            }
+            bot.countdown--;
 
-        	byte speed = (byte)bot.Waypoints[bot.cur].rotspeed;
-        	if (bot.rot[0] + speed > 255) bot.rot[0] = 0;
-        	else if (bot.rot[0] + speed < 0) bot.rot[0] = 255;
-        	else bot.rot[0] += speed;
+            byte speed = (byte)bot.Waypoints[bot.cur].rotspeed;
+            if (bot.rot[0] + speed > 255) bot.rot[0] = 0;
+            else if (bot.rot[0] + speed < 0) bot.rot[0] = 255;
+            else bot.rot[0] += speed;
 
-        	if (bot.countdown == 0) { bot.NextInstruction(); return false; }
-        	return true;
+            if (bot.countdown == 0) { bot.NextInstruction(); return false; }
+            return true;
         }
         
         static bool DoSpeed(PlayerBot bot) {
@@ -126,7 +126,7 @@ namespace MCGalaxy.Bots {
                     case 4: bot.pos[1] -= 24; break;
                     case 5: bot.pos[1] -= 24; bot.jumping = false; bot.currentjump = 0; bot.jumpTimer.Stop(); break;
                 }
-            };       	
+            };           
             bot.jumpTimer.Start();
             bot.NextInstruction(); return true;
         }

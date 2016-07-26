@@ -116,17 +116,17 @@ namespace MCGalaxy.Commands
             }
 
             try {
-            	if (action != "reverse") {
-            		ScriptFile.Append(p, ai, action, extra, more); return;
-            	}
-            	
-            	using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
-            		for (int i = allLines.Length - 1; i > 0; i--) {
-            			if (allLines[i][0] != '#' && allLines[i] != "")
-            				w.WriteLine(allLines[i]);
-            		}
-            		return;
-            	}
+                if (action != "reverse") {
+                    ScriptFile.Append(p, ai, action, extra, more); return;
+                }
+                
+                using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
+                    for (int i = allLines.Length - 1; i > 0; i--) {
+                        if (allLines[i][0] != '#' && allLines[i] != "")
+                            w.WriteLine(allLines[i]);
+                    }
+                    return;
+                }
             } catch { 
                 Player.Message(p, "Invalid parameter"); 
             }

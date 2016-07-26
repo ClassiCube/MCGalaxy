@@ -73,7 +73,7 @@ namespace MCGalaxy.Bots {
         
         public static void Append(Player p, string ai, string action = "", 
                                   string extra = "10", string more = "2") {
-			using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
+            using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
                 switch (action.ToLower()) {
                     case "":
                     case "walk":

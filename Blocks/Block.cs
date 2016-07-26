@@ -23,11 +23,11 @@ namespace MCGalaxy
     public sealed partial class Block
     {
         public static bool Walkthrough(byte block) {
-			return block == air || block == shrub || (block >= water && block <= lavastill) 
-			    || (block >= yellowflower && block <= redmushroom) || block == rope;
+            return block == air || block == shrub || (block >= water && block <= lavastill) 
+                || (block >= yellowflower && block <= redmushroom) || block == rope;
         }
 
-        public static bool AllowBreak(byte block) {	
+        public static bool AllowBreak(byte block) {    
             switch (block) {
                 case blue_portal:
                 case orange_portal:
@@ -84,13 +84,13 @@ namespace MCGalaxy
         }
 
         public static bool Placable(byte block) {
-        	return !(block == blackrock || (block >= water && block <= lavastill))
-			    && block < CpeCount;
+            return !(block == blackrock || (block >= water && block <= lavastill))
+                && block < CpeCount;
         }
 
         public static bool RightClick(byte block, bool countAir = false) {
             if (countAir && block == air) return true;
-            return block >= water && block <= lavastill;			
+            return block >= water && block <= lavastill;            
         }
 
         public static bool OPBlocks(byte block) { return Props[block].OPBlock; }
@@ -99,8 +99,8 @@ namespace MCGalaxy
 
         public static bool BuildIn(byte block) {
             if (block == op_water || block == op_lava || portal(block) || mb(block)) return false;
-			block = Convert(block);
-			return block >= water && block <= lavastill;
+            block = Convert(block);
+            return block >= water && block <= lavastill;
         }
 
         public static bool Mover(byte block) { return walkthroughHandlers[block] != null; }
@@ -108,7 +108,7 @@ namespace MCGalaxy
         public static bool FireKill(byte block) { return block != air && Props[block].LavaKills; }
         
         public static bool LavaKill(byte block) { return Props[block].LavaKills; }
-		
+        
         public static bool WaterKill(byte block) { return Props[block].WaterKills; }
 
         public static bool LightPass(byte block, byte extBlock, BlockDefinition[] defs) {

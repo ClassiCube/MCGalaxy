@@ -32,7 +32,7 @@ namespace MCGalaxy.BlockBehaviour {
             if (!p.onTrain) p.HandleDeath(Block.train);
             return true;
         }
-		
+        
         internal static bool Portal(Player p, byte block, ushort x, ushort y, ushort z, bool checkPos) {
             if (checkPos && p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
             p.RevertBlock(x, y, z);

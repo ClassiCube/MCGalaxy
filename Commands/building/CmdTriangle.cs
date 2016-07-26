@@ -19,14 +19,14 @@ using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands.Building {	
-	public sealed class CmdTriangle : DrawCmd {
+namespace MCGalaxy.Commands.Building {    
+    public sealed class CmdTriangle : DrawCmd {
         public override string name { get { return "triangle"; } }
         public override string shortcut { get { return "tri"; } }
         public override int MarksCount { get { return 3; } }
-		protected override string PlaceMessage {
-			get { return "Place three blocks to determine the edges."; }
-		} 
+        protected override string PlaceMessage {
+            get { return "Place three blocks to determine the edges."; }
+        } 
 
         protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             DrawArgs cpos = (DrawArgs)state;
