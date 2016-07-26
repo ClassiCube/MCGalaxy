@@ -132,8 +132,8 @@ namespace MCGalaxy {
                                               ushort.Parse(row["EntryZ"].ToString()));
                     if (Block.portal(tile)) continue;
                     
-                    Database.executeQuery("DELETE FROM `Portals" + name + "` WHERE EntryX=" + row["EntryX"]
-                                          + " AND EntryY=" + row["EntryY"] + " AND EntryZ=" + row["EntryZ"]);
+                    Database.Execute("DELETE FROM `Portals" + name + "` WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2",
+                                     row["EntryX"], row["EntryY"], row["EntryZ"]);
                 }
             }
             
@@ -145,30 +145,24 @@ namespace MCGalaxy {
                     if (Block.mb(tile)) continue;
                     
                     //givenName is safe against SQL injections, it gets checked in CmdLoad.cs
-                    Database.executeQuery("DELETE FROM `Messages" + name + "` WHERE X=" +
-                                          row["X"] + " AND Y=" + row["Y"] + " AND Z=" + row["Z"]);
+                    Database.Execute("DELETE FROM `Messages" + name + "` WHERE X=@0 AND Y=@1 AND Z=@2", 
+                                     row["X"], row["Y"], row["Z"]);
                 }
             }
         }
-		
-		public static void DeleteZone(string level, Level.Zone zn) {
-			ParameterisedQuery query = ParameterisedQuery.Create();
-			query.AddParam("@Owner", zn.Owner);
-			Database.executeQuery(query, "DELETE FROM `Zone" + level + "` WHERE Owner=@Owner" +
-			                      " AND SmallX='" + zn.smallX + "' AND SMALLY='" +
-			                      zn.smallY + "' AND SMALLZ='" + zn.smallZ + "' AND BIGX='" +
-			                      zn.bigX + "' AND BIGY='" + zn.bigY + "' AND BIGZ='" + zn.bigZ + "'");
-		}
-		
-		public static void CreateZone(string level, Level.Zone zn) {
-			ParameterisedQuery query = ParameterisedQuery.Create();
-			query.AddParam("@Owner", zn.Owner);
-			Database.executeQuery(query, "INSERT INTO `Zone" + level + 
-			                      "` (SmallX, SmallY, SmallZ, BigX, BigY, BigZ, Owner) VALUES ("
-			                      + zn.smallX + ", " + zn.smallY + ", " + zn.smallZ + ", " 
-			                      + zn.bigX + ", " + zn.bigY + ", " + zn.bigZ + ", @Owner)");
-		}
-		
+        
+        public static void DeleteZone(string level, Level.Zone zn) {
+            Database.Execute("DELETE FROM `Zone" + level + "` WHERE Owner=@0 AND SmallX=@1 AND " +
+                             "SMALLY=@2 AND SMALLZ=@3 AND BIGX=@4 AND BIGY=@5 AND BIGZ=@6",
+                             zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
+        }
+        
+        public static void CreateZone(string level, Level.Zone zn) {
+            Database.Execute("INSERT INTO `Zone" + level +  "` (Owner, SmallX, SmallY, SmallZ, " +
+			                 "BigX, BigY, BigZ, Owner) VALUES (@0, @1, @2, @3, @4, @5, @6)",
+                             zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
+        }
+        
         
         const string createBlock =
             @"CREATE TABLE if not exists `Block{0}` (

@@ -249,9 +249,7 @@ Additional4 INT{2});"; // reserve space for possible future additions
         }
         
         public ZombieStats LoadZombieStats(string name) {
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@Name", name);
-            DataTable table = Database.fillData(query, "SELECT * FROM ZombieStats WHERE Name=@Name");
+            DataTable table = Database.Fill("SELECT * FROM ZombieStats WHERE Name=@0", name);
             ZombieStats stats = default(ZombieStats);
             
             if (table.Rows.Count > 0) {
@@ -267,22 +265,13 @@ Additional4 INT{2});"; // reserve space for possible future additions
         
         public void SaveZombieStats(Player p) {
             if (p.Game.TotalRoundsSurvived == 0 && p.Game.TotalInfected == 0) return;
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@Name", p.name);
-            DataTable table = Database.fillData(query, "SELECT * FROM ZombieStats WHERE Name=@Name");
-            
-            query.AddParam("@Name", p.name);
-            query.AddParam("@TR", p.Game.TotalRoundsSurvived);
-            query.AddParam("@MR", p.Game.MaxRoundsSurvived);
-            query.AddParam("@TI", p.Game.TotalInfected);
-            query.AddParam("@MI", p.Game.MaxInfected);
-            
-            if (table.Rows.Count == 0)
-                Database.executeQuery(query, "INSERT INTO ZombieStats (TotalRounds, MaxRounds, " +
-                                      "TotalInfected, MaxInfected, Name) VALUES (@TR, @MR, @TI, @MI, @Name)");
-            else
-                Database.executeQuery(query, "UPDATE ZombieStats SET TotalRounds=@TR, MaxRounds=@MR, " +
-                                      "TotalInfected=@TI, MaxInfected=@MI WHERE Name=@NAME");
+            DataTable table = Database.Fill("SELECT * FROM ZombieStats WHERE Name=@0", p.name);
+
+            string syntax = table.Rows.Count == 0 ?
+                "INSERT INTO ZombieStats (TotalRounds, MaxRounds, TotalInfected, MaxInfected, Name) VALUES (@0, @1, @2, @3, @4)"
+                : "UPDATE ZombieStats SET TotalRounds=@0, MaxRounds=@1, TotalInfected=@2, MaxInfected=@3 WHERE Name=@4";
+            Database.Execute(syntax, p.Game.TotalRoundsSurvived, p.Game.MaxRoundsSurvived,
+                             p.Game.TotalInfected, p.Game.MaxInfected, p.name);
             table.Dispose();
         }
         #endregion

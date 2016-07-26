@@ -1260,12 +1260,8 @@ return;
 
             try { //opstats patch (since 5.5.11)
                 if (Server.opstats.Contains(cmd) || (cmd == "review" && message.ToLower() == "next" && Server.reviewlist.Count > 0)) {
-                    ParameterisedQuery query = ParameterisedQuery.Create();
-                    query.AddParam("@Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                    query.AddParam("@Name", name);
-                    query.AddParam("@Cmd", cmd);
-                    query.AddParam("@Cmdmsg", message);
-                    Database.executeQuery(query, "INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) VALUES (@Time, @Name, @Cmd, @Cmdmsg)");
+                    Database.Execute("INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) VALUES (@0, @1, @2, @3)",
+                                     DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), name, cmd, message);
                 }
             } catch { }
             

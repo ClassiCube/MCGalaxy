@@ -47,14 +47,11 @@ namespace MCGalaxy.Commands {
                 message = message.Remove(0, 255);
             }
             //safe against SQL injections because whoTo is checked for illegal characters
-            Database.Execute("CREATE TABLE if not exists `Inbox" + whoTo + "` (PlayerFrom CHAR(20), TimeSent DATETIME, Contents VARCHAR(255));");
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@From", fromname);
-            query.AddParam("@Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            query.AddParam("@Content", message);
-            Database.executeQuery(query, "INSERT INTO `Inbox" + whoTo + "` (PlayerFrom, TimeSent, Contents) VALUES (@From, @Time, @Content)");
-            //DB
-            
+            Database.Execute("CREATE TABLE if not exists `Inbox" + whoTo + 
+                             "` (PlayerFrom CHAR(20), TimeSent DATETIME, Contents VARCHAR(255));");
+            Database.Execute("INSERT INTO `Inbox" + whoTo + "` (PlayerFrom, TimeSent, Contents) VALUES (@0, @1, @2)",
+                             fromname, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), message);
+
             Player.Message(p, "Message sent to &5" + whoTo + ".");
             if (who != null) who.SendMessage("Message recieved from &5" + fromname + "%S.");
         }
