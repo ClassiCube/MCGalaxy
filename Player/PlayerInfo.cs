@@ -157,11 +157,9 @@ namespace MCGalaxy {
         }
         
         public static List<string> FindAccounts(string ip) {
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@IP", ip);
-            DataTable clones = Database.fillData(query, "SELECT Name FROM Players WHERE IP=@IP");
-
+            DataTable clones = Database.Fill("SELECT Name FROM Players WHERE IP=@0", ip);
             List<string> alts = new List<string>();
+            
             foreach (DataRow row in clones.Rows) {
                 string name = row["Name"].ToString();
                 if (!alts.CaselessContains(name))
@@ -191,21 +189,17 @@ namespace MCGalaxy {
         
         
         static DataTable Query(string name, string selector) {
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@Name", name);
             string syntax = Server.useMySQL ?
-                "SELECT " + selector + " FROM Players WHERE Name=@Name COLLATE utf8_general_ci" :
-                "SELECT " + selector + " FROM Players WHERE Name=@Name COLLATE NOCASE";
-            return Database.fillData(query, syntax);
+                "SELECT " + selector + " FROM Players WHERE Name=@0 COLLATE utf8_general_ci" :
+                "SELECT " + selector + " FROM Players WHERE Name=@0 COLLATE NOCASE";
+            return Database.Fill(syntax, name);
         }
         
         static DataTable QueryMulti(string name, string selector) {
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@Name", "%" + name + "%");
             string syntax = Server.useMySQL ?
-                "SELECT " + selector + " FROM Players WHERE Name LIKE @Name LIMIT 21" :
-                "SELECT " + selector + " FROM Players WHERE Name LIKE @Name LIMIT 21 COLLATE NOCASE";
-            return Database.fillData(query, syntax);
+                "SELECT " + selector + " FROM Players WHERE Name LIKE @0 LIMIT 21" :
+                "SELECT " + selector + " FROM Players WHERE Name LIKE @0 LIMIT 21 COLLATE NOCASE";
+            return Database.Fill(syntax, "%" + name + "%");
         }
         
         static OfflinePlayer FillInfo(DataRow row, bool fullStats) {

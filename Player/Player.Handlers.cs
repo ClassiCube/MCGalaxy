@@ -443,10 +443,7 @@ namespace MCGalaxy {
             if (Server.verify) return Server.whiteList.Contains(name);
             
             // Verify names is off, check if the player is on the same IP.
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@IP", ip);
-            using (DataTable ipQuery = Database.fillData(query, "SELECT Name FROM Players WHERE IP = @IP"))
-                 return ipQuery.Rows.Contains(name) && Server.whiteList.Contains(name);
+            return Server.whiteList.Contains(name) && PlayerInfo.FindAccounts(ip).Contains(name);
         }
         
         void CompleteLoginProcess() {
@@ -489,9 +486,7 @@ namespace MCGalaxy {
             
             //OpenClassic Client Check
             SendBlockchange(0, 0, 0, 0);
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@Name", name);
-            DataTable playerDb = Database.fillData(query, "SELECT * FROM Players WHERE Name=@Name");
+            DataTable playerDb = Database.Fill("SELECT * FROM Players WHERE Name=@0", name);
             timeLogged = DateTime.Now;
             lastLogin = DateTime.Now;
             	

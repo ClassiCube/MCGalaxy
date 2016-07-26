@@ -58,10 +58,10 @@ namespace MCGalaxy {
             //safe against SQL injections because foundLevel is being checked and,
             //newName is being split and partly checked on illegal characters reserved for Windows.
             if (Server.useMySQL)
-                Database.Excecute(String.Format("RENAME TABLE `Block{0}` TO `Block{1}`, " +
-                                                "`Portals{0}` TO `Portals{1}`, " +
-                                                "`Messages{0}` TO `Messages{1}`, " +
-                                                "`Zone{0}` TO `Zone{1}`", src, dst));
+                Database.Execute(String.Format("RENAME TABLE `Block{0}` TO `Block{1}`, " +
+                                               "`Portals{0}` TO `Portals{1}`, " +
+                                               "`Messages{0}` TO `Messages{1}`, " +
+                                               "`Zone{0}` TO `Zone{1}`", src, dst));
             else {
                 using (BulkTransaction helper = SQLiteBulkTransaction.Create()) { // ensures that it's either all work, or none work.
                     helper.Execute(String.Format("ALTER TABLE `Block{0}` RENAME TO `Block{1}`", src, dst));

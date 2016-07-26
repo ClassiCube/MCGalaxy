@@ -51,20 +51,16 @@ namespace MCGalaxy.Commands {
         
         static void SetTitle(Player p, Player who, string[] args) {
             string title = args.Length > 1 ? args[1] : "";
-            ParameterisedQuery query = ParameterisedQuery.Create();
             if (title != "")
                 title = title.Replace("[", "").Replace("]", "");
             if (title.Length >= 20) { Player.Message(p, "Title must be under 20 letters."); return; }
 
             if (title == "") {
                 Player.SendChatFrom(who, who.FullName + " %Shad their title removed.", false);
-                query.AddParam("@Name", who.name);
-                Database.executeQuery(query, "UPDATE Players SET Title = '' WHERE Name = @Name");
+                Database.Execute("UPDATE Players SET Title = '' WHERE Name = @0", who.name);
             } else {
                 Player.SendChatFrom(who, who.FullName + " %Swas given the title of &b[" + title + "%b]", false);
-                query.AddParam("@Title", title);
-                query.AddParam("@Name", who.name);
-                Database.executeQuery(query, "UPDATE Players SET Title = @Title WHERE Name = @Name");
+                Database.Execute("UPDATE Players SET Title = @1 WHERE Name = @0", who.name, title);
             }        
             who.title = title;
             who.SetPrefix();            

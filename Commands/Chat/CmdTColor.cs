@@ -49,23 +49,17 @@ namespace MCGalaxy.Commands {
         }
         
         static void SetTColor(Player p, Player who, string[] args) {
-            ParameterisedQuery query = ParameterisedQuery.Create();
             if (args.Length == 1) {                
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their title color removed.", false);
                 who.titlecolor = "";
-                
-                query.AddParam("@Name", who.name);
-                Database.executeQuery(query, "UPDATE Players SET title_color = '' WHERE Name = @Name");
+                Database.Execute("UPDATE Players SET title_color = '' WHERE Name = @0", who.name);
             } else  {
                 string color = Colors.Parse(args[1]);
                 if (color == "") { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
                 else if (color == who.titlecolor) { Player.Message(p, who.DisplayName + " already has that title color."); return; }
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their title color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.titlecolor = color;
-                
-                query.AddParam("@Color", color);
-                query.AddParam("@Name", who.name);
-                Database.executeQuery(query, "UPDATE Players SET title_color = @Color WHERE Name = @Name");                
+                Database.Execute("UPDATE Players SET title_color = @1 WHERE Name = @0", who.name, color);                
             }
             who.SetPrefix();        	
         }

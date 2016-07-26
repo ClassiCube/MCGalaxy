@@ -56,7 +56,6 @@ namespace MCGalaxy.Commands {
         }
 
         static void SetBotColor(Player p, PlayerBot pBot, string[] args) {
-            ParameterisedQuery query = ParameterisedQuery.Create();
             string color = args.Length == 2 ? "&1" : Colors.Parse(args[2]);
             if (color == "") { Player.Message(p, "There is no color \"" + args[2] + "\"."); return; }
             Player.GlobalMessage("Bot " + pBot.ColoredName + "'s %Scolor was changed to " + color + Colors.Name(color));
@@ -68,23 +67,17 @@ namespace MCGalaxy.Commands {
         }
         
         static void SetColor(Player p, Player who, string[] args) {
-            ParameterisedQuery query = ParameterisedQuery.Create();
             if (args.Length == 1) {
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their color removed.", false);
                 who.color = who.group.color;
-                
-                query.AddParam("@Name", who.name);
-                Database.executeQuery(query, "UPDATE Players SET color = '' WHERE name = @Name");
+                Database.Execute("UPDATE Players SET color = '' WHERE name = @0", who.name);
             } else {
                 string color = Colors.Parse(args[1]);
                 if (color == "") { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
                 else if (color == who.color) { Player.Message(p, who.DisplayName + " already has that color."); return; }
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.color = color;
-                
-                query.AddParam("@Color", color);
-                query.AddParam("@Name", who.name);
-                Database.executeQuery(query, "UPDATE Players SET color = @Color WHERE name = @Name");
+                Database.Execute("UPDATE Players SET color = @1 WHERE name = @0", who.name, color);
             }
             Entities.GlobalDespawn(who, true);
             Entities.GlobalSpawn(who, true);
