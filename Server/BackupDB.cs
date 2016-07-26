@@ -141,12 +141,12 @@ namespace MCGalaxy {
                 }
                 sql.WriteLine(");");
             } else {
-                using (DataTable tableSQL = Database.fillData("SELECT sql FROM" +
-                                                              "   (SELECT * FROM sqlite_master UNION ALL" +
-                                                              "    SELECT * FROM sqlite_temp_master)" +
-                                                              "WHERE tbl_name LIKE '" + tableName + "'" +
-                                                              "  AND type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%'" +
-                                                              "ORDER BY substr(type,2,1), name"))
+                using (DataTable tableSQL = Database.Fill("SELECT sql FROM" +
+                                                          "   (SELECT * FROM sqlite_master UNION ALL" +
+                                                          "    SELECT * FROM sqlite_temp_master)" +
+                                                          "WHERE tbl_name LIKE '" + tableName + "'" +
+                                                          "  AND type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%'" +
+                                                          "ORDER BY substr(type,2,1), name"))
                 {
                     //just print out the data in the table.
                     foreach (DataRow row in tableSQL.Rows) {

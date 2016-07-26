@@ -86,23 +86,17 @@ namespace MCGalaxy {
 
 
         public void save() {
-            //safe against SQL injects because no user input is provided
-            string query =
-                "UPDATE Players SET IP='" + ip + "'" +
-                ", LastLogin='" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'" +
-                ", totalLogin=" + totalLogins +
-                ", totalDeaths=" + overallDeath +
-                ", Money=" + money +
-                ", totalBlocks=" + overallBlocks +
-                ", totalKicked=" + totalKicked +
-                ", TimeSpent='" + time.ToDBTime() +
-                "' WHERE Name='" + name + "'";
+            const string query = "UPDATE Players SET IP=@0, LastLogin=@1, totalLogin=@2, " +
+                "totalDeaths=@3, Money=@4, totalBlocks=@5, totalKicked=@6, TimeSpent=@7 WHERE Name=@8";
             
             if (MySQLSave != null) MySQLSave(this, query);
             OnMySQLSaveEvent.Call(this, query);
             if (cancelmysql) { cancelmysql = false; return; }
             
-            Database.executeQuery(query);
+            Database.Execute(query, ip, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 
+                             totalLogins, overallDeath, money, overallBlocks,
+                             totalKicked, time.ToDBTime(), name);
+            
             if (Economy.Enabled && loginMoney != money) {
                 Economy.EcoStats ecos = Economy.RetrieveEcoStats(name);
                 ecos.money = money;

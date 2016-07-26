@@ -134,17 +134,10 @@ namespace MCGalaxy {
         }
 
         public static void UpdateEcoStats(EcoStats es) {
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@Name", es.playerName);
-            query.AddParam("@Money", es.money);
-            query.AddParam("@Total", es.totalSpent);
-            query.AddParam("@Purchase", es.purchase);
-            query.AddParam("@Payment", es.payment);
-            query.AddParam("@Salary", es.salary);
-            query.AddParam("@Fine", es.fine);
             string type = Server.useMySQL ? "REPLACE INTO" : "INSERT OR REPLACE INTO";
-            Database.executeQuery(query, type + " Economy (player, money, total, purchase, payment, salary, fine) VALUES " +
-                                  "(@Name, @Money, @Total, @Purchase, @Payment, @Salary, @Fine)");
+            Database.Execute(type + " Economy (player, money, total, purchase, payment, salary, fine) " +
+                             "VALUES (@0, @1, @2, @3, @4, @5, @6)", es.playerName, es.money, es.totalSpent,
+                             es.purchase, es.payment, es.salary, es.fine);
         }
         
         public static Item[] Items = { new ColorItem(), new TitleColorItem(), 

@@ -440,16 +440,10 @@ tags     MEDIUMINT UNSIGNED{1});";
             Chat.GlobalMessageLevel(mainlevel, "The winner was " + winnerteam.color + winner + "!!");
             Thread.Sleep(4000);
             //MYSQL!
-            cache.ForEach(delegate(Data d)
-            {
-                const string syntax = "UPDATE CTF SET Points=@Points, Captures=@Captures, tags=@Tags WHERE Name=@Name";
+            cache.ForEach(delegate(Data d) {
                 d.hasflag = false;
-                ParameterisedQuery query = ParameterisedQuery.Create();
-                query.AddParam("@Points", d.points);
-                query.AddParam("@Captures", d.cap);
-                query.AddParam("@Tags", d.tag);
-                query.AddParam("@Name", d.p.name);
-                Database.executeQuery(query, syntax);
+                Database.Execute("UPDATE CTF SET Points=@1, Captures=@2, tags=@3 WHERE Name=@0", 
+                                 d.p.name, d.points, d.cap, d.tag);
             });
             nextmap = Vote();
             Chat.GlobalMessageLevel(mainlevel, "Starting a new game!");

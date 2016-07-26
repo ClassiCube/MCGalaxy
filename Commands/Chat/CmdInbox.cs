@@ -63,19 +63,17 @@ namespace MCGalaxy.Commands {
                         Player.Message(p, "\"" + num + "\" does not exist."); return;
                     }
 
-                    ParameterisedQuery query = ParameterisedQuery.Create();
-                    string queryString;
                     //safe against SQL injections because no user input is given here
                     if (num == -1) {
-                        queryString = Server.useMySQL ? "TRUNCATE TABLE `Inbox" + p.name + "`" : "DELETE FROM `Inbox" + p.name + "`";
+                        string syntax = Server.useMySQL ? "TRUNCATE TABLE `Inbox" + p.name + "`" : "DELETE FROM `Inbox" + p.name + "`";
+                        Database.Execute(syntax);
                     } else {
                         DataRow row = Inbox.Rows[num];
-                        query.AddParam("@From", row["PlayerFrom"]);
-                        query.AddParam("@Time", Convert.ToDateTime(row["TimeSent"]).ToString("yyyy-MM-dd HH:mm:ss"));
-                        queryString = "DELETE FROM `Inbox" + p.name + "` WHERE PlayerFrom=@FROM AND TimeSent=@Time";
+                        string syntax = "DELETE FROM `Inbox" + p.name + "` WHERE PlayerFrom=@0 AND TimeSent=@1";
+                        string time = Convert.ToDateTime(row["TimeSent"]).ToString("yyyy-MM-dd HH:mm:ss");
+                        Database.Execute(syntax, row["PlayerFrom"], time);
                     }
-                    
-                    Database.executeQuery(query, queryString);
+
                     if (num == -1) Player.Message(p, "Deleted all messages.");
                     else Player.Message(p, "Deleted message.");
                 }
