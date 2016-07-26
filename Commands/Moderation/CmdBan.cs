@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Moderation {
             	}
                 
             	Entities.DespawnEntities(who, false);
-                who.group = Group.findPerm(LevelPermission.Banned);             
+                who.group = Group.findPerm(LevelPermission.Banned);
                 who.color = who.group.color;
                 Entities.SpawnEntities(who, false);
             }

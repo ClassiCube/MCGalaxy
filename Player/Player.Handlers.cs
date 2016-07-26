@@ -333,7 +333,7 @@ namespace MCGalaxy {
                     }
                 } catch { }
 
-                if (!CheckWhitelist()) return;
+                if (!CheckWhitelist()) { Leave("This is a private server!", true); return; }
                 Group foundGrp = Group.findPlayerGroup(name);
                 
                 // ban check
@@ -341,16 +341,14 @@ namespace MCGalaxy {
                     Kick(Server.defaultBanMessage, true);  return;
                 }
                 
-                if (foundGrp == Group.findPerm(LevelPermission.Banned)) {
-                    if (!Server.useWhitelist || !onWhitelist) {
-                        string[] data = Ban.GetBanData(name);
-                        if (data != null) {
-                            Kick(Ban.FormatBan(data[0], data[1]), true);
-                        } else {
-                            Kick(Server.defaultBanMessage, true);
-                        }
-                        return;
+                if (foundGrp.Permission == LevelPermission.Banned) {
+                    string[] data = Ban.GetBanData(name);
+                    if (data != null) {
+                        Kick(Ban.FormatBan(data[0], data[1]), true);
+                    } else {
+                        Kick(Server.defaultBanMessage, true);
                     }
+                    return;
                 }
 
                 // maxplayer check
@@ -439,27 +437,14 @@ namespace MCGalaxy {
         }
         
         bool CheckWhitelist() {
-            if (!Server.useWhitelist) return true;
+            if (!Server.useWhitelist) return true;            
+            if (Server.verify) return Server.whiteList.Contains(name);
             
-            if (Server.verify) {
-                if (Server.whiteList.Contains(name))
-                    onWhitelist = true;
-            } else {
-                // Verify Names is off. Gotta check the hard way.
-                ParameterisedQuery query = ParameterisedQuery.Create();
-                query.AddParam("@IP", ip);
-                DataTable ipQuery = Database.fillData(query, "SELECT Name FROM Players WHERE IP = @IP");
-
-                if (ipQuery.Rows.Count > 0) {
-                    if (ipQuery.Rows.Contains(name) && Server.whiteList.Contains(name)) {
-                        onWhitelist = true;
-                    }
-                }
-                ipQuery.Dispose();
-            }
-            if (!onWhitelist) 
-                Leave("This is a private server!", true); //i think someone forgot this?
-            return onWhitelist;
+            // Verify names is off, check if the player is on the same IP.
+            ParameterisedQuery query = ParameterisedQuery.Create();
+            query.AddParam("@IP", ip);
+            using (DataTable ipQuery = Database.fillData(query, "SELECT Name FROM Players WHERE IP = @IP"))
+                 return ipQuery.Rows.Contains(name) && Server.whiteList.Contains(name);
         }
         
         void CompleteLoginProcess() {

@@ -35,29 +35,39 @@ namespace MCGalaxy.Commands {
                 string names = Server.whiteList.All().Concatenate(", ");
                 Player.Message(p, "Whitelist: &f" + names); return;
             }
-            if (player == "") { Help(p); return; }
+            if (player == "") { Add(p, action); return; }
             
             if (action.CaselessEq("add")) {
-                if (Server.whiteList.Contains(player)) {
-                    Player.Message(p, "&f" + player + " %Sis already on the whitelist!"); return;
-                }
-                
-                Server.whiteList.Add(player);
-                Chat.GlobalMessageOps(p.ColoredName + " %Sadded &f" + player + " %Sto the whitelist.");
-                Server.whiteList.Save();
-                Server.s.Log("WHITELIST: Added " + player);
-            } else if (action.CaselessEq("del")) {
-                if (!Server.whiteList.Contains(player)) {
-                    Player.Message(p, "&f" + player + " %Sis not on the whitelist!"); return;
-                }
-                
-                Server.whiteList.Remove(player);
-                Chat.GlobalMessageOps(p.ColoredName + " %Sremoved &f" + player + " %Sfrom the whitelist.");
-                Server.whiteList.Save();
-                Server.s.Log("WHITELIST: Removed " + player);
+                Add(p, player);
+            } else if (action.CaselessEq("del") || action.CaselessEq("remove")) {
+                Remove(p, player);
             } else {
                 Help(p);
             }
+        }
+        
+        static void Add(Player p, string player) {
+            if (Server.whiteList.Contains(player)) {
+                Player.Message(p, "&f" + player + " %Sis already on the whitelist!"); return;
+            }
+            
+            Server.whiteList.Add(player);
+            string src = p == null ? "(console)" : p.ColoredName;
+            Chat.GlobalMessageOps(src + " %Sadded &f" + player + " %Sto the whitelist.");
+            Server.whiteList.Save();
+            Server.s.Log("WHITELIST: Added " + player);
+        }
+        
+        static void Remove(Player p, string player) {
+            if (!Server.whiteList.Contains(player)) {
+                Player.Message(p, "&f" + player + " %Sis not on the whitelist!"); return;
+            }
+            
+            Server.whiteList.Remove(player);
+            string src = p == null ? "(console)" : p.ColoredName;
+            Chat.GlobalMessageOps(src + " %Sremoved &f" + player + " %Sfrom the whitelist.");
+            Server.whiteList.Save();
+            Server.s.Log("WHITELIST: Removed " + player);
         }
 
         public override void Help(Player p) {
