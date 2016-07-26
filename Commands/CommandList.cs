@@ -16,11 +16,9 @@
     permissions and limitations under the Licenses.
 */
 using System.Collections.Generic;
-using System.Linq;
-namespace MCGalaxy
-{
-    public sealed class CommandList
-    {
+
+namespace MCGalaxy {
+    public sealed class CommandList {
         public List<Command> commands = new List<Command>();
         public bool AddOtherPerms = false;
 
@@ -54,7 +52,10 @@ namespace MCGalaxy
         
         public Command Find(string name) {
             name = name.ToLower();
-            return commands.FirstOrDefault(cmd => cmd.name == name || cmd.shortcut == name);
+            foreach (Command cmd in commands) {
+                if (cmd.name == name || cmd.shortcut == name) return cmd;
+            }
+            return null;
         }
 
         public string FindShort(string shortcut) {

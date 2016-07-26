@@ -17,7 +17,6 @@
  */
 using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace MCGalaxy.Commands {
@@ -72,8 +71,8 @@ namespace MCGalaxy.Commands {
             StringBuilder builder = new StringBuilder();
             Level[] loaded = LevelInfo.Loaded.Items;
             for (int i = start; i < end; i++) {
-            	string level = Path.GetFileNameWithoutExtension(files[i]);
-                if (!all && loaded.Any(l => l.name.CaselessEq(level))) continue;
+                string level = Path.GetFileNameWithoutExtension(files[i]);
+                if (!all && IsLoaded(loaded, level)) continue;
                 
                 LevelPermission visitP, buildP;
                 bool loadOnGoto;
@@ -83,6 +82,13 @@ namespace MCGalaxy.Commands {
                 builder.Append(", ").Append(Group.findPerm(buildP).color + level + " &b[" + visit + "&b]");
             }
             return builder;
+        }
+        
+        static bool IsLoaded(Level[] loaded, string level) {
+            foreach (Level lvl in loaded) {
+                if (lvl.name.CaselessEq(level)) return true;
+            }
+            return false;
         }
         
         static void RetrieveProps(string level, out LevelPermission visit,

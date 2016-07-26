@@ -18,10 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
-namespace MCGalaxy {
-    
+namespace MCGalaxy {  
     /// <summary> These are extra permissions for certain commands </summary>
     public static class CommandOtherPerms {
         
@@ -43,7 +41,10 @@ namespace MCGalaxy {
         }
 
         public static OtherPerms Find(Command cmd, int number = 1) {
-            return list.FirstOrDefault(OtPe => OtPe.cmd == cmd && OtPe.number == number);
+            foreach (OtherPerms perms in list) {
+        	    if (perms.cmd == cmd && perms.number == number) return perms;
+            }
+            return null;
         }
 
         public static void Add(Command command, int Perm, string desc, int number = 1) {

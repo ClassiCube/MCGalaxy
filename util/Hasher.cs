@@ -17,7 +17,6 @@
  */
 using System;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -38,13 +37,13 @@ namespace MCGalaxy.Util {
             plainText = plainText.Replace(">", ")");
 
             MD5 hash = MD5.Create();
-
-            byte[] textBuffer = Encoding.ASCII.GetBytes(plainText);
-            byte[] saltBuffer = Encoding.ASCII.GetBytes(salt);
-
-            byte[] hashedTextBuffer = hash.ComputeHash(textBuffer);
-            byte[] hashedSaltBuffer = hash.ComputeHash(saltBuffer);
-            return hash.ComputeHash(hashedSaltBuffer.Concat(hashedTextBuffer).ToArray());
+            byte[] saltB = hash.ComputeHash(Encoding.ASCII.GetBytes(salt));
+            byte[] textB = hash.ComputeHash(Encoding.ASCII.GetBytes(plainText));
+           
+            byte[] data = new byte[saltB.Length + textB.Length];
+            Array.Copy(saltB, 0, data, 0, saltB.Length);
+            Array.Copy(textB, 0, data, saltB.Length, textB.Length);
+            return hash.ComputeHash(data);
         }
 
         internal static void StoreHash(string salt, string plainText) {
