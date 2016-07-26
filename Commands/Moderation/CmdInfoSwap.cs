@@ -56,26 +56,15 @@ namespace MCGalaxy.Commands {
         
         const string format = "yyyy-MM-dd HH:mm:ss";
         void Swap(OfflinePlayer src, OfflinePlayer dst) {
-            ParameterisedQuery query = ParameterisedQuery.Create();
-            query.AddParam("@Name", dst.name);
-            query.AddParam("@Blocks", src.blocks);
-            query.AddParam("@Color", Colors.Name(src.color));
-            query.AddParam("@Deaths", src.deaths);
-            query.AddParam("@First", DateTime.Parse(src.firstLogin).ToString(format));
-            query.AddParam("@IP", src.ip);
-            query.AddParam("@Kicks", src.kicks);
-            query.AddParam("@Last", DateTime.Parse(src.lastLogin).ToString(format));
-            query.AddParam("@Logins", src.logins);
-            query.AddParam("@Money", src.money);
-            query.AddParam("@Title", src.title);
-            query.AddParam("@TColor", Colors.Name(src.titleColor));
-            query.AddParam("@Time", src.totalTime);
+            string first = DateTime.Parse(src.firstLogin).ToString(format);
+            string last = DateTime.Parse(src.lastLogin).ToString(format);
+            const string syntax = "UPDATE Players SET totalBlocks=@0, color=@1, totalDeaths=@2"
+                + ", FirstLogin=@3, IP=@4, totalKicked=@5, LastLogin=@6, totalLogin=@7"
+                + ", Money=@8, Title=@9, title_color=@10, TimeSpent=@11 WHERE Name=@12";
             
-            Database.executeQuery(query, "UPDATE Players SET totalBlocks=@Blocks,color=@Color,"
-                                  + "totalDeaths=@Deaths,FirstLogin=@First,IP=@IP,"
-                                  + "totalKicked=@Kicks,LastLogin=@Last,totalLogin=@Logins,"
-                                  + "Money=@Money,Title=@Title,title_color=@TColor,TimeSpent=@Time"
-                                  + " WHERE Name=@Name");
+            Database.Execute(syntax, src.blocks, src.color, src.deaths,
+                             first, src.ip, src.kicks, last, src.logins,
+                             src.money, src.title, src.titleColor, src.totalTime, dst.name);            
         }
         
         void SwapGroups(OfflinePlayer src, OfflinePlayer dst) {

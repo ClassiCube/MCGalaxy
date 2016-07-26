@@ -97,7 +97,8 @@ namespace MCGalaxy.Commands.Building {
             
             CopyState cState = new CopyState(minX, minY, minZ, maxX - minX + 1,
                                             maxY - minY + 1, maxZ - minZ + 1);
-            cState.SetOrigin(m[0].X, m[0].Y, m[0].Z);
+            cState.OriginX = m[0].X; cState.OriginY = m[0].Y; cState.OriginZ = m[0].Z;
+            
             int index = 0; cState.UsedBlocks = 0;
             cState.PasteAir = cArgs.type == 2;
             

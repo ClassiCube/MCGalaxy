@@ -58,10 +58,6 @@ namespace MCGalaxy.Drawing {
 			ExtBlocks = null;
 		}
 		
-		public void SetOrigin(int x, int y, int z) {
-			OriginX = x; OriginY = y; OriginZ = z;
-		}
-		
 		public void GetCoords(int index, out ushort x, out ushort y, out ushort z) {
 			y = (ushort)(index / Width / Length);
 			index -= y * Width * Length;

@@ -54,23 +54,28 @@ namespace MCGalaxy.Drawing {
             return Rotate(state, newState, m);
         }
 
-        static CopyState Rotate(CopyState state, CopyState newState, int[] m) {
+        static CopyState Rotate(CopyState state, CopyState flipped, int[] m) {
             byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
             for (int i = 0; i < blocks.Length; i++) {
                 ushort x, y, z;
                 state.GetCoords(i, out x, out y, out z);
-                newState.Set(blocks[i], extBlocks[i],
-                             Rotate(m[0], x, y, z, state),
-                             Rotate(m[1], x, y, z, state),
-                             Rotate(m[2], x, y, z, state));
+                flipped.Set(blocks[i], extBlocks[i],
+                            Rotate(m[0], x, y, z, state),
+                            Rotate(m[1], x, y, z, state),
+                            Rotate(m[2], x, y, z, state));
             }
             
             int oX = state.OriginX - state.X, oY = state.OriginY - state.Y, oZ = state.OriginZ - state.Z;
-            newState.SetOrigin(
-                state.X + Rotate(m[0], oX, oY, oZ, state),
-                state.Y + Rotate(m[1], oX, oY, oZ, state),
-                state.Z + Rotate(m[2], oX, oY, oZ, state));
-            return newState;
+            flipped.OriginX = state.X + Rotate(m[0], oX, oY, oZ, state);
+            flipped.OriginY = state.Y + Rotate(m[1], oX, oY, oZ, state);
+            flipped.OriginZ = state.Z + Rotate(m[2], oX, oY, oZ, state);
+            
+            // Offset is relative to Origin
+            oX += state.Offset.X; oY += state.Offset.Y; oZ += state.Offset.Z;
+            flipped.Offset.X = state.X + Rotate(m[0], oX, oY, oZ, state) - flipped.OriginX;
+            flipped.Offset.Y = state.Y + Rotate(m[1], oX, oY, oZ, state) - flipped.OriginY;
+            flipped.Offset.Z = state.Z + Rotate(m[2], oX, oY, oZ, state) - flipped.OriginZ;
+            return flipped;
         }
         
         const int posX = 0x100, negX = 0x200, posY = 0x010, negY = 0x020, posZ = 0x001, negZ = 0x002;
