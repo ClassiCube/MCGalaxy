@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
                 CreateIgnoreFile(p); return;
             } else if (action == "list") {
                 Player.Message(p, "&cCurrently ignoring the following players:");
-                string names = p.listignored.Concatenate();
+                string names = p.listignored.Join();
                 if (names != "") Player.Message(p, names);
                 if (p.ignoreAll) Player.Message(p, "&cIgnoring all chat");
                 if (p.ignoreIRC) Player.Message(p, "&cIgnoring IRC chat");

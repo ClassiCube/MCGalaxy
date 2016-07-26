@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
 
             List<string> accounts = PlayerInfo.FindAccounts(message);
             if (accounts.Count == 0) { Player.Message(p, "Could not find anyone with this IP"); return; }
-            Player.Message(p, accounts.Concatenate());
+            Player.Message(p, accounts.Join());
         }
         
         public override void Help(Player p) {

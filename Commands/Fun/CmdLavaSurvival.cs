@@ -188,7 +188,7 @@ namespace MCGalaxy.Commands
 					{
 						if (s.Length < 3)
 						{
-							Player.Message(p, "Maps: &b" + Server.lava.Maps.Concatenate(", "));
+							Player.Message(p, "Maps: &b" + Server.lava.Maps.Join(", "));
 							Player.Message(p, "Setup rank: " + Group.findPerm(Server.lava.setupRank).ColoredName);
 							Player.Message(p, "Control rank: " + Group.findPerm(Server.lava.controlRank).ColoredName);
 							Player.Message(p, "Start on server startup: " + (Server.lava.startOnStartup ? "&aON" : "&cOFF"));

@@ -97,13 +97,11 @@ namespace MCGalaxy {
                 ", totalKicked=" + totalKicked +
                 ", TimeSpent='" + time.ToDBTime() +
                 "' WHERE Name='" + name + "'";
-            if ( MySQLSave != null )
-                MySQLSave(this, query);
+            
+            if (MySQLSave != null) MySQLSave(this, query);
             OnMySQLSaveEvent.Call(this, query);
-            if ( cancelmysql ) {
-                cancelmysql = false;
-                return;
-            }
+            if (cancelmysql) { cancelmysql = false; return; }
+            
             Database.executeQuery(query);
             if (Economy.Enabled && loginMoney != money) {
                 Economy.EcoStats ecos = Economy.RetrieveEcoStats(name);
@@ -112,20 +110,6 @@ namespace MCGalaxy {
             }
             Server.zombie.SaveZombieStats(this);
 
-            try {
-                if ( !smileySaved ) {
-                    if ( parseSmiley )
-                        emoteList.RemoveAll(s => s == name);
-                    else
-                        emoteList.Add(name);
-
-                    File.WriteAllLines("text/emotelist.txt", emoteList.ToArray());
-                    smileySaved = true;
-                }
-            }
-            catch ( Exception e ) {
-                Server.ErrorLog(e);
-            }
             try {
                 SaveUndo(this);
             } catch (Exception e) {

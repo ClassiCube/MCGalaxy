@@ -82,6 +82,8 @@ namespace MCGalaxy {
             frozen = PlayerList.Load("frozen.txt");
             hidden = PlayerList.Load("hidden.txt");
             vip = PlayerList.Load("text/vip.txt");
+            noEmotes = PlayerList.Load("text/emotelist.txt");
+            
             jailed = PlayerExtList.Load("ranks/jailed.txt");
             models = PlayerExtList.Load("extra/models.txt");
             skins = PlayerExtList.Load("extra/skins.txt");

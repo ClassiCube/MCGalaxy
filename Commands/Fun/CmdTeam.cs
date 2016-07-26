@@ -185,7 +185,7 @@ namespace MCGalaxy.Commands {
                 if (team == null) { Player.Message(p, "No team found with the name \"" + args[1] + "\"."); return; }
             }
             Player.Message(p, "Team owner: " + team.Owner);
-            Player.Message(p, "Members: " + team.Members.Concatenate());
+            Player.Message(p, "Members: " + team.Members.Join());
         }
         
         public override void Help(Player p) {

@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
                     break;
                     
                 case "list":
-                    string names = Server.ircControllers.All().Concatenate();
+                    string names = Server.ircControllers.All().Join();
                     Player.Message(p, "IRC controllers list:");
                     Player.Message(p, names);
                     break;

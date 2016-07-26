@@ -86,13 +86,6 @@ namespace MCGalaxy {
             EnsureFilesExist();
             MoveOutdatedFiles();
 
-            if (File.Exists("text/emotelist.txt")) {
-                foreach (string s in File.ReadAllLines("text/emotelist.txt"))
-                    Player.emoteList.Add(s);
-            } else {
-                File.Create("text/emotelist.txt").Dispose();
-            }
-
             lava = new LavaSurvival();
             zombie = new ZombieGame();
             Countdown = new CountdownGame();

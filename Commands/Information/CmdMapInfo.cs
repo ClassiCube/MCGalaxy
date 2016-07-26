@@ -93,9 +93,9 @@ namespace MCGalaxy.Commands {
             GetBlacklistedPlayers(data.Name, blacklist);
             
             if (whitelist.Count > 0)
-                Player.Message(p, "  Visit whitelist: &a" + whitelist.Concatenate("%S, &a"));
+                Player.Message(p, "  Visit whitelist: &a" + whitelist.Join("%S, &a"));
             if (blacklist.Count > 0)
-                Player.Message(p, "  Visit blacklist: &c" + blacklist.Concatenate("%S, &c"));
+                Player.Message(p, "  Visit blacklist: &c" + blacklist.Join("%S, &c"));
             
             if (String.IsNullOrEmpty(data.RealmOwner))
                 data.RealmOwner = GetRealmMapOwner(data.Name);

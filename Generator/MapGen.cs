@@ -40,8 +40,8 @@ namespace MCGalaxy.Generator {
         }
         
         public static void PrintThemes(Player p) {
-            Player.Message(p, "Simple themes: " + simpleGens.Keys.Concatenate(", "));
-            Player.Message(p, "Advanced themes: " + advGens.Keys.Concatenate(", "));
+            Player.Message(p, "Simple themes: " + simpleGens.Keys.Join(", "));
+            Player.Message(p, "Advanced themes: " + advGens.Keys.Join(", "));
         }
         
         public static bool OkayAxis(int len) {

@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         internal static string AvailableBrushes {
-            get { return Brush.Brushes.Keys.Concatenate(); }
+            get { return Brush.Brushes.Keys.Join(); }
         }
         
         public override void Help(Player p) {

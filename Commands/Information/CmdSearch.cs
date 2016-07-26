@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands {
             if (matches.Count == 0) 
             Player.Message(p, "No levels found containing &b" + keyword);
             else
-            Player.Message(p, matches.Concatenate());
+            Player.Message(p, matches.Join());
         }
         
         public override void Help(Player p) {

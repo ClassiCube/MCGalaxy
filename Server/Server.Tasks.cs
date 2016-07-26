@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Linq;
 using System.Threading;
 
 namespace MCGalaxy {    
@@ -116,14 +115,12 @@ namespace MCGalaxy {
             
             players = PlayerInfo.Online.Items;
             if (players.Length <= 0) return;
-            string allCount = players.Aggregate("", (current, pl) => current + (", " + pl.name));
-            try { Server.s.Log("!PLAYERS ONLINE: " + allCount.Remove(0, 2), true); }
-            catch { }
+            string all = players.Join(p => p.name);
+            if (all.Length > 0) Server.s.Log("!PLAYERS ONLINE: " + all, true);
 
             levels = LevelInfo.Loaded.Items;
-            allCount = levels.Aggregate("", (current, l) => current + (", " + l.name));
-            try { Server.s.Log("!LEVELS ONLINE: " + allCount.Remove(0, 2), true); }
-            catch { }
+            all = levels.Join(l => l.name);
+            if (all.Length > 0) Server.s.Log("!LEVELS ONLINE: " + all, true);
         }
     }
 }

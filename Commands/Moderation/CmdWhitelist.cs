@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             string player = sep >= 0 ? message.Substring(sep + 1) : "";
             
             if (action.CaselessEq("list")) {
-                string names = Server.whiteList.All().Concatenate(", ");
+                string names = Server.whiteList.All().Join(", ");
                 Player.Message(p, "Whitelist: &f" + names); return;
             }
             if (player == "") { Add(p, action); return; }

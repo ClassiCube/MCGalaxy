@@ -21,14 +21,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace MCGalaxy
-{
-    /// <summary>
-    /// This is the group object
-    /// Where ranks and there data are stored
-    /// </summary>
-    public sealed class Group
-    {
+namespace MCGalaxy {
+    /// <summary> This is the group object, where ranks and their data are stored </summary>
+    public sealed class Group {
         public delegate void RankSet(Player p, Group newrank);
         [Obsolete("Please use OnPlayerRankSetEvent.Register()")]
         public static event RankSet OnPlayerRankSet;

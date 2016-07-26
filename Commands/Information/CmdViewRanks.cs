@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
         	    Group.findPerm(LevelPermission.Banned) : Group.Find(message);
             if (grp == null) { Player.Message(p, "Could not find group"); return; }
 
-            string list = grp.playerList.All().Concatenate(", ");            
+            string list = grp.playerList.All().Join(", ");            
             if (list.Length == 0) {
                 Player.Message(p, "No one has the rank of " + grp.ColoredName);
             } else {

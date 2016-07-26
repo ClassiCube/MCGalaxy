@@ -79,8 +79,20 @@ namespace MCGalaxy {
             return new string(a);
         }
         
-        public static string Concatenate<T>(this IEnumerable<T> list, string separator = ", ") {
-            return String.Join(separator, list);
+        public static string Join(this IEnumerable<string> items, string separator = ", ") {
+            return String.Join(separator, items);
+        }
+        
+        public static string Join<T>(this IEnumerable<T> items, 
+                                           Func<T, string> formatter, string separator = ", ") {
+            StringBuilder builder = new StringBuilder();
+            bool first = true;
+            foreach (T item in items) {
+                if (!first) builder.Append(separator);
+                builder.Append(formatter(item));
+                first = false;
+            }
+            return builder.ToString();
         }
         
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;

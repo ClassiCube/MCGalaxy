@@ -48,7 +48,6 @@ namespace MCGalaxy {
         
         public static List<Player> connections = new List<Player>(Server.players);
         System.Timers.Timer muteTimer = new System.Timers.Timer(1000);
-        public static List<string> emoteList = new List<string>();
         public List<string> listignored = new List<string>();
         public static byte number { get { return (byte)PlayerInfo.Online.Count; } }
         
@@ -130,8 +129,7 @@ namespace MCGalaxy {
         public bool deleteMode = false;
         public bool ignorePermission = false;
         public bool ignoreGrief = false;
-        public bool parseSmiley = true;
-        public bool smileySaved = true;
+        public bool parseEmotes = true;
         public bool opchat = false;
         public bool adminchat = false;
         public bool onWhitelist = false;
@@ -219,7 +217,7 @@ namespace MCGalaxy {
         public string model = "humanoid";
         public bool spawned = false;
 
-        public bool Mojangaccount { get { return truename.Contains('@'); } }
+        public bool Mojangaccount { get { return truename.IndexOf('@') >= 0; } }
 
         //Undo
         public struct UndoPos { public ushort x, y, z; public byte type, extType, newtype, newExtType; public string mapName; public int timeDelta; }
