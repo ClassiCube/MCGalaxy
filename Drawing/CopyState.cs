@@ -28,6 +28,7 @@ namespace MCGalaxy.Drawing {
 		public int Width, Height, Length;
 		public bool PasteAir;
 		public int UsedBlocks;
+		public Vec3S32 Offset;
 		
 		const int identifier = 0x434F5059; // 'COPY'
 		const int identifierC = 0x434F5043; // 'COPC' (Copy compressed)

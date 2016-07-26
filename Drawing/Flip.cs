@@ -99,6 +99,7 @@ namespace MCGalaxy.Drawing {
             int midZ = state.Length / 2, maxZ = state.Length - 1;
             byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
             state.OriginZ = state.OppositeOriginZ;
+            state.Offset.Z = -state.Offset.Z; 
             
             for (int y = 0; y < state.Height; y++) {
                 for (int z = 0; z < midZ; z++) {
@@ -117,6 +118,7 @@ namespace MCGalaxy.Drawing {
             int midY = state.Height / 2, maxY = state.Height - 1;
             byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
             state.OriginY = state.OppositeOriginY;
+            state.Offset.Y = -state.Offset.Y;
             
             for (int y = 0; y < midY; y++) {
                 int endY = maxY - y;
@@ -135,6 +137,7 @@ namespace MCGalaxy.Drawing {
             int midX = state.Width / 2, maxX = state.Width - 1;
             byte[] blocks = state.Blocks, extBlocks = state.ExtBlocks;
             state.OriginX = state.OppositeOriginX;
+            state.Offset.X = -state.Offset.X;
             
             for (int y = 0; y < state.Height; y++) {
                 for (int z = 0; z < state.Length; z++) {

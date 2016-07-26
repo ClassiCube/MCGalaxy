@@ -39,8 +39,9 @@ namespace MCGalaxy.Commands.Building {
 
         bool DoPaste(Player p, Vec3S32[] m, object state, byte type, byte extType) {
             string message = (string)state;
-            m[0] += p.copyoffset;
             CopyState cState = p.CopyBuffer;
+            m[0] += cState.Offset;
+            
             if (cState.X != cState.OriginX) m[0].X -= (cState.Width - 1);
             if (cState.Y != cState.OriginY) m[0].Y -= (cState.Height - 1);
             if (cState.Z != cState.OriginZ) m[0].Z -= (cState.Length - 1);

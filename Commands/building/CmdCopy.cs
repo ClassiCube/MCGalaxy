@@ -75,7 +75,6 @@ namespace MCGalaxy.Commands.Building {
 		
 		void HandleOther(Player p, string opt, string[] parts, int allowoffset) {
 			CopyArgs cArgs = default(CopyArgs);
-			p.copyoffset = default(Vec3S32);
 			cArgs.allowoffset = allowoffset;
 			
 			if (opt == "cut") {
@@ -91,7 +90,6 @@ namespace MCGalaxy.Commands.Building {
 		}
 
 		bool DoCopy(Player p, Vec3S32[] m, object state, byte type, byte extType) {
-			p.copystart = m[0];
 			CopyArgs cArgs = (CopyArgs)state;
 			ushort minX = (ushort)Math.Min(m[0].X, m[1].X), maxX = (ushort)Math.Max(m[0].X, m[1].X);
 			ushort minY = (ushort)Math.Min(m[0].Y, m[1].Y), maxY = (ushort)Math.Max(m[0].Y, m[1].Y);
@@ -144,12 +142,14 @@ namespace MCGalaxy.Commands.Building {
 		    return false;
 		}
 
-		void BlockchangeOffset(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-			RevertAndClearState(p, x, y, z);
-			p.copyoffset.X = p.copystart.X - x;
-			p.copyoffset.Y = p.copystart.Y - y;
-			p.copyoffset.Z = p.copystart.Z - z;
-		}
+        void BlockchangeOffset(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+            RevertAndClearState(p, x, y, z);
+            CopyState state = p.CopyBuffer;
+            
+            state.Offset.X = state.OriginX - x;
+            state.Offset.Y = state.OriginY - y;
+            state.Offset.Z = state.OriginZ - z;
+        }
 
 		void SaveCopy(Player p, string file) {
 			if (!ValidName(p, file, "saved copy")) return;

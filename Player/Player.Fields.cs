@@ -14,7 +14,6 @@ permissions and limitations under the Licenses.
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using MCGalaxy.Drawing;
@@ -204,9 +203,7 @@ namespace MCGalaxy {
         public bool inTNTwarsMap = false;
         public Player HarmedBy = null; //For Assists
 
-        //Copy
         public CopyState CopyBuffer;
-        public Vec3S32 copyoffset, copystart;
         
         // GlobalBlock
         internal int gbStep = 0, gbTargetId = 0;

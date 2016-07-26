@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -396,8 +395,11 @@ namespace MCGalaxy {
             if (foundGrp.Permission > LevelPermission.Guest) return true;
             
             online = PlayerInfo.Online.Items;
-            int curGuests = online.Count(pl => pl.Rank <= LevelPermission.Guest);
-            if (curGuests < Server.maxGuests) return true;
+            int guests = 0;
+            foreach (Player p in online) {
+                if (p.Rank <= LevelPermission.Guest) guests++;
+            }
+            if (guests < Server.maxGuests) return true;
             
             if (Server.guestLimitNotify) Chat.GlobalMessageOps("Guest " + DisplayName + " couldn't log in - too many guests.");
             Server.s.Log("Guest " + name + " couldn't log in - too many guests.");
@@ -942,12 +944,10 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 }
 
                 text = Regex.Replace(text, "  +", " ");
-                if ( text.Any(ch => ch == '&') ) {
-                    Leave("Illegal character in chat message!", true);
-                    return;
+                if (text.IndexOf('&') >= 0) {
+                    Leave("Illegal character in chat message!", true); return;
                 }
-                if ( text.Length == 0 )
-                    return;
+                if (text.Length == 0) return;
                 LastAction = DateTime.UtcNow;
 
                 if ( text != "/afk" && IsAfk )
