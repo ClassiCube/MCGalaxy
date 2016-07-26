@@ -75,7 +75,7 @@ SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE {0};";
             }
             
             //since 5.5.11 we are cleaning up the table Playercmds
-            //if Playercmds exists copy-filter to Ostats and remove Playercmds
+            //if Playercmds exists copy-filter to Opstats and remove Playercmds
             if (Database.TableExists("Playercmds")) {
                 foreach (string cmd in Server.Opstats)
                     Database.Execute(string.Format(insertSyntax, "cmd = '" + cmd + "'"));

@@ -16,10 +16,8 @@
 	permissions and limitations under the Licenses.
 */
 using System;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdMove : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdMove : Command {
         public override string name { get { return "move"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -83,8 +81,8 @@ namespace MCGalaxy.Commands
                 catch { Player.Message(p, "Invalid co-ordinates"); }
             }
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.Message(p, "%T/move <player> <map> <x> <y> <z>");
             Player.Message(p, "%HMove <player> to <map> or given coordinates");
             Player.Message(p, "%H<map> must be blank if x, y or z is used and vice versa");

@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
             if (message.Length >= 256 && Server.useMySQL) { 
                 Player.Message(p, "Message was too long. It has been trimmed to:"); 
                 Player.Message(p, message.Substring(0, 255)); 
-                message = message.Remove(0, 255);
+                message = message.Substring(0, 255);
             }
             //safe against SQL injections because whoTo is checked for illegal characters
             Database.Execute("CREATE TABLE if not exists `Inbox" + whoTo + 

@@ -29,11 +29,11 @@ namespace MCGalaxy.Util {
         /// <param name="language">The language.</param>
         /// <returns>A result from the compilation</returns>
         public static CompileResult Compile(string text, ScriptLanguage language) {
-            Scripting scripting = language == ScriptLanguage.VB ? Scripting.VB : Scripting.CS;           
+            Scripting engine = language == ScriptLanguage.VB ? Scripting.VB : Scripting.CS;           
             CompilerParameters args = new CompilerParameters();
             args.GenerateInMemory = true;
             
-            CompilerResults results = scripting.CompileSource(text, args);
+            CompilerResults results = engine.CompileSource(text, args);
             if (results.Errors.HasErrors)
                 return new CompileResult(null, results.Errors);
             List<Command> list = Scripting.LoadFrom(results.CompiledAssembly);

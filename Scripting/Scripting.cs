@@ -96,39 +96,24 @@ namespace MCGalaxy {
             args.GenerateExecutable = false;
             args.MainClass = cmdName;
             args.OutputAssembly = DllDir + "Cmd" + cmdName + ".dll";
+            
             string source = File.ReadAllText(path);
             results = CompileSource(source, args);
-            
-            switch (results.Errors.Count) {
-                case 0:
-                    return true;
-                case 1:
-                    sb = new StringBuilder();
-                    CompilerError error = results.Errors[0];
-                    AppendDivider(sb, exists);
-                    
-                    sb.AppendLine("Error " + error.ErrorNumber);
-                    sb.AppendLine("Message: " + error.ErrorText);
-                    sb.AppendLine("Line: " + error.Line);
-                    using (StreamWriter w = new StreamWriter(ErrorPath, exists))
-                        w.Write(sb.ToString());
-                    return false;
-                default:
-                    sb = new StringBuilder();
-                    AppendDivider(sb, exists);
-                    bool first = true;
-                    
-                    foreach (CompilerError err in results.Errors) {
-                        if (!first) AppendDivider(sb, true);
-                        sb.AppendLine("Error #" + err.ErrorNumber);
-                        sb.AppendLine("Message: " + err.ErrorText);
-                        sb.AppendLine("Line: " + err.Line);
-                        first = false;
-                    }
-                    using (StreamWriter w = new StreamWriter(ErrorPath, exists))
-                        w.Write(sb.ToString());
-                    return false;
+            if (!results.Errors.HasErrors) return true;
+
+            sb = new StringBuilder();
+            AppendDivider(sb, exists);
+            bool first = true;           
+            foreach (CompilerError err in results.Errors) {
+                if (!first) AppendDivider(sb, true);
+                sb.AppendLine("Error #" + err.ErrorNumber);
+                sb.AppendLine("Message: " + err.ErrorText);
+                sb.AppendLine("Line: " + err.Line);
+                first = false;
             }
+            using (StreamWriter w = new StreamWriter(ErrorPath, exists))
+                w.Write(sb.ToString());
+            return false;
         }
         
         void AppendDivider(StringBuilder sb, bool exists) {
