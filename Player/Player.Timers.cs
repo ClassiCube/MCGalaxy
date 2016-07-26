@@ -57,9 +57,11 @@ namespace MCGalaxy {
             extraTimer.Stop();
 
             try {
-                if ( !Group.Find("Nobody").commands.Contains("inbox") && !Group.Find("Nobody").commands.Contains("send") ) {
+                Group nobody = Group.findPerm(LevelPermission.Nobody);
+                if (!nobody.commands.Contains("inbox") && !nobody.commands.Contains("send") 
+            	    && Database.TableExists("Inbox" + name) ) {
                     //safe against SQL injections because no user input is given here
-                    DataTable Inbox = Database.fillData("SELECT * FROM `Inbox" + name + "`", true);
+                    DataTable Inbox = Database.fillData("SELECT * FROM `Inbox" + name + "`");
 
                     SendMessage("&cYou have &f" + Inbox.Rows.Count + " &cmessages in /inbox");
                     Inbox.Dispose();
