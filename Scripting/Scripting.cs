@@ -19,6 +19,7 @@
  */
 using System;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -47,6 +48,11 @@ namespace MCGalaxy {
         
         public Scripting() {
             compiler = CodeDomProvider.CreateProvider(ProviderName);
+            if (compiler == null) {
+                Server.s.Log("WARNING: Provider " + ProviderName + 
+                             " is missing, you will be unable to compile " + Ext + " commands.");
+                // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
+            }
         }
         
         public void CreateNew(string cmdName) {
@@ -86,12 +92,12 @@ namespace MCGalaxy {
             if (!Directory.Exists(DllDir))
                 Directory.CreateDirectory(DllDir);
             
+            CompilerParameters args = new CompilerParameters();
             args.GenerateExecutable = false;
             args.MainClass = cmdName;
             args.OutputAssembly = DllDir + "Cmd" + cmdName + ".dll";
-            args.ReferencedAssemblies.Add("MCGalaxy_.dll");
-            string code = File.ReadAllText(path);
-            results = compiler.CompileAssemblyFromSource(args, code.Replace("MCLawl", "MCGalaxy"));
+            string source = File.ReadAllText(path);
+            results = CompileSource(source, args);
             
             switch (results.Errors.Count) {
                 case 0:
@@ -132,6 +138,15 @@ namespace MCGalaxy {
             sb.AppendLine();
         }
         
+        public CompilerResults CompileSource(string source, CompilerParameters args) {
+            args.ReferencedAssemblies.Add("MCGalaxy_.dll");
+            args.ReferencedAssemblies.Add("MCGalaxy.exe");
+            source = source.Replace("MCLawl", "MCGalaxy");
+            source = source.Replace("MCForge", "MCGalaxy");
+            return compiler.CompileAssemblyFromSource(args, source);
+        }
+        
+        
         /// <summary> Automatically loads all .dll commands specified in the autoload file. </summary>
         public static void Autoload() {
             if (!File.Exists(AutoloadFile)) { File.Create(AutoloadFile); return; }        
@@ -142,7 +157,6 @@ namespace MCGalaxy {
                 string error = Scripting.Load("Cmd" + cmd.ToLower());
                 if (error != null) { Server.s.Log(error); continue; }
                 Server.s.Log("AUTOLOAD: Loaded " + cmd.ToLower() + ".dll");
-
             }
         }
         
@@ -153,20 +167,13 @@ namespace MCGalaxy {
             if (command.Length < 3 || command.Substring(0, 3).ToLower() != "cmd")
                 return "Invalid command name specified.";
             try {
-                //Allows unloading and deleting dlls without server restart
                 byte[] data = File.ReadAllBytes(DllDir + command + ".dll");
-                Assembly lib = Assembly.Load(data);
+                Assembly lib = Assembly.Load(data); // TODO: Assembly.LoadFile instead?
+                List<Command> commands = LoadFrom(lib);
                 
-                foreach (Type t in lib.GetTypes()) {
-                    if (t.BaseType != typeof(Command)) continue;
-                    object instance = Activator.CreateInstance(t);
-                    
-                    if (instance == null) {
-                        Server.s.Log("The command " + command + " couldn't be loaded!");
-                        throw new BadImageFormatException();
-                    }
-                    Command.all.Add((Command)instance);
-                }
+                if (commands.Count == 0) return null;
+                foreach (Command cmd in commands)
+                    Command.all.Add(cmd);
             } catch (FileNotFoundException e) {
                 Server.ErrorLog(e);
                 return command + ".dll does not exist in the DLL folder, or is missing a dependency. Details in the error log.";
@@ -187,6 +194,23 @@ namespace MCGalaxy {
                 return "An unknown error occured and has been logged.";
             }
             return null;
+        }
+        
+        public static List<Command> LoadFrom(Assembly lib) {
+            //Allows unloading and deleting dlls without server restart
+            List<Command> commands = new List<Command>();
+            
+            foreach (Type t in lib.GetTypes()) {
+                if (t.IsAbstract || !t.IsSubclassOf(typeof(Command)) )continue;
+                object instance = Activator.CreateInstance(t);
+                
+                if (instance == null) {
+                    Server.s.Log("Command \"" + t.Name + "\" could not be loaded.");
+                    throw new BadImageFormatException();
+                }
+                commands.Add((Command)instance);
+            }
+            return commands;
         }
     }
 }
