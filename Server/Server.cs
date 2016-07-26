@@ -115,6 +115,7 @@ namespace MCGalaxy {
             Mods.Clear();
             Background.QueueOnce(UpdateStaffListTask);
             
+            MainScheduler.QueueRepeat(TemprankExpiryTask, null, TimeSpan.FromSeconds(60));
             Background.QueueRepeat(AutoSaveTask, 1, 
                                           TimeSpan.FromSeconds(Server.backupInterval));
             Background.QueueRepeat(BlockUpdatesTask, null,

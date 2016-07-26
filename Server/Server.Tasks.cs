@@ -1,5 +1,6 @@
 ﻿/*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2011 MCForge
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -16,6 +17,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.IO;
 using System.Threading;
 
 namespace MCGalaxy {    
@@ -121,6 +123,32 @@ namespace MCGalaxy {
             levels = LevelInfo.Loaded.Items;
             all = levels.Join(l => l.name);
             if (all.Length > 0) Server.s.Log("!LEVELS ONLINE: " + all, true);
+        }
+        
+        void TemprankExpiryTask(SchedulerTask task) {
+            Player[] players = PlayerInfo.Online.Items;
+            const StringComparison comp = StringComparison.OrdinalIgnoreCase;
+            
+            foreach (Player p in players) {
+                foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
+                    if (!line.StartsWith(p.name, comp)) continue;
+                    string[] args = line.Split(' ');
+
+                    int period = Convert.ToInt32(args[3]);
+                    int minutes = Convert.ToInt32(args[4]);
+                    int hours = Convert.ToInt32(args[5]);
+                    int days = Convert.ToInt32(args[6]);
+                    int months = Convert.ToInt32(args[7]);
+                    int years = Convert.ToInt32(args[8]);
+                    
+                    DateTime expire = new DateTime(years, months, days, hours, minutes, 0).AddHours(period);
+                    if (DateTime.Now >= expire)
+                        Command.all.Find("temprank").Use(null, p.name + " delete");
+                }
+            }
+            
+            DateTime now = DateTime.UtcNow;
+            task.Delay = TimeSpan.FromSeconds(60 - now.Second);
         }
     }
 }
