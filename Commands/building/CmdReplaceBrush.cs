@@ -19,74 +19,74 @@ using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands.Building {	
-	public class CmdReplaceBrush : Command {
-		public override string name { get { return "replacebrush"; } }
-		public override string shortcut { get { return "rb"; } }
-		public override string type { get { return CommandTypes.Building; } }
-		public override bool museumUsable { get { return false; } }
-		public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+namespace MCGalaxy.Commands.Building {    
+    public class CmdReplaceBrush : Command {
+        public override string name { get { return "replacebrush"; } }
+        public override string shortcut { get { return "rb"; } }
+        public override string type { get { return CommandTypes.Building; } }
+        public override bool museumUsable { get { return false; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
-		public override void Use(Player p, string message) {
-			if (message == "") { Help(p); return; }
-			if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-			string replaceCmd = ReplaceNot ? "replacenot" : "replace";
-			if (!p.group.CanExecute(replaceCmd) || !p.group.CanExecute("brush")) {
-				Player.Message(p, "You cannot use /brush and/or /" + replaceCmd + 
-				                   ", so therefore cannot use this command."); return;
-			}
-			
-			Player.Message(p, "Place two blocks to determine the edges.");
+        public override void Use(Player p, string message) {
+            if (message == "") { Help(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
+            string replaceCmd = ReplaceNot ? "replacenot" : "replace";
+            if (!p.group.CanExecute(replaceCmd) || !p.group.CanExecute("brush")) {
+                Player.Message(p, "You cannot use /brush and/or /" + replaceCmd + 
+                                   ", so therefore cannot use this command."); return;
+            }
+            
+            Player.Message(p, "Place two blocks to determine the edges.");
             p.MakeSelection(2, message.ToLower(), DoReplace);
         }
         
         bool DoReplace(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-			string[] parts = ((string)state).SplitSpaces(3);
-			if (parts.Length < 2) { Help(p); return false; }
-			
-			byte extBlock = 0;
-			int block = DrawCmd.GetBlock(p, parts[0], out extBlock);
-			if (block == -1) return false;
-			
-			string brushName = CmdBrush.FindBrush(parts[1]);
-			if (brushName == null) {
-				Player.Message(p, "No brush found with name \"" + parts[1] + "\".");
-				Player.Message(p, "Available brushes: " + CmdBrush.AvailableBrushes);
-				return false;
-			}
+            string[] parts = ((string)state).SplitSpaces(3);
+            if (parts.Length < 2) { Help(p); return false; }
+            
+            byte extBlock = 0;
+            int block = DrawCmd.GetBlock(p, parts[0], out extBlock);
+            if (block == -1) return false;
+            
+            string brushName = CmdBrush.FindBrush(parts[1]);
+            if (brushName == null) {
+                Player.Message(p, "No brush found with name \"" + parts[1] + "\".");
+                Player.Message(p, "Available brushes: " + CmdBrush.AvailableBrushes);
+                return false;
+            }
 
-			string brushMessage = parts.Length > 2 ? parts[2].ToLower() : "";
-			BrushArgs args = new BrushArgs(p, brushMessage, type, extType);
-			Brush brush = Brush.Brushes[brushName](args);
-			if (brush == null) return false;
-			
-			DrawOp drawOp = null;
-			if (ReplaceNot) drawOp = new ReplaceNotDrawOp((byte)block, extBlock);
-			else drawOp = new ReplaceDrawOp((byte)block, extBlock);
-			return DrawOp.DoDrawOp(drawOp, brush, p, marks);
-		}
-		
-		protected virtual bool ReplaceNot { get { return false; } }
-		
-		public override void Help(Player p) {
-			Player.Message(p, "%T/rb [block] [brush name] <brush args>");
-			Player.Message(p, "%HReplaces all blocks of the given type, " +
-			                   "in the specified area with the output of the given brush.");
-			Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
-		}
-	}
-	
-	public class CmdReplaceNotBrush : CmdReplaceBrush {
-		public override string name { get { return "replacenotbrush"; } }
-		public override string shortcut { get { return "rnb"; } }
-		
-		protected override bool ReplaceNot { get { return true; } }
-		
-		public override void Help(Player p) {
-			Player.Message(p, "%T/rnb [block] [brush name] <brush args>");
-			Player.Message(p, "%HReplaces all blocks (except for the given block), " +
-			                   "in the specified area with the output of the given brush.");
-			Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
-		}
-	}
+            string brushMessage = parts.Length > 2 ? parts[2].ToLower() : "";
+            BrushArgs args = new BrushArgs(p, brushMessage, type, extType);
+            Brush brush = Brush.Brushes[brushName](args);
+            if (brush == null) return false;
+            
+            DrawOp drawOp = null;
+            if (ReplaceNot) drawOp = new ReplaceNotDrawOp((byte)block, extBlock);
+            else drawOp = new ReplaceDrawOp((byte)block, extBlock);
+            return DrawOp.DoDrawOp(drawOp, brush, p, marks);
+        }
+        
+        protected virtual bool ReplaceNot { get { return false; } }
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/rb [block] [brush name] <brush args>");
+            Player.Message(p, "%HReplaces all blocks of the given type, " +
+                               "in the specified area with the output of the given brush.");
+            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+        }
+    }
+    
+    public class CmdReplaceNotBrush : CmdReplaceBrush {
+        public override string name { get { return "replacenotbrush"; } }
+        public override string shortcut { get { return "rnb"; } }
+        
+        protected override bool ReplaceNot { get { return true; } }
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/rnb [block] [brush name] <brush args>");
+            Player.Message(p, "%HReplaces all blocks (except for the given block), " +
+                               "in the specified area with the output of the given brush.");
+            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+        }
+    }
 }
