@@ -55,12 +55,11 @@ namespace MCGalaxy.Levels.IO {
                 }
                 int read = ds.Read(lvl.blocks, 0, lvl.blocks.Length);
             }
-            Upgrade(lvl);
-            lvl.Save(true);
+            ConvertExtended(lvl);
             return lvl;
         }
         
-        static void Upgrade(Level lvl) {
+        internal static void ConvertExtended(Level lvl) {
             ushort x, y, z;
             for (int i = 0; i < lvl.blocks.Length; i++) {
                 byte block = lvl.blocks[i];

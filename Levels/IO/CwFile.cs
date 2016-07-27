@@ -17,8 +17,6 @@
  */
 using System;
 using System.IO;
-using System.IO.Compression;
-using System.Text;
 using fNbt;
 
 namespace MCGalaxy.Levels.IO {   
@@ -29,10 +27,17 @@ namespace MCGalaxy.Levels.IO {
             file.LoadFromStream(stream, NbtCompression.GZip);
             
             NbtCompound root = file.RootTag;
-            foreach (NbtTag tag in root.Tags) {
-                Server.s.Log(stream.Position + ", " + tag.Name + ":" + tag.TagType);
-            }
-            return null;
+            if (root["FormatVersion"].ByteValue > 1)
+                throw new NotSupportedException("Only version 1 of ClassicWorld format is supported.");
+            
+            short x = root["X"].ShortValue, y = root["Y"].ShortValue, z = root["Z"].ShortValue;
+            if (x <= 0 || y <= 0 || z <= 0)
+                throw new InvalidDataException("Level dimensions must be > 0.");
+            
+            Level lvl = new Level(name, (ushort)x, (ushort)y, (ushort)z);
+            lvl.blocks = root["BlockArray"].ByteArrayValue;
+            FcmFile.ConvertExtended(lvl);
+            return lvl;
         }
     }
 }

@@ -54,7 +54,6 @@ namespace MCGalaxy.Levels.IO {
                 lvl.blocks[i] = blocks[i * 2];
             
             gs.Close();
-            lvl.Save(true);
             return lvl;
         }
     }
