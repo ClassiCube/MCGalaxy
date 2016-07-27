@@ -78,9 +78,6 @@
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="fNbt">
-      <HintPath>fNbt.dll</HintPath>
-    </Reference>
     <Reference Include="LibNoise">
       <HintPath>LibNoise.dll</HintPath>
     </Reference>
@@ -485,6 +482,7 @@
     <Compile Include="Generator\RealisticGenParams.cs" />
     <Compile Include="Generator\RealisticMapGen.cs" />
     <Compile Include="Generator\SimpleGen.cs" />
+    <Compile Include="Levels\fNbt.cs" />
     <Compile Include="Levels\IO\CwFile.cs" />
     <Compile Include="Levels\IO\DatFile.cs" />
     <Compile Include="Levels\IO\FcmFile.cs" />

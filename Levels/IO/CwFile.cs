@@ -24,7 +24,7 @@ namespace MCGalaxy.Levels.IO {
 
         public static Level Load(Stream stream, string name) {
             NbtFile file = new NbtFile();
-            file.LoadFromStream(stream, NbtCompression.GZip);
+            file.LoadFromStream(stream);
             
             Level lvl;
             ImportData(file.RootTag, name, out lvl);
@@ -64,6 +64,8 @@ namespace MCGalaxy.Levels.IO {
                 ParseEnvMapAppearance(cpe, lvl);
             if (cpe.Contains("EnvColors"))
                 ParseEnvColors(cpe, lvl);
+            if (cpe.Contains("BlockDefinitions"))
+                ParseBlockDefinitions(cpe, lvl);
             
             foreach(NbtTag tag in cpe.Tags)
                 Server.s.Log(tag.Name + " - " + tag.TagType);
@@ -103,5 +105,9 @@ namespace MCGalaxy.Levels.IO {
             if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) return "";
             return r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
         }
+		
+		static void ParseBlockDefinitions(NbtCompound cpe, Level lvl) {
+			
+		}
     }
 }
