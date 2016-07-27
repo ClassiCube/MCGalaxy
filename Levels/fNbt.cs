@@ -238,6 +238,14 @@ namespace fNbt {
                 throw new InvalidCastException("Cannot get ByteValue from " + TagType);
             }
         }
+        
+        public float FloatValue {
+            get {
+                if (TagType == NbtTagType.Float)
+                    return ((NbtFloat)this).Value;
+                throw new InvalidCastException("Cannot get FloatValue from " + TagType);
+            }
+        }
 
         public short ShortValue {
             get {

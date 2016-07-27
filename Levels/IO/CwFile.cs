@@ -66,9 +66,6 @@ namespace MCGalaxy.Levels.IO {
                 ParseEnvColors(cpe, lvl);
             if (cpe.Contains("BlockDefinitions"))
                 ParseBlockDefinitions(cpe, lvl);
-            
-            foreach(NbtTag tag in cpe.Tags)
-                Server.s.Log(tag.Name + " - " + tag.TagType);
         }
         
         static void ParseEnvMapAppearance(NbtCompound cpe, Level lvl) {
@@ -99,15 +96,54 @@ namespace MCGalaxy.Levels.IO {
         
         static string GetColor(NbtCompound comp, string type) {
             if (!comp.Contains(type)) return "";
-            NbtCompound rgb = (NbtCompound)comp[type];            
+            NbtCompound rgb = (NbtCompound)comp[type];
             short r = rgb["R"].ShortValue, g = rgb["G"].ShortValue, b = rgb["B"].ShortValue;
             
             if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) return "";
             return r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
         }
-		
-		static void ParseBlockDefinitions(NbtCompound cpe, Level lvl) {
-			
-		}
+        
+        static void ParseBlockDefinitions(NbtCompound cpe, Level lvl) {
+            NbtCompound blocks = (NbtCompound)cpe["BlockDefinitions"];
+            bool hasBlockDefs = false;
+            
+            foreach (NbtTag tag in blocks) {
+                if (tag.TagType != NbtTagType.Compound) continue;
+                
+                NbtCompound props = (NbtCompound)tag;
+                BlockDefinition def = new BlockDefinition();
+                def.BlockID = props["ID"].ByteValue;
+                def.Name = props["Name"].StringValue;
+                def.CollideType = props["CollideType"].ByteValue;
+                def.Speed = props["Speed"].FloatValue;
+                
+                def.BlocksLight = props["TransmitsLight"].ByteValue == 0;
+                def.WalkSound = props["WalkSound"].ByteValue;
+                def.FullBright = props["FullBright"].ByteValue != 0;
+                def.Shape = props["Shape"].ByteValue;
+                def.BlockDraw = props["BlockDraw"].ByteValue;
+                
+                byte[] fog = props["Fog"].ByteArrayValue;
+                def.FogDensity = fog[0];
+                def.FogR = fog[1]; def.FogG = fog[2]; def.FogB = fog[3];
+                
+                byte[] tex = props["Textures"].ByteArrayValue;
+                def.TopTex = tex[0]; def.BottomTex = tex[1];
+                def.LeftTex = tex[2]; def.RightTex = tex[3];
+                def.FrontTex = tex[4]; def.BackTex = tex[5];
+
+                byte[] coords = props["Coords"].ByteArrayValue;
+                def.MinX = coords[0]; def.MinZ = coords[1]; def.MinY = coords[2];
+                def.MaxX = coords[3]; def.MaxZ = coords[4]; def.MaxY = coords[5];
+                
+                def.SideTex = def.LeftTex;
+                def.Version2 = true;
+                lvl.CustomBlockDefs[def.BlockID] = def;
+                hasBlockDefs = true;
+            }
+            
+            if (hasBlockDefs)
+                BlockDefinition.Save(false, lvl);
+        }
     }
 }

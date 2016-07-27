@@ -113,7 +113,7 @@ namespace MCGalaxy {
             return defs;
         }
         
-        static void Save(bool global, Level lvl) {
+        internal static void Save(bool global, Level lvl) {
             BlockDefinition[] defs = global ? GlobalDefs : lvl.CustomBlockDefs;
             // We don't want to save global blocks in the level's custom blocks list
             if (!global) {
