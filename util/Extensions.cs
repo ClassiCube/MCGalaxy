@@ -99,6 +99,8 @@ namespace MCGalaxy {
         
         public static bool CaselessStarts(this string a, string b) { return a.StartsWith(b, comp);  }
         
+        public static bool CaselessEnds(this string a, string b) { return a.EndsWith(b, comp);  }
+        
         public static bool CaselessContains(this List<string> items, string value) {
             foreach (string item in items) {
                 if (item.Equals(value, comp)) return true;
