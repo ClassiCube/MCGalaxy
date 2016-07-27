@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using System.Linq;
 using MCGalaxy.Commands.CPE;
+using MCGalaxy.Commands.World;
 
 namespace MCGalaxy.Commands
 {
@@ -212,7 +213,8 @@ namespace MCGalaxy.Commands
             } else if (cmd == "GUNS") {
                 Command.all.Find("allowguns").Use(p, "");
             } else if (cmd == "CHAT") {
-                Command.all.Find("map").Use(p, "chat");
+                CmdMap.SetBool(p, p.level, ref p.level.worldChat, "Roleplay (level only) chat: ", true);
+                Level.SaveSettings(p.level);
             } else if (cmd == "RESTORE") {
                 Command.all.Find("restore").Use(p, value);
             } else if (cmd == "PERVISIT") {

@@ -179,7 +179,7 @@ namespace MCGalaxy.Commands.World {
             return true;
         }
         
-        static void SetBool(Player p, Level lvl, ref bool target, string name, bool negate = false) {
+        internal static void SetBool(Player p, Level lvl, ref bool target, string name, bool negate = false) {
             target = !target;
             bool display = negate ? !target : target;
             lvl.ChatLevel(name + GetBool(display));

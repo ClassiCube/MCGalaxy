@@ -82,6 +82,7 @@ namespace MCGalaxy {
             CheckFile("sqlite3.dll");
             CheckFile("Newtonsoft.Json.dll");
             CheckFile("LibNoise.dll");
+            CheckFile("fNbt.dll");
 
             EnsureFilesExist();
             MoveOutdatedFiles();
