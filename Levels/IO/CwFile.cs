@@ -125,6 +125,8 @@ namespace MCGalaxy.Levels.IO {
                 
                 byte[] fog = props["Fog"].ByteArrayValue;
                 def.FogDensity = fog[0];
+                // Fix for older ClassicalSharp versions which saved wrong value for density = 0
+                if( def.FogDensity == 0xFF ) def.FogDensity = 0;
                 def.FogR = fog[1]; def.FogG = fog[2]; def.FogB = fog[3];
                 
                 byte[] tex = props["Textures"].ByteArrayValue;
@@ -136,6 +138,10 @@ namespace MCGalaxy.Levels.IO {
                 def.MinX = coords[0]; def.MinZ = coords[1]; def.MinY = coords[2];
                 def.MaxX = coords[3]; def.MaxZ = coords[4]; def.MaxY = coords[5];
                 
+                // Don't define localcustom block if same as global cusom block
+                BlockDefinition globalDef = BlockDefinition.GlobalDefs[def.BlockID];
+                if (PropsEquals(def, globalDef)) continue;
+                
                 def.SideTex = def.LeftTex;
                 def.Version2 = true;
                 lvl.CustomBlockDefs[def.BlockID] = def;
@@ -144,6 +150,17 @@ namespace MCGalaxy.Levels.IO {
             
             if (hasBlockDefs)
                 BlockDefinition.Save(false, lvl);
+        }
+		
+		static bool PropsEquals(BlockDefinition a, BlockDefinition b) {
+            if (b == null || b.Name == null) return false;
+            return a.Name == b.Name && a.CollideType == b.CollideType && a.Speed == b.Speed && a.TopTex == b.TopTex 
+                && a.BottomTex == b.BottomTex && a.BlocksLight == b.BlocksLight && a.WalkSound == b.WalkSound 
+                && a.FullBright == b.FullBright && a.Shape == b.Shape && a.BlockDraw == b.BlockDraw 
+                && a.FogDensity == b.FogDensity && a.FogR == b.FogR && a.FogG == b.FogG && a.FogB == b.FogB 
+                && a.MinX == b.MinX && a.MinY == b.MinY && a.MinZ == b.MinZ && a.MaxX == b.MaxX 
+                && a.MaxY == b.MaxY && a.MaxZ == b.MaxZ && a.LeftTex == b.LeftTex && a.RightTex == b.RightTex 
+                && a.FrontTex == b.FrontTex && a.BackTex == b.BackTex;
         }
     }
 }

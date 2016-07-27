@@ -34,7 +34,7 @@ namespace MCGalaxy {
         public bool FullBright;
         public byte Shape;
         public byte BlockDraw;
-        public byte FogDensity,FogR, FogG, FogB;
+        public byte FogDensity, FogR, FogG, FogB;
         public byte FallBack;
         // BlockDefinitionsExt fields
         public byte MinX, MinY, MinZ;
@@ -72,10 +72,10 @@ namespace MCGalaxy {
             GlobalDefs[0].Name = "Air fallback";
             
             try {
-            	if (File.Exists(GlobalPath) && File.Exists(GlobalBackupPath)) {
+                if (File.Exists(GlobalPath) && File.Exists(GlobalBackupPath)) {
                     File.Delete(GlobalBackupPath);
                     File.Copy(GlobalPath, GlobalBackupPath);
-            	}
+                }
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
             }
@@ -95,7 +95,7 @@ namespace MCGalaxy {
                 defs = new BlockDefinition[256];
             }
             
-            for (int i = 0; i < 256; i++) {           	
+            for (int i = 0; i < 256; i++) {               
                 if (defs[i] != null && defs[i].Name == null)
                     defs[i] = null;
             }
@@ -225,7 +225,7 @@ namespace MCGalaxy {
         }
         
         static void SendDefineBlockExt(Player p, BlockDefinition def, bool uniqueSideTexs) {
-        	byte[] buffer = new byte[uniqueSideTexs ? 88 : 85];
+            byte[] buffer = new byte[uniqueSideTexs ? 88 : 85];
             int index = 0;
             buffer[index++] = Opcode.CpeDefineBlockExt;
             MakeDefineBlockStart(def, buffer, ref index, uniqueSideTexs);
