@@ -580,6 +580,7 @@
     <Compile Include="Server\Server.Fields.cs" />
     <Compile Include="Server\Server.Init.cs" />
     <Compile Include="Server\Server.Tasks.cs" />
+    <Compile Include="Server\ThreadSafeCache.cs" />
     <Compile Include="Server\Updater.cs" />
     <Compile Include="API\WebServer.cs" />
     <Compile Include="util\BufferedBlockSender.cs" />

@@ -351,8 +351,7 @@ namespace MCGalaxy {
             try {
                 Level level = LvlFile.Load(name, path);
                 level.setPhysics(phys);
-                level.backedup = true;
-                LevelDB.LoadZones(level, name);
+                level.backedup = true;              
 
                 level.jailx = (ushort)(level.spawnx * 32);
                 level.jaily = (ushort)(level.spawny * 32);
@@ -360,13 +359,7 @@ namespace MCGalaxy {
                 level.jailrotx = level.rotx;
                 level.jailroty = level.roty;
                 level.StartPhysics();
-
-                try {
-                    LevelDB.LoadMetadata(level, name);
-                } catch (Exception e) {
-                    Server.ErrorLog(e);
-                }
-
+                
                 try {
                     string propsPath = LevelInfo.FindPropertiesFile(level.name);
                     if (propsPath != null)
@@ -385,6 +378,12 @@ namespace MCGalaxy {
                     level.CustomBlockDefs[i] = defs[i];
                 }
                 Bots.BotsFile.LoadBots(level);
+                
+                object locker = ThreadSafeCache.DBCache.Get(name);
+                lock (locker) {
+                    LevelDB.LoadZones(level, name);
+                    LevelDB.LoadMetadata(level, name);
+                }
 
                 Server.s.Log(string.Format("Level \"{0}\" loaded.", level.name));
                 if (LevelLoaded != null)

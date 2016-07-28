@@ -115,11 +115,14 @@ namespace MCGalaxy {
             Mods.Clear();
             Background.QueueOnce(UpdateStaffListTask);
             
-            MainScheduler.QueueRepeat(TemprankExpiryTask, null, TimeSpan.FromSeconds(60));
+            MainScheduler.QueueRepeat(TemprankExpiryTask, null, 
+                                      TimeSpan.FromMinutes(1));
             Background.QueueRepeat(AutoSaveTask, 1, 
-                                          TimeSpan.FromSeconds(Server.backupInterval));
+                                   TimeSpan.FromSeconds(Server.backupInterval));
             Background.QueueRepeat(BlockUpdatesTask, null,
-                                          TimeSpan.FromSeconds(Server.blockInterval));
+                                   TimeSpan.FromSeconds(Server.blockInterval));
+            Background.QueueRepeat(ThreadSafeCache.CleanupTask, null,
+                                   TimeSpan.FromMinutes(5));
         }
         
         void EnsureFilesExist() {

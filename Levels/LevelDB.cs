@@ -109,6 +109,7 @@ namespace MCGalaxy {
         }
         
         internal static void LoadZones(Level level, string name) {
+            if (!Database.TableExists("Zone" + name)) return;
             using (DataTable table = Database.Fill("SELECT * FROM `Zone" + name + "`")) {
                 Level.Zone Zn;
                 foreach (DataRow row in table.Rows) {
@@ -124,7 +125,8 @@ namespace MCGalaxy {
             }
         }
         
-        internal static void LoadMetadata(Level level, string name) {
+        internal static void LoadPortals(Level level, string name) {
+            if (!Database.TableExists("Portals" + name)) return;
             using (DataTable table = Database.Fill("SELECT * FROM `Portals" + name + "`")) {
                 foreach (DataRow row in table.Rows) {
                     byte tile = level.GetTile(ushort.Parse(row["EntryX"].ToString()),
@@ -136,7 +138,10 @@ namespace MCGalaxy {
                                      row["EntryX"], row["EntryY"], row["EntryZ"]);
                 }
             }
-            
+        }
+        
+        internal static void LoadMessages(Level level, string name) {
+            if (!Database.TableExists("Messages" + name)) return;
             using (DataTable table = Database.Fill("SELECT * FROM `Messages" + name + "`")) {
                 foreach (DataRow row in table.Rows) {
                     byte tile = level.GetTile(ushort.Parse(row["X"].ToString()),
@@ -159,12 +164,12 @@ namespace MCGalaxy {
         
         public static void CreateZone(string level, Level.Zone zn) {
             Database.Execute("INSERT INTO `Zone" + level +  "` (Owner, SmallX, SmallY, " +
-			                 "SmallZ, BigX, BigY, BigZ) VALUES (@0, @1, @2, @3, @4, @5, @6)",
+                             "SmallZ, BigX, BigY, BigZ) VALUES (@0, @1, @2, @3, @4, @5, @6)",
                              zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
         }
         
         
-        const string createBlock =
+        internal const string createBlock =
             @"CREATE TABLE if not exists `Block{0}` (
 Username      CHAR(20),
 TimePerformed DATETIME,
@@ -174,7 +179,7 @@ Z             SMALLINT UNSIGNED,
 Type          TINYINT UNSIGNED,
 Deleted       {1})";
         
-        const string createPortals =
+        internal const string createPortals =
             @"CREATE TABLE if not exists `Portals{0}` (
 EntryX  SMALLINT UNSIGNED,
 EntryY  SMALLINT UNSIGNED,
@@ -184,14 +189,14 @@ ExitX   SMALLINT UNSIGNED,
 ExitY   SMALLINT UNSIGNED,
 ExitZ   SMALLINT UNSIGNED)";
         
-        const string createMessages =
+        internal const string createMessages =
             @"CREATE TABLE if not exists `Messages{0}` (
 X       SMALLINT UNSIGNED,
 Y       SMALLINT UNSIGNED,
 Z       SMALLINT UNSIGNED,
 Message CHAR(255))";
         
-        const string createZones =
+        internal const string createZones =
             @"CREATE TABLE if not exists `Zone{0}` (
 SmallX SMALLINT UNSIGNED,
 SmallY SMALLINT UNSIGNED,
