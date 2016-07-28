@@ -126,9 +126,12 @@ namespace MCGalaxy {
 
             //safe against SQL injections because the levelname (message) is first being checked if it exists
             Database.Execute("DROP TABLE `Block" + name + "`");
-            Database.Execute("DROP TABLE `Portals" + name + "`");
-            Database.Execute("DROP TABLE `Messages" + name + "`");
-            Database.Execute("DROP TABLE `Zone" + name + "`");
+            object locker = ThreadSafeCache.DBCache.Get(name);
+            lock (locker) {
+                Database.Execute("DROP TABLE `Portals" + name + "`");
+                Database.Execute("DROP TABLE `Messages" + name + "`");
+                Database.Execute("DROP TABLE `Zone" + name + "`");
+            }
         }
         
         public static void Replace(Level old, Level lvl) {

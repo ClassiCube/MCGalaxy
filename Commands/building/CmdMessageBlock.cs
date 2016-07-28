@@ -120,16 +120,16 @@ namespace MCGalaxy.Commands.Building {
         void ShowMessageBlocks(Player p) {
             p.showMBs = !p.showMBs;
             //safe against SQL injections because no user input is given here
-            using (DataTable Messages = Database.Fill("SELECT * FROM `Messages" + p.level.name + "`")) {
+            using (DataTable table = Database.Fill("SELECT * FROM `Messages" + p.level.name + "`")) {
                 if (p.showMBs) {
-                    for (int i = 0; i < Messages.Rows.Count; i++) {
-                        DataRow row = Messages.Rows[i];
+                    for (int i = 0; i < table.Rows.Count; i++) {
+                        DataRow row = table.Rows[i];
                         p.SendBlockchange(ushort.Parse(row["X"].ToString()), ushort.Parse(row["Y"].ToString()), ushort.Parse(row["Z"].ToString()), Block.MsgWhite);
                     }
-                    Player.Message(p, "Now showing &a" + Messages.Rows.Count + " %SMBs.");
+                    Player.Message(p, "Now showing &a" + table.Rows.Count + " %SMBs.");
                 } else {
-                    for (int i = 0; i < Messages.Rows.Count; i++) {
-                        DataRow row = Messages.Rows[i];
+                    for (int i = 0; i < table.Rows.Count; i++) {
+                        DataRow row = table.Rows[i];
                         p.RevertBlock(ushort.Parse(row["X"].ToString()), ushort.Parse(row["Y"].ToString()), ushort.Parse(row["Z"].ToString()));
                     }
                     Player.Message(p, "Now hiding MBs.");

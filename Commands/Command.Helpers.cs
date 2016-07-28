@@ -56,7 +56,7 @@ namespace MCGalaxy {
         
         protected void SuperRequiresArgs(Player p, string type) { SuperRequiresArgs(name, p, type); }
         
-        protected static void SuperRequiresArgs(string cmd, Player p, string type) {
+        protected internal static void SuperRequiresArgs(string cmd, Player p, string type) {
             string src = p == null ? "console" : "IRC";
             Player.Message(p, "When using /{0} from {2}, you must provide a {1}.", cmd, type, src);
         }
