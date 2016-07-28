@@ -24,12 +24,12 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
 
         public override void Use(Player p, string message) {
-        	string[] args = message.Split(' ');
-            if (Command.all.Contains(args[0])) {
+        	string cmdName = message.Split(' ')[0];
+        	if (Command.all.Contains(cmdName)) {
                 Player.Message(p, "That command is already loaded!"); return;
             }
             
-        	string error = Scripting.Load("Cmd" + args[0]);
+        	string error = Scripting.Load("Cmd" + cmdName);
         	if (error != null) { Player.Message(p, error); return; }
         	GrpCommands.fillRanks();
         	Player.Message(p, "Command was successfully loaded.");

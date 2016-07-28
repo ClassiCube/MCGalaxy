@@ -52,7 +52,7 @@ namespace MCGalaxy {
                 all.Add(cmd);
                 
                 CommandAlias[] aliases = cmd.Aliases;
-                if (aliases == null) continue;                
+                if (aliases == null) continue;
                 foreach (CommandAlias a in aliases) {
                     Alias alias = new Alias(a.Trigger, cmd.name, a.Prefix, a.Suffix);
                     Alias.coreAliases.Add(alias);

@@ -1109,82 +1109,62 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             }
         }
 
-       
 
         private void btnLoad_Click(object sender, EventArgs e) {
             Command[] commands = null;
+            using (FileDialog dialog = new OpenFileDialog()) {
+                dialog.RestoreDirectory = true;
+                dialog.Filter = "Accepted File Types (*.cs, *.vb, *.dll)|*.cs;*.vb;*.dll|C# Source (*.cs)|*.cs|Visual Basic Source (*.vb)|*.vb|.NET Assemblies (*.dll)|*.dll";
+                if (dialog.ShowDialog() != DialogResult.OK) return;
 
-            using(FileDialog fileDialog = new OpenFileDialog()) {
-                fileDialog.RestoreDirectory = true;
-                fileDialog.Filter = "Accepted File Types (*.cs, *.vb, *.dll)|*.cs;*.vb;*.dll|C# Source (*.cs)|*.cs|Visual Basic Source (*.vb)|*.vb|.NET Assemblies (*.dll)|*.dll";
+                string fileName = dialog.FileName;
+                if (fileName.EndsWith(".dll")) {
+                    commands = MCGalaxyScripter.FromAssemblyFile(fileName);
+                } else {
+                    ScriptLanguage language = fileName.EndsWith(".cs") ? ScriptLanguage.CSharp : ScriptLanguage.VB;
+                    if (!File.Exists(fileName)) return;
+                    
+                    var result = MCGalaxyScripter.Compile(File.ReadAllText(fileName), language);
+                    if (result == null) { MessageBox.Show ( "Error compiling files" ); return; }
 
-                if ( fileDialog.ShowDialog() == DialogResult.OK ) {
-
-                    string fileName = fileDialog.FileName;
-
-                    if ( fileName.EndsWith ( ".dll" ) ) {
-                        commands = MCGalaxyScripter.FromAssemblyFile ( fileName );
-                    }
-                    else {
-
-                        ScriptLanguage language = fileName.EndsWith ( ".cs" ) ? ScriptLanguage.CSharp : ScriptLanguage.VB;
-
-                        if ( File.Exists ( fileName ) ) {
-                            var result = MCGalaxyScripter.Compile ( File.ReadAllText ( fileName ), language );
-
-                            if ( result == null ) {
-                                MessageBox.Show ( "Error compiling files" );
-                                return;
-                            }
-
-                            if ( result.CompilerErrors != null ) {
-                                foreach ( CompilerError err in result.CompilerErrors ) {
-                                    Server.s.ErrorCase( "Error #" + err.ErrorNumber );
-                                    Server.s.ErrorCase( "Message: " + err.ErrorText );
-                                    Server.s.ErrorCase( "Line: " + err.Line );
-
-                                    Server.s.ErrorCase( "=================================" );
-                                }
-                                MessageBox.Show ( "Error compiling from source. Check logs for error" );
-                                return;
-                            }
-
-                            commands = result.Commands;
+                    if (result.CompilerErrors != null) {
+                        foreach (CompilerError err in result.CompilerErrors) {
+                            Server.s.ErrorCase("Error #" + err.ErrorNumber);
+                            Server.s.ErrorCase("Message: " + err.ErrorText);
+                            Server.s.ErrorCase("Line: " + err.Line);
+                            Server.s.ErrorCase( "=================================" );
                         }
+                        MessageBox.Show("Error compiling from source. Check logs for error");
+                        return;
                     }
+                    commands = result.Commands;
                 }
             }
 
-            if ( commands == null ) {
-                MessageBox.Show( "Error compiling files" );
-                return;
-            }
+            if (commands == null) { MessageBox.Show("Error compiling files"); return; }
+            for (int i = 0; i < commands.Length; i++) {
+                Command cmd = commands[i];
 
-            for ( int i = 0; i < commands.Length; i++ ) {
-                Command command = commands[ i ];
-
-                if(lstCommands.Items.Contains(command.name)) {
-                    MessageBox.Show ( "Command " + command.name + " already exists. As a result, it was not loaded" );
+                if (lstCommands.Items.Contains(cmd.name)) {
+                    MessageBox.Show("Command " + cmd.name + " already exists. As a result, it was not loaded");
                     continue;
                 }
 
-                lstCommands.Items.Add ( command.name );
-                Command.all.Add(command);
-                Server.s.Log("Added " + command.name + " to commands");
-            }
-            
+                lstCommands.Items.Add(cmd.name);
+                Command.all.Add(cmd);
+                Server.s.Log("Added " + cmd.name + " to commands");
+            }           
             GrpCommands.fillRanks();
         }
 
         private void btnUnload_Click(object sender, EventArgs e) {
-            Command foundCmd = Command.all.Find(lstCommands.SelectedItem.ToString());
-            if ( foundCmd == null ) {
-                MessageBox.Show(txtCommandName.Text + " is not a valid or loaded command.", "");
-                return;
+            Command cmd = Command.all.Find(lstCommands.SelectedItem.ToString());
+            if (cmd == null) {
+                MessageBox.Show(txtCommandName.Text + " is not a valid or loaded command.", ""); return;
             }
 
-            lstCommands.Items.Remove( foundCmd.name );
-            Command.all.Remove(foundCmd);
+            lstCommands.Items.Remove( cmd.name );
+            Command.all.Remove(cmd);
             GrpCommands.fillRanks();
             MessageBox.Show("Command was successfully unloaded.", "");
         }

@@ -21,7 +21,6 @@ using System.IO;
 using System.Linq;
 
 namespace MCGalaxy {
-
     public class GrpCommands {
         
         public class rankAllowance {
@@ -31,7 +30,6 @@ namespace MCGalaxy {
             public List<LevelPermission> allow = new List<LevelPermission>();
         }
         public static List<rankAllowance> allowedCommands;
-        public static List<string> foundCommands = new List<string>();
 
         public static LevelPermission defaultRanks(string command) {
             Command cmd = Command.all.Find(command);
@@ -42,9 +40,17 @@ namespace MCGalaxy {
             var perms = GrpCommands.allowedCommands.Find(C => C.commandName == cmd.name);
             return perms == null ? cmd.defaultRank : perms.lowestRank;
         }
+        
+        public static bool Remove(string cmdName) {
+            for (int i = 0; i < allowedCommands.Count; i++) {
+                if (allowedCommands[i].commandName != cmdName) continue;
+                allowedCommands.RemoveAt(i); return true;
+            }
+            return false;
+        }
 
         public static void fillRanks() {
-            foundCommands = Command.all.commandNames();
+            List<string> cmdNames = Command.all.commandNames();
             allowedCommands = new List<rankAllowance>();
 
             rankAllowance allowVar;
@@ -58,8 +64,8 @@ namespace MCGalaxy {
             if (File.Exists("properties/command.properties")) {
                 string[] lines = File.ReadAllLines("properties/command.properties");
                 //if (lines.Length == 0) ; // this is useless?
-                if (lines[0] == "#Version 2") ReadVersion2(lines);
-                else ReadVersion1(lines);
+                if (lines[0] == "#Version 2") ReadVersion2(lines, cmdNames);
+                else ReadVersion1(lines, cmdNames);
                 Save(allowedCommands);
             } else {
                 Save(allowedCommands);
@@ -69,7 +75,7 @@ namespace MCGalaxy {
                 grp.fillCommands();
         }
         
-        static void ReadVersion2(string[] lines) {
+        static void ReadVersion2(string[] lines, List<string> cmdNames) {
             string[] colon = new[] { " : " };
             foreach (string line in lines) {
                 if (line == "" || line[0] == '#') continue;
@@ -77,7 +83,7 @@ namespace MCGalaxy {
                 //Name : Lowest : Disallow : Allow
                 string[] args = line.Split(colon, StringSplitOptions.None);
 
-                if (!foundCommands.Contains(args[0])) {
+                if (!cmdNames.Contains(args[0])) {
                     Server.s.Log("Incorrect command name: " + args[0]); continue;
                 }
                 perms.commandName = args[0];
@@ -103,14 +109,14 @@ namespace MCGalaxy {
             }
         }
         
-        static void ReadVersion1(string[] lines) {
+        static void ReadVersion1(string[] lines, List<string> cmdNames) {
             foreach (string line in lines) {
                 if (line == "" || line[0] == '#') continue;
                 rankAllowance perms = new rankAllowance();
                 string key = line.Split('=')[0].Trim().ToLower();
                 string value = line.Split('=')[1].Trim().ToLower();
 
-                if (!foundCommands.Contains(key)) {
+                if (!cmdNames.Contains(key)) {
                     Server.s.Log("Incorrect command name: " + key);
                 } else if (Level.PermissionFromName(value) == LevelPermission.Null) {
                     Server.s.Log("Incorrect value given for " + key + ", using default value.");
