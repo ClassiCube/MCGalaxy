@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 
 namespace MCGalaxy {
     /// <summary> This is the group object, where ranks and their data are stored </summary>
@@ -53,11 +52,8 @@ namespace MCGalaxy {
         public PlayerList playerList;
         public string MOTD = String.Empty;
 
-        /// <summary>
-        /// Create a new group object
-        /// </summary>
-        public Group()
-        {
+        /// <summary> Create a new group object </summary>
+        public Group() {
             Permission = LevelPermission.Null;
         }
 
@@ -88,11 +84,9 @@ namespace MCGalaxy {
                 OnGroupLoaded(this);
             OnGroupLoadedEvent.Call(this);
         }
-        /// <summary>
-        /// Fill the commands that this group can use
-        /// </summary>
-        public void fillCommands()
-        {
+        
+        /// <summary> Fill the commands that this group can use </summary>
+        public void fillCommands() {
             CommandList _commands = new CommandList();
             GrpCommands.AddCommands(out _commands, Permission);
             commands = _commands;
@@ -101,7 +95,7 @@ namespace MCGalaxy {
         public bool CanExecute(string cmdName) { 
             return commands.Contains(Command.all.Find(cmdName));
         }
-        	
+            
         /// <summary> Check to see if this group can excute cmd </summary>
         /// <param name="cmd">The command object to check</param>
         /// <returns>True if this group can use it, false if they cant</returns>
@@ -114,25 +108,32 @@ namespace MCGalaxy {
         /// <summary> Load up all server groups </summary>
         public static void InitAll() {
             GroupList = new List<Group>();
-
             if (File.Exists("properties/ranks.properties"))
                 GroupProperties.InitAll();
 
-            if (findPerm(LevelPermission.Banned) == null) GroupList.Add(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', String.Empty, "banned.txt"));
-            if (findPerm(LevelPermission.Guest) == null) GroupList.Add(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', String.Empty, "guest.txt"));
-            if (findPerm(LevelPermission.Builder) == null) GroupList.Add(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', String.Empty, "builders.txt"));
-            if (findPerm(LevelPermission.AdvBuilder) == null) GroupList.Add(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', String.Empty, "advbuilders.txt"));
-            if (findPerm(LevelPermission.Operator) == null) GroupList.Add(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', String.Empty, "operators.txt"));
-            if (findPerm(LevelPermission.Admin) == null) GroupList.Add(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', String.Empty, "uberOps.txt"));
+            if (findPerm(LevelPermission.Banned) == null) 
+                GroupList.Add(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', String.Empty, "banned.txt"));
+            if (findPerm(LevelPermission.Guest) == null) 
+                GroupList.Add(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', String.Empty, "guest.txt"));
+            if (findPerm(LevelPermission.Builder) == null) 
+                GroupList.Add(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', String.Empty, "builders.txt"));
+            if (findPerm(LevelPermission.AdvBuilder) == null) 
+                GroupList.Add(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', String.Empty, "advbuilders.txt"));
+            if (findPerm(LevelPermission.Operator) == null) 
+                GroupList.Add(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', String.Empty, "operators.txt"));
+            if (findPerm(LevelPermission.Admin) == null) 
+                GroupList.Add(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', String.Empty, "uberOps.txt"));
             GroupList.Add(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', String.Empty, "nobody.txt"));            
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
 
-            if (Group.Find(Server.defaultRank) != null) standard = Group.Find(Server.defaultRank);
-            else standard = Group.findPerm(LevelPermission.Guest);
+            if (Group.Find(Server.defaultRank) != null) 
+                standard = Group.Find(Server.defaultRank);
+            else 
+                standard = Group.findPerm(LevelPermission.Guest);
 
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players)
-                pl.group = GroupList.Find(g => g.name == pl.group.name);
+                pl.group = Find(pl.group.name);
             if (OnGroupLoad != null)
                 OnGroupLoad();
             OnGroupLoadEvent.Call();
@@ -142,9 +143,9 @@ namespace MCGalaxy {
         /// <summary> Save givenList group </summary>
         /// <param name="givenList">The list of groups to save</param>
         public static void saveGroups(List<Group> givenList) {
-        	lock (saveLock)
-        	    GroupProperties.SaveGroups(givenList);
-        	
+            lock (saveLock)
+                GroupProperties.SaveGroups(givenList);
+            
             if (OnGroupSave != null) OnGroupSave();
             OnGroupSaveEvent.Call();
         }
@@ -152,14 +153,21 @@ namespace MCGalaxy {
         /// <summary> Check whether a group with that name exists. </summary>
         public static bool Exists(string name) {
             name = name.ToLower();
-            return GroupList.Any(gr => gr.name == name);
+            foreach (Group grp in GroupList) {
+                if (grp.name == name) return true;
+            }
+            return false;
         }
         
         /// <summary> Find the group which has the given name. </summary>
         public static Group Find(string name) {
             name = name.ToLower();
             MapName(ref name);
-            return GroupList.Find(gr => gr.name == name);
+            
+            foreach (Group grp in GroupList) {
+                if (grp.name == name) return grp;
+            }
+            return null;
         }
         
         /// <summary> Find the group(s) which contain the given name. </summary>
@@ -172,11 +180,11 @@ namespace MCGalaxy {
         
         /// <summary> Find the group(s) which contain the given name. </summary>
         public static Group FindMatches(Player p, string name) {
-        	int matches = 0; return FindMatches(p, name, out matches);
+            int matches = 0; return FindMatches(p, name, out matches);
         }
         
         static void MapName(ref string name) {
-        	if (name == "adv") name = "advbuilder";
+            if (name == "adv") name = "advbuilder";
             if (name == "op") name = "operator";
             if (name == "super" || (name == "admin" && !Group.Exists("admin"))) name = "superop";
             if (name == "noone") name = "nobody";
@@ -193,40 +201,32 @@ namespace MCGalaxy {
         }
 
         /// <summary> Get the group name that player /playerName/ is in </summary>
-        /// <param name="playerName">The player Name</param>
+        /// <param name="name">The player Name</param>
         /// <returns>The group name</returns>
-        public static string findPlayer(string playerName) {
-            foreach (Group grp in Group.GroupList.Where(grp => grp.playerList.Contains(playerName))) {
-                return grp.name;
-            }
-            return Group.standard.name;
-        }
+        public static string findPlayer(string name) { return findPlayerGroup(name).name; }
 
         /// <summary> Find the group object that the player /playerName/ is in </summary>
-        /// <param name="playerName">The player name</param>
+        /// <param name="name">The player name</param>
         /// <returns>The group object that the player is in</returns>
-        public static Group findPlayerGroup(string playerName) {
-            foreach (Group grp in Group.GroupList.Where(grp => grp.playerList.Contains(playerName))) {
-                return grp;
+        public static Group findPlayerGroup(string name) {
+            foreach (Group grp in Group.GroupList) {
+        	    if (grp.playerList.Contains(name)) return grp;
             }
             return Group.standard;
         }
 
         public static string concatList(bool includeColor = true, bool skipExtra = false, bool permissions = false) {
-            string returnString = "";
-            foreach (Group grp in Group.GroupList.Where(grp => !skipExtra || (grp.Permission > LevelPermission.Guest && grp.Permission < LevelPermission.Nobody)))
-            {
-                if (includeColor)
-                    returnString += ", " + grp.color + grp.name + Server.DefaultColor;
-                else if (permissions)
-                    returnString += ", " + ((int)grp.Permission).ToString(CultureInfo.InvariantCulture);
-                else
-                    returnString += ", " + grp.name;
+            string sum = "";
+            foreach (Group grp in Group.GroupList) {
+                if (skipExtra && (grp.Permission < LevelPermission.Guest || grp.Permission >= LevelPermission.Nobody)) continue;
+            	
+                if (includeColor) sum += ", " + grp.ColoredName + Server.DefaultColor;
+                else if (permissions) sum += ", " + ((int)grp.Permission);
+                else sum += ", " + grp.name;
             }
 
-            if (includeColor) returnString = returnString.Remove(returnString.Length - 2);
-
-            return returnString.Remove(0, 2);
+            if (includeColor) sum = sum.Remove(sum.Length - 2);
+            return sum.Remove(0, 2);
         }
         
         /// <summary> Returns whether the given player is in the banned rank. </summary>

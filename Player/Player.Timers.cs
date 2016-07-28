@@ -75,7 +75,8 @@ namespace MCGalaxy {
                 SendMessage("You currently have &a" + money + " %S" + Server.moneys);
             
             try {
-                if ( !Group.Find("Nobody").commands.Contains("award") && !Group.Find("Nobody").commands.Contains("awards") && !Group.Find("Nobody").commands.Contains("awardmod") )
+                Group nobody = Group.findPerm(LevelPermission.Nobody);
+                if (!nobody.commands.Contains("award") && !nobody.commands.Contains("awards") && !nobody.commands.Contains("awardmod") )
                     SendMessage("You have " + Awards.AwardAmount(name) + " awards.");
             } catch {
             }

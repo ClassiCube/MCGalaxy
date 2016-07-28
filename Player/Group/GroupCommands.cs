@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MCGalaxy {
     public class GrpCommands {
@@ -163,20 +162,16 @@ namespace MCGalaxy {
         
         public static string getInts(List<LevelPermission> givenList) {
             if (givenList == null) return "";
-            string returnString = ""; bool foundOne = false;
-            foreach (LevelPermission Perm in givenList)
-            {
-                foundOne = true;
-                returnString += "," + (int)Perm;
-            }
-            if (foundOne) returnString = returnString.Remove(0, 1);
-            return returnString;
+            return givenList.Join(p => ((int)p).ToString(), ",");
         }
         
         public static void AddCommands(out CommandList commands, LevelPermission perm) {
             commands = new CommandList();
-            foreach (rankAllowance aV in allowedCommands.Where(aV => (aV.lowestRank <= perm && !aV.disallow.Contains(perm)) || aV.allow.Contains(perm)))
-                commands.Add(Command.all.Find(aV.commandName));
+            foreach (rankAllowance perms in allowedCommands) {
+                bool canUse = perms.lowestRank <= perm && !perms.disallow.Contains(perm);
+                if (canUse || perms.allow.Contains(perm))                
+                    commands.Add(Command.all.Find(perms.commandName));
+            }
         }
     }
 }
