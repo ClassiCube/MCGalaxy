@@ -19,17 +19,15 @@
 using System;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdZombieGame : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdZombieGame : Command {
         public override string name { get { return "zombiegame"; } }
         public override string shortcut { get { return "zg"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-        	get { return new[] { new CommandAlias("zs"), new CommandAlias("zombiesurvival") }; }
+            get { return new[] { new CommandAlias("zs"), new CommandAlias("zombiesurvival") }; }
         }        
         public CmdZombieGame() { }
         
@@ -49,16 +47,19 @@ namespace MCGalaxy.Commands
         static void HandleStatus(Player p, string message, string[] args) {
             switch (Server.zombie.Status) {
                 case ZombieGameStatus.NotStarted:
-                    Player.Message(p, "Zombie Survival is not ccurrently running."); return;
+                    Player.Message(p, "Zombie Survival is not currently running."); break;
                 case ZombieGameStatus.InfiniteRounds:
-                    Player.Message(p, "Zombie Survival is currently in progress with infinite rounds."); return;
+                    Player.Message(p, "Zombie Survival is currently in progress with infinite rounds."); break;
                 case ZombieGameStatus.SingleRound:
-                    Player.Message(p, "Zombie Survival game currently in progress."); return;
+                    Player.Message(p, "Zombie Survival game currently in progress."); break;
                 case ZombieGameStatus.VariableRounds:
-                    Player.Message(p, "Zombie Survival game currently in progress with " + Server.zombie.MaxRounds + " rounds."); return;
+                    Player.Message(p, "Zombie Survival game currently in progress with " + Server.zombie.MaxRounds + " rounds."); break;
                 case ZombieGameStatus.LastRound:
-                    Player.Message(p, "Zombie Survival game currently in progress, with this round being the final round."); return;
+                    Player.Message(p, "Zombie Survival game currently in progress, with this round being the final round."); break;
             }
+            
+            if (Server.zombie.Status == ZombieGameStatus.NotStarted || Server.zombie.CurLevelName == "") return;
+            Player.Message(p, "Running on map: " + Server.zombie.CurLevelName);
         }
         
         static void HandleStart(Player p, string message, string[] args) {
@@ -90,7 +91,7 @@ namespace MCGalaxy.Commands
             if (!Server.zombie.Running) {
                 Player.Message(p, "There is no Zombie Survival game currently in progress."); return;
             }
-        	
+            
             string src = p == null ? "(console)" : p.name;
             Server.s.Log("Zombie Survival ended forcefully by " + src);
             Server.zombie.Alive.Clear();
