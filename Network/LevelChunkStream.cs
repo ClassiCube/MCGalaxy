@@ -71,7 +71,7 @@ namespace MCGalaxy {
             
             if (index != chunkSize) return;
             WritePacket();
-            index = 0;
+            data = new byte[chunkSize + 4];
         }
         
         void WritePacket() {
