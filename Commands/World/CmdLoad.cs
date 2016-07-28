@@ -45,20 +45,20 @@ namespace MCGalaxy.Commands {
             }
             
             try {
-                LoadLevelCore(p, name, phys);
+                LoadLevel(p, name, phys);
             } finally {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
         }
         
-        static void LoadLevelCore(Player p, string name, string phys) {
+        internal static Level LoadLevel(Player p, string name, string phys) {
             Level lvl = GetLevel(p, name);
-            if (lvl == null || !lvl.CanJoin(p)) return;
+            if (lvl == null || !lvl.CanJoin(p)) return null;
 
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level l in loaded) {
-                if (l.name == name) { Player.Message(p, name + " is already loaded!"); return; }
+                if (l.name == name) { Player.Message(p, name + " is already loaded!"); return null; }
             }
 
             LevelInfo.Loaded.Add(lvl);
@@ -72,9 +72,11 @@ namespace MCGalaxy.Commands {
             } catch { }*/
             
             int temp;
-            if (!int.TryParse(phys, out temp)) { Player.Message(p, "Physics must be an integer between 0 and 5."); return; }
-            if (temp >= 1 && temp <= 5)
-                lvl.setPhysics(temp);
+            if (!int.TryParse(phys, out temp)) { 
+                Player.Message(p, "Physics must be an integer between 0 and 5."); return null; 
+            }
+            if (temp >= 1 && temp <= 5) lvl.setPhysics(temp);
+            return lvl;
         }
         
         static Level GetLevel(Player p, string name) {

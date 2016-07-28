@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Threading;
+using MCGalaxy.Commands;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Games {
@@ -31,17 +32,40 @@ namespace MCGalaxy.Games {
     
     public sealed partial class ZombieGame {
         
-        public void Start(ZombieGameStatus status, int amount) {
+        public void Start(ZombieGameStatus status, Level level, int rounds) {
             Status = status;
             RoundInProgress = false;
-            initialChangeLevel = false;
-            MaxRounds = amount + 1;
+            MaxRounds = rounds + 1;
             RoundsDone = 0;
+            if (!SetStartLevel(level)) return;
+            
             if (UseAwards) ZombieAwards.AddDefaults();
-
             Thread t = new Thread(MainLoop);
             t.Name = "MCG_ZombieGame";
             t.Start();
+        }
+        
+        bool SetStartLevel(Level level) {
+            if (level == null) {
+                List<string> levels = GetCandidateLevels();
+                if (levels == null) return false;
+                
+                CurLevelName = GetRandomLevel(new Random(), levels);
+                CurLevel = LevelInfo.FindExact(CurLevelName) 
+                    ?? CmdLoad.LoadLevel(null, CurLevelName, "0");
+                if (CurLevel == null) return false;
+            } else {
+                CurLevelName = level.name;
+                CurLevel = level;
+            }
+            
+            Player.GlobalMessage("A game of zombie survival is starting on: " + CurLevelName);
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level != CurLevel) continue;
+                PlayerJoinedLevel(p, p.level, p.level);
+            }
+            return true;
         }
 
         /// <summary> If there are no infected players left, randomly selected one of the alive players to continue the infection. </summary>
@@ -134,7 +158,6 @@ namespace MCGalaxy.Games {
         public void ResetState() {
             Status = ZombieGameStatus.NotStarted;
             MaxRounds = 0;
-            initialChangeLevel = false;
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;

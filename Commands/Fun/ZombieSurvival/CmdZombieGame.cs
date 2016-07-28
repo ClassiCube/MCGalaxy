@@ -66,6 +66,8 @@ namespace MCGalaxy.Commands {
             if (Server.zombie.Running) {
                 Player.Message(p, "There is already a Zombie Survival game currently in progress."); return;
             }
+        	Level lvl = Player.IsSuper(p) ? null : p.level;
+        	
             if (args.Length == 2) {
                 int rounds = 1;
                 if (!int.TryParse(args[1], out rounds)) {
@@ -73,9 +75,9 @@ namespace MCGalaxy.Commands {
                 }
                 ZombieGameStatus status = rounds == 0 ?
                     ZombieGameStatus.InfiniteRounds : ZombieGameStatus.VariableRounds;
-                Server.zombie.Start(status, rounds);
+                Server.zombie.Start(status, lvl, rounds);
             } else {
-                Server.zombie.Start(ZombieGameStatus.SingleRound, 0);
+                Server.zombie.Start(ZombieGameStatus.SingleRound, lvl, 0);
             }
         }
         

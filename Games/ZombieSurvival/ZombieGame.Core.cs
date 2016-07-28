@@ -43,11 +43,6 @@ namespace MCGalaxy.Games {
         
         void MainLoopCore() {
             if (Status == ZombieGameStatus.NotStarted) return;
-            if (!initialChangeLevel) {
-                ChooseNextLevel();
-                initialChangeLevel = true;
-            }
-
             while (true) {
                 RoundInProgress = false;
                 RoundsDone++;
@@ -192,9 +187,9 @@ namespace MCGalaxy.Games {
                             || Math.Abs(pAlive.pos[2] - pKiller.pos[2]) > HitboxPrecision)
                             continue;
                         
-                        if (!pAlive.Game.Infected && pKiller.Game.Infected && !pAlive.Game.Referee 
+                        if (!pAlive.Game.Infected && pKiller.Game.Infected && !pAlive.Game.Referee
                             && !pKiller.Game.Referee && pKiller != pAlive
-                            && pKiller.level.name.CaselessEq(CurLevelName) 
+                            && pKiller.level.name.CaselessEq(CurLevelName)
                             && pAlive.level.name.CaselessEq(CurLevelName))
                         {
                             CheckKillerAwards(pAlive, pKiller);
@@ -240,7 +235,7 @@ namespace MCGalaxy.Games {
             foreach (Player p in players) {
                 if (p.level != CurLevel) continue;
                 CpeMessageType type = announce && p.HasCpeExt(CpeExt.MessageTypes)
-                	? CpeMessageType.Announcement : CpeMessageType.Normal;
+                    ? CpeMessageType.Announcement : CpeMessageType.Normal;
                 p.SendRawMessage(type, message);
             }
         }
@@ -293,7 +288,7 @@ namespace MCGalaxy.Games {
         }
         
         void CheckKillerAwards(Player pAlive, Player pKiller) {
-            if (pAlive.IsAfk) 
+            if (pAlive.IsAfk)
                 ZombieAwards.Give(pKiller, ZombieAwards.afkKiller, this);
             if (pAlive.Game.Invisible)
                 ZombieAwards.Give(pKiller, ZombieAwards.killInvisHuman, this);
@@ -316,7 +311,7 @@ namespace MCGalaxy.Games {
             CurLevel.ChatLevel(String.Format(text,
                                              Colors.red + pKiller.DisplayName + Colors.yellow,
                                              Colors.red + pAlive.DisplayName + Colors.yellow));
-        }        
+        }
 
         static void UpdatePlayerColor(Player p, string color) {
             if (p.Game.lastSpawnColor == color) return;
@@ -363,7 +358,7 @@ namespace MCGalaxy.Games {
                         ZombieAwards.Give(pl, ZombieAwards.lowWinChance, this);
                     if (pl.Game.RevivesUsed > 0)
                         ZombieAwards.Give(pl, ZombieAwards.reviveSurvive, this);
-                   
+                    
                     pl.Game.CurrentRoundsSurvived++;
                     if (pl.Game.CurrentRoundsSurvived == 5)
                         ZombieAwards.Give(pl, ZombieAwards.survive5Rounds, this);
@@ -422,12 +417,12 @@ namespace MCGalaxy.Games {
             Player winner = online[0];
             if (online.Count == 1) {
                 winner.SendMessage("Your money was refunded as you were " +
-                                      "the only player still in the lottery.");
+                                   "the only player still in the lottery.");
             } else {
                 Random rand = new Random();
                 winner = online[rand.Next(online.Count)];
                 amount = 9 * online.Count;
-                CurLevel.ChatLevel(winner.ColoredName + " %Swon the lottery for &6" 
+                CurLevel.ChatLevel(winner.ColoredName + " %Swon the lottery for &6"
                                    + amount + " " + Server.moneys);
             }
             Lottery.Clear();
@@ -462,15 +457,9 @@ namespace MCGalaxy.Games {
             if (QueuedLevel != null) { ChangeLevel(QueuedLevel); return; }
             if (!ChangeLevels) return;
             
-            try
-            {
-                bool useLevelList = LevelList.Count > 0;
+            try {
                 List<string> levels = GetCandidateLevels();
-                foreach (string ignore in IgnoredLevelList)
-                    levels.Remove(ignore);
-                
-                if (levels.Count <= 2 && !useLevelList) { Server.s.Log("You must have more than 2 levels to change levels in Zombie Survival"); return; }
-                if (levels.Count <= 2 && useLevelList) { Server.s.Log("You must have more than 2 levels in your level list to change levels in Zombie Survival"); return; }
+                if (levels == null) return;
 
                 string picked1 = "", picked2 = "";
                 Random r = new Random();
@@ -493,16 +482,14 @@ namespace MCGalaxy.Games {
                 lastLevel1 = picked1; lastLevel2 = picked2;
                 if (!Running || Status == ZombieGameStatus.LastRound) return;
 
-                if (initialChangeLevel) {
-                    Server.votingforlevel = true;
-                    Player[] players = PlayerInfo.Online.Items;
-                    foreach (Player pl in players) {
-                        if (pl.level != CurLevel) continue;
-                        SendVoteMessage(pl, picked1, picked2);
-                    }
-                    System.Threading.Thread.Sleep(15000);
-                    Server.votingforlevel = false;
-                } else { Level1Vote = 1; Level2Vote = 0; Level3Vote = 0; }
+                Server.votingforlevel = true;
+                Player[] players = PlayerInfo.Online.Items;
+                foreach (Player pl in players) {
+                    if (pl.level != CurLevel) continue;
+                    SendVoteMessage(pl, picked1, picked2);
+                }
+                System.Threading.Thread.Sleep(15000);
+                Server.votingforlevel = false;
 
                 if (!Running || Status == ZombieGameStatus.LastRound) return;
                 MoveToNextLevel(r, levels, picked1, picked2);
@@ -539,18 +526,30 @@ namespace MCGalaxy.Games {
         }
         
         List<string> GetCandidateLevels() {
-            if (LevelList.Count > 0) return LevelList;           
-            List<string> maps = new List<string>();
+            List<string> maps = LevelList.Count > 0 ? LevelList : GetAllMaps();
+            foreach (string ignore in IgnoredLevelList)
+                maps.Remove(ignore);
             
+            bool useLevelList = LevelList.Count > 0;
+            if (maps.Count <= 2 && !useLevelList) { 
+                Server.s.Log("You must have more than 2 levels to change levels in Zombie Survival"); return null; }
+            if (maps.Count <= 2 && useLevelList) { 
+                Server.s.Log("You must have more than 2 levels in your level list to change levels in Zombie Survival"); return null; }
+            return maps;
+        }
+        
+        static List<string> GetAllMaps() {
+            List<string> maps = new List<string>();
             string[] files = Directory.GetFiles("levels", "*.lvl");
             foreach (string file in files) {
-                string mapName = Path.GetFileNameWithoutExtension(file);
-                if (mapName.IndexOf('+') >= 0 && IgnorePersonalWorlds) 
+                string name = Path.GetFileNameWithoutExtension(file);
+                if (name.IndexOf('+') >= 0 && IgnorePersonalWorlds)
                     continue;
-                maps.Add(mapName);
+                maps.Add(name);
             }
             return maps;
         }
+        
         
         void SendVoteMessage(Player p, string lvl1, string lvl2) {
             const string line1 = "&eLevel vote - type &a1&e, &c2&e or &93";
