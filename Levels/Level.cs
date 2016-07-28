@@ -109,6 +109,15 @@ namespace MCGalaxy {
                 CustomBlocks = null;
             }
         }
+        
+        public bool CanUseHacks(Player p) {
+             bool serverMotd = p.level == Server.mainLevel || motd == "ignore";
+             string realMotd = serverMotd ? Server.motd : motd;
+             bool noHacks = realMotd.Contains("-hax") || ctfmode || CurrentGame() != null;
+             if (noHacks && p.Rank >= LevelPermission.Operator && realMotd.Contains("+ophax"))
+                 return true;
+             return noHacks;
+        }
 
         /// <summary> Whether block changes made on this level should be 
         /// saved to the BlockDB and .lvl files. </summary>

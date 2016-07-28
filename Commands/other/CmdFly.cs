@@ -28,13 +28,8 @@ namespace MCGalaxy.Commands {
         public CmdFly() { }
 
         public override void Use(Player p, string message) {
-            bool serverMotd = p.level == Server.mainLevel || p.level.motd == "ignore";
-            string motd = serverMotd ? Server.motd : p.level.motd;
-            bool noFly = motd.Contains("-hax") || p.level.ctfmode || p.level.CurrentGame() != null;
-            if (noFly && p.Rank >= LevelPermission.Operator && motd.Contains("+ophax"))
-                noFly = false;
-            
-            if (noFly) {
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
+            if (!p.level.CanUseHacks(p)) {
                 Player.Message(p, "You cannot use /fly on this map.");
                 p.isFlying = false; return;
             }

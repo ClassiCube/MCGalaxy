@@ -27,6 +27,10 @@ namespace MCGalaxy.Commands {
         public CmdAscend() { }
 
         public override void Use(Player p, string message) {
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
+            if (!p.level.CanUseHacks(p)) {
+                Player.Message(p, "You cannot use /ascend on this map."); return;
+            }
             ushort x = (ushort)(p.pos[0] / 32), y = (ushort)(p.pos[1] / 32), z = (ushort)(p.pos[2] / 32);
             
             while (y < p.level.Height) {
@@ -52,8 +56,11 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
+         	string name = Group.findPerm(LevelPermission.Operator).ColoredName;
             Player.Message(p, "%T/ascend");
             Player.Message(p, "%HTeleports you to the first free space above you.");
+            Player.Message(p, "%H  Does not work on maps which have -hax in their motd. " +
+                           "(unless you are {0}%H+ and the motd also has +ophax)", name);
         }
     }
 }

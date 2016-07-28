@@ -373,11 +373,8 @@ namespace MCGalaxy {
             if (OnSettingsUpdate != null) OnSettingsUpdate();
         }
 
-        public static string FindColor(string Username) {
-            foreach (Group grp in Group.GroupList.Where(grp => grp.playerList.Contains(Username))) {
-                return grp.color;
-            }
-            return Group.standard.color;
+        public static string FindColor(string name) {
+            return Group.findPlayerGroup(name).color;
         }
     }
 }

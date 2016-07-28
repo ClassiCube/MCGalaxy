@@ -30,15 +30,10 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             Player[] infected = Server.zombie.Infected.Items;
-            if (infected.Length == 0) {
-                Player.Message(p, "No one is infected"); return;
-            }
+            if (infected.Length == 0) { Player.Message(p, "No one is infected"); return; }
             
-            Player.Message(p, "Players who are " + Colors.red + "infected %Sare:");
-            string list = "";
-            foreach (Player pl in infected)
-                list = list + Colors.red + pl.DisplayName + "%S, ";
-            Player.Message(p, list);
+            Player.Message(p, "Players who are &cinfected %Sare:");
+            Player.Message(p, infected.Join(pl => "&c" + pl.DisplayName + "%S"));
         }
         
         public override void Help(Player p) {

@@ -25,6 +25,10 @@ namespace MCGalaxy.Commands {
         public CmdDescend() { }
 
         public override void Use(Player p, string message) {
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
+            if (!p.level.CanUseHacks(p)) {
+                Player.Message(p, "You cannot use /descend on this map."); return;
+            }
             if (p.pos[1] < 51 + 4) { Player.Message(p, "No free spaces found below you."); return; }
         	// Move starting position down half a block since players are a little bit above the ground.
         	ushort x = (ushort)(p.pos[0] / 32), y = (ushort)((p.pos[1] - 51 - 4) / 32), z = (ushort)(p.pos[2] / 32);
@@ -54,6 +58,8 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/descend");
             Player.Message(p, "%HTeleports you to the first free space below you.");
+            Player.Message(p, "%H  Does not work on maps which have -hax in their motd. " +
+                           "(unless you are {0}%H+ and the motd also has +ophax)", name);
         }
     }
 }
