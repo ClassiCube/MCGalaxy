@@ -21,7 +21,7 @@ using System.IO;
 using System.Text;
 
 namespace MCGalaxy {
-    public sealed class PlayerList {          
+    public sealed class PlayerList {
         string path;
         List<string> players = new List<string>();
         readonly object locker = new object();
@@ -57,6 +57,13 @@ namespace MCGalaxy {
                 int idx = players.IndexOf(p);
                 if (idx >= 0) return;
                 players.Add(p);
+            }
+        }
+        
+        public string FindMatches(Player p, string name, string type, out int matches) {
+            lock (locker) {
+                return Extensions.FindMatches<string>(p, name, out matches, players,
+                                                      n => true, n => n, type, 20);
             }
         }
         

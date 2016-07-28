@@ -382,7 +382,8 @@ namespace MCGalaxy {
                 object locker = ThreadSafeCache.DBCache.Get(name);
                 lock (locker) {
                     LevelDB.LoadZones(level, name);
-                    LevelDB.LoadMetadata(level, name);
+                    LevelDB.LoadPortals(level, name);
+                    LevelDB.LoadMessages(level, name);
                 }
 
                 Server.s.Log(string.Format("Level \"{0}\" loaded.", level.name));
