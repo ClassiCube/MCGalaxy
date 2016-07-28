@@ -392,9 +392,12 @@ namespace MCGalaxy {
             byte* convCPE = stackalloc byte[256];
             for (int i = 0; i < 256; i++)
                 conv[i] = Block.Convert((byte)i);
+            
             if (!hasCustomBlocks) {
-                for (int i = 0; i < 256; i++)
+            	for (int i = 0; i < 256; i++) {
                     convCPE[i] = Block.ConvertCPE((byte)i);
+                    conv[i] = Block.ConvertCPE(conv[i]);
+            	}
             }
             
             using (GZipStream compressor = new GZipStream(dst, CompressionMode.Compress, true)) {
@@ -425,7 +428,7 @@ namespace MCGalaxy {
                             block = hasBlockDefs ? level.GetExtTile(i) : level.GetFallbackExtTile(i);
                             buffer[bIndex] = convCPE[block];
                         } else {
-                            buffer[bIndex] = convCPE[conv[block]];
+                            buffer[bIndex] = conv[block];
                         }
                         
                         bIndex++;
