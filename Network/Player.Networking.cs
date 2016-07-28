@@ -532,7 +532,7 @@ namespace MCGalaxy {
             } else if (hasCustomBlocks) {
                 buffer[7] = Block.Convert(block);
             } else {
-                buffer[7] = Block.Convert(Block.ConvertCPE(block));
+                buffer[7] = Block.ConvertCPE(Block.Convert(block));
             }
             SendRaw(buffer);
         }

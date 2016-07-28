@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands {
     public sealed class CmdUnban : Command {
         public override string name { get { return "unban"; } }
         public override string shortcut { get { return ""; } }
@@ -37,7 +37,8 @@ namespace MCGalaxy.Commands {
         void Unban(Player p, string name, Player who, string reason) {
             string srcFull = p == null ? "(console)" : p.ColoredName + "%S";
             string src = p == null ? "(console)" : p.name;
-            
+            Group banned = Group.findPerm(LevelPermission.Banned);
+
             // Check tempbans first
             foreach (Server.TempBan tban in Server.tempBans) {
                 if (!tban.name.CaselessEq(name)) continue;
@@ -46,14 +47,19 @@ namespace MCGalaxy.Commands {
                 Player.GlobalMessage(name + " had their temporary ban lifted by " + srcFull + ".");
                 Server.s.Log("UNBANNED: " + name + " by " + src);
                 Server.IRC.Say(name + " was unbanned by " + src + ".");
+                
+                if (banned.playerList.Contains(name))
+                    UnbanPlayer(p, name, src, srcFull, reason);
                 return;
-            }
+            }            
             
-            Group banned = Group.findPerm(LevelPermission.Banned);
             int matches = 0;
             name = banned.playerList.FindMatches(p, name, "banned players", out matches);
             if (name == null) return;
-            
+            UnbanPlayer(p, name, src, srcFull, reason);
+        }
+        
+        static void UnbanPlayer(Player p, string name, string src, string srcFull, string reason) {
             Player.GlobalMessage(name + " was &8(unbanned) %Sby " + srcFull + ".");
             Server.s.Log("UNBANNED: " + name + " by " + src);
             Server.IRC.Say(name + " was unbanned by " + src + ".");
@@ -62,10 +68,11 @@ namespace MCGalaxy.Commands {
             Group.findPerm(LevelPermission.Banned).playerList.Remove(name);
             Group.findPerm(LevelPermission.Banned).playerList.Save();
             
+            Player who = PlayerInfo.Find(name);
             if (who != null) {
                 who.group = Group.standard; who.color = who.group.color;
-                Entities.GlobalDespawn(who, false);
-                Entities.GlobalSpawn(who, false);
+                Entities.GlobalDespawn(who, true);
+                Entities.GlobalSpawn(who, true);
             }
             
             string ip = PlayerInfo.FindIP(name);
