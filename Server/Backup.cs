@@ -96,8 +96,8 @@ namespace MCGalaxy {
                 
                 try {
                     PackagePart part = package.CreatePart(loc, "");
-                    using (Stream stream = new FileStream("./" + file, FileMode.Open, FileAccess.Read))
-                        CopyStream(stream, part.GetStream());
+                    using (Stream src = new FileStream("./" + file, FileMode.Open, FileAccess.Read))
+                        CopyStream(src, part.GetStream());
                 } catch (Exception ex) {
                     Server.s.Log("Failed to save file: " + file);
                     Server.ErrorLog(ex);
@@ -124,31 +124,44 @@ namespace MCGalaxy {
 
         public static void ExtractPackage(object p) {
             int errors = 0;
-            using (ZipPackage zip = (ZipPackage)ZipPackage.Open(File.OpenRead(path)))  {
-                PackagePartCollection pc = zip.GetParts();
-                foreach (ZipPackagePart item in pc) {
-                    try {
-                        CopyStream(item.GetStream(), File.Create("./" + Uri.UnescapeDataString(item.Uri.ToString())));
-                    } catch {
-                        try {
-                            Directory.CreateDirectory("./" + item.Uri.ToString().Substring(0, item.Uri.ToString().LastIndexOfAny("\\/".ToCharArray())));
-                            CopyStream(item.GetStream(), File.Create("./" + Uri.UnescapeDataString(item.Uri.ToString())));
-                        } catch (IOException e) {
-                            Server.ErrorLog(e);
-                            Server.s.Log("Caught ignoreable Error. See log for more details. Will continue with rest of files.");
-                            errors++;
-                        }
-                    }
-                    
-                    // To make life easier, we reload settings now, to maker it less likely to need restart
-                    Command.all.Find("server").Use(null, "reload"); //Reload, as console
-                    if (item.Uri.ToString().ToLower().Contains("sql.sql"))
-                    { // If it's in there, they backed it up, meaning they want it restored
+            using (FileStream src = File.OpenRead(path))
+                using (ZipPackage zip = (ZipPackage)ZipPackage.Open(src))
+            {
+                PackagePartCollection parts = zip.GetParts();
+                foreach (ZipPackagePart item in parts) {
+                	ExtractItem(item, ref errors);
+                    if (item.Uri.ToString().ToLower().Contains("sql.sql")) {
+                        // If it's in there, they backed it up, meaning they want it restored
                         Backup.fillDatabase(item.GetStream());
                     }
                 }
             }
+            
+            // To make life easier, we reload settings now, to maker it less likely to need restart
+            Command.all.Find("server").Use(null, "reload"); // Reload, as console
             Player.Message((Player)p, "Server restored" + (errors > 0 ? " with errors.  May be a partial restore" : "") + ".  Restart is reccommended, though not required.");
+        }
+        
+        static void ExtractItem(ZipPackagePart item, ref int errors) {
+            string entry = item.Uri.ToString();
+            string file = "./" + Uri.UnescapeDataString(entry);
+            
+            using (Stream src = item.GetStream()) {
+                try {
+                    using (Stream dst = File.Create(file))
+                        CopyStream(src, dst);
+                } catch {
+                    try {
+                        Directory.CreateDirectory("./" + entry.Substring(0, entry.LastIndexOfAny("\\/".ToCharArray())));
+                        using (Stream dst = File.Create(file))
+                            CopyStream(src, dst);
+                    } catch (IOException e) {
+                        Server.ErrorLog(e);
+                        Server.s.Log("Caught ignoreable Error. See log for more details. Will continue with rest of files.");
+                        errors++;
+                    }
+                }
+            }
         }
     }
 }
