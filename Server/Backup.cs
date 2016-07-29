@@ -68,13 +68,15 @@ namespace MCGalaxy {
             Server.s.Log("Server backed up!");
         }
 
+        const string undo1 = "extra/undo/", undo2 = @"extra\undo\";
+        const string prev1 = "extra/undoPrevious/", prev2 = @"extra\undoPrevious\";
         static List<Uri> GetAllFiles(DirectoryInfo dir, Uri baseUri, bool lite) {
             List<Uri> list = new List<Uri>();
             foreach (FileSystemInfo entry in dir.GetFileSystemInfos()) {
                 if (entry is FileInfo) {
                     string path = ((FileInfo)entry).FullName;
-                    if (lite && path.Contains("extra/undo/")) continue;
-                    if (lite && path.Contains("extra/undoPrevious")) continue;
+                    if (lite && (path.Contains(undo1) || path.Contains(undo2))) continue;
+                    if (lite && (path.Contains(prev1) || path.Contains(prev2))) continue;
                     
                     // Make a relative URI
                     Uri uri = baseUri.MakeRelativeUri(new Uri(path));

@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy {    
+namespace MCGalaxy {
     public static partial class Backup {
         
         public static void BackupDatabase(StreamWriter sql, bool lite) {
@@ -38,27 +38,25 @@ namespace MCGalaxy {
             sql.WriteLine("-- http://mcgalaxy.ml");
             sql.WriteLine("--");
             sql.WriteLine("-- Host: {0}", Server.MySQLHost);
-            sql.WriteLine("-- Generation Time: {0} at {1}", DateTime.Now.Date, DateTime.Now.TimeOfDay);
+            sql.WriteLine("-- Generation Time: {0:d} at {0:HH:mm:ss}", DateTime.Now, DateTime.Now);
             sql.WriteLine("-- MCGalaxy Version: {0}", Server.Version);
             sql.WriteLine();
             sql.WriteLine();
 
             List<string> sqlTables = GetTables();
             foreach (string name in sqlTables) {
-            	if (lite && name.CaselessStarts("Block")) continue;
+                if (lite && name.CaselessStarts("Block")) continue;
                 BackupTable(name, sql);
             }
         }
         
         public static void BackupTable(string tableName, StreamWriter sql) {
             //For each table, we iterate through all rows, (and save them)
-            sql.WriteLine("-- --------------------------------------------------------");
             sql.WriteLine();
-            sql.WriteLine("--");
+            sql.WriteLine("-- --------------------------------------------------------");      
             sql.WriteLine("-- Table structure for table `{0}`", tableName);
-            sql.WriteLine("--");
             sql.WriteLine();
-            List<string[]> tableSchema = WriteTableSchema(tableName, sql);
+            List<string[]> schema = WriteTableSchema(tableName, sql);
             
             using (DataTable data = Database.Fill("SELECT * FROM `" + tableName + "`")) {
                 if (data.Rows.Count == 0) {
@@ -78,9 +76,9 @@ namespace MCGalaxy {
                 foreach (DataRow row in data.Rows) { //We rely on the correct datatype being given here.
                     sql.WriteLine();
                     sql.Write("INSERT INTO `{0}` (`", tableName);
-                    foreach (string[] rParams in tableSchema) {
+                    foreach (string[] rParams in schema) {
                         sql.Write(rParams[0]);
-                        sql.Write((tableSchema[tableSchema.Count - 1].Equals(rParams) ? "`) VALUES" : "`, `"));
+                        sql.Write((schema[schema.Count - 1].Equals(rParams) ? "`) VALUES" : "`, `"));
                     }
 
                     sql.WriteLine();
@@ -217,44 +215,9 @@ namespace MCGalaxy {
                 foreach (string cmd in cmds) {
                     string newCmd = cmd.Trim(" \r\n\t".ToCharArray());
                     int index = newCmd.ToUpper().IndexOf("CREATE TABLE");
-                    if (index > -1) {
-                        newCmd = newCmd.Remove(0, index);
-                        //Do we have a primary key?
-                        try
-                        {
-                            if (Server.useMySQL)
-                            {
-                                int priIndex = newCmd.ToUpper().IndexOf(" PRIMARY KEY AUTOINCREMENT");
-                                int priCount = " PRIMARY KEY AUTOINCREMENT".Length;
-                                int attIdx = newCmd.Substring(0, newCmd.Substring(0, priIndex - 1).LastIndexOfAny("` \n".ToCharArray())).LastIndexOfAny("` \n".ToCharArray()) + 1;
-                                int attIdxEnd = newCmd.IndexOfAny("` \n".ToCharArray(), attIdx) - 1;
-                                string attName = newCmd.Substring(attIdx, attIdxEnd - attIdx + 1).Trim(' ', '\n', '`', '\r');
-                                //For speed, we just delete this, and add it to the attribute name, then delete the auto_increment clause.
-                                newCmd = newCmd.Remove(priIndex, priCount);
-                                newCmd = newCmd.Insert(newCmd.LastIndexOf(")"), ", PRIMARY KEY (`" + attName + "`)");
-                                newCmd = newCmd.Insert(newCmd.IndexOf(',', priIndex), " AUTO_INCREMENT");
-
-                            }
-                            else
-                            {
-                                int priIndex = newCmd.ToUpper().IndexOf(",\r\nPRIMARY KEY");
-                                int priIndexEnd = newCmd.ToUpper().IndexOf(')', priIndex);
-                                int attIdx = newCmd.IndexOf("(", priIndex) + 1;
-                                int attIdxEnd = priIndexEnd - 1;
-                                string attName = newCmd.Substring(attIdx, attIdxEnd - attIdx + 1);
-                                newCmd = newCmd.Remove(priIndex, priIndexEnd - priIndex + 1);
-                                int start = newCmd.IndexOf(attName) + attName.Length;
-                                int end = newCmd.IndexOf(',');
-                                newCmd = newCmd.Remove(start, end - start);
-                                newCmd = newCmd.Insert(newCmd.IndexOf(attName) + attName.Length, " INTEGER PRIMARY KEY AUTOINCREMENT");
-                                newCmd = newCmd.Replace(" auto_increment", "").Replace(" AUTO_INCREMENT", "").Replace("True", "1").Replace("False", "0");
-                            }
-                        }
-                        catch (ArgumentOutOfRangeException) { } // If we don't, just ignore it.
-                    }
+                    if (index > -1) ParseCreate(ref newCmd, index);
                     //Run the command in the transaction.
                     helper.Execute(newCmd.Replace(" unsigned", "").Replace(" UNSIGNED", "") + ";");
-                    //                        sb.Append(newCmd).Append(";\n");
                 }
                 helper.Commit();
             }
@@ -263,6 +226,38 @@ namespace MCGalaxy {
             //AUTOINCREMENT is changed to AUTO_INCREMENT for SQLite -> MySQL
             // All we should have in the script file is CREATE TABLE and INSERT INTO commands.
             //executeQuery(sb.ToString().Replace(" unsigned", "").Replace(" UNSIGNED", ""));
+        }
+        
+        static void ParseCreate(ref string newCmd, int index) {
+            newCmd = newCmd.Remove(0, index);
+            //Do we have a primary key?
+            try {
+                if (Server.useMySQL) {
+                    int priIndex = newCmd.ToUpper().IndexOf(" PRIMARY KEY AUTOINCREMENT");
+                    int priCount = " PRIMARY KEY AUTOINCREMENT".Length;
+                    int attIdx = newCmd.Substring(0, newCmd.Substring(0, priIndex - 1).LastIndexOfAny("` \n".ToCharArray())).LastIndexOfAny("` \n".ToCharArray()) + 1;
+                    int attIdxEnd = newCmd.IndexOfAny("` \n".ToCharArray(), attIdx) - 1;
+                    string attName = newCmd.Substring(attIdx, attIdxEnd - attIdx + 1).Trim(' ', '\n', '`', '\r');
+                    
+                    //For speed, we just delete this, and add it to the attribute name, then delete the auto_increment clause.
+                    newCmd = newCmd.Remove(priIndex, priCount);
+                    newCmd = newCmd.Insert(newCmd.LastIndexOf(")"), ", PRIMARY KEY (`" + attName + "`)");
+                    newCmd = newCmd.Insert(newCmd.IndexOf(',', priIndex), " AUTO_INCREMENT");
+                } else {
+                    int priIndex = newCmd.ToUpper().IndexOf(",\r\nPRIMARY KEY");
+                    int priIndexEnd = newCmd.ToUpper().IndexOf(')', priIndex);
+                    int attIdx = newCmd.IndexOf("(", priIndex) + 1;
+                    int attIdxEnd = priIndexEnd - 1;
+                    string attName = newCmd.Substring(attIdx, attIdxEnd - attIdx + 1);
+                    newCmd = newCmd.Remove(priIndex, priIndexEnd - priIndex + 1);
+                    int start = newCmd.IndexOf(attName) + attName.Length;
+                    int end = newCmd.IndexOf(',');
+                    newCmd = newCmd.Remove(start, end - start);
+                    newCmd = newCmd.Insert(newCmd.IndexOf(attName) + attName.Length, " INTEGER PRIMARY KEY AUTOINCREMENT");
+                    newCmd = newCmd.Replace(" auto_increment", "").Replace(" AUTO_INCREMENT", "").Replace("True", "1").Replace("False", "0");
+                }
+            }
+            catch (ArgumentOutOfRangeException) { } // If we don't, just ignore it.
         }
     }
 }
