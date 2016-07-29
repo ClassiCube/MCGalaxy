@@ -53,7 +53,7 @@ namespace MCGalaxy {
         public static void BackupTable(string tableName, StreamWriter sql) {
             //For each table, we iterate through all rows, (and save them)
             sql.WriteLine();
-            sql.WriteLine("-- --------------------------------------------------------");      
+            sql.WriteLine("-- --------------------------------------------------------");
             sql.WriteLine("-- Table structure for table `{0}`", tableName);
             sql.WriteLine();
             List<string[]> schema = WriteTableSchema(tableName, sql);
@@ -205,22 +205,25 @@ namespace MCGalaxy {
             List<string> tables = GetTables();
             foreach (string name in tables)
                 Database.Execute("DROP TABLE `" + name + "`");
-            
-            //Make new
-            string script = new StreamReader(stream).ReadToEnd();
-            string[] cmds = script.Split(';');
-            StringBuilder sb = new StringBuilder();
 
-            using (BulkTransaction helper = BulkTransaction.Create()) {
-                foreach (string cmd in cmds) {
-                    string newCmd = cmd.Trim(" \r\n\t".ToCharArray());
-                    int index = newCmd.ToUpper().IndexOf("CREATE TABLE");
-                    if (index > -1) ParseCreate(ref newCmd, index);
+            // Import data
+            using (StreamReader reader = new StreamReader(stream))
+                using (BulkTransaction helper = BulkTransaction.Create())
+            {
+                List<string> buffer = new List<string>();
+                while (!reader.EndOfStream) {
+                    string cmd = NextStatement(reader, buffer);
+                    if (cmd == null || cmd.Length == 0) continue;
+                    
+                    int index = cmd.ToUpper().IndexOf("CREATE TABLE");
+                    if (index > -1) ParseCreate(ref cmd, index);
+                    
                     //Run the command in the transaction.
-                    helper.Execute(newCmd.Replace(" unsigned", "").Replace(" UNSIGNED", "") + ";");
+                    helper.Execute(cmd.Replace(" unsigned", "").Replace(" UNSIGNED", ""));
                 }
                 helper.Commit();
             }
+            
             //Not sure if order matters.
             //AUTO_INCREMENT is changed to AUTOINCREMENT for MySQL -> SQLite
             //AUTOINCREMENT is changed to AUTO_INCREMENT for SQLite -> MySQL
@@ -228,33 +231,48 @@ namespace MCGalaxy {
             //executeQuery(sb.ToString().Replace(" unsigned", "").Replace(" UNSIGNED", ""));
         }
         
-        static void ParseCreate(ref string newCmd, int index) {
-            newCmd = newCmd.Remove(0, index);
+        static string NextStatement(StreamReader reader, List<string> buffer) {
+            buffer.Clear();
+            string line = null;
+            
+            while ((line = reader.ReadLine()) != null) {
+                if (line.StartsWith("--")) continue; // comment
+                line = line.Trim();
+                if (line.Length == 0) continue; // whitespace
+                
+                buffer.Add(line);
+                if (line.EndsWith(";")) break;
+            }
+            return buffer.Join("");
+        }
+        
+        static void ParseCreate(ref string cmd, int index) {
+            cmd = cmd.Remove(0, index);
             //Do we have a primary key?
             try {
                 if (Server.useMySQL) {
-                    int priIndex = newCmd.ToUpper().IndexOf(" PRIMARY KEY AUTOINCREMENT");
+                    int priIndex = cmd.ToUpper().IndexOf(" PRIMARY KEY AUTOINCREMENT");
                     int priCount = " PRIMARY KEY AUTOINCREMENT".Length;
-                    int attIdx = newCmd.Substring(0, newCmd.Substring(0, priIndex - 1).LastIndexOfAny("` \n".ToCharArray())).LastIndexOfAny("` \n".ToCharArray()) + 1;
-                    int attIdxEnd = newCmd.IndexOfAny("` \n".ToCharArray(), attIdx) - 1;
-                    string attName = newCmd.Substring(attIdx, attIdxEnd - attIdx + 1).Trim(' ', '\n', '`', '\r');
+                    int attIdx = cmd.Substring(0, cmd.Substring(0, priIndex - 1).LastIndexOfAny("` \n".ToCharArray())).LastIndexOfAny("` \n".ToCharArray()) + 1;
+                    int attIdxEnd = cmd.IndexOfAny("` \n".ToCharArray(), attIdx) - 1;
+                    string attName = cmd.Substring(attIdx, attIdxEnd - attIdx + 1).Trim(' ', '\n', '`', '\r');
                     
                     //For speed, we just delete this, and add it to the attribute name, then delete the auto_increment clause.
-                    newCmd = newCmd.Remove(priIndex, priCount);
-                    newCmd = newCmd.Insert(newCmd.LastIndexOf(")"), ", PRIMARY KEY (`" + attName + "`)");
-                    newCmd = newCmd.Insert(newCmd.IndexOf(',', priIndex), " AUTO_INCREMENT");
+                    cmd = cmd.Remove(priIndex, priCount);
+                    cmd = cmd.Insert(cmd.LastIndexOf(")"), ", PRIMARY KEY (`" + attName + "`)");
+                    cmd = cmd.Insert(cmd.IndexOf(',', priIndex), " AUTO_INCREMENT");
                 } else {
-                    int priIndex = newCmd.ToUpper().IndexOf(",\r\nPRIMARY KEY");
-                    int priIndexEnd = newCmd.ToUpper().IndexOf(')', priIndex);
-                    int attIdx = newCmd.IndexOf("(", priIndex) + 1;
+                    int priIndex = cmd.ToUpper().IndexOf(",\r\nPRIMARY KEY");
+                    int priIndexEnd = cmd.ToUpper().IndexOf(')', priIndex);
+                    int attIdx = cmd.IndexOf("(", priIndex) + 1;
                     int attIdxEnd = priIndexEnd - 1;
-                    string attName = newCmd.Substring(attIdx, attIdxEnd - attIdx + 1);
-                    newCmd = newCmd.Remove(priIndex, priIndexEnd - priIndex + 1);
-                    int start = newCmd.IndexOf(attName) + attName.Length;
-                    int end = newCmd.IndexOf(',');
-                    newCmd = newCmd.Remove(start, end - start);
-                    newCmd = newCmd.Insert(newCmd.IndexOf(attName) + attName.Length, " INTEGER PRIMARY KEY AUTOINCREMENT");
-                    newCmd = newCmd.Replace(" auto_increment", "").Replace(" AUTO_INCREMENT", "").Replace("True", "1").Replace("False", "0");
+                    string attName = cmd.Substring(attIdx, attIdxEnd - attIdx + 1);
+                    cmd = cmd.Remove(priIndex, priIndexEnd - priIndex + 1);
+                    int start = cmd.IndexOf(attName) + attName.Length;
+                    int end = cmd.IndexOf(',');
+                    cmd = cmd.Remove(start, end - start);
+                    cmd = cmd.Insert(cmd.IndexOf(attName) + attName.Length, " INTEGER PRIMARY KEY AUTOINCREMENT");
+                    cmd = cmd.Replace(" auto_increment", "").Replace(" AUTO_INCREMENT", "").Replace("True", "1").Replace("False", "0");
                 }
             }
             catch (ArgumentOutOfRangeException) { } // If we don't, just ignore it.

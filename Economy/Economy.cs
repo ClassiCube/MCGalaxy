@@ -31,14 +31,14 @@ namespace MCGalaxy {
         
         const string createTable =
             @"CREATE TABLE if not exists Economy (
-                player      VARCHAR(20),
-                money       INT UNSIGNED,
-                total       INT UNSIGNED NOT NULL DEFAULT 0,
-                purchase    VARCHAR(255) NOT NULL DEFAULT '%cNone',
-                payment     VARCHAR(255) NOT NULL DEFAULT '%cNone',
-                salary      VARCHAR(255) NOT NULL DEFAULT '%cNone',
-                fine        VARCHAR(255) NOT NULL DEFAULT '%cNone',
-                PRIMARY KEY(player)
+player      VARCHAR(20),
+money       INT UNSIGNED,
+total       INT UNSIGNED NOT NULL DEFAULT 0,
+purchase    VARCHAR(255) NOT NULL DEFAULT '%cNone',
+payment     VARCHAR(255) NOT NULL DEFAULT '%cNone',
+salary      VARCHAR(255) NOT NULL DEFAULT '%cNone',
+fine        VARCHAR(255) NOT NULL DEFAULT '%cNone',
+PRIMARY KEY(player)
             );";
 
         public struct EcoStats {
