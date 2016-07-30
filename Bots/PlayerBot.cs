@@ -155,7 +155,9 @@ namespace MCGalaxy {
         
         void UpdatePosition() {
             if (movement) {
-                for (int i = 0; i < movementSpeed; i++)
+                double scale = Math.Ceiling(Server.updateTimer.Interval / 25.0);
+                int steps = movementSpeed * (int)scale;
+                for (int i = 0; i < steps; i++)
                     DoMove();
             }
             
