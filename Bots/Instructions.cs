@@ -26,7 +26,7 @@ namespace MCGalaxy.Bots {
             new Dictionary<string, Func<PlayerBot, bool>>{
             { "walk", DoWalk }, { "teleport", DoTeleport }, { "wait", DoWait },
             { "nod", DoNod }, { "spin", DoSpin }, { "speed", DoSpeed },
-            { "jump", DoJump }, { "reset", DoReset }, { "remove", DoRemove },
+            { "reset", DoReset }, { "remove", DoRemove }, { "jump", DoJump }, 
             { "linkscript", DoLinkscript },
         };
         
@@ -120,18 +120,7 @@ namespace MCGalaxy.Bots {
         }
         
         static bool DoJump(PlayerBot bot) {
-            bot.jumpTimer.Elapsed += delegate {
-                bot.currentjump++;
-                switch (bot.currentjump) {
-                    case 1:
-                    case 2: bot.pos[1] += 24; break;
-                    case 3: break;
-                    case 4: bot.pos[1] -= 24; break;
-                    case 5: bot.pos[1] -= 24; bot.jumping = false; bot.currentjump = 0; bot.jumpTimer.Stop(); break;
-                }
-            };
-            
-            bot.jumpTimer.Start();
+            bot.jumping = true;
             bot.NextInstruction();
             return false;
         }

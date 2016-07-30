@@ -148,8 +148,9 @@ namespace MCGalaxy.Commands
             Player.Message(p, "%T/botai del [name] last%H- deletes last instruction of that AI");
             Player.Message(p, "%T/botai info [name] %H- prints list of instructions that AI has");
             Player.Message(p, "%T/botai add [name] [instruction] <args>");
-            Player.Message(p, "%HInstructions: %Swalk, teleport, wait, nod, speed, " +
-                           "spin, reset, remove, reverse, linkscript, jump");
+            
+            var instructions = Instructions.Defined.Keys;
+            Player.Message(p, "%HInstructions: %S{0}, reverse", instructions.Join());
             Player.Message(p, "%HTo see extended help, type %T/help botai [instruction]");
             Player.Message(p, "%Hwait, nod, spin %S- optional arg specifies '0.1 seconds'");
             Player.Message(p, "%Hnod, spin %S- optional second arg specifies 'speed'");

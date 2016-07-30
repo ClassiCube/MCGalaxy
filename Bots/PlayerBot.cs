@@ -52,7 +52,6 @@ namespace MCGalaxy {
         internal int currentjump = 0;
 
         System.Timers.Timer botTimer = new System.Timers.Timer(100);
-        internal System.Timers.Timer jumpTimer = new System.Timers.Timer(95);
 
         public PlayerBot(string n, Level lvl, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             name = n;
@@ -68,8 +67,120 @@ namespace MCGalaxy {
             botTimer.Start();
         }
         
-        #region Script handling
+        public void SetPos(ushort x, ushort y, ushort z, byte rotx, byte roty) {
+            pos = new ushort[3] { x, y, z };
+            rot = new byte[2] { rotx, roty };
+        }
         
+        public static void Add(PlayerBot bot, bool save = true) {
+            Bots.Add(bot);
+            bot.GlobalSpawn();
+            
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level == bot.level)
+                    Player.Message(p, bot.color + bot.name + "%S, the bot, has been added.");
+            }
+            if (save)
+                BotsFile.UpdateBot(bot);
+        }
+
+        public static void Remove(PlayerBot bot, bool save = true) {
+            Bots.Remove(bot);
+            bot.GlobalDespawn();
+            
+            bot.botTimer.Stop();
+            bot.jumping = false;
+            if (save) BotsFile.RemoveBot(bot);
+        }
+        
+        public static void UnloadFromLevel(Level lvl) {
+            BotsFile.UnloadBots(lvl);
+            RemoveAll(lvl, false);
+        }
+        
+        public static void RemoveAllFromLevel(Level lvl) {
+            RemoveAll(lvl, true);
+            BotsFile.RemoveLevelBots(lvl.name);
+        }
+        
+        static void RemoveAll(Level lvl, bool save) {
+            PlayerBot[] bots = Bots.Items;
+            for (int i = 0; i < bots.Length; i++) {
+                PlayerBot bot = bots[i];
+                if (bots[i].level == lvl) Remove(bot, save);
+            }
+        }
+        
+
+        public void GlobalSpawn() {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level == level) Entities.Spawn(p, this);
+            }
+        }
+
+        public void GlobalDespawn() {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level == level) Entities.Despawn(p, id);
+            }
+        }
+        
+        public static void GlobalUpdatePosition() {
+            PlayerBot[] bots = Bots.Items;
+            foreach (PlayerBot b in bots) b.UpdatePosition();
+        }
+        
+        
+        public static PlayerBot Find(string name) {
+            PlayerBot match = null; int matches = 0;
+            name = name.ToLower();
+            PlayerBot[] bots = Bots.Items;
+
+            foreach (PlayerBot bot in bots) {
+                if (bot.name.ToLower() == name) return bot;
+                if (bot.name.ToLower().Contains(name)) {
+                    match = bot; matches++;
+                }
+            }
+            return matches == 1 ? match : null;
+        }
+        
+        public static PlayerBot FindMatches(Player pl, string name) {
+            int matches = 0;
+            return Extensions.FindMatches<PlayerBot>(pl, name, out matches, Bots.Items,
+                                                     b => true, b => b.name, "bots");
+        }
+        
+        void UpdatePosition() {
+            if (movement) {
+                for (int i = 0; i < movementSpeed; i++)
+                    DoMove();
+            }
+            
+            byte[] packet = Entities.GetPositionPacket(this);
+            oldpos = pos; oldrot = rot;
+            if (packet == null) return;
+
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players)
+                if (p.level == level) p.SendRaw(packet);
+        }
+
+        
+        static byte FreeId() {
+            for (byte i = 127; i >= 64; i--) {
+                foreach (PlayerBot b in playerbots) {
+                    if (b.id == i) { goto Next; }
+                } return i;
+                Next: continue;
+            }
+            return 0xFF;
+        }
+        
+        
+        // Script handling        
         void BotTimerFunc(object sender, ElapsedEventArgs e) {
             if (kill) Instructions.DoKill(this);
             movement = false;
@@ -78,12 +189,14 @@ namespace MCGalaxy {
                 if (hunt) Instructions.DoHunt(this);
             } else {
                 bool doNextInstruction = !DoInstruction();
-                if (cur == Waypoints.Count) cur = 0;
-                
-                if (!doNextInstruction) return;
-                DoInstruction();
-                if (cur == Waypoints.Count) cur = 0;
+                if (cur == Waypoints.Count) cur = 0;             
+                if (doNextInstruction) {
+                    DoInstruction();
+                    if (cur == Waypoints.Count) cur = 0;
+                }
             }
+            
+            if (jumping) DoJump();
         }
         
         bool DoInstruction() {
@@ -167,117 +280,16 @@ namespace MCGalaxy {
                     }
                 }*/
         }
-        #endregion
-
-        public void SetPos(ushort x, ushort y, ushort z, byte rotx, byte roty) {
-            pos = new ushort[3] { x, y, z };
-            rot = new byte[2] { rotx, roty };
-        }
         
-        public static void Add(PlayerBot bot, bool save = true) {
-            Bots.Add(bot);
-            bot.GlobalSpawn();
-            
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.level == bot.level)
-                    Player.Message(p, bot.color + bot.name + "%S, the bot, has been added.");
+        void DoJump() {
+            currentjump++;
+            switch (currentjump) {
+                case 1: pos[1] += 24; break;
+                case 2: pos[1] += 12; break;
+                case 3: break;
+                case 4: pos[1] -= 12; break;
+                case 5: pos[1] -= 24; jumping = false; currentjump = 0; break;
             }
-            if (save)
-                BotsFile.UpdateBot(bot);
-        }
-
-        public static void Remove(PlayerBot bot, bool save = true) {
-            Bots.Remove(bot);
-            bot.GlobalDespawn();
-            
-            bot.botTimer.Stop();
-            bot.jumpTimer.Stop();
-            if (save)
-                BotsFile.RemoveBot(bot);
-        }
-        
-        public static void UnloadFromLevel(Level lvl) {
-            BotsFile.UnloadBots(lvl);
-            RemoveAll(lvl, false);
-        }
-        
-        public static void RemoveAllFromLevel(Level lvl) {
-            RemoveAll(lvl, true);
-            BotsFile.RemoveLevelBots(lvl.name);
-        }
-        
-        static void RemoveAll(Level lvl, bool save) {
-            PlayerBot[] bots = Bots.Items;
-            for (int i = 0; i < bots.Length; i++) {
-                PlayerBot bot = bots[i];
-                if (bots[i].level == lvl) Remove(bot, save);
-            }
-        }
-
-        public void GlobalSpawn() {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.level == level) Entities.Spawn(p, this);
-            }
-        }
-
-        public void GlobalDespawn() {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.level == level) Entities.Despawn(p, id);
-            }
-        }
-
-        void UpdatePosition() {
-            if (movement) {
-                for (int i = 0; i < movementSpeed; i++)
-                    DoMove();
-            }
-            
-            byte[] packet = Entities.GetPositionPacket(this);
-            oldpos = pos; oldrot = rot;
-            if (packet == null) return;
-
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players)
-                if (p.level == level) p.SendRaw(packet);
-        }
-
-        
-        static byte FreeId() {
-            for (byte i = 127; i >= 64; i--) {
-                foreach (PlayerBot b in playerbots) {
-                    if (b.id == i) { goto Next; }
-                } return i;
-                Next: continue;
-            }
-            return 0xFF;
-        }
-        
-        public static PlayerBot Find(string name) {
-            PlayerBot match = null; int matches = 0;
-            name = name.ToLower();
-            PlayerBot[] bots = Bots.Items;
-
-            foreach (PlayerBot bot in bots) {
-                if (bot.name.ToLower() == name) return bot;
-                if (bot.name.ToLower().Contains(name)) {
-                    match = bot; matches++;
-                }
-            }
-            return matches == 1 ? match : null;
-        }
-        
-        public static PlayerBot FindMatches(Player pl, string name) {
-            int matches = 0;
-            return Extensions.FindMatches<PlayerBot>(pl, name, out matches, Bots.Items,
-                                                     b => true, b => b.name, "bots");
-        }
-
-        public static void GlobalUpdatePosition() {
-            PlayerBot[] bots = Bots.Items;
-            foreach (PlayerBot b in bots) b.UpdatePosition();
         }
     }
 }
