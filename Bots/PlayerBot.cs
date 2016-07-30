@@ -47,12 +47,11 @@ namespace MCGalaxy {
         public ushort[] pos = new ushort[3], oldpos = new ushort[3], foundPos = new ushort[3];
         public byte[] rot = new byte[2], oldrot = new byte[2], foundRot = new byte[2];
         public bool movement = false;
-        public int movementSpeed = 24;
+        public int movementSpeed = 3;
         internal bool jumping = false;
         internal int currentjump = 0;
 
         System.Timers.Timer botTimer = new System.Timers.Timer(100);
-        System.Timers.Timer moveTimer = new System.Timers.Timer(100 / 24);
         internal System.Timers.Timer jumpTimer = new System.Timers.Timer(95);
 
         public PlayerBot(string n, Level lvl, ushort x, ushort y, ushort z, byte rotx, byte roty) {
@@ -67,8 +66,6 @@ namespace MCGalaxy {
 
             botTimer.Elapsed += BotTimerFunc;
             botTimer.Start();
-            moveTimer.Elapsed += MoveTimerFunc;
-            moveTimer.Start();
         }
         
         #region Script handling
@@ -81,9 +78,9 @@ namespace MCGalaxy {
                 if (hunt) Instructions.DoHunt(this);
             } else {
                 bool doNextInstruction = !DoInstruction();
-                if (cur == Waypoints.Count) cur = 0;  
+                if (cur == Waypoints.Count) cur = 0;
                 
-                if (!doNextInstruction) return;               
+                if (!doNextInstruction) return;
                 DoInstruction();
                 if (cur == Waypoints.Count) cur = 0;
             }
@@ -112,10 +109,7 @@ namespace MCGalaxy {
             if (cur == Waypoints.Count) cur = 0;
         }
         
-        void MoveTimerFunc(object sender, ElapsedEventArgs e) {
-            moveTimer.Interval = Server.updateTimer.Interval / movementSpeed;
-            if (!movement) return;
-
+        void DoMove() {
             if ((pos[1] - 19) % 32 != 0 && !jumping)
                 pos[1] = (ushort)((pos[1] + 19) - (pos[1] % 32));
 
@@ -144,7 +138,7 @@ namespace MCGalaxy {
             } else if (Block.Walkthrough(b1) && Block.Walkthrough(b2)) {
                 pos[0] += (ushort)dx; // Stay on current level
                 pos[2] += (ushort)dz;
-            } else if (Block.Walkthrough(b) && Block.Walkthrough(b1)) {                         
+            } else if (Block.Walkthrough(b) && Block.Walkthrough(b1)) {
                 pos[0] += (ushort)dx; // Drop a level
                 pos[1] -= (ushort)32;
                 pos[2] += (ushort)dz;
@@ -198,7 +192,6 @@ namespace MCGalaxy {
             bot.GlobalDespawn();
             
             bot.botTimer.Stop();
-            bot.moveTimer.Stop();
             bot.jumpTimer.Stop();
             if (save)
                 BotsFile.RemoveBot(bot);
@@ -236,9 +229,12 @@ namespace MCGalaxy {
             }
         }
 
-        public void Update() { }
-
         void UpdatePosition() {
+            if (movement) {
+                for (int i = 0; i < movementSpeed; i++)
+                    DoMove();
+            }
+            
             byte[] packet = Entities.GetPositionPacket(this);
             oldpos = pos; oldrot = rot;
             if (packet == null) return;
@@ -248,13 +244,10 @@ namespace MCGalaxy {
                 if (p.level == level) p.SendRaw(packet);
         }
 
-        #region == Misc ==
-        static byte FreeId()
-        {
-            for (byte i = 127; i >= 64; i--)
-            {
-                foreach (PlayerBot b in playerbots)
-                {
+        
+        static byte FreeId() {
+            for (byte i = 127; i >= 64; i--) {
+                foreach (PlayerBot b in playerbots) {
                     if (b.id == i) { goto Next; }
                 } return i;
                 Next: continue;
@@ -281,7 +274,6 @@ namespace MCGalaxy {
             return Extensions.FindMatches<PlayerBot>(pl, name, out matches, Bots.Items,
                                                      b => true, b => b.name, "bots");
         }
-        #endregion
 
         public static void GlobalUpdatePosition() {
             PlayerBot[] bots = Bots.Items;

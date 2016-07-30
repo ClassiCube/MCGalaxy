@@ -114,7 +114,7 @@ namespace MCGalaxy.Bots {
         }
         
         static bool DoSpeed(PlayerBot bot) {
-            bot.movementSpeed = (int)Math.Round(24m / 100m * bot.Waypoints[bot.cur].seconds);
+            bot.movementSpeed = (int)Math.Round(3m / 100m * bot.Waypoints[bot.cur].seconds);
             if (bot.movementSpeed == 0) bot.movementSpeed = 1;
             bot.NextInstruction(); return false;
         }

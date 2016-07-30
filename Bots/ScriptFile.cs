@@ -29,7 +29,7 @@ namespace MCGalaxy.Bots {
 
             PlayerBot.Pos newPos = new PlayerBot.Pos();
             try { bot.Waypoints.Clear(); } catch { }
-            bot.cur = 0; bot.countdown = 0; bot.movementSpeed = 12;
+            bot.cur = 0; bot.countdown = 0; bot.movementSpeed = 3;
 
             foreach (string line in codes) {
                 if (line == "" || line[0] == '#') continue;
