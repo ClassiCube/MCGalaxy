@@ -84,51 +84,20 @@ namespace MCGalaxy {
             if (Waypoints.Count == 0) {
                 if (hunt) DoHunt();
             } else {
-                bool skip = false;
-
-                retry: 
-                switch (Waypoints[cur].type) {
-                    case "walk":
-                        if (!DoWalk(ref skip)) goto retry;
-                        break;
-                    case "teleport":
-                        DoTeleport();
-                        return;
-                    case "wait":
-                        if (!DoWait(ref skip)) goto retry;
-                        return;
-                    case "nod":
-                        if (!DoNod(ref skip)) goto retry;
-                        return;
-                    case "spin":
-                        if (!DoSpin(ref skip)) goto retry;
-                        return;
-                    case "speed":
-                        if (!DoSpeed(ref skip)) goto retry;
-                        return;
-                    case "reset":
-                        cur = 0;
-                        return;
-                    case "remove":
-                        PlayerBot.Remove(this);
-                        return;
-                    case "linkscript":
-                        if (File.Exists("bots/" + Waypoints[cur].newscript)) {
-                            Command.all.Find("botset").Use(null, name + " " + Waypoints[cur].newscript);
-                            return;
-                        }
-
-                        cur++;
-                        if (cur == Waypoints.Count) cur = 0;
-                        if (!skip) { skip = true; goto retry; }
-                        return;
-                    case "jump":
-                        if (!DoJump(ref skip)) goto retry;
-                        break;
-                }
+                bool doNextInstruction = !DoInstruction();
+                if (cur == Waypoints.Count) cur = 0;  
+                
+                if (!doNextInstruction) return;               
+                DoInstruction();
                 if (cur == Waypoints.Count) cur = 0;
             }
-            AdvanceRotation();
+        }
+        
+        bool DoInstruction() {
+            Func<PlayerBot, bool> instruction;
+            if (!Instructions.Defined.TryGetValue(Waypoints[cur].type, out instruction))
+                return false;
+            return instruction(this);
         }
         
         public void AdvanceRotation() {
@@ -144,124 +113,7 @@ namespace MCGalaxy {
         
         public void NextInstruction() {
             cur++;
-            if (cur == Waypoints.Count) 
-                cur = 0;
-        }
-        
-        bool DoWalk(ref bool skip) {
-            foundPos[0] = Waypoints[cur].x;
-            foundPos[1] = Waypoints[cur].y;
-            foundPos[2] = Waypoints[cur].z;
-            movement = true;
-
-            if ((ushort)(pos[0] / 32) == (ushort)(Waypoints[cur].x / 32)) {
-                if ((ushort)(pos[2] / 32) == (ushort)(Waypoints[cur].z / 32)) {
-                    rot[0] = Waypoints[cur].rotx;
-                    rot[1] = Waypoints[cur].roty;
-                    movement = false;
-                    NextInstruction();
-                    if (!skip) { skip = true; return false; }
-                }
-            }
-            return true;
-        }
-        
-        void DoTeleport() {
-            pos[0] = Waypoints[cur].x;
-            pos[1] = Waypoints[cur].y;
-            pos[2] = Waypoints[cur].z;
-            rot[0] = Waypoints[cur].rotx;
-            rot[1] = Waypoints[cur].roty;
-            NextInstruction();
-        }
-        
-        bool DoWait(ref bool skip) {
-            if (countdown != 0) {
-                countdown--;
-                if (countdown == 0) {
-                    NextInstruction();
-                    if (!skip) { skip = true; return false; }
-                }
-            } else {
-                countdown = Waypoints[cur].seconds;
-            }
-            return true;
-        }
-        
-        bool DoNod(ref bool skip) {
-            if (countdown != 0) {
-                countdown--;
-
-                if (nodUp) {
-                    if (rot[1] > 32 && rot[1] < 128) nodUp = !nodUp;
-                    else
-                    {
-                        if (rot[1] + (byte)Waypoints[cur].rotspeed > 255) rot[1] = 0;
-                        else rot[1] += (byte)Waypoints[cur].rotspeed;
-                    }
-                } else {
-                    if (rot[1] > 128 && rot[1] < 224) nodUp = !nodUp;
-                    else
-                    {
-                        if (rot[1] - (byte)Waypoints[cur].rotspeed < 0) rot[1] = 255;
-                        else rot[1] -= (byte)Waypoints[cur].rotspeed;
-                    }
-                }
-
-                if (countdown == 0) {
-                    NextInstruction();
-                    if (!skip) { skip = true; return false; }
-                }
-            } else {
-                countdown = Waypoints[cur].seconds;
-            }
-            return true;
-        }
-        
-        bool DoSpin(ref bool skip) {
-            if (countdown != 0) {
-                countdown--;
-
-                if (rot[0] + (byte)Waypoints[cur].rotspeed > 255) rot[0] = 0;
-                else if (rot[0] + (byte)Waypoints[cur].rotspeed < 0) rot[0] = 255;
-                else rot[0] += (byte)Waypoints[cur].rotspeed;
-
-                if (countdown == 0) {
-                    NextInstruction();
-                    if (!skip) { skip = true; return false; }
-                }
-            } else {
-                countdown = Waypoints[cur].seconds;
-            }
-            return true;
-        }
-        
-        bool DoSpeed(ref bool skip) {
-            movementSpeed = (int)Math.Round(24m / 100m * Waypoints[cur].seconds);
-            if (movementSpeed == 0) movementSpeed = 1;
-
-            NextInstruction();
-            if (!skip) { skip = true; return false; }
-            return true;
-        }
-        
-        bool DoJump(ref bool skip) {
-            jumpTimer.Elapsed += delegate {
-                currentjump++;
-                switch (currentjump)
-                {
-                    case 1:
-                        case 2: pos[1] += 24; break;
-                        case 3: break;
-                        case 4: pos[1] -= 24; break;
-                        case 5: pos[1] -= 24; jumping = false; currentjump = 0; jumpTimer.Stop(); break;
-                }
-            };
-            
-            jumpTimer.Start();
-            NextInstruction();
-            if (!skip) { skip = true; return false; }
-            return true;
+            if (cur == Waypoints.Count) cur = 0;
         }
         
         void MoveTimerFunc(object sender, ElapsedEventArgs e) {
@@ -339,7 +191,7 @@ namespace MCGalaxy {
         void DoKill(ushort x, ushort y, ushort z) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if ((ushort)(p.pos[0] / 32) == x 
+                if ((ushort)(p.pos[0] / 32) == x
                     && Math.Abs((ushort)(p.pos[1] / 32) - y) < 2
                     && (ushort)(p.pos[2] / 32) == z) {
                     p.HandleDeath(Block.Zero);
@@ -377,7 +229,7 @@ namespace MCGalaxy {
             Bots.Add(bot);
             bot.GlobalSpawn();
             
-            Player[] players = PlayerInfo.Online.Items; 
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level == bot.level)
                     Player.Message(p, bot.color + bot.name + "%S, the bot, has been added.");
@@ -388,7 +240,7 @@ namespace MCGalaxy {
 
         public static void Remove(PlayerBot bot, bool save = true) {
             Bots.Remove(bot);
-            bot.GlobalDespawn();    
+            bot.GlobalDespawn();
             
             bot.botTimer.Stop();
             bot.moveTimer.Stop();
@@ -399,7 +251,7 @@ namespace MCGalaxy {
         
         public static void UnloadFromLevel(Level lvl) {
             BotsFile.UnloadBots(lvl);
-            RemoveAll(lvl, false);           
+            RemoveAll(lvl, false);
         }
         
         public static void RemoveAllFromLevel(Level lvl) {
@@ -416,7 +268,7 @@ namespace MCGalaxy {
         }
 
         public void GlobalSpawn() {
-            Player[] players = PlayerInfo.Online.Items; 
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level == level) Entities.Spawn(p, this);
             }
@@ -471,7 +323,7 @@ namespace MCGalaxy {
         
         public static PlayerBot FindMatches(Player pl, string name) {
             int matches = 0;
-            return Extensions.FindMatches<PlayerBot>(pl, name, out matches, Bots.Items, 
+            return Extensions.FindMatches<PlayerBot>(pl, name, out matches, Bots.Items,
                                                      b => true, b => b.name, "bots");
         }
         #endregion

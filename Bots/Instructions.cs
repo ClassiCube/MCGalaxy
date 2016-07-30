@@ -24,7 +24,10 @@ namespace MCGalaxy.Bots {
         
         public static Dictionary<string, Func<PlayerBot, bool>> Defined = 
             new Dictionary<string, Func<PlayerBot, bool>>{
-            { "walk", DoWalk }, { "teleport", DoTeleport },
+            { "walk", DoWalk }, { "teleport", DoTeleport }, { "wait", DoWait }, 
+            { "nod", DoNod }, { "spin", DoSpin }, { "speed", DoSpeed }, 
+            { "jump", DoJump }, { "reset", DoReset }, { "remove", DoRemove },
+            { "linkscript", DoLinkscript },
         };
             
         static bool DoWalk(PlayerBot bot) {
@@ -55,7 +58,7 @@ namespace MCGalaxy.Bots {
             return true;
         }
         
-       static bool DoWait(PlayerBot bot) {
+        static bool DoWait(PlayerBot bot) {
             if (bot.countdown == 0) {
                 bot.countdown = bot.Waypoints[bot.cur].seconds;
                 return true;
@@ -113,7 +116,7 @@ namespace MCGalaxy.Bots {
         static bool DoSpeed(PlayerBot bot) {
             bot.movementSpeed = (int)Math.Round(24m / 100m * bot.Waypoints[bot.cur].seconds);
             if (bot.movementSpeed == 0) bot.movementSpeed = 1;
-            bot.NextInstruction(); return true;
+            bot.NextInstruction(); return false;
         }
         
         static bool DoJump(PlayerBot bot) {
@@ -126,8 +129,29 @@ namespace MCGalaxy.Bots {
                     case 4: bot.pos[1] -= 24; break;
                     case 5: bot.pos[1] -= 24; bot.jumping = false; bot.currentjump = 0; bot.jumpTimer.Stop(); break;
                 }
-            };           
+            };
+            
             bot.jumpTimer.Start();
+            bot.NextInstruction();
+            return false;
+        }
+            
+        static bool DoReset(PlayerBot bot) {
+            bot.cur = 0; 
+            return true;
+        }
+        
+        static bool DoRemove(PlayerBot bot) {
+            PlayerBot.Remove(bot);
+            return true;
+        }
+        
+        static bool DoLinkscript(PlayerBot bot) {
+            if (File.Exists("bots/" + bot.Waypoints[bot.cur].newscript)) {
+                string args = bot.name + " " + bot.Waypoints[bot.cur].newscript;
+                Command.all.Find("botset").Use(null, args);
+                return true;
+            }
             bot.NextInstruction(); return true;
         }
     }
