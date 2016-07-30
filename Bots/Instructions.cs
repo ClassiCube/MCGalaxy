@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,14 +22,14 @@ using System.IO;
 namespace MCGalaxy.Bots {
     public static class Instructions {
         
-        public static Dictionary<string, Func<PlayerBot, bool>> Defined = 
+        public static Dictionary<string, Func<PlayerBot, bool>> Defined =
             new Dictionary<string, Func<PlayerBot, bool>>{
-            { "walk", DoWalk }, { "teleport", DoTeleport }, { "wait", DoWait }, 
-            { "nod", DoNod }, { "spin", DoSpin }, { "speed", DoSpeed }, 
+            { "walk", DoWalk }, { "teleport", DoTeleport }, { "wait", DoWait },
+            { "nod", DoNod }, { "spin", DoSpin }, { "speed", DoSpeed },
             { "jump", DoJump }, { "reset", DoReset }, { "remove", DoRemove },
             { "linkscript", DoLinkscript },
         };
-            
+        
         static bool DoWalk(PlayerBot bot) {
             bot.foundPos[0] = bot.Waypoints[bot.cur].x;
             bot.foundPos[1] = bot.Waypoints[bot.cur].y;
@@ -135,9 +135,9 @@ namespace MCGalaxy.Bots {
             bot.NextInstruction();
             return false;
         }
-            
+        
         static bool DoReset(PlayerBot bot) {
-            bot.cur = 0; 
+            bot.cur = 0;
             return true;
         }
         
@@ -153,6 +153,43 @@ namespace MCGalaxy.Bots {
                 return true;
             }
             bot.NextInstruction(); return true;
+        }
+        
+        
+        internal static void DoKill(PlayerBot bot) {
+            ushort x = (ushort)Math.Round((decimal)bot.pos[0] / 32);
+            ushort y = (ushort)((bot.pos[1] - 33) / 32);
+            ushort z = (ushort)Math.Round((decimal)bot.pos[2] / 32);
+            Player[] players = PlayerInfo.Online.Items;
+            
+            foreach (Player p in players) {
+                if ((ushort)(p.pos[0] / 32) == x
+                    && Math.Abs((ushort)(p.pos[1] / 32) - y) < 2
+                    && (ushort)(p.pos[2] / 32) == z) {
+                    p.HandleDeath(Block.Zero);
+                }
+            }
+        }
+        
+        internal static void DoHunt(PlayerBot bot) {
+            int dist = 75 * 32;
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level != bot.level || p.invincible) continue;
+                int curDist = Math.Abs(p.pos[0] - bot.pos[0]) + Math.Abs(p.pos[1] - bot.pos[1]) + Math.Abs(p.pos[2] - bot.pos[2]);
+                if (curDist >= dist) continue;
+                
+                dist = curDist;
+                bot.foundPos = p.pos;
+                bot.foundRot = p.rot;
+                bot.movement = true;
+                
+                bot.rot[1] = (byte)(255 - bot.foundRot[1]);
+                if (bot.foundRot[0] < 128)
+                    bot.rot[0] = (byte)(bot.foundRot[0] + 128);
+                else
+                    bot.rot[0] = (byte)(bot.foundRot[0] - 128);
+            }
         }
     }
 }

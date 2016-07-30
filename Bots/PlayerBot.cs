@@ -74,15 +74,11 @@ namespace MCGalaxy {
         #region Script handling
         
         void BotTimerFunc(object sender, ElapsedEventArgs e) {
-            ushort x = (ushort)Math.Round((decimal)pos[0] / 32);
-            ushort y = (ushort)((pos[1] - 33) / 32);
-            ushort z = (ushort)Math.Round((decimal)pos[2] / 32);
-
-            if (kill) DoKill(x, y, z);
+            if (kill) Instructions.DoKill(this);
             movement = false;
 
             if (Waypoints.Count == 0) {
-                if (hunt) DoHunt();
+                if (hunt) Instructions.DoHunt(this);
             } else {
                 bool doNextInstruction = !DoInstruction();
                 if (cur == Waypoints.Count) cur = 0;  
@@ -119,52 +115,42 @@ namespace MCGalaxy {
         void MoveTimerFunc(object sender, ElapsedEventArgs e) {
             moveTimer.Interval = Server.updateTimer.Interval / movementSpeed;
             if (!movement) return;
-            int newNum;
 
             if ((pos[1] - 19) % 32 != 0 && !jumping)
-            {
                 pos[1] = (ushort)((pos[1] + 19) - (pos[1] % 32));
-            }
 
             ushort x = (ushort)Math.Round((decimal)(pos[0] - 16) / 32);
             ushort y = (ushort)((pos[1] - 64) / 32);
             ushort z = (ushort)Math.Round((decimal)(pos[2] - 16) / 32);
+            int dx = Math.Sign(foundPos[0] - pos[0]), dz = Math.Sign(foundPos[2] - pos[2]);
 
             byte b = Block.Convert(level.GetTile(x, y, z));
-            byte b1, b2, b3;//, b4;
+            byte b1, b2, b3;
 
             if (Block.Walkthrough(b) && !jumping)
-            {
                 pos[1] = (ushort)(pos[1] - 32);
-            }
-
             y = (ushort)((pos[1] - 64) / 32);   //Block below feet
 
-            newNum = level.PosToInt((ushort)(x + Math.Sign(foundPos[0] - pos[0])), y, (ushort)(z + Math.Sign(foundPos[2] - pos[2])));
-            b = Block.Convert(level.GetTile(newNum));
-            b1 = Block.Convert(level.GetTile(level.IntOffset(newNum, 0, 1, 0)));
-            b2 = Block.Convert(level.GetTile(level.IntOffset(newNum, 0, 2, 0)));
-            b3 = Block.Convert(level.GetTile(level.IntOffset(newNum, 0, 3, 0)));
+            int index = level.PosToInt((ushort)(x + dx), y, (ushort)(z + dz));
+            b = Block.Convert(level.GetTile(index));
+            b1 = Block.Convert(level.GetTile(level.IntOffset(index, 0, 1, 0)));
+            b2 = Block.Convert(level.GetTile(level.IntOffset(index, 0, 2, 0)));
+            b3 = Block.Convert(level.GetTile(level.IntOffset(index, 0, 3, 0)));
 
-            if (Block.Walkthrough(b2) && Block.Walkthrough(b3) && !Block.Walkthrough(b1))
-            {     //Get ready to go up step
-                pos[0] += (ushort)Math.Sign(foundPos[0] - pos[0]);
+            if (Block.Walkthrough(b2) && Block.Walkthrough(b3) && !Block.Walkthrough(b1)) {
+                pos[0] += (ushort)dx; // Get ready to go up step
                 pos[1] += (ushort)32;
-                pos[2] += (ushort)Math.Sign(foundPos[2] - pos[2]);
-            }
-            else if (Block.Walkthrough(b1) && Block.Walkthrough(b2))
-            {                        //Stay on current level
-                pos[0] += (ushort)Math.Sign(foundPos[0] - pos[0]);
-                pos[2] += (ushort)Math.Sign(foundPos[2] - pos[2]);
-            }
-            else if (Block.Walkthrough(b) && Block.Walkthrough(b1))
-            {                         //Drop a level
-                pos[0] += (ushort)Math.Sign(foundPos[0] - pos[0]);
+                pos[2] += (ushort)dz;
+            } else if (Block.Walkthrough(b1) && Block.Walkthrough(b2)) {
+                pos[0] += (ushort)dx; // Stay on current level
+                pos[2] += (ushort)dz;
+            } else if (Block.Walkthrough(b) && Block.Walkthrough(b1)) {                         
+                pos[0] += (ushort)dx; // Drop a level
                 pos[1] -= (ushort)32;
-                pos[2] += (ushort)Math.Sign(foundPos[2] - pos[2]);
+                pos[2] += (ushort)dz;
             }
 
-            x = (ushort)Math.Round((decimal)(pos[0] - 16) / (decimal)32);
+            /*x = (ushort)Math.Round((decimal)(pos[0] - 16) / (decimal)32);
             y = (ushort)((pos[1] - 64) / 32);
             z = (ushort)Math.Round((decimal)(pos[2] - 16) / (decimal)32);
 
@@ -172,7 +158,7 @@ namespace MCGalaxy {
             b2 = Block.Convert(level.GetTile(x, (ushort)(y + 2), z));
             b3 = Block.Convert(level.GetTile(x, y, z));
 
-            /*
+            
                 if ((ushort)(foundPos[1] / 32) > y) {
                     if (b1 == Block.water || b1 == Block.waterstill || b1 == Block.lava || b1 == Block.lavastill) {
                         if (Block.Walkthrough(b2)) {
@@ -186,37 +172,6 @@ namespace MCGalaxy {
                         pos[1] = (ushort)(pos[1] + (Math.Sign(foundPos[1] - pos[1])));
                     }
                 }*/
-        }
-        
-        void DoKill(ushort x, ushort y, ushort z) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if ((ushort)(p.pos[0] / 32) == x
-                    && Math.Abs((ushort)(p.pos[1] / 32) - y) < 2
-                    && (ushort)(p.pos[2] / 32) == z) {
-                    p.HandleDeath(Block.Zero);
-                }
-            }
-        }
-        
-        void DoHunt() {
-            int foundNum = (32 * 75);
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.level != level || p.invincible) continue;
-                
-                int currentNum = Math.Abs(p.pos[0] - pos[0]) + Math.Abs(p.pos[1] - pos[1]) + Math.Abs(p.pos[2] - pos[2]);
-                if (currentNum < foundNum)
-                {
-                    foundNum = currentNum;
-                    foundPos = p.pos;
-                    foundRot = p.rot;
-                    movement = true;
-                    rot[1] = (byte)(255 - foundRot[1]);
-                    if (foundRot[0] < 128) rot[0] = (byte)(foundRot[0] + 128);
-                    else rot[0] = (byte)(foundRot[0] - 128);
-                }
-            }
         }
         #endregion
 
