@@ -124,7 +124,7 @@ namespace MCGalaxy.Util {
                 P.timeDelta = timeDelta;
                 
                 if (pl != null) {
-                    if (lvl.DoBlockchange(pl, P.x, P.y, P.z, P.newtype, P.newExtType)) {
+                    if (lvl.DoBlockchange(pl, P.x, P.y, P.z, P.newtype, P.newExtType, true)) {
                         buffer.Add(lvl.PosToInt(P.x, P.y, P.z), P.newtype, P.newExtType);
                         buffer.CheckIfSend(false);
                     }

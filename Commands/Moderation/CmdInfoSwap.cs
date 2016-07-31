@@ -35,19 +35,19 @@ namespace MCGalaxy.Commands {
             if (!ValidName(p, args[1], "player")) return;
             
             if (PlayerInfo.FindExact(args[0]) != null) {
-                Player.SendMessage(p, "\"" + args[0] + "\" must be offline to use /infoswap."); return;
+            	Player.Message(p, "\"{0}\" must be offline to use /infoswap.", args[0]); return;
             }
             if (PlayerInfo.FindExact(args[1]) != null) {
-                Player.SendMessage(p, "\"" + args[1] + "\" must be offline to use /infoswap."); return;
+            	Player.Message(p, "\"{0}\" must be offline to use /infoswap.", args[1]); return;
             }
             
             OfflinePlayer src = PlayerInfo.Find(args[0], true);
             if (src == null) {
-                Player.SendMessage(p, "\"" + args[0] + "\" was not found in the database."); return;
+            	Player.Message(p, "\"{0}\" was not found in the database.", args[0]); return;
             }
             OfflinePlayer dst = PlayerInfo.Find(args[1], true);
             if (dst == null) {
-                Player.SendMessage(p, "\"" + args[1] + "\" was not found in the database."); return;
+            	Player.Message(p, "\"{0}\" was not found in the database.", args[1]); return;
             }
             
             Swap(src, dst); Swap(dst, src);
@@ -58,11 +58,11 @@ namespace MCGalaxy.Commands {
         void Swap(OfflinePlayer src, OfflinePlayer dst) {
             string first = DateTime.Parse(src.firstLogin).ToString(format);
             string last = DateTime.Parse(src.lastLogin).ToString(format);
-            const string syntax = "UPDATE Players SET totalBlocks=@0, color=@1, totalDeaths=@2"
-                + ", FirstLogin=@3, IP=@4, totalKicked=@5, LastLogin=@6, totalLogin=@7"
-                + ", Money=@8, Title=@9, title_color=@10, TimeSpent=@11 WHERE Name=@12";
+            const string syntax = "UPDATE Players SET totalBlocks=@0, totalCuboided=@1" +
+            	", color=@2, totalDeaths=@3, FirstLogin=@4, IP=@5, totalKicked=@6, LastLogin=@7" +
+            	", totalLogin=@8, Money=@9, Title=@10, title_color=@11, TimeSpent=@12 WHERE Name=@13";
             
-            Database.Execute(syntax, src.blocks, src.color, src.deaths,
+            Database.Execute(syntax, src.blocks, src.cuboided, src.color, src.deaths,
                              first, src.ip, src.kicks, last, src.logins,
                              src.money, src.title, src.titleColor, src.totalTime, dst.name);            
         }

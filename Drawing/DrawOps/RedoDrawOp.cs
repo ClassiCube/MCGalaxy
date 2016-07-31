@@ -60,7 +60,7 @@ namespace MCGalaxy.Drawing.Ops {
                     
                     byte tile, extTile;
                     item.GetBlock(out tile, out extTile);
-                    if (lvl.DoBlockchange(p, x, y, z, tile, extTile)) {
+                    if (lvl.DoBlockchange(p, x, y, z, tile, extTile, true)) {
                         buffer.Add(lvl.PosToInt(x, y, z), tile, extTile);
                         buffer.CheckIfSend(false);
                     }

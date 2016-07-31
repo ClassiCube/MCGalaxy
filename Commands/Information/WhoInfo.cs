@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands {
         public string FullName, Name;
         public Group Group;
         public int Money, Deaths;
-        public long TotalBlocks, LoginBlocks;
+        public long TotalBlocks, LoginBlocks, TotalDrawn;
         public TimeSpan TimeSpent, TimeOnline;
         public DateTime First, Last;
         public int Logins, Kicks;
@@ -38,20 +38,23 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "  Rank of " + who.Group.ColoredName);
             
             if (Economy.Enabled)
-                Player.Message(p, "  &a" + who.Deaths + " &cdeaths%S, &a" + who.Money +
-                                   " %S" + Server.moneys +", " + Awards.AwardAmount(who.Name) + " awards");
+                Player.Message(p, "  &a{0} &cdeaths%S, &a{2} %S{3}, {1} %Sawards", 
+            	               who.Deaths, Awards.AwardAmount(who.Name), who.Money, Server.moneys);
             else
-                Player.Message(p, "  &a" + who.Deaths + " &cdeaths%S, " + Awards.AwardAmount(who.Name) + " awards");
+            	Player.Message(p, "  &a{0} &cdeaths%S, {1} %Sawards", 
+            	               who.Deaths, Awards.AwardAmount(who.Name));
             
             if (who.LoginBlocks >= 0)
-                Player.Message(p, "  &bModified &a{0} &eblocks, &a{1} &esince login", who.TotalBlocks, who.LoginBlocks);
+                Player.Message(p, "  Modified &a{0} %Sblocks, &a{1} %Ssince login", who.TotalBlocks, who.LoginBlocks);
             else
-                Player.Message(p, "  &bModified &a{0} &eblocks", who.TotalBlocks);
+                Player.Message(p, "  Modified &a{0} %Sblocks", who.TotalBlocks);
+            Player.Message(p, "    &a0 %Splaced, &a0 %Sdeleted, &a{0} %Sdrawn", who.TotalDrawn);
 
             if (who.TimeOnline.Ticks > 0)
-            	Player.Message(p, "  Spent {0} on the server, {1} this session", who.TimeSpent.Shorten(), who.TimeOnline.Shorten());
+            	Player.Message(p, "  Spent &a{0}%S on the server, &a{1}%S this session", 
+            	               who.TimeSpent.Shorten(), who.TimeOnline.Shorten());
             else
-            	Player.Message(p, "  Spent {0} on the server", who.TimeSpent.Shorten());
+            	Player.Message(p, "  Spent &a{0}%S on the server", who.TimeSpent.Shorten());
             
             if (who.Last.Ticks > 0)
                 Player.Message(p, "  First login &a" + who.First.ToString("yyyy-MM-dd")

@@ -82,7 +82,6 @@ namespace MCGalaxy {
             }
 
             Player[] players = PlayerInfo.Online.Items;
-            SendMessage("You have modified &a" + overallBlocks + " %Sblocks!");
             string prefix = players.Length == 1 ? "There is" : "There are";
             string suffix = players.Length == 1 ? " player online" : " players online";
             SendMessage(prefix + " currently &a" + players.Length + suffix);

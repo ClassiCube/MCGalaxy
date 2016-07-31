@@ -140,11 +140,12 @@ namespace MCGalaxy.Drawing.Ops {
                     lvl.SetTile(b.X, b.Y, b.Z, b.Block, p, b.ExtBlock);
                     p.loginBlocks++;
                     p.overallBlocks++;
+                    p.TotalBlocksDrawn++;
                 }
             } else if (item.Level.bufferblocks) {
                 foreach (var b in item.Op.Perform(item.Marks, p, lvl, item.Brush)) {
             		if (b.Block == Block.Zero) continue;
-                    if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock)) continue;
+                    if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) continue;
                     bP.name = p.name;
                     bP.index = lvl.PosToInt(b.X, b.Y, b.Z);
                     bP.SetData(b.Block, b.ExtBlock, b.Block == 0);
@@ -156,7 +157,7 @@ namespace MCGalaxy.Drawing.Ops {
             } else {
                 foreach (var b in item.Op.Perform(item.Marks, p, item.Level, item.Brush)) {
             	    if (b.Block == Block.Zero) continue;
-                    if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock)) continue;
+                    if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) continue;
                     bP.name = p.name;
                     bP.index = lvl.PosToInt(b.X, b.Y, b.Z);
                     

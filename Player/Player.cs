@@ -86,16 +86,16 @@ namespace MCGalaxy {
 
 
         public void save() {
-            const string query = "UPDATE Players SET IP=@0, LastLogin=@1, totalLogin=@2, " +
-                "totalDeaths=@3, Money=@4, totalBlocks=@5, totalKicked=@6, TimeSpent=@7 WHERE Name=@8";
+            const string query = "UPDATE Players SET IP=@0, LastLogin=@1, totalLogin=@2, totalDeaths=@3, " +
+            	"Money=@4, totalBlocks=@5, totalCuboided=@6, totalKicked=@7, TimeSpent=@8 WHERE Name=@9";
             
             if (MySQLSave != null) MySQLSave(this, query);
             OnMySQLSaveEvent.Call(this, query);
             if (cancelmysql) { cancelmysql = false; return; }
             
             Database.Execute(query, ip, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 
-                             totalLogins, overallDeath, money, overallBlocks,
-                             totalKicked, time.ToDBTime(), name);
+                             totalLogins, overallDeath, money, overallBlocks, 
+                             TotalBlocksDrawn, totalKicked, time.ToDBTime(), name);
             
             if (Economy.Enabled && loginMoney != money) {
                 Economy.EcoStats ecos = Economy.RetrieveEcoStats(name);
@@ -120,7 +120,8 @@ namespace MCGalaxy {
             GlobalBlockchange(level, x, y, z, block, extBlock);
         }
         
-        public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, byte block, byte extBlock) {
+        public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, 
+                                             byte block, byte extBlock) {
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) { 
                 if (p.level == level) p.SendBlockchange(x, y, z, block, extBlock);

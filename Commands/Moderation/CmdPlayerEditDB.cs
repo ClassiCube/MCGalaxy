@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands {
                     SetInteger(p, args, "totalBlocks", int.MaxValue, who, v => who.overallBlocks = v); break;
                 case "totalcuboided":
                 case "totalcuboid":
-                    SetInteger(p, args, "totalCuboided", int.MaxValue, who, v => {}); break;
+                    SetInteger(p, args, "totalCuboided", int.MaxValue, who, v => who.TotalBlocksDrawn = v); break;
                 case "totalkicked":
                     SetInteger(p, args, "totalKicked", 1000000000, who, v => who.totalKicked = v); break;
                 case "timespent":

@@ -263,12 +263,14 @@ namespace MCGalaxy {
             return true;
         }
         
-        public void Blockchange(Player p, ushort x, ushort y, ushort z, byte type, byte extType = 0) {
-            if (DoBlockchange(p, x, y, z, type, extType))
-                Player.GlobalBlockchange(this, x, y, z, type, extType);
+        public void Blockchange(Player p, ushort x, ushort y, ushort z, 
+                                byte block, byte extBlock = 0) {
+            if (DoBlockchange(p, x, y, z, block, extBlock))
+                Player.GlobalBlockchange(this, x, y, z, block, extBlock);
         }
         
-        public bool DoBlockchange(Player p, ushort x, ushort y, ushort z, byte type, byte extType = 0) {
+        public bool DoBlockchange(Player p, ushort x, ushort y, ushort z, 
+                                  byte block, byte extBlock = 0, bool drawn = false) {
             string errorLocation = "start";
         retry:
             try
@@ -279,13 +281,13 @@ namespace MCGalaxy {
                 if (b == Block.custom_block) extB = GetExtTile(x, y, z);
 
                 errorLocation = "Permission checking";
-                if (!CheckAffectPermissions(p, x, y, z, b, type, extType)) {
+                if (!CheckAffectPermissions(p, x, y, z, b, block, extBlock)) {
                     p.RevertBlock(x, y, z); return false;
                 }
 
-                if (b == Block.sponge && physics > 0 && type != Block.sponge)
+                if (b == Block.sponge && physics > 0 && block != Block.sponge)
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z));
-                if (b == Block.lava_sponge && physics > 0 && type != Block.lava_sponge)
+                if (b == Block.lava_sponge && physics > 0 && block != Block.lava_sponge)
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), true);
 
                 errorLocation = "Undo buffer filling";
@@ -293,27 +295,29 @@ namespace MCGalaxy {
                 Pos.x = x; Pos.y = y; Pos.z = z;
                 Pos.mapName = name;
                 Pos.type = b; Pos.extType = extB;
-                Pos.newtype = type; Pos.newExtType = extType;
+                Pos.newtype = block; Pos.newExtType = extBlock;
                 Pos.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
                 p.UndoBuffer.Add(this, Pos);
 
                 errorLocation = "Setting tile";
                 p.loginBlocks++;
                 p.overallBlocks++;
-                SetTile(x, y, z, type);
-                if (b == Block.custom_block && type != Block.custom_block)
+                if (drawn) p.TotalBlocksDrawn++;
+                
+                SetTile(x, y, z, block);
+                if (b == Block.custom_block && block != Block.custom_block)
                     RevertExtTileNoCheck(x, y, z);
-                if (type == Block.custom_block)
-                    SetExtTileNoCheck(x, y, z, extType);
+                if (block == Block.custom_block)
+                    SetExtTileNoCheck(x, y, z, extBlock);
 
                 errorLocation = "Adding physics";
-                if (p.PlayingTntWars && type == Block.smalltnt) AddTntCheck(PosToInt(x, y, z), p);
-                if (physics > 0 && Block.Physics(type)) AddCheck(PosToInt(x, y, z));
+                if (p.PlayingTntWars && block == Block.smalltnt) AddTntCheck(PosToInt(x, y, z), p);
+                if (physics > 0 && Block.Physics(block)) AddCheck(PosToInt(x, y, z));
 
                 changed = true;
                 backedup = false;
-                bool diffBlock = b == Block.custom_block ? extB != extType :
-                    Block.Convert(b) != Block.Convert(type);
+                bool diffBlock = b == Block.custom_block ? extB != extBlock :
+                    Block.Convert(b) != Block.Convert(block);
                 return diffBlock;
             } catch (OutOfMemoryException) {
                 Player.Message(p, "Undo buffer too big! Cleared!");
@@ -436,19 +440,20 @@ namespace MCGalaxy {
             return pos.X < Width && pos.Y < Height && pos.Z < Length;
         }
         
-        public void UpdateBlock(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
-            if (!DoBlockchange(p, x, y, z, type, extType)) return;          
+        public void UpdateBlock(Player p, ushort x, ushort y, ushort z, 
+                                byte block, byte extBlock, bool drawn = false) {
+            if (!DoBlockchange(p, x, y, z, block, extBlock, drawn)) return;          
             BlockPos bP = default(BlockPos);
             bP.name = p.name;
             bP.index = PosToInt(x, y, z);
-            bP.SetData(type, extType, type == 0);
+            bP.SetData(block, extBlock, block == 0);
             if (UseBlockDB)
                 blockCache.Add(bP);
             
             if (bufferblocks) 
-                BlockQueue.Addblock(p, bP.index, type, extType);
+                BlockQueue.Addblock(p, bP.index, block, extBlock);
             else 
-                Player.GlobalBlockchange(this, x, y, z, type, extType);
+                Player.GlobalBlockchange(this, x, y, z, block, extBlock);
         }
     }
 }

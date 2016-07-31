@@ -60,7 +60,9 @@ namespace MCGalaxy.Commands {
             info.Name = who.name;
             info.Group = who.group;
             info.Money = who.money; info.Deaths = who.overallDeath;
-            info.TotalBlocks = who.overallBlocks; info.LoginBlocks = who.loginBlocks;
+            info.TotalBlocks = who.overallBlocks; info.TotalDrawn = who.TotalBlocksDrawn;            
+            info.LoginBlocks = who.loginBlocks;
+            
             info.TimeSpent = who.time; info.TimeOnline = DateTime.Now - who.timeLogged;
             info.First = who.firstLogin;
             info.Logins = who.totalLogins; info.Kicks = who.totalKicked;
@@ -85,6 +87,8 @@ namespace MCGalaxy.Commands {
             info.Group = group;
             info.Money = int.Parse(target.money); info.Deaths = int.Parse(target.deaths);
             info.TotalBlocks = long.Parse(target.blocks); info.LoginBlocks = -1;
+            info.TotalDrawn = long.Parse(target.cuboided);
+            
             info.TimeSpent = target.totalTime.ParseDBTime();
             info.First = DateTime.Parse(target.firstLogin);
             info.Last = DateTime.Parse(target.lastLogin);

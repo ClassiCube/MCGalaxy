@@ -102,6 +102,7 @@ namespace MCGalaxy {
             p.totalKicked = 0;
             p.overallDeath = 0;
             p.overallBlocks = 0;
+            p.TotalBlocksDrawn = 0;
             string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             
             const string query = "INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths" +
@@ -109,8 +110,8 @@ namespace MCGalaxy {
             Database.Execute(query, p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, p.time.ToDBTime());
             
             const string ecoQuery = "INSERT INTO Economy (player, money, total, purchase, payment, salary, fine) " +
-                "VALUES (@0, @1, @2, @3, @4, @5, @6)";
-            Database.Execute(ecoQuery, p.name, p.money, 0, "%cNone", "%cNone", "%cNone", "%cNone");
+                "VALUES (@0, @1, @2, @3, @3, @3, @3)";
+            Database.Execute(ecoQuery, p.name, p.money, 0, "%cNone");
         }
         
         internal static void LoadInfo(DataTable playerDb, Player p) {
@@ -131,6 +132,8 @@ namespace MCGalaxy {
             
             p.overallDeath = int.Parse(row["TotalDeaths"].ToString());
             p.overallBlocks = long.Parse(row["totalBlocks"].ToString().Trim());
+            p.TotalBlocksDrawn = long.Parse(row["totalCuboided"].ToString().Trim());
+            
             //money = int.Parse(playerDb.Rows[0]["Money"].ToString());
             p.money = Economy.RetrieveEcoStats(p.name).money;
             p.loginMoney = p.money;
@@ -221,6 +224,7 @@ namespace MCGalaxy {
             pl.money = row["Money"].ToString();
             pl.deaths = row["TotalDeaths"].ToString();
             pl.blocks = row["totalBlocks"].ToString();
+            pl.cuboided = row["totalCuboided"].ToString();
             pl.logins = row["totalLogin"].ToString();
             pl.kicks = row["totalKicked"].ToString();
             return pl;
@@ -239,7 +243,7 @@ namespace MCGalaxy {
     
     public class OfflinePlayer {
         public string name, color, title, titleColor;
-        public string money, deaths, blocks, logins, kicks;
+        public string money, deaths, blocks, cuboided, logins, kicks;
         public string totalTime, firstLogin, lastLogin, ip;
     }
 }

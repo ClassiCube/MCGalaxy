@@ -151,8 +151,7 @@ namespace MCGalaxy {
         public bool canBuild = true;
 
         public int money = 0, loginMoney = 0;
-        public long overallBlocks = 0;
-
+        public long overallBlocks = 0, TotalBlocksDrawn = 0;
         public int loginBlocks = 0;
 
         public DateTime timeLogged;
