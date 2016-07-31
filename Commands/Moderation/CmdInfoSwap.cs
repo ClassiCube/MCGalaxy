@@ -62,7 +62,9 @@ namespace MCGalaxy.Commands {
             	", color=@2, totalDeaths=@3, FirstLogin=@4, IP=@5, totalKicked=@6, LastLogin=@7" +
             	", totalLogin=@8, Money=@9, Title=@10, title_color=@11, TimeSpent=@12 WHERE Name=@13";
             
-            Database.Execute(syntax, src.Blocks, src.Cuboided, src.Color, src.Deaths,
+            long blocks = PlayerData.BlocksPacked(src.TotalPlaced, src.TotalModified);
+            long cuboided = PlayerData.CuboidPacked(src.TotalDeleted, src.TotalDrawn);
+            Database.Execute(syntax, blocks, cuboided, src.Color, src.Deaths,
                              first, src.IP, src.Kicks, last, src.Logins,
                              src.Money, src.Title, src.TitleColor, src.TotalTime, dst.Name);            
         }

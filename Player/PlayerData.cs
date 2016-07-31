@@ -24,7 +24,7 @@ namespace MCGalaxy {
         public string Name, Color, Title, TitleColor, TotalTime, IP;
         public DateTime FirstLogin, LastLogin;
         public int UserID, Money, Deaths, Logins, Kicks;
-        public long Blocks, Cuboided;      
+        public long TotalModified, TotalDrawn, TotalPlaced, TotalDeleted;
         
         internal static void Create(Player p) {
             p.prefix = "";
@@ -69,8 +69,10 @@ namespace MCGalaxy {
             if (p.color == "") p.color = p.group.color;
             
             p.overallDeath = data.Deaths;
-            p.overallBlocks = data.Blocks;
-            p.TotalDrawn = data.Cuboided;
+            p.overallBlocks = data.TotalModified;
+            p.TotalDrawn = data.TotalDrawn;
+            p.TotalPlaced = data.TotalPlaced;
+            p.TotalDeleted = data.TotalDeleted;
             
             //money = int.Parse(data.money);
             p.money = Economy.RetrieveEcoStats(p.name).money;
@@ -79,27 +81,33 @@ namespace MCGalaxy {
         }
         
         public static PlayerData Fill(DataRow row) {
-            PlayerData pl = new PlayerData();
-            pl.Name = row["Name"].ToString().Trim();
-            pl.IP = row["IP"].ToString().Trim();
-            pl.UserID = int.Parse(row["ID"].ToString().Trim());
+            PlayerData data = new PlayerData();
+            data.Name = row["Name"].ToString().Trim();
+            data.IP = row["IP"].ToString().Trim();
+            data.UserID = int.Parse(row["ID"].ToString().Trim());
             
-            pl.TotalTime = row["TimeSpent"].ToString();
-            pl.FirstLogin = DateTime.Parse(row["FirstLogin"].ToString());
-            pl.LastLogin = DateTime.Parse(row["LastLogin"].ToString());
+            data.TotalTime = row["TimeSpent"].ToString();
+            data.FirstLogin = DateTime.Parse(row["FirstLogin"].ToString());
+            data.LastLogin = DateTime.Parse(row["LastLogin"].ToString());
             
-            pl.Title = row["Title"].ToString().Trim();
-            pl.TitleColor = ParseColor(row["title_color"]);
-            pl.Color = ParseColor(row["color"]);
+            data.Title = row["Title"].ToString().Trim();
+            data.TitleColor = ParseColor(row["title_color"]);
+            data.Color = ParseColor(row["color"]);
             
-            pl.Money = int.Parse(row["Money"].ToString());
-            pl.Deaths = int.Parse(row["TotalDeaths"].ToString());
-            pl.Blocks = long.Parse(row["totalBlocks"].ToString());
-            pl.Cuboided = long.Parse(row["totalCuboided"].ToString());
-            pl.Logins = int.Parse(row["totalLogin"].ToString());
-            pl.Kicks = int.Parse(row["totalKicked"].ToString());
-            return pl;
+            data.Money = int.Parse(row["Money"].ToString());
+            data.Deaths = int.Parse(row["TotalDeaths"].ToString());
+            data.Logins = int.Parse(row["totalLogin"].ToString());
+            data.Kicks = int.Parse(row["totalKicked"].ToString());
+            
+            long blocks = long.Parse(row["totalBlocks"].ToString());
+            long cuboided = long.Parse(row["totalCuboided"].ToString());
+            data.TotalModified = blocks & LowerBitsMask;
+            data.TotalPlaced = blocks >> LowerBits;
+            data.TotalDrawn = cuboided & LowerBitsMask;
+            data.TotalDeleted = cuboided >> LowerBits;
+            return data;
         }
+        
         
         static string ParseColor(object value) {
             string col = value.ToString().Trim();
@@ -110,5 +118,17 @@ namespace MCGalaxy {
             if (parsed != "") return parsed;        
             return Colors.Name(col) == "" ? "" : col;
         }
+        
+        
+        internal static long BlocksPacked(long placed, long modified) {
+            return placed << LowerBits | modified;
+        }
+        
+        internal static long CuboidPacked(long deleted, long drawn) {
+            return deleted << LowerBits | drawn;
+        }
+
+        public const int LowerBits = 38;
+        public const long LowerBitsMask = (1L << LowerBits) - 1;
     }
 }

@@ -89,7 +89,8 @@ namespace MCGalaxy.Commands {
             info.Group = group;
             info.Money = data.Money; info.Deaths = data.Deaths;
             
-            info.TotalBlocks = data.Blocks; info.TotalDrawn = data.Cuboided;
+            info.TotalBlocks = data.TotalModified; info.TotalDrawn = data.TotalDrawn;
+            info.TotalPlaced = data.TotalPlaced; info.TotalDeleted = data.TotalDeleted;
             info.LoginBlocks = -1;           
             
             info.TimeSpent = data.TotalTime.ParseDBTime();

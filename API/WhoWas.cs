@@ -19,7 +19,7 @@ namespace MCGalaxy {
             PlayerData pl = PlayerInfo.FindData(p);
             if (pl == null) return;
             
-            modified_blocks = (int)pl.Blocks;
+            modified_blocks = (int)pl.TotalModified;
             time = pl.TotalTime;
             first_login = pl.FirstLogin.ToString("yyyy-MM-dd HH:mm:ss");
             last_login = pl.LastLogin.ToString("yyyy-MM-dd HH:mm:ss");

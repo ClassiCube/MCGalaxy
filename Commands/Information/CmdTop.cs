@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands {
                     title = "&aMost recent players:";
                     break;
                 case "6":
-                    columnName = "TotalBlocks";
+                    columnName = "TotalBlocks & " + PlayerData.LowerBitsMask;
                     title = "&aTop " + strLimit + " number of blocks modified:";
                     break;
                 case "7":

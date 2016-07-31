@@ -101,10 +101,12 @@ namespace MCGalaxy {
             if (MySQLSave != null) MySQLSave(this, query);
             OnMySQLSaveEvent.Call(this, query);
             if (cancelmysql) { cancelmysql = false; return; }
-            
+
+            long blocks = PlayerData.BlocksPacked(TotalPlaced, overallBlocks);
+            long cuboided = PlayerData.CuboidPacked(TotalDeleted, TotalDrawn);            
             Database.Execute(query, ip, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 
-                             totalLogins, overallDeath, money, overallBlocks, 
-                             TotalDrawn, totalKicked, time.ToDBTime(), name);
+                             totalLogins, overallDeath, money, blocks, 
+                             cuboided, totalKicked, time.ToDBTime(), name);
             
             if (Economy.Enabled && loginMoney != money) {
                 Economy.EcoStats ecos = Economy.RetrieveEcoStats(name);
