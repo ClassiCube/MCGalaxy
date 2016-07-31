@@ -166,7 +166,7 @@ namespace MCGalaxy.Commands.Building {
                 }
 
                 if (col.A < 20) cur.Block = Block.air;
-                p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, cur.Block, 0);
+                p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, cur.Block, 0, true);
             }
             
             if (dArgs.name == "tempImage_" + p.name)

@@ -150,15 +150,15 @@ namespace MCGalaxy {
         //Using for anything else can cause unintended effects!
         public bool canBuild = true;
 
-        public int money = 0, loginMoney = 0;
-        public long overallBlocks = 0, TotalBlocksDrawn = 0;
-        public int loginBlocks = 0;
+        public int money, loginMoney;
+        public long overallBlocks, TotalDrawn, TotalPlaced, TotalDeleted;
+        public int loginBlocks;
 
         public DateTime timeLogged;
         public DateTime firstLogin, lastLogin;
-        public int totalLogins = 0;
-        public int totalKicked = 0;
-        public int overallDeath = 0;
+        public int totalLogins;
+        public int totalKicked;
+        public int overallDeath;
 
         public bool staticCommands = false;
         internal bool outdatedClient = false; // for ClassicalSharp 0.98.5, which didn't reload map for BlockDefinitions

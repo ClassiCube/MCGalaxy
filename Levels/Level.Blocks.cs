@@ -292,9 +292,7 @@ namespace MCGalaxy {
                 p.UndoBuffer.Add(this, Pos);
 
                 errorLocation = "Setting tile";
-                p.loginBlocks++;
-                p.overallBlocks++;
-                if (drawn) p.TotalBlocksDrawn++;
+                p.IncrementBlockStats(block, drawn);
                 
                 SetTile(x, y, z, block);
                 if (b == Block.custom_block && block != Block.custom_block)

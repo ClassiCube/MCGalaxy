@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands {
         public string FullName, Name;
         public Group Group;
         public int Money, Deaths;
-        public long TotalBlocks, LoginBlocks, TotalDrawn;
+        public long TotalBlocks, LoginBlocks, TotalDrawn, TotalPlaced, TotalDeleted;
         public TimeSpan TimeSpent, TimeOnline;
         public DateTime First, Last;
         public int Logins, Kicks;
@@ -48,7 +48,8 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "  Modified &a{0} %Sblocks, &a{1} %Ssince login", who.TotalBlocks, who.LoginBlocks);
             else
                 Player.Message(p, "  Modified &a{0} %Sblocks", who.TotalBlocks);
-            Player.Message(p, "    &a0 %Splaced, &a0 %Sdeleted, &a{0} %Sdrawn", who.TotalDrawn);
+            Player.Message(p, "    &a{0} %Splaced, &a{1} %Sdeleted, &a{2} %Sdrawn", 
+                           who.TotalPlaced, who.TotalDeleted, who.TotalDrawn);
 
             if (who.TimeOnline.Ticks > 0)
             	Player.Message(p, "  Spent &a{0}%S on the server, &a{1}%S this session", 

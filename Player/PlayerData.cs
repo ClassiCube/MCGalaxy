@@ -21,9 +21,10 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy {   
     public class PlayerData {
-        public string Name, Color, Title, TitleColor;
-        public string Money, Deaths, Blocks, Cuboided, Logins, Kicks;
-        public string TotalTime, FirstLogin, LastLogin, IP, UserID;
+        public string Name, Color, Title, TitleColor, TotalTime, IP;
+        public DateTime FirstLogin, LastLogin;
+        public int UserID, Money, Deaths, Logins, Kicks;
+        public long Blocks, Cuboided;      
         
         internal static void Create(Player p) {
             p.prefix = "";
@@ -38,7 +39,7 @@ namespace MCGalaxy {
             p.totalKicked = 0;
             p.overallDeath = 0;
             p.overallBlocks = 0;
-            p.TotalBlocksDrawn = 0;
+            p.TotalDrawn = 0;
             string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             
             const string query = "INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths" +
@@ -54,11 +55,11 @@ namespace MCGalaxy {
         
         internal static void Load(DataTable playerDb, Player p) {
             PlayerData data = PlayerData.Fill(playerDb.Rows[0]);
-            p.totalLogins = int.Parse(data.Logins) + 1;
+            p.totalLogins = data.Logins + 1;
             p.time = data.TotalTime.ParseDBTime();
-            p.DatabaseID = int.Parse(data.UserID);
-            p.firstLogin = DateTime.Parse(data.FirstLogin);
-            p.lastLogin = DateTime.Parse(data.LastLogin);
+            p.DatabaseID = data.UserID;
+            p.firstLogin = data.FirstLogin;
+            p.lastLogin = data.LastLogin;
             
             p.title = data.Title;
             if (p.title != "") p.title = p.title.Replace("[", "").Replace("]", "");
@@ -67,36 +68,36 @@ namespace MCGalaxy {
             p.color = data.Color;
             if (p.color == "") p.color = p.group.color;
             
-            p.overallDeath = int.Parse(data.Deaths);
-            p.overallBlocks = long.Parse(data.Blocks);
-            p.TotalBlocksDrawn = long.Parse(data.Cuboided);
+            p.overallDeath = data.Deaths;
+            p.overallBlocks = data.Blocks;
+            p.TotalDrawn = data.Cuboided;
             
             //money = int.Parse(data.money);
             p.money = Economy.RetrieveEcoStats(p.name).money;
             p.loginMoney = p.money;
-            p.totalKicked = int.Parse(data.Kicks);
+            p.totalKicked = data.Kicks;
         }
         
         public static PlayerData Fill(DataRow row) {
             PlayerData pl = new PlayerData();
             pl.Name = row["Name"].ToString().Trim();
             pl.IP = row["IP"].ToString().Trim();
-            pl.UserID = row["ID"].ToString().Trim();
+            pl.UserID = int.Parse(row["ID"].ToString().Trim());
             
             pl.TotalTime = row["TimeSpent"].ToString();
-            pl.FirstLogin = row["FirstLogin"].ToString();
-            pl.LastLogin = row["LastLogin"].ToString();
+            pl.FirstLogin = DateTime.Parse(row["FirstLogin"].ToString());
+            pl.LastLogin = DateTime.Parse(row["LastLogin"].ToString());
             
             pl.Title = row["Title"].ToString().Trim();
             pl.TitleColor = ParseColor(row["title_color"]);
             pl.Color = ParseColor(row["color"]);
             
-            pl.Money = row["Money"].ToString();
-            pl.Deaths = row["TotalDeaths"].ToString();
-            pl.Blocks = row["totalBlocks"].ToString();
-            pl.Cuboided = row["totalCuboided"].ToString();
-            pl.Logins = row["totalLogin"].ToString();
-            pl.Kicks = row["totalKicked"].ToString();
+            pl.Money = int.Parse(row["Money"].ToString());
+            pl.Deaths = int.Parse(row["TotalDeaths"].ToString());
+            pl.Blocks = long.Parse(row["totalBlocks"].ToString());
+            pl.Cuboided = long.Parse(row["totalCuboided"].ToString());
+            pl.Logins = int.Parse(row["totalLogin"].ToString());
+            pl.Kicks = int.Parse(row["totalKicked"].ToString());
             return pl;
         }
         

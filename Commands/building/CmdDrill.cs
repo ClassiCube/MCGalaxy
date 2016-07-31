@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Building {
                 if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
                 
                 bool sameBlock = type == Block.custom_block ? extType == extTile : type == tile;
-                if (sameBlock) p.level.UpdateBlock(p, x, y, z, Block.air, 0);
+                if (sameBlock) p.level.UpdateBlock(p, x, y, z, Block.air, 0, true);
             }
             Player.Message(p, "Drilled " + buffer.Count + " blocks.");
             return true;

@@ -27,6 +27,15 @@ namespace MCGalaxy {
     
     public sealed partial class Player : IDisposable {
 
+        public void IncrementBlockStats(byte block, bool drawn) {
+            loginBlocks++;
+            overallBlocks++;
+            
+            if (drawn) TotalDrawn++;
+            else if (block == 0) TotalDeleted++;
+            else TotalPlaced++;
+        }
+		
         public static string CheckPlayerStatus(Player p) {
             if ( p.hidden ) return "hidden";
             if ( p.IsAfk ) return "afk";
@@ -87,7 +96,7 @@ namespace MCGalaxy {
 
         public void save() {
             const string query = "UPDATE Players SET IP=@0, LastLogin=@1, totalLogin=@2, totalDeaths=@3, " +
-            	"Money=@4, totalBlocks=@5, totalCuboided=@6, totalKicked=@7, TimeSpent=@8 WHERE Name=@9";
+                "Money=@4, totalBlocks=@5, totalCuboided=@6, totalKicked=@7, TimeSpent=@8 WHERE Name=@9";
             
             if (MySQLSave != null) MySQLSave(this, query);
             OnMySQLSaveEvent.Call(this, query);
@@ -95,7 +104,7 @@ namespace MCGalaxy {
             
             Database.Execute(query, ip, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 
                              totalLogins, overallDeath, money, overallBlocks, 
-                             TotalBlocksDrawn, totalKicked, time.ToDBTime(), name);
+                             TotalDrawn, totalKicked, time.ToDBTime(), name);
             
             if (Economy.Enabled && loginMoney != money) {
                 Economy.EcoStats ecos = Economy.RetrieveEcoStats(name);

@@ -56,8 +56,8 @@ namespace MCGalaxy.Commands {
         
         const string format = "yyyy-MM-dd HH:mm:ss";
         void Swap(PlayerData src, PlayerData dst) {
-            string first = DateTime.Parse(src.FirstLogin).ToString(format);
-            string last = DateTime.Parse(src.LastLogin).ToString(format);
+            string first = src.FirstLogin.ToString(format);
+            string last = src.LastLogin.ToString(format);
             const string syntax = "UPDATE Players SET totalBlocks=@0, totalCuboided=@1" +
             	", color=@2, totalDeaths=@3, FirstLogin=@4, IP=@5, totalKicked=@6, LastLogin=@7" +
             	", totalLogin=@8, Money=@9, Title=@10, title_color=@11, TimeSpent=@12 WHERE Name=@13";

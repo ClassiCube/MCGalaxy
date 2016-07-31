@@ -137,9 +137,7 @@ namespace MCGalaxy.Drawing.Ops {
                         continue;
                     
                     lvl.SetTile(b.X, b.Y, b.Z, b.Block, p, b.ExtBlock);
-                    p.loginBlocks++;
-                    p.overallBlocks++;
-                    p.TotalBlocksDrawn++;
+                    p.IncrementBlockStats(b.Block, true);
                 }
             } else if (item.Level.bufferblocks) {
                 foreach (var b in item.Op.Perform(item.Marks, p, lvl, item.Brush)) {

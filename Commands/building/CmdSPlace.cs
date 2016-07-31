@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Building {
             ushort endX = (ushort)(m[0].X + dirX * distance);
             ushort endY = (ushort)(m[0].Y + dirY * distance);
             ushort endZ = (ushort)(m[0].Z + dirZ * distance);
-            p.level.UpdateBlock(p, endX, endY, endZ, Block.rock, 0);   
+            p.level.UpdateBlock(p, endX, endY, endZ, Block.rock, 0, true);   
             
             if (interval > 0) {
                 int x = m[0].X, y = m[0].Y, z = m[0].Z;
@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands.Building {
                     delta = Math.Abs(x - m[0].X) + Math.Abs(y - m[0].Y) + Math.Abs(z - m[0].Z);
                 }
             } else {
-                p.level.UpdateBlock(p, (ushort)m[0].X, (ushort)m[0].Y, (ushort)m[0].Z, Block.rock, 0);
+                p.level.UpdateBlock(p, (ushort)m[0].X, (ushort)m[0].Y, (ushort)m[0].Z, Block.rock, 0, true);
             }
 
             Player.Message(p, "Placed stone blocks {0} apart.", interval > 0 ? interval : distance);

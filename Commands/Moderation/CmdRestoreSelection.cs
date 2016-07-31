@@ -61,10 +61,10 @@ namespace MCGalaxy.Commands {
                 for (int z = Math.Min(m[0].Z, m[1].Z); z <= Math.Max(m[0].Z, m[1].Z); z++)
                     for (int x = Math.Min(m[0].X, m[1].X); x <= Math.Max(m[0].X, m[1].X); x++)
             {
-                byte tile = blocks[x + width * (z + y * length)], extTile = 0;
-                if (tile == Block.custom_block) 
-                    extTile = other.GetExtTile((ushort)x, (ushort)y, (ushort)z);
-                p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, tile, extTile);
+                byte block = blocks[x + width * (z + y * length)], extBlock = 0;
+                if (block == Block.custom_block) 
+                    extBlock = other.GetExtTile((ushort)x, (ushort)y, (ushort)z);
+                p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, block, extBlock, true);
             }
             return true;
         }
