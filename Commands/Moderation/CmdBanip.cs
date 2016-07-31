@@ -69,8 +69,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (who != null) return who.ip;
             
             Player.Message(p, "Searching PlayerDB..");
-            OfflinePlayer target = PlayerInfo.FindOfflineMatches(p, message);
-            return target == null ? null : target.ip;
+            return PlayerInfo.FindOfflineIPMatches(p, message);
         }
         
         static bool CheckIP(Player p, string ip) {

@@ -41,11 +41,11 @@ namespace MCGalaxy.Commands {
             	Player.Message(p, "\"{0}\" must be offline to use /infoswap.", args[1]); return;
             }
             
-            OfflinePlayer src = PlayerInfo.Find(args[0], true);
+            PlayerData src = PlayerInfo.FindData(args[0]);
             if (src == null) {
             	Player.Message(p, "\"{0}\" was not found in the database.", args[0]); return;
             }
-            OfflinePlayer dst = PlayerInfo.Find(args[1], true);
+            PlayerData dst = PlayerInfo.FindData(args[1]);
             if (dst == null) {
             	Player.Message(p, "\"{0}\" was not found in the database.", args[1]); return;
             }
@@ -55,28 +55,28 @@ namespace MCGalaxy.Commands {
         }
         
         const string format = "yyyy-MM-dd HH:mm:ss";
-        void Swap(OfflinePlayer src, OfflinePlayer dst) {
-            string first = DateTime.Parse(src.firstLogin).ToString(format);
-            string last = DateTime.Parse(src.lastLogin).ToString(format);
+        void Swap(PlayerData src, PlayerData dst) {
+            string first = DateTime.Parse(src.FirstLogin).ToString(format);
+            string last = DateTime.Parse(src.LastLogin).ToString(format);
             const string syntax = "UPDATE Players SET totalBlocks=@0, totalCuboided=@1" +
             	", color=@2, totalDeaths=@3, FirstLogin=@4, IP=@5, totalKicked=@6, LastLogin=@7" +
             	", totalLogin=@8, Money=@9, Title=@10, title_color=@11, TimeSpent=@12 WHERE Name=@13";
             
-            Database.Execute(syntax, src.blocks, src.cuboided, src.color, src.deaths,
-                             first, src.ip, src.kicks, last, src.logins,
-                             src.money, src.title, src.titleColor, src.totalTime, dst.name);            
+            Database.Execute(syntax, src.Blocks, src.Cuboided, src.Color, src.Deaths,
+                             first, src.IP, src.Kicks, last, src.Logins,
+                             src.Money, src.Title, src.TitleColor, src.TotalTime, dst.Name);            
         }
         
-        void SwapGroups(OfflinePlayer src, OfflinePlayer dst) {
-            Group srcGroup = Group.findPlayerGroup(src.name);
-            Group dstGroup = Group.findPlayerGroup(dst.name);
+        void SwapGroups(PlayerData src, PlayerData dst) {
+            Group srcGroup = Group.findPlayerGroup(src.Name);
+            Group dstGroup = Group.findPlayerGroup(dst.Name);
             
-            srcGroup.playerList.Remove(src.name);
-            srcGroup.playerList.Add(dst.name);
+            srcGroup.playerList.Remove(src.Name);
+            srcGroup.playerList.Add(dst.Name);
             srcGroup.playerList.Save();
             
-            dstGroup.playerList.Remove(dst.name);
-            dstGroup.playerList.Add(src.name);
+            dstGroup.playerList.Remove(dst.Name);
+            dstGroup.playerList.Add(src.Name);
             dstGroup.playerList.Save();
         }
         

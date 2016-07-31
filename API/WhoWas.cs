@@ -16,15 +16,15 @@ namespace MCGalaxy {
 
         public WhoWas(string p) {
             rank = Group.findPlayer(p);
-            OfflinePlayer pl = PlayerInfo.Find(p, true);
+            PlayerData pl = PlayerInfo.FindData(p);
             if (pl == null) return;
             
-            modified_blocks = int.Parse(pl.blocks);
-            time = pl.totalTime;
-            first_login = pl.firstLogin;
-            last_login = pl.lastLogin;
-            total_logins = int.Parse(pl.logins);
-            kicks = int.Parse(pl.kicks);
+            modified_blocks = int.Parse(pl.Blocks);
+            time = pl.TotalTime;
+            first_login = pl.FirstLogin;
+            last_login = pl.LastLogin;
+            total_logins = int.Parse(pl.Logins);
+            kicks = int.Parse(pl.Kicks);
         }
     }
 }

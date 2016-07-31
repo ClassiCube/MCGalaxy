@@ -12,17 +12,17 @@ BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
+ 
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {
     
-    public static class PlayerInfo {
-        
+    public static class PlayerInfo {       
         public static List<Player> players;
+        
         /// <summary> Array of all currently online players. </summary>
         /// <remarks> Note this field is highly volatile, you should cache references to the items array. </remarks>
         public static VolatileArray<Player> Online = new VolatileArray<Player>(true);
@@ -88,62 +88,12 @@ namespace MCGalaxy {
             }
             return matches == 1 ? match : null;
         }
+ 
         
-        internal static void CreateInfo(Player p) {
-            p.prefix = "";
-            p.time = new TimeSpan(0, 0, 0, 1);
-            p.title = "";
-            p.titlecolor = "";
-            p.color = p.group.color;
-            p.money = 0;
-            
-            p.firstLogin = DateTime.Now;
-            p.totalLogins = 1;
-            p.totalKicked = 0;
-            p.overallDeath = 0;
-            p.overallBlocks = 0;
-            p.TotalBlocksDrawn = 0;
-            string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            
-            const string query = "INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths" +
-                ", Money, totalBlocks, totalKicked, TimeSpent) VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10)";
-            Database.Execute(query, p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, p.time.ToDBTime());
-            
-            const string ecoQuery = "INSERT INTO Economy (player, money, total, purchase, payment, salary, fine) " +
-                "VALUES (@0, @1, @2, @3, @3, @3, @3)";
-            Database.Execute(ecoQuery, p.name, p.money, 0, "%cNone");
-        }
-        
-        internal static void LoadInfo(DataTable playerDb, Player p) {
-            DataRow row = playerDb.Rows[0];
-            p.totalLogins = int.Parse(row["totalLogin"].ToString()) + 1;
-            p.time = row["TimeSpent"].ToString().ParseDBTime();
-            p.userID = int.Parse(row["ID"].ToString());
-            p.firstLogin = DateTime.Parse(row["firstLogin"].ToString());
-            p.lastLogin = DateTime.Parse(row["LastLogin"].ToString());
-            
-            p.title = row["Title"].ToString().Trim();
-            if (p.title != "")
-                p.title = p.title.Replace("[", "").Replace("]", "");
-            
-            p.titlecolor = ParseColor(row["title_color"]);           
-            p.color = ParseColor(row["color"]);
-            if (p.color == "") p.color = p.group.color;
-            
-            p.overallDeath = int.Parse(row["TotalDeaths"].ToString());
-            p.overallBlocks = long.Parse(row["totalBlocks"].ToString().Trim());
-            p.TotalBlocksDrawn = long.Parse(row["totalCuboided"].ToString().Trim());
-            
-            //money = int.Parse(playerDb.Rows[0]["Money"].ToString());
-            p.money = Economy.RetrieveEcoStats(p.name).money;
-            p.loginMoney = p.money;
-            p.totalKicked = int.Parse(row["totalKicked"].ToString());
-        }
-        
-        public static OfflinePlayer Find(string name, bool fullStats = false) {
+        public static PlayerData FindData(string name) {
             using (DataTable results = Query(name, "*")) {
                 if (results.Rows.Count == 0) return null;
-                return FillInfo(results.Rows[0], fullStats);
+                return PlayerData.Fill(results.Rows[0]);
             }
         }
         
@@ -161,6 +111,34 @@ namespace MCGalaxy {
             }
         }
         
+        
+        public static PlayerData FindOfflineMatches(Player p, string name) {
+            using (DataTable results = QueryMulti(name, "*")) {
+                int matches = 0;
+                DataRow row = Extensions.FindMatches<DataRow>(p, name, out matches, results.Rows,
+                                                              r => true, r => r["Name"].ToString(), "players", 20);
+                return row == null ? null : PlayerData.Fill(row);
+            }
+        }
+        
+        public static string FindOfflineNameMatches(Player p, string name) {
+            using (DataTable results = QueryMulti(name, "Name")) {
+                int matches = 0;
+                DataRow row = Extensions.FindMatches<DataRow>(p, name, out matches, results.Rows,
+                                                              r => true, r => r["Name"].ToString(), "players", 20);
+                return row == null ? null : row["Name"].ToString();
+            }
+        }
+        
+        public static string FindOfflineIPMatches(Player p, string name) {
+            using (DataTable results = QueryMulti(name, "Name, IP")) {
+                int matches = 0;
+                DataRow row = Extensions.FindMatches<DataRow>(p, name, out matches, results.Rows,
+                                                              r => true, r => r["Name"].ToString(), "players", 20);
+                return row == null ? null : row["IP"].ToString();
+            }
+        }
+        
         public static List<string> FindAccounts(string ip) {
             DataTable clones = Database.Fill("SELECT Name FROM Players WHERE IP=@0", ip);
             List<string> alts = new List<string>();
@@ -172,24 +150,6 @@ namespace MCGalaxy {
             }
             clones.Dispose();
             return alts;
-        }
-
-        public static string FindOfflineNameMatches(Player p, string name) {
-            using (DataTable results = QueryMulti(name, "Name")) {
-                int matches = 0;
-                DataRow row = Extensions.FindMatches<DataRow>(p, name, out matches, results.Rows,
-                                                              r => true, r => r["Name"].ToString(), "players", 20);
-                return row == null ? null : row["Name"].ToString();
-            }
-        }
-        
-        public static OfflinePlayer FindOfflineMatches(Player p, string name) {
-            using (DataTable results = QueryMulti(name, "*")) {
-                int matches = 0;
-                DataRow row = Extensions.FindMatches<DataRow>(p, name, out matches, results.Rows,
-                                                              r => true, r => r["Name"].ToString(), "players", 20);
-                return row == null ? null : FillInfo(row, true);
-            }
         }
         
         
@@ -206,44 +166,5 @@ namespace MCGalaxy {
                 "SELECT " + selector + " FROM Players WHERE Name LIKE @0 LIMIT 21 COLLATE NOCASE";
             return Database.Fill(syntax, "%" + name + "%");
         }
-        
-        static OfflinePlayer FillInfo(DataRow row, bool fullStats) {
-            OfflinePlayer pl = new OfflinePlayer();
-            pl.name = row["Name"].ToString().Trim();
-            pl.ip = row["IP"].ToString().Trim();
-            
-            pl.totalTime = row["TimeSpent"].ToString();
-            pl.firstLogin = row["FirstLogin"].ToString();
-            pl.lastLogin = row["LastLogin"].ToString();
-            if (!fullStats) return pl;
-            
-            pl.title = row["Title"].ToString().Trim();
-            pl.titleColor = ParseColor(row["title_color"]);
-            pl.color = ParseColor(row["color"]);
-            
-            pl.money = row["Money"].ToString();
-            pl.deaths = row["TotalDeaths"].ToString();
-            pl.blocks = row["totalBlocks"].ToString();
-            pl.cuboided = row["totalCuboided"].ToString();
-            pl.logins = row["totalLogin"].ToString();
-            pl.kicks = row["totalKicked"].ToString();
-            return pl;
-        }
-        
-        static string ParseColor(object value) {
-            string col = value.ToString().Trim();
-            if (col == "") return col;
-            
-            // Try parse color name, then color code
-            string parsed = Colors.Parse(col);
-            if (parsed != "") return parsed;        
-            return Colors.Name(col) == "" ? "" : col;
-        }
-    }
-    
-    public class OfflinePlayer {
-        public string name, color, title, titleColor;
-        public string money, deaths, blocks, cuboided, logins, kicks;
-        public string totalTime, firstLogin, lastLogin, ip;
     }
 }

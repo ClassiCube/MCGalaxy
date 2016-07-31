@@ -44,14 +44,15 @@ namespace MCGalaxy.Commands
             Economy.EcoStats payer, receiver;
             
             if (who == null) {
-                OfflinePlayer off = PlayerInfo.FindOfflineMatches(p, args[0]);
-                if (off == null) return;
+                string dbName = PlayerInfo.FindOfflineNameMatches(p, args[0]);
+                if (dbName == null) return;
+                
                 payer = Economy.RetrieveEcoStats(p.name);
-                receiver = Economy.RetrieveEcoStats(off.name);
+                receiver = Economy.RetrieveEcoStats(dbName);
                 if (!IsLegalPayment(p, payer.money, receiver.money, amount)) return;
                 
-                target = off.color + off.name;
-                Player.GlobalMessage(p.ColoredName + " %Spaid %f" + off.color + off.name + "%S(offline) %f" + amount + " %3" + Server.moneys);
+                target = receiver.playerName;
+                Player.GlobalMessage(p.ColoredName + " %Spaid %f" + receiver.playerName + "%S(offline) %f" + amount + " %3" + Server.moneys);
             } else {
                 payer = Economy.RetrieveEcoStats(p.name);
                 receiver = Economy.RetrieveEcoStats(who.name);

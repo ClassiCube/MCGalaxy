@@ -34,22 +34,22 @@ namespace MCGalaxy.Commands {
             message = Colors.EscapeColors(message);
             if (message == "" && p != null) message = p.name;
 
-            string name = null;
+            string name = message;
             int matches = 0;
             Player who = PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;
             if (who == null) {
                 Player.Message(p, "Could not find player. Searching Player DB.");
-                OfflinePlayer target = PlayerInfo.FindOfflineMatches(p, message);
+                PlayerData target = PlayerInfo.FindOfflineMatches(p, message);
                 if (target == null) return;
-                message = target.ip; name = target.name;
+                message = target.IP; name = target.Name;
             } else {
                 message = who.ip; name = who.name;
             }
 
             List<string> alts = PlayerInfo.FindAccounts(message);
             if (alts.Count == 0) { Player.Message(p, "Could not find any record of the player entered."); return; }
-            if (alts.Count == 1) { Player.Message(p, message + " has no clones."); return; }
+            if (alts.Count == 1) { Player.Message(p, name + " has no clones."); return; }
             Group grp = Group.findPerm(LevelPermission.Banned);
            
             StringBuilder builder = new StringBuilder();

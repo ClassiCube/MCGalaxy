@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands {
             } else {
                 if (!ValidName(p, message, "player")) return;
                 Player.Message(p, "Searching database for the player..");           
-                OfflinePlayer target = PlayerInfo.FindOfflineMatches(p, message);              
+                PlayerData target = PlayerInfo.FindOfflineMatches(p, message);
                 if (target == null) return;
                 info = FromOffline(target, message);
             }
@@ -76,27 +76,27 @@ namespace MCGalaxy.Commands {
             return info;
         }
         
-        WhoInfo FromOffline(OfflinePlayer target, string message) {
-            Group group = Group.findPlayerGroup(target.name);
-            string color = target.color == "" ? group.color : target.color;
-            string prefix = target.title == "" ? "" : color + "[" + target.titleColor + target.title + color + "] ";
+        WhoInfo FromOffline(PlayerData target, string message) {
+            Group group = Group.findPlayerGroup(target.Name);
+            string color = target.Color == "" ? group.color : target.Color;
+            string prefix = target.Title == "" ? "" : color + "[" + target.TitleColor + target.Title + color + "] ";
             
             WhoInfo info = new WhoInfo();
-            info.FullName = prefix + color + target.name.TrimEnd('+');
-            info.Name = target.name;
+            info.FullName = prefix + color + target.Name.TrimEnd('+');
+            info.Name = target.Name;
             info.Group = group;
-            info.Money = int.Parse(target.money); info.Deaths = int.Parse(target.deaths);
-            info.TotalBlocks = long.Parse(target.blocks); info.LoginBlocks = -1;
-            info.TotalDrawn = long.Parse(target.cuboided);
+            info.Money = int.Parse(target.Money); info.Deaths = int.Parse(target.Deaths);
+            info.TotalBlocks = long.Parse(target.Blocks); info.LoginBlocks = -1;
+            info.TotalDrawn = long.Parse(target.Cuboided);
             
-            info.TimeSpent = target.totalTime.ParseDBTime();
-            info.First = DateTime.Parse(target.firstLogin);
-            info.Last = DateTime.Parse(target.lastLogin);
-            info.Logins = int.Parse(target.logins); info.Kicks = int.Parse(target.kicks);
-            info.IP = target.ip;
+            info.TimeSpent = target.TotalTime.ParseDBTime();
+            info.First = DateTime.Parse(target.FirstLogin);
+            info.Last = DateTime.Parse(target.LastLogin);
+            info.Logins = int.Parse(target.Logins); info.Kicks = int.Parse(target.Kicks);
+            info.IP = target.IP;
             
             if (Server.zombie.Running) {
-                ZombieStats stats = Server.zombie.LoadZombieStats(target.name);
+                ZombieStats stats = Server.zombie.LoadZombieStats(target.Name);
                 info.RoundsTotal = stats.TotalRounds; info.InfectedTotal = stats.TotalInfected;
                 info.RoundsMax = stats.MaxRounds; info.InfectedMax = stats.MaxInfected;
             }

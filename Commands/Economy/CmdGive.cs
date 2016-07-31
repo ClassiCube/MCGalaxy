@@ -49,9 +49,10 @@ namespace MCGalaxy.Commands
             Economy.EcoStats ecos;
 
             if (who == null) {
-                OfflinePlayer off = PlayerInfo.FindOfflineMatches(p, args[0]);
-                if (off == null) return;
-                ecos = Economy.RetrieveEcoStats(off.name);
+                string dbName = PlayerInfo.FindOfflineNameMatches(p, args[0]);
+                if (dbName == null) return;
+                
+                ecos = Economy.RetrieveEcoStats(dbName);
                 if (ReachedMax(p, ecos.money, amount)) return;
                 Player.GlobalMessage(giver + " %Sgave %f" + ecos.playerName + "%S(offline)" + " %f" + amount + " %3" + Server.moneys);
             } else {

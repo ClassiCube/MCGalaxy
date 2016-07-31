@@ -90,7 +90,7 @@ namespace MCGalaxy {
         public string realName;
         public int warn = 0;
         public byte id;
-        public int userID = -1;
+        public int DatabaseID = -1;
         public string ip;
         public string color;
         public Group group;

@@ -50,11 +50,12 @@ namespace MCGalaxy.Commands {
             
             Economy.EcoStats ecos;
             if (who == null) {
-                OfflinePlayer off = PlayerInfo.FindOfflineMatches(p, args[0]);
-                if (off == null) return;
-                ecos = Economy.RetrieveEcoStats(off.name);
+                string dbName = PlayerInfo.FindOfflineNameMatches(p, args[0]);
+                if (dbName == null) return;
+                
+                ecos = Economy.RetrieveEcoStats(dbName);
                 Take(all, ref ecos, ref amount);
-                Player.GlobalMessage(taker + " %Stook %f" + amount + " %3" + Server.moneys + " %Sfrom " + off.color + off.name + "%f(offline)");
+                Player.GlobalMessage(taker + " %Stook %f" + amount + " %3" + Server.moneys + " %Sfrom " + ecos.playerName + "%f(offline)");
             } else {
                 ecos = Economy.RetrieveEcoStats(who.name);
                 ecos.money = who.money;

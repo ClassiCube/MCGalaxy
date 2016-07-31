@@ -611,11 +611,11 @@ namespace MCGalaxy {
         
         void InitPlayerStats(DataTable playerDb) {
             SendMessage("Welcome " + DisplayName + "! This is your first visit.");
-            PlayerInfo.CreateInfo(this);
+            PlayerData.Create(this);
         }
         
         void LoadPlayerStats(DataTable playerDb) {
-            PlayerInfo.LoadInfo(playerDb, this);
+            PlayerData.Load(playerDb, this);
             SendMessage("Welcome back " + color + prefix + DisplayName + "%S! " +
                         "You've been here " + totalLogins + " times!");
         }

@@ -36,10 +36,10 @@ namespace MCGalaxy.Commands {
             string ip = "";
             Player who = PlayerInfo.Find(message);
             if (who == null) {
-                Player.Message(p, "&eNo online player \"" + message + "\", searching database..");
-                OfflinePlayer target = PlayerInfo.FindOfflineMatches(p, message);              
-                if (target == null) return;
-                ip = target.ip;
+                Player.Message(p, "&eNo online player \"{0}\", searching database..", message);
+                string targetIP = PlayerInfo.FindOfflineIPMatches(p, message);
+                if (targetIP == null) return;
+                ip = targetIP;
             } else {
                 ip = who.ip;
             }
