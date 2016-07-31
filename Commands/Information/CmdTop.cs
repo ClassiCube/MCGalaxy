@@ -79,26 +79,38 @@ namespace MCGalaxy.Commands {
                     title = "&aMost recent players:";
                     break;
                 case "6":
-                    columnName = "TotalBlocks & " + PlayerData.LowerBitsMask;
-                    title = "&aTop " + strLimit + " number of blocks modified:";
-                    break;
-                case "7":
                     columnName = "TotalKicked";
                     title = "&aTop " + strLimit + " number of kicks:";
                     break;
+                case "7":
+                    columnName = "totalBlocks & " + PlayerData.LowerBitsMask;
+                    title = "&aTop " + strLimit + " number of blocks modified:";
+                    break;
                 case "8":
+                    columnName = "totalCuboided & " + PlayerData.LowerBitsMask;
+                    title = "&aTop " + strLimit + " number of blocks drawn:";
+                    break;
+                case "9":
+                    columnName = "totalBlocks >> " + PlayerData.LowerBits;
+                    title = "&aTop " + strLimit + " number of blocks placed:";
+                    break;
+                case "10":
+                    columnName = "totalCuboided >> " + PlayerData.LowerBits;
+                    title = "&aTop " + strLimit + " number of blocks deleted:";
+                    break;
+                case "11":
                     columnName = "TotalInfected";
                     title = "&aTop total infections:";
                     table = "ZombieStats"; break;
-                case "9":
+                case "12":
                     columnName = "TotalRounds";
                     title = "&aTop rounds survived:";
                     table = "ZombieStats"; break;
-                case "10":
+                case "13":
                     columnName = "MaxInfected";
                     title = "&aTop consecutive infections:";
                     table = "ZombieStats"; break;
-                case "11":
+                case "14":
                     columnName = "MaxRounds";
                     title = "&aTop consecutive rounds survived:";
                     table = "ZombieStats"; break;
@@ -125,11 +137,13 @@ namespace MCGalaxy.Commands {
         	               "most/top of a particular stat. Available stats:");
             
         	Player.Message(p, "1) Most logins, 2) Most deaths, 3) Money");
-            Player.Message(p, "4) First joined, 5) Recently joined");
-            Player.Message(p, "6) Blocks Modified, 7) Most kicks");
+            Player.Message(p, "4) First joined, 5) Recently joined, 6) Most kicks");
+            Player.Message(p, "7) Blocks modified, 8) Blocks drawn");
+            Player.Message(p, "9) Blocks placed, 10) Blocks deleted");
+             
             if (!Server.zombie.Running) return;
-            Player.Message(p, "8) Most infected, 9) Most rounds survived");
-            Player.Message(p, "10) Max infected, 11) Max rounds survived");
+            Player.Message(p, "11) Most infected, 12) Most rounds survived");
+            Player.Message(p, "13) Max infected, 14) Max rounds survived");
         }
     }
 }
