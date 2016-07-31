@@ -72,11 +72,6 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            Level.BlockPos bP = default(Level.BlockPos);
-            bP.name = name;
-            bP.index = level.PosToInt(x, y, z);
-            bP.SetData(block, extBlock, false);
-
             lastClick.X = x; lastClick.Y = y; lastClick.Z = z;
             if (Blockchange != null) {
                 Blockchange(this, x, y, z, block, extBlock); return;
@@ -123,14 +118,14 @@ namespace MCGalaxy {
                     RevertBlock(x, y, z); return;
                 }
             }
-            //else
+            
+            int index = level.PosToInt(x, y, z);
             if (!painting && action == 0) {
-                bP.flags |= 1;
-                if (DeleteBlock(old, x, y, z, block, extBlock) && level.UseBlockDB)
-                    level.blockCache.Add(bP);
+                if (DeleteBlock(old, x, y, z, block, extBlock))
+                    level.AddToBlockDB(this, index, block, extBlock, true);
             } else {
-                if (PlaceBlock(old, x, y, z, block, extBlock) && level.UseBlockDB)
-                    level.blockCache.Add(bP);
+                if (PlaceBlock(old, x, y, z, block, extBlock))
+                	level.AddToBlockDB(this, index, block, extBlock, false);
             }
         }
         

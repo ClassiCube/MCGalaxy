@@ -72,7 +72,8 @@ namespace MCGalaxy {
         public List<UndoPos> UndoBuffer = new List<UndoPos>();
         public List<Zone> ZoneList;
         public bool backedup;
-        public List<BlockPos> blockCache = new List<BlockPos>();        
+        internal readonly object blockCacheLock = new object();
+        public List<BlockPos> blockCache = new List<BlockPos>();
         [ConfigBool("UseBlockDB", "Other", null, true)]
         public bool UseBlockDB = true;
 

@@ -127,43 +127,35 @@ namespace MCGalaxy {
             chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = 0;
         }
         
-        public void SetTile(ushort x, ushort y, ushort z, byte type, Player p, byte extType = 0) {
-            int b = PosToInt(x, y, z);
-            if (blocks == null || b < 0) return;
+        public void SetTile(ushort x, ushort y, ushort z, byte block, Player p, byte extBlock = 0) {
+            int index = PosToInt(x, y, z);
+            if (blocks == null || index < 0) return;
             
-            byte oldType = blocks[b];
-            blocks[b] = type;
-            byte oldExtType = 0;
+            byte oldBlock = blocks[index], oldExtBlock = 0;
+            blocks[index] = block;
             changed = true;
             
-            if (oldType == Block.custom_block) {
-                oldExtType = GetExtTile(x, y, z);
-                if (type != Block.custom_block)
+            if (oldBlock == Block.custom_block) {
+                oldExtBlock = GetExtTile(x, y, z);
+                if (block != Block.custom_block)
                     RevertExtTileNoCheck(x, y, z);
             }
-            if (type == Block.custom_block)
-                SetExtTileNoCheck(x, y, z, extType);
-            if (p == null)
-                return;    
+            if (block == Block.custom_block)
+                SetExtTileNoCheck(x, y, z, extBlock);
+            if (p == null) return;    
             
-            Level.BlockPos bP = default(Level.BlockPos);
-            bP.name = p.name;
-            bP.index = b;
-            bP.SetData(type, extType, type == 0); 
-            if (UseBlockDB)
-                blockCache.Add(bP);
-            
+            AddToBlockDB(p, index, block, extBlock, block == 0);
             Player.UndoPos Pos;
             Pos.x = x; Pos.y = y; Pos.z = z;
             Pos.mapName = this.name;
-            Pos.type = oldType; Pos.extType = oldExtType;
-            Pos.newtype = type; Pos.newExtType = extType;
+            Pos.type = oldBlock; Pos.extType = oldExtBlock;
+            Pos.newtype = block; Pos.newExtType = extBlock;
             Pos.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             p.UndoBuffer.Add(this, Pos);
         }
 
-        bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref byte type) {
-            if (!(type == Block.tnt || type == Block.bigtnt || type == Block.nuketnt || type == Block.smalltnt))
+        bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref byte block) {
+            if (!(block == Block.tnt || block == Block.bigtnt || block == Block.nuketnt || block == Block.smalltnt))
                 return true;
             
             TntWarsGame game = TntWarsGame.GetTntWarsGame(p);
@@ -177,7 +169,7 @@ namespace MCGalaxy {
                 Player.Message(p, "TNT Wars: You have passed the maximum amount of TNT that can be placed!"); return false;
             }
             p.TntAtATime();
-            type = Block.smalltnt;
+            block = Block.smalltnt;
             return true;
         }
         
@@ -440,18 +432,25 @@ namespace MCGalaxy {
             return pos.X < Width && pos.Y < Height && pos.Z < Length;
         }
         
-        public void UpdateBlock(Player p, ushort x, ushort y, ushort z, 
-                                byte block, byte extBlock, bool drawn = false) {
-            if (!DoBlockchange(p, x, y, z, block, extBlock, drawn)) return;          
+        public void AddToBlockDB(Player p, int index, byte block, byte extBlock, bool delete) {
+            if (!UseBlockDB) return;
             BlockPos bP = default(BlockPos);
             bP.name = p.name;
-            bP.index = PosToInt(x, y, z);
-            bP.SetData(block, extBlock, block == 0);
-            if (UseBlockDB)
+            bP.index = index;
+            
+            bP.SetData(block, extBlock, delete);
+            lock (blockCacheLock)
                 blockCache.Add(bP);
+        }
+        
+        public void UpdateBlock(Player p, ushort x, ushort y, ushort z, 
+                                byte block, byte extBlock, bool drawn = false) {
+            if (!DoBlockchange(p, x, y, z, block, extBlock, drawn)) return;
+            int index = PosToInt(x, y, z);
+            AddToBlockDB(p, index, block, extBlock, block == 0);
             
             if (bufferblocks) 
-                BlockQueue.Addblock(p, bP.index, block, extBlock);
+                BlockQueue.Addblock(p, index, block, extBlock);
             else 
                 Player.GlobalBlockchange(this, x, y, z, block, extBlock);
         }

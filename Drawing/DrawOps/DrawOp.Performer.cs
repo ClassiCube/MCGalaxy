@@ -128,7 +128,6 @@ namespace MCGalaxy.Drawing.Ops {
         
         static void DoDrawOp(PendingDrawOp item, Player p) {
             Level lvl = item.Level;
-            Level.BlockPos bP = default(Level.BlockPos);
             
             if (item.Affected > Server.DrawReloadLimit) {
                 foreach (var b in item.Op.Perform(item.Marks, p, lvl, item.Brush)) {
@@ -146,24 +145,18 @@ namespace MCGalaxy.Drawing.Ops {
                 foreach (var b in item.Op.Perform(item.Marks, p, lvl, item.Brush)) {
             		if (b.Block == Block.Zero) continue;
                     if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) continue;
-                    bP.name = p.name;
-                    bP.index = lvl.PosToInt(b.X, b.Y, b.Z);
-                    bP.SetData(b.Block, b.ExtBlock, b.Block == 0);
                     
-                    if (lvl.UseBlockDB)
-                        lvl.blockCache.Add(bP);
-                    BlockQueue.Addblock(p, bP.index, b.Block, b.ExtBlock);
+                    int index = lvl.PosToInt(b.X, b.Y, b.Z);
+                    lvl.AddToBlockDB(p, index, b.Block, b.ExtBlock, b.Block == 0);
+                    BlockQueue.Addblock(p, index, b.Block, b.ExtBlock);
                 }
             } else {
                 foreach (var b in item.Op.Perform(item.Marks, p, item.Level, item.Brush)) {
             	    if (b.Block == Block.Zero) continue;
                     if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) continue;
-                    bP.name = p.name;
-                    bP.index = lvl.PosToInt(b.X, b.Y, b.Z);
                     
-                    bP.SetData(b.Block, b.ExtBlock, b.Block == 0);
-                    if (lvl.UseBlockDB)
-                        lvl.blockCache.Add(bP);
+                    int index = lvl.PosToInt(b.X, b.Y, b.Z);
+                    lvl.AddToBlockDB(p, index, b.Block, b.ExtBlock, b.Block == 0);
                     Player.GlobalBlockchange(lvl, b.X, b.Y, b.Z, b.Block, b.ExtBlock);
                 }
             }
