@@ -330,7 +330,13 @@ namespace MCGalaxy {
         
         public void SendMap(Level oldLevel) { SendRawMap(oldLevel, level); }
         
+        readonly object joinLock = new object();
         public bool SendRawMap(Level oldLevel, Level level) {
+            lock (joinLock)
+                return SendRawMapCore(oldLevel, level);
+        }
+        
+        bool SendRawMapCore(Level oldLevel, Level level) {
             if (level.blocks == null) return false;
             bool success = true;
             useCheckpointSpawn = false;
@@ -345,7 +351,7 @@ namespace MCGalaxy {
                 
                 SendRaw(Opcode.LevelInitialise);
                 using (LevelChunkStream s = new LevelChunkStream(this))
-                	CompressRawMap(s);
+                    CompressRawMap(s);
                 
                 byte[] buffer = new byte[7];
                 buffer[0] = Opcode.LevelFinalise;
@@ -360,14 +366,16 @@ namespace MCGalaxy {
                 if (HasCpeExt(CpeExt.EnvColors))
                     SendCurrentEnvColors();
                 SendCurrentMapAppearance();
+                if (HasCpeExt(CpeExt.BlockPermissions))
+                    SendCurrentBlockPermissions();
                 
-                if ( OnSendMap != null )
+                if (OnSendMap != null)
                     OnSendMap(this, buffer);
                 if (!level.guns && aiming) {
                     aiming = false;
                     ClearBlockchange();
                 }
-            } catch( Exception ex ) {
+            } catch (Exception ex) {
                 success = false;
                 PlayerActions.ChangeMap(this, Server.mainLevel.name);
                 SendMessage("There was an error sending the map data, you have been sent to the main level.");
@@ -376,9 +384,6 @@ namespace MCGalaxy {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
-            
-            if (HasCpeExt(CpeExt.BlockPermissions))
-                SendCurrentBlockPermissions();
             return success;
         }
         
@@ -394,10 +399,10 @@ namespace MCGalaxy {
                 conv[i] = Block.Convert((byte)i);
             
             if (!hasCustomBlocks) {
-            	for (int i = 0; i < 256; i++) {
+                for (int i = 0; i < 256; i++) {
                     convCPE[i] = Block.ConvertCPE((byte)i);
                     conv[i] = Block.ConvertCPE(conv[i]);
-            	}
+                }
             }
             
             using (GZipStream compressor = new GZipStream(dst, CompressionMode.Compress, true)) {
@@ -740,7 +745,7 @@ namespace MCGalaxy {
         }
         
         public void SendSetMapWeather(int weather) { // 0 - sunny; 1 - raining; 2 - snowing
-        	SendRaw(Opcode.CpeEnvWeatherType, (byte)weather);
+            SendRaw(Opcode.CpeEnvWeatherType, (byte)weather);
         }
         
         void SendHackControl(byte allowflying, byte allownoclip, byte allowspeeding, byte allowrespawning,

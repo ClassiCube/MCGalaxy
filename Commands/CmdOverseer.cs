@@ -21,10 +21,8 @@ using System.Linq;
 using MCGalaxy.Commands.CPE;
 using MCGalaxy.Commands.World;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdOverseer : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdOverseer : Command {
         public override string name { get { return "overseer"; } }
         public override string shortcut { get { return "os"; } }
         public override string type { get { return CommandTypes.Moderation; } }
