@@ -60,18 +60,12 @@ namespace MCGalaxy.Commands.Moderation {
             		banMsg = who.ColoredName + " %Swas &8banned %Sby " + banner + "%S." + banReason;
             		Player.GlobalMessage(banMsg);
             	}
-                
-            	Entities.DespawnEntities(who, false);
-                who.group = Group.findPerm(LevelPermission.Banned);
-                who.color = who.group.color;
-                Entities.SpawnEntities(who, false);
+                who.color = "";
             }
             
-            Ban.DeleteBan(target.ToLower());
-            string oldgroup = group.name;
-            Group.findPerm(LevelPermission.Banned).playerList.Add(target);
-            Ban.BanPlayer(p, target, reason, stealth, oldgroup);
-            Group.findPerm(LevelPermission.Banned).playerList.Save();
+            Ban.DeleteBan(target);
+            Ban.BanPlayer(p, target, reason, stealth, group.name);
+            RankCmd.ChangeRank(target, group, Group.findPerm(LevelPermission.Banned), who);
             
             if (args.Length == 1) Player.AddNote(target, p, "B");
             else Player.AddNote(target, p, "B", args[1]);
@@ -86,9 +80,6 @@ namespace MCGalaxy.Commands.Moderation {
             if (p != null && group.Permission >= p.Rank) {
         	    MessageTooHighRank(p, "ban", false); return false;
             }
-            
-            group.playerList.Remove(name);
-            group.playerList.Save();
             return true;
         }
         

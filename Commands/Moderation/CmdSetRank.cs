@@ -42,71 +42,53 @@ namespace MCGalaxy.Commands.Moderation {
             
             string reason = args.Length > 2 ? args[2] : null, rankMsg = null;
             Player who = PlayerInfo.Find(name);
+            if (who == p && who != null) { Player.Message(p, "Cannot change your own rank."); return; }
+            if (who != null) name = who.name;
+            
+            Group curRank = who != null ? who.group : PlayerInfo.GetGroup(name);
+            Group newRank = TargetRank(p, rank.ToLower(), curRank);
+            if (newRank == null) return;
+            if (!ChangeRank(name, curRank, newRank, who, p, ref reason)) return;
+            
             if (who == null) {
-                Group group = Group.findPlayerGroup(name);
-                Group newRank = TargetRank(p, rank.ToLower(), group);
-                if (newRank == null) return;
-                
-                if (!ChangeRank(name, group, newRank, null, p, ref reason)) return;                
                 rankMsg = name + " &f(offline)%S's rank was set to " + newRank.ColoredName + "%S. (" + reason + "%S)";
                 Player.GlobalMessage(rankMsg);
-            } else if (who == p) {
-                Player.Message(p, "Cannot change your own rank."); return;
             } else {
-                Group newRank = TargetRank(p, rank.ToLower(), who.group);
-                if (newRank == null) return;
-                
-                if (!ChangeRank(who.name, who.group, newRank, who, p, ref reason)) return;
                 rankMsg = who.ColoredName + "%S's rank was set to " + newRank.ColoredName + "%S. (" + reason + "%S)";
                 Player.GlobalMessage(rankMsg);
-                Entities.DespawnEntities(who, false);
-                
-                if (who.color == "" || who.color == who.group.color) 
-                    who.color = newRank.color;
-                who.group = newRank;
-                who.SetPrefix();
-
                 who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
-                who.SendUserType(Block.canPlace(who.Rank, Block.blackrock));
-                Entities.SpawnEntities(who, false);
             }
+            
+            RankCmd.ChangeRank(name, curRank, newRank, who);
+            WriteRankInfo(p, name, newRank, curRank, reason);
             Server.IRC.Say(rankMsg);
         }
         
-        bool ChangeRank(string name, Group group, Group newRank, Player who, Player p, ref string reason) {
+        bool ChangeRank(string name, Group curRank, Group newRank, 
+                        Player who, Player p, ref string reason) {
             Group banned = Group.findPerm(LevelPermission.Banned);
             if (reason == null) {
-                reason = newRank.Permission >= group.Permission ? 
+                reason = newRank.Permission >= curRank.Permission ? 
                     Server.defaultPromoteMessage : Server.defaultDemoteMessage;
             }
             
-            if (group == banned || newRank == banned) {
-                Player.Message(p, "Cannot change the rank to or from \"" + banned.name + "\"."); return false;
+            if (curRank == banned || newRank == banned) {
+                Player.Message(p, "Cannot change the rank to or from \"{0}\".", banned.name); return false;
             }
-            if (p != null && (group.Permission >= p.Rank || newRank.Permission >= p.Rank)) {
+            if (p != null && (curRank.Permission >= p.Rank || newRank.Permission >= p.Rank)) {
                 MessageTooHighRank(p, "change the rank of", false); return false;
             }
-            if (p != null && (newRank.Permission >= p.Rank)) {
+            if (p != null && newRank.Permission >= p.Rank) {
                 Player.Message(p, "Cannot change the rank of a player to a rank equal or higher to yours."); return false;
             }
             
-            if (who != null) {
-                Group.because(who, newRank);
-                if (Group.cancelrank) {
-                    Group.cancelrank = false; return false;
-                }
-            }
-            
-            Server.reviewlist.Remove(name);
-            group.playerList.Remove(name);
-            group.playerList.Save();
-            newRank.playerList.Add(name);
-            newRank.playerList.Save();
-            WriteRankInfo(p, name, newRank, group, reason);
+            if (who == null) return true;
+            Group.because(who, newRank);
+            if (Group.cancelrank) { Group.cancelrank = false; return false; }
             return true;
         }
         
-        static void WriteRankInfo(Player p, string name, Group newRank, Group group, string reason) {
+        static void WriteRankInfo(Player p, string name, Group newRank, Group oldRank, string reason) {
             string year = DateTime.Now.Year.ToString();
             string month = DateTime.Now.Month.ToString();
             string day = DateTime.Now.Day.ToString();
@@ -115,18 +97,18 @@ namespace MCGalaxy.Commands.Moderation {
             string assigner = p == null ? "(console)" : p.name;
 
             string line = name + " " + assigner + " " + minute + " " + hour + " " + day + " " + month
-                + " " + year + " " + newRank.name + " " + group.name + " " + reason.Replace(" ", "%20");
+                + " " + year + " " + newRank.name + " " + oldRank.name + " " + reason.Replace(" ", "%20");
             Server.RankInfo.Append(line);            
         }
         
-        static Group TargetRank(Player p, string name, Group curGroup) {
-            if (name == "+up") return NextRankUp(p, curGroup);
-            if (name == "-down") return NextRankDown(p, curGroup);
+        static Group TargetRank(Player p, string name, Group curRank) {
+            if (name == "+up") return NextRankUp(p, curRank);
+            if (name == "-down") return NextRankDown(p, curRank);
             return Group.FindMatches(p, name);
         }
         
-        static Group NextRankDown(Player p, Group curGroup) {
-            int index = Group.GroupList.IndexOf(curGroup);
+        static Group NextRankDown(Player p, Group curRank) {
+            int index = Group.GroupList.IndexOf(curRank);
             if (index > 0) {
                 Group next = Group.GroupList[index - 1];
                 if (next.Permission > LevelPermission.Banned) return next;
@@ -134,8 +116,8 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "No lower ranks exist"); return null;
         }
         
-        static Group NextRankUp(Player p, Group curGroup) {
-            int index = Group.GroupList.IndexOf(curGroup);
+        static Group NextRankUp(Player p, Group curRank) {
+            int index = Group.GroupList.IndexOf(curRank);
             if (index < Group.GroupList.Count - 1) {
                 Group next = Group.GroupList[index + 1];
                 if (next.Permission < LevelPermission.Nobody) return next;

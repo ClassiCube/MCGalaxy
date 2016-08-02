@@ -1,7 +1,7 @@
 /*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdUnban : Command {
         public override string name { get { return "unban"; } }
         public override string shortcut { get { return ""; } }
@@ -65,15 +65,9 @@ namespace MCGalaxy.Commands {
             Server.IRC.Say(name + " was unbanned by " + src + ".");
             
             Ban.UnbanPlayer(p, name, reason);
-            Group.findPerm(LevelPermission.Banned).playerList.Remove(name);
-            Group.findPerm(LevelPermission.Banned).playerList.Save();
-            
+            Group banned = Group.findPerm(LevelPermission.Banned);
             Player who = PlayerInfo.Find(name);
-            if (who != null) {
-                who.group = Group.standard; who.color = who.group.color;
-                Entities.GlobalDespawn(who, true);
-                Entities.GlobalSpawn(who, true);
-            }
+            RankCmd.ChangeRank(name, banned, Group.standard, who, false);
             
             string ip = PlayerInfo.FindIP(name);
             if (ip != null && Server.bannedIP.Contains(ip))
