@@ -255,7 +255,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, value + " has been allowed building on your map.");
             } else if (cmd == "DEL") {
                 // TODO: Delete zone by name
-                if (value == "ALL" || value == "")
+                if (value.CaselessEq("ALL") || value == "")
                     CmdZone.DeleteAll(p);
             } else if (cmd == "BLOCK") {
                 if (value == "") {

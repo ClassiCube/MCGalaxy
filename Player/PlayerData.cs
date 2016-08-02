@@ -94,13 +94,13 @@ namespace MCGalaxy {
             data.TitleColor = ParseColor(row["title_color"]);
             data.Color = ParseColor(row["color"]);
             
-            data.Money = int.Parse(row["Money"].ToString());
-            data.Deaths = int.Parse(row["TotalDeaths"].ToString());
-            data.Logins = int.Parse(row["totalLogin"].ToString());
-            data.Kicks = int.Parse(row["totalKicked"].ToString());
+            data.Money = ParseInt(row["Money"].ToString());
+            data.Deaths = ParseInt(row["TotalDeaths"].ToString());
+            data.Logins = ParseInt(row["totalLogin"].ToString());
+            data.Kicks = ParseInt(row["totalKicked"].ToString());
             
-            long blocks = long.Parse(row["totalBlocks"].ToString());
-            long cuboided = long.Parse(row["totalCuboided"].ToString());
+            long blocks = ParseLong(row["totalBlocks"].ToString());
+            long cuboided = ParseLong(row["totalCuboided"].ToString());
             data.TotalModified = blocks & LowerBitsMask;
             data.TotalPlaced = blocks >> LowerBits;
             data.TotalDrawn = cuboided & LowerBitsMask;
@@ -108,6 +108,14 @@ namespace MCGalaxy {
             return data;
         }
         
+        
+        static long ParseLong(string value) {
+            return value == "" ? 0 : long.Parse(value);
+        }
+        
+        static int ParseInt(string value) {
+            return value == "" ? 0 : int.Parse(value);
+        }
         
         static string ParseColor(object value) {
             string col = value.ToString().Trim();
