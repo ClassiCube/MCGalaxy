@@ -41,7 +41,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public static Brush Process(BrushArgs args) {
             if (args.Message == "")
-                return new SolidBrush(args.Type, args.ExtType);
+                return new SolidBrush(args.Block, args.ExtBlock);
             byte extBlock;
             int block = DrawCmd.GetBlock(args.Player, args.Message, out extBlock);
             if (block == -1) return null;

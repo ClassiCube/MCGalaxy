@@ -58,10 +58,10 @@ namespace MCGalaxy.Drawing.Brushes {
     public struct BrushArgs {
         public Player Player;
         public string Message;
-        public byte Type, ExtType; // currently holding
+        public byte Block, ExtBlock; // currently holding
         
-        public BrushArgs(Player p, string message, byte type, byte extType) {
-            Player = p; Message = message; Type = type; ExtType = extType;
+        public BrushArgs(Player p, string message, byte block, byte extBlock) {
+            Player = p; Message = message; Block = block; ExtBlock = extBlock;
         }
     }
 }

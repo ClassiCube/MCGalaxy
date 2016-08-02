@@ -43,7 +43,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public static Brush Process(BrushArgs args) {
             if (args.Message == "")
-                return new StripedBrush(args.Type, args.ExtType, 0, 0);
+                return new StripedBrush(args.Block, args.ExtBlock, 0, 0);
             string[] parts = args.Message.Split(' ');
             
             byte extBlock1;

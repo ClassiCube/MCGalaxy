@@ -26,6 +26,7 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        protected virtual bool ReplaceNot { get { return false; } }
         
         public override void Use(Player p, string message) {
             Player.Message(p, "Place two blocks to determine the edges.");
@@ -41,12 +42,11 @@ namespace MCGalaxy.Commands.Building {
             return DrawOp.DoDrawOp(drawOp, brush, p, marks);
         }
         
-        protected virtual bool ReplaceNot { get { return false; } }
-        
         public override void Help(Player p) {
             Player.Message(p, "%T/replace [block] [block2].. [new]");
             Player.Message(p, "%HReplaces [block] with [new] between two points.");
-            Player.Message(p, "%H   If more than one [block] is specified, they will all be replaced with [new].");
+            Player.Message(p, "%H  If more than one [block] is given, they are all replaced.");
+            Player.Message(p, "%H  If only [block] is given, replaces with your held block.");
         }
     }
     
@@ -58,7 +58,8 @@ namespace MCGalaxy.Commands.Building {
         public override void Help(Player p) {
             Player.Message(p, "%T/replacenot [block] [block2].. [new]");
             Player.Message(p, "%HReplaces everything but [block] with [new] between two points.");
-            Player.Message(p, "%H   If more than one [block] is specified, they will all be ignored.");
+            Player.Message(p, "%H  If more than one [block] is given, they are all skipped.");
+            Player.Message(p, "%H  If only [block] is given, replaces with your held block.");
         }
     }
     
@@ -87,7 +88,8 @@ namespace MCGalaxy.Commands.Building {
         public override void Help(Player p) {
             Player.Message(p, "%T/replaceall [block] [block2].. [new]");
             Player.Message(p, "%HReplaces [block] with [new] for the entire map.");
-            Player.Message(p, "%H   If more than one [block] is specified, they will all be replaced with [new].");
+            Player.Message(p, "%H  If more than one [block] is given, they are all replaced.");
+            Player.Message(p, "%H  If only [block] is given, replaces with your held block.");
         }
     }
 }

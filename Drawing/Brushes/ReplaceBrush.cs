@@ -36,27 +36,27 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public static string[] HelpString = new [] {
             "%TArguments: [block1] [block2].. [new]",
-            "%HDraws by replacing existing blocks that are in " +
-                "the given [blocks] with the block [new]",
+            "%HDraws by replacing existing blocks that are in the given [blocks] with [new]",
+            "%H  If only [block] is given, replaces with your held block.",
         };
         
         public static Brush Process(BrushArgs args) {
-        	return ProcessReplace(args, false);
+            return ProcessReplace(args, false);
         }
         
         internal static Brush ProcessReplace(BrushArgs args, bool not) {
-        	string[] parts = args.Message.Split(' ');
-            if (parts.Length < 2) {
-                args.Player.SendMessage("You need to provide a target block, and at least one block to replace."); return null;
+            string[] parts = args.Message.Split(' ');
+            if (args.Message == "") {
+                args.Player.SendMessage("You need at least one block to replace."); return null;
             }
-            ExtBlock[] toAffect = GetBlocks(args.Player, 0, parts.Length - 1, parts);
+            
+            int count = parts.Length == 1 ? 1 : parts.Length - 1;
+            ExtBlock[] toAffect = GetBlocks(args.Player, 0, count, parts);
             if (toAffect == null) return null;
             
             ExtBlock target;
-            int block = DrawCmd.GetBlock(args.Player, parts[parts.Length - 1], out target.Ext);
-            if (block == -1) return null;
+            if (!GetTargetBlock(args, parts, out target)) return null;
             
-            target.Block = (byte)block;
             if (not) return new ReplaceNotBrush(toAffect, target);
             return new ReplaceBrush(toAffect, target);
         }
@@ -72,6 +72,19 @@ namespace MCGalaxy.Drawing.Brushes {
                 blocks[i].Block = (byte)block; blocks[i].Ext = extBlock;
             }
             return blocks;
+        }
+        
+        static bool GetTargetBlock(BrushArgs args, string[] parts, out ExtBlock target) {
+            if (parts.Length == 1) {
+                target = new ExtBlock(args.Block, args.ExtBlock);
+                return true;
+            }
+            
+            target = default(ExtBlock);
+            int block = DrawCmd.GetBlock(args.Player, parts[parts.Length - 1], out target.Ext);
+            if (block == -1) return false;          
+            target.Block = (byte)block;
+            return true;
         }
         
         public override byte NextBlock(DrawOp op) {
@@ -106,8 +119,8 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public static string[] HelpString = new [] {
             "%TArguments: [block1] [block2].. [new]",
-            "%HDraws by replacing existing blocks that not are in " +
-                "the given [blocks] with the block [new]",
+            "%HDraws by replacing existing blocks that not are in the given [blocks] with [new]",
+            "%H  If only [block] is given, replaces with your held block.",
         };
         
         public static Brush Process(BrushArgs args) {

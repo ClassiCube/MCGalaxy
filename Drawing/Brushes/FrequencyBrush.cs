@@ -78,7 +78,7 @@ namespace MCGalaxy.Drawing.Brushes {
             
             // No blocks given, assume first is held block
             if (bCount == 0)
-                blocks[0] = new ExtBlock(args.Type, args.ExtType);
+                blocks[0] = new ExtBlock(args.Block, args.ExtBlock);
         }
         
         public static ExtBlock[] Combine(ExtBlock[] toAffect, int[] count) {
