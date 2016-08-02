@@ -15,8 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands {    
     public sealed class CmdHasirc : Command {
         public override string name { get { return "hasirc"; } }
         public override string shortcut { get { return "irc"; } }

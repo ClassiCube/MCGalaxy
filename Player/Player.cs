@@ -157,11 +157,11 @@ namespace MCGalaxy {
             string msg_NT = message, msg_NN = message, msg_NNNT = message;
             if (showname) {
                 string msg = ": &f" + message;
-                string pre = from.voicestring + from.color + from.prefix;     
+                string pre = from.color + from.prefix;     
                 message = pre + from.DisplayName + msg; // Titles + Nickname
                 msg_NN = pre + from.truename + msg; // Titles + Account name
                 
-                pre = from.voicestring + (from.group.prefix == "" ? "" : "&f" + from.group.prefix);
+                pre = from.group.prefix == "" ? "" : "&f" + from.group.prefix;
                 msg_NT = pre + from.color + from.DisplayName + msg; // Nickname
                 msg_NNNT = pre + from.color + from.truename + msg; // Account name
             }

@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System.Threading;
+
 namespace MCGalaxy.Commands {
     public sealed class CmdRide : Command {
         public override string name { get { return "ride"; } }

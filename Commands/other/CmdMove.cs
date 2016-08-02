@@ -16,6 +16,7 @@
 	permissions and limitations under the Licenses.
 */
 using System;
+
 namespace MCGalaxy.Commands {
     public sealed class CmdMove : Command {
         public override string name { get { return "move"; } }
@@ -25,8 +26,7 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdMove() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             // /move name map
             // /move x y z
             // /move name x y z

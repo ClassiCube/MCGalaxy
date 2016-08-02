@@ -811,7 +811,8 @@ return;
             onTrain = false; trainGrab = false;
             ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);            
             string deathMsg = Block.Props[b].DeathMessage;
-            if (deathMsg != null) Chat.GlobalChatLevel(this, String.Format(deathMsg, ColoredName), false);            
+            if (deathMsg != null) Chat.GlobalChatLevel(this, String.Format(deathMsg, ColoredName), false);
+            
             if (b == Block.rockethead) level.MakeExplosion(x, y, z, 0);
             if (b == Block.creeper) level.MakeExplosion(x, y, z, 1);
             if (b == Block.rock || b == Block.stone) {

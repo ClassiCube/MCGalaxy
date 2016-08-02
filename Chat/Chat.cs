@@ -25,7 +25,7 @@ namespace MCGalaxy {
         
         public static void GlobalChatLevel(Player from, string message, bool showname) {
             if (showname)
-                message = "<Level>" + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
+                message = "<Level>" + from.FullName + ": &f" + message;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level == from.level && p.Chatroom == null)
@@ -40,9 +40,9 @@ namespace MCGalaxy {
         
         public static void GlobalChatRoom(Player from, string message, bool showname) {
             string rawMessage = message;
-            if ( showname ) {
-                message = "<GlobalChatRoom> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
-            }
+            if (showname)
+                message = "<GlobalChatRoom> " + from.FullName + ": &f" + message;
+
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.Chatroom != null)
@@ -53,9 +53,9 @@ namespace MCGalaxy {
         
         public static void ChatRoom(Player from, string message, bool showname, string chatroom) {
             string rawMessage = message;
-            string messageforspy = ( "<ChatRoomSPY: " + chatroom + "> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message );
+            string messageforspy = "<ChatRoomSPY: " + chatroom + "> " + from.FullName + ": &f" + message;
             if (showname)
-                message = "<ChatRoom: " + chatroom + "> " + from.color + from.voicestring + from.color + from.prefix + from.name + ": &f" + message;
+                message = "<ChatRoom: " + chatroom + "> " + from.FullName + ": &f" + message;
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {

@@ -40,7 +40,6 @@ namespace MCGalaxy.Commands {
                 who.SendMessage("You have received voice status.");
             }
             who.voice = !who.voice;
-            who.voicestring = who.voice ? "&f+" : "";
         }
         
         public override void Help(Player p) {
