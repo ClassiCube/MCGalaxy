@@ -480,10 +480,11 @@ namespace MCGalaxy {
             }
             
             //OpenClassic Client Check
-            SendBlockchange(0, 0, 0, 0);
-            DataTable playerDb = Database.Fill("SELECT * FROM Players WHERE Name=@0", name);
+            SendBlockchange(0, 0, 0, 0);            
             timeLogged = DateTime.Now;
             lastLogin = DateTime.Now;
+            p.time = new TimeSpan(0, 0, 0, 1);
+            DataTable playerDb = Database.Fill("SELECT * FROM Players WHERE Name=@0", name);
             	
             if (playerDb.Rows.Count == 0)
                 InitPlayerStats(playerDb);
