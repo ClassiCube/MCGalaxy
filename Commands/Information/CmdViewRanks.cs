@@ -34,8 +34,8 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Player.Message(p, "Available ranks: " + Group.concatList()); return; }
         	Group grp = message.CaselessEq("banned") ? 
-        	    Group.findPerm(LevelPermission.Banned) : Group.Find(message);
-            if (grp == null) { Player.Message(p, "Could not find group"); return; }
+        	    Group.findPerm(LevelPermission.Banned) : Group.FindMatches(p, message);
+            if (grp == null) return;
 
             string list = grp.playerList.All().Join(", ");            
             if (list.Length == 0) {

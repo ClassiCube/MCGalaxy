@@ -161,7 +161,7 @@ namespace MCGalaxy.Eco {
             int lasttrueprice = 0;
             foreach (Group group in Group.GroupList) {
                 if (group.Permission > Group.Find(MaxRank).Permission) break;
-                if (group.Permission <= Group.Find(Server.defaultRank).Permission) continue;
+                if (group.Permission <= Group.standard.Permission) continue;
                 
                 Rank rank = FindRank(group.name);
                 if (rank == null) {

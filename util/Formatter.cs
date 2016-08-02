@@ -99,7 +99,7 @@ namespace MCGalaxy {
 		public static void MessageBlock(Player p, string action, byte block) {
             StringBuilder builder = new StringBuilder("Only ");
             Block.Blocks perms = Block.BlockList[block];
-            Formatter.PrintRanks(perms.lowestRank, perms.allow, perms.disallow, builder);
+            PrintRanks(perms.lowestRank, perms.allow, perms.disallow, builder);
             
             builder.Append( " %Scan ").Append(action);
             builder.Append(Block.Name(block)).Append(".");

@@ -121,8 +121,8 @@ namespace MCGalaxy.Games
             }
             //Map stuff
             lvl.setPhysics(3);
-            lvl.permissionbuild = Group.Find(Server.defaultRank).Permission;
-            lvl.permissionvisit = Group.Find(Server.defaultRank).Permission;
+            lvl.permissionbuild = Group.standard.Permission;
+            lvl.permissionvisit = Group.standard.Permission;
             lvl.Killer = true;
             //Seting Up Some Player stuff
             {
