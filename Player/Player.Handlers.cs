@@ -372,7 +372,7 @@ namespace MCGalaxy {
                 group = foundGrp;
                 Loading = true;
                 if (disconnected) return;
-                id = FreeId();
+                id = NextFreeId();
                 
                 if (type != 0x42)
                      CompleteLoginProcess();
@@ -483,7 +483,7 @@ namespace MCGalaxy {
             SendBlockchange(0, 0, 0, 0);            
             timeLogged = DateTime.Now;
             lastLogin = DateTime.Now;
-            p.time = new TimeSpan(0, 0, 0, 1);
+            time = new TimeSpan(0, 0, 0, 1);
             DataTable playerDb = Database.Fill("SELECT * FROM Players WHERE Name=@0", name);
             	
             if (playerDb.Rows.Count == 0)

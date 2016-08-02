@@ -380,24 +380,24 @@ catch { }*/
         [Obsolete("Use PlayerInfo.FindNick(name)")]
         public static Player FindNick(string name) { return PlayerInfo.FindNick(null, name); }
         
-        static byte FreeId() {
-            /*
-for (byte i = 0; i < 255; i++)
-{
-foreach (Player p in players)
-{
-if (p.id == i) { goto Next; }
-} return i;
-Next: continue;
-} unchecked { return 0xFF; }*/
+        unsafe static byte NextFreeId() {
+            byte* used = stackalloc byte[256];
+            for (int i = 0; i < 256; i++)
+                used[i] = 0;
 
-            for ( byte i = 0; i < 255; i++ ) {
-                bool used = PlayerInfo.players.Any(p => p.id == i);
-
-                if ( !used )
-                    return i;
+            // Lock to ensure that no two players can end up with the same playerid
+            lock (PlayerInfo.Online.locker) {
+                Player[] players = PlayerInfo.Online.Items;
+                for (int i = 0; i < players.Length; i++) {
+                    byte id = players[i].id;
+                    used[id] = 1;
+                }
             }
-            return (byte)1;
+            
+            for (byte i = 0; i < 255; i++ ) {
+                if (used[i] == 0) return i;
+            }
+            return 1;
         }
 
         public static bool ValidName(string name) {

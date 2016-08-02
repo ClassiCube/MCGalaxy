@@ -19,17 +19,21 @@ using System;
 using System.Collections.Generic;
 
 namespace MCGalaxy {
-    
     public sealed class VolatileArray<T> {
-        
-        public List<T> list;
 
         /// <remarks> Note this field is highly volatile, you should cache references to it. </remarks>
         public volatile T[] Items = new T[0];
         
+        /// <summary> Returns the number of items in this array. </summary>
         public int Count { get { return Items.Length; } }
         
-        readonly object locker = new object();
+        /// <summary> Object used to sychronise Add/Remove calls to this array. </summary>
+        /// <remarks> When locking on this object from external code, you should try
+        /// to minimise the amount of time the object is locked for. </remarks>
+        public readonly object locker = new object();
+        
+        public List<T> list;
+        
         readonly bool useList;
         
         public VolatileArray(bool useList) {
