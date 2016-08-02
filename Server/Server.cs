@@ -60,8 +60,8 @@ namespace MCGalaxy {
             serverConfig = ConfigElement.GetAll(typeof(Server), typeof(ZombieGame));
             levelConfig = ConfigElement.GetAll(typeof(Level));
         	
-            PlayerInfo.players = PlayerInfo.Online.list;
             Player.players = PlayerInfo.Online.list;
+            PlayerInfo.players = PlayerInfo.Online.list;
             Server.levels = LevelInfo.Loaded.list;
             PlayerBot.playerbots = PlayerBot.Bots.list;
             StartTime = DateTime.UtcNow;
@@ -164,7 +164,7 @@ namespace MCGalaxy {
                 string api = "";
                 API API = new API();
                 API.max_players = (int)Server.players;
-                API.players = PlayerInfo.players.Select(mc => mc.name).ToArray();
+                API.players = Player.players.Select(mc => mc.name).ToArray();
                 API.chat = Player.Last50Chat.ToArray();
                 api = JsonConvert.SerializeObject(API, Formatting.Indented);
                 return api;
@@ -290,7 +290,7 @@ namespace MCGalaxy {
         }
 
         public void PlayerListUpdate() {
-            if (Server.s.OnPlayerListChange != null) Server.s.OnPlayerListChange(PlayerInfo.players);
+            if (Server.s.OnPlayerListChange != null) Server.s.OnPlayerListChange(Player.players);
         }
 
         public void FailBeat()  {

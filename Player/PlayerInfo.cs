@@ -19,15 +19,13 @@ using System.Data;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {
-    
-    public static class PlayerInfo {       
-        public static List<Player> players;
-        
+    public static class PlayerInfo {
+		
         /// <summary> Array of all currently online players. </summary>
         /// <remarks> Note this field is highly volatile, you should cache references to the items array. </remarks>
         public static VolatileArray<Player> Online = new VolatileArray<Player>(true);
-        
-        public static List<Player> GetPlayers() { return new List<Player>(players); }
+        [Obsolete("Use PlayerInfo.Online.Items")]
+        public static List<Player> players;
         
         public static Group GetGroup(string name) { return Group.findPlayerGroup(name); }
         
@@ -52,7 +50,8 @@ namespace MCGalaxy {
             int matches = 0; return FindMatches(pl, name, out matches, onlyCanSee);
         }
         
-        public static Player FindMatches(Player pl, string name, out int matches, bool onlyCanSee = true) {
+        public static Player FindMatches(Player pl, string name, 
+                                         out int matches, bool onlyCanSee = true) {
             matches = 0;
             if (!Player.ValidName(name)) {
                 Player.Message(pl, "\"{0}\" is not a valid player name.", name); return null;
@@ -63,6 +62,8 @@ namespace MCGalaxy {
                                                   p => p.name, "online players");
         }
         
+        /// <summary> Finds the online player whose name caselessly exactly matches the given name. </summary>
+        /// <returns> Player instance if an exact match is found, null if not. </returns>
         public static Player FindExact(string name) {
             Player[] players = PlayerInfo.Online.Items;
 
@@ -90,6 +91,9 @@ namespace MCGalaxy {
         }
  
         
+        /// <summary> Retrieves the player data for the player whose name 
+        /// caselessly exactly matches the given name. </summary>
+        /// <returns> PlayerData instance if found, null if not. </returns>
         public static PlayerData FindData(string name) {
             using (DataTable results = Query(name, "*")) {
                 if (results.Rows.Count == 0) return null;
@@ -97,13 +101,19 @@ namespace MCGalaxy {
             }
         }
         
+        /// <summary> Retrieves the actual name for the player whose name 
+        /// caselessly exactly matches the given name. </summary>
+        /// <returns> Correctly cased name if found, null if not. </returns>
         public static string FindName(string name) {
             using (DataTable playerDB = Query(name, "Name")) {
                 if (playerDB.Rows.Count == 0) return null;
                 return playerDB.Rows[0]["Name"].ToString().Trim();
             }
         }
-        
+
+        /// <summary> Retrieves the last IP address for the player whose name 
+        /// caselessly exactly matches the given name. </summary>
+        /// <returns> Last IP address if found, null if not. </returns>
         public static string FindIP(string name) {
             using (DataTable results = Query(name, "IP")) {
                 if (results.Rows.Count == 0) return null;
@@ -139,6 +149,8 @@ namespace MCGalaxy {
             }
         }
         
+        /// <summary> Retrieves the names of all players whose last IP address 
+        /// matches the given IP address. </summary>
         public static List<string> FindAccounts(string ip) {
             DataTable clones = Database.Fill("SELECT Name FROM Players WHERE IP=@0", ip);
             List<string> alts = new List<string>();

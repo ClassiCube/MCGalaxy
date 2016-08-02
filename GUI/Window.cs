@@ -74,7 +74,7 @@ namespace MCGalaxy.Gui {
 
             UpdateListTimer.Elapsed += delegate {
                 try {
-                    UpdateClientList(PlayerInfo.players);
+                    UpdateClientList(Player.players);
                     UpdateMapList();
                 }
                 catch { } // needed for slower computers
@@ -219,14 +219,14 @@ namespace MCGalaxy.Gui {
                 //dgvPlayers.SuspendLayout();
 
                 pc = new PlayerCollection();
-                PlayerInfo.players.ForEach(p => pc.Add(p));
+                Player.players.ForEach(p => pc.Add(p));
 
                 //dgvPlayers.Invalidate();
                 main_Players.DataSource = pc;
                 // Reselect player
                 if (selected != null)
                 {
-                    foreach (Player t in PlayerInfo.players)
+                    foreach (Player t in Player.players)
                         for (int j = 0; j < main_Players.Rows.Count; j++)
                             if (Equals(main_Players.Rows[j].Cells[0].Value, selected))
                                 main_Players.Rows[j].Selected = true;
@@ -536,7 +536,7 @@ namespace MCGalaxy.Gui {
         }
 
         void LoginBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             CP437Writer.WriteAllText("text/login/" + curPlayer.name + ".txt", pl_txtLogin.Text);
@@ -544,7 +544,7 @@ namespace MCGalaxy.Gui {
         }
 
         void LogoutBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             CP437Writer.WriteAllText("text/logout/" + curPlayer.name + ".txt", pl_txtLogout.Text);
@@ -552,7 +552,7 @@ namespace MCGalaxy.Gui {
         }
 
         void TitleBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             if (pl_txtTitle.Text.Length > 17) { PlayersTextBox.AppendTextAndScroll("Title must be under 17 letters."); return; }
@@ -561,7 +561,7 @@ namespace MCGalaxy.Gui {
         }
 
         void ColorBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             curPlayer.color = Colors.Parse(pl_cmbColor.Text);
@@ -569,7 +569,7 @@ namespace MCGalaxy.Gui {
         }
 
         void MapBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             if (pl_cmbMap.Text.ToLower() == curPlayer.level.name.ToLower()) {
@@ -588,7 +588,7 @@ namespace MCGalaxy.Gui {
         }
 
         void UndoBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             if (pl_txtUndo.Text.Trim() == "")  {
@@ -604,7 +604,7 @@ namespace MCGalaxy.Gui {
         }
 
         void MessageBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             Player.SendMessage(curPlayer, "<CONSOLE> " + pl_txtMessage.Text);
@@ -613,7 +613,7 @@ namespace MCGalaxy.Gui {
         }
 
         void ImpersonateORSendCmdBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             try {
@@ -669,7 +669,7 @@ namespace MCGalaxy.Gui {
         void IPBanBt_Click(object sender, EventArgs e) { DoCmd("banip", "IP-Banned"); }
         
         void DoCmd(string cmdName, string action) {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             Command.all.Find(cmdName).Use(null, curPlayer.name);
@@ -677,7 +677,7 @@ namespace MCGalaxy.Gui {
         }
         
         void DoCmd(string cmdName, string action, string prefix) {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             Command.all.Find(cmdName).Use(null, prefix + curPlayer.name);
@@ -686,7 +686,7 @@ namespace MCGalaxy.Gui {
         
         void DoToggle(string cmdName, Button target, string targetDesc,
                       Predicate<Player> getter, string action) {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             Command.all.Find(cmdName).Use(null, curPlayer.name);
@@ -701,7 +701,7 @@ namespace MCGalaxy.Gui {
         }
 
         void SendRulesTxt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             Command.all.Find("rules").Use(curPlayer, "");
@@ -709,7 +709,7 @@ namespace MCGalaxy.Gui {
         }
 
         void SpawnBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !PlayerInfo.players.Contains(curPlayer)) {
+            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
                 PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
             }
             Player p = curPlayer;
@@ -722,11 +722,9 @@ namespace MCGalaxy.Gui {
 
         public void UpdatePlyersListBox() {
             RunOnUiThread(
-                delegate
-                {
-
+                delegate {
                     PlyersListBox.Items.Clear();
-                    foreach (Player p in PlayerInfo.players)
+                    foreach (Player p in Player.players)
                     {
                         PlyersListBox.Items.Add(p.name);
                     }

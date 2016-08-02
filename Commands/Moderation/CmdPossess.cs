@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "That player is either following someone or already possessed."); return;
                 }                
                 if (p.possess != "") {
-                    Player prev = PlayerInfo.Find(p.possess);
+                    Player prev = PlayerInfo.FindExact(p.possess);
                     if (prev != null) {
                         prev.following = "";
                         prev.canBuild = true;

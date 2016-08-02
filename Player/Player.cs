@@ -362,13 +362,13 @@ catch { }*/
         }
 
         public bool IsAloneOnCurrentLevel() {
-            return PlayerInfo.players.All(pl => pl.level != level || pl == this);
+            return Player.players.All(pl => pl.level != level || pl == this);
         }
 
         #endregion
         #region == OTHER ==
         
-        [Obsolete("Use PlayerInfo.players")]
+        [Obsolete("Use PlayerInfo.Online.Items")]
         public static List<Player> players;
         
         [Obsolete("Use PlayerInfo.Find(name)")]
