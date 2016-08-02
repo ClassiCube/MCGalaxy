@@ -58,9 +58,9 @@ namespace MCGalaxy {
             DisplayName = n;
             SkinName = n;
             color = "&1";
-            id = FreeId();
             
             level = lvl;
+            id = NextFreeId(this);
             SetPos(x, y, z, rotx, roty);
 
             botTimer.Elapsed += BotTimerFunc;
@@ -171,12 +171,23 @@ namespace MCGalaxy {
         }
 
         
-        static byte FreeId() {
-            for (byte i = 127; i >= 64; i--) {
-                foreach (PlayerBot b in playerbots) {
-                    if (b.id == i) { goto Next; }
-                } return i;
-                Next: continue;
+        unsafe static byte NextFreeId(PlayerBot bot) {
+            byte* used = stackalloc byte[256];
+            for (int i = 0; i < 256; i++)
+                used[i] = 0;
+
+            // Lock to ensure that no two bots can end up with the same playerid
+            lock (Bots.locker) {
+                PlayerBot[] bots = Bots.Items;
+                for (int i = 0; i < bots.Length; i++) {
+                    if (bots[i].level != bot.level) continue;
+                    byte id = bots[i].id;
+                    used[id] = 1;
+                }
+            }
+            
+            for (byte i = 127; i >= 64; i-- ) {
+                if (used[i] == 0) return i;
             }
             return 0xFF;
         }
