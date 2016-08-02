@@ -15,7 +15,6 @@ permissions and limitations under the Licenses.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -354,15 +353,16 @@ namespace MCGalaxy {
             spamBlockLog.Clear();
             //spamChatLog.Clear();
             spyChatRooms.Clear();
-            /*try
-{
-//this.commThread.Abort();
-}
-catch { }*/
         }
 
         public bool IsAloneOnCurrentLevel() {
-            return Player.players.All(pl => pl.level != level || pl == this);
+            lock (PlayerInfo.Online.locker) {
+                Player[] players = PlayerInfo.Online.Items;
+                foreach (Player p in players) {
+                    if (p != this && p.level == level) return false;
+                }
+                return true;
+            }
         }
 
         #endregion

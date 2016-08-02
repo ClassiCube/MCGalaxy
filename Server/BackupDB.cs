@@ -175,8 +175,8 @@ namespace MCGalaxy {
                     string[] split = col.TrimStart('\n', '\r', '\t').Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     //Just to make it the same as the MySQL schema.
                     schema.Add(new string[] { split[0].Trim('`'), split[1].Trim('\t', '`'),
-                                   ( split.Count() > 2 ? (split[2].Trim('\t', '`').ToUpper() == "NOT" ? "NOT NULL" : "DEFAULT NULL") : ""),
-                                   ( split.Count() > 2 ? (split[split.Count() - 2].Trim('\t', '`').ToUpper() == "PRIMARY" && split[split.Count() - 1].Trim('\t', '`').ToUpper() == "KEY" ? "PRI" : "") : ""),
+                                   ( split.Length > 2 ? (split[2].Trim('\t', '`').ToUpper() == "NOT" ? "NOT NULL" : "DEFAULT NULL") : ""),
+                                   ( split.Length > 2 ? (split[split.Length - 2].Trim('\t', '`').ToUpper() == "PRIMARY" && split[split.Length - 1].Trim('\t', '`').ToUpper() == "KEY" ? "PRI" : "") : ""),
                                    "NULL",
                                    (split.Contains("AUTO_INCREMENT") || split.Contains("AUTOINCREMENT") ? "AUTO_INCREMENT" : "")});
                 }
