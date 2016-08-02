@@ -50,19 +50,15 @@ namespace MCGalaxy.Commands {
             List<string> alts = PlayerInfo.FindAccounts(message);
             if (alts.Count == 0) { Player.Message(p, "Could not find any record of the player entered."); return; }
             if (alts.Count == 1) { Player.Message(p, name + " has no clones."); return; }
-            Group grp = Group.findPerm(LevelPermission.Banned);
-           
-            StringBuilder builder = new StringBuilder();
-            foreach (string alt in alts) {
-                if (Group.IsBanned(alt))
-                    builder.Append(grp.color + alt + "%S");
-                else
-                    builder.Append(alt);
-                builder.Append(", ");
-            }
-
+            
+            Group banned = Group.findPerm(LevelPermission.Banned);
             Player.Message(p, "These players have the same IP address:");
-            Player.Message(p, builder.ToString(0, builder.Length - 2));
+            Player.Message(p, alts.Join(alt => FormatAlt(alt, banned)));
+        }
+        
+        static string FormatAlt(string alt, Group banned) {
+            if (!banned.playerList.Contains(alt)) return alt;
+            return banned.color + alt + "%S";
         }
 
         public override void Help(Player p) {
