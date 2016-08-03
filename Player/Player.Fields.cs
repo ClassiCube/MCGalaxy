@@ -222,9 +222,7 @@ namespace MCGalaxy {
         internal readonly object pendingDrawOpsLock = new object();
         internal List<PendingDrawOp> PendingDrawOps = new List<PendingDrawOp>();
 
-        public bool showPortals = false;
-        public bool showMBs = false;
-
+        public bool showPortals = false, showMBs = false;
         public string prevMsg = "";
 
         //Movement
@@ -234,7 +232,7 @@ namespace MCGalaxy {
         //Games
         public DateTime lastDeath = DateTime.UtcNow;
 
-        public byte modeType;
+        public byte modeType, RawHeldBlock;
         public byte[] bindings = new byte[Block.CpeCount];
         public string[] cmdBind = new string[10];
         public string[] messageBind = new string[10];

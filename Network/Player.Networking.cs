@@ -29,18 +29,18 @@ namespace MCGalaxy {
         static void Receive(IAsyncResult result) {
             //Server.s.Log(result.AsyncState.ToString());
             Player p = (Player)result.AsyncState;
-            if ( p.disconnected || p.socket == null )
-                return;
+            if (p.disconnected || p.socket == null) return;
+            
             try {
                 int length = p.socket.EndReceive(result);
-                if ( length == 0 ) { p.Disconnect(); return; }
+                if (length == 0) { p.Disconnect(); return; }
 
-                byte[] b = new byte[p.buffer.Length + length];
-                Buffer.BlockCopy(p.buffer, 0, b, 0, p.buffer.Length);
-                Buffer.BlockCopy(p.tempbuffer, 0, b, p.buffer.Length, length);
-
-                p.buffer = p.HandleMessage(b);
-                if ( p.dontmindme && p.buffer.Length == 0 ) {
+                byte[] allData = new byte[p.buffer.Length + length];
+                Buffer.BlockCopy(p.buffer, 0, allData, 0, p.buffer.Length);
+                Buffer.BlockCopy(p.tempbuffer, 0, allData, p.buffer.Length, length);
+                p.buffer = p.ProcessReceived(allData);
+                
+                if (p.dontmindme && p.buffer.Length == 0) {
                     Server.s.Log("Disconnected");
                     p.socket.Close();
                     p.disconnected = true;

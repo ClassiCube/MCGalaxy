@@ -11,7 +11,7 @@ software distributed under the Licenses are distributed on an "AS IS"
 BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -47,7 +47,7 @@ namespace MCGalaxy {
             ManualChange(x, y, z, action, block, extBlock, true);
         }
         
-        public void ManualChange(ushort x, ushort y, ushort z, byte action, 
+        public void ManualChange(ushort x, ushort y, ushort z, byte action,
                                  byte block, byte extBlock, bool checkPlaceDist) {
             byte old = level.GetTile(x, y, z);
             if (old == Block.Zero) return;
@@ -64,7 +64,7 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            if (Server.zombie.Running && Server.zombie.HandlesManualChange(this, x, y, z, action, block, old)) 
+            if (Server.zombie.Running && Server.zombie.HandlesManualChange(this, x, y, z, action, block, old))
                 return;
 
             if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) ) {
@@ -83,8 +83,8 @@ namespace MCGalaxy {
 
             if (group.Permission == LevelPermission.Banned) return;
             if (checkPlaceDist && group.Permission == LevelPermission.Guest) {
-            	int dx = ((short)pos[0] / 32) - x, dy = ((short)pos[1] / 32) - y, dz = ((short)pos[2] / 32) - z;
-            	int diff = (int)Math.Sqrt(dx * dx + dy * dy + dz * dz);
+                int dx = ((short)pos[0] / 32) - x, dy = ((short)pos[1] / 32) - y, dz = ((short)pos[2] / 32) - z;
+                int diff = (int)Math.Sqrt(dx * dx + dy * dy + dz * dz);
                 if (diff > ReachDistance + 4) {
                     Server.s.Log(name + " attempted to build with a " + diff + " distance offset");
                     SendMessage("You can't build that far away.");
@@ -98,7 +98,7 @@ namespace MCGalaxy {
             }
 
             if (!Block.canPlace(this, block)) {
-            	Formatter.MessageBlock(this, "place ", block);
+                Formatter.MessageBlock(this, "place ", block);
                 RevertBlock(x, y, z); return;
             }
 
@@ -125,7 +125,7 @@ namespace MCGalaxy {
                     level.AddToBlockDB(this, index, block, extBlock, true);
             } else {
                 if (PlaceBlock(old, x, y, z, block, extBlock))
-                	level.AddToBlockDB(this, index, block, extBlock, false);
+                    level.AddToBlockDB(this, index, block, extBlock, false);
             }
         }
         
@@ -140,7 +140,7 @@ namespace MCGalaxy {
                 changed = ChangeBlock(x, y, z, Block.air, 0);
             }
 
-            if ((level.physics == 0 || level.physics == 5) && level.GetTile(x, (ushort)(y - 1), z) == Block.dirt) 
+            if ((level.physics == 0 || level.physics == 5) && level.GetTile(x, (ushort)(y - 1), z) == Block.dirt)
                 ChangeBlock(x, (ushort)(y - 1), z, Block.grass, 0);
             return changed;
         }
@@ -166,109 +166,87 @@ namespace MCGalaxy {
             if (!level.DoBlockchange(this, x, y, z, block, extBlock)) return false;
             Player.GlobalBlockchange(level, x, y, z, block, extBlock);
             
-            if (level.GetTile(x, (ushort)(y - 1), z) == Block.grass && level.GrassDestroy 
+            if (level.GetTile(x, (ushort)(y - 1), z) == Block.grass && level.GrassDestroy
                 && !Block.LightPass(block, extBlock, level.CustomBlockDefs)) {
                 level.Blockchange(this, x, (ushort)(y - 1), z, Block.dirt);
             }
             return true;
         }
         
-        byte[] HandleMessage(byte[] buffer) {
+        byte[] ProcessReceived(byte[] buffer) {
+        	if (buffer.Length == 0) return buffer;
+
             try {
-                int length = 0; byte msg = buffer[0];
-                // Get the length of the message by checking the first byte
-                switch (msg) {
-                    //For wom
-                    case (byte)'G':
-                        return new byte[1];
-                    case Opcode.Handshake:
-                        length = 130;
-                        break;
-                    case Opcode.SetBlockClient:
-                        if (!loggedIn)
-                            goto default;
-                        length = 8;
-                        break;
-                    case Opcode.EntityTeleport:
-                        if (!loggedIn)
-                            goto default;
-                        length = 9;
-                        break;
-                    case Opcode.Message:
-                        if (!loggedIn)
-                            goto default;
-                        length = 65;
-                        break;
-                    case Opcode.CpeExtInfo:
-                        length = 66;
-                        break;
-                    case Opcode.CpeExtEntry:
-                        length = 68;
-                        break;
-                    case Opcode.CpeCustomBlockSupportLevel:
-                        length = 1;
-                        break;
-                    default:
-                        if (!dontmindme)
-                            Leave("Unhandled message id \"" + msg + "\"!", true);
-                        else
-                            Server.s.Log(Encoding.UTF8.GetString(buffer, 0, buffer.Length));
-                        return new byte[0];
-                }
-                if (buffer.Length > length) {
-                    byte[] message = new byte[length];
-                    Buffer.BlockCopy(buffer, 1, message, 0, length);
+                int length = GetDataSize(buffer);
+                if (length == -2) return new byte[1]; // WoM get request
+                if (length == -1) return new byte[0]; // invalid packet 
+                if (buffer.Length < length) return buffer;
 
-                    byte[] tempbuffer = new byte[buffer.Length - length - 1];
-                    Buffer.BlockCopy(buffer, length + 1, tempbuffer, 0, buffer.Length - length - 1);
-
-                    buffer = tempbuffer;
-
-                    switch (msg) {
-                        case Opcode.Handshake:
-                            HandleLogin(message);
-                            break;
-                        case Opcode.SetBlockClient:
-                            if (!loggedIn) break;
-                            HandleBlockchange(message);
-                            break;
-                        case Opcode.EntityTeleport:
-                            if (!loggedIn) break;
-                            HandleMovement(message);
-                            break;
-                        case Opcode.Message:
-                            if (!loggedIn) break;
-                            HandleChat(message);
-                            break;
-                        case Opcode.CpeExtInfo:
-                            HandleExtInfo( message );
-                            break;
-                        case Opcode.CpeExtEntry:
-                            HandleExtEntry( message );
-                            break;
-                        case Opcode.CpeCustomBlockSupportLevel:
-                            HandleCustomBlockSupportLevel( message );
-                            break;
-                    }
-                    //thread.Start((object)message);
-                    if (buffer.Length > 0)
-                        buffer = HandleMessage(buffer);
-                    else
-                        return new byte[0];
-                }
+                byte[] packet = new byte[length];
+                Buffer.BlockCopy(buffer, 1, packet, 0, length);
+                HandlePacket(buffer[0], packet);
+                
+                byte[] remaining = new byte[buffer.Length - length - 1];
+                Buffer.BlockCopy(buffer, length + 1, remaining, 0, buffer.Length - length - 1);
+                return ProcessReceived(remaining);
             } catch (Exception e) {
                 Server.ErrorLog(e);
             }
             return buffer;
         }
         
+        int GetDataSize(byte[] buffer) {
+            switch (buffer[0]) {
+                case (byte)'G': return -2; //For wom
+                case Opcode.Handshake: return 130;
+                case Opcode.SetBlockClient:
+                    if (!loggedIn) goto default;
+                    return 8;
+                case Opcode.EntityTeleport:
+                    if (!loggedIn) goto default;
+                    return 9;
+                case Opcode.Message:
+                    if (!loggedIn) goto default;
+                    return 65;
+                case Opcode.CpeExtInfo: return 66;
+                case Opcode.CpeExtEntry: return 68;
+                case Opcode.CpeCustomBlockSupportLevel: return 1;
+                default:
+                    if (!dontmindme)
+                    	Leave("Unhandled message id \"" + buffer[0] + "\"!", true);
+                    else
+                        Server.s.Log(Encoding.UTF8.GetString(buffer, 0, buffer.Length));
+                    return -1;
+            }
+        }
+        
+        void HandlePacket(byte opcode, byte[] buffer) {
+            switch (opcode) {
+                case Opcode.Handshake:
+                    HandleLogin(buffer); break;
+                case Opcode.SetBlockClient:
+                    if (!loggedIn) break;
+                    HandleBlockchange(buffer); break;
+                case Opcode.EntityTeleport:
+                    if (!loggedIn) break;
+                    HandleMovement(buffer); break;
+                case Opcode.Message:
+                    if (!loggedIn) break;
+                    HandleChat(buffer); break;
+                case Opcode.CpeExtInfo:
+                    HandleExtInfo(buffer); break;
+                case Opcode.CpeExtEntry:
+                    HandleExtEntry( buffer ); break;
+                case Opcode.CpeCustomBlockSupportLevel:
+                    HandleCustomBlockSupportLevel(buffer); break;
+            }
+        }
+        
         #region Login
         
-        void HandleLogin(byte[] message)
-        {
+        void HandleLogin(byte[] message) {
             LastAction = DateTime.UtcNow;
-            try
-            {
+            try {
                 if (loggedIn) return;
 
                 byte version = message[0];
@@ -354,7 +332,7 @@ namespace MCGalaxy {
                     if (p.name == name)  {
                         if (Server.verify) {
                             p.Leave("Someone logged in as you!"); break;
-                        } else { 
+                        } else {
                             Leave("Already logged in!", true); return;
                         }
                     }
@@ -375,7 +353,7 @@ namespace MCGalaxy {
                 id = NextFreeId();
                 
                 if (type != 0x42)
-                     CompleteLoginProcess();
+                    CompleteLoginProcess();
             } catch (Exception e) {
                 Server.ErrorLog(e);
                 Player.GlobalMessage("An error occurred: " + e.Message);
@@ -383,7 +361,7 @@ namespace MCGalaxy {
         }
         
         bool CheckPlayersCount(Group foundGrp) {
-        	if (Server.vip.Contains(name)) return true;
+            if (Server.vip.Contains(name)) return true;
             
             Player[] online = PlayerInfo.Online.Items;
             if (online.Length >= Server.players && !IPInPrivateRange(ip)) { Leave("Server full!", true); return false; }
@@ -434,7 +412,7 @@ namespace MCGalaxy {
         }
         
         bool CheckWhitelist() {
-            if (!Server.useWhitelist) return true;            
+            if (!Server.useWhitelist) return true;
             if (Server.verify) return Server.whiteList.Contains(name);
             
             // Verify names is off, check if the player is on the same IP.
@@ -480,12 +458,12 @@ namespace MCGalaxy {
             }
             
             //OpenClassic Client Check
-            SendBlockchange(0, 0, 0, 0);            
+            SendBlockchange(0, 0, 0, 0);
             timeLogged = DateTime.Now;
             lastLogin = DateTime.Now;
             time = new TimeSpan(0, 0, 0, 1);
             DataTable playerDb = Database.Fill("SELECT * FROM Players WHERE Name=@0", name);
-            	
+            
             if (playerDb.Rows.Count == 0)
                 InitPlayerStats(playerDb);
             else
@@ -626,12 +604,12 @@ namespace MCGalaxy {
                 muted = true;
                 GlobalMessage(DisplayName + " is still muted from the last time they went offline.");
                 Player.Message(this, "!%cYou are still %8muted%c since your last login.");
-            }           
+            }
             if (Server.frozen.Contains(name)) {
                 frozen = true;
                 GlobalMessage(DisplayName + " is still frozen from the last time they went offline.");
                 Player.Message(this, "!%cYou are still %8frozen%c since your last login.");
-            }            
+            }
         }
         
         void CheckLoginJailed() {
@@ -674,7 +652,7 @@ namespace MCGalaxy {
                 
                 if (type >= Block.CpeCount) {
                     if (!hasBlockDefs || level.CustomBlockDefs[type] == null) {
-                        SendMessage("Invalid block type: " + type); 
+                        SendMessage("Invalid block type: " + type);
                         RevertBlock(x, y, z); return;
                     }
                     extType = type;
@@ -718,7 +696,7 @@ return;
             
             if (cancelmove) {
                 SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]); return;
-            } 
+            }
             
             pos = new ushort[3] { x, y, z };
             rot = new byte[2] { rotx, roty };
@@ -795,7 +773,7 @@ return;
             
             lastWalkthrough = level.PosToInt(x, y, z);
             if ( ( bHead == Block.tntexplosion || bFeet == Block.tntexplosion ) && PlayingTntWars ) { }
-            else if ( Block.Death(bHead) ) HandleDeath(bHead); 
+            else if ( Block.Death(bHead) ) HandleDeath(bHead);
             else if ( Block.Death(bFeet) ) HandleDeath(bFeet);
         }
 
@@ -809,7 +787,7 @@ return;
             if (!level.Killer || invincible || hidden) return;
 
             onTrain = false; trainGrab = false;
-            ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);            
+            ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);
             string deathMsg = Block.Props[b].DeathMessage;
             if (deathMsg != null) Chat.GlobalChatLevel(this, String.Format(deathMsg, ColoredName), false);
             
@@ -1062,7 +1040,7 @@ return;
                         newtext = text.Remove(0, 1).Trim();
                         Chat.GlobalChatLevel(this, newtext, true);
                     } else {
-                       SendChatFrom(this, newtext);
+                        SendChatFrom(this, newtext);
                     }
                     Server.s.Log("<" + name + "> " + newtext);
                     //IRCBot.Say("<" + name + "> " + newtext);
@@ -1147,8 +1125,8 @@ return;
                 thread.Name = "MCG_Command";
                 thread.IsBackground = true;
                 thread.Start();
-            } catch (Exception e) { 
-                Server.ErrorLog(e); SendMessage("Command failed."); 
+            } catch (Exception e) {
+                Server.ErrorLog(e); SendMessage("Command failed.");
             }
         }
         
@@ -1161,19 +1139,19 @@ return;
                     string cmd = parts[0].ToLower();
                     string message = parts.Length > 1 ? parts[1] : "";
                     
-                     if (!CheckCommand(cmd)) return;
-                     Command command = GetCommand(ref cmd, ref message);
-                     if (command == null) return;
-                     
-                     messages.Add(message); commands.Add(command);
+                    if (!CheckCommand(cmd)) return;
+                    Command command = GetCommand(ref cmd, ref message);
+                    if (command == null) return;
+                    
+                    messages.Add(message); commands.Add(command);
                 }
 
                 Thread thread = new Thread(() => UseCommands(commands, messages));
                 thread.Name = "MCG_Command";
                 thread.IsBackground = true;
                 thread.Start();
-            } catch (Exception e) { 
-                Server.ErrorLog(e); SendMessage("Command failed."); 
+            } catch (Exception e) {
+                Server.ErrorLog(e); SendMessage("Command failed.");
             }
         }
         
@@ -1240,7 +1218,7 @@ return;
             string reason = Command.GetDisabledReason(command.Enabled);
             if (reason != null) {
                 SendMessage("Command is disabled as " + reason); return null;
-            }           
+            }
             if (level.IsMuseum && !command.museumUsable ) {
                 SendMessage("Cannot use this command while in a museum."); return null;
             }
@@ -1252,7 +1230,7 @@ return;
             if (cmd != "repeat" && cmd != "pass") {
                 lastCMD = cmd + " " + message;
                 lastCmdTime = DateTime.Now;
-            }            
+            }
             if (cmd != "pass") Server.s.CommandUsed(name + " used /" + cmd + " " + message);
 
             try { //opstats patch (since 5.5.11)

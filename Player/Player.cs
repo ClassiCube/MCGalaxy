@@ -23,7 +23,6 @@ using MCGalaxy.SQL;
 using MCGalaxy.Util;
 
 namespace MCGalaxy {
-    
     public sealed partial class Player : IDisposable {
 
         public void IncrementBlockStats(byte block, bool drawn) {
