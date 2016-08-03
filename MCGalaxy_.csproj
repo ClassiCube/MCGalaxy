@@ -530,6 +530,7 @@
     <Compile Include="Player\List\PlayerMetaList.cs" />
     <Compile Include="Player\Player.Fields.cs" />
     <Compile Include="Player\Player.Handlers.cs" />
+    <Compile Include="Player\Player.Login.cs" />
     <Compile Include="Player\PlayerActions.cs" />
     <Compile Include="Player\PlayerData.cs" />
     <Compile Include="Player\PlayerInfo.cs" />

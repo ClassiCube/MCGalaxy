@@ -33,7 +33,17 @@ namespace MCGalaxy {
             else if (block == 0) TotalDeleted++;
             else TotalPlaced++;
         }
-		
+        
+        public byte GetActualHeldBlock(out byte extBlock) {
+            byte block = RawHeldBlock;
+            extBlock = 0;
+            if (modeType != 0) return modeType;    
+            
+            if (block < Block.CpeCount) return bindings[block];
+            extBlock = block;
+            return Block.custom_block;            
+        }
+        
         public static string CheckPlayerStatus(Player p) {
             if ( p.hidden ) return "hidden";
             if ( p.IsAfk ) return "afk";
