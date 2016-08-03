@@ -325,12 +325,13 @@ namespace MCGalaxy {
                 
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player p in players) {
-                    if (p.name == name)  {
-                        if (Server.verify) {
-                            p.Leave("Someone logged in as you!"); break;
-                        } else {
-                            Leave("Already logged in!", true); return;
-                        }
+                    if (p.name != name) continue;
+                    
+                    if (Server.verify) {
+                        string reason = p.ip == ip ? "(Reconnecting)" : "(Reconnecting from a different IP)";
+                        p.Leave(reason); break;
+                    } else {
+                        Leave("Already logged in!", true); return;
                     }
                 }
                 
