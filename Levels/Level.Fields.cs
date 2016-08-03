@@ -193,9 +193,7 @@ namespace MCGalaxy {
         
         public Random physRandom = new Random();
         public bool physPause;
-        public DateTime physResume;
         public Thread physThread;
-        public Timer physTimer = new Timer(1000);
         readonly object physThreadLock = new object();
         bool physThreadStarted = false;
         

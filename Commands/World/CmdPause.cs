@@ -16,10 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdPause : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdPause : Command {
         public override string name { get { return "pause"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }
@@ -50,36 +48,29 @@ namespace MCGalaxy.Commands
             bool enabled = lvl.physPause;
             lvl.PhysicsEnabled = enabled;
             lvl.physPause = !lvl.physPause;
-            lvl.physResume = DateTime.UtcNow;
             if (enabled) {
                 Player.GlobalMessage("Physics on " + lvl.name + " were re-enabled.");
             } else {
-                lvl.physResume = lvl.physResume.AddSeconds(seconds);
+                Server.MainScheduler.QueueOnce(PauseCallback, lvl.name,
+                                               TimeSpan.FromSeconds(seconds));
                 Player.GlobalMessage("Physics on " + lvl.name + " were temporarily disabled.");
-                StartPauseCheck(lvl);
             }
         }
         
-        static void StartPauseCheck(Level lvl) {
-            lvl.physTimer.Elapsed += delegate
-            {
-                if (DateTime.UtcNow > lvl.physResume) {
-                    lvl.physPause = false;
-                    lvl.PhysicsEnabled = true;
-                    
-                    Player.GlobalMessage("Physics on " + lvl.name + " were re-enabled.");
-                    lvl.physTimer.Stop();
-                    lvl.physTimer.Dispose();
-                }
-            };
-            lvl.physTimer.Start();
+        static void PauseCallback(SchedulerTask task) {
+            string lvlName = (string)task.State;
+            Level lvl = LevelInfo.FindExact(lvlName);
+            if (lvl == null) return;
+            
+            lvl.PhysicsEnabled = true;
+            Player.GlobalMessage("Physics on " + lvl.name + " were re-enabled.");
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/pause [map] [seconds]");
             Player.Message(p, "%HPauses physics on the given map for the specified number of seconds.");
-            Player.Message(p, "%H  If no map name is given, pauses physics on the current map.");
-            Player.Message(p, "%H  If no or non-numerical seconds are given, pauses physics for 30 seconds.");    
+            Player.Message(p, "%H  If [map] is not given, pauses physics on the current map.");
+            Player.Message(p, "%H  If [seconds] is not given, pauses physics for 30 seconds.");
         }
     }
 }
