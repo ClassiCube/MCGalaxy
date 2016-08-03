@@ -182,10 +182,7 @@ namespace MCGalaxy {
                 if (length == -1) return new byte[0]; // invalid packet 
                 if (buffer.Length < length) return buffer;
 
-                byte[] packet = new byte[length];
-                Buffer.BlockCopy(buffer, 1, packet, 0, length);
-                HandlePacket(buffer[0], packet);
-                
+                HandlePacket(buffer);              
                 byte[] remaining = new byte[buffer.Length - length - 1];
                 Buffer.BlockCopy(buffer, length + 1, remaining, 0, buffer.Length - length - 1);
                 return ProcessReceived(remaining);
@@ -220,8 +217,8 @@ namespace MCGalaxy {
             }
         }
         
-        void HandlePacket(byte opcode, byte[] buffer) {
-            switch (opcode) {
+        void HandlePacket(byte[] buffer) {
+        	switch (buffer[0]) {
                 case Opcode.Handshake:
                     HandleLogin(buffer); break;
                 case Opcode.SetBlockClient:
@@ -236,21 +233,21 @@ namespace MCGalaxy {
                 case Opcode.CpeExtInfo:
                     HandleExtInfo(buffer); break;
                 case Opcode.CpeExtEntry:
-                    HandleExtEntry( buffer ); break;
+                    HandleExtEntry(buffer); break;
                 case Opcode.CpeCustomBlockSupportLevel:
-                    HandleCustomBlockSupportLevel(buffer); break;
+                    customBlockSupportLevel = buffer[1]; break;
             }
         }
         
         #region Login
         
-        void HandleLogin(byte[] message) {
+        void HandleLogin(byte[] packet) {
             LastAction = DateTime.UtcNow;
             try {
                 if (loggedIn) return;
 
-                byte version = message[0];
-                name = enc.GetString(message, 1, 64).Trim();
+                byte version = packet[1];
+                name = enc.GetString(packet, 2, 64).Trim();
                 if (name.Length > 16) {
                     Leave("Usernames must be 16 characters or less", true); return;
                 }
@@ -271,7 +268,7 @@ namespace MCGalaxy {
                     }
                 }
 
-                string verify = enc.GetString(message, 65, 32).Trim();
+                string verify = enc.GetString(packet, 66, 32).Trim();
                 verifiedName = false;
                 if (Server.verify) {
                     byte[] hash = null;
@@ -287,10 +284,9 @@ namespace MCGalaxy {
                         verifiedName = true;
                     }
                 }
+                
                 DisplayName = name;
                 if (Server.ClassicubeAccountPlus) name += "+";
-                byte type = message[129];
-
                 isDev = Server.Devs.CaselessContains(truename);
                 isMod = Server.Mods.CaselessContains(truename);
 
@@ -339,10 +335,8 @@ namespace MCGalaxy {
                 }
                 
                 LoadIgnores();
-                if (type == 0x42) {
-                    hasCpe = true;
-                    SendCpeExtensions();
-                }
+                byte type = packet[130];
+                if (type == 0x42) { hasCpe = true; SendCpeExtensions(); }
                 
                 try { left.Remove(name.ToLower()); }
                 catch { }
@@ -630,19 +624,16 @@ namespace MCGalaxy {
 
         #endregion
 
-        void HandleBlockchange(byte[] message) {
+        void HandleBlockchange(byte[] packet) {
             try {
-                if ( !loggedIn ) return;
-                if ( CheckBlockSpam() ) return;
+        		if (!loggedIn || CheckBlockSpam()) return;              
+                ushort x = NetUtils.ReadU16(packet, 1);
+                ushort y = NetUtils.ReadU16(packet, 3);
+                ushort z = NetUtils.ReadU16(packet, 5);
+                byte action = packet[7], block = packet[8];
+                byte extBlock = block;
                 
-                ushort x = NetUtils.ReadU16(message, 0);
-                ushort y = NetUtils.ReadU16(message, 2);
-                ushort z = NetUtils.ReadU16(message, 4);
-                byte action = message[6];
-                byte type = message[7];
-                byte extType = type;
-                
-                if ((action == 0 || type == 0) && !level.Deletable) {
+                if ((action == 0 || block == 0) && !level.Deletable) {
                     SendMessage("You cannot currently delete blocks in this level.");
                     RevertBlock(x, y, z); return;
                 } else if (action == 1 && !level.Buildable) {
@@ -650,15 +641,15 @@ namespace MCGalaxy {
                     RevertBlock(x, y, z); return;
                 }
                 
-                if (type >= Block.CpeCount) {
-                    if (!hasBlockDefs || level.CustomBlockDefs[type] == null) {
-                        SendMessage("Invalid block type: " + type);
+                if (block >= Block.CpeCount) {
+                    if (!hasBlockDefs || level.CustomBlockDefs[block] == null) {
+                        SendMessage("Invalid block type: " + block);
                         RevertBlock(x, y, z); return;
                     }
-                    extType = type;
-                    type = Block.custom_block;
+                    extBlock = block;
+                    block = Block.custom_block;
                 }
-                ManualChange(x, y, z, action, type, extType);
+                ManualChange(x, y, z, action, block, extBlock);
             } catch ( Exception e ) {
                 // Don't ya just love it when the server tattles?
                 Chat.GlobalMessageOps(DisplayName + " has triggered a block change error");
@@ -667,19 +658,18 @@ namespace MCGalaxy {
             }
         }
         
-        void HandleMovement(byte[] message) {
-            if ( !loggedIn || trainGrab || following != "" || frozen )
-                return;
+        void HandleMovement(byte[] packet) {
+            if (!loggedIn || trainGrab || following != "" || frozen) return;
             /*if (CheckIfInsideBlock())
 {
 this.SendPos(0xFF, (ushort)(clippos[0] - 18), (ushort)(clippos[1] - 18), (ushort)(clippos[2] - 18), cliprot[0], cliprot[1]);
 return;
 }*/
-            byte thisid = message[0];
-            ushort x = NetUtils.ReadU16(message, 1);
-            ushort y = NetUtils.ReadU16(message, 3);
-            ushort z = NetUtils.ReadU16(message, 5);
-            byte rotx = message[7], roty = message[8];
+            byte thisid = packet[1];
+            ushort x = NetUtils.ReadU16(packet, 2);
+            ushort y = NetUtils.ReadU16(packet, 4);
+            ushort z = NetUtils.ReadU16(packet, 6);
+            byte rotx = packet[8], roty = packet[9];
 
             if (Server.Countdown.HandlesMovement(this, x, y, z, rotx, roty))
                 return;
@@ -864,15 +854,15 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
 }
 } */
         DateTime lastSpamReset;
-        void HandleChat(byte[] message) {
+        void HandleChat(byte[] packet) {
             try {
-                if ( !loggedIn ) return;
+                if (!loggedIn) return;
                 if ((DateTime.UtcNow - lastSpamReset).TotalSeconds > Server.spamcountreset) {
                     lastSpamReset = DateTime.UtcNow;
                     consecutivemessages = 0;
                 }
-                byte continued = message[0];
-                string text = GetString(message, 1);
+                byte continued = packet[1];
+                string text = GetString(packet, 2);
 
                 // handles the /womid client message, which displays the WoM vrersion
                 if ( text.Truncate(6) == "/womid" ) {

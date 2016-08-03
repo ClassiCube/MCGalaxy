@@ -69,9 +69,10 @@ namespace MCGalaxy {
         public int extensionCount;
         public List<string> extensions = new List<string>();
         public int customBlockSupportLevel;
-        void HandleExtInfo( byte[] message ) {
-            appName = enc.GetString( message, 0, 64 ).Trim();
-            extensionCount = message[65];
+        
+        void HandleExtInfo(byte[] packet) {
+            appName = GetString(packet, 1);
+            extensionCount = packet[67];
             // NOTE: Workaround as ClassiCube violates the CPE specification here.
             // If server sends version 2, the client should reply with version 1.
             // Except ClassiCube just doesn't reply at all if server sends version 2.
@@ -79,17 +80,13 @@ namespace MCGalaxy {
                 EnvMapAppearance = 1;
         }
 
-        void HandleExtEntry( byte[] message ) {
-            AddExtension(enc.GetString(message, 0, 64).Trim(), NetUtils.ReadI32(message, 64));
+        void HandleExtEntry(byte[] packet) {
+            AddExtension(GetString(packet, 1), NetUtils.ReadI32(packet, 65));
             extensionCount--;
             if (extensionCount <= 0 && !finishedCpeLogin) {
                 CompleteLoginProcess();
                 finishedCpeLogin = true;
             }
-        }
-
-        void HandleCustomBlockSupportLevel( byte[] message ) {
-            customBlockSupportLevel = message[0];
         }
         
         char[] characters = new char[64];
