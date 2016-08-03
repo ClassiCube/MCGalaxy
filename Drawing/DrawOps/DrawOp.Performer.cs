@@ -51,7 +51,7 @@ namespace MCGalaxy.Drawing.Ops {
                 return false;
             }
             
-            long affected = 0;
+            long affected = checkLimit ? 0L : op.GetBlocksAffected(op.Level, marks);
             if (checkLimit && !op.CanDraw(marks, p, out affected))
                 return false;
             if (brush != null && affected != -1) {
