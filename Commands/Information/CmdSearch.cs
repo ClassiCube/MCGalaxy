@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands {
             StringBuilder ranks = new StringBuilder();
             foreach (Group g in Group.GroupList) {
                 if (g.name.IndexOf(keyword, comp) >= 0)
-                    ranks.Append(", ").Append(g.color).Append(g.name);
+                    ranks.Append(", ").Append(g.ColoredName);
             }
             if (ranks.Length == 0) { Player.Message(p, "No ranks found containing &b" + keyword); return; }
             Player.Message(p, ranks.ToString(2, ranks.Length - 2));

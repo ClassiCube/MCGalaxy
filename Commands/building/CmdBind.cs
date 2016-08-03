@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Building {
             if (args.Length > 2) { Help(p); return; }
             
             if (args[0] == "clear") {
-                for (byte id = 0; id < 128; id++) p.bindings[id] = id;
+                for (byte id = 0; id < Block.CpeCount; id++) p.bindings[id] = id;
                 Player.Message(p, "All bindings were unbound.");
                 return;
             }

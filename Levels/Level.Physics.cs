@@ -109,6 +109,9 @@ namespace MCGalaxy {
         }
 
         public PhysicsArgs foundInfo(ushort x, ushort y, ushort z) {
+            if (!listCheckExists.Get(x, y, z))
+                return default(PhysicsArgs);
+        	
             int index = PosToInt(x, y, z);
             for (int i = 0; i < ListCheck.Count; i++) {
                 Check C = ListCheck.Items[i];

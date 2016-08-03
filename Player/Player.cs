@@ -83,7 +83,7 @@ namespace MCGalaxy {
                 SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
                 Server.s.Log(ip + " connected to the server.");
 
-                for (byte i = 0; i < 128; i++) bindings[i] = i;
+                for (byte i = 0; i < Block.CpeCount; i++) bindings[i] = i;
 
                 socket.BeginReceive(tempbuffer, 0, tempbuffer.Length, SocketFlags.None, new AsyncCallback(Receive), this);
                 InitTimers();
@@ -599,7 +599,7 @@ namespace MCGalaxy {
             }
         }
         
-        void SelectionBlockChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void SelectionBlockChange(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock) {
             lock (selLock) {
                 Blockchange = SelectionBlockChange;
                 RevertBlock(x, y, z);
@@ -609,8 +609,8 @@ namespace MCGalaxy {
                 if (selIndex != selMarks.Length) return;
                 
                 Blockchange = null;
-                type = type < 128 ? p.bindings[type] : type;
-                bool canRepeat = selCallback(this, selMarks, selState, type, extType);
+                block = block < Block.CpeCount ? p.bindings[block] : block;
+                bool canRepeat = selCallback(this, selMarks, selState, block, extBlock);
                 if (canRepeat && staticCommands)
                     MakeSelection(selIndex, selState, selCallback);
             }

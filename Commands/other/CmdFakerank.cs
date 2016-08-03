@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands
             } else {
                 Player.GlobalMessage(who.ColoredName + "%S's rank was set to " + 
                                      grp.ColoredName + "%S. (Congratulations!)");
-                who.SendMessage("You are now ranked " + grp.color + grp.name + "%S, type /help for your new set of commands.");
+                Player.Message(who, "You are now ranked {0}%S, type /help for your new set of commands.", grp.ColoredName);
             }
         }
         

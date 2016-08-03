@@ -235,7 +235,7 @@ namespace MCGalaxy {
         public DateTime lastDeath = DateTime.UtcNow;
 
         public byte modeType;
-        public byte[] bindings = new byte[128];
+        public byte[] bindings = new byte[Block.CpeCount];
         public string[] cmdBind = new string[10];
         public string[] messageBind = new string[10];
         public string lastCMD = "";

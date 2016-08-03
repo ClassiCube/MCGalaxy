@@ -108,12 +108,12 @@ namespace MCGalaxy {
             }
 
             if (action > 1 ) { Leave("Unknown block action!", true); return; }
-            byte oldType = block;
-            if (block < 128) block = bindings[block];
+            byte blockRaw = block;
+            if (block < Block.CpeCount) block = bindings[block];
             
             //Ignores updating blocks that are the same and send block only to the player
             byte newBlock = (painting || action == 1) ? block : (byte)0;
-            if (old == newBlock && (painting || oldType != block)) {
+            if (old == newBlock && (painting || blockRaw != block)) {
                 if (old != Block.custom_block || extBlock == level.GetExtTile(x, y, z)) {
                     RevertBlock(x, y, z); return;
                 }
@@ -129,13 +129,13 @@ namespace MCGalaxy {
             }
         }
         
-        bool DeleteBlock(byte b, ushort x, ushort y, ushort z, byte block, byte extBlock) {
+        bool DeleteBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
             if (deleteMode) { return ChangeBlock(x, y, z, Block.air, 0); }
             bool changed = true;
 
-            Block.HandleDelete handler = Block.deleteHandlers[b];
+            Block.HandleDelete handler = Block.deleteHandlers[old];
             if (handler != null) {
-                if (handler(this, b, x, y, z)) return false;
+                if (handler(this, old, x, y, z)) return false;
             } else {
                 changed = ChangeBlock(x, y, z, Block.air, 0);
             }
@@ -145,16 +145,16 @@ namespace MCGalaxy {
             return changed;
         }
 
-        bool PlaceBlock(byte b, ushort x, ushort y, ushort z, byte block, byte extBlock) {
+        bool PlaceBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
             if (modeType != 0) {
-                if (b == modeType) SendBlockchange(x, y, z, b);
+                if (old == modeType) SendBlockchange(x, y, z, old);
                 else ChangeBlock(x, y, z, modeType, 0);
                 return true;
             }
             
             Block.HandlePlace handler = Block.placeHandlers[block];
             if (handler != null) {
-                if (handler(this, b, x, y, z)) return false;
+                if (handler(this, old, x, y, z)) return false;
             } else {
                 return ChangeBlock(x, y, z, block, extBlock);
             }

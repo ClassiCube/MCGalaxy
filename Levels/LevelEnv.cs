@@ -84,7 +84,7 @@ namespace MCGalaxy {
         public static void SetColor(Player p, string value, byte envType, string envTypeName, ref string target) {
             if (IsResetString(value)) {
                 Player.Message(p, "Reset {0} color for {1}%S to normal", envTypeName, p.level.name);
-                target = null;
+                target = "";
             } else {
 			    if (!Extensions.CheckHex(p, ref value)) return;              
                 Player.Message(p, "Set {0} color for {1}%S to #{2}", envTypeName, p.level.name, value);

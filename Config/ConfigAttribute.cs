@@ -37,7 +37,7 @@ namespace MCGalaxy.Config {
         public abstract object Parse(string value);
         
         /// <summary> Converts the given value into its serialised string form. </summary>
-        public virtual string Serialise(object value) { return value.ToString(); }
+        public virtual string Serialise(object value) { return value == null ? "" : value.ToString(); }
         
         public ConfigAttribute(string name, string section, string desc, object defValue) {
             Name = name; Description = desc; 
