@@ -174,17 +174,17 @@ namespace MCGalaxy {
         }
         
         byte[] ProcessReceived(byte[] buffer) {
-        	if (buffer.Length == 0) return buffer;
-
             try {
-                int length = GetDataSize(buffer);
-                if (length == -2) return new byte[1]; // WoM get request
-                if (length == -1) return new byte[0]; // invalid packet 
-                if (buffer.Length < length) return buffer;
-
-                HandlePacket(buffer);              
-                byte[] remaining = new byte[buffer.Length - length - 1];
-                Buffer.BlockCopy(buffer, length + 1, remaining, 0, buffer.Length - length - 1);
+                int size = PacketSize(buffer);
+                if (size == -2) return new byte[1]; // WoM get request
+                if (size == -1) return new byte[0]; // invalid packet 
+                
+                if (buffer.Length < size) return buffer;
+                HandlePacket(buffer);
+                if (buffer.Length == size) return new byte[0];
+                
+                byte[] remaining = new byte[buffer.Length - size];
+                Buffer.BlockCopy(buffer, size, remaining, 0, remaining.Length);
                 return ProcessReceived(remaining);
             } catch (Exception e) {
                 Server.ErrorLog(e);
@@ -192,22 +192,22 @@ namespace MCGalaxy {
             return buffer;
         }
         
-        int GetDataSize(byte[] buffer) {
+        int PacketSize(byte[] buffer) {
             switch (buffer[0]) {
                 case (byte)'G': return -2; //For wom
-                case Opcode.Handshake: return 130;
+                case Opcode.Handshake: return 131;
                 case Opcode.SetBlockClient:
                     if (!loggedIn) goto default;
-                    return 8;
+                    return 9;
                 case Opcode.EntityTeleport:
                     if (!loggedIn) goto default;
-                    return 9;
+                    return 10;
                 case Opcode.Message:
                     if (!loggedIn) goto default;
-                    return 65;
-                case Opcode.CpeExtInfo: return 66;
-                case Opcode.CpeExtEntry: return 68;
-                case Opcode.CpeCustomBlockSupportLevel: return 1;
+                    return 66;
+                case Opcode.CpeExtInfo: return 67;
+                case Opcode.CpeExtEntry: return 69;
+                case Opcode.CpeCustomBlockSupportLevel: return 2;
                 default:
                     if (!dontmindme)
                     	Leave("Unhandled message id \"" + buffer[0] + "\"!", true);
