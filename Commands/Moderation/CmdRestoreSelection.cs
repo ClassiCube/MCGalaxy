@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands {
         static bool CopyBlocks(Player p, Level other, Vec3S32[] m) {
             byte[] blocks = other.blocks;
             if (blocks.Length != p.level.blocks.Length) {
-                p.SendMessage("Cant restore selection of different size maps.");
+                p.Sessage("Cannot restore selection of different size maps.");
                 return false;
             }
             

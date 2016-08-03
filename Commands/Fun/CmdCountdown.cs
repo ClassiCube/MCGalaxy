@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands {
                         HandleTutorial(p); return;
                 }
             }
-            p.SendMessage("Sorry, you aren't a high enough rank or that wasn't a correct command addition.");
+            Player.Message(p, "Sorry, you aren't a high enough rank or that wasn't a correct command addition.");
         }
         
         void HandleJoin(Player p) {
@@ -326,7 +326,7 @@ namespace MCGalaxy.Commands {
                 case "ultimate":
                     game.speed = 150; game.speedtype = "ultimate"; break;
                 default:
-                    p.SendMessage("You didn't specify a speed, resorting to 'normal'");
+                    Player.Message(p, "You didn't specify a speed, resorting to 'normal'");
                     game.speed = 650; game.speedtype = "normal"; break;
             }
             Server.Countdown.freezemode = (par2 == "freeze" || par2 == "frozen");
@@ -354,35 +354,34 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleTutorial(Player p) {
-            p.SendMessage("First, generate the map using /cd generate");
-            p.SendMessage("Next, type /cd enable to enable the game mode");
-            p.SendMessage("Next, type /cd join to join the game and tell other players to join aswell");
-            p.SendMessage("When some people have joined, type /cd start [speed] to start it");
-            p.SendMessage("[speed] can be 'ultimate', 'extreme', 'fast', 'normal' or 'slow'");
-            p.SendMessage("When you are done, type /cd reset [map/all]");
-            p.SendMessage("use map to reset only the map and all to reset everything.");
+            Player.Message(p, "First, generate the map using /cd generate");
+            Player.Message(p, "Next, type /cd enable to enable the game mode");
+            Player.Message(p, "Next, type /cd join to join the game and tell other players to join aswell");
+            Player.Message(p, "When some people have joined, type /cd start [speed] to start it");
+            Player.Message(p, "[speed] can be 'ultimate', 'extreme', 'fast', 'normal' or 'slow'");
+            Player.Message(p, "When you are done, type /cd reset [map/all]");
+            Player.Message(p, "use map to reset only the map and all to reset everything.");
         }
         
         public override void Help(Player p) {
-            p.SendMessage("/cd join - join the game");
-            p.SendMessage("/cd leave - leave the game");
-            p.SendMessage("/cd goto - goto the countdown map");
-            p.SendMessage("/cd players - view players currently playing");
+            Player.Message(p, "/cd join - join the game");
+            Player.Message(p, "/cd leave - leave the game");
+            Player.Message(p, "/cd goto - goto the countdown map");
+            Player.Message(p, "/cd players - view players currently playing");
             
             if (CheckExtraPerm(p, 1))
-                p.SendMessage("/cd rules <all/map/player> - the rules of countdown. with send: all to send to all, map to send to map and have a player's name to send to a player");
+                Player.Message(p, "/cd rules <all/map/player> - the rules of countdown. with send: all to send to all, map to send to map and have a player's name to send to a player");
             else
-                p.SendMessage("/cd rules - view the rules of countdown");
+                Player.Message(p, "/cd rules - view the rules of countdown");
             
-            if (CheckExtraPerm(p, 2)) {
-                p.SendMessage("/cd generate [width] [height] [length] - generates the countdown map (default size is 32x32x32)");
-                p.SendMessage("/cd enable - enable the game");
-                p.SendMessage("/cd disable - disable the game");
-                p.SendMessage("/cd cancel - cancels a game");
-                p.SendMessage("/cd start [speed] [mode] - start the game, speeds are 'slow', 'normal', 'fast', 'extreme' and 'ultimate', modes are 'normal' and 'freeze'");
-                p.SendMessage("/cd reset [all/map] - reset the whole game (all) or only the map (map)");
-                p.SendMessage("/cd tutorial - a tutorial on how to setup countdown");
-            }
+            if (!CheckExtraPerm(p, 2)) return;
+            Player.Message(p, "/cd generate [width] [height] [length] - generates the countdown map (default size is 32x32x32)");
+            Player.Message(p, "/cd enable - enable the game");
+            Player.Message(p, "/cd disable - disable the game");
+            Player.Message(p, "/cd cancel - cancels a game");
+            Player.Message(p, "/cd start [speed] [mode] - start the game, speeds are 'slow', 'normal', 'fast', 'extreme' and 'ultimate', modes are 'normal' and 'freeze'");
+            Player.Message(p, "/cd reset [all/map] - reset the whole game (all) or only the map (map)");
+            Player.Message(p, "/cd tutorial - a tutorial on how to setup countdown");
         }
     }
 }

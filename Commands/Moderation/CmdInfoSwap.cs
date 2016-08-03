@@ -83,9 +83,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.SendMessage(p, "%T/infoswap [source] [other]");
-            Player.SendMessage(p, "%HSwaps all the player's info from [source] to [other].");
-            Player.SendMessage(p, "%HNote that both players must be offline for this to work.");
+            Player.Message(p, "%T/infoswap [source] [other]");
+            Player.Message(p, "%HSwaps all the player's info from [source] to [other].");
+            Player.Message(p, "%HNote that both players must be offline for this to work.");
         }
     }
 }

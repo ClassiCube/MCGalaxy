@@ -45,36 +45,36 @@ namespace MCGalaxy.Commands.World {
                 return; 
             }
             
-            string url = args[1];            
+            string url = args[1];
             if (url.ToLower() == "normal" || url.ToLower() == "reset") {
                 url = "";
             } else if (!(url.StartsWith("http://") || url.StartsWith("https://"))) {
-                p.SendMessage("Please use http:// or https:// in front of your URL"); return;
+                Player.Message(p, "Please use http:// or https:// in front of your URL"); return;
             }
             
             if ((scope == "global" || scope == "level") && !(url == "" || url.EndsWith(".png"))) {
-                p.SendMessage("The terrain URL must end in a .png"); return;
+                Player.Message(p, "The terrain URL must end in a .png"); return;
             }
             if ((scope == "globalzip" || scope == "levelzip") && !(url == "" || url.EndsWith(".zip"))) {
-                p.SendMessage("The texture pack URL must end in a .zip"); return;
+                Player.Message(p, "The texture pack URL must end in a .zip"); return;
             }
             if (url.Length > 64) { p.SendMessage("The URL must be 64 characters or less."); return; }
             
             if (scope == "global") {
                 Server.defaultTerrainUrl = url;
-                p.SendMessage("Set server's default terrain to " + args[1]);
+                Player.Message(p, "Set server's default terrain to " + args[1]);
                 UpdateGlobally(p, false);
             } else if (scope == "level") {
                 p.level.terrainUrl = url;
-                p.SendMessage("Set level's terrain to " + args[1]);
+                Player.Message(p, "Set level's terrain to " + args[1]);
                 UpdateLevel(p, false);
             } else if (scope == "globalzip") {
                 Server.defaultTextureUrl = url;
-                p.SendMessage("Set server's default texture pack to " + args[1]);
+                Player.Message(p, "Set server's default texture pack to " + args[1]);
                 UpdateGlobally(p, true);
             } else if (scope == "levelzip") {
                 p.level.texturePackUrl = url;
-                p.SendMessage("Set level's texture pack to " + args[1]);
+                Player.Message(p, "Set level's texture pack to " + args[1]);
                 UpdateLevel(p, true);
             } else {
                 Help(p);

@@ -28,12 +28,12 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message) {
             if (message == "" || message.IndexOf(' ') != -1) { Help(p); return; }
-
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
+            
             who.ignoreGrief = !who.ignoreGrief;
             Player.Message(p, who.ColoredName + "%S's trust status: " + who.ignoreGrief);
-            who.SendMessage("Your trust status was changed to: " + who.ignoreGrief);
+            Player.Message(who, "Your trust status was changed to: " + who.ignoreGrief);
         }
         
         public override void Help(Player p) {
