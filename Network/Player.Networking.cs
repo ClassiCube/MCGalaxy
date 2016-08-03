@@ -72,7 +72,7 @@ namespace MCGalaxy {
         
         void HandleExtInfo(byte[] packet) {
             appName = GetString(packet, 1);
-            extensionCount = packet[67];
+            extensionCount = packet[66];
             // NOTE: Workaround as ClassiCube violates the CPE specification here.
             // If server sends version 2, the client should reply with version 1.
             // Except ClassiCube just doesn't reply at all if server sends version 2.
