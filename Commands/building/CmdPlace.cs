@@ -27,17 +27,16 @@ namespace MCGalaxy.Commands.Building {
         public CmdPlace() { }
 
         public override void Use(Player p, string message) {
-            int block = -1;
             byte extBlock = 0;
+            int block = p.GetActualHeldBlock(out extBlock);
             ushort x = p.pos[0], y = (ushort)(p.pos[1] - 32), z = p.pos[2];
 
             try {
             	string[] parts = message.Split(' ');
                 switch (parts.Length) {
-                    case 1: block = message == "" ? Block.rock :
+                    case 1: block = message == "" ? block :
                         DrawCmd.GetBlock(p, parts[0], out extBlock); break;
                     case 3:
-                        block = Block.rock;
                         x = (ushort)(Convert.ToUInt16(parts[0]) * 32);
                         y = (ushort)(Convert.ToUInt16(parts[1]) * 32);
                         z = (ushort)(Convert.ToUInt16(parts[2]) * 32);
@@ -60,7 +59,7 @@ namespace MCGalaxy.Commands.Building {
             
             P.X /= 32; P.Y /= 32; P.Z /= 32;
             p.level.UpdateBlock(p, P.X, P.Y, P.Z, (byte)block, extBlock);
-            Player.Message(p, "A block was placed at ({0}, {1}, {2}).", P.X, P.Y, P.Z);
+            Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", P.X, P.Y, P.Z, Block.Name((byte)block));
         }
         
         public override void Help(Player p) {

@@ -18,10 +18,8 @@
 using System;
 using System.Drawing;
 
-namespace MCGalaxy
-{
-    public partial class Player
-    {
+namespace MCGalaxy {
+    public partial class Player {
         public int ClickDistance = 0;
         public int CustomBlocks = 0;
         public int HeldBlock = 0;
@@ -47,10 +45,8 @@ namespace MCGalaxy
         public bool hasCustomBlocks, hasBlockDefs, 
         hasTextColors, hasChangeModel, hasExtList;
 
-        public void AddExtension(string Extension, int version)
-        {
-            switch (Extension.Trim())
-            {
+        public void AddExtension(string ext, int version) {
+            switch (ext.Trim()) {
                 case CpeExt.ClickDistance:
                     ClickDistance = version; break;
                 case CpeExt.CustomBlocks:

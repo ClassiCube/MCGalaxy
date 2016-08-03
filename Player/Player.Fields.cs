@@ -232,7 +232,7 @@ namespace MCGalaxy {
         //Games
         public DateTime lastDeath = DateTime.UtcNow;
 
-        public byte modeType, RawHeldBlock = Block.stone;
+        public byte modeType, RawHeldBlock = Block.rock;
         public byte[] bindings = new byte[Block.CpeCount];
         public string[] cmdBind = new string[10];
         public string[] messageBind = new string[10];

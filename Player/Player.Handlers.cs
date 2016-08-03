@@ -281,7 +281,10 @@ namespace MCGalaxy {
 this.SendPos(0xFF, (ushort)(clippos[0] - 18), (ushort)(clippos[1] - 18), (ushort)(clippos[2] - 18), cliprot[0], cliprot[1]);
 return;
 }*/
-            byte thisid = packet[1];
+            byte heldBlock = packet[1];
+            if (HasCpeExt(CpeExt.HeldBlock))
+                RawHeldBlock = heldBlock;
+                
             ushort x = NetUtils.ReadU16(packet, 2);
             ushort y = NetUtils.ReadU16(packet, 4);
             ushort z = NetUtils.ReadU16(packet, 6);
