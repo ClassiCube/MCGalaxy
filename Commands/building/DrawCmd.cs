@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-        	message = message.ToLower();
+            message = message.ToLower();
             string[] parts = message.Split(' ');
             DrawArgs cpos = default(DrawArgs);
             cpos.message = message;
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Building {
         protected virtual void OnUse(Player p, string msg, string[] parts, ref DrawArgs cpos) { }
         
         protected virtual DrawMode GetMode(string message, string[] parts) {
-        	return message == "" ? DrawMode.normal : ParseMode(parts[parts.Length - 1]);
+            return message == "" ? DrawMode.normal : ParseMode(parts[parts.Length - 1]);
         }
         
         internal static int GetBlock(Player p, string msg, out byte extBlock, bool checkPlacePerm = true) {
@@ -56,14 +56,14 @@ namespace MCGalaxy.Commands.Building {
             if (msg.CaselessEq("skip") || msg.CaselessEq("none")) return Block.Zero;
             
             if (block == Block.Zero) {
-            	// try treat as a block definition id.
-            	block = BlockDefinition.GetBlock(msg, p);
-            	if (block == Block.Zero) {
-            		Player.Message(p, "There is no block \"{0}\".", msg);
-            		return -1;
-            	}
-            	extBlock = block;
-            	return Block.custom_block;
+                // try treat as a block definition id.
+                block = BlockDefinition.GetBlock(msg, p);
+                if (block == Block.Zero) {
+                    Player.Message(p, "There is no block \"{0}\".", msg);
+                    return -1;
+                }
+                extBlock = block;
+                return Block.custom_block;
             }
             
             if (checkPlacePerm && !Block.canPlace(p, block)) {
@@ -74,18 +74,18 @@ namespace MCGalaxy.Commands.Building {
         
         protected static Brush GetBrush(Player p, DrawArgs dArgs, 
                                         int usedFromEnd, Func<BrushArgs, Brush> constructor = null) {
-        	int end = dArgs.message.Length;
-        	string brushMsg = "";
-        	for (int i = 0; i < usedFromEnd; i++) {
-        		end = dArgs.message.LastIndexOf(' ', end - 1);
-        		if (end == -1) break;  
-        	}
-        	
-        	if (end >= 0) brushMsg = dArgs.message.Substring(0, end);
-        	if (brushMsg == "") brushMsg = p.DefaultBrushArgs;
-        	if (constructor == null) constructor = Brush.Brushes[p.BrushName];
-        	BrushArgs args = new BrushArgs(p, brushMsg, dArgs.block, dArgs.extBlock);
-        	return constructor(args);
+            int end = dArgs.message.Length;
+            string brushMsg = "";
+            for (int i = 0; i < usedFromEnd; i++) {
+                end = dArgs.message.LastIndexOf(' ', end - 1);
+                if (end == -1) break;  
+            }
+            
+            if (end >= 0) brushMsg = dArgs.message.Substring(0, end);
+            if (brushMsg == "") brushMsg = p.DefaultBrushArgs;
+            if (constructor == null) constructor = Brush.Brushes[p.BrushName];
+            BrushArgs args = new BrushArgs(p, brushMsg, dArgs.block, dArgs.extBlock);
+            return constructor(args);
         }
         
         protected struct DrawArgs {

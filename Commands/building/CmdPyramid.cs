@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override DrawMode ParseMode(string msg) {
-        	if (msg == "solid") return DrawMode.solid;
+            if (msg == "solid") return DrawMode.solid;
             else if (msg == "hollow") return DrawMode.hollow;
             else if (msg == "reverse") return DrawMode.reverse;
             return DrawMode.normal;

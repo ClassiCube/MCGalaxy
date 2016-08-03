@@ -42,9 +42,9 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleSetup(Player p, string message, string[] args) {
-        	if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "can setup the economy."); return; }
+            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "can setup the economy."); return; }
             
-        	switch (args[0].ToLower()) {
+            switch (args[0].ToLower()) {
                 case "apply":
                     Economy.Load();
                     Player.Message(p, "%aApplied changes");
@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%cMost commands have been removed from /economy, " +
                                "use the appropriate command from %T/help economy %cinstead.");
-        	if (CheckExtraPerm(p)) {
+            if (CheckExtraPerm(p)) {
                 Player.Message(p, "%f/eco <type> %e- to setup economy");
                 Player.Message(p, "%f/eco help %e- get more specific help for setting up the economy");
             }

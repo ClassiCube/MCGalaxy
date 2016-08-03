@@ -247,7 +247,7 @@ namespace MCGalaxy.Commands {
                 Command.all.Find("zone").Use(p, "");
             } else if (cmd == "ADD") {
                 if (value == "") {
-                	Player.Message(p, "You did not specify a name to allow building on your map."); return;
+                    Player.Message(p, "You did not specify a name to allow building on your map."); return;
                 }
                 
                 CmdZone.ZoneAll(p.level, value);

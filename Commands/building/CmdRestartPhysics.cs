@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Building {
                 extraInfo.Type2 = type; extraInfo.Value2 = value;
             }
             if (parts.Length >= 6) {
-            	Player.Message(p, "You can only use up to two types of physics."); return false;
+                Player.Message(p, "You can only use up to two types of physics."); return false;
             }
             return true;
         }
@@ -88,14 +88,14 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool DoRestart(Player p, Vec3S32[] m, object state, byte type, byte extType) {
-        	PhysicsArgs extraInfo = (PhysicsArgs)state;
+            PhysicsArgs extraInfo = (PhysicsArgs)state;
             List<int> buffer = new List<int>();
             
             for (int y = Math.Min(m[0].Y, m[1].Y); y <= Math.Max(m[0].Y, m[1].Y); y++)
                 for (int z = Math.Min(m[0].Z, m[1].Z); z <= Math.Max(m[0].Z, m[1].Z); z++)
                     for (int x = Math.Min(m[0].X, m[1].X); x <= Math.Max(m[0].X, m[1].X); x++)
             {
-            	int index = p.level.PosToInt((ushort)x, (ushort)y, (ushort)z);
+                int index = p.level.PosToInt((ushort)x, (ushort)y, (ushort)z);
                 if (index >= 0 && p.level.blocks[index] != Block.air)
                     buffer.Add(index);
             }

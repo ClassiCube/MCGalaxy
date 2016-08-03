@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands {
             if (!Server.useMySQL) {                
                 DataTable maxTable = Database.Fill("SELECT MAX(_ROWID_) FROM Players LIMIT 1;");
                 if (maxTable.Rows.Count > 0) {
-                	 string row = maxTable.Rows[0]["MAX(_ROWID_)"].ToString();
+                     string row = maxTable.Rows[0]["MAX(_ROWID_)"].ToString();
                      maxTable.Dispose();
                      if (int.TryParse(row, out count) && count > 0) return count;
                 }             

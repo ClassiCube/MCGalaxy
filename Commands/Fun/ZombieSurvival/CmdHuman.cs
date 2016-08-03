@@ -17,8 +17,7 @@
 */
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands {    
     public sealed class CmdHuman : Command {
         public override string name { get { return "human"; } }
         public override string shortcut { get { return ""; } }
@@ -29,14 +28,14 @@ namespace MCGalaxy.Commands {
         public CmdHuman() { }
         
         public override void Use(Player p, string message) {
-        	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-        	if (p.Game.PledgeSurvive) {
-        		Player.Message(p, "You cannot un-pledge that you will be infected."); return;
-        	}
-        	
-        	p.Game.PledgeSurvive = true;
-        	Server.zombie.CurLevel
-        		.ChatLevel(p.ColoredName + " %Spledges that they will not succumb to the infection!");
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
+            if (p.Game.PledgeSurvive) {
+                Player.Message(p, "You cannot un-pledge that you will be infected."); return;
+            }
+            
+            p.Game.PledgeSurvive = true;
+            Server.zombie.CurLevel
+                .ChatLevel(p.ColoredName + " %Spledges that they will not succumb to the infection!");
         }
         
         public override void Help(Player p) {

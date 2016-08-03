@@ -15,16 +15,14 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdInfect : Command {
-        
+namespace MCGalaxy.Commands {    
+    public sealed class CmdInfect : Command {        
         public override string name { get { return "infect"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-		public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }      
+        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }      
         public CmdInfect() { }
         
         public override void Use(Player p, string message) {

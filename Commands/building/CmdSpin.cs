@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdSpin() { }
         public override CommandAlias[] Aliases {
-        	get { return new [] { new CommandAlias("mirror", "mirror"), new CommandAlias("rotate") }; }
+            get { return new [] { new CommandAlias("mirror", "mirror"), new CommandAlias("rotate") }; }
         }
 
         public override void Use(Player p, string message) {

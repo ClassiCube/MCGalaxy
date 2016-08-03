@@ -19,8 +19,8 @@
 */
 using System;
 
-namespace MCGalaxy.Commands {	
-    public sealed class CmdRankMsg : Command {		
+namespace MCGalaxy.Commands {    
+    public sealed class CmdRankMsg : Command {        
         public override string name { get { return "rankmsg"; } }
         public override string shortcut { get { return "rm"; } }
         public override string type { get { return CommandTypes.Chat; } }

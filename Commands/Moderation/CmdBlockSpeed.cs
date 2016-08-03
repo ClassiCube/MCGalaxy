@@ -1,24 +1,24 @@
 /*
-	Copyright 2011 MCForge
-		
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
+    Copyright 2011 MCForge
+        
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
 */
 using System;
 
-namespace MCGalaxy.Commands {	
-    public sealed class CmdBlockSpeed : Command {		
+namespace MCGalaxy.Commands {    
+    public sealed class CmdBlockSpeed : Command {        
         public override string name { get { return "blockspeed"; } }
         public override string shortcut { get { return "bs"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands {
             if (cmd == "clear") {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level lvl in loaded) {
-                	lock (lvl.queueLock)
-                	    lvl.blockqueue.Clear();
+                    lock (lvl.queueLock)
+                        lvl.blockqueue.Clear();
                 }
                 return;
             }
@@ -41,16 +41,16 @@ namespace MCGalaxy.Commands {
             int value = 0;
             
             if (cmd == "bs") {
-            	if (!int.TryParse(args[1], out value)) { 
-            		Player.Message(p, "Invalid number specified."); return; 
-            	}
-            	BlockQueue.blockupdates = value;
+                if (!int.TryParse(args[1], out value)) { 
+                    Player.Message(p, "Invalid number specified."); return; 
+                }
+                BlockQueue.blockupdates = value;
                 Player.Message(p, "Blocks per interval is now {0}.", BlockQueue.blockupdates);
             } else if (cmd == "ts") {
                 if (!int.TryParse(args[1], out value)) { 
-            		Player.Message(p, "Invalid number specified."); return; 
-            	}
-            	BlockQueue.time = value;
+                    Player.Message(p, "Invalid number specified."); return; 
+                }
+                BlockQueue.time = value;
                 Player.Message(p, "Block interval is now {0}.", BlockQueue.time);
             } else if (cmd == "buf")  {
                 if (p.level.bufferblocks)
@@ -59,10 +59,10 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "Block buffering on {0} enabled.", p.level.name);
                 p.level.bufferblocks = !p.level.bufferblocks;
             } else if (cmd == "net") {
-            	if (!int.TryParse(args[1], out value)) { 
-            		Player.Message(p, "Invalid number specified."); return; 
-            	}
-            	
+                if (!int.TryParse(args[1], out value)) { 
+                    Player.Message(p, "Invalid number specified."); return; 
+                }
+                
                 switch (value) {
                     case 2: Set(25, 100); break;
                     case 4: Set(50, 100); break;
@@ -79,12 +79,12 @@ namespace MCGalaxy.Commands {
         }
         
         static void Set(int updates, int time) {
-        	BlockQueue.blockupdates = updates;
-        	BlockQueue.time = time;
+            BlockQueue.blockupdates = updates;
+            BlockQueue.time = time;
         }
         
         static void SendEstimation(Player p) {
-        	int updates = BlockQueue.blockupdates, time = BlockQueue.time, count = PlayerInfo.Online.Count;
+            int updates = BlockQueue.blockupdates, time = BlockQueue.time, count = PlayerInfo.Online.Count;
             Player.Message(p, "{0} blocks every {1} milliseconds = {2} blocks per second.", updates, time, updates * (1000 / time));
             Player.Message(p, "Using ~{0}KB/s times {1} player(s) = ~{2}KB/s", (updates * (1000 / time) * 8) / 1000, count, count * ((updates * (1000 / time) * 8) / 1000));
         }

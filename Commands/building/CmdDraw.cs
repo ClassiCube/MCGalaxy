@@ -82,8 +82,8 @@ namespace MCGalaxy.Commands.Building {
             if (brush == null) return false;
             
             Vec3S32[] marks = {
-            	new Vec3S32(m[0].X - radius, m[0].Y, m[0].Z - radius),
-            	new Vec3S32(m[0].X + radius, m[0].Y, m[0].Z + radius) };
+                new Vec3S32(m[0].X - radius, m[0].Y, m[0].Z - radius),
+                new Vec3S32(m[0].X + radius, m[0].Y, m[0].Z + radius) };
             if (op.UsesHeight) {
                 marks[1].Y += height;
             } else {

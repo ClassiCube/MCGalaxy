@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands {
         
         static void DoQuery(Player p, string group, string start, string end, string name, string cmd, string msg) {
             DataTable table = Database.Fill("SELECT COUNT(ID) FROM Opstats WHERE Time >= @0 AND Time < @1 " +
-        	                                "AND Name LIKE @2 AND Cmd LIKE @3 AND Cmdmsg " + msg, start, end, name, cmd);
+                                            "AND Name LIKE @2 AND Cmd LIKE @3 AND Cmdmsg " + msg, start, end, name, cmd);
             // don't use colour codes in cli or gui
             Player.Message(p, (p == null ? "" : "&a") + group + (p == null ? "" : "&5") + table.Rows[0]["COUNT(id)"]);
             table.Dispose();

@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool DownloadWebFile(string url, Player p) {
-        	return HeightmapGen.DownloadImage(url, "extra/images/", p);
+            return HeightmapGen.DownloadImage(url, "extra/images/", p);
         }
         
         bool DoImage(Player p, Vec3S32[] m, object state, byte type, byte extType) {
@@ -86,9 +86,9 @@ namespace MCGalaxy.Commands.Building {
 
             int dir;
             if (Math.Abs(m[1].X - m[0].X) > Math.Abs(m[1].Z - m[0].Z))
-            	dir = m[1].X <= m[0].X ? 1 : 0;
+                dir = m[1].X <= m[0].X ? 1 : 0;
             else
-            	dir = m[1].Z <= m[0].Z ? 3 : 2;
+                dir = m[1].Z <= m[0].Z ? 3 : 2;
             
             Thread thread = new Thread(() => DoDrawImage(p, m[0], (DrawArgs)state, dir));
             thread.Name = "MCG_ImagePrint";

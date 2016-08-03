@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("sphereh", null, "hollow"), new CommandAlias("sph", null, "hollow"),
-        		    new CommandAlias("circle", null, "circle" ) }; }
+                    new CommandAlias("circle", null, "circle" ) }; }
         }
         protected override string PlaceMessage { get { return "Place a block for the centre, then another for the radius."; } }
         

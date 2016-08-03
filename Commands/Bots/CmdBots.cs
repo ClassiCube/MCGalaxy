@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             
             foreach (PlayerBot bot in bots) {
                 text.Append(", ").Append(bot.name)
-                	.Append("(").Append(bot.level.name).Append(")");
+                    .Append("(").Append(bot.level.name).Append(")");
                                                               
                 if (bot.AIName != "") text.Append("[").Append(bot.AIName).Append("]");
                 else if (bot.hunt) text.Append("[Hunt]");

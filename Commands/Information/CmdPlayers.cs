@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message) {
             DisplayPlayers(p, message, text => Player.Message(p, text), 
-        	               true, Server.showEmptyRanks);
+                           true, Server.showEmptyRanks);
         }
         
         public static void DisplayPlayers(Player p, string message, Action<string> output, 
@@ -76,8 +76,8 @@ namespace MCGalaxy.Commands
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
-            	if (pl.hidden && !showHidden) continue;
-            	if (p == pl || Entities.CanSee(p, pl)) {
+                if (pl.hidden && !showHidden) continue;
+                if (p == pl || Entities.CanSee(p, pl)) {
                     totalPlayers++;
                     string name = Colors.StripColors(pl.DisplayName);
                     AddStates(pl, ref name);
@@ -101,7 +101,7 @@ namespace MCGalaxy.Commands
         }
         
         static void AddStates(Player pl, ref string name) {
-        	if (pl.hidden) name += "-hidden";
+            if (pl.hidden) name += "-hidden";
             if (pl.muted) name += "-muted";
             if (pl.frozen) name += "-freeze";
             if (pl.Game.Referee) name += "-ref";

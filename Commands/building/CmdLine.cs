@@ -57,10 +57,10 @@ namespace MCGalaxy.Commands.Building {
             cpos.block = type; cpos.extBlock = extType;
 
             if (cpos.mode == DrawMode.straight) { 
-            	int dx = Math.Abs(m[0].X - m[1].X), dy = Math.Abs(m[0].Y - m[1].Y), dz = Math.Abs(m[0].Z - m[1].Z);
+                int dx = Math.Abs(m[0].X - m[1].X), dy = Math.Abs(m[0].Y - m[1].Y), dz = Math.Abs(m[0].Z - m[1].Z);
 
                 if (dx > dy && dx > dz) {
-            		m[1].Y = m[0].Y; m[1].Z = m[0].Z;
+                    m[1].Y = m[0].Y; m[1].Z = m[0].Z;
                 } else if (dy > dx && dy > dz) {
                     m[1].X = m[0].X; m[1].Z = m[0].Z;
                 } else if (dz > dy && dz > dx) {

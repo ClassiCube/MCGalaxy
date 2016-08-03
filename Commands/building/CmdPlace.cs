@@ -1,24 +1,24 @@
 /*
-	Copyright 2011 MCForge
-		
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
+    Copyright 2011 MCForge
+        
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
 */
 using System;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdPlace : Command {		
+    public sealed class CmdPlace : Command {        
         public override string name { get { return "place"; } }
         public override string shortcut { get { return "pl"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Building {
             ushort x = p.pos[0], y = (ushort)(p.pos[1] - 32), z = p.pos[2];
 
             try {
-            	string[] parts = message.Split(' ');
+                string[] parts = message.Split(' ');
                 switch (parts.Length) {
                     case 1: block = message == "" ? block :
                         DrawCmd.GetBlock(p, parts[0], out extBlock); break;
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
                     default: Player.Message(p, "Invalid number of parameters"); return;
                 }
             } catch { 
-            	Player.Message(p, "Invalid parameters"); return; 
+                Player.Message(p, "Invalid parameters"); return; 
             }
 
             if (block == -1 || block == Block.Zero) return;

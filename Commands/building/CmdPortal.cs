@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Building {
             string block = message == "" ? "" : args[0].ToLower();
 
             if (args.Length >= 2) {
-            	if (args[1].CaselessEq("multi")) {
+                if (args[1].CaselessEq("multi")) {
                     data.Multi = true;
                 } else {
                     Player.Message(p, "Invalid parameters"); return;

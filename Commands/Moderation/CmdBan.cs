@@ -50,16 +50,16 @@ namespace MCGalaxy.Commands.Moderation {
             string banner = p == null ? "(console)" : p.ColoredName;
             string banMsg = null;
             if (who == null) {
-            	banMsg = target + " &f(offline) %Swas &8banned %Sby " + banner + "%S." + banReason;
-            	Player.GlobalMessage(banMsg);
+                banMsg = target + " &f(offline) %Swas &8banned %Sby " + banner + "%S." + banReason;
+                Player.GlobalMessage(banMsg);
             } else {
-            	if (stealth) {
-            		banMsg = who.ColoredName + " %Swas STEALTH &8banned %Sby " + banner + "%S." + banReason;
+                if (stealth) {
+                    banMsg = who.ColoredName + " %Swas STEALTH &8banned %Sby " + banner + "%S." + banReason;
                     Chat.GlobalMessageOps(banMsg);
-            	} else {
-            		banMsg = who.ColoredName + " %Swas &8banned %Sby " + banner + "%S." + banReason;
-            		Player.GlobalMessage(banMsg);
-            	}
+                } else {
+                    banMsg = who.ColoredName + " %Swas &8banned %Sby " + banner + "%S." + banReason;
+                    Player.GlobalMessage(banMsg);
+                }
                 who.color = "";
             }
             
@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, name + " is already banned."); return false;
             }
             if (p != null && group.Permission >= p.Rank) {
-        	    MessageTooHighRank(p, "ban", false); return false;
+                MessageTooHighRank(p, "ban", false); return false;
             }
             return true;
         }

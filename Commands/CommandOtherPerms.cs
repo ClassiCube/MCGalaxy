@@ -42,7 +42,7 @@ namespace MCGalaxy {
 
         public static OtherPerms Find(Command cmd, int number = 1) {
             foreach (OtherPerms perms in list) {
-        	    if (perms.cmd == cmd && perms.number == number) return perms;
+                if (perms.cmd == cmd && perms.number == number) return perms;
             }
             return null;
         }

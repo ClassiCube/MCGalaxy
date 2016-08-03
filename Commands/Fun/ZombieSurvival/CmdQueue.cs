@@ -16,16 +16,14 @@
     permissions and limitations under the Licenses.
 */
 using System.IO;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdQueue : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdQueue : Command {
         public override string name { get { return "queue"; } }
         public override string shortcut { get { return "qz"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-		public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }      
+        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }      
         public CmdQueue() { }
 
         public override void Use(Player p, string message) {
@@ -50,7 +48,7 @@ namespace MCGalaxy.Commands
                 if (Server.zombie.CurLevel != null)
                     Server.zombie.CurLevel.ChatLevel(map + " was queued as the next map.");
             } else {
-            	Help(p);
+                Help(p);
             }
         }
 

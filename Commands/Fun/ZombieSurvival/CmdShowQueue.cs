@@ -18,10 +18,8 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdShowQueue : Command {
-        
+namespace MCGalaxy.Commands {    
+    public sealed class CmdShowQueue : Command {      
         public override string name { get { return "showqueue"; } }
         public override string shortcut { get { return "sq"; } }
         public override string type { get { return CommandTypes.Games; } }
@@ -36,7 +34,7 @@ namespace MCGalaxy.Commands {
         }
         
         void ShowQueued(Player p, string queued, string type) {
-        	if (String.IsNullOrEmpty(queued))
+            if (String.IsNullOrEmpty(queued))
                 Player.Message(p, "There is no " + type + " queued.");
             else
                 Player.Message(p, "\"" + queued + "\" is queued as the next " + type + ".");

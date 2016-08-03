@@ -15,10 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdAward : Command {
-        
+namespace MCGalaxy.Commands {    
+    public sealed class CmdAward : Command {      
         public override string name { get { return "award"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Economy; } }
@@ -30,11 +28,11 @@ namespace MCGalaxy.Commands {
             if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }
             bool take = false;
             if (message.CaselessStarts("give ")) {
-            	message = message.Substring(5);
+                message = message.Substring(5);
             } else if (message.CaselessStarts("take ")) {
-            	message = message.Substring(5); take = true;
+                message = message.Substring(5); take = true;
             }
-            		
+                    
             string[] args = message.SplitSpaces(2);
             string plName = args[0];
             Player who = PlayerInfo.Find(plName);

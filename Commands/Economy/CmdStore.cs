@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
                     if (!item.Enabled) continue;
                     item.OnStoreOverview(p); 
                 }
-        		Player.Message(p, "%HUse %T/store [item] %Hto see more information about that item.");
+                Player.Message(p, "%HUse %T/store [item] %Hto see more information about that item.");
                 return;
             }
             

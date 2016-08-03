@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands {
                 who.titlecolor = color;
                 Database.Execute("UPDATE Players SET title_color = @1 WHERE Name = @0", who.name, color);                
             }
-            who.SetPrefix();        	
+            who.SetPrefix();
         }
 
         public override void Help(Player p) {

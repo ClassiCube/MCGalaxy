@@ -132,11 +132,11 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-        	Player.Message(p, "%T/top [stat] [number of players to show]");
-        	Player.Message(p, "%HPrints a list of players who have the " +
-        	               "most/top of a particular stat. Available stats:");
+            Player.Message(p, "%T/top [stat] [number of players to show]");
+            Player.Message(p, "%HPrints a list of players who have the " +
+                           "most/top of a particular stat. Available stats:");
             
-        	Player.Message(p, "1) Most logins, 2) Most deaths, 3) Money");
+            Player.Message(p, "1) Most logins, 2) Most deaths, 3) Money");
             Player.Message(p, "4) First joined, 5) Recently joined, 6) Most kicks");
             Player.Message(p, "7) Blocks modified, 8) Blocks drawn");
             Player.Message(p, "9) Blocks placed, 10) Blocks deleted");

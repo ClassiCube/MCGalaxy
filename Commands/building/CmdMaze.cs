@@ -1,7 +1,7 @@
 /*
     Copyright 2011 MCForge
     
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -27,11 +27,11 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
         public override void Use(Player p, string message) {
-        	int randomizer = 0;
+            int randomizer = 0;
             if (message.Length > 0 && !int.TryParse(message, out randomizer)) {
                 Help(p); return;
             }
-        	
+            
             Player.Message(p, "Place two blocks to determine the edges.");           
             p.MakeSelection(2, randomizer, DoMaze);
         }
@@ -43,8 +43,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-        	Player.Message(p, "%T/maze");
-        	Player.Message(p, "%HGenerates a random maze between two points.");
+            Player.Message(p, "%T/maze");
+            Player.Message(p, "%HGenerates a random maze between two points.");
         }
     }
 }

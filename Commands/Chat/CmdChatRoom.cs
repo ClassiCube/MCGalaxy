@@ -205,7 +205,7 @@ namespace MCGalaxy.Commands {
             if (pl.Rank >= p.Rank) { MessageTooHighRank(p, "force-join", false); return;}
             
             if (pl.spyChatRooms.Contains(room)) {
-            	Player.Message(pl, "The chat room '{0}' has been removed from your spying list " +
+                Player.Message(pl, "The chat room '{0}' has been removed from your spying list " +
                                    "because you are force joining the room '{0}'", room);
                 pl.spyChatRooms.Remove(room);
             }
@@ -227,7 +227,7 @@ namespace MCGalaxy.Commands {
             Player pl = PlayerInfo.FindMatches(p, name);
             if (pl == null) return;
             if (pl.Rank >= p.Rank) {
-            	MessageTooHighRank(p, "kick from a chatroom", false); return;
+                MessageTooHighRank(p, "kick from a chatroom", false); return;
             }
             
             Player.Message(pl, "You were kicked from the chat room '" + pl.Chatroom + "'");

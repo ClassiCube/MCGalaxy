@@ -39,10 +39,10 @@ namespace MCGalaxy.Commands {
             
             if (Economy.Enabled)
                 Player.Message(p, "  &a{0} &cdeaths%S, &a{2} %S{3}, {1} %Sawards", 
-            	               who.Deaths, Awards.AwardAmount(who.Name), who.Money, Server.moneys);
+                               who.Deaths, Awards.AwardAmount(who.Name), who.Money, Server.moneys);
             else
-            	Player.Message(p, "  &a{0} &cdeaths%S, {1} %Sawards", 
-            	               who.Deaths, Awards.AwardAmount(who.Name));
+                Player.Message(p, "  &a{0} &cdeaths%S, {1} %Sawards", 
+                               who.Deaths, Awards.AwardAmount(who.Name));
             
             if (who.LoginBlocks >= 0)
                 Player.Message(p, "  Modified &a{0} %Sblocks, &a{1} %Ssince login", who.TotalBlocks, who.LoginBlocks);
@@ -52,10 +52,10 @@ namespace MCGalaxy.Commands {
                            who.TotalPlaced, who.TotalDeleted, who.TotalDrawn);
 
             if (who.TimeOnline.Ticks > 0)
-            	Player.Message(p, "  Spent &a{0}%S on the server, &a{1}%S this session", 
-            	               who.TimeSpent.Shorten(), who.TimeOnline.Shorten());
+                Player.Message(p, "  Spent &a{0}%S on the server, &a{1}%S this session", 
+                               who.TimeSpent.Shorten(), who.TimeOnline.Shorten());
             else
-            	Player.Message(p, "  Spent &a{0}%S on the server", who.TimeSpent.Shorten());
+                Player.Message(p, "  Spent &a{0}%S on the server", who.TimeSpent.Shorten());
             
             if (who.Last.Ticks > 0)
                 Player.Message(p, "  First login &a" + who.First.ToString("yyyy-MM-dd")
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands {
             if (who.AfkMessage != null)
                 Player.Message(p, "  Idle for {0} (AFK {1}%S)", who.IdleTime.Shorten(), who.AfkMessage);
             else if (who.IdleTime.TotalMinutes >= 1)
-            	Player.Message(p, "  Idle for {0}", who.IdleTime.Shorten());
+                Player.Message(p, "  Idle for {0}", who.IdleTime.Shorten());
             
             if (!Server.zombie.Running) return;
             Player.Message(p, "  Survived &a" + who.RoundsTotal +
