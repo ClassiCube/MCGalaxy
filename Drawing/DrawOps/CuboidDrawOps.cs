@@ -21,8 +21,7 @@ using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
 
-    public class HollowDrawOp : CuboidDrawOp {
-        
+    public class HollowDrawOp : CuboidDrawOp {      
         public override string Name { get { return "Hollow"; } }
         public byte Skip;
         
@@ -56,8 +55,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class OutlineDrawOp : CuboidDrawOp {
-        
+    public class OutlineDrawOp : CuboidDrawOp {        
         public override string Name { get { return "Outline"; } }
         public byte Block, ExtBlock, NewBlock, NewExtBlock;
         

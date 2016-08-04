@@ -19,14 +19,11 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
-namespace MCGalaxy.Drawing.Ops {
-    
-    public class WriteDrawOp : DrawOp {
-        
+namespace MCGalaxy.Drawing.Ops {   
+    public class WriteDrawOp : DrawOp { 
+        public override string Name { get { return "Write"; } }		
         public string Text;
         public byte Scale, Spacing;
-        
-        public override string Name { get { return "Write"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
             int blocks = 0;

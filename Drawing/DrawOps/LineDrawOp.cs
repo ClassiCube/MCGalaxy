@@ -19,14 +19,11 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
-namespace MCGalaxy.Drawing.Ops {
-    
+namespace MCGalaxy.Drawing.Ops { 
     public class LineDrawOp : DrawOp {
-        
+        public override string Name { get { return "Line"; } }
         public bool WallsMode;
         public int MaxLength = int.MaxValue;
-        
-        public override string Name { get { return "Line"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
         	Vec3S32 p1 = marks[0], p2 = marks[1];

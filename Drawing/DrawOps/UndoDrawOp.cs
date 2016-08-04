@@ -27,8 +27,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "UndoSelf"; } }
     }
     
-    public class UndoOnlineDrawOp : DrawOp {
-        
+    public class UndoOnlineDrawOp : DrawOp {        
         public override string Name { get { return "UndoOnline"; } }
         
         /// <summary> Point in time that the /undo should go backwards up to. </summary>

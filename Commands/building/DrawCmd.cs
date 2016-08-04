@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Building {
             string[] parts = message.Split(' ');
             DrawArgs cpos = default(DrawArgs);
             cpos.message = message;
-            cpos.mode = GetMode(message, parts);
+            cpos.mode = GetMode(parts);
             OnUse(p, message, parts, ref cpos);
             
             Player.Message(p, PlaceMessage);
@@ -43,12 +43,16 @@ namespace MCGalaxy.Commands.Building {
                                       object state, byte block, byte extBlock) {
             DrawArgs dArgs = (DrawArgs)state;
             dArgs.block = block; dArgs.extBlock = extBlock;        
-            marks = GetMarks(dArgs, marks);
-            DrawOp op = GetDrawOp(dArgs);
+            
+            DrawOp op = GetDrawOp(dArgs, marks);
+            if (op == null) return false;
+            dArgs.Op = op;
+            GetMarks(dArgs, marks);
             
             int offset = 0;
             BrushFactory factory = GetBrush(p, dArgs, ref offset);
             Brush brush = ParseBrush(p, dArgs, offset, factory);
+            dArgs.Op = null;
             return brush != null && DrawOp.DoDrawOp(op, brush, p, marks);
         }
         
@@ -99,7 +103,7 @@ namespace MCGalaxy.Commands.Building {
             string brushMsg = "";
             for (int i = 0; i < usedFromEnd; i++) {
                 end = dArgs.message.LastIndexOf(' ', end - 1);
-                if (end == -1) break;  
+                if (end == -1) break;
             }
             
             if (end >= 0) brushMsg = dArgs.message.Substring(0, end);
@@ -114,6 +118,7 @@ namespace MCGalaxy.Commands.Building {
             public byte block, extBlock;
             public object data;
             public string message;
+            public DrawOp Op;
         }
 
         protected enum DrawMode {

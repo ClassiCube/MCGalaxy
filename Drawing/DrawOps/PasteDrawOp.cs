@@ -19,13 +19,10 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
-namespace MCGalaxy.Drawing.Ops {
-    
+namespace MCGalaxy.Drawing.Ops {    
     public class SimplePasteDrawOp : DrawOp {
-        
+        public override string Name { get { return "Paste"; } }        
         public CopyState CopyState;
-        
-        public override string Name { get { return "Paste"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
             return CopyState.UsedBlocks;

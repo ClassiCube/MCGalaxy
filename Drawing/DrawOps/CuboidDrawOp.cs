@@ -21,8 +21,7 @@ using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
 
-    public class CuboidDrawOp : DrawOp {
-        
+    public class CuboidDrawOp : DrawOp {        
         public override string Name { get { return "Cuboid"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
@@ -40,8 +39,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class CuboidHollowsDrawOp : DrawOp {
-        
+    public class CuboidHollowsDrawOp : DrawOp {       
         public override string Name { get { return "Cuboid Hollow"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
@@ -100,8 +98,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class CuboidWallsDrawOp : CuboidHollowsDrawOp {
-        
+	public class CuboidWallsDrawOp : CuboidHollowsDrawOp {
         public override string Name { get { return "Cuboid Walls"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
@@ -127,8 +124,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class CuboidWireframeDrawOp : CuboidHollowsDrawOp {
-        
+    public class CuboidWireframeDrawOp : CuboidHollowsDrawOp {        
         public override string Name { get { return "Cuboid Wireframe"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {

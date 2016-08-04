@@ -23,8 +23,7 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Drawing.Ops {
     
-    public class RedoSelfDrawOp : DrawOp {
-        
+    public class RedoSelfDrawOp : DrawOp {        
         public override string Name { get { return "RedoSelf"; } }
         
         /// <summary> Point in time that the /undo should go backwards up to. </summary>

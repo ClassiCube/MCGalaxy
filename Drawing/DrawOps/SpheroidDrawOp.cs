@@ -20,9 +20,7 @@ using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
-
-    public class EllipsoidDrawOp : DrawOp {
-        
+    public class EllipsoidDrawOp : DrawOp {        
         public override string Name { get { return "Ellipsoid"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
@@ -81,8 +79,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class CylinderDrawOp : DrawOp {
-        
+    public class CylinderDrawOp : DrawOp {       
         public override string Name { get { return "Cylinder"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {

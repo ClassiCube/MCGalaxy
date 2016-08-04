@@ -19,10 +19,8 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
-namespace MCGalaxy.Drawing.Ops {
-    
-    public class TriangleDrawOp : DrawOp {
-        
+namespace MCGalaxy.Drawing.Ops {    
+    public class TriangleDrawOp : DrawOp {        
         public override string Name { get { return "Triangle"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {

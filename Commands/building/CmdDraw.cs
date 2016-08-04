@@ -19,10 +19,10 @@ using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands.Building {    
+namespace MCGalaxy.Commands.Building {
     public sealed class CmdDraw : DrawCmd {
         public override string name { get { return "draw"; } }
-        public override string shortcut { get { return ""; } }     
+        public override string shortcut { get { return ""; } }
         protected override string PlaceMessage { get { return "Place a block to determine the origin."; } }
         public override int MarksCount { get { return 1; } }
         
@@ -42,39 +42,33 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
         
-        protected override bool DoDraw(Player p, Vec3S32[] m, object state, byte type, byte extType) {
-            DrawArgs cpos = (DrawArgs)state;
-            cpos.block = type; cpos.extBlock = extType;
-            AdvDrawOp op = null;
-            switch (cpos.mode) {
-                case DrawMode.cone:
-                    op = new AdvConeDrawOp(); break;
-                case DrawMode.hcone:
-                    op = new AdvHollowConeDrawOp(); break;
-                case DrawMode.icone:
-                    op = new AdvConeDrawOp(); op.Invert = true; break;
-                case DrawMode.hicone:
-                    op = new AdvHollowConeDrawOp(); op.Invert = true; break;
-                case DrawMode.pyramid:
-                    op = new AdvPyramidDrawOp(); break;
-                case DrawMode.hpyramid:
-                    op = new AdvHollowPyramidDrawOp(); break;
-                case DrawMode.ipyramid:
-                    op = new AdvPyramidDrawOp(); op.Invert = true; break;
-                case DrawMode.hipyramid:
-                    op = new AdvHollowPyramidDrawOp(); op.Invert = true; break;
-                case DrawMode.sphere:
-                    op = new AdvSphereDrawOp(); op.Invert = true; break;
-                case DrawMode.hsphere:
-                    op = new AdvHollowSphereDrawOp(); op.Invert = true; break;
-                case DrawMode.volcano:
-                    op = new AdvVolcanoDrawOp(); break;
-                default:
-                    Help(p); return false;
+        protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
+            switch (dArgs.mode) {
+                case DrawMode.cone: return new AdvConeDrawOp();
+                case DrawMode.hcone: return new AdvHollowConeDrawOp();
+                case DrawMode.icone: return new AdvConeDrawOp(true);
+                case DrawMode.hicone: return new AdvHollowConeDrawOp(true);
+                case DrawMode.pyramid: return new AdvPyramidDrawOp();
+                case DrawMode.hpyramid: return new AdvHollowPyramidDrawOp();
+                case DrawMode.ipyramid: return new AdvPyramidDrawOp(true);
+                case DrawMode.hipyramid: return new AdvHollowPyramidDrawOp(true);
+                case DrawMode.sphere: return new AdvSphereDrawOp();
+                case DrawMode.hsphere: return new AdvHollowSphereDrawOp();
+                case DrawMode.volcano: return new AdvVolcanoDrawOp();
             }
+            Help(p); return null;
+        }
+        
+        protected override BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
+            brushOffset = dArgs.Op.UsesHeight ? 3 : 2;
+            return BrushFactory.Find(p.BrushName);
+        }
+        
+        protected override bool DoDraw(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+            
             ushort radius = 0, height = 0;
             string[] args = cpos.message.Split(' ');
-            if ((op.UsesHeight && !CheckTwoArgs(p, ref radius, ref height, args)) || 
+            if ((op.UsesHeight && !CheckTwoArgs(p, ref radius, ref height, args)) ||
                 (!op.UsesHeight && !CheckOneArg(p, ref radius, args))) return false;
             
             int brushOffset = op.UsesHeight ? 3 : 2;
@@ -88,7 +82,7 @@ namespace MCGalaxy.Commands.Building {
                 marks[1].Y += height;
             } else {
                 marks[0].Y -= radius; marks[1].Y += radius;
-            }           
+            }
             return DrawOp.DoDrawOp(op, brush, p, marks);
         }
         
@@ -103,7 +97,7 @@ namespace MCGalaxy.Commands.Building {
         
         bool CheckOneArg(Player p, ref ushort radius, string[] parts) {
             if (parts.Length < 2) { Help(p); return false; }
-            if (!ushort.TryParse(parts[parts.Length - 2], out radius) || radius > 2000) { 
+            if (!ushort.TryParse(parts[parts.Length - 2], out radius) || radius > 2000) {
                 Player.Message(p, "Radius must be a positive integer less than 2000."); return false;
             }
             return true;

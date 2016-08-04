@@ -28,10 +28,8 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
-namespace MCGalaxy.Drawing.Ops {
-    
-    public class TreeDrawOp : DrawOp {
-        
+namespace MCGalaxy.Drawing.Ops {   
+    public class TreeDrawOp : DrawOp {       
         public override string Name { get { return "Tree"; } }
         
         public Random random;

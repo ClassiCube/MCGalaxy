@@ -24,8 +24,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
-namespace MCGalaxy.Drawing.Ops {
-    
+namespace MCGalaxy.Drawing.Ops {    
     public abstract class AdvDrawOp : DrawOp {
 		public int Radius { get { return (Max.X - Min.X) / 2; } }
 		
@@ -33,8 +32,7 @@ namespace MCGalaxy.Drawing.Ops {
         public virtual bool UsesHeight { get { return true; } }
     }
     
-    public class AdvSphereDrawOp : AdvDrawOp {
-        
+    public class AdvSphereDrawOp : AdvDrawOp {        
         public override bool UsesHeight { get { return false; } }
         public override string Name { get { return "Adv Sphere"; } }
         
@@ -59,8 +57,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class AdvHollowSphereDrawOp : AdvDrawOp {
-        
+    public class AdvHollowSphereDrawOp : AdvDrawOp {        
         public override bool UsesHeight { get { return false; } }
         public override string Name { get { return "Adv Hollow Sphere"; } }
         

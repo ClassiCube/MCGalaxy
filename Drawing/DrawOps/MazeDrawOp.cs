@@ -20,10 +20,8 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using MCGalaxy.Drawing.Brushes;
 
-namespace MCGalaxy.Drawing.Ops {
-    
-    public class MazeDrawOp : CuboidHollowsDrawOp {
-        
+namespace MCGalaxy.Drawing.Ops {    
+    public class MazeDrawOp : CuboidHollowsDrawOp {       
         public override string Name { get { return "Maze"; } }
         
         internal int randomizer = 0;

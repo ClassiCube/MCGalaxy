@@ -39,6 +39,10 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
         
+        protected override DrawOp GetDrawOp(DrawArgs dArg, Vec3S32[] m) {
+            return null;
+        }
+        
         protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             DrawArgs cpos = (DrawArgs)state;
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;

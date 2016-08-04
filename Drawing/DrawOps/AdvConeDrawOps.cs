@@ -25,10 +25,9 @@ using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
-
     public class AdvConeDrawOp : AdvDrawOp {
-        
         public override string Name { get { return "Adv Cone"; } }
+        public AdvConeDrawOp(bool invert = false) { Invert = invert; }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
             long R = Radius, H = Max.Y - Min.Y;
@@ -59,9 +58,9 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class AdvHollowConeDrawOp : AdvDrawOp {
-        
+    public class AdvHollowConeDrawOp : AdvDrawOp {        
         public override string Name { get { return "Adv Hollow Cone"; } }
+        public AdvHollowConeDrawOp(bool invert = false) { Invert = invert; }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
             long R = Radius, H = Max.Y - Min.Y;
@@ -95,8 +94,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class AdvVolcanoDrawOp : AdvDrawOp {
-        
+    public class AdvVolcanoDrawOp : AdvDrawOp {       
         public override string Name { get { return "Adv Volcano"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {

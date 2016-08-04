@@ -69,16 +69,14 @@ namespace MCGalaxy.Drawing.Ops {
     
     public class PyramidSolidDrawOp : PyramidDrawOp {
 
-        public PyramidSolidDrawOp() : base(new CuboidDrawOp(), 1) {
-        }
+        public PyramidSolidDrawOp() : base(new CuboidDrawOp(), 1) { }
         
         public override string Name { get { return "Pyramid solid"; } }
     }
     
     public class PyramidHollowDrawOp : PyramidDrawOp {      
 
-        public PyramidHollowDrawOp() : base(new CuboidWallsDrawOp(), 1) {
-        }
+        public PyramidHollowDrawOp() : base(new CuboidWallsDrawOp(), 1) { }
         
         public override string Name { get { return "Pyramid hollow"; } }
     }

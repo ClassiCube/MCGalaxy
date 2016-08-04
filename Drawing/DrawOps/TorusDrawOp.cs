@@ -20,9 +20,7 @@ using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
-
-    public class TorusDrawOp : DrawOp {
-        
+    public class TorusDrawOp : DrawOp {      
         public override string Name { get { return "Torus"; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {

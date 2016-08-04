@@ -25,10 +25,9 @@ using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
-
-    public class AdvPyramidDrawOp : AdvDrawOp {
-        
+    public class AdvPyramidDrawOp : AdvDrawOp {        
         public override string Name { get { return "Adv Pyramid"; } }
+        public AdvPyramidDrawOp(bool invert = false) { Invert = invert; }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
             long R = Radius, H = Max.Y - Min.Y;
@@ -58,9 +57,9 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class AdvHollowPyramidDrawOp : AdvDrawOp {
-        
+    public class AdvHollowPyramidDrawOp : AdvDrawOp {      
         public override string Name { get { return "Adv Hollow Pyramid"; } }
+        public AdvHollowPyramidDrawOp(bool invert = false) { Invert = invert; }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
             long R = Radius, H = Max.Y - Min.Y;
