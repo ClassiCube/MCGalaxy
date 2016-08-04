@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Building {
 
             string brushMessage = parts.Length > 2 ? parts[2].ToLower() : "";
             BrushArgs args = new BrushArgs(p, brushMessage, type, extType);
-            Brush brush = Brush.Brushes[brushName](args);
+            Brush brush = BrushFactory.Brushes[brushName](args);
             if (brush == null) return false;
             
             DrawOp drawOp = null;

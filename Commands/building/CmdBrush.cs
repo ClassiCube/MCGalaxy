@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         internal static string FindBrush(string message) {
-            foreach (var brush in Brush.Brushes) {
+            foreach (var brush in BrushFactory.Brushes) {
                 if (brush.Key.CaselessEq(message))
                     return brush.Key;
             }
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         internal static string AvailableBrushes {
-            get { return Brush.Brushes.Keys.Join(); }
+            get { return BrushFactory.Brushes.Keys.Join(); }
         }
         
         public override void Help(Player p) {
@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "No brush found with name \"{0}\".", message);
                 Player.Message(p, "%HAvailable brushes: %S" + AvailableBrushes);
             } else {
-                Player.MessageLines(p, Brush.BrushesHelp[brush]);
+                Player.MessageLines(p, BrushFactory.BrushesHelp[brush]);
             }
         }
     }

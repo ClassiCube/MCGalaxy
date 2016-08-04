@@ -16,12 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Commands;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {
-    
     public abstract class Brush {
         
         /// <summary> Human friendly name of this brush. </summary>
@@ -33,35 +30,12 @@ namespace MCGalaxy.Drawing.Brushes {
         /// <summary> Performs calcuations (if necessary) for the given drawop. </summary>
         public virtual void Configure(DrawOp op, Player p) { }
         
+        /// <summary> Returns the next block that should be placed in the world, 
+        /// based on the draw operation's current state. </summary>
         public abstract byte NextBlock(DrawOp op);
-        
+
+        /// <summary> Returns the next custom block that should be placed in the world, 
+        /// based on the draw operation's current state. </summary>        
         public abstract byte NextExtBlock(DrawOp op);
-        
-        public static Dictionary<string, Func<BrushArgs, Brush>> Brushes 
-            = new Dictionary<string, Func<BrushArgs, Brush>> {
-            { "normal", SolidBrush.Process }, { "paste", PasteBrush.Process },
-            { "checkered", CheckeredBrush.Process }, { "rainbow", RainbowBrush.Process },
-            { "bwrainbow", BWRainbowBrush.Process }, { "striped", StripedBrush.Process },
-            { "replace", ReplaceBrush.Process }, { "replacenot", ReplaceNotBrush.Process },
-            { "random", RandomBrush.Process }, { "cloudy", CloudyBrush.Process },
-        };
-        
-        public static Dictionary<string, string[]> BrushesHelp = new Dictionary<string, string[]> {
-            { "normal", SolidBrush.HelpString }, { "paste", PasteBrush.HelpString },
-            { "checkered", CheckeredBrush.HelpString }, { "rainbow", RainbowBrush.HelpString },
-            { "bwrainbow", BWRainbowBrush.HelpString }, { "striped", StripedBrush.HelpString },
-            { "replace", ReplaceBrush.HelpString }, { "replacenot", ReplaceNotBrush.HelpString },
-            { "random", RandomBrush.HelpString }, { "cloudy", CloudyBrush.HelpString },
-        };
-    }
-    
-    public struct BrushArgs {
-        public Player Player;
-        public string Message;
-        public byte Block, ExtBlock; // currently holding
-        
-        public BrushArgs(Player p, string message, byte block, byte extBlock) {
-            Player = p; Message = message; Block = block; ExtBlock = extBlock;
-        }
     }
 }

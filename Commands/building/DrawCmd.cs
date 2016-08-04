@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Building {
             
             if (end >= 0) brushMsg = dArgs.message.Substring(0, end);
             if (brushMsg == "") brushMsg = p.DefaultBrushArgs;
-            if (constructor == null) constructor = Brush.Brushes[p.BrushName];
+            if (constructor == null) constructor = BrushFactory.Brushes[p.BrushName];
             BrushArgs args = new BrushArgs(p, brushMsg, dArgs.block, dArgs.extBlock);
             return constructor(args);
         }

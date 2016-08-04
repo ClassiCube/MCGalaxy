@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.Building {
 
             string brushArgs = parts.Length >= 2 ? parts[1].ToLower() : "";
             BrushArgs args = new BrushArgs(p, brushArgs, block, extBlock);
-            return Brush.Brushes[brushName](args);
+            return BrushFactory.Brushes[brushName](args);
         }
         
         struct DrawArgs { public int mode; public string brushMsg; }

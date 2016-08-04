@@ -423,6 +423,7 @@
     <Compile Include="Drawing\Brushes\ReplaceBrush.cs" />
     <Compile Include="Drawing\Brushes\SolidBrush.cs" />
     <Compile Include="Drawing\Brushes\StripedBrush.cs" />
+    <Compile Include="Drawing\BrushFactories\BrushFactory.cs" />
     <Compile Include="Drawing\CopyState.cs" />
     <Compile Include="Drawing\DrawOps\AdvConeDrawOps.cs" />
     <Compile Include="Drawing\DrawOps\AdvDrawOps.cs" />
@@ -691,6 +692,7 @@
     <Folder Include="Drawing\DrawOps" />
     <Folder Include="Drawing\Brushes" />
     <Folder Include="Drawing\Image" />
+    <Folder Include="Drawing\BrushFactories" />
     <Folder Include="Games\Countdown" />
     <Folder Include="Games\LavaSurvival" />
     <Folder Include="Games\TntWars" />
