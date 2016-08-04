@@ -24,34 +24,21 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "spheroid"; } }
         public override string shortcut { get { return "e"; } }
         public override CommandAlias[] Aliases {
-        	get { return new[] { new CommandAlias("eh", null, "hollow"), new CommandAlias("cylinder", null, "vertical") }; }
-        }        
-
-        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-            DrawArgs cpos = (DrawArgs)state;
-            cpos.block = type; cpos.extBlock = extType;
-            DrawOp op = null;
-            int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
-            Brush brush = GetBrush(p, cpos, brushOffset);
-            if (brush == null) return false;
-
-            switch (cpos.mode) {
-                case DrawMode.solid:
-                case DrawMode.normal:
-                    op = new EllipsoidDrawOp(); break;
-                case DrawMode.hollow:
-                    op = new EllipsoidHollowDrawOp(); break;
-                case DrawMode.vertical:
-                    op = new CylinderDrawOp(); break;
-            }                      
-            return DrawOp.DoDrawOp(op, brush, p, marks);
+            get { return new[] { new CommandAlias("eh", null, "hollow"), new CommandAlias("cylinder", null, "vertical") }; }
         }
         
-        protected override DrawMode ParseMode(string msg) {
-            if (msg == "solid") return DrawMode.solid;
-            else if (msg == "hollow") return DrawMode.hollow;
-            else if (msg == "vertical") return DrawMode.vertical;
-            return DrawMode.normal;
+        protected override BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
+            brushOffset = dArgs.mode == DrawMode.normal ? 0 : 1;
+            if (dArgs.mode == DrawMode.solid) return BrushFactory.Find("normal");
+            return BrushFactory.Find(p.BrushName);
+        }
+        
+        protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
+            switch (dArgs.mode) {
+                case DrawMode.hollow: return new EllipsoidHollowDrawOp();
+                case DrawMode.vertical: return new CylinderDrawOp();
+            }
+            return new EllipsoidDrawOp();
         }
         
         public override void Help(Player p) {
@@ -62,4 +49,3 @@ namespace MCGalaxy.Commands.Building {
         }
     }
 }
-

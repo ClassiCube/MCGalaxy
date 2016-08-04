@@ -25,12 +25,7 @@ namespace MCGalaxy.Commands.Building {
         public override string shortcut { get { return "l"; } }      
         protected override string PlaceMessage { get { return "Place two blocks to determine the endpoints."; } }
         
-        protected override DrawMode ParseMode(string msg) {
-            if (msg == "normal") return DrawMode.solid;
-            else if (msg == "walls") return DrawMode.walls;
-            else if (msg == "straight") return DrawMode.straight;
-            return DrawMode.normal;
-        }
+        
         
         protected override void OnUse(Player p, string msg, string[] parts, ref DrawArgs cpos) {
             if (parts.Length < 2 || cpos.mode == DrawMode.normal) return;
@@ -40,16 +35,24 @@ namespace MCGalaxy.Commands.Building {
                 cpos.data = len;
         }
         
-        protected override DrawMode GetMode(string message, string[] parts) {
-            if (message == "") return DrawMode.normal;
-            DrawMode mode = ParseMode(parts[parts.Length - 1]);
-            if (mode != DrawMode.normal) return mode;
+        protected override DrawMode GetMode(string[] parts) {
+            string mode = parts[parts.Length - 1];
+            if (mode == "") return DrawMode.normal;
+            DrawMode dMode = ParseMode(mode);
+            if (dMode != DrawMode.normal) return dMode;
             
             // May be in the format <brush args> <mode> <max_length>
             ushort len;
-            if (parts.Length == 1 || !ushort.TryParse(parts[parts.Length - 1], out len)) 
+            if (parts.Length == 1 || !ushort.TryParse(mode, out len)) 
                 return DrawMode.normal;
             return ParseMode(parts[parts.Length - 2]);
+        }
+        
+        static DrawMode ParseMode(string msg) {
+            if (msg == "normal") return DrawMode.solid;
+            else if (msg == "walls") return DrawMode.walls;
+            else if (msg == "straight") return DrawMode.straight;
+            return DrawMode.normal;
         }
 
         protected override bool DoDraw(Player p, Vec3S32[] m, object state, byte type, byte extType) {
@@ -74,7 +77,7 @@ namespace MCGalaxy.Commands.Building {
             if (cpos.data != null) {
                 drawOp.MaxLength = (ushort)cpos.data; brushOffset++;
             }
-            Brush brush = GetBrush(p, cpos, brushOffset);
+            Brush brush = ParseBrush(p, cpos, brushOffset);
             if (brush == null) return false;
             return DrawOp.DoDrawOp(drawOp, brush, p, m);
         }

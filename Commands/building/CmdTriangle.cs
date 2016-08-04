@@ -16,28 +16,21 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands.Building {    
+namespace MCGalaxy.Commands.Building {
     public sealed class CmdTriangle : DrawCmd {
         public override string name { get { return "triangle"; } }
         public override string shortcut { get { return "tri"; } }
         public override int MarksCount { get { return 3; } }
+        
         protected override string PlaceMessage {
             get { return "Place three blocks to determine the edges."; }
-        } 
-
-        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-            DrawArgs cpos = (DrawArgs)state;
-            cpos.block = type; cpos.extBlock = extType;
-            
-            Brush brush = GetBrush(p, cpos, 0, null);
-            if (brush == null) return false;
-            return DrawOp.DoDrawOp(new TriangleDrawOp(), brush, p, marks);
         }
         
-        protected override DrawMode ParseMode(string msg) { return DrawMode.normal; }
+        protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
+            return new TriangleDrawOp(); 
+        }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/triangle [brush args]");

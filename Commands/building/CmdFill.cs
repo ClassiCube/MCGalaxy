@@ -20,15 +20,16 @@ using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands.Building {   
-    public sealed class CmdFill : DrawCmd {        
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdFill : DrawCmd {
         public override string name { get { return "fill"; } }
         public override string shortcut { get { return "f"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         protected override string PlaceMessage { get { return "Destroy the block you wish to fill."; } }
         public override int MarksCount { get { return 1; } }
         
-        protected override DrawMode ParseMode(string msg) {
+        protected override DrawMode GetMode(string[] parts) {
+            string msg = parts[parts.Length - 1];
             if (msg == "normal") return DrawMode.solid;
             else if (msg == "up") return DrawMode.up;
             else if (msg == "down") return DrawMode.down;
@@ -65,7 +66,7 @@ namespace MCGalaxy.Commands.Building {
             FillDrawOp op = new FillDrawOp();
             op.Positions = buffer;
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
-            Brush brush = GetBrush(p, cpos, brushOffset);
+            Brush brush = ParseBrush(p, cpos, brushOffset);
             if (brush == null || !DrawOp.DoDrawOp(op, brush, p, marks)) return false;
             bits.Clear();
             op.Positions = null;

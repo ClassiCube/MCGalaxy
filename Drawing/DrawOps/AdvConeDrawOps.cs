@@ -125,8 +125,8 @@ namespace MCGalaxy.Drawing.Ops {
                 if (ctile != 0) continue;
                 
                 bool layer = dist >= (curRadius - 1) * (curRadius - 1);
-                byte type = layer ? Block.grass : Block.lavastill;
-                yield return Place(x, y, z, type, 0);
+                byte block = layer ? Block.grass : Block.lavastill;
+                yield return Place(x, y, z, block, 0);
             }
         }
     }

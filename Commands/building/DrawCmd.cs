@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Drawing.Ops;
 using System;
 
 namespace MCGalaxy.Commands.Building {    
@@ -38,17 +39,37 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(MarksCount, cpos, DoDraw);
         }
         
-        protected abstract bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType);
+        protected virtual bool DoDraw(Player p, Vec3S32[] marks, 
+                                      object state, byte block, byte extBlock) {
+            DrawArgs dArgs = (DrawArgs)state;
+            dArgs.block = block; dArgs.extBlock = extBlock;        
+            marks = GetMarks(dArgs, marks);
+            DrawOp op = GetDrawOp(dArgs);
+            
+            int offset = 0;
+            BrushFactory factory = GetBrush(p, dArgs, ref offset);
+            Brush brush = ParseBrush(p, dArgs, offset, factory);
+            return brush != null && DrawOp.DoDrawOp(op, brush, p, marks);
+        }
         
-        protected virtual string PlaceMessage { get { return "Place two blocks to determine the edges."; } }
-        
-        protected abstract DrawMode ParseMode(string mode);
+        protected virtual string PlaceMessage { 
+            get { return "Place two blocks to determine the edges."; } 
+        }
         
         protected virtual void OnUse(Player p, string msg, string[] parts, ref DrawArgs cpos) { }
         
-        protected virtual DrawMode GetMode(string message, string[] parts) {
-            return message == "" ? DrawMode.normal : ParseMode(parts[parts.Length - 1]);
+        
+        protected virtual DrawMode GetMode(string[] parts) { return DrawMode.Normal; }
+        
+        protected virtual void GetMarks(DrawArgs dArgs, Vec3S32[] m) { return m; }
+        
+        protected virtual BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
+            brushOffset = dArgs.mode == DrawMode.normal ? 0 : 1;
+            return BrushFactory.Find(p.BrushName);
         }
+        
+        protected abstract DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m);
+        
         
         internal static int GetBlock(Player p, string msg, out byte extBlock, bool checkPlacePerm = true) {
             byte block = Block.Byte(msg);
@@ -72,7 +93,7 @@ namespace MCGalaxy.Commands.Building {
             return block;
         }
         
-        protected static Brush GetBrush(Player p, DrawArgs dArgs, 
+        protected static Brush ParseBrush(Player p, DrawArgs dArgs, 
                                         int usedFromEnd, BrushFactory factory = null) {
             int end = dArgs.message.Length;
             string brushMsg = "";

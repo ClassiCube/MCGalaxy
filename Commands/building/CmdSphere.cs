@@ -25,43 +25,39 @@ namespace MCGalaxy.Commands.Building {
         public override string shortcut { get { return "sp"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("sphereh", null, "hollow"), new CommandAlias("sph", null, "hollow"),
-                    new CommandAlias("circle", null, "circle" ) }; }
+            get { return new[] { new CommandAlias("sphereh", null, "hollow"), 
+                    new CommandAlias("sph", null, "hollow"), new CommandAlias("circle", null, "circle" ) }; }
         }
-        protected override string PlaceMessage { get { return "Place a block for the centre, then another for the radius."; } }
+        protected override string PlaceMessage { 
+            get { return "Place a block for the centre, then another for the radius."; } 
+        }
         
-        protected override DrawMode ParseMode(string msg) {
+        protected override DrawMode GetMode(string[] parts) {
+            string msg = parts[parts.Length - 1];
             if (msg == "solid") return DrawMode.solid;
             else if (msg == "hollow") return DrawMode.hollow;
             else if (msg == "circle") return DrawMode.circle;
             return DrawMode.normal;
         }
-
-        protected override bool DoDraw(Player p, Vec3S32[] m, object state, byte type, byte extType) {
-            DrawArgs cpos = (DrawArgs)state;
-            cpos.block = type; cpos.extBlock = extType;
-            
-            DrawOp op = null;
-            BrushFactory factory = null;
-            switch (cpos.mode) {
-                case DrawMode.solid:
-                    op = new AdvSphereDrawOp();
-                    factory = BrushFactory.Find("normal"); break;
-                case DrawMode.hollow:
-                    op = new AdvHollowSphereDrawOp(); break;
-                case DrawMode.circle:
-                    op = new EllipsoidDrawOp(); break;
-                default:
-                    op = new AdvSphereDrawOp(); break;
-            }
-            int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
-            Brush brush = GetBrush(p, cpos, brushOffset, factory);
-            if (brush == null) return false;
-
+        
+        protected override void GetMarks(DrawArgs dArgs, Vec3S32[] m) {
             Vec3S32 p0 = m[0];
             Vec3S32 radius = GetRadius(cpos.mode, m);
             m[0] = p0 - radius; m[1] = p0 + radius;
-            return DrawOp.DoDrawOp(op, brush, p, m);
+        }
+        
+        protected override BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
+            brushOffset = dArgs.mode == DrawMode.normal ? 0 : 1;
+            if (dArgs.mode == DrawMode.solid) return BrushFactory.Find("normal");
+            return BrushFactory.Find(p.BrushName);
+        }
+        
+        protected override DrawOp GetDrawOp(DrawArgs dArg, Vec3S32[] m) {
+            switch (dArgs.mode) {
+                case DrawMode.hollow: return new AdvHollowSphereDrawOp();
+                case DrawMode.circle: return new EllipsoidDrawOp();
+            }
+            return new AdvSphereDrawOp();
         }
         
         static Vec3S32 GetRadius(DrawMode mode, Vec3S32[] m) {

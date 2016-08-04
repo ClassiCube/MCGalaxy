@@ -16,9 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Drawing;
-using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdCuboid : DrawCmd {
@@ -29,40 +28,9 @@ namespace MCGalaxy.Commands.Building {
                     new CommandAlias("ch", null, "hollow"), new CommandAlias("walls", null, "walls"),
                     new CommandAlias("box"), new CommandAlias("hbox", null, "hollow") }; }
         }
-
-        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-            DrawArgs cpos = (DrawArgs)state;
-            cpos.block = type; cpos.extBlock = extType;
-            DrawOp op = null;
-            BrushFactory factory = null;
-
-            switch (cpos.mode) {
-                case DrawMode.solid:
-                    op = new CuboidDrawOp();
-                    factory = BrushFactory.Find("normal"); break;
-                case DrawMode.normal:
-                    op = new CuboidDrawOp(); break;
-                case DrawMode.hollow:
-                    op = new CuboidHollowsDrawOp(); break;
-                case DrawMode.walls:
-                    op = new CuboidWallsDrawOp(); break;
-                case DrawMode.holes:
-                    op = new CuboidDrawOp(); 
-                    factory = BrushFactory.Find("checkered"); break;
-                case DrawMode.wire:
-                    op = new CuboidWireframeDrawOp(); break;
-                case DrawMode.random:
-                    op = new CuboidDrawOp();
-                    factory = BrushFactory.Find("random"); break;
-            }
-            
-            int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
-            Brush brush = GetBrush(p, cpos, brushOffset, factory);
-            if (brush == null) return false;
-            return DrawOp.DoDrawOp(op, brush, p, marks);
-        }
         
-        protected override DrawMode ParseMode(string msg) {
+        protected override DrawMode GetMode(string[] parts) {
+            string msg = parts[parts.Length - 1];
             if (msg == "solid") return DrawMode.solid;
             else if (msg == "hollow") return DrawMode.hollow;
             else if (msg == "walls") return DrawMode.walls;
@@ -71,6 +39,25 @@ namespace MCGalaxy.Commands.Building {
             else if (msg == "random") return DrawMode.random;
             return DrawMode.normal;
         }
+        
+        protected override BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
+            brushOffset = dArgs.mode == DrawMode.normal ? 0 : 1;
+            if (dArgs.mode == DrawMode.solid) return BrushFactory.Find("normal");
+            if (dArgs.mode == DrawMode.holes) return BrushFactory.Find("checkered");
+            if (dArgs.mode == DrawMode.random) return BrushFactory.Find("random");
+            return BrushFactory.Find(p.BrushName);
+        }
+        
+        protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
+            switch (dArgs.mode) {
+                case DrawMode.hollow: return new CuboidHollowsDrawOp();
+                case DrawMode.walls: return new CuboidWallsDrawOp();
+                case DrawMode.holes: return new CuboidDrawOp();
+                case DrawMode.wire: return new CuboidWireframeDrawOp();
+                case DrawMode.random: return new CuboidDrawOp();
+            }
+        	return new CuboidDrawOp();
+		}
         
         public override void Help(Player p) {
             Player.Message(p, "%T/cuboid [brush args] <mode>");

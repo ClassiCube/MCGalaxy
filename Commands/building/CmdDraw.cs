@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
@@ -27,7 +26,8 @@ namespace MCGalaxy.Commands.Building {
         protected override string PlaceMessage { get { return "Place a block to determine the origin."; } }
         public override int MarksCount { get { return 1; } }
         
-        protected override DrawMode ParseMode(string msg) {
+        protected override DrawMode GetMode(string[] parts) {
+            string msg = parts[parts.Length - 1];
             if (msg == "cone") return DrawMode.cone;
             else if (msg == "hcone") return DrawMode.hcone;
             else if (msg == "icone") return DrawMode.icone;
@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands.Building {
                 (!op.UsesHeight && !CheckOneArg(p, ref radius, args))) return false;
             
             int brushOffset = op.UsesHeight ? 3 : 2;
-            Brush brush = GetBrush(p, cpos, brushOffset);
+            Brush brush = ParseBrush(p, cpos, brushOffset);
             if (brush == null) return false;
             
             Vec3S32[] marks = {

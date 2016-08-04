@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands.Building {   
@@ -27,26 +26,22 @@ namespace MCGalaxy.Commands.Building {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("donut"), new CommandAlias("bagel") }; }
         }
-        protected override string PlaceMessage { get { return "Place a block for the centre, then another for the radius."; } }
-        
-        protected override bool DoDraw(Player p, Vec3S32[] m, object state, byte type, byte extType) {
-            DrawArgs cpos = (DrawArgs)state;
-            cpos.block = type; cpos.extBlock = extType;
-            
-            DrawOp drawOp = new TorusDrawOp();
-            Brush brush = GetBrush(p, cpos, 0);
-            if (brush == null) return false;
-            
-            int dx = m[0].X - m[1].X, dy = m[0].Y - m[1].Y, dz = m[0].Z - m[1].Z;
-            int horR = (int)Math.Sqrt(dx * dx + dz * dz), verR = Math.Abs(dy);
-            Vec3S32 p0 = m[0];
-            m = new [] { new Vec3S32(p0.X - horR, p0.Y - verR, p0.Z - horR),
-                         new Vec3S32(p0.X + horR, p0.Y + verR, p0.Z + horR) };
-                      
-            return DrawOp.DoDrawOp(drawOp, brush, p, m);
+        protected override string PlaceMessage { 
+            get { return "Place a block for the centre, then another for the radius."; } 
         }
         
-        protected override DrawMode ParseMode(string msg) { return DrawMode.normal; }
+        protected override void GetMarks(DrawArgs dArgs, Vec3S32[] m) {
+            int dx = m[0].X - m[1].X, dy = m[0].Y - m[1].Y, dz = m[0].Z - m[1].Z;
+            int horR = (int)Math.Sqrt(dx * dx + dz * dz), verR = Math.Abs(dy);
+            
+            Vec3S32 p0 = m[0];
+            m[0] = new Vec3S32(p0.X - horR, p0.Y - verR, p0.Z - horR);
+            m[1] = new Vec3S32(p0.X + horR, p0.Y + verR, p0.Z + horR);
+        }
+        
+        protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
+            return new TorusDrawOp(); 
+        }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/torus [brush args]");
