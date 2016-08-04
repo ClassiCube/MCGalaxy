@@ -34,12 +34,12 @@ namespace MCGalaxy.Commands.Building {
             DrawArgs cpos = (DrawArgs)state;
             cpos.block = type; cpos.extBlock = extType;
             DrawOp op = null;
-            Func<BrushArgs, Brush> constructor = null;
+            BrushFactory factory = null;
 
             switch (cpos.mode) {
                 case DrawMode.solid:
                     op = new CuboidDrawOp();
-                    constructor = SolidBrush.Process; break;
+                    factory = BrushFactory.Find("normal"); break;
                 case DrawMode.normal:
                     op = new CuboidDrawOp(); break;
                 case DrawMode.hollow:
@@ -48,16 +48,16 @@ namespace MCGalaxy.Commands.Building {
                     op = new CuboidWallsDrawOp(); break;
                 case DrawMode.holes:
                     op = new CuboidDrawOp(); 
-                    constructor = CheckeredBrush.Process; break;
+                    factory = BrushFactory.Find("checkered"); break;
                 case DrawMode.wire:
                     op = new CuboidWireframeDrawOp(); break;
                 case DrawMode.random:
                     op = new CuboidDrawOp();
-                    constructor = RandomBrush.Process; break;
+                    factory = BrushFactory.Find("random"); break;
             }
             
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
-            Brush brush = GetBrush(p, cpos, brushOffset, constructor);
+            Brush brush = GetBrush(p, cpos, brushOffset, factory);
             if (brush == null) return false;
             return DrawOp.DoDrawOp(op, brush, p, marks);
         }

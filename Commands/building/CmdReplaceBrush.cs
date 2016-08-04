@@ -48,16 +48,16 @@ namespace MCGalaxy.Commands.Building {
             int block = DrawCmd.GetBlock(p, parts[0], out extBlock);
             if (block == -1) return false;
             
-            string brushName = CmdBrush.FindBrush(parts[1]);
-            if (brushName == null) {
-                Player.Message(p, "No brush found with name \"" + parts[1] + "\".");
-                Player.Message(p, "Available brushes: " + CmdBrush.AvailableBrushes);
+            BrushFactory factory = BrushFactory.Find(parts[1]);
+            if (factory == null) {
+                Player.Message(p, "No brush found with name \"{0}\".", parts[1]);
+                Player.Message(p, "Available brushes: " + BrushFactory.Available);
                 return false;
             }
 
             string brushMessage = parts.Length > 2 ? parts[2].ToLower() : "";
             BrushArgs args = new BrushArgs(p, brushMessage, type, extType);
-            Brush brush = BrushFactory.Brushes[brushName](args);
+            Brush brush = factory.Construct(args);
             if (brush == null) return false;
             
             DrawOp drawOp = null;

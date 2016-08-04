@@ -31,24 +31,24 @@ namespace MCGalaxy.Drawing.Brushes {
         
         /// <summary> Creates a brush from the given arguments, 
         /// returning null if invalid arguments are specified. </summary>
-        public abstract Brush Process(BrushArgs args);
+        public abstract Brush Construct(BrushArgs args);
         
-        public static Dictionary<string, Func<BrushArgs, Brush>> Brushes 
-            = new Dictionary<string, Func<BrushArgs, Brush>> {
-            { "normal", SolidBrush.Process }, { "paste", PasteBrush.Process },
-            { "checkered", CheckeredBrush.Process }, { "rainbow", RainbowBrush.Process },
-            { "bwrainbow", BWRainbowBrush.Process }, { "striped", StripedBrush.Process },
-            { "replace", ReplaceBrush.Process }, { "replacenot", ReplaceNotBrush.Process },
-            { "random", RandomBrush.Process }, { "cloudy", CloudyBrush.Process },
+        public static List<BrushFactory> Brushes = new List<BrushFactory>() {
+            new SolidBrushFactory(), new CheckeredBrushFactory(),
+            new StripedBrushFactory(), new PasteBrushFactory(),
+            new ReplaceBrushFactory(), new ReplaceNotBrushFactory(),
+            new RainbowBrushFactory(), new BWRainbowBrushFactory(),
+            new RandomBrushFactory(), new CloudyBrushFactory(),
         };
         
-        public static Dictionary<string, string[]> BrushesHelp = new Dictionary<string, string[]> {
-            { "normal", SolidBrush.HelpString }, { "paste", PasteBrush.HelpString },
-            { "checkered", CheckeredBrush.HelpString }, { "rainbow", RainbowBrush.HelpString },
-            { "bwrainbow", BWRainbowBrush.HelpString }, { "striped", StripedBrush.HelpString },
-            { "replace", ReplaceBrush.HelpString }, { "replacenot", ReplaceNotBrush.HelpString },
-            { "random", RandomBrush.HelpString }, { "cloudy", CloudyBrush.HelpString },
-        };
+        public static string Available { get { return Brushes.Join(b => b.Name); } }
+        
+        public static BrushFactory Find(string name) {
+            foreach (BrushFactory brush in Brushes) {
+                if (brush.Name.CaselessEq(name)) return brush;
+            }
+            return null;
+        }
     }
     
     public struct BrushArgs {

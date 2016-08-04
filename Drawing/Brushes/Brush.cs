@@ -24,9 +24,6 @@ namespace MCGalaxy.Drawing.Brushes {
         /// <summary> Human friendly name of this brush. </summary>
         public abstract string Name { get; }
         
-        /// <summary> Description of the brush, in addition to its syntax. </summary>
-        public abstract string[] Help { get; }
-        
         /// <summary> Performs calcuations (if necessary) for the given drawop. </summary>
         public virtual void Configure(DrawOp op, Player p) { }
         

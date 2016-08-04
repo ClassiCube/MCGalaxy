@@ -36,30 +36,18 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "Your current brush is: " + p.BrushName); return;
             }
             string[] args = message.SplitSpaces(2);
-            string brush = FindBrush(args[0]);
+            BrushFactory brush = BrushFactory.Find(args[0]);
             
             if (args[0].CaselessEq("list")) {
-                Player.Message(p, "%HAvailable brushes: %S" + AvailableBrushes);
+                Player.Message(p, "%HAvailable brushes: %S" + BrushFactory.Available);
             } else if (brush == null) {
-                Player.Message(p, "No brush found with name \"" + args[0] + "\".");
-                Player.Message(p, "Available brushes: " + AvailableBrushes);
+            	Player.Message(p, "No brush found with name \"{0}\".", args[0]);
+                Player.Message(p, "Available brushes: " + BrushFactory.Available);
             } else {
-                Player.Message(p, "Set your brush to: " + brush);
-                p.BrushName = brush;
+                Player.Message(p, "Set your brush to: " + brush.Name);
+                p.BrushName = brush.Name;
                 p.DefaultBrushArgs = args.Length > 1 ? args[1] : "";
             }
-        }
-        
-        internal static string FindBrush(string message) {
-            foreach (var brush in BrushFactory.Brushes) {
-                if (brush.Key.CaselessEq(message))
-                    return brush.Key;
-            }
-            return null;
-        }
-        
-        internal static string AvailableBrushes {
-            get { return BrushFactory.Brushes.Keys.Join(); }
         }
         
         public override void Help(Player p) {
@@ -67,7 +55,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%HSets your current brush to the brush with that name.");
             Player.Message(p, "%T/help brush [name]");
             Player.Message(p, "%HOutputs the help for the brush with that name.");
-            Player.Message(p, "%HAvailable brushes: %S" + AvailableBrushes);
+            Player.Message(p, "%HAvailable brushes: %S" + BrushFactory.Available);
             Player.Message(p, "%H- The default brush takes one argument specifying the block to draw with. " +
                            "If no arguments are given, draws with your currently held block.");
             Player.Message(p, "%H- If \"skip\" is used for a block name, " +
@@ -75,12 +63,12 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p, string message) {
-            string brush = FindBrush(message);
+            BrushFactory brush = BrushFactory.Find(message);
             if (brush == null) {
                 Player.Message(p, "No brush found with name \"{0}\".", message);
-                Player.Message(p, "%HAvailable brushes: %S" + AvailableBrushes);
+                Player.Message(p, "%HAvailable brushes: %S" + BrushFactory.Available);
             } else {
-                Player.MessageLines(p, BrushFactory.BrushesHelp[brush]);
+                Player.MessageLines(p, brush.Help);
             }
         }
     }

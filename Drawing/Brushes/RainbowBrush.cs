@@ -26,14 +26,6 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override string Name { get { return "Rainbow"; } }
         
-        public override string[] Help { get { return HelpString; } }
-        
-        public static string[] HelpString = new [] {
-            "%TArguments: <random>",
-            "%HIf no arguments are given, draws a diagonally repeating rainbow",
-            "%HIf \'random\' is given, draws by randomly selecting blocks from the rainbow pattern.",
-        };
-        
         public override byte NextBlock(DrawOp op) {
             int offset = (op.Coords.X + op.Coords.Y + op.Coords.Z) % 13;
             if (offset < 0) offset += 13;
@@ -41,14 +33,6 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         public override byte NextExtBlock(DrawOp op) { return 0; }
-        
-        public static Brush Process(BrushArgs args) {
-            if (args.Message == "random")
-                return new RandomRainbowBrush();
-            if (args.Message == "bw")
-                return new BWRainbowBrush();
-            return new RainbowBrush();
-        }
     }
     
     public sealed class BWRainbowBrush : Brush {
@@ -63,18 +47,7 @@ namespace MCGalaxy.Drawing.Brushes {
             return blocks[offset];
         }
         
-        public override string[] Help { get { return HelpString; } }
-        
-        public static string[] HelpString = new [] {
-            "%TArguments: none",
-            "%HDraws a diagonally repeating black-white rainbow",
-        };
-        
         public override byte NextExtBlock(DrawOp op) { return 0; }
-        
-        public static Brush Process(BrushArgs args) {
-            return new BWRainbowBrush();
-        }
     }
     
     internal sealed class RandomRainbowBrush : Brush {
@@ -82,15 +55,9 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override string Name { get { return "RandomRainbow"; } }
         
-        public override string[] Help { get { return new string[0]; } }
+        public RandomRainbowBrush() { rnd = new Random(); }
         
-        public RandomRainbowBrush() {
-            rnd = new Random();
-        }
-        
-        public RandomRainbowBrush(int seed) {
-            rnd = new Random(seed);
-        }
+        public RandomRainbowBrush(int seed) { rnd = new Random(seed); }
         
         public override byte NextBlock(DrawOp op) {
             return (byte)rnd.Next(Block.red, Block.darkgrey);

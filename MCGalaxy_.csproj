@@ -415,7 +415,6 @@
     <Compile Include="Database\SQLite\SQLiteParameterisedQuery.cs" />
     <Compile Include="Drawing\Brushes\Brush.cs" />
     <Compile Include="Drawing\Brushes\CheckeredBrush.cs" />
-    <Compile Include="Drawing\Brushes\FrequencyBrush.cs" />
     <Compile Include="Drawing\Brushes\CloudyBrush.cs" />
     <Compile Include="Drawing\Brushes\PasteBrush.cs" />
     <Compile Include="Drawing\Brushes\RainbowBrush.cs" />
@@ -424,6 +423,10 @@
     <Compile Include="Drawing\Brushes\SolidBrush.cs" />
     <Compile Include="Drawing\Brushes\StripedBrush.cs" />
     <Compile Include="Drawing\BrushFactories\BrushFactory.cs" />
+    <Compile Include="Drawing\BrushFactories\CloudyBrush.cs" />
+    <Compile Include="Drawing\BrushFactories\FrequencyBrushes.cs" />
+    <Compile Include="Drawing\BrushFactories\ReplaceBrushes.cs" />
+    <Compile Include="Drawing\BrushFactories\SimpleBrushes.cs" />
     <Compile Include="Drawing\CopyState.cs" />
     <Compile Include="Drawing\DrawOps\AdvConeDrawOps.cs" />
     <Compile Include="Drawing\DrawOps\AdvDrawOps.cs" />

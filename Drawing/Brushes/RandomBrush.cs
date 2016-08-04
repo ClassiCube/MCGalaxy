@@ -33,24 +33,6 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override string Name { get { return "Random"; } }
         
-        public override string[] Help { get { return HelpString; } }
-        
-        public static string[] HelpString = new [] {
-            "%TArguments: [block1/frequency] [block2]..",
-            "%HDraws by randomly selecting blocks from the given [blocks].",
-            "%Hfrequency is optional (defaults to 1), and specifies the number of times " +
-            "the block should appear (as a fraction of the total of all the frequencies).",
-        };
-        
-        public static Brush Process(BrushArgs args) {
-            int[] count;
-            ExtBlock[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => true, null);
-            
-            if (toAffect == null) return null;           
-            ExtBlock[] blocks = FrequencyBrush.Combine(toAffect, count);
-            return new RandomBrush(blocks);
-        }
-        
         int next;
         const int mask = 0x7fffffff;
         public override byte NextBlock(DrawOp op) {

@@ -57,10 +57,10 @@ namespace MCGalaxy.Commands.Building {
             string[] args = message.Split(' ');
             
             if (args[0].CaselessEq("not")) {
-                op.Exclude = ReplaceBrush.GetBlocks(p, 1, args.Length, args);
+                op.Exclude = ReplaceBrushFactory.GetBlocks(p, 1, args.Length, args);
                 if (op.Exclude == null) return false;
             } else {
-                op.Include = ReplaceBrush.GetBlocks(p, 0, args.Length, args);
+                op.Include = ReplaceBrushFactory.GetBlocks(p, 0, args.Length, args);
                 if (op.Include == null) return false;
             }
             return DrawOp.DoDrawOp(op, null, p, m);

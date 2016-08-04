@@ -35,7 +35,8 @@ namespace MCGalaxy.Commands.Building {
         
         bool DoReplace(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             BrushArgs args = new BrushArgs(p, (string)state, type, extType);
-            Brush brush = ReplaceNot ? ReplaceNotBrush.Process(args) : ReplaceBrush.Process(args);
+            string name = ReplaceNot ? "replacenot" : "replace";
+            Brush brush = BrushFactory.Find(name).Construct(args);
             if (brush == null) return false;
             
             DrawOp drawOp = new CuboidDrawOp();
@@ -76,7 +77,7 @@ namespace MCGalaxy.Commands.Building {
             ushort z2 = (ushort)(p.level.Length - 1);
 
             BrushArgs args = new BrushArgs(p, message.ToLower(), 0, 0);
-            Brush brush = ReplaceBrush.Process(args);
+            Brush brush = BrushFactory.Find("replace").Construct(args);
             if (brush == null) return;
             
             DrawOp drawOp = new CuboidDrawOp();

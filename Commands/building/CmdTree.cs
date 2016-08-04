@@ -70,16 +70,16 @@ namespace MCGalaxy.Commands.Building {
         
         static Brush ParseBrush(string raw, Player p, byte block, byte extBlock) {
             string[] parts = raw.SplitSpaces(2);
-            string brushName = CmdBrush.FindBrush(parts[0]);
-            if (brushName == null) {
+            BrushFactory brush = BrushFactory.Find(parts[0]);
+            if (brush == null) {
                 Player.Message(p, "No brush found with name \"{0}\".", parts[0]);
-                Player.Message(p, "Available brushes: " + CmdBrush.AvailableBrushes);
+                Player.Message(p, "Available brushes: " + BrushFactory.Available);
                 return null;
             }
 
             string brushArgs = parts.Length >= 2 ? parts[1].ToLower() : "";
             BrushArgs args = new BrushArgs(p, brushArgs, block, extBlock);
-            return BrushFactory.Brushes[brushName](args);
+            return brush.Construct(args);
         }
         
         struct DrawArgs { public int mode; public string brushMsg; }

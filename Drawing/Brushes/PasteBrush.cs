@@ -20,32 +20,14 @@ using System.Collections.Generic;
 using MCGalaxy.Commands;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Drawing.Brushes {
-    
+namespace MCGalaxy.Drawing.Brushes {    
     public sealed class PasteBrush : Brush {
         readonly CopyState state;
         
-        public PasteBrush(CopyState state) {
-            this.state = state;
-        }
+        public PasteBrush(CopyState state) { this.state = state; }
         
         public override string Name { get { return "Paste"; } }
-        
-        public override string[] Help { get { return HelpString; } }
-        
-        public static string[] HelpString = new [] {
-            "%TArguments: none",
-            "%HDraws using blocks from the current copy state.",
-        };
-        
-        public static Brush Process(BrushArgs args) {
-            if (args.Player.CopyBuffer == null) {
-                args.Player.SendMessage("You haven't copied anything yet.");
-                return null;
-            }
-            return new PasteBrush(args.Player.CopyBuffer);
-        }
-        
+
         public override byte NextBlock(DrawOp op) {
             Vec3U16 p = LocalCoords(op);
             return state.Blocks[state.GetIndex(p.X, p.Y, p.Z)];

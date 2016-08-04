@@ -19,37 +19,19 @@ using System;
 using MCGalaxy.Commands.Building;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Drawing.Brushes {
-    
+namespace MCGalaxy.Drawing.Brushes {    
     public sealed class SolidBrush : Brush {
-        readonly byte type, extType;
+        readonly byte block, extBlock;
         
         public SolidBrush(byte type, byte extType) {
-            this.type = type;
-            this.extType = extType;
+            this.block = type;
+            this.extBlock = extType;
         }
         
         public override string Name { get { return "Normal"; } }
         
-        public override string[] Help { get { return HelpString; } }
+        public override byte NextBlock(DrawOp op) { return block; }
         
-        public static string[] HelpString = new [] {
-            "%TArguments: [block]",
-            "%HDraws using the specified block.",
-            "%H   If block is not given, the currently held block is used.",
-        };
-        
-        public static Brush Process(BrushArgs args) {
-            if (args.Message == "")
-                return new SolidBrush(args.Block, args.ExtBlock);
-            byte extBlock;
-            int block = DrawCmd.GetBlock(args.Player, args.Message, out extBlock);
-            if (block == -1) return null;
-            return new SolidBrush((byte)block, extBlock);
-        }
-        
-        public override byte NextBlock(DrawOp op) { return type; }
-        
-        public override byte NextExtBlock(DrawOp op) { return extType; }
+        public override byte NextExtBlock(DrawOp op) { return extBlock; }
     }
 }

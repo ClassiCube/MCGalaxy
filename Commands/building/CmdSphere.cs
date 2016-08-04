@@ -42,11 +42,11 @@ namespace MCGalaxy.Commands.Building {
             cpos.block = type; cpos.extBlock = extType;
             
             DrawOp op = null;
-            Func<BrushArgs, Brush> constructor = null;
+            BrushFactory factory = null;
             switch (cpos.mode) {
                 case DrawMode.solid:
                     op = new AdvSphereDrawOp();
-                    constructor = SolidBrush.Process; break;
+                    factory = BrushFactory.Find("normal"); break;
                 case DrawMode.hollow:
                     op = new AdvHollowSphereDrawOp(); break;
                 case DrawMode.circle:
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Building {
                     op = new AdvSphereDrawOp(); break;
             }
             int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
-            Brush brush = GetBrush(p, cpos, brushOffset, constructor);
+            Brush brush = GetBrush(p, cpos, brushOffset, factory);
             if (brush == null) return false;
 
             Vec3S32 p0 = m[0];

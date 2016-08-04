@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected static Brush GetBrush(Player p, DrawArgs dArgs, 
-                                        int usedFromEnd, Func<BrushArgs, Brush> constructor = null) {
+                                        int usedFromEnd, BrushFactory factory = null) {
             int end = dArgs.message.Length;
             string brushMsg = "";
             for (int i = 0; i < usedFromEnd; i++) {
@@ -83,9 +83,9 @@ namespace MCGalaxy.Commands.Building {
             
             if (end >= 0) brushMsg = dArgs.message.Substring(0, end);
             if (brushMsg == "") brushMsg = p.DefaultBrushArgs;
-            if (constructor == null) constructor = BrushFactory.Brushes[p.BrushName];
+            if (factory == null) factory = BrushFactory.Find(p.BrushName);
             BrushArgs args = new BrushArgs(p, brushMsg, dArgs.block, dArgs.extBlock);
-            return constructor(args);
+            return factory.Construct(args);
         }
         
         protected struct DrawArgs {
