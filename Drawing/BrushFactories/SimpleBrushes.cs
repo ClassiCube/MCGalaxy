@@ -37,6 +37,12 @@ namespace MCGalaxy.Drawing.Brushes {
             if (block == -1) return null;
             return new SolidBrush((byte)block, extBlock);
         }
+        
+        public override bool Validate(BrushArgs args) {
+            if (args.Message == "") return true;
+            byte extBlock;
+            return DrawCmd.GetBlock(args.Player, args.Message, out extBlock) != -1;
+        }
     }
     
     public sealed class CheckeredBrushFactory : BrushFactory {

@@ -40,10 +40,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override DrawOp GetDrawOp(DrawArgs dArg) {
-        	return new CuboidDrawOp();
+            return new CuboidDrawOp();
         }
         
-        protected override bool DoDraw(Player p, Vec3S32[] marks, 
+        protected override bool DoDraw(Player p, Vec3S32[] marks,
                                        object state, byte block, byte extBlock) {
             DrawArgs dArgs = (DrawArgs)state;
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
@@ -52,69 +52,86 @@ namespace MCGalaxy.Commands.Building {
                 oldExtBlock = p.level.GetExtTile(x, y, z);
 
             dArgs.Block = block; dArgs.ExtBlock = extBlock;
-            if (!Block.canPlace(p, oldBlock) && !Block.BuildIn(oldBlock)) { 
+            if (!Block.canPlace(p, oldBlock) && !Block.BuildIn(oldBlock)) {
                 Formatter.MessageBlock(p, "fill over ", oldBlock); return false;
-            }
-
-            SparseBitSet bits = new SparseBitSet(p.level.Width, p.level.Height, p.level.Length);
-            List<int> buffer = new List<int>(), origins = new List<int>();
-            FloodFill(p, x, y, z, oldBlock, oldExtBlock, dArgs.Mode, bits, buffer, origins, 0);
-
-            int totalFill = origins.Count;
-            for (int i = 0; i < totalFill; i++) {
-                int pos = origins[i];
-                p.level.IntToPos(pos, out x, out y, out z);
-                FloodFill(p, x, y, z, oldBlock, oldExtBlock, dArgs.Mode, bits, buffer, origins, 0);
-                totalFill = origins.Count;
-            }         
+            }           
             FillDrawOp op = new FillDrawOp();
-            op.Positions = buffer;
+            op.Positions = FloodFill(p, p.level.PosToInt(x, y, z), oldBlock, oldExtBlock, dArgs.Mode);
             
-            int offset = dArgs.Mode == DrawMode.normal ? 0 : 1;          
+            int offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
             BrushFactory factory = BrushFactory.Find(p.BrushName);
             BrushArgs bArgs = GetBrushArgs(dArgs, offset);
-            Brush brush = factory.Construct(bArgs);  
+            Brush brush = factory.Construct(bArgs);
             
-            if (brush == null || !DrawOp.DoDrawOp(op, brush, p, marks)) return false;            
-            bits.Clear();
+            if (brush == null || !DrawOp.DoDrawOp(op, brush, p, marks)) return false;
             op.Positions = null;
             return true;
         }
+        
+        unsafe List<int> FloodFill(Player p, int index, byte block, byte extBlock, DrawMode mode) {
+            Level lvl = p.level;
+            SparseBitSet bits = new SparseBitSet(lvl.Width, lvl.Height, lvl.Length);
+            List<int> buffer = new List<int>();
+            Queue<int> temp = new Queue<int>();
+            
+            const int max = 65536;
+            int count = 0, oneY = lvl.Width * lvl.Length;
+            int* pos = stackalloc int[max];
+            pos[0] = index; count++;
+            
+            while (count > 0 && buffer.Count <= p.group.maxBlocks) {
+                index = pos[count - 1]; count--;
+                ushort x = (ushort)(index % lvl.Width);
+                ushort y = (ushort)((index / lvl.Width) / lvl.Length);
+                ushort z = (ushort)((index / lvl.Width) % lvl.Length);
+                
+                if (temp.Count > 0) { pos[count] = temp.Dequeue(); count++; }
+                if (bits.Get(x, y, z)) continue;
+                
+                bits.Set(x, y, z, true);
+                buffer.Add(index);
+                
+                if (mode != DrawMode.verticalX) { // x
+                    if (Check(p, (ushort)(x + 1), y, z, block, extBlock)) {
+                        if (count == max) { temp.Enqueue(index + 1); }
+                        else { pos[count] = index + 1; count++; }
+                    }
+                    if (Check(p, (ushort)(x - 1), y, z, block, extBlock)) {
+                        if (count == max) { temp.Enqueue(index - 1); }
+                        else { pos[count] = index - 1; count++; }
+                    }
+                }
 
-        void FloodFill(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock, DrawMode fillType,
-                       SparseBitSet bits, List<int> buffer, List<int> origins, int depth) {
-            if (bits.Get(x, y, z) || buffer.Count > p.group.maxBlocks) return;
-            int index = p.level.PosToInt(x, y, z);
-            if (depth > 2000) { origins.Add(index); return; }
-            bits.Set(x, y, z, true);
-            buffer.Add(index);
+                if (mode != DrawMode.verticalZ) { // z
+                    if (Check(p, x, y, (ushort)(z + 1), block, extBlock)) {
+                        if (count == max) { temp.Enqueue(index + lvl.Width); }
+                        else { pos[count] = index + lvl.Width; count++; }
+                    }
+                    if (Check(p, x, y, (ushort)(z - 1), block, extBlock)) {
+                        if (count == max) { temp.Enqueue(index - lvl.Width); }
+                        else { pos[count] = index - lvl.Width; count++; }
+                    }
+                }
 
-            if (fillType != DrawMode.verticalX) { // x
-                if (CheckTile(p, (ushort)(x + 1), y, z, block, extBlock))
-                    FloodFill(p, (ushort)(x + 1), y, z, block, extBlock, fillType, bits, buffer, origins, depth + 1);
-                if (CheckTile(p, (ushort)(x - 1), y, z, block, extBlock))
-                    FloodFill(p, (ushort)(x - 1), y, z, block, extBlock, fillType, bits, buffer, origins, depth + 1);
+                if (!(mode == DrawMode.down || mode == DrawMode.layer)) { // y up
+                    if (Check(p, x, (ushort)(y + 1), z, block, extBlock)) {
+                        if (count == max) { temp.Enqueue(index + oneY); }
+                        else { pos[count] = index + oneY; count++; }
+                    }
+                }
+
+                if (!(mode == DrawMode.up || mode == DrawMode.layer)) { // y down
+                    if (Check(p, x, (ushort)(y - 1), z, block, extBlock)) {
+                        if (count == max) { temp.Enqueue(index - oneY); }
+                        else { pos[count] = index - oneY; count++; }
+                    }
+                }
             }
-
-            if (fillType != DrawMode.verticalZ) { // z
-                if (CheckTile(p, x, y, (ushort)(z + 1), block, extBlock))
-                    FloodFill(p, x, y, (ushort)(z + 1), block, extBlock, fillType, bits, buffer, origins, depth + 1);
-                if (CheckTile(p, x, y, (ushort)(z - 1), block, extBlock))
-                    FloodFill(p, x, y, (ushort)(z - 1), block, extBlock, fillType, bits, buffer, origins, depth + 1);
-            }
-
-            if (!(fillType == DrawMode.down || fillType == DrawMode.layer)) { // y up
-                if (CheckTile(p, x, (ushort)(y + 1), z, block, extBlock))
-                    FloodFill(p, x, (ushort)(y + 1), z, block, extBlock, fillType, bits, buffer, origins, depth + 1);
-            }
-
-            if (!(fillType == DrawMode.up || fillType == DrawMode.layer)) { // y down
-                if (CheckTile(p, x, (ushort)(y - 1), z, block, extBlock))
-                    FloodFill(p, x, (ushort)(y - 1), z, block, extBlock, fillType, bits, buffer, origins, depth + 1);
-            }
+            bits.Clear();
+            return buffer;
         }
         
-        bool CheckTile(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock) {
+        static bool Check(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock) {
             byte curBlock = p.level.GetTile(x, y, z);
 
             if (curBlock == block && curBlock == Block.custom_block) {
@@ -128,7 +145,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%T/fill [brush args] <mode>");
             Player.Message(p, "%HFills the area specified with the output of the current brush.");
             Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
-            Player.Message(p, "   %HModes: &fnormal/up/down/layer/vertical_x/vertical_z");            
+            Player.Message(p, "   %HModes: &fnormal/up/down/layer/vertical_x/vertical_z");
         }
     }
 }
