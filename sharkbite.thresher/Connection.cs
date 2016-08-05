@@ -73,7 +73,6 @@ namespace Sharkbite.Irc
 		//TCP/IP connection established with IRC server
 		private bool connected;
 		private bool handleNickFailure;
-		private List<IParser> parsers;
 		private ServerProperties properties;
 		private Encoding encoding;
 
@@ -91,7 +90,6 @@ namespace Sharkbite.Irc
 			connected = false;
 			handleNickFailure = true;
 			connectionArgs = args;
-			parsers = new List<IParser>();
 			sender = new Sender( this );
 			listener = new Listener( );
 			RegisterDelegates();
@@ -192,18 +190,6 @@ namespace Sharkbite.Irc
 		/// has not been created.</value>
 		public ServerProperties ServerProperties { get { return properties; } }
 
-		private bool CustomParse( string line )
-		{
-			foreach( IParser parser in parsers )
-			{
-				if( parser.CanParse( line ) )
-				{
-					parser.Parse( line );
-					return true;
-				}
-			}
-			return false;
-		}
 		/// <summary>
 		/// Respond to IRC keep-alives.
 		/// </summary>
@@ -354,13 +340,6 @@ namespace Sharkbite.Irc
 					try
 					{
 						Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceVerbose, "[" + Thread.CurrentThread.Name +"] Connection::ReceiveIRCMessages() rec'd:" + line );
-						//Try any custom parsers first
-						if( CustomParse( line ) )
-						{
-							//One of the custom parsers handled this message so
-							//we go back to listening
-							continue;
-						}
 						if( IsDccRequest( line ) ) continue;
 						if( IsCtcpMessage( line) ) continue;
 						
@@ -506,34 +485,11 @@ namespace Sharkbite.Irc
 					socketListenThread.Abort();
 			}
 		}
-		/// <summary>
-		/// A friendly name for this connection.
-		/// </summary>
+		
+		/// <summary> A friendly name for this connection. </summary>
 		/// <returns>The Name property</returns>
-		public override string ToString()
-		{
+		public override string ToString() {
 			return Name;
-		}
-
-		/// <summary>
-		/// Adds a parser class to a list of custom parsers.
-		/// Any number can be added. The custom parsers
-		/// will be tested using <c>CanParse()</c> before
-		/// the default parsers. The last parser to be added
-		/// will be the first to process a message.
-		/// </summary>
-		/// <param name="parser">Any class that implements IParser.</param>
-		public void AddParser( IParser parser )
-		{
-			parsers.Insert(0, parser );
-		}
-		/// <summary>
-		/// Remove a custom parser class.
-		/// </summary>
-		/// <param name="parser">Any class that implements IParser.</param>
-		public void RemoveParser( IParser parser )
-		{
-			parsers.Remove( parser );
 		}
 
 		const string ctcpTypes = "(FINGER|USERINFO|VERSION|SOURCE|CLIENTINFO|ERRMSG|PING|TIME)";

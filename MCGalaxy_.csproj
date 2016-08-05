@@ -604,7 +604,6 @@
     <Compile Include="sharkbite.thresher\Delegates.cs" />
     <Compile Include="sharkbite.thresher\Enums.cs" />
     <Compile Include="sharkbite.thresher\Identd.cs" />
-    <Compile Include="sharkbite.thresher\IParser.cs" />
     <Compile Include="sharkbite.thresher\Listener.cs" />
     <Compile Include="sharkbite.thresher\NameGenerator.cs" />
     <Compile Include="sharkbite.thresher\ReplyCode.cs" />

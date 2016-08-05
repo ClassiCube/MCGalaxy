@@ -37,55 +37,19 @@ namespace Sharkbite.Irc
 		private ChannelMode mode;
 		private string parameter;
 	
-		/// <summary>
-		/// Whether the mode is being added or removed. In the case of a Channel mode
-		/// request this will always be 'added'.
-		/// </summary>
-		public ModeAction Action
-		{
-			get
-			{
-				return action;
-			}
-			set
-			{
-				action = value;
-			}
-		}
+		/// <summary> Whether the mode is being added or removed. In the case of a 
+		/// Channel mode request this will always be 'added'. </summary>
+		public ModeAction Action { get { return action; } set { action = value; } }
 
-		/// <summary>
-		/// What mode is being added or removed.
-		/// </summary>
-		public ChannelMode Mode
-		{
-			get
-			{
-				return mode;
-			}
-			set
-			{
-				mode = value;
-			}
-		}
-		/// <summary>
-		/// Any additional parameters that belong to the mode. For example
-		/// user masks or a maximum numbers of user allowed in a channel.
-		/// </summary>
-		public string Parameter
-		{
-			get
-			{
-				return parameter;
-			}
-			set
-			{
-				parameter = value;
-			}
-		}
+		/// <summary> What mode is being added or removed. </summary>
+		public ChannelMode Mode { get { return mode; } set { mode = value; } }
+		
+		/// <summary> Any additional parameters that belong to the mode. For example
+		/// user masks or a maximum numbers of user allowed in a channel. </summary>
+		public string Parameter { get { return parameter; } set { parameter = value; } }
 	
 	
-		public override string ToString() 
-		{
+		public override string ToString() {
 			return string.Format("Action={0} Mode={1} Parameter={2}", Action, Mode, Parameter ); 
 		}
 
