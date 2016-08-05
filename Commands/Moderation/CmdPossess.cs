@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
             if (message == "" || message == p.possess) {
                 if (message == "" && p.possess == "") { Help(p); return; }
                 
-                Player who = PlayerInfo.Find(p.possess);
+                Player who = PlayerInfo.FindExact(p.possess);
                 if (who == null) {
                     p.possess = "";
                     Player.Message(p, "Possession disabled."); return;

@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override DrawOp GetDrawOp(DrawArgs dArg) {
-            return null;
+        	return new CuboidDrawOp();
         }
         
         protected override bool DoDraw(Player p, Vec3S32[] marks, 
@@ -66,13 +66,16 @@ namespace MCGalaxy.Commands.Building {
                 p.level.IntToPos(pos, out x, out y, out z);
                 FloodFill(p, x, y, z, oldBlock, oldExtBlock, dArgs.Mode, bits, buffer, origins, 0);
                 totalFill = origins.Count;
-            }
-            
+            }         
             FillDrawOp op = new FillDrawOp();
             op.Positions = buffer;
-            int offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
-            Brush brush = ParseBrush(p, dArgs, offset);
-            if (brush == null || !DrawOp.DoDrawOp(op, brush, p, marks)) return false;
+            
+            int offset = dArgs.Mode == DrawMode.normal ? 0 : 1;          
+            BrushFactory factory = BrushFactory.Find(p.BrushName);
+            BrushArgs bArgs = GetBrushArgs(dArgs, offset);
+            Brush brush = factory.Construct(bArgs);  
+            
+            if (brush == null || !DrawOp.DoDrawOp(op, brush, p, marks)) return false;            
             bits.Clear();
             op.Positions = null;
             return true;

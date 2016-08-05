@@ -33,6 +33,9 @@ namespace MCGalaxy.Drawing.Brushes {
         /// returning null if invalid arguments are specified. </summary>
         public abstract Brush Construct(BrushArgs args);
         
+        /// <summary> Validates the given arguments, returning false if they are invalid. </summary>
+        public virtual bool Validate(BrushArgs args) { return Construct(args) != null; }
+        
         public static List<BrushFactory> Brushes = new List<BrushFactory>() {
             new SolidBrushFactory(), new CheckeredBrushFactory(),
             new StripedBrushFactory(), new PasteBrushFactory(),

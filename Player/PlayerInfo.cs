@@ -91,8 +91,8 @@ namespace MCGalaxy {
         }
  
         
-        /// <summary> Retrieves the player data for the player whose name 
-        /// caselessly exactly matches the given name. </summary>
+        /// <summary> Retrieves from the database the player data for the player 
+        /// whose name caselessly exactly matches the given name. </summary>
         /// <returns> PlayerData instance if found, null if not. </returns>
         public static PlayerData FindData(string name) {
             using (DataTable results = Query(name, "*")) {
@@ -101,8 +101,8 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Retrieves the actual name for the player whose name 
-        /// caselessly exactly matches the given name. </summary>
+        /// <summary> Retrieves from the database the actual name for the player 
+        /// whose name caselessly exactly matches the given name. </summary>
         /// <returns> Correctly cased name if found, null if not. </returns>
         public static string FindName(string name) {
             using (DataTable playerDB = Query(name, "Name")) {
@@ -111,8 +111,8 @@ namespace MCGalaxy {
             }
         }
 
-        /// <summary> Retrieves the last IP address for the player whose name 
-        /// caselessly exactly matches the given name. </summary>
+        /// <summary> Retrieves from the database the last IP address for the
+        /// player whose name caselessly exactly matches the given name. </summary>
         /// <returns> Last IP address if found, null if not. </returns>
         public static string FindIP(string name) {
             using (DataTable results = Query(name, "IP")) {
@@ -149,8 +149,8 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Retrieves the names of all players whose last IP address 
-        /// matches the given IP address. </summary>
+        /// <summary> Retrieves from the database the names of all players whose 
+        /// last IP address matches the given IP address. </summary>
         public static List<string> FindAccounts(string ip) {
             DataTable clones = Database.Fill("SELECT Name FROM Players WHERE IP=@0", ip);
             List<string> alts = new List<string>();

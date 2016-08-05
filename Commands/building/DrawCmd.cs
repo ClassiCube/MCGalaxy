@@ -41,8 +41,8 @@ namespace MCGalaxy.Commands.Building {
             // Validate the brush syntax is correct
             int offset = 0;
             BrushFactory factory = BrushFactory.Find(GetBrush(p, dArgs, ref offset));
-            Brush brush = ParseBrush(p, dArgs, offset, factory);
-            if (brush == null) return;
+            BrushArgs bArgs = GetBrushArgs(dArgs, offset);
+            if (!factory.Validate(bArgs)) return;
             
             Player.Message(p, PlaceMessage);
             p.MakeSelection(MarksCount, dArgs, DoDraw);
@@ -57,16 +57,13 @@ namespace MCGalaxy.Commands.Building {
             
             int offset = 0;
             BrushFactory factory = BrushFactory.Find(GetBrush(p, dArgs, ref offset));
-            Brush brush = ParseBrush(p, dArgs, offset, factory);
+            BrushArgs bArgs = GetBrushArgs(dArgs, offset);
+            Brush brush = factory.Construct(bArgs);
             return brush != null && DrawOp.DoDrawOp(dArgs.Op, brush, p, marks);
         }
         
         protected virtual string PlaceMessage {
             get { return "Place two blocks to determine the edges."; }
-        }
-        
-        protected virtual bool OnUse(Player p, string msg, string[] parts, ref DrawArgs dArgs) {
-            return true;
         }
         
         
@@ -104,8 +101,7 @@ namespace MCGalaxy.Commands.Building {
             return block;
         }
         
-        protected static Brush ParseBrush(Player p, DrawArgs dArgs,
-                                          int usedFromEnd, BrushFactory factory = null) {
+        protected static BrushArgs GetBrushArgs(DrawArgs dArgs, int usedFromEnd) {
             int end = dArgs.Message.Length;
             string brushMsg = "";
             for (int i = 0; i < usedFromEnd; i++) {
@@ -114,10 +110,8 @@ namespace MCGalaxy.Commands.Building {
             }
             
             if (end >= 0) brushMsg = dArgs.Message.Substring(0, end);
-            if (brushMsg == "") brushMsg = p.DefaultBrushArgs;
-            if (factory == null) factory = BrushFactory.Find(p.BrushName);
-            BrushArgs args = new BrushArgs(p, brushMsg, dArgs.Block, dArgs.ExtBlock);
-            return factory.Construct(args);
+            if (brushMsg == "") brushMsg = dArgs.Player.DefaultBrushArgs;
+            return new BrushArgs(dArgs.Player, brushMsg, dArgs.Block, dArgs.ExtBlock);
         }
         
         protected struct DrawArgs {
