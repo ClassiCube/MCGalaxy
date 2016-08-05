@@ -166,19 +166,18 @@ namespace MCGalaxy {
             int foundStart = tableSQLString.IndexOf("(") + 1;
             int foundLength = tableSQLString.LastIndexOf(")") - foundStart;
             tableSQLString = tableSQLString.Substring(foundStart, foundLength);
+            
             // Now we have everything inside the parenthisies.
             string[] column = tableSQLString.Split(',');
-            foreach (string col in column)
-            {
-                if (!col.ToUpper().StartsWith("PRIMARY KEY"))
-                {
+            foreach (string col in column) {
+                if (!col.ToUpper().StartsWith("PRIMARY KEY")) {
+                    bool autoInc = col.IndexOf("AUTOINCREMENT") >= 0 || col.IndexOf("AUTO_INCREMENT") >= 0;
                     string[] split = col.TrimStart('\n', '\r', '\t').Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     //Just to make it the same as the MySQL schema.
                     schema.Add(new string[] { split[0].Trim('`'), split[1].Trim('\t', '`'),
                                    ( split.Length > 2 ? (split[2].Trim('\t', '`').ToUpper() == "NOT" ? "NOT NULL" : "DEFAULT NULL") : ""),
                                    ( split.Length > 2 ? (split[split.Length - 2].Trim('\t', '`').ToUpper() == "PRIMARY" && split[split.Length - 1].Trim('\t', '`').ToUpper() == "KEY" ? "PRI" : "") : ""),
-                                   "NULL",
-                                   (split.Contains("AUTO_INCREMENT") || split.Contains("AUTOINCREMENT") ? "AUTO_INCREMENT" : "")});
+                                   "NULL", autoInc ? "AUTO_INCREMENT" : ""});
                 }
             }
             return schema;

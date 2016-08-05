@@ -16,13 +16,10 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Data;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using MCGalaxy.Games;
-using MCGalaxy.SQL;
 using Newtonsoft.Json;
 
 namespace MCGalaxy {
@@ -161,13 +158,17 @@ namespace MCGalaxy {
         
         public static string SendResponse(HttpListenerRequest request) {
             try {
-                string api = "";
-                API API = new API();
-                API.max_players = (int)Server.players;
-                API.players = Player.players.Select(mc => mc.name).ToArray();
-                API.chat = Player.Last50Chat.ToArray();
-                api = JsonConvert.SerializeObject(API, Formatting.Indented);
-                return api;
+                API data = new API();
+                data.max_players = (int)Server.players;
+                
+                Player[] players = PlayerInfo.Online.Items;
+                string[] names = new string[players.Length];
+                for (int i = 0; i < players.Length; i++)
+                    names[i] = players[i].name;
+                data.players = names;
+                
+                data.chat = Player.Last50Chat.ToArray();
+                return JsonConvert.SerializeObject(data, Formatting.Indented);
             } catch(Exception e) {
                 Logger.WriteError(e);
             }
@@ -177,19 +178,19 @@ namespace MCGalaxy {
         public static string WhoIsResponse(HttpListenerRequest request) {
             try {
                 string p = request.QueryString.Get("name");
-                if (p == null || p == "")
-                    return "Error";
-                var whois = new WhoWas(p);
-                Group grp = Group.Find(whois.rank);
-                whois.banned = grp != null && grp.Permission == LevelPermission.Banned;
+                if (p == null || p == "") return "Error";
                 
-                if (whois.banned) {
+                WhoWas data = new WhoWas(p);
+                Group grp = Group.Find(data.rank);
+                data.banned = grp != null && grp.Permission == LevelPermission.Banned;
+                
+                if (data.banned) {
                     string[] bandata = Ban.GetBanData(p);
-                    whois.banned_by = bandata[0];
-                    whois.ban_reason = bandata[1];
-                    whois.banned_time = bandata[2];
+                    data.banned_by = bandata[0];
+                    data.ban_reason = bandata[1];
+                    data.banned_time = bandata[2];
                 }
-                return JsonConvert.SerializeObject(whois, Formatting.Indented);
+                return JsonConvert.SerializeObject(data, Formatting.Indented);
             } catch(Exception e) {
                 Logger.WriteError(e);
             }

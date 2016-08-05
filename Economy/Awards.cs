@@ -91,7 +91,7 @@ namespace MCGalaxy {
             
             using (StreamWriter w = new StreamWriter("text/playerAwards.txt")) {
                 foreach (PlayerAward pA in PlayerAwards)
-                	w.WriteLine(pA.Name.ToLower() + " : " + string.Join(",", pA.Awards.ToArray()));
+                	w.WriteLine(pA.Name.ToLower() + " : " + pA.Awards.Join(","));
             }
         }
         #endregion

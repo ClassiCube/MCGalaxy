@@ -345,7 +345,7 @@ namespace MCGalaxy.Games
             }
 
             if (OnVoteStart != null)
-                OnVoteStart(votes.Keys.ToList().ToArray());
+            	OnVoteStart(GetVotedLevels().ToArray());
             map.ChatLevel("Vote for the next map! The vote ends in " + voteTime + " minute" + (voteTime == 1 ? "" : "s") +".");
             map.ChatLevel("Choices: " + str.Remove(0, 4));
 
@@ -353,8 +353,7 @@ namespace MCGalaxy.Games
             voteTimer.AutoReset = false;
             voteTimer.Elapsed += delegate
             {
-                try
-                {
+                try {
                     EndVote();
                     voteTimer.Dispose();
                 }
@@ -363,9 +362,16 @@ namespace MCGalaxy.Games
             voteTimer.Start();
             voteActive = true;
         }
+        
+        List<string> GetVotedLevels() {
+            var keys = votes.Keys;
+            List<string> names = new List<string>();
+            foreach (string key in keys) 
+                names.Add(key);
+            return names;
+        }
 
-        public void EndVote()
-        {
+        public void EndVote() {
             if (!voteActive) return;
 
             voteActive = false;

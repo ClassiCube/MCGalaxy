@@ -17,7 +17,6 @@
  */
 using System;
 using System.IO;
-using System.Linq;
 using MCGalaxy.Commands.CPE;
 using MCGalaxy.Commands.World;
 

@@ -17,11 +17,9 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
-namespace MCGalaxy.Games {
-    
+namespace MCGalaxy.Games {    
     public sealed partial class CountdownGame {
         
         public List<Player> players = new List<Player>();

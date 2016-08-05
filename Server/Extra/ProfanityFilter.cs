@@ -20,14 +20,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace MCGalaxy
-{
-    public static class ProfanityFilter
-    {
+namespace MCGalaxy {
+    public static class ProfanityFilter {
         private static Dictionary<string, string> RegexReduce;
         private static List<string> BadWords;
         public static void Init()
