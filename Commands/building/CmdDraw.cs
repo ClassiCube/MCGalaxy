@@ -43,20 +43,29 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
+            AdvDrawOp op = null;
             switch (dArgs.Mode) {
-                case DrawMode.cone: return new AdvConeDrawOp();
-                case DrawMode.hcone: return new AdvHollowConeDrawOp();
-                case DrawMode.icone: return new AdvConeDrawOp(true);
-                case DrawMode.hicone: return new AdvHollowConeDrawOp(true);
-                case DrawMode.pyramid: return new AdvPyramidDrawOp();
-                case DrawMode.hpyramid: return new AdvHollowPyramidDrawOp();
-                case DrawMode.ipyramid: return new AdvPyramidDrawOp(true);
-                case DrawMode.hipyramid: return new AdvHollowPyramidDrawOp(true);
-                case DrawMode.sphere: return new AdvSphereDrawOp();
-                case DrawMode.hsphere: return new AdvHollowSphereDrawOp();
-                case DrawMode.volcano: return new AdvVolcanoDrawOp();
-            }
-            Help(dArgs.Player); return null;
+                case DrawMode.cone: op = new AdvConeDrawOp(); break;
+                case DrawMode.hcone: op = new AdvHollowConeDrawOp(); break;
+                case DrawMode.icone: op = new AdvConeDrawOp(true); break;
+                case DrawMode.hicone: op = new AdvHollowConeDrawOp(true); break;
+                case DrawMode.pyramid: op = new AdvPyramidDrawOp(); break;
+                case DrawMode.hpyramid: op = new AdvHollowPyramidDrawOp(); break;
+                case DrawMode.ipyramid: op = new AdvPyramidDrawOp(true); break;
+                case DrawMode.hipyramid: op = new AdvHollowPyramidDrawOp(true); break;
+                case DrawMode.sphere: op = new AdvSphereDrawOp(); break;
+                case DrawMode.hsphere: op = new AdvHollowSphereDrawOp(); break;
+                case DrawMode.volcano: op = new AdvVolcanoDrawOp(); break;
+            }            
+            if (op == null) { Help(dArgs.Player); return null; }
+            
+            // Validate radius/height when the user first uses the command 
+            ushort radius = 0, height = 0;
+            string[] args = dArgs.Message.Split(' ');            
+            if ((op.UsesHeight && !CheckTwoArgs(dArgs.Player, ref radius, ref height, args)) ||
+                (!op.UsesHeight && !CheckOneArg(dArgs.Player, ref radius, args)))
+                return null;
+            return op;
         }
         
         protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
@@ -88,7 +97,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool CheckTwoArgs(Player p, ref ushort radius, ref ushort height, string[] parts) {
-            if (parts.Length < 3) { Help(p); return false; }
+            if (parts.Length < 3) { 
+                Player.Message(p, "You need to provide the radius and the height for the {0}.", parts[parts.Length - 1]); return false;
+            }
             if (!ushort.TryParse(parts[parts.Length - 3], out height) || height > 2000 ||
                 !ushort.TryParse(parts[parts.Length - 2], out radius) || radius > 2000) {
                 Player.Message(p, "Radius and height must be positive integers less than 2000."); return false;
@@ -97,7 +108,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool CheckOneArg(Player p, ref ushort radius, string[] parts) {
-            if (parts.Length < 2) { Help(p); return false; }
+            if (parts.Length < 2) { 
+                Player.Message(p, "You need to provide the radius for the {0}.", parts[parts.Length - 1]); return false;
+            }
             if (!ushort.TryParse(parts[parts.Length - 2], out radius) || radius > 2000) {
                 Player.Message(p, "Radius must be a positive integer less than 2000."); return false;
             }
