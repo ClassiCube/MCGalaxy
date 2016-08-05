@@ -30,17 +30,18 @@ namespace MCGalaxy.Commands.Building {
             get { return "Place a block for the centre, then another for the radius."; } 
         }
         
-        protected override void GetMarks(DrawArgs dArgs, Vec3S32[] m) {
+        protected override bool GetMarks(DrawArgs dArgs, Vec3S32[] m) {
             int dx = m[0].X - m[1].X, dy = m[0].Y - m[1].Y, dz = m[0].Z - m[1].Z;
             int horR = (int)Math.Sqrt(dx * dx + dz * dz), verR = Math.Abs(dy);
             
             Vec3S32 p0 = m[0];
             m[0] = new Vec3S32(p0.X - horR, p0.Y - verR, p0.Z - horR);
             m[1] = new Vec3S32(p0.X + horR, p0.Y + verR, p0.Z + horR);
+            return true;
         }
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
-            return new TorusDrawOp(); 
+            return new TorusDrawOp();
         }
         
         public override void Help(Player p) {

@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
-            switch (dArgs.mode) {
+            switch (dArgs.Mode) {
                 case DrawMode.cone: return new AdvConeDrawOp();
                 case DrawMode.hcone: return new AdvHollowConeDrawOp();
                 case DrawMode.icone: return new AdvConeDrawOp(true);
@@ -56,34 +56,32 @@ namespace MCGalaxy.Commands.Building {
                 case DrawMode.hsphere: return new AdvHollowSphereDrawOp();
                 case DrawMode.volcano: return new AdvVolcanoDrawOp();
             }
-            Help(p); return null;
+            Help(dArgs.Player); return null;
+        }
+        
+        protected override bool GetMarks(DrawArgs dArgs, Vec3S32[] m) {
+            ushort radius = 0, height = 0;
+            string[] args = dArgs.Message.Split(' ');
+            AdvDrawOp op = (AdvDrawOp)dArgs.Op;
+            
+            if ((op.UsesHeight && !CheckTwoArgs(dArgs.Player, ref radius, ref height, args)) ||
+                (!op.UsesHeight && !CheckOneArg(dArgs.Player, ref radius, args))) return false;
+            
+            Vec3S32 P = m[0];
+            m[0] = new Vec3S32(P.X - radius, P.Y, P.Z - radius);
+            m[1] = new Vec3S32(P.X + radius, P.Y, P.Z + radius);
+
+            if (op.UsesHeight) {
+                m[1].Y += height;
+            } else {
+                m[0].Y -= radius; m[1].Y += radius;
+            }
+            return true;
         }
         
         protected override BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
-            brushOffset = dArgs.Op.UsesHeight ? 3 : 2;
+            brushOffset = ((AdvDrawOp)dArgs.Op).UsesHeight ? 3 : 2;
             return BrushFactory.Find(p.BrushName);
-        }
-        
-        protected override bool DoDraw(Player p, Vec3S32[] m, object state, byte type, byte extType) {
-            
-            ushort radius = 0, height = 0;
-            string[] args = cpos.message.Split(' ');
-            if ((op.UsesHeight && !CheckTwoArgs(p, ref radius, ref height, args)) ||
-                (!op.UsesHeight && !CheckOneArg(p, ref radius, args))) return false;
-            
-            int brushOffset = op.UsesHeight ? 3 : 2;
-            Brush brush = ParseBrush(p, cpos, brushOffset);
-            if (brush == null) return false;
-            
-            Vec3S32[] marks = {
-                new Vec3S32(m[0].X - radius, m[0].Y, m[0].Z - radius),
-                new Vec3S32(m[0].X + radius, m[0].Y, m[0].Z + radius) };
-            if (op.UsesHeight) {
-                marks[1].Y += height;
-            } else {
-                marks[0].Y -= radius; marks[1].Y += radius;
-            }
-            return DrawOp.DoDrawOp(op, brush, p, marks);
         }
         
         bool CheckTwoArgs(Player p, ref ushort radius, ref ushort height, string[] parts) {

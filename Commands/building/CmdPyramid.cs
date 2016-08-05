@@ -32,16 +32,17 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
-        	if (m[0].Y != m[1].Y) {
-                Player.Message(p, "The two edges of the pyramid must be on the same level"); return null;
+            if (m[0].Y != m[1].Y) {
+                Player.Message(dArgs.Player, "The two edges of the pyramid must be on the same level");
+                return null;
             }
-        	
-            switch (dArgs.mode) {
+            
+            switch (dArgs.Mode) {
                 case DrawMode.hollow: return new PyramidHollowDrawOp();
                 case DrawMode.reverse: return new PyramidReverseDrawOp();
             }
             return new PyramidSolidDrawOp();
-		}
+        }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/pyramid [brush args] <mode>");

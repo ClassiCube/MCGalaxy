@@ -40,24 +40,24 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
         
-        protected override BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
-            brushOffset = dArgs.mode == DrawMode.normal ? 0 : 1;
-            if (dArgs.mode == DrawMode.solid) return BrushFactory.Find("normal");
-            if (dArgs.mode == DrawMode.holes) return BrushFactory.Find("checkered");
-            if (dArgs.mode == DrawMode.random) return BrushFactory.Find("random");
-            return BrushFactory.Find(p.BrushName);
-        }
-        
         protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
-            switch (dArgs.mode) {
+            switch (dArgs.Mode) {
                 case DrawMode.hollow: return new CuboidHollowsDrawOp();
                 case DrawMode.walls: return new CuboidWallsDrawOp();
                 case DrawMode.holes: return new CuboidDrawOp();
                 case DrawMode.wire: return new CuboidWireframeDrawOp();
                 case DrawMode.random: return new CuboidDrawOp();
             }
-        	return new CuboidDrawOp();
-		}
+            return new CuboidDrawOp();
+        }
+        
+        protected override BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
+            brushOffset = dArgs.Mode == DrawMode.normal ? 0 : 1;
+            if (dArgs.Mode == DrawMode.solid) return BrushFactory.Find("normal");
+            if (dArgs.Mode == DrawMode.holes) return BrushFactory.Find("checkered");
+            if (dArgs.Mode == DrawMode.random) return BrushFactory.Find("random");
+            return BrushFactory.Find(p.BrushName);
+        }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/cuboid [brush args] <mode>");

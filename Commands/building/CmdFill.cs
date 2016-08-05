@@ -50,26 +50,26 @@ namespace MCGalaxy.Commands.Building {
             if (oldType == Block.custom_block)
                 oldExtType = p.level.GetExtTile(x, y, z);
 
-            cpos.block = type; cpos.extBlock = extType;
+            cpos.Block = type; cpos.ExtBlock = extType;
             if (!Block.canPlace(p, oldType) && !Block.BuildIn(oldType)) { 
                 Formatter.MessageBlock(p, "fill over ", oldType); return false;
             }
 
             SparseBitSet bits = new SparseBitSet(p.level.Width, p.level.Height, p.level.Length);
             List<int> buffer = new List<int>(), origins = new List<int>();
-            FloodFill(p, x, y, z, oldType, oldExtType, cpos.mode, bits, buffer, origins, 0);
+            FloodFill(p, x, y, z, oldType, oldExtType, cpos.Mode, bits, buffer, origins, 0);
 
             int totalFill = origins.Count;
             for (int i = 0; i < totalFill; i++) {
                 int pos = origins[i];
                 p.level.IntToPos(pos, out x, out y, out z);
-                FloodFill(p, x, y, z, oldType, oldExtType, cpos.mode, bits, buffer, origins, 0);
+                FloodFill(p, x, y, z, oldType, oldExtType, cpos.Mode, bits, buffer, origins, 0);
                 totalFill = origins.Count;
             }
             
             FillDrawOp op = new FillDrawOp();
             op.Positions = buffer;
-            int brushOffset = cpos.mode == DrawMode.normal ? 0 : 1;
+            int brushOffset = cpos.Mode == DrawMode.normal ? 0 : 1;
             Brush brush = ParseBrush(p, cpos, brushOffset);
             if (brush == null || !DrawOp.DoDrawOp(op, brush, p, marks)) return false;
             bits.Clear();

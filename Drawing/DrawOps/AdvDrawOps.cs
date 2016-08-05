@@ -26,8 +26,8 @@ using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {    
     public abstract class AdvDrawOp : DrawOp {
-		public int Radius { get { return (Max.X - Min.X) / 2; } }
-		
+        public int Radius { get { return (Max.X - Min.X) / 2; } }
+        
         public bool Invert;
         public virtual bool UsesHeight { get { return true; } }
     }

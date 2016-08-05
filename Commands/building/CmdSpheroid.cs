@@ -28,13 +28,13 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
-            brushOffset = dArgs.mode == DrawMode.normal ? 0 : 1;
-            if (dArgs.mode == DrawMode.solid) return BrushFactory.Find("normal");
+            brushOffset = dArgs.Mode == DrawMode.normal ? 0 : 1;
+            if (dArgs.Mode == DrawMode.solid) return BrushFactory.Find("normal");
             return BrushFactory.Find(p.BrushName);
         }
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
-            switch (dArgs.mode) {
+            switch (dArgs.Mode) {
                 case DrawMode.hollow: return new EllipsoidHollowDrawOp();
                 case DrawMode.vertical: return new CylinderDrawOp();
             }

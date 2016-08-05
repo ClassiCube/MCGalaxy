@@ -31,8 +31,8 @@ namespace MCGalaxy.Commands.Building {
             message = message.ToLower();
             string[] parts = message.Split(' ');
             DrawArgs cpos = default(DrawArgs);
-            cpos.message = message;
-            cpos.mode = GetMode(parts);
+            cpos.Message = message;
+            cpos.Mode = GetMode(parts);
             OnUse(p, message, parts, ref cpos);
             
             Player.Message(p, PlaceMessage);
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Building {
         protected virtual bool DoDraw(Player p, Vec3S32[] marks, 
                                       object state, byte block, byte extBlock) {
             DrawArgs dArgs = (DrawArgs)state;
-            dArgs.block = block; dArgs.extBlock = extBlock;        
+            dArgs.Block = block; dArgs.ExtBlock = extBlock;
             
             DrawOp op = GetDrawOp(dArgs, marks);
             if (op == null) return false;
@@ -63,12 +63,12 @@ namespace MCGalaxy.Commands.Building {
         protected virtual void OnUse(Player p, string msg, string[] parts, ref DrawArgs cpos) { }
         
         
-        protected virtual DrawMode GetMode(string[] parts) { return DrawMode.Normal; }
+        protected virtual DrawMode GetMode(string[] parts) { return DrawMode.normal; }
         
-        protected virtual void GetMarks(DrawArgs dArgs, Vec3S32[] m) { return m; }
+        protected virtual bool GetMarks(DrawArgs dArgs, Vec3S32[] m) { return true; }
         
         protected virtual BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
-            brushOffset = dArgs.mode == DrawMode.normal ? 0 : 1;
+            brushOffset = dArgs.Mode == DrawMode.normal ? 0 : 1;
             return BrushFactory.Find(p.BrushName);
         }
         
@@ -99,26 +99,28 @@ namespace MCGalaxy.Commands.Building {
         
         protected static Brush ParseBrush(Player p, DrawArgs dArgs, 
                                         int usedFromEnd, BrushFactory factory = null) {
-            int end = dArgs.message.Length;
+            int end = dArgs.Message.Length;
             string brushMsg = "";
             for (int i = 0; i < usedFromEnd; i++) {
-                end = dArgs.message.LastIndexOf(' ', end - 1);
+                end = dArgs.Message.LastIndexOf(' ', end - 1);
                 if (end == -1) break;
             }
             
-            if (end >= 0) brushMsg = dArgs.message.Substring(0, end);
+            if (end >= 0) brushMsg = dArgs.Message.Substring(0, end);
             if (brushMsg == "") brushMsg = p.DefaultBrushArgs;
             if (factory == null) factory = BrushFactory.Find(p.BrushName);
-            BrushArgs args = new BrushArgs(p, brushMsg, dArgs.block, dArgs.extBlock);
+            BrushArgs args = new BrushArgs(p, brushMsg, dArgs.Block, dArgs.ExtBlock);
             return factory.Construct(args);
         }
         
         protected struct DrawArgs {
-            public DrawMode mode;
-            public byte block, extBlock;
-            public object data;
-            public string message;
+            public DrawMode Mode;
+            public byte Block, ExtBlock;        
+            public string Message;
+            
+            public object Data;
             public DrawOp Op;
+            public Player Player;
         }
 
         protected enum DrawMode {
