@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (!Directory.Exists("extra/passwords"))
                 Directory.CreateDirectory("extra/passwords");
-            if (p.Rank < Server.verifyadminsrank) {
+            if (p != null && p.Rank < Server.verifyadminsrank) {
                 MessageNeedMinPerm(p, "verify or set a password", (int)Server.verifyadminsrank); return;
             }
             if (!Server.verifyadmins) { Player.Message(p, "Admin verficiation is not currently enabled."); return; }
