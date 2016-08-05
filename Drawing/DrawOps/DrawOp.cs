@@ -96,7 +96,7 @@ namespace MCGalaxy.Drawing.Ops {
             Coords.X = x; Coords.Y = y; Coords.Z = z;
             Coords.Block = brush.NextBlock(this);
             
-            if (Coords.Block != Block.Zero)
+            if (Coords.Block == Block.custom_block)
                 Coords.ExtBlock = brush.NextExtBlock(this);
             return Coords;
         }

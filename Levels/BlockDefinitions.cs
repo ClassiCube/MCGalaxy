@@ -244,10 +244,11 @@ namespace MCGalaxy {
             // therefore raw = 64log2(speed) + 128
             byte rawSpeed = (byte)(64 * Math.Log(def.Speed, 2) + 128);
             buffer[index++] = def.BlockID;
-            Encoding.ASCII.GetBytes(def.Name.PadRight(64), 0, 64, buffer, index);
-            index += 64;
+            NetUtils.WriteAscii(def.Name, buffer, index);
+            index += 64;      
             buffer[index++] = def.CollideType;
             buffer[index++] = rawSpeed;
+            
             buffer[index++] = def.TopTex;
             if (uniqueSideTexs) {
                 buffer[index++] = def.LeftTex;

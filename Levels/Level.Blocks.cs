@@ -178,12 +178,12 @@ namespace MCGalaxy {
             if (p.Rank < LevelPermission.Admin) {
             	bool foundDel = FindZones(p, x, y, z, ref inZone, ref AllowBuild, ref Owners);
                 if (!AllowBuild) {
-                    if (p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
+                    if (p.ZoneSpam <= DateTime.UtcNow) {
                         if (Owners != "")
                             Player.Message(p, "This zone belongs to &b" + Owners.Remove(0, 2) + ".");
                         else
                             Player.Message(p, "This zone belongs to no one.");
-                        p.ZoneSpam = DateTime.UtcNow;
+                        p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
                     }
                     return false;
                 }
@@ -222,17 +222,17 @@ namespace MCGalaxy {
         
         bool CheckRank(Player p, bool AllowBuild, bool inZone) {
             if (p.Rank < permissionbuild && (!inZone || !AllowBuild)) {
-                if (p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
+                if (p.ZoneSpam <= DateTime.UtcNow) {
                     Player.Message(p, "Must be at least " + PermissionToName(permissionbuild) + " to build here");
-                    p.ZoneSpam = DateTime.UtcNow;
+                    p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
                 }
                 return false;
             }
             
             if (p.Rank > perbuildmax && (!inZone || !AllowBuild) && !p.group.CanExecute("perbuildmax")) {
-                if (p.ZoneSpam.AddSeconds(2) <= DateTime.UtcNow) {
+                if (p.ZoneSpam <= DateTime.UtcNow) {
                     Player.Message(p, "Your rank must be " + perbuildmax + " or lower to build here!");
-                    p.ZoneSpam = DateTime.UtcNow;
+                    p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
                 }
                 return false;
             }
