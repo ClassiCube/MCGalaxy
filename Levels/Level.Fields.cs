@@ -166,8 +166,6 @@ namespace MCGalaxy {
             }
         }
         int Physicsint;
-        public bool GrassDestroy = true;
-        public bool GrassGrow = true;
         public bool physicschanged { get { return ListCheck.Count > 0; } }
         public int currentUndo;
 
@@ -185,6 +183,8 @@ namespace MCGalaxy {
         public bool growTrees;
         [ConfigBool("Animal AI", "Physics", null, true)]
         public bool ai = true;
+        [ConfigBool("GrassGrowth", "Physics", null, true)]
+        public bool GrassGrow = true;
         
         public int lastCheck, lastUpdate;
         internal FastList<Check> ListCheck = new FastList<Check>(); //A list of blocks that need to be updated

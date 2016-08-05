@@ -140,7 +140,8 @@ namespace MCGalaxy {
                 changed = ChangeBlock(x, y, z, Block.air, 0);
             }
 
-            if ((level.physics == 0 || level.physics == 5) && level.GetTile(x, (ushort)(y - 1), z) == Block.dirt)
+            bool autoDelete = level.GrassGrow && (level.physics == 0 || level.physics == 5);
+            if (autoDelete && level.GetTile(x, (ushort)(y - 1), z) == Block.dirt)
                 ChangeBlock(x, (ushort)(y - 1), z, Block.grass, 0);
             return changed;
         }
@@ -166,7 +167,7 @@ namespace MCGalaxy {
             if (!level.DoBlockchange(this, x, y, z, block, extBlock)) return false;
             Player.GlobalBlockchange(level, x, y, z, block, extBlock);
             
-            if (level.GetTile(x, (ushort)(y - 1), z) == Block.grass && level.GrassDestroy
+            if (level.GrassGrow && level.GetTile(x, (ushort)(y - 1), z) == Block.grass
                 && !Block.LightPass(block, extBlock, level.CustomBlockDefs)) {
                 level.Blockchange(this, x, (ushort)(y - 1), z, Block.dirt);
             }
