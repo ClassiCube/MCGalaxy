@@ -83,20 +83,22 @@ namespace MCGalaxy {
 
                     sql.WriteLine();
                     sql.Write("(");
-                    for (int col = 0; col < row.ItemArray.Length; col++) {
+                    for (int col = 0; col < data.Columns.Count; col++) {
                         //The values themselves can be integers or strings, or null
-                        Type eleType = allCols[col].DataType;
+                        Type type = allCols[col].DataType;
                         if (row.IsNull(col)) {
                             sql.Write("NULL");
-                        } else if (eleType.Name.Equals("DateTime")) { // special format
-                            DateTime dt = row.Field<DateTime>(col);
-                            sql.Write("'{0:yyyy-MM-dd HH:mm:ss.ffff}'", dt);
-                        } else if (eleType.Name.Equals("Boolean")) {
-                            sql.Write(row.Field<Boolean>(col) ? "1" : "0");
-                        } else if (eleType.Name.Equals("String")) { // Requires ''
-                            sql.Write("'{0}'", row.Field<string>(col));
+                        } else if (type == typeof(DateTime)) { // special format
+                        	sql.Write("'{0:yyyy-MM-dd HH:mm:ss.ffff}'", (DateTime)row[col]);
+                        } else if (type == typeof(bool)) {
+                        	sql.Write((bool)row[col] ? "1" : "0");
+                        } else if (type == typeof(string)) { // Requires ''
+                        	string value = row[col].ToString();
+                        	if (value.IndexOf(' ') >= 0)
+                        	    value = value.Replace("'", "''");
+                        	sql.Write("'{0}'", value);
                         } else {
-                            sql.Write(row.Field<Object>(col)); // We assume all other data is left as-is
+                        	sql.Write(row[col]); // We assume all other data is left as-is
                             //This includes numbers, blobs, etc.  (As well as objects, but we don't save them into the database)
                         }
                         sql.Write((col < row.ItemArray.Length - 1 ? ", " : ");"));
@@ -119,7 +121,7 @@ namespace MCGalaxy {
                         //Save the info contained to file
                         List<string> tmp = new List<string>();
                         for (int col = 0; col < schema.Columns.Count; col++)
-                            tmp.Add(row.Field<string>(col));
+                            tmp.Add(row[col].ToString());
                         
                         rowParams = tmp.ToArray();
                         rowParams[2] = (rowParams[2].ToLower().Equals("no") ? "NOT " : "DEFAULT ") + "NULL";
@@ -148,7 +150,7 @@ namespace MCGalaxy {
                 {
                     //just print out the data in the table.
                     foreach (DataRow row in tableSQL.Rows) {
-                        string tableSQLString = row.Field<string>(0);
+                    	string tableSQLString = row[0].ToString();
                         sql.WriteLine(tableSQLString.Replace(" " + tableName, " `" + tableName + "`").Replace("CREATE TABLE `" + tableName + "`", "CREATE TABLE IF NOT EXISTS `" + tableName + "`") + ";");
                         //We parse this ourselves to find the actual types.
                         tableSchema = getSchema(tableSQLString);
@@ -188,7 +190,7 @@ namespace MCGalaxy {
             string syntax = Server.useMySQL ? "SHOW TABLES" : "SELECT * FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'";
             using (DataTable tables = Database.Fill(syntax)) {
                 foreach (DataRow row in tables.Rows) {
-                    string tableName = row.Field<string>((Server.useMySQL ? 0 : 1));
+            		string tableName = row[Server.useMySQL ? 0 : 1].ToString();
                     tableNames.Add(tableName);
                 }
             }
