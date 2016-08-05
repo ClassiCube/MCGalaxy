@@ -27,13 +27,13 @@ namespace MCGalaxy.Commands.Building {
             get { return new[] { new CommandAlias("eh", null, "hollow"), new CommandAlias("cylinder", null, "vertical") }; }
         }
         
-        protected override BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
-            brushOffset = dArgs.Mode == DrawMode.normal ? 0 : 1;
-            if (dArgs.Mode == DrawMode.solid) return BrushFactory.Find("normal");
-            return BrushFactory.Find(p.BrushName);
+        protected override string GetBrush(Player p, DrawArgs dArgs, ref int offset) {
+            offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
+            if (dArgs.Mode == DrawMode.solid) return "normal";
+            return p.BrushName;
         }
         
-        protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             switch (dArgs.Mode) {
                 case DrawMode.hollow: return new EllipsoidHollowDrawOp();
                 case DrawMode.vertical: return new CylinderDrawOp();

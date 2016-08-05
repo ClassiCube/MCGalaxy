@@ -30,50 +30,51 @@ namespace MCGalaxy.Commands.Building {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             message = message.ToLower();
             string[] parts = message.Split(' ');
-            DrawArgs cpos = default(DrawArgs);
-            cpos.Message = message;
-            cpos.Mode = GetMode(parts);
-            OnUse(p, message, parts, ref cpos);
             
+            DrawArgs dArgs = default(DrawArgs);
+            dArgs.Message = message;
+            dArgs.Mode = GetMode(parts);
+            dArgs.Op = GetDrawOp(dArgs);
+            if (dArgs.Op == null) return;
+            
+            OnUse(p, message, parts, ref dArgs);        
             Player.Message(p, PlaceMessage);
-            p.MakeSelection(MarksCount, cpos, DoDraw);
+            p.MakeSelection(MarksCount, dArgs, DoDraw);
         }
         
         protected virtual bool DoDraw(Player p, Vec3S32[] marks, 
                                       object state, byte block, byte extBlock) {
             DrawArgs dArgs = (DrawArgs)state;
             dArgs.Block = block; dArgs.ExtBlock = extBlock;
+            dArgs.Player = p;
             
-            DrawOp op = GetDrawOp(dArgs, marks);
-            if (op == null) return false;
-            dArgs.Op = op;
-            GetMarks(dArgs, marks);
+            GetMarks(dArgs, ref marks);
+            if (marks == null) return false;
             
             int offset = 0;
-            BrushFactory factory = GetBrush(p, dArgs, ref offset);
+            BrushFactory factory = BrushFactory.Find(GetBrush(p, dArgs, ref offset));
             Brush brush = ParseBrush(p, dArgs, offset, factory);
-            dArgs.Op = null;
-            return brush != null && DrawOp.DoDrawOp(op, brush, p, marks);
+            return brush != null && DrawOp.DoDrawOp(dArgs.Op, brush, p, marks);
         }
         
         protected virtual string PlaceMessage { 
             get { return "Place two blocks to determine the edges."; } 
         }
         
-        protected virtual void OnUse(Player p, string msg, string[] parts, ref DrawArgs cpos) { }
+        protected virtual void OnUse(Player p, string msg, string[] parts, ref DrawArgs dArgs) { }
         
         
         protected virtual DrawMode GetMode(string[] parts) { return DrawMode.normal; }
         
-        protected virtual bool GetMarks(DrawArgs dArgs, Vec3S32[] m) { return true; }
+        protected abstract DrawOp GetDrawOp(DrawArgs dArgs);
         
-        protected virtual BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
-            brushOffset = dArgs.Mode == DrawMode.normal ? 0 : 1;
-            return BrushFactory.Find(p.BrushName);
+        protected virtual void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) { }
+        
+        protected virtual string GetBrush(Player p, DrawArgs dArgs, ref int offset) {
+            offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
+            return p.BrushName;
         }
-        
-        protected abstract DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m);
-        
+
         
         internal static int GetBlock(Player p, string msg, out byte extBlock, bool checkPlacePerm = true) {
             byte block = Block.Byte(msg);
@@ -118,7 +119,6 @@ namespace MCGalaxy.Commands.Building {
             public byte Block, ExtBlock;        
             public string Message;
             
-            public object Data;
             public DrawOp Op;
             public Player Player;
         }

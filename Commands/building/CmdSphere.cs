@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
         
-        protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             switch (dArgs.Mode) {
                 case DrawMode.hollow: return new AdvHollowSphereDrawOp();
                 case DrawMode.circle: return new EllipsoidDrawOp();
@@ -48,17 +48,16 @@ namespace MCGalaxy.Commands.Building {
             return new AdvSphereDrawOp();
         }
         
-        protected override bool GetMarks(DrawArgs dArgs, Vec3S32[] m) {
+        protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
             Vec3S32 p0 = m[0];
             Vec3S32 radius = GetRadius(dArgs.Mode, m);
             m[0] = p0 - radius; m[1] = p0 + radius;
-            return true;
         }
         
-        protected override BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
-            brushOffset = dArgs.Mode == DrawMode.normal ? 0 : 1;
-            if (dArgs.Mode == DrawMode.solid) return BrushFactory.Find("normal");
-            return BrushFactory.Find(p.BrushName);
+        protected override string GetBrush(Player p, DrawArgs dArgs, ref int offset) {
+            offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
+            if (dArgs.Mode == DrawMode.solid) return "normal";
+            return p.BrushName;
         }
         
         static Vec3S32 GetRadius(DrawMode mode, Vec3S32[] m) {

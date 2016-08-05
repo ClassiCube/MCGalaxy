@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
         
-        protected override DrawOp GetDrawOp(DrawArgs dArg, Vec3S32[] m) {
+        protected override DrawOp GetDrawOp(DrawArgs dArg) {
             return null;
         }
         
@@ -69,8 +69,8 @@ namespace MCGalaxy.Commands.Building {
             
             FillDrawOp op = new FillDrawOp();
             op.Positions = buffer;
-            int brushOffset = cpos.Mode == DrawMode.normal ? 0 : 1;
-            Brush brush = ParseBrush(p, cpos, brushOffset);
+            int offset = cpos.Mode == DrawMode.normal ? 0 : 1;
+            Brush brush = ParseBrush(p, cpos, offset);
             if (brush == null || !DrawOp.DoDrawOp(op, brush, p, marks)) return false;
             bits.Clear();
             op.Positions = null;

@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
         
-        protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             switch (dArgs.Mode) {
                 case DrawMode.hollow: return new CuboidHollowsDrawOp();
                 case DrawMode.walls: return new CuboidWallsDrawOp();
@@ -51,12 +51,12 @@ namespace MCGalaxy.Commands.Building {
             return new CuboidDrawOp();
         }
         
-        protected override BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
-            brushOffset = dArgs.Mode == DrawMode.normal ? 0 : 1;
-            if (dArgs.Mode == DrawMode.solid) return BrushFactory.Find("normal");
-            if (dArgs.Mode == DrawMode.holes) return BrushFactory.Find("checkered");
-            if (dArgs.Mode == DrawMode.random) return BrushFactory.Find("random");
-            return BrushFactory.Find(p.BrushName);
+        protected override string GetBrush(Player p, DrawArgs dArgs, ref int offset) {
+            offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
+            if (dArgs.Mode == DrawMode.solid) return "normal";
+            if (dArgs.Mode == DrawMode.holes) return "checkered";
+            if (dArgs.Mode == DrawMode.random) return "random";
+            return p.BrushName;
         }
         
         public override void Help(Player p) {

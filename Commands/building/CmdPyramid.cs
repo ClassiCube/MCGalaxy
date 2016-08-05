@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using MCGalaxy.Drawing.Ops;
 
@@ -31,12 +31,7 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
         
-        protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
-            if (m[0].Y != m[1].Y) {
-                Player.Message(dArgs.Player, "The two edges of the pyramid must be on the same level");
-                return null;
-            }
-            
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             switch (dArgs.Mode) {
                 case DrawMode.hollow: return new PyramidHollowDrawOp();
                 case DrawMode.reverse: return new PyramidReverseDrawOp();
@@ -44,11 +39,17 @@ namespace MCGalaxy.Commands.Building {
             return new PyramidSolidDrawOp();
         }
         
+        protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
+            if (m[0].Y == m[1].Y) return;
+            Player.Message(dArgs.Player, "The two corners of the pyramid must be on the same level");
+            m = null;
+        }
+        
         public override void Help(Player p) {
             Player.Message(p, "%T/pyramid [brush args] <mode>");
             Player.Message(p, "%HDraws a square pyramid, using two points for the base.");
             Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
-            Player.Message(p, "   %HModes: &fsolid/hollow/reverse");            
+            Player.Message(p, "   %HModes: &fsolid/hollow/reverse");
         }
     }
 }

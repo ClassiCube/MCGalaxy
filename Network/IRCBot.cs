@@ -34,12 +34,14 @@ namespace MCGalaxy {
         string nick, server;
         bool reset = false;
         byte retries = 0;
+        
         Dictionary<string, List<string>> users = new Dictionary<string, List<string>>();
         static char[] trimChars = { ' ' };
         ConnectionArgs args;
+        DateTime lastWho;
         
         public IRCBot() {
-            UpdateState();         
+            UpdateState();
             if (!Server.irc) return;
             connection = new Connection(new UTF8Encoding(false), args);
             LoadBannedCommands();
@@ -257,20 +259,18 @@ namespace MCGalaxy {
             }
 
             Command cmd = Command.all.Find(cmdName);
-            if (cmd != null) {
-                Server.s.Log("IRC Command: /" + message + " (by " + user.Nick + ")");
-                string args = parts.Length > 1 ? parts[1] : "";
-                Player p = MakeIRCPlayer(user.Nick);
-                
-                try {
-                    if (!p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return; }
-                    cmd.Use(p, args);
-                } catch (Exception e) {
-                    Pm(user.Nick, "CMD Error: " + e.ToString());
-                }
+            if (cmd == null) { Pm(user.Nick, "Unknown command!"); return; }
+            
+            Server.s.Log("IRC Command: /" + message + " (by " + user.Nick + ")");
+            string args = parts.Length > 1 ? parts[1] : "";
+            Player p = MakeIRCPlayer(user.Nick);
+            
+            try {
+                if (!p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return; }
+                cmd.Use(p, args);
+            } catch (Exception ex) {
+                Pm(user.Nick, "CMD Error: " + ex);
             }
-            else
-                Pm(user.Nick, "Unknown command!");
         }
 
         void Listener_OnPublic(UserInfo user, string channel, string message) {
@@ -290,41 +290,46 @@ namespace MCGalaxy {
                 }
             }
             
-            if (ircCmd == ".x") {
-                string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
-                string cmdArgs = parts.Length > 2 ? parts[2] : "";
-                Command.Search(ref cmdName, ref cmdArgs);
-                
-                string error;
-                if (!CheckIRCCommand(user, cmdName, channel, out error)) {
-                    if (error != null) Say(error, opchat);
-                    return;
-                }
-                
-                Command cmd = Command.all.Find(cmdName);
-                if (cmdName != "" && cmd != null) {
-                    Server.s.Log("IRC Command: /" + message.Replace(".x ", "") + " (by " + user.Nick + ")");
-                    string nick = opchat ? "#@private@#" : "#@public@#";
-                    Player p = MakeIRCPlayer(nick);
-                    
-                    try {
-                        if (!p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return; }
-                        cmd.Use(p, cmdArgs);
-                    } catch (Exception ex) {
-                        Say("CMD Error: " + ex, opchat);
-                    }
-                } else {
-                    Say("Unknown command!", opchat);
-                }
-            }
+            if (ircCmd == ".x" && !HandlePublicCommand(user, channel, message, parts, opchat)) return;
 
             if (channel.CaselessEq(opchannel)) {
                 Server.s.Log(String.Format("(OPs): [IRC] {0}: {1}", user.Nick, message));
-                Chat.GlobalMessageOps(String.Format("To Ops &f-%I[IRC] {0}&f- {1}", user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
+                Chat.GlobalMessageOps(String.Format("To Ops &f-%I[IRC] {0}&f- {1}", user.Nick, 
+                                                    Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
             } else {
                 Server.s.Log(String.Format("[IRC] {0}: {1}", user.Nick, message));
-                Player.GlobalIRCMessage(String.Format("%I[IRC] {0}: &f{1}", user.Nick, Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
+                Player.GlobalIRCMessage(String.Format("%I[IRC] {0}: &f{1}", user.Nick, 
+                                                      Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
             }
+        }
+        
+        bool HandlePublicCommand(UserInfo user, string channel, string message,
+                                 string[] parts, bool opchat) {
+            string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
+            string cmdArgs = parts.Length > 2 ? parts[2] : "";
+            Command.Search(ref cmdName, ref cmdArgs);
+            
+            string error;
+            if (!CheckIRCCommand(user, cmdName, channel, out error)) {
+                if (error != null) Say(error, opchat);
+                return false;
+            }
+            
+            Command cmd = Command.all.Find(cmdName);
+            if (cmdName == "" || cmd == null) {
+                Say("Unknown command!", opchat); return false;
+            }
+            Server.s.Log("IRC Command: /" + message.Substring(3) + " (by " + user.Nick + ")");
+            string nick = opchat ? "#@private@#" : "#@public@#";
+            Player p = MakeIRCPlayer(nick);
+            
+            try {
+                if (!p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return false; }
+                cmd.Use(p, cmdArgs);
+            } catch (Exception ex) {
+                Say("CMD Error: " + ex, opchat);
+            }
+            return true;
         }
 
         bool CheckIRCCommand(UserInfo user, string cmdName, string channel, out string error) {

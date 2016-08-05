@@ -26,11 +26,14 @@ namespace MCGalaxy.Commands.Building {
         protected override string PlaceMessage { get { return "Place two blocks to determine the endpoints."; } }
 
         protected override void OnUse(Player p, string msg, string[] parts, ref DrawArgs dArgs) {
+            LineDrawOp line = (LineDrawOp)dArgs.Op;
+            line.WallsMode = dArgs.Mode == DrawMode.walls;
             if (parts.Length < 2 || dArgs.Mode == DrawMode.normal) return;
+            
             string arg = parts[parts.Length - 1];
             ushort len;
             if (ushort.TryParse(arg, out len))
-                dArgs.Data = len;
+                line.MaxLength = len;
         }
         
         protected override DrawMode GetMode(string[] parts) {
@@ -53,8 +56,12 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
         
-        protected override bool GetMarks(DrawArgs dArgs, Vec3S32[] m) {
-            if (dArgs.Mode != DrawMode.straight) return true;
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
+            return new LineDrawOp();
+        }
+        
+        protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
+            if (dArgs.Mode != DrawMode.straight) return;
             int dx = Math.Abs(m[0].X - m[1].X), dy = Math.Abs(m[0].Y - m[1].Y), dz = Math.Abs(m[0].Z - m[1].Z);
 
             if (dx > dy && dx > dz) {
@@ -64,17 +71,14 @@ namespace MCGalaxy.Commands.Building {
             } else if (dz > dy && dz > dx) {
                 m[1].X = m[0].X; m[1].Y = m[0].Y;
             }
-            return true;
         }
         
-        protected override BrushFactory GetBrush(Player p, DrawArgs dArgs, ref int brushOffset) {
-            brushOffset = dArgs.Mode == DrawMode.normal ? 0 : 1;
-            if (dArgs.Data != null) brushOffset++;
-            return BrushFactory.Find(p.BrushName);
-        }
-        
-        protected override DrawOp GetDrawOp(DrawArgs dArg, Vec3S32[] m) {
-            return new LineDrawOp();
+        protected override string GetBrush(Player p, DrawArgs dArgs, ref int offset) {
+            LineDrawOp line = (LineDrawOp)dArgs.Op;
+            offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
+            
+            if (line.MaxLength != int.MaxValue) offset++;
+            return p.BrushName;
         }
         
         public override void Help(Player p) {

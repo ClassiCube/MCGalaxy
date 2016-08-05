@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Building {
             get { return "Place three blocks to determine the edges."; }
         }
         
-        protected override DrawOp GetDrawOp(DrawArgs dArgs, Vec3S32[] m) {
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             return new TriangleDrawOp(); 
         }
         
