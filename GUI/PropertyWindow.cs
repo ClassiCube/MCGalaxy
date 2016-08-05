@@ -604,10 +604,12 @@ namespace MCGalaxy.Gui {
             Server.dollarNames = chk17Dollar.Checked;
             //Server.useWhitelist = ; //We don't have a setting for this?
             Server.moneys = txtMoneys.Text;
-            Server.osPerbuildDefault = Group.GroupList.Find(grp => grp.name == cmbOsMap.SelectedItem.ToString()).Permission;
-            	
-            Server.opchatperm = Group.GroupList.Find(grp => grp.name == cmbOpChat.SelectedItem.ToString()).Permission;
-            Server.adminchatperm = Group.GroupList.Find(grp => grp.name == cmbAdminChat.SelectedItem.ToString()).Permission;
+            
+            Server.osPerbuildDefault = Group.Find(cmbOsMap.SelectedItem.ToString()).Permission;            	
+            Server.opchatperm = Group.Find(cmbOpChat.SelectedItem.ToString()).Permission;
+            Server.adminchatperm = Group.Find(cmbAdminChat.SelectedItem.ToString()).Permission;
+            Server.afkkickperm = Group.Find(cmbAFKKickPerm.SelectedItem.ToString()).Permission;
+            
             Server.logbeat = chkLogBeat.Checked;
             Server.forceCuboid = chkForceCuboid.Checked;
             Server.profanityFilter = chkProfanityFilter.Checked;

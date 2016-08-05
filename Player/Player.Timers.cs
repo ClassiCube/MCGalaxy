@@ -95,6 +95,7 @@ namespace MCGalaxy {
         void CheckTimerElapsed(object sender, ElapsedEventArgs e) {
             if (name == "") return;
             SendRaw(Opcode.Ping);
+            Server.s.Log("CALLBACK");
             if (Server.afkminutes <= 0) return;
             
             if (IsAfk) {

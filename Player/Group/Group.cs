@@ -186,7 +186,7 @@ namespace MCGalaxy {
         static void MapName(ref string name) {
             if (name == "adv") name = "advbuilder";
             if (name == "op") name = "operator";
-            if (name == "super" || (name == "admin" && !Group.Exists("admin"))) name = "superop";
+            if (name == "super" || (name == "admin" && !Exists("admin"))) name = "superop";
             if (name == "noone") name = "nobody";
         }
         
