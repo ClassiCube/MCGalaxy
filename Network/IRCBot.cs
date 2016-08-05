@@ -38,7 +38,7 @@ namespace MCGalaxy {
         Dictionary<string, List<string>> users = new Dictionary<string, List<string>>();
         static char[] trimChars = { ' ' };
         ConnectionArgs args;
-        DateTime lastWho;
+        DateTime lastWho, lastOpWho;
         
         public IRCBot() {
             UpdateState();
@@ -282,12 +282,18 @@ namespace MCGalaxy {
             message = CP437Reader.ConvertToRaw(message);
             string[] parts = message.SplitSpaces(3);
             string ircCmd = parts[0].ToLower();
-            if (ircCmd == ".who" || ircCmd == ".players") {
+            
+            bool whoCmd = ircCmd == ".who" || ircCmd == ".players" || ircCmd == "!players";
+            DateTime last =  opchat ? lastOpWho : lastWho;
+            if (whoCmd && (DateTime.UtcNow - last).TotalSeconds > 1) {
                 try {
                     CmdPlayers.DisplayPlayers(null, "", text => Say(text, opchat, true), false, false);
                 } catch (Exception e) {
                     Server.ErrorLog(e);
                 }
+                
+                if (opchat) lastOpWho = DateTime.UtcNow;
+                else lastWho = DateTime.UtcNow;
             }
             
             if (ircCmd == ".x" && !HandlePublicCommand(user, channel, message, parts, opchat)) return;
