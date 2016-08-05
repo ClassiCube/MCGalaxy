@@ -14,13 +14,13 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using System;
 
-namespace MCGalaxy.Commands.Building {    
-    public abstract class DrawCmd : Command {       
+namespace MCGalaxy.Commands.Building {
+    public abstract class DrawCmd : Command {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
@@ -33,21 +33,25 @@ namespace MCGalaxy.Commands.Building {
             
             DrawArgs dArgs = default(DrawArgs);
             dArgs.Message = message;
+            dArgs.Player = p;
             dArgs.Mode = GetMode(parts);
-            dArgs.Op = GetDrawOp(dArgs);
+            dArgs.Op = GetDrawOp(dArgs);            
             if (dArgs.Op == null) return;
             
-            OnUse(p, message, parts, ref dArgs);        
+            // Validate the brush syntax is correct
+            int offset = 0;
+            BrushFactory factory = BrushFactory.Find(GetBrush(p, dArgs, ref offset));
+            Brush brush = ParseBrush(p, dArgs, offset, factory);
+            if (brush == null) return;
+            
             Player.Message(p, PlaceMessage);
             p.MakeSelection(MarksCount, dArgs, DoDraw);
         }
         
-        protected virtual bool DoDraw(Player p, Vec3S32[] marks, 
+        protected virtual bool DoDraw(Player p, Vec3S32[] marks,
                                       object state, byte block, byte extBlock) {
             DrawArgs dArgs = (DrawArgs)state;
-            dArgs.Block = block; dArgs.ExtBlock = extBlock;
-            dArgs.Player = p;
-            
+            dArgs.Block = block; dArgs.ExtBlock = extBlock;            
             GetMarks(dArgs, ref marks);
             if (marks == null) return false;
             
@@ -57,11 +61,13 @@ namespace MCGalaxy.Commands.Building {
             return brush != null && DrawOp.DoDrawOp(dArgs.Op, brush, p, marks);
         }
         
-        protected virtual string PlaceMessage { 
-            get { return "Place two blocks to determine the edges."; } 
+        protected virtual string PlaceMessage {
+            get { return "Place two blocks to determine the edges."; }
         }
         
-        protected virtual void OnUse(Player p, string msg, string[] parts, ref DrawArgs dArgs) { }
+        protected virtual bool OnUse(Player p, string msg, string[] parts, ref DrawArgs dArgs) {
+            return true;
+        }
         
         
         protected virtual DrawMode GetMode(string[] parts) { return DrawMode.normal; }
@@ -98,8 +104,8 @@ namespace MCGalaxy.Commands.Building {
             return block;
         }
         
-        protected static Brush ParseBrush(Player p, DrawArgs dArgs, 
-                                        int usedFromEnd, BrushFactory factory = null) {
+        protected static Brush ParseBrush(Player p, DrawArgs dArgs,
+                                          int usedFromEnd, BrushFactory factory = null) {
             int end = dArgs.Message.Length;
             string brushMsg = "";
             for (int i = 0; i < usedFromEnd; i++) {
@@ -116,7 +122,7 @@ namespace MCGalaxy.Commands.Building {
         
         protected struct DrawArgs {
             public DrawMode Mode;
-            public byte Block, ExtBlock;        
+            public byte Block, ExtBlock;
             public string Message;
             
             public DrawOp Op;
@@ -126,11 +132,11 @@ namespace MCGalaxy.Commands.Building {
         protected enum DrawMode {
             normal, solid, hollow, walls,
             holes, wire, random,
-            vertical, reverse, straight,           // line           
+            vertical, reverse, straight,           // line
             up, down, layer, verticalX, verticalZ, // fill
             cone, hcone, icone, hicone, volcano,   // draw
             pyramid, hpyramid, ipyramid, hipyramid,// draw
-            sphere, hsphere, circle,               // draw    
+            sphere, hsphere, circle,               // draw
         }
     }
 }

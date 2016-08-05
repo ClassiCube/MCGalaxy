@@ -24,17 +24,6 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "line"; } }
         public override string shortcut { get { return "l"; } }
         protected override string PlaceMessage { get { return "Place two blocks to determine the endpoints."; } }
-
-        protected override void OnUse(Player p, string msg, string[] parts, ref DrawArgs dArgs) {
-            LineDrawOp line = (LineDrawOp)dArgs.Op;
-            line.WallsMode = dArgs.Mode == DrawMode.walls;
-            if (parts.Length < 2 || dArgs.Mode == DrawMode.normal) return;
-            
-            string arg = parts[parts.Length - 1];
-            ushort len;
-            if (ushort.TryParse(arg, out len))
-                line.MaxLength = len;
-        }
         
         protected override DrawMode GetMode(string[] parts) {
             string mode = parts[parts.Length - 1];
@@ -57,7 +46,16 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
-            return new LineDrawOp();
+            LineDrawOp line = new LineDrawOp();
+            line.WallsMode = dArgs.Mode == DrawMode.walls;
+            string msg = dArgs.Message;
+            if (msg.IndexOf(' ') == -1 || dArgs.Mode == DrawMode.normal) return line;
+            
+            string arg = msg.Substring(msg.LastIndexOf(' ') + 1);
+            ushort len;
+            if (ushort.TryParse(arg, out len))
+                line.MaxLength = len;
+            return line;
         }
         
         protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {

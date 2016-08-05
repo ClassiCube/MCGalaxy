@@ -43,34 +43,35 @@ namespace MCGalaxy.Commands.Building {
             return null;
         }
         
-        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-            DrawArgs cpos = (DrawArgs)state;
+        protected override bool DoDraw(Player p, Vec3S32[] marks, 
+                                       object state, byte block, byte extBlock) {
+            DrawArgs dArgs = (DrawArgs)state;
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
-            byte oldType = p.level.GetTile(x, y, z), oldExtType = 0;
-            if (oldType == Block.custom_block)
-                oldExtType = p.level.GetExtTile(x, y, z);
+            byte oldBlock = p.level.GetTile(x, y, z), oldExtBlock = 0;
+            if (oldBlock == Block.custom_block)
+                oldExtBlock = p.level.GetExtTile(x, y, z);
 
-            cpos.Block = type; cpos.ExtBlock = extType;
-            if (!Block.canPlace(p, oldType) && !Block.BuildIn(oldType)) { 
-                Formatter.MessageBlock(p, "fill over ", oldType); return false;
+            dArgs.Block = block; dArgs.ExtBlock = extBlock;
+            if (!Block.canPlace(p, oldBlock) && !Block.BuildIn(oldBlock)) { 
+                Formatter.MessageBlock(p, "fill over ", oldBlock); return false;
             }
 
             SparseBitSet bits = new SparseBitSet(p.level.Width, p.level.Height, p.level.Length);
             List<int> buffer = new List<int>(), origins = new List<int>();
-            FloodFill(p, x, y, z, oldType, oldExtType, cpos.Mode, bits, buffer, origins, 0);
+            FloodFill(p, x, y, z, oldBlock, oldExtBlock, dArgs.Mode, bits, buffer, origins, 0);
 
             int totalFill = origins.Count;
             for (int i = 0; i < totalFill; i++) {
                 int pos = origins[i];
                 p.level.IntToPos(pos, out x, out y, out z);
-                FloodFill(p, x, y, z, oldType, oldExtType, cpos.Mode, bits, buffer, origins, 0);
+                FloodFill(p, x, y, z, oldBlock, oldExtBlock, dArgs.Mode, bits, buffer, origins, 0);
                 totalFill = origins.Count;
             }
             
             FillDrawOp op = new FillDrawOp();
             op.Positions = buffer;
-            int offset = cpos.Mode == DrawMode.normal ? 0 : 1;
-            Brush brush = ParseBrush(p, cpos, offset);
+            int offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
+            Brush brush = ParseBrush(p, dArgs, offset);
             if (brush == null || !DrawOp.DoDrawOp(op, brush, p, marks)) return false;
             bits.Clear();
             op.Positions = null;
