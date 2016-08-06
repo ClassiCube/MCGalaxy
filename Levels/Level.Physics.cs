@@ -105,7 +105,6 @@ namespace MCGalaxy {
                 }
             }
             physThreadStarted = false;
-            physThread.Abort();
         }
 
         public PhysicsArgs foundInfo(ushort x, ushort y, ushort z) {
