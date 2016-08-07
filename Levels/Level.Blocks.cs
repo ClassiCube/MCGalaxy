@@ -240,11 +240,8 @@ namespace MCGalaxy {
         }
         
         public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, byte b, byte type, byte extType = 0) {
-            if (!Block.AllowBreak(b) && !Block.canPlace(p, b) && !Block.BuildIn(b)) {
-                return false;
-            }
-            if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref type))
-                return false;
+            if (!Block.AllowBreak(b) && !Block.canPlace(p, b) && !Block.BuildIn(b)) return false;
+            if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref type)) return false;
             
             string Owners = "";
             bool AllowBuild = true, inZone = false;

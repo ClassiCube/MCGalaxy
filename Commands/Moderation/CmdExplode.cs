@@ -35,17 +35,14 @@ namespace MCGalaxy.Commands {
             
             ushort x, y, z;
             if (args.Length == 1) {
-            	Player who = PlayerInfo.FindMatches(p, args[0]);
+                Player who = PlayerInfo.FindMatches(p, args[0]);
                 if (who == null) return;
-                if (who.level.physics < 3 || who.level.physics == 5) {
-                    Player.Message(p, "The physics on the player's level are not sufficient for exploding."); return;
-                }
                 
                 x = (ushort)(who.pos[0] / 32);
                 y = (ushort)(who.pos[1] / 32);
                 z = (ushort)(who.pos[2] / 32);
-                who.level.MakeExplosion(x, y, z, 1);
-                Player.Message(p, who.ColoredName + " %Shas been exploded!");                
+                if (DoExplode(p, who.level, x, y, z))
+                    Player.Message(p, who.ColoredName + " %Shas been exploded!");
             } else if (args.Length == 3) {
                 try {
                     x = Convert.ToUInt16(args[0]);
@@ -55,15 +52,21 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "Invalid parameters"); return;
                 }
 
-                Level level = p.level;
                 if (y >= p.level.Height) y = (ushort)(p.level.Height - 1);
-
-                if (p.level.physics < 3 || p.level.physics == 5) {
-                    Player.Message(p, "The physics on this level are not sufficient for exploding!"); return;
-                }
-                p.level.MakeExplosion(x, y, z, 1);
-                Player.Message(p, "An explosion was made at (" + x + ", " + y + ", " + z + ").");
+                if (DoExplode(p, p.level, x, y, z))
+                    Player.Message(p, "An explosion was made at {0}, {1}, {2}).", x, y, z);
             }
+        }
+        
+        static bool DoExplode(Player p, Level lvl, ushort x, ushort y, ushort z) {
+            if (lvl.physics < 3 || lvl.physics == 5) {
+                Player.Message(p, "The physics on this level are not sufficient for exploding!"); return false;
+            }
+            
+            byte old = lvl.GetTile(x, y, z);
+            if (!lvl.CheckAffectPermissions(p, x, y, z, old, Block.tnt, 0)) return false;
+            lvl.MakeExplosion(x, y, z, 1);
+            return true;
         }
         
         public override void Help(Player p) {
