@@ -135,7 +135,7 @@ namespace MCGalaxy.Gui
             this.chkUseSQL = new System.Windows.Forms.CheckBox();
             this.cmbVerificationRank = new System.Windows.Forms.ComboBox();
             this.chkEnableVerification = new System.Windows.Forms.CheckBox();
-            this.chkSpamControl = new System.Windows.Forms.CheckBox();
+            this.spam_cbAuto = new System.Windows.Forms.CheckBox();
             this.lsChkSendAFKMain = new System.Windows.Forms.CheckBox();
             this.lsChkStartOnStartup = new System.Windows.Forms.CheckBox();
             this.lsNudVoteCount = new System.Windows.Forms.NumericUpDown();
@@ -358,15 +358,17 @@ namespace MCGalaxy.Gui
             this.tabPage11 = new System.Windows.Forms.TabPage();
             this.propsZG = new System.Windows.Forms.PropertyGrid();
             this.pageSecurity = new System.Windows.Forms.TabPage();
-            this.gbSecOther = new System.Windows.Forms.GroupBox();
-            this.gbSpamSettings = new System.Windows.Forms.GroupBox();
-            this.numCountReset = new System.Windows.Forms.NumericUpDown();
-            this.label69 = new System.Windows.Forms.Label();
-            this.numSpamMute = new System.Windows.Forms.NumericUpDown();
-            this.label45 = new System.Windows.Forms.Label();
-            this.numSpamMessages = new System.Windows.Forms.NumericUpDown();
-            this.label44 = new System.Windows.Forms.Label();
-            this.gbPasswords = new System.Windows.Forms.GroupBox();
+            this.gbSec_Other = new System.Windows.Forms.GroupBox();
+            this.gbSec_Spam = new System.Windows.Forms.GroupBox();
+            this.spam_numSecs = new System.Windows.Forms.NumericUpDown();
+            this.spam_lblOnSecs = new System.Windows.Forms.Label();
+            this.spam_numMute = new System.Windows.Forms.NumericUpDown();
+            this.spam_lblOnMsgs = new System.Windows.Forms.Label();
+            this.spam_numMsgs = new System.Windows.Forms.NumericUpDown();
+            this.spam_lblOnMute = new System.Windows.Forms.Label();
+            this.spam_lblForMute = new System.Windows.Forms.Label();
+            this.spam_lblForSecs = new System.Windows.Forms.Label();
+            this.gbSec_Passwords = new System.Windows.Forms.GroupBox();
             this.btnReset = new System.Windows.Forms.Button();
             this.listPasswords = new System.Windows.Forms.ListBox();
             this.label39 = new System.Windows.Forms.Label();
@@ -450,12 +452,12 @@ namespace MCGalaxy.Gui
             this.groupBox30.SuspendLayout();
             this.tabPage11.SuspendLayout();
             this.pageSecurity.SuspendLayout();
-            this.gbSecOther.SuspendLayout();
-            this.gbSpamSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numCountReset)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpamMute)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpamMessages)).BeginInit();
-            this.gbPasswords.SuspendLayout();
+            this.gbSec_Other.SuspendLayout();
+            this.gbSec_Spam.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spam_numSecs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spam_numMute)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spam_numMsgs)).BeginInit();
+            this.gbSec_Passwords.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).BeginInit();
             this.chat_gbTab.SuspendLayout();
             this.SuspendLayout();
@@ -1391,18 +1393,6 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.chkEnableVerification, "Whether or not the server will ask for verification from admins before they can u" +
                         "se commands.");
             this.chkEnableVerification.UseVisualStyleBackColor = true;
-            // 
-            // chkSpamControl
-            // 
-            this.chkSpamControl.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkSpamControl.AutoSize = true;
-            this.chkSpamControl.Location = new System.Drawing.Point(15, 20);
-            this.chkSpamControl.Name = "chkSpamControl";
-            this.chkSpamControl.Size = new System.Drawing.Size(49, 23);
-            this.chkSpamControl.TabIndex = 24;
-            this.chkSpamControl.Text = "Enable";
-            this.toolTip.SetToolTip(this.chkSpamControl, "If enabled it mutes a player for spamming. Default false.\r\n");
-            this.chkSpamControl.UseVisualStyleBackColor = true;
             // 
             // lsChkSendAFKMain
             // 
@@ -3958,9 +3948,9 @@ namespace MCGalaxy.Gui
             // pageSecurity
             // 
             this.pageSecurity.BackColor = System.Drawing.SystemColors.Control;
-            this.pageSecurity.Controls.Add(this.gbSecOther);
-            this.pageSecurity.Controls.Add(this.gbSpamSettings);
-            this.pageSecurity.Controls.Add(this.gbPasswords);
+            this.pageSecurity.Controls.Add(this.gbSec_Other);
+            this.pageSecurity.Controls.Add(this.gbSec_Spam);
+            this.pageSecurity.Controls.Add(this.gbSec_Passwords);
             this.pageSecurity.Location = new System.Drawing.Point(4, 22);
             this.pageSecurity.Name = "pageSecurity";
             this.pageSecurity.Padding = new System.Windows.Forms.Padding(3);
@@ -3968,127 +3958,155 @@ namespace MCGalaxy.Gui
             this.pageSecurity.TabIndex = 7;
             this.pageSecurity.Text = "Security";
             // 
-            // gbSecOther
+            // gbSec_Other
             // 
-            this.gbSecOther.Controls.Add(this.cbLogNotes);
-            this.gbSecOther.Location = new System.Drawing.Point(225, 213);
-            this.gbSecOther.Name = "gbSecOther";
-            this.gbSecOther.Size = new System.Drawing.Size(248, 45);
-            this.gbSecOther.TabIndex = 2;
-            this.gbSecOther.TabStop = false;
-            this.gbSecOther.Text = "Other settings";
+            this.gbSec_Other.Controls.Add(this.cbLogNotes);
+            this.gbSec_Other.Location = new System.Drawing.Point(225, 133);
+            this.gbSec_Other.Name = "gbSec_Other";
+            this.gbSec_Other.Size = new System.Drawing.Size(248, 45);
+            this.gbSec_Other.TabIndex = 2;
+            this.gbSec_Other.TabStop = false;
+            this.gbSec_Other.Text = "Other settings";
             // 
-            // gbSpamSettings
+            // gbSec_Spam
             // 
-            this.gbSpamSettings.Controls.Add(this.numCountReset);
-            this.gbSpamSettings.Controls.Add(this.label69);
-            this.gbSpamSettings.Controls.Add(this.numSpamMute);
-            this.gbSpamSettings.Controls.Add(this.label45);
-            this.gbSpamSettings.Controls.Add(this.numSpamMessages);
-            this.gbSpamSettings.Controls.Add(this.label44);
-            this.gbSpamSettings.Controls.Add(this.chkSpamControl);
-            this.gbSpamSettings.Location = new System.Drawing.Point(225, 18);
-            this.gbSpamSettings.Name = "gbSpamSettings";
-            this.gbSpamSettings.Size = new System.Drawing.Size(248, 189);
-            this.gbSpamSettings.TabIndex = 1;
-            this.gbSpamSettings.TabStop = false;
-            this.gbSpamSettings.Text = "Spam Control";
+            this.gbSec_Spam.Controls.Add(this.spam_cbAuto);
+            this.gbSec_Spam.Controls.Add(this.spam_lblOnMute);
+            this.gbSec_Spam.Controls.Add(this.spam_numMsgs);
+            this.gbSec_Spam.Controls.Add(this.spam_lblOnMsgs);
+            this.gbSec_Spam.Controls.Add(this.spam_numSecs);
+            this.gbSec_Spam.Controls.Add(this.spam_lblOnSecs);
+            this.gbSec_Spam.Controls.Add(this.spam_lblForMute);
+            this.gbSec_Spam.Controls.Add(this.spam_numMute);
+            this.gbSec_Spam.Controls.Add(this.spam_lblForSecs);
+            this.gbSec_Spam.Location = new System.Drawing.Point(225, 18);
+            this.gbSec_Spam.Name = "gbSec_Spam";
+            this.gbSec_Spam.Size = new System.Drawing.Size(248, 109);
+            this.gbSec_Spam.TabIndex = 1;
+            this.gbSec_Spam.TabStop = false;
+            this.gbSec_Spam.Text = "Chat spam control";
             // 
-            // numCountReset
+            // spam_cbAuto
             // 
-            this.numCountReset.Location = new System.Drawing.Point(170, 143);
-            this.numCountReset.Maximum = new decimal(new int[] {
-                                    128,
-                                    0,
-                                    0,
-                                    0});
-            this.numCountReset.Name = "numCountReset";
-            this.numCountReset.Size = new System.Drawing.Size(60, 21);
-            this.numCountReset.TabIndex = 34;
-            this.numCountReset.Tag = "The number of seconds before the message counter is reset.";
-            this.numCountReset.Value = new decimal(new int[] {
-                                    5,
-                                    0,
-                                    0,
-                                    0});
+            this.spam_cbAuto.AutoSize = true;
+            this.spam_cbAuto.Location = new System.Drawing.Point(10, 20);
+            this.spam_cbAuto.Name = "spam_cbAuto";
+            this.spam_cbAuto.Size = new System.Drawing.Size(49, 23);
+            this.spam_cbAuto.TabIndex = 24;
+            this.spam_cbAuto.Text = "Enable automatic muting";
+            this.spam_cbAuto.UseVisualStyleBackColor = true;
+            this.spam_cbAuto.CheckedChanged += new System.EventHandler(this.spam_cbAuto_CheckedChanged);
             // 
-            // label69
+            // spam_lblOnMute
             // 
-            this.label69.AutoSize = true;
-            this.label69.Location = new System.Drawing.Point(15, 145);
-            this.label69.Name = "label69";
-            this.label69.Size = new System.Drawing.Size(149, 13);
-            this.label69.TabIndex = 33;
-            this.label69.Text = "Counter Reset Time (seconds):";
+            this.spam_lblOnMute.AutoSize = true;
+            this.spam_lblOnMute.Location = new System.Drawing.Point(6, 48);
+            this.spam_lblOnMute.Name = "spam_lblOnMute";
+            this.spam_lblOnMute.Size = new System.Drawing.Size(46, 13);
+            this.spam_lblOnMute.TabIndex = 25;
+            this.spam_lblOnMute.Text = "Mute on";
             // 
-            // numSpamMute
+            // spam_numMsgs
             // 
-            this.numSpamMute.Location = new System.Drawing.Point(158, 104);
-            this.numSpamMute.Maximum = new decimal(new int[] {
-                                    128,
-                                    0,
-                                    0,
-                                    0});
-            this.numSpamMute.Name = "numSpamMute";
-            this.numSpamMute.Size = new System.Drawing.Size(60, 21);
-            this.numSpamMute.TabIndex = 32;
-            this.numSpamMute.Tag = "The number of seconds a player is muted for, for spamming.";
-            this.numSpamMute.Value = new decimal(new int[] {
-                                    60,
-                                    0,
-                                    0,
-                                    0});
+            this.spam_numMsgs.Location = new System.Drawing.Point(46, 45);
+            this.spam_numMsgs.Maximum = new decimal(new int[] {
+            128,
+            0,
+            0,
+            0});
+            this.spam_numMsgs.Name = "spam_numMsgs";
+            this.spam_numMsgs.Size = new System.Drawing.Size(37, 21);
+            this.spam_numMsgs.TabIndex = 30;
+            this.spam_numMsgs.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
             // 
-            // label45
+            // spam_lblOnMsgs
             // 
-            this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(15, 106);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(137, 13);
-            this.label45.TabIndex = 31;
-            this.label45.Text = "Spam Mute Time (seconds) :";
+            this.spam_lblOnMsgs.AutoSize = true;
+            this.spam_lblOnMsgs.Location = new System.Drawing.Point(85, 48);
+            this.spam_lblOnMsgs.Name = "spam_lblOnMsgs";
+            this.spam_lblOnMsgs.Size = new System.Drawing.Size(65, 13);
+            this.spam_lblOnMsgs.TabIndex = 31;
+            this.spam_lblOnMsgs.Text = "messages in";
             // 
-            // numSpamMessages
+            // spam_numSecs
             // 
-            this.numSpamMessages.Location = new System.Drawing.Point(106, 67);
-            this.numSpamMessages.Maximum = new decimal(new int[] {
-                                    128,
-                                    0,
-                                    0,
-                                    0});
-            this.numSpamMessages.Name = "numSpamMessages";
-            this.numSpamMessages.Size = new System.Drawing.Size(60, 21);
-            this.numSpamMessages.TabIndex = 30;
-            this.numSpamMessages.Tag = "The amount of messages that have to be sent before a player is muted.";
-            this.numSpamMessages.Value = new decimal(new int[] {
-                                    8,
-                                    0,
-                                    0,
-                                    0});
+            this.spam_numSecs.Location = new System.Drawing.Point(141, 45);
+            this.spam_numSecs.Maximum = new decimal(new int[] {
+            128,
+            0,
+            0,
+            0});
+            this.spam_numSecs.Name = "spam_numSecs";
+            this.spam_numSecs.Size = new System.Drawing.Size(42, 21);
+            this.spam_numSecs.TabIndex = 34;
+            this.spam_numSecs.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             // 
-            // label44
+            // spam_lblOnSecs
             // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(15, 71);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(85, 13);
-            this.label44.TabIndex = 25;
-            this.label44.Text = "Spam Messages:";
+            this.spam_lblOnSecs.AutoSize = true;
+            this.spam_lblOnSecs.Location = new System.Drawing.Point(184, 48);
+            this.spam_lblOnSecs.Name = "spam_lblOnSecs";
+            this.spam_lblOnSecs.Size = new System.Drawing.Size(46, 13);
+            this.spam_lblOnSecs.TabIndex = 33;
+            this.spam_lblOnSecs.Text = "seconds";
             // 
-            // gbPasswords
+            // spam_lblForMute
             // 
-            this.gbPasswords.Controls.Add(this.btnReset);
-            this.gbPasswords.Controls.Add(this.listPasswords);
-            this.gbPasswords.Controls.Add(this.label39);
-            this.gbPasswords.Controls.Add(this.chkEnableVerification);
-            this.gbPasswords.Controls.Add(this.cmbVerificationRank);
-            this.gbPasswords.Controls.Add(this.label38);
-            this.gbPasswords.Location = new System.Drawing.Point(19, 18);
-            this.gbPasswords.Name = "gbPasswords";
-            this.gbPasswords.Size = new System.Drawing.Size(191, 322);
-            this.gbPasswords.TabIndex = 0;
-            this.gbPasswords.TabStop = false;
-            this.gbPasswords.Text = "Admin Verification";
+            this.spam_lblForMute.AutoSize = true;
+            this.spam_lblForMute.Location = new System.Drawing.Point(6, 81);
+            this.spam_lblForMute.Name = "spam_lblForMute";
+            this.spam_lblForMute.Size = new System.Drawing.Size(46, 13);
+            this.spam_lblForMute.TabIndex = 25;
+            this.spam_lblForMute.Text = "Mute for";
+            // 
+            // spam_numMute
+            // 
+            this.spam_numMute.Location = new System.Drawing.Point(46, 78);
+            this.spam_numMute.Maximum = new decimal(new int[] {
+            128,
+            0,
+            0,
+            0});
+            this.spam_numMute.Name = "spam_numMute";
+            this.spam_numMute.Size = new System.Drawing.Size(37, 21);
+            this.spam_numMute.TabIndex = 32;
+            this.spam_numMute.Value = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            // 
+            // spam_lblForSecs
+            // 
+            this.spam_lblForSecs.AutoSize = true;
+            this.spam_lblForSecs.Location = new System.Drawing.Point(85, 81);
+            this.spam_lblForSecs.Name = "spam_lblForSecs";
+            this.spam_lblForSecs.Size = new System.Drawing.Size(46, 13);
+            this.spam_lblForSecs.TabIndex = 33;
+            this.spam_lblForSecs.Text = "seconds";
+            // 
+            // gbSec_Passwords
+            // 
+            this.gbSec_Passwords.Controls.Add(this.btnReset);
+            this.gbSec_Passwords.Controls.Add(this.listPasswords);
+            this.gbSec_Passwords.Controls.Add(this.label39);
+            this.gbSec_Passwords.Controls.Add(this.chkEnableVerification);
+            this.gbSec_Passwords.Controls.Add(this.cmbVerificationRank);
+            this.gbSec_Passwords.Controls.Add(this.label38);
+            this.gbSec_Passwords.Location = new System.Drawing.Point(19, 18);
+            this.gbSec_Passwords.Name = "gbSec_Passwords";
+            this.gbSec_Passwords.Size = new System.Drawing.Size(191, 322);
+            this.gbSec_Passwords.TabIndex = 0;
+            this.gbSec_Passwords.TabStop = false;
+            this.gbSec_Passwords.Text = "Admin Verification";
             // 
             // btnReset
             // 
@@ -4291,15 +4309,15 @@ namespace MCGalaxy.Gui
             this.groupBox30.ResumeLayout(false);
             this.tabPage11.ResumeLayout(false);
             this.pageSecurity.ResumeLayout(false);
-            this.gbSecOther.ResumeLayout(false);
-            this.gbSecOther.PerformLayout();
-            this.gbSpamSettings.ResumeLayout(false);
-            this.gbSpamSettings.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numCountReset)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpamMute)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpamMessages)).EndInit();
-            this.gbPasswords.ResumeLayout(false);
-            this.gbPasswords.PerformLayout();
+            this.gbSec_Other.ResumeLayout(false);
+            this.gbSec_Other.PerformLayout();
+            this.gbSec_Spam.ResumeLayout(false);
+            this.gbSec_Spam.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spam_numSecs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spam_numMute)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spam_numMsgs)).EndInit();
+            this.gbSec_Passwords.ResumeLayout(false);
+            this.gbSec_Passwords.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).EndInit();
             this.chat_gbTab.ResumeLayout(false);
             this.chat_gbTab.PerformLayout();
@@ -4312,7 +4330,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.ComboBox cmbOsMap;
         private System.Windows.Forms.Label lblOsMap;
         private System.Windows.Forms.CheckBox cbLogNotes;
-        private System.Windows.Forms.GroupBox gbSecOther;
+        private System.Windows.Forms.GroupBox gbSec_Other;
         private System.Windows.Forms.TextBox txtPrefix;
         private System.Windows.Forms.TextBox txtOSMaps;
         private System.Windows.Forms.Label label10;
@@ -4478,13 +4496,14 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox txtSQLUsername;
         private System.Windows.Forms.CheckBox chkUseSQL;
         private System.Windows.Forms.TabPage pageSecurity;
-        private System.Windows.Forms.GroupBox gbSpamSettings;
-        private System.Windows.Forms.NumericUpDown numSpamMute;
-        private System.Windows.Forms.Label label45;
-        private System.Windows.Forms.NumericUpDown numSpamMessages;
-        private System.Windows.Forms.Label label44;
-        private System.Windows.Forms.CheckBox chkSpamControl;
-        private System.Windows.Forms.GroupBox gbPasswords;
+        private System.Windows.Forms.GroupBox gbSec_Spam;
+        private System.Windows.Forms.Label spam_lblForMute;
+        private System.Windows.Forms.NumericUpDown spam_numMute;
+        private System.Windows.Forms.Label spam_lblOnMsgs;
+        private System.Windows.Forms.NumericUpDown spam_numMsgs;
+        private System.Windows.Forms.Label spam_lblOnMute;
+        private System.Windows.Forms.CheckBox spam_cbAuto;
+        private System.Windows.Forms.GroupBox gbSec_Passwords;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.ListBox listPasswords;
         private System.Windows.Forms.Label label39;
@@ -4549,8 +4568,9 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.ComboBox lsCmbControlRank;
         private System.Windows.Forms.Label label68;
         private System.Windows.Forms.Button lsBtnEndVote;
-        private System.Windows.Forms.NumericUpDown numCountReset;
-        private System.Windows.Forms.Label label69;
+        private System.Windows.Forms.NumericUpDown spam_numSecs;
+        private System.Windows.Forms.Label spam_lblOnSecs;
+        private System.Windows.Forms.Label spam_lblForSecs;
         private System.Windows.Forms.NumericUpDown lsNudLives;
         private System.Windows.Forms.TextBox txtSQLPort;
         private System.Windows.Forms.Label label70;

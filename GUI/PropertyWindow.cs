@@ -63,8 +63,9 @@ namespace MCGalaxy.Gui {
             chat_cmbDesc.Items.AddRange(colorsArray);
             cmbColor.Items.AddRange(colorsArray);
 
-            toggleIrcSettings(Server.irc);
-            toggleMySQLSettings(Server.useMySQL);
+            ToggleIrcSettings(Server.irc);
+            ToggleMySQLSettings(Server.useMySQL);
+            ToggleAutoMuteSettings(Server.checkspam);
 
             string opchatperm = String.Empty;
             string adminchatperm = String.Empty;
@@ -502,22 +503,22 @@ namespace MCGalaxy.Gui {
                     }
                     break;
                 case "mute-on-spam":
-                    chkSpamControl.Checked = value.ToLower() == "true";
+                    spam_cbAuto.Checked = value.ToLower() == "true";
                     break;
                 case "spam-messages":
                     try {
-                        numSpamMessages.Value = Convert.ToInt16(value);
+                        spam_numMsgs.Value = Convert.ToInt16(value);
                     }
                     catch {
-                        numSpamMessages.Value = 8;
+                        spam_numMsgs.Value = 8;
                     }
                     break;
                 case "spam-mute-time":
                     try {
-                        numSpamMute.Value = Convert.ToInt16(value);
+                        spam_numMute.Value = Convert.ToInt16(value);
                     }
                     catch {
-                        numSpamMute.Value = 60;
+                        spam_numMute.Value = 60;
                     }
                     break;
                 case "log-notes":
@@ -658,10 +659,10 @@ namespace MCGalaxy.Gui {
             Server.verifyadmins = chkEnableVerification.Checked;
             Server.verifyadminsrank = Group.GroupList.Find(grp => grp.name == cmbVerificationRank.SelectedItem.ToString()).Permission;
 
-            Server.checkspam = chkSpamControl.Checked;
-            Server.spamcounter = (int)numSpamMessages.Value;
-            Server.mutespamtime = (int)numSpamMute.Value;
-            Server.spamcountreset = (int)numCountReset.Value;
+            Server.checkspam = spam_cbAuto.Checked;
+            Server.spamcounter = (int)spam_numMsgs.Value;
+            Server.mutespamtime = (int)spam_numMute.Value;
+            Server.spamcountreset = (int)spam_numSecs.Value;
             Server.LogNotes = cbLogNotes.Checked;
             Server.showEmptyRanks = chkShowEmptyRanks.Checked;
             Server.reviewcooldown = (int)nudCooldownTime.Value;
@@ -756,8 +757,7 @@ namespace MCGalaxy.Gui {
         }
 
         private void chkIRC_CheckedChanged(object sender, EventArgs e) {
-
-            toggleIrcSettings(chkIRC.Checked);
+            ToggleIrcSettings(chkIRC.Checked);
         }
 
         private void btnBackup_Click(object sender, EventArgs e) {
@@ -1226,7 +1226,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         }
 
         private void chkUseSQL_CheckedChanged(object sender, EventArgs e) {
-            toggleMySQLSettings(chkUseSQL.Checked);
+            ToggleMySQLSettings(chkUseSQL.Checked);
         }
 
         private void forceUpdateBtn_Click(object sender, EventArgs e) {
@@ -1293,11 +1293,13 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         private void lstCommands_SelectedIndexChanged ( object sender, EventArgs e ) {
             btnUnload.Enabled = lstCommands.SelectedIndex != -1;
         }
+        
+        void spam_cbAuto_CheckedChanged(object sender, EventArgs e) {
+            ToggleAutoMuteSettings(spam_cbAuto.Checked);
+        }
 
 
-        /// <summary> Toggles enabled state for IRC options. </summary>
-        /// <param name="enabled"></param>
-        protected void toggleIrcSettings(bool enabled) {
+       void ToggleIrcSettings(bool enabled) {
             txtIRCServer.Enabled = enabled;
             txtIRCPort.Enabled = enabled;
             txtNick.Enabled = enabled;
@@ -1308,16 +1310,18 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             irc_cbTitles.Enabled = enabled;
         }
 
-
-        /// <summary> Toggles enabeld state for MySQL options. </summary>
-        /// <param name="enabled"></param>
-        protected void toggleMySQLSettings(bool enabled)
-        {
+        void ToggleMySQLSettings(bool enabled) {
             txtSQLUsername.Enabled = enabled;
             txtSQLPassword.Enabled = enabled;
             txtSQLPort.Enabled = enabled;
             txtSQLHost.Enabled = enabled;
             txtSQLDatabase.Enabled = enabled;
+        }
+        
+        void ToggleAutoMuteSettings(bool enabled) {
+            spam_numMsgs.Enabled = enabled;
+            spam_numMute.Enabled = enabled;
+            spam_numSecs.Enabled = enabled;
         }
     }
 }
