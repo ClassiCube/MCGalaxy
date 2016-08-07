@@ -24,7 +24,7 @@ namespace MCGalaxy {
     public sealed class PlayerList {
         string path;
         List<string> players = new List<string>();
-        readonly object locker = new object();
+        readonly object locker = new object(), saveLocker = new object();
         
         public PlayerList() { }
         public PlayerList(string path) { this.path = path; }
@@ -70,13 +70,18 @@ namespace MCGalaxy {
         
         public void Save() { Save(true); }
         public void Save(bool console) {
-            using (StreamWriter w = new StreamWriter(path)) {
-                lock (locker) {
-                    foreach (string p in players)
-                        w.WriteLine(p);
-                }
+            lock (saveLocker) {
+                using (StreamWriter w = new StreamWriter(path))
+                    SaveEntries(w);
             }
             if (console) Server.s.Log("SAVED: " + path, true);
+        }
+        
+        void SaveEntries(StreamWriter w) {
+            lock (locker) {
+                foreach (string p in players)
+                    w.WriteLine(p);
+            }
         }
         
         public static PlayerList Load(string file) {

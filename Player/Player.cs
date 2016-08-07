@@ -624,5 +624,37 @@ namespace MCGalaxy {
                     MakeSelection(selIndex, selState, selCallback);
             }
         }
+        
+        
+        public void CheckForMessageSpam() {
+            Player.lastMSG = name; 
+            if (!Server.checkspam || ircNick != null) return;
+            
+            lock (lastMessageLock) {
+                if (LastMessageTimes == null) 
+                    LastMessageTimes = new List<DateTime>(Server.spamcounter);
+                
+                DateTime now = DateTime.UtcNow;
+                int count = LastMessageTimes.Count, inThreshold = 0;
+                if (count > 0 && count >= Server.spamcounter)
+                    LastMessageTimes.RemoveAt(0);
+                LastMessageTimes.Add(now);
+                
+                // Count number of messages that are within the chat spam dection threshold
+                count = LastMessageTimes.Count;
+                for (int i = 0; i < count; i++) {
+                    TimeSpan delta = now - LastMessageTimes[i];
+                    if (delta.TotalSeconds <= Server.spamcountreset)
+                        inThreshold++;
+                }            
+                if (inThreshold < Server.spamcounter) return;
+                
+                muteCooldown = Server.mutespamtime;
+                Command.all.Find("mute").Use(null, name);
+                Player.GlobalMessage(color + DisplayName + " %Shas been &0muted &efor spamming!");
+                muteTimer.Elapsed += MuteTimerElapsed;
+                muteTimer.Start();
+            }
+        }        
     }
 }

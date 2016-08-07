@@ -473,14 +473,9 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
 });
 }
 } */
-        DateTime lastSpamReset;
         void HandleChat(byte[] packet) {
             try {
                 if (!loggedIn) return;
-                if ((DateTime.UtcNow - lastSpamReset).TotalSeconds > Server.spamcountreset) {
-                    lastSpamReset = DateTime.UtcNow;
-                    consecutivemessages = 0;
-                }
                 byte continued = packet[1];
                 string text = GetString(packet, 2);
 
@@ -658,26 +653,6 @@ return;
                 //IRCBot.Say(name + ": " + text);
             }
             catch ( Exception e ) { Server.ErrorLog(e); Player.GlobalMessage("An error occurred: " + e.Message); }
-        }
-        
-        public void CheckForMessageSpam() {
-            if (!Server.checkspam || ircNick != null) { Player.lastMSG = name; return; }
-            
-            if (Player.lastMSG == name) {
-                consecutivemessages++;
-            } else {
-                consecutivemessages--;
-            }
-
-            if (consecutivemessages >= Server.spamcounter) {
-                muteCooldown = Server.mutespamtime;
-                Command.all.Find("mute").Use(null, name);
-                Player.GlobalMessage(color + DisplayName + " %Shas been &0muted &efor spamming!");
-                muteTimer.Elapsed += MuteTimerElapsed;
-                muteTimer.Start();
-                return;
-            }
-            Player.lastMSG = name;
         }
         
         string HandleJoker(string text) {

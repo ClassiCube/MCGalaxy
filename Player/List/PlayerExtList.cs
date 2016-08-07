@@ -26,7 +26,7 @@ namespace MCGalaxy {
         string path;
         List<string> players = new List<string>();
         List<string> lines = new List<string>();
-        readonly object locker = new object();
+        readonly object locker = new object(), saveLocker = new object();
         
         public void Add(string p, string data) {
         	p = p.ToLower();
@@ -68,14 +68,20 @@ namespace MCGalaxy {
         public int Count { get { lock (locker) return players.Count; } }
         
         
-        public void Save(bool console = false) {
-            using (StreamWriter w = new StreamWriter(path)) {
-                lock (locker) {
-                    foreach (string line in lines)
-                        w.WriteLine(line);
-                }
+        public void Save() { Save(true); }
+        public void Save(bool console) {
+            lock (saveLocker) {
+                using (StreamWriter w = new StreamWriter(path))
+                    SaveEntries(w);
             }
             if (console) Server.s.Log("SAVED: " + path, true);
+        }
+        
+        void SaveEntries(StreamWriter w) {
+            lock (locker) {
+                foreach (string p in players)
+                    w.WriteLine(p);
+            }
         }
         
         public static PlayerExtList Load(string path) {

@@ -260,6 +260,8 @@ namespace MCGalaxy {
         Queue<DateTime> spamBlockLog = new Queue<DateTime>(spamBlockCount);
 
         public int consecutivemessages;
+        internal readonly object lastMessageLock = new object();
+        public List<DateTime> LastMessageTimes;
         //public static int spamChatCount = 3;
         //public static int spamChatTimer = 4;
         //Queue<DateTime> spamChatLog = new Queue<DateTime>(spamChatCount);
