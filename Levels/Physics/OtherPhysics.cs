@@ -121,11 +121,14 @@ namespace MCGalaxy.BlockPhysics {
             }
             
             TreeDrawOp op = new TreeDrawOp();
+            op.Level = lvl;
             op.random = rand;
             Vec3S32[] marks = new [] { new Vec3S32(x, y, z) };
             op.SetMarks(marks);
-            foreach (var block in op.Perform(marks, null, lvl, null))
-                lvl.Blockchange(block.X, block.Y, block.Z, 0);
+            
+            foreach (var block in op.Perform(marks, null, lvl, null)) {
+                lvl.Blockchange(block.X, block.Y, block.Z, block.Block);
+            }
             C.data.Data = 255;
         }
         
