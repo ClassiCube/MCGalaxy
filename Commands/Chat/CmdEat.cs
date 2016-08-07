@@ -39,9 +39,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "You need to have at least 1 &3" + Server.moneys + 
                                    " %Sto purchase a snack."); return;
             }
-            if (p.muted) {
-                Player.Message(p, "You cannot use this command while muted."); return;
-            }
+            if (p.muted) { Player.Message(p, "You cannot use this command while muted."); return; }
             
             p.NextEat = DateTime.UtcNow.AddSeconds(10);
             if (Economy.Enabled) {
@@ -60,7 +58,8 @@ namespace MCGalaxy.Commands {
                 Chat.GlobalChatLevel(p, "<Level>" + p.ColoredName + " %S" + action, false);
             } else {
                 Player.SendChatFrom(p, p.ColoredName + " %S" + action, false);
-            }      
+            }
+            p.CheckForMessageSpam();
         }
         
         static string[] defMessages = { "guzzled a grape", "chewed a cherry", "ate an avocado" };

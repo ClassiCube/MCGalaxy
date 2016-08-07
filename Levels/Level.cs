@@ -186,11 +186,8 @@ namespace MCGalaxy {
 
             try {
                 PlayerBot.UnloadFromLevel(this);
-                //physChecker.Stop();
-                //physChecker.Dispose();
                 physThread.Abort();
                 physThread.Join();
-
             } catch {
             } finally {
                 Dispose();

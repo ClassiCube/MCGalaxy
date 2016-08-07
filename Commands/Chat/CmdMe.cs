@@ -16,30 +16,29 @@
     permissions and limitations under the Licenses.
 */
 using System;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdMe : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdMe : Command {
         public override string name { get { return "me"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdMe() { }
-        public override void Use(Player p, string message)
-        {
+        
+        public override void Use(Player p, string message) {
             if (message == "") { Player.Message(p, "You"); return; }
             if (p == null) { MessageInGameOnly(p); return; }
 
             if (p.joker || p.muted) { Player.Message(p, "Cannot use /me while muted or jokered."); return; }
             if (Server.chatmod && !p.voice) { Player.Message(p, "Chat moderation is on, you cannot emote."); return; }
-
+            
             if (!p.level.worldChat) {
                 Chat.GlobalChatLevel(p, "<Level>" + p.color + "*" + Colors.StripColors(p.DisplayName) + " " + message, false);
             } else {
                 Player.SendChatFrom(p, p.color + "*" + Colors.StripColors(p.DisplayName) + " " + message, false);
                 Player.RaisePlayerAction(p, PlayerAction.Me, message);
             }
+            p.CheckForMessageSpam();
         }
         
         public override void Help(Player p) {

@@ -43,7 +43,8 @@ namespace MCGalaxy.Commands {
                     type = args[1];
             }
             if (type == null) {
-                Player.GlobalMessage(p, giver + " %Shugged " + who.ColoredName + "."); return;
+                Player.GlobalMessage(p, giver + " %Shugged " + who.ColoredName + "."); 
+                p.CheckForMessageSpam(); return;
             }
             
             if (type == "deadly") {
@@ -56,6 +57,7 @@ namespace MCGalaxy.Commands {
                 who.HandleDeath(Block.rock, " died from a %cdeadly hug.");
             }
             Player.GlobalMessage(p, giver + " %Sgave " + who.ColoredName + " %Sa " + type + " hug.");
+            p.CheckForMessageSpam();
         }
         
         public override void Help(Player p) {

@@ -37,6 +37,7 @@ namespace MCGalaxy.Commands {
             if (min > max) { int a = min; min = max; max = a; }
 
             Player.GlobalMessage(p, p.ColoredName + " %Srolled a &a" + rand.Next(min, max + 1) + " %S(" + min + "|" + max + ")");
+            p.CheckForMessageSpam();
         }
         
         public override void Help(Player p) {

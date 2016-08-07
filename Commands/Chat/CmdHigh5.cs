@@ -35,6 +35,7 @@ namespace MCGalaxy.Commands {
             string giver = (p == null) ? "(console)" : p.ColoredName;
             Player.Message(who, giver + " just highfived you");
             Player.GlobalMessage(p, giver + " %Sjust highfived " + who.ColoredName);
+            p.CheckForMessageSpam();
         }
 
         public override void Help(Player p) {

@@ -558,7 +558,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 }
             hello:
                 // People who are muted can't speak or vote
-                if ( muted ) { this.SendMessage("You are muted."); return; } //Muted: Only allow commands
+                if (muted) { SendMessage("You are muted."); return; } //Muted: Only allow commands
 
                 // Lava Survival map vote recorder
                 if ( Server.lava.HasPlayer(this) && Server.lava.HasVote(text.ToLower()) ) {
@@ -578,28 +578,10 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 if (IsHandledMessage(text)) return;
                 
                 // Put this after vote collection so that people can vote even when chat is moderated
-                if ( Server.chatmod && !voice ) { this.SendMessage("Chat moderation is on, you cannot speak."); return; }
+                if (Server.chatmod && !voice) { SendMessage("Chat moderation is on, you cannot speak."); return; }
+                CheckForMessageSpam();
 
-                if (Server.checkspam) {
-                    if (Player.lastMSG == name) {
-                        consecutivemessages++;
-                    } else {
-                        consecutivemessages--;
-                    }
-
-                    if (consecutivemessages >= Server.spamcounter) {
-                        muteCooldown = Server.mutespamtime;
-                        Command.all.Find("mute").Use(null, name);
-                        Player.GlobalMessage(color + DisplayName + " %Shas been &0muted &efor spamming!");
-                        muteTimer.Elapsed += MuteTimerElapsed;
-                        muteTimer.Start();
-                        return;
-                    }
-                }
-                Player.lastMSG = this.name;
-
-                if( Chat.HandleModes(this, text) )
-                    return;
+                if (Chat.HandleModes(this, text)) return;
 
                 if ( text[0] == ':' ) {
                     if ( PlayingTntWars ) {
@@ -676,6 +658,26 @@ return;
                 //IRCBot.Say(name + ": " + text);
             }
             catch ( Exception e ) { Server.ErrorLog(e); Player.GlobalMessage("An error occurred: " + e.Message); }
+        }
+        
+        public void CheckForMessageSpam() {
+            if (!Server.checkspam || ircNick != null) { Player.lastMSG = name; return; }
+            
+            if (Player.lastMSG == name) {
+                consecutivemessages++;
+            } else {
+                consecutivemessages--;
+            }
+
+            if (consecutivemessages >= Server.spamcounter) {
+                muteCooldown = Server.mutespamtime;
+                Command.all.Find("mute").Use(null, name);
+                Player.GlobalMessage(color + DisplayName + " %Shas been &0muted &efor spamming!");
+                muteTimer.Elapsed += MuteTimerElapsed;
+                muteTimer.Start();
+                return;
+            }
+            Player.lastMSG = name;
         }
         
         string HandleJoker(string text) {
