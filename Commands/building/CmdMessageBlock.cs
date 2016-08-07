@@ -87,8 +87,8 @@ namespace MCGalaxy.Commands.Building {
             p.ClearBlockchange();
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             
-            byte b = p.level.GetTile(x, y, z);
-            if (p.level.CheckAffectPermissions(p, x, y, z, b, cpos.type, 0)) {
+            byte old = p.level.GetTile(x, y, z);
+            if (p.level.CheckAffectPermissions(p, x, y, z, old, cpos.type, 0)) {
                 p.level.Blockchange(p, x, y, z, cpos.type, 0);
                 p.SendBlockchange(x, y, z, cpos.type, 0); // for when same block type but different message
                 UpdateDatabase(p, cpos, x, y, z);

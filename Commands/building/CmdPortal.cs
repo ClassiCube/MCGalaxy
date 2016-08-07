@@ -60,7 +60,8 @@ namespace MCGalaxy.Commands.Building {
 
         void EntryChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {          
             PortalData bp = (PortalData)p.blockchangeObject;            
-            if (!p.level.CheckAffectPermissions(p, x, y, z, type, extType)) {
+            byte old = p.level.GetTile(x, y, z);
+            if (!p.level.CheckAffectPermissions(p, x, y, z, old, type, extType)) {
                 p.RevertBlock(x, y, z); return;
             }
             p.ClearBlockchange();

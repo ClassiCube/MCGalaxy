@@ -239,7 +239,8 @@ namespace MCGalaxy {
             return true;
         }
         
-        public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, byte b, byte type, byte extType = 0) {
+        public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, 
+                                           byte b, byte type, byte extType = 0) {
             if (!Block.AllowBreak(b) && !Block.canPlace(p, b) && !Block.BuildIn(b)) return false;
             if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref type)) return false;
             
@@ -266,24 +267,24 @@ namespace MCGalaxy {
             {
                 //if (x < 0 || y < 0 || z < 0) return;
                 if (x >= Width || y >= Height || z >= Length) return false;
-                byte b = GetTile(x, y, z), extB = 0;
-                if (b == Block.custom_block) extB = GetExtTile(x, y, z);
+                byte old = GetTile(x, y, z), extOld = 0;
+                if (old == Block.custom_block) extOld = GetExtTile(x, y, z);
 
                 errorLocation = "Permission checking";
-                if (!CheckAffectPermissions(p, x, y, z, b, block, extBlock)) {
+                if (!CheckAffectPermissions(p, x, y, z, old, block, extBlock)) {
                     p.RevertBlock(x, y, z); return false;
                 }
 
-                if (b == Block.sponge && physics > 0 && block != Block.sponge)
+                if (old == Block.sponge && physics > 0 && block != Block.sponge)
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z));
-                if (b == Block.lava_sponge && physics > 0 && block != Block.lava_sponge)
+                if (old == Block.lava_sponge && physics > 0 && block != Block.lava_sponge)
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), true);
 
                 errorLocation = "Undo buffer filling";
                 Player.UndoPos Pos;
                 Pos.x = x; Pos.y = y; Pos.z = z;
                 Pos.mapName = name;
-                Pos.type = b; Pos.extType = extB;
+                Pos.type = old; Pos.extType = extOld;
                 Pos.newtype = block; Pos.newExtType = extBlock;
                 Pos.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
                 p.UndoBuffer.Add(this, Pos);
@@ -292,7 +293,7 @@ namespace MCGalaxy {
                 p.IncrementBlockStats(block, drawn);
                 
                 SetTile(x, y, z, block);
-                if (b == Block.custom_block && block != Block.custom_block)
+                if (old == Block.custom_block && block != Block.custom_block)
                     RevertExtTileNoCheck(x, y, z);
                 if (block == Block.custom_block)
                     SetExtTileNoCheck(x, y, z, extBlock);
@@ -303,8 +304,8 @@ namespace MCGalaxy {
 
                 changed = true;
                 backedup = false;
-                bool diffBlock = b == Block.custom_block ? extB != extBlock :
-                    Block.Convert(b) != Block.Convert(block);
+                bool diffBlock = old == Block.custom_block ? extOld != extBlock :
+                    Block.Convert(old) != Block.Convert(block);
                 return diffBlock;
             } catch (OutOfMemoryException) {
                 Player.Message(p, "Undo buffer too big! Cleared!");

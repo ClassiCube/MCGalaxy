@@ -133,7 +133,7 @@ namespace MCGalaxy.Drawing.Ops {
                 foreach (var b in item.Op.Perform(item.Marks, p, lvl, item.Brush)) {
             		if (b.Block == Block.Zero) continue;
                     byte old = lvl.GetTile(b.X, b.Y, b.Z);
-                    if (old == Block.Zero || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block))
+                    if (old == Block.Zero || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block, b.ExtBlock))
                         continue;
                     
                     lvl.SetTile(b.X, b.Y, b.Z, b.Block, p, b.ExtBlock);

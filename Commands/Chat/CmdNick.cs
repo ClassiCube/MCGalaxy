@@ -62,9 +62,9 @@ namespace MCGalaxy.Commands {
                 pBot.DisplayName = pBot.name;
                 Player.GlobalMessage("Bot " + pBot.ColoredName + "'s %Sreverted to their original name.");
             } else {
-                if (newName.CaselessEq("empty")) newName = "";
-                if (newName.Length >= 30) { Player.Message(p, "Name must be under 30 letters."); return; }                
-                Player.GlobalMessage("Bot " + pBot.ColoredName + "'s %Sname was set to " + newName + "%S.");
+                string nameTag = newName.CaselessEq("empty") ? "" : newName;
+                if (newName.Length >= 30) { Player.Message(p, "Name must be under 30 letters."); return; }
+                Player.GlobalMessage("Bot " + pBot.ColoredName + "'s %Sname was set to " + nameTag + "%S.");
                 pBot.DisplayName = newName;
             }
             
