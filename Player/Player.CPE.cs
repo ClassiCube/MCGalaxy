@@ -195,16 +195,11 @@ namespace MCGalaxy {
         }
         
         public void SendCurrentEnvColors() {
-            //SendEnvColor(0, level.SkyColor);
-            //SendEnvColor(1, level.CloudColor);
-            //SendEnvColor(2, level.FogColor);
-            //SendEnvColor(3, level.ShadowColor);
-            //SendEnvColor(4, level.LightColor);
-            SendEnvColor(0, -200, -200, -200);
-            SendEnvColor(1, -100, -100, -100);
-            SendEnvColor(2, 0, 0, 0);
-            SendEnvColor(3, -2000, -2000, -2000);
-            SendEnvColor(4, -1000, -1000, -1000);
+            SendEnvColor(0, level.SkyColor);
+            SendEnvColor(1, level.CloudColor);
+            SendEnvColor(2, level.FogColor);
+            SendEnvColor(3, level.ShadowColor);
+            SendEnvColor(4, level.LightColor);
         }
         
         void SendEnvColor(byte type, string src) {
