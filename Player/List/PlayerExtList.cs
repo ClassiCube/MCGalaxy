@@ -79,8 +79,8 @@ namespace MCGalaxy {
         
         void SaveEntries(StreamWriter w) {
             lock (locker) {
-                foreach (string p in players)
-                    w.WriteLine(p);
+                foreach (string l in lines)
+                    w.WriteLine(l);
             }
         }
         
