@@ -111,7 +111,7 @@ namespace MCGalaxy {
              bool noHacks = realMotd.Contains("-hax") || ctfmode || CurrentGame() != null;
              if (noHacks && p.Rank >= LevelPermission.Operator && realMotd.Contains("+ophax"))
                  return true;
-             return noHacks;
+             return !noHacks;
         }
 
         /// <summary> Whether block changes made on this level should be 

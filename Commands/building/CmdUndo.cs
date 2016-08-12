@@ -146,13 +146,13 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool CheckUndoPerms(Player p, Group grp) {
-             if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "can undo other players."); return false; }
+             if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "undo other players."); return false; }
              if (grp.Permission > p.Rank) { MessageTooHighRank(p, "undo", true); return false; }
              return true;
         }
         
         void UndoLevelPhysics(Player p, long seconds) {
-            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, "can undo physics.", 2); return; }
+            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, "undo physics.", 2); return; }
             if (p != null && !p.group.CanExecute("physics")) {
                 Player.Message(p, "You can only undo physics if you can use /physics."); return;
             }

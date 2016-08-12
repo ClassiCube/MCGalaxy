@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleSetup(Player p, string message, string[] args) {
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "can setup the economy."); return; }
+            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "setup the economy."); return; }
             
             switch (args[0].ToLower()) {
                 case "apply":

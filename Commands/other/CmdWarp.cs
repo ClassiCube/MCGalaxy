@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands {
             
             string name = args[1];
             if (cmd == "create" || cmd == "add") {
-                if (!CheckExtraPerm(p, 1)) { MessageNeedExtra(p, "can create warps.", 1); return; }
+                if (!CheckExtraPerm(p, 1)) { MessageNeedExtra(p, "create warps.", 1); return; }
                 if (warps.Exists(name)) { Player.Message(p, "That warp already exists"); return; }                
                 Player who = args.Length == 2 ? p : PlayerInfo.FindMatches(p, args[2]);
                 if (who == null) return;
@@ -63,13 +63,13 @@ namespace MCGalaxy.Commands {
                 warps.Create(name, who);
                 Player.Message(p, "Warp created.");
             } else if (cmd == "delete" || cmd == "remove") {
-                if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, "can delete warps.", 2); return; }
+                if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, "delete warps.", 2); return; }
                 if (!warps.Exists(name)) { Player.Message(p, "That warp does not exist"); return; }
                 
                 warps.Remove(name, p);
                 Player.Message(p, "Warp deleted.");
             } else if (cmd == "move" || cmd == "change" || cmd == "edit") {
-                if (!CheckExtraPerm(p, 3)) { MessageNeedExtra(p, "can move warps.", 3); return; }
+                if (!CheckExtraPerm(p, 3)) { MessageNeedExtra(p, "move warps.", 3); return; }
                 if (!warps.Exists(name)) { Player.Message(p, "Warp doesn't exist!!"); return; }
                 Player who = args.Length == 2 ? p : PlayerInfo.FindMatches(p, args[2]);
                 if (who == null) return;
