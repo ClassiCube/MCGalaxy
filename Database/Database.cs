@@ -22,10 +22,9 @@ using System.IO;
 namespace MCGalaxy.SQL {
     public static partial class Database {
         
-        [Obsolete("Use a ParameterisedQuery instance instead, which is threadsafe.")]
+        [Obsolete("Use Execute() or Fill() instead, which is threadsafe.", true)]
         public static void AddParams(string name, object param) {
-            if (Server.useMySQL) MySQL.AddParams(name, param);
-            else SQLite.AddParams(name, param);
+            throw new NotSupportedException("AddParams() is not threadsafe and is deprecated, use Execute() or Fill() instead.");
         }
         
         public static bool TableExists(string table) {
@@ -142,10 +141,6 @@ namespace MCGalaxy.SQL {
         static string connStringFormat = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4}";
         public static string connString { get { return String.Format(connStringFormat, Server.MySQLHost, Server.MySQLPort, Server.MySQLUsername, Server.MySQLPassword, Server.DatabasePooling); } }
         internal static ParameterisedQuery query = new MySQLParameterisedQuery();
-
-        public static void AddParams(string name, object param) { query.AddParam(name, param); }
-        
-        public static void ClearParams() { query.ClearParams(); }
         
         public const string TableExists = "SELECT * FROM information_schema.tables WHERE table_schema = @1 AND table_name = @0";
     }
@@ -155,10 +150,6 @@ namespace MCGalaxy.SQL {
         static string connStringFormat = "Data Source =" + Server.apppath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =300;";
         public static string connString { get { return String.Format(connStringFormat, Server.DatabasePooling); } }
         internal static ParameterisedQuery query = new SQLiteParameterisedQuery();
-
-        public static void AddParams(string name, object param) { query.AddParam(name, param); }
-        
-        public static void ClearParams() { query.ClearParams(); }
         
         public const string TableExists = "SELECT name FROM sqlite_master WHERE type='table' AND name=@0";
     }
