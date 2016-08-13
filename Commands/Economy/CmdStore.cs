@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2011 MCForge
+    Copyright 2015 MCGalaxy
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -16,13 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Globalization;
-using System.Threading;
 using MCGalaxy.Eco;
-using MCGalaxy.SQL;
-namespace MCGalaxy.Commands {
-    
-    /// <summary> Economy Beta v1.0 QuantumHive  </summary>
+
+namespace MCGalaxy.Commands {  
     public sealed class CmdStore : Command {
         public override string name { get { return "store"; } }
         public override string shortcut { get { return "shop"; } }

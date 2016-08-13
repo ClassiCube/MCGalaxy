@@ -17,7 +17,6 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 
 namespace MCGalaxy.Eco {
@@ -41,25 +40,27 @@ namespace MCGalaxy.Eco {
         }
         
         public override void Parse(string line, string[] split) {
-            if (split[1] == "price") {
+            if (split[1].CaselessEq("enabled")) {
+                Enabled = split[2].CaselessEq("true");
+            } else if (split[1].CaselessEq("purchaserank")) {
+                PurchaseRank = (LevelPermission)int.Parse(split[2]);
+            } else if (split[1].CaselessEq("price")) {
                 Rank rnk = FindRank(split[2]);
                 if (rnk == null) {
                     rnk = new Rank();
                     rnk.group = Group.Find(split[2]);
-                    rnk.price = int.Parse(split[3]);
                     RanksList.Add(rnk);
-                } else {
-                    rnk.price = int.Parse(split[3]);
                 }
+                rnk.price = int.Parse(split[3]);
             } else if (split[1] == "maxrank") {
                 if (Group.Exists(split[2])) MaxRank = split[2];
-            } else if (split[1] == "enabled") {
-                Enabled = split[2].CaselessEq("true");
             }
         }
         
         public override void Serialise(StreamWriter writer) {
             writer.WriteLine("rank:enabled:" + Enabled);
+            writer.WriteLine("rank:purchaserank:" + (int)PurchaseRank);
+            
             writer.WriteLine("rank:maxrank:" + MaxRank);
             foreach (Rank rnk in RanksList) {
                 writer.WriteLine("rank:price:" + rnk.group.name + ":" + rnk.price);
@@ -89,20 +90,22 @@ namespace MCGalaxy.Eco {
         protected internal override void OnSetupCommand(Player p, string[] args) {
             switch (args[1].ToLower()) {
                 case "enable":
-                    Player.Message(p, "%aThe " + Name + " item is now enabled.");
+                    Player.Message(p, "%aThe {0} item is now enabled.", Name);
                     Enabled = true; break;
                 case "disable":
-                    Player.Message(p, "%aThe " + Name + " item is now disabled.");
+                    Player.Message(p, "%aThe {0} item is now disabled.", Name);
                     Enabled = false; break;
                 case "price":
                     Rank rnk = FindRank(args[2]);
                     if (rnk == null) {
-                        Player.Message(p, "%cThat wasn't a rank or it's past the max rank (maxrank is: " + Group.Find(MaxRank).color + MaxRank + "%c)"); return; }
+                        Player.Message(p, "%cThat wasn't a rank or it's past the max rank (maxrank is: {0}%c)", Group.Find(MaxRank).ColoredName); return; 
+                    }
+                    
                     int cost;
                     if (!int.TryParse(args[3], out cost)) {
                         Player.Message(p, "\"" + args[3] + "\" is not a valid integer."); return;
                     }
-                    Player.Message(p, "%aSuccesfully changed the rank price for " + rnk.group.color + rnk.group.name + " to: %f" + cost + " %3" + Server.moneys);
+                    Player.Message(p, "%aSuccesfully changed the rank price for {0} to: &f{1} &3{2}", rnk.group.ColoredName, cost, Server.moneys);
                     rnk.price = cost; break;
 
                 case "maxrank":
@@ -111,13 +114,13 @@ namespace MCGalaxy.Eco {
                 case "maximumrank":
                     Group grp = Group.Find(args[2]);
                     if (grp == null) { Player.Message(p, "%cThat wasn't a rank!"); return; }
-                    if (p != null && p.Rank < grp.Permission) { Player.Message(p, "%cCan't set a maxrank that is higher than yours!"); return; }
+                    if (p != null && p.Rank < grp.Permission) { Player.Message(p, "%cCannot set maxrank to a rank higher than yours."); return; }
                     MaxRank = args[2].ToLower();
                     Player.Message(p, "%aSuccessfully set max rank to: " + grp.ColoredName);
                     UpdatePrices();
                     break;
                 default:
-                    Player.Message(p, "Supported actions: enable, disable, price [rank] [pcost], maxrank [rank]"); break;
+                    Player.Message(p, "Supported actions: enable, disable, price [rank] [cost], maxrank [rank]"); break;
             }
         }
 
@@ -127,7 +130,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "Rankup - &calready at max rank."); return;
             }
             Rank rnk = NextRank(p);
-            Player.Message(p, "Rankup to " + rnk.group.color + rnk.group.name + " %S- costs &f" + rnk.price + " &3" + Server.moneys);
+            Player.Message(p, "Rankup to {0} %S- costs &f{1} &3{2}", rnk.group.ColoredName, rnk.price, Server.moneys);
         }
         
         protected internal override void OnStoreCommand(Player p) {
@@ -137,7 +140,7 @@ namespace MCGalaxy.Eco {
             Player.Message(p, "%cYou can only buy ranks one at a time, in sequential order.");
             
             foreach (Rank rnk in RanksList) {
-                Player.Message(p, rnk.group.color + rnk.group.name + " costs &f" + rnk.price + " &3" + Server.moneys);
+                Player.Message(p, "{0} %S- costs &f{1} &3{2}", rnk.group.ColoredName, rnk.price, Server.moneys);
                 if (rnk.group.name.CaselessEq(maxrank.name)) break;
             }
         }
@@ -151,9 +154,11 @@ namespace MCGalaxy.Eco {
         }
 
         public Rank NextRank(Player p) {
-            int index = Group.GroupList.IndexOf(p.group);
-            if (index < Group.GroupList.Count - 1)
-                return FindRank(Group.GroupList[index + 1].name);
+            int grpIndex = Group.GroupList.IndexOf(p.group);
+            for (int i = grpIndex + 1; i < Group.GroupList.Count; i++) {
+                Rank rank = FindRank(Group.GroupList[i].name);
+                if (rank != null) return rank;
+            }
             return null;
         }
         

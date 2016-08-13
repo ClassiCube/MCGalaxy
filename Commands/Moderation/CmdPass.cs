@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             if (!Directory.Exists("extra/passwords"))
                 Directory.CreateDirectory("extra/passwords");
             if (p != null && p.Rank < Server.verifyadminsrank) {
-                MessageNeedMinPerm(p, "verify or set a password", (int)Server.verifyadminsrank); return;
+                Formatter.MessageNeedMinPerm(p, "verify or set a password", Server.verifyadminsrank); return;
             }
             if (!Server.verifyadmins) { Player.Message(p, "Admin verficiation is not currently enabled."); return; }
             if (message == "") { Help(p); return; }

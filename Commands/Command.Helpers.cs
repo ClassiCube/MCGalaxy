@@ -67,15 +67,7 @@ namespace MCGalaxy {
         
         protected void MessageNeedExtra(Player p, string action, int num = 1) {
             int perm = CommandOtherPerms.GetPerm(this, num);
-            MessageNeedMinPerm(p, action, perm);
-        }
-        
-        protected static void MessageNeedMinPerm(Player p, string action, int perm) {
-            Group grp = Group.findPermInt(perm);
-            if (grp == null)
-                Player.Message(p, "Only {0}%S+ can {1}", perm, action);
-            else
-                Player.Message(p, "Only {0}%S+ can {1}", grp.ColoredName, action);
+            Formatter.MessageNeedMinPerm(p, action, (LevelPermission)perm);
         }
         
         protected static void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {

@@ -36,8 +36,8 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "Number of groups of 10 blocks to buy must be an integer between 1 and 10."); return;
             }
             if (p.money < Price * count) {
-                Player.Message(p, "%cYou don't have enough %3" + Server.moneys + 
-                                   "%c to buy " +  (count * 10) +  " " + Name + "."); return;
+                Player.Message(p, "&cYou don't have enough &3{2} &cto buy {1} {0}.", 
+            	               Name, count * 10, Server.moneys); return;
             }
             
             p.Game.BlocksLeft += 10 * count;
@@ -47,7 +47,7 @@ namespace MCGalaxy.Eco {
         protected internal override void OnStoreCommand(Player p) {
             Player.Message(p, "Syntax: %T/buy 10blocks [num]");
             Player.Message(p, "Increases the blocks you are able to place by 10 * [num].");
-            Player.Message(p, "Costs %f" + Price + " * [num] %3" + Server.moneys);
+            Player.Message(p, "Costs &f{0} * [num] &3{1}", Price, Server.moneys);
         }        
     }
     
@@ -98,7 +98,7 @@ namespace MCGalaxy.Eco {
             PlayerDB.AppendInfectMessage(p.name, text);
             if (p.Game.InfectMessages == null) p.Game.InfectMessages = new List<string>();
             p.Game.InfectMessages.Add(text);
-            Player.Message(p, "%aAdded infect message: %f" + text);
+            Player.Message(p, "%aAdded infect message: &f" + text);
             Economy.MakePurchase(p, Price, "%3InfectMessage: " + message);
         }
         
@@ -123,7 +123,7 @@ namespace MCGalaxy.Eco {
         protected internal override void OnBuyCommand(Command cmd, Player p, 
                                              string message, string[] args) {
             if (p.money < Price) {
-                Player.Message(p, "%cYou don't have enough %3" + Server.moneys + "%c to buy a " + Name + "."); return;
+                Player.Message(p, "%cYou don't have enough &3{1} &c to buy a {0}.", Name, Server.moneys); return;
             }
             if (p.Game.Invisible) {
                 Player.Message(p, "You are already invisible."); return;
@@ -147,7 +147,7 @@ namespace MCGalaxy.Eco {
             p.Game.InvisibilityPotions++;
             int left = ZombieGame.InvisibilityPotions - p.Game.InvisibilityPotions;
             
-            Player.Message(p, "Lasts for &a" + duration + " %Sseconds. You can buy &a" + left + " %Smore this round.");
+            Player.Message(p, "Lasts for &a{0} %Sseconds. You can buy &a{1} %Smore this round.", duration, left);
             Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %Svanished. &a*POOF*");
             Entities.GlobalDespawn(p, false);
             Economy.MakePurchase(p, Price, "%3Invisibility: " + duration);

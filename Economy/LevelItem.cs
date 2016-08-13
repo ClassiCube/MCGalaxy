@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using MCGalaxy.Generator;
-using MCGalaxy.SQL;
 
 namespace MCGalaxy.Eco {
     
@@ -43,6 +42,8 @@ namespace MCGalaxy.Eco {
         public override void Parse(string line, string[] split) {
             if (split[1] == "enabled") {
                 Enabled = split[2].CaselessEq("true");
+            } else if (split[1].CaselessEq("purchaserank")) {
+                PurchaseRank = (LevelPermission)int.Parse(split[2]);
             } else if (split[1] == "levels") {
                 LevelPreset preset = FindPreset(split[2]);
                 if (preset == null) {
@@ -51,24 +52,20 @@ namespace MCGalaxy.Eco {
                 }
                 
                 switch (split[3]) {
-                    case "name":
-                        preset.name = split[4]; break;
-                    case "price":
-                        preset.price = int.Parse(split[4]); break;
-                    case "x":
-                        preset.x = split[4]; break;
-                    case "y":
-                        preset.y = split[4]; break;
-                    case "z":
-                        preset.z = split[4]; break;
-                    case "type":
-                        preset.type = split[4]; break;
+                    case "name": preset.name = split[4]; break;
+                    case "price": preset.price = int.Parse(split[4]); break;
+                    case "x": preset.x = split[4]; break;
+                    case "y": preset.y = split[4]; break;
+                    case "z": preset.z = split[4]; break;
+                    case "type": preset.type = split[4]; break;
                 }
             }
         }
         
         public override void Serialise(StreamWriter writer) {
             writer.WriteLine("level:enabled:" + Enabled);
+            writer.WriteLine("level:purchaserank:" + (int)PurchaseRank);
+            
             foreach (LevelPreset preset in Presets) {
                 writer.WriteLine();
                 writer.WriteLine("level:levels:" + preset.name + ":name:" + preset.name);
