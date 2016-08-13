@@ -165,7 +165,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             string path = "extra/savecopy/" + p.name + "/" + file + ".cpb";
-            using (FileStream fs = new FileStream(path, FileMode.Create))
+            using (FileStream fs = File.Create(path))
                 using(GZipStream gs = new GZipStream(fs, CompressionMode.Compress))
             {
                 p.CopyBuffer.SaveTo(gs);
@@ -182,7 +182,7 @@ namespace MCGalaxy.Commands.Building {
             }
             path = existsNew ? path + ".cpb" : path + ".cpy";
 
-            using (FileStream fs = new FileStream(path, FileMode.Open))
+            using (FileStream fs = File.OpenRead(path))
                 using(GZipStream gs = new GZipStream(fs, CompressionMode.Decompress))
             {
                 CopyState state = new CopyState(0, 0, 0, 0, 0, 0, null, null);

@@ -18,8 +18,7 @@
 using System;
 
 namespace MCGalaxy {  
-    public struct Vec3U16 {
-        
+    public struct Vec3U16 : IEquatable<Vec3U16> {        
         public ushort X, Y, Z;
         public static Vec3U16 Zero = new Vec3U16(0);
         public static Vec3U16 MinVal = new Vec3U16(ushort.MinValue);
@@ -88,7 +87,7 @@ namespace MCGalaxy {
         }
         
         public static explicit operator Vec3U16(Vec3S32 a) {
-        	return new Vec3U16((ushort)a.X, (ushort)a.Y, (ushort)a.Z);
+            return new Vec3U16((ushort)a.X, (ushort)a.Y, (ushort)a.Z);
         }
         
         public override string ToString() {
@@ -100,8 +99,7 @@ namespace MCGalaxy {
         }
     }
     
-    public struct Vec3S32 {
-        
+    public struct Vec3S32 : IEquatable<Vec3S32> {        
         public int X, Y, Z;
         
         public Vec3S32(int x, int y, int z) {
@@ -175,8 +173,7 @@ namespace MCGalaxy {
         }
     }
     
-    public struct Vec3F32 {
-        
+    public struct Vec3F32 : IEquatable<Vec3F32> {        
         public float X, Y, Z;
         
         public Vec3F32(float x, float y, float z) {

@@ -55,16 +55,8 @@ namespace MCGalaxy {
             string path = "plugins/" + name + ".dll";
             try {
                 Plugin instance = null;
-                Assembly lib = null;
-                using (FileStream fs = File.Open(path, FileMode.Open)) {
-                    using (MemoryStream ms = new MemoryStream()) {
-                        byte[] buffer = new byte[1024];
-                        int read = 0;
-                        while ((read = fs.Read(buffer, 0, 1024)) > 0)
-                            ms.Write(buffer, 0, read);
-                        lib = Assembly.Load(ms.ToArray());
-                    }
-                }
+                byte[] data = File.ReadAllBytes(path);
+                Assembly lib = Assembly.Load(data);
 
                 try {
                 	foreach (Type t in lib.GetTypes()) {

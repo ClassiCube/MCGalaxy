@@ -224,7 +224,7 @@ namespace MCGalaxy {
             if (File.Exists("text/messages.txt")) {
                 messages = CP437Reader.ReadAllLines("text/messages.txt");
             } else {
-                File.Create("text/messages.txt").Close();
+                using (File.Create("text/messages.txt")) {}
             }
             Server.MainScheduler.QueueRepeat(RandomMessage, null, TimeSpan.FromMinutes(5));
         }
