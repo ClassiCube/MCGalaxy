@@ -172,14 +172,14 @@ namespace MCGalaxy {
         }
 
         
-        /// <summary> Returns whether the given player is able to see the other player (e.g. in /who). </summary>
+        /// <summary> Returns whether the given player is able to see the target player (e.g. in /who). </summary>
         public static bool CanSee(Player p, Player target) {
             if (p == null || !target.hidden || p == target) return true;
             if (target.otherRankHidden) return p.Rank >= target.oHideRank;
-            return p.Rank > target.group.Permission;
+            return p.Rank >= target.Rank;
         }
         
-        /// <summary> Returns whether the given player is able to see the other player as an in-game entity. </summary>
+        /// <summary> Returns whether the given player is able to see the target player as an in-game entity. </summary>
         public static bool CanSeeEntity(Player p, Player target) {
             bool mayBeHidden = target.hidden;
             mayBeHidden |= (target.Game.Referee || target.Game.Invisible) && Server.zombie.Running;
@@ -189,7 +189,7 @@ namespace MCGalaxy {
             if (target.Game.Invisible && !p.Game.Referee 
                 && Server.zombie.Running) return false;
             if (target.otherRankHidden) return p.Rank >= target.oHideRank;
-            return p.Rank >= target.group.Permission;
+            return p.Rank >= target.Rank;
         }
         
         /// <summary> Updates the model of the entity with the specified id to all other players. </summary>
