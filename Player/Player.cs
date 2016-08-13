@@ -294,7 +294,13 @@ namespace MCGalaxy {
                 if (!loggedIn) {
                     connections.Remove(this);
                     RemoveFromPending();
-                    Server.s.Log(ip + " disconnected.");
+                    
+                    string user = String.IsNullOrEmpty(name) ? ip : name + " (" + ip + ")";
+                    string msg = discMsg ?? kickMsg;
+                    if (String.IsNullOrEmpty(msg))
+                        Server.s.Log(user + " disconnected.");
+                    else
+                        Server.s.Log(user + " disconnected. (" + msg + ")");
                     return;
                 }
 
@@ -308,21 +314,7 @@ namespace MCGalaxy {
                 }
 
                 Entities.DespawnEntities(this, false);
-                if (discMsg != null) {
-                    string leavem = "&c- " + FullName + " %S" + discMsg;
-                    const LevelPermission perm = LevelPermission.Guest;
-                    if (group.Permission > perm || (Server.guestLeaveNotify && group.Permission <= perm)) {
-                        Player[] players = PlayerInfo.Online.Items;
-                        foreach (Player pl in players) {
-                            if (Entities.CanSee(pl, this)) Player.Message(pl, leavem); 
-                        }
-                    }
-                    Server.s.Log(name + " disconnected (" + discMsg + ").");
-                } else {
-                    totalKicked++;
-                    SendChatFrom(this, "&c- " + FullName + " %Skicked (" + kickMsg + "%S).", false);
-                    Server.s.Log(name + " kicked (" + kickMsg + ").");
-                }
+                SendDisconnectMessage(discMsg, kickMsg);
 
                 try { save(); }
                 catch ( Exception e ) { Server.ErrorLog(e); }
@@ -340,6 +332,24 @@ namespace MCGalaxy {
                 Server.ErrorLog(e); 
             } finally {
                 CloseSocket();
+            }
+        }
+        
+        void SendDisconnectMessage(string discMsg, string kickMsg) {
+            if (discMsg != null) {
+                string leavem = "&c- " + FullName + " %S" + discMsg;
+                const LevelPermission perm = LevelPermission.Guest;
+                if (group.Permission > perm || (Server.guestLeaveNotify && group.Permission <= perm)) {
+                    Player[] players = PlayerInfo.Online.Items;
+                    foreach (Player pl in players) {
+                        if (Entities.CanSee(pl, this)) Player.Message(pl, leavem);
+                    }
+                }
+                Server.s.Log(name + " disconnected (" + discMsg + ").");
+            } else {
+                totalKicked++;
+                SendChatFrom(this, "&c- " + FullName + " %Skicked (" + kickMsg + "%S).", false);
+                Server.s.Log(name + " kicked (" + kickMsg + ").");
             }
         }
         
