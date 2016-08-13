@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.CPE {
                 if (GetBD(p, global) != null)
                     SendStepHelp(p, GetStep(p, global));
                 else
-                    Help(p, global, cmd);
+                    Help(p, cmd);
                 return;
             }
             
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.CPE {
                     if (GetBD(p, global) != null)
                         DefineBlockStep(p, message, global, cmd);
                     else
-                        Help(p, global, cmd);
+                        Help(p, cmd);
                     break;
             }
         }
@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void CopyHandler(Player p, string[] parts, bool global, string cmd) {
-            if (parts.Length <= 2) { Help(p, global, cmd); return; }          
+            if (parts.Length <= 2) { Help(p, cmd); return; }          
             int srcId, dstId;
             if (!CheckBlockId(p, parts[1], global, out srcId)) return;
             if (!CheckBlockId(p, parts[2], global, out dstId)) return;
@@ -124,7 +124,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void InfoHandler(Player p, string[] parts, bool global, string cmd) {
-            if (parts.Length == 1) { Help(p, global, cmd); return; }          
+            if (parts.Length == 1) { Help(p, cmd); return; }          
             int id;
             if (!CheckBlockId(p, parts[1], global, out id)) return;
             
@@ -177,7 +177,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void RemoveHandler(Player p, string[] parts, bool global, string cmd) {
-            if (parts.Length <= 1) { Help(p, global, cmd); return; }
+            if (parts.Length <= 1) { Help(p, cmd); return; }
             int blockId;
             if (!CheckBlockId(p, parts[1], global, out blockId)) return;
             
@@ -306,7 +306,7 @@ namespace MCGalaxy.Commands.CPE {
                                        "bottomtex, blockslight, sound, fullbright, shape, blockdraw, min, max, " +
                                        "fogdensity, fogred, foggreen, fogblue, fallback, lefttex, righttex, fronttex, backtex");
                 else
-                    Help(p, global, cmd);
+                    Help(p, cmd);
                 return;
             }
             int blockId;
@@ -598,7 +598,7 @@ namespace MCGalaxy.Commands.CPE {
             else p.lbStep = step;
         }
         
-        internal static void Help(Player p, bool global, string cmd) {
+        internal static void Help(Player p, string cmd) {
             // TODO: find a nicer way of doing this
             string fullCmd = cmd.Replace("lb", "levelblock")
                 .Replace("gb", "globalblock");
@@ -628,7 +628,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         public override void Help(Player p) { 
-            CustomBlockCommand.Help(p, true, "/gb");
+            CustomBlockCommand.Help(p, "/gb");
         }
     }
     
@@ -647,7 +647,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         public override void Help(Player p) { 
-            CustomBlockCommand.Help(p, false, "/lb"); 
+            CustomBlockCommand.Help(p, "/lb"); 
         }
     }
 }

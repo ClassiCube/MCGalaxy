@@ -155,12 +155,6 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "The review queue has been cleared");
         }
         
-        static void MessageNoPerm(Player p, LevelPermission perm) {
-            Player.Message(p, "There is something wrong with the system.  A message has been sent to the admin to fix");
-            Chat.GlobalMessageAdmins(p.name + " tryed to use /review, but a system error occurred. Make sure your groups are formatted correctly");
-            Chat.GlobalMessageAdmins("The group permission that is messed up is: " + perm + " (" + (int)perm+ ")");
-        }
-        
         static void MessageReviewPosChanged() {
             int count = 0;
             foreach (string name in Server.reviewlist) {

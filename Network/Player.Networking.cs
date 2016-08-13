@@ -568,10 +568,6 @@ namespace MCGalaxy {
             SendRaw(buffer, sync);
         }
         
-        void SendPing() {
-            SendRaw(Opcode.Ping);
-        }
-        
         void SendExtInfo( byte count ) {
             byte[] buffer = new byte[67];
             buffer[0] = Opcode.CpeExtInfo;

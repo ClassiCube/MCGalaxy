@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
 */
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -27,7 +26,7 @@ using MCGalaxy.SQL;
 namespace MCGalaxy {
     public static class Economy {
 
-        public static bool Enabled = false;
+        public static bool Enabled;
         
         const string createTable =
             @"CREATE TABLE if not exists Economy (

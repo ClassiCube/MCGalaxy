@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands {
                         who.title = args[2];
                         who.SetPrefix();
                     }
-                    UpdateDB(p, args[0], args[1], args[2], "Title");
+                    UpdateDB(args[0], args[2], "Title");
                     MessageDataChanged(p, args[0], args[1], args[2]); break;
                 case "totaldeaths":
                     SetInteger(p, args, "TotalDeaths", 1000000, who, v => who.overallDeath = v); break;
@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands {
                 who.SetPrefix();
                 args[0] = who.name;
             }
-            UpdateDB(p, args[0], args[1], col, column);
+            UpdateDB(args[0], col, column);
             MessageDataChanged(p, args[0], args[1], args[2]);
         }
         
@@ -127,7 +127,7 @@ namespace MCGalaxy.Commands {
             
             if (who != null)
                 setter(date);
-            UpdateDB(p, args[0], args[1], args[2], column);
+            UpdateDB(args[0], args[2], column);
             MessageDataChanged(p, args[0], args[1], args[2]);
         }
         
@@ -145,7 +145,7 @@ namespace MCGalaxy.Commands {
             if (who != null) {
                 setter(time);
             } else {
-                UpdateDB(p, args[0], args[1], time, column);
+                UpdateDB(args[0], time, column);
             }
             MessageDataChanged(p, args[0], args[1], timeFrame.Shorten(true));
         }
@@ -171,11 +171,11 @@ namespace MCGalaxy.Commands {
             if (who != null)
                 setter(value);
             else
-                UpdateDB(p, args[0], args[1], args[2], column);
+                UpdateDB(args[0], args[2], column);
             MessageDataChanged(p, args[0], args[1], args[2]);
         }
         
-        static void UpdateDB(Player p, string name, string type, string value, string column) {
+        static void UpdateDB(string name, string value, string column) {
             if (value != "") {
                 Database.Execute("UPDATE Players SET " + column + "=@1 WHERE Name=@0", name, value);
             } else {

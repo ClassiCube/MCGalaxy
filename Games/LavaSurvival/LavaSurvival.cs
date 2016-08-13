@@ -93,15 +93,6 @@ namespace MCGalaxy.Games
             LoadSettings();
         }
 
-        // Private methods
-        private void LevelCommand(string name, string msg = "")
-        {
-            Command cmd = Command.all.Find(name.Trim());
-            if (cmd != null && map != null)
-                try { cmd.Use(null, map.name + " " + msg.Trim()); }
-                catch (Exception e) { Server.ErrorLog(e); }
-        }
-
         // Public methods
         public byte Start(string mapName = "")
         {
