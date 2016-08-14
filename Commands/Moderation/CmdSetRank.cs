@@ -52,10 +52,10 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (who == null) {
                 rankMsg = name + " &f(offline)%S's rank was set to " + newRank.ColoredName + "%S. (" + reason + "%S)";
-                Player.GlobalMessage(rankMsg);
+                Chat.MessageAll(rankMsg);
             } else {
                 rankMsg = who.ColoredName + "%S's rank was set to " + newRank.ColoredName + "%S. (" + reason + "%S)";
-                Player.GlobalMessage(rankMsg);
+                Chat.MessageAll(rankMsg);
                 who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
             }
             

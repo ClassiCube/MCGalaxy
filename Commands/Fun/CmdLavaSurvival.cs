@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands
 					switch (Server.lava.Start(s.Length > 1 ? s[1] : ""))
 					{
 						case 0:
-							Player.GlobalMessage("Lava Survival has started! Join the fun with /ls go");
+							Chat.MessageAll("Lava Survival has started! Join the fun with /ls go");
 							return;
 						case 1:
 							Player.Message(p, "There is already an active Lava Survival game.");
@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands
 					switch (Server.lava.Stop())
 					{
 						case 0:
-							Player.GlobalMessage("Lava Survival has ended! We hope you had fun!");
+							Chat.MessageAll("Lava Survival has ended! We hope you had fun!");
 							return;
 						case 1:
 							Player.Message(p, "There isn't an active Lava Survival game.");

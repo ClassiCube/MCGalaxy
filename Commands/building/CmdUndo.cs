@@ -161,7 +161,7 @@ namespace MCGalaxy.Commands.Building {
             op.seconds = seconds;
             DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
             
-            Player.GlobalMessage("Physics were undone &b" + seconds + " %Sseconds");
+            Chat.MessageAll("Physics were undone &b{0} %Sseconds", seconds);
             Server.s.Log( "Physics were undone &b" + seconds + " %Sseconds");
             p.level.Save(true);
         }

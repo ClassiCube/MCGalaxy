@@ -204,7 +204,7 @@ namespace MCGalaxy {
         }
         
         public static void GlobalMessage(Player from, string message) {
-            if (from == null) GlobalMessage(message, false);
+            if (from == null) Chat.MessageAll(message);
             else SendChatFrom(from, message, false);
         }
         

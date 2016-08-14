@@ -51,14 +51,14 @@ namespace MCGalaxy.Commands.Moderation {
             string banMsg = null;
             if (who == null) {
                 banMsg = target + " &f(offline) %Swas &8banned %Sby " + banner + "%S." + banReason;
-                Player.GlobalMessage(banMsg);
+                Chat.MessageAll(banMsg);
             } else {
                 if (stealth) {
                     banMsg = who.ColoredName + " %Swas STEALTH &8banned %Sby " + banner + "%S." + banReason;
                     Chat.MessageOps(banMsg);
                 } else {
                     banMsg = who.ColoredName + " %Swas &8banned %Sby " + banner + "%S." + banReason;
-                    Player.GlobalMessage(banMsg);
+                    Chat.MessageAll(banMsg);
                 }
                 who.color = "";
             }

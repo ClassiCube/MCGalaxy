@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             string warnedby = (p == null) ? "(console)" : p.ColoredName;
             Player.GlobalMessage(warnedby + " %ewarned " + who.ColoredName + " %ebecause:");
-            Player.GlobalMessage("&c" + reason);
+            Chat.MessageAll("&c" + reason);
             Server.IRC.Say(warnedby + " %ewarned " + who.ColoredName + " %efor: %c" + reason);
             Server.s.Log(warnedby + " warned " + who.name);
 

@@ -69,12 +69,12 @@ namespace MCGalaxy.Gui
                                 {
                                     if (Server.autoupdate || p != null)
                                     {
-                                        Player.GlobalMessage("Updating in &f" + timeLeft + " %Sseconds.");
+                                        Chat.MessageAll("Updating in &f{0} %Sseconds.", timeLeft);
                                         Server.s.Log("Updating in " + timeLeft + " seconds.");
                                         timeLeft = timeLeft - 1;
                                         if (timeLeft < 0)
                                         {
-                                            Player.GlobalMessage("---UPDATING SERVER---");
+                                            Chat.MessageAll("---UPDATING SERVER---");
                                             Server.s.Log("---UPDATING SERVER---");
                                             countDown.Stop();
                                             countDown.Dispose();
@@ -83,7 +83,7 @@ namespace MCGalaxy.Gui
                                     }
                                     else
                                     {
-                                        Player.GlobalMessage("Stopping auto restart.");
+                                        Chat.MessageAll("Stopping auto restart.");
                                         Server.s.Log("Stopping auto restart.");
                                         countDown.Stop();
                                         countDown.Dispose();

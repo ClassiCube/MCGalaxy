@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands
             cmd.Use(p, args + " air");
 
             CmdPhysics.SetPhysics(p.level, phys);
-            Chat.MessageLevel("Unflooded!");
+            Chat.MessageLevel(p.level, "Unflooded!");
         }
         
         public override void Help(Player p) {

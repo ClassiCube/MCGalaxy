@@ -56,21 +56,21 @@ namespace MCGalaxy.Commands {
             else SetNick(p, who, args);
         }
         
-        static void SetBotNick(Player p, PlayerBot pBot, string[] args) {
+        static void SetBotNick(Player p, PlayerBot bot, string[] args) {
             string newName = args.Length > 2 ? args[2] : "";
             if (newName == "") {
-                pBot.DisplayName = pBot.name;
-                Player.GlobalMessage("Bot " + pBot.ColoredName + "'s %Sreverted to their original name.");
+                bot.DisplayName = bot.name;
+                Chat.MessageAll("Bot {0}'s %Sreverted to their original name.", bot.ColoredName);
             } else {
                 string nameTag = newName.CaselessEq("empty") ? "" : newName;
                 if (newName.Length >= 30) { Player.Message(p, "Name must be under 30 letters."); return; }
-                Player.GlobalMessage("Bot " + pBot.ColoredName + "'s %Sname was set to " + nameTag + "%S.");
-                pBot.DisplayName = newName;
+                Chat.MessageAll("Bot {0}'s %Sname was set to {1}%S.", bot.ColoredName, nameTag);
+                bot.DisplayName = newName;
             }
             
-            pBot.GlobalDespawn();
-            pBot.GlobalSpawn();
-            BotsFile.UpdateBot(pBot);
+            bot.GlobalDespawn();
+            bot.GlobalSpawn();
+            BotsFile.UpdateBot(bot);
         }
         
         static void SetNick(Player p, Player who, string[] args) {

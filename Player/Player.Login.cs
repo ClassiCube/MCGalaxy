@@ -231,7 +231,7 @@ namespace MCGalaxy {
                 CheckOutdatedClient();
             } catch (Exception e) {
                 Server.ErrorLog(e);
-                Player.GlobalMessage("An error occurred: " + e.Message);
+                Chat.MessageAll("An error occurred: {0}", e.Message);
             }
             
             //OpenClassic Client Check

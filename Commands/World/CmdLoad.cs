@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands {
 
             LevelInfo.Loaded.Add(lvl);
             if (p == null || !p.hidden)
-                Player.GlobalMessage("Level \"{0}\" loaded.", lvl.name);
+                Chat.MessageAll("Level \"{0}\" loaded.", lvl.name);
             /*try {
                 Gui.Window.thisWindow.UpdatePlayerMapCombo();
                 Gui.Window.thisWindow.UnloadedlistUpdate();

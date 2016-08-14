@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
                         pl.SendMessage("You were summoned by " + p.ColoredName + "%S.");
                     }
                 }
-                Player.GlobalMessage(p.ColoredName + " %Ssummoned everyone!");
+                Chat.MessageAll("{0} %Ssummoned everyone!", p.ColoredName);
                 return;
             }
 

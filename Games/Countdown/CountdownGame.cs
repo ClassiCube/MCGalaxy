@@ -284,7 +284,7 @@ namespace MCGalaxy.Games {
                     Player.Message(pl, "The countdown game was canceled!");
                     Command.all.Find("spawn").Use(pl, "");
                 }
-                Player.GlobalMessage("The countdown game was canceled!!");
+                Chat.MessageAll("The countdown game was canceled!!");
                 gamestatus = CountdownGameStatus.Enabled;
                 playersleftlist.Clear();
                 players.Clear();
