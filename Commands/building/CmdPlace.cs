@@ -59,7 +59,8 @@ namespace MCGalaxy.Commands.Building {
             
             P.X /= 32; P.Y /= 32; P.Z /= 32;
             p.level.UpdateBlock(p, P.X, P.Y, P.Z, (byte)block, extBlock);
-            Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", P.X, P.Y, P.Z, Block.Name((byte)block));
+            string blockName = p.level.BlockName((byte)block, extBlock);
+            Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", P.X, P.Y, P.Z, blockName);
         }
         
         public override void Help(Player p) {

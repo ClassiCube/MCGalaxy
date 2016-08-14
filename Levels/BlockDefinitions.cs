@@ -208,10 +208,10 @@ namespace MCGalaxy {
                     return def.BlockID;
             }
             
-            byte type;
-            if (!byte.TryParse(msg, out type) || defs[type] == null)
+            byte extBlock;
+            if (!byte.TryParse(msg, out extBlock) || defs[extBlock] == null)
                 return Block.Zero;
-            return type;
+            return extBlock;
         }
         
         static void SendDefineBlock(Player p, BlockDefinition def) {
