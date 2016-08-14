@@ -32,7 +32,7 @@ namespace MCGalaxy.Games {
                 MainLoopCore();
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
-                Player.GlobalMessage("&cZombie survival disabled due to an error.");
+                Chat.MessageAll("&cZombie survival disabled due to an error.");
                 try {
                     ResetState();
                 } catch (Exception ex2) {

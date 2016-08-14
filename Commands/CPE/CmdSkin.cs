@@ -36,14 +36,14 @@ namespace MCGalaxy.Commands.CPE {
             if (message == "") message = p.truename;
             
             Player who = p;
-            PlayerBot pBot = null;
+            PlayerBot bot = null;
             bool isBot = message.CaselessStarts("bot ");
             string[] args = message.SplitSpaces(isBot ? 3 : 2);
             string skin = null;
 
             if (isBot && args.Length > 2) {
-                pBot = PlayerBot.FindMatches(p, args[1]);
-                if (pBot == null) return;
+                bot = PlayerBot.FindMatches(p, args[1]);
+                if (bot == null) return;
                 skin = args[2];
             } else if (args.Length >= 2) {
                 isBot = false;
@@ -66,11 +66,11 @@ namespace MCGalaxy.Commands.CPE {
                 skin = "http://skins.minecraft.net/MinecraftSkins/" + skin.Substring(1) + ".png";
             
             if (isBot) {
-                pBot.SkinName = skin;
-                pBot.GlobalDespawn();
-                pBot.GlobalSpawn();
-                Player.GlobalMessage("Bot " + pBot.ColoredName + "'s %Sskin was changed to &c" + skin);
-                BotsFile.UpdateBot(pBot);
+                bot.SkinName = skin;
+                bot.GlobalDespawn();
+                bot.GlobalSpawn();
+                Chat.MessageAll("Bot {0}'s %Sskin was changed to &c{1}", bot.ColoredName, skin);
+                BotsFile.UpdateBot(bot);
             } else {
                 who.skinName = skin;
                 Entities.GlobalDespawn(who, true);

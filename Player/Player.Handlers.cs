@@ -649,10 +649,8 @@ return;
                 } else {
                     Chat.GlobalChatLevel(this, text, true);
                 }
-
-                //IRCBot.Say(name + ": " + text);
             }
-            catch ( Exception e ) { Server.ErrorLog(e); Player.GlobalMessage("An error occurred: " + e.Message); }
+            catch ( Exception e ) { Server.ErrorLog(e); Chat.MessageAll("An error occurred: {0}", e.Message); }
         }
         
         string HandleJoker(string text) {
@@ -757,7 +755,7 @@ return;
             //DO NOT REMOVE THE TWO COMMANDS BELOW, /PONY AND /RAINBOWDASHLIKESCOOLTHINGS. -EricKilla
             if (cmd == "pony") {
                 if (ponycount < 2) {
-                    GlobalMessage(color + DisplayName + " %Sjust so happens to be a proud brony! Everyone give " + color + DisplayName + " %Sa brohoof!");
+                    Chat.MessageAll("{0} %Sjust so happens to be a proud brony! Everyone give {0} %Sa brohoof!", ColoredName);
                     ponycount++;
                 } else {
                     SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
@@ -765,7 +763,7 @@ return;
                 return false;
             } else if (cmd == "rainbowdashlikescoolthings") {
                 if (rdcount < 2) {
-                    GlobalMessage("&1T&2H&3I&4S &5S&6E&7R&8V&9E&aR &bJ&cU&dS&eT &fG&0O&1T &22&30 &4P&CE&7R&DC&EE&9N&1T &5C&6O&7O&8L&9E&aR&b!");
+                    Chat.MessageAll("&1T&2H&3I&4S &5S&6E&7R&8V&9E&aR &bJ&cU&dS&eT &fG&0O&1T &22&30 &4P&CE&7R&DC&EE&9N&1T &5C&6O&7O&8L&9E&aR&b!");
                     rdcount++;
                 } else {
                     SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");

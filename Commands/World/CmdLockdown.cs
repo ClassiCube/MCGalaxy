@@ -44,11 +44,11 @@ namespace MCGalaxy.Commands {
                 string path = "text/lockdown/map/" + args[1];
                 if (!File.Exists(path)) {
                     File.Create(path).Dispose();
-                    Player.GlobalMessage("The map " + args[1] + " has been locked");
+                    Chat.MessageAll("The map {0} has been locked", args[1]);
                     Chat.MessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
                 } else {
                     File.Delete(path);
-                    Player.GlobalMessage("The map " + args[1] + " has been unlocked");
+                    Chat.MessageAll("The map {0} has been unlocked", args[1]);
                     Chat.MessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
                 }
             } else {
@@ -64,10 +64,10 @@ namespace MCGalaxy.Commands {
                         PlayerActions.ChangeMap(who, p.level.name);
                         who.BlockUntilLoad(500);
                     }
-                    Player.GlobalMessage(who.ColoredName + " %Shas been locked down!");
+                    Chat.MessageAll("{0} %Shas been locked down!", who.ColoredName);
                     Chat.MessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
                 } else {
-                    Player.GlobalMessage(who.ColoredName + " %Shas been unlocked.");
+                	Chat.MessageAll("{0} %Shas been unlocked.", who.ColoredName);
                     Chat.MessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
                 }
                 who.jailed = !who.jailed;

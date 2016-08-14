@@ -37,35 +37,29 @@ namespace MCGalaxy.Commands {
             switch (args[0].ToLower()) {
                 case "rt":
                 case "reloadthreshold":
-                    Player.GlobalMessage("Threshold before drawing reloads map set to &b" + limit);
-                    Server.DrawReloadLimit = limit;
-                    SrvProperties.Save(); return;
+                    SetLimit("Threshold before drawing reloads map set to {0}", ref Server.DrawReloadLimit, limit);
+                    return;
                 case "rp":
                 case "restartphysics":
-                    Player.GlobalMessage("Custom /rp's limit was changed to &b" + limit);
-                    Server.rpLimit = limit;
-                    SrvProperties.Save(); return;
+                    SetLimit("Custom /rp's limit was changed to {0}", ref Server.rpLimit, limit);
+                    return;
                 case "rpnormal":
-                    Player.GlobalMessage("Normal /rp's limit set to &b" + limit);
-                    Server.rpNormLimit = limit;
-                    SrvProperties.Save(); return;
+                    SetLimit("Normal /rp's limit set to {0}", ref Server.rpNormLimit, limit);
+                    return;
                 case "pu":
                 case "physicsundo":
-                    Player.GlobalMessage("Physics undo max entries set to &b" + limit);
-                    Server.physUndo = limit;
-                    SrvProperties.Save(); return;
+                    SetLimit("Physics undo max entries set to {0}", ref Server.physUndo, limit);
+                    return;
                 case "gen":
                 case "genlimit":
-                    Player.GlobalMessage("Maximum volume of maps players can generate set to &b" + limit);
-                    Server.MapGenLimit = limit;
-                    SrvProperties.Save(); return;
+                    SetLimit("Maximum volume of maps players can generate set to {0}", ref Server.MapGenLimit, limit);
+                    return;
                 case "genadmin":
                 case "genadminlimit":
                 case "admingen":
                 case "admingenlimit":
-                    Player.GlobalMessage("Maximum volume of maps admins can generate set to &b" + limit);
-                    Server.MapGenLimitAdmin = limit; 
-                    SrvProperties.Save(); return;
+                    SetLimit("Maximum volume of maps admins can generate set to &b{0}", ref Server.MapGenLimitAdmin, limit);
+                    return;
             }
 
             if (args.Length == 2) { Player.Message(p, "You need to provide a rank name for this type."); return; }
@@ -80,11 +74,17 @@ namespace MCGalaxy.Commands {
                 case "mu":
                 case "maxundo":
                     Player.GlobalMessage(grp.ColoredName + "%S's undo limit set to &b" + limit);
-                    grp.maxUndo = limit; break;                    
+                    grp.maxUndo = limit; break;
                 default:
                     Help(p); return;
             }
             Group.saveGroups(Group.GroupList);
+        }
+        
+        static void SetLimit(string format, ref int target, int limit) {
+            Chat.MessageAll(format, "&b" + limit);
+            target = limit;
+            SrvProperties.Save();
         }
         
         public override void Help(Player p) {

@@ -26,8 +26,8 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             Server.flipHead = !Server.flipHead;
-            if (Server.flipHead) Player.GlobalMessage("All necks were broken");
-            else Player.GlobalMessage("All necks were mended");
+            if (Server.flipHead) Chat.MessageAll("All necks were broken");
+            else Chat.MessageAll("All necks were mended");
         }
         
         public override void Help(Player p) {

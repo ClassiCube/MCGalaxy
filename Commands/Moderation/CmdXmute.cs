@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands {
             	Player.Message(p, "Time must be positive and greater than zero."); return;
             }
             
-            Player.GlobalMessage(muter.color + muter.DisplayName + " %Shas been muted for " + time + " seconds");
+            Chat.MessageAll("{0} %Shas been muted for {1} seconds", muter.ColoredName, time);
             Player.Message(muter, "You have been muted for " + time + " seconds");
             Thread.Sleep(time * 1000);
             Command.all.Find("mute").Use(p, muter.name);

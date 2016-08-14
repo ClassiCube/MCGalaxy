@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (Server.muted.Contains(message)) {
                     Server.muted.Remove(message);
                     Server.muted.Save();
-                    Player.GlobalMessage(message + " %Sis not online but is now &bun-muted");
+                    Chat.MessageAll("{0} %Sis not online but is now &bun-muted", message);
                 }
                 return;
             }

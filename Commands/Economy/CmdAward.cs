@@ -48,13 +48,13 @@ namespace MCGalaxy.Commands {
 
             if (!take) {
                 if (Awards.GiveAward(plName, award)) {
-                    Player.GlobalMessage(Server.FindColor(plName) + plName + " %Swas awarded: &b" + award);
+                    Chat.MessageAll("{0}{1} %Swas awarded: &b{2}", Server.FindColor(plName), plName, award);
                 } else {
                     Player.Message(p, "The player already has that award."); return;
                 }
             } else {
                 if (Awards.TakeAward(plName, award)) {
-                    Player.GlobalMessage(Server.FindColor(plName) + plName + " %Shad their &b" + award + " %Saward removed");
+                    Chat.MessageAll("{0}{1} %Shad their &b{2} %Saward removed", Server.FindColor(plName), plName, award);
                 } else {
                     Player.Message(p, "The player didn't have the award you tried to take"); return;
                 }

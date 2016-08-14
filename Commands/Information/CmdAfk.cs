@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands {
             bool send = !Server.chatmod && !p.muted;
             if (p.IsAfk) {                
                 if (send) {
-                    Player.GlobalMessage("-" + p.ColoredName + "%S- is AFK " + message);
+                    Chat.MessageAll("-{0}%S- is AFK {1}", p.ColoredName, message);
                     Player.RaisePlayerAction(p, PlayerAction.AFK, message);
                 } else {
                     Player.Message(p, "You are now marked as being AFK.");
@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands {
                 OnPlayerAFKEvent.Call(p);
             } else {
                 if (send) {
-                    Player.GlobalMessage("-" + p.ColoredName + "%S- is no longer AFK");
+                    Chat.MessageAll("-{0}%S- is no longer AFK", p.ColoredName);
                     Player.RaisePlayerAction(p, PlayerAction.UnAFK, message);
                 } else {
                     Player.Message(p, "You are no longer marked as being AFK.");

@@ -133,7 +133,7 @@ namespace MCGalaxy {
                     CompleteLoginProcess();
             } catch (Exception e) {
                 Server.ErrorLog(e);
-                Player.GlobalMessage("An error occurred: " + e.Message);
+                Chat.MessageAll("An error occurred: {0}", e.Message);
             }
         }
         
@@ -379,12 +379,12 @@ namespace MCGalaxy {
         void CheckState() {
             if (Server.muted.Contains(name)) {
                 muted = true;
-                GlobalMessage(DisplayName + " is still muted from the last time they went offline.");
+                Chat.MessageAll("{0} is still muted from the last time they went offline.", DisplayName);
                 Player.Message(this, "!%cYou are still %8muted%c since your last login.");
             }
             if (Server.frozen.Contains(name)) {
                 frozen = true;
-                GlobalMessage(DisplayName + " is still frozen from the last time they went offline.");
+                Chat.MessageAll("{0} is still frozen from the last time they went offline.", DisplayName);
                 Player.Message(this, "!%cYou are still %8frozen%c since your last login.");
             }
         }

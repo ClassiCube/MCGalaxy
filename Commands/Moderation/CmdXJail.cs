@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands {
                 PlayerActions.ChangeMap(pl, xjailMap);
                 pl.BlockUntilLoad(10);
                 jail.Use(p, message);
-                Player.GlobalMessage(pl.ColoredName + " %Swas XJailed!");
+                Chat.MessageAll("{0} %Swas XJailed!", pl.ColoredName);
             } else {
                 if (pl.muted) mute.Use(p, message);
                 if (pl.frozen) freeze.Use(p, message);
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands {
                 
                 jail.Use(p, message);
                 spawn.Use(pl, "");
-                Player.GlobalMessage(pl.ColoredName + " %Swas released from XJail!");
+                Chat.MessageAll("{0} %Swas released from XJail!", pl.ColoredName);
             }
         }
         

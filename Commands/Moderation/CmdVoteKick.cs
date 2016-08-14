@@ -42,8 +42,8 @@ namespace MCGalaxy.Commands {
             }
 
             Chat.MessageOps(p.ColoredName + " %Sused &a/votekick");
-            Player.GlobalMessage("&9A vote to kick " + who.ColoredName + " %Shas been called!");
-            Player.GlobalMessage("&9Type &aY %Sor &cN %Sto vote.");
+            Chat.MessageAll("&9A vote to kick {0} %Shas been called!", who.ColoredName);
+            Chat.MessageAll("&9Type &aY %Sor &cN %Sto vote.");
 
             // 1/3rd of the players must vote or nothing happens
             // Keep it at 0 to disable min number of votes
@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands {
             string name = (string)task.State;
             Player who = PlayerInfo.FindExact(name);
             if (who == null) {
-                Player.GlobalMessage(name + " was not kicked, as they already left the server."); return;
+            	Chat.MessageAll("{0} was not kicked, as they already left the server.", name); return;
             }
 
             int netVotesYes = votesYes - votesNo;
@@ -74,12 +74,12 @@ namespace MCGalaxy.Commands {
             Server.s.Log("VoteKick results for " + who.DisplayName + ": " + votesYes + " yes and " + votesNo + " no votes.");
 
             if (votesYes + votesNo < Server.voteKickVotesNeeded) {
-                Player.GlobalMessage("Not enough votes were made. " + who.ColoredName + " %Sshall remain!");
+                Chat.MessageAll("Not enough votes were made. {0} %Sshall remain!", who.ColoredName);
             } else if (netVotesYes > 0) {
-                Player.GlobalMessage("The people have spoken, " + who.ColoredName + " %Sis gone!");
+                Chat.MessageAll("The people have spoken, {0} %Sis gone!", who.ColoredName);
                 who.Kick("Vote-Kick: The people have spoken!");
             } else {
-                Player.GlobalMessage(who.ColoredName + " %Sshall remain!");
+                Chat.MessageAll("{0} %Sshall remain!", who.ColoredName);
             }
         }
         

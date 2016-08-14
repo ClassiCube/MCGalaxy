@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
             if (amount < 0) { Player.Message(p, "You can't fakepay a negative amount."); return; }        
             if (amount >= 16777215) { Player.Message(p, "You can only fakepay up to 16777215."); return; }
 
-            Player.GlobalMessage(who.ColoredName + " %Swas given " + amount + " " + Server.moneys);
+            Chat.MessageAll("{0} %Swas given {1} {2}", who.ColoredName, amount, Server.moneys);
         }
         
         public override void Help(Player p) {

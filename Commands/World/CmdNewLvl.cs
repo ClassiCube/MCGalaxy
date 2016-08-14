@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.World {
             }
             
             string format = seed != "" ? "Level \"{0}\" created with seed \"{1}\"" : "Level \"{0}\" created";
-            Player.GlobalMessage(String.Format(format, name, seed));
+            Chat.MessageAll(format, name, seed);
         }
         
         internal static bool CheckMapSize(Player p, int x, int y, int z) {

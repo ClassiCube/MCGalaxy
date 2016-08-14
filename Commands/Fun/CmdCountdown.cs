@@ -186,11 +186,11 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "The last person alive will win!!");
             } else if (hasPerm) {
                 if (target == "all") {
-                    Player.GlobalMessage("Countdown Rules being sent to everyone by " + p.ColoredName + ":");
-                    Player.GlobalMessage("The aim of the game is to stay alive the longest.");
-                    Player.GlobalMessage("Don't fall in the lava!!");
-                    Player.GlobalMessage("Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disappering.");
-                    Player.GlobalMessage("The last person alive will win!!");
+                    Chat.MessageAll("Countdown Rules being sent to everyone by " + p.ColoredName + ":");
+                    Chat.MessageAll("The aim of the game is to stay alive the longest.");
+                    Chat.MessageAll("Don't fall in the lava!!");
+                    Chat.MessageAll("Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disappering.");
+                    Chat.MessageAll("The last person alive will win!!");
                     Player.Message(p, "Countdown rules sent to everyone");
                     return;
                 } else if (target == "map") {
@@ -269,7 +269,7 @@ namespace MCGalaxy.Commands {
                 Server.Countdown.mapon.motd = "Welcome to the Countdown map! -hax";
                 
                 Server.Countdown.gamestatus = CountdownGameStatus.Enabled;
-                Player.GlobalMessage("Countdown has been enabled!!");
+                Chat.MessageAll("Countdown has been enabled!!");
             } else {
                 Player.Message(p, "A Game is either already enabled or is already progress");
             }

@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands
                 {
                     Player.Message(p, "Starting CTF..");
                     Server.ctf = new Auto_CTF();
-                    Player.GlobalMessage("A CTF GAME IS STARTING AT CTF! TYPE /goto CTF to join!");
+                    Chat.MessageAll("A CTF GAME IS STARTING AT CTF! TYPE /goto CTF to join!");
                 }
                 else if (Server.ctf.started)
                 {
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands
                 else if (!Server.ctf.started)
                 {
                     Server.ctf.Start();
-                    Player.GlobalMessage("A CTF GAME IS STARTING AT CTF! TYPE /goto CTF to join!");
+                    Chat.MessageAll("A CTF GAME IS STARTING AT CTF! TYPE /goto CTF to join!");
                 }
             }
             if (message == "stop")

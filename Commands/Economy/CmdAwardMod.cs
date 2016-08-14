@@ -40,13 +40,13 @@ namespace MCGalaxy.Commands {
                 if (!Awards.Add(args[0], args[1])) {
                     Player.Message(p, "This award already exists."); return;
                 } else {
-                    Player.GlobalMessage("Award added: &6" + args[0] + " : " + args[1]);
+                    Chat.MessageAll("Award added: &6{0} : {1}", args[0], args[1]);
                 }
             } else {
                 if (!Awards.Remove(args[1])) {
                     Player.Message(p, "This award does not exist."); return;
                 } else {
-                    Player.GlobalMessage("Award removed: &6" + args[1]);
+            		Chat.MessageAll("Award removed: &6{0}", args[1]);
                 }
             }
             Awards.Save();

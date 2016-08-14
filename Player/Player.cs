@@ -187,17 +187,10 @@ namespace MCGalaxy {
         }
 
         public static List<ChatMessage> Last50Chat = new List<ChatMessage>();
-        public static void GlobalMessage(string message) { GlobalMessage(message, false); }
-        public static void GlobalMessage(string message, bool global) {
-            message = Colors.EscapeColors(message);           
-            Player[] players = PlayerInfo.Online.Items; 
-            foreach (Player p in players) {
-                if (p.ignoreAll || (global && p.ignoreGlobal)) continue;
-                
-                if (p.level.worldChat && p.Chatroom == null)
-                    p.SendMessage(message, !global);
-            }
-        }
+        [Obsolete("Use Chat.MessageAll() instead")]
+        public static void GlobalMessage(string message) { Chat.MessageAll(message); }
+        [Obsolete("Use Chat.MessageAll() instead")]
+        public static void GlobalMessage(string message, bool global) { Chat.MessageAll(message); }
         
         public static void GlobalIRCMessage(string message) {
             message = Colors.EscapeColors(message);            
@@ -651,7 +644,7 @@ namespace MCGalaxy {
                 
                 muteCooldown = Server.mutespamtime;
                 Command.all.Find("mute").Use(null, name);
-                Player.GlobalMessage(color + DisplayName + " %Shas been &0muted &efor spamming!");
+                Chat.MessageAll("{0} %Shas been &0muted %Sfor spamming!", ColoredName);
                 muteTimer.Elapsed += MuteTimerElapsed;
                 muteTimer.Start();
             }

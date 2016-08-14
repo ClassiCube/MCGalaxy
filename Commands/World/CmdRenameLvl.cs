@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.World {
             LevelActions.Rename(lvl.name.ToLower(), newName.ToLower());
             try { Command.all.Find("load").Use(p, newName); }
             catch { }
-            Player.GlobalMessage("Renamed " + lvl.name + " to " + newName);
+            Chat.MessageAll("Renamed {0} to {1}", lvl.name, newName);
         }
         
         public override void Help(Player p) {

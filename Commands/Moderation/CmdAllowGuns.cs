@@ -36,13 +36,13 @@ namespace MCGalaxy.Commands {
             }
             
             if (lvl.guns) {
-                Player.GlobalMessage("&9Gun usage has been disabled on &c" + lvl.name + "&9!");
+                Chat.MessageAll("&9Gun usage has been disabled on &c{0}&9!", lvl.name);
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players)
                 	if (pl.level.name.CaselessEq(lvl.name))
                         pl.aiming = false;
             } else {
-                Player.GlobalMessage("&9Gun usage has been enabled on &c" + lvl.name + "&9!");
+                Chat.MessageAll("&9Gun usage has been enabled on &c{0}&9!", lvl.name);
             }
             lvl.guns = !lvl.guns;
             Level.SaveSettings(lvl);
