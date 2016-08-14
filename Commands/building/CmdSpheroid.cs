@@ -33,6 +33,14 @@ namespace MCGalaxy.Commands.Building {
             return p.BrushName;
         }
         
+        protected override DrawMode GetMode(string[] parts) {
+            string msg = parts[parts.Length - 1];
+            if (msg == "solid") return DrawMode.solid;
+            else if (msg == "hollow") return DrawMode.hollow;
+            else if (msg == "vertical") return DrawMode.vertical;
+            return DrawMode.normal;
+        }
+        
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             switch (dArgs.Mode) {
                 case DrawMode.hollow: return new EllipsoidHollowDrawOp();

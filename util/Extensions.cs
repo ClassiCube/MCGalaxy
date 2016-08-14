@@ -172,6 +172,7 @@ namespace MCGalaxy {
                 string itemName = nameGetter(item);
                 if (itemName.Equals(name, comp)) { matches = 1; return item; }
                 if (itemName.IndexOf(name, comp) < 0) continue;
+                Queue<Queue<Queue>> queue = new Queue<Queue<Queue>>();
                 
                 match = item; matches++;
                 if (matches <= limit)

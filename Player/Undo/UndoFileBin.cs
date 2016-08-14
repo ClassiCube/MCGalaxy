@@ -180,26 +180,5 @@ namespace MCGalaxy.Util {
             header.DataPosition = s.Position;
             return header;
         }
-        
-        static void WriteChunkEntries(BinaryWriter w, ushort entries, long entriesPos) {
-            long curPos = w.BaseStream.Position;
-            w.BaseStream.Seek(entriesPos, SeekOrigin.Begin);
-            
-            w.Write(entries);
-            w.BaseStream.Seek(curPos, SeekOrigin.Begin);
-        }
-        
-        static ChunkHeader WriteEmptyChunk(BinaryWriter w, string mapName, DateTime time, ref long entriesPos) {
-            byte[] mapBytes = Encoding.UTF8.GetBytes(mapName);
-            w.Write((ushort)mapBytes.Length);
-            w.Write(mapBytes);
-            w.Write(time.ToLocalTime().Ticks);
-            
-            entriesPos = w.BaseStream.Position;
-            w.Write((ushort)0);
-            ChunkHeader header = default(ChunkHeader);
-            header.LevelName = mapName; header.BaseTime = time;
-            return header;
-        }
     }
 }

@@ -198,7 +198,7 @@ namespace MCGalaxy {
         
         void CompleteLoginProcess() {
             try {
-                SendMotd();
+                SendUserMOTD();
                 SendMap(null);
                 if (disconnected) return;
                 loggedIn = true;

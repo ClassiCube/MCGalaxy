@@ -50,6 +50,8 @@ namespace MCGalaxy {
             if (old == Block.Zero) return;
             if (jailed || !agreed || !canBuild) { RevertBlock(x, y, z); return; }
             if (level.IsMuseum && Blockchange == null) return;
+            if (action > 1) { Leave("Unknown block action!", true); return; }
+            bool doDelete = !painting && action == 0;
 
             if (!deleteMode) {
                 PhysicsArgs args = level.foundInfo(x, y, z);
@@ -76,7 +78,7 @@ namespace MCGalaxy {
             if (PlayerBlockChange != null)
                 PlayerBlockChange(this, x, y, z, block, extBlock);
             OnBlockChangeEvent.Call(this, x, y, z, block, extBlock);
-            if ( cancelBlock ) { cancelBlock = false; return; }
+            if (cancelBlock) { cancelBlock = false; return; }
 
             if (group.Permission == LevelPermission.Banned) return;
             if (checkPlaceDist && group.Permission == LevelPermission.Guest) {
@@ -90,7 +92,7 @@ namespace MCGalaxy {
             }
 
             if (!Block.canPlace(this, old) && !Block.BuildIn(old) && !Block.AllowBreak(old)) {
-                SendMessage("Cannot build here!");
+                Formatter.MessageBlock(this, doDelete ? "delete " : "replace ", old);
                 RevertBlock(x, y, z); return;
             }
 
@@ -99,12 +101,11 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            if (old >= 200 && old < 220) {
-                SendMessage("Block is active, you cant disturb it!");
+            if (old >= Block.air_flood && old <= Block.air_door_air) {
+                SendMessage("Block is active, you cannot disturb it.");
                 RevertBlock(x, y, z); return;
             }
 
-            if (action > 1 ) { Leave("Unknown block action!", true); return; }
             byte blockRaw = block;
             if (block < Block.CpeCount) block = bindings[block];
             
@@ -118,9 +119,8 @@ namespace MCGalaxy {
             
             byte heldExt = 0;
             byte heldBlock = GetActualHeldBlock(out heldExt);
-            int index = level.PosToInt(x, y, z);
-            
-            if (!painting && action == 0) {
+            int index = level.PosToInt(x, y, z);            
+            if (doDelete) {
                 if (DeleteBlock(old, x, y, z, block, extBlock))
                     level.AddToBlockDB(this, index, heldBlock, heldExt, true);
             } else {

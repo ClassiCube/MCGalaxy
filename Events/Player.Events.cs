@@ -67,33 +67,33 @@ namespace MCGalaxy {
         public delegate void BlockchangeEventHandler(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
         /// <summary> Called when a player removes or places a block </summary>
         [Obsolete("Please use OnBlockChangeEvent.Register()")]
-        public event BlockchangeEventHandler Blockchange = null;
+        public event BlockchangeEventHandler Blockchange;
         /// <summary> Called when a player places a block. </summary>
         [Obsolete("Please use OnBlockChangeEvent.Register()")]
-        public static event BlockchangeEventHandler2 PlayerBlockChange = null;
+        public static event BlockchangeEventHandler2 PlayerBlockChange;
         public void ClearBlockchange() { Blockchange = null; }
-        public object blockchangeObject = null;
+        public object blockchangeObject;
         
         /// <summary> Called when a player connects to the server. </summary>
         public delegate void OnPlayerConnect(Player p);
         /// <summary> Called when a player connects to the server. </summary>
         [Obsolete("Please use OnPlayerConnectEvent.Register()")]
-        public static event OnPlayerConnect PlayerConnect = null;
+        public static event OnPlayerConnect PlayerConnect;
         
         /// <summary> Called when a player disconnects. </summary>
         public delegate void OnPlayerDisconnect(Player p, string reason);        
         /// <summary> Called when a player disconnects. </summary>
-        public static event OnPlayerDisconnect PlayerDisconnect = null;
+        public static event OnPlayerDisconnect PlayerDisconnect;
         
         /// <summary> Called when a player does a command. However, the server will still look for 
         /// another command unless you cancel the event </summary>
         public delegate void OnPlayerCommand(string cmd, Player p, string message);
         /// <summary> Called when a player does a command (string cmd, Player p, string message) </summary>
         [Obsolete("Please use OnPlayerCommandEvent.Register()")]
-        public static event OnPlayerCommand PlayerCommand = null;
+        public static event OnPlayerCommand PlayerCommand;
         /// <summary> Called when the player does a command. </summary>
         [Obsolete("Please use OnPlayerCommandEvent.Register()")]
-        public event OnPlayerCommand OnCommand = null;
+        public event OnPlayerCommand OnCommand;
         public void ClearPlayerCommand() { OnCommand = null; }
         
         /// <summary> Called when a player chats on the server. Message will be sent unless you cancel the event. </summary>
@@ -102,48 +102,48 @@ namespace MCGalaxy {
         public delegate void OnPlayerMessageReceived(Player p, string message);
         /// <summary> Called when a player chats. </summary>
         [Obsolete("Please use OnPlayerChatEvent.Register()")]
-        public static event OnPlayerChat PlayerChat = null;
+        public static event OnPlayerChat PlayerChat;
         /// <summary> Called when a player is about to recieve a chat message </summary>
         [Obsolete("Please use OnMessageRecieveEvent.Register()")]
-        public static event OnPlayerMessageReceived MessageRecieve = null;
+        public static event OnPlayerMessageReceived MessageRecieve;
         /// <summary> Called when the player is about to recieve a chat message </summary>
         [Obsolete("Please use OnMessageRecieveEvent.Register()")]
-        public event OnPlayerMessageReceived OnMessageRecieve = null;
+        public event OnPlayerMessageReceived OnMessageRecieve;
         /// <summary> Called when the player chats. </summary>
         [Obsolete("Please use OnPlayerChatEvent.Register()")]
-        public event OnPlayerChat OnChat = null;
+        public event OnPlayerChat OnChat;
         public void ClearPlayerChat() { OnChat = null; }
         
         /// <summary> Called when a player dies. </summary>
         public delegate void OnPlayerDeath(Player p, byte deathblock);     
         /// <summary> Called when the player dies. </summary>
         [Obsolete("Please use OnPlayerDeathEvent.Register()")]
-        public event OnPlayerDeath OnDeath = null;
+        public event OnPlayerDeath OnDeath;
         /// <summary> Called when a player dies. </summary>
         [Obsolete("Please use OnPlayerDeathEvent.Register()")]
-        public static event OnPlayerDeath PlayerDeath = null;
+        public static event OnPlayerDeath PlayerDeath;
         public void ClearPlayerDeath() { OnDeath = null; }
          
         /// <summary> TCalled when a player moves on the server </summary>
         public delegate void OnPlayerMove(Player p, ushort x, ushort y, ushort z);
         /// <summary> Called when a player moves. </summary>
-        public static event OnPlayerMove PlayerMove = null;
+        public static event OnPlayerMove PlayerMove;
         /// <summary> Called when the player moves. </summary>
-        public event OnPlayerMove OnMove = null;
+        public event OnPlayerMove OnMove;
         
         /// <summary> Called when a player rotates on the server. 
         /// (rot[0] is yaw, rot[1] is pitch). </summary>
         public delegate void OnPlayerRotate(Player p, byte[] rot);
         /// <summary> Called when a player rotates. </summary>
-        public static event OnPlayerRotate PlayerRotate = null;
+        public static event OnPlayerRotate PlayerRotate;
         /// <summary> Called when the player rotates. </summary>
-        public event OnPlayerRotate OnRotate = null;
+        public event OnPlayerRotate OnRotate;
         
         /// <summary> Called when the player performs an action. </summary>
         public delegate void OnPlayerAction(Player p, PlayerAction action, 
                                             string message, bool stealth);
         /// <summary> Called when a player performs an action. </summary>
-        public static event OnPlayerAction DoPlayerAction = null;      
+        public static event OnPlayerAction DoPlayerAction;
         public static void RaisePlayerAction(Player p, PlayerAction action,
                                              string message = null, bool stealth = false) {
             OnPlayerAction change = DoPlayerAction;

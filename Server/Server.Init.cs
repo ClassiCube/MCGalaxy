@@ -224,7 +224,7 @@ namespace MCGalaxy {
             if (File.Exists("text/messages.txt")) {
                 messages = CP437Reader.ReadAllLines("text/messages.txt");
             } else {
-                File.Create("text/messages.txt").Close();
+                using (File.Create("text/messages.txt")) {}
             }
             Server.MainScheduler.QueueRepeat(RandomMessage, null, TimeSpan.FromMinutes(5));
         }
@@ -247,23 +247,23 @@ namespace MCGalaxy {
             locationChecker = new Thread(DoLocationChecks);
             locationChecker.Name = "MCG_LocationCheck";
             locationChecker.Start();
-            #if DEBUG
-            UseTextures = true;
-            #endif
+             
+            InitZombieSurvival();
+            BlockQueue.Start();
+
             Log("Finished setting up server, finding classicube.net url..");
             ServerSetupFinished = true;
-            try
-            {
-                if (Server.lava.startOnStartup)
-                    Server.lava.Start();
-                if (ZombieGame.StartImmediately)
-                    Server.zombie.Start(ZombieGameStatus.InfiniteRounds, null, 0);
-                //This doesnt use the main map
-                if (Server.UseCTF)
-                    ctf = new Auto_CTF();
-            }
-            catch (Exception e) { Server.ErrorLog(e); }
-            BlockQueue.Start();
+        }
+        
+        void InitZombieSurvival() {
+            if (!ZombieGame.StartImmediately) return;
+            try {
+                Level oldMain = Server.mainLevel;
+                Server.zombie.Start(ZombieGameStatus.InfiniteRounds, null, 0);
+                // Did zombie survival change the main world?
+                if (oldMain != null && oldMain != Server.mainLevel)
+                    oldMain.Unload(true, false);
+            } catch (Exception e) { Server.ErrorLog(e); }
         }
 
         const string staffUrl = "https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Uploads/devs.txt";       

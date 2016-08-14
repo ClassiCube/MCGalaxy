@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleCreate(Player p, string[] parts) {
-            if (!CheckExtraPerm(p, 1)) { MessageNeedExtra(p, "can create a chatroom.", 1); return; }
+            if (!CheckExtraPerm(p, 1)) { MessageNeedExtra(p, "create a chatroom.", 1); return; }
             if (parts.Length <= 1) {
                 Player.Message(p, "You need to provide a new chatroom name.");
                 return;
@@ -168,7 +168,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleSpy(Player p, string[] parts) {
-            if (!CheckExtraPerm(p, 4)) { MessageNeedExtra(p, "can spy on a chatroom.", 4); return; }
+            if (!CheckExtraPerm(p, 4)) { MessageNeedExtra(p, "spy on a chatroom.", 4); return; }
             if (parts.Length <= 1) {
                 Player.Message(p, "You need to provide a chatroom name to spy on."); return;
             }
@@ -191,7 +191,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleForceJoin(Player p, string[] parts) {
-            if (!CheckExtraPerm(p, 5)) { MessageNeedExtra(p, "can force players to join a chatroom.", 5); return; }
+            if (!CheckExtraPerm(p, 5)) { MessageNeedExtra(p, "force players to join a chatroom.", 5); return; }
             if (parts.Length <= 2) {
                 Player.Message(p, "You need to provide a player name, then a chatroom name."); return;
             }
@@ -217,7 +217,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleKick(Player p, string[] parts) {
-            if (!CheckExtraPerm(p, 6)) { MessageNeedExtra(p, "can kick players from a chatroom.", 6); return; }
+            if (!CheckExtraPerm(p, 6)) { MessageNeedExtra(p, "kick players from a chatroom.", 6); return; }
             if (parts.Length <= 1) {
                 Player.Message(p, "You need to provide a player name.");
                 return;

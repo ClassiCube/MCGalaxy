@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
             if (p != null && who.Rank > p.Rank) {
                 MessageTooHighRank(p, "change the title color of", true); return;
             }
-            if (who != p && !CheckExtraPerm(p)) { MessageNeedExtra(p, "can change the title color of others."); return; }
+            if (who != p && !CheckExtraPerm(p)) { MessageNeedExtra(p, "change the title color of others."); return; }
             SetTColor(p, who, args);
         }
         

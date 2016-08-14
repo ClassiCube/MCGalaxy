@@ -24,7 +24,7 @@ namespace MCGalaxy.Generator {
     public static class HeightmapGen {
         
         public static bool DownloadImage(string url, string dir, Player p) {
-            if (!Directory.Exists(dir)) 
+            if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
             if (!url.StartsWith("http://") && !url.StartsWith("https://"))
                 url = "http://" + url;
@@ -48,7 +48,7 @@ namespace MCGalaxy.Generator {
             Bitmap bmp = null;
             try {
                 bmp = new Bitmap(dir + name + ".bmp");
-                int width = bmp.Width; 
+                int width = bmp.Width;
                 // sometimes Mono will return an invalid bitmap instance that throws ArgumentNullException,
                 // so we make sure to check for that here rather than later.
                 return bmp;
@@ -69,21 +69,22 @@ namespace MCGalaxy.Generator {
             if (!DownloadImage(args.Args, "extra/heightmap/", p )) return false;
             Bitmap bmp = ReadBitmap("tempImage_" + p.name, "extra/heightmap/", p);
             if (bmp == null) return false;
-            if (lvl.Width != bmp.Width || lvl.Length != bmp.Height) {
-                Player.Message(p, "The size of the heightmap is {0} by {1}.", bmp.Width, bmp.Height);
-                Player.Message(p, "The width and length of the new level must match that size.");
-                return false;
-            }
-
             int index = 0, oneY = lvl.Width * lvl.Length;
+            
             using (bmp) {
+                if (lvl.Width != bmp.Width || lvl.Length != bmp.Height) {
+                    Player.Message(p, "The size of the heightmap is {0} by {1}.", bmp.Width, bmp.Height);
+                    Player.Message(p, "The width and length of the new level must match that size.");
+                    return false;
+                }
+                
                 for (int z = 0; z < bmp.Height; z++)
                     for (int x = 0; x < bmp.Width; x++)
                 {
                     int height = bmp.GetPixel(x, z).R * lvl.Height / 255;
                     for (int y = 0; y < height - 1; y++)
                         lvl.blocks[index + oneY * y] = Block.dirt;
-                    if (height > 0) 
+                    if (height > 0)
                         lvl.blocks[index + oneY * (height - 1)] = Block.grass;
                     index++;
                 }

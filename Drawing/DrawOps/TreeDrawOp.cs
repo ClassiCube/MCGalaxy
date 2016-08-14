@@ -45,10 +45,10 @@ namespace MCGalaxy.Drawing.Ops {
             if (brush == null) brush = defBrush;
             Vec3U16 P = Clamp(marks[0]);
             
-            if (Type == T_Tree) return AddTree(p, lvl, P.X, P.Y, P.Z, brush);
-            if (Type == T_NotchTree) return AddNotchTree(p, lvl, P.X, P.Y, P.Z, brush);
-            if (Type == T_NotchSwamp) return AddNotchSwampTree(p, lvl, P.X, P.Y, P.Z, brush);
-            if (Type == T_Cactus) return AddCactus(p, lvl, P.X, P.Y, P.Z);
+            if (Type == T_Tree) return AddTree(lvl, P.X, P.Y, P.Z, brush);
+            if (Type == T_NotchTree) return AddNotchTree(lvl, P.X, P.Y, P.Z, brush);
+            if (Type == T_NotchSwamp) return AddNotchSwampTree(lvl, P.X, P.Y, P.Z, brush);
+            if (Type == T_Cactus) return AddCactus(lvl, P.X, P.Y, P.Z);
             return null;
         }
         
@@ -78,7 +78,7 @@ namespace MCGalaxy.Drawing.Ops {
             Max.X += size; Max.Z += size;
         }
         
-        IEnumerable<DrawOpBlock> AddTree(Player p, Level lvl, ushort x, ushort y, ushort z, Brush brush) {
+        IEnumerable<DrawOpBlock> AddTree(Level lvl, ushort x, ushort y, ushort z, Brush brush) {
             for (ushort dy = 0; dy < top + height - 1; dy++) {
                 ushort yy = (ushort)(y + dy);
                 if (overwrite || lvl.GetTile(x, yy, z) == Block.air || (yy == y && lvl.GetTile(x, yy, z) == Block.shrub))
@@ -99,7 +99,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
 
-        IEnumerable<DrawOpBlock> AddNotchTree(Player p, Level lvl, ushort x, ushort y, ushort z, Brush brush) {
+        IEnumerable<DrawOpBlock> AddNotchTree(Level lvl, ushort x, ushort y, ushort z, Brush brush) {
             for (int dy = 0; dy <= height; dy++) {
                 ushort yy = (ushort)(y + dy);
                 byte tile = lvl.GetTile(x, yy, z);
@@ -129,7 +129,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
 
-        IEnumerable<DrawOpBlock> AddNotchSwampTree(Player p, Level lvl, ushort x, ushort y, ushort z, Brush brush) {
+        IEnumerable<DrawOpBlock> AddNotchSwampTree(Level lvl, ushort x, ushort y, ushort z, Brush brush) {
             for (int dy = 0; dy <= height; dy++) {
                 ushort yy = (ushort)(y + dy);
                 byte tile = lvl.GetTile(x, yy, z);
@@ -159,7 +159,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
 
-        IEnumerable<DrawOpBlock> AddCactus(Player p, Level lvl, ushort x, ushort y, ushort z) {
+        IEnumerable<DrawOpBlock> AddCactus(Level lvl, ushort x, ushort y, ushort z) {
             for (ushort dy = 0; dy <= height; dy++) {
                 if (overwrite || lvl.GetTile(z, (ushort)(y + dy), z) == Block.air)
                     yield return Place(x, (ushort)(y + dy), z, Block.green, 0);

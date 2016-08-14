@@ -651,7 +651,6 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="app.config" />
-    <None Include="bin\Release\Updater.exe" />
     <Content Include="Galaxy.ico" />
     <Content Include="mcf.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
                 SuperRequiresArgs(name + " all", p, "level name"); return false;
             }
             
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "can reload all players in a map."); return false; }
+            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "reload all players in a map."); return false; }
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player who in players) {
                 if (who.level == lvl)

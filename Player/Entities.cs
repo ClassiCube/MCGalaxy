@@ -73,7 +73,7 @@ namespace MCGalaxy {
         
         internal static void Spawn(Player dst, Player p, byte id, ushort x, ushort y, ushort z,
                                    byte rotx, byte roty, string possession = "") {
-        	if (!Server.TablistGlobal)
+            if (!Server.TablistGlobal)
                 TabList.Add(dst, p, id);
             if (!Server.zombie.Running || !p.Game.Infected) {
                 string col = GetSupportedCol(dst, p.color);             
@@ -102,14 +102,14 @@ namespace MCGalaxy {
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
         internal static void SpawnEntities(Player p, bool bots = true) { 
-        	SpawnEntities(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], bots); 
+            SpawnEntities(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], bots); 
         }
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
         internal static void SpawnEntities(Player p, ushort x, ushort y, ushort z, byte rotX, byte rotY, bool bots = true) {
-        	Player[] players = PlayerInfo.Online.Items;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-        		if (pl.level != p.level || !CanSeeEntity(p, pl) || p == pl) continue;
+                if (pl.level != p.level || !CanSeeEntity(p, pl) || p == pl) continue;
                 Spawn(p, pl, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
             }           
             GlobalSpawn(p, x, y, z, rotX, rotY, true);
@@ -117,7 +117,7 @@ namespace MCGalaxy {
             if (!bots) return;            
             PlayerBot[] botsList = PlayerBot.Bots.Items;
             foreach (PlayerBot b in botsList)
-            	if (b.level == p.level) Spawn(p, b);
+                if (b.level == p.level) Spawn(p, b);
         }
         
         /// <summary> Despawns this player to all other players, and despawns all others players to this player. </summary>
@@ -172,14 +172,14 @@ namespace MCGalaxy {
         }
 
         
-        /// <summary> Returns whether the given player is able to see the other player (e.g. in /who). </summary>
+        /// <summary> Returns whether the given player is able to see the target player (e.g. in /who). </summary>
         public static bool CanSee(Player p, Player target) {
             if (p == null || !target.hidden || p == target) return true;
             if (target.otherRankHidden) return p.Rank >= target.oHideRank;
-            return p.Rank > target.group.Permission;
+            return p.Rank >= target.Rank;
         }
         
-        /// <summary> Returns whether the given player is able to see the other player as an in-game entity. </summary>
+        /// <summary> Returns whether the given player is able to see the target player as an in-game entity. </summary>
         public static bool CanSeeEntity(Player p, Player target) {
             bool mayBeHidden = target.hidden;
             mayBeHidden |= (target.Game.Referee || target.Game.Invisible) && Server.zombie.Running;
@@ -189,7 +189,7 @@ namespace MCGalaxy {
             if (target.Game.Invisible && !p.Game.Referee 
                 && Server.zombie.Running) return false;
             if (target.otherRankHidden) return p.Rank >= target.oHideRank;
-            return p.Rank >= target.group.Permission;
+            return p.Rank >= target.Rank;
         }
         
         /// <summary> Updates the model of the entity with the specified id to all other players. </summary>

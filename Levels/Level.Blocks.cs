@@ -87,26 +87,26 @@ namespace MCGalaxy {
             return def == null ? Block.air : def.FallBack;
         }
         
-        public void SetTile(int b, byte type) {
-            if (blocks == null || b < 0 || b >= blocks.Length) return;
-            blocks[b] = type;
+        public void SetTile(int index, byte block) {
+            if (blocks == null || index < 0 || index >= blocks.Length) return;
+            blocks[index] = block;
             changed = true;
         }
         
-        public void SetTile(ushort x, ushort y, ushort z, byte type) {
-            int b = PosToInt(x, y, z);
-            if (blocks == null || b < 0) return;
-            blocks[b] = type;
+        public void SetTile(ushort x, ushort y, ushort z, byte block) {
+            int index = PosToInt(x, y, z);
+            if (blocks == null || index < 0) return;
+            blocks[index] = block;
             changed = true;
         }
         
-        public void SetExtTile(ushort x, ushort y, ushort z, byte extType) {
+        public void SetExtTile(ushort x, ushort y, ushort z, byte extBlock) {
             int index = PosToInt(x, y, z);
             if (index < 0 || blocks == null) return;
-            SetExtTileNoCheck(x, y, z, extType);
+            SetExtTileNoCheck(x, y, z, extBlock);
         }
         
-        public void SetExtTileNoCheck(ushort x, ushort y, ushort z, byte extType) {
+        public void SetExtTileNoCheck(ushort x, ushort y, ushort z, byte extBlock) {
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             int cIndex = (cy * ChunksZ + cz) * ChunksX + cx;
             byte[] chunk = CustomBlocks[cIndex];
@@ -115,7 +115,7 @@ namespace MCGalaxy {
                 chunk = new byte[16 * 16 * 16];
                 CustomBlocks[cIndex] = chunk;
             }
-            chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = extType;
+            chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = extBlock;
         }
         
         public void RevertExtTileNoCheck(ushort x, ushort y, ushort z) {
@@ -331,21 +331,21 @@ namespace MCGalaxy {
             AddCheck(b, false, args);
         }
         
-        public void Blockchange(int b, byte type, bool overRide = false, 
+        public void Blockchange(int b, byte block, bool overRide = false, 
                                 PhysicsArgs data = default(PhysicsArgs),
-                                byte extType = 0, bool addUndo = true) { //Block change made by physics
-            if (DoPhysicsBlockchange(b, type, overRide, data, extType, addUndo))
-                Player.GlobalBlockchange(this, b, type, extType);
+                                byte extBlock = 0, bool addUndo = true) { //Block change made by physics
+            if (DoPhysicsBlockchange(b, block, overRide, data, extBlock, addUndo))
+                Player.GlobalBlockchange(this, b, block, extBlock);
         }
         
-        public void Blockchange(ushort x, ushort y, ushort z, byte type, bool overRide = false, 
+        public void Blockchange(ushort x, ushort y, ushort z, byte block, bool overRide = false, 
                                 PhysicsArgs data = default(PhysicsArgs),
-                                byte extType = 0, bool addUndo = true) {
-            Blockchange(PosToInt(x, y, z), type, overRide, data, extType, addUndo); //Block change made by physics
+                                byte extBlock = 0, bool addUndo = true) {
+            Blockchange(PosToInt(x, y, z), block, overRide, data, extBlock, addUndo); //Block change made by physics
         }
         
-        public void Blockchange(ushort x, ushort y, ushort z, byte type, byte extType) {
-            Blockchange(PosToInt(x, y, z), type, false, default(PhysicsArgs), extType); //Block change made by physics
+        public void Blockchange(ushort x, ushort y, ushort z, byte block, byte extBlock) {
+            Blockchange(PosToInt(x, y, z), block, false, default(PhysicsArgs), extBlock); //Block change made by physics
         }
         
         internal bool DoPhysicsBlockchange(int b, byte block, bool overRide = false, 
@@ -449,6 +449,18 @@ namespace MCGalaxy {
                 BlockQueue.Addblock(p, index, block, extBlock);
             else 
                 Player.GlobalBlockchange(this, x, y, z, block, extBlock);
+        }
+        
+        public string BlockName(byte block, byte extBlock) {
+            if (block == Block.custom_block) {
+                BlockDefinition[] defs = CustomBlockDefs;
+                for (int i = 1; i < 255; i++) {
+                    BlockDefinition def = defs[i];
+                    if (def == null) continue;
+                    if (def.BlockID == extBlock) return def.Name.Replace(" ", "");
+                }
+            }
+            return Block.Name(block);
         }
     }
 }

@@ -38,11 +38,11 @@ namespace MCGalaxy.Commands {
             string[] args = { "", "", "", "", "", "", "", "" };
             for (int i = 0; i < Math.Min(args.Length, raw.Length); i++)
                 args[i] = raw[i];
-            HandleSetup(p, message, args);
+            HandleSetup(p, args);
         }
         
-        void HandleSetup(Player p, string message, string[] args) {
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "can setup the economy."); return; }
+        void HandleSetup(Player p, string[] args) {
+            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "setup the economy."); return; }
             
             switch (args[0].ToLower()) {
                 case "apply":

@@ -392,7 +392,6 @@ namespace MCGalaxy.Games
                 foreach (player p in Players)
                 {
                     Player.Message(p.p, Message);
-
                 }
             }
             catch { };
@@ -668,14 +667,11 @@ namespace MCGalaxy.Games
             catch { }
         }
 
-        public bool Finished()
-        {
+        public bool Finished() {
             if (GameMode == TntWarsGameMode.TDM && (RedScore >= ScoreLimit || BlueScore >= ScoreLimit))
-            {
                 return true;
-            }
-            if (GameMode == TntWarsGameMode.FFA)
-            {
+            
+            if (GameMode == TntWarsGameMode.FFA) {
                 try
                 {
                     if (Players.Any(p => p.Score >= ScoreLimit))
@@ -685,20 +681,12 @@ namespace MCGalaxy.Games
                 }
                 catch { }
             }
-            if (PlayingPlayers() <= 1)
-            {
-                return true;
-            }
-            if (GameStatus == TntWarsGameStatus.Finished)
-            {
-                return true;
-            }
-            return false;
+            if (PlayingPlayers() <= 1) return true;
+            return GameStatus == TntWarsGameStatus.Finished;
         }
 
         //enums
-        public enum TntWarsGameStatus : int
-        {
+        public enum TntWarsGameStatus {
             WaitingForPlayers = 0,
             AboutToStart = 1,
             GracePeriod = 2,
@@ -706,14 +694,12 @@ namespace MCGalaxy.Games
             Finished = 4
         }
 
-        public enum TntWarsGameMode : int
-        {
+        public enum TntWarsGameMode {
             FFA = 0,
             TDM = 1
         }
 
-        public enum TntWarsDifficulty : int
-        {
+        public enum TntWarsDifficulty {
             Easy = 0,       //2 Hits to die, Tnt has long delay
             Normal = 1,     //2 Hits to die, Tnt has normal delay
             Hard = 2,       //1 Hit to die, Tnt has short delay
@@ -761,8 +747,7 @@ namespace MCGalaxy.Games
 
         public bool CheckAllSetUp(Player p, bool ReturnErrors = false, bool TellPlayerOnSuccess = true)
         {
-            if (lvl != null
-                && GameStatus == 0)
+            if (lvl != null && GameStatus == 0)
             {
                 if (GameList.Any(g => g.lvl == this.lvl && g != this))
                 {
@@ -810,10 +795,7 @@ namespace MCGalaxy.Games
         public static TntWarsGame GetTntWarsGame(Player p)
         {
             TntWarsGame it = TntWarsGame.Find(p.level);
-            if (it != null)
-            {
-                return it;
-            }
+            if (it != null) return it;
             it = FindFromGameNumber(p.CurrentTntGameNumber);
             return it;
         }

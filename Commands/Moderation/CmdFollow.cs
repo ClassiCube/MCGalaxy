@@ -42,12 +42,12 @@ namespace MCGalaxy.Commands {
             
             if (name == "" && p.following == "") { Help(p); return; }
             if (name.CaselessEq(p.following) || (name == "" && p.following != ""))
-                Unfollow(p, name, stealth);
+                Unfollow(p, stealth);
             else
                 Follow(p, name, stealth);
         }
         
-        static void Unfollow(Player p, string name, bool stealth) {
+        static void Unfollow(Player p, bool stealth) {
             Player who = PlayerInfo.FindExact(p.following);
             Player.Message(p, "Stopped following ", who == null ? p.following : who.ColoredName);
             p.following = "";

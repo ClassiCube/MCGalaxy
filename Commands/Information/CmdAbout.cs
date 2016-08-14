@@ -45,7 +45,9 @@ namespace MCGalaxy.Commands {
             byte id = b;
             if (b == Block.custom_block)
                 id = p.level.GetExtTile(x, y, z);
-            Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.", x, y, z, id, Block.Name(b));
+            
+            string blockName = p.level.BlockName(b, id);
+            Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.", x, y, z, id, blockName);
             DateTime now = DateTime.Now;
             bool foundOne = false;
             

@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.World {
             } else if (scope == "level") {
                 p.level.terrainUrl = url;
                 Player.Message(p, "Set level's terrain to " + args[1]);
-                UpdateLevel(p, false);
+                UpdateLevel(p);
             } else if (scope == "globalzip") {
                 Server.defaultTextureUrl = url;
                 Player.Message(p, "Set server's default texture pack to " + args[1]);
@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands.World {
             } else if (scope == "levelzip") {
                 p.level.texturePackUrl = url;
                 Player.Message(p, "Set level's texture pack to " + args[1]);
-                UpdateLevel(p, true);
+                UpdateLevel(p);
             } else {
                 Help(p);
             }
@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands.World {
             SrvProperties.Save();
         }
         
-        void UpdateLevel(Player p, bool zip) {
+        void UpdateLevel(Player p) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level != p.level) continue;

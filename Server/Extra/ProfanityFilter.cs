@@ -21,33 +21,51 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace MCGalaxy {
     public static class ProfanityFilter {
-        private static Dictionary<string, string> RegexReduce;
-        private static List<string> BadWords;
-        public static void Init()
-        {
-            // Initializes the reduction dictionary and word list
-            RegexReduce = new Dictionary<string, string>();
-            RegexReduce.Add("a", "[@]");
-            RegexReduce.Add("b", "i3|l3");
-            RegexReduce.Add("c", "[(]");
-            RegexReduce.Add("e", "[3]");
-            RegexReduce.Add("f", "ph");
-            RegexReduce.Add("g", "[6]");
-            RegexReduce.Add("h", "#");
-            // Because Is and Ls are similar, the swear list will contain a lowercase I instead of Ls.
-            // For example, the word "asshole" would be saved as "asshoie".
-            RegexReduce.Add("i", "[l!1]");
-            RegexReduce.Add("o", "[0]");
-            RegexReduce.Add("q", "[9]");
-            RegexReduce.Add("s", "[$5]");
-            RegexReduce.Add("w", "vv");
-            RegexReduce.Add("z", "[2]");
+        static string[] reduceKeys, reduceValues;
+        static List<string> filters;
+        
+        public static void Init() {
+            InitReduceTable();
+            LoadBadWords();
+        }
 
-            // Load/create the badwords.txt file and import them into the BadWords list
+        public static string Parse(string text) { return FilterWords(text); }
+        
+
+        // Replace any whole word containing a bad word inside it (including partial word matches)
+        static string FilterWords(string text) {
+            string[] words = text.Split(' ');
+            string[] reduced = Reduce(text).Split(' ');
+
+            // Loop through each reduced word, looking for a bad word
+            for (int i = 0; i < reduced.Length; i++) {
+                bool isFiltered = false;
+                foreach (string filter in filters) {
+                    if (reduced[i].Contains(filter)) {
+                        isFiltered = true; break;   
+                    }
+                }
+                if (!isFiltered) continue;
+
+                // If a bad word is found anywhere in the word, replace the word
+                int length = words[i].Length;               
+                words[i] = new String('*', length);
+            }            
+            return String.Join(" ", words);
+        }
+        
+        static void InitReduceTable() {
+            if (reduceKeys != null) return;
+            // Because some letters are similar (Like i and l), they are reduced to the same form.
+            // For example, the word "@t3$5t ll" is reduced to "atest ii";
+            reduceKeys = "@|i3|l3|(|3|ph|6|#|l|!|1|0|9|$5|vv|2".Split('|');
+            reduceValues= "a|b|b|c|e|f|g|h|i|i|i|o|q|s|w|z".Split('|');
+        }
+        
+        static void LoadBadWords() {
             if (!File.Exists("text/badwords.txt")) {
                 // No file exists yet, so let's create one
                 StringBuilder sb = new StringBuilder();
@@ -56,88 +74,20 @@ namespace MCGalaxy {
                 File.WriteAllText("text/badwords.txt", sb.ToString());
             }
             
-            // OK the file should exist now
             List<string> lines = CP437Reader.ReadAllLines("text/badwords.txt");
             // Run the badwords through the reducer to ensure things like Ls become Is and everything is lowercase
-            // Also remove lines starting with a "#" since they are comments
-            BadWords = new List<string>();
+            filters = new List<string>();
             foreach (string line in lines) {
                 if (line.StartsWith("#") || line.Trim().Length == 0) continue;
                 string word = Reduce(line.ToLower());
-                BadWords.Add(word);
+                filters.Add(word);
             }
         }
 
-        public static string Parse(string text) {
-            //return ParseMatchWholeWords(text);
-            return ParseMatchPartialWords(text);
-        }
-
-        // Replace bad words only if the whole word matches
-        private static string ParseMatchWholeWords(string text)
-        {
-            var result = new List<string>();
-            var originalWords = text.Split(' ');
-            var reducedWords = Reduce(text).Split(' ');
-            for (var i = 0; i < originalWords.Length; i++)
-            {
-                if (BadWords.Contains(reducedWords[i].ToLower()))
-                {
-                    // A reduced word matched a bad word from our file!
-                    result.Add(new String('*', originalWords[i].Length));
-                }
-                else
-                {
-                    result.Add(originalWords[i]);
-                }
-            }
-
-            return String.Join(" ", result.ToArray());
-        }
-
-        // Replace any whole word containing a bad word inside it (including partial word matches)
-        private static string ParseMatchPartialWords(string text)
-        {
-            var result = new List<string>();
-            var originalWords = text.Split(' ');
-            var reducedWords = Reduce(text).Split(' ');
-
-            // Loop through each reduced word, looking for a badword
-            for(int i=0; i<reducedWords.Length; i++)
-            {
-                bool badwordfound = false;
-                foreach (string badword in BadWords)
-                {
-                    if (reducedWords[i].Contains(badword))
-                    {
-                        badwordfound = true;
-                        break;   
-                    }
-                }
-
-                if (badwordfound)
-                {
-                    // If a badword is found anywhere in the string, replace the whole word
-                    result.Add(new String('*', originalWords[i].Length));
-                }
-                else
-                {
-                    // Nothing found, so use the original word
-                    result.Add(originalWords[i]);
-                }
-            }
-            
-            return String.Join(" ", result.ToArray());
-        }
-
-
-        private static string Reduce(string text)
-        {
+        static string Reduce(string text) {
             text = text.ToLower();
-            foreach (var pattern in RegexReduce)
-            {
-                text = Regex.Replace(text, pattern.Value, pattern.Key/*, RegexOptions.IgnoreCase*/);
-            }
+            for (int i = 0; i < reduceKeys.Length; i++)
+                text = text.Replace(reduceKeys[i], reduceValues[i]);
             return text;
         }
     }

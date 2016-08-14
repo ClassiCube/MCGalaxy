@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
                 BotsFile.UpdateBot(bot);
                 return;
             } else if (ai == "kill") {
-                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "can toggle a bot's killer instinct."); return; }
+                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "toggle a bot's killer instinct."); return; }
                 bot.kill = !bot.kill;
                 if (p != null) Chat.GlobalChatLevel(p, bot.ColoredName + "%S's kill instinct: " + bot.kill, false);
                 Server.s.Log(bot.name + "'s kill instinct: " + bot.kill);

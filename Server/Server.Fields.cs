@@ -26,15 +26,15 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy {
     public sealed partial class Server {
-        public static bool cancelcommand = false;
-        public static bool canceladmin = false;
-        public static bool cancellog = false;
-        public static bool canceloplog = false;
+        public static bool cancelcommand;
+        public static bool canceladmin;
+        public static bool cancellog;
+        public static bool canceloplog;
         public static string apppath = Application.StartupPath;
         public delegate void OnConsoleCommand(string cmd, string message);
         public static event OnConsoleCommand ConsoleCommand;
         public delegate void OnServerError(Exception error);
-        public static event OnServerError ServerError = null;
+        public static event OnServerError ServerError;
         public delegate void OnServerLog(string message);
         public static event OnServerLog ServerLog, ServerAdminLog, ServerOpLog;
         public delegate void HeartBeatHandler();

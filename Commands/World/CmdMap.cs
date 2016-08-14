@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.World {
                 value = args.Length > 2 ? args[2] : "";
             }
             
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "can set map options."); return; }
+            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "set map options."); return; }
             SetMapOption(p, lvl, opt, value);
         }
         
@@ -124,7 +124,7 @@ namespace MCGalaxy.Commands.World {
                     SetBool(p, lvl, ref lvl.Deletable, "Deletable: ");
                     lvl.UpdateBlockPermissions(); break;
                 case "realmowner":
-                    if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, "can set personal realm owners.", 2); return; }
+                    if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, "set personal realm owners.", 2); return; }
                     lvl.RealmOwner = value;
                     if (value == "") Player.Message(p, "Removed realm owner for this level.");
                     else Player.Message(p, "Set realm owner of this level to {0}.", value);

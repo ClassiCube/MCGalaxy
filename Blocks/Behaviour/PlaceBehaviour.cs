@@ -32,9 +32,9 @@ namespace MCGalaxy.BlockBehaviour {
             if (above == Block.custom_block) 
                 extAbove = lvl.GetExtTile(x, (ushort)(y + 1), z);
             
-            byte type = (above == Block.Zero || Block.LightPass(above, extAbove, lvl.CustomBlockDefs))
+            block = (above == Block.Zero || Block.LightPass(above, extAbove, lvl.CustomBlockDefs))
                 ? Block.grass : Block.dirt;
-            p.ChangeBlock(x, y, z, type, 0);
+            p.ChangeBlock(x, y, z, block, 0);
             return false;
         }
         

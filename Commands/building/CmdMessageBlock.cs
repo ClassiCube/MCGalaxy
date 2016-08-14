@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands.Building {
             
             string syntax = Messages.Rows.Count == 0 ?
                 "INSERT INTO `Messages" + p.level.name + "` (X, Y, Z, Message) VALUES (@0, @1, @2, @3)"
-                : "UPDATE `Messages" + p.level.name + "` SET X=@0, Y=@1, Z=@2, Message=@3";
+                : "UPDATE `Messages" + p.level.name + "` SET Message=@3 WHERE X=@0 AND Y=@1 AND Z=@2";
             Database.Execute(syntax, x, y, z, cpos.message);
         }
 
