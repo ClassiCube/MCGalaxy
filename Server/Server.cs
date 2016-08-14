@@ -215,7 +215,7 @@ namespace MCGalaxy {
             CommandOtherPerms.Load();
             ProfanityFilter.Init();
             Team.LoadList();
-            Chat.LoadCustomTokens();
+            ChatTokens.LoadCustom();
             FixupOldReviewPerms();
         }
         

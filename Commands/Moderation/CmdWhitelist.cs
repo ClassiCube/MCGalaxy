@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands {
             
             Server.whiteList.Add(player);
             string src = p == null ? "(console)" : p.ColoredName;
-            Chat.GlobalMessageOps(src + " %Sadded &f" + player + " %Sto the whitelist.");
+            Chat.MessageOps(src + " %Sadded &f" + player + " %Sto the whitelist.");
             Server.whiteList.Save();
             Server.s.Log("WHITELIST: Added " + player);
         }
@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands {
             
             Server.whiteList.Remove(player);
             string src = p == null ? "(console)" : p.ColoredName;
-            Chat.GlobalMessageOps(src + " %Sremoved &f" + player + " %Sfrom the whitelist.");
+            Chat.MessageOps(src + " %Sremoved &f" + player + " %Sfrom the whitelist.");
             Server.whiteList.Save();
             Server.s.Log("WHITELIST: Removed " + player);
         }

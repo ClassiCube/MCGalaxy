@@ -269,8 +269,8 @@ namespace MCGalaxy {
                 ManualChange(x, y, z, action, block, extBlock);
             } catch ( Exception e ) {
                 // Don't ya just love it when the server tattles?
-                Chat.GlobalMessageOps(DisplayName + " has triggered a block change error");
-                Chat.GlobalMessageOps(e.GetType().ToString() + ": " + e.Message);
+                Chat.MessageOps(DisplayName + " has triggered a block change error");
+                Chat.MessageOps(e.GetType().ToString() + ": " + e.Message);
                 Server.ErrorLog(e);
             }
         }
@@ -576,7 +576,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 if (Server.chatmod && !voice) { SendMessage("Chat moderation is on, you cannot speak."); return; }
                 CheckForMessageSpam();
 
-                if (Chat.HandleModes(this, text)) return;
+                if (ChatModes.Handle(this, text)) return;
 
                 if ( text[0] == ':' ) {
                     if ( PlayingTntWars ) {
@@ -661,7 +661,7 @@ return;
                 File.Create("text/joker.txt").Dispose(); return text;
             }
             Server.s.Log("<JOKER>: " + name + ": " + text);
-            Chat.GlobalMessageOps("%S<&aJ&bO&cK&5E&9R%S>: " + ColoredName + ":&f " + text);
+            Chat.MessageOps("%S<&aJ&bO&cK&5E&9R%S>: " + ColoredName + ":&f " + text);
 
             List<string> lines = new List<string>();
             using (StreamReader r = new StreamReader("text/joker.txt")) {

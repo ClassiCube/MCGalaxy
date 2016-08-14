@@ -45,11 +45,11 @@ namespace MCGalaxy.Commands {
                 if (!File.Exists(path)) {
                     File.Create(path).Dispose();
                     Player.GlobalMessage("The map " + args[1] + " has been locked");
-                    Chat.GlobalMessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
+                    Chat.MessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
                 } else {
                     File.Delete(path);
                     Player.GlobalMessage("The map " + args[1] + " has been unlocked");
-                    Chat.GlobalMessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
+                    Chat.MessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
                 }
             } else {
                 Player who = PlayerInfo.FindMatches(p, args[1]);
@@ -65,10 +65,10 @@ namespace MCGalaxy.Commands {
                         who.BlockUntilLoad(500);
                     }
                     Player.GlobalMessage(who.ColoredName + " %Shas been locked down!");
-                    Chat.GlobalMessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
+                    Chat.MessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
                 } else {
                     Player.GlobalMessage(who.ColoredName + " %Shas been unlocked.");
-                    Chat.GlobalMessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
+                    Chat.MessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
                 }
                 who.jailed = !who.jailed;
             }

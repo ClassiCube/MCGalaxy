@@ -300,7 +300,7 @@ namespace MCGalaxy {
 
             if (channel.CaselessEq(opchannel)) {
                 Server.s.Log(String.Format("(OPs): [IRC] {0}: {1}", user.Nick, message));
-                Chat.GlobalMessageOps(String.Format("To Ops &f-%I[IRC] {0}&f- {1}", user.Nick, 
+                Chat.MessageOps(String.Format("To Ops &f-%I[IRC] {0}&f- {1}", user.Nick, 
                                                     Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
             } else {
                 Server.s.Log(String.Format("[IRC] {0}: {1}", user.Nick, message));

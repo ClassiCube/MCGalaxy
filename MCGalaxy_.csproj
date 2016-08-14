@@ -115,9 +115,11 @@
     <Compile Include="Bots\PlayerBot.cs" />
     <Compile Include="Bots\ScriptFile.cs" />
     <Compile Include="Chat\Chat.cs" />
+    <Compile Include="Chat\ChatModes.cs" />
     <Compile Include="Chat\Colors.cs" />
     <Compile Include="Chat\EmotesHandler.cs" />
     <Compile Include="Chat\FullCP437Handler.cs" />
+    <Compile Include="Chat\ChatTokens.cs" />
     <Compile Include="Commands\Bots\CmdBotAdd.cs" />
     <Compile Include="Commands\Bots\CmdBotAI.cs" />
     <Compile Include="Commands\Bots\CmdBotRemove.cs" />

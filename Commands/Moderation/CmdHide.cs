@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands
                 Entities.GlobalDespawn(p, false);
                 TabList.Add(p, p, 0xFF);
                 if (messageOps && !p.otherRankHidden)
-                    Chat.GlobalMessageOps("To Ops -" + p.ColoredName + "%S- is now &finvisible%S.");
+                    Chat.MessageOps("To Ops -" + p.ColoredName + "%S- is now &finvisible%S.");
                 string discMsg = PlayerDB.GetLogoutMessage(p);
                 Player.SendChatFrom(p, "&c- " + p.FullName + " %S" + discMsg, false);
                 Server.IRC.Say(p.DisplayName + " left the game (" + discMsg + ")");
@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands
                 p.otherRankHidden = false;
                 p.oHideRank = LevelPermission.Null;
                 if (messageOps)
-                    Chat.GlobalMessageAdmins("To Admins -" + p.ColoredName + "%S- is now &fvisible%S.");
+                    Chat.MessageAdmins("To Admins -" + p.ColoredName + "%S- is now &fvisible%S.");
                 
                 Player.SendChatFrom(p, "&a+ " + p.FullName + " %S" + PlayerDB.GetLoginMessage(p), false);
                 Server.IRC.Say(p.DisplayName + " joined the game");

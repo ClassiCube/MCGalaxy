@@ -88,8 +88,8 @@ namespace MCGalaxy.Commands {
             Player.Message(p, msg);
             
             string start = pos > 0 ? "There are now &c" + (pos + 1) + " %Speople" : "There is now &c1 %Sperson";
-            Chat.GlobalMessageMinPerms(p.color + p.name + " %Sentered the review queue", nextPerm);
-            Chat.GlobalMessageMinPerms(start + " waiting for a &creview!", nextPerm);
+            Chat.MessageAllMinPerm(p.ColoredName + " %Sentered the review queue", nextPerm);
+            Chat.MessageAllMinPerm(start + " waiting for a &creview!", nextPerm);
             p.NextReviewTime = DateTime.UtcNow.AddSeconds(Server.reviewcooldown);
             Player.RaisePlayerAction(p, PlayerAction.Review, null, true);
         }
@@ -157,8 +157,8 @@ namespace MCGalaxy.Commands {
         
         static void MessageNoPerm(Player p, LevelPermission perm) {
             Player.Message(p, "There is something wrong with the system.  A message has been sent to the admin to fix");
-            Chat.GlobalMessageAdmins(p.name + " tryed to use /review, but a system error occurred. Make sure your groups are formatted correctly");
-            Chat.GlobalMessageAdmins("The group permission that is messed up is: " + perm + " (" + (int)perm+ ")");
+            Chat.MessageAdmins(p.name + " tryed to use /review, but a system error occurred. Make sure your groups are formatted correctly");
+            Chat.MessageAdmins("The group permission that is messed up is: " + perm + " (" + (int)perm+ ")");
         }
         
         static void MessageReviewPosChanged() {

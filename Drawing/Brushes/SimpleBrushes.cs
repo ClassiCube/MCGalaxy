@@ -33,6 +33,8 @@ namespace MCGalaxy.Drawing.Brushes {
         public override byte NextBlock(DrawOp op) { return block; }
         
         public override byte NextExtBlock(DrawOp op) { return extBlock; }
+        
+        // TODO: OVerride validate
     }
 	
     public sealed class StripedBrush : Brush {

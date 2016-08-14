@@ -22,7 +22,7 @@ namespace MCGalaxy.Commands {
         public CmdAdminChat() { }
 
         public override void Use(Player p, string message) {
-            if (message != "") { Chat.MessageAdmins(p, message); return; }
+            if (message != "") { ChatModes.MessageAdmins(p, message); return; }
             
             p.adminchat = !p.adminchat;
             if (p.adminchat) Player.Message(p, "All messages will now be sent to Admins only");

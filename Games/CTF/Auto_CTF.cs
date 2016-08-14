@@ -278,7 +278,7 @@ namespace MCGalaxy.Games
                                 Thread.Sleep(300);
                                 if (GetPlayer(p1).hasflag)
                                 {
-                                    Chat.GlobalMessageLevel(mainlevel, redteam.color + p.name + " DROPPED THE FLAG!");
+                                    Chat.MessageLevel(mainlevel, redteam.color + p.name + " DROPPED THE FLAG!");
                                     GetPlayer(p1).points -= caplose;
                                     mainlevel.Blockchange(b.x, b.y, b.z, b.block);
                                     GetPlayer(p1).hasflag = false;
@@ -303,13 +303,13 @@ namespace MCGalaxy.Games
                 {
                     //cache.Remove(GetPlayer(p));
                     blueteam.members.Remove(p);
-                    Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + blueteam.color + "left the ctf game");
+                    Chat.MessageLevel(mainlevel, p.color + p.name + " " + blueteam.color + "left the ctf game");
                 }
                 else if (redteam.members.Contains(p))
                 {
                     //cache.Remove(GetPlayer(p));
                     redteam.members.Remove(p);
-                    Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + redteam.color + "left the ctf game");
+                    Chat.MessageLevel(mainlevel, p.color + p.name + " " + redteam.color + "left the ctf game");
                 }
             }
         }
@@ -386,34 +386,34 @@ tags     MEDIUMINT UNSIGNED{1});";
             map2 = maps1[rand.Next(maps1.Count)];
             maps1.Remove(map2);
             map3 = maps1[rand.Next(maps1.Count)];
-            Chat.GlobalMessageLevel(mainlevel, "%2VOTE:");
-            Chat.GlobalMessageLevel(mainlevel, "1. " + map1 + " 2. " + map2 + " 3. " + map3);
+            Chat.MessageLevel(mainlevel, "%2VOTE:");
+            Chat.MessageLevel(mainlevel, "1. " + map1 + " 2. " + map2 + " 3. " + map3);
             voting = true;
             int seconds = rand.Next(15, 61);
-            Chat.GlobalMessageLevel(mainlevel, "You have " + seconds + " seconds to vote!");
+            Chat.MessageLevel(mainlevel, "You have " + seconds + " seconds to vote!");
             Thread.Sleep(seconds * 1000);
             voting = false;
-            Chat.GlobalMessageLevel(mainlevel, "VOTING ENDED!");
+            Chat.MessageLevel(mainlevel, "VOTING ENDED!");
             Thread.Sleep(rand.Next(1, 10) * 1000);
             if (vote1 > vote2 && vote1 > vote3)
             {
-                Chat.GlobalMessageLevel(mainlevel, map1 + " WON!");
+                Chat.MessageLevel(mainlevel, map1 + " WON!");
                 return map1;
             }
             if (vote2 > vote1 && vote2 > vote3)
             {
-                Chat.GlobalMessageLevel(mainlevel, map2 + " WON!");
+                Chat.MessageLevel(mainlevel, map2 + " WON!");
                 return map2;
             }
             if (vote3 > vote2 && vote3 > vote1)
             {
-                Chat.GlobalMessageLevel(mainlevel, map3 + " WON!");
+                Chat.MessageLevel(mainlevel, map3 + " WON!");
                 return map3;
             }
             else
             {
-                Chat.GlobalMessageLevel(mainlevel, "There was a tie!");
-                Chat.GlobalMessageLevel(mainlevel, "I'll choose!");
+                Chat.MessageLevel(mainlevel, "There was a tie!");
+                Chat.MessageLevel(mainlevel, "I'll choose!");
                 return maps[rand.Next(maps.Count)];
             }
         }
@@ -435,9 +435,9 @@ tags     MEDIUMINT UNSIGNED{1});";
             }
             else
             {
-                Chat.GlobalMessageLevel(mainlevel, "The game ended in a tie!");
+                Chat.MessageLevel(mainlevel, "The game ended in a tie!");
             }
-            Chat.GlobalMessageLevel(mainlevel, "The winner was " + winnerteam.color + winner + "!!");
+            Chat.MessageLevel(mainlevel, "The winner was " + winnerteam.color + winner + "!!");
             Thread.Sleep(4000);
             //MYSQL!
             cache.ForEach(delegate(Data d) {
@@ -446,7 +446,7 @@ tags     MEDIUMINT UNSIGNED{1});";
                                  d.p.name, d.points, d.cap, d.tag);
             });
             nextmap = Vote();
-            Chat.GlobalMessageLevel(mainlevel, "Starting a new game!");
+            Chat.MessageLevel(mainlevel, "Starting a new game!");
             redbase = null;
             redteam = null;
             bluebase = null;
@@ -468,19 +468,19 @@ tags     MEDIUMINT UNSIGNED{1});";
                 }
                 if (p.level == mainlevel && blueteam.members.Contains(p) && x == redbase.x && y == redbase.y && z == redbase.z && mainlevel.GetTile(redbase.x, redbase.y, redbase.z) != Block.air)
                 {
-                    Chat.GlobalMessageLevel(mainlevel, blueteam.color + p.name + " took the " + redteam.color + " red team's FLAG!");
+                    Chat.MessageLevel(mainlevel, blueteam.color + p.name + " took the " + redteam.color + " red team's FLAG!");
                     GetPlayer(p).hasflag = true;
                 }
                 if (p.level == mainlevel && redteam.members.Contains(p) && x == bluebase.x && y == bluebase.y && z == bluebase.z && mainlevel.GetTile(bluebase.x, bluebase.y, bluebase.z) != Block.air)
                 {
-                    Chat.GlobalMessageLevel(mainlevel, redteam.color + p.name + " took the " + blueteam.color + " blue team's FLAG");
+                    Chat.MessageLevel(mainlevel, redteam.color + p.name + " took the " + blueteam.color + " blue team's FLAG");
                     GetPlayer(p).hasflag = true;
                 }
                 if (p.level == mainlevel && blueteam.members.Contains(p) && x == bluebase.x && y == bluebase.y && z == bluebase.z && mainlevel.GetTile(bluebase.x, bluebase.y, bluebase.z) != Block.air)
                 {
                     if (GetPlayer(p).hasflag)
                     {
-                        Chat.GlobalMessageLevel(mainlevel, blueteam.color + p.name + " RETURNED THE FLAG!");
+                        Chat.MessageLevel(mainlevel, blueteam.color + p.name + " RETURNED THE FLAG!");
                         GetPlayer(p).hasflag = false;
                         GetPlayer(p).cap++;
                         GetPlayer(p).points += cappoint;
@@ -505,7 +505,7 @@ tags     MEDIUMINT UNSIGNED{1});";
                 {
                     if (GetPlayer(p).hasflag)
                     {
-                        Chat.GlobalMessageLevel(mainlevel, redteam.color + p.name + " RETURNED THE FLAG!");
+                        Chat.MessageLevel(mainlevel, redteam.color + p.name + " RETURNED THE FLAG!");
                         GetPlayer(p).hasflag = false;
                         GetPlayer(p).points += cappoint;
                         GetPlayer(p).cap++;
@@ -573,7 +573,7 @@ tags     MEDIUMINT UNSIGNED{1});";
                                 GetPlayer(p).blue = false;
                             }
                             redteam.Add(p);
-                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + Colors.red + "joined the RED Team");
+                            Chat.MessageLevel(mainlevel, p.color + p.name + " " + Colors.red + "joined the RED Team");
                             Player.Message(p, Colors.red + "You are now on the red team!");
                         }
                         else if (redteam.members.Count > blueteam.members.Count)
@@ -586,7 +586,7 @@ tags     MEDIUMINT UNSIGNED{1});";
                                 GetPlayer(p).blue = true;
                             }
                             blueteam.Add(p);
-                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + Colors.blue + "joined the BLUE Team");
+                            Chat.MessageLevel(mainlevel, p.color + p.name + " " + Colors.blue + "joined the BLUE Team");
                             Player.Message(p, Colors.blue + "You are now on the blue team!");
                         }
                         else if (new Random().Next(2) == 0)
@@ -599,7 +599,7 @@ tags     MEDIUMINT UNSIGNED{1});";
                                 GetPlayer(p).blue = false;
                             }
                             redteam.Add(p);
-                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + Colors.red + "joined the RED Team");
+                            Chat.MessageLevel(mainlevel, p.color + p.name + " " + Colors.red + "joined the RED Team");
                             Player.Message(p, Colors.red + "You are now on the red team!");
                         }
                         else
@@ -612,7 +612,7 @@ tags     MEDIUMINT UNSIGNED{1});";
                                 GetPlayer(p).blue = true;
                             }
                             blueteam.Add(p);
-                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + Colors.blue + "joined the BLUE Team");
+                            Chat.MessageLevel(mainlevel, p.color + p.name + " " + Colors.blue + "joined the BLUE Team");
                             Player.Message(p, Colors.blue + "You are now on the blue team!");
                         }
                     }
@@ -622,13 +622,13 @@ tags     MEDIUMINT UNSIGNED{1});";
                         {
                             //cache.Remove(GetPlayer(p));
                             blueteam.members.Remove(p);
-                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + blueteam.color + "left the ctf game");
+                            Chat.MessageLevel(mainlevel, p.color + p.name + " " + blueteam.color + "left the ctf game");
                         }
                         else if (redteam.members.Contains(p))
                         {
                             //cache.Remove(GetPlayer(p));
                             redteam.members.Remove(p);
-                            Chat.GlobalMessageLevel(mainlevel, p.color + p.name + " " + redteam.color + "left the ctf game");
+                            Chat.MessageLevel(mainlevel, p.color + p.name + " " + redteam.color + "left the ctf game");
                         }
                     }
                 }
@@ -701,13 +701,13 @@ tags     MEDIUMINT UNSIGNED{1});";
                     {
                         if (redteam.members.Contains(p))
                         {
-                            Chat.GlobalMessageLevel(mainlevel, redteam.color + p.name + " DROPPED THE FLAG!");
+                            Chat.MessageLevel(mainlevel, redteam.color + p.name + " DROPPED THE FLAG!");
                             GetPlayer(p).points -= caplose;
                             mainlevel.Blockchange(redbase.x, redbase.y, redbase.z, Block.red);
                         }
                         else if (blueteam.members.Contains(p))
                         {
-                            Chat.GlobalMessageLevel(mainlevel, blueteam.color + p.name + " DROPPED THE FLAG!");
+                            Chat.MessageLevel(mainlevel, blueteam.color + p.name + " DROPPED THE FLAG!");
                             GetPlayer(p).points -= caplose;
                             mainlevel.Blockchange(bluebase.x, bluebase.y, bluebase.z, Block.blue);
                         }

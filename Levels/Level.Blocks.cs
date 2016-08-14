@@ -314,8 +314,8 @@ namespace MCGalaxy {
                 goto retry;
             } catch (Exception e) {
                 Server.ErrorLog(e);
-                Chat.GlobalMessageOps(p.name + " triggered a non-fatal error on " + name);
-                Chat.GlobalMessageOps("Error location: " + errorLocation);
+                Chat.MessageOps(p.name + " triggered a non-fatal error on " + name);
+                Chat.MessageOps("Error location: " + errorLocation);
                 Server.s.Log(p.name + " triggered a non-fatal error on " + name);
                 Server.s.Log("Error location: " + errorLocation);
                 return false;

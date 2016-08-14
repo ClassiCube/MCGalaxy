@@ -151,7 +151,7 @@ namespace MCGalaxy {
             }
             if (guests < Server.maxGuests) return true;
             
-            if (Server.guestLimitNotify) Chat.GlobalMessageOps("Guest " + DisplayName + " couldn't log in - too many guests.");
+            if (Server.guestLimitNotify) Chat.MessageOps("Guest " + DisplayName + " couldn't log in - too many guests.");
             Server.s.Log("Guest " + name + " couldn't log in - too many guests.");
             Leave("Server has reached max number of guests", true);
             return false;
@@ -222,7 +222,7 @@ namespace MCGalaxy {
                     }
                     if (found) {
                         if (group.Permission < Server.adminchatperm || !Server.adminsjoinsilent) {
-                            Chat.GlobalMessageOps(alts);
+                            Chat.MessageOps(alts);
                             //IRCBot.Say(temp, true); //Tells people in op channel on IRC
                         }
                         Server.s.Log(alts);

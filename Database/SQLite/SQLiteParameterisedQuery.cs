@@ -38,6 +38,7 @@ namespace MCGalaxy.SQL {
         public override void Fill(string query, DataTable results) {
             using (var conn = new SQLiteConnection(SQLite.connString)) {
                 conn.Open();
+    
                 using (SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn)) {
                     foreach (var param in parameters)
                         da.SelectCommand.Parameters.AddWithValue(param.Key, param.Value);

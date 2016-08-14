@@ -113,7 +113,7 @@ namespace MCGalaxy.Games
                 if (BackupNumber <= 0)
                 {
                     SendAllPlayersMessage(Colors.red + "Backing up Level for TNT Wars failed, Stopping game");
-                    Chat.GlobalMessageOps(Colors.red + "Backing up Level for TNT Wars failed, Stopping game");
+                    Chat.MessageOps(Colors.red + "Backing up Level for TNT Wars failed, Stopping game");
                     GameStatus = TntWarsGameStatus.Finished;
                     return;
                 }

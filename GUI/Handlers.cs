@@ -24,7 +24,7 @@ namespace MCGalaxy.Gui {
         public static void HandleChat(string text, Action<string> output) {
             if (text != null) text = text.Trim();
             if (String.IsNullOrEmpty(text)) return;
-            if (Chat.HandleModes(null, text)) return;
+            if (ChatModes.Handle(null, text)) return;
             
             Player.GlobalMessage("Console [&a" + Server.ZallState + Server.DefaultColor + "]:&f " + text);
             Server.IRC.Say("Console [&a" + Server.ZallState + "%S]: " + text);

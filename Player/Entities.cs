@@ -136,10 +136,10 @@ namespace MCGalaxy {
         }
         
         internal static void Spawn(Player dst, PlayerBot b) {
-            string name = Chat.ApplyTokens(b.DisplayName, dst);
+            string name = ChatTokens.Apply(b.DisplayName, dst);
             if (name.CaselessEq("empty")) name = "";
             else name = b.color + name;
-        	string skin = Chat.ApplyTokens(b.SkinName, dst);
+        	string skin = ChatTokens.Apply(b.SkinName, dst);
         	
             if (dst.hasExtList) {
                 dst.SendExtAddEntity2(b.id, skin, name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);

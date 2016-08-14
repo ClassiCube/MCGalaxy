@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
                 return;
             }
 
-            Chat.GlobalMessageOps(p.ColoredName + " %Sused &a/votekick");
+            Chat.MessageOps(p.ColoredName + " %Sused &a/votekick");
             Player.GlobalMessage("&9A vote to kick " + who.ColoredName + " %Shas been called!");
             Player.GlobalMessage("&9Type &aY %Sor &cN %Sto vote.");
 
@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands {
 
             int netVotesYes = votesYes - votesNo;
             // Should we also send this to players?
-            Chat.GlobalMessageOps("Vote Ended. Results: &aY: " + votesYes + " &cN: " + votesNo);
+            Chat.MessageOps("Vote Ended. Results: &aY: " + votesYes + " &cN: " + votesNo);
             Server.s.Log("VoteKick results for " + who.DisplayName + ": " + votesYes + " yes and " + votesNo + " no votes.");
 
             if (votesYes + votesNo < Server.voteKickVotesNeeded) {

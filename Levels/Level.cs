@@ -194,7 +194,7 @@ namespace MCGalaxy {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                if (!silent) Chat.GlobalMessageOps("&3" + name + " %Swas unloaded.");
+                if (!silent) Chat.MessageOps("&3" + name + " %Swas unloaded.");
                 Server.s.Log(name + " was unloaded.");
             }
             return true;

@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands {
         public CmdOpChat() { }
 
         public override void Use(Player p, string message) {
-            if (message != "") { Chat.MessageOps(p, message); return; }
+            if (message != "") { ChatModes.MessageOps(p, message); return; }
             
             p.opchat = !p.opchat;
             if (p.opchat) Player.Message(p, "All messages will now be sent to OPs only");

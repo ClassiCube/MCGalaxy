@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Moderation {
             } else {
                 if (stealth) {
                     banMsg = who.ColoredName + " %Swas STEALTH &8banned %Sby " + banner + "%S." + banReason;
-                    Chat.GlobalMessageOps(banMsg);
+                    Chat.MessageOps(banMsg);
                 } else {
                     banMsg = who.ColoredName + " %Swas &8banned %Sby " + banner + "%S." + banReason;
                     Player.GlobalMessage(banMsg);

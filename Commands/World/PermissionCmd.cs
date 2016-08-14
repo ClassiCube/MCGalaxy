@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.World {
             setter(level, grp.Permission);
             Level.SaveSettings(level);
             Server.s.Log(level.name + " " + target + " permission changed to " + grp.Permission + ".");
-            Chat.GlobalMessageLevel(level, target + " permission changed to " + grp.ColoredName + "%S.");
+            Chat.MessageLevel(level, target + " permission changed to " + grp.ColoredName + "%S.");
             if (p == null || p.level != level)
                 Player.Message(p, "{0} permission changed to {1}%S on {2}.", target, grp.ColoredName, level.name);
         }
@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands.World {
             Level.SaveSettings(level);
             string msg = name + " was " + target + " " + mode + "ed";
             Server.s.Log(msg + " on " + level.name);
-            Chat.GlobalMessageLevel(level, msg);
+            Chat.MessageLevel(level, msg);
             if (p == null || p.level != level)
                 Player.Message(p, msg + " on {0}.", level.name);
         }
