@@ -606,7 +606,7 @@ namespace MCGalaxy.Gui {
                                 }
                             }
                             {
-                                string mesg = pl.p.color + pl.p.name + Server.DefaultColor + " " + "is now";
+                                string mesg = pl.p.ColoredName + Server.DefaultColor + " " + "is now";
                                 if ( pl.Red ) {
                                     mesg += " on the " + Colors.red + "red team";
                                 }

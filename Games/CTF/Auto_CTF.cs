@@ -25,42 +25,26 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Games
 {
-    /// <summary>
-    /// This is the team class for CTF
-    /// </summary>
+    /// <summary> This is the team class for CTF </summary>
     public sealed class Teams
     {
         public string color;
         public int points = 0;
         public List<Player> members;
-        /// <summary>
-        /// Create a new Team Object
-        /// </summary>
-        /// <param name="color">The color code that the team will have</param>
-        public Teams(string color)
-        {
-            this.color = Colors.Parse(color);
+        
+        /// <summary> Create a new Team Object </summary>
+        public Teams(string color) {
+            color = Colors.Parse(color);
             members = new List<Player>();
         }
-        /// <summary>
-        /// Add a player to the team
-        /// </summary>
-        /// <param name="p">The player to add</param>
-        public void Add(Player p)
-        {
+        /// <summary> Add a player to the team </summary>
+        public void Add(Player p) {
             members.Add(p);
         }
-        /// <summary>
-        /// Checks to see if the player is on this team
-        /// </summary>
-        /// <param name="p">The player</param>
-        /// <returns>If true, then that player is on the team. Otherwise that player isnt</returns>
-        public bool isOnTeam(Player p)
-        {
-            if (members.IndexOf(p) != -1)
-                return true;
-            else
-                return false;
+        
+        /// <summary> Checks to see if the player is on this team </summary>
+        public bool isOnTeam(Player p) {
+            return members.IndexOf(p) != -1;
         }
     }
     internal sealed class Data
@@ -303,13 +287,13 @@ namespace MCGalaxy.Games
                 {
                     //cache.Remove(GetPlayer(p));
                     blueteam.members.Remove(p);
-                    Chat.MessageLevel(mainlevel, p.color + p.name + " " + blueteam.color + "left the ctf game");
+                    Chat.MessageLevel(mainlevel, p.ColoredName + " " + blueteam.color + "left the ctf game");
                 }
                 else if (redteam.members.Contains(p))
                 {
                     //cache.Remove(GetPlayer(p));
                     redteam.members.Remove(p);
-                    Chat.MessageLevel(mainlevel, p.color + p.name + " " + redteam.color + "left the ctf game");
+                    Chat.MessageLevel(mainlevel, p.ColoredName + " " + redteam.color + "left the ctf game");
                 }
             }
         }
@@ -573,7 +557,7 @@ tags     MEDIUMINT UNSIGNED{1});";
                                 GetPlayer(p).blue = false;
                             }
                             redteam.Add(p);
-                            Chat.MessageLevel(mainlevel, p.color + p.name + " " + Colors.red + "joined the RED Team");
+                            Chat.MessageLevel(mainlevel, p.ColoredName + " " + Colors.red + "joined the RED Team");
                             Player.Message(p, Colors.red + "You are now on the red team!");
                         }
                         else if (redteam.members.Count > blueteam.members.Count)
@@ -586,7 +570,7 @@ tags     MEDIUMINT UNSIGNED{1});";
                                 GetPlayer(p).blue = true;
                             }
                             blueteam.Add(p);
-                            Chat.MessageLevel(mainlevel, p.color + p.name + " " + Colors.blue + "joined the BLUE Team");
+                            Chat.MessageLevel(mainlevel, p.ColoredName + " " + Colors.blue + "joined the BLUE Team");
                             Player.Message(p, Colors.blue + "You are now on the blue team!");
                         }
                         else if (new Random().Next(2) == 0)
@@ -599,7 +583,7 @@ tags     MEDIUMINT UNSIGNED{1});";
                                 GetPlayer(p).blue = false;
                             }
                             redteam.Add(p);
-                            Chat.MessageLevel(mainlevel, p.color + p.name + " " + Colors.red + "joined the RED Team");
+                            Chat.MessageLevel(mainlevel, p.ColoredName + " " + Colors.red + "joined the RED Team");
                             Player.Message(p, Colors.red + "You are now on the red team!");
                         }
                         else
@@ -612,7 +596,7 @@ tags     MEDIUMINT UNSIGNED{1});";
                                 GetPlayer(p).blue = true;
                             }
                             blueteam.Add(p);
-                            Chat.MessageLevel(mainlevel, p.color + p.name + " " + Colors.blue + "joined the BLUE Team");
+                            Chat.MessageLevel(mainlevel, p.ColoredName + " " + Colors.blue + "joined the BLUE Team");
                             Player.Message(p, Colors.blue + "You are now on the blue team!");
                         }
                     }
@@ -622,13 +606,13 @@ tags     MEDIUMINT UNSIGNED{1});";
                         {
                             //cache.Remove(GetPlayer(p));
                             blueteam.members.Remove(p);
-                            Chat.MessageLevel(mainlevel, p.color + p.name + " " + blueteam.color + "left the ctf game");
+                            Chat.MessageLevel(mainlevel, p.ColoredName + " " + blueteam.color + "left the ctf game");
                         }
                         else if (redteam.members.Contains(p))
                         {
                             //cache.Remove(GetPlayer(p));
                             redteam.members.Remove(p);
-                            Chat.MessageLevel(mainlevel, p.color + p.name + " " + redteam.color + "left the ctf game");
+                            Chat.MessageLevel(mainlevel, p.ColoredName + " " + redteam.color + "left the ctf game");
                         }
                     }
                 }
@@ -674,7 +658,7 @@ tags     MEDIUMINT UNSIGNED{1});";
                         	Player[] online = PlayerInfo.Online.Items; 
                         	foreach (Player p1 in online) {
                                 if (blueteam.members.Contains(p1))
-                                    Player.Message(p1, "(Blue) " + p.color + p.name + ":&f " + message);
+                                    Player.Message(p1, "(Blue) " + p.ColoredName + ":&f " + message);
                             }
                             Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
                         }
@@ -683,7 +667,7 @@ tags     MEDIUMINT UNSIGNED{1});";
                         	Player[] online = PlayerInfo.Online.Items; 
                         	foreach (Player p1 in online) {
                                 if (redteam.members.Contains(p1))
-                                    Player.Message(p1, "(Red) " + p.color + p.name + ":&f " + message);
+                                    Player.Message(p1, "(Red) " + p.ColoredName + ":&f " + message);
                             }
                             Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
                         }

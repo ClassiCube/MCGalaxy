@@ -777,12 +777,12 @@ namespace MCGalaxy {
                 // Close the damn socket connection!
                 socket.Shutdown(SocketShutdown.Both);
                 #if DEBUG
-                Server.s.Log("Socket was shutdown for " + this.name ?? this.ip);
+                Server.s.Log("Socket was shutdown for " + name ?? ip);
                 #endif
             }
             catch ( Exception e ) {
                 #if DEBUG
-                Exception ex = new Exception("Failed to shutdown socket for " + this.name ?? this.ip, e);
+                Exception ex = new Exception("Failed to shutdown socket for " + name ?? ip, e);
                 Server.ErrorLog(ex);
                 #endif
             }
@@ -790,12 +790,12 @@ namespace MCGalaxy {
             try {
                 socket.Close();
                 #if DEBUG
-                Server.s.Log("Socket was closed for " + this.name ?? this.ip);
+                Server.s.Log("Socket was closed for " + name ?? ip);
                 #endif
             }
             catch ( Exception e ) {
                 #if DEBUG
-                Exception ex = new Exception("Failed to close socket for " + this.name ?? this.ip, e);
+                Exception ex = new Exception("Failed to close socket for " + name ?? ip, e);
                 Server.ErrorLog(ex);
                 #endif
             }

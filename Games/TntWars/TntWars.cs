@@ -423,8 +423,8 @@ namespace MCGalaxy.Games
                 {
                     Kld.TntWarsHealth -= HealthDamage;
                     Kld.HarmedBy = Killer;
-                    Player.Message(Killer, "TNT Wars: You harmed " + Kld.color + Kld.name);
-                    Player.Message(Kld, "TNT Wars: You were harmed by " + Killer.color + Killer.name);
+                    Player.Message(Killer, "TNT Wars: You harmed " + Kld.ColoredName);
+                    Player.Message(Kld, "TNT Wars: You were harmed by " + Killer.ColoredName);
                 }
             }
             foreach (Player Died in Dead)
@@ -497,7 +497,7 @@ namespace MCGalaxy.Games
                 else if (Killer.TntWarsKillStreak >= Properties.DefaultStreakThreeAmount && Killer.TNTWarsLastKillStreakAnnounced != Properties.DefaultStreakThreeAmount)
                 {
                     Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString() + " (Multiplier of " + Properties.DefaultStreakThreeMultiplier.ToString() + " and you now have 1 extra health!)");
-                    SendAllPlayersMessage("TNT Wars: " + Killer.color + Killer.name + " %Shas a kill streak of " + Killer.TntWarsKillStreak.ToString() + " and now has 1 extra health!");
+                    SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak.ToString() + " and now has 1 extra health!");
                     Killer.TntWarsScoreMultiplier = Properties.DefaultStreakThreeMultiplier;
                     Killer.TNTWarsLastKillStreakAnnounced = Properties.DefaultStreakThreeAmount;
                     if (GameDifficulty == TntWarsDifficulty.Hard || GameDifficulty == TntWarsDifficulty.Extreme)

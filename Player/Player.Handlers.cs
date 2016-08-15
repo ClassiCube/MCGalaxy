@@ -610,8 +610,8 @@ return;
 }*/
                 text = HandleJoker(text);
                 //chatroom stuff
-                if ( this.Chatroom != null ) {
-                    Chat.ChatRoom(this, text, true, this.Chatroom);
+                if ( Chatroom != null ) {
+                    Chat.ChatRoom(this, text, true, Chatroom);
                     return;
                 }
 
@@ -674,11 +674,11 @@ return;
         bool IsHandledMessage(string text) {
             if (Server.voteKickInProgress && text.Length == 1) {
                 if (text.ToLower() == "y") {
-                    this.voteKickChoice = VoteKickChoice.Yes;
+                    voteKickChoice = VoteKickChoice.Yes;
                     SendMessage("Thanks for voting!");
                     return true;
                 } else if (text.ToLower() == "n") {
-                    this.voteKickChoice = VoteKickChoice.No;
+                    voteKickChoice = VoteKickChoice.No;
                     SendMessage("Thanks for voting!");
                     return true;
                 }

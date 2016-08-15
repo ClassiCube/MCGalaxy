@@ -542,7 +542,7 @@ namespace MCGalaxy {
                 }
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
-                Server.s.Log("Failed to save ignored list for player: " + this.name);
+                Server.s.Log("Failed to save ignored list for player: " + name);
             }
         }
         

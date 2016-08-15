@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands {
                 
                 p.invincible = false;
                 Command.all.Find("hide").Use(p, "");
-                Player.Message(p, "Stopped possessing " + who.color + who.name + "%S.");
+                Player.Message(p, "Stopped possessing " + who.ColoredName + "%S.");
             } else {
                 Player who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands {
                 if (!result) return;
                 p.DespawnEntity(who.id);
                 who.canBuild = false;
-                Player.Message(p, "Successfully possessed " + who.color + who.name + "%S.");
+                Player.Message(p, "Successfully possessed {0}%S.", who.ColoredName);
             }
         }
 

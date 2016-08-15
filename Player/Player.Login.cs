@@ -290,7 +290,7 @@ namespace MCGalaxy {
             }
 
             if (Server.verifyadmins && group.Permission >= Server.verifyadminsrank) {
-                if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + this.name + ".dat"))
+                if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + name + ".dat"))
                     SendMessage("&cPlease set your admin verification password with &a/setpass [Password]!");
                 else
                     SendMessage("&cPlease complete admin verification with &a/pass [Password]!");

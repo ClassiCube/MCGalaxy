@@ -76,7 +76,7 @@ namespace MCGalaxy {
             if (!Server.TablistGlobal)
                 TabList.Add(dst, p, id);
             if (!Server.zombie.Running || !p.Game.Infected) {
-                string col = GetSupportedCol(dst, p.color);             
+                string col = GetSupportedCol(dst, p.color);
                 if (dst.hasExtList) {
                     dst.SendExtAddEntity2(id, p.skinName, col + p.truename + possession, x, y, z, rotx, roty);
                 } else {

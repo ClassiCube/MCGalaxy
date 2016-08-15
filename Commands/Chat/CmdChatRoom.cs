@@ -230,8 +230,8 @@ namespace MCGalaxy.Commands {
             }
             
             Player.Message(pl, "You were kicked from the chat room '" + pl.Chatroom + "'");
-            Player.Message(p, pl.color + pl.name + " %Swas kicked from the chat room '" + pl.Chatroom + "'");
-            Chat.ChatRoom(pl, pl.color + pl.name + " %Swas kicked from your chat room", false, pl.Chatroom);
+            Player.Message(p, pl.ColoredName + " %Swas kicked from the chat room '" + pl.Chatroom + "'");
+            Chat.ChatRoom(pl, pl.ColoredName + " %Swas kicked from your chat room", false, pl.Chatroom);
             pl.Chatroom = null;
         }
         
@@ -258,7 +258,7 @@ namespace MCGalaxy.Commands {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl.Chatroom == room)
-                        Player.Message(p, pl.color + pl.name);
+                        Player.Message(p, pl.ColoredName);
                 }
             } else {
                 Player.Message(p, "There is no command with the type '" + room + "'," +

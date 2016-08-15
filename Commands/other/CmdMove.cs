@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands {
                     ushort y = ushort.Parse(args[offset + 1]);
                     ushort z = ushort.Parse(args[offset + 2]);
                     PlayerActions.MoveCoords(who, x, y, z);
-                    if (p != who) Player.Message(p, "Moved " + who.color + who.name);
+                    if (p != who) Player.Message(p, "Moved " + who.ColoredName);
                 }
                 catch { Player.Message(p, "Invalid co-ordinates"); }
             }
