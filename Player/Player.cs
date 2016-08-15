@@ -338,11 +338,11 @@ namespace MCGalaxy {
                         if (Entities.CanSee(pl, this)) Player.Message(pl, leavem);
                     }
                 }
-                Server.s.Log(name + " disconnected (" + discMsg + ").");
+                Server.s.Log(name + " disconnected (" + discMsg + "%S).");
             } else {
                 totalKicked++;
                 SendChatFrom(this, "&c- " + FullName + " %Skicked (" + kickMsg + "%S).", false);
-                Server.s.Log(name + " kicked (" + kickMsg + ").");
+                Server.s.Log(name + " kicked (" + kickMsg + "%S).");
             }
         }
         
