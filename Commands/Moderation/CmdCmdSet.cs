@@ -30,7 +30,9 @@ namespace MCGalaxy.Commands {
             if (message == "" || args.Length == 1) { Help(p); return; }
             Command cmd = Command.all.Find(args[0]);
             if (cmd == null) { Player.Message(p, "Could not find command entered"); return; }
-            if (p != null && !p.group.CanExecute(cmd)) { Player.Message(p, "Your rank cannot use this command."); return; }
+            if (p != null && !p.group.CanExecute(cmd)) { 
+                Player.Message(p, "Your rank cannot use this command."); return; 
+            }
 
             Group grp = Group.FindMatches(p, args[1]);
             if (grp == null) return;
@@ -64,14 +66,18 @@ namespace MCGalaxy.Commands {
             } else {
                 CommandOtherPerms.OtherPerms perms = CommandOtherPerms.Find(cmd, otherPermIndex);
                 if (perms == null) {
-                    Player.Message(p, "This command has no extra permission with that number."); return;
+                    Player.Message(p, "This command has no extra permission by that number."); return;
                 }
-                
+                if (p != null && (int)p.Rank < perms.Permission) {
+                    Player.Message(p, "Your rank cannot modify this extra permission."); return;
+                }                
                 perms.Permission = (int)grp.Permission;
                 CommandOtherPerms.Save();
+                
                 string permName = "extra permission " + otherPermIndex;
                 Chat.MessageAll("&d{0}%S's {1} was set to {2}", cmd.name, permName, grp.ColoredName);
-                Player.Message(p, "{0}'s {1} was set to {2}", cmd.name, permName, grp.ColoredName);
+                if (Player.IsSuper(p))
+                    Player.Message(p, "{0}'s {1} was set to {2}", cmd.name, permName, grp.ColoredName);
             }
         }
         
@@ -79,7 +85,8 @@ namespace MCGalaxy.Commands {
              GrpCommands.Save(GrpCommands.allowedCommands);
              GrpCommands.fillRanks();
              Chat.MessageAll("&d{0}%S{1}", cmd.name, message);
-             Player.Message(p, cmd.name + message);
+             if (Player.IsSuper(p))
+                 Player.Message(p, cmd.name + message);
         }
         
         public override void Help(Player p) {
