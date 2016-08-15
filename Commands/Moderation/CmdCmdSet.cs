@@ -70,15 +70,15 @@ namespace MCGalaxy.Commands {
                 perms.Permission = (int)grp.Permission;
                 CommandOtherPerms.Save();
                 string permName = "extra permission " + otherPermIndex;
-                Player.GlobalMessage("&d" + cmd.name + "%S's " + permName + " was set to " + grp.ColoredName);
-                Player.Message(p, cmd.name + "'s " + permName + " was set to " + grp.ColoredName);
+                Chat.MessageAll("&d{0}%S's {1} was set to {2}", cmd.name, permName, grp.ColoredName);
+                Player.Message(p, "{0}'s {1} was set to {2}", cmd.name, permName, grp.ColoredName);
             }
         }
         
         static void UpdatePermissions(Command cmd, Player p, string message) {
              GrpCommands.Save(GrpCommands.allowedCommands);
              GrpCommands.fillRanks();
-             Player.GlobalMessage("&d" + cmd.name + "%S" + message);
+             Chat.MessageAll("&d{0}%S{1}", cmd.name, message);
              Player.Message(p, cmd.name + message);
         }
         

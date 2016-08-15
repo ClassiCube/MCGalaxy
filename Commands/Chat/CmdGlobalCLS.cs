@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
             for (int i = 0; i < 20; i++) {
                 foreach (Player pl in players) pl.SendBlankMessage();
             }
-            Player.GlobalMessage("%4Global Chat Cleared.");
+            Chat.MessageAll("%4Global Chat Cleared.");
         }
 
         public override void Help(Player p) {

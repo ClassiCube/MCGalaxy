@@ -62,8 +62,7 @@ namespace MCGalaxy.Commands {
             }
 
             LevelInfo.Loaded.Add(lvl);
-            if (p == null || !p.hidden)
-                Chat.MessageAll("Level \"{0}\" loaded.", lvl.name);
+            Chat.MessageWhere("Level \"{0}\" loaded.", pl => Entities.CanSee(pl, p), lvl.name);
             /*try {
                 Gui.Window.thisWindow.UpdatePlayerMapCombo();
                 Gui.Window.thisWindow.UnloadedlistUpdate();

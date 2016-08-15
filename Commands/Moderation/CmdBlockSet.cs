@@ -41,9 +41,9 @@ namespace MCGalaxy.Commands {
             Block.ResendBlockPermissions(block);
             // TODO: custom blocks permissions
 
-            Player.GlobalMessage("&d" + Block.Name(block) + "%S's permission was changed to " + grp.ColoredName);
+            Chat.MessageAll("&d{0}%S's permission was changed to {1}", Block.Name(block), grp.ColoredName);
             if (p == null)
-                Player.Message(p, Block.Name(block) + "'s permission was changed to " + grp.ColoredName);
+                Player.Message(p, "{0}'s permission was changed to {1}", Block.Name(block), grp.ColoredName);
         }
         
         public override void Help(Player p) {

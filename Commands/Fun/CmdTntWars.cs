@@ -172,7 +172,7 @@ namespace MCGalaxy.Commands {
 				msg += " on the " + Colors.blue + "blue team";
 			if (pl.spec)
 				msg += Server.DefaultColor + " (as a spectator)";
-			Player.GlobalMessage(msg);
+			Chat.MessageAll(msg);
 		}
 		
 		void DoLeave(Player p, string[] text) {
@@ -1061,7 +1061,7 @@ namespace MCGalaxy.Commands {
 					msg += " on the " + Colors.blue + "blue team";
 				if (pl.spec)
 					msg += Server.DefaultColor + " (as a spectator)";
-				Player.GlobalMessage(msg);
+				Chat.MessageAll(msg);
 			}
 			
 			if (it.ScoreLimit == TntWarsGame.Properties.DefaultFFAmaxScore) {

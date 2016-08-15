@@ -50,14 +50,14 @@ namespace MCGalaxy.Commands {
             }
            
             string final = builder.ToString();
-            Player.GlobalMessage(p.ColoredName + "%S asked the &b8-Ball: &f" + message);
+            Chat.MessageAll("{0}%S asked the &b8-Ball: &f{1}", p.ColoredName, message);
             Server.MainScheduler.QueueOnce(EightBallCallback, final, delay);
         }
         
         static void EightBallCallback(SchedulerTask task) {
             string final = (string)task.State;
-             Random random = new Random(final.ToLower().GetHashCode());
-             Player.GlobalMessage("The %b8-Ball %ssays:%f " + messages[random.Next(messages.Length)]);
+            Random random = new Random(final.ToLower().GetHashCode());
+            Chat.MessageAll("The &b8-Ball %Ssays: &f{0}", messages[random.Next(messages.Length)]);
         }
 
         public override void Help(Player p) {

@@ -199,11 +199,11 @@ namespace MCGalaxy.Games
             }
             string teamkillling = "Disabled";
             if (TeamKills) teamkillling = "Enabled";
-            Player.GlobalMessage("&cTNT Wars %Son '" + lvl.name + "' has started &3" + Gamemode + " %Swith a difficulty of &3" +
-                                 Difficulty + " %S(&3" + HitsToDie + " %Shits to die, a &3" + explosiontime + 
-                                 " %Sexplosion delay and with a &3" + explosionsize + " %Sexplosion size)" + 
-                                 ", team killing is &3" + teamkillling + " %Sand you can place &3" + TntPerPlayerAtATime 
-                                 + " %STNT at a time and there is a score limit of &3" + ScoreLimit + "%S!!");
+            Chat.MessageAll("&cTNT Wars %Son '" + lvl.name + "' has started &3" + Gamemode + " %Swith a difficulty of &3" +
+                            Difficulty + " %S(&3" + HitsToDie + " %Shits to die, a &3" + explosiontime + 
+                            " %Sexplosion delay and with a &3" + explosionsize + " %Sexplosion size)" + 
+                            ", team killing is &3" + teamkillling + " %Sand you can place &3" + TntPerPlayerAtATime 
+                            + " %STNT at a time and there is a score limit of &3" + ScoreLimit + "%S!!");
             if (GameMode == TntWarsGameMode.TDM) SendAllPlayersMessage("TNT Wars: Start your message with ':' to send it as a team chat!");
             //GracePeriod
             if (GracePeriod) //Check This Grace Stuff
@@ -316,21 +316,21 @@ namespace MCGalaxy.Games
             //Message about winners etc.
             if (Players.Count <= 1)
             {
-                Player.GlobalMessage("&cTNT Wars %Shas ended because there are no longer enough players!");
+                Chat.MessageAll("&cTNT Wars %Shas ended because there are no longer enough players!");
             }
             else
             {
-                Player.GlobalMessage("&cTNT Wars %Shas ended!!");
+                Chat.MessageAll("&cTNT Wars %Shas ended!!");
             }
             if (GameMode == TntWarsGameMode.TDM)
             {
                 if (RedScore >= BlueScore)
                 {
-                    Player.GlobalMessage("TNT Wars: Team &cRed %Swon &cTNT Wars %Sby " + (RedScore - BlueScore) + " points!");
+                	Chat.MessageAll("TNT Wars: Team &cRed %Swon &cTNT Wars %Sby {0} points!", RedScore - BlueScore);
                 }
                 if (BlueScore >= RedScore)
                 {
-                    Player.GlobalMessage("TNT Wars: Team &9Blue %Swon &cTNT Wars %Sby " + (BlueScore - RedScore) + " points!");
+                    Chat.MessageAll("TNT Wars: Team &9Blue %Swon &cTNT Wars %Sby {1} points!", BlueScore - RedScore);
                 }
                 try
                 {
@@ -354,7 +354,7 @@ namespace MCGalaxy.Games
                 {
                     if (count == 1)
                     {
-                        Player.GlobalMessage("&cTNT Wars %S1st Place: " + pl.p.ColoredName + " %Swith a score of " + pl.p.color + pl.Score);
+                        Chat.MessageAll("&cTNT Wars %S1st Place: " + pl.p.ColoredName + " %Swith a score of " + pl.p.color + pl.Score);
                     }
                     else if (count == 2)
                     {

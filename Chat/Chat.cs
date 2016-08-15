@@ -27,11 +27,6 @@ namespace MCGalaxy {
             }
         }
         
-        [Obsolete("Use GlobalChatLevel instead, this method has been removed.")]
-        public static void GlobalChatWorld(Player from, string message, bool showname) {
-            GlobalChatLevel(from, message, showname);
-        }
-        
         public static void GlobalChatRoom(Player from, string message, bool showname) {
             string rawMessage = message;
             if (showname)
@@ -69,32 +64,27 @@ namespace MCGalaxy {
         }
         
         
-        /// <summary> Sends a message to all players who are on the given level. </summary>
-        public static void MessageLevel(Level lvl, string message) {
+        /// <summary> Sends a message to all players who match the given filter. </summary>
+        public static void MessageWhere(string message, Predicate<Player> filter) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p.level == lvl && p.Chatroom == null)
-                    Player.Message(p, message);
+            	if (filter(p)) Player.Message(p, message);
             }
         }
         
-        /// <summary> Sends a message to all players who are ranked minPerm or above. </summary>
-        public static void MessageAllMinPerm(string message, LevelPermission minPerm) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.Rank >= minPerm)
-                    Player.Message(p, message);
-            }
+        /// <summary> Sends a message to all players who are on the given level. </summary>
+        public static void MessageLevel(Level lvl, string message) {
+            MessageWhere(message, pl => pl.level == lvl && pl.Chatroom == null);
         }
         
         /// <summary> Sends a message to all players who are have the permission to read opchat. </summary>
         public static void MessageOps(string message) {
-            MessageAllMinPerm(message, Server.opchatperm);
+            MessageWhere(message, pl => pl.Rank >= Server.opchatperm);
         }
         
         /// <summary> Sends a message to all players who are have the permission to read adminchat. </summary>
         public static void MessageAdmins(string message) {
-            MessageAllMinPerm(message, Server.adminchatperm);
+            MessageWhere(message, pl => pl.Rank >= Server.adminchatperm);
         }
         
         /// <summary> Sends a message to all players, who do not have 
@@ -107,6 +97,8 @@ namespace MCGalaxy {
                     p.SendMessage(message, true);
             }
         }
+        
+        #region Format helpers
         
         public static void MessageAll(string message, object a0) {
             MessageAll(String.Format(message, a0));
@@ -123,5 +115,23 @@ namespace MCGalaxy {
         public static void MessageAll(string message, params object[] args) {
             MessageAll(String.Format(message, args));
         }
+        
+        public static void MessageWhere(string message, Predicate<Player> filter, object a0) {
+            MessageWhere(String.Format(message, a0), filter);
+        }
+        
+        public static void MessageWhere(string message, Predicate<Player> filter, object a0, object a1) {
+            MessageWhere(String.Format(message, a0, a1), filter);
+        }
+        
+        public static void MessageWhere(string message, Predicate<Player> filter, object a0, object a1, object a2) {
+            MessageWhere(String.Format(message, a0, a1, a2), filter);
+        }
+        
+        public static void MessageWhere(string message, Predicate<Player> filter, params object[] args) {
+            MessageWhere(String.Format(message, args), filter);
+        }
+        
+        #endregion
     }
 }

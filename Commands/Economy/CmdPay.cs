@@ -52,7 +52,8 @@ namespace MCGalaxy.Commands
                 if (!IsLegalPayment(p, payer.money, receiver.money, amount)) return;
                 
                 target = receiver.playerName;
-                Player.GlobalMessage(p.ColoredName + " %Spaid %f" + receiver.playerName + "%S(offline) %f" + amount + " %3" + Server.moneys);
+                Chat.MessageAll("{0} %Spaid &f{1}%S(offline) &f{2} &3{3}", 
+                                p.ColoredName, receiver.playerName, amount, Server.moneys);
             } else {
                 payer = Economy.RetrieveEcoStats(p.name);
                 receiver = Economy.RetrieveEcoStats(who.name);
@@ -62,7 +63,8 @@ namespace MCGalaxy.Commands
                 who.money += amount;
                 who.OnMoneyChanged();
                 target = who.color + who.name;
-                Player.GlobalMessage(p.ColoredName + " %Spaid " + who.ColoredName + " %f" + amount + " %3" + Server.moneys);
+                Chat.MessageAll("{0} %Spaid {1} &f{2} &3{3}", 
+                                p.ColoredName, who.ColoredName, amount, Server.moneys);
             }
             
             payer.payment = "%f" + amount + " %3" + Server.moneys + " to " + target + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);                

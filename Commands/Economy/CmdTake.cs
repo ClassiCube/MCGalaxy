@@ -55,14 +55,16 @@ namespace MCGalaxy.Commands {
                 
                 ecos = Economy.RetrieveEcoStats(dbName);
                 Take(all, ref ecos, ref amount);
-                Player.GlobalMessage(taker + " %Stook %f" + amount + " %3" + Server.moneys + " %Sfrom " + ecos.playerName + "%f(offline)");
+                Chat.MessageAll("{0} %Stook &f{2} &3{3} %Sfrom &f{1}%S(offline)", 
+                                p.ColoredName, ecos.playerName, amount, Server.moneys);
             } else {
                 ecos = Economy.RetrieveEcoStats(who.name);
                 ecos.money = who.money;
                 Take(all, ref ecos, ref amount);
                 who.money = ecos.money;
                 who.OnMoneyChanged();
-                Player.GlobalMessage(taker + " %Stook %f" + amount + " %3" + Server.moneys + " %Sfrom " + who.prefix + who.name);
+                Chat.MessageAll("{0} %Stook &f{2} &3{3} %Sfrom {1}", 
+                                p.ColoredName, who.ColoredName, amount, Server.moneys);
             }
             ecos.fine = "%f" + amount + " %3" + Server.moneys + " by " + takerRaw + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
             Economy.UpdateEcoStats(ecos);

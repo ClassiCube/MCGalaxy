@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Moderation {
             string unbanner = p == null ? "(console)" : p.ColoredName;
             Server.IRC.Say(message.ToLower() + " was un-ip-banned by " + unbanner + ".");
             Server.s.Log("IP-UNBANNED: " + message.ToLower() + " by " + unbanner + ".");
-            Player.GlobalMessage(message + " was &8un-ip-banned %Sby " + unbanner + "%S.");
+            Chat.MessageAll("{0} was &8un-ip-banned %Sby {1}%S.", message, unbanner);
             
             Server.bannedIP.Remove(message);
             Server.bannedIP.Save();

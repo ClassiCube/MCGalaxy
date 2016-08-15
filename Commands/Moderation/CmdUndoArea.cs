@@ -79,8 +79,8 @@ namespace MCGalaxy.Commands {
             DrawOp.DoDrawOp(op, null, p, marks);
 
             if (op.foundUser) {
-                Player.GlobalMessage(group.color + whoName + 
-                                     "%S's actions for the past &b" + args.seconds + " %Sseconds were undone.");
+                Chat.MessageAll("{0}{1}%S's actions for the past &b{2} %Sseconds were undone.", 
+            	                group.color, whoName, args.seconds);
                 Server.s.Log(whoName + "'s actions for the past " + args.seconds + " seconds were undone.");
                 p.level.Save(true);
             } else {

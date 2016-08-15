@@ -174,7 +174,7 @@ namespace MCGalaxy {
         
         /// <summary> Returns whether the given player is able to see the target player (e.g. in /who). </summary>
         public static bool CanSee(Player p, Player target) {
-            if (p == null || !target.hidden || p == target) return true;
+            if (p == null || target == null || !target.hidden || p == target) return true;
             if (target.otherRankHidden) return p.Rank >= target.oHideRank;
             return p.Rank >= target.Rank;
         }

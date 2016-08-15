@@ -35,13 +35,13 @@ namespace MCGalaxy.Commands {
             }
             Server.voting = true;
             Server.NoVotes = 0; Server.YesVotes = 0;
-            Player.GlobalMessage(Colors.green + " VOTE: %S" + message + "%S(" + Colors.green + "Yes" + " %S/ " + Colors.red + "No" + "%S)");
+            Chat.MessageAll("&2 VOTE: %S{0} %S(&2Yes %S/&cNo%S)", message);
             Server.MainScheduler.QueueOnce(VoteCallback, null, TimeSpan.FromSeconds(15));
         }
         
         void VoteCallback(SchedulerTask task) {
             Server.voting = false;
-            Player.GlobalMessage("The votes are in! " + Colors.green + "Y: " + Server.YesVotes + Colors.red + " N: " + Server.NoVotes);
+            Chat.MessageAll("The votes are in! &2Y: {0} &cN: {1}", Server.YesVotes, Server.NoVotes);
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) pl.voted = false;
         }

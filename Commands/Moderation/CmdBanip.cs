@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Moderation {
             string banner = p == null ? "(console)" : p.ColoredName;
             Server.IRC.Say(message.ToLower() + " was ip-banned by " + banner + "%S.");
             Server.s.Log("IP-BANNED: " + message.ToLower() + " by " + banner + ".");
-            Player.GlobalMessage(message + " was &8ip-banned %Sby " + banner + "%S.");
+            Chat.MessageAll("{0} was &8ip-banned %Sby {1}%S.", message, banner);
             
             Server.bannedIP.Add(message);
             Server.bannedIP.Save();

@@ -69,8 +69,8 @@ namespace MCGalaxy.Commands.World {
             else
                 lvl.name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + " " + args[1] + ")";
 
-            if (!p.hidden)
-                Player.GlobalMessage(p.ColoredName + " %Swent to the " + lvl.name);
+            Chat.MessageWhere("{0} %Swent to the {1}", 
+                              pl => Entities.CanSee(pl, p), p.ColoredName, lvl.name);
         }
         
         public override void Help(Player p) {

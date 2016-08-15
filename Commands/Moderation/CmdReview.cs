@@ -88,8 +88,8 @@ namespace MCGalaxy.Commands {
             Player.Message(p, msg);
             
             string start = pos > 0 ? "There are now &c" + (pos + 1) + " %Speople" : "There is now &c1 %Sperson";
-            Chat.MessageAllMinPerm(p.ColoredName + " %Sentered the review queue", nextPerm);
-            Chat.MessageAllMinPerm(start + " waiting for a &creview!", nextPerm);
+            Chat.MessageWhere(p.ColoredName + " %Sentered the review queue", pl => pl.Rank >= nextPerm);
+            Chat.MessageWhere(start + " waiting for a &creview!", pl => pl.Rank >= nextPerm);
             p.NextReviewTime = DateTime.UtcNow.AddSeconds(Server.reviewcooldown);
             Player.RaisePlayerAction(p, PlayerAction.Review, null, true);
         }

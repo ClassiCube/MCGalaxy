@@ -59,7 +59,7 @@ namespace MCGalaxy.Gui
                         {
                             if (Server.notifyPlayers || p != null)
                             {
-                                Player.GlobalMessage("Update found. Prepare for restart in &f" + Server.restartcountdown + " %Sseconds.");
+                                Chat.MessageAll("Update found. Prepare for restart in &f{0} %Sseconds.", Server.restartcountdown);
                                 Server.s.Log("Update found. Prepare for restart in " + Server.restartcountdown + " seconds.");
                                 int timeLeft = Server.restartcountdown;
                                 System.Timers.Timer countDown = new System.Timers.Timer();

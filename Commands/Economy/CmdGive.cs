@@ -54,14 +54,16 @@ namespace MCGalaxy.Commands
                 
                 ecos = Economy.RetrieveEcoStats(dbName);
                 if (ReachedMax(p, ecos.money, amount)) return;
-                Player.GlobalMessage(giver + " %Sgave %f" + ecos.playerName + "%S(offline)" + " %f" + amount + " %3" + Server.moneys);
+                Chat.MessageAll("{0} %Sgave &f{1}%S(offline) &f{2} &3{3}", 
+                                giver, ecos.playerName, amount, Server.moneys);
             } else {
                 if (ReachedMax(p, who.money, amount)) return;
                 ecos.money = who.money;
                 who.money += amount;
                 who.OnMoneyChanged();
                 ecos = Economy.RetrieveEcoStats(who.name);
-                Player.GlobalMessage(giver + " %Sgave " + who.ColoredName + " %f" + amount + " %3" + Server.moneys);
+                Chat.MessageAll("{0} %Sgave {1} &f{2} &3{3}", 
+                                giver, who.ColoredName, amount, Server.moneys);
             }
             
             ecos.money += amount;

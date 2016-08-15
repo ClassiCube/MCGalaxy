@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
         void DoFakeRank(Player p, Group newRank) {
             p.color = newRank.color;
             p.hackrank = true;
-            Player.GlobalMessage(p.ColoredName + "%S's rank was set to " + newRank.ColoredName + "%S. (Congratulations!)");
+            Chat.MessageAll("{0}%S's rank was set to {1}%S. (Congratulations!)", p.ColoredName, newRank.ColoredName);
             p.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
             DoKick(p, newRank);
         }

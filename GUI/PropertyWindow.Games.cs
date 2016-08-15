@@ -616,7 +616,7 @@ namespace MCGalaxy.Gui {
                                 if ( pl.spec ) {
                                     mesg += Server.DefaultColor + " (as a spectator)";
                                 }
-                                Player.GlobalMessage(mesg);
+                                Chat.MessageAll(mesg);
                             }
                         }
                         if ( TntWarsGame.GuiLoaded.ScoreLimit == TntWarsGame.Properties.DefaultFFAmaxScore ) {

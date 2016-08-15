@@ -193,7 +193,7 @@ namespace MCGalaxy {
         public static void GlobalMessage(string message, bool global) { Chat.MessageAll(message); }
         
         public static void GlobalIRCMessage(string message) {
-            message = Colors.EscapeColors(message);            
+            message = Colors.EscapeColors(message);
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 if (p.ignoreAll || p.ignoreIRC) continue;

@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (!tban.name.CaselessEq(name)) continue;
                 
                 Server.tempBans.Remove(tban);
-                Player.GlobalMessage(name + " had their temporary ban lifted by " + srcFull + ".");
+                Chat.MessageAll("{0} had their temporary ban lifted by {1}.", name, srcFull);
                 Server.s.Log("UNBANNED: " + name + " by " + src);
                 Server.IRC.Say(name + " was unbanned by " + src + ".");
                 
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void UnbanPlayer(Player p, string name, string src, string srcFull, string reason) {
-            Player.GlobalMessage(name + " was &8(unbanned) %Sby " + srcFull + ".");
+            Chat.MessageAll("{0} was &8(unbanned) %Sby {1}.", name, srcFull);
             Server.s.Log("UNBANNED: " + name + " by " + src);
             Server.IRC.Say(name + " was unbanned by " + src + ".");
             

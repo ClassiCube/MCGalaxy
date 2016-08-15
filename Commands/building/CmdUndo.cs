@@ -137,7 +137,8 @@ namespace MCGalaxy.Commands.Building {
             DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
 
             if (op.foundUser) {
-                Player.GlobalMessage(Server.FindColor(whoName) + whoName + "%S's actions for the past &b" + seconds + " %Sseconds were undone.");
+            	Chat.MessageAll("{0}{1}%S's actions for the past &b{2} %Sseconds were undone.", 
+            	                Server.FindColor(whoName), whoName, seconds);
                 Server.s.Log(whoName + "'s actions for the past " + seconds + " seconds were undone.");
                 if (p != null) p.level.Save(true);
             } else {

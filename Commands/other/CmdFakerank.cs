@@ -34,11 +34,13 @@ namespace MCGalaxy.Commands
             
             if (grp.Permission == LevelPermission.Banned) {
                 string banner = p == null ? "console" : p.ColoredName;
-                Player.GlobalMessage(who.ColoredName + " %Swas &8banned %Sby " + banner + "%S.");
+                Chat.MessageAll("{0} %Swas &8banned %Sby {1}%S.", 
+                                who.ColoredName, banner);
             } else {
-                Player.GlobalMessage(who.ColoredName + "%S's rank was set to " + 
-                                     grp.ColoredName + "%S. (Congratulations!)");
-                Player.Message(who, "You are now ranked {0}%S, type /help for your new set of commands.", grp.ColoredName);
+                Chat.MessageAll("{0}%S's rank was set to {1}%S. (Congratulations!)", 
+            	                who.ColoredName, grp.ColoredName);
+                Player.Message(who, "You are now ranked {0}%S, type /help for your new set of commands.", 
+            	               grp.ColoredName);
             }
         }
         
