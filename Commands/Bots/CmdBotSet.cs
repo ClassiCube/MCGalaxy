@@ -33,10 +33,10 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
-            PlayerBot bot = PlayerBot.FindMatches(p, args[0]);
+            PlayerBot bot = PlayerBot.FindMatchesPreferLevel(p, args[0]);
             if (bot == null) return;
                 
-            if (args.Length == 1) {             
+            if (args.Length == 1) {
                 try { bot.Waypoints.Clear(); } catch { }
                 bot.kill = false;
                 bot.hunt = false;

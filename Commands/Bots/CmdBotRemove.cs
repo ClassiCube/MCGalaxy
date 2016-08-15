@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
                 PlayerBot.RemoveAllFromLevel(p.level); return;
             }
             
-            PlayerBot who = PlayerBot.FindMatches(p, message);
+            PlayerBot who = PlayerBot.FindMatchesPreferLevel(p, message);
             if (who == null) return;
             if (!p.level.name.CaselessEq(who.level.name)) {
                 Player.Message(p, who.ColoredName + " %Sis in a different level."); return;

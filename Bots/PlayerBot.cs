@@ -153,6 +153,18 @@ namespace MCGalaxy {
                                                      b => true, b => b.name, "bots");
         }
         
+        public static PlayerBot FindMatchesPreferLevel(Player pl, string name) {
+            if (Player.IsSuper(pl)) return FindMatches(pl, name);
+            
+            // Try for exact match in current level, then partial match against all bots
+            PlayerBot[] bots = Bots.Items;
+            for (int i = 0; i < bots.Length; i++) {
+                if (pl.level == bots[i].level && name.CaselessEq(bots[i].name))
+                    return bots[i];
+            }
+            return FindMatches(pl, name);
+        }
+        
         void UpdatePosition() {
             if (movement) {
                 double scale = Math.Ceiling(Server.updateTimer.Interval / 25.0);
@@ -193,7 +205,7 @@ namespace MCGalaxy {
         }
         
         
-        // Script handling        
+        // Script handling
         void BotTimerFunc(object sender, ElapsedEventArgs e) {
             if (kill) Instructions.DoKill(this);
             movement = false;
@@ -202,7 +214,7 @@ namespace MCGalaxy {
                 if (hunt) Instructions.DoHunt(this);
             } else {
                 bool doNextInstruction = !DoInstruction();
-                if (cur == Waypoints.Count) cur = 0;             
+                if (cur == Waypoints.Count) cur = 0;
                 if (doNextInstruction) {
                     DoInstruction();
                     if (cur == Waypoints.Count) cur = 0;

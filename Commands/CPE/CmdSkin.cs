@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.CPE {
             string skin = null;
 
             if (isBot && args.Length > 2) {
-                bot = PlayerBot.FindMatches(p, args[1]);
+                bot = PlayerBot.FindMatchesPreferLevel(p, args[1]);
                 if (bot == null) return;
                 skin = args[2];
             } else if (args.Length >= 2) {

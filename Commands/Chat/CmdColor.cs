@@ -41,17 +41,17 @@ namespace MCGalaxy.Commands {
             }
             
             Player who = null;
-            PlayerBot pBot = null;
+            PlayerBot bot = null;
             bool isBot = message.CaselessStarts("bot ");
-            if (isBot) pBot = PlayerBot.FindMatches(p, args[1]);
+            if (isBot) bot = PlayerBot.FindMatchesPreferLevel(p, args[1]);
             else who = PlayerInfo.FindMatches(p, args[0]);
-            if (pBot == null && who == null) return;
+            if (bot == null && who == null) return;
             
             if (p != null && who != null && who.Rank > p.Rank) {
                 MessageTooHighRank(p, "change the color of", true); return;
             }
             if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedExtra(p, "change the color of others."); return; }
-            if (isBot) SetBotColor(p, pBot, args);
+            if (isBot) SetBotColor(p, bot, args);
             else SetColor(p, who, args);
         }
 

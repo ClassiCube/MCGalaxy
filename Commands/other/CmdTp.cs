@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
                 if (target == null) return;
                 if (!CheckPlayer(p, target)) return;
             } else if (args[0].CaselessEq("bot")) {
-                bot = PlayerBot.FindMatches(p, args[1]);
+                bot = PlayerBot.FindMatchesPreferLevel(p, args[1]);
                 if (bot == null) return;
             } else {
                 Help(p); return;
