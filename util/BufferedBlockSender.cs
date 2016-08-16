@@ -49,6 +49,8 @@ namespace MCGalaxy {
             count++;
         }
         
+        /// <summary> Sends the block change packets if either 'force' is true, 
+        /// or the number of blocks in the buffer has reached the limit. </summary>
         public void CheckIfSend(bool force) {
             if (count > 0 && (force || count == 256)) {
                 if (player != null) SendPlayer();
@@ -59,9 +61,9 @@ namespace MCGalaxy {
         
         void SendLevel() {
             byte[] bulk = null, normal = null, noBlockDefs = null, original = null;
-            Player[] players = PlayerInfo.Online.Items;            
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p.level != level) continue;                
+                if (p.level != level) continue;
                 byte[] packet = MakePacket(p, ref bulk, ref normal,
                                            ref noBlockDefs, ref original);
                 p.SendRaw(packet);
