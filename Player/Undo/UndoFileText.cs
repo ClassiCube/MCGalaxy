@@ -66,7 +66,7 @@ namespace MCGalaxy.Util {
             string[] lines = File.ReadAllText(path).Split(' ');
             Vec3U16 min = (Vec3U16)marks[0], max = (Vec3U16)marks[1];
             bool undoArea = min.X != ushort.MaxValue;
-            BufferedBlockSender buffer = new BufferedBlockSender(null);
+            BufferedBlockSender buffer = new BufferedBlockSender();
             string last = null;
             
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".

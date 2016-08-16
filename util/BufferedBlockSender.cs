@@ -18,16 +18,28 @@
 using System;
 
 namespace MCGalaxy {
-    
+    /// <summary> Combines block changes and sends them as either a CPE BulkBlockUpdate packet,
+    /// or 256 SetBlock packets combined as a single byte array to reduce overhead. </summary>
     public sealed class BufferedBlockSender {
         
         int[] indices = new int[256];
         byte[] types = new byte[256];
         int count = 0;
         public Level level;
+        public Player player;
         
+        /// <summary> Constructs a bulk sender. </summary>
+        public BufferedBlockSender() { }
+        
+        /// <summary> Constructs a bulk sender that will send block changes to all players on that level. </summary>
         public BufferedBlockSender(Level level) {
             this.level = level;
+        }
+        
+        /// <summary> Constructs a bulk sender that will only send block changes to that player. </summary>
+        public BufferedBlockSender(Player player) {
+            this.player = player;
+            this.level = player.level;
         }
         
         public void Add(int index, byte type, byte extType) {
@@ -39,36 +51,51 @@ namespace MCGalaxy {
         
         public void CheckIfSend(bool force) {
             if (count > 0 && (force || count == 256)) {
-                byte[] bulk = null, normal = null, noBlockDefs = null, original = null;
-                Player[] players = PlayerInfo.Online.Items;
-                
-                foreach (Player p in players) {
-                    if (p.level != level) continue;
-                    
-                    // Different clients support varying types of blocks
-                    byte[] packet = null;
-                    if (p.HasCpeExt(CpeExt.BulkBlockUpdate) && p.hasCustomBlocks && p.hasBlockDefs && count >= 160) {
-                        if (bulk == null) bulk = MakeBulkPacket();
-                        packet = bulk;
-                    } else if (p.hasCustomBlocks && p.hasBlockDefs) {
-                        if (normal == null) normal = MakeNormalPacket();
-                        packet = normal;
-                    } else if (p.hasCustomBlocks) {
-                        if (noBlockDefs == null) noBlockDefs = MakeNoBlockDefsPacket();
-                        packet = noBlockDefs;
-                    } else {
-                        if (original == null) original = MakeOriginalOnlyPacket();
-                        packet = original;
-                    }
-                    p.SendRaw(packet);
-                }
+                if (player != null) SendPlayer();
+                else SendLevel();
                 count = 0;
             }
         }
         
+        void SendLevel() {
+            byte[] bulk = null, normal = null, noBlockDefs = null, original = null;
+            Player[] players = PlayerInfo.Online.Items;            
+            foreach (Player p in players) {
+                if (p.level != level) continue;                
+                byte[] packet = MakePacket(p, ref bulk, ref normal,
+                                           ref noBlockDefs, ref original);
+                p.SendRaw(packet);
+            }
+        }
+        
+        void SendPlayer() {
+            byte[] bulk = null, normal = null, noBlockDefs = null, original = null;
+            byte[] packet = MakePacket(player, ref bulk, ref normal,
+                                       ref noBlockDefs, ref original);
+            player.SendRaw(packet);
+        }
+        
         #region Packet construction
         
-        byte[] MakeBulkPacket() {
+        byte[] MakePacket(Player p, ref byte[] bulk, ref byte[] normal,
+                          ref byte[] noBlockDefs, ref byte[] original) {
+            // Different clients support varying types of blocks
+            if (p.HasCpeExt(CpeExt.BulkBlockUpdate) && p.hasCustomBlocks && p.hasBlockDefs && count >= 160) {
+                if (bulk == null) bulk = MakeBulk();
+                return bulk;
+            } else if (p.hasCustomBlocks && p.hasBlockDefs) {
+                if (normal == null) normal = MakeNormal();
+                return normal;
+            } else if (p.hasCustomBlocks) {
+                if (noBlockDefs == null) noBlockDefs = MakeNoBlockDefs();
+                return noBlockDefs;
+            } else {
+                if (original == null) original = MakeOriginalOnly();
+                return original;
+            }
+        }
+        
+        byte[] MakeBulk() {
             byte[] data = new byte[2 + 256 * 5];
             data[0] = Opcode.CpeBulkBlockUpdate;
             data[1] = (byte)(count - 1);
@@ -82,7 +109,7 @@ namespace MCGalaxy {
             return data;
         }
         
-        byte[] MakeNormalPacket() {
+        byte[] MakeNormal() {
             byte[] data = new byte[count * 8];
             for (int i = 0, j = 0; i < count; i++) {
                 int index = indices[i];
@@ -93,13 +120,13 @@ namespace MCGalaxy {
                 data[j++] = Opcode.SetBlock;
                 data[j++] = (byte)(x >> 8); data[j++] = (byte)x;
                 data[j++] = (byte)(y >> 8); data[j++] = (byte)y;
-                data[j++] = (byte)(z >> 8); data[j++] = (byte)z; 
+                data[j++] = (byte)(z >> 8); data[j++] = (byte)z;
                 data[j++] = types[i];
             }
             return data;
         }
         
-        byte[] MakeNoBlockDefsPacket() {
+        byte[] MakeNoBlockDefs() {
             byte[] data = new byte[count * 8];
             for (int i = 0, j = 0; i < count; i++) {
                 int index = indices[i];
@@ -110,13 +137,13 @@ namespace MCGalaxy {
                 data[j++] = Opcode.SetBlock;
                 data[j++] = (byte)(x >> 8); data[j++] = (byte)x;
                 data[j++] = (byte)(y >> 8); data[j++] = (byte)y;
-                data[j++] = (byte)(z >> 8); data[j++] = (byte)z; 
+                data[j++] = (byte)(z >> 8); data[j++] = (byte)z;
                 data[j++] = types[i] < Block.CpeCount ? types[i] : level.GetFallback(types[i]);
             }
             return data;
         }
         
-        byte[] MakeOriginalOnlyPacket() {
+        byte[] MakeOriginalOnly() {
             byte[] data = new byte[count * 8];
             for (int i = 0, j = 0; i < count; i++) {
                 int index = indices[i];

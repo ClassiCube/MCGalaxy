@@ -66,10 +66,11 @@ namespace MCGalaxy.Commands {
             }
         }
         
-       static void PerformHighlight(Player p, long seconds, UndoCache cache) {
+        static void PerformHighlight(Player p, long seconds, UndoCache cache) {
             UndoCacheNode node = cache.Tail;
             if (node == null) return;
             
+            BufferedBlockSender sender = new BufferedBlockSender(p);
             while (node != null) {
                 Level lvl = LevelInfo.FindExact(node.MapName);
                 if (lvl != p.level) { node = node.Prev; continue; }
@@ -80,14 +81,19 @@ namespace MCGalaxy.Commands {
                     ushort x, y, z;
                     node.Unpack(item.Index, out x, out y, out z);
                     DateTime time = node.BaseTime.AddSeconds(item.TimeDelta + seconds);
-                    if (time < DateTime.UtcNow) return;
+                    if (time < DateTime.UtcNow) { sender.CheckIfSend(true); return; }
                     
-                    byte newTile = 0, newExtTile = 0;
-                    item.GetNewBlock(out newTile, out newExtTile);
-                    p.SendBlockchange(x, y, z, newTile == Block.air ? Block.red : Block.green);
+                    byte newBlock = 0, newExtBlock = 0;
+                    item.GetNewBlock(out newBlock, out newExtBlock);
+                    int index = lvl.PosToInt(x, y, z);
+                    
+                    byte highlightBlock = newBlock == Block.air ? Block.red : Block.green;
+                    sender.Add(index, highlightBlock, 0);
+                    sender.CheckIfSend(false);
                 }
                 node = node.Prev;
             }
+            sender.CheckIfSend(true);
         }
 
         public override void Help(Player p) {

@@ -24,7 +24,7 @@ namespace MCGalaxy {
         public static int blockupdates = 250;
         static System.Timers.Timer blocktimer = new System.Timers.Timer(100);
         static bool started = false;
-        static BufferedBlockSender bulkSender = new BufferedBlockSender(null);
+        static BufferedBlockSender bulkSender = new BufferedBlockSender();
 
         public static void Start() {
             blocktimer.Elapsed += delegate {

@@ -24,7 +24,7 @@ namespace MCGalaxy {
         public static void SetWeather(Player p, Level lvl, string value) {
             byte weather = 255;
             if (IsResetString(value)) {
-                Player.Message(p, "Reset weather for {0}%S to 0 (sun)", lvl.name);
+                Player.Message(p, "Reset weather for {0}%S to 0 (%SSun)", lvl.name);
                 weather = 0;
             } else {
                 if (byte.TryParse(value, out weather)) {
@@ -51,7 +51,7 @@ namespace MCGalaxy {
         public static void SetBlock(Player p, string value, EnvProp prop,
                                     string variable, byte defValue, ref int target) {
             if (IsResetString(value)) {
-                Player.Message(p, "Reset {0} for {0}%S to normal", variable, p.level.name);
+                Player.Message(p, "Reset {0} for {1}%S to normal", variable, p.level.name);
                 target = defValue;
             } else {
                 if (!CheckBlock(p, value, variable, ref target)) return;
@@ -62,7 +62,7 @@ namespace MCGalaxy {
         public static void SetShort(Player p, string value, EnvProp prop,
                                     string variable, short defValue, ref int target) {
             if (IsResetString(value)) {
-                Player.Message(p, "Reset {0} for {0}%S to normal", variable, p.level.name);
+                Player.Message(p, "Reset {0} for {1}%S to normal", variable, p.level.name);
                 target = defValue;
             } else {
                 if (!CheckShort(p, value, variable, ref target)) return;
