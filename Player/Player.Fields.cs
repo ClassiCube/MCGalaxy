@@ -75,7 +75,7 @@ namespace MCGalaxy {
         public string BrushName = "normal", DefaultBrushArgs = "";
         public string afkMessage;
 
-        byte[] buffer = new byte[0];
+        byte[] leftBuffer = new byte[0];
         byte[] tempbuffer = new byte[0xFF];
         public bool disconnected = false;
         

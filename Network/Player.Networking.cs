@@ -33,12 +33,12 @@ namespace MCGalaxy {
                 int length = p.socket.EndReceive(result);
                 if (length == 0) { p.Disconnect(); return; }
 
-                byte[] allData = new byte[p.buffer.Length + length];
-                Buffer.BlockCopy(p.buffer, 0, allData, 0, p.buffer.Length);
-                Buffer.BlockCopy(p.tempbuffer, 0, allData, p.buffer.Length, length);
-                p.buffer = p.ProcessReceived(allData);
+                byte[] allData = new byte[p.leftBuffer.Length + length];
+                Buffer.BlockCopy(p.leftBuffer, 0, allData, 0, p.leftBuffer.Length);
+                Buffer.BlockCopy(p.tempbuffer, 0, allData, p.leftBuffer.Length, length);
+                p.leftBuffer = p.ProcessReceived(allData);
                 
-                if (p.dontmindme && p.buffer.Length == 0) {
+                if (p.dontmindme && p.leftBuffer.Length == 0) {
                     Server.s.Log("Disconnected");
                     p.socket.Close();
                     p.disconnected = true;
@@ -299,8 +299,8 @@ namespace MCGalaxy {
 
         void SendMapMotd(bool ignoreLevelMotd) {
             byte[] packet = Packet.MakeMotd(this, ignoreLevelMotd);
-            if (OnSendMOTD != null) OnSendMOTD(this, buffer);
-            SendRaw(buffer);
+            if (OnSendMOTD != null) OnSendMOTD(this, packet);
+            SendRaw(packet);
         }
         
         public void SendMap(Level oldLevel) { SendRawMap(oldLevel, level); }
