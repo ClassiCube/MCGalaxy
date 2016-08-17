@@ -32,12 +32,10 @@ namespace MCGalaxy.Commands {
             string[] parts = message.SplitSpaces(2);
             if (message == "" || parts.Length == 1) { Help(p); return; }
 
-            Player who = PlayerInfo.Find(parts[0]);
-            string whoTo = who == null ? parts[0] : who.name;
-            string fromname = p == null ? "(console)" : p.name;
-            if (!Player.ValidName(whoTo)) {
-                Player.Message(p, "%cIllegal name!"); return;
-            }
+            Player receiver = PlayerInfo.Find(parts[0]);
+            string receiverName = receiver == null ? parts[0] : receiver.name;
+            string senderName = p == null ? "(console)" : p.name;
+            if (!ValidName(p, receiverName, "player")) return;
 
             message = parts[1];
             //DB
@@ -47,13 +45,13 @@ namespace MCGalaxy.Commands {
                 message = message.Substring(0, 255);
             }
             //safe against SQL injections because whoTo is checked for illegal characters
-            Database.Execute("CREATE TABLE if not exists `Inbox" + whoTo + 
+            Database.Execute("CREATE TABLE if not exists `Inbox" + receiverName + 
                              "` (PlayerFrom CHAR(20), TimeSent DATETIME, Contents VARCHAR(255));");
-            Database.Execute("INSERT INTO `Inbox" + whoTo + "` (PlayerFrom, TimeSent, Contents) VALUES (@0, @1, @2)",
-                             fromname, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), message);
+            Database.Execute("INSERT INTO `Inbox" + receiverName + "` (PlayerFrom, TimeSent, Contents) VALUES (@0, @1, @2)",
+                             senderName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), message);
 
-            Player.Message(p, "Message sent to &5" + whoTo + ".");
-            if (who != null) who.SendMessage("Message recieved from &5" + fromname + "%S.");
+            Player.Message(p, "Message sent to &5" + receiverName + ".");
+            if (receiver != null) receiver.SendMessage("Message recieved from &5" + senderName + "%S.");
         }
         
         public override void Help(Player p) {

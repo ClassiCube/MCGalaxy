@@ -49,9 +49,18 @@ namespace MCGalaxy.Commands {
             if (dst == null) {
             	Player.Message(p, "\"{0}\" was not found in the database.", args[1]); return;
             }
+
+            Group srcGroup = Group.findPlayerGroup(src.Name);
+            Group dstGroup = Group.findPlayerGroup(dst.Name);
+            if (p != null && srcGroup.Permission > p.Rank) {
+                Player.Message(p, "Cannot /infoswap for a player ranked equal or higher to yours."); return;
+            }
+            if (p != null && dstGroup.Permission > p.Rank) {
+                Player.Message(p, "Cannot /infoswap for a player ranked equal or higher to yours."); return;
+            }
             
             Swap(src, dst); Swap(dst, src);
-            SwapGroups(src, dst);
+            SwapGroups(src, dst, srcGroup, dstGroup);
         }
         
         const string format = "yyyy-MM-dd HH:mm:ss";
@@ -69,10 +78,7 @@ namespace MCGalaxy.Commands {
                              src.Money, src.Title, src.TitleColor, src.TotalTime, dst.Name);            
         }
         
-        void SwapGroups(PlayerData src, PlayerData dst) {
-            Group srcGroup = Group.findPlayerGroup(src.Name);
-            Group dstGroup = Group.findPlayerGroup(dst.Name);
-            
+        void SwapGroups(PlayerData src, PlayerData dst, Group srcGroup, Group dstGroup) {
             srcGroup.playerList.Remove(src.Name);
             srcGroup.playerList.Add(dst.Name);
             srcGroup.playerList.Save();
