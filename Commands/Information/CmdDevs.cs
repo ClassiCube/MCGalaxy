@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
             Player.Message(p, "&9MCGalaxy devs: %S{0}", Server.Devs.Join());
-            Player.Message(p, "&9MCGalaxy mods: %S{0}", Server.Mods.Join());
+            Player.Message(p, "&2MCGalaxy mods: %S{0}", Server.Mods.Join());
         }
 
         public override void Help(Player p) {

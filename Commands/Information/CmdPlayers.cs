@@ -70,10 +70,7 @@ namespace MCGalaxy.Commands
                 playerList.Add(MakeSection(grp, title));
             }
 
-            Section devSec = MakeSection("#&9MCGalaxy Devs:%S");
-            Section modsSec = MakeSection("#&2MCGalaxy Mods:%S");
-            int totalPlayers = 0;
-            
+            int totalPlayers = 0;            
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
                 if (pl.hidden && !showHidden) continue;
@@ -81,9 +78,6 @@ namespace MCGalaxy.Commands
                     totalPlayers++;
                     string name = Colors.StripColors(pl.DisplayName);
                     AddStates(pl, ref name);
-
-                    if (pl.isDev) devSec.Append(pl, name);
-                    if (pl.isMod) modsSec.Append(pl, name);
                     playerList.Find(grp => grp.group == pl.group).Append(pl, name);
                 }
             }
@@ -92,9 +86,6 @@ namespace MCGalaxy.Commands
                 output("There is &a1 %Splayer online.");
             else
                 output("There are &a" + totalPlayers + " %Splayers online.");
-            
-            devSec.Print(output, false);
-            modsSec.Print(output, false);
             
             for (int i = playerList.Count - 1; i >= 0; i--)
                 playerList[i].Print(output, showEmptyRanks);
@@ -116,8 +107,7 @@ namespace MCGalaxy.Commands
             public bool Empty { get { return builder.Length == 0; } }
             
             public void Print(Action<string> output, bool showEmpty) {
-                if (builder.Length == 0 && !showEmpty)
-                    return;
+                if (builder.Length == 0 && !showEmpty) return;
                 
                 if (builder.Length > 0)
                     builder.Remove(builder.Length - 1, 1);

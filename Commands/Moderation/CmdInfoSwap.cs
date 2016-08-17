@@ -43,19 +43,19 @@ namespace MCGalaxy.Commands {
             
             PlayerData src = PlayerInfo.FindData(args[0]);
             if (src == null) {
-            	Player.Message(p, "\"{0}\" was not found in the database.", args[0]); return;
+                Player.Message(p, "\"{0}\" was not found in the database.", args[0]); return;
             }
             PlayerData dst = PlayerInfo.FindData(args[1]);
             if (dst == null) {
-            	Player.Message(p, "\"{0}\" was not found in the database.", args[1]); return;
+                Player.Message(p, "\"{0}\" was not found in the database.", args[1]); return;
             }
 
             Group srcGroup = Group.findPlayerGroup(src.Name);
             Group dstGroup = Group.findPlayerGroup(dst.Name);
-            if (p != null && srcGroup.Permission > p.Rank) {
+            if (p != null && srcGroup.Permission >= p.Rank) {
                 Player.Message(p, "Cannot /infoswap for a player ranked equal or higher to yours."); return;
             }
-            if (p != null && dstGroup.Permission > p.Rank) {
+            if (p != null && dstGroup.Permission >= p.Rank) {
                 Player.Message(p, "Cannot /infoswap for a player ranked equal or higher to yours."); return;
             }
             

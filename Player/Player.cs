@@ -60,7 +60,9 @@ namespace MCGalaxy {
             if (game != null) game.AdjustPrefix(this, ref prefix);
             
             bool isOwner = Server.server_owner.CaselessEq(name);
-            string viptitle = isDev ? string.Format("{0}[&9Dev{0}] ", color) : 
+            string viptitle =
+                isMod ? string.Format("{0}[&aInfo{0}] ", color) :                
+                isDev ? string.Format("{0}[&9Dev{0}] ", color) :
                 isOwner ? string.Format("{0}[&cOwner{0}] ", color) : "";
             prefix = prefix + viptitle;
             prefix = (title == "") ? prefix : prefix + color + "[" + titlecolor + title + color + "] ";
