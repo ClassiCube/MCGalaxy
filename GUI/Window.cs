@@ -923,7 +923,7 @@ namespace MCGalaxy.Gui {
             
             if (name == last) return;
             last = name;
-            LevelSettings settings = new LevelSettings(lvl);
+            LevelProperties settings = new LevelProperties(lvl);
             pgMaps.SelectedObject = settings;
             gbMap_Props.Text = "Properties for " + name;
         }

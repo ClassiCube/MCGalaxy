@@ -28,7 +28,7 @@ using Microsoft.Win32;
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
         string lsLoadedMap = "";
-        ZombieSettings zSettings = new ZombieSettings();
+        ZombieProperties zSettings = new ZombieProperties();
 
         public PropertyWindow() {
             InitializeComponent();

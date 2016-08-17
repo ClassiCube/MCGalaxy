@@ -19,11 +19,9 @@ using System;
 using System.ComponentModel;
 
 namespace MCGalaxy.Gui {
-
-    public sealed class PlayerSettings {
-        
+    public sealed class PlayerProperties {       
         readonly Player player;
-        public PlayerSettings(Player player) {
+        public PlayerProperties(Player player) {
             this.player = player;
         }
         

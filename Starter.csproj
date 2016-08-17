@@ -52,9 +52,9 @@
     <Compile Include="GUI\Formatter.cs" />
     <Compile Include="GUI\Handlers.cs" />
     <Compile Include="GUI\Program.cs" />
-    <Compile Include="GUI\Settings\LevelSettings.cs" />
-    <Compile Include="GUI\Settings\PlayerSettings.cs" />
-    <Compile Include="GUI\Settings\ZombieSettings.cs" />
+    <Compile Include="GUI\Settings\LevelProperties.cs" />
+    <Compile Include="GUI\Settings\PlayerProperties.cs" />
+    <Compile Include="GUI\Settings\ZombieProperties.cs" />
     <Compile Include="GUI\Window.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -21,8 +21,7 @@ using System.ComponentModel;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Gui {
-
-    public sealed class ZombieSettings {
+    public sealed class ZombieProperties {
         
         [Description("Whether at the end of each round, different levels are randomly picked for the next round. " +
                      "You should generallly leave this as true.")]

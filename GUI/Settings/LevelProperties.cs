@@ -19,11 +19,9 @@ using System;
 using System.ComponentModel;
 
 namespace MCGalaxy.Gui {
-
-    public sealed class LevelSettings {
-        
+    public sealed class LevelProperties {     
         readonly Level lvl;
-        public LevelSettings(Level lvl) {
+        public LevelProperties(Level lvl) {
             this.lvl = lvl;
         }
         
