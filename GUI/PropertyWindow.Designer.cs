@@ -1331,7 +1331,7 @@ namespace MCGalaxy.Gui
             this.chkWorld.Name = "chkWorld";
             this.chkWorld.Size = new System.Drawing.Size(78, 17);
             this.chkWorld.TabIndex = 4;
-            this.chkWorld.Text = "World chat";
+            this.chkWorld.Text = "Server-wide chat";
             this.toolTip.SetToolTip(this.chkWorld, "If disabled, every map has isolated chat.\nIf enabled, every map is able to commun" +
                         "icate without special letters.");
             this.chkWorld.UseVisualStyleBackColor = true;

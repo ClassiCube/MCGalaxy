@@ -433,7 +433,7 @@ namespace MCGalaxy.Gui {
                 case "no-respawning-during-zombie":
                     zSettings.Respawning = value.ToLower() != "true"; break;
                 case "no-level-saving-during-zombie":
-                    zSettings.SaveZombieLevelChanges = value.ToLower() != "true"; break;
+                    zSettings.SaveLevelChanges = value.ToLower() != "true"; break;
                 case "no-pillaring-during-zombie":
                     zSettings.Pillaring = value.ToLower() != "true"; break;
                 case "zombie-name-while-infected":
@@ -447,7 +447,7 @@ namespace MCGalaxy.Gui {
                 case "zombie-levels-list":
                     zSettings.LevelsList = value.Replace(" ", ""); break;
                 case "zombie-save-blockchanges":
-                    zSettings.SaveZombieLevelChanges = value.ToLower() == "true"; break;
+                    zSettings.SaveLevelChanges = value.ToLower() == "true"; break;
                 case "zombie-hitbox-precision":
                     zSettings.HitboxPrecision = int.Parse(value); break;
                 case "zombie-maxmove-distance":
