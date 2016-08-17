@@ -57,14 +57,12 @@ namespace MCGalaxy {
             extraTimer.Stop();
 
             try {
-                Group nobody = Group.findPerm(LevelPermission.Nobody);
-                if (!nobody.commands.Contains("inbox") && !nobody.commands.Contains("send") 
-            	    && Database.TableExists("Inbox" + name) ) {
+                if (group.commands.Contains("inbox") && Database.TableExists("Inbox" + name) ) {
                     //safe against SQL injections because no user input is given here
-                    DataTable Inbox = Database.Fill("SELECT * FROM `Inbox" + name + "`");
-
-                    SendMessage("&cYou have &f" + Inbox.Rows.Count + " &cmessages in /inbox");
-                    Inbox.Dispose();
+                    using (DataTable Inbox = Database.Fill("SELECT * FROM `Inbox" + name + "`")) {
+                    	if (Inbox.Rows.Count > 0)
+                    	    SendMessage("You have &a" + Inbox.Rows.Count + " %Smessages in /inbox");
+                    }
                 }
             } catch {
             }
