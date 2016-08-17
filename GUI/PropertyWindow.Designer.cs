@@ -47,6 +47,10 @@ namespace MCGalaxy.Gui
         {
             this.components = new System.ComponentModel.Container();
             this.tabChat = new System.Windows.Forms.TabPage();
+            this.chat_gbTab = new System.Windows.Forms.GroupBox();
+            this.chat_cbTabRank = new System.Windows.Forms.CheckBox();
+            this.chat_cbTabLevel = new System.Windows.Forms.CheckBox();
+            this.chat_cbTabBots = new System.Windows.Forms.CheckBox();
             this.chat_gbMessages = new System.Windows.Forms.GroupBox();
             this.chat_lblDemote = new System.Windows.Forms.Label();
             this.chat_lblPromote = new System.Windows.Forms.Label();
@@ -135,7 +139,6 @@ namespace MCGalaxy.Gui
             this.chkUseSQL = new System.Windows.Forms.CheckBox();
             this.cmbVerificationRank = new System.Windows.Forms.ComboBox();
             this.chkEnableVerification = new System.Windows.Forms.CheckBox();
-            this.spam_cbAuto = new System.Windows.Forms.CheckBox();
             this.lsChkSendAFKMain = new System.Windows.Forms.CheckBox();
             this.lsChkStartOnStartup = new System.Windows.Forms.CheckBox();
             this.lsNudVoteCount = new System.Windows.Forms.NumericUpDown();
@@ -161,6 +164,7 @@ namespace MCGalaxy.Gui
             this.cmbDefaultRank = new System.Windows.Forms.ComboBox();
             this.cbLogNotes = new System.Windows.Forms.CheckBox();
             this.cmbOsMap = new System.Windows.Forms.ComboBox();
+            this.spam_cbAuto = new System.Windows.Forms.CheckBox();
             this.pageBlocks = new System.Windows.Forms.TabPage();
             this.btnBlHelp = new System.Windows.Forms.Button();
             this.txtBlRanks = new System.Windows.Forms.TextBox();
@@ -205,6 +209,8 @@ namespace MCGalaxy.Gui
             this.economyGroupBox = new System.Windows.Forms.GroupBox();
             this.buttonEco = new System.Windows.Forms.Button();
             this.grpExtra = new System.Windows.Forms.GroupBox();
+            this.nudCooldownTime = new System.Windows.Forms.NumericUpDown();
+            this.label84 = new System.Windows.Forms.Label();
             this.lblOsMap = new System.Windows.Forms.Label();
             this.chkShowEmptyRanks = new System.Windows.Forms.CheckBox();
             this.chkRepeatMessages = new System.Windows.Forms.CheckBox();
@@ -249,11 +255,11 @@ namespace MCGalaxy.Gui
             this.label49 = new System.Windows.Forms.Label();
             this.txtIrcId = new System.Windows.Forms.TextBox();
             this.chkIrcId = new System.Windows.Forms.CheckBox();
-            this.irc_cbTitles = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.irc_cbTitles = new System.Windows.Forms.CheckBox();
             this.pageServer = new System.Windows.Forms.TabPage();
             this.grpLevels = new System.Windows.Forms.GroupBox();
             this.label27 = new System.Windows.Forms.Label();
@@ -360,27 +366,22 @@ namespace MCGalaxy.Gui
             this.pageSecurity = new System.Windows.Forms.TabPage();
             this.gbSec_Other = new System.Windows.Forms.GroupBox();
             this.gbSec_Spam = new System.Windows.Forms.GroupBox();
+            this.spam_lblOnMute = new System.Windows.Forms.Label();
+            this.spam_numMsgs = new System.Windows.Forms.NumericUpDown();
+            this.spam_lblOnMsgs = new System.Windows.Forms.Label();
             this.spam_numSecs = new System.Windows.Forms.NumericUpDown();
             this.spam_lblOnSecs = new System.Windows.Forms.Label();
-            this.spam_numMute = new System.Windows.Forms.NumericUpDown();
-            this.spam_lblOnMsgs = new System.Windows.Forms.Label();
-            this.spam_numMsgs = new System.Windows.Forms.NumericUpDown();
-            this.spam_lblOnMute = new System.Windows.Forms.Label();
             this.spam_lblForMute = new System.Windows.Forms.Label();
+            this.spam_numMute = new System.Windows.Forms.NumericUpDown();
             this.spam_lblForSecs = new System.Windows.Forms.Label();
             this.gbSec_Passwords = new System.Windows.Forms.GroupBox();
             this.btnReset = new System.Windows.Forms.Button();
             this.listPasswords = new System.Windows.Forms.ListBox();
             this.label39 = new System.Windows.Forms.Label();
             this.label38 = new System.Windows.Forms.Label();
-            this.nudCooldownTime = new System.Windows.Forms.NumericUpDown();
-            this.label84 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.chat_gbTab = new System.Windows.Forms.GroupBox();
-            this.chat_cbTabBots = new System.Windows.Forms.CheckBox();
-            this.chat_cbTabLevel = new System.Windows.Forms.CheckBox();
-            this.chat_cbTabRank = new System.Windows.Forms.CheckBox();
             this.tabChat.SuspendLayout();
+            this.chat_gbTab.SuspendLayout();
             this.chat_gbMessages.SuspendLayout();
             this.chat_gbOther.SuspendLayout();
             this.chat_gbColors.SuspendLayout();
@@ -412,6 +413,7 @@ namespace MCGalaxy.Gui
             this.pageMisc.SuspendLayout();
             this.economyGroupBox.SuspendLayout();
             this.grpExtra.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).BeginInit();
             this.grpMessages.SuspendLayout();
             this.grpPhysics.SuspendLayout();
             this.grpAFK.SuspendLayout();
@@ -454,12 +456,10 @@ namespace MCGalaxy.Gui
             this.pageSecurity.SuspendLayout();
             this.gbSec_Other.SuspendLayout();
             this.gbSec_Spam.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spam_numMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spam_numSecs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spam_numMute)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spam_numMsgs)).BeginInit();
             this.gbSec_Passwords.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).BeginInit();
-            this.chat_gbTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabChat
@@ -475,6 +475,48 @@ namespace MCGalaxy.Gui
             this.tabChat.Size = new System.Drawing.Size(498, 521);
             this.tabChat.TabIndex = 10;
             this.tabChat.Text = "Chat";
+            // 
+            // chat_gbTab
+            // 
+            this.chat_gbTab.Controls.Add(this.chat_cbTabRank);
+            this.chat_gbTab.Controls.Add(this.chat_cbTabLevel);
+            this.chat_gbTab.Controls.Add(this.chat_cbTabBots);
+            this.chat_gbTab.Location = new System.Drawing.Point(235, 59);
+            this.chat_gbTab.Name = "chat_gbTab";
+            this.chat_gbTab.Size = new System.Drawing.Size(256, 92);
+            this.chat_gbTab.TabIndex = 3;
+            this.chat_gbTab.TabStop = false;
+            this.chat_gbTab.Text = "Tab list";
+            // 
+            // chat_cbTabRank
+            // 
+            this.chat_cbTabRank.AutoSize = true;
+            this.chat_cbTabRank.Location = new System.Drawing.Point(6, 19);
+            this.chat_cbTabRank.Name = "chat_cbTabRank";
+            this.chat_cbTabRank.Size = new System.Drawing.Size(116, 17);
+            this.chat_cbTabRank.TabIndex = 31;
+            this.chat_cbTabRank.Text = "Sort tab list by rank";
+            this.chat_cbTabRank.UseVisualStyleBackColor = true;
+            // 
+            // chat_cbTabLevel
+            // 
+            this.chat_cbTabLevel.AutoSize = true;
+            this.chat_cbTabLevel.Location = new System.Drawing.Point(6, 44);
+            this.chat_cbTabLevel.Name = "chat_cbTabLevel";
+            this.chat_cbTabLevel.Size = new System.Drawing.Size(108, 17);
+            this.chat_cbTabLevel.TabIndex = 30;
+            this.chat_cbTabLevel.Text = "Level only tab list";
+            this.chat_cbTabLevel.UseVisualStyleBackColor = true;
+            // 
+            // chat_cbTabBots
+            // 
+            this.chat_cbTabBots.AutoSize = true;
+            this.chat_cbTabBots.Location = new System.Drawing.Point(6, 69);
+            this.chat_cbTabBots.Name = "chat_cbTabBots";
+            this.chat_cbTabBots.Size = new System.Drawing.Size(120, 17);
+            this.chat_cbTabBots.TabIndex = 32;
+            this.chat_cbTabBots.Text = "Show bots in tab list";
+            this.chat_cbTabBots.UseVisualStyleBackColor = true;
             // 
             // chat_gbMessages
             // 
@@ -921,7 +963,7 @@ namespace MCGalaxy.Gui
             this.lblLoadedCommands.AutoSize = true;
             this.lblLoadedCommands.Location = new System.Drawing.Point(7, 120);
             this.lblLoadedCommands.Name = "lblLoadedCommands";
-            this.lblLoadedCommands.Size = new System.Drawing.Size(97, 13);
+            this.lblLoadedCommands.Size = new System.Drawing.Size(96, 13);
             this.lblLoadedCommands.TabIndex = 40;
             this.lblLoadedCommands.Text = "Loaded commands";
             // 
@@ -1081,7 +1123,7 @@ namespace MCGalaxy.Gui
             this.label73.AutoSize = true;
             this.label73.Location = new System.Drawing.Point(3, 18);
             this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(179, 13);
+            this.label73.Size = new System.Drawing.Size(128, 13);
             this.label73.TabIndex = 44;
             this.label73.Text = "Extra permission number:";
             // 
@@ -1736,6 +1778,17 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.cmbOsMap, "Default min rank that can build on maps made with /os map add.\nIf \'nobody\' is sel" +
                         "ected, the default min rank used is the min rank that can use /os.");
             // 
+            // spam_cbAuto
+            // 
+            this.spam_cbAuto.AutoSize = true;
+            this.spam_cbAuto.Location = new System.Drawing.Point(10, 20);
+            this.spam_cbAuto.Name = "spam_cbAuto";
+            this.spam_cbAuto.Size = new System.Drawing.Size(142, 17);
+            this.spam_cbAuto.TabIndex = 24;
+            this.spam_cbAuto.Text = "Enable automatic muting";
+            this.spam_cbAuto.UseVisualStyleBackColor = true;
+            this.spam_cbAuto.CheckedChanged += new System.EventHandler(this.spam_cbAuto_CheckedChanged);
+            // 
             // pageBlocks
             // 
             this.pageBlocks.BackColor = System.Drawing.SystemColors.Control;
@@ -1931,7 +1984,7 @@ namespace MCGalaxy.Gui
             this.gbRankSettings.Controls.Add(this.label52);
             this.gbRankSettings.Location = new System.Drawing.Point(11, 16);
             this.gbRankSettings.Name = "gbRankSettings";
-            this.gbRankSettings.Size = new System.Drawing.Size(197, 250);
+            this.gbRankSettings.Size = new System.Drawing.Size(194, 291);
             this.gbRankSettings.TabIndex = 18;
             this.gbRankSettings.TabStop = false;
             this.gbRankSettings.Text = "Rank settings";
@@ -2181,56 +2234,56 @@ namespace MCGalaxy.Gui
             this.buttonEco.Text = "Economy Settings";
             this.buttonEco.UseVisualStyleBackColor = true;
             this.buttonEco.Click += new System.EventHandler(this.buttonEco_Click);
-        	// 
-        	// grpExtra
-        	// 
-        	this.grpExtra.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-        	this.grpExtra.Controls.Add(this.nudCooldownTime);
-        	this.grpExtra.Controls.Add(this.label84);
-        	this.grpExtra.Controls.Add(this.lblOsMap);
-        	this.grpExtra.Controls.Add(this.cmbOsMap);
-        	this.grpExtra.Controls.Add(this.chkGuestLimitNotify);
-        	this.grpExtra.Controls.Add(this.chkShowEmptyRanks);
-        	this.grpExtra.Controls.Add(this.chkRepeatMessages);
-        	this.grpExtra.Controls.Add(this.chkDeath);
-        	this.grpExtra.Controls.Add(this.txtRestartTime);
-        	this.grpExtra.Controls.Add(this.txtMoneys);
-        	this.grpExtra.Controls.Add(this.chkRestartTime);
-        	this.grpExtra.Controls.Add(this.chk17Dollar);
-        	this.grpExtra.Controls.Add(this.chkSmile);
-        	this.grpExtra.Controls.Add(this.label34);
-        	this.grpExtra.Location = new System.Drawing.Point(10, 158);
-        	this.grpExtra.Name = "grpExtra";
-        	this.grpExtra.Size = new System.Drawing.Size(332, 270);
-        	this.grpExtra.TabIndex = 40;
-        	this.grpExtra.TabStop = false;
-        	this.grpExtra.Text = "Extra";
-        	// 
-        	// nudCooldownTime
-        	// 
-        	this.nudCooldownTime.Location = new System.Drawing.Point(143, 234);
-        	this.nudCooldownTime.Maximum = new decimal(new int[] {
-        	        	        	86400,
-        	        	        	0,
-        	        	        	0,
-        	        	        	0});
-        	this.nudCooldownTime.Name = "nudCooldownTime";
-        	this.nudCooldownTime.Size = new System.Drawing.Size(57, 21);
-        	this.nudCooldownTime.TabIndex = 50;
-        	this.nudCooldownTime.Value = new decimal(new int[] {
-        	        	        	600,
-        	        	        	0,
-        	        	        	0,
-        	        	        	0});
-        	// 
-        	// label84
-        	// 
-        	this.label84.AutoSize = true;
-        	this.label84.Location = new System.Drawing.Point(23, 238);
-        	this.label84.Name = "label84";
-        	this.label84.Size = new System.Drawing.Size(115, 13);
-        	this.label84.TabIndex = 49;
-        	this.label84.Text = "Review cooldown time:";
+            // 
+            // grpExtra
+            // 
+            this.grpExtra.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.grpExtra.Controls.Add(this.nudCooldownTime);
+            this.grpExtra.Controls.Add(this.label84);
+            this.grpExtra.Controls.Add(this.lblOsMap);
+            this.grpExtra.Controls.Add(this.cmbOsMap);
+            this.grpExtra.Controls.Add(this.chkGuestLimitNotify);
+            this.grpExtra.Controls.Add(this.chkShowEmptyRanks);
+            this.grpExtra.Controls.Add(this.chkRepeatMessages);
+            this.grpExtra.Controls.Add(this.chkDeath);
+            this.grpExtra.Controls.Add(this.txtRestartTime);
+            this.grpExtra.Controls.Add(this.txtMoneys);
+            this.grpExtra.Controls.Add(this.chkRestartTime);
+            this.grpExtra.Controls.Add(this.chk17Dollar);
+            this.grpExtra.Controls.Add(this.chkSmile);
+            this.grpExtra.Controls.Add(this.label34);
+            this.grpExtra.Location = new System.Drawing.Point(10, 158);
+            this.grpExtra.Name = "grpExtra";
+            this.grpExtra.Size = new System.Drawing.Size(332, 270);
+            this.grpExtra.TabIndex = 40;
+            this.grpExtra.TabStop = false;
+            this.grpExtra.Text = "Extra";
+            // 
+            // nudCooldownTime
+            // 
+            this.nudCooldownTime.Location = new System.Drawing.Point(143, 234);
+            this.nudCooldownTime.Maximum = new decimal(new int[] {
+                                    86400,
+                                    0,
+                                    0,
+                                    0});
+            this.nudCooldownTime.Name = "nudCooldownTime";
+            this.nudCooldownTime.Size = new System.Drawing.Size(57, 21);
+            this.nudCooldownTime.TabIndex = 50;
+            this.nudCooldownTime.Value = new decimal(new int[] {
+                                    600,
+                                    0,
+                                    0,
+                                    0});
+            // 
+            // label84
+            // 
+            this.label84.AutoSize = true;
+            this.label84.Location = new System.Drawing.Point(23, 238);
+            this.label84.Name = "label84";
+            this.label84.Size = new System.Drawing.Size(115, 13);
+            this.label84.TabIndex = 49;
+            this.label84.Text = "Review cooldown time:";
             // 
             // lblOsMap
             // 
@@ -2606,16 +2659,6 @@ namespace MCGalaxy.Gui
             this.txtSQLUsername.TabIndex = 1;
             this.txtSQLUsername.Tag = "The username set while installing MySQL";
             // 
-            // irc_cbTitles
-            // 
-            this.irc_cbTitles.AutoSize = true;
-            this.irc_cbTitles.Location = new System.Drawing.Point(9, 251);
-            this.irc_cbTitles.Name = "irc_cbTitles";
-            this.irc_cbTitles.Size = new System.Drawing.Size(140, 17);
-            this.irc_cbTitles.TabIndex = 32;
-            this.irc_cbTitles.Text = "Show player titles on IRC";
-            this.irc_cbTitles.UseVisualStyleBackColor = true;
-            // 
             // grpIRC
             // 
             this.grpIRC.Controls.Add(this.txtIRCPort);
@@ -2719,6 +2762,16 @@ namespace MCGalaxy.Gui
             this.label5.Size = new System.Drawing.Size(49, 13);
             this.label5.TabIndex = 18;
             this.label5.Text = "Channel:";
+            // 
+            // irc_cbTitles
+            // 
+            this.irc_cbTitles.AutoSize = true;
+            this.irc_cbTitles.Location = new System.Drawing.Point(9, 251);
+            this.irc_cbTitles.Name = "irc_cbTitles";
+            this.irc_cbTitles.Size = new System.Drawing.Size(140, 17);
+            this.irc_cbTitles.TabIndex = 32;
+            this.irc_cbTitles.Text = "Show player titles on IRC";
+            this.irc_cbTitles.UseVisualStyleBackColor = true;
             // 
             // pageServer
             // 
@@ -2987,7 +3040,7 @@ namespace MCGalaxy.Gui
             // 
             // numPlayers
             // 
-            this.numPlayers.Location = new System.Drawing.Point(84, 20);
+            this.numPlayers.Location = new System.Drawing.Point(83, 20);
             this.numPlayers.Maximum = new decimal(new int[] {
                                     128,
                                     0,
@@ -3986,17 +4039,6 @@ namespace MCGalaxy.Gui
             this.gbSec_Spam.TabStop = false;
             this.gbSec_Spam.Text = "Chat spam control";
             // 
-            // spam_cbAuto
-            // 
-            this.spam_cbAuto.AutoSize = true;
-            this.spam_cbAuto.Location = new System.Drawing.Point(10, 20);
-            this.spam_cbAuto.Name = "spam_cbAuto";
-            this.spam_cbAuto.Size = new System.Drawing.Size(49, 23);
-            this.spam_cbAuto.TabIndex = 24;
-            this.spam_cbAuto.Text = "Enable automatic muting";
-            this.spam_cbAuto.UseVisualStyleBackColor = true;
-            this.spam_cbAuto.CheckedChanged += new System.EventHandler(this.spam_cbAuto_CheckedChanged);
-            // 
             // spam_lblOnMute
             // 
             this.spam_lblOnMute.AutoSize = true;
@@ -4008,25 +4050,25 @@ namespace MCGalaxy.Gui
             // 
             // spam_numMsgs
             // 
-            this.spam_numMsgs.Location = new System.Drawing.Point(46, 45);
+            this.spam_numMsgs.Location = new System.Drawing.Point(53, 45);
             this.spam_numMsgs.Maximum = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
+                                    128,
+                                    0,
+                                    0,
+                                    0});
             this.spam_numMsgs.Name = "spam_numMsgs";
             this.spam_numMsgs.Size = new System.Drawing.Size(37, 21);
             this.spam_numMsgs.TabIndex = 30;
             this.spam_numMsgs.Value = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
+                                    8,
+                                    0,
+                                    0,
+                                    0});
             // 
             // spam_lblOnMsgs
             // 
             this.spam_lblOnMsgs.AutoSize = true;
-            this.spam_lblOnMsgs.Location = new System.Drawing.Point(85, 48);
+            this.spam_lblOnMsgs.Location = new System.Drawing.Point(91, 48);
             this.spam_lblOnMsgs.Name = "spam_lblOnMsgs";
             this.spam_lblOnMsgs.Size = new System.Drawing.Size(65, 13);
             this.spam_lblOnMsgs.TabIndex = 31;
@@ -4034,25 +4076,25 @@ namespace MCGalaxy.Gui
             // 
             // spam_numSecs
             // 
-            this.spam_numSecs.Location = new System.Drawing.Point(141, 45);
+            this.spam_numSecs.Location = new System.Drawing.Point(157, 45);
             this.spam_numSecs.Maximum = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
+                                    128,
+                                    0,
+                                    0,
+                                    0});
             this.spam_numSecs.Name = "spam_numSecs";
             this.spam_numSecs.Size = new System.Drawing.Size(42, 21);
             this.spam_numSecs.TabIndex = 34;
             this.spam_numSecs.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
+                                    5,
+                                    0,
+                                    0,
+                                    0});
             // 
             // spam_lblOnSecs
             // 
             this.spam_lblOnSecs.AutoSize = true;
-            this.spam_lblOnSecs.Location = new System.Drawing.Point(184, 48);
+            this.spam_lblOnSecs.Location = new System.Drawing.Point(200, 48);
             this.spam_lblOnSecs.Name = "spam_lblOnSecs";
             this.spam_lblOnSecs.Size = new System.Drawing.Size(46, 13);
             this.spam_lblOnSecs.TabIndex = 33;
@@ -4063,31 +4105,31 @@ namespace MCGalaxy.Gui
             this.spam_lblForMute.AutoSize = true;
             this.spam_lblForMute.Location = new System.Drawing.Point(6, 81);
             this.spam_lblForMute.Name = "spam_lblForMute";
-            this.spam_lblForMute.Size = new System.Drawing.Size(46, 13);
+            this.spam_lblForMute.Size = new System.Drawing.Size(47, 13);
             this.spam_lblForMute.TabIndex = 25;
             this.spam_lblForMute.Text = "Mute for";
             // 
             // spam_numMute
             // 
-            this.spam_numMute.Location = new System.Drawing.Point(46, 78);
+            this.spam_numMute.Location = new System.Drawing.Point(53, 79);
             this.spam_numMute.Maximum = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
+                                    128,
+                                    0,
+                                    0,
+                                    0});
             this.spam_numMute.Name = "spam_numMute";
             this.spam_numMute.Size = new System.Drawing.Size(37, 21);
             this.spam_numMute.TabIndex = 32;
             this.spam_numMute.Value = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
+                                    60,
+                                    0,
+                                    0,
+                                    0});
             // 
             // spam_lblForSecs
             // 
             this.spam_lblForSecs.AutoSize = true;
-            this.spam_lblForSecs.Location = new System.Drawing.Point(85, 81);
+            this.spam_lblForSecs.Location = new System.Drawing.Point(91, 81);
             this.spam_lblForSecs.Name = "spam_lblForSecs";
             this.spam_lblForSecs.Size = new System.Drawing.Size(46, 13);
             this.spam_lblForSecs.TabIndex = 33;
@@ -4144,48 +4186,6 @@ namespace MCGalaxy.Gui
             this.label38.TabIndex = 1;
             this.label38.Text = "Rank:\r\n\r\n\r\n";
             // 
-            // chat_gbTab
-            // 
-            this.chat_gbTab.Controls.Add(this.chat_cbTabRank);
-            this.chat_gbTab.Controls.Add(this.chat_cbTabLevel);
-            this.chat_gbTab.Controls.Add(this.chat_cbTabBots);
-            this.chat_gbTab.Location = new System.Drawing.Point(235, 59);
-            this.chat_gbTab.Name = "chat_gbTab";
-            this.chat_gbTab.Size = new System.Drawing.Size(256, 92);
-            this.chat_gbTab.TabIndex = 3;
-            this.chat_gbTab.TabStop = false;
-            this.chat_gbTab.Text = "Tab list";
-            // 
-            // chat_cbTabLevel
-            // 
-            this.chat_cbTabLevel.AutoSize = true;
-            this.chat_cbTabLevel.Location = new System.Drawing.Point(6, 44);
-            this.chat_cbTabLevel.Name = "chat_cbTabLevel";
-            this.chat_cbTabLevel.Size = new System.Drawing.Size(108, 17);
-            this.chat_cbTabLevel.TabIndex = 30;
-            this.chat_cbTabLevel.Text = "Level only tab list";
-            this.chat_cbTabLevel.UseVisualStyleBackColor = true;
-            // 
-            // chat_gbTabRank
-            // 
-            this.chat_cbTabRank.AutoSize = true;
-            this.chat_cbTabRank.Location = new System.Drawing.Point(6, 19);
-            this.chat_cbTabRank.Name = "chat_cbTabRank";
-            this.chat_cbTabRank.Size = new System.Drawing.Size(116, 17);
-            this.chat_cbTabRank.TabIndex = 31;
-            this.chat_cbTabRank.Text = "Sort tab list by rank";
-            this.chat_cbTabRank.UseVisualStyleBackColor = true;
-            // 
-            // chat_cbTabBots
-            // 
-            this.chat_cbTabBots.AutoSize = true;
-            this.chat_cbTabBots.Location = new System.Drawing.Point(6, 69);
-            this.chat_cbTabBots.Name = "chat_cbTabBots";
-            this.chat_cbTabBots.Size = new System.Drawing.Size(108, 17);
-            this.chat_cbTabBots.TabIndex = 32;
-            this.chat_cbTabBots.Text = "Show bots in tab list";
-            this.chat_cbTabBots.UseVisualStyleBackColor = true;
-            // 
             // PropertyWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4205,6 +4205,8 @@ namespace MCGalaxy.Gui
             this.Load += new System.EventHandler(this.PropertyWindow_Load);
             this.Disposed += new System.EventHandler(this.PropertyWindow_Unload);
             this.tabChat.ResumeLayout(false);
+            this.chat_gbTab.ResumeLayout(false);
+            this.chat_gbTab.PerformLayout();
             this.chat_gbMessages.ResumeLayout(false);
             this.chat_gbMessages.PerformLayout();
             this.chat_gbOther.ResumeLayout(false);
@@ -4250,6 +4252,7 @@ namespace MCGalaxy.Gui
             this.economyGroupBox.ResumeLayout(false);
             this.grpExtra.ResumeLayout(false);
             this.grpExtra.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).EndInit();
             this.grpMessages.ResumeLayout(false);
             this.grpMessages.PerformLayout();
             this.grpPhysics.ResumeLayout(false);
@@ -4313,14 +4316,11 @@ namespace MCGalaxy.Gui
             this.gbSec_Other.PerformLayout();
             this.gbSec_Spam.ResumeLayout(false);
             this.gbSec_Spam.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spam_numMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spam_numSecs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spam_numMute)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spam_numMsgs)).EndInit();
             this.gbSec_Passwords.ResumeLayout(false);
             this.gbSec_Passwords.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).EndInit();
-            this.chat_gbTab.ResumeLayout(false);
-            this.chat_gbTab.PerformLayout();
             this.ResumeLayout(false);
         }
         private System.Windows.Forms.CheckBox chat_cbTabBots;

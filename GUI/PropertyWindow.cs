@@ -35,18 +35,6 @@ namespace MCGalaxy.Gui {
             propsZG.SelectedObject = zSettings;
             zSettings.LoadFromServer();
             propsZG.Invalidate();
-            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
-            Font = SystemFonts.IconTitleFont;
-        }
-
-        void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e) {
-            if (e.Category == UserPreferenceCategory.Window) {
-                Font = SystemFonts.IconTitleFont;
-            }
-        }
-
-        void PropertyWindow_FormClosing(object sender, FormClosingEventArgs e) {
-            SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
         }
 
         void PropertyWindow_Load(object sender, EventArgs e) {
