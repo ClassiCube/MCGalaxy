@@ -51,8 +51,10 @@
     <Compile Include="GUI\Descriptors.cs" />
     <Compile Include="GUI\Formatter.cs" />
     <Compile Include="GUI\Handlers.cs" />
-    <Compile Include="GUI\LevelSettings.cs" />
     <Compile Include="GUI\Program.cs" />
+    <Compile Include="GUI\Settings\LevelSettings.cs" />
+    <Compile Include="GUI\Settings\PlayerSettings.cs" />
+    <Compile Include="GUI\Settings\ZombieSettings.cs" />
     <Compile Include="GUI\Window.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -66,7 +68,6 @@
     <Compile Include="GUI\PropertyWindow.Games.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\ZombieSettings.cs" />
     <Compile Include="GUI\ColoredTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -141,6 +142,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Galaxy.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="GUI\Settings" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
