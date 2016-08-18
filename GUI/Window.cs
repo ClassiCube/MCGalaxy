@@ -490,7 +490,6 @@ namespace MCGalaxy.Gui {
             curPlayer = p;
             NameTxtPlayersTab.Text = p.name;
             MapTxt.Text = p.level.name;
-            RankTxt.Text = p.group.name;
             StatusTxt.Text = Player.CheckPlayerStatus(p);
             IPtxt.Text = p.ip;
             DeathsTxt.Text = p.fallCount.ToString();

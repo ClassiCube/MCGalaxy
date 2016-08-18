@@ -75,6 +75,11 @@ namespace MCGalaxy.Gui {
         public bool Jokered { get { return p.joker; } set { DoCmd("joker"); } }
         
         [Category("Status")]
+        [DisplayName("Map")]
+        [TypeConverter(typeof(LevelConverter))]
+        public string Map { get { return p.level.name; } set { DoCmd("sendcmd", "goto " + value); } }
+        
+        [Category("Status")]
         [DisplayName("Muted")]
         public bool Muted { get { return p.muted; } set { DoCmd("mute"); } }
         
@@ -118,6 +123,19 @@ namespace MCGalaxy.Gui {
                     ranks.Add(g.trueName);
                 }
                 return new StandardValuesCollection(ranks);
+            }
+        }
+        
+        class LevelConverter : StringConverter {
+            public override bool GetStandardValuesSupported(ITypeDescriptorContext context) { return true; }
+            public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) { return true; }
+            
+            public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context) {
+                List<string> levels = new List<string>();
+                Level[] loaded = LevelInfo.Loaded.Items;
+                foreach (Level lvl in loaded)
+                    levels.Add(lvl.name);
+                return new StandardValuesCollection(levels);
             }
         }
     }

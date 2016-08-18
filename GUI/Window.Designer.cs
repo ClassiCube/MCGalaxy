@@ -154,6 +154,23 @@ namespace MCGalaxy.Gui
             this.lblMap_Name = new System.Windows.Forms.Label();
             this.txtMap_Name = new System.Windows.Forms.TextBox();
             this.tp_Players = new System.Windows.Forms.TabPage();
+            this.pl_gbOther = new System.Windows.Forms.GroupBox();
+            this.pl_txtImpersonate = new System.Windows.Forms.TextBox();
+            this.pl_txtUndo = new System.Windows.Forms.TextBox();
+            this.pl_btnImpersonate = new System.Windows.Forms.Button();
+            this.pl_txtMessage = new System.Windows.Forms.TextBox();
+            this.pl_btnMessage = new System.Windows.Forms.Button();
+            this.pl_btnUndo = new System.Windows.Forms.Button();
+            this.pl_gbActions = new System.Windows.Forms.GroupBox();
+            this.pl_btnSpawn = new System.Windows.Forms.Button();
+            this.pl_btnWarn = new System.Windows.Forms.Button();
+            this.pl_btnRules = new System.Windows.Forms.Button();
+            this.pl_btnKick = new System.Windows.Forms.Button();
+            this.pl_btnBanIP = new System.Windows.Forms.Button();
+            this.pl_btnSlap = new System.Windows.Forms.Button();
+            this.pl_btnBan = new System.Windows.Forms.Button();
+            this.pl_btnKill = new System.Windows.Forms.Button();
+            this.pgPlayers = new System.Windows.Forms.PropertyGrid();
             this.PlayersTextBox = new MCGalaxy.Gui.AutoScrollTextBox();
             this.PlyersListBox = new System.Windows.Forms.ListBox();
             this.StatusTxt = new System.Windows.Forms.TextBox();
@@ -170,31 +187,9 @@ namespace MCGalaxy.Gui
             this.label27 = new System.Windows.Forms.Label();
             this.IPtxt = new System.Windows.Forms.TextBox();
             this.label26 = new System.Windows.Forms.Label();
-            this.pl_actions = new System.Windows.Forms.Panel();
-            this.pl_btnSpawn = new System.Windows.Forms.Button();
-            this.pl_txtUndo = new System.Windows.Forms.TextBox();
-            this.pl_btnUndo = new System.Windows.Forms.Button();
-            this.pl_btnSlap = new System.Windows.Forms.Button();
-            this.pl_btnRules = new System.Windows.Forms.Button();
-            this.pl_txtImpersonate = new System.Windows.Forms.TextBox();
-            this.pl_btnImpersonate = new System.Windows.Forms.Button();
-            this.pl_btnKill = new System.Windows.Forms.Button();
-            this.pl_btnWarn = new System.Windows.Forms.Button();
-            this.pl_btnMessage = new System.Windows.Forms.Button();
-            this.pl_txtMessage = new System.Windows.Forms.TextBox();
-            this.pl_btnBanIP = new System.Windows.Forms.Button();
-            this.pl_btnBan = new System.Windows.Forms.Button();
-            this.pl_btnKick = new System.Windows.Forms.Button();
-            this.pl_cmbMap = new System.Windows.Forms.ComboBox();
-            this.pl_btnMap = new System.Windows.Forms.Button();
-            this.RankTxt = new System.Windows.Forms.TextBox();
-            this.label24 = new System.Windows.Forms.Label();
-            this.MapTxt = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
             this.NameTxtPlayersTab = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.pgPlayers = new System.Windows.Forms.PropertyGrid();
             this.mapsStrip.SuspendLayout();
             this.playerStrip.SuspendLayout();
             this.iconContext.SuspendLayout();
@@ -215,7 +210,8 @@ namespace MCGalaxy.Gui
             this.gbMap_Unld.SuspendLayout();
             this.gbMap_New.SuspendLayout();
             this.tp_Players.SuspendLayout();
-            this.pl_actions.SuspendLayout();
+            this.pl_gbOther.SuspendLayout();
+            this.pl_gbActions.SuspendLayout();
             this.SuspendLayout();
             // 
             // mapsStrip
@@ -1215,6 +1211,8 @@ namespace MCGalaxy.Gui
             // 
             // tp_Players
             // 
+            this.tp_Players.Controls.Add(this.pl_gbOther);
+            this.tp_Players.Controls.Add(this.pl_gbActions);
             this.tp_Players.Controls.Add(this.pgPlayers);
             this.tp_Players.Controls.Add(this.PlayersTextBox);
             this.tp_Players.Controls.Add(this.PlyersListBox);
@@ -1232,11 +1230,6 @@ namespace MCGalaxy.Gui
             this.tp_Players.Controls.Add(this.label27);
             this.tp_Players.Controls.Add(this.IPtxt);
             this.tp_Players.Controls.Add(this.label26);
-            this.tp_Players.Controls.Add(this.pl_actions);
-            this.tp_Players.Controls.Add(this.RankTxt);
-            this.tp_Players.Controls.Add(this.label24);
-            this.tp_Players.Controls.Add(this.MapTxt);
-            this.tp_Players.Controls.Add(this.label14);
             this.tp_Players.Controls.Add(this.NameTxtPlayersTab);
             this.tp_Players.Controls.Add(this.label12);
             this.tp_Players.Location = new System.Drawing.Point(4, 22);
@@ -1246,25 +1239,200 @@ namespace MCGalaxy.Gui
             this.tp_Players.TabIndex = 7;
             this.tp_Players.Text = "Players";
             // 
+            // pl_gbOther
+            // 
+            this.pl_gbOther.Controls.Add(this.pl_txtImpersonate);
+            this.pl_gbOther.Controls.Add(this.pl_txtUndo);
+            this.pl_gbOther.Controls.Add(this.pl_btnImpersonate);
+            this.pl_gbOther.Controls.Add(this.pl_txtMessage);
+            this.pl_gbOther.Controls.Add(this.pl_btnMessage);
+            this.pl_gbOther.Controls.Add(this.pl_btnUndo);
+            this.pl_gbOther.Location = new System.Drawing.Point(155, 364);
+            this.pl_gbOther.Name = "pl_gbOther";
+            this.pl_gbOther.Size = new System.Drawing.Size(606, 113);
+            this.pl_gbOther.TabIndex = 66;
+            this.pl_gbOther.TabStop = false;
+            this.pl_gbOther.Text = "Other";
+            // 
+            // pl_txtImpersonate
+            // 
+            this.pl_txtImpersonate.Location = new System.Drawing.Point(115, 82);
+            this.pl_txtImpersonate.Name = "pl_txtImpersonate";
+            this.pl_txtImpersonate.Size = new System.Drawing.Size(488, 21);
+            this.pl_txtImpersonate.TabIndex = 38;
+            this.pl_txtImpersonate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImpersonateORSendCmdTxt_KeyDown);
+            // 
+            // pl_txtUndo
+            // 
+            this.pl_txtUndo.Location = new System.Drawing.Point(115, 18);
+            this.pl_txtUndo.Name = "pl_txtUndo";
+            this.pl_txtUndo.Size = new System.Drawing.Size(234, 21);
+            this.pl_txtUndo.TabIndex = 42;
+            this.pl_txtUndo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UndoTxt_KeyDown);
+            // 
+            // pl_btnImpersonate
+            // 
+            this.pl_btnImpersonate.Location = new System.Drawing.Point(6, 80);
+            this.pl_btnImpersonate.Name = "pl_btnImpersonate";
+            this.pl_btnImpersonate.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnImpersonate.TabIndex = 37;
+            this.pl_btnImpersonate.Text = "Impersonate:";
+            this.pl_btnImpersonate.UseVisualStyleBackColor = true;
+            this.pl_btnImpersonate.Click += new System.EventHandler(this.ImpersonateORSendCmdBt_Click);
+            // 
+            // pl_txtMessage
+            // 
+            this.pl_txtMessage.Location = new System.Drawing.Point(115, 50);
+            this.pl_txtMessage.Name = "pl_txtMessage";
+            this.pl_txtMessage.Size = new System.Drawing.Size(488, 21);
+            this.pl_txtMessage.TabIndex = 8;
+            this.pl_txtMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PLayersMessageTxt_KeyDown);
+            // 
+            // pl_btnMessage
+            // 
+            this.pl_btnMessage.Location = new System.Drawing.Point(6, 48);
+            this.pl_btnMessage.Name = "pl_btnMessage";
+            this.pl_btnMessage.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnMessage.TabIndex = 9;
+            this.pl_btnMessage.Text = "Message:";
+            this.pl_btnMessage.UseVisualStyleBackColor = true;
+            this.pl_btnMessage.Click += new System.EventHandler(this.MessageBt_Click);
+            // 
+            // pl_btnUndo
+            // 
+            this.pl_btnUndo.Location = new System.Drawing.Point(6, 16);
+            this.pl_btnUndo.Name = "pl_btnUndo";
+            this.pl_btnUndo.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnUndo.TabIndex = 41;
+            this.pl_btnUndo.Text = "Undo:";
+            this.pl_btnUndo.UseVisualStyleBackColor = true;
+            this.pl_btnUndo.Click += new System.EventHandler(this.UndoBt_Click);
+            // 
+            // pl_gbActions
+            // 
+            this.pl_gbActions.Controls.Add(this.pl_btnSpawn);
+            this.pl_gbActions.Controls.Add(this.pl_btnWarn);
+            this.pl_gbActions.Controls.Add(this.pl_btnRules);
+            this.pl_gbActions.Controls.Add(this.pl_btnKick);
+            this.pl_gbActions.Controls.Add(this.pl_btnBanIP);
+            this.pl_gbActions.Controls.Add(this.pl_btnSlap);
+            this.pl_gbActions.Controls.Add(this.pl_btnBan);
+            this.pl_gbActions.Controls.Add(this.pl_btnKill);
+            this.pl_gbActions.Location = new System.Drawing.Point(529, 57);
+            this.pl_gbActions.Name = "pl_gbActions";
+            this.pl_gbActions.Size = new System.Drawing.Size(228, 136);
+            this.pl_gbActions.TabIndex = 65;
+            this.pl_gbActions.TabStop = false;
+            this.pl_gbActions.Text = "Actions";
+            // 
+            // pl_btnSpawn
+            // 
+            this.pl_btnSpawn.Location = new System.Drawing.Point(8, 105);
+            this.pl_btnSpawn.Name = "pl_btnSpawn";
+            this.pl_btnSpawn.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnSpawn.TabIndex = 43;
+            this.pl_btnSpawn.Text = "Spawn";
+            this.pl_btnSpawn.UseVisualStyleBackColor = true;
+            this.pl_btnSpawn.Click += new System.EventHandler(this.SpawnBt_Click);
+            // 
+            // pl_btnWarn
+            // 
+            this.pl_btnWarn.Location = new System.Drawing.Point(8, 18);
+            this.pl_btnWarn.Name = "pl_btnWarn";
+            this.pl_btnWarn.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnWarn.TabIndex = 10;
+            this.pl_btnWarn.Text = "Warn";
+            this.pl_btnWarn.UseVisualStyleBackColor = true;
+            this.pl_btnWarn.Click += new System.EventHandler(this.WarnBt_Click);
+            // 
+            // pl_btnRules
+            // 
+            this.pl_btnRules.Location = new System.Drawing.Point(122, 105);
+            this.pl_btnRules.Name = "pl_btnRules";
+            this.pl_btnRules.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnRules.TabIndex = 39;
+            this.pl_btnRules.Text = "Send Rules";
+            this.pl_btnRules.UseVisualStyleBackColor = true;
+            this.pl_btnRules.Click += new System.EventHandler(this.SendRulesTxt_Click);
+            // 
+            // pl_btnKick
+            // 
+            this.pl_btnKick.Location = new System.Drawing.Point(122, 18);
+            this.pl_btnKick.Name = "pl_btnKick";
+            this.pl_btnKick.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnKick.TabIndex = 4;
+            this.pl_btnKick.Text = "Kick";
+            this.pl_btnKick.UseVisualStyleBackColor = true;
+            this.pl_btnKick.Click += new System.EventHandler(this.KickBt_Click);
+            // 
+            // pl_btnBanIP
+            // 
+            this.pl_btnBanIP.Location = new System.Drawing.Point(122, 47);
+            this.pl_btnBanIP.Name = "pl_btnBanIP";
+            this.pl_btnBanIP.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnBanIP.TabIndex = 6;
+            this.pl_btnBanIP.Text = "IP Ban";
+            this.pl_btnBanIP.UseVisualStyleBackColor = true;
+            this.pl_btnBanIP.Click += new System.EventHandler(this.IPBanBt_Click);
+            // 
+            // pl_btnSlap
+            // 
+            this.pl_btnSlap.Location = new System.Drawing.Point(8, 76);
+            this.pl_btnSlap.Name = "pl_btnSlap";
+            this.pl_btnSlap.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnSlap.TabIndex = 40;
+            this.pl_btnSlap.Text = "Slap";
+            this.pl_btnSlap.UseVisualStyleBackColor = true;
+            this.pl_btnSlap.Click += new System.EventHandler(this.SlapBt_Click);
+            // 
+            // pl_btnBan
+            // 
+            this.pl_btnBan.Location = new System.Drawing.Point(8, 47);
+            this.pl_btnBan.Name = "pl_btnBan";
+            this.pl_btnBan.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnBan.TabIndex = 5;
+            this.pl_btnBan.Text = "Ban";
+            this.pl_btnBan.UseVisualStyleBackColor = true;
+            this.pl_btnBan.Click += new System.EventHandler(this.BanBt_Click);
+            // 
+            // pl_btnKill
+            // 
+            this.pl_btnKill.Location = new System.Drawing.Point(122, 76);
+            this.pl_btnKill.Name = "pl_btnKill";
+            this.pl_btnKill.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnKill.TabIndex = 36;
+            this.pl_btnKill.Text = "Kill";
+            this.pl_btnKill.UseVisualStyleBackColor = true;
+            this.pl_btnKill.Click += new System.EventHandler(this.KillBt_Click);
+            // 
+            // pgPlayers
+            // 
+            this.pgPlayers.HelpVisible = false;
+            this.pgPlayers.Location = new System.Drawing.Point(155, 57);
+            this.pgPlayers.Name = "pgPlayers";
+            this.pgPlayers.Size = new System.Drawing.Size(355, 301);
+            this.pgPlayers.TabIndex = 64;
+            this.pgPlayers.ToolbarVisible = false;
+            // 
             // PlayersTextBox
             // 
             this.PlayersTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.PlayersTextBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.PlayersTextBox.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PlayersTextBox.Location = new System.Drawing.Point(552, 304);
+            this.PlayersTextBox.Location = new System.Drawing.Point(529, 199);
             this.PlayersTextBox.Multiline = true;
             this.PlayersTextBox.Name = "PlayersTextBox";
             this.PlayersTextBox.ReadOnly = true;
             this.PlayersTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.PlayersTextBox.Size = new System.Drawing.Size(206, 173);
+            this.PlayersTextBox.Size = new System.Drawing.Size(232, 159);
             this.PlayersTextBox.TabIndex = 63;
             // 
             // PlyersListBox
             // 
             this.PlyersListBox.FormattingEnabled = true;
-            this.PlyersListBox.Location = new System.Drawing.Point(8, 304);
+            this.PlyersListBox.Location = new System.Drawing.Point(8, 57);
             this.PlyersListBox.Name = "PlyersListBox";
-            this.PlyersListBox.Size = new System.Drawing.Size(291, 173);
+            this.PlyersListBox.Size = new System.Drawing.Size(123, 420);
             this.PlyersListBox.TabIndex = 62;
             this.PlyersListBox.Click += new System.EventHandler(this.PlyersListBox_Click);
             // 
@@ -1387,217 +1555,6 @@ namespace MCGalaxy.Gui
             this.label26.TabIndex = 48;
             this.label26.Text = "IP:";
             // 
-            // pl_actions
-            // 
-            this.pl_actions.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pl_actions.Controls.Add(this.pl_btnSpawn);
-            this.pl_actions.Controls.Add(this.pl_txtUndo);
-            this.pl_actions.Controls.Add(this.pl_btnUndo);
-            this.pl_actions.Controls.Add(this.pl_btnSlap);
-            this.pl_actions.Controls.Add(this.pl_btnRules);
-            this.pl_actions.Controls.Add(this.pl_txtImpersonate);
-            this.pl_actions.Controls.Add(this.pl_btnImpersonate);
-            this.pl_actions.Controls.Add(this.pl_btnKill);
-            this.pl_actions.Controls.Add(this.pl_btnWarn);
-            this.pl_actions.Controls.Add(this.pl_btnMessage);
-            this.pl_actions.Controls.Add(this.pl_txtMessage);
-            this.pl_actions.Controls.Add(this.pl_btnBanIP);
-            this.pl_actions.Controls.Add(this.pl_btnBan);
-            this.pl_actions.Controls.Add(this.pl_btnKick);
-            this.pl_actions.Controls.Add(this.pl_cmbMap);
-            this.pl_actions.Controls.Add(this.pl_btnMap);
-            this.pl_actions.Location = new System.Drawing.Point(8, 59);
-            this.pl_actions.Name = "pl_actions";
-            this.pl_actions.Size = new System.Drawing.Size(753, 235);
-            this.pl_actions.TabIndex = 47;
-            // 
-            // pl_btnSpawn
-            // 
-            this.pl_btnSpawn.Location = new System.Drawing.Point(627, 149);
-            this.pl_btnSpawn.Name = "pl_btnSpawn";
-            this.pl_btnSpawn.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnSpawn.TabIndex = 43;
-            this.pl_btnSpawn.Text = "Spawn";
-            this.pl_btnSpawn.UseVisualStyleBackColor = true;
-            this.pl_btnSpawn.Click += new System.EventHandler(this.SpawnBt_Click);
-            // 
-            // pl_txtUndo
-            // 
-            this.pl_txtUndo.Location = new System.Drawing.Point(131, 148);
-            this.pl_txtUndo.Name = "pl_txtUndo";
-            this.pl_txtUndo.Size = new System.Drawing.Size(234, 21);
-            this.pl_txtUndo.TabIndex = 42;
-            this.pl_txtUndo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UndoTxt_KeyDown);
-            // 
-            // pl_btnUndo
-            // 
-            this.pl_btnUndo.Location = new System.Drawing.Point(4, 148);
-            this.pl_btnUndo.Name = "pl_btnUndo";
-            this.pl_btnUndo.Size = new System.Drawing.Size(121, 23);
-            this.pl_btnUndo.TabIndex = 41;
-            this.pl_btnUndo.Text = "Undo:";
-            this.pl_btnUndo.UseVisualStyleBackColor = true;
-            this.pl_btnUndo.Click += new System.EventHandler(this.UndoBt_Click);
-            // 
-            // pl_btnSlap
-            // 
-            this.pl_btnSlap.Location = new System.Drawing.Point(371, 146);
-            this.pl_btnSlap.Name = "pl_btnSlap";
-            this.pl_btnSlap.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnSlap.TabIndex = 40;
-            this.pl_btnSlap.Text = "Slap";
-            this.pl_btnSlap.UseVisualStyleBackColor = true;
-            this.pl_btnSlap.Click += new System.EventHandler(this.SlapBt_Click);
-            // 
-            // pl_btnRules
-            // 
-            this.pl_btnRules.Location = new System.Drawing.Point(627, 120);
-            this.pl_btnRules.Name = "pl_btnRules";
-            this.pl_btnRules.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnRules.TabIndex = 39;
-            this.pl_btnRules.Text = "Send Rules";
-            this.pl_btnRules.UseVisualStyleBackColor = true;
-            this.pl_btnRules.Click += new System.EventHandler(this.SendRulesTxt_Click);
-            // 
-            // pl_txtImpersonate
-            // 
-            this.pl_txtImpersonate.Location = new System.Drawing.Point(132, 207);
-            this.pl_txtImpersonate.Name = "pl_txtImpersonate";
-            this.pl_txtImpersonate.Size = new System.Drawing.Size(616, 21);
-            this.pl_txtImpersonate.TabIndex = 38;
-            this.pl_txtImpersonate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImpersonateORSendCmdTxt_KeyDown);
-            // 
-            // pl_btnImpersonate
-            // 
-            this.pl_btnImpersonate.Location = new System.Drawing.Point(3, 206);
-            this.pl_btnImpersonate.Name = "pl_btnImpersonate";
-            this.pl_btnImpersonate.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnImpersonate.TabIndex = 37;
-            this.pl_btnImpersonate.Text = "Impersonate/Cmd:";
-            this.pl_btnImpersonate.UseVisualStyleBackColor = true;
-            this.pl_btnImpersonate.Click += new System.EventHandler(this.ImpersonateORSendCmdBt_Click);
-            // 
-            // pl_btnKill
-            // 
-            this.pl_btnKill.Location = new System.Drawing.Point(499, 120);
-            this.pl_btnKill.Name = "pl_btnKill";
-            this.pl_btnKill.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnKill.TabIndex = 36;
-            this.pl_btnKill.Text = "Kill";
-            this.pl_btnKill.UseVisualStyleBackColor = true;
-            this.pl_btnKill.Click += new System.EventHandler(this.KillBt_Click);
-            // 
-            // pl_btnWarn
-            // 
-            this.pl_btnWarn.Location = new System.Drawing.Point(627, 3);
-            this.pl_btnWarn.Name = "pl_btnWarn";
-            this.pl_btnWarn.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnWarn.TabIndex = 10;
-            this.pl_btnWarn.Text = "Warn";
-            this.pl_btnWarn.UseVisualStyleBackColor = true;
-            this.pl_btnWarn.Click += new System.EventHandler(this.WarnBt_Click);
-            // 
-            // pl_btnMessage
-            // 
-            this.pl_btnMessage.Location = new System.Drawing.Point(3, 177);
-            this.pl_btnMessage.Name = "pl_btnMessage";
-            this.pl_btnMessage.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnMessage.TabIndex = 9;
-            this.pl_btnMessage.Text = "Message:";
-            this.pl_btnMessage.UseVisualStyleBackColor = true;
-            this.pl_btnMessage.Click += new System.EventHandler(this.MessageBt_Click);
-            // 
-            // pl_txtMessage
-            // 
-            this.pl_txtMessage.Location = new System.Drawing.Point(131, 179);
-            this.pl_txtMessage.Name = "pl_txtMessage";
-            this.pl_txtMessage.Size = new System.Drawing.Size(617, 21);
-            this.pl_txtMessage.TabIndex = 8;
-            this.pl_txtMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PLayersMessageTxt_KeyDown);
-            // 
-            // pl_btnBanIP
-            // 
-            this.pl_btnBanIP.Location = new System.Drawing.Point(627, 90);
-            this.pl_btnBanIP.Name = "pl_btnBanIP";
-            this.pl_btnBanIP.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnBanIP.TabIndex = 6;
-            this.pl_btnBanIP.Text = "IP Ban";
-            this.pl_btnBanIP.UseVisualStyleBackColor = true;
-            this.pl_btnBanIP.Click += new System.EventHandler(this.IPBanBt_Click);
-            // 
-            // pl_btnBan
-            // 
-            this.pl_btnBan.Location = new System.Drawing.Point(627, 61);
-            this.pl_btnBan.Name = "pl_btnBan";
-            this.pl_btnBan.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnBan.TabIndex = 5;
-            this.pl_btnBan.Text = "Ban";
-            this.pl_btnBan.UseVisualStyleBackColor = true;
-            this.pl_btnBan.Click += new System.EventHandler(this.BanBt_Click);
-            // 
-            // pl_btnKick
-            // 
-            this.pl_btnKick.Location = new System.Drawing.Point(627, 32);
-            this.pl_btnKick.Name = "pl_btnKick";
-            this.pl_btnKick.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnKick.TabIndex = 4;
-            this.pl_btnKick.Text = "Kick";
-            this.pl_btnKick.UseVisualStyleBackColor = true;
-            this.pl_btnKick.Click += new System.EventHandler(this.KickBt_Click);
-            // 
-            // pl_cmbMap
-            // 
-            this.pl_cmbMap.FormattingEnabled = true;
-            this.pl_cmbMap.Location = new System.Drawing.Point(131, 119);
-            this.pl_cmbMap.Name = "pl_cmbMap";
-            this.pl_cmbMap.Size = new System.Drawing.Size(234, 21);
-            this.pl_cmbMap.TabIndex = 3;
-            this.pl_cmbMap.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MapCombo_KeyDown);
-            // 
-            // pl_btnMap
-            // 
-            this.pl_btnMap.Location = new System.Drawing.Point(3, 119);
-            this.pl_btnMap.Name = "pl_btnMap";
-            this.pl_btnMap.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnMap.TabIndex = 2;
-            this.pl_btnMap.Text = "Map:";
-            this.pl_btnMap.UseVisualStyleBackColor = true;
-            this.pl_btnMap.Click += new System.EventHandler(this.MapBt_Click);
-            // 
-            // RankTxt
-            // 
-            this.RankTxt.Location = new System.Drawing.Point(426, 4);
-            this.RankTxt.Name = "RankTxt";
-            this.RankTxt.ReadOnly = true;
-            this.RankTxt.Size = new System.Drawing.Size(134, 21);
-            this.RankTxt.TabIndex = 44;
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(387, 7);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(33, 13);
-            this.label24.TabIndex = 43;
-            this.label24.Text = "Rank:";
-            // 
-            // MapTxt
-            // 
-            this.MapTxt.Location = new System.Drawing.Point(238, 4);
-            this.MapTxt.Name = "MapTxt";
-            this.MapTxt.ReadOnly = true;
-            this.MapTxt.Size = new System.Drawing.Size(143, 21);
-            this.MapTxt.TabIndex = 42;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(201, 7);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(31, 13);
-            this.label14.TabIndex = 41;
-            this.label14.Text = "Map:";
-            // 
             // NameTxtPlayersTab
             // 
             this.NameTxtPlayersTab.Location = new System.Drawing.Point(45, 4);
@@ -1623,15 +1580,6 @@ namespace MCGalaxy.Gui
             this.toolTip.ReshowDelay = 100;
             this.toolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip.ToolTipTitle = "Information";
-            // 
-            // pgPlayers
-            // 
-            this.pgPlayers.HelpVisible = false;
-            this.pgPlayers.Location = new System.Drawing.Point(317, 304);
-            this.pgPlayers.Name = "pgPlayers";
-            this.pgPlayers.Size = new System.Drawing.Size(213, 173);
-            this.pgPlayers.TabIndex = 64;
-            this.pgPlayers.ToolbarVisible = false;
             // 
             // Window
             // 
@@ -1676,10 +1624,13 @@ namespace MCGalaxy.Gui
             this.gbMap_New.PerformLayout();
             this.tp_Players.ResumeLayout(false);
             this.tp_Players.PerformLayout();
-            this.pl_actions.ResumeLayout(false);
-            this.pl_actions.PerformLayout();
+            this.pl_gbOther.ResumeLayout(false);
+            this.pl_gbOther.PerformLayout();
+            this.pl_gbActions.ResumeLayout(false);
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.GroupBox pl_gbActions;
+        private System.Windows.Forms.GroupBox pl_gbOther;
         private System.Windows.Forms.PropertyGrid pgPlayers;
         private System.Windows.Forms.TextBox txtMap_Name;
         private System.Windows.Forms.Label lblMap_Name;
@@ -1748,18 +1699,11 @@ namespace MCGalaxy.Gui
         private TabPage tp_Players;
         internal RichTextBox logs_txtGeneral;
         private DateTimePicker logs_dateGeneral;
-        private Panel pl_actions;
-        private TextBox RankTxt;
-        private Label label24;
-        private TextBox MapTxt;
-        private Label label14;
         private TextBox NameTxtPlayersTab;
         private Label label12;
         private Button pl_btnBanIP;
         private Button pl_btnBan;
         private Button pl_btnKick;
-        private ComboBox pl_cmbMap;
-        private Button pl_btnMap;
         private TextBox IPtxt;
         private Label label26;
         private Button pl_btnMessage;
