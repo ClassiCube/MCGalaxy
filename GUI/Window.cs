@@ -477,12 +477,14 @@ namespace MCGalaxy.Gui {
         void demoteToolStripMenuItem_Click(object sender, EventArgs e) {
             PlayerCmd("rank", "-down ", "");
         }
+        PlayerProperties playerProps;
 
         #region Tabs
         #region playersTab
         void LoadPLayerTabDetails(object sender, EventArgs e) {
             Player p = PlayerInfo.Find(PlyersListBox.Text);
             if (p == null) return;
+            
             PlayersTextBox.AppendTextAndScroll("==" + p.name + "==");
             //Top Stuff
             curPlayer = p;
@@ -510,6 +512,9 @@ namespace MCGalaxy.Gui {
             pl_txtLogout.Text = PlayerDB.GetLogoutMessage(p);
             pl_txtTitle.Text = p.title;
             pl_cmbColor.SelectedText = Colors.Name(p.color).Capitalize();
+            
+            playerProps = new PlayerProperties(p);
+            pgPlayers.SelectedObject = playerProps;
             
             //Map
             try {

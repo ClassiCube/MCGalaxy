@@ -21,34 +21,53 @@ using System.ComponentModel;
 namespace MCGalaxy.Gui {
     public sealed class PlayerProperties {       
         readonly Player player;
+        string inMsg, outMsg;
+        
         public PlayerProperties(Player player) {
             this.player = player;
+            inMsg = PlayerDB.GetLoginMessage(player);
+            outMsg = PlayerDB.GetLogoutMessage(player);
         }
         
-        [Description("Whether the player is frozen or not.")]
+        [Category("Properties")]
+        [DisplayName("Login message")]
+        public string LoginMsg { get { return inMsg; } set { inMsg = DoCmd("loginmessage", value); } }
+        
+        [Category("Properties")]
+        [DisplayName("Logout message")]
+        public string LogoutMsg { get { return outMsg; } set { outMsg = DoCmd("logoutmessage", value); } }
+        
+        
         [Category("Status")]
         [DisplayName("Frozen")]
-        public bool Frozen { get { return player.frozen; } set { DoCommand("freeze"); } }
+        public bool Frozen { get { return player.frozen; } set { DoCmd("freeze"); } }
         
-        [Description("Whether the player is hidden or not.")]
         [Category("Status")]
         [DisplayName("Hidden")]
-        public bool Hidden { get { return player.hidden; } set { DoCommand("ohide"); } }
+        public bool Hidden { get { return player.hidden; } set { DoCmd("ohide"); } }
         
-        [Description("Whether the player is muted or not.")]
         [Category("Status")]
         [DisplayName("Muted")]
-        public bool Muted { get { return player.hidden; } set { DoCommand("mute"); } }
+        public bool Muted { get { return player.muted; } set { DoCmd("mute"); } }
         
-        void DoCommand(string cmd) {
+        [Category("Status")]
+        [DisplayName("Voiced")]
+        public bool Voiced { get { return player.voice; } set { DoCmd("voice"); } }
+        
+        void DoCmd(string cmd) { DoCmd(cmd, ""); }
+        
+        string DoCmd(string cmd, string args) {
+            // Is the player still on the server?
             Player p = PlayerInfo.FindExact(player.name);
-            if (p == null) return;
+            if (p == null) return args;           
 
             try {
-                Command.all.Find(cmd).Use(null, p.name);
+                string cmdArgs = args == "" ? p.name : p.name + " " + args;
+                Command.all.Find(cmd).Use(null, cmdArgs);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
             }
+            return args;
         }
     }
 }
