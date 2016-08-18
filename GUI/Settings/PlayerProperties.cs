@@ -16,18 +16,24 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace MCGalaxy.Gui {
-    public sealed class PlayerProperties {       
-        readonly Player player;
+    public sealed class PlayerProperties {
+        readonly Player p;
         string inMsg, outMsg;
         
         public PlayerProperties(Player player) {
-            this.player = player;
+            this.p = player;
             inMsg = PlayerDB.GetLoginMessage(player);
             outMsg = PlayerDB.GetLogoutMessage(player);
         }
+
+        [Category("Properties")]
+        [DisplayName("Color")]
+        [TypeConverter(typeof(ColorConverter))]
+        public string Color { get { return Colors.Name(p.color); } set { DoCmd("color", value); } }
         
         [Category("Properties")]
         [DisplayName("Login message")]
@@ -37,29 +43,51 @@ namespace MCGalaxy.Gui {
         [DisplayName("Logout message")]
         public string LogoutMsg { get { return outMsg; } set { outMsg = DoCmd("logoutmessage", value); } }
         
+        [Category("Properties")]
+        [DisplayName("Rank")]
+        [TypeConverter(typeof(RankConverter))]
+        public string Rank { get { return p.group.trueName; } set { DoCmd("setrank", value); } }
+        
+        [Category("Properties")]
+        [DisplayName("Title")]
+        public string Title { get { return p.title; } set { DoCmd("title", value); } }
+
+        [Category("Properties")]
+        [DisplayName("Title color")]
+        [TypeConverter(typeof(ColorConverter))]
+        public string TColor { get { return Colors.Name(p.titlecolor); } set { DoCmd("tcolor", value); } }
+        
         
         [Category("Status")]
         [DisplayName("Frozen")]
-        public bool Frozen { get { return player.frozen; } set { DoCmd("freeze"); } }
+        public bool Frozen { get { return p.frozen; } set { DoCmd("freeze"); } }
         
         [Category("Status")]
         [DisplayName("Hidden")]
-        public bool Hidden { get { return player.hidden; } set { DoCmd("ohide"); } }
+        public bool Hidden { get { return p.hidden; } set { DoCmd("ohide"); } }
+
+        [Category("Status")]
+        [DisplayName("Jailed")]
+        public bool Jailed { get { return p.jailed; } set { DoCmd("jail"); } }
+        
+        [Category("Status")]
+        [DisplayName("Jokered")]
+        public bool Jokered { get { return p.joker; } set { DoCmd("joker"); } }
         
         [Category("Status")]
         [DisplayName("Muted")]
-        public bool Muted { get { return player.muted; } set { DoCmd("mute"); } }
+        public bool Muted { get { return p.muted; } set { DoCmd("mute"); } }
         
         [Category("Status")]
         [DisplayName("Voiced")]
-        public bool Voiced { get { return player.voice; } set { DoCmd("voice"); } }
+        public bool Voiced { get { return p.voice; } set { DoCmd("voice"); } }
         
         void DoCmd(string cmd) { DoCmd(cmd, ""); }
         
         string DoCmd(string cmd, string args) {
             // Is the player still on the server?
-            Player p = PlayerInfo.FindExact(player.name);
-            if (p == null) return args;           
+            Player pl = PlayerInfo.FindExact(p.name);
+            if (pl == null) return args;
 
             try {
                 string cmdArgs = args == "" ? p.name : p.name + " " + args;
@@ -68,6 +96,29 @@ namespace MCGalaxy.Gui {
                 Server.ErrorLog(ex);
             }
             return args;
+        }
+        
+        class ColorConverter : StringConverter {
+            public override bool GetStandardValuesSupported(ITypeDescriptorContext context) { return true; }
+            public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) { return true; }
+            
+            public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context) {
+                return new StandardValuesCollection(Formatter.GetColorsList());
+            }
+        }
+        
+        class RankConverter : StringConverter {
+            public override bool GetStandardValuesSupported(ITypeDescriptorContext context) { return true; }
+            public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) { return true; }
+            
+            public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context) {
+                List<string> ranks = new List<string>();
+                foreach (Group g in Group.GroupList) {
+                    if (g.Permission <= LevelPermission.Banned || g.Permission >= LevelPermission.Nobody) continue;
+                    ranks.Add(g.trueName);
+                }
+                return new StandardValuesCollection(ranks);
+            }
         }
     }
 }

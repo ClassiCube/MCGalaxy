@@ -179,30 +179,14 @@ namespace MCGalaxy.Gui
             this.pl_txtImpersonate = new System.Windows.Forms.TextBox();
             this.pl_btnImpersonate = new System.Windows.Forms.Button();
             this.pl_btnKill = new System.Windows.Forms.Button();
-            this.pl_btnJail = new System.Windows.Forms.Button();
-            this.pl_btnDemote = new System.Windows.Forms.Button();
-            this.pl_btnPromote = new System.Windows.Forms.Button();
-            this.pl_txtLogin = new System.Windows.Forms.TextBox();
-            this.pl_txtLogout = new System.Windows.Forms.TextBox();
-            this.pl_txtTitle = new System.Windows.Forms.TextBox();
-            this.pl_cmbColor = new System.Windows.Forms.ComboBox();
-            this.pl_btnColor = new System.Windows.Forms.Button();
-            this.pl_btnTitle = new System.Windows.Forms.Button();
-            this.pl_btnLogout = new System.Windows.Forms.Button();
-            this.pl_btnLogin = new System.Windows.Forms.Button();
-            this.pl_btnFreeze = new System.Windows.Forms.Button();
-            this.pl_btnVoice = new System.Windows.Forms.Button();
-            this.pl_btnJoker = new System.Windows.Forms.Button();
             this.pl_btnWarn = new System.Windows.Forms.Button();
             this.pl_btnMessage = new System.Windows.Forms.Button();
             this.pl_txtMessage = new System.Windows.Forms.TextBox();
-            this.pl_btnHide = new System.Windows.Forms.Button();
             this.pl_btnBanIP = new System.Windows.Forms.Button();
             this.pl_btnBan = new System.Windows.Forms.Button();
             this.pl_btnKick = new System.Windows.Forms.Button();
             this.pl_cmbMap = new System.Windows.Forms.ComboBox();
             this.pl_btnMap = new System.Windows.Forms.Button();
-            this.pl_btnMute = new System.Windows.Forms.Button();
             this.RankTxt = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
             this.MapTxt = new System.Windows.Forms.TextBox();
@@ -1414,30 +1398,14 @@ namespace MCGalaxy.Gui
             this.pl_actions.Controls.Add(this.pl_txtImpersonate);
             this.pl_actions.Controls.Add(this.pl_btnImpersonate);
             this.pl_actions.Controls.Add(this.pl_btnKill);
-            this.pl_actions.Controls.Add(this.pl_btnJail);
-            this.pl_actions.Controls.Add(this.pl_btnDemote);
-            this.pl_actions.Controls.Add(this.pl_btnPromote);
-            this.pl_actions.Controls.Add(this.pl_txtLogin);
-            this.pl_actions.Controls.Add(this.pl_txtLogout);
-            this.pl_actions.Controls.Add(this.pl_txtTitle);
-            this.pl_actions.Controls.Add(this.pl_cmbColor);
-            this.pl_actions.Controls.Add(this.pl_btnColor);
-            this.pl_actions.Controls.Add(this.pl_btnTitle);
-            this.pl_actions.Controls.Add(this.pl_btnLogout);
-            this.pl_actions.Controls.Add(this.pl_btnLogin);
-            this.pl_actions.Controls.Add(this.pl_btnFreeze);
-            this.pl_actions.Controls.Add(this.pl_btnVoice);
-            this.pl_actions.Controls.Add(this.pl_btnJoker);
             this.pl_actions.Controls.Add(this.pl_btnWarn);
             this.pl_actions.Controls.Add(this.pl_btnMessage);
             this.pl_actions.Controls.Add(this.pl_txtMessage);
-            this.pl_actions.Controls.Add(this.pl_btnHide);
             this.pl_actions.Controls.Add(this.pl_btnBanIP);
             this.pl_actions.Controls.Add(this.pl_btnBan);
             this.pl_actions.Controls.Add(this.pl_btnKick);
             this.pl_actions.Controls.Add(this.pl_cmbMap);
             this.pl_actions.Controls.Add(this.pl_btnMap);
-            this.pl_actions.Controls.Add(this.pl_btnMute);
             this.pl_actions.Location = new System.Drawing.Point(8, 59);
             this.pl_actions.Name = "pl_actions";
             this.pl_actions.Size = new System.Drawing.Size(753, 235);
@@ -1519,157 +1487,6 @@ namespace MCGalaxy.Gui
             this.pl_btnKill.UseVisualStyleBackColor = true;
             this.pl_btnKill.Click += new System.EventHandler(this.KillBt_Click);
             // 
-            // pl_btnJail
-            // 
-            this.pl_btnJail.Location = new System.Drawing.Point(499, 149);
-            this.pl_btnJail.Name = "pl_btnJail";
-            this.pl_btnJail.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnJail.TabIndex = 34;
-            this.pl_btnJail.Text = "Jail";
-            this.pl_btnJail.UseVisualStyleBackColor = true;
-            this.pl_btnJail.Click += new System.EventHandler(this.JailBt_Click);
-            // 
-            // pl_btnDemote
-            // 
-            this.pl_btnDemote.Location = new System.Drawing.Point(371, 87);
-            this.pl_btnDemote.Name = "pl_btnDemote";
-            this.pl_btnDemote.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnDemote.TabIndex = 33;
-            this.pl_btnDemote.Text = "Demote";
-            this.pl_btnDemote.UseVisualStyleBackColor = true;
-            this.pl_btnDemote.Click += new System.EventHandler(this.DemoteBt_Click);
-            // 
-            // pl_btnPromote
-            // 
-            this.pl_btnPromote.Location = new System.Drawing.Point(371, 58);
-            this.pl_btnPromote.Name = "pl_btnPromote";
-            this.pl_btnPromote.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnPromote.TabIndex = 32;
-            this.pl_btnPromote.Text = "Promote";
-            this.pl_btnPromote.UseVisualStyleBackColor = true;
-            this.pl_btnPromote.Click += new System.EventHandler(this.PromoteBt_Click);
-            // 
-            // pl_txtLogin
-            // 
-            this.pl_txtLogin.Location = new System.Drawing.Point(131, 3);
-            this.pl_txtLogin.Name = "pl_txtLogin";
-            this.pl_txtLogin.Size = new System.Drawing.Size(362, 21);
-            this.pl_txtLogin.TabIndex = 31;
-            this.pl_txtLogin.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LoginTxt_KeyDown);
-            // 
-            // pl_txtLogout
-            // 
-            this.pl_txtLogout.Location = new System.Drawing.Point(131, 31);
-            this.pl_txtLogout.Name = "pl_txtLogout";
-            this.pl_txtLogout.Size = new System.Drawing.Size(362, 21);
-            this.pl_txtLogout.TabIndex = 30;
-            this.pl_txtLogout.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LogoutTxt_KeyDown);
-            // 
-            // pl_txtTitle
-            // 
-            this.pl_txtTitle.Location = new System.Drawing.Point(131, 60);
-            this.pl_txtTitle.Name = "pl_txtTitle";
-            this.pl_txtTitle.Size = new System.Drawing.Size(234, 21);
-            this.pl_txtTitle.TabIndex = 29;
-            this.pl_txtTitle.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TitleTxt_KeyDown);
-            // 
-            // pl_cmbColor
-            // 
-            this.pl_cmbColor.FormattingEnabled = true;
-            this.pl_cmbColor.Items.AddRange(new object[] {
-                                    "",
-                                    "Black",
-                                    "Navy",
-                                    "Green",
-                                    "Teal",
-                                    "Maroon",
-                                    "Purple",
-                                    "Gold",
-                                    "Silver",
-                                    "Gray",
-                                    "Blue",
-                                    "Lime",
-                                    "Aqua",
-                                    "Red",
-                                    "Pink",
-                                    "Yellow",
-                                    "White"});
-            this.pl_cmbColor.Location = new System.Drawing.Point(131, 89);
-            this.pl_cmbColor.Name = "pl_cmbColor";
-            this.pl_cmbColor.Size = new System.Drawing.Size(234, 21);
-            this.pl_cmbColor.TabIndex = 28;
-            this.pl_cmbColor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ColorCombo_KeyDown);
-            // 
-            // pl_btnColor
-            // 
-            this.pl_btnColor.Location = new System.Drawing.Point(3, 89);
-            this.pl_btnColor.Name = "pl_btnColor";
-            this.pl_btnColor.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnColor.TabIndex = 27;
-            this.pl_btnColor.Text = "Color:";
-            this.pl_btnColor.UseVisualStyleBackColor = true;
-            this.pl_btnColor.Click += new System.EventHandler(this.ColorBt_Click);
-            // 
-            // pl_btnTitle
-            // 
-            this.pl_btnTitle.Location = new System.Drawing.Point(3, 60);
-            this.pl_btnTitle.Name = "pl_btnTitle";
-            this.pl_btnTitle.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnTitle.TabIndex = 26;
-            this.pl_btnTitle.Text = "Title:";
-            this.pl_btnTitle.UseVisualStyleBackColor = true;
-            this.pl_btnTitle.Click += new System.EventHandler(this.TitleBt_Click);
-            // 
-            // pl_btnLogout
-            // 
-            this.pl_btnLogout.Location = new System.Drawing.Point(3, 31);
-            this.pl_btnLogout.Name = "pl_btnLogout";
-            this.pl_btnLogout.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnLogout.TabIndex = 25;
-            this.pl_btnLogout.Text = "Logout:";
-            this.pl_btnLogout.UseVisualStyleBackColor = true;
-            this.pl_btnLogout.Click += new System.EventHandler(this.LogoutBt_Click);
-            // 
-            // pl_btnLogin
-            // 
-            this.pl_btnLogin.Location = new System.Drawing.Point(3, 3);
-            this.pl_btnLogin.Name = "pl_btnLogin";
-            this.pl_btnLogin.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnLogin.TabIndex = 24;
-            this.pl_btnLogin.Text = "Login:";
-            this.pl_btnLogin.UseVisualStyleBackColor = true;
-            this.pl_btnLogin.Click += new System.EventHandler(this.LoginBt_Click);
-            // 
-            // pl_btnFreeze
-            // 
-            this.pl_btnFreeze.Location = new System.Drawing.Point(499, 32);
-            this.pl_btnFreeze.Name = "pl_btnFreeze";
-            this.pl_btnFreeze.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnFreeze.TabIndex = 14;
-            this.pl_btnFreeze.Text = "Freeze";
-            this.pl_btnFreeze.UseVisualStyleBackColor = true;
-            this.pl_btnFreeze.Click += new System.EventHandler(this.FreezeBt_Click);
-            // 
-            // pl_btnVoice
-            // 
-            this.pl_btnVoice.Location = new System.Drawing.Point(499, 90);
-            this.pl_btnVoice.Name = "pl_btnVoice";
-            this.pl_btnVoice.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnVoice.TabIndex = 12;
-            this.pl_btnVoice.Text = "Voice";
-            this.pl_btnVoice.UseVisualStyleBackColor = true;
-            this.pl_btnVoice.Click += new System.EventHandler(this.VoiceBt_Click);
-            // 
-            // pl_btnJoker
-            // 
-            this.pl_btnJoker.Location = new System.Drawing.Point(499, 3);
-            this.pl_btnJoker.Name = "pl_btnJoker";
-            this.pl_btnJoker.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnJoker.TabIndex = 11;
-            this.pl_btnJoker.Text = "Joker";
-            this.pl_btnJoker.UseVisualStyleBackColor = true;
-            this.pl_btnJoker.Click += new System.EventHandler(this.JokerBt_Click);
-            // 
             // pl_btnWarn
             // 
             this.pl_btnWarn.Location = new System.Drawing.Point(627, 3);
@@ -1697,16 +1514,6 @@ namespace MCGalaxy.Gui
             this.pl_txtMessage.Size = new System.Drawing.Size(617, 21);
             this.pl_txtMessage.TabIndex = 8;
             this.pl_txtMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PLayersMessageTxt_KeyDown);
-            // 
-            // pl_btnHide
-            // 
-            this.pl_btnHide.Location = new System.Drawing.Point(371, 117);
-            this.pl_btnHide.Name = "pl_btnHide";
-            this.pl_btnHide.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnHide.TabIndex = 7;
-            this.pl_btnHide.Text = "Hide";
-            this.pl_btnHide.UseVisualStyleBackColor = true;
-            this.pl_btnHide.Click += new System.EventHandler(this.HideBt_Click);
             // 
             // pl_btnBanIP
             // 
@@ -1756,16 +1563,6 @@ namespace MCGalaxy.Gui
             this.pl_btnMap.Text = "Map:";
             this.pl_btnMap.UseVisualStyleBackColor = true;
             this.pl_btnMap.Click += new System.EventHandler(this.MapBt_Click);
-            // 
-            // pl_btnMute
-            // 
-            this.pl_btnMute.Location = new System.Drawing.Point(499, 61);
-            this.pl_btnMute.Name = "pl_btnMute";
-            this.pl_btnMute.Size = new System.Drawing.Size(122, 23);
-            this.pl_btnMute.TabIndex = 13;
-            this.pl_btnMute.Text = "Mute";
-            this.pl_btnMute.UseVisualStyleBackColor = true;
-            this.pl_btnMute.Click += new System.EventHandler(this.MuteBt_Click);
             // 
             // RankTxt
             // 
@@ -1967,7 +1764,6 @@ namespace MCGalaxy.Gui
         private Label label26;
         private Button pl_btnMessage;
         private TextBox pl_txtMessage;
-        private Button pl_btnHide;
         private Label label30;
         private TextBox TimesLoggedInTxt;
         private Label label29;
@@ -1979,21 +1775,6 @@ namespace MCGalaxy.Gui
         private Label label31;
         private TextBox Kickstxt;
         private Button pl_btnWarn;
-        private Button pl_btnVoice;
-        private Button pl_btnJoker;
-        private Button pl_btnMute;
-        private Button pl_btnFreeze;
-        private Button pl_btnLogout;
-        private Button pl_btnLogin;
-        private TextBox pl_txtLogin;
-        private TextBox pl_txtLogout;
-        private TextBox pl_txtTitle;
-        private ComboBox pl_cmbColor;
-        private Button pl_btnColor;
-        private Button pl_btnTitle;
-        private Button pl_btnJail;
-        private Button pl_btnDemote;
-        private Button pl_btnPromote;
         private Button pl_btnKill;
         private TextBox StatusTxt;
         private Label label25;

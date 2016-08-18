@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using MCGalaxy.Gui.Components;
 
@@ -46,10 +47,10 @@ namespace MCGalaxy.Gui {
         
         static int Next(int start, string message) {
             for (int i = start; i < message.Length; i++) {
-				if (!(message[i] == '&' || message[i] == '%')) continue;
-				// No colour code follows this
-				if (i == message.Length - 1) return -1;
-				
+                if (!(message[i] == '&' || message[i] == '%')) continue;
+                // No colour code follows this
+                if (i == message.Length - 1) return -1;
+                
                 // Check following character is an actual colour code
                 char col = message[i + 1];
                 if (Colors.MapColor(ref col)) return i;
@@ -125,6 +126,16 @@ namespace MCGalaxy.Gui {
                     CustomColor col = Colors.ExtColors[c];
                     return Color.FromArgb(col.R, col.G, col.B);
             }
+        }
+        
+        public static List<string> GetColorsList() {
+            List<string> colors = new List<string>() { "black", "navy", "green", "teal", "maroon", 
+                "purple", "gold", "silver", "gray", "blue", "lime", "aqua", "red", "pink", "yellow", "white" };
+            for (int i = 0; i < 256; i++) {
+                if (Colors.ExtColors[i].Undefined) continue;
+                colors.Add(Colors.ExtColors[i].Name);
+            }
+			return colors;
         }
     }
 }

@@ -38,18 +38,12 @@ namespace MCGalaxy.Gui {
         }
 
         void PropertyWindow_Load(object sender, EventArgs e) {
-        	List<string> colors = new List<string>() { "black", "navy", "green", "teal", "maroon", 
-        		"purple", "gold", "silver", "gray", "blue", "lime", "aqua", "red", "pink", "yellow", "white" };
-        	for (int i = 0; i < 256; i++) {
-        		if (Colors.ExtColors[i].Undefined) continue;
-        		colors.Add(Colors.ExtColors[i].Name);
-        	}
-        	string[] colorsArray = colors.ToArray();
-            chat_cmbDefault.Items.AddRange(colorsArray);
-            chat_cmbIRC.Items.AddRange(colorsArray);
-            chat_cmbSyntax.Items.AddRange(colorsArray);
-            chat_cmbDesc.Items.AddRange(colorsArray);
-            cmbColor.Items.AddRange(colorsArray);
+        	string[] colors = Formatter.GetColorsList().ToArray();
+            chat_cmbDefault.Items.AddRange(colors);
+            chat_cmbIRC.Items.AddRange(colors);
+            chat_cmbSyntax.Items.AddRange(colors);
+            chat_cmbDesc.Items.AddRange(colors);
+            cmbColor.Items.AddRange(colors);
 
             ToggleIrcSettings(Server.irc);
             ToggleMySQLSettings(Server.useMySQL);

@@ -499,20 +499,6 @@ namespace MCGalaxy.Gui {
             LoggedinForTxt.Text = Convert.ToDateTime(DateTime.Now.Subtract(p.timeLogged).ToString()).ToString("HH:mm:ss");
             Kickstxt.Text = p.totalKicked.ToString();
             
-            //Check buttons
-            if (p.joker) { pl_btnJoker.Text = "UnJoker"; } else { pl_btnJoker.Text = "Joker"; }
-            if (p.frozen) { pl_btnFreeze.Text = "UnFreeze"; } else { pl_btnFreeze.Text = "Freeze"; }
-            if (p.muted) { pl_btnMute.Text = "UnMute"; } else { pl_btnMute.Text = "Mute"; }
-            if (p.voice) { pl_btnVoice.Text = "UnVoice"; } else { pl_btnVoice.Text = "Voice"; }
-            if (p.hidden) { pl_btnHide.Text = "UnHide"; } else { pl_btnHide.Text = "Hide"; }
-            if (p.jailed) { pl_btnJail.Text = "UnJail"; } else { pl_btnJail.Text = "Jail"; }
-            
-            //Text box stuff
-            pl_txtLogin.Text = PlayerDB.GetLoginMessage(p);
-            pl_txtLogout.Text = PlayerDB.GetLogoutMessage(p);
-            pl_txtTitle.Text = p.title;
-            pl_cmbColor.SelectedText = Colors.Name(p.color).Capitalize();
-            
             playerProps = new PlayerProperties(p);
             pgPlayers.SelectedObject = playerProps;
             
@@ -538,39 +524,6 @@ namespace MCGalaxy.Gui {
                 pl_cmbMap.Items.Add(level.name);
             }
             pl_cmbMap.SelectedIndex = selected;
-        }
-
-        void LoginBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
-            }
-            CP437Writer.WriteAllText("text/login/" + curPlayer.name + ".txt", pl_txtLogin.Text);
-            PlayersTextBox.AppendTextAndScroll("The login message has been saved!");
-        }
-
-        void LogoutBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
-            }
-            CP437Writer.WriteAllText("text/logout/" + curPlayer.name + ".txt", pl_txtLogout.Text);
-            PlayersTextBox.AppendTextAndScroll("The logout message has been saved!");
-        }
-
-        void TitleBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
-            }
-            if (pl_txtTitle.Text.Length > 17) { PlayersTextBox.AppendTextAndScroll("Title must be under 17 letters."); return; }
-            curPlayer.prefix = "[" + pl_txtTitle.Text + "]";
-            PlayersTextBox.AppendTextAndScroll("The title has been saved");
-        }
-
-        void ColorBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
-            }
-            curPlayer.color = Colors.Parse(pl_cmbColor.Text);
-            PlayersTextBox.AppendTextAndScroll("Set color to " + pl_cmbColor.Text);
         }
 
         void MapBt_Click(object sender, EventArgs e) {
@@ -645,27 +598,6 @@ namespace MCGalaxy.Gui {
             }
         }
 
-        void HideBt_Click(object sender, EventArgs e) {
-            DoToggle("ohide", pl_btnHide, "Hide", p => p.hidden, "Hid");
-        }
-        void JokerBt_Click(object sender, EventArgs e) {
-            DoToggle("joker", pl_btnJoker, "Joker", p => p.joker, "Jokered");
-        }
-        void FreezeBt_Click(object sender, EventArgs e) {
-            DoToggle("freeze", pl_btnFreeze, "Freeze", p => p.frozen, "Froze");
-        }
-        void MuteBt_Click(object sender, EventArgs e) {
-            DoToggle("mute", pl_btnMute, "Mute", p => p.muted, "Muted");
-        }
-        void VoiceBt_Click(object sender, EventArgs e) {
-            DoToggle("voice", pl_btnVoice, "Voice", p => p.voice, "Voiced");
-        }
-        void JailBt_Click(object sender, EventArgs e) {
-            DoToggle("jail", pl_btnJail, "Jail", p => p.jailed, "Jailed");
-        }
-
-        void PromoteBt_Click(object sender, EventArgs e) { DoCmd("rank", "Promoted", "+up "); }
-        void DemoteBt_Click(object sender, EventArgs e) { DoCmd("rank", "Demoted", "-down "); }
         void SlapBt_Click(object sender, EventArgs e) { DoCmd("slap", "Slapped"); }
         void KillBt_Click(object sender, EventArgs e) { DoCmd("kill", "Killed"); }
         void WarnBt_Click(object sender, EventArgs e) { DoCmd("warn", "Warned"); }
@@ -744,23 +676,11 @@ namespace MCGalaxy.Gui {
         void ImpersonateORSendCmdTxt_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Enter) ImpersonateORSendCmdBt_Click(sender, e);
         }
-        void LoginTxt_KeyDown(object sender, KeyEventArgs e){
-            if (e.KeyCode == Keys.Enter) LoginBt_Click(sender, e);
-        }
-        void LogoutTxt_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Enter) LogoutBt_Click(sender, e);
-        }
-        void TitleTxt_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Enter) TitleBt_Click(sender, e);
-        }
         void UndoTxt_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Enter) UndoBt_Click(sender, e);
         }
         void PLayersMessageTxt_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Enter) MessageBt_Click(sender, e);
-        }
-        void ColorCombo_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Enter) ColorBt_Click(sender, e);
         }
         void MapCombo_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Enter) MapBt_Click(sender, e);
