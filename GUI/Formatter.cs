@@ -129,13 +129,16 @@ namespace MCGalaxy.Gui {
         }
         
         public static List<string> GetColorsList() {
-            List<string> colors = new List<string>() { "black", "navy", "green", "teal", "maroon", 
-                "purple", "gold", "silver", "gray", "blue", "lime", "aqua", "red", "pink", "yellow", "white" };
+            List<string> colors = new List<string>() { 
+                "Black", "Navy", "Green", "Teal", "Maroon",
+                "Purple", "Gold", "Silver", "Gray", "Blue", 
+                "Lime", "Aqua", "Red", "Pink", "Yellow", "White" };
+            
             for (int i = 0; i < 256; i++) {
                 if (Colors.ExtColors[i].Undefined) continue;
                 colors.Add(Colors.ExtColors[i].Name);
             }
-			return colors;
+            return colors;
         }
     }
 }

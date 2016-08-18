@@ -154,8 +154,8 @@ namespace MCGalaxy.Gui
             this.lblMap_Name = new System.Windows.Forms.Label();
             this.txtMap_Name = new System.Windows.Forms.TextBox();
             this.tp_Players = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.pgPlayers = new System.Windows.Forms.PropertyGrid();
+            this.pl_gbProps = new System.Windows.Forms.GroupBox();
+            this.pl_pgProps = new System.Windows.Forms.PropertyGrid();
             this.pl_gbOther = new System.Windows.Forms.GroupBox();
             this.pl_txtImpersonate = new System.Windows.Forms.TextBox();
             this.pl_txtUndo = new System.Windows.Forms.TextBox();
@@ -172,8 +172,8 @@ namespace MCGalaxy.Gui
             this.pl_btnSlap = new System.Windows.Forms.Button();
             this.pl_btnBan = new System.Windows.Forms.Button();
             this.pl_btnKill = new System.Windows.Forms.Button();
-            this.PlayersTextBox = new MCGalaxy.Gui.AutoScrollTextBox();
-            this.PlyersListBox = new System.Windows.Forms.ListBox();
+            this.pl_statusBox = new MCGalaxy.Gui.AutoScrollTextBox();
+            this.pl_listBox = new System.Windows.Forms.ListBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.mapsStrip.SuspendLayout();
             this.playerStrip.SuspendLayout();
@@ -195,7 +195,7 @@ namespace MCGalaxy.Gui
             this.gbMap_Unld.SuspendLayout();
             this.gbMap_New.SuspendLayout();
             this.tp_Players.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.pl_gbProps.SuspendLayout();
             this.pl_gbOther.SuspendLayout();
             this.pl_gbActions.SuspendLayout();
             this.SuspendLayout();
@@ -209,7 +209,7 @@ namespace MCGalaxy.Gui
                                     this.toolStripSeparator1,
                                     this.infoToolStripMenuItem});
             this.mapsStrip.Name = "mapsStrip";
-            this.mapsStrip.Size = new System.Drawing.Size(138, 98);
+            this.mapsStrip.Size = new System.Drawing.Size(144, 98);
             // 
             // physicsToolStripMenuItem
             // 
@@ -221,48 +221,48 @@ namespace MCGalaxy.Gui
                                     this.toolStripMenuItem6,
                                     this.toolStripMenuItem7});
             this.physicsToolStripMenuItem.Name = "physicsToolStripMenuItem";
-            this.physicsToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.physicsToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.physicsToolStripMenuItem.Text = "Physics Level";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(128, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(135, 22);
             this.toolStripMenuItem2.Text = "Off";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click_1);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(128, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(135, 22);
             this.toolStripMenuItem3.Text = "Normal";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click_1);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(128, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(135, 22);
             this.toolStripMenuItem4.Text = "Advanced";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click_1);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(128, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(135, 22);
             this.toolStripMenuItem5.Text = "Hardcore";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click_1);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(128, 22);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(135, 22);
             this.toolStripMenuItem6.Text = "Instant";
             this.toolStripMenuItem6.Click += new System.EventHandler(this.toolStripMenuItem6_Click_1);
             // 
             // toolStripMenuItem7
             // 
             this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(128, 22);
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(135, 22);
             this.toolStripMenuItem7.Text = "Doors-Only";
             this.toolStripMenuItem7.Click += new System.EventHandler(this.toolStripMenuItem7_Click_1);
             // 
@@ -273,7 +273,7 @@ namespace MCGalaxy.Gui
                                     this.loadingToolStripMenuItem,
                                     this.miscToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // physicsToolStripMenuItem1
@@ -287,55 +287,55 @@ namespace MCGalaxy.Gui
                                     this.leafDecayToolStripMenuItem,
                                     this.autpPhysicsToolStripMenuItem});
             this.physicsToolStripMenuItem1.Name = "physicsToolStripMenuItem1";
-            this.physicsToolStripMenuItem1.Size = new System.Drawing.Size(111, 22);
+            this.physicsToolStripMenuItem1.Size = new System.Drawing.Size(117, 22);
             this.physicsToolStripMenuItem1.Text = "Physics";
             // 
             // finiteModeToolStripMenuItem
             // 
             this.finiteModeToolStripMenuItem.Name = "finiteModeToolStripMenuItem";
-            this.finiteModeToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.finiteModeToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.finiteModeToolStripMenuItem.Text = "Finite Mode";
             this.finiteModeToolStripMenuItem.Click += new System.EventHandler(this.finiteModeToolStripMenuItem_Click);
             // 
             // randomFlowToolStripMenuItem
             // 
             this.randomFlowToolStripMenuItem.Name = "randomFlowToolStripMenuItem";
-            this.randomFlowToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.randomFlowToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.randomFlowToolStripMenuItem.Text = "Random Flow";
             this.randomFlowToolStripMenuItem.Click += new System.EventHandler(this.randomFlowToolStripMenuItem_Click);
             // 
             // edgeWaterToolStripMenuItem
             // 
             this.edgeWaterToolStripMenuItem.Name = "edgeWaterToolStripMenuItem";
-            this.edgeWaterToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.edgeWaterToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.edgeWaterToolStripMenuItem.Text = "Edge Water";
             this.edgeWaterToolStripMenuItem.Click += new System.EventHandler(this.edgeWaterToolStripMenuItem_Click);
             // 
             // growingGrassToolStripMenuItem
             // 
             this.growingGrassToolStripMenuItem.Name = "growingGrassToolStripMenuItem";
-            this.growingGrassToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.growingGrassToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.growingGrassToolStripMenuItem.Text = "Grass Growing";
             this.growingGrassToolStripMenuItem.Click += new System.EventHandler(this.growingGrassToolStripMenuItem_Click);
             // 
             // treeGrowingToolStripMenuItem
             // 
             this.treeGrowingToolStripMenuItem.Name = "treeGrowingToolStripMenuItem";
-            this.treeGrowingToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.treeGrowingToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.treeGrowingToolStripMenuItem.Text = "Tree Growing";
             this.treeGrowingToolStripMenuItem.Click += new System.EventHandler(this.treeGrowingToolStripMenuItem_Click);
             // 
             // leafDecayToolStripMenuItem
             // 
             this.leafDecayToolStripMenuItem.Name = "leafDecayToolStripMenuItem";
-            this.leafDecayToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.leafDecayToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.leafDecayToolStripMenuItem.Text = "Leaf Decay";
             this.leafDecayToolStripMenuItem.Click += new System.EventHandler(this.leafDecayToolStripMenuItem_Click);
             // 
             // autpPhysicsToolStripMenuItem
             // 
             this.autpPhysicsToolStripMenuItem.Name = "autpPhysicsToolStripMenuItem";
-            this.autpPhysicsToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.autpPhysicsToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.autpPhysicsToolStripMenuItem.Text = "Auto Physics";
             this.autpPhysicsToolStripMenuItem.Click += new System.EventHandler(this.autpPhysicsToolStripMenuItem_Click);
             // 
@@ -345,20 +345,20 @@ namespace MCGalaxy.Gui
                                     this.unloadToolStripMenuItem1,
                                     this.loadOngotoToolStripMenuItem});
             this.loadingToolStripMenuItem.Name = "loadingToolStripMenuItem";
-            this.loadingToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
+            this.loadingToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.loadingToolStripMenuItem.Text = "Loading";
             // 
             // unloadToolStripMenuItem1
             // 
             this.unloadToolStripMenuItem1.Name = "unloadToolStripMenuItem1";
-            this.unloadToolStripMenuItem1.Size = new System.Drawing.Size(141, 22);
+            this.unloadToolStripMenuItem1.Size = new System.Drawing.Size(150, 22);
             this.unloadToolStripMenuItem1.Text = "Auto Unload";
             this.unloadToolStripMenuItem1.Click += new System.EventHandler(this.unloadToolStripMenuItem1_Click);
             // 
             // loadOngotoToolStripMenuItem
             // 
             this.loadOngotoToolStripMenuItem.Name = "loadOngotoToolStripMenuItem";
-            this.loadOngotoToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.loadOngotoToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.loadOngotoToolStripMenuItem.Text = "Load on /goto";
             this.loadOngotoToolStripMenuItem.Click += new System.EventHandler(this.loadOngotoToolStripMenuItem_Click);
             // 
@@ -372,48 +372,48 @@ namespace MCGalaxy.Gui
                                     this.rPChatToolStripMenuItem,
                                     this.gunsToolStripMenuItem});
             this.miscToolStripMenuItem.Name = "miscToolStripMenuItem";
-            this.miscToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
+            this.miscToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.miscToolStripMenuItem.Text = "Misc";
             // 
             // animalAIToolStripMenuItem
             // 
             this.animalAIToolStripMenuItem.Name = "animalAIToolStripMenuItem";
-            this.animalAIToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.animalAIToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.animalAIToolStripMenuItem.Text = "Animal AI";
             this.animalAIToolStripMenuItem.Click += new System.EventHandler(this.animalAIToolStripMenuItem_Click);
             // 
             // survivalDeathToolStripMenuItem
             // 
             this.survivalDeathToolStripMenuItem.Name = "survivalDeathToolStripMenuItem";
-            this.survivalDeathToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.survivalDeathToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.survivalDeathToolStripMenuItem.Text = "Survival Death";
             this.survivalDeathToolStripMenuItem.Click += new System.EventHandler(this.survivalDeathToolStripMenuItem_Click);
             // 
             // killerBlocksToolStripMenuItem
             // 
             this.killerBlocksToolStripMenuItem.Name = "killerBlocksToolStripMenuItem";
-            this.killerBlocksToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.killerBlocksToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.killerBlocksToolStripMenuItem.Text = "Killer Blocks";
             this.killerBlocksToolStripMenuItem.Click += new System.EventHandler(this.killerBlocksToolStripMenuItem_Click);
             // 
             // instantBuildingToolStripMenuItem
             // 
             this.instantBuildingToolStripMenuItem.Name = "instantBuildingToolStripMenuItem";
-            this.instantBuildingToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.instantBuildingToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.instantBuildingToolStripMenuItem.Text = "Instant Building";
             this.instantBuildingToolStripMenuItem.Click += new System.EventHandler(this.instantBuildingToolStripMenuItem_Click);
             // 
             // rPChatToolStripMenuItem
             // 
             this.rPChatToolStripMenuItem.Name = "rPChatToolStripMenuItem";
-            this.rPChatToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.rPChatToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.rPChatToolStripMenuItem.Text = "RP Chat";
             this.rPChatToolStripMenuItem.Click += new System.EventHandler(this.rPChatToolStripMenuItem_Click);
             // 
             // gunsToolStripMenuItem
             // 
             this.gunsToolStripMenuItem.Name = "gunsToolStripMenuItem";
-            this.gunsToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.gunsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.gunsToolStripMenuItem.Text = "Guns";
             this.gunsToolStripMenuItem.Click += new System.EventHandler(this.gunsToolStripMenuItem_Click);
             // 
@@ -425,46 +425,46 @@ namespace MCGalaxy.Gui
                                     this.unloadToolStripMenuItem,
                                     this.moveAllToolStripMenuItem});
             this.actiondToolStripMenuItem.Name = "actiondToolStripMenuItem";
-            this.actiondToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.actiondToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.actiondToolStripMenuItem.Text = "Actions";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click_1);
             // 
             // reloadToolStripMenuItem
             // 
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.reloadToolStripMenuItem.Text = "Reload";
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
             // 
             // unloadToolStripMenuItem
             // 
             this.unloadToolStripMenuItem.Name = "unloadToolStripMenuItem";
-            this.unloadToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.unloadToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.unloadToolStripMenuItem.Text = "Unload";
             this.unloadToolStripMenuItem.Click += new System.EventHandler(this.unloadToolStripMenuItem_Click_1);
             // 
             // moveAllToolStripMenuItem
             // 
             this.moveAllToolStripMenuItem.Name = "moveAllToolStripMenuItem";
-            this.moveAllToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.moveAllToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.moveAllToolStripMenuItem.Text = "Move All";
             this.moveAllToolStripMenuItem.Click += new System.EventHandler(this.moveAllToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(134, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(140, 6);
             // 
             // infoToolStripMenuItem
             // 
             this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.infoToolStripMenuItem.Text = "Info";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
             // 
@@ -479,54 +479,54 @@ namespace MCGalaxy.Gui
                                     this.promoteToolStripMenuItem,
                                     this.demoteToolStripMenuItem});
             this.playerStrip.Name = "playerStrip";
-            this.playerStrip.Size = new System.Drawing.Size(115, 158);
+            this.playerStrip.Size = new System.Drawing.Size(121, 158);
             // 
             // whoisToolStripMenuItem
             // 
             this.whoisToolStripMenuItem.Name = "whoisToolStripMenuItem";
-            this.whoisToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.whoisToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.whoisToolStripMenuItem.Text = "Whois";
             this.whoisToolStripMenuItem.Click += new System.EventHandler(this.whoisToolStripMenuItem_Click);
             // 
             // kickToolStripMenuItem
             // 
             this.kickToolStripMenuItem.Name = "kickToolStripMenuItem";
-            this.kickToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.kickToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.kickToolStripMenuItem.Text = "Kick";
             this.kickToolStripMenuItem.Click += new System.EventHandler(this.kickToolStripMenuItem_Click);
             // 
             // banToolStripMenuItem
             // 
             this.banToolStripMenuItem.Name = "banToolStripMenuItem";
-            this.banToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.banToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.banToolStripMenuItem.Text = "Ban";
             this.banToolStripMenuItem.Click += new System.EventHandler(this.banToolStripMenuItem_Click);
             // 
             // voiceToolStripMenuItem
             // 
             this.voiceToolStripMenuItem.Name = "voiceToolStripMenuItem";
-            this.voiceToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.voiceToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.voiceToolStripMenuItem.Text = "Voice";
             this.voiceToolStripMenuItem.Click += new System.EventHandler(this.voiceToolStripMenuItem_Click);
             // 
             // clonesToolStripMenuItem
             // 
             this.clonesToolStripMenuItem.Name = "clonesToolStripMenuItem";
-            this.clonesToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.clonesToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.clonesToolStripMenuItem.Text = "Clones";
             this.clonesToolStripMenuItem.Click += new System.EventHandler(this.clonesToolStripMenuItem_Click);
             // 
             // promoteToolStripMenuItem
             // 
             this.promoteToolStripMenuItem.Name = "promoteToolStripMenuItem";
-            this.promoteToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.promoteToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.promoteToolStripMenuItem.Text = "Promote";
             this.promoteToolStripMenuItem.Click += new System.EventHandler(this.promoteToolStripMenuItem_Click);
             // 
             // demoteToolStripMenuItem
             // 
             this.demoteToolStripMenuItem.Name = "demoteToolStripMenuItem";
-            this.demoteToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.demoteToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.demoteToolStripMenuItem.Text = "Demote";
             this.demoteToolStripMenuItem.Click += new System.EventHandler(this.demoteToolStripMenuItem_Click);
             // 
@@ -537,26 +537,26 @@ namespace MCGalaxy.Gui
                                     this.shutdownServer,
                                     this.restartServerToolStripMenuItem});
             this.iconContext.Name = "iconContext";
-            this.iconContext.Size = new System.Drawing.Size(158, 70);
+            this.iconContext.Size = new System.Drawing.Size(164, 70);
             // 
             // openConsole
             // 
             this.openConsole.Name = "openConsole";
-            this.openConsole.Size = new System.Drawing.Size(157, 22);
+            this.openConsole.Size = new System.Drawing.Size(163, 22);
             this.openConsole.Text = "Open Console";
             this.openConsole.Click += new System.EventHandler(this.openConsole_Click);
             // 
             // shutdownServer
             // 
             this.shutdownServer.Name = "shutdownServer";
-            this.shutdownServer.Size = new System.Drawing.Size(157, 22);
+            this.shutdownServer.Size = new System.Drawing.Size(163, 22);
             this.shutdownServer.Text = "Shutdown Server";
             this.shutdownServer.Click += new System.EventHandler(this.shutdownServer_Click);
             // 
             // restartServerToolStripMenuItem
             // 
             this.restartServerToolStripMenuItem.Name = "restartServerToolStripMenuItem";
-            this.restartServerToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.restartServerToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.restartServerToolStripMenuItem.Text = "Restart Server";
             this.restartServerToolStripMenuItem.Click += new System.EventHandler(this.restartServerToolStripMenuItem_Click);
             // 
@@ -670,7 +670,7 @@ namespace MCGalaxy.Gui
             this.logs_dateGeneral.Size = new System.Drawing.Size(200, 21);
             this.logs_dateGeneral.TabIndex = 5;
             this.logs_dateGeneral.Value = new System.DateTime(2011, 7, 20, 18, 31, 50, 0);
-            this.logs_dateGeneral.ValueChanged += new System.EventHandler(this.DatePicker1_ValueChanged);
+            this.logs_dateGeneral.ValueChanged += new System.EventHandler(this.logs_dateGeneralValueChanged);
             // 
             // logs_txtGeneral
             // 
@@ -824,12 +824,12 @@ namespace MCGalaxy.Gui
                                     this.toolStripSeparator3,
                                     this.clearToolStripMenuItem});
             this.txtLogMenuStrip.Name = "txtLogMenuStrip";
-            this.txtLogMenuStrip.Size = new System.Drawing.Size(144, 170);
+            this.txtLogMenuStrip.Size = new System.Drawing.Size(150, 170);
             // 
             // nightModeToolStripMenuItem
             // 
             this.nightModeToolStripMenuItem.Name = "nightModeToolStripMenuItem";
-            this.nightModeToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.nightModeToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.nightModeToolStripMenuItem.Text = "Night Theme";
             this.nightModeToolStripMenuItem.Click += new System.EventHandler(this.nightModeToolStripMenuItem_Click_1);
             // 
@@ -838,7 +838,7 @@ namespace MCGalaxy.Gui
             this.colorsToolStripMenuItem.Checked = true;
             this.colorsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.colorsToolStripMenuItem.Name = "colorsToolStripMenuItem";
-            this.colorsToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.colorsToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.colorsToolStripMenuItem.Text = "Colors";
             this.colorsToolStripMenuItem.Click += new System.EventHandler(this.colorsToolStripMenuItem_Click_1);
             // 
@@ -847,7 +847,7 @@ namespace MCGalaxy.Gui
             this.dateStampToolStripMenuItem.Checked = true;
             this.dateStampToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.dateStampToolStripMenuItem.Name = "dateStampToolStripMenuItem";
-            this.dateStampToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.dateStampToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.dateStampToolStripMenuItem.Text = "Date Stamp";
             this.dateStampToolStripMenuItem.Click += new System.EventHandler(this.dateStampToolStripMenuItem_Click);
             // 
@@ -856,38 +856,38 @@ namespace MCGalaxy.Gui
             this.autoScrollToolStripMenuItem.Checked = true;
             this.autoScrollToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.autoScrollToolStripMenuItem.Name = "autoScrollToolStripMenuItem";
-            this.autoScrollToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.autoScrollToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.autoScrollToolStripMenuItem.Text = "Auto Scroll";
             this.autoScrollToolStripMenuItem.Click += new System.EventHandler(this.autoScrollToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(140, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(146, 6);
             // 
             // copySelectedToolStripMenuItem
             // 
             this.copySelectedToolStripMenuItem.Name = "copySelectedToolStripMenuItem";
-            this.copySelectedToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.copySelectedToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.copySelectedToolStripMenuItem.Text = "Copy Selected";
             this.copySelectedToolStripMenuItem.Click += new System.EventHandler(this.copySelectedToolStripMenuItem_Click);
             // 
             // copyAllToolStripMenuItem
             // 
             this.copyAllToolStripMenuItem.Name = "copyAllToolStripMenuItem";
-            this.copyAllToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.copyAllToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.copyAllToolStripMenuItem.Text = "Copy All";
             this.copyAllToolStripMenuItem.Click += new System.EventHandler(this.copyAllToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(140, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(146, 6);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
@@ -1197,11 +1197,11 @@ namespace MCGalaxy.Gui
             // 
             // tp_Players
             // 
-            this.tp_Players.Controls.Add(this.groupBox1);
+            this.tp_Players.Controls.Add(this.pl_gbProps);
             this.tp_Players.Controls.Add(this.pl_gbOther);
             this.tp_Players.Controls.Add(this.pl_gbActions);
-            this.tp_Players.Controls.Add(this.PlayersTextBox);
-            this.tp_Players.Controls.Add(this.PlyersListBox);
+            this.tp_Players.Controls.Add(this.pl_statusBox);
+            this.tp_Players.Controls.Add(this.pl_listBox);
             this.tp_Players.Location = new System.Drawing.Point(4, 22);
             this.tp_Players.Name = "tp_Players";
             this.tp_Players.Padding = new System.Windows.Forms.Padding(3);
@@ -1209,43 +1209,41 @@ namespace MCGalaxy.Gui
             this.tp_Players.TabIndex = 7;
             this.tp_Players.Text = "Players";
             // 
-            // groupBox1
+            // pl_gbProps
             // 
-            this.groupBox1.Controls.Add(this.pgPlayers);
-            this.groupBox1.Location = new System.Drawing.Point(147, 9);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(363, 349);
-            this.groupBox1.TabIndex = 67;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Properties for (none selected)";
+            this.pl_gbProps.Controls.Add(this.pl_pgProps);
+            this.pl_gbProps.Location = new System.Drawing.Point(147, 9);
+            this.pl_gbProps.Name = "pl_gbProps";
+            this.pl_gbProps.Size = new System.Drawing.Size(363, 380);
+            this.pl_gbProps.TabIndex = 67;
+            this.pl_gbProps.TabStop = false;
+            this.pl_gbProps.Text = "Properties for (none selected)";
             // 
-            // pgPlayers
+            // pl_pgProps
             // 
-            this.pgPlayers.HelpVisible = false;
-            this.pgPlayers.Location = new System.Drawing.Point(6, 18);
-            this.pgPlayers.Name = "pgPlayers";
-            this.pgPlayers.Size = new System.Drawing.Size(351, 325);
-            this.pgPlayers.TabIndex = 64;
-            this.pgPlayers.ToolbarVisible = false;
+            this.pl_pgProps.HelpVisible = false;
+            this.pl_pgProps.Location = new System.Drawing.Point(6, 18);
+            this.pl_pgProps.Name = "pl_pgProps";
+            this.pl_pgProps.Size = new System.Drawing.Size(351, 356);
+            this.pl_pgProps.TabIndex = 64;
+            this.pl_pgProps.ToolbarVisible = false;
             // 
             // pl_gbOther
             // 
             this.pl_gbOther.Controls.Add(this.pl_txtImpersonate);
-            this.pl_gbOther.Controls.Add(this.pl_txtUndo);
             this.pl_gbOther.Controls.Add(this.pl_btnImpersonate);
             this.pl_gbOther.Controls.Add(this.pl_txtMessage);
             this.pl_gbOther.Controls.Add(this.pl_btnMessage);
-            this.pl_gbOther.Controls.Add(this.pl_btnUndo);
-            this.pl_gbOther.Location = new System.Drawing.Point(147, 364);
+            this.pl_gbOther.Location = new System.Drawing.Point(147, 395);
             this.pl_gbOther.Name = "pl_gbOther";
-            this.pl_gbOther.Size = new System.Drawing.Size(614, 113);
+            this.pl_gbOther.Size = new System.Drawing.Size(614, 78);
             this.pl_gbOther.TabIndex = 66;
             this.pl_gbOther.TabStop = false;
             this.pl_gbOther.Text = "Other";
             // 
             // pl_txtImpersonate
             // 
-            this.pl_txtImpersonate.Location = new System.Drawing.Point(115, 82);
+            this.pl_txtImpersonate.Location = new System.Drawing.Point(115, 50);
             this.pl_txtImpersonate.Name = "pl_txtImpersonate";
             this.pl_txtImpersonate.Size = new System.Drawing.Size(485, 21);
             this.pl_txtImpersonate.TabIndex = 38;
@@ -1253,15 +1251,15 @@ namespace MCGalaxy.Gui
             // 
             // pl_txtUndo
             // 
-            this.pl_txtUndo.Location = new System.Drawing.Point(115, 18);
+            this.pl_txtUndo.Location = new System.Drawing.Point(122, 150);
             this.pl_txtUndo.Name = "pl_txtUndo";
-            this.pl_txtUndo.Size = new System.Drawing.Size(234, 21);
+            this.pl_txtUndo.Size = new System.Drawing.Size(98, 21);
             this.pl_txtUndo.TabIndex = 42;
             this.pl_txtUndo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UndoTxt_KeyDown);
             // 
             // pl_btnImpersonate
             // 
-            this.pl_btnImpersonate.Location = new System.Drawing.Point(6, 80);
+            this.pl_btnImpersonate.Location = new System.Drawing.Point(6, 48);
             this.pl_btnImpersonate.Name = "pl_btnImpersonate";
             this.pl_btnImpersonate.Size = new System.Drawing.Size(98, 23);
             this.pl_btnImpersonate.TabIndex = 37;
@@ -1271,7 +1269,7 @@ namespace MCGalaxy.Gui
             // 
             // pl_txtMessage
             // 
-            this.pl_txtMessage.Location = new System.Drawing.Point(115, 50);
+            this.pl_txtMessage.Location = new System.Drawing.Point(115, 18);
             this.pl_txtMessage.Name = "pl_txtMessage";
             this.pl_txtMessage.Size = new System.Drawing.Size(485, 21);
             this.pl_txtMessage.TabIndex = 8;
@@ -1279,7 +1277,7 @@ namespace MCGalaxy.Gui
             // 
             // pl_btnMessage
             // 
-            this.pl_btnMessage.Location = new System.Drawing.Point(6, 48);
+            this.pl_btnMessage.Location = new System.Drawing.Point(6, 16);
             this.pl_btnMessage.Name = "pl_btnMessage";
             this.pl_btnMessage.Size = new System.Drawing.Size(98, 23);
             this.pl_btnMessage.TabIndex = 9;
@@ -1289,7 +1287,7 @@ namespace MCGalaxy.Gui
             // 
             // pl_btnUndo
             // 
-            this.pl_btnUndo.Location = new System.Drawing.Point(6, 16);
+            this.pl_btnUndo.Location = new System.Drawing.Point(8, 148);
             this.pl_btnUndo.Name = "pl_btnUndo";
             this.pl_btnUndo.Size = new System.Drawing.Size(98, 23);
             this.pl_btnUndo.TabIndex = 41;
@@ -1300,16 +1298,18 @@ namespace MCGalaxy.Gui
             // pl_gbActions
             // 
             this.pl_gbActions.Controls.Add(this.pl_btnSpawn);
+            this.pl_gbActions.Controls.Add(this.pl_txtUndo);
             this.pl_gbActions.Controls.Add(this.pl_btnWarn);
             this.pl_gbActions.Controls.Add(this.pl_btnRules);
             this.pl_gbActions.Controls.Add(this.pl_btnKick);
             this.pl_gbActions.Controls.Add(this.pl_btnBanIP);
+            this.pl_gbActions.Controls.Add(this.pl_btnUndo);
             this.pl_gbActions.Controls.Add(this.pl_btnSlap);
             this.pl_gbActions.Controls.Add(this.pl_btnBan);
             this.pl_gbActions.Controls.Add(this.pl_btnKill);
             this.pl_gbActions.Location = new System.Drawing.Point(529, 9);
             this.pl_gbActions.Name = "pl_gbActions";
-            this.pl_gbActions.Size = new System.Drawing.Size(228, 136);
+            this.pl_gbActions.Size = new System.Drawing.Size(228, 186);
             this.pl_gbActions.TabIndex = 65;
             this.pl_gbActions.TabStop = false;
             this.pl_gbActions.Text = "Actions";
@@ -1394,27 +1394,27 @@ namespace MCGalaxy.Gui
             this.pl_btnKill.UseVisualStyleBackColor = true;
             this.pl_btnKill.Click += new System.EventHandler(this.KillBt_Click);
             // 
-            // PlayersTextBox
+            // pl_statusBox
             // 
-            this.PlayersTextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.PlayersTextBox.Cursor = System.Windows.Forms.Cursors.Default;
-            this.PlayersTextBox.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PlayersTextBox.Location = new System.Drawing.Point(529, 151);
-            this.PlayersTextBox.Multiline = true;
-            this.PlayersTextBox.Name = "PlayersTextBox";
-            this.PlayersTextBox.ReadOnly = true;
-            this.PlayersTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.PlayersTextBox.Size = new System.Drawing.Size(232, 207);
-            this.PlayersTextBox.TabIndex = 63;
+            this.pl_statusBox.BackColor = System.Drawing.SystemColors.Window;
+            this.pl_statusBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pl_statusBox.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pl_statusBox.Location = new System.Drawing.Point(529, 201);
+            this.pl_statusBox.Multiline = true;
+            this.pl_statusBox.Name = "pl_statusBox";
+            this.pl_statusBox.ReadOnly = true;
+            this.pl_statusBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.pl_statusBox.Size = new System.Drawing.Size(232, 188);
+            this.pl_statusBox.TabIndex = 63;
             // 
-            // PlyersListBox
+            // pl_listBox
             // 
-            this.PlyersListBox.FormattingEnabled = true;
-            this.PlyersListBox.Location = new System.Drawing.Point(8, 14);
-            this.PlyersListBox.Name = "PlyersListBox";
-            this.PlyersListBox.Size = new System.Drawing.Size(123, 459);
-            this.PlyersListBox.TabIndex = 62;
-            this.PlyersListBox.Click += new System.EventHandler(this.PlyersListBox_Click);
+            this.pl_listBox.FormattingEnabled = true;
+            this.pl_listBox.Location = new System.Drawing.Point(8, 14);
+            this.pl_listBox.Name = "pl_listBox";
+            this.pl_listBox.Size = new System.Drawing.Size(123, 459);
+            this.pl_listBox.TabIndex = 62;
+            this.pl_listBox.Click += new System.EventHandler(this.PlyersListBox_Click);
             // 
             // toolTip
             // 
@@ -1468,16 +1468,17 @@ namespace MCGalaxy.Gui
             this.gbMap_New.PerformLayout();
             this.tp_Players.ResumeLayout(false);
             this.tp_Players.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
+            this.pl_gbProps.ResumeLayout(false);
             this.pl_gbOther.ResumeLayout(false);
             this.pl_gbOther.PerformLayout();
             this.pl_gbActions.ResumeLayout(false);
+            this.pl_gbActions.PerformLayout();
             this.ResumeLayout(false);
         }
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox pl_gbProps;
         private System.Windows.Forms.GroupBox pl_gbActions;
         private System.Windows.Forms.GroupBox pl_gbOther;
-        private System.Windows.Forms.PropertyGrid pgPlayers;
+        private System.Windows.Forms.PropertyGrid pl_pgProps;
         private System.Windows.Forms.TextBox txtMap_Name;
         private System.Windows.Forms.Label lblMap_Name;
         private System.Windows.Forms.ComboBox cmbMap_X;
@@ -1559,8 +1560,8 @@ namespace MCGalaxy.Gui
         private Button pl_btnUndo;
         private Button pl_btnSlap;
         private Button pl_btnRules;
-        private AutoScrollTextBox PlayersTextBox;
-        private ListBox PlyersListBox;
+        private AutoScrollTextBox pl_statusBox;
+        private ListBox pl_listBox;
         private Button main_btnSaveAll;
         private Button main_btnUnloadEmpty;
         private Button main_btnKillPhysics;
