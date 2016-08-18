@@ -314,10 +314,6 @@ namespace MCGalaxy.Gui {
                     chkLogBeat.Checked = ( value.ToLower() == "true" );
                     break;
 
-                case "force-cuboid":
-                    chkForceCuboid.Checked = ( value.ToLower() == "true" );
-                    break;
-
                 case "profanity-filter":
                     chkProfanityFilter.Checked = ( value.ToLower() == "true" );
                     break;
@@ -594,7 +590,6 @@ namespace MCGalaxy.Gui {
             Server.afkkickperm = Group.Find(cmbAFKKickPerm.SelectedItem.ToString()).Permission;
             
             Server.logbeat = chkLogBeat.Checked;
-            Server.forceCuboid = chkForceCuboid.Checked;
             Server.profanityFilter = chkProfanityFilter.Checked;
             Server.repeatMessage = chkRepeatMessages.Checked;
             Server.ZallState = chat_txtConsole.Text;

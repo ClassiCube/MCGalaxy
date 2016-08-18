@@ -121,7 +121,6 @@ namespace MCGalaxy.Gui
             this.txtBackup = new System.Windows.Forms.TextBox();
             this.txtafk = new System.Windows.Forms.TextBox();
             this.txtAFKKick = new System.Windows.Forms.TextBox();
-            this.chkForceCuboid = new System.Windows.Forms.CheckBox();
             this.hackrank_kick = new System.Windows.Forms.CheckBox();
             this.chkIRC = new System.Windows.Forms.CheckBox();
             this.txtNick = new System.Windows.Forms.TextBox();
@@ -1243,19 +1242,6 @@ namespace MCGalaxy.Gui
             this.txtAFKKick.TabIndex = 9;
             this.toolTip.SetToolTip(this.txtAFKKick, "Kick the user after they have been afk for this many minutes (0 = No kick)");
             // 
-            // chkForceCuboid
-            // 
-            this.chkForceCuboid.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkForceCuboid.AutoSize = true;
-            this.chkForceCuboid.Location = new System.Drawing.Point(523, 266);
-            this.chkForceCuboid.Name = "chkForceCuboid";
-            this.chkForceCuboid.Size = new System.Drawing.Size(78, 23);
-            this.chkForceCuboid.TabIndex = 29;
-            this.chkForceCuboid.Text = "Force Cuboid";
-            this.toolTip.SetToolTip(this.chkForceCuboid, "When true, runs an attempted cuboid despite cuboid limits, until it hits the grou" +
-                        "p limit for that user.");
-            this.chkForceCuboid.UseVisualStyleBackColor = true;
-            // 
             // hackrank_kick
             // 
             this.hackrank_kick.AutoSize = true;
@@ -2206,7 +2192,6 @@ namespace MCGalaxy.Gui
             this.pageMisc.Controls.Add(this.grpAFK);
             this.pageMisc.Controls.Add(this.grpBackups);
             this.pageMisc.Controls.Add(this.chkProfanityFilter);
-            this.pageMisc.Controls.Add(this.chkForceCuboid);
             this.pageMisc.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pageMisc.Location = new System.Drawing.Point(4, 22);
             this.pageMisc.Name = "pageMisc";
@@ -4400,7 +4385,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox hackrank_kick;
         private System.Windows.Forms.CheckBox chkProfanityFilter;
         private System.Windows.Forms.CheckBox chkRepeatMessages;
-        private System.Windows.Forms.CheckBox chkForceCuboid;
         private System.Windows.Forms.CheckBox chat_chkCheap;
         private System.Windows.Forms.CheckBox chkDeath;
         private System.Windows.Forms.CheckBox chk17Dollar;
