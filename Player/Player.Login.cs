@@ -36,18 +36,17 @@ namespace MCGalaxy {
                 truename = name;
                 skinName = name;
                 
-                lock (pendingLock) {
-                    int altsCount = 0;
+                int altsCount = 0;
+                lock (pendingLock) {                    
                     DateTime now = DateTime.UtcNow;
                     foreach (PendingItem item in pendingNames) {
                         if (item.Name == truename && (now - item.Connected).TotalSeconds <= 60)
                             altsCount++;
-                    }
+                    }                    
                     pendingNames.Add(new PendingItem(name));
-                    
-                    if (altsCount > 0) {
-                        Leave("Already logged in!", true); return;
-                    }
+                }
+                if (altsCount > 0) {
+                    Leave("Already logged in!", true); return;
                 }
 
                 string verify = enc.GetString(packet, 66, 32).Trim();
@@ -352,7 +351,7 @@ namespace MCGalaxy {
             string version = appName.Substring(spaceIndex, appName.Length - spaceIndex);
             Version ver;
             try {
-                ver = Version.Parse(version);
+                ver = new Version(version);
             } catch {
                 return;
             }
