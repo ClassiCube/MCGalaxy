@@ -154,6 +154,8 @@ namespace MCGalaxy.Gui
             this.lblMap_Name = new System.Windows.Forms.Label();
             this.txtMap_Name = new System.Windows.Forms.TextBox();
             this.tp_Players = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.pgPlayers = new System.Windows.Forms.PropertyGrid();
             this.pl_gbOther = new System.Windows.Forms.GroupBox();
             this.pl_txtImpersonate = new System.Windows.Forms.TextBox();
             this.pl_txtUndo = new System.Windows.Forms.TextBox();
@@ -170,25 +172,8 @@ namespace MCGalaxy.Gui
             this.pl_btnSlap = new System.Windows.Forms.Button();
             this.pl_btnBan = new System.Windows.Forms.Button();
             this.pl_btnKill = new System.Windows.Forms.Button();
-            this.pgPlayers = new System.Windows.Forms.PropertyGrid();
             this.PlayersTextBox = new MCGalaxy.Gui.AutoScrollTextBox();
             this.PlyersListBox = new System.Windows.Forms.ListBox();
-            this.StatusTxt = new System.Windows.Forms.TextBox();
-            this.label25 = new System.Windows.Forms.Label();
-            this.LoggedinForTxt = new System.Windows.Forms.TextBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.Kickstxt = new System.Windows.Forms.TextBox();
-            this.label30 = new System.Windows.Forms.Label();
-            this.TimesLoggedInTxt = new System.Windows.Forms.TextBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.Blockstxt = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.DeathsTxt = new System.Windows.Forms.TextBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.IPtxt = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.NameTxtPlayersTab = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.mapsStrip.SuspendLayout();
             this.playerStrip.SuspendLayout();
@@ -210,6 +195,7 @@ namespace MCGalaxy.Gui
             this.gbMap_Unld.SuspendLayout();
             this.gbMap_New.SuspendLayout();
             this.tp_Players.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.pl_gbOther.SuspendLayout();
             this.pl_gbActions.SuspendLayout();
             this.SuspendLayout();
@@ -1211,33 +1197,36 @@ namespace MCGalaxy.Gui
             // 
             // tp_Players
             // 
+            this.tp_Players.Controls.Add(this.groupBox1);
             this.tp_Players.Controls.Add(this.pl_gbOther);
             this.tp_Players.Controls.Add(this.pl_gbActions);
-            this.tp_Players.Controls.Add(this.pgPlayers);
             this.tp_Players.Controls.Add(this.PlayersTextBox);
             this.tp_Players.Controls.Add(this.PlyersListBox);
-            this.tp_Players.Controls.Add(this.StatusTxt);
-            this.tp_Players.Controls.Add(this.label25);
-            this.tp_Players.Controls.Add(this.LoggedinForTxt);
-            this.tp_Players.Controls.Add(this.label31);
-            this.tp_Players.Controls.Add(this.Kickstxt);
-            this.tp_Players.Controls.Add(this.label30);
-            this.tp_Players.Controls.Add(this.TimesLoggedInTxt);
-            this.tp_Players.Controls.Add(this.label29);
-            this.tp_Players.Controls.Add(this.Blockstxt);
-            this.tp_Players.Controls.Add(this.label28);
-            this.tp_Players.Controls.Add(this.DeathsTxt);
-            this.tp_Players.Controls.Add(this.label27);
-            this.tp_Players.Controls.Add(this.IPtxt);
-            this.tp_Players.Controls.Add(this.label26);
-            this.tp_Players.Controls.Add(this.NameTxtPlayersTab);
-            this.tp_Players.Controls.Add(this.label12);
             this.tp_Players.Location = new System.Drawing.Point(4, 22);
             this.tp_Players.Name = "tp_Players";
             this.tp_Players.Padding = new System.Windows.Forms.Padding(3);
             this.tp_Players.Size = new System.Drawing.Size(767, 488);
             this.tp_Players.TabIndex = 7;
             this.tp_Players.Text = "Players";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.pgPlayers);
+            this.groupBox1.Location = new System.Drawing.Point(147, 9);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(363, 349);
+            this.groupBox1.TabIndex = 67;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Properties for (none selected)";
+            // 
+            // pgPlayers
+            // 
+            this.pgPlayers.HelpVisible = false;
+            this.pgPlayers.Location = new System.Drawing.Point(6, 18);
+            this.pgPlayers.Name = "pgPlayers";
+            this.pgPlayers.Size = new System.Drawing.Size(351, 325);
+            this.pgPlayers.TabIndex = 64;
+            this.pgPlayers.ToolbarVisible = false;
             // 
             // pl_gbOther
             // 
@@ -1247,9 +1236,9 @@ namespace MCGalaxy.Gui
             this.pl_gbOther.Controls.Add(this.pl_txtMessage);
             this.pl_gbOther.Controls.Add(this.pl_btnMessage);
             this.pl_gbOther.Controls.Add(this.pl_btnUndo);
-            this.pl_gbOther.Location = new System.Drawing.Point(155, 364);
+            this.pl_gbOther.Location = new System.Drawing.Point(147, 364);
             this.pl_gbOther.Name = "pl_gbOther";
-            this.pl_gbOther.Size = new System.Drawing.Size(606, 113);
+            this.pl_gbOther.Size = new System.Drawing.Size(614, 113);
             this.pl_gbOther.TabIndex = 66;
             this.pl_gbOther.TabStop = false;
             this.pl_gbOther.Text = "Other";
@@ -1258,7 +1247,7 @@ namespace MCGalaxy.Gui
             // 
             this.pl_txtImpersonate.Location = new System.Drawing.Point(115, 82);
             this.pl_txtImpersonate.Name = "pl_txtImpersonate";
-            this.pl_txtImpersonate.Size = new System.Drawing.Size(488, 21);
+            this.pl_txtImpersonate.Size = new System.Drawing.Size(485, 21);
             this.pl_txtImpersonate.TabIndex = 38;
             this.pl_txtImpersonate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImpersonateORSendCmdTxt_KeyDown);
             // 
@@ -1284,7 +1273,7 @@ namespace MCGalaxy.Gui
             // 
             this.pl_txtMessage.Location = new System.Drawing.Point(115, 50);
             this.pl_txtMessage.Name = "pl_txtMessage";
-            this.pl_txtMessage.Size = new System.Drawing.Size(488, 21);
+            this.pl_txtMessage.Size = new System.Drawing.Size(485, 21);
             this.pl_txtMessage.TabIndex = 8;
             this.pl_txtMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PLayersMessageTxt_KeyDown);
             // 
@@ -1318,7 +1307,7 @@ namespace MCGalaxy.Gui
             this.pl_gbActions.Controls.Add(this.pl_btnSlap);
             this.pl_gbActions.Controls.Add(this.pl_btnBan);
             this.pl_gbActions.Controls.Add(this.pl_btnKill);
-            this.pl_gbActions.Location = new System.Drawing.Point(529, 57);
+            this.pl_gbActions.Location = new System.Drawing.Point(529, 9);
             this.pl_gbActions.Name = "pl_gbActions";
             this.pl_gbActions.Size = new System.Drawing.Size(228, 136);
             this.pl_gbActions.TabIndex = 65;
@@ -1405,172 +1394,27 @@ namespace MCGalaxy.Gui
             this.pl_btnKill.UseVisualStyleBackColor = true;
             this.pl_btnKill.Click += new System.EventHandler(this.KillBt_Click);
             // 
-            // pgPlayers
-            // 
-            this.pgPlayers.HelpVisible = false;
-            this.pgPlayers.Location = new System.Drawing.Point(155, 57);
-            this.pgPlayers.Name = "pgPlayers";
-            this.pgPlayers.Size = new System.Drawing.Size(355, 301);
-            this.pgPlayers.TabIndex = 64;
-            this.pgPlayers.ToolbarVisible = false;
-            // 
             // PlayersTextBox
             // 
             this.PlayersTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.PlayersTextBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.PlayersTextBox.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PlayersTextBox.Location = new System.Drawing.Point(529, 199);
+            this.PlayersTextBox.Location = new System.Drawing.Point(529, 151);
             this.PlayersTextBox.Multiline = true;
             this.PlayersTextBox.Name = "PlayersTextBox";
             this.PlayersTextBox.ReadOnly = true;
             this.PlayersTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.PlayersTextBox.Size = new System.Drawing.Size(232, 159);
+            this.PlayersTextBox.Size = new System.Drawing.Size(232, 207);
             this.PlayersTextBox.TabIndex = 63;
             // 
             // PlyersListBox
             // 
             this.PlyersListBox.FormattingEnabled = true;
-            this.PlyersListBox.Location = new System.Drawing.Point(8, 57);
+            this.PlyersListBox.Location = new System.Drawing.Point(8, 14);
             this.PlyersListBox.Name = "PlyersListBox";
-            this.PlyersListBox.Size = new System.Drawing.Size(123, 420);
+            this.PlyersListBox.Size = new System.Drawing.Size(123, 459);
             this.PlyersListBox.TabIndex = 62;
             this.PlyersListBox.Click += new System.EventHandler(this.PlyersListBox_Click);
-            // 
-            // StatusTxt
-            // 
-            this.StatusTxt.Location = new System.Drawing.Point(612, 4);
-            this.StatusTxt.Name = "StatusTxt";
-            this.StatusTxt.ReadOnly = true;
-            this.StatusTxt.Size = new System.Drawing.Size(145, 21);
-            this.StatusTxt.TabIndex = 61;
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(566, 7);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(40, 13);
-            this.label25.TabIndex = 60;
-            this.label25.Text = "Status:";
-            // 
-            // LoggedinForTxt
-            // 
-            this.LoggedinForTxt.Location = new System.Drawing.Point(537, 31);
-            this.LoggedinForTxt.Name = "LoggedinForTxt";
-            this.LoggedinForTxt.ReadOnly = true;
-            this.LoggedinForTxt.Size = new System.Drawing.Size(76, 21);
-            this.LoggedinForTxt.TabIndex = 59;
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(505, 34);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(25, 13);
-            this.label31.TabIndex = 58;
-            this.label31.Text = "For:";
-            // 
-            // Kickstxt
-            // 
-            this.Kickstxt.Location = new System.Drawing.Point(658, 31);
-            this.Kickstxt.Name = "Kickstxt";
-            this.Kickstxt.ReadOnly = true;
-            this.Kickstxt.Size = new System.Drawing.Size(99, 21);
-            this.Kickstxt.TabIndex = 57;
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(619, 34);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(34, 13);
-            this.label30.TabIndex = 56;
-            this.label30.Text = "Kicks:";
-            // 
-            // TimesLoggedInTxt
-            // 
-            this.TimesLoggedInTxt.Location = new System.Drawing.Point(412, 31);
-            this.TimesLoggedInTxt.Name = "TimesLoggedInTxt";
-            this.TimesLoggedInTxt.ReadOnly = true;
-            this.TimesLoggedInTxt.Size = new System.Drawing.Size(92, 21);
-            this.TimesLoggedInTxt.TabIndex = 55;
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(352, 34);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(54, 13);
-            this.label29.TabIndex = 54;
-            this.label29.Text = "Logged in:";
-            // 
-            // Blockstxt
-            // 
-            this.Blockstxt.Location = new System.Drawing.Point(281, 31);
-            this.Blockstxt.Name = "Blockstxt";
-            this.Blockstxt.ReadOnly = true;
-            this.Blockstxt.Size = new System.Drawing.Size(65, 21);
-            this.Blockstxt.TabIndex = 53;
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(228, 34);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(52, 13);
-            this.label28.TabIndex = 52;
-            this.label28.Text = "Modified:";
-            // 
-            // DeathsTxt
-            // 
-            this.DeathsTxt.Location = new System.Drawing.Point(188, 31);
-            this.DeathsTxt.Name = "DeathsTxt";
-            this.DeathsTxt.ReadOnly = true;
-            this.DeathsTxt.Size = new System.Drawing.Size(34, 21);
-            this.DeathsTxt.TabIndex = 51;
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(137, 34);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(44, 13);
-            this.label27.TabIndex = 50;
-            this.label27.Text = "Deaths:";
-            // 
-            // IPtxt
-            // 
-            this.IPtxt.Location = new System.Drawing.Point(42, 31);
-            this.IPtxt.Name = "IPtxt";
-            this.IPtxt.ReadOnly = true;
-            this.IPtxt.Size = new System.Drawing.Size(89, 21);
-            this.IPtxt.TabIndex = 49;
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(5, 34);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(19, 13);
-            this.label26.TabIndex = 48;
-            this.label26.Text = "IP:";
-            // 
-            // NameTxtPlayersTab
-            // 
-            this.NameTxtPlayersTab.Location = new System.Drawing.Point(45, 4);
-            this.NameTxtPlayersTab.Name = "NameTxtPlayersTab";
-            this.NameTxtPlayersTab.ReadOnly = true;
-            this.NameTxtPlayersTab.Size = new System.Drawing.Size(150, 21);
-            this.NameTxtPlayersTab.TabIndex = 40;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(5, 7);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(38, 13);
-            this.label12.TabIndex = 39;
-            this.label12.Text = "Name:";
             // 
             // toolTip
             // 
@@ -1624,11 +1468,13 @@ namespace MCGalaxy.Gui
             this.gbMap_New.PerformLayout();
             this.tp_Players.ResumeLayout(false);
             this.tp_Players.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
             this.pl_gbOther.ResumeLayout(false);
             this.pl_gbOther.PerformLayout();
             this.pl_gbActions.ResumeLayout(false);
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox pl_gbActions;
         private System.Windows.Forms.GroupBox pl_gbOther;
         private System.Windows.Forms.PropertyGrid pgPlayers;
@@ -1699,29 +1545,13 @@ namespace MCGalaxy.Gui
         private TabPage tp_Players;
         internal RichTextBox logs_txtGeneral;
         private DateTimePicker logs_dateGeneral;
-        private TextBox NameTxtPlayersTab;
-        private Label label12;
         private Button pl_btnBanIP;
         private Button pl_btnBan;
         private Button pl_btnKick;
-        private TextBox IPtxt;
-        private Label label26;
         private Button pl_btnMessage;
         private TextBox pl_txtMessage;
-        private Label label30;
-        private TextBox TimesLoggedInTxt;
-        private Label label29;
-        private TextBox Blockstxt;
-        private Label label28;
-        private TextBox DeathsTxt;
-        private Label label27;
-        private TextBox LoggedinForTxt;
-        private Label label31;
-        private TextBox Kickstxt;
         private Button pl_btnWarn;
         private Button pl_btnKill;
-        private TextBox StatusTxt;
-        private Label label25;
         private TextBox pl_txtImpersonate;
         private Button pl_btnImpersonate;
         private Button pl_btnSpawn;

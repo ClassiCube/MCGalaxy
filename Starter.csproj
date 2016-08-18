@@ -54,6 +54,7 @@
     <Compile Include="GUI\Program.cs" />
     <Compile Include="GUI\Settings\LevelProperties.cs" />
     <Compile Include="GUI\Settings\PlayerProperties.cs" />
+    <Compile Include="GUI\Settings\TypeConverters.cs" />
     <Compile Include="GUI\Settings\ZombieProperties.cs" />
     <Compile Include="GUI\Window.cs">
       <SubType>Form</SubType>

@@ -36,6 +36,10 @@ namespace MCGalaxy.Gui {
         public string Color { get { return Colors.Name(p.color); } set { DoCmd("color", value); } }
         
         [Category("Properties")]
+        [DisplayName("IP address")]
+        public string IP { get { return p.ip; } set { } }
+        
+        [Category("Properties")]
         [DisplayName("Login message")]
         public string LoginMsg { get { return inMsg; } set { inMsg = DoCmd("loginmessage", value); } }
         
@@ -57,6 +61,27 @@ namespace MCGalaxy.Gui {
         [TypeConverter(typeof(ColorConverter))]
         public string TColor { get { return Colors.Name(p.titlecolor); } set { DoCmd("tcolor", value); } }
         
+
+        [Category("Stats")]
+        [DisplayName("Blocks modified")]
+        public long BlocksModified { get { return p.overallBlocks; } set { p.overallBlocks = value; } }
+        
+        [Category("Stats")]
+        [DisplayName("Number of deaths")]
+        public int TimesDied { get { return p.overallDeath; } set { p.overallDeath = value; } }
+        
+        [Category("Stats")]
+        [DisplayName("Times been kicked")]
+        public int TimesKicked { get { return p.totalKicked; } set { p.totalKicked = value; } }
+
+        [Category("Stats")]
+        [DisplayName("Number of logins")]
+        public int TimesLogins { get { return p.totalLogins; } set { p.totalLogins = value; } }
+        
+
+        [Category("Status")]
+        [DisplayName("AFK")]
+        public bool AFK { get { return p.IsAfk; } set { DoCmd("sendcmd", "afk"); } }
         
         [Category("Status")]
         [DisplayName("Frozen")]
@@ -101,42 +126,6 @@ namespace MCGalaxy.Gui {
                 Server.ErrorLog(ex);
             }
             return args;
-        }
-        
-        class ColorConverter : StringConverter {
-            public override bool GetStandardValuesSupported(ITypeDescriptorContext context) { return true; }
-            public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) { return true; }
-            
-            public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context) {
-                return new StandardValuesCollection(Formatter.GetColorsList());
-            }
-        }
-        
-        class RankConverter : StringConverter {
-            public override bool GetStandardValuesSupported(ITypeDescriptorContext context) { return true; }
-            public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) { return true; }
-            
-            public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context) {
-                List<string> ranks = new List<string>();
-                foreach (Group g in Group.GroupList) {
-                    if (g.Permission <= LevelPermission.Banned || g.Permission >= LevelPermission.Nobody) continue;
-                    ranks.Add(g.trueName);
-                }
-                return new StandardValuesCollection(ranks);
-            }
-        }
-        
-        class LevelConverter : StringConverter {
-            public override bool GetStandardValuesSupported(ITypeDescriptorContext context) { return true; }
-            public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) { return true; }
-            
-            public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context) {
-                List<string> levels = new List<string>();
-                Level[] loaded = LevelInfo.Loaded.Items;
-                foreach (Level lvl in loaded)
-                    levels.Add(lvl.name);
-                return new StandardValuesCollection(levels);
-            }
         }
     }
 }

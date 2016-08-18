@@ -487,61 +487,20 @@ namespace MCGalaxy.Gui {
             
             PlayersTextBox.AppendTextAndScroll("==" + p.name + "==");
             //Top Stuff
-            curPlayer = p;
-            NameTxtPlayersTab.Text = p.name;
-            MapTxt.Text = p.level.name;
-            StatusTxt.Text = Player.CheckPlayerStatus(p);
-            IPtxt.Text = p.ip;
-            DeathsTxt.Text = p.fallCount.ToString();
-            Blockstxt.Text = p.overallBlocks.ToString();
-            TimesLoggedInTxt.Text = p.totalLogins.ToString();
-            LoggedinForTxt.Text = Convert.ToDateTime(DateTime.Now.Subtract(p.timeLogged).ToString()).ToString("HH:mm:ss");
-            Kickstxt.Text = p.totalKicked.ToString();
-            
             playerProps = new PlayerProperties(p);
             pgPlayers.SelectedObject = playerProps;
             
             //Map
             try {
-                try {
-                    UpdatePlayerMapCombo();
-                } catch { }
-                
-                foreach (Object obj in pl_cmbMap.Items) {
-                    if (LevelInfo.Find(obj.ToString()) == null) continue;
-                    
-                    if (p.level == LevelInfo.Find(obj.ToString()))
-                        pl_cmbMap.SelectedItem = obj;
-                }
+                UpdatePlayerMapCombo();
             } catch { }
         }
 
         void UpdatePlayerMapCombo() {
-            int selected = pl_cmbMap.SelectedIndex;
-            pl_cmbMap.Items.Clear();
-            foreach (Level level in Server.levels) {
-                pl_cmbMap.Items.Add(level.name);
-            }
-            pl_cmbMap.SelectedIndex = selected;
-        }
-
-        void MapBt_Click(object sender, EventArgs e) {
-            if (curPlayer == null || !Player.players.Contains(curPlayer)) {
-                PlayersTextBox.AppendTextAndScroll("No Player Selected"); return;
-            }
-            if (pl_cmbMap.Text.ToLower() == curPlayer.level.name.ToLower()) {
-                PlayersTextBox.AppendTextAndScroll("The player is already on that map"); return;
-            }
-            if (!Server.levels.Contains(LevelInfo.Find(pl_cmbMap.Text))) {
-                PlayersTextBox.AppendTextAndScroll("That map doesn't exist!!"); return;
-            }
-
-            try {
-                Command.all.Find("goto").Use(curPlayer, pl_cmbMap.Text);
-                PlayersTextBox.AppendTextAndScroll("Sent player to " + pl_cmbMap.Text);
-            } catch {
-                PlayersTextBox.AppendTextAndScroll("Something went wrong!!");
-            }
+            // TODO: why not working
+        	pgPlayers.Refresh();
+            if (tabControl1.SelectedTab == tp_Players)
+                Invalidate();
         }
 
         void UndoBt_Click(object sender, EventArgs e) {
@@ -680,9 +639,6 @@ namespace MCGalaxy.Gui {
         }
         void PLayersMessageTxt_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Enter) MessageBt_Click(sender, e);
-        }
-        void MapCombo_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Enter) MapBt_Click(sender, e);
         }
         #endregion
 
