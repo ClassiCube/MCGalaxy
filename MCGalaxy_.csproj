@@ -486,10 +486,10 @@
     <Compile Include="Generator\RealisticGenParams.cs" />
     <Compile Include="Generator\RealisticMapGen.cs" />
     <Compile Include="Generator\SimpleGen.cs" />
-    <Compile Include="Levels\fNbt.cs" />
     <Compile Include="Levels\IO\CwFile.cs" />
     <Compile Include="Levels\IO\DatFile.cs" />
     <Compile Include="Levels\IO\FcmFile.cs" />
+    <Compile Include="Levels\IO\fNbt.cs" />
     <Compile Include="Levels\IO\LvlFile.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />
     <Compile Include="Levels\IO\McfFile.cs" />
@@ -500,7 +500,6 @@
     <Compile Include="Levels\LevelActions.cs" />
     <Compile Include="Levels\LevelEnv.cs" />
     <Compile Include="Levels\LevelInfo.cs" />
-    <Compile Include="Levels\PhysicsArgs.cs" />
     <Compile Include="Levels\Physics\AIPhysics.cs" />
     <Compile Include="Levels\Physics\AirPhysics.cs" />
     <Compile Include="Levels\Physics\BirdPhysics.cs" />
@@ -514,6 +513,7 @@
     <Compile Include="Levels\Physics\HunterPhysics.cs" />
     <Compile Include="Levels\Physics\LeafPhysics.cs" />
     <Compile Include="Levels\Physics\LiquidPhysics.cs" />
+    <Compile Include="Levels\Physics\PhysicsArgs.cs" />
     <Compile Include="Levels\Physics\SimpleLiquidPhysics.cs" />
     <Compile Include="Levels\Physics\RocketPhysics.cs" />
     <Compile Include="Levels\Physics\OtherPhysics.cs" />
@@ -560,6 +560,7 @@
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\Plugin.Events.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
+    <Compile Include="Scripting\MCForgeScripter.cs" />
     <Compile Include="Scripting\Scripting.cs" />
     <Compile Include="Player\Ban.cs" />
     <Compile Include="Levels\BlockDefinitions.cs" />
@@ -623,7 +624,6 @@
     <Compile Include="util\Extensions.cs" />
     <Compile Include="util\Hasher.cs" />
     <Compile Include="util\MathHelper.cs" />
-    <Compile Include="util\MCForgeScripter.cs" />
     <Compile Include="Player\Player.CPE.cs" />
     <Compile Include="Database\PlayerDB.cs" />
   </ItemGroup>
