@@ -24,7 +24,7 @@ namespace MCGalaxy.Util {
 
     public sealed class UndoFileBin : UndoFile {
         
-        protected override string Extension { get { return ".unbin"; } }
+        protected override string Ext { get { return ".unbin"; } }
         const int entrySize = 12;
 
         protected override void SaveUndoData(List<Player.UndoPos> buffer, string path) {
@@ -37,7 +37,7 @@ namespace MCGalaxy.Util {
         
         protected override IEnumerable<Player.UndoPos> GetEntries(Stream s, UndoEntriesArgs args) {
             List<ChunkHeader> list = new List<ChunkHeader>();
-            Player.UndoPos pos = default(Player.UndoPos);
+            Player.UndoPos pos;
             bool super = args.Player == null || args.Player.ircNick != null;
             DateTime start = args.StartRange;
             
@@ -48,6 +48,7 @@ namespace MCGalaxy.Util {
                 bool inRange = chunk.BaseTime.AddTicks(65536 * TimeSpan.TicksPerSecond) >= start;
                 if (!inRange) { args.Stop = true; yield break; }
                 if (!super && !args.Player.level.name.CaselessEq(chunk.LevelName)) continue;
+                pos.mapName = chunk.LevelName;
                 
                 s.Seek(chunk.DataPosition, SeekOrigin.Begin);
                 if (args.Temp == null)
@@ -59,6 +60,7 @@ namespace MCGalaxy.Util {
                     int offset = j * entrySize;
                     DateTime time = chunk.BaseTime.AddTicks(U16(temp, offset + 0) * TimeSpan.TicksPerSecond);
                     if (time < start) { args.Stop = true; yield break; }
+                    pos.timeDelta = (int)time.Subtract(Server.StartTime).TotalSeconds;
                     
                     pos.x = U16(temp, offset + 2);
                     pos.y = U16(temp, offset + 4);

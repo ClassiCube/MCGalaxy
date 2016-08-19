@@ -30,10 +30,15 @@ namespace MCGalaxy.Util {
         public static UndoFile NewFormat = new UndoFileCBin();
         
         protected class UndoEntriesArgs {
-        	public Player Player;
+            public Player Player;
             public byte[] Temp;
             public bool Stop;
             public DateTime StartRange;
+            
+            public UndoEntriesArgs(Player p, DateTime start) {
+                Player = p;
+                StartRange = start;
+            }
         }
         
         protected abstract void SaveUndoData(List<Player.UndoPos> buffer, string path);
@@ -42,7 +47,7 @@ namespace MCGalaxy.Util {
         
         protected abstract IEnumerable<Player.UndoPos> GetEntries(Stream s, UndoEntriesArgs args);
         
-        protected abstract string Extension { get; }
+        protected abstract string Ext { get; }
         
         public static void SaveUndo(Player p) {
             if (p == null || p.UndoBuffer.Count < 1) return;
@@ -59,7 +64,7 @@ namespace MCGalaxy.Util {
                 Directory.CreateDirectory(playerDir);
             
             int numFiles = Directory.GetFiles(playerDir).Length;
-            string path = Path.Combine(playerDir, numFiles + NewFormat.Extension);
+            string path = Path.Combine(playerDir, numFiles + NewFormat.Ext);
             
             UndoCache cache = p.UndoBuffer;
             using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
@@ -89,7 +94,7 @@ namespace MCGalaxy.Util {
                 return;
             string[] files = Directory.GetFiles(path);
             Array.Sort<string>(files, CompareFiles);
-            byte[] temp = null;
+            UndoEntriesArgs args = new UndoFile.UndoEntriesArgs(p, start);
             
             for (int i = files.Length - 1; i >= 0; i--) {
                 path = files[i];
@@ -98,15 +103,18 @@ namespace MCGalaxy.Util {
                     continue;
                 
                 UndoFile format = null;
-                if (path.EndsWith(TxtFormat.Extension)) format = TxtFormat;
-                if (path.EndsWith(BinFormat.Extension)) format = BinFormat;
-                if (path.EndsWith(NewFormat.Extension)) format = NewFormat;
+                if (path.EndsWith(TxtFormat.Ext)) format = TxtFormat;
+                if (path.EndsWith(BinFormat.Ext)) format = BinFormat;
+                if (path.EndsWith(NewFormat.Ext)) format = NewFormat;
                 if (format == null) continue;
                 
-                if (highlight) {
-                    if (!format.HighlightEntry(p, path, ref temp, start)) break;
-                } else {
-                    if (!format.UndoEntry(p, path, marks, ref temp, start)) break;
+                using (Stream s = File.OpenRead(path)) {
+                    if (highlight) {
+                		DoHighlight(s, format, args);
+                    } else {
+                        if (!format.UndoEntry(p, path, marks, ref temp, start)) break;
+                    }
+                    if (args.Stop) break;
                 }
             }
             FoundUser = true;
@@ -122,8 +130,8 @@ namespace MCGalaxy.Util {
             return aNum.CompareTo(bNum);
         }
         
-        protected internal static void UndoBlock(Player pl, Level lvl, Player.UndoPos P, 
-                                        int timeDelta, BufferedBlockSender buffer) {
+        protected internal static void UndoBlock(Player pl, Level lvl, Player.UndoPos P,
+                                                 int timeDelta, BufferedBlockSender buffer) {
             byte lvlTile = lvl.GetTile(P.x, P.y, P.z);
             if (lvlTile == P.newtype || Block.Convert(lvlTile) == Block.water
                 || Block.Convert(lvlTile) == Block.lava || lvlTile == Block.grass) {
@@ -146,22 +154,31 @@ namespace MCGalaxy.Util {
                     if (diffBlock) {
                         buffer.Add(lvl.PosToInt(P.x, P.y, P.z), P.newtype, P.newExtType);
                         buffer.CheckIfSend(false);
-                    }                    
+                    }
                     lvl.SetTile(P.x, P.y, P.z, P.newtype);
                     if (P.newtype == Block.custom_block)
                         lvl.SetExtTile(P.x, P.y, P.z, P.newExtType);
-                }              
+                }
             }
         }
         
-        protected static void HighlightBlock(Player p, Level lvl, byte type, byte newType, 
-                                             ushort x, ushort y, ushort z) {
-            byte block = (newType == Block.air 
+        static void DoHighlight(Stream s, UndoFile format, UndoEntriesArgs args) {
+            BufferedBlockSender buffer = new BufferedBlockSender(args.Player);
+            Level lvl = args.Player.level;
+            
+            foreach (Player.UndoPos P in format.GetEntries(s, args)) {
+                byte type = P.type, newType = P.newtype;
+                byte block = (newType == Block.air
                           || Block.Convert(type) == Block.water || type == Block.waterstill
-                          || Block.Convert(type) == Block.lava || type == Block.lavastill) 
+                          || Block.Convert(type) == Block.lava || type == Block.lavastill)
                 ? Block.red : Block.green;
-            p.SendBlockchange(x, y, z, block);
+                
+                buffer.Add(lvl.PosToInt(P.x, P.y, P.z), block, 0);
+                buffer.CheckIfSend(false);
+            }
+            buffer.CheckIfSend(true);
         }
+        
         
         public static void CreateDefaultDirectories() {
             if (!Directory.Exists(undoDir))
@@ -177,23 +194,27 @@ namespace MCGalaxy.Util {
         
         static void UpgradeFiles(string dir, string name) {
             string path = Path.Combine(dir, name);
-            if (!Directory.Exists(path))
-                return;
+            if (!Directory.Exists(path)) return;
             string[] files = Directory.GetFiles(path);
             List<Player.UndoPos> buffer = new List<Player.UndoPos>();
+            UndoEntriesArgs args = new UndoEntriesArgs(null, DateTime.MinValue);
             
             for (int i = 0; i < files.Length; i++) {
                 path = files[i];
-                if (path.EndsWith(BinFormat.Extension)) {
-                    buffer.Clear();
-                    BinFormat.ReadUndoData(buffer, path);
-                } else if (path.EndsWith(TxtFormat.Extension)) {
-                    buffer.Clear();
-                    TxtFormat.ReadUndoData(buffer, path);
-                }
+                if (!path.EndsWith(BinFormat.Ext) && !path.EndsWith(TxtFormat.Ext)) continue;
                 
-                string newPath = Path.ChangeExtension(path, NewFormat.Extension);
-                NewFormat.SaveUndoData(buffer, newPath);
+                IEnumerable<Player.UndoPos> data = null;
+                using (FileStream s = File.OpenRead(path)) {
+                    data = path.EndsWith(BinFormat.Ext) 
+                        ? BinFormat.GetEntries(s, args)
+                        : TxtFormat.GetEntries(s, args);
+                    
+                    foreach (Player.UndoPos pos in data)
+                        buffer.Add(pos);
+                    buffer.Reverse();
+                    string newPath = Path.ChangeExtension(path, NewFormat.Ext);
+                    NewFormat.SaveUndoData(buffer, newPath);
+                }
                 File.Delete(path);
             }
         }

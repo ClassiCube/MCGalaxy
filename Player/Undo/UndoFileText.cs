@@ -24,7 +24,7 @@ namespace MCGalaxy.Util {
 
     public sealed class UndoFileText : UndoFile {
         
-        protected override string Extension { get { return ".undo"; } }
+        protected override string Ext { get { return ".undo"; } }
         
         protected override void SaveUndoData(List<Player.UndoPos> buffer, string path) {
             throw new NotSupportedException("Text undo files have been deprecated");
@@ -35,7 +35,8 @@ namespace MCGalaxy.Util {
         }
         
         protected override IEnumerable<Player.UndoPos> GetEntries(Stream s, UndoEntriesArgs args) {
-            Player.UndoPos pos = default(Player.UndoPos);
+            Player.UndoPos pos;
+            pos.newExtType = 0; pos.extType = 0;
             string[] lines = new StreamReader(s).ReadToEnd().Split(' ');
             Player p = args.Player;
             bool super = p == null || p.ircNick != null;
@@ -47,6 +48,7 @@ namespace MCGalaxy.Util {
                 string timeRaw = lines[(i * 7) - 3].Replace('&', ' ');
                 DateTime time = DateTime.Parse(timeRaw, CultureInfo.InvariantCulture);
                 if (time < start) { args.Stop = true; yield break; }
+                pos.timeDelta = (int)time.Subtract(Server.StartTimeLocal).TotalSeconds;
                 
                 string map = lines[(i * 7) - 7];
                 if (!super && !p.level.name.CaselessEq(map)) continue;

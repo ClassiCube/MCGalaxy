@@ -25,7 +25,7 @@ namespace MCGalaxy.Util {
 
     public sealed class UndoFileCBin : UndoFile {
         
-        protected override string Extension { get { return ".uncbin"; } }
+        protected override string Ext { get { return ".uncbin"; } }
         const int entrySize = 8;
 
         protected override void SaveUndoData(List<Player.UndoPos> buffer, string path) {
@@ -100,7 +100,7 @@ namespace MCGalaxy.Util {
 
         protected override IEnumerable<Player.UndoPos> GetEntries(Stream s, UndoEntriesArgs args) {
             List<ChunkHeader> list = new List<ChunkHeader>();
-            Player.UndoPos pos = default(Player.UndoPos);
+            Player.UndoPos pos;
             UndoCacheItem item = default(UndoCacheItem);
             bool super = args.Player == null || args.Player.ircNick != null;
             DateTime start = args.StartRange;            
@@ -125,6 +125,7 @@ namespace MCGalaxy.Util {
                     item.Flags = U16(temp, offset + 0);
                     DateTime time = chunk.BaseTime.AddTicks((item.Flags & 0x3FFF) * TimeSpan.TicksPerSecond);
                     if (time < start) { args.Stop = true; yield break; }
+                    pos.timeDelta = (int)time.Subtract(Server.StartTime).TotalSeconds;
                     
                     int index = I32(temp, offset + 2);
                     pos.x = (ushort)(index % chunk.Width);
