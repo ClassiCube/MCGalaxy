@@ -62,8 +62,8 @@ namespace MCGalaxy {
         
         public string FindMatches(Player p, string name, string type, out int matches) {
             lock (locker) {
-                return Extensions.FindMatches<string>(p, name, out matches, players,
-                                                      n => true, n => n, type, 20);
+                return Utils.FindMatches<string>(p, name, out matches, players,
+        		                                 n => true, n => n, type, 20);
             }
         }
         

@@ -259,7 +259,8 @@ namespace MCGalaxy {
             
             if (Server.verifyadmins && group.Permission >= Server.verifyadminsrank)
                 adminpen = true;
-            parseEmotes = !Server.noEmotes.Contains(name);
+            if (Server.noEmotes.Contains(name))
+                parseEmotes = !Server.parseSmiley;
 
             hidden = group.CanExecute("hide") && Server.hidden.Contains(name);
             if (hidden) SendMessage("&8Reminder: You are still hidden.");

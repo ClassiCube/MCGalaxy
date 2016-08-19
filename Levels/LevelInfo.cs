@@ -46,8 +46,8 @@ namespace MCGalaxy {
         }
         
         public static Level FindMatches(Player pl, string name, out int matches) {
-            return Extensions.FindMatches<Level>(pl, name, out matches, LevelInfo.Loaded.Items,
-                                             l => true, l => l.name, "loaded levels");
+            return Utils.FindMatches<Level>(pl, name, out matches, LevelInfo.Loaded.Items,
+        	                                l => true, l => l.name, "loaded levels");
         }
         
         public static string FindMapMatches(Player pl, string name) {
@@ -61,8 +61,8 @@ namespace MCGalaxy {
             }
             
             var files = Directory.EnumerateFiles("levels", "*.lvl");
-            string map = Extensions.FindMatches<string>(pl, name, out matches, files,
-                                                        l => true, l => Path.GetFileNameWithoutExtension(l), "levels");
+            string map = Utils.FindMatches<string>(pl, name, out matches, files,
+                                                   l => true, l => Path.GetFileNameWithoutExtension(l), "levels");
             if (map != null) 
                 map = Path.GetFileNameWithoutExtension(map);
             return map;

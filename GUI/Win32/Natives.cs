@@ -19,7 +19,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace MCGalaxy.Gui.Utils {
+namespace MCGalaxy.Gui.Native {
 
     internal class Natives {
 

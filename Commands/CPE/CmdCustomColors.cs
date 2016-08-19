@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.CPE {
             
             char fallback;
             if (!CheckName(p, args[2]) || !CheckFallback(p, args[3], out fallback)
-                || !Extensions.CheckHex(p, ref args[4])) return;
+                || !Utils.CheckHex(p, ref args[4])) return;
             
             CustomColor col = default(CustomColor);
             col.Code = code; col.Fallback = fallback; col.A = 255;
@@ -148,7 +148,7 @@ namespace MCGalaxy.Commands.CPE {
                     col.Fallback = fallback; break;
                 case "hex":
                 case "color":
-                    if (!Extensions.CheckHex(p, ref args[3])) return;
+                    if (!Utils.CheckHex(p, ref args[3])) return;
                     Color rgb = ColorTranslator.FromHtml("#" + args[3]);
                     col.R = rgb.R; col.G = rgb.G; col.B = rgb.B;
                     break;

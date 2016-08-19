@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); }
             p.parseEmotes = !p.parseEmotes;
             
-            if (p.parseEmotes) Server.noEmotes.Remove(p.name);
+            bool addToList = p.parseEmotes != Server.parseSmiley;
+            if (!addToList) Server.noEmotes.Remove(p.name);
             else Server.noEmotes.AddOrReplace(p.name);
             Server.noEmotes.Save();           
             Player.Message(p, "Emote parsing is {0}.", p.parseEmotes ? "enabled" : "disabled");

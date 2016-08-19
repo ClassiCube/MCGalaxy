@@ -120,6 +120,7 @@
     <Compile Include="Chat\EmotesHandler.cs" />
     <Compile Include="Chat\FullCP437Handler.cs" />
     <Compile Include="Chat\ChatTokens.cs" />
+    <Compile Include="Chat\LineWrapper.cs" />
     <Compile Include="Commands\Bots\CmdBotAdd.cs" />
     <Compile Include="Commands\Bots\CmdBotAI.cs" />
     <Compile Include="Commands\Bots\CmdBotRemove.cs" />
@@ -595,9 +596,9 @@
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\App.cs" />
     <Compile Include="util\Formatter.cs" />
-    <Compile Include="util\LineWrapper.cs" />
     <Compile Include="util\SparseBitSet.cs" />
     <Compile Include="util\TimeUtils.cs" />
+    <Compile Include="util\Utils.cs" />
     <Compile Include="util\Vectors.cs" />
     <Compile Include="util\VolatileArray.cs" />
     <Compile Include="sharkbite.thresher\ChannelModeInfo.cs" />
@@ -623,7 +624,6 @@
     <Compile Include="properties\AssemblyInfo.cs" />
     <Compile Include="util\Extensions.cs" />
     <Compile Include="util\Hasher.cs" />
-    <Compile Include="util\MathHelper.cs" />
     <Compile Include="Player\Player.CPE.cs" />
     <Compile Include="Database\PlayerDB.cs" />
   </ItemGroup>

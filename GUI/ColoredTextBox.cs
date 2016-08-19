@@ -22,8 +22,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-
-using MCGalaxy.Gui.Utils;
+using MCGalaxy.Gui.Native;
 
 //MCGalaxy 6 Preview :D
 

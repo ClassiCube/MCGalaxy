@@ -62,7 +62,7 @@ namespace MCGalaxy.Games
                                 sendAfkMain = bool.Parse(value);
                                 break;
                             case "vote-count":
-                                voteCount = (byte)MathHelper.Clamp(decimal.Parse(value), 2, 10);
+                                voteCount = (byte)Utils.Clamp(decimal.Parse(value), 2, 10);
                                 break;
                             case "vote-time":
                                 voteTime = double.Parse(value);
@@ -124,19 +124,19 @@ namespace MCGalaxy.Games
                         switch (line.Substring(0, line.IndexOf(" = ")).ToLower())
                         {
                             case "fast-chance":
-                                settings.fast = (byte)MathHelper.Clamp(decimal.Parse(value), 0, 100);
+                                settings.fast = (byte)Utils.Clamp(decimal.Parse(value), 0, 100);
                                 break;
                             case "killer-chance":
-                                settings.killer = (byte)MathHelper.Clamp(decimal.Parse(value), 0, 100);
+                                settings.killer = (byte)Utils.Clamp(decimal.Parse(value), 0, 100);
                                 break;
                             case "destroy-chance":
-                                settings.destroy = (byte)MathHelper.Clamp(decimal.Parse(value), 0, 100);
+                                settings.destroy = (byte)Utils.Clamp(decimal.Parse(value), 0, 100);
                                 break;
                             case "water-chance":
-                                settings.water = (byte)MathHelper.Clamp(decimal.Parse(value), 0, 100);
+                                settings.water = (byte)Utils.Clamp(decimal.Parse(value), 0, 100);
                                 break;
                             case "layer-chance":
-                                settings.layer = (byte)MathHelper.Clamp(decimal.Parse(value), 0, 100);
+                                settings.layer = (byte)Utils.Clamp(decimal.Parse(value), 0, 100);
                                 break;
                             case "layer-height":
                                 settings.layerHeight = int.Parse(value);

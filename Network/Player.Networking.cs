@@ -262,7 +262,7 @@ namespace MCGalaxy {
             if (colorParse) ParseColors(sb);
             
             ChatTokens.Apply(sb, this);
-            if (Server.parseSmiley && parseEmotes) {
+            if (parseEmotes) {
                 sb.Replace(":)", "(darksmile)");
                 sb.Replace(":D", "(smile)");
                 sb.Replace("<3", "(heart)");

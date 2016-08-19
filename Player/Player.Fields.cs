@@ -128,7 +128,7 @@ namespace MCGalaxy {
         public bool deleteMode = false;
         public bool ignorePermission = false;
         public bool ignoreGrief = false;
-        public bool parseEmotes = true;
+        public bool parseEmotes = Server.parseSmiley;
         public bool opchat = false;
         public bool adminchat = false;
         public bool onWhitelist = false;

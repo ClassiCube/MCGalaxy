@@ -57,9 +57,9 @@ namespace MCGalaxy {
                 Player.Message(pl, "\"{0}\" is not a valid player name.", name); return null;
             }
             
-            return Extensions.FindMatches<Player>(pl, name, out matches, Online.Items,
-                                                  p => Entities.CanSee(pl, p) || !onlyCanSee,
-                                                  p => p.name, "online players");
+            return Utils.FindMatches<Player>(pl, name, out matches, Online.Items,
+                                             p => Entities.CanSee(pl, p) || !onlyCanSee,
+                                             p => p.name, "online players");
         }
         
         /// <summary> Finds the online player whose name caselessly exactly matches the given name. </summary>
@@ -125,8 +125,8 @@ namespace MCGalaxy {
         public static PlayerData FindOfflineMatches(Player p, string name) {
             using (DataTable results = QueryMulti(name, "*")) {
                 int matches = 0;
-                DataRow row = Extensions.FindMatches<DataRow>(p, name, out matches, results.Rows,
-                                                              r => true, r => r["Name"].ToString(), "players", 20);
+                DataRow row = Utils.FindMatches<DataRow>(p, name, out matches, results.Rows,
+                                                         r => true, r => r["Name"].ToString(), "players", 20);
                 return row == null ? null : PlayerData.Fill(row);
             }
         }
@@ -134,8 +134,8 @@ namespace MCGalaxy {
         public static string FindOfflineNameMatches(Player p, string name) {
             using (DataTable results = QueryMulti(name, "Name")) {
                 int matches = 0;
-                DataRow row = Extensions.FindMatches<DataRow>(p, name, out matches, results.Rows,
-                                                              r => true, r => r["Name"].ToString(), "players", 20);
+                DataRow row = Utils.FindMatches<DataRow>(p, name, out matches, results.Rows,
+                                                         r => true, r => r["Name"].ToString(), "players", 20);
                 return row == null ? null : row["Name"].ToString();
             }
         }
@@ -143,8 +143,8 @@ namespace MCGalaxy {
         public static string FindOfflineIPMatches(Player p, string name) {
             using (DataTable results = QueryMulti(name, "Name, IP")) {
                 int matches = 0;
-                DataRow row = Extensions.FindMatches<DataRow>(p, name, out matches, results.Rows,
-                                                              r => true, r => r["Name"].ToString(), "players", 20);
+                DataRow row = Utils.FindMatches<DataRow>(p, name, out matches, results.Rows,
+                                                         r => true, r => r["Name"].ToString(), "players", 20);
                 return row == null ? null : row["IP"].ToString();
             }
         }
