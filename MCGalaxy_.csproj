@@ -311,7 +311,7 @@
     <Compile Include="Commands\Moderation\CmdPatrol.cs" />
     <Compile Include="Commands\Moderation\CmdPlayerEditDB.cs" />
     <Compile Include="Commands\Moderation\CmdPossess.cs" />
-    <Compile Include="Commands\Moderation\CmdResetBot.cs" />
+    <Compile Include="Commands\Moderation\CmdIRCBot.cs" />
     <Compile Include="Commands\Moderation\CmdRestart.cs" />
     <Compile Include="Commands\Moderation\CmdRestoreSelection.cs" />
     <Compile Include="Commands\Moderation\CmdReview.cs" />

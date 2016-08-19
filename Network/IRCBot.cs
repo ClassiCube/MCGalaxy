@@ -42,9 +42,7 @@ namespace MCGalaxy {
         
         public IRCBot() {
             UpdateState();
-            if (!Server.irc) return;
-            connection = new Connection(new UTF8Encoding(false), args);
-            LoadBannedCommands();
+            InitConnectionState();
         }
 
         public void Say(string message, bool opchat = false, bool color = true) {
@@ -63,15 +61,22 @@ namespace MCGalaxy {
         }
         
         public void Reset() {
-            if (!Server.irc) return;
             reset = true;
             retries = 0;
             Disconnect("IRC Bot resetting...");
+            if (!Server.irc) return;
             Connect();
         }
         
+        void InitConnectionState() {
+            if (!Server.irc || connection != null) return;
+            connection = new Connection(new UTF8Encoding(false), args);
+            LoadBannedCommands();
+        }
+        
         public void Connect() {
-            if (!Server.irc || Server.shuttingDown) return;
+            if (!Server.irc || IsConnected() || Server.shuttingDown) return;
+            InitConnectionState();
             if (!hookedEvents) HookEvents();
             
             Server.s.Log("Connecting to IRC...");
