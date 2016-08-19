@@ -64,6 +64,11 @@ namespace MCGalaxy.Util {
             using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
                 NewFormat.SaveUndoData(cache, path);
             }
+
+            using (IDisposable locker = cache.ClearLock.AccquireWriteLock()) {
+            	lock (cache.AddLock)
+            	    cache.Clear();
+            }
         }
         
         public static void UndoPlayer(Player p, string target, Vec3S32[] marks, DateTime start, ref bool FoundUser) {

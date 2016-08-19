@@ -39,25 +39,30 @@ namespace MCGalaxy.Util {
         /// <summary> Used to sychronise clearing an undo cache. </summary>
         public ReaderWriterLockSlim ClearLock = new ReaderWriterLockSlim();
         
+        /// <summary> Used to sychronise adding to an undo cache. </summary>
+        public object AddLock = new object();
+        
         public const int TimeDeltaMax = (1 << 13) - 1;
         
         /// <summary> Appends an item to the cache. </summary>
         public void Add(Level lvl, Player.UndoPos item) {
-            DateTime time = Server.StartTime.AddTicks(item.timeDelta * TimeSpan.TicksPerSecond);
-            if (Tail == null) {
-                Tail = UndoCacheNode.Make(lvl, time); Head = Tail;
-            }
+            lock (AddLock) {
+                DateTime time = Server.StartTime.AddTicks(item.timeDelta * TimeSpan.TicksPerSecond);
+                if (Tail == null) {
+                    Tail = UndoCacheNode.Make(lvl, time); Head = Tail;
+                }
 
-            if (lvl.name != Tail.MapName || lvl.Width != Tail.Width || lvl.Height != Tail.Height ||
-                lvl.Length != Tail.Length || Math.Abs((time - Tail.BaseTime).TotalSeconds) > TimeDeltaMax) {
-                UndoCacheNode node = UndoCacheNode.Make(lvl, time);
-                Tail.Next = node; node.Prev = Tail;
-                Tail = node;
+                if (lvl.name != Tail.MapName || lvl.Width != Tail.Width || lvl.Height != Tail.Height ||
+                    lvl.Length != Tail.Length || Math.Abs((time - Tail.BaseTime).TotalSeconds) > TimeDeltaMax) {
+                    UndoCacheNode node = UndoCacheNode.Make(lvl, time);
+                    Tail.Next = node; node.Prev = Tail;
+                    Tail = node;
+                }
+                
+                short timeDiff = (short)(time - Tail.BaseTime).TotalSeconds;
+                Tail.Items.Add(UndoCacheItem.Make(Tail, timeDiff, ref item));
+                Count++;
             }
-            
-            short timeDiff = (short)(time - Tail.BaseTime).TotalSeconds;
-            Tail.Items.Add(UndoCacheItem.Make(Tail, timeDiff, ref item));
-            Count++;
         }
         
         /// <summary> Removes all items from the cache and resets the state to default. </summary>
@@ -81,7 +86,7 @@ namespace MCGalaxy.Util {
         public int Width, Height, Length;
         public DateTime BaseTime;
         
-        public UndoCacheNode Prev;
+        public UndoCacheNode Prev, Next;
         public List<UndoCacheItem> Items = new List<UndoCacheItem>();
         
         public static UndoCacheNode Make(Level lvl, DateTime time) {

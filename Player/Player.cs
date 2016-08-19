@@ -123,14 +123,9 @@ namespace MCGalaxy {
                 ecos.money = money;
                 Economy.UpdateEcoStats(ecos);
             }
+            
             Server.zombie.SaveZombieStats(this);
-
-            try {
-                SaveUndo(this);
-            } catch (Exception e) {
-                Server.s.Log("Error saving undo data.");
-                Server.ErrorLog(e);
-            }
+            SaveUndo(this);
         }
 
         #region == GLOBAL MESSAGES ==

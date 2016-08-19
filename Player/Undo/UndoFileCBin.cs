@@ -70,12 +70,11 @@ namespace MCGalaxy.Util {
         }
         
         protected override void SaveUndoData(UndoCache buffer, string path) {
-            // TODO: should be writing Head first??
             using (FileStream fs = File.Create(path)) {
                 BinaryWriter w = new BinaryWriter(fs);
                 long entriesPos = 0;
                 ChunkHeader last = default(ChunkHeader);
-                UndoCacheNode node = buffer.Tail;
+                UndoCacheNode node = buffer.Head;
                 
                 while (node != null) {
                     List<UndoCacheItem> items = node.Items;
@@ -95,7 +94,7 @@ namespace MCGalaxy.Util {
                     }
                     if (last.Entries > 0)
                         WriteChunkEntries(w, last.Entries, entriesPos);
-                    node = node.Prev;
+                    node = node.Next;
                 }
             }
         }

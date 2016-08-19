@@ -74,7 +74,6 @@ namespace MCGalaxy.Drawing.Ops {
                 buffer.CheckIfSend(true);
                 node = node.Prev;
             }
-            return;
         }
     }
 }
