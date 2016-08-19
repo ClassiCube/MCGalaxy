@@ -18,12 +18,13 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace MCGalaxy.Util {
 
     public sealed class UndoCache {
-        
-        /// <summary> The oldest/first node in the cache. </summary>
+
+        /// <summary> The olded/first node in the cache. </summary>
         public UndoCacheNode Head;
         
         /// <summary> The newest/last node in the cache. </summary>
@@ -35,14 +36,16 @@ namespace MCGalaxy.Util {
         /// <summary> Last time this undo buffer was cleared. </summary>
         public DateTime LastClear;
         
+        /// <summary> Used to sychronise clearing an undo cache. </summary>
+        public ReaderWriterLockSlim ClearLock = new ReaderWriterLockSlim();
+        
         public const int TimeDeltaMax = (1 << 13) - 1;
         
         /// <summary> Appends an item to the cache. </summary>
         public void Add(Level lvl, Player.UndoPos item) {
             DateTime time = Server.StartTime.AddTicks(item.timeDelta * TimeSpan.TicksPerSecond);
-            if (Head == null) {
-                Head = UndoCacheNode.Make(lvl, time);
-                Tail = Head;
+            if (Tail == null) {
+                Tail = UndoCacheNode.Make(lvl, time); Head = Tail;
             }
 
             if (lvl.name != Tail.MapName || lvl.Width != Tail.Width || lvl.Height != Tail.Height ||
@@ -60,15 +63,15 @@ namespace MCGalaxy.Util {
         /// <summary> Removes all items from the cache and resets the state to default. </summary>
         public void Clear() {
             Count = 0;
-            if( Head == null ) return;
+            if (Tail == null) return;
             LastClear = DateTime.UtcNow;
             
-            UndoCacheNode node = Head;
-            while( node != null ) {
+            UndoCacheNode node = Tail;
+            while (node != null) {
                 node.Items = null;
-                node = node.Next;
+                node = node.Prev;
             }
-            Head = null; Tail = null;
+            Tail = null; Head = null;
         }
     }
     
@@ -78,7 +81,7 @@ namespace MCGalaxy.Util {
         public int Width, Height, Length;
         public DateTime BaseTime;
         
-        public UndoCacheNode Prev, Next;
+        public UndoCacheNode Prev;
         public List<UndoCacheItem> Items = new List<UndoCacheItem>();
         
         public static UndoCacheNode Make(Level lvl, DateTime time) {

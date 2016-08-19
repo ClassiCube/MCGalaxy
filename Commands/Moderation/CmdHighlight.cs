@@ -53,7 +53,10 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.Find(name);
             if (who != null) {
                 FoundUser = true;
-                PerformHighlight(p, seconds, who.UndoBuffer);
+                UndoCache cache = who.UndoBuffer;
+                using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
+                    HighlightBlocks(p, seconds, cache);
+                }
             }
 
             DateTime start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
@@ -66,7 +69,7 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        static void PerformHighlight(Player p, long seconds, UndoCache cache) {
+        static void HighlightBlocks(Player p, long seconds, UndoCache cache) {
             UndoCacheNode node = cache.Tail;
             if (node == null) return;
             

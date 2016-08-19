@@ -70,6 +70,7 @@ namespace MCGalaxy.Util {
         }
         
         protected override void SaveUndoData(UndoCache buffer, string path) {
+            // TODO: should be writing Head first??
             using (FileStream fs = File.Create(path)) {
                 BinaryWriter w = new BinaryWriter(fs);
                 long entriesPos = 0;

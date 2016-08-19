@@ -23,7 +23,7 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Drawing.Ops {
     
-    public class RedoSelfDrawOp : DrawOp {        
+    public class RedoSelfDrawOp : DrawOp {
         public override string Name { get { return "RedoSelf"; } }
         
         /// <summary> Point in time that the /undo should go backwards up to. </summary>
@@ -36,12 +36,19 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             UndoCache cache = p.UndoBuffer;
-            UndoCacheNode node = cache.Tail;
-            if (node == null) yield break;
-            int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
+            using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
+                RedoBlocks(p);
+            }
+            yield break;
+        }
+        
+        void RedoBlocks(Player p) {
+            UndoCache cache = p.UndoBuffer;
+            UndoCacheNode node = p.UndoBuffer.Tail;
+            if (node == null) return;
             
             while (node != null) {
-                lvl = LevelInfo.FindExact(node.MapName);
+                Level lvl = LevelInfo.FindExact(node.MapName);
                 if (lvl == null || (p.level != null && !p.level.name.CaselessEq(lvl.name))) {
                     node = node.Prev; continue;
                 }
@@ -55,7 +62,7 @@ namespace MCGalaxy.Drawing.Ops {
                     
                     DateTime time = node.BaseTime.AddTicks(item.TimeDelta * TimeSpan.TicksPerSecond);
                     if (time > End) continue;
-                    if (time < Start) { buffer.CheckIfSend(true); yield break; }
+                    if (time < Start) { buffer.CheckIfSend(true); return; }
                     
                     byte tile, extTile;
                     item.GetBlock(out tile, out extTile);
@@ -67,7 +74,7 @@ namespace MCGalaxy.Drawing.Ops {
                 buffer.CheckIfSend(true);
                 node = node.Prev;
             }
-            yield break;
+            return;
         }
     }
 }

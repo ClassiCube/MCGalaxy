@@ -42,14 +42,18 @@ namespace MCGalaxy.Drawing.Ops {
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-            PerformUndo(p, ref saveLevel);
+            UndoCache cache = p.UndoBuffer;
+            using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
+                UndoBlocks(p, ref saveLevel);
+            }
+            
             bool foundUser = false;
             Vec3S32[] bounds = { Min, Max };
             UndoFile.UndoPlayer(p, who.name.ToLower(), bounds, Start, ref foundUser);
             yield break;
         }
         
-        void PerformUndo(Player p, ref Level saveLvl) {
+        void UndoBlocks(Player p, ref Level saveLvl) {
             UndoCache cache = who.UndoBuffer;
             UndoCacheNode node = cache.Tail;
             if (node == null) return;

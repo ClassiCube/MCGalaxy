@@ -68,7 +68,7 @@ namespace MCGalaxy.Gui {
 
             UpdateListTimer.Elapsed += delegate {
                 try {
-                    UpdateClientList(Player.players);
+                    UpdateClientList(null);
                     UpdateMapList();
                 }
                 catch { } // needed for slower computers

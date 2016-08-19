@@ -56,7 +56,7 @@ namespace fNbt {
         }
         byte[] bytes = ZeroArray;
 
-        public new byte this[int tagIndex] {
+        public byte this[int tagIndex] {
             get { return Value[tagIndex]; }
             set { Value[tagIndex] = value; }
         }
@@ -153,7 +153,7 @@ namespace fNbt {
         public override NbtTagType TagType { get { return NbtTagType.IntArray; } }
         public int[] Value { get; set; }
 
-        public new int this[int tagIndex] {
+        public int this[int tagIndex] {
             get { return Value[tagIndex]; }
             set { Value[tagIndex] = value; }
         }
