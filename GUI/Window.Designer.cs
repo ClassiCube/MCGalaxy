@@ -50,52 +50,33 @@ namespace MCGalaxy.Gui
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Window));
-            this.mapsStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.physicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.physicsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.finiteModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.randomFlowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.edgeWaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.growingGrassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.treeGrowingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.leafDecayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.autpPhysicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.unloadToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadOngotoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.miscToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.animalAIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.survivalDeathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.killerBlocksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.instantBuildingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rPChatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gunsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.actiondToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.unloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.moveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.playerStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.whoisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.kickToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.banToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.voiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clonesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.promoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.demoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.iconContext = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.openConsole = new System.Windows.Forms.ToolStripMenuItem();
-            this.shutdownServer = new System.Windows.Forms.ToolStripMenuItem();
-            this.restartServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMap = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsMap_physicsMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMap_physics0 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMap_physics1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMap_physics2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMap_physics3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMap_physics4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMap_physics5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMap_actionsMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMap_Save = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMap_Reload = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMap_Unload = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMap_moveAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMap_separator = new System.Windows.Forms.ToolStripSeparator();
+            this.tsMap_info = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlayer = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsPlayer_whois = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlayer_kick = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlayer_ban = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlayer_voice = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlayer_clones = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlayer_promote = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlayer_demote = new System.Windows.Forms.ToolStripMenuItem();
+            this.icon_context = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.icon_openConsole = new System.Windows.Forms.ToolStripMenuItem();
+            this.icon_shutdown = new System.Windows.Forms.ToolStripMenuItem();
+            this.icon_restart = new System.Windows.Forms.ToolStripMenuItem();
             this.main_btnProps = new System.Windows.Forms.Button();
             this.main_btnClose = new System.Windows.Forms.Button();
             this.main_btnRestart = new System.Windows.Forms.Button();
@@ -117,67 +98,67 @@ namespace MCGalaxy.Gui
             this.main_btnSaveAll = new System.Windows.Forms.Button();
             this.main_Maps = new System.Windows.Forms.DataGridView();
             this.main_txtLog = new MCGalaxy.Gui.Components.ColoredTextBox();
-            this.txtLogMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.nightModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.colorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dateStampToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.autoScrollToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.copySelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsLog_Menu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsLog_night = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsLog_Colored = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsLog_dateStamp = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsLog_autoScroll = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsLog_separator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsPlayer_copySelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsLog_copyAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsLog_separator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsLog_clear = new System.Windows.Forms.ToolStripMenuItem();
             this.main_txtInput = new System.Windows.Forms.TextBox();
             this.main_txtUrl = new System.Windows.Forms.TextBox();
             this.main_Players = new System.Windows.Forms.DataGridView();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabs = new System.Windows.Forms.TabControl();
             this.tp_Maps = new System.Windows.Forms.TabPage();
-            this.gbMap_Props = new System.Windows.Forms.GroupBox();
-            this.pgMaps = new System.Windows.Forms.PropertyGrid();
-            this.gbMap_Lded = new System.Windows.Forms.GroupBox();
-            this.lbMap_Lded = new System.Windows.Forms.ListBox();
-            this.gbMap_Unld = new System.Windows.Forms.GroupBox();
-            this.btnMap_Load = new System.Windows.Forms.Button();
-            this.lbMap_Unld = new System.Windows.Forms.ListBox();
-            this.gbMap_New = new System.Windows.Forms.GroupBox();
-            this.btnMap_Gen = new System.Windows.Forms.Button();
-            this.lblMap_Type = new System.Windows.Forms.Label();
-            this.lblMap_Seed = new System.Windows.Forms.Label();
-            this.lblMap_Z = new System.Windows.Forms.Label();
-            this.lblMap_X = new System.Windows.Forms.Label();
-            this.lblMap_Y = new System.Windows.Forms.Label();
-            this.txtMap_Seed = new System.Windows.Forms.TextBox();
-            this.cmbMap_Type = new System.Windows.Forms.ComboBox();
-            this.cmbMap_Z = new System.Windows.Forms.ComboBox();
-            this.cmbMap_Y = new System.Windows.Forms.ComboBox();
-            this.cmbMap_X = new System.Windows.Forms.ComboBox();
-            this.lblMap_Name = new System.Windows.Forms.Label();
-            this.txtMap_Name = new System.Windows.Forms.TextBox();
+            this.map_gbProps = new System.Windows.Forms.GroupBox();
+            this.map_pgProps = new System.Windows.Forms.PropertyGrid();
+            this.map_gbLoaded = new System.Windows.Forms.GroupBox();
+            this.map_lbLoaded = new System.Windows.Forms.ListBox();
+            this.map_gbUnloaded = new System.Windows.Forms.GroupBox();
+            this.map_btnLoad = new System.Windows.Forms.Button();
+            this.map_lbUnloaded = new System.Windows.Forms.ListBox();
+            this.map_gbNew = new System.Windows.Forms.GroupBox();
+            this.map_btnGen = new System.Windows.Forms.Button();
+            this.map_lblType = new System.Windows.Forms.Label();
+            this.map_lblSeed = new System.Windows.Forms.Label();
+            this.map_lblZ = new System.Windows.Forms.Label();
+            this.map_lblX = new System.Windows.Forms.Label();
+            this.map_lblY = new System.Windows.Forms.Label();
+            this.map_txtSeed = new System.Windows.Forms.TextBox();
+            this.map_cmbType = new System.Windows.Forms.ComboBox();
+            this.map_cmbZ = new System.Windows.Forms.ComboBox();
+            this.map_cmbY = new System.Windows.Forms.ComboBox();
+            this.map_cmbX = new System.Windows.Forms.ComboBox();
+            this.map_lblName = new System.Windows.Forms.Label();
+            this.map_txtName = new System.Windows.Forms.TextBox();
             this.tp_Players = new System.Windows.Forms.TabPage();
             this.pl_gbProps = new System.Windows.Forms.GroupBox();
             this.pl_pgProps = new System.Windows.Forms.PropertyGrid();
             this.pl_gbOther = new System.Windows.Forms.GroupBox();
             this.pl_txtImpersonate = new System.Windows.Forms.TextBox();
-            this.pl_txtUndo = new System.Windows.Forms.TextBox();
             this.pl_btnImpersonate = new System.Windows.Forms.Button();
             this.pl_txtMessage = new System.Windows.Forms.TextBox();
             this.pl_btnMessage = new System.Windows.Forms.Button();
-            this.pl_btnUndo = new System.Windows.Forms.Button();
             this.pl_gbActions = new System.Windows.Forms.GroupBox();
             this.pl_btnSpawn = new System.Windows.Forms.Button();
+            this.pl_txtUndo = new System.Windows.Forms.TextBox();
             this.pl_btnWarn = new System.Windows.Forms.Button();
             this.pl_btnRules = new System.Windows.Forms.Button();
             this.pl_btnKick = new System.Windows.Forms.Button();
             this.pl_btnBanIP = new System.Windows.Forms.Button();
+            this.pl_btnUndo = new System.Windows.Forms.Button();
             this.pl_btnSlap = new System.Windows.Forms.Button();
             this.pl_btnBan = new System.Windows.Forms.Button();
             this.pl_btnKill = new System.Windows.Forms.Button();
             this.pl_statusBox = new MCGalaxy.Gui.AutoScrollTextBox();
             this.pl_listBox = new System.Windows.Forms.ListBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.mapsStrip.SuspendLayout();
-            this.playerStrip.SuspendLayout();
-            this.iconContext.SuspendLayout();
+            this.tsMap.SuspendLayout();
+            this.tsPlayer.SuspendLayout();
+            this.icon_context.SuspendLayout();
             this.logs_tp.SuspendLayout();
             this.logs_tab.SuspendLayout();
             this.logs_tabErr.SuspendLayout();
@@ -186,379 +167,227 @@ namespace MCGalaxy.Gui
             this.tabLog_Chg.SuspendLayout();
             this.tp_Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.main_Maps)).BeginInit();
-            this.txtLogMenuStrip.SuspendLayout();
+            this.tsLog_Menu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.main_Players)).BeginInit();
-            this.tabControl1.SuspendLayout();
+            this.tabs.SuspendLayout();
             this.tp_Maps.SuspendLayout();
-            this.gbMap_Props.SuspendLayout();
-            this.gbMap_Lded.SuspendLayout();
-            this.gbMap_Unld.SuspendLayout();
-            this.gbMap_New.SuspendLayout();
+            this.map_gbProps.SuspendLayout();
+            this.map_gbLoaded.SuspendLayout();
+            this.map_gbUnloaded.SuspendLayout();
+            this.map_gbNew.SuspendLayout();
             this.tp_Players.SuspendLayout();
             this.pl_gbProps.SuspendLayout();
             this.pl_gbOther.SuspendLayout();
             this.pl_gbActions.SuspendLayout();
             this.SuspendLayout();
             // 
-            // mapsStrip
-            // 
-            this.mapsStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                                    this.physicsToolStripMenuItem,
-                                    this.settingsToolStripMenuItem,
-                                    this.actiondToolStripMenuItem,
-                                    this.toolStripSeparator1,
-                                    this.infoToolStripMenuItem});
-            this.mapsStrip.Name = "mapsStrip";
-            this.mapsStrip.Size = new System.Drawing.Size(144, 98);
-            // 
-            // physicsToolStripMenuItem
-            // 
-            this.physicsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                                    this.toolStripMenuItem2,
-                                    this.toolStripMenuItem3,
-                                    this.toolStripMenuItem4,
-                                    this.toolStripMenuItem5,
-                                    this.toolStripMenuItem6,
-                                    this.toolStripMenuItem7});
-            this.physicsToolStripMenuItem.Name = "physicsToolStripMenuItem";
-            this.physicsToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
-            this.physicsToolStripMenuItem.Text = "Physics Level";
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(135, 22);
-            this.toolStripMenuItem2.Text = "Off";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click_1);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(135, 22);
-            this.toolStripMenuItem3.Text = "Normal";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click_1);
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(135, 22);
-            this.toolStripMenuItem4.Text = "Advanced";
-            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click_1);
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(135, 22);
-            this.toolStripMenuItem5.Text = "Hardcore";
-            this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click_1);
-            // 
-            // toolStripMenuItem6
-            // 
-            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(135, 22);
-            this.toolStripMenuItem6.Text = "Instant";
-            this.toolStripMenuItem6.Click += new System.EventHandler(this.toolStripMenuItem6_Click_1);
-            // 
-            // toolStripMenuItem7
-            // 
-            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(135, 22);
-            this.toolStripMenuItem7.Text = "Doors-Only";
-            this.toolStripMenuItem7.Click += new System.EventHandler(this.toolStripMenuItem7_Click_1);
-            // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                                    this.physicsToolStripMenuItem1,
-                                    this.loadingToolStripMenuItem,
-                                    this.miscToolStripMenuItem});
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            // 
-            // physicsToolStripMenuItem1
-            // 
-            this.physicsToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                                    this.finiteModeToolStripMenuItem,
-                                    this.randomFlowToolStripMenuItem,
-                                    this.edgeWaterToolStripMenuItem,
-                                    this.growingGrassToolStripMenuItem,
-                                    this.treeGrowingToolStripMenuItem,
-                                    this.leafDecayToolStripMenuItem,
-                                    this.autpPhysicsToolStripMenuItem});
-            this.physicsToolStripMenuItem1.Name = "physicsToolStripMenuItem1";
-            this.physicsToolStripMenuItem1.Size = new System.Drawing.Size(117, 22);
-            this.physicsToolStripMenuItem1.Text = "Physics";
-            // 
-            // finiteModeToolStripMenuItem
-            // 
-            this.finiteModeToolStripMenuItem.Name = "finiteModeToolStripMenuItem";
-            this.finiteModeToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.finiteModeToolStripMenuItem.Text = "Finite Mode";
-            this.finiteModeToolStripMenuItem.Click += new System.EventHandler(this.finiteModeToolStripMenuItem_Click);
-            // 
-            // randomFlowToolStripMenuItem
-            // 
-            this.randomFlowToolStripMenuItem.Name = "randomFlowToolStripMenuItem";
-            this.randomFlowToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.randomFlowToolStripMenuItem.Text = "Random Flow";
-            this.randomFlowToolStripMenuItem.Click += new System.EventHandler(this.randomFlowToolStripMenuItem_Click);
+            // tsMap
+            // 
+            this.tsMap.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                                    this.tsMap_physicsMenu,
+                                    this.tsMap_actionsMenu,
+                                    this.tsMap_separator,
+                                    this.tsMap_info});
+            this.tsMap.Name = "mapsStrip";
+            this.tsMap.Size = new System.Drawing.Size(138, 76);
             // 
-            // edgeWaterToolStripMenuItem
+            // tsMap_physicsMenu
             // 
-            this.edgeWaterToolStripMenuItem.Name = "edgeWaterToolStripMenuItem";
-            this.edgeWaterToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.edgeWaterToolStripMenuItem.Text = "Edge Water";
-            this.edgeWaterToolStripMenuItem.Click += new System.EventHandler(this.edgeWaterToolStripMenuItem_Click);
+            this.tsMap_physicsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                                    this.tsMap_physics0,
+                                    this.tsMap_physics1,
+                                    this.tsMap_physics2,
+                                    this.tsMap_physics3,
+                                    this.tsMap_physics4,
+                                    this.tsMap_physics5});
+            this.tsMap_physicsMenu.Name = "tsMap_physicsMenu";
+            this.tsMap_physicsMenu.Size = new System.Drawing.Size(137, 22);
+            this.tsMap_physicsMenu.Text = "Physics Level";
             // 
-            // growingGrassToolStripMenuItem
+            // tsMap_physics0
             // 
-            this.growingGrassToolStripMenuItem.Name = "growingGrassToolStripMenuItem";
-            this.growingGrassToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.growingGrassToolStripMenuItem.Text = "Grass Growing";
-            this.growingGrassToolStripMenuItem.Click += new System.EventHandler(this.growingGrassToolStripMenuItem_Click);
+            this.tsMap_physics0.Name = "tsMap_physics0";
+            this.tsMap_physics0.Size = new System.Drawing.Size(152, 22);
+            this.tsMap_physics0.Text = "Off";
+            this.tsMap_physics0.Click += new System.EventHandler(this.toolStripMenuItem2_Click_1);
+            // 
+            // tsMap_physics1
             // 
-            // treeGrowingToolStripMenuItem
+            this.tsMap_physics1.Name = "tsMap_physics1";
+            this.tsMap_physics1.Size = new System.Drawing.Size(152, 22);
+            this.tsMap_physics1.Text = "Normal";
+            this.tsMap_physics1.Click += new System.EventHandler(this.toolStripMenuItem3_Click_1);
             // 
-            this.treeGrowingToolStripMenuItem.Name = "treeGrowingToolStripMenuItem";
-            this.treeGrowingToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.treeGrowingToolStripMenuItem.Text = "Tree Growing";
-            this.treeGrowingToolStripMenuItem.Click += new System.EventHandler(this.treeGrowingToolStripMenuItem_Click);
+            // tsMap_physics2
             // 
-            // leafDecayToolStripMenuItem
+            this.tsMap_physics2.Name = "tsMap_physics2";
+            this.tsMap_physics2.Size = new System.Drawing.Size(152, 22);
+            this.tsMap_physics2.Text = "Advanced";
+            this.tsMap_physics2.Click += new System.EventHandler(this.toolStripMenuItem4_Click_1);
             // 
-            this.leafDecayToolStripMenuItem.Name = "leafDecayToolStripMenuItem";
-            this.leafDecayToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.leafDecayToolStripMenuItem.Text = "Leaf Decay";
-            this.leafDecayToolStripMenuItem.Click += new System.EventHandler(this.leafDecayToolStripMenuItem_Click);
+            // tsMap_physics3
             // 
-            // autpPhysicsToolStripMenuItem
+            this.tsMap_physics3.Name = "tsMap_physics3";
+            this.tsMap_physics3.Size = new System.Drawing.Size(152, 22);
+            this.tsMap_physics3.Text = "Hardcore";
+            this.tsMap_physics3.Click += new System.EventHandler(this.toolStripMenuItem5_Click_1);
             // 
-            this.autpPhysicsToolStripMenuItem.Name = "autpPhysicsToolStripMenuItem";
-            this.autpPhysicsToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.autpPhysicsToolStripMenuItem.Text = "Auto Physics";
-            this.autpPhysicsToolStripMenuItem.Click += new System.EventHandler(this.autpPhysicsToolStripMenuItem_Click);
+            // tsMap_physics4
             // 
-            // loadingToolStripMenuItem
+            this.tsMap_physics4.Name = "tsMap_physics4";
+            this.tsMap_physics4.Size = new System.Drawing.Size(152, 22);
+            this.tsMap_physics4.Text = "Instant";
+            this.tsMap_physics4.Click += new System.EventHandler(this.toolStripMenuItem6_Click_1);
             // 
-            this.loadingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                                    this.unloadToolStripMenuItem1,
-                                    this.loadOngotoToolStripMenuItem});
-            this.loadingToolStripMenuItem.Name = "loadingToolStripMenuItem";
-            this.loadingToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-            this.loadingToolStripMenuItem.Text = "Loading";
+            // tsMap_physics5
             // 
-            // unloadToolStripMenuItem1
+            this.tsMap_physics5.Name = "tsMap_physics5";
+            this.tsMap_physics5.Size = new System.Drawing.Size(152, 22);
+            this.tsMap_physics5.Text = "Doors-Only";
+            this.tsMap_physics5.Click += new System.EventHandler(this.toolStripMenuItem7_Click_1);
             // 
-            this.unloadToolStripMenuItem1.Name = "unloadToolStripMenuItem1";
-            this.unloadToolStripMenuItem1.Size = new System.Drawing.Size(150, 22);
-            this.unloadToolStripMenuItem1.Text = "Auto Unload";
-            this.unloadToolStripMenuItem1.Click += new System.EventHandler(this.unloadToolStripMenuItem1_Click);
+            // tsMap_actionsMenu
             // 
-            // loadOngotoToolStripMenuItem
+            this.tsMap_actionsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                                    this.tsMap_Save,
+                                    this.tsMap_Reload,
+                                    this.tsMap_Unload,
+                                    this.tsMap_moveAll});
+            this.tsMap_actionsMenu.Name = "tsMap_actionsMenu";
+            this.tsMap_actionsMenu.Size = new System.Drawing.Size(137, 22);
+            this.tsMap_actionsMenu.Text = "Actions";
             // 
-            this.loadOngotoToolStripMenuItem.Name = "loadOngotoToolStripMenuItem";
-            this.loadOngotoToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.loadOngotoToolStripMenuItem.Text = "Load on /goto";
-            this.loadOngotoToolStripMenuItem.Click += new System.EventHandler(this.loadOngotoToolStripMenuItem_Click);
+            // tsMap_Save
             // 
-            // miscToolStripMenuItem
+            this.tsMap_Save.Name = "tsMap_Save";
+            this.tsMap_Save.Size = new System.Drawing.Size(152, 22);
+            this.tsMap_Save.Text = "Save";
+            this.tsMap_Save.Click += new System.EventHandler(this.saveToolStripMenuItem_Click_1);
             // 
-            this.miscToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                                    this.animalAIToolStripMenuItem,
-                                    this.survivalDeathToolStripMenuItem,
-                                    this.killerBlocksToolStripMenuItem,
-                                    this.instantBuildingToolStripMenuItem,
-                                    this.rPChatToolStripMenuItem,
-                                    this.gunsToolStripMenuItem});
-            this.miscToolStripMenuItem.Name = "miscToolStripMenuItem";
-            this.miscToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-            this.miscToolStripMenuItem.Text = "Misc";
+            // tsMap_Reload
             // 
-            // animalAIToolStripMenuItem
+            this.tsMap_Reload.Name = "tsMap_Reload";
+            this.tsMap_Reload.Size = new System.Drawing.Size(152, 22);
+            this.tsMap_Reload.Text = "Reload";
+            this.tsMap_Reload.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
             // 
-            this.animalAIToolStripMenuItem.Name = "animalAIToolStripMenuItem";
-            this.animalAIToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.animalAIToolStripMenuItem.Text = "Animal AI";
-            this.animalAIToolStripMenuItem.Click += new System.EventHandler(this.animalAIToolStripMenuItem_Click);
+            // tsMap_Unload
             // 
-            // survivalDeathToolStripMenuItem
+            this.tsMap_Unload.Name = "tsMap_Unload";
+            this.tsMap_Unload.Size = new System.Drawing.Size(152, 22);
+            this.tsMap_Unload.Text = "Unload";
+            this.tsMap_Unload.Click += new System.EventHandler(this.unloadToolStripMenuItem_Click_1);
             // 
-            this.survivalDeathToolStripMenuItem.Name = "survivalDeathToolStripMenuItem";
-            this.survivalDeathToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.survivalDeathToolStripMenuItem.Text = "Survival Death";
-            this.survivalDeathToolStripMenuItem.Click += new System.EventHandler(this.survivalDeathToolStripMenuItem_Click);
+            // tsMap_moveAll
             // 
-            // killerBlocksToolStripMenuItem
+            this.tsMap_moveAll.Name = "tsMap_moveAll";
+            this.tsMap_moveAll.Size = new System.Drawing.Size(152, 22);
+            this.tsMap_moveAll.Text = "Move All";
+            this.tsMap_moveAll.Click += new System.EventHandler(this.moveAllToolStripMenuItem_Click);
             // 
-            this.killerBlocksToolStripMenuItem.Name = "killerBlocksToolStripMenuItem";
-            this.killerBlocksToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.killerBlocksToolStripMenuItem.Text = "Killer Blocks";
-            this.killerBlocksToolStripMenuItem.Click += new System.EventHandler(this.killerBlocksToolStripMenuItem_Click);
+            // tsMap_separator
             // 
-            // instantBuildingToolStripMenuItem
+            this.tsMap_separator.Name = "tsMap_separator";
+            this.tsMap_separator.Size = new System.Drawing.Size(134, 6);
             // 
-            this.instantBuildingToolStripMenuItem.Name = "instantBuildingToolStripMenuItem";
-            this.instantBuildingToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.instantBuildingToolStripMenuItem.Text = "Instant Building";
-            this.instantBuildingToolStripMenuItem.Click += new System.EventHandler(this.instantBuildingToolStripMenuItem_Click);
+            // tsMap_info
             // 
-            // rPChatToolStripMenuItem
+            this.tsMap_info.Name = "tsMap_info";
+            this.tsMap_info.Size = new System.Drawing.Size(137, 22);
+            this.tsMap_info.Text = "Info";
+            this.tsMap_info.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
             // 
-            this.rPChatToolStripMenuItem.Name = "rPChatToolStripMenuItem";
-            this.rPChatToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.rPChatToolStripMenuItem.Text = "RP Chat";
-            this.rPChatToolStripMenuItem.Click += new System.EventHandler(this.rPChatToolStripMenuItem_Click);
+            // tsPlayer
             // 
-            // gunsToolStripMenuItem
+            this.tsPlayer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                                    this.tsPlayer_whois,
+                                    this.tsPlayer_kick,
+                                    this.tsPlayer_ban,
+                                    this.tsPlayer_voice,
+                                    this.tsPlayer_clones,
+                                    this.tsPlayer_promote,
+                                    this.tsPlayer_demote});
+            this.tsPlayer.Name = "playerStrip";
+            this.tsPlayer.Size = new System.Drawing.Size(115, 158);
             // 
-            this.gunsToolStripMenuItem.Name = "gunsToolStripMenuItem";
-            this.gunsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.gunsToolStripMenuItem.Text = "Guns";
-            this.gunsToolStripMenuItem.Click += new System.EventHandler(this.gunsToolStripMenuItem_Click);
+            // tsPlayer_whois
             // 
-            // actiondToolStripMenuItem
+            this.tsPlayer_whois.Name = "tsPlayer_whois";
+            this.tsPlayer_whois.Size = new System.Drawing.Size(114, 22);
+            this.tsPlayer_whois.Text = "Whois";
+            this.tsPlayer_whois.Click += new System.EventHandler(this.whoisToolStripMenuItem_Click);
             // 
-            this.actiondToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                                    this.saveToolStripMenuItem,
-                                    this.reloadToolStripMenuItem,
-                                    this.unloadToolStripMenuItem,
-                                    this.moveAllToolStripMenuItem});
-            this.actiondToolStripMenuItem.Name = "actiondToolStripMenuItem";
-            this.actiondToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
-            this.actiondToolStripMenuItem.Text = "Actions";
+            // tsPlayer_kick
             // 
-            // saveToolStripMenuItem
+            this.tsPlayer_kick.Name = "tsPlayer_kick";
+            this.tsPlayer_kick.Size = new System.Drawing.Size(114, 22);
+            this.tsPlayer_kick.Text = "Kick";
+            this.tsPlayer_kick.Click += new System.EventHandler(this.kickToolStripMenuItem_Click);
             // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click_1);
+            // tsPlayer_ban
             // 
-            // reloadToolStripMenuItem
+            this.tsPlayer_ban.Name = "tsPlayer_ban";
+            this.tsPlayer_ban.Size = new System.Drawing.Size(114, 22);
+            this.tsPlayer_ban.Text = "Ban";
+            this.tsPlayer_ban.Click += new System.EventHandler(this.banToolStripMenuItem_Click);
             // 
-            this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.reloadToolStripMenuItem.Text = "Reload";
-            this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
+            // tsPlayer_voice
             // 
-            // unloadToolStripMenuItem
+            this.tsPlayer_voice.Name = "tsPlayer_voice";
+            this.tsPlayer_voice.Size = new System.Drawing.Size(114, 22);
+            this.tsPlayer_voice.Text = "Voice";
+            this.tsPlayer_voice.Click += new System.EventHandler(this.voiceToolStripMenuItem_Click);
             // 
-            this.unloadToolStripMenuItem.Name = "unloadToolStripMenuItem";
-            this.unloadToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.unloadToolStripMenuItem.Text = "Unload";
-            this.unloadToolStripMenuItem.Click += new System.EventHandler(this.unloadToolStripMenuItem_Click_1);
+            // tsPlayer_clones
             // 
-            // moveAllToolStripMenuItem
+            this.tsPlayer_clones.Name = "tsPlayer_clones";
+            this.tsPlayer_clones.Size = new System.Drawing.Size(114, 22);
+            this.tsPlayer_clones.Text = "Clones";
+            this.tsPlayer_clones.Click += new System.EventHandler(this.clonesToolStripMenuItem_Click);
             // 
-            this.moveAllToolStripMenuItem.Name = "moveAllToolStripMenuItem";
-            this.moveAllToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.moveAllToolStripMenuItem.Text = "Move All";
-            this.moveAllToolStripMenuItem.Click += new System.EventHandler(this.moveAllToolStripMenuItem_Click);
+            // tsPlayer_promote
             // 
-            // toolStripSeparator1
+            this.tsPlayer_promote.Name = "tsPlayer_promote";
+            this.tsPlayer_promote.Size = new System.Drawing.Size(114, 22);
+            this.tsPlayer_promote.Text = "Promote";
+            this.tsPlayer_promote.Click += new System.EventHandler(this.promoteToolStripMenuItem_Click);
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(140, 6);
+            // tsPlayer_demote
             // 
-            // infoToolStripMenuItem
+            this.tsPlayer_demote.Name = "tsPlayer_demote";
+            this.tsPlayer_demote.Size = new System.Drawing.Size(114, 22);
+            this.tsPlayer_demote.Text = "Demote";
+            this.tsPlayer_demote.Click += new System.EventHandler(this.demoteToolStripMenuItem_Click);
             // 
-            this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
-            this.infoToolStripMenuItem.Text = "Info";
-            this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
+            // icon_context
             // 
-            // playerStrip
+            this.icon_context.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                                    this.icon_openConsole,
+                                    this.icon_shutdown,
+                                    this.icon_restart});
+            this.icon_context.Name = "iconContext";
+            this.icon_context.Size = new System.Drawing.Size(158, 70);
             // 
-            this.playerStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                                    this.whoisToolStripMenuItem,
-                                    this.kickToolStripMenuItem,
-                                    this.banToolStripMenuItem,
-                                    this.voiceToolStripMenuItem,
-                                    this.clonesToolStripMenuItem,
-                                    this.promoteToolStripMenuItem,
-                                    this.demoteToolStripMenuItem});
-            this.playerStrip.Name = "playerStrip";
-            this.playerStrip.Size = new System.Drawing.Size(121, 158);
+            // icon_openConsole
             // 
-            // whoisToolStripMenuItem
+            this.icon_openConsole.Name = "icon_openConsole";
+            this.icon_openConsole.Size = new System.Drawing.Size(157, 22);
+            this.icon_openConsole.Text = "Open Console";
+            this.icon_openConsole.Click += new System.EventHandler(this.openConsole_Click);
             // 
-            this.whoisToolStripMenuItem.Name = "whoisToolStripMenuItem";
-            this.whoisToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
-            this.whoisToolStripMenuItem.Text = "Whois";
-            this.whoisToolStripMenuItem.Click += new System.EventHandler(this.whoisToolStripMenuItem_Click);
+            // icon_shutdown
             // 
-            // kickToolStripMenuItem
+            this.icon_shutdown.Name = "icon_shutdown";
+            this.icon_shutdown.Size = new System.Drawing.Size(157, 22);
+            this.icon_shutdown.Text = "Shutdown Server";
+            this.icon_shutdown.Click += new System.EventHandler(this.shutdownServer_Click);
             // 
-            this.kickToolStripMenuItem.Name = "kickToolStripMenuItem";
-            this.kickToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
-            this.kickToolStripMenuItem.Text = "Kick";
-            this.kickToolStripMenuItem.Click += new System.EventHandler(this.kickToolStripMenuItem_Click);
+            // icon_restart
             // 
-            // banToolStripMenuItem
-            // 
-            this.banToolStripMenuItem.Name = "banToolStripMenuItem";
-            this.banToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
-            this.banToolStripMenuItem.Text = "Ban";
-            this.banToolStripMenuItem.Click += new System.EventHandler(this.banToolStripMenuItem_Click);
-            // 
-            // voiceToolStripMenuItem
-            // 
-            this.voiceToolStripMenuItem.Name = "voiceToolStripMenuItem";
-            this.voiceToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
-            this.voiceToolStripMenuItem.Text = "Voice";
-            this.voiceToolStripMenuItem.Click += new System.EventHandler(this.voiceToolStripMenuItem_Click);
-            // 
-            // clonesToolStripMenuItem
-            // 
-            this.clonesToolStripMenuItem.Name = "clonesToolStripMenuItem";
-            this.clonesToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
-            this.clonesToolStripMenuItem.Text = "Clones";
-            this.clonesToolStripMenuItem.Click += new System.EventHandler(this.clonesToolStripMenuItem_Click);
-            // 
-            // promoteToolStripMenuItem
-            // 
-            this.promoteToolStripMenuItem.Name = "promoteToolStripMenuItem";
-            this.promoteToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
-            this.promoteToolStripMenuItem.Text = "Promote";
-            this.promoteToolStripMenuItem.Click += new System.EventHandler(this.promoteToolStripMenuItem_Click);
-            // 
-            // demoteToolStripMenuItem
-            // 
-            this.demoteToolStripMenuItem.Name = "demoteToolStripMenuItem";
-            this.demoteToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
-            this.demoteToolStripMenuItem.Text = "Demote";
-            this.demoteToolStripMenuItem.Click += new System.EventHandler(this.demoteToolStripMenuItem_Click);
-            // 
-            // iconContext
-            // 
-            this.iconContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                                    this.openConsole,
-                                    this.shutdownServer,
-                                    this.restartServerToolStripMenuItem});
-            this.iconContext.Name = "iconContext";
-            this.iconContext.Size = new System.Drawing.Size(164, 70);
-            // 
-            // openConsole
-            // 
-            this.openConsole.Name = "openConsole";
-            this.openConsole.Size = new System.Drawing.Size(163, 22);
-            this.openConsole.Text = "Open Console";
-            this.openConsole.Click += new System.EventHandler(this.openConsole_Click);
-            // 
-            // shutdownServer
-            // 
-            this.shutdownServer.Name = "shutdownServer";
-            this.shutdownServer.Size = new System.Drawing.Size(163, 22);
-            this.shutdownServer.Text = "Shutdown Server";
-            this.shutdownServer.Click += new System.EventHandler(this.shutdownServer_Click);
-            // 
-            // restartServerToolStripMenuItem
-            // 
-            this.restartServerToolStripMenuItem.Name = "restartServerToolStripMenuItem";
-            this.restartServerToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-            this.restartServerToolStripMenuItem.Text = "Restart Server";
-            this.restartServerToolStripMenuItem.Click += new System.EventHandler(this.restartServerToolStripMenuItem_Click);
+            this.icon_restart.Name = "icon_restart";
+            this.icon_restart.Size = new System.Drawing.Size(157, 22);
+            this.icon_restart.Text = "Restart Server";
+            this.icon_restart.Click += new System.EventHandler(this.restartServerToolStripMenuItem_Click);
             // 
             // main_btnProps
             // 
@@ -788,7 +617,7 @@ namespace MCGalaxy.Gui
             this.main_Maps.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.main_Maps.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.main_Maps.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.main_Maps.ContextMenuStrip = this.mapsStrip;
+            this.main_Maps.ContextMenuStrip = this.tsMap;
             this.main_Maps.Location = new System.Drawing.Point(512, 292);
             this.main_Maps.MultiSelect = false;
             this.main_Maps.Name = "main_Maps";
@@ -801,7 +630,7 @@ namespace MCGalaxy.Gui
             // main_txtLog
             // 
             this.main_txtLog.BackColor = System.Drawing.SystemColors.Window;
-            this.main_txtLog.ContextMenuStrip = this.txtLogMenuStrip;
+            this.main_txtLog.ContextMenuStrip = this.tsLog_Menu;
             this.main_txtLog.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.main_txtLog.Location = new System.Drawing.Point(8, 38);
             this.main_txtLog.Name = "main_txtLog";
@@ -811,85 +640,85 @@ namespace MCGalaxy.Gui
             this.main_txtLog.TabIndex = 0;
             this.main_txtLog.Text = "";
             // 
-            // txtLogMenuStrip
+            // tsLog_Menu
             // 
-            this.txtLogMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                                    this.nightModeToolStripMenuItem,
-                                    this.colorsToolStripMenuItem,
-                                    this.dateStampToolStripMenuItem,
-                                    this.autoScrollToolStripMenuItem,
-                                    this.toolStripSeparator2,
-                                    this.copySelectedToolStripMenuItem,
-                                    this.copyAllToolStripMenuItem,
-                                    this.toolStripSeparator3,
-                                    this.clearToolStripMenuItem});
-            this.txtLogMenuStrip.Name = "txtLogMenuStrip";
-            this.txtLogMenuStrip.Size = new System.Drawing.Size(150, 170);
+            this.tsLog_Menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                                    this.tsLog_night,
+                                    this.tsLog_Colored,
+                                    this.tsLog_dateStamp,
+                                    this.tsLog_autoScroll,
+                                    this.tsLog_separator1,
+                                    this.tsPlayer_copySelected,
+                                    this.tsLog_copyAll,
+                                    this.tsLog_separator2,
+                                    this.tsLog_clear});
+            this.tsLog_Menu.Name = "txtLogMenuStrip";
+            this.tsLog_Menu.Size = new System.Drawing.Size(144, 170);
             // 
-            // nightModeToolStripMenuItem
+            // tsLog_night
             // 
-            this.nightModeToolStripMenuItem.Name = "nightModeToolStripMenuItem";
-            this.nightModeToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-            this.nightModeToolStripMenuItem.Text = "Night Theme";
-            this.nightModeToolStripMenuItem.Click += new System.EventHandler(this.nightModeToolStripMenuItem_Click_1);
+            this.tsLog_night.Name = "tsLog_night";
+            this.tsLog_night.Size = new System.Drawing.Size(143, 22);
+            this.tsLog_night.Text = "Night Theme";
+            this.tsLog_night.Click += new System.EventHandler(this.nightModeToolStripMenuItem_Click_1);
             // 
-            // colorsToolStripMenuItem
+            // tsLog_Colored
             // 
-            this.colorsToolStripMenuItem.Checked = true;
-            this.colorsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.colorsToolStripMenuItem.Name = "colorsToolStripMenuItem";
-            this.colorsToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-            this.colorsToolStripMenuItem.Text = "Colors";
-            this.colorsToolStripMenuItem.Click += new System.EventHandler(this.colorsToolStripMenuItem_Click_1);
+            this.tsLog_Colored.Checked = true;
+            this.tsLog_Colored.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.tsLog_Colored.Name = "tsLog_Colored";
+            this.tsLog_Colored.Size = new System.Drawing.Size(143, 22);
+            this.tsLog_Colored.Text = "Colors";
+            this.tsLog_Colored.Click += new System.EventHandler(this.colorsToolStripMenuItem_Click_1);
             // 
-            // dateStampToolStripMenuItem
+            // tsLog_dateStamp
             // 
-            this.dateStampToolStripMenuItem.Checked = true;
-            this.dateStampToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dateStampToolStripMenuItem.Name = "dateStampToolStripMenuItem";
-            this.dateStampToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-            this.dateStampToolStripMenuItem.Text = "Date Stamp";
-            this.dateStampToolStripMenuItem.Click += new System.EventHandler(this.dateStampToolStripMenuItem_Click);
+            this.tsLog_dateStamp.Checked = true;
+            this.tsLog_dateStamp.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.tsLog_dateStamp.Name = "tsLog_dateStamp";
+            this.tsLog_dateStamp.Size = new System.Drawing.Size(143, 22);
+            this.tsLog_dateStamp.Text = "Date Stamp";
+            this.tsLog_dateStamp.Click += new System.EventHandler(this.dateStampToolStripMenuItem_Click);
             // 
-            // autoScrollToolStripMenuItem
+            // tsLog_autoScroll
             // 
-            this.autoScrollToolStripMenuItem.Checked = true;
-            this.autoScrollToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.autoScrollToolStripMenuItem.Name = "autoScrollToolStripMenuItem";
-            this.autoScrollToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-            this.autoScrollToolStripMenuItem.Text = "Auto Scroll";
-            this.autoScrollToolStripMenuItem.Click += new System.EventHandler(this.autoScrollToolStripMenuItem_Click);
+            this.tsLog_autoScroll.Checked = true;
+            this.tsLog_autoScroll.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.tsLog_autoScroll.Name = "tsLog_autoScroll";
+            this.tsLog_autoScroll.Size = new System.Drawing.Size(143, 22);
+            this.tsLog_autoScroll.Text = "Auto Scroll";
+            this.tsLog_autoScroll.Click += new System.EventHandler(this.autoScrollToolStripMenuItem_Click);
             // 
-            // toolStripSeparator2
+            // tsLog_separator1
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(146, 6);
+            this.tsLog_separator1.Name = "tsLog_separator1";
+            this.tsLog_separator1.Size = new System.Drawing.Size(140, 6);
             // 
-            // copySelectedToolStripMenuItem
+            // tsPlayer_copySelected
             // 
-            this.copySelectedToolStripMenuItem.Name = "copySelectedToolStripMenuItem";
-            this.copySelectedToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-            this.copySelectedToolStripMenuItem.Text = "Copy Selected";
-            this.copySelectedToolStripMenuItem.Click += new System.EventHandler(this.copySelectedToolStripMenuItem_Click);
+            this.tsPlayer_copySelected.Name = "tsPlayer_copySelected";
+            this.tsPlayer_copySelected.Size = new System.Drawing.Size(143, 22);
+            this.tsPlayer_copySelected.Text = "Copy Selected";
+            this.tsPlayer_copySelected.Click += new System.EventHandler(this.copySelectedToolStripMenuItem_Click);
             // 
-            // copyAllToolStripMenuItem
+            // tsLog_copyAll
             // 
-            this.copyAllToolStripMenuItem.Name = "copyAllToolStripMenuItem";
-            this.copyAllToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-            this.copyAllToolStripMenuItem.Text = "Copy All";
-            this.copyAllToolStripMenuItem.Click += new System.EventHandler(this.copyAllToolStripMenuItem_Click);
+            this.tsLog_copyAll.Name = "tsLog_copyAll";
+            this.tsLog_copyAll.Size = new System.Drawing.Size(143, 22);
+            this.tsLog_copyAll.Text = "Copy All";
+            this.tsLog_copyAll.Click += new System.EventHandler(this.copyAllToolStripMenuItem_Click);
             // 
-            // toolStripSeparator3
+            // tsLog_separator2
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(146, 6);
+            this.tsLog_separator2.Name = "tsLog_separator2";
+            this.tsLog_separator2.Size = new System.Drawing.Size(140, 6);
             // 
-            // clearToolStripMenuItem
+            // tsLog_clear
             // 
-            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-            this.clearToolStripMenuItem.Text = "Clear";
-            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            this.tsLog_clear.Name = "tsLog_clear";
+            this.tsLog_clear.Size = new System.Drawing.Size(143, 22);
+            this.tsLog_clear.Text = "Clear";
+            this.tsLog_clear.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // main_txtInput
             // 
@@ -921,7 +750,7 @@ namespace MCGalaxy.Gui
             this.main_Players.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.main_Players.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.main_Players.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.main_Players.ContextMenuStrip = this.playerStrip;
+            this.main_Players.ContextMenuStrip = this.tsPlayer;
             this.main_Players.Location = new System.Drawing.Point(512, 7);
             this.main_Players.MultiSelect = false;
             this.main_Players.Name = "main_Players";
@@ -932,190 +761,190 @@ namespace MCGalaxy.Gui
             this.main_Players.TabIndex = 37;
             this.main_Players.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dgvPlayers_RowPrePaint);
             // 
-            // tabControl1
+            // tabs
             // 
-            this.tabControl1.Controls.Add(this.tp_Main);
-            this.tabControl1.Controls.Add(this.logs_tp);
-            this.tabControl1.Controls.Add(this.tp_Maps);
-            this.tabControl1.Controls.Add(this.tp_Players);
-            this.tabControl1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.tabControl1.Font = new System.Drawing.Font("Calibri", 8.25F);
-            this.tabControl1.Location = new System.Drawing.Point(1, 11);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(775, 514);
-            this.tabControl1.TabIndex = 2;
-            this.tabControl1.Click += new System.EventHandler(this.tabControl1_Click);
+            this.tabs.Controls.Add(this.tp_Main);
+            this.tabs.Controls.Add(this.logs_tp);
+            this.tabs.Controls.Add(this.tp_Maps);
+            this.tabs.Controls.Add(this.tp_Players);
+            this.tabs.Cursor = System.Windows.Forms.Cursors.Default;
+            this.tabs.Font = new System.Drawing.Font("Calibri", 8.25F);
+            this.tabs.Location = new System.Drawing.Point(1, 11);
+            this.tabs.Name = "tabs";
+            this.tabs.SelectedIndex = 0;
+            this.tabs.Size = new System.Drawing.Size(775, 514);
+            this.tabs.TabIndex = 2;
+            this.tabs.Click += new System.EventHandler(this.tabControl1_Click);
             // 
             // tp_Maps
             // 
             this.tp_Maps.BackColor = System.Drawing.SystemColors.Control;
-            this.tp_Maps.Controls.Add(this.gbMap_Props);
-            this.tp_Maps.Controls.Add(this.gbMap_Lded);
-            this.tp_Maps.Controls.Add(this.gbMap_Unld);
-            this.tp_Maps.Controls.Add(this.gbMap_New);
+            this.tp_Maps.Controls.Add(this.map_gbProps);
+            this.tp_Maps.Controls.Add(this.map_gbLoaded);
+            this.tp_Maps.Controls.Add(this.map_gbUnloaded);
+            this.tp_Maps.Controls.Add(this.map_gbNew);
             this.tp_Maps.Location = new System.Drawing.Point(4, 22);
             this.tp_Maps.Name = "tp_Maps";
             this.tp_Maps.Size = new System.Drawing.Size(767, 488);
             this.tp_Maps.TabIndex = 9;
             this.tp_Maps.Text = "Maps";
             // 
-            // gbMap_Props
+            // map_gbProps
             // 
-            this.gbMap_Props.Controls.Add(this.pgMaps);
-            this.gbMap_Props.Location = new System.Drawing.Point(415, 3);
-            this.gbMap_Props.Name = "gbMap_Props";
-            this.gbMap_Props.Size = new System.Drawing.Size(343, 349);
-            this.gbMap_Props.TabIndex = 5;
-            this.gbMap_Props.TabStop = false;
-            this.gbMap_Props.Text = "Properties for (none selected)";
+            this.map_gbProps.Controls.Add(this.map_pgProps);
+            this.map_gbProps.Location = new System.Drawing.Point(415, 3);
+            this.map_gbProps.Name = "map_gbProps";
+            this.map_gbProps.Size = new System.Drawing.Size(343, 349);
+            this.map_gbProps.TabIndex = 5;
+            this.map_gbProps.TabStop = false;
+            this.map_gbProps.Text = "Properties for (none selected)";
             // 
-            // pgMaps
+            // map_pgProps
             // 
-            this.pgMaps.Location = new System.Drawing.Point(7, 20);
-            this.pgMaps.Name = "pgMaps";
-            this.pgMaps.Size = new System.Drawing.Size(330, 323);
-            this.pgMaps.TabIndex = 0;
-            this.pgMaps.ToolbarVisible = false;
+            this.map_pgProps.Location = new System.Drawing.Point(7, 20);
+            this.map_pgProps.Name = "map_pgProps";
+            this.map_pgProps.Size = new System.Drawing.Size(330, 323);
+            this.map_pgProps.TabIndex = 0;
+            this.map_pgProps.ToolbarVisible = false;
             // 
-            // gbMap_Lded
+            // map_gbLoaded
             // 
-            this.gbMap_Lded.Controls.Add(this.lbMap_Lded);
-            this.gbMap_Lded.Location = new System.Drawing.Point(7, 3);
-            this.gbMap_Lded.Name = "gbMap_Lded";
-            this.gbMap_Lded.Size = new System.Drawing.Size(390, 221);
-            this.gbMap_Lded.TabIndex = 4;
-            this.gbMap_Lded.TabStop = false;
-            this.gbMap_Lded.Text = "Loaded levels";
+            this.map_gbLoaded.Controls.Add(this.map_lbLoaded);
+            this.map_gbLoaded.Location = new System.Drawing.Point(7, 3);
+            this.map_gbLoaded.Name = "map_gbLoaded";
+            this.map_gbLoaded.Size = new System.Drawing.Size(390, 221);
+            this.map_gbLoaded.TabIndex = 4;
+            this.map_gbLoaded.TabStop = false;
+            this.map_gbLoaded.Text = "Loaded levels";
             // 
-            // lbMap_Lded
+            // map_lbLoaded
             // 
-            this.lbMap_Lded.FormattingEnabled = true;
-            this.lbMap_Lded.Location = new System.Drawing.Point(5, 15);
-            this.lbMap_Lded.MultiColumn = true;
-            this.lbMap_Lded.Name = "lbMap_Lded";
-            this.lbMap_Lded.Size = new System.Drawing.Size(379, 199);
-            this.lbMap_Lded.TabIndex = 0;
-            this.lbMap_Lded.SelectedIndexChanged += new System.EventHandler(this.UpdateSelectedMap);
+            this.map_lbLoaded.FormattingEnabled = true;
+            this.map_lbLoaded.Location = new System.Drawing.Point(5, 15);
+            this.map_lbLoaded.MultiColumn = true;
+            this.map_lbLoaded.Name = "map_lbLoaded";
+            this.map_lbLoaded.Size = new System.Drawing.Size(379, 199);
+            this.map_lbLoaded.TabIndex = 0;
+            this.map_lbLoaded.SelectedIndexChanged += new System.EventHandler(this.UpdateSelectedMap);
             // 
-            // gbMap_Unld
+            // map_gbUnloaded
             // 
-            this.gbMap_Unld.Controls.Add(this.btnMap_Load);
-            this.gbMap_Unld.Controls.Add(this.lbMap_Unld);
-            this.gbMap_Unld.Location = new System.Drawing.Point(7, 227);
-            this.gbMap_Unld.Name = "gbMap_Unld";
-            this.gbMap_Unld.Size = new System.Drawing.Size(390, 258);
-            this.gbMap_Unld.TabIndex = 3;
-            this.gbMap_Unld.TabStop = false;
-            this.gbMap_Unld.Text = "Unloaded levels";
+            this.map_gbUnloaded.Controls.Add(this.map_btnLoad);
+            this.map_gbUnloaded.Controls.Add(this.map_lbUnloaded);
+            this.map_gbUnloaded.Location = new System.Drawing.Point(7, 227);
+            this.map_gbUnloaded.Name = "map_gbUnloaded";
+            this.map_gbUnloaded.Size = new System.Drawing.Size(390, 258);
+            this.map_gbUnloaded.TabIndex = 3;
+            this.map_gbUnloaded.TabStop = false;
+            this.map_gbUnloaded.Text = "Unloaded levels";
             // 
-            // btnMap_Load
+            // map_btnLoad
             // 
-            this.btnMap_Load.Location = new System.Drawing.Point(150, 230);
-            this.btnMap_Load.Name = "btnMap_Load";
-            this.btnMap_Load.Size = new System.Drawing.Size(75, 23);
-            this.btnMap_Load.TabIndex = 1;
-            this.btnMap_Load.Text = "Load map";
-            this.btnMap_Load.UseVisualStyleBackColor = true;
-            this.btnMap_Load.Click += new System.EventHandler(this.MapLoadClick);
+            this.map_btnLoad.Location = new System.Drawing.Point(150, 230);
+            this.map_btnLoad.Name = "map_btnLoad";
+            this.map_btnLoad.Size = new System.Drawing.Size(75, 23);
+            this.map_btnLoad.TabIndex = 1;
+            this.map_btnLoad.Text = "Load map";
+            this.map_btnLoad.UseVisualStyleBackColor = true;
+            this.map_btnLoad.Click += new System.EventHandler(this.MapLoadClick);
             // 
-            // lbMap_Unld
+            // map_lbUnloaded
             // 
-            this.lbMap_Unld.FormattingEnabled = true;
-            this.lbMap_Unld.Location = new System.Drawing.Point(5, 15);
-            this.lbMap_Unld.MultiColumn = true;
-            this.lbMap_Unld.Name = "lbMap_Unld";
-            this.lbMap_Unld.Size = new System.Drawing.Size(379, 212);
-            this.lbMap_Unld.TabIndex = 0;
+            this.map_lbUnloaded.FormattingEnabled = true;
+            this.map_lbUnloaded.Location = new System.Drawing.Point(5, 15);
+            this.map_lbUnloaded.MultiColumn = true;
+            this.map_lbUnloaded.Name = "map_lbUnloaded";
+            this.map_lbUnloaded.Size = new System.Drawing.Size(379, 212);
+            this.map_lbUnloaded.TabIndex = 0;
             // 
-            // gbMap_New
+            // map_gbNew
             // 
-            this.gbMap_New.Controls.Add(this.btnMap_Gen);
-            this.gbMap_New.Controls.Add(this.lblMap_Type);
-            this.gbMap_New.Controls.Add(this.lblMap_Seed);
-            this.gbMap_New.Controls.Add(this.lblMap_Z);
-            this.gbMap_New.Controls.Add(this.lblMap_X);
-            this.gbMap_New.Controls.Add(this.lblMap_Y);
-            this.gbMap_New.Controls.Add(this.txtMap_Seed);
-            this.gbMap_New.Controls.Add(this.cmbMap_Type);
-            this.gbMap_New.Controls.Add(this.cmbMap_Z);
-            this.gbMap_New.Controls.Add(this.cmbMap_Y);
-            this.gbMap_New.Controls.Add(this.cmbMap_X);
-            this.gbMap_New.Controls.Add(this.lblMap_Name);
-            this.gbMap_New.Controls.Add(this.txtMap_Name);
-            this.gbMap_New.Location = new System.Drawing.Point(415, 358);
-            this.gbMap_New.Name = "gbMap_New";
-            this.gbMap_New.Size = new System.Drawing.Size(343, 127);
-            this.gbMap_New.TabIndex = 0;
-            this.gbMap_New.TabStop = false;
-            this.gbMap_New.Text = "Create new map";
+            this.map_gbNew.Controls.Add(this.map_btnGen);
+            this.map_gbNew.Controls.Add(this.map_lblType);
+            this.map_gbNew.Controls.Add(this.map_lblSeed);
+            this.map_gbNew.Controls.Add(this.map_lblZ);
+            this.map_gbNew.Controls.Add(this.map_lblX);
+            this.map_gbNew.Controls.Add(this.map_lblY);
+            this.map_gbNew.Controls.Add(this.map_txtSeed);
+            this.map_gbNew.Controls.Add(this.map_cmbType);
+            this.map_gbNew.Controls.Add(this.map_cmbZ);
+            this.map_gbNew.Controls.Add(this.map_cmbY);
+            this.map_gbNew.Controls.Add(this.map_cmbX);
+            this.map_gbNew.Controls.Add(this.map_lblName);
+            this.map_gbNew.Controls.Add(this.map_txtName);
+            this.map_gbNew.Location = new System.Drawing.Point(415, 358);
+            this.map_gbNew.Name = "map_gbNew";
+            this.map_gbNew.Size = new System.Drawing.Size(343, 127);
+            this.map_gbNew.TabIndex = 0;
+            this.map_gbNew.TabStop = false;
+            this.map_gbNew.Text = "Create new map";
             // 
-            // btnMap_Gen
+            // map_btnGen
             // 
-            this.btnMap_Gen.Location = new System.Drawing.Point(150, 99);
-            this.btnMap_Gen.Name = "btnMap_Gen";
-            this.btnMap_Gen.Size = new System.Drawing.Size(75, 23);
-            this.btnMap_Gen.TabIndex = 17;
-            this.btnMap_Gen.Text = "Generate";
-            this.btnMap_Gen.UseVisualStyleBackColor = true;
-            this.btnMap_Gen.Click += new System.EventHandler(this.MapGenClick);
+            this.map_btnGen.Location = new System.Drawing.Point(150, 99);
+            this.map_btnGen.Name = "map_btnGen";
+            this.map_btnGen.Size = new System.Drawing.Size(75, 23);
+            this.map_btnGen.TabIndex = 17;
+            this.map_btnGen.Text = "Generate";
+            this.map_btnGen.UseVisualStyleBackColor = true;
+            this.map_btnGen.Click += new System.EventHandler(this.MapGenClick);
             // 
-            // lblMap_Type
+            // map_lblType
             // 
-            this.lblMap_Type.AutoSize = true;
-            this.lblMap_Type.Location = new System.Drawing.Point(13, 78);
-            this.lblMap_Type.Name = "lblMap_Type";
-            this.lblMap_Type.Size = new System.Drawing.Size(32, 13);
-            this.lblMap_Type.TabIndex = 16;
-            this.lblMap_Type.Text = "Type:";
+            this.map_lblType.AutoSize = true;
+            this.map_lblType.Location = new System.Drawing.Point(13, 78);
+            this.map_lblType.Name = "map_lblType";
+            this.map_lblType.Size = new System.Drawing.Size(32, 13);
+            this.map_lblType.TabIndex = 16;
+            this.map_lblType.Text = "Type:";
             // 
-            // lblMap_Seed
+            // map_lblSeed
             // 
-            this.lblMap_Seed.AutoSize = true;
-            this.lblMap_Seed.Location = new System.Drawing.Point(192, 78);
-            this.lblMap_Seed.Name = "lblMap_Seed";
-            this.lblMap_Seed.Size = new System.Drawing.Size(33, 13);
-            this.lblMap_Seed.TabIndex = 15;
-            this.lblMap_Seed.Text = "Seed:";
+            this.map_lblSeed.AutoSize = true;
+            this.map_lblSeed.Location = new System.Drawing.Point(192, 78);
+            this.map_lblSeed.Name = "map_lblSeed";
+            this.map_lblSeed.Size = new System.Drawing.Size(33, 13);
+            this.map_lblSeed.TabIndex = 15;
+            this.map_lblSeed.Text = "Seed:";
             // 
-            // lblMap_Z
+            // map_lblZ
             // 
-            this.lblMap_Z.AutoSize = true;
-            this.lblMap_Z.Location = new System.Drawing.Point(231, 51);
-            this.lblMap_Z.Name = "lblMap_Z";
-            this.lblMap_Z.Size = new System.Drawing.Size(42, 13);
-            this.lblMap_Z.TabIndex = 14;
-            this.lblMap_Z.Text = "Length:";
+            this.map_lblZ.AutoSize = true;
+            this.map_lblZ.Location = new System.Drawing.Point(231, 51);
+            this.map_lblZ.Name = "map_lblZ";
+            this.map_lblZ.Size = new System.Drawing.Size(42, 13);
+            this.map_lblZ.TabIndex = 14;
+            this.map_lblZ.Text = "Length:";
             // 
-            // lblMap_X
+            // map_lblX
             // 
-            this.lblMap_X.AutoSize = true;
-            this.lblMap_X.Location = new System.Drawing.Point(7, 51);
-            this.lblMap_X.Name = "lblMap_X";
-            this.lblMap_X.Size = new System.Drawing.Size(39, 13);
-            this.lblMap_X.TabIndex = 13;
-            this.lblMap_X.Text = "Width:";
+            this.map_lblX.AutoSize = true;
+            this.map_lblX.Location = new System.Drawing.Point(7, 51);
+            this.map_lblX.Name = "map_lblX";
+            this.map_lblX.Size = new System.Drawing.Size(39, 13);
+            this.map_lblX.TabIndex = 13;
+            this.map_lblX.Text = "Width:";
             // 
-            // lblMap_Y
+            // map_lblY
             // 
-            this.lblMap_Y.AutoSize = true;
-            this.lblMap_Y.Location = new System.Drawing.Point(118, 51);
-            this.lblMap_Y.Name = "lblMap_Y";
-            this.lblMap_Y.Size = new System.Drawing.Size(41, 13);
-            this.lblMap_Y.TabIndex = 12;
-            this.lblMap_Y.Text = "Height:";
+            this.map_lblY.AutoSize = true;
+            this.map_lblY.Location = new System.Drawing.Point(118, 51);
+            this.map_lblY.Name = "map_lblY";
+            this.map_lblY.Size = new System.Drawing.Size(41, 13);
+            this.map_lblY.TabIndex = 12;
+            this.map_lblY.Text = "Height:";
             // 
-            // txtMap_Seed
+            // map_txtSeed
             // 
-            this.txtMap_Seed.Location = new System.Drawing.Point(231, 75);
-            this.txtMap_Seed.Name = "txtMap_Seed";
-            this.txtMap_Seed.Size = new System.Drawing.Size(107, 21);
-            this.txtMap_Seed.TabIndex = 11;
+            this.map_txtSeed.Location = new System.Drawing.Point(231, 75);
+            this.map_txtSeed.Name = "map_txtSeed";
+            this.map_txtSeed.Size = new System.Drawing.Size(107, 21);
+            this.map_txtSeed.TabIndex = 11;
             // 
-            // cmbMap_Type
+            // map_cmbType
             // 
-            this.cmbMap_Type.FormattingEnabled = true;
-            this.cmbMap_Type.Items.AddRange(new object[] {
+            this.map_cmbType.FormattingEnabled = true;
+            this.map_cmbType.Items.AddRange(new object[] {
                                     "Island",
                                     "Mountains",
                                     "Forest",
@@ -1126,15 +955,15 @@ namespace MCGalaxy.Gui
                                     "Space",
                                     "Rainbow",
                                     "Hell"});
-            this.cmbMap_Type.Location = new System.Drawing.Point(51, 75);
-            this.cmbMap_Type.Name = "cmbMap_Type";
-            this.cmbMap_Type.Size = new System.Drawing.Size(121, 21);
-            this.cmbMap_Type.TabIndex = 10;
+            this.map_cmbType.Location = new System.Drawing.Point(51, 75);
+            this.map_cmbType.Name = "map_cmbType";
+            this.map_cmbType.Size = new System.Drawing.Size(121, 21);
+            this.map_cmbType.TabIndex = 10;
             // 
-            // cmbMap_Z
+            // map_cmbZ
             // 
-            this.cmbMap_Z.FormattingEnabled = true;
-            this.cmbMap_Z.Items.AddRange(new object[] {
+            this.map_cmbZ.FormattingEnabled = true;
+            this.map_cmbZ.Items.AddRange(new object[] {
                                     "16",
                                     "32",
                                     "64",
@@ -1142,15 +971,15 @@ namespace MCGalaxy.Gui
                                     "256",
                                     "512",
                                     "1024"});
-            this.cmbMap_Z.Location = new System.Drawing.Point(279, 48);
-            this.cmbMap_Z.Name = "cmbMap_Z";
-            this.cmbMap_Z.Size = new System.Drawing.Size(60, 21);
-            this.cmbMap_Z.TabIndex = 9;
+            this.map_cmbZ.Location = new System.Drawing.Point(279, 48);
+            this.map_cmbZ.Name = "map_cmbZ";
+            this.map_cmbZ.Size = new System.Drawing.Size(60, 21);
+            this.map_cmbZ.TabIndex = 9;
             // 
-            // cmbMap_Y
+            // map_cmbY
             // 
-            this.cmbMap_Y.FormattingEnabled = true;
-            this.cmbMap_Y.Items.AddRange(new object[] {
+            this.map_cmbY.FormattingEnabled = true;
+            this.map_cmbY.Items.AddRange(new object[] {
                                     "16",
                                     "32",
                                     "64",
@@ -1158,15 +987,15 @@ namespace MCGalaxy.Gui
                                     "256",
                                     "512",
                                     "1024"});
-            this.cmbMap_Y.Location = new System.Drawing.Point(165, 48);
-            this.cmbMap_Y.Name = "cmbMap_Y";
-            this.cmbMap_Y.Size = new System.Drawing.Size(60, 21);
-            this.cmbMap_Y.TabIndex = 8;
+            this.map_cmbY.Location = new System.Drawing.Point(165, 48);
+            this.map_cmbY.Name = "map_cmbY";
+            this.map_cmbY.Size = new System.Drawing.Size(60, 21);
+            this.map_cmbY.TabIndex = 8;
             // 
-            // cmbMap_X
+            // map_cmbX
             // 
-            this.cmbMap_X.FormattingEnabled = true;
-            this.cmbMap_X.Items.AddRange(new object[] {
+            this.map_cmbX.FormattingEnabled = true;
+            this.map_cmbX.Items.AddRange(new object[] {
                                     "16",
                                     "32",
                                     "64",
@@ -1174,26 +1003,26 @@ namespace MCGalaxy.Gui
                                     "256",
                                     "512",
                                     "1024"});
-            this.cmbMap_X.Location = new System.Drawing.Point(52, 48);
-            this.cmbMap_X.Name = "cmbMap_X";
-            this.cmbMap_X.Size = new System.Drawing.Size(60, 21);
-            this.cmbMap_X.TabIndex = 7;
+            this.map_cmbX.Location = new System.Drawing.Point(52, 48);
+            this.map_cmbX.Name = "map_cmbX";
+            this.map_cmbX.Size = new System.Drawing.Size(60, 21);
+            this.map_cmbX.TabIndex = 7;
             // 
-            // lblMap_Name
+            // map_lblName
             // 
-            this.lblMap_Name.AutoSize = true;
-            this.lblMap_Name.Location = new System.Drawing.Point(7, 24);
-            this.lblMap_Name.Name = "lblMap_Name";
-            this.lblMap_Name.Size = new System.Drawing.Size(38, 13);
-            this.lblMap_Name.TabIndex = 6;
-            this.lblMap_Name.Text = "Name:";
+            this.map_lblName.AutoSize = true;
+            this.map_lblName.Location = new System.Drawing.Point(7, 24);
+            this.map_lblName.Name = "map_lblName";
+            this.map_lblName.Size = new System.Drawing.Size(38, 13);
+            this.map_lblName.TabIndex = 6;
+            this.map_lblName.Text = "Name:";
             // 
-            // txtMap_Name
+            // map_txtName
             // 
-            this.txtMap_Name.Location = new System.Drawing.Point(51, 21);
-            this.txtMap_Name.Name = "txtMap_Name";
-            this.txtMap_Name.Size = new System.Drawing.Size(287, 21);
-            this.txtMap_Name.TabIndex = 0;
+            this.map_txtName.Location = new System.Drawing.Point(51, 21);
+            this.map_txtName.Name = "map_txtName";
+            this.map_txtName.Size = new System.Drawing.Size(287, 21);
+            this.map_txtName.TabIndex = 0;
             // 
             // tp_Players
             // 
@@ -1249,14 +1078,6 @@ namespace MCGalaxy.Gui
             this.pl_txtImpersonate.TabIndex = 38;
             this.pl_txtImpersonate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImpersonateORSendCmdTxt_KeyDown);
             // 
-            // pl_txtUndo
-            // 
-            this.pl_txtUndo.Location = new System.Drawing.Point(122, 150);
-            this.pl_txtUndo.Name = "pl_txtUndo";
-            this.pl_txtUndo.Size = new System.Drawing.Size(98, 21);
-            this.pl_txtUndo.TabIndex = 42;
-            this.pl_txtUndo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UndoTxt_KeyDown);
-            // 
             // pl_btnImpersonate
             // 
             this.pl_btnImpersonate.Location = new System.Drawing.Point(6, 48);
@@ -1284,16 +1105,6 @@ namespace MCGalaxy.Gui
             this.pl_btnMessage.Text = "Message:";
             this.pl_btnMessage.UseVisualStyleBackColor = true;
             this.pl_btnMessage.Click += new System.EventHandler(this.MessageBt_Click);
-            // 
-            // pl_btnUndo
-            // 
-            this.pl_btnUndo.Location = new System.Drawing.Point(8, 148);
-            this.pl_btnUndo.Name = "pl_btnUndo";
-            this.pl_btnUndo.Size = new System.Drawing.Size(98, 23);
-            this.pl_btnUndo.TabIndex = 41;
-            this.pl_btnUndo.Text = "Undo:";
-            this.pl_btnUndo.UseVisualStyleBackColor = true;
-            this.pl_btnUndo.Click += new System.EventHandler(this.UndoBt_Click);
             // 
             // pl_gbActions
             // 
@@ -1323,6 +1134,14 @@ namespace MCGalaxy.Gui
             this.pl_btnSpawn.Text = "Spawn";
             this.pl_btnSpawn.UseVisualStyleBackColor = true;
             this.pl_btnSpawn.Click += new System.EventHandler(this.SpawnBt_Click);
+            // 
+            // pl_txtUndo
+            // 
+            this.pl_txtUndo.Location = new System.Drawing.Point(122, 150);
+            this.pl_txtUndo.Name = "pl_txtUndo";
+            this.pl_txtUndo.Size = new System.Drawing.Size(98, 21);
+            this.pl_txtUndo.TabIndex = 42;
+            this.pl_txtUndo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UndoTxt_KeyDown);
             // 
             // pl_btnWarn
             // 
@@ -1363,6 +1182,16 @@ namespace MCGalaxy.Gui
             this.pl_btnBanIP.Text = "IP Ban";
             this.pl_btnBanIP.UseVisualStyleBackColor = true;
             this.pl_btnBanIP.Click += new System.EventHandler(this.IPBanBt_Click);
+            // 
+            // pl_btnUndo
+            // 
+            this.pl_btnUndo.Location = new System.Drawing.Point(8, 148);
+            this.pl_btnUndo.Name = "pl_btnUndo";
+            this.pl_btnUndo.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnUndo.TabIndex = 41;
+            this.pl_btnUndo.Text = "Undo:";
+            this.pl_btnUndo.UseVisualStyleBackColor = true;
+            this.pl_btnUndo.Click += new System.EventHandler(this.UndoBt_Click);
             // 
             // pl_btnSlap
             // 
@@ -1433,7 +1262,7 @@ namespace MCGalaxy.Gui
             this.Controls.Add(this.main_btnClose);
             this.Controls.Add(this.main_btnProps);
             this.Controls.Add(this.main_btnRestart);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.tabs);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -1441,9 +1270,9 @@ namespace MCGalaxy.Gui
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Window_FormClosing);
             this.Load += new System.EventHandler(this.Window_Load);
             this.Resize += new System.EventHandler(this.Window_Resize);
-            this.mapsStrip.ResumeLayout(false);
-            this.playerStrip.ResumeLayout(false);
-            this.iconContext.ResumeLayout(false);
+            this.tsMap.ResumeLayout(false);
+            this.tsPlayer.ResumeLayout(false);
+            this.icon_context.ResumeLayout(false);
             this.logs_tp.ResumeLayout(false);
             this.logs_tab.ResumeLayout(false);
             this.logs_tabErr.ResumeLayout(false);
@@ -1457,15 +1286,15 @@ namespace MCGalaxy.Gui
             this.tp_Main.ResumeLayout(false);
             this.tp_Main.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.main_Maps)).EndInit();
-            this.txtLogMenuStrip.ResumeLayout(false);
+            this.tsLog_Menu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.main_Players)).EndInit();
-            this.tabControl1.ResumeLayout(false);
+            this.tabs.ResumeLayout(false);
             this.tp_Maps.ResumeLayout(false);
-            this.gbMap_Props.ResumeLayout(false);
-            this.gbMap_Lded.ResumeLayout(false);
-            this.gbMap_Unld.ResumeLayout(false);
-            this.gbMap_New.ResumeLayout(false);
-            this.gbMap_New.PerformLayout();
+            this.map_gbProps.ResumeLayout(false);
+            this.map_gbLoaded.ResumeLayout(false);
+            this.map_gbUnloaded.ResumeLayout(false);
+            this.map_gbNew.ResumeLayout(false);
+            this.map_gbNew.PerformLayout();
             this.tp_Players.ResumeLayout(false);
             this.tp_Players.PerformLayout();
             this.pl_gbProps.ResumeLayout(false);
@@ -1479,27 +1308,27 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox pl_gbActions;
         private System.Windows.Forms.GroupBox pl_gbOther;
         private System.Windows.Forms.PropertyGrid pl_pgProps;
-        private System.Windows.Forms.TextBox txtMap_Name;
-        private System.Windows.Forms.Label lblMap_Name;
-        private System.Windows.Forms.ComboBox cmbMap_X;
-        private System.Windows.Forms.ComboBox cmbMap_Y;
-        private System.Windows.Forms.ComboBox cmbMap_Z;
-        private System.Windows.Forms.ComboBox cmbMap_Type;
-        private System.Windows.Forms.TextBox txtMap_Seed;
-        private System.Windows.Forms.Label lblMap_Y;
-        private System.Windows.Forms.Label lblMap_X;
-        private System.Windows.Forms.Label lblMap_Z;
-        private System.Windows.Forms.Label lblMap_Seed;
-        private System.Windows.Forms.Label lblMap_Type;
-        private System.Windows.Forms.Button btnMap_Gen;
-        private System.Windows.Forms.GroupBox gbMap_New;
-        private System.Windows.Forms.ListBox lbMap_Unld;
-        private System.Windows.Forms.Button btnMap_Load;
-        private System.Windows.Forms.GroupBox gbMap_Unld;
-        private System.Windows.Forms.ListBox lbMap_Lded;
-        private System.Windows.Forms.GroupBox gbMap_Lded;
-        private System.Windows.Forms.PropertyGrid pgMaps;
-        private System.Windows.Forms.GroupBox gbMap_Props;
+        private System.Windows.Forms.TextBox map_txtName;
+        private System.Windows.Forms.Label map_lblName;
+        private System.Windows.Forms.ComboBox map_cmbX;
+        private System.Windows.Forms.ComboBox map_cmbY;
+        private System.Windows.Forms.ComboBox map_cmbZ;
+        private System.Windows.Forms.ComboBox map_cmbType;
+        private System.Windows.Forms.TextBox map_txtSeed;
+        private System.Windows.Forms.Label map_lblY;
+        private System.Windows.Forms.Label map_lblX;
+        private System.Windows.Forms.Label map_lblZ;
+        private System.Windows.Forms.Label map_lblSeed;
+        private System.Windows.Forms.Label map_lblType;
+        private System.Windows.Forms.Button map_btnGen;
+        private System.Windows.Forms.GroupBox map_gbNew;
+        private System.Windows.Forms.ListBox map_lbUnloaded;
+        private System.Windows.Forms.Button map_btnLoad;
+        private System.Windows.Forms.GroupBox map_gbUnloaded;
+        private System.Windows.Forms.ListBox map_lbLoaded;
+        private System.Windows.Forms.GroupBox map_gbLoaded;
+        private System.Windows.Forms.PropertyGrid map_pgProps;
+        private System.Windows.Forms.GroupBox map_gbProps;
         private System.Windows.Forms.TabPage tp_Main;
         private System.Windows.Forms.TabPage tabLog_Chg;
         private System.Windows.Forms.TabPage tabLog_Sys;
@@ -1510,26 +1339,18 @@ namespace MCGalaxy.Gui
         #endregion
 
         private Button main_btnClose;
-        private ContextMenuStrip iconContext;
-        private ToolStripMenuItem openConsole;
-        private ToolStripMenuItem shutdownServer;
-        private ContextMenuStrip playerStrip;
-        private ToolStripMenuItem whoisToolStripMenuItem;
-        private ToolStripMenuItem kickToolStripMenuItem;
-        private ToolStripMenuItem banToolStripMenuItem;
-        private ToolStripMenuItem voiceToolStripMenuItem;
-        private ContextMenuStrip mapsStrip;
-        private ToolStripMenuItem settingsToolStripMenuItem;
-        private ToolStripMenuItem finiteModeToolStripMenuItem;
-        private ToolStripMenuItem animalAIToolStripMenuItem;
-        private ToolStripMenuItem edgeWaterToolStripMenuItem;
-        private ToolStripMenuItem growingGrassToolStripMenuItem;
-        private ToolStripMenuItem survivalDeathToolStripMenuItem;
-        private ToolStripMenuItem killerBlocksToolStripMenuItem;
-        private ToolStripMenuItem rPChatToolStripMenuItem;
-        private ToolStripMenuItem clonesToolStripMenuItem;
+        private ContextMenuStrip icon_context;
+        private ToolStripMenuItem icon_openConsole;
+        private ToolStripMenuItem icon_shutdown;
+        private ContextMenuStrip tsPlayer;
+        private ToolStripMenuItem tsPlayer_whois;
+        private ToolStripMenuItem tsPlayer_kick;
+        private ToolStripMenuItem tsPlayer_ban;
+        private ToolStripMenuItem tsPlayer_voice;
+        private ContextMenuStrip tsMap;
+        private ToolStripMenuItem tsPlayer_clones;
         private Button main_btnRestart;
-        private ToolStripMenuItem restartServerToolStripMenuItem;
+        private ToolStripMenuItem icon_restart;
         private TabPage logs_tp;
         private Label logs_lblGeneral;
         private TextBox logs_txtError;
@@ -1540,9 +1361,9 @@ namespace MCGalaxy.Gui
         private TextBox main_txtInput;
         private TextBox main_txtUrl;
         private DataGridView main_Players;
-        private TabControl tabControl1;
-        private ToolStripMenuItem promoteToolStripMenuItem;
-        private ToolStripMenuItem demoteToolStripMenuItem;
+        private TabControl tabs;
+        private ToolStripMenuItem tsPlayer_promote;
+        private ToolStripMenuItem tsPlayer_demote;
         private TabPage tp_Players;
         internal RichTextBox logs_txtGeneral;
         private DateTimePicker logs_dateGeneral;
@@ -1565,42 +1386,31 @@ namespace MCGalaxy.Gui
         private Button main_btnSaveAll;
         private Button main_btnUnloadEmpty;
         private Button main_btnKillPhysics;
-        private ToolStripMenuItem unloadToolStripMenuItem1;
-        private ToolStripMenuItem loadOngotoToolStripMenuItem;
-        private ToolStripMenuItem autpPhysicsToolStripMenuItem;
-        private ToolStripMenuItem instantBuildingToolStripMenuItem;
-        private ToolStripMenuItem gunsToolStripMenuItem;
-        private ToolStripMenuItem infoToolStripMenuItem;
-        private ToolStripMenuItem actiondToolStripMenuItem;
-        private ToolStripMenuItem saveToolStripMenuItem;
-        private ToolStripMenuItem unloadToolStripMenuItem;
-        private ToolStripMenuItem moveAllToolStripMenuItem;
-        private ToolStripMenuItem reloadToolStripMenuItem;
-        private ToolStripMenuItem randomFlowToolStripMenuItem;
-        private ToolStripMenuItem leafDecayToolStripMenuItem;
-        private ToolStripMenuItem treeGrowingToolStripMenuItem;
-        private ToolStripMenuItem physicsToolStripMenuItem;
-        private ToolStripMenuItem toolStripMenuItem2;
-        private ToolStripMenuItem toolStripMenuItem3;
-        private ToolStripMenuItem toolStripMenuItem4;
-        private ToolStripMenuItem toolStripMenuItem5;
-        private ToolStripMenuItem toolStripMenuItem6;
-        private ToolStripMenuItem toolStripMenuItem7;
-        private ToolStripMenuItem physicsToolStripMenuItem1;
-        private ToolStripMenuItem loadingToolStripMenuItem;
-        private ToolStripMenuItem miscToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem tsMap_info;
+        private ToolStripMenuItem tsMap_actionsMenu;
+        private ToolStripMenuItem tsMap_Save;
+        private ToolStripMenuItem tsMap_Unload;
+        private ToolStripMenuItem tsMap_moveAll;
+        private ToolStripMenuItem tsMap_Reload;
+        private ToolStripMenuItem tsMap_physicsMenu;
+        private ToolStripMenuItem tsMap_physics0;
+        private ToolStripMenuItem tsMap_physics1;
+        private ToolStripMenuItem tsMap_physics2;
+        private ToolStripMenuItem tsMap_physics3;
+        private ToolStripMenuItem tsMap_physics4;
+        private ToolStripMenuItem tsMap_physics5;
+        private ToolStripSeparator tsMap_separator;
         private Components.ColoredTextBox main_txtLog;
-        private ContextMenuStrip txtLogMenuStrip;
-        private ToolStripMenuItem nightModeToolStripMenuItem;
-        private ToolStripMenuItem colorsToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator2;
-        private ToolStripMenuItem copySelectedToolStripMenuItem;
-        private ToolStripMenuItem copyAllToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator3;
-        private ToolStripMenuItem clearToolStripMenuItem;
-        private ToolStripMenuItem dateStampToolStripMenuItem;
-        private ToolStripMenuItem autoScrollToolStripMenuItem;
+        private ContextMenuStrip tsLog_Menu;
+        private ToolStripMenuItem tsLog_night;
+        private ToolStripMenuItem tsLog_Colored;
+        private ToolStripSeparator tsLog_separator1;
+        private ToolStripMenuItem tsPlayer_copySelected;
+        private ToolStripMenuItem tsLog_copyAll;
+        private ToolStripSeparator tsLog_separator2;
+        private ToolStripMenuItem tsLog_clear;
+        private ToolStripMenuItem tsLog_dateStamp;
+        private ToolStripMenuItem tsLog_autoScroll;
         private Button main_btnProps;
         private System.Windows.Forms.ToolTip toolTip;
     }

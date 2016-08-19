@@ -53,7 +53,7 @@ namespace MCGalaxy.Gui {
             InitServer();
 
             notifyIcon1.Text = ("MCGalaxy Server: " + Server.name).Truncate(64);
-            notifyIcon1.ContextMenuStrip = this.iconContext;
+            notifyIcon1.ContextMenuStrip = this.icon_context;
             notifyIcon1.Icon = this.Icon;
             notifyIcon1.Visible = true;
             notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(notifyIcon1_MouseClick);
@@ -179,40 +179,37 @@ namespace MCGalaxy.Gui {
 
         /// <summary> Updates the list of client names in the window </summary>
         /// <param name="players">The list of players to add</param>
-        public void UpdateClientList(List<Player> players) {
+        public void UpdateClientList(List<Player> playerList) {
             if (InvokeRequired) {
-                Invoke(new PlayerListCallback(UpdateClientList), players);
-            } else {
-                if (main_Players.DataSource == null)
-                    main_Players.DataSource = pc;
-
-                // Try to keep the same selection on update
-                string selected = null;
-                if (pc.Count > 0 && main_Players.SelectedRows.Count > 0) {
-                    selected = (from DataGridViewRow row in main_Players.Rows where row.Selected select pc[row.Index]).First().name;
-                }
-
-                // Update the data source and control
-                //dgvPlayers.SuspendLayout();
-
-                pc = new PlayerCollection();
-                Player.players.ForEach(p => pc.Add(p));
-
-                //dgvPlayers.Invalidate();
-                main_Players.DataSource = pc;
-                // Reselect player
-                if (selected != null)
-                {
-                    foreach (Player t in Player.players)
-                        for (int j = 0; j < main_Players.Rows.Count; j++)
-                            if (Equals(main_Players.Rows[j].Cells[0].Value, selected))
-                                main_Players.Rows[j].Selected = true;
-                }
-
-                main_Players.Refresh();
-                //dgvPlayers.ResumeLayout();
+                Invoke(new PlayerListCallback(UpdateClientList), playerList); return;
             }
+        	
+        	if (main_Players.DataSource == null)
+        		main_Players.DataSource = pc;
 
+        	// Try to keep the same selection on update
+        	string selected = null;
+        	var selectedRows = main_Players.SelectedRows;
+        	if (pc.Count > 0 && selectedRows.Count > 0)
+        	    selected = pc[selectedRows[0].Index].name;
+
+        	// Update the data source and control
+        	pc = new PlayerCollection();
+        	Player[] players = PlayerInfo.Online.Items;
+        	foreach (Player pl in players)
+        		pc.Add(pl);
+
+        	main_Players.DataSource = pc;
+        	
+        	// Reselect player
+        	if (selected != null) {
+        		for (int i = 0; i < main_Players.Rows.Count; i++) {
+        			if (Equals(main_Players.Rows[i].Cells[0].Value, selected))
+        				main_Players.Rows[i].Selected = true;
+        		}
+        	}
+
+        	main_Players.Refresh();
         }
 
         public void PopupNotify(string message, ToolTipIcon icon = ToolTipIcon.Info) {
@@ -239,19 +236,19 @@ namespace MCGalaxy.Gui {
                 //dgvPlayers.SuspendLayout();
                 lc.Clear();
                 string selectedLvl = null;
-                if (lbMap_Lded.SelectedItem != null)
-                    selectedLvl = lbMap_Lded.SelectedItem.ToString();
+                if (map_lbLoaded.SelectedItem != null)
+                    selectedLvl = map_lbLoaded.SelectedItem.ToString();
                 
-                lbMap_Lded.Items.Clear();
+                map_lbLoaded.Items.Clear();
                 //lc = new LevelCollection(new LevelListView());
                 Server.levels.ForEach(l => lc.Add(l));
-                Server.levels.ForEach(l => lbMap_Lded.Items.Add(l.name));
+                Server.levels.ForEach(l => map_lbLoaded.Items.Add(l.name));
                 
                 if (selectedLvl != null) {
-                    int index = lbMap_Lded.Items.IndexOf(selectedLvl);
-                    lbMap_Lded.SelectedIndex = index;
+                    int index = map_lbLoaded.Items.IndexOf(selectedLvl);
+                    map_lbLoaded.SelectedIndex = index;
                 } else {
-                    lbMap_Lded.SelectedIndex = -1;
+                    map_lbLoaded.SelectedIndex = -1;
                 }
                 UpdateSelectedMap(null, null);
 
@@ -388,11 +385,11 @@ namespace MCGalaxy.Gui {
                     logs_dateGeneral.Value = DateTime.Now;
             }
             catch { }
-            foreach (TextBox txtBox in (from TabPage tP in tabControl1.TabPages from Control ctrl in tP.Controls select ctrl).OfType<TextBox>())
+            foreach (TextBox txtBox in (from TabPage tP in tabs.TabPages from Control ctrl in tP.Controls select ctrl).OfType<TextBox>())
             {
                 txtBox.Update();
             }
-            tabControl1.Update();
+            tabs.Update();
         }
 
         void restartServerToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -517,26 +514,26 @@ namespace MCGalaxy.Gui {
             if (mapgen) { MessageBox.Show("A map is already being generated."); return; }
             string name, x, y, z, type, seed;
 
-            try { name = txtMap_Name.Text.ToLower(); }
+            try { name = map_txtName.Text.ToLower(); }
             catch { name = ""; }
             if (String.IsNullOrEmpty(name)) { MessageBox.Show("Map name cannot be blank."); return; }
-            try { x = cmbMap_X.SelectedItem.ToString(); }
+            try { x = map_cmbX.SelectedItem.ToString(); }
             catch { x = ""; }
             if (String.IsNullOrEmpty(x)) { MessageBox.Show("Map width cannot be blank."); return; }
             
-            try { y = cmbMap_Y.SelectedItem.ToString(); }
+            try { y = map_cmbY.SelectedItem.ToString(); }
             catch { y = ""; }
             if (String.IsNullOrEmpty(y)) { MessageBox.Show("Map height cannot be blank."); return; }
             
-            try { z = cmbMap_Z.SelectedItem.ToString(); }
+            try { z = map_cmbZ.SelectedItem.ToString(); }
             catch { z = ""; }
             if (String.IsNullOrEmpty(z)) { MessageBox.Show("Map length cannot be blank."); return; }
             
-            try { type = cmbMap_Type.SelectedItem.ToString().ToLower(); }
+            try { type = map_cmbType.SelectedItem.ToString().ToLower(); }
             catch { type = ""; }
             if (String.IsNullOrEmpty(type)) { MessageBox.Show("Map type cannot be blank."); return; }
             
-            try { seed = txtMap_Seed.Text; }
+            try { seed = map_txtSeed.Text; }
             catch { seed = ""; }
 
             Thread genThread = new Thread(() =>
@@ -568,7 +565,7 @@ namespace MCGalaxy.Gui {
         
         void MapLoadClick(object sender, EventArgs e) {
             try {
-                Command.all.Find("load").Use(null, lbMap_Unld.SelectedItem.ToString());
+                Command.all.Find("load").Use(null, map_lbUnloaded.SelectedItem.ToString());
             } catch { 
             }
             UpdateUnloadedList();
@@ -577,47 +574,47 @@ namespace MCGalaxy.Gui {
         
         string last = null;
         void UpdateSelectedMap(object sender, EventArgs e) {
-            if (lbMap_Lded.SelectedItem == null) {
-                if (pgMaps.SelectedObject == null) return;
-                pgMaps.SelectedObject = null; last = null;
-                gbMap_Props.Text = "Properties for (none selected)"; return;
+            if (map_lbLoaded.SelectedItem == null) {
+                if (map_pgProps.SelectedObject == null) return;
+                map_pgProps.SelectedObject = null; last = null;
+                map_gbProps.Text = "Properties for (none selected)"; return;
             }
             
-            string name = lbMap_Lded.SelectedItem.ToString();
+            string name = map_lbLoaded.SelectedItem.ToString();
             Level lvl = LevelInfo.FindExact(name);
             if (lvl == null) {
-                if (pgMaps.SelectedObject == null) return;
-                pgMaps.SelectedObject = null; last = null;
-                gbMap_Props.Text = "Properties for (none selected)"; return;
+                if (map_pgProps.SelectedObject == null) return;
+                map_pgProps.SelectedObject = null; last = null;
+                map_gbProps.Text = "Properties for (none selected)"; return;
             }
             
             if (name == last) return;
             last = name;
             LevelProperties settings = new LevelProperties(lvl);
-            pgMaps.SelectedObject = settings;
-            gbMap_Props.Text = "Properties for " + name;
+            map_pgProps.SelectedObject = settings;
+            map_gbProps.Text = "Properties for " + name;
         }
         
         public void UpdateUnloadedList() {
             RunOnUiThread(() =>
             {
                 string selectedLvl = null;
-                if (lbMap_Unld.SelectedItem != null)
-                    selectedLvl = lbMap_Unld.SelectedItem.ToString();
+                if (map_lbUnloaded.SelectedItem != null)
+                    selectedLvl = map_lbUnloaded.SelectedItem.ToString();
                 
-                lbMap_Unld.Items.Clear();
+                map_lbUnloaded.Items.Clear();
                 string[] files = Directory.GetFiles("levels", "*.lvl");
                 foreach (string file in files) {
                     string name = Path.GetFileNameWithoutExtension(file);
                     if (LevelInfo.FindExact(name) == null)
-                        lbMap_Unld.Items.Add(name);
+                        map_lbUnloaded.Items.Add(name);
                 }
                 
                 if (selectedLvl != null) {
-                    int index = lbMap_Unld.Items.IndexOf(selectedLvl);
-                    lbMap_Unld.SelectedIndex = index;
+                    int index = map_lbUnloaded.Items.IndexOf(selectedLvl);
+                    map_lbUnloaded.SelectedIndex = index;
                 } else {
-                    lbMap_Unld.SelectedIndex = -1;
+                    map_lbUnloaded.SelectedIndex = -1;
                 }
             });
         }
@@ -660,7 +657,7 @@ namespace MCGalaxy.Gui {
         }
 
         void UpdatePlayerMapCombo() {          
-            if (tabControl1.SelectedTab != tp_Players) return;
+            if (tabs.SelectedTab != tp_Players) return;
             pl_pgProps.Refresh();
         }
 
@@ -752,11 +749,6 @@ namespace MCGalaxy.Gui {
         }
         #endregion
 
-        void loadOngotoToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " loadongoto"); }
-        void instantBuildingToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " instant"); }
-        void autpPhysicsToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " restartphysics"); }
-        void gunsToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("allowguns"); }
-        void unloadToolStripMenuItem1_Click(object sender, EventArgs e) { LevelCmd("map", " unload"); }
         void infoToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map"); LevelCmd("mapinfo"); }
         void moveAllToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("moveall"); }
         void toolStripMenuItem2_Click_1(object sender, EventArgs e) { LevelCmd("physics", " 0"); }
@@ -768,9 +760,6 @@ namespace MCGalaxy.Gui {
         void saveToolStripMenuItem_Click_1(object sender, EventArgs e) { LevelCmd("save"); }
         void unloadToolStripMenuItem_Click_1(object sender, EventArgs e) { LevelCmd("unload"); }
         void reloadToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("reload"); }
-        void leafDecayToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " leafdecay"); }
-        void randomFlowToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " randomflow"); }
-        void treeGrowingToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " growtrees"); }
 
         #region Colored Reader Context Menu
 
@@ -778,23 +767,23 @@ namespace MCGalaxy.Gui {
             if (MessageBox.Show("Changing to and from night mode will clear your logs. Do you still want to change?", "You sure?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
                 return;
 
-            main_txtLog.NightMode = nightModeToolStripMenuItem.Checked;
-            nightModeToolStripMenuItem.Checked = !nightModeToolStripMenuItem.Checked;
+            main_txtLog.NightMode = tsLog_night.Checked;
+            tsLog_night.Checked = !tsLog_night.Checked;
         }
 
         void colorsToolStripMenuItem_Click_1(object sender, EventArgs e) {
-            main_txtLog.Colorize = !colorsToolStripMenuItem.Checked;
-            colorsToolStripMenuItem.Checked = !colorsToolStripMenuItem.Checked;
+            main_txtLog.Colorize = !tsLog_Colored.Checked;
+            tsLog_Colored.Checked = !tsLog_Colored.Checked;
         }
 
         void dateStampToolStripMenuItem_Click(object sender, EventArgs e) {
-            main_txtLog.DateStamp = !dateStampToolStripMenuItem.Checked;
-            dateStampToolStripMenuItem.Checked = !dateStampToolStripMenuItem.Checked;
+            main_txtLog.DateStamp = !tsLog_dateStamp.Checked;
+            tsLog_dateStamp.Checked = !tsLog_dateStamp.Checked;
         }
 
         void autoScrollToolStripMenuItem_Click(object sender, EventArgs e) {
-            main_txtLog.AutoScroll = !autoScrollToolStripMenuItem.Checked;
-            autoScrollToolStripMenuItem.Checked = !autoScrollToolStripMenuItem.Checked;
+            main_txtLog.AutoScroll = !tsLog_autoScroll.Checked;
+            tsLog_autoScroll.Checked = !tsLog_autoScroll.Checked;
         }
 
         void copySelectedToolStripMenuItem_Click(object sender, EventArgs e) {
