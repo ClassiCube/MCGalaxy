@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using MCGalaxy.Drawing;
 
 namespace MCGalaxy.Util {
 
@@ -36,121 +35,44 @@ namespace MCGalaxy.Util {
             throw new NotSupportedException("Non-optimised binary undo files have been deprecated");
         }
         
-        protected override void ReadUndoData(List<Player.UndoPos> buffer, string path) {
-            Player.UndoPos Pos;
-            using (Stream fs = File.OpenRead(path))
-                using (BinaryReader r = new BinaryReader(fs))
-            {
-                int approxEntries = (int)(fs.Length / entrySize);
-                if (buffer.Capacity < approxEntries)
-                    buffer.Capacity = approxEntries;
-                while (fs.Position < fs.Length) {
-                    ChunkHeader chunk = ReadHeader(fs, r);
-                    Pos.mapName = chunk.LevelName;
-                    
-                    for (int j = 0; j < chunk.Entries; j++ ) {
-                        DateTime rawTime = chunk.BaseTime.AddSeconds(r.ReadUInt16());
-                        Pos.timeDelta = (int)rawTime.Subtract(Server.StartTime).TotalSeconds;
-                        Pos.x = r.ReadUInt16(); Pos.y = r.ReadUInt16(); Pos.z = r.ReadUInt16();
-                        Pos.type = r.ReadByte(); Pos.extType = r.ReadByte();
-                        Pos.newtype = r.ReadByte(); Pos.newExtType = r.ReadByte();
-                        buffer.Add(Pos);
-                    }
-                }
-            }
-        }
-        
-        protected override bool UndoEntry(Player p, string path, Vec3S32[] marks,
-                                          ref byte[] temp, DateTime start) {
+        protected override IEnumerable<Player.UndoPos> GetEntries(Stream s, UndoEntriesArgs args) {
             List<ChunkHeader> list = new List<ChunkHeader>();
-            int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
-            Player.UndoPos Pos = default(Player.UndoPos);
-            Vec3U16 min = (Vec3U16)marks[0], max = (Vec3U16)marks[1];
-            bool undoArea = min.X != ushort.MaxValue;
+            Player.UndoPos pos = default(Player.UndoPos);
+            bool super = args.Player == null || args.Player.ircNick != null;
+            DateTime start = args.StartRange;
             
-            using (Stream fs = File.OpenRead(path))
-                using (BinaryReader r = new BinaryReader(fs))
-            {
-                ReadHeaders(list, r);
-                for (int i = list.Count - 1; i >= 0; i--) {
-                    ChunkHeader chunk = list[i];
-                    Level lvl;
-                    if (!CheckChunk(chunk, start, p, out lvl)) return false;
-                    if (lvl == null) continue;
-                    bool super = p == null || p.ircNick != null;
-                    if (!super && !p.level.name.CaselessEq(lvl.name)) continue;
+            ReadHeaders(list, s);
+            for (int i = list.Count - 1; i >= 0; i--) {
+                ChunkHeader chunk = list[i];
+                // Can we safely discard the entire chunk?
+                bool inRange = chunk.BaseTime.AddTicks(65536 * TimeSpan.TicksPerSecond) >= start;
+                if (!inRange) { args.Stop = true; yield break; }
+                if (!super && !args.Player.level.name.CaselessEq(chunk.LevelName)) continue;
+                
+                s.Seek(chunk.DataPosition, SeekOrigin.Begin);
+                if (args.Temp == null)
+                    args.Temp = new byte[ushort.MaxValue * entrySize];
+                s.Read(args.Temp, 0, chunk.Entries * entrySize);
+                byte[] temp = args.Temp;
+                
+                for (int j = chunk.Entries - 1; j >= 0; j-- ) {
+                    int offset = j * entrySize;
+                    DateTime time = chunk.BaseTime.AddTicks(U16(temp, offset + 0) * TimeSpan.TicksPerSecond);
+                    if (time < start) { args.Stop = true; yield break; }
                     
-                    BufferedBlockSender buffer = new BufferedBlockSender(lvl);
-                    if (!undoArea) {
-                        min = new Vec3U16(0, 0, 0);
-                        max = new Vec3U16((ushort)(lvl.Width - 1), (ushort)(lvl.Height - 1), (ushort)(lvl.Length - 1));
-                    }
+                    pos.x = U16(temp, offset + 2);
+                    pos.y = U16(temp, offset + 4);
+                    pos.z = U16(temp, offset + 6);
                     
-                    Pos.mapName = chunk.LevelName;
-                    fs.Seek(chunk.DataPosition, SeekOrigin.Begin);
-                    if (temp == null) temp = new byte[ushort.MaxValue * entrySize];
-                    fs.Read(temp, 0, chunk.Entries * entrySize);
-                    
-                    for (int j = chunk.Entries - 1; j >= 0; j-- ) {
-                        int offset = j * entrySize;
-                        DateTime time = chunk.BaseTime.AddTicks(U16(temp, offset + 0) * TimeSpan.TicksPerSecond);
-                        if (time < start) { buffer.CheckIfSend(true); return false; }
-                        Pos.x = U16(temp, offset + 2); Pos.y = U16(temp, offset + 4); Pos.z = U16(temp, offset + 6);
-                        if (Pos.x < min.X || Pos.y < min.Y || Pos.z < min.Z ||
-                            Pos.x > max.X || Pos.y > max.Y || Pos.z > max.Z) continue;
-                        
-                        Pos.type = temp[offset + 8]; Pos.extType = temp[offset + 9];
-                        Pos.newtype = temp[offset + 10]; Pos.newExtType = temp[offset + 11];
-                        UndoBlock(p, lvl, Pos, timeDelta, buffer);
-                    }
-                    buffer.CheckIfSend(true);
+                    pos.type = temp[offset + 8]; pos.extType = temp[offset + 9];
+                    pos.newtype = temp[offset + 10]; pos.newExtType = temp[offset + 11];
+                    yield return pos;
                 }
             }
-            return true;
-        }
-
-        protected override bool HighlightEntry(Player p, string path,
-                                               ref byte[] temp, DateTime start) {
-            List<ChunkHeader> list = new List<ChunkHeader>();
-            
-            using (Stream fs = File.OpenRead(path))
-                using (BinaryReader r = new BinaryReader(fs))
-            {
-                ReadHeaders(list, r);
-                for (int i = list.Count - 1; i >= 0; i--) {
-                    ChunkHeader chunk = list[i];
-                    Level lvl;
-                    if (!CheckChunk(chunk, start, p, out lvl))
-                        return false;
-                    if (lvl == null || lvl != p.level) continue;
-                    
-                    fs.Seek(chunk.DataPosition, SeekOrigin.Begin);
-                    if (temp == null) temp = new byte[ushort.MaxValue * entrySize];
-                    fs.Read(temp, 0, chunk.Entries * entrySize);
-                    
-                    for (int j = chunk.Entries - 1; j >= 0; j-- ) {
-                        int offset = j * entrySize;
-                        DateTime time = chunk.BaseTime.AddTicks(U16(temp, offset + 0) * TimeSpan.TicksPerSecond);
-                        if (time < start) return false;
-                        ushort x = U16(temp, offset + 2), y = U16(temp, offset + 4), z = U16(temp, offset + 6);
-                        HighlightBlock(p, lvl, temp[offset + 8], temp[offset + 10], x, y, z);
-                    }
-                }
-            }
-            return true;
         }
         
         static ushort U16(byte[] buffer, int offset) {
             return (ushort)(buffer[offset + 0] | buffer[offset + 1] << 8);
-        }
-        
-        static bool CheckChunk(ChunkHeader chunk, DateTime start, Player p, out Level lvl) {
-            DateTime time = chunk.BaseTime;
-            lvl = null;
-            if (time.AddTicks(65536 * TimeSpan.TicksPerSecond) < start)
-                return false; // we can safely discard the entire chunk
-            lvl = LevelInfo.FindExact(chunk.LevelName);
-            return true;
         }
         
         struct ChunkHeader {
@@ -160,8 +82,8 @@ namespace MCGalaxy.Util {
             public long DataPosition;
         }
         
-        static void ReadHeaders(List<ChunkHeader> list, BinaryReader r) {
-            Stream s = r.BaseStream;
+        static void ReadHeaders(List<ChunkHeader> list, Stream s) {
+            BinaryReader r = new BinaryReader(s);
             long len = s.Length;
             while (s.Position < len) {
                 ChunkHeader header = ReadHeader(s, r);

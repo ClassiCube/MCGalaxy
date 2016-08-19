@@ -29,17 +29,18 @@ namespace MCGalaxy.Util {
         public static UndoFile BinFormat = new UndoFileBin();
         public static UndoFile NewFormat = new UndoFileCBin();
         
+        protected class UndoEntriesArgs {
+        	public Player Player;
+            public byte[] Temp;
+            public bool Stop;
+            public DateTime StartRange;
+        }
+        
         protected abstract void SaveUndoData(List<Player.UndoPos> buffer, string path);
         
         protected abstract void SaveUndoData(UndoCache buffer, string path);
-         
-        protected abstract void ReadUndoData(List<Player.UndoPos> buffer, string path);
         
-        protected abstract bool UndoEntry(Player p, string path, Vec3S32[] marks,
-                                          ref byte[] temp, DateTime start);
-        
-        protected abstract bool HighlightEntry(Player p, string path, 
-                                               ref byte[] temp, DateTime start);
+        protected abstract IEnumerable<Player.UndoPos> GetEntries(Stream s, UndoEntriesArgs args);
         
         protected abstract string Extension { get; }
         
@@ -66,8 +67,8 @@ namespace MCGalaxy.Util {
             }
 
             using (IDisposable locker = cache.ClearLock.AccquireWriteLock()) {
-            	lock (cache.AddLock)
-            	    cache.Clear();
+                lock (cache.AddLock)
+                    cache.Clear();
             }
         }
         
@@ -138,17 +139,17 @@ namespace MCGalaxy.Util {
                         buffer.CheckIfSend(false);
                     }
                 } else {
-                	bool diffBlock = Block.Convert(lvlTile) != Block.Convert(P.newtype);
+                    bool diffBlock = Block.Convert(lvlTile) != Block.Convert(P.newtype);
                     if (!diffBlock && lvlTile == Block.custom_block)
-                    	diffBlock = lvl.GetExtTile(P.x, P.y, P.z) != P.newExtType;
+                        diffBlock = lvl.GetExtTile(P.x, P.y, P.z) != P.newExtType;
                     
-                	if (diffBlock) {
+                    if (diffBlock) {
                         buffer.Add(lvl.PosToInt(P.x, P.y, P.z), P.newtype, P.newExtType);
                         buffer.CheckIfSend(false);
                     }                    
                     lvl.SetTile(P.x, P.y, P.z, P.newtype);
                     if (P.newtype == Block.custom_block)
-                    	lvl.SetExtTile(P.x, P.y, P.z, P.newExtType);
+                        lvl.SetExtTile(P.x, P.y, P.z, P.newExtType);
                 }              
             }
         }
@@ -156,9 +157,9 @@ namespace MCGalaxy.Util {
         protected static void HighlightBlock(Player p, Level lvl, byte type, byte newType, 
                                              ushort x, ushort y, ushort z) {
             byte block = (newType == Block.air 
-        	              || Block.Convert(type) == Block.water || type == Block.waterstill
-        	              || Block.Convert(type) == Block.lava || type == Block.lavastill) 
-        	    ? Block.red : Block.green;
+                          || Block.Convert(type) == Block.water || type == Block.waterstill
+                          || Block.Convert(type) == Block.lava || type == Block.lavastill) 
+                ? Block.red : Block.green;
             p.SendBlockchange(x, y, z, block);
         }
         
