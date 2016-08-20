@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing.Ops {
             UndoCache cache = p.UndoBuffer;
             using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
                 if (UndoBlocks(p)) yield break;
-            }          
+            }      
             bool found = false;
             string target = who.name.ToLower();
             

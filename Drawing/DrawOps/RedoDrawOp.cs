@@ -37,43 +37,19 @@ namespace MCGalaxy.Drawing.Ops {
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             UndoCache cache = p.UndoBuffer;
             using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
-                RedoBlocks(p);
+                if (RedoBlocks(p)) yield break;
             }
+            
+            bool found = false;
+            UndoFormat.DoRedo(p, p.name.ToLower(), Start, End, ref found);
             yield break;
         }
         
-        void RedoBlocks(Player p) {
-            UndoCache cache = p.UndoBuffer;
-            UndoCacheNode node = p.UndoBuffer.Tail;
-            if (node == null) return;
-            
-            while (node != null) {
-                Level lvl = LevelInfo.FindExact(node.MapName);
-                if (lvl == null || (p.level != null && !p.level.name.CaselessEq(lvl.name))) {
-                    node = node.Prev; continue;
-                }
-                List<UndoCacheItem> items = node.Items;
-                BufferedBlockSender buffer = new BufferedBlockSender(lvl);
-                
-                for (int i = items.Count - 1; i >= 0; i--) {
-                    UndoCacheItem item = items[i];
-                    ushort x, y, z;
-                    node.Unpack(item.Index, out x, out y, out z);
-                    
-                    DateTime time = node.BaseTime.AddTicks(item.TimeDelta * TimeSpan.TicksPerSecond);
-                    if (time > End) continue;
-                    if (time < Start) { buffer.CheckIfSend(true); return; }
-                    
-                    byte tile, extTile;
-                    item.GetBlock(out tile, out extTile);
-                    if (lvl.DoBlockchange(p, x, y, z, tile, extTile, true)) {
-                        buffer.Add(lvl.PosToInt(x, y, z), tile, extTile);
-                        buffer.CheckIfSend(false);
-                    }
-                }
-                buffer.CheckIfSend(true);
-                node = node.Prev;
-            }
+        bool RedoBlocks(Player p) {
+            UndoFormatArgs args = new UndoFormatArgs(p, Start);
+            UndoFormat format = new UndoFormatOnline(p.UndoBuffer);
+            UndoFormat.DoRedo(null, End, format, args);
+            return args.Stop;
         }
     }
 }
