@@ -90,7 +90,7 @@ namespace MCGalaxy.Drawing.Ops {
                     
                     item.GetNewBlock(out Pos.newtype, out Pos.newExtType);
                     item.GetBlock(out Pos.type, out Pos.extType);
-                    UndoFormat.UndoBlock(p, lvl, Pos, timeDelta, buffer);
+                    UndoFormat.UndoBlock(p, lvl, Pos, buffer);
                 }
                 buffer.CheckIfSend(true);
                 node = node.Prev;

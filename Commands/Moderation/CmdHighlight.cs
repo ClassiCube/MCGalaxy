@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
             long seconds;
             bool found = false;
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            if (message == "") message = p.name + " 300";
+            if (message == "") message = p.name + " 1800";
             string[] args = message.Split(' ');
             string name = args[0];
 
@@ -46,9 +46,9 @@ namespace MCGalaxy.Commands {
             } else if (long.TryParse(args[0], out seconds)) {
                 args[0] = p.name;
             } else {
-                seconds = 300;
+                seconds = 30 * 60;
             }
-            if (seconds <= 0) seconds = 5400;
+            if (seconds <= 0) seconds = 30 * 60;
             DateTime start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
 
             Player who = PlayerInfo.Find(name);

@@ -77,8 +77,7 @@ namespace MCGalaxy.Undo {
         static void FilterEntries(Player p, string dir, string name, Vec3S32[] marks,
                                   DateTime start, bool highlight, ref bool FoundUser) {
             string path = Path.Combine(dir, name);
-            if (!Directory.Exists(path))
-                return;
+            if (!Directory.Exists(path)) return;
             string[] files = Directory.GetFiles(path);
             Array.Sort<string>(files, CompareFiles);
             UndoEntriesArgs args = new UndoEntriesArgs(p, start);
@@ -99,7 +98,7 @@ namespace MCGalaxy.Undo {
                     if (highlight) {
                         DoHighlight(s, format, args);
                     } else {
-                        // TODO: fixy fix if (!format.UndoEntry(p, path, marks, ref temp, start)) break;
+                	    DoUndo(s, format, args);
                     }
                     if (args.Stop) break;
                 }
@@ -117,8 +116,43 @@ namespace MCGalaxy.Undo {
             return aNum.CompareTo(bNum);
         }
         
+        public static void DoHighlight(Stream s, UndoFormat format, UndoEntriesArgs args) {
+            BufferedBlockSender buffer = new BufferedBlockSender(args.Player);
+            Level lvl = args.Player.level;
+            
+            foreach (Player.UndoPos P in format.GetEntries(s, args)) {
+                byte type = P.type, newType = P.newtype;
+                byte block = (newType == Block.air
+                              || Block.Convert(type) == Block.water || type == Block.waterstill
+                              || Block.Convert(type) == Block.lava || type == Block.lavastill)
+                    ? Block.red : Block.green;
+                
+                buffer.Add(lvl.PosToInt(P.x, P.y, P.z), block, 0);
+                buffer.CheckIfSend(false);
+            }
+            buffer.CheckIfSend(true);
+        }
+        
+        public static void DoUndo(Stream s, UndoFormat format, UndoEntriesArgs args) {            
+            Level lvl = args.Player == null ? null : args.Player.level;
+            BufferedBlockSender buffer = new BufferedBlockSender(lvl);
+            string lastMap = null;
+            
+            foreach (Player.UndoPos P in format.GetEntries(s, args)) {
+                if (P.mapName != lastMap) {
+                    lvl = LevelInfo.FindExact(P.mapName);
+                    buffer.CheckIfSend(true);
+                    buffer.level = lvl;
+                }
+                
+                if (lvl == null) continue;
+                UndoBlock(args.Player, lvl, P, buffer);
+            }
+            buffer.CheckIfSend(true);
+        }
+        
         protected internal static void UndoBlock(Player pl, Level lvl, Player.UndoPos P,
-                                                 int timeDelta, BufferedBlockSender buffer) {
+                                                 BufferedBlockSender buffer) {
             byte lvlTile = lvl.GetTile(P.x, P.y, P.z);
             if (lvlTile == P.newtype || Block.Convert(lvlTile) == Block.water
                 || Block.Convert(lvlTile) == Block.lava || lvlTile == Block.grass) {
@@ -126,7 +160,6 @@ namespace MCGalaxy.Undo {
                 byte newExtType = P.newExtType;
                 P.newtype = P.type; P.newExtType = P.extType;
                 P.extType = newExtType; P.type = lvlTile;
-                P.timeDelta = timeDelta;
                 
                 if (pl != null) {
                     if (lvl.DoBlockchange(pl, P.x, P.y, P.z, P.newtype, P.newExtType, true)) {
@@ -147,23 +180,6 @@ namespace MCGalaxy.Undo {
                         lvl.SetExtTile(P.x, P.y, P.z, P.newExtType);
                 }
             }
-        }
-        
-        public static void DoHighlight(Stream s, UndoFormat format, UndoEntriesArgs args) {
-            BufferedBlockSender buffer = new BufferedBlockSender(args.Player);
-            Level lvl = args.Player.level;
-            
-            foreach (Player.UndoPos P in format.GetEntries(s, args)) {
-                byte type = P.type, newType = P.newtype;
-                byte block = (newType == Block.air
-                              || Block.Convert(type) == Block.water || type == Block.waterstill
-                              || Block.Convert(type) == Block.lava || type == Block.lavastill)
-                    ? Block.red : Block.green;
-                
-                buffer.Add(lvl.PosToInt(P.x, P.y, P.z), block, 0);
-                buffer.CheckIfSend(false);
-            }
-            buffer.CheckIfSend(true);
         }
         
         
@@ -193,8 +209,7 @@ namespace MCGalaxy.Undo {
                 IEnumerable<Player.UndoPos> data = null;
                 using (FileStream s = File.OpenRead(path)) {
                     data = path.EndsWith(BinFormat.Ext)
-                        ? BinFormat.GetEntries(s, args)
-                        : TxtFormat.GetEntries(s, args);
+                        ? BinFormat.GetEntries(s, args) : TxtFormat.GetEntries(s, args);
                     
                     foreach (Player.UndoPos pos in data)
                         buffer.Add(pos);
