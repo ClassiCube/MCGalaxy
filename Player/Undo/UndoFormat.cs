@@ -21,6 +21,8 @@ using System.IO;
 
 namespace MCGalaxy.Undo {
 
+    /// <summary> Retrieves and saves undo data in a particular format. </summary>
+    /// <remarks> Note most formats only support retrieving undo data. </remarks>
     public abstract class UndoFormat {
         
         protected const string undoDir = "extra/undo", prevUndoDir = "extra/undoPrevious";
@@ -76,34 +78,48 @@ namespace MCGalaxy.Undo {
         
         static void FilterEntries(Player p, string dir, string name, Vec3S32[] marks,
                                   DateTime start, bool highlight, ref bool FoundUser) {
-            string path = Path.Combine(dir, name);
-            if (!Directory.Exists(path)) return;
-            string[] files = Directory.GetFiles(path);
-            Array.Sort<string>(files, CompareFiles);
+            string[] files = GetFiles(dir, name);
+            if (files == null || files.Length == 0) return;
             UndoEntriesArgs args = new UndoEntriesArgs(p, start);
             
             for (int i = files.Length - 1; i >= 0; i--) {
-                path = files[i];
-                string file = Path.GetFileName(path);
-                if (file.Length == 0 || file[0] < '0' || file[0] > '9')
-                    continue;
-                
-                UndoFormat format = null;
-                if (path.EndsWith(TxtFormat.Ext)) format = TxtFormat;
-                if (path.EndsWith(BinFormat.Ext)) format = BinFormat;
-                if (path.EndsWith(NewFormat.Ext)) format = NewFormat;
+                string path = files[i];
+                if (path == null) continue;
+                UndoFormat format = GetFormat(path);
                 if (format == null) continue;
                 
                 using (Stream s = File.OpenRead(path)) {
                     if (highlight) {
                         DoHighlight(s, format, args);
                     } else {
-                	    DoUndo(s, format, args);
+                        DoUndo(s, format, args);
                     }
                     if (args.Stop) break;
                 }
             }
             FoundUser = true;
+        }
+        
+        static string[] GetFiles(string dir, string name) {
+            string path = Path.Combine(dir, name);
+            if (!Directory.Exists(path)) return null;
+            
+            string[] files = Directory.GetFiles(path);
+            Array.Sort<string>(files, CompareFiles);
+            
+            for (int i = 0; i < files.Length; i++) {
+                name = Path.GetFileName(files[i]);
+                if (name.Length == 0 || name[0] < '0' || name[0] > '9')
+                    files[i] = null;
+            }
+            return files;
+        }
+        
+        static UndoFormat GetFormat(string file) {
+            if (file.EndsWith(TxtFormat.Ext)) return TxtFormat;
+            if (file.EndsWith(BinFormat.Ext)) return BinFormat;
+            if (file.EndsWith(NewFormat.Ext)) return NewFormat;
+            return null;
         }
         
         static int CompareFiles(string a, string b) {
@@ -133,7 +149,7 @@ namespace MCGalaxy.Undo {
             buffer.CheckIfSend(true);
         }
         
-        public static void DoUndo(Stream s, UndoFormat format, UndoEntriesArgs args) {            
+        public static void DoUndo(Stream s, UndoFormat format, UndoEntriesArgs args) {
             Level lvl = args.Player == null ? null : args.Player.level;
             BufferedBlockSender buffer = new BufferedBlockSender(lvl);
             string lastMap = null;
