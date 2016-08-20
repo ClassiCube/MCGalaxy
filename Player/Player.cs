@@ -20,7 +20,7 @@ using System.Net.Sockets;
 using System.Threading;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
-using MCGalaxy.Util;
+using MCGalaxy.Undo;
 
 namespace MCGalaxy {
     public sealed partial class Player : IDisposable {
@@ -345,7 +345,7 @@ namespace MCGalaxy {
         
         public static void SaveUndo(Player p) {
             try {
-                UndoFile.SaveUndo(p);
+                UndoFormat.SaveUndo(p);
             } catch (Exception e) { 
                 Server.s.Log("Error saving undo data for " + p.name + "!"); Server.ErrorLog(e); 
             }

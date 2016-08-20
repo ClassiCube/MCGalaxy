@@ -541,12 +541,13 @@
     <Compile Include="Player\PlayerInfo.cs" />
     <Compile Include="Player\TabList.cs" />
     <Compile Include="Player\Undo\UndoCache.cs" />
-    <Compile Include="Player\Undo\UndoFileCBin.cs" />
+    <Compile Include="Player\Undo\UndoFormatCBin.cs" />
+    <Compile Include="Player\Undo\UndoFormatOnline.cs" />
     <Compile Include="Player\Warp.cs" />
     <Compile Include="Player\Player.Timers.cs" />
-    <Compile Include="Player\Undo\UndoFile.cs" />
-    <Compile Include="Player\Undo\UndoFileBin.cs" />
-    <Compile Include="Player\Undo\UndoFileText.cs" />
+    <Compile Include="Player\Undo\UndoFormat.cs" />
+    <Compile Include="Player\Undo\UndoFormatBin.cs" />
+    <Compile Include="Player\Undo\UndoFormatText.cs" />
     <Compile Include="Plugins\Events\Enums.cs" />
     <Compile Include="Plugins\Events\GroupEvents.cs" />
     <Compile Include="Plugins\Events\IPluginEvent.cs" />

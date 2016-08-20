@@ -20,18 +20,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace MCGalaxy.Util {
+namespace MCGalaxy.Undo {
 
-    public sealed class UndoFileBin : UndoFile {
+    public sealed class UndoFormatBin : UndoFormat {
         
         protected override string Ext { get { return ".unbin"; } }
         const int entrySize = 12;
 
-        protected override void SaveUndoData(List<Player.UndoPos> buffer, string path) {
+        protected override void Save(List<Player.UndoPos> buffer, string path) {
             throw new NotSupportedException("Non-optimised binary undo files have been deprecated");
         }
         
-        protected override void SaveUndoData(UndoCache buffer, string path) {
+        protected override void Save(UndoCache buffer, string path) {
             throw new NotSupportedException("Non-optimised binary undo files have been deprecated");
         }
         

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace MCGalaxy.Util {
+namespace MCGalaxy.Undo {
 
     public sealed class UndoCache {
 

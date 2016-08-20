@@ -17,7 +17,7 @@
  */
 using System;
 using MCGalaxy.Drawing.Ops;
-using MCGalaxy.Util;
+using MCGalaxy.Undo;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdUndo : Command {
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Building {
             long seconds = GetSeconds(p, who, parts.Length > 1 ? parts[1] : "30");
             
             if (parts.Length > 1 && parts[1].CaselessEq("update")) {
-                UndoFile.UpgradePlayerUndoFiles(parts[0]);
+                UndoFormat.UpgradePlayerUndoFiles(parts[0]);
                 Player.Message(p, "Updated undo files for " + parts[0] + " to the new binary format.");
                 return;
             }

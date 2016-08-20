@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.BlockPhysics;
 using MCGalaxy.Drawing.Brushes;
-using MCGalaxy.Util;
+using MCGalaxy.Undo;
 
 namespace MCGalaxy.Drawing.Ops {
 
@@ -49,7 +49,7 @@ namespace MCGalaxy.Drawing.Ops {
             
             bool foundUser = false;
             Vec3S32[] bounds = { Min, Max };
-            UndoFile.UndoPlayer(p, who.name.ToLower(), bounds, Start, ref foundUser);
+            UndoFormat.UndoPlayer(p, who.name.ToLower(), bounds, Start, ref foundUser);
             yield break;
         }
         
@@ -90,7 +90,7 @@ namespace MCGalaxy.Drawing.Ops {
                     
                     item.GetNewBlock(out Pos.newtype, out Pos.newExtType);
                     item.GetBlock(out Pos.type, out Pos.extType);
-                    UndoFile.UndoBlock(p, lvl, Pos, timeDelta, buffer);
+                    UndoFormat.UndoBlock(p, lvl, Pos, timeDelta, buffer);
                 }
                 buffer.CheckIfSend(true);
                 node = node.Prev;
@@ -112,7 +112,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             Vec3S32[] bounds = { Min, Max };
-            UndoFile.UndoPlayer(p, whoName.ToLower(), bounds, Start, ref foundUser);
+            UndoFormat.UndoPlayer(p, whoName.ToLower(), bounds, Start, ref foundUser);
             yield break;
         }
     }

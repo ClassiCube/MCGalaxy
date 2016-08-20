@@ -20,7 +20,7 @@ using MCGalaxy.BlockPhysics;
 using MCGalaxy.Commands;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
-using MCGalaxy.Util;
+using MCGalaxy.Undo;
 
 namespace MCGalaxy.Drawing {
     internal struct PendingDrawOp {

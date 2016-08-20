@@ -21,14 +21,14 @@ using System.IO;
 using System.Text;
 using MCGalaxy.Levels.IO;
 
-namespace MCGalaxy.Util {
+namespace MCGalaxy.Undo {
 
-    public sealed class UndoFileCBin : UndoFile {
+    public sealed class UndoFormatCBin : UndoFormat {
         
         protected override string Ext { get { return ".uncbin"; } }
         const int entrySize = 8;
 
-        protected override void SaveUndoData(List<Player.UndoPos> buffer, string path) {
+        protected override void Save(List<Player.UndoPos> buffer, string path) {
             UndoCacheNode node = new UndoCacheNode();
             string lastLoggedName = "";
             
@@ -68,7 +68,7 @@ namespace MCGalaxy.Util {
             }
         }
         
-        protected override void SaveUndoData(UndoCache buffer, string path) {
+        protected override void Save(UndoCache buffer, string path) {
             using (FileStream fs = File.Create(path)) {
                 BinaryWriter w = new BinaryWriter(fs);
                 long entriesPos = 0;

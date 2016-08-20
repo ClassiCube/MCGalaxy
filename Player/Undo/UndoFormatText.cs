@@ -20,17 +20,17 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
-namespace MCGalaxy.Util {
+namespace MCGalaxy.Undo {
 
-    public sealed class UndoFileText : UndoFile {
+    public sealed class UndoFormatText : UndoFormat {
         
         protected override string Ext { get { return ".undo"; } }
         
-        protected override void SaveUndoData(List<Player.UndoPos> buffer, string path) {
+        protected override void Save(List<Player.UndoPos> buffer, string path) {
             throw new NotSupportedException("Text undo files have been deprecated");
         }
         
-        protected override void SaveUndoData(UndoCache buffer, string path) {
+        protected override void Save(UndoCache buffer, string path) {
             throw new NotSupportedException("Text undo files have been deprecated");
         }
         

@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using MCGalaxy.Util;
+using MCGalaxy.Undo;
 
 namespace MCGalaxy.Commands {
     
@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             long seconds;
-            bool FoundUser = false;
+            bool found = false;
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") message = p.name + " 300";
             string[] args = message.Split(' ');
@@ -49,19 +49,20 @@ namespace MCGalaxy.Commands {
                 seconds = 300;
             }
             if (seconds <= 0) seconds = 5400;
+            DateTime start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
 
             Player who = PlayerInfo.Find(name);
+            bool done = false;
             if (who != null) {
-                FoundUser = true;
+                found = true;
                 UndoCache cache = who.UndoBuffer;
                 using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
-                    HighlightBlocks(p, seconds, cache);
+                    done = HighlightBlocks(p, start, cache);
                 }
-            }
-
-            DateTime start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
-            UndoFile.HighlightPlayer(p, name.ToLower(), start, ref FoundUser);
-            if (FoundUser) {
+            }          
+            if (!done) UndoFormat.HighlightPlayer(p, name.ToLower(), start, ref found);
+            
+            if (found) {
                 Player.Message(p, "Now highlighting &b" + seconds +  " %Sseconds for " + Server.FindColor(name) + name);
                 Player.Message(p, "&cUse /reload to un-highlight");
             } else {
@@ -69,34 +70,12 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        static void HighlightBlocks(Player p, long seconds, UndoCache cache) {
-            UndoCacheNode node = cache.Tail;
-            if (node == null) return;
-            
-            BufferedBlockSender sender = new BufferedBlockSender(p);
-            while (node != null) {
-                Level lvl = LevelInfo.FindExact(node.MapName);
-                if (lvl != p.level) { node = node.Prev; continue; }
-                List<UndoCacheItem> items = node.Items;
-                
-                for (int i = items.Count - 1; i >= 0; i--) {
-                    UndoCacheItem item = items[i];
-                    ushort x, y, z;
-                    node.Unpack(item.Index, out x, out y, out z);
-                    DateTime time = node.BaseTime.AddSeconds(item.TimeDelta + seconds);
-                    if (time < DateTime.UtcNow) { sender.CheckIfSend(true); return; }
-                    
-                    byte newBlock = 0, newExtBlock = 0;
-                    item.GetNewBlock(out newBlock, out newExtBlock);
-                    int index = lvl.PosToInt(x, y, z);
-                    
-                    byte highlightBlock = newBlock == Block.air ? Block.red : Block.green;
-                    sender.Add(index, highlightBlock, 0);
-                    sender.CheckIfSend(false);
-                }
-                node = node.Prev;
-            }
-            sender.CheckIfSend(true);
+        static bool HighlightBlocks(Player p, DateTime start, UndoCache cache) {
+            UndoEntriesArgs args = new UndoEntriesArgs(p, start);
+            UndoFormatOnline format = new UndoFormatOnline();
+            format.Cache = cache;           
+            UndoFormat.DoHighlight(null, format, args);
+            return args.Stop;
         }
 
         public override void Help(Player p) {
