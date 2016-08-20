@@ -34,32 +34,31 @@ namespace MCGalaxy.Undo {
             throw new NotSupportedException("Text undo files have been deprecated");
         }
         
-        protected override IEnumerable<Player.UndoPos> GetEntries(Stream s, UndoEntriesArgs args) {
-            Player.UndoPos pos;
-            pos.newExtType = 0; pos.extType = 0;
+        protected override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
+            UndoFormatEntry pos;
+            pos.NewExtBlock = 0; pos.ExtBlock = 0;
             string[] lines = new StreamReader(s).ReadToEnd().Split(' ');
             Player p = args.Player;
             bool super = p == null || p.ircNick != null;
-            DateTime start = args.StartRange;
+            DateTime start = args.Start;
             
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
             for (int i = (lines.Length - 1) / 7; i >= 0; i--) {
                 // line format: mapName x y z date oldblock newblock
                 string timeRaw = lines[(i * 7) - 3].Replace('&', ' ');
-                DateTime time = DateTime.Parse(timeRaw, CultureInfo.InvariantCulture);
-                if (time < start) { args.Stop = true; yield break; }
-                pos.timeDelta = (int)time.Subtract(Server.StartTimeLocal).TotalSeconds;
+                pos.Time = DateTime.Parse(timeRaw, CultureInfo.InvariantCulture);
+                if (pos.Time < start) { args.Stop = true; yield break; }
                 
                 string map = lines[(i * 7) - 7];
                 if (!super && !p.level.name.CaselessEq(map)) continue;
-                pos.mapName = map;
+                pos.LevelName = map;
                 
-                pos.x = Convert.ToUInt16(lines[(i * 7) - 6]);
-                pos.y = Convert.ToUInt16(lines[(i * 7) - 5]);
-                pos.z = Convert.ToUInt16(lines[(i * 7) - 4]);
+                pos.X = Convert.ToUInt16(lines[(i * 7) - 6]);
+                pos.Y = Convert.ToUInt16(lines[(i * 7) - 5]);
+                pos.Z = Convert.ToUInt16(lines[(i * 7) - 4]);
                 
-                pos.newtype = Convert.ToByte(lines[(i * 7) - 1]);
-                pos.type = Convert.ToByte(lines[(i * 7) - 2]);
+                pos.NewBlock = Convert.ToByte(lines[(i * 7) - 1]);
+                pos.Block = Convert.ToByte(lines[(i * 7) - 2]);
                 yield return pos;
             }
         }

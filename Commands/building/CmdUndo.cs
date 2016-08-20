@@ -118,14 +118,12 @@ namespace MCGalaxy.Commands.Building {
             op.who = who;
             DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
             
-            Level saveLevel = op.saveLevel;
             if (p == who) {
                 Player.Message(p, "Undid your actions for the past &b" + seconds + " %Sseconds.");
             } else {
                 Player.SendChatFrom(who, who.ColoredName + "%S's actions for the past &b" + seconds + " seconds were undone.", false);
             }
             Server.s.Log(who.name + "'s actions for the past " + seconds + " seconds were undone.");
-            if (saveLevel != null) saveLevel.Save(true);
         }
         
         void UndoOfflinePlayer(Player p, long seconds, string whoName) {
@@ -136,7 +134,7 @@ namespace MCGalaxy.Commands.Building {
             op.whoName = whoName;
             DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
 
-            if (op.foundUser) {
+            if (op.found) {
             	Chat.MessageAll("{0}{1}%S's actions for the past &b{2} %Sseconds were undone.", 
             	                Server.FindColor(whoName), whoName, seconds);
                 Server.s.Log(whoName + "'s actions for the past " + seconds + " seconds were undone.");

@@ -35,11 +35,11 @@ namespace MCGalaxy.Undo {
             throw new NotSupportedException("Non-optimised binary undo files have been deprecated");
         }
         
-        protected override IEnumerable<Player.UndoPos> GetEntries(Stream s, UndoEntriesArgs args) {
+        protected override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
             List<ChunkHeader> list = new List<ChunkHeader>();
-            Player.UndoPos pos;
+            UndoFormatEntry pos;
             bool super = args.Player == null || args.Player.ircNick != null;
-            DateTime start = args.StartRange;
+            DateTime start = args.Start;
             
             ReadHeaders(list, s);
             for (int i = list.Count - 1; i >= 0; i--) {
@@ -48,7 +48,7 @@ namespace MCGalaxy.Undo {
                 bool inRange = chunk.BaseTime.AddTicks(65536 * TimeSpan.TicksPerSecond) >= start;
                 if (!inRange) { args.Stop = true; yield break; }
                 if (!super && !args.Player.level.name.CaselessEq(chunk.LevelName)) continue;
-                pos.mapName = chunk.LevelName;
+                pos.LevelName = chunk.LevelName;
                 
                 s.Seek(chunk.DataPosition, SeekOrigin.Begin);
                 if (args.Temp == null)
@@ -58,16 +58,15 @@ namespace MCGalaxy.Undo {
                 
                 for (int j = chunk.Entries - 1; j >= 0; j-- ) {
                     int offset = j * entrySize;
-                    DateTime time = chunk.BaseTime.AddTicks(U16(temp, offset + 0) * TimeSpan.TicksPerSecond);
-                    if (time < start) { args.Stop = true; yield break; }
-                    pos.timeDelta = (int)time.Subtract(Server.StartTime).TotalSeconds;
+                    pos.Time = chunk.BaseTime.AddTicks(U16(temp, offset + 0) * TimeSpan.TicksPerSecond);
+                    if (pos.Time < start) { args.Stop = true; yield break; }
                     
-                    pos.x = U16(temp, offset + 2);
-                    pos.y = U16(temp, offset + 4);
-                    pos.z = U16(temp, offset + 6);
+                    pos.X = U16(temp, offset + 2);
+                    pos.Y = U16(temp, offset + 4);
+                    pos.Z = U16(temp, offset + 6);
                     
-                    pos.type = temp[offset + 8]; pos.extType = temp[offset + 9];
-                    pos.newtype = temp[offset + 10]; pos.newExtType = temp[offset + 11];
+                    pos.Block = temp[offset + 8]; pos.ExtBlock = temp[offset + 9];
+                    pos.NewBlock = temp[offset + 10]; pos.NewExtBlock = temp[offset + 11];
                     yield return pos;
                 }
             }

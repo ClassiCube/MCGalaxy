@@ -23,7 +23,7 @@ namespace MCGalaxy.Undo {
 
     /// <summary> Retrieves and saves undo data in a particular format. </summary>
     /// <remarks> Note most formats only support retrieving undo data. </remarks>
-    public abstract class UndoFormat {
+    public abstract partial class UndoFormat {
         
         protected const string undoDir = "extra/undo", prevUndoDir = "extra/undoPrevious";
         public static UndoFormat TxtFormat = new UndoFormatText();
@@ -34,10 +34,12 @@ namespace MCGalaxy.Undo {
         
         protected abstract void Save(UndoCache buffer, string path);
         
-        protected abstract IEnumerable<Player.UndoPos> GetEntries(Stream s, UndoEntriesArgs args);
+        protected abstract IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args);
         
         protected abstract string Ext { get; }
         
+        /// <summary> Saves the undo data for the given player to disc. </summary>
+        /// <remarks> Clears the player's in-memory undo buffer on success. </remarks>
         public static void SaveUndo(Player p) {
             if (p == null || p.UndoBuffer.Count < 1) return;
             
@@ -64,52 +66,40 @@ namespace MCGalaxy.Undo {
                 lock (cache.AddLock)
                     cache.Clear();
             }
-        }
+        }   
         
-        public static void UndoPlayer(Player p, string target, Vec3S32[] marks, DateTime start, ref bool FoundUser) {
-            FilterEntries(p, undoDir, target, marks, start, false, ref FoundUser);
-            FilterEntries(p, prevUndoDir, target, marks, start, false, ref FoundUser);
-        }
-        
-        public static void HighlightPlayer(Player p, string target, DateTime start, ref bool FoundUser) {
-            FilterEntries(p, undoDir, target, null, start, true, ref FoundUser);
-            FilterEntries(p, prevUndoDir, target, null, start, true, ref FoundUser);
-        }
-        
-        static void FilterEntries(Player p, string dir, string name, Vec3S32[] marks,
-                                  DateTime start, bool highlight, ref bool FoundUser) {
-            string[] files = GetFiles(dir, name);
-            if (files == null || files.Length == 0) return;
-            UndoEntriesArgs args = new UndoEntriesArgs(p, start);
+        /// <summary> Gets a list of all undo file names for the given player. </summary>
+        /// <remarks> This list is sorted, such that the first element is the
+        /// most recent undo file, and the last element is the oldest.</remarks>
+        public static List<string> GetUndoFiles(string name) {
+            List<string> entries = new List<string>();
+            string[] cur = GetFiles(undoDir, name);
+            string[] prev = GetFiles(prevUndoDir, name);
             
-            for (int i = files.Length - 1; i >= 0; i--) {
-                string path = files[i];
-                if (path == null) continue;
-                UndoFormat format = GetFormat(path);
-                if (format == null) continue;
-                
-                using (Stream s = File.OpenRead(path)) {
-                    if (highlight) {
-                        DoHighlight(s, format, args);
-                    } else {
-                        DoUndo(s, format, args);
-                    }
-                    if (args.Stop) break;
-                }
+            // Start from the last entry, because when undoing we want to start
+            // with the most recent file first
+            for (int i = cur.Length - 1; i >= 0; i--) {
+                if (cur[i] == null) continue;
+                entries.Add(cur[i]);
             }
-            FoundUser = true;
+            for (int i = prev.Length - 1; i >= 0; i--) {
+                if (prev[i] == null) continue;
+                entries.Add(prev[i]);
+            }
+            return entries;
         }
         
         static string[] GetFiles(string dir, string name) {
             string path = Path.Combine(dir, name);
-            if (!Directory.Exists(path)) return null;
-            
+            if (!Directory.Exists(path)) return new string[0];
             string[] files = Directory.GetFiles(path);
             Array.Sort<string>(files, CompareFiles);
             
             for (int i = 0; i < files.Length; i++) {
                 name = Path.GetFileName(files[i]);
                 if (name.Length == 0 || name[0] < '0' || name[0] > '9')
+                    files[i] = null;
+                if (files[i] != null && GetFormat(name) == null)
                     files[i] = null;
             }
             return files;
@@ -132,121 +122,43 @@ namespace MCGalaxy.Undo {
             return aNum.CompareTo(bNum);
         }
         
-        public static void DoHighlight(Stream s, UndoFormat format, UndoEntriesArgs args) {
-            BufferedBlockSender buffer = new BufferedBlockSender(args.Player);
-            Level lvl = args.Player.level;
-            
-            foreach (Player.UndoPos P in format.GetEntries(s, args)) {
-                byte type = P.type, newType = P.newtype;
-                byte block = (newType == Block.air
-                              || Block.Convert(type) == Block.water || type == Block.waterstill
-                              || Block.Convert(type) == Block.lava || type == Block.lavastill)
-                    ? Block.red : Block.green;
-                
-                buffer.Add(lvl.PosToInt(P.x, P.y, P.z), block, 0);
-                buffer.CheckIfSend(false);
-            }
-            buffer.CheckIfSend(true);
-        }
-        
-        public static void DoUndo(Stream s, UndoFormat format, UndoEntriesArgs args) {
-            Level lvl = args.Player == null ? null : args.Player.level;
-            BufferedBlockSender buffer = new BufferedBlockSender(lvl);
-            string lastMap = null;
-            
-            foreach (Player.UndoPos P in format.GetEntries(s, args)) {
-                if (P.mapName != lastMap) {
-                    lvl = LevelInfo.FindExact(P.mapName);
-                    buffer.CheckIfSend(true);
-                    buffer.level = lvl;
-                }
-                
-                if (lvl == null) continue;
-                UndoBlock(args.Player, lvl, P, buffer);
-            }
-            buffer.CheckIfSend(true);
-        }
-        
-        protected internal static void UndoBlock(Player pl, Level lvl, Player.UndoPos P,
-                                                 BufferedBlockSender buffer) {
-            byte lvlTile = lvl.GetTile(P.x, P.y, P.z);
-            if (lvlTile == P.newtype || Block.Convert(lvlTile) == Block.water
-                || Block.Convert(lvlTile) == Block.lava || lvlTile == Block.grass) {
-                
-                byte newExtType = P.newExtType;
-                P.newtype = P.type; P.newExtType = P.extType;
-                P.extType = newExtType; P.type = lvlTile;
-                
-                if (pl != null) {
-                    if (lvl.DoBlockchange(pl, P.x, P.y, P.z, P.newtype, P.newExtType, true)) {
-                        buffer.Add(lvl.PosToInt(P.x, P.y, P.z), P.newtype, P.newExtType);
-                        buffer.CheckIfSend(false);
-                    }
-                } else {
-                    bool diffBlock = Block.Convert(lvlTile) != Block.Convert(P.newtype);
-                    if (!diffBlock && lvlTile == Block.custom_block)
-                        diffBlock = lvl.GetExtTile(P.x, P.y, P.z) != P.newExtType;
-                    
-                    if (diffBlock) {
-                        buffer.Add(lvl.PosToInt(P.x, P.y, P.z), P.newtype, P.newExtType);
-                        buffer.CheckIfSend(false);
-                    }
-                    lvl.SetTile(P.x, P.y, P.z, P.newtype);
-                    if (P.newtype == Block.custom_block)
-                        lvl.SetExtTile(P.x, P.y, P.z, P.newExtType);
-                }
-            }
-        }
-        
-        
+        /// <summary> Creates the default base directories used to store undo data on disc. </summary>
         public static void CreateDefaultDirectories() {
             if (!Directory.Exists(undoDir))
                 Directory.CreateDirectory(undoDir);
             if (!Directory.Exists(prevUndoDir))
                 Directory.CreateDirectory(prevUndoDir);
         }
-        
-        public static void UpgradePlayerUndoFiles(string name) {
-            UpgradeFiles(undoDir, name);
-            UpgradeFiles(prevUndoDir, name);
-        }
-        
-        static void UpgradeFiles(string dir, string name) {
-            string path = Path.Combine(dir, name);
-            if (!Directory.Exists(path)) return;
-            string[] files = Directory.GetFiles(path);
-            List<Player.UndoPos> buffer = new List<Player.UndoPos>();
-            UndoEntriesArgs args = new UndoEntriesArgs(null, DateTime.MinValue);
-            
-            for (int i = 0; i < files.Length; i++) {
-                path = files[i];
-                if (!path.EndsWith(BinFormat.Ext) && !path.EndsWith(TxtFormat.Ext)) continue;
-                
-                IEnumerable<Player.UndoPos> data = null;
-                using (FileStream s = File.OpenRead(path)) {
-                    data = path.EndsWith(BinFormat.Ext)
-                        ? BinFormat.GetEntries(s, args) : TxtFormat.GetEntries(s, args);
-                    
-                    foreach (Player.UndoPos pos in data)
-                        buffer.Add(pos);
-                    buffer.Reverse();
-                    string newPath = Path.ChangeExtension(path, NewFormat.Ext);
-                    NewFormat.Save(buffer, newPath);
-                }
-                File.Delete(path);
-            }
-        }
     }
     
-    public class UndoEntriesArgs {
-        public Player Player;
-        public byte[] Temp;
+    /// <summary> Arguments provided to an UndoFormat for retrieving undo data. </summary>
+    public class UndoFormatArgs {
+
+        /// <summary> Player associated with this undo, can be console or IRC. </summary>
+        internal readonly Player Player;
+
+        /// <summary> Small work buffer, used to avoid memory allocations. </summary>
+        internal byte[] Temp;
+
+        /// <summary> Whether the format has finished retrieving undo data,
+        /// due to finding an entry before the start range. </summary>
         public bool Stop;
-        public DateTime StartRange;
-        
-        public UndoEntriesArgs(Player p, DateTime start) {
+
+        /// <summary> First instance in time that undo data should be retrieved back to. </summary>
+        internal readonly DateTime Start;
+
+        public UndoFormatArgs(Player p, DateTime start) {
             Player = p;
-            StartRange = start;
+            Start = start;
         }
+    }
+
+    public struct UndoFormatEntry {
+        public string LevelName;
+        public DateTime Time;
+        
+        public ushort X, Y, Z;
+        public byte Block, ExtBlock;
+        public byte NewBlock, NewExtBlock;
     }
 }

@@ -24,7 +24,10 @@ namespace MCGalaxy.Undo {
     public sealed class UndoFormatOnline : UndoFormat {
         
         protected override string Ext { get { return null; } }
-        public UndoCache Cache;
+        readonly UndoCache cache;
+        public UndoFormatOnline(UndoCache cache) {
+            this.cache = cache;
+        }
 
         protected override void Save(List<Player.UndoPos> buffer, string path) {
             throw new NotSupportedException("UndoFileOnline is read only.");
@@ -34,29 +37,29 @@ namespace MCGalaxy.Undo {
             throw new NotSupportedException("UndoFileOnline is read only.");
         }
         
-        protected override IEnumerable<Player.UndoPos> GetEntries(Stream s, UndoEntriesArgs args) {
-            UndoCacheNode node = Cache.Tail;
+        protected override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
+            UndoCacheNode node = cache.Tail;
             if (node == null) yield break;
             
-            Player.UndoPos pos;
+            UndoFormatEntry pos;
             bool super = args.Player == null || args.Player.ircNick != null;
-            DateTime start = args.StartRange;
+            DateTime start = args.Start;
             
             while (node != null) {
                 Level lvl = LevelInfo.FindExact(node.MapName);
                 if (!super && !args.Player.level.name.CaselessEq(node.MapName)) continue;
                 List<UndoCacheItem> items = node.Items;
-                pos.mapName = node.MapName;
+                pos.LevelName = node.MapName;
                 
                 for (int i = items.Count - 1; i >= 0; i--) {
                     UndoCacheItem item = items[i];
                     DateTime time = node.BaseTime.AddTicks(item.TimeDelta * TimeSpan.TicksPerSecond);
                     if (time < start) { args.Stop = true; yield break; }
-                    pos.timeDelta = (int)time.Subtract(Server.StartTime).TotalSeconds;
+                    pos.Time = time;
                     
-                    node.Unpack(item.Index, out pos.x, out pos.y, out pos.z);
-                    item.GetBlock(out pos.type, out pos.extType);
-                    item.GetNewBlock(out pos.newtype, out pos.newExtType);
+                    node.Unpack(item.Index, out pos.X, out pos.Y, out pos.Z);
+                    item.GetBlock(out pos.Block, out pos.ExtBlock);
+                    item.GetNewBlock(out pos.NewBlock, out pos.NewExtBlock);
                     yield return pos;
                 }
                 node = node.Prev;

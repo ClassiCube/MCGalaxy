@@ -98,12 +98,12 @@ namespace MCGalaxy.Undo {
             }
         }
 
-        protected override IEnumerable<Player.UndoPos> GetEntries(Stream s, UndoEntriesArgs args) {
+        protected override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
             List<ChunkHeader> list = new List<ChunkHeader>();
-            Player.UndoPos pos;
+            UndoFormatEntry pos;
             UndoCacheItem item = default(UndoCacheItem);
             bool super = args.Player == null || args.Player.ircNick != null;
-            DateTime start = args.StartRange;            
+            DateTime start = args.Start;            
 
             ReadHeaders(list, s);
             for (int i = list.Count - 1; i >= 0; i--) {
@@ -112,7 +112,7 @@ namespace MCGalaxy.Undo {
                 bool inRange = chunk.BaseTime.AddTicks((65536 >> 2) * TimeSpan.TicksPerSecond) >= start;
                 if (!inRange) { args.Stop = true; yield break; }
                 if (!super && !args.Player.level.name.CaselessEq(chunk.LevelName)) continue;
-                pos.mapName = chunk.LevelName;
+                pos.LevelName = chunk.LevelName;
                 
                 s.Seek(chunk.DataPosition, SeekOrigin.Begin);
                 if (args.Temp == null)
@@ -123,19 +123,18 @@ namespace MCGalaxy.Undo {
                 for (int j = chunk.Entries - 1; j >= 0; j-- ) {
                     int offset = j * entrySize;
                     item.Flags = U16(temp, offset + 0);
-                    DateTime time = chunk.BaseTime.AddTicks((item.Flags & 0x3FFF) * TimeSpan.TicksPerSecond);
-                    if (time < start) { args.Stop = true; yield break; }
-                    pos.timeDelta = (int)time.Subtract(Server.StartTime).TotalSeconds;
+                    pos.Time = chunk.BaseTime.AddTicks((item.Flags & 0x3FFF) * TimeSpan.TicksPerSecond);
+                    if (pos.Time < start) { args.Stop = true; yield break; }
                     
                     int index = I32(temp, offset + 2);
-                    pos.x = (ushort)(index % chunk.Width);
-                    pos.y = (ushort)((index / chunk.Width) / chunk.Length);
-                    pos.z = (ushort)((index / chunk.Width) % chunk.Length);
+                    pos.X = (ushort)(index % chunk.Width);
+                    pos.Y = (ushort)((index / chunk.Width) / chunk.Length);
+                    pos.Z = (ushort)((index / chunk.Width) % chunk.Length);
                     
                     item.Type = temp[offset + 6];
                     item.NewType = temp[offset + 7];
-                    item.GetBlock(out pos.type, out pos.extType);
-                    item.GetNewBlock(out pos.newtype, out pos.newExtType);
+                    item.GetBlock(out pos.Block, out pos.ExtBlock);
+                    item.GetNewBlock(out pos.NewBlock, out pos.NewExtBlock);
                     yield return pos;
                 }
             }

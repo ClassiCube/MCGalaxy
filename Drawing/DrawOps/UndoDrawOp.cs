@@ -27,7 +27,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "UndoSelf"; } }
     }
     
-    public class UndoOnlineDrawOp : DrawOp {        
+    public class UndoOnlineDrawOp : DrawOp {
         public override string Name { get { return "UndoOnline"; } }
         
         /// <summary> Point in time that the /undo should go backwards up to. </summary>
@@ -37,67 +37,36 @@ namespace MCGalaxy.Drawing.Ops {
         public DateTime End = DateTime.MaxValue;
         
         internal Player who;
-        internal Level saveLevel = null;
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             UndoCache cache = p.UndoBuffer;
             using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
-                UndoBlocks(p, ref saveLevel);
-            }
+                if (UndoBlocks(p)) yield break;
+            }          
+            bool found = false;
+            string target = who.name.ToLower();
             
-            bool foundUser = false;
-            Vec3S32[] bounds = { Min, Max };
-            UndoFormat.UndoPlayer(p, who.name.ToLower(), bounds, Start, ref foundUser);
+            if (Min.X != ushort.MaxValue)
+                UndoFormat.DoUndoArea(p, target, Start, Min, Max, ref found);
+            else
+                UndoFormat.DoUndo(p, target, Start, End, ref found);
             yield break;
         }
         
-        void UndoBlocks(Player p, ref Level saveLvl) {
-            UndoCache cache = who.UndoBuffer;
-            UndoCacheNode node = cache.Tail;
-            if (node == null) return;
+        bool UndoBlocks(Player p) {
+            UndoFormatArgs args = new UndoFormatArgs(p, Start);
+            UndoFormat format = new UndoFormatOnline(p.UndoBuffer);
             
-            Vec3U16 min = (Vec3U16)Min, max = (Vec3U16)Max;
-            bool undoArea = Min.X != ushort.MaxValue;
-            Player.UndoPos Pos = default(Player.UndoPos);
-            int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
-            
-            while (node != null) {
-                Level lvl = LevelInfo.FindExact(node.MapName);
-                if (lvl == null) { node = node.Prev; continue; }
-                bool super = p == null || p.ircNick != null;
-                if (!super && !p.level.name.CaselessEq(lvl.name)) { node = node.Prev; continue; }
-                Pos.mapName = lvl.name;
-                
-                saveLvl = lvl;
-                List<UndoCacheItem> items = node.Items;
-                BufferedBlockSender buffer = new BufferedBlockSender(lvl);
-                if (!undoArea) {
-                    min = new Vec3U16(0, 0, 0);
-                    max = new Vec3U16((ushort)(lvl.Width - 1), (ushort)(lvl.Height - 1), (ushort)(lvl.Length - 1));
-                }
-                
-                for (int i = items.Count - 1; i >= 0; i--) {
-                    UndoCacheItem item = items[i];
-                    node.Unpack(item.Index, out Pos.x, out Pos.y, out Pos.z);
-                    if (Pos.x < min.X || Pos.y < min.Y || Pos.z < min.Z ||
-                        Pos.x > max.X || Pos.y > max.Y || Pos.z > max.Z) continue;
-                    
-                    DateTime time = node.BaseTime.AddTicks(item.TimeDelta * TimeSpan.TicksPerSecond);
-                    if (time > End) continue;
-                    if (time < Start) { buffer.CheckIfSend(true); return; }
-                    
-                    item.GetNewBlock(out Pos.newtype, out Pos.newExtType);
-                    item.GetBlock(out Pos.type, out Pos.extType);
-                    UndoFormat.UndoBlock(p, lvl, Pos, buffer);
-                }
-                buffer.CheckIfSend(true);
-                node = node.Prev;
-            }
+            if (Min.X != ushort.MaxValue)
+                UndoFormat.DoUndoArea(null, Min, Max, format, args);
+            else
+                UndoFormat.DoUndo(null, End, format, args);
+            return args.Stop;
         }
     }
-    
+
     public class UndoOfflineDrawOp : DrawOp {
         
         public override string Name { get { return "UndoOffline"; } }
@@ -106,17 +75,20 @@ namespace MCGalaxy.Drawing.Ops {
         public DateTime Start = DateTime.MinValue;
         
         internal string whoName;
-        internal bool foundUser = false;
+        internal bool found = false;
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
-            Vec3S32[] bounds = { Min, Max };
-            UndoFormat.UndoPlayer(p, whoName.ToLower(), bounds, Start, ref foundUser);
+            string target = whoName.ToLower();
+            if (Min.X != ushort.MaxValue)
+                UndoFormat.DoUndoArea(p, target, Start, Min, Max, ref found);
+            else
+                UndoFormat.DoUndo(p, target, Start, DateTime.MaxValue, ref found);
             yield break;
         }
     }
-    
+
     public class UndoPhysicsDrawOp : DrawOp {
         
         public override string Name { get { return "UndoPhysics"; } }

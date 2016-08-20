@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
                     done = HighlightBlocks(p, start, cache);
                 }
             }          
-            if (!done) UndoFormat.HighlightPlayer(p, name.ToLower(), start, ref found);
+            if (!done) UndoFormat.DoHighlight(p, name.ToLower(), start, ref found);
             
             if (found) {
                 Player.Message(p, "Now highlighting &b" + seconds +  " %Sseconds for " + Server.FindColor(name) + name);
@@ -71,9 +71,8 @@ namespace MCGalaxy.Commands {
         }
         
         static bool HighlightBlocks(Player p, DateTime start, UndoCache cache) {
-            UndoEntriesArgs args = new UndoEntriesArgs(p, start);
-            UndoFormatOnline format = new UndoFormatOnline();
-            format.Cache = cache;           
+            UndoFormatArgs args = new UndoFormatArgs(p, start);
+            UndoFormat format = new UndoFormatOnline(cache);
             UndoFormat.DoHighlight(null, format, args);
             return args.Stop;
         }
