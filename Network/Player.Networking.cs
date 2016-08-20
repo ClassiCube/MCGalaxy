@@ -329,7 +329,7 @@ namespace MCGalaxy {
                 
                 SendRaw(Opcode.LevelInitialise);
                 using (LevelChunkStream s = new LevelChunkStream(this))
-                	LevelChunkStream.CompressMap(this, s);
+                    LevelChunkStream.CompressMap(this, s);
                 
                 byte[] buffer = new byte[7];
                 buffer[0] = Opcode.LevelFinalise;
@@ -475,29 +475,6 @@ namespace MCGalaxy {
                 buffer[7] = Block.Convert(Block.ConvertCPE(block));
             }
             Send(buffer);
-        }
-        
-        void SendKick(string message, bool sync) {
-            byte[] buffer = new byte[65];
-            buffer[0] = Opcode.Kick;
-            NetUtils.Write(message, buffer, 1, HasCpeExt(CpeExt.FullCP437));
-            Send(buffer, sync);
-        }
-        
-        void SendExtInfo( byte count ) {
-            byte[] buffer = new byte[67];
-            buffer[0] = Opcode.CpeExtInfo;
-            NetUtils.WriteAscii("MCGalaxy " + Server.Version, buffer, 1);
-            NetUtils.WriteI16((short)count, buffer, 65);
-            Send(buffer, true);
-        }
-        
-        void SendExtEntry( string name, int version ) {
-            byte[] buffer = new byte[69];
-            buffer[0] = Opcode.CpeExtEntry;
-            NetUtils.WriteAscii(name, buffer, 1);
-            NetUtils.WriteI32(version, buffer, 65);
-            Send(buffer, true);
         }
 
         public void SendExtAddEntity(byte id, string name, string displayname = "") {

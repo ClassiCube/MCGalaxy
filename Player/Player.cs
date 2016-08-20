@@ -279,7 +279,8 @@ namespace MCGalaxy {
                 isFlying = false;
                 aiming = false;
                 
-                SendKick(kickMsg, sync);
+                bool cp437 = HasCpeExt(CpeExt.FullCP437);
+                Send(Packet.MakeKick(kickMsg, cp437), sync);
                 disconnected = true;
                 if (!loggedIn) {
                     connections.Remove(this);

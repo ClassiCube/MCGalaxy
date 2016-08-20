@@ -50,5 +50,12 @@ namespace MCGalaxy {
             buffer[1] = Block.canPlace(p, Block.blackrock) ? (byte)100 : (byte)0;
             return buffer;
         }
+        
+        public static byte[] MakeKick(string message, bool cp437) {
+            byte[] buffer = new byte[65];
+            buffer[0] = Opcode.Kick;
+            NetUtils.Write(message, buffer, 1, cp437);
+            return buffer;
+        }
     }
 }

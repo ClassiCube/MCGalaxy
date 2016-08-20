@@ -21,6 +21,22 @@ namespace MCGalaxy {
 
     public static partial class Packet {     
         
+        public static byte[] MakeExtInfo(byte count) {
+            byte[] buffer = new byte[67];
+            buffer[0] = Opcode.CpeExtInfo;
+            NetUtils.WriteAscii("MCGalaxy " + Server.Version, buffer, 1);
+            NetUtils.WriteI16((short)count, buffer, 65);
+            return buffer;
+        }
+        
+        public static byte[] MakeExtEntry(string name, int version) {
+            byte[] buffer = new byte[69];
+            buffer[0] = Opcode.CpeExtEntry;
+            NetUtils.WriteAscii(name, buffer, 1);
+            NetUtils.WriteI32(version, buffer, 65);
+            return buffer;
+        }
+        
         public static byte[] MakeClickDistance(short distance) {
             byte[] buffer = new byte[3];
             buffer[0] = Opcode.CpeSetClickDistance;

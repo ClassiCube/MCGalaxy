@@ -211,7 +211,7 @@ namespace MCGalaxy {
                 case Opcode.CpeCustomBlockSupportLevel: return 2;
                 default:
                     if (!dontmindme)
-                    	Leave("Unhandled message id \"" + buffer[0] + "\"!", true);
+                        Leave("Unhandled message id \"" + buffer[0] + "\"!", true);
                     else
                         Server.s.Log(Encoding.UTF8.GetString(buffer, 0, buffer.Length));
                     return -1;
@@ -219,7 +219,7 @@ namespace MCGalaxy {
         }
         
         void HandlePacket(byte[] buffer) {
-        	switch (buffer[0]) {
+            switch (buffer[0]) {
                 case Opcode.Handshake:
                     HandleLogin(buffer); break;
                 case Opcode.SetBlockClient:
@@ -242,7 +242,7 @@ namespace MCGalaxy {
 
         void HandleBlockchange(byte[] packet) {
             try {
-        		if (!loggedIn || CheckBlockSpam()) return;              
+                if (!loggedIn || CheckBlockSpam()) return;              
                 ushort x = NetUtils.ReadU16(packet, 1);
                 ushort y = NetUtils.ReadU16(packet, 3);
                 ushort z = NetUtils.ReadU16(packet, 5);

@@ -157,34 +157,34 @@ namespace MCGalaxy {
         }
         
         void SendCpeExtensions() {
-            SendExtInfo(21);
-            SendExtEntry(CpeExt.ClickDistance, 1);
-            SendExtEntry(CpeExt.CustomBlocks, 1);
-            SendExtEntry(CpeExt.HeldBlock, 1);
+            Send(Packet.MakeExtInfo(21), true);
+            Send(Packet.MakeExtEntry(CpeExt.ClickDistance, 1), true);
+            Send(Packet.MakeExtEntry(CpeExt.CustomBlocks, 1), true);
+            Send(Packet.MakeExtEntry(CpeExt.HeldBlock, 1), true);
             
-            SendExtEntry(CpeExt.TextHotkey, 1);
-            SendExtEntry(CpeExt.EnvColors, 1);
-            SendExtEntry(CpeExt.SelectionCuboid, 1);
+            Send(Packet.MakeExtEntry(CpeExt.TextHotkey, 1), true);
+            Send(Packet.MakeExtEntry(CpeExt.EnvColors, 1), true);
+            Send(Packet.MakeExtEntry(CpeExt.SelectionCuboid, 1), true);
             
-            SendExtEntry(CpeExt.BlockPermissions, 1);
-            SendExtEntry(CpeExt.ChangeModel, 1);
-            SendExtEntry(CpeExt.EnvMapAppearance, 2);
+            Send(Packet.MakeExtEntry(CpeExt.BlockPermissions, 1), true);
+            Send(Packet.MakeExtEntry(CpeExt.ChangeModel, 1), true);
+            Send(Packet.MakeExtEntry(CpeExt.EnvMapAppearance, 2), true);
             
-            SendExtEntry(CpeExt.EnvWeatherType, 1);
-            SendExtEntry(CpeExt.HackControl, 1);
-            SendExtEntry(CpeExt.EmoteFix, 1);
+            Send(Packet.MakeExtEntry(CpeExt.EnvWeatherType, 1), true);
+            Send(Packet.MakeExtEntry(CpeExt.HackControl, 1), true);
+            Send(Packet.MakeExtEntry(CpeExt.EmoteFix, 1), true);
             
-            SendExtEntry(CpeExt.FullCP437, 1);
-            SendExtEntry(CpeExt.LongerMessages, 1);
-            SendExtEntry(CpeExt.BlockDefinitions, 1);
+            Send(Packet.MakeExtEntry(CpeExt.FullCP437, 1), true);
+            Send(Packet.MakeExtEntry(CpeExt.LongerMessages, 1), true);
+            Send(Packet.MakeExtEntry(CpeExt.BlockDefinitions, 1), true);
             
-            SendExtEntry(CpeExt.BlockDefinitionsExt, 2);
-            SendExtEntry(CpeExt.TextColors, 1);
-            SendExtEntry(CpeExt.BulkBlockUpdate, 1);
+            Send(Packet.MakeExtEntry(CpeExt.BlockDefinitionsExt, 2), true);
+            Send(Packet.MakeExtEntry(CpeExt.TextColors, 1), true);
+            Send(Packet.MakeExtEntry(CpeExt.BulkBlockUpdate, 1), true);
             
-            SendExtEntry(CpeExt.MessageTypes, 1);
-            SendExtEntry(CpeExt.ExtPlayerList, 2);
-            SendExtEntry(CpeExt.EnvMapAspect, 1);
+            Send(Packet.MakeExtEntry(CpeExt.MessageTypes, 1), true);
+            Send(Packet.MakeExtEntry(CpeExt.ExtPlayerList, 2), true);
+            Send(Packet.MakeExtEntry(CpeExt.EnvMapAspect, 1), true);
         }
         
         bool CheckWhitelist() {
