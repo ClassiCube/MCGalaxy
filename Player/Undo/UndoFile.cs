@@ -112,7 +112,7 @@ namespace MCGalaxy.Util {
                     if (highlight) {
                 		DoHighlight(s, format, args);
                     } else {
-                        if (!format.UndoEntry(p, path, marks, ref temp, start)) break;
+                        // TODO: fixy fix if (!format.UndoEntry(p, path, marks, ref temp, start)) break;
                     }
                     if (args.Stop) break;
                 }

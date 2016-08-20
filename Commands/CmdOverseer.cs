@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
                 p.SendMessage("Your rank is set to have 0 overseer maps. Therefore, you may not use overseer.");
             if (message == "") { Help(p); return; }
             
-            string[] parts = message.SplitSpaces(3);        
+            string[] parts = message.SplitSpaces(3);
             string cmd = parts[0].ToUpper();
             string arg = parts.Length > 1 ? parts[1].ToUpper() : "";
             string arg2 = parts.Length > 2 ? parts[2] : "";
@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands {
         
         void HandleEnvCommand(Player p, string type, string value) {
             string arg = value == "" ? "normal" : value;
-            if (CmdEnvironment.Handle(p, type.ToLower(), arg)) return;           
+            if (CmdEnvironment.Handle(p, type.ToLower(), arg)) return;
             Player.MessageLines(p, envHelp);
         }
         
@@ -112,46 +112,34 @@ namespace MCGalaxy.Commands {
             byte mapNum = 0;
             
             if (cmd == "ADD") {
-                string level = p.name.ToLower();
-                if (LevelInfo.ExistsOffline(level) || LevelInfo.ExistsOffline(level + "00")) {
-                    for (int i = 2; i < p.group.OverseerMaps + 2; i++) {
-                        if (LevelInfo.ExistsOffline(p.name.ToLower() + i)) continue;
-                        if(i > p.group.OverseerMaps) {
-                            p.SendMessage("You have reached the limit for your overseer maps."); return;
-                        }
-                        level = p.name.ToLower() + i;
-                        break;
-                    }
-                    if (level == p.name.ToLower()) {
-                        p.SendMessage("You have reached the limit for your overseer maps."); return;
-                    }
-                }                
+            	string level = NextLevel(p);
+            	if (level == null) return;
 
                 if (value == "") value = "128 64 128 flat";
                 else if (value.IndexOf(' ') == -1) value = "128 64 128 " + value;
                 
                 string[] args = value.TrimEnd().Split(' ');
                 if (args.Length == 3) value += " flat";
-                    
+                
                 Player.Message(p, "Creating a new map for you: " + level);
                 Command.all.Find("newlvl").Use(p, level + " " + value);
                 
                 // Set default perbuild permissions
                 Command.all.Find("load").Use(p, level);
                 Level lvl = LevelInfo.FindExact(level);
-                if (lvl != null) {
-                    LevelPermission osPerm = Server.osPerbuildDefault;
-                    if (osPerm == LevelPermission.Nobody)
-                        osPerm = GrpCommands.MinPerm(this);
-                    
-                    CmdZone.ZoneAll(lvl, p.name);                 
-                    Group grp = Group.findPerm(osPerm);
-                    if (grp != null) {
-                        Command.all.Find("perbuild").Use(null, lvl.name + " " + grp.name);
-                        Player.Message(p, "Use %T/os zone add [name] %Sto allow " +
-                                           "players ranked below " + grp.ColoredName + " %Sto build in the map.");
-                    }
-                }
+                if (lvl == null) return;
+                
+                LevelPermission osPerm = Server.osPerbuildDefault;
+                if (osPerm == LevelPermission.Nobody)
+                    osPerm = GrpCommands.MinPerm(this);
+                
+                CmdZone.ZoneAll(lvl, p.name);
+                Group grp = Group.findPerm(osPerm);
+                if (grp == null) return;
+                
+                Command.all.Find("perbuild").Use(null, lvl.name + " " + grp.name);
+                Player.Message(p, "Use %T/os zone add [name] %Sto allow " +
+                               "players ranked below " + grp.ColoredName + " %Sto build in the map.");
             } else if (cmd == "PHYSICS") {
                 if (value == "0" || value == "1" || value == "2" || value == "3" || value == "4" || value == "5")
                     CmdPhysics.SetPhysics(p.level, int.Parse(value));
@@ -210,8 +198,7 @@ namespace MCGalaxy.Commands {
             } else if (cmd == "GUNS") {
                 Command.all.Find("allowguns").Use(p, "");
             } else if (cmd == "CHAT") {
-                CmdMap.SetBool(p, p.level, ref p.level.worldChat, "Roleplay (level only) chat: ", true);
-                Level.SaveSettings(p.level);
+                CmdMap.SetMapOption(p, p.level, "chat", "");
             } else if (cmd == "RESTORE") {
                 Command.all.Find("restore").Use(p, value);
             } else if (cmd == "PERVISIT") {
@@ -233,9 +220,9 @@ namespace MCGalaxy.Commands {
                     Command.all.Find("texture").Use(p, "levelzip " + value);
                 }
             } else if (cmd == "BUILDABLE") {
-                Command.all.Find("map").Use(p, "buildable");
+                CmdMap.SetMapOption(p, p.level, "buildable", "");
             } else if (cmd == "DELETABLE") {
-                Command.all.Find("map").Use(p, "deletable");
+                CmdMap.SetMapOption(p, p.level, "deleteable", "");
             } else {
                 Player.MessageLines(p, mapHelp);
             }
@@ -262,7 +249,7 @@ namespace MCGalaxy.Commands {
                 }
                 Player blocked = PlayerInfo.Find(value);
                 if (blocked == null) { Player.Message(p, "Cannot find player."); return; }
-                if (blocked.name.CaselessEq(p.name)) { Player.Message(p, "You can't blacklist yourself"); return; }                
+                if (blocked.name.CaselessEq(p.name)) { Player.Message(p, "You can't blacklist yourself"); return; }
                 
                 string path = "levels/blacklists/" + p.level.name + ".txt";
                 if (File.Exists(path) && File.ReadAllText(path).Contains(blocked.name)) {
@@ -278,8 +265,8 @@ namespace MCGalaxy.Commands {
                     Server.s.Log("Error saving level blacklist");
                 }
                 Player.Message(p, blocked.name + " has been blacklisted from your map.");
-                if (blocked.level.name == p.level.name) { 
-                    PlayerActions.ChangeMap(blocked, Server.mainLevel.name); return; 
+                if (blocked.level.name == p.level.name) {
+                    PlayerActions.ChangeMap(blocked, Server.mainLevel.name); return;
                 }
             } else if (cmd == "UNBLOCK") {
                 if (value == "") {
@@ -330,6 +317,23 @@ namespace MCGalaxy.Commands {
             if (!File.Exists(path))
                 File.Create(path).Dispose();
         }
+        
+        static string NextLevel(Player p) {
+            string level = p.name.ToLower();
+            if (LevelInfo.ExistsOffline(level) || LevelInfo.ExistsOffline(level + "00")) {
+                for (int i = 2; i < p.group.OverseerMaps + 2; i++) {
+                    if (LevelInfo.ExistsOffline(p.name.ToLower() + i)) continue;
+                    if(i > p.group.OverseerMaps) {
+                        p.SendMessage("You have reached the limit for your overseer maps."); return null;
+                    }
+                    return p.name.ToLower() + i;
+                }
+                if (level == p.name.ToLower()) {
+                    p.SendMessage("You have reached the limit for your overseer maps."); return null;
+                }
+            }
+            return level;
+        }
 
         static string FirstMapName(Player p) {
             /* Returns the proper name of the User Level. By default the User Level will be named
@@ -351,7 +355,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%T/os [command] [args]");
             Player.Message(p, "%HAllows you to modify and manage your personal realms.");
             Player.Message(p, "%HCommands: %Sgo, map, spawn, zone, kick, " +
-                           "kickall, env, preset, levelblock(lb)");            
+                           "kickall, env, preset, levelblock(lb)");
             Player.Message(p, "%T/os zone add [name] %H- allows [name] to build in the world.");
         }
         
@@ -391,7 +395,7 @@ namespace MCGalaxy.Commands {
         
         static string[] zoneHelp = {
             "%T/os zone add [player/rank] %H- Adds a zone for a player or a rank, " +
-            "allowing them to always build in your map.",
+                "allowing them to always build in your map.",
             "%T/os zone del all %H- Deletes all zones in your map.",
             "%T/os zone list %H- Shows zones affecting a particular block.",
             "%T/os zone block [name] %H- Prevents them from joining your map.",
