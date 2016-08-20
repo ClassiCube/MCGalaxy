@@ -43,22 +43,23 @@ namespace MCGalaxy.Undo {
             DateTime start = args.Start;
             
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
-            for (int i = (lines.Length - 1) / 7; i >= 0; i--) {
+            const int items = 7;
+            for (int i = (lines.Length - 1) / items; i > 0; i--) {
                 // line format: mapName x y z date oldblock newblock
-                string timeRaw = lines[(i * 7) - 3].Replace('&', ' ');
+                string timeRaw = lines[(i * items) - 3].Replace('&', ' ');
                 pos.Time = DateTime.Parse(timeRaw, CultureInfo.InvariantCulture);
                 if (pos.Time < start) { args.Stop = true; yield break; }
                 
-                string map = lines[(i * 7) - 7];
+                string map = lines[(i * items) - 7];
                 if (!super && !p.level.name.CaselessEq(map)) continue;
                 pos.LevelName = map;
                 
-                pos.X = Convert.ToUInt16(lines[(i * 7) - 6]);
-                pos.Y = Convert.ToUInt16(lines[(i * 7) - 5]);
-                pos.Z = Convert.ToUInt16(lines[(i * 7) - 4]);
-                
-                pos.NewBlock = Convert.ToByte(lines[(i * 7) - 1]);
-                pos.Block = Convert.ToByte(lines[(i * 7) - 2]);
+                pos.X = Convert.ToUInt16(lines[(i * items) - 6]);
+                pos.Y = Convert.ToUInt16(lines[(i * items) - 5]);
+                pos.Z = Convert.ToUInt16(lines[(i * items) - 4]);
+                                
+                pos.Block = Convert.ToByte(lines[(i * items) - 2]);
+                pos.NewBlock = Convert.ToByte(lines[(i * items) - 1]);
                 yield return pos;
             }
         }
