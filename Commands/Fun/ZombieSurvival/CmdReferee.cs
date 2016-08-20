@@ -36,11 +36,17 @@ namespace MCGalaxy.Commands {
                 p.Game.Referee = !p.Game.Referee;
                 if (p.level == Server.zombie.CurLevel)
                     Server.zombie.PlayerJoinedLevel(p, Server.zombie.CurLevel, Server.zombie.CurLevel);
+                
+                if (p.HasCpeExt(CpeExt.HackControl))
+                    p.Send(Hacks.MakeHackControl(p));
             } else {
                 Player.SendChatFrom(p, p.ColoredName + " %Sis now a referee", false);               
                 Server.zombie.PlayerLeftServer(p);
                 Entities.GlobalDespawn(p, false);
                 p.Game.Referee = !p.Game.Referee;
+                
+                if (p.HasCpeExt(CpeExt.HackControl))
+                    p.Send(Packet.MakeHackControl(true, true, true, true, true, -1));
             }
             Entities.GlobalSpawn(p, true, "");
             p.SetPrefix();
