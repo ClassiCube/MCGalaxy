@@ -349,7 +349,7 @@ namespace Sharkbite.Irc
 							OnRawMessageReceived( line );
 						}
 					}
-					catch( ThreadAbortException e )
+					catch( ThreadAbortException )
 					{
 						Thread.ResetAbort();
 						//This exception is raised when the Thread

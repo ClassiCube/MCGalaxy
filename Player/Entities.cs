@@ -289,7 +289,7 @@ namespace MCGalaxy {
              byte[] packet = new byte[count];
              for (int i = 0; i < packet.Length; i++)
                  packet[i] = src[i];
-             p.SendRaw(packet);
+             p.Send(packet);
         }
         
         static byte MakePitch(Player p) {

@@ -19,7 +19,7 @@ using System;
 
 namespace MCGalaxy {
 
-    public static class Packet {
+    public static partial class Packet {
         
         public static byte[] MakeMotd(Player p, bool ignoreLevelMotd) {
             byte[] buffer = new byte[131];
@@ -40,61 +40,14 @@ namespace MCGalaxy {
                 NetUtils.Write(lvl.motd, buffer, 66, cp437);
             }
 
-            bool canPlace = Block.canPlace(p, Block.blackrock);
-            buffer[130] = canPlace ? (byte)100 : (byte)0;
+            buffer[130] = Block.canPlace(p, Block.blackrock) ? (byte)100 : (byte)0;
             return buffer;
         }
         
-        public static byte[] MakeHoldThis(byte block, bool locked) {
-            byte[] buffer = new byte[3];
-            buffer[0] = Opcode.CpeHoldThis;
-            buffer[1] = block;
-            buffer[2] = (byte)(locked ? 1 : 0);
-            return buffer;
-        }
-        
-        public static byte[] MakeTextHotKey(string label, string input, int keycode, byte mods) {
-            byte[] buffer = new byte[134];
-            buffer[0] = Opcode.CpeSetTextHotkey;
-            NetUtils.WriteAscii(label, buffer, 1);
-            NetUtils.WriteAscii(input, buffer, 65);
-            NetUtils.WriteI32(keycode, buffer, 129);
-            buffer[133] = mods;
-            return buffer;
-        }
-        
-        public static byte[] MakeMakeSelection(byte id, string label, Vec3U16 p1, Vec3U16 p2,
-                                               short r, short g, short b, short opacity ) {
-            byte[] buffer = new byte[86];
-            buffer[0] = Opcode.CpeMakeSelection;
-            buffer[1] = id;
-            NetUtils.WriteAscii(label, buffer, 2);
-            
-            NetUtils.WriteU16(p1.X, buffer, 66);
-            NetUtils.WriteU16(p1.Y, buffer, 68);
-            NetUtils.WriteU16(p1.Z, buffer, 70);
-            NetUtils.WriteU16(p2.X, buffer, 72);
-            NetUtils.WriteU16(p2.Y, buffer, 74);
-            NetUtils.WriteU16(p2.Z, buffer, 76);
-            
-            NetUtils.WriteI16(r, buffer, 78);
-            NetUtils.WriteI16(g, buffer, 80);
-            NetUtils.WriteI16(b, buffer, 82);
-            NetUtils.WriteI16(opacity, buffer, 84);
-            return buffer;
-        }
-        
-        public static byte[] SendHackControl(bool canFly, bool canNoclip, 
-                                             bool canSpeed, bool canRespawn,
-                                             bool can3rdPerson, short maxJumpHeight) {
-            byte[] buffer = new byte[8];
-            buffer[0] = Opcode.CpeHackControl;
-            buffer[1] = (byte)(canFly ? 1 : 0);
-            buffer[2] = (byte)(canNoclip ? 1 : 0);
-            buffer[3] = (byte)(canSpeed ? 1 : 0);
-            buffer[4] = (byte)(canRespawn ? 1 : 0);
-            buffer[5] = (byte)(can3rdPerson ? 1 : 0);
-            NetUtils.WriteI16(maxJumpHeight, buffer, 6);
+        public static byte[] MakeUserType(Player p) {
+            byte[] buffer = new byte[2];
+            buffer[0] = Opcode.SetPermission;
+            buffer[1] = Block.canPlace(p, Block.blackrock) ? (byte)100 : (byte)0;
             return buffer;
         }
     }

@@ -101,12 +101,12 @@ namespace MCGalaxy {
 
         public void SendRaw(int id) {
             byte[] buffer = new [] { (byte)id };
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         public void SendRaw(int id, byte data) {
             byte[] buffer = new [] { (byte)id, data };
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         [Obsolete("Include the opcode in the array to avoid an extra temp allocation.")]
@@ -119,7 +119,10 @@ namespace MCGalaxy {
             buffer = null;
         }
         
-        public void SendRaw(byte[] buffer, bool sync = false) {
+        [Obsolete("Use Send() instead.")]
+        public void SendRaw(byte[] buffer, bool sync = false) { Send(buffer, sync); }
+        
+        public void Send(byte[] buffer, bool sync = false) {
             // Abort if socket has been closed
             if (disconnected || socket == null || !socket.Connected) return;
             
@@ -135,7 +138,7 @@ namespace MCGalaxy {
                 #if DEBUG
                 Server.ErrorLog(e);
                 #endif
-            } catch (ObjectDisposedException ex) {
+            } catch (ObjectDisposedException) {
                 // socket was already closed by another thread.
                 buffer = null;
             }
@@ -147,7 +150,7 @@ namespace MCGalaxy {
             
             for (int i = 2; i < buffer.Length; i++)
                 buffer[i] = (byte)' ';
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         public static void MessageLines(Player p, IEnumerable<string> lines) {
@@ -228,7 +231,7 @@ namespace MCGalaxy {
                     buffer[0] = Opcode.Message;
                     buffer[1] = (byte)id;
                     NetUtils.Write(line, buffer, 2, HasCpeExt(CpeExt.FullCP437));
-                    SendRaw(buffer);
+                    Send(buffer);
                 }
             } catch ( Exception e ) {
                 message = "&f" + message;
@@ -253,7 +256,7 @@ namespace MCGalaxy {
             buffer[0] = Opcode.Message;
             buffer[1] = (byte)id;
             NetUtils.Write(message, buffer, 2, HasCpeExt(CpeExt.FullCP437));
-            SendRaw(buffer);
+            Send(buffer);
         }
 
         string ConvertMessage(string message, bool colorParse) {
@@ -300,7 +303,7 @@ namespace MCGalaxy {
         void SendMapMotd(bool ignoreLevelMotd) {
             byte[] packet = Packet.MakeMotd(this, ignoreLevelMotd);
             if (OnSendMOTD != null) OnSendMOTD(this, packet);
-            SendRaw(packet);
+            Send(packet);
         }
         
         public void SendMap(Level oldLevel) { SendRawMap(oldLevel, level); }
@@ -333,7 +336,7 @@ namespace MCGalaxy {
                 NetUtils.WriteI16((short)level.Width, buffer, 1);
                 NetUtils.WriteI16((short)level.Height, buffer, 3);
                 NetUtils.WriteI16((short)level.Length, buffer, 5);
-                SendRaw(buffer);
+                Send(buffer);
                 Loading = false;
                 
                 if (HasCpeExt(CpeExt.EnvWeatherType))
@@ -383,7 +386,7 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 70);
             buffer[72] = rotx;
             buffer[73] = roty;
-            SendRaw(buffer);
+            Send(buffer);
 
             if (hasChangeModel) UpdateModels();
         }
@@ -410,7 +413,7 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 6);
             buffer[8] = rotx;
             buffer[9] = roty;
-            SendRaw(buffer);
+            Send(buffer);
         }
         
          /// <summary> Sends a packet indicating an absolute position + orientation change for the player. </summary>
@@ -428,11 +431,6 @@ namespace MCGalaxy {
         /// <summary> Sends a packet indicating an entity was removed from the current map. </summary>
         public void SendDespawn(byte id) {
             SendRaw(Opcode.RemoveEntity, id);
-        }
-        
-        /// <summary> Sends a packet indicating the user's permissions changed. </summary>
-        public void SendUserType(bool op) {
-            SendRaw(Opcode.SetPermission, op ? (byte)100 : (byte)0);
         }
         
         public void SendBlockchange(ushort x, ushort y, ushort z, byte block) {
@@ -454,7 +452,7 @@ namespace MCGalaxy {
             } else {
                 buffer[7] = Block.ConvertCPE(Block.Convert(block));
             }
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         // Duplicated as this packet needs to have maximum optimisation.
@@ -476,14 +474,14 @@ namespace MCGalaxy {
             } else {
                 buffer[7] = Block.Convert(Block.ConvertCPE(block));
             }
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         void SendKick(string message, bool sync) {
             byte[] buffer = new byte[65];
             buffer[0] = Opcode.Kick;
             NetUtils.Write(message, buffer, 1, HasCpeExt(CpeExt.FullCP437));
-            SendRaw(buffer, sync);
+            Send(buffer, sync);
         }
         
         void SendExtInfo( byte count ) {
@@ -491,7 +489,7 @@ namespace MCGalaxy {
             buffer[0] = Opcode.CpeExtInfo;
             NetUtils.WriteAscii("MCGalaxy " + Server.Version, buffer, 1);
             NetUtils.WriteI16((short)count, buffer, 65);
-            SendRaw(buffer, true);
+            Send(buffer, true);
         }
         
         void SendExtEntry( string name, int version ) {
@@ -499,18 +497,7 @@ namespace MCGalaxy {
             buffer[0] = Opcode.CpeExtEntry;
             NetUtils.WriteAscii(name, buffer, 1);
             NetUtils.WriteI32(version, buffer, 65);
-            SendRaw(buffer, true);
-        }
-        
-        public void SendClickDistance( short distance ) {
-            byte[] buffer = new byte[3];
-            buffer[0] = Opcode.CpeSetClickDistance;
-            NetUtils.WriteI16(distance, buffer, 1);
-            SendRaw(buffer);
-        }
-        
-        void SendCustomBlockSupportLevel(byte level) {
-            SendRaw(Opcode.CpeCustomBlockSupportLevel, level);
+            Send(buffer, true);
         }
 
         public void SendExtAddEntity(byte id, string name, string displayname = "") {
@@ -520,7 +507,7 @@ namespace MCGalaxy {
             NetUtils.WriteAscii(name, buffer, 2);
             if (displayname == "") displayname = name;
             NetUtils.WriteAscii(displayname, buffer, 66);
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         public void SendExtAddEntity2(byte id, string skinName, string displayName, ushort x, ushort y, ushort z, byte rotx, byte roty) {
@@ -534,7 +521,7 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 134);
             buffer[136] = rotx;
             buffer[137] = roty;
-            SendRaw(buffer);
+            Send(buffer);
 
             if (hasChangeModel) UpdateModels();
         }
@@ -547,14 +534,14 @@ namespace MCGalaxy {
             NetUtils.WriteAscii(displayName, buffer, 67);
             NetUtils.WriteAscii(grp, buffer, 131);
             buffer[195] = grpRank;
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         public void SendExtRemovePlayerName(byte id) {
             byte[] buffer = new byte[3];
             buffer[0] = Opcode.CpeExtRemovePlayerName;
             NetUtils.WriteI16(id, buffer, 1);
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         public void SendEnvColor( byte type, short r, short g, short b ) {
@@ -564,7 +551,7 @@ namespace MCGalaxy {
             NetUtils.WriteI16(r, buffer, 2);
             NetUtils.WriteI16(g, buffer, 4);
             NetUtils.WriteI16(b, buffer, 6);
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         public void SendDeleteSelection( byte id ) {
@@ -577,7 +564,7 @@ namespace MCGalaxy {
             buffer[1] = type;
             buffer[2] = canplace ? (byte)1 : (byte)0;
             buffer[3] = candelete ? (byte)1 : (byte)0;
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         public void SendChangeModel( byte id, string model ) {
@@ -592,7 +579,7 @@ namespace MCGalaxy {
             buffer[0] = Opcode.CpeChangeModel;
             buffer[1] = id;
             NetUtils.WriteAscii(model, buffer, 2);
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         public void SendSetMapAppearance( string url, byte sideblock, byte edgeblock, int sidelevel ) {
@@ -602,7 +589,7 @@ namespace MCGalaxy {
             buffer[65] = sideblock;
             buffer[66] = edgeblock;
             NetUtils.WriteI16((short)sidelevel, buffer, 67);
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         public void SendSetMapAppearanceV2( string url, byte sideblock, byte edgeblock, int sidelevel,
@@ -615,7 +602,7 @@ namespace MCGalaxy {
             NetUtils.WriteI16((short)sidelevel, buffer, 67);
             NetUtils.WriteI16((short)cloudHeight, buffer, 69);
             NetUtils.WriteI16((short)maxFog, buffer, 71);
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         public void SendSetMapWeather(int weather) { // 0 - sunny; 1 - raining; 2 - snowing
@@ -626,7 +613,7 @@ namespace MCGalaxy {
             byte[] buffer = new byte[65];
             buffer[0] = Opcode.CpeSetMapEnvUrl;
             NetUtils.WriteAscii(url, buffer, 1);
-            SendRaw(buffer);
+            Send(buffer);
         }
         
         public void SendSetEnvMapProperty(EnvProp prop, int value) {
@@ -634,7 +621,7 @@ namespace MCGalaxy {
             buffer[0] = Opcode.CpeSetMapEnvProperty;
             buffer[1] = (byte)prop;
             NetUtils.WriteI32(value, buffer, 2);
-            SendRaw(buffer);
+            Send(buffer);
         }
 
         internal void CloseSocket() {

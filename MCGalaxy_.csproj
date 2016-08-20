@@ -525,6 +525,7 @@
     <Compile Include="Network\Heart.cs" />
     <Compile Include="Network\IRCBot.cs" />
     <Compile Include="Network\LevelChunkStream.cs" />
+    <Compile Include="Network\Packet.CPE.cs" />
     <Compile Include="Network\Packet.cs" />
     <Compile Include="Player\Entities.cs" />
     <Compile Include="Player\Group\Group.cs" />

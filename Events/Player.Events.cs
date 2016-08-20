@@ -66,10 +66,8 @@ namespace MCGalaxy {
         /// <summary> Called when a player removes, or places a block. </summary>
         public delegate void BlockchangeEventHandler(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
         /// <summary> Called when a player removes or places a block </summary>
-        [Obsolete("Please use OnBlockChangeEvent.Register()")]
         public event BlockchangeEventHandler Blockchange;
         /// <summary> Called when a player places a block. </summary>
-        [Obsolete("Please use OnBlockChangeEvent.Register()")]
         public static event BlockchangeEventHandler2 PlayerBlockChange;
         public void ClearBlockchange() { Blockchange = null; }
         public object blockchangeObject;
@@ -77,7 +75,6 @@ namespace MCGalaxy {
         /// <summary> Called when a player connects to the server. </summary>
         public delegate void OnPlayerConnect(Player p);
         /// <summary> Called when a player connects to the server. </summary>
-        [Obsolete("Please use OnPlayerConnectEvent.Register()")]
         public static event OnPlayerConnect PlayerConnect;
         
         /// <summary> Called when a player disconnects. </summary>
@@ -89,10 +86,8 @@ namespace MCGalaxy {
         /// another command unless you cancel the event </summary>
         public delegate void OnPlayerCommand(string cmd, Player p, string message);
         /// <summary> Called when a player does a command (string cmd, Player p, string message) </summary>
-        [Obsolete("Please use OnPlayerCommandEvent.Register()")]
         public static event OnPlayerCommand PlayerCommand;
         /// <summary> Called when the player does a command. </summary>
-        [Obsolete("Please use OnPlayerCommandEvent.Register()")]
         public event OnPlayerCommand OnCommand;
         public void ClearPlayerCommand() { OnCommand = null; }
         
@@ -101,26 +96,20 @@ namespace MCGalaxy {
         /// <summary> Called when a player receives messages from the server. (including chat) </summary>
         public delegate void OnPlayerMessageReceived(Player p, string message);
         /// <summary> Called when a player chats. </summary>
-        [Obsolete("Please use OnPlayerChatEvent.Register()")]
         public static event OnPlayerChat PlayerChat;
         /// <summary> Called when a player is about to recieve a chat message </summary>
-        [Obsolete("Please use OnMessageRecieveEvent.Register()")]
         public static event OnPlayerMessageReceived MessageRecieve;
         /// <summary> Called when the player is about to recieve a chat message </summary>
-        [Obsolete("Please use OnMessageRecieveEvent.Register()")]
         public event OnPlayerMessageReceived OnMessageRecieve;
         /// <summary> Called when the player chats. </summary>
-        [Obsolete("Please use OnPlayerChatEvent.Register()")]
         public event OnPlayerChat OnChat;
         public void ClearPlayerChat() { OnChat = null; }
         
         /// <summary> Called when a player dies. </summary>
         public delegate void OnPlayerDeath(Player p, byte deathblock);     
         /// <summary> Called when the player dies. </summary>
-        [Obsolete("Please use OnPlayerDeathEvent.Register()")]
         public event OnPlayerDeath OnDeath;
         /// <summary> Called when a player dies. </summary>
-        [Obsolete("Please use OnPlayerDeathEvent.Register()")]
         public static event OnPlayerDeath PlayerDeath;
         public void ClearPlayerDeath() { OnDeath = null; }
          

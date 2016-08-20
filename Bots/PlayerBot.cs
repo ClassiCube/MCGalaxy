@@ -179,7 +179,7 @@ namespace MCGalaxy {
 
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players)
-                if (p.level == level) p.SendRaw(packet);
+                if (p.level == level) p.Send(packet);
         }
 
         

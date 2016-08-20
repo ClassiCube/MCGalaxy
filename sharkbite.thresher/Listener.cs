@@ -448,7 +448,7 @@ namespace Sharkbite.Irc
 								ChannelModeInfo[] modes = ChannelModeInfo.ParseModes( tokens, 3);
 								OnChannelModeChange( who, tokens[2], modes );
 							}
-							catch( Exception e ) 
+							catch( Exception ) 
 							{
 								if( OnError != null ) 
 								{
@@ -679,7 +679,7 @@ namespace Sharkbite.Irc
 							ChannelModeInfo[] modes = ChannelModeInfo.ParseModes( tokens, 4);
 							OnChannelModeRequest( tokens[3], modes);
 						}
-						catch( Exception e ) 
+						catch( Exception ) 
 						{
 							if( OnError != null ) 
 							{

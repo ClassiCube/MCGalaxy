@@ -28,7 +28,7 @@ namespace MCGalaxy {
             
             Add(ref time, value.Days, 'd', spaces);
             Add(ref time, value.Hours, 'h', spaces);
-            Add(ref time, value.Minutes, 'm', spaces);        
+            Add(ref time, value.Minutes, 'm', spaces);
             if (seconds && value.Days < 1) 
                 Add(ref time, value.Seconds, 's', spaces);
             

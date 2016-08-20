@@ -94,6 +94,7 @@ namespace MCGalaxy {
         public static PerformanceCounter ProcessCounter = null;
 
         public static Level mainLevel;
+        [Obsolete("Use LevelInfo.Loaded.Items")]
         public static List<Level> levels;
         //reviewlist intitialize
         public static List<string> reviewlist = new List<string>();

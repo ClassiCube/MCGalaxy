@@ -57,10 +57,13 @@ namespace MCGalaxy {
             serverConfig = ConfigElement.GetAll(typeof(Server), typeof(ZombieGame));
             levelConfig = ConfigElement.GetAll(typeof(Level));
         	
+            #pragma warning disable 0618
             Player.players = PlayerInfo.Online.list;
             PlayerInfo.players = PlayerInfo.Online.list;
             Server.levels = LevelInfo.Loaded.list;
             PlayerBot.playerbots = PlayerBot.Bots.list;
+            #pragma warning restore 0618
+            
             StartTime = DateTime.UtcNow;
             StartTimeLocal = StartTime.ToLocalTime();
             shuttingDown = false;

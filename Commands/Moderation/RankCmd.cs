@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Moderation {
             who.group = newRank;
             
             who.SetPrefix();
-            who.SendUserType(Block.canPlace(who.Rank, Block.blackrock));
+            who.Send(Packet.MakeUserType(who));
             Entities.SpawnEntities(who, false);
         }
     }

@@ -75,7 +75,7 @@ namespace MCGalaxy {
             data[0] = Opcode.LevelDataChunk;
             NetUtils.WriteU16((ushort)index, data, 1);
             data[1027] = (byte)(100 * (float)position / length);
-            p.SendRaw(data);
+            p.Send(data);
             index = 0;
         }
         

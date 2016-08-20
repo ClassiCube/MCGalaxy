@@ -66,7 +66,7 @@ namespace MCGalaxy {
                 if (p.level != level) continue;
                 byte[] packet = MakePacket(p, ref bulk, ref normal,
                                            ref noBlockDefs, ref original);
-                p.SendRaw(packet);
+                p.Send(packet);
             }
         }
         
@@ -74,7 +74,7 @@ namespace MCGalaxy {
             byte[] bulk = null, normal = null, noBlockDefs = null, original = null;
             byte[] packet = MakePacket(player, ref bulk, ref normal,
                                        ref noBlockDefs, ref original);
-            player.SendRaw(packet);
+            player.Send(packet);
         }
         
         #region Packet construction

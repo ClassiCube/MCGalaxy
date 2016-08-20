@@ -137,7 +137,7 @@ namespace Sharkbite.Irc
 					goto loop;
 				}
 			}
-			catch( Exception e ) 
+			catch( Exception ) 
 			{
 				Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceInfo,"[" + Thread.CurrentThread.Name +"] Identd::Run() Identd stopped");
 			}

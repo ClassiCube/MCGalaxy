@@ -114,10 +114,12 @@ namespace MCGalaxy {
             }
         }        
         
+        #pragma warning disable 0649
         class Response {
             public string[][] errors;
             public string response;
             public string status;
         }
+        #pragma warning restore 0649
     }
 }

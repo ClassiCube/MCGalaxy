@@ -221,7 +221,7 @@ namespace MCGalaxy {
             MakeDefineBlockStart(def, buffer, ref index, false);
             buffer[index++] = def.Shape;
             MakeDefineBlockEnd(def, ref index, buffer);
-            p.SendRaw(buffer);
+            p.Send(buffer);
         }
         
         static void SendDefineBlockExt(Player p, BlockDefinition def, bool uniqueSideTexs) {
@@ -236,7 +236,7 @@ namespace MCGalaxy {
             buffer[index++] = def.MaxZ;
             buffer[index++] = def.MaxY;
             MakeDefineBlockEnd(def, ref index, buffer);
-            p.SendRaw(buffer);
+            p.Send(buffer);
         }
         
         static void MakeDefineBlockStart(BlockDefinition def, byte[] buffer, ref int index, bool uniqueSideTexs) {

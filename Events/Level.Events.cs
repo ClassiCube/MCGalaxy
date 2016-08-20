@@ -36,22 +36,16 @@ namespace MCGalaxy {
 
         public static event OnPhysicsStateChanged PhysicsStateChanged;
 
-        [Obsolete("Please use OnPhysicsUpdate.Register()")]
         public event OnPhysicsUpdate PhysicsUpdate;
         
-        [Obsolete("Please use OnLevelUnloadEvent.Register()")]
         public static event OnLevelUnload LevelUnload;
         
-        [Obsolete("Please use OnLevelSaveEvent.Register()")]
         public static event OnLevelSave LevelSave;
 
-        [Obsolete("Please use OnLevelUnloadEvent.Register()")]
         public event OnLevelUnload onLevelUnload;
         
-        [Obsolete("Please use OnLevelUnloadEvent.Register()")]
         public static event OnLevelLoad LevelLoad;
         
-        [Obsolete("Please use OnLevelUnloadEvent.Register()")]
         public static event OnLevelLoaded LevelLoaded;
     }
 }
