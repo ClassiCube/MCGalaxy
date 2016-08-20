@@ -83,7 +83,7 @@ namespace MCGalaxy {
             return buffer;
         }
         
-        public static byte[] SendHackControl(bool canFly, bool canNoclip, 
+        public static byte[] MakeHackControl(bool canFly, bool canNoclip, 
                                              bool canSpeed, bool canRespawn,
                                              bool can3rdPerson, short maxJumpHeight) {
             byte[] buffer = new byte[8];

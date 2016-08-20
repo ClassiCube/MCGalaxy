@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            if (!p.level.CanUseHacks(p)) {
+            if (!Hacks.CanUseHacks(p, p.level)) {
                 Player.Message(p, "You cannot use /fly on this map.");
                 p.isFlying = false; return;
             }

@@ -482,7 +482,7 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 // handles the /womid client message, which displays the WoM vrersion
                 if ( text.Truncate(6) == "/womid" ) {
                     string version = (text.Length <= 21 ? text.Substring(text.IndexOf(' ') + 1) : text.Substring(7, 15));
-                    Server.s.Log(Colors.red + "[INFO] " + color + DisplayName + "%f is using wom client");
+                    Server.s.Log(Colors.red + "[INFO] " + ColoredName + "%f is using wom client");
                     Server.s.Log(Colors.red + "[INFO] %fVersion: " + version);
                     UsingWom = true;
                     return;

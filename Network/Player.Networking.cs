@@ -296,14 +296,16 @@ namespace MCGalaxy {
             }
         }
         
-        public void SendMotd() { SendMapMotd(true); }
+        public void SendMotd() { SendMapMotd(); }
+        public void SendUserMOTD() { SendMapMotd(); }
 
-        public void SendUserMOTD() { SendMapMotd(false); }
-
-        void SendMapMotd(bool ignoreLevelMotd) {
-            byte[] packet = Packet.MakeMotd(this, ignoreLevelMotd);
+        void SendMapMotd() {
+            byte[] packet = Packet.MakeMotd(this);
             if (OnSendMOTD != null) OnSendMOTD(this, packet);
             Send(packet);
+            
+            if (HasCpeExt(CpeExt.HackControl))
+                Send(Hacks.MakeHackControl(this, level));
         }
         
         public void SendMap(Level oldLevel) { SendRawMap(oldLevel, level); }

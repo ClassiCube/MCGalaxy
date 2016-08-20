@@ -159,8 +159,8 @@ namespace MCGalaxy.Commands {
                 
                 if (pl.spyChatRooms.Contains(room)) {
                     pl.spyChatRooms.Remove(room);
-                    pl.SendMessage("Stopped spying on chatroom '" + room + 
-                                   "' because it was deleted by: " + p.color + p.name);
+                    Player.Message(pl, "Stopped spying on chatroom '{0}' because it was deleted by: {1}", 
+                                   room, p.ColoredName);
                 }
             }
             Chat.MessageAll("The chatroom '{0}' has been deleted", room);

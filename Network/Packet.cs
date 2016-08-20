@@ -21,23 +21,19 @@ namespace MCGalaxy {
 
     public static partial class Packet {
         
-        public static byte[] MakeMotd(Player p, bool ignoreLevelMotd) {
+        public static byte[] MakeMotd(Player p) {
             byte[] buffer = new byte[131];
             buffer[0] = Opcode.Handshake;
             buffer[1] = Server.version;
-            bool cp437 = p.HasCpeExt(CpeExt.FullCP437);
-            Level lvl = p.level;
             
-            if (ignoreLevelMotd || lvl.motd == "ignore") {
-                NetUtils.Write(Server.name, buffer, 2, cp437);
-                string line2 = String.IsNullOrEmpty(p.group.MOTD) ? Server.motd : p.group.MOTD;
-                NetUtils.Write(line2, buffer, 66, cp437);
-            } else if (lvl.motd.Length > 64) {
-                NetUtils.Write(lvl.motd, buffer, 2, cp437);
-                NetUtils.Write(lvl.motd.Substring(64), buffer, 66, cp437);
+            bool cp437 = p.HasCpeExt(CpeExt.FullCP437);
+            string motd = p.level.GetMotd(p);            
+            if (motd.Length > 64) {
+                NetUtils.Write(motd, buffer, 2, cp437);
+                NetUtils.Write(motd.Substring(64), buffer, 66, cp437);
             } else {
                 NetUtils.Write(Server.name, buffer, 2, cp437);
-                NetUtils.Write(lvl.motd, buffer, 66, cp437);
+                NetUtils.Write(motd, buffer, 66, cp437);
             }
 
             buffer[130] = Block.canPlace(p, Block.blackrock) ? (byte)100 : (byte)0;

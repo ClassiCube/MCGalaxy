@@ -1054,13 +1054,10 @@ namespace MCGalaxy.Commands {
 				Player.Message(pl.p, "TNT Wars: Changed gamemode to Team Deathmatch");
 				AssignAutoTeam(pl, it, it.RedTeam(), it.BlueTeam());
 				
-				string msg = pl.p.color + pl.p.name + Server.DefaultColor + " is now";
-				if (pl.Red)
-					msg += " on the " + Colors.red + "red team";
-				if (pl.Blue)
-					msg += " on the " + Colors.blue + "blue team";
-				if (pl.spec)
-					msg += Server.DefaultColor + " (as a spectator)";
+				string msg = pl.p.ColoredName + " %Sis now";
+				if (pl.Red) msg += " on the " + Colors.red + "red team";
+				if (pl.Blue) msg += " on the " + Colors.blue + "blue team";
+				if (pl.spec) msg += " (as a spectator)";
 				Chat.MessageAll(msg);
 			}
 			

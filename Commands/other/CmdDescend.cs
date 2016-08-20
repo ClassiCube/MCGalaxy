@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            if (!p.level.CanUseHacks(p)) {
+            if (!Hacks.CanUseHacks(p, p.level)) {
                 Player.Message(p, "You cannot use /descend on this map."); return;
             }
             if (p.pos[1] < 51 + 4) { Player.Message(p, "No free spaces found below you."); return; }

@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            if (!p.level.CanUseHacks(p)) {
+            if (!Hacks.CanUseHacks(p, p.level)) {
                 Player.Message(p, "You cannot use /ascend on this map."); return;
             }
             ushort x = (ushort)(p.pos[0] / 32), y = (ushort)(p.pos[1] / 32), z = (ushort)(p.pos[2] / 32);

@@ -112,7 +112,7 @@ namespace Sharkbite.Irc
 				listener = new TcpListener( IdentdPort );
 				listener.Start();
 
-				loop:
+				while (true) 
 				{
 					try 
 					{
@@ -134,7 +134,6 @@ namespace Sharkbite.Irc
 					{
 						Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceWarning,"[" + Thread.CurrentThread.Name +"] Identd::Run() exception=" + ioe);
 					}
-					goto loop;
 				}
 			}
 			catch( Exception ) 

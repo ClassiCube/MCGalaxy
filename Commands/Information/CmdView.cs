@@ -32,15 +32,13 @@ namespace MCGalaxy.Commands {
                 Directory.CreateDirectory("extra/text");
             if (message == "") {
                 string[] files = Directory.GetFiles("extra/text", "*.txt");
-                string allFiles = "";
-                foreach (string file in files)
-                    allFiles += ", " + Path.GetFileNameWithoutExtension(file);
+                string all = files.Join(f => Path.GetFileNameWithoutExtension(f));
 
-                if (allFiles == "") {
+                if (all == "") {
                     Player.Message(p, "No files are viewable by you");
                 } else {
                     Player.Message(p, "Available files:");
-                    Player.Message(p, allFiles.Remove(0, 2));
+                    Player.Message(p, all);
                 }
             } else {
                 Player who = p;

@@ -108,13 +108,9 @@ namespace MCGalaxy {
             }
         }
         
-        public bool CanUseHacks(Player p) {
-             bool serverMotd = p.level == Server.mainLevel || motd == "ignore";
-             string realMotd = serverMotd ? Server.motd : motd;
-             bool noHacks = realMotd.Contains("-hax") || ctfmode || CurrentGame() != null;
-             if (noHacks && p.Rank >= LevelPermission.Operator && realMotd.Contains("+ophax"))
-                 return true;
-             return !noHacks;
+        public string GetMotd(Player p) {
+            if (motd != "ignore") return motd;
+            return String.IsNullOrEmpty(p.group.MOTD) ? Server.motd : p.group.MOTD;
         }
 
         /// <summary> Whether block changes made on this level should be 

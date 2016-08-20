@@ -188,14 +188,13 @@ namespace MCGalaxy.Commands {
 
         static void SendPresetsMessage(Player p) {
             Player.Message(p, "/env preset [type] -- Uses an env preset on your current map");
-            Player.Message(p, "Valid types: Cartoon/Midnight/Midnight2/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
-            
+            Player.Message(p, "Valid types: Cartoon/Midnight/Midnight2/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");           
             if (!Directory.Exists("presets")) return;
-            string custom = "";
-            foreach (string s in Directory.GetFiles("presets/", "*.env"))
-                custom += ", " + Path.GetFileNameWithoutExtension(s);
-            if (custom != "")
-                Player.Message(p, "Custom preset types: " + custom.Remove(0, 2));
+            
+            string[] files = Directory.GetFiles("preset", "*.env");
+            string all = files.Join(f => Path.GetFileNameWithoutExtension(f));
+            if (all != "")
+                Player.Message(p, "Custom preset types: " + all);
         }
         
         public override void Help(Player p) {
