@@ -29,8 +29,8 @@ namespace MCGalaxy {
             return !noHacks;
         }
         
-        public static byte[] MakeHackControl(Player p, Level lvl) {
-            string motd = lvl.GetMotd(p);
+        public static byte[] MakeHackControl(Player p) {
+            string motd = p.level.GetMotd(p);
             bool isOp = p.Rank >= LevelPermission.Operator;
             
             bool fly = true, noclip = true, speed = true, respawn = true, _3rdPerson = true;
@@ -38,7 +38,6 @@ namespace MCGalaxy {
             string[] parts = motd.Split(' ');
             for (int i = 0; i < parts.Length; i++) {
                 string part = parts[i];
-                // +/-
                 if (part.CaselessEq("-hax")) {
                     fly = false; noclip = false; speed = false; respawn = false; _3rdPerson = false;
                 } if (part.CaselessEq("-hax")) {
@@ -49,13 +48,11 @@ namespace MCGalaxy {
                     fly = true; noclip = true; speed = true; respawn = true; _3rdPerson = true;
                 }
                 
-                // +specific hack flags
                 if (part.CaselessEq("+noclip")) { noclip = true; }
                 else if (part.CaselessEq("+fly")) { fly = false; }
                 else if (part.CaselessEq("+speed")) { speed = true; }
                 else if (part.CaselessEq("+respawn")) { respawn = true; }
                 
-                // -specific hack flags
                 if (part.CaselessEq("-noclip")) { noclip = false; }
                 else if (part.CaselessEq("-fly")) { fly = false; }
                 else if (part.CaselessEq("-speed")) { speed = false; }

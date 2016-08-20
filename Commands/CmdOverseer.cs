@@ -185,16 +185,7 @@ namespace MCGalaxy.Commands {
                 int pos = message.IndexOf("motd ");
                 string motd = "";
                 if (message.Split(' ').Length > 2) motd = message.Substring(pos + 5);
-                if (motd == "") motd = "ignore";
-                
-                if (motd.Length > 64) {
-                    Player.Message(p, "Your motd can be no longer than %b64 %Scharacters.");
-                } else {
-                    p.level.motd = motd;
-                    p.level.ChatLevel("Map's MOTD was changed to: &b" + p.level.motd);
-                    p.level.Save();
-                    Level.SaveSettings(p.level);
-                }
+                CmdMap.SetMapOption(p, p.level, "motd", motd);
             } else if (cmd == "GUNS") {
                 Command.all.Find("allowguns").Use(p, "");
             } else if (cmd == "CHAT") {

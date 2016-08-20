@@ -305,7 +305,7 @@ namespace MCGalaxy {
             Send(packet);
             
             if (HasCpeExt(CpeExt.HackControl))
-                Send(Hacks.MakeHackControl(this, level));
+                Send(Hacks.MakeHackControl(this));
         }
         
         public void SendMap(Level oldLevel) { SendRawMap(oldLevel, level); }

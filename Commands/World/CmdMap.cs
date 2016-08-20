@@ -95,6 +95,7 @@ namespace MCGalaxy.Commands.World {
                 case "motd":
                     lvl.motd = value == "" ? "ignore" : value;
                     lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.motd);
+                    UpdateMotd(lvl);
                     break;
                 case "death":
                     SetBool(p, lvl, ref lvl.Death, "Survival death: "); break;
@@ -135,6 +136,14 @@ namespace MCGalaxy.Commands.World {
                     Player.Message(p, "Could not find option entered."); return;
             }
             Level.SaveSettings(lvl);
+        }
+        
+        static void UpdateMotd(Level lvl) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+            	if (p.level != lvl || !p.HasCpeExt(CpeExt.HackControl)) continue;
+                p.Send(Hacks.MakeHackControl(p));
+            }
         }
         
         static void PrintMapInfo(Player p, Level lvl) {
