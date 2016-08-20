@@ -34,13 +34,19 @@ namespace MCGalaxy.Commands.Moderation {
 
             IPAddress ip;
             if (!IPAddress.TryParse(message, out ip)) { Player.Message(p, "\"{0}\" is not a valid IP.", message); return; }
-            if (p != null && p.ip == message) { Player.Message(p, "You cannot un-ip-ban yourself."); return; }
+            if (p != null && p.ip == message) { Player.Message(p, "You cannot un-IP ban yourself."); return; }
             if (!Server.bannedIP.Contains(message)) { Player.Message(p, message + " is not a banned IP."); return; }
-
+            
             string unbanner = p == null ? "(console)" : p.ColoredName;
-            Server.IRC.Say(message.ToLower() + " was un-ip-banned by " + unbanner + ".");
+            string normMsg = String.Format("An IP was &8unbanned %Sby {0}%S.", unbanner);
+            string opsMsg = String.Format("{1} was &8un-IP banned %Sby {0}%S.", unbanner, message);
+            
+            Server.IRC.Say(normMsg, false);
+            Server.IRC.Say(opsMsg, true);            
+            int seeIPperm = CommandOtherPerms.GetPerm(Command.all.Find("whois"));
+            Chat.MessageWhere(normMsg, pl => (int)pl.Rank < seeIPperm);
+            Chat.MessageWhere(opsMsg, pl => (int)pl.Rank >= seeIPperm);
             Server.s.Log("IP-UNBANNED: " + message.ToLower() + " by " + unbanner + ".");
-            Chat.MessageAll("{0} was &8un-ip-banned %Sby {1}%S.", message, unbanner);
             
             Server.bannedIP.Remove(message);
             Server.bannedIP.Save();

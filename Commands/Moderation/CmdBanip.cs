@@ -35,16 +35,22 @@ namespace MCGalaxy.Commands.Moderation {
 
             IPAddress ip;
             if (!IPAddress.TryParse(message, out ip)) { Player.Message(p, "\"{0}\" is not a valid IP.", message); return; }
-            if (IPAddress.IsLoopback(ip)) { Player.Message(p, "You cannot ip-ban the server."); return; }
-            if (p != null && p.ip == message) { Player.Message(p, "You cannot ip-ban yourself."); return; }
-            if (Server.bannedIP.Contains(message)) { Player.Message(p, "{0} is already ip-banned.", message); return; }
+            if (IPAddress.IsLoopback(ip)) { Player.Message(p, "You cannot IP ban the server."); return; }
+            if (p != null && p.ip == message) { Player.Message(p, "You cannot IP ban yourself."); return; }
+            if (Server.bannedIP.Contains(message)) { Player.Message(p, "{0} is already IP banned.", message); return; }
             // Check if IP is shared by any other higher ranked accounts
             if (!CheckIP(p, message)) return;
 
             string banner = p == null ? "(console)" : p.ColoredName;
-            Server.IRC.Say(message.ToLower() + " was ip-banned by " + banner + "%S.");
+            string normMsg = String.Format("An IP was &8banned %Sby {0}%S.", banner);
+            string opsMsg = String.Format("{1} was &8IP banned %Sby {0}%S.", banner, message);
+            
+            Server.IRC.Say(normMsg, false);
+            Server.IRC.Say(opsMsg, true);            
+            int seeIPperm = CommandOtherPerms.GetPerm(Command.all.Find("whois"));
+            Chat.MessageWhere(normMsg, pl => (int)pl.Rank < seeIPperm);
+            Chat.MessageWhere(opsMsg, pl => (int)pl.Rank >= seeIPperm);
             Server.s.Log("IP-BANNED: " + message.ToLower() + " by " + banner + ".");
-            Chat.MessageAll("{0} was &8ip-banned %Sby {1}%S.", message, banner);
             
             Server.bannedIP.Add(message);
             Server.bannedIP.Save();
@@ -60,7 +66,7 @@ namespace MCGalaxy.Commands.Moderation {
                 // Some classicube.net accounts can be parsed as valid IPs, so warn in this case.
                 Player.Message(p, "Note: \"{0}\" is an IP, but is also an account name. "
                                + "If you meant to {1} the account, use %T/{2} @{0}",
-                               message, ban ? "ip-ban" : "un-ip-ban", ban ? "banip" : "unbanip");
+                               message, ban ? "IP ban" : "un-IP ban", ban ? "banip" : "unbanip");
                 return message;
             }
             
@@ -81,7 +87,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Group grp = Group.findPlayerGroup(name);
                 if (grp == null || grp.Permission < p.Rank) continue;
                 
-                Player.Message(p, "You can only ipban IPs used by players with a lower rank.");
+                Player.Message(p, "You can only IP ban IPs used by players with a lower rank.");
                 Player.Message(p, name + "(" + grp.ColoredName + "%S) uses that IP.");
                 Server.s.Log(p.name + "failed to ipban " + ip + " - IP is also used by: " + name + "(" + grp.name + ")");
                 return false;
