@@ -1,19 +1,19 @@
 ﻿/*
-	Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
 */
 using System;
 using System.Collections.Generic;
@@ -40,7 +40,7 @@ namespace MCGalaxy {
             foreach (Plugin p in tempList) {
                 if (p.name.ToLower() == name) return p;
                 if (p.name.ToLower().Contains(name)) {
-                	match = p; matches++;
+                    match = p; matches++;
                 }
             }
             return matches == 1 ? match : null;
@@ -59,10 +59,10 @@ namespace MCGalaxy {
                 Assembly lib = Assembly.Load(data);
 
                 try {
-                	foreach (Type t in lib.GetTypes()) {
-                		if (!t.IsSubclassOf(typeof(Plugin))) continue;
-                		instance = (Plugin)Activator.CreateInstance(t);
-                		break;
+                    foreach (Type t in lib.GetTypes()) {
+                        if (!t.IsSubclassOf(typeof(Plugin))) continue;
+                        instance = (Plugin)Activator.CreateInstance(t);
+                        break;
                     }
                 } catch { }
                 if (instance == null) {
@@ -102,18 +102,20 @@ namespace MCGalaxy {
         /// <param name="shutdown">Is this shutdown?</param>
         public static void Unload(Plugin p, bool shutdown) {
             try {
-                p.Unload(shutdown);
-                all.Remove(p);
+                p.Unload(shutdown);             
                 Server.s.Log(p.name + " was unloaded.");
-            } catch { Server.s.Log("An error occurred while unloading a plugin."); 
-        	}
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                Server.s.Log("An error occurred while unloading a plugin.");
+            }
+            all.Remove(p);
         }
 
         /// <summary> Unload all plugins </summary>
         public static void Unload() {
-        	for (int i = 0; i < all.Count; i++) {
-        	    Unload(all[i], true); i--;
-        	}
+            for (int i = 0; i < all.Count; i++) {
+                Unload(all[i], true); i--;
+            }
         }
         
         /// <summary> Load all plugins </summary>
@@ -123,10 +125,10 @@ namespace MCGalaxy {
                     string name = Path.GetFileNameWithoutExtension(path);
                     Load(name, true);
                 }
-        	} else {
+            } else {
                 Directory.CreateDirectory("plugins");
-        	}
-        	
+            }
+            
             // Load Internal Plugins
             CTF.Setup temp = new CTF.Setup();
             temp.Load(true);
