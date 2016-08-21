@@ -147,7 +147,7 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "Accepted numbers are: 0, 1, 2, 3, 4 or 5");
             } else if (cmd == "DELETE") {
                 if (value == "") {
-                    Player.Message(p, "To delete one of your maps, type %T/os map delete [map number[");
+                    Player.Message(p, "To delete one of your maps, type %T/os map delete [map number]");
                 } else if (value == "1") {
                     string map = FirstMapName(p);
                     if (!LevelInfo.ExistsOffline(map)) {
