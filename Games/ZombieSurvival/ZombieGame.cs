@@ -133,6 +133,7 @@ namespace MCGalaxy.Games {
                 CurLevel.ChatLevel("The next map has been chosen - " + Colors.red + next.ToLower());
                 CurLevel.ChatLevel("Please wait while you are transfered.");
             }
+            string lastLevel = CurLevelName;
             
             CurLevelName = next;
             QueuedLevel = null;
@@ -145,7 +146,7 @@ namespace MCGalaxy.Games {
             foreach (Player pl in online) {
                 pl.Game.RatedMap = false;
                 pl.Game.PledgeSurvive = false;
-                if (!pl.level.name.CaselessEq(next) && pl.level.name.CaselessEq(LastLevelName)) {
+                if (!pl.level.name.CaselessEq(next) && pl.level.name.CaselessEq(lastLevel)) {
                     pl.SendMessage("Going to the next map - &a" + next);
                     PlayerActions.ChangeMap(pl, next);
                 }
