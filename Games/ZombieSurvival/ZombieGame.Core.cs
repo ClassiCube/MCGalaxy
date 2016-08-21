@@ -72,14 +72,7 @@ namespace MCGalaxy.Games {
             if (!Running) return;
             List<Player> players = DoRoundCountdown();
             if (players == null) return;
-            RoundInProgress = true;
             Random random = new Random();
-            Player first = PickFirstZombie(random, players);
-
-            CurLevel.ChatLevel(first.color + first.name + " %Sstarted the infection!");
-            first.Game.Infected = true;
-            PlayerMoneyChanged(first);
-            UpdatePlayerColor(first, InfectCol);
 
             RoundInProgress = true;
             int roundMins = random.Next(CurLevel.MinRoundTime, CurLevel.MaxRoundTime);
@@ -90,14 +83,15 @@ namespace MCGalaxy.Games {
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
                 if (p.level == null || p.level != CurLevel || p.Game.Referee) continue;
-                if (p != first) Alive.Add(p);
+                Alive.Add(p);
             }
-
             Infected.Clear();
-            Infected.Add(first);
-            UpdateAllPlayerStatus();
-            DoCoreGame(random);
-            
+
+            Player first = PickFirstZombie(random, players);
+            CurLevel.ChatLevel(first.ColoredName + " %Sstarted the infection!");
+            InfectPlayer(first);
+
+            DoCoreGame(random); 
             if (!Running) {
                 Status = ZombieGameStatus.LastRound; return;
             } else {
