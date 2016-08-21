@@ -165,7 +165,7 @@ namespace MCGalaxy.Games {
                 if (seconds <= 0) { HandOutRewards(); return; }
                 if (seconds <= 5 && seconds != lastTime) {
                     string suffix = seconds == 1 ? " &4second" : " &4seconds";
-                    SendLevelRaw("&4Ending in &f " + seconds + suffix, true);
+                    SendLevelRaw("&4Ending in &f" + seconds + suffix, true);
                     lastTime = seconds;
                 }
                 

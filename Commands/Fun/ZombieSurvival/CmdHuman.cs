@@ -32,6 +32,9 @@ namespace MCGalaxy.Commands {
             if (p.Game.PledgeSurvive) {
                 Player.Message(p, "You cannot un-pledge that you will be infected."); return;
             }
+            if (p.Game.Infected) {
+                Player.Message(p, "You cannot use /human as you are currently infected."); return;
+            }
             
             p.Game.PledgeSurvive = true;
             Server.zombie.CurLevel
