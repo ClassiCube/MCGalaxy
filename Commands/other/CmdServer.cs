@@ -177,19 +177,18 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/server <reset|reload|public|private|backup|restore> - All server commands.");
-            Player.Message(p, "/server <reset>    - Reset everything to defaults. (Owner only)  WARNING: This will erase ALL properties.  Use with caution. (Likely requires restart)");
-            Player.Message(p, "/server <reload>   - Reload the server files. (May require restart) (Owner only)");
-            Player.Message(p, "/server <public>   - Make the server public. (Start listening for new connections.)");
-            Player.Message(p, "/server <private>  - Make the server private. (Stop listening for new connections.)");
-            Player.Message(p, "/server <restore>  - Restore the server from a backup.");
-            Player.Message(p, "/server <backup> [all/db/files/lite] - Make a backup. (Default all)");
-            Player.Message(p, "Backup options:");
-            Player.Message(p, "all    - Make a backup of the server and all SQL data.");
-            Player.Message(p, "db    - Just backup the database.");
-            Player.Message(p, "files - Backup everything BUT the database.");
-            Player.Message(p, "lite   - Backups everything, except BlockDB and undo files.");
-            Player.Message(p, "/server <backup> table [name] - Backups that database table");
+            Player.Message(p, "%T/server reset %H- Reset everything to defaults. (Owner only)");
+            Player.Message(p, "  &cWARNING: This will erase ALL properties. Use with caution. (Likely requires restart)");
+            Player.Message(p, "%T/server reload %H- Reload the server files. (May require restart) (Owner only)");
+            Player.Message(p, "%T/server public/private %H- Make the server public or private.");
+            Player.Message(p, "%T/server restore %H- Restore the server from a backup.");
+            Player.Message(p, "%T/server backup [all/db/files/lite] %H- Make a backup. (Default all)");
+            Player.Message(p, "%HBackup options:");
+            Player.Message(p, "  %Hall - Make a backup of the server and all SQL data.");
+            Player.Message(p, "  %Hdb - Just backup the database.");
+            Player.Message(p, "  %Hfiles - Backup everything BUT the database.");
+            Player.Message(p, "  %Hlite - Backups everything, except BlockDB and undo files.");
+            Player.Message(p, "%T/server backup table [name] %H- Backups that database table");
         }
     }
 }
