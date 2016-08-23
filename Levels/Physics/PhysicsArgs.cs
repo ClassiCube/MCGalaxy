@@ -25,34 +25,36 @@ namespace MCGalaxy.BlockPhysics {
         public uint Raw;
         
         public const uint TypeMask = 0x3F;
+        public const uint TypeBitsMask = 0x07;
+        public const uint ValueBitsMask = 0xFF;
         
         public byte Type1 {
-            get { return (byte)(Raw & 0x7); }
-            set { Raw &= ~(0x7u << 0);
+            get { return (byte)(Raw & TypeBitsMask); }
+            set { Raw &= ~TypeBitsMask;
                 Raw |= (uint)value << 0; }
         }
         
         public byte Type2 {
-            get { return (byte)((Raw >> 3) & 0x7); }
-            set { Raw &= ~(0x7u << 3);
+            get { return (byte)((Raw >> 3) & TypeBitsMask); }
+            set { Raw &= ~(TypeBitsMask << 3);
                 Raw |= (uint)value << 3; }
         }
         
         public byte Value1 {
             get { return (byte)(Raw >> 6); }
-            set { Raw &= ~(0xFFu << 6);
+            set { Raw &= ~(ValueBitsMask << 6);
                 Raw |= (uint)value << 6; }
         }
         
         public byte Value2 {
             get { return (byte)(Raw >> 14); }
-            set { Raw &= ~(0xFFu << 14);
+            set { Raw &= ~(ValueBitsMask << 14);
                 Raw |= (uint)value << 14; }
         }
         
         public byte Data {
             get { return (byte)(Raw >> 22); }
-            set { Raw &= ~(0xFFu << 22);
+            set { Raw &= ~(ValueBitsMask << 22);
                 Raw |= (uint)value << 22; }
         }
         
@@ -63,8 +65,8 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public bool HasWait {
-            get { byte value = (byte)Raw;
-                return (value & 0x7) == Wait || ((value & 0x38) == Wait << 3);
+            get { return (Raw & TypeBitsMask) == Wait 
+                    || ((Raw >> 3) & TypeBitsMask) == Wait);
             }
         }
         
