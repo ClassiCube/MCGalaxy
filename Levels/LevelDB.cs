@@ -40,7 +40,7 @@ namespace MCGalaxy {
             Server.s.Log("Saved BlockDB changes for:" + lvl.name, true);
         }
         
-        unsafe static bool DoSaveChanges(List<Level.BlockPos> tempCache, char* ptr, 
+        unsafe static bool DoSaveChanges(List<Level.BlockPos> tempCache, char* ptr,
                                          Level lvl, string date, BulkTransaction transaction) {
             string template = "INSERT INTO `Block" + lvl.name +
                 "` (Username, TimePerformed, X, Y, Z, type, deleted) VALUES (@Name, @Time, @X, @Y, @Z, @Tile, @Del)";
@@ -104,8 +104,6 @@ namespace MCGalaxy {
         public static void CreateTables(string givenName) {
             Database.Execute(String.Format(createBlock, givenName, Server.useMySQL ? "BOOL" : "INT"));
             Database.Execute(String.Format(createPortals, givenName));
-            Database.Execute(String.Format(createMessages, givenName));
-            Database.Execute(String.Format(createZones, givenName));
         }
         
         internal static void LoadZones(Level level, string name) {
@@ -150,22 +148,30 @@ namespace MCGalaxy {
                     if (Block.mb(tile)) continue;
                     
                     //givenName is safe against SQL injections, it gets checked in CmdLoad.cs
-                    Database.Execute("DELETE FROM `Messages" + name + "` WHERE X=@0 AND Y=@1 AND Z=@2", 
+                    Database.Execute("DELETE FROM `Messages" + name + "` WHERE X=@0 AND Y=@1 AND Z=@2",
                                      row["X"], row["Y"], row["Z"]);
                 }
             }
         }
         
         public static void DeleteZone(string level, Level.Zone zn) {
-            Database.Execute("DELETE FROM `Zone" + level + "` WHERE Owner=@0 AND SmallX=@1 AND " +
-                             "SMALLY=@2 AND SMALLZ=@3 AND BIGX=@4 AND BIGY=@5 AND BIGZ=@6",
-                             zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
+            object locker = ThreadSafeCache.DBCache.Get(level);
+            lock (locker) {
+                if (!Database.TableExists("Zone" + level)) return;
+                Database.Execute("DELETE FROM `Zone" + level + "` WHERE Owner=@0 AND SmallX=@1 AND " +
+                                 "SMALLY=@2 AND SMALLZ=@3 AND BIGX=@4 AND BIGY=@5 AND BIGZ=@6",
+                                 zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
+            }
         }
         
         public static void CreateZone(string level, Level.Zone zn) {
-            Database.Execute("INSERT INTO `Zone" + level +  "` (Owner, SmallX, SmallY, " +
-                             "SmallZ, BigX, BigY, BigZ) VALUES (@0, @1, @2, @3, @4, @5, @6)",
-                             zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
+            object locker = ThreadSafeCache.DBCache.Get(level);
+            lock (locker) {
+                Database.Execute(String.Format(LevelDB.createZones, level));
+                Database.Execute("INSERT INTO `Zone" + level +  "` (Owner, SmallX, SmallY, " +
+                                 "SmallZ, BigX, BigY, BigZ) VALUES (@0, @1, @2, @3, @4, @5, @6)",
+                                 zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
+            }
         }
         
         

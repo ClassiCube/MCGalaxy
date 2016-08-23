@@ -59,7 +59,7 @@ namespace MCGalaxy {
             //newName is being split and partly checked on illegal characters reserved for Windows.
             string syntax = Server.useMySQL
                 ? "RENAME TABLE `{2}{0}` TO `{2}{1}`" : "ALTER TABLE `{2}{0}` RENAME TO `{2}{1}`";
-            Database.Execute(String.Format(syntax, src, dst, "Blocks"));
+            Database.Execute(String.Format(syntax, src, dst, "Block"));
             
             object locker = ThreadSafeCache.DBCache.Get(src);
             lock (locker) {

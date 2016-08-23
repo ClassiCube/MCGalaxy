@@ -21,8 +21,8 @@ using System.Data;
 using MCGalaxy.BlockBehaviour;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands.Building {    
-    public sealed class CmdMessageBlock : Command {      
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdMessageBlock : Command {
         public override string name { get { return "mb"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -36,17 +36,17 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
 
-            CatchPos cpos;
+            MBData cpos;
             cpos.message = null;
             string[] args = message.SplitSpaces(2);
             switch (args[0].ToLower()) {
-                case "air": cpos.type = Block.MsgAir; break;
-                case "water": cpos.type = Block.MsgWater; break;
-                case "lava": cpos.type = Block.MsgLava; break;
-                case "black": cpos.type = Block.MsgBlack; break;
-                case "white": cpos.type = Block.MsgWhite; break;
-                case "show": ShowMessageBlocks(p); return;
-                default: cpos.type = Block.MsgWhite; cpos.message = message; break;
+                    case "air": cpos.type = Block.MsgAir; break;
+                    case "water": cpos.type = Block.MsgWater; break;
+                    case "lava": cpos.type = Block.MsgLava; break;
+                    case "black": cpos.type = Block.MsgBlack; break;
+                    case "white": cpos.type = Block.MsgWhite; break;
+                    case "show": ShowMessageBlocks(p); return;
+                    default: cpos.type = Block.MsgWhite; cpos.message = message; break;
             }
             if (args.Length == 1) {
                 Player.Message(p, "You need to provide text to put in the messageblock."); return;
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands.Building {
 
         void PlacedMark(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             p.ClearBlockchange();
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
+            MBData cpos = (MBData)p.blockchangeObject;
             
             byte old = p.level.GetTile(x, y, z);
             if (p.level.CheckAffectPermissions(p, x, y, z, old, cpos.type, 0)) {
@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands.Building {
                 UpdateDatabase(p, cpos, x, y, z);
                 Player.Message(p, "Message block created.");
             } else {
-                p.RevertBlock(x, y, z); 
+                p.RevertBlock(x, y, z);
                 Player.Message(p, "Failed to create a message block.");
             }
 
@@ -102,20 +102,29 @@ namespace MCGalaxy.Commands.Building {
                 p.Blockchange += PlacedMark;
         }
         
-        void UpdateDatabase(Player p, CatchPos cpos, ushort x, ushort y, ushort z) {
-            cpos.message = cpos.message.Replace("'", "\\'");
-            cpos.message = Colors.EscapeColors(cpos.message);
+        void UpdateDatabase(Player p, MBData data, ushort x, ushort y, ushort z) {
+            data.message = data.message.Replace("'", "\\'");
+            data.message = Colors.EscapeColors(data.message);
             //safe against SQL injections because no user input is given here
-            DataTable Messages = Database.Fill("SELECT * FROM `Messages" + p.level.name + "` WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
-            Messages.Dispose();
+            string lvlName = p.level.name;
+            object locker = ThreadSafeCache.DBCache.Get(lvlName);
             
-            string syntax = Messages.Rows.Count == 0 ?
-                "INSERT INTO `Messages" + p.level.name + "` (X, Y, Z, Message) VALUES (@0, @1, @2, @3)"
-                : "UPDATE `Messages" + p.level.name + "` SET Message=@3 WHERE X=@0 AND Y=@1 AND Z=@2";
-            Database.Execute(syntax, x, y, z, cpos.message);
+            lock (locker) {
+                Database.Execute(String.Format(LevelDB.createMessages, lvlName));
+                
+                int count = 0;
+                string syntax = "SELECT * FROM `Messages" + lvlName + "` WHERE X=@0 AND Y=@1 AND Z=@2";
+                using (DataTable Messages = Database.Fill(syntax, x, y, z))
+                    count = Messages.Rows.Count;
+                
+                syntax = count == 0 ?
+                    "INSERT INTO `Messages" + lvlName + "` (X, Y, Z, Message) VALUES (@0, @1, @2, @3)"
+                    : "UPDATE `Messages" + lvlName + "` SET Message=@3 WHERE X=@0 AND Y=@1 AND Z=@2";
+                Database.Execute(syntax, x, y, z, data.message);
+            }
         }
 
-        struct CatchPos { public string message; public byte type; }
+        struct MBData { public string message; public byte type; }
 
         void ShowMessageBlocks(Player p) {
             p.showMBs = !p.showMBs;
@@ -142,7 +151,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%HPlaces a message in your next block.");
             Player.Message(p, "%H  Valid blocks: white, black, air, water, lava");
             Player.Message(p, "%H  Use | to separate commands, e.g. /say 1 |/say 2");
-            Player.Message(p, "%H  Note: \"@p\" is a placeholder for player who clicked.");            
+            Player.Message(p, "%H  Note: \"@p\" is a placeholder for player who clicked.");
             Player.Message(p, "%T/mb show %H- Shows or hides MBs");
         }
     }
