@@ -14,14 +14,14 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands.Building {  
-    public sealed class CmdPortal : Command {        
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdPortal : Command {
         public override string name { get { return "portal"; } }
         public override string shortcut { get { return "o"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -58,8 +58,8 @@ namespace MCGalaxy.Commands.Building {
             p.Blockchange += EntryChange;
         }
 
-        void EntryChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {          
-            PortalData bp = (PortalData)p.blockchangeObject;            
+        void EntryChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+            PortalData bp = (PortalData)p.blockchangeObject;
             byte old = p.level.GetTile(x, y, z);
             if (!p.level.CheckAffectPermissions(p, x, y, z, old, type, extType)) {
                 p.RevertBlock(x, y, z); return;
@@ -90,25 +90,32 @@ namespace MCGalaxy.Commands.Building {
             RevertAndClearState(p, x, y, z);
             PortalData bp = (PortalData)p.blockchangeObject;
 
-            foreach (PortalPos pos in bp.entries) {
+            foreach (PortalPos P in bp.entries) {
                 //safe against SQL injections because no user input is given here
-                DataTable Portals = Database.Fill("SELECT * FROM `Portals" + pos.mapName + 
-                                                  "` WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", pos.x, pos.y, pos.z);
-                Portals.Dispose();
+                string lvlName = P.mapName;
+                object locker = ThreadSafeCache.DBCache.Get(lvlName);
                 
-                string syntax = Portals.Rows.Count == 0 ?
-                    "INSERT INTO `Portals" + pos.mapName + "` (EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap) VALUES (@0, @1, @2, @3, @4, @5, @6)"
-                    : "UPDATE `Portals" + pos.mapName + "` SET ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5 WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2";
-                Database.Execute(syntax, pos.x, pos.y, pos.z, x, y, z, p.level.name);
+                lock (locker) {
+                    Database.Execute(String.Format(LevelDB.createPortals, lvlName));
 
-                if (pos.mapName == p.level.name) 
-                    p.SendBlockchange(pos.x, pos.y, pos.z, bp.type);
+                    int count = 0;
+                    string syntax = "SELECT * FROM `Portals" + lvlName + "` WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2";
+                    using (DataTable portals = Database.Fill(syntax, P.x, P.y, P.z))
+                        count = portals.Rows.Count;
+                    
+                    syntax = count == 0 ?
+                        "INSERT INTO `Portals" + lvlName + "` (EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap) VALUES (@0, @1, @2, @3, @4, @5, @6)"
+                        : "UPDATE `Portals" + lvlName + "` SET ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5 WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2";
+                    Database.Execute(syntax, P.x, P.y, P.z, x, y, z, p.level.name);
+                }
+                if (P.mapName == p.level.name)
+                    p.SendBlockchange(P.x, P.y, P.z, bp.type);
             }
 
             Player.Message(p, "&3Exit %Sblock placed");
             if (!p.staticCommands) return;
-            bp.entries.Clear(); 
-            p.blockchangeObject = bp; 
+            bp.entries.Clear();
+            p.blockchangeObject = bp;
             p.Blockchange += EntryChange;
         }
 

@@ -103,7 +103,6 @@ namespace MCGalaxy {
         
         public static void CreateTables(string givenName) {
             Database.Execute(String.Format(createBlock, givenName, Server.useMySQL ? "BOOL" : "INT"));
-            Database.Execute(String.Format(createPortals, givenName));
         }
         
         internal static void LoadZones(Level level, string name) {
