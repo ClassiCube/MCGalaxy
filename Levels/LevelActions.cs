@@ -24,7 +24,7 @@ namespace MCGalaxy {
     
     public static class LevelActions {
         
-        /// <summary> Renames the .lvl (and related) files and database tables. 
+        /// <summary> Renames the .lvl (and related) files and database tables.
         /// Does not perform any unloading. </summary>
         public static void Rename(string src, string dst) {
             File.Move(LevelInfo.LevelPath(src), LevelInfo.LevelPath(dst));
@@ -57,19 +57,18 @@ namespace MCGalaxy {
 
             //safe against SQL injections because foundLevel is being checked and,
             //newName is being split and partly checked on illegal characters reserved for Windows.
-            if (Server.useMySQL)
-                Database.Execute(String.Format("RENAME TABLE `Block{0}` TO `Block{1}`, " +
-                                               "`Portals{0}` TO `Portals{1}`, " +
-                                               "`Messages{0}` TO `Messages{1}`, " +
-                                               "`Zone{0}` TO `Zone{1}`", src, dst));
-            else {
-                using (BulkTransaction helper = SQLiteBulkTransaction.Create()) { // ensures that it's either all work, or none work.
-                    helper.Execute(String.Format("ALTER TABLE `Block{0}` RENAME TO `Block{1}`", src, dst));
-                    helper.Execute(String.Format("ALTER TABLE `Portals{0}` RENAME TO `Portals{1}`", src, dst));
-                    helper.Execute(String.Format("ALTER TABLE `Messages{0}` RENAME TO `Messages{1}`", src, dst));
-                    helper.Execute(String.Format("ALTER TABLE `Zone{0}` RENAME TO `Zone{1}`", src, dst));
-                    helper.Commit();
-                }
+            string syntax = Server.useMySQL
+                ? "RENAME TABLE `{2}{0}` TO `{2}{1}`" : "ALTER TABLE `{2}{0}` RENAME TO `{2}{1}`";
+            Database.Execute(String.Format(syntax, src, dst, "Blocks"));
+            
+            object locker = ThreadSafeCache.DBCache.Get(src);
+            lock (locker) {
+                if (Database.TableExists("Portals" + src))
+                    Database.Execute(String.Format(syntax, src, dst, "Portals"));
+                if (Database.TableExists("Messages" + src))
+                    Database.Execute(String.Format(syntax, src, dst, "Messages"));
+                if (Database.TableExists("Zone" + src))
+                    Database.Execute(String.Format(syntax, src, dst, "Zone"));
             }
         }
         
@@ -98,13 +97,13 @@ namespace MCGalaxy {
         }
         
         
-        /// <summary> Deletes the .lvl (and related) files and database tables. 
+        /// <summary> Deletes the .lvl (and related) files and database tables.
         /// Unloads a level (if present) which exactly matches name. </summary>
         public static void Delete(string name) {
             Level lvl = LevelInfo.FindExact(name);
             if (lvl != null) lvl.Unload();
             
-            if (!Directory.Exists("levels/deleted")) 
+            if (!Directory.Exists("levels/deleted"))
                 Directory.CreateDirectory("levels/deleted");
             
             if (File.Exists("levels/deleted/" + name + ".lvl")) {
@@ -128,9 +127,12 @@ namespace MCGalaxy {
             Database.Execute("DROP TABLE `Block" + name + "`");
             object locker = ThreadSafeCache.DBCache.Get(name);
             lock (locker) {
-                Database.Execute("DROP TABLE `Portals" + name + "`");
-                Database.Execute("DROP TABLE `Messages" + name + "`");
-                Database.Execute("DROP TABLE `Zone" + name + "`");
+                if (Database.TableExists("Portals" + name))
+                    Database.Execute("DROP TABLE `Portals" + name + "`");
+                if (Database.TableExists("Messages" + name))
+                    Database.Execute("DROP TABLE `Messages" + name + "`");
+                if (Database.TableExists("Zone" + name))
+                    Database.Execute("DROP TABLE `Zone" + name + "`");
             }
         }
         

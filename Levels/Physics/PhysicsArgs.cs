@@ -66,7 +66,7 @@ namespace MCGalaxy.BlockPhysics {
         
         public bool HasWait {
             get { return (Raw & TypeBitsMask) == Wait 
-                    || ((Raw >> 3) & TypeBitsMask) == Wait);
+                    || ((Raw >> 3) & TypeBitsMask) == Wait;
             }
         }
         
