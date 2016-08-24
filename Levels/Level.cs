@@ -60,6 +60,9 @@ namespace MCGalaxy {
             if (Height < 16) Height = 16;
             if (Length < 16) Length = 16;
             
+            VisitAccess = new LevelAccess(this, true);
+            BuildAccess = new LevelAccess(this, false);
+            
             #pragma warning disable 0612
             width = Width;
             length = Height;
@@ -136,17 +139,11 @@ namespace MCGalaxy {
         
         public bool CanJoin(Player p) {
             if (p == null) return true;
-            if (Player.BlacklistCheck(p.name, name) || VisitBlacklist.CaselessContains(p.name)) {
+            if (Player.BlacklistCheck(p.name, name)) {
                 Player.Message(p, "You are blacklisted from going to {0}.", name); return false;
             }
             
-            bool whitelisted = VisitWhitelist.CaselessContains(p.name);
-            if (!p.ignorePermission && !whitelisted && p.Rank < permissionvisit) {
-                Player.Message(p, "You are not allowed to go to {0}.", name); return false;
-            }
-            if (!p.ignorePermission && !whitelisted && p.Rank > pervisitmax && !p.group.CanExecute("pervisitmax")) {
-                Player.Message(p, "Your rank must be ranked {1} or lower to go to {0}.", name, pervisitmax); return false;
-            }
+            if (!VisitAccess.CheckDetailed(p, p.ignorePermission)) return false;
             if (File.Exists("text/lockdown/map/" + name)) {
                 Player.Message(p, "The level " + name + " is locked."); return false;
             }
