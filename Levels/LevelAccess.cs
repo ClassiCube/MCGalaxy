@@ -106,7 +106,8 @@ namespace MCGalaxy {
         /// had insufficient permission to change the minimum rank. </returns>
         public bool SetMin(Player p, Group grp) {
             string target = IsVisit ? "pervisit" : "perbuild";
-            if (!CheckRank(p, grp, target)) return false;            
+            if (!CheckRank(p, Min, target, false)) return false;
+            if (!CheckRank(p, grp.Permission, target, true)) return false;
             Min = grp.Permission;
             
             UpdateAllowBuild();
@@ -119,7 +120,9 @@ namespace MCGalaxy {
         /// had insufficient permission to change the minimum rank. </returns>
         public bool SetMax(Player p, Group grp) {
             string target = IsVisit ? "pervisitmax" : "perbuildmax";
-            if (grp.Permission != LevelPermission.Nobody && !CheckRank(p, grp, target)) return false;           
+            const LevelPermission ignore = LevelPermission.Nobody;
+            if (Max != ignore && !CheckRank(p, Max, target, false)) return false;
+            if (grp.Permission != ignore && !CheckRank(p, grp.Permission, target, true)) return false;
             Max = grp.Permission;
             
             UpdateAllowBuild();
@@ -128,13 +131,10 @@ namespace MCGalaxy {
         }
         
         
-        bool CheckRank(Player p, Group grp, string target) {
-            if (p != null && Min > p.Rank) {
-                Player.Message(p, "You cannot change the {0} of a level with a {0} higher than your rank.", target);
-                return false;
-            }
-            if (p != null && grp.Permission > p.Rank) {
-                Player.Message(p, "You cannot change the {0} of a level to a {0} higher than your rank.", target);
+        bool CheckRank(Player p, LevelPermission perm, string target, bool newPerm) {
+            if (p != null && perm > p.Rank) {
+                Player.Message(p, "You cannot change the {0} of a level {1} a {0} higher than your rank.", 
+        		               target, newPerm ? "to" : "with");
                 return false;
             }
             return true;

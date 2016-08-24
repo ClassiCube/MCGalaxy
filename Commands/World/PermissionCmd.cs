@@ -25,12 +25,12 @@ namespace MCGalaxy.Commands.World {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        protected Level GetArgs(Player p, string[] args, out Group grp) {
+        protected Level GetArgs(Player p, string[] args, ref Group grp) {
             if (args.Length == 1 && Player.IsSuper(p)) {
                 SuperRequiresArgs(p, "level"); return null;
             }
             Level level = args.Length == 1 ? p.level : LevelInfo.FindMatches(p, args[0]);
-            if (level == null) return;
+            if (level == null) return null;
             
             string rank = args.Length == 1 ? args[0] : args[1];
             grp = Group.FindMatches(p, rank);

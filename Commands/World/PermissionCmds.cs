@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.World {
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
             Group grp = null;
-            Level lvl = GetArgs(p, args, out grp);
+            Level lvl = GetArgs(p, args, ref grp);
             if (lvl != null) lvl.BuildAccess.SetMax(p, grp);
         }
         
@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.World {
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
             Group grp = null;
-            Level lvl = GetArgs(p, args, out grp);
+            Level lvl = GetArgs(p, args, ref grp);
             if (lvl != null) lvl.BuildAccess.SetMin(p, grp);
         }
         
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.World {
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
             Group grp = null;
-            Level lvl = GetArgs(p, args, out grp);
+            Level lvl = GetArgs(p, args, ref grp);
             if (lvl != null) lvl.VisitAccess.SetMax(p, grp);
         }
         
@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands.World {
             }
             
             Group grp = null;
-            Level lvl = GetArgs(p, args, out grp);
+            Level lvl = GetArgs(p, args, ref grp);
             if (lvl != null) lvl.VisitAccess.SetMin(p, grp);
         }
         
