@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.World {
             Level lvl = LvlFile.Load(name, path);
             lvl.setPhysics(0);
             lvl.backedup = true;
-            lvl.permissionbuild = LevelPermission.Admin;
+            lvl.permissionbuild = LevelPermission.Nobody;
 
             lvl.jailx = (ushort)(lvl.spawnx * 32);
             lvl.jaily = (ushort)(lvl.spawny * 32);

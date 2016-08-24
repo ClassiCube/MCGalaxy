@@ -49,7 +49,9 @@ namespace MCGalaxy.Commands.World {
             }
             
             setter(level, grp.Permission);
+            UpdateAllowBuild(level);
             Level.SaveSettings(level);
+            
             Server.s.Log(level.name + " " + target + " permission changed to " + grp.Permission + ".");
             Chat.MessageLevel(level, target + " permission changed to " + grp.ColoredName + "%S.");
             if (p == null || p.level != level)
@@ -95,12 +97,22 @@ namespace MCGalaxy.Commands.World {
             list.Add(name);
             other.CaselessRemove(name);
             
+            UpdateAllowBuild(level);
             Level.SaveSettings(level);
+            
             string msg = name + " was " + target + " " + mode + "ed";
             Server.s.Log(msg + " on " + level.name);
             Chat.MessageLevel(level, msg);
             if (p == null || p.level != level)
                 Player.Message(p, msg + " on {0}.", level.name);
+        }
+        
+        static void UpdateAllowBuild(Level level) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level != level) continue;
+                p.AllowBuild = level.BuildAccess.Check(p, false);
+            }
         }
     }
 }

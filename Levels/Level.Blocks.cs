@@ -173,28 +173,27 @@ namespace MCGalaxy {
             return true;
         }
         
-        bool CheckZonePerms(Player p, ushort x, ushort y, ushort z,
-                        ref bool AllowBuild, ref bool inZone, ref string Owners) {
+        bool CheckZonePerms(Player p, ushort x, ushort y, ushort z, ref bool inZone) {
             if (p.Rank < LevelPermission.Admin) {
-            	bool foundDel = FindZones(p, x, y, z, ref inZone, ref AllowBuild, ref Owners);
-                if (!AllowBuild) {
-                    if (p.ZoneSpam <= DateTime.UtcNow) {
-                        if (Owners != "")
-                            Player.Message(p, "This zone belongs to &b" + Owners.Remove(0, 2) + ".");
-                        else
-                            Player.Message(p, "This zone belongs to no one.");
-                        p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
-                    }
-                    return false;
-                }
+        	    string owners = "";
+                bool zoneAllow = FindZones(p, x, y, z, ref inZone, ref owners);
+                if (zoneAllow) return true;
+                if (p.ZoneSpam > DateTime.UtcNow) return false;
+                
+                if (owners != "")
+                    Player.Message(p, "This zone belongs to &b" + owners.Remove(0, 2) + ".");
+                else
+                    Player.Message(p, "This zone belongs to no one.");
+                p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
+                return false;
             }
             return true;
         }
         
         bool FindZones(Player p, ushort x, ushort y, ushort z, 
-                             ref bool inZone, ref bool AllowBuild, ref string Owners) {
-            if (ZoneList.Count == 0) { AllowBuild = true; return false; }
-            bool foundDel = false;
+                             ref bool inZone, ref string Owners) {
+            if (ZoneList.Count == 0) return true;
+            bool zoneAllow = true;
             
             for (int i = 0; i < ZoneList.Count; i++) {
                 Zone zn = ZoneList[i];
@@ -204,39 +203,23 @@ namespace MCGalaxy {
                 inZone = true;
                 if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
                     string grpName = zn.Owner.Substring(3);
-                    if (Group.Find(grpName).Permission <= p.Rank) {
-                        AllowBuild = true; break;
-                    }
-                    AllowBuild = false;
+                    if (Group.Find(grpName).Permission <= p.Rank) return true;
                     Owners += ", " + grpName;
                 } else {
-                	if (zn.Owner.CaselessEq(p.name)) {
-                        AllowBuild = true; break;
-                    }
-                    AllowBuild = false;
+                	if (zn.Owner.CaselessEq(p.name)) return true;
                     Owners += ", " + zn.Owner;
                 }
+                zoneAllow = false;
             }
-            return foundDel;
+            return zoneAllow;
         }
         
-        bool CheckRank(Player p, bool AllowBuild, bool inZone) {
-            if (p.Rank < permissionbuild && (!inZone || !AllowBuild)) {
-                if (p.ZoneSpam <= DateTime.UtcNow) {
-                    Player.Message(p, "Must be at least " + PermissionToName(permissionbuild) + " to build here");
-                    p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
-                }
-                return false;
+        bool CheckRank(Player p) {
+            if (p.ZoneSpam <= DateTime.UtcNow) {
+                BuildAccess.CheckDetailed(p, false);
+                p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
             }
-            
-            if (p.Rank > perbuildmax && (!inZone || !AllowBuild) && !p.group.CanExecute("perbuildmax")) {
-                if (p.ZoneSpam <= DateTime.UtcNow) {
-                    Player.Message(p, "Your rank must be " + perbuildmax + " or lower to build here!");
-                    p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
-                }
-                return false;
-            }
-            return true;
+            return p.AllowBuild;
         }
         
         public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, 
@@ -244,13 +227,9 @@ namespace MCGalaxy {
             if (!Block.AllowBreak(b) && !Block.canPlace(p, b) && !Block.BuildIn(b)) return false;
             if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref type)) return false;
             
-            string Owners = "";
-            bool AllowBuild = true, inZone = false;
-            if (!CheckZonePerms(p, x, y, z, ref AllowBuild, ref inZone, ref Owners))
-                return false;
-            if (Owners.Length == 0 && !CheckRank(p, AllowBuild, inZone))
-                return false;
-            return true;
+            bool inZone = false;
+            if (!CheckZonePerms(p, x, y, z, ref inZone)) return false;
+            return inZone || CheckRank(p);
         }
         
         public void Blockchange(Player p, ushort x, ushort y, ushort z, 
