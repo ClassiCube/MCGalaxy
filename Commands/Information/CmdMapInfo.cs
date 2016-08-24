@@ -65,9 +65,10 @@ namespace MCGalaxy.Commands {
             }
 
             if (Directory.Exists(Server.backupLocation + "/" + data.Name)) {
-                int latestBackup = Directory.GetDirectories(Server.backupLocation + "/" + data.Name).Length;
-                DateTime time = Directory.GetCreationTime(LevelInfo.BackupPath(data.Name, latestBackup.ToString()));
-                Player.Message(p, "  Latest backup: &a{0} %Sat &a" + time.ToString("yyyy-MM-dd HH:mm:ss"), latestBackup);
+                int latest = Directory.GetDirectories(Server.backupLocation + "/" + data.Name).Length;
+                DateTime time = File.GetCreationTimeUtc(LevelInfo.BackupPath(data.Name, latest.ToString()));
+                TimeSpan delta = DateTime.UtcNow - time;
+                Player.Message(p, "  Latest backup: &a{0} %S({1} ago)", latest, delta.Shorten());
             } else {
                 Player.Message(p, "  No backups for this map exist yet.");
             }

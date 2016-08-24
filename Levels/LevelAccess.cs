@@ -86,8 +86,9 @@ namespace MCGalaxy {
             if (p.Rank > Max && !p.group.CanExecute(maxCmd)) {
                 Group grp = Group.findPerm(Max);
                 string grpName = grp == null ? "&f" + Max : grp.ColoredName;
-                Player.Message(p, "Only {2} and below may {1} in {0}.", name, action, grpName) return false;
+                Player.Message(p, "Only {2} and below may {1} in {0}.", name, action, grpName); return false;
             }
+            return true;
         }
     }
 }
