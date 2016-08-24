@@ -36,11 +36,19 @@ namespace MCGalaxy {
         /// <summary> Lowest allowed rank. </summary>
         public LevelPermission Min {
             get { return IsVisit ? lvl.permissionvisit : lvl.permissionbuild; }
+            set {
+                if (IsVisit) lvl.permissionvisit = value;
+                else lvl.permissionbuild = value;
+            }
         }
         
         /// <summary> Highest allowed rank. </summary>
         public LevelPermission Max {
             get { return IsVisit ? lvl.pervisitmax : lvl.perbuildmax; }
+            set {
+                if (IsVisit) lvl.pervisitmax = value;
+                else lvl.perbuildmax = value;
+            }
         }
         
         /// <summary> List of always allowed players, overrides rank allowances. </summary>
@@ -52,6 +60,7 @@ namespace MCGalaxy {
         public List<string> Blacklisted {
             get { return IsVisit ? lvl.VisitBlacklist : lvl.BuildBlacklist; }
         }
+        
         
         /// <summary> Returns whether the given player is allowed by these access permissions. </summary>
         public bool Check(Player p, bool ignoreRankPerm = false) {
@@ -89,6 +98,63 @@ namespace MCGalaxy {
                 Player.Message(p, "Only {2}%S and below may {1} {0}.", name, action, grpName); return false;
             }
             return true;
+        }
+        
+        
+        /// <summary> Sets the minimum rank allowed to access these permissions. </summary>
+        /// <returns> true if the minimum rank was changed, false if the given player
+        /// had insufficient permission to change the minimum rank. </returns>
+        public bool SetMin(Player p, Group grp) {
+            string target = IsVisit ? "pervisit" : "perbuild";
+            if (!CheckRank(p, grp, target)) return false;            
+            Min = grp.Permission;
+            
+            UpdateAllowBuild();
+            OnPermissionChanged(p, grp, target);
+            return true;
+        }
+        
+        /// <summary> Sets the minimum rank allowed to access these permissions. </summary>
+        /// <returns> true if the minimum rank was changed, false if the given player
+        /// had insufficient permission to change the minimum rank. </returns>
+        public bool SetMax(Player p, Group grp) {
+            string target = IsVisit ? "pervisitmax" : "perbuildmax";
+            if (grp.Permission != LevelPermission.Nobody && !CheckRank(p, grp, target)) return false;           
+            Max = grp.Permission;
+            
+            UpdateAllowBuild();
+            OnPermissionChanged(p, grp, target);
+            return true;
+        }
+        
+        
+        bool CheckRank(Player p, Group grp, string target) {
+            if (p != null && Min > p.Rank) {
+                Player.Message(p, "You cannot change the {0} of a level with a {0} higher than your rank.", target);
+                return false;
+            }
+            if (p != null && grp.Permission > p.Rank) {
+                Player.Message(p, "You cannot change the {0} of a level to a {0} higher than your rank.", target);
+                return false;
+            }
+            return true;
+        }
+        
+        void OnPermissionChanged(Player p, Group grp, string target) {
+            Level.SaveSettings(lvl);
+            Server.s.Log(lvl.name + " " + target + " permission changed to " + grp.Permission + ".");
+            Chat.MessageLevel(lvl, target + " permission changed to " + grp.ColoredName + "%S.");
+            if (p == null || p.level != lvl)
+                Player.Message(p, "{0} permission changed to {1}%S on {2}.", target, grp.ColoredName, lvl.name);
+        }
+        
+        void UpdateAllowBuild() {
+            if (IsVisit) return;
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level != lvl) continue;
+                p.AllowBuild = lvl.BuildAccess.Check(p, false);
+            }
         }
     }
 }

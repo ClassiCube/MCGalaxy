@@ -18,44 +18,23 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands.World {   
-    static class PermissionCmd {
+namespace MCGalaxy.Commands.World {
+    public abstract class PermissionCmd : Command {
+        public override string shortcut { get { return ""; } }
+        public override string type { get { return CommandTypes.World; } }
+        public override bool museumUsable { get { return false; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        public static void Use(Player p, string[] args, bool skipNobodyPerm, string target,
-                               Func<Level, LevelPermission> getter, Action<Level, LevelPermission> setter) {
-            if (args.Length == 1 && p == null) {
-                Player.Message(p, "You must provide a level name when using this command from console.");
-                return;
+        protected Level GetArgs(Player p, string[] args, out Group grp) {
+            if (args.Length == 1 && Player.IsSuper(p)) {
+                SuperRequiresArgs(p, "level"); return null;
             }
             Level level = args.Length == 1 ? p.level : LevelInfo.FindMatches(p, args[0]);
             if (level == null) return;
             
             string rank = args.Length == 1 ? args[0] : args[1];
-            Group grp = Group.FindMatches(p, rank);
-            if (grp == null) return;
-
-            if (p != null && getter(level) > p.Rank) {
-                if (skipNobodyPerm || (getter(level) != LevelPermission.Nobody)) {
-                    Player.Message(p, "You cannot change the {0} of a level with a {0} higher than your rank.", target);
-                    return;
-                }
-            }
-            
-            if (p != null && grp.Permission > p.Rank) {
-                if (skipNobodyPerm || (grp.Permission != LevelPermission.Nobody)) {
-                    Player.Message(p, "You cannot change the {0} of a level to a {0} higher than your rank.", target);
-                    return;
-                }
-            }
-            
-            setter(level, grp.Permission);
-            UpdateAllowBuild(level);
-            Level.SaveSettings(level);
-            
-            Server.s.Log(level.name + " " + target + " permission changed to " + grp.Permission + ".");
-            Chat.MessageLevel(level, target + " permission changed to " + grp.ColoredName + "%S.");
-            if (p == null || p.level != level)
-                Player.Message(p, "{0} permission changed to {1}%S on {2}.", target, grp.ColoredName, level.name);
+            grp = Group.FindMatches(p, rank);
+            return grp != null ? level : null;
         }
         
         public static void UseList(Player p, string[] args, string target,
@@ -71,7 +50,7 @@ namespace MCGalaxy.Commands.World {
             string mode = name[0] == '+' ? "whitelist" : "blacklist";
             List<string> list = name[0] == '+' ? wlGetter(level) : blGetter(level);
             List<string> other = name[0] == '+' ? blGetter(level) : wlGetter(level);
-            name = name.Substring(1);            
+            name = name.Substring(1);
             
             if (name == "") {
                 Player.Message(p, "You must provide a player name to {0}.", mode); return;

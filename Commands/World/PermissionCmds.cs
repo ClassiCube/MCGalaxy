@@ -19,21 +19,16 @@ using System;
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.World {  
-    public sealed class CmdPerbuildMax : Command {        
+    public sealed class CmdPerbuildMax : PermissionCmd {        
         public override string name { get { return "perbuildmax"; } }
-        public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.World; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdPerbuildMax() { }
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
-            PermissionCmd.Use(
-                p, args, false, "perbuildmax", l => l.perbuildmax,
-                (l, v) => l.perbuildmax = v);
+            Group grp = null;
+            Level lvl = GetArgs(p, args, out grp);
+            if (lvl != null) lvl.BuildAccess.SetMax(p, grp);
         }
         
         public override void Help(Player p) {
@@ -42,21 +37,16 @@ namespace MCGalaxy.Commands.World {
         }
     }
     
-    public sealed class CmdPermissionBuild : Command {        
+    public sealed class CmdPermissionBuild : PermissionCmd {        
         public override string name { get { return "perbuild"; } }
-        public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.World; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdPermissionBuild() { }
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
-            PermissionCmd.Use(
-                p, args, true, "perbuild", l => l.permissionbuild,
-                (l, v) => l.permissionbuild = v);
+            Group grp = null;
+            Level lvl = GetArgs(p, args, out grp);
+            if (lvl != null) lvl.BuildAccess.SetMin(p, grp);
         }
         
         public override void Help(Player p) {
@@ -65,21 +55,16 @@ namespace MCGalaxy.Commands.World {
         }
     }
     
-    public sealed class CmdPervisitMax : Command {        
+    public sealed class CmdPervisitMax : PermissionCmd {        
         public override string name { get { return "pervisitmax"; } }
-        public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.World; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdPervisitMax() { }
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
-            PermissionCmd.Use(
-                p, args, false, "pervisitmax", l => l.pervisitmax,
-                (l, v) => l.pervisitmax = v);
+            Group grp = null;
+            Level lvl = GetArgs(p, args, out grp);
+            if (lvl != null) lvl.VisitAccess.SetMax(p, grp);
         }
         
         public override void Help(Player p) {
@@ -88,13 +73,8 @@ namespace MCGalaxy.Commands.World {
         }
     }
     
-    public sealed class CmdPermissionVisit : Command {       
+    public sealed class CmdPermissionVisit : PermissionCmd {       
         public override string name { get { return "pervisit"; } }
-        public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.World; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdPermissionVisit() { }
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
@@ -106,9 +86,9 @@ namespace MCGalaxy.Commands.World {
                                        l => l.VisitWhitelist, l => l.VisitBlacklist); return;
             }
             
-            PermissionCmd.Use(
-                p, args, true, "pervisit", l => l.permissionvisit,
-                (l, v) => l.permissionvisit = v);
+            Group grp = null;
+            Level lvl = GetArgs(p, args, out grp);
+            if (lvl != null) lvl.VisitAccess.SetMin(p, grp);
         }
         
         public override void Help(Player p) {
