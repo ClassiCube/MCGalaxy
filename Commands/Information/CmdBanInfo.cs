@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System;
+
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdBanInfo : Command {
         public override string name { get { return "baninfo"; } }
@@ -25,7 +27,7 @@ namespace MCGalaxy.Commands.Moderation {
         public CmdBanInfo() { }
 
         public override void Use(Player p, string message) {
-        	if (CheckSuper(p, message, "player name")) return;
+            if (CheckSuper(p, message, "player name")) return;
             if (message == "") message = p.name;
             bool banned = Group.IsBanned(message);
             string msg = message;
@@ -46,8 +48,8 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, msg);
             
             if (data != null) {
-                data[2] = Reformat(data[2]);
-                Player.Message(p, "{0} on {1} by {2}", banned ? "Banned" : "Last banned", data[2], data[0]);
+                TimeSpan delta = GetDelta(data[2]);
+                Player.Message(p, "{0} {1} ago by {2}", banned ? "Banned" : "Last banned", delta.Shorten(), data[0]);
                 Player.Message(p, "Reason: {0}", data[1]);
             } else {
                 Player.Message(p, "No ban data found for " + message + ".");
@@ -55,22 +57,26 @@ namespace MCGalaxy.Commands.Moderation {
             
             data = Ban.GetUnbanData(message);
             if (data != null) {
-                data[2] = Reformat(data[2]);
-                Player.Message(p, "{0} on {1} by {2}", banned ? "Last unbanned" : "Unbanned", data[2], data[0]);
+                TimeSpan delta = GetDelta(data[2]);
+                Player.Message(p, "{0} {1} ago by {2}", banned ? "Last unbanned" : "Unbanned", delta.Shorten(), data[0]);
                 Player.Message(p, "Reason: {0}", data[1]);
             }
         }
         
-        static string Reformat(string data) {
-            string[] date = data.Split(' ');
-            data = date[1] + "-" + date[2] + "-" + date[3] + " at " + date[5];
+        static TimeSpan GetDelta(string data) {
             data = data.Replace(",", "");
-            return data;
+            string[] date = data.Split(' ');
+            string[] minuteHour = date[5].Split(':');
+            
+            int hour = int.Parse(minuteHour[0]), minute = int.Parse(minuteHour[1]);
+            int day = int.Parse(date[1]), month = int.Parse(date[2]), year = int.Parse(date[3]);
+            DateTime time = new DateTime(year, month, day, hour, minute, 0);
+            return DateTime.Now - time;
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/baninfo <player>");
-            Player.Message(p, "%Hreturns info about banned player.");
+            Player.Message(p, "%T/baninfo [player]");
+            Player.Message(p, "%HOutputs information about current and/or previous ban/unban for that player.");
         }
     }
 }
