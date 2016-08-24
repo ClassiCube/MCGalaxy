@@ -333,6 +333,7 @@
     <Compile Include="Commands\Moderation\CmdXJail.cs" />
     <Compile Include="Commands\Moderation\CmdXmute.cs" />
     <Compile Include="Commands\Moderation\CmdZone.cs" />
+    <Compile Include="Commands\Moderation\ModActionCmd.cs" />
     <Compile Include="Commands\Moderation\RankCmd.cs" />
     <Compile Include="Commands\other\CmdAgree.cs" />
     <Compile Include="Commands\other\CmdAscend.cs" />

@@ -18,11 +18,9 @@
 using System;
 
 namespace MCGalaxy.Commands.Moderation {    
-    public sealed class CmdBan : Command {        
+    public sealed class CmdBan : ModActionCmd {        
         public override string name { get { return "ban"; } }
         public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdBan() { }
 
@@ -37,11 +35,13 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             string[] args = message.SplitSpaces(2);
-            string reason = args.Length > 1 ? args[1] : Server.defaultBanMessage;
+            string reason = args.Length > 1 ? args[1] : Server.defaultBanMessage;            
+            if (reason == "-") reason = "&c-";
+            reason = GetReason(p, reason);
+            if (reason == null) return;
             string banReason = reason == "-" ? "" : " (" + reason + ")";
-            if (reason == "-") reason = "&c-";    
-            Player who = PlayerInfo.Find(args[0]);
             
+            Player who = PlayerInfo.Find(args[0]);            
             string target = who == null ? args[0] : who.name;
             if (!ValidName(p, target, "player")) return;
             Group group = who == null ? Group.findPlayerGroup(args[0]) : who.group;
@@ -87,6 +87,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "%T/ban <player> [reason]");
             Player.Message(p, "%HBans a player without kicking them.");
             Player.Message(p, "%HAdd # before name to stealth ban.");
+            Player.Message(p, "%HFor [reason], @number can be used as a shortcut for that rule.");
         }
     }
 }

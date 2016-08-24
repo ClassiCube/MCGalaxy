@@ -18,11 +18,9 @@
 using System;
 
 namespace MCGalaxy.Commands {    
-    public sealed class CmdKick : Command {       
+    public sealed class CmdKick : ModActionCmd {       
         public override string name { get { return "kick"; } }
         public override string shortcut { get { return "k"; } }
-        public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
         public override void Use(Player p, string message) {
@@ -34,6 +32,9 @@ namespace MCGalaxy.Commands {
             if (args.Length > 1) message = args[1];
             else if (p == null) message = "You were kicked by the console.";
             else message = "You were kicked by " + p.DisplayName + ".";
+            
+            message = GetReason(p, message);
+            if (message == null) return;
 
             if (p != null && p == who) { Player.Message(p, "You cannot kick yourself."); return; }
             if (p != null && who.Rank >= p.Rank) {
@@ -48,8 +49,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/kick <player> [message]");
+            Player.Message(p, "%T/kick <player> [reason]");
             Player.Message(p, "%HKicks a player.");
+            Player.Message(p, "%HFor [reason], @number can be used as a shortcut for that rule.");
         }
     }
 }
