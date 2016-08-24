@@ -18,11 +18,9 @@
 using System;
 
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdTempBan : Command {       
+    public sealed class CmdTempBan : ModActionCmd {       
         public override string name { get { return "tempban"; } }
         public override string shortcut { get { return "tb"; } }
-        public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
         public override void Use(Player p, string message) {
@@ -45,9 +43,11 @@ namespace MCGalaxy.Commands.Moderation {
             Server.TempBan tBan;
             tBan.name = target;
             tBan.reason = args.Length > 2 ? args[2] : "";
-            tBan.expiryTime = DateTime.UtcNow.Add(time);
-            AddTempban(tBan);
+            tBan.reason = GetReason(p, tBan.reason);
+            if (tBan.reason == null) return;
             
+            tBan.expiryTime = DateTime.UtcNow.Add(time);
+            AddTempban(tBan);            
             if (who != null) {
                 string reason = tBan.reason == "" ? "" : " - (" + tBan.reason + ")";
                 who.Kick("Banned for " + time.Shorten(true) + "." + reason);
@@ -72,6 +72,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "%HBans <name> for <timespan>. Max is 1 day, default is 1 hour.");
             Player.Message(p, "%H  e.g. to tempban for 90 minutes, <timespan> would be 1h30m");
             Player.Message(p, "%HTemp bans will reset on server restart");
+            Player.Message(p, "%HFor [reason], @number can be used as a shortcut for that rule.");
         }
     }
 }

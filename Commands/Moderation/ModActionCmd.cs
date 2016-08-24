@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public abstract class ModActionCmd : Command {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         
         protected string GetReason(Player p, string reason) {
-            if (reason.Length == 0 || reason[0] != '@') return reason;            
+            if (reason.Length == 0 || reason[0] != '@') return reason;
             reason = reason.Substring(1);
             int num;
             if (!int.TryParse(reason, out num)) return "@" + reason;

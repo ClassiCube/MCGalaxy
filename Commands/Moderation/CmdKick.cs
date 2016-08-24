@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Moderation {    
     public sealed class CmdKick : ModActionCmd {       
         public override string name { get { return "kick"; } }
         public override string shortcut { get { return "k"; } }
