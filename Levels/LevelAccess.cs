@@ -148,7 +148,7 @@ namespace MCGalaxy {
                 Player.Message(p, "{0} permission changed to {1}%S on {2}.", target, grp.ColoredName, lvl.name);
         }
         
-        void UpdateAllowBuild() {
+        internal void UpdateAllowBuild() {
             if (IsVisit) return;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {

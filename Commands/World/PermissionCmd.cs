@@ -37,19 +37,20 @@ namespace MCGalaxy.Commands.World {
             return grp != null ? level : null;
         }
         
-        public static void UseList(Player p, string[] args, string target,
-                                   Func<Level, LevelPermission> getter,
-                                   Func<Level, List<string>> wlGetter, Func<Level, List<string>> blGetter) {
+        protected void UseList(Player p, string[] args, bool isVisit) {
+            string target = isVisit ? "pervisit" : "perbuild";
             if (args.Length == 1 && Player.IsSuper(p)) {
                 Command.SuperRequiresArgs(target, p, "level"); return;
             }
             Level level = args.Length == 1 ? p.level : LevelInfo.FindMatches(p, args[0]);
             if (level == null) return;
+            LevelAccess access = isVisit ? level.VisitAccess : level.BuildAccess;
             
             string name = args.Length == 1 ? args[0] : args[1];
-            string mode = name[0] == '+' ? "whitelist" : "blacklist";
-            List<string> list = name[0] == '+' ? wlGetter(level) : blGetter(level);
-            List<string> other = name[0] == '+' ? blGetter(level) : wlGetter(level);
+            bool include = name[0] == '+';
+            string mode = include ? "whitelist" : "blacklist";
+            List<string> list = include ? access.Whitelisted : access.Blacklisted;
+            List<string> other = include ? access.Blacklisted : access.Whitelisted;
             name = name.Substring(1);
             
             if (name == "") {
@@ -59,12 +60,8 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "You cannot {0} yourself.", mode); return;
             }
             
-            if (p != null && getter(level) > p.Rank) {
-                Player.Message(p, "You cannot change the {0} {1} permissions " +
-                               "for a player higher than your rank.", target, mode); return;
-            }
-            if (p != null && blGetter(level).CaselessContains(p.name)) {
-                Player.Message(p, "You cannot change {0} permissions as you are blacklisted.", target); return;
+            if (p != null && !access.CheckDetailed(p, false)) {
+                Player.Message(p, "Hence you cannot modify the {0} {1}.", target, mode); return;
             }
             if (p != null && PlayerInfo.GetGroup(name).Permission > p.Rank) {
                 Player.Message(p, "You cannot whitelist/blacklist players of a higher rank."); return;
@@ -73,10 +70,10 @@ namespace MCGalaxy.Commands.World {
             if (list.CaselessContains(name)) {
                 Player.Message(p, "\"{0}\" is already {1}ed.", name, mode); return;
             }
-            list.Add(name);
-            other.CaselessRemove(name);
+            if (!other.CaselessRemove(name))
+                list.Add(name);
             
-            UpdateAllowBuild(level);
+            access.UpdateAllowBuild();
             Level.SaveSettings(level);
             
             string msg = name + " was " + target + " " + mode + "ed";
@@ -85,13 +82,20 @@ namespace MCGalaxy.Commands.World {
             if (p == null || p.level != level)
                 Player.Message(p, msg + " on {0}.", level.name);
         }
+
         
-        static void UpdateAllowBuild(Level level) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.level != level) continue;
-                p.AllowBuild = level.BuildAccess.Check(p, false);
-            }
+        protected void MaxHelp(Player p, string action) {
+            Player.Message(p, "%T/{0} [Level] [Rank]", name);
+            Player.Message(p, "%HSets the highest rank able to {0} the given level.", action);
+        }
+        
+        protected void NormalHelp(Player p, string action, string action2) {
+            Player.Message(p, "%T/{0} [level] [rank]", name);
+            Player.Message(p, "%HSets the lowest rank able to {0} the given level.", action);
+            Player.Message(p, "%T/{0} [level] +[name]", name);
+            Player.Message(p, "%HAllows [name] to {0}, even if their rank cannot.", action2);
+            Player.Message(p, "%T/{0} [level] -[name]", name);
+            Player.Message(p, "%HPrevents [name] from {0}ing, even if their rank can.", action2);
         }
     }
 }

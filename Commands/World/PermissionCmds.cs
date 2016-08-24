@@ -31,10 +31,7 @@ namespace MCGalaxy.Commands.World {
             if (lvl != null) lvl.BuildAccess.SetMax(p, grp);
         }
         
-        public override void Help(Player p) {
-            Player.Message(p, "%T/perbuildmax [Level] [Rank]");
-            Player.Message(p, "%HSets the highest rank able to build on the given level.");
-        }
+        public override void Help(Player p) { MaxHelp(p, "build on"); }
     }
     
     public sealed class CmdPermissionBuild : PermissionCmd {        
@@ -44,15 +41,17 @@ namespace MCGalaxy.Commands.World {
             string[] args = message.Split(' ');
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
+            string name = args[args.Length - 1];
+            if (name.Length > 0 && (name[0] == '+' || name[0] == '-')) {
+                UseList(p, args, false); return;
+            }
+            
             Group grp = null;
             Level lvl = GetArgs(p, args, ref grp);
             if (lvl != null) lvl.BuildAccess.SetMin(p, grp);
         }
         
-        public override void Help(Player p) {
-            Player.Message(p, "%T/perbuild [Level] [Rank]");
-            Player.Message(p, "%HSets the lowest rank able to build on the given level.");
-        }
+        public override void Help(Player p) { NormalHelp(p, "build on", "build"); }
     }
     
     public sealed class CmdPervisitMax : PermissionCmd {        
@@ -67,10 +66,7 @@ namespace MCGalaxy.Commands.World {
             if (lvl != null) lvl.VisitAccess.SetMax(p, grp);
         }
         
-        public override void Help(Player p) {
-            Player.Message(p, "%T/pervisitmax [level] [rank]");
-            Player.Message(p, "%HSets the highest rank able to visit the given level.");
-        }
+        public override void Help(Player p) { MaxHelp(p, "visit"); }
     }
     
     public sealed class CmdPermissionVisit : PermissionCmd {       
@@ -82,8 +78,7 @@ namespace MCGalaxy.Commands.World {
             
             string name = args[args.Length - 1];
             if (name.Length > 0 && (name[0] == '+' || name[0] == '-')) {
-                PermissionCmd.UseList(p, args, "pervisit", l => l.permissionvisit,
-                                       l => l.VisitWhitelist, l => l.VisitBlacklist); return;
+                UseList(p, args, true); return;
             }
             
             Group grp = null;
@@ -91,13 +86,6 @@ namespace MCGalaxy.Commands.World {
             if (lvl != null) lvl.VisitAccess.SetMin(p, grp);
         }
         
-        public override void Help(Player p) {
-            Player.Message(p, "%T/pervisit [level] [rank]");
-            Player.Message(p, "%HSets the lowest rank able to visit the given level.");
-            Player.Message(p, "%T/pervisit [level] +[name]");
-            Player.Message(p, "%HAllows [name] to visit the map, even if their rank cannot.");
-            Player.Message(p, "%T/pervisit [level] -[name]");
-            Player.Message(p, "%HPrevents [name] from visiting the map, even if their rank can.");
-        }
+        public override void Help(Player p) { NormalHelp(p, "visit", "visit"); }
     }
 }
