@@ -125,19 +125,18 @@ namespace MCGalaxy.Commands {
                 Command.all.Find("newlvl").Use(p, level + " " + value);
                 
                 // Set default perbuild permissions
-                Command.all.Find("load").Use(p, level);
+                Command.all.Find("load").Use(null, level);
                 Level lvl = LevelInfo.FindExact(level);
                 if (lvl == null) return;
+                Command.all.Find("perbuild").Use(null, lvl.name + " +" + p.name);
                 
                 LevelPermission osPerm = Server.osPerbuildDefault;
                 if (osPerm == LevelPermission.Nobody)
                     osPerm = GrpCommands.MinPerm(this);
-                
-                CmdZone.ZoneAll(lvl, p.name);
                 Group grp = Group.findPerm(osPerm);
                 if (grp == null) return;
                 
-                Command.all.Find("perbuild").Use(null, lvl.name + " " + grp.name);
+                Command.all.Find("perbuild").Use(null, lvl.name + " " + grp.name);                
                 Player.Message(p, "Use %T/os zone add [name] %Sto allow " +
                                "players ranked below " + grp.ColoredName + " %Sto build in the map.");
             } else if (cmd == "PHYSICS") {

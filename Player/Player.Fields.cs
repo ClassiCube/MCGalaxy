@@ -149,6 +149,8 @@ namespace MCGalaxy {
         // Only used for possession.
         //Using for anything else can cause unintended effects!
         public bool canBuild = true;
+        /// <summary> Whether the player has build permission in the current world. </summary>
+        public bool AllowBuild = true;
 
         public int money, loginMoney;
         public long overallBlocks, TotalDrawn, TotalPlaced, TotalDeleted;

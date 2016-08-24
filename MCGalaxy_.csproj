@@ -386,7 +386,7 @@
     <Compile Include="Commands\World\CmdMuseum.cs" />
     <Compile Include="Commands\World\CmdNewLvl.cs" />
     <Compile Include="Commands\World\CmdPause.cs" />
-    <Compile Include="Commands\World\CmdPermissions.cs" />
+    <Compile Include="Commands\World\PermissionCmds.cs" />
     <Compile Include="Commands\World\CmdPhysics.cs" />
     <Compile Include="Commands\World\CmdRenameLvl.cs" />
     <Compile Include="Commands\World\CmdResizeLvl.cs" />
@@ -498,6 +498,7 @@
     <Compile Include="Levels\IO\McfFile.cs" />
     <Compile Include="Levels\Level.Blocks.cs" />
     <Compile Include="Levels\Level.Fields.cs" />
+    <Compile Include="Levels\LevelAccess.cs" />
     <Compile Include="Levels\LevelDB.cs" />
     <Compile Include="Levels\Level.Physics.cs" />
     <Compile Include="Levels\LevelActions.cs" />

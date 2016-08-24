@@ -141,6 +141,8 @@ namespace MCGalaxy {
         public bool Buildable = true;
         [ConfigBool("Deletable", "Permissions", null, true)]
         public bool Deletable = true;
+        public LevelAccess VisitAccess, BuildAccess;
+        
         [ConfigPerm("PerBuildMax", "Permissions", null, LevelPermission.Nobody, true)]
         public LevelPermission perbuildmax = LevelPermission.Nobody;
         [ConfigPerm("PerBuild", "Permissions", null, LevelPermission.Guest, true)]
@@ -149,13 +151,16 @@ namespace MCGalaxy {
         [ConfigPerm("PerVisit", "Permissions", null, LevelPermission.Guest, true)]
         public LevelPermission permissionvisit = LevelPermission.Guest;
         [ConfigPerm("PerVisitMax", "Permissions", null, LevelPermission.Nobody, true)]
-        public LevelPermission pervisitmax = LevelPermission.Nobody;
+        public LevelPermission pervisitmax = LevelPermission.Nobody;       
         // Other blacklists/whitelists
         [ConfigStringList("VisitWhitelist", "Permissions", null)]
         public List<string> VisitWhitelist = new List<string>();
         [ConfigStringList("VisitBlacklist", "Permissions", null)]
         public List<string> VisitBlacklist = new List<string>();
-
+        [ConfigStringList("BuildWhitelist", "Permissions", null)]
+        public List<string> BuildWhitelist = new List<string>();
+        [ConfigStringList("BuildBlacklist", "Permissions", null)]
+        public List<string> BuildBlacklist = new List<string>();
         
         // Physics fields and settings
         public int physics {

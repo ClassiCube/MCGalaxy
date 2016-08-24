@@ -65,9 +65,10 @@ namespace MCGalaxy.Commands {
             }
 
             if (Directory.Exists(Server.backupLocation + "/" + data.Name)) {
-                int latestBackup = Directory.GetDirectories(Server.backupLocation + "/" + data.Name).Length;
-                DateTime time = Directory.GetCreationTime(LevelInfo.BackupPath(data.Name, latestBackup.ToString()));
-                Player.Message(p, "  Latest backup: &a{0} %Sat &a" + time.ToString("yyyy-MM-dd HH:mm:ss"), latestBackup);
+                int latest = Directory.GetDirectories(Server.backupLocation + "/" + data.Name).Length;
+                DateTime time = File.GetCreationTimeUtc(LevelInfo.BackupPath(data.Name, latest.ToString()));
+                TimeSpan delta = DateTime.UtcNow - time;
+                Player.Message(p, "  Latest backup: &a{0} %S({1} ago)", latest, delta.Shorten());
             } else {
                 Player.Message(p, "  No backups for this map exist yet.");
             }
@@ -88,14 +89,19 @@ namespace MCGalaxy.Commands {
                            " %S: Visit rank = " + Group.findPerm(data.visit).ColoredName);
             Player.Message(p, "  BuildMax Rank = " + Group.findPerm(data.buildmax).ColoredName +
                            " %S: VisitMax Rank = " + Group.findPerm(data.visitmax).ColoredName);
-            List<string> whitelist = data.VisitWhitelist;
-            List<string> blacklist = data.VisitBlacklist;
-            GetBlacklistedPlayers(data.Name, blacklist);
+        	
+            List<string> vWhitelist = data.VisitWhitelist, vBlacklist = data.VisitBlacklist;
+            List<string> bWhitelist = data.BuildWhitelist, bBlacklist = data.BuildBlacklist;
+            GetBlacklistedPlayers(data.Name, vBlacklist);
             
-            if (whitelist.Count > 0)
-                Player.Message(p, "  Visit whitelist: &a" + whitelist.Join("%S, &a"));
-            if (blacklist.Count > 0)
-                Player.Message(p, "  Visit blacklist: &c" + blacklist.Join("%S, &c"));
+            if (vWhitelist.Count > 0)
+                Player.Message(p, "  Visit whitelist: &a" + vWhitelist.Join("%S, &a"));
+            if (vBlacklist.Count > 0)
+                Player.Message(p, "  Visit blacklist: &c" + vBlacklist.Join("%S, &c"));
+            if (bWhitelist.Count > 0)
+                Player.Message(p, "  Build whitelist: &a" + bWhitelist.Join("%S, &a"));
+            if (bBlacklist.Count > 0)
+                Player.Message(p, "  Build blacklist: &c" + bBlacklist.Join("%S, &c"));
             
             if (String.IsNullOrEmpty(data.RealmOwner))
                 data.RealmOwner = GetRealmMapOwner(data.Name);
@@ -164,6 +170,8 @@ namespace MCGalaxy.Commands {
             public LevelPermission visit, build, visitmax, buildmax;
             public List<string> VisitWhitelist = new List<string>();
             public List<string> VisitBlacklist = new List<string>();
+            public List<string> BuildWhitelist = new List<string>();
+            public List<string> BuildBlacklist = new List<string>();
             // Zombie data
             public string Authors;
             public int TotalRounds, HumanRounds;
@@ -179,6 +187,8 @@ namespace MCGalaxy.Commands {
                 visitmax = lvl.pervisitmax; buildmax = lvl.perbuildmax;
                 VisitWhitelist = new List<string>(lvl.VisitWhitelist);
                 VisitBlacklist = new List<string>(lvl.VisitBlacklist);
+                BuildWhitelist = new List<string>(lvl.BuildWhitelist);
+                BuildBlacklist = new List<string>(lvl.BuildBlacklist);
                 
                 Fog = lvl.FogColor; Sky = lvl.SkyColor; Clouds = lvl.CloudColor;
                 Light = lvl.LightColor; Shadow = lvl.ShadowColor;
@@ -221,6 +231,8 @@ namespace MCGalaxy.Commands {
                     case "pervisitmax": visitmax = GetPerm(value); break;
                     case "visitwhitelist": VisitWhitelist = Parse(value); break;
                     case "visitblacklist": VisitBlacklist = Parse(value); break;
+                    case "buildwhitelist": BuildWhitelist = Parse(value); break;
+                    case "buildblacklist": BuildBlacklist = Parse(value); break;
                     
                     case "authors": Authors = value; break;
                     case "roundsplayed": TotalRounds = int.Parse(value); break;
