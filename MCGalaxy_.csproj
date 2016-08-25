@@ -452,6 +452,10 @@
     <Compile Include="Drawing\Flip.cs" />
     <Compile Include="Drawing\Image\ImagePalette.cs" />
     <Compile Include="Drawing\Image\IPalette.cs" />
+    <Compile Include="Drawing\TransformFactories\SimpleTransforms.cs" />
+    <Compile Include="Drawing\TransformFactories\TransformFactory.cs" />
+    <Compile Include="Drawing\Transform\SimpleTransforms.cs" />
+    <Compile Include="Drawing\Transform\Transform.cs" />
     <Compile Include="Economy\Awards.cs" />
     <Compile Include="Economy\ReviveItem.cs" />
     <Compile Include="Economy\ZombieItems.cs" />
@@ -700,6 +704,8 @@
     <Folder Include="Drawing\Brushes" />
     <Folder Include="Drawing\Image" />
     <Folder Include="Drawing\BrushFactories" />
+    <Folder Include="Drawing\TransformFactories" />
+    <Folder Include="Drawing\Transform" />
     <Folder Include="Games\Countdown" />
     <Folder Include="Games\LavaSurvival" />
     <Folder Include="Games\TntWars" />

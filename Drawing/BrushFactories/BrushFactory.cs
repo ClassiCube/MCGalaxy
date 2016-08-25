@@ -47,18 +47,18 @@ namespace MCGalaxy.Drawing.Brushes {
         public static string Available { get { return Brushes.Join(b => b.Name); } }
         
         public static BrushFactory Find(string name) {
-            foreach (BrushFactory brush in Brushes) {
-                if (brush.Name.CaselessEq(name)) return brush;
+            foreach (BrushFactory entry in Brushes) {
+                if (entry.Name.CaselessEq(name)) return entry;
             }
             return null;
         }
     }
     
     public struct BrushArgs {
-        /// <summary> Player that is providing arguments for this brush. </summary>
+        /// <summary> Player that is providing arguments. </summary>
         public Player Player;
         
-        /// <summary> Raw message provided for arguments to the brush, including spaces. </summary>
+        /// <summary> Raw message provided for arguments, including spaces. </summary>
         public string Message;
         
         /// <summary> Raw block the player is currently holding. </summary>
