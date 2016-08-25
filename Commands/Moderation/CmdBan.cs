@@ -84,10 +84,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ban <player> [reason]");
+            Player.Message(p, "%T/ban [player] <reason>");
             Player.Message(p, "%HBans a player without kicking them.");
             Player.Message(p, "%HAdd # before name to stealth ban.");
-            Player.Message(p, "%HFor [reason], @number can be used as a shortcut for that rule.");
+            Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

@@ -18,11 +18,9 @@
 using System;
 using System.IO;
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdSetRank : Command {
+    public sealed class CmdSetRank : ModActionCmd {
         public override string name { get { return "setrank"; } }
         public override string shortcut { get { return "rank"; } }
-        public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("promote", "+up"), new CommandAlias("demote", "-down") }; }
@@ -71,9 +69,14 @@ namespace MCGalaxy.Commands.Moderation {
                 reason = newRank.Permission >= curRank.Permission ? 
                     Server.defaultPromoteMessage : Server.defaultDemoteMessage;
             }
+            reason = GetReason(p, reason);
+            if (reason == null) return false;
             
-            if (curRank == banned || newRank == banned) {
-                Player.Message(p, "Cannot change the rank to or from \"{0}\".", banned.name); return false;
+            if (newRank == banned) {
+                Player.Message(p, "Use /ban to change a player's rank to {0}%S.", banned.ColoredName); return false;
+            }
+            if (curRank == banned) {
+                Player.Message(p, "Use /unban to change a player's rank from %S{0}.", banned.ColoredName); return false;
             }
             if (p != null && (curRank.Permission >= p.Rank || newRank.Permission >= p.Rank)) {
                 MessageTooHighRank(p, "change the rank of", false); return false;
@@ -126,8 +129,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/rank <player> <rank> <reason> - Sets a player's rank.");
-            Player.Message(p, "Valid Ranks are: " + Group.concatList(true, true));
+            Player.Message(p, "%T/rank [player] [rank] <reason>");
+            Player.Message(p, "%HSets that player's rank/group, with an optional reason.");
+            Player.Message(p, "%H  See /viewranks for a list of ranks.");
+            Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

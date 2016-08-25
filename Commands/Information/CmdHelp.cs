@@ -167,8 +167,7 @@ namespace MCGalaxy.Commands {
                 default:
                     Player.Message(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b))); break;
             }
-            Group foundRank = Group.findPerm(Block.BlockList[b].lowestRank);
-            Player.Message(p, "Rank needed: " + foundRank.ColoredName);
+            Formatter.MessageBlock(p, "use ", b);
             return true;
         }
         

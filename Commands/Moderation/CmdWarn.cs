@@ -70,9 +70,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/warn [player] [reason]");
+            Player.Message(p, "%T/warn [player] <reason>");
             Player.Message(p, "%HWarns a player. Players are kicked after 3 warnings.");
-            Player.Message(p, "%HFor [reason], @number can be used as a shortcut for that rule.");
+            Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }
