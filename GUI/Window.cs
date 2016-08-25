@@ -183,33 +183,33 @@ namespace MCGalaxy.Gui {
             if (InvokeRequired) {
                 Invoke(new PlayerListCallback(UpdateClientList), playerList); return;
             }
-        	
-        	if (main_Players.DataSource == null)
-        		main_Players.DataSource = pc;
+            
+            if (main_Players.DataSource == null)
+                main_Players.DataSource = pc;
 
-        	// Try to keep the same selection on update
-        	string selected = null;
-        	var selectedRows = main_Players.SelectedRows;
-        	if (pc.Count > 0 && selectedRows.Count > 0)
-        	    selected = pc[selectedRows[0].Index].name;
+            // Try to keep the same selection on update
+            string selected = null;
+            var selectedRows = main_Players.SelectedRows;
+            if (pc.Count > 0 && selectedRows.Count > 0)
+                selected = pc[selectedRows[0].Index].name;
 
-        	// Update the data source and control
-        	pc = new PlayerCollection();
-        	Player[] players = PlayerInfo.Online.Items;
-        	foreach (Player pl in players)
-        		pc.Add(pl);
+            // Update the data source and control
+            pc = new PlayerCollection();
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players)
+                pc.Add(pl);
 
-        	main_Players.DataSource = pc;
-        	
-        	// Reselect player
-        	if (selected != null) {
-        		for (int i = 0; i < main_Players.Rows.Count; i++) {
-        			if (Equals(main_Players.Rows[i].Cells[0].Value, selected))
-        				main_Players.Rows[i].Selected = true;
-        		}
-        	}
+            main_Players.DataSource = pc;
+            
+            // Reselect player
+            if (selected != null) {
+                for (int i = 0; i < main_Players.Rows.Count; i++) {
+                    if (Equals(main_Players.Rows[i].Cells[0].Value, selected))
+                        main_Players.Rows[i].Selected = true;
+                }
+            }
 
-        	main_Players.Refresh();
+            main_Players.Refresh();
         }
 
         public void PopupNotify(string message, ToolTipIcon icon = ToolTipIcon.Info) {
@@ -407,16 +407,41 @@ namespace MCGalaxy.Gui {
         void demoteToolStripMenuItem_Click(object sender, EventArgs e) {
             PlayerCmd("rank", "-down ", "");
         }
-        PlayerProperties playerProps;
         
         #region Main tab
+        List<string> inputLog = new List<string>(21);
+        int inputIndex = -1;
         
         void txtInput_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode != Keys.Enter) return;
+            if (e.KeyCode == Keys.Up) {
+                inputIndex = Math.Min(inputIndex + 1, inputLog.Count - 1);
+                if (inputIndex > -1) SetInputText();
+            } else if (e.KeyCode == Keys.Down) {
+                inputIndex = Math.Max(inputIndex - 1, -1);
+                if (inputIndex > -1) SetInputText();
+            } else if (e.KeyCode == Keys.Enter) {
+                InputText();
+            } else {
+                inputIndex = -1; return;
+            }
             e.Handled = true;
-            e.SuppressKeyPress = true;            
+            e.SuppressKeyPress = true;
+        }
+        
+        void SetInputText() {
+            if (inputIndex == -1) return;
+            main_txtInput.Text = inputLog[inputIndex];
+            main_txtInput.SelectionLength = 0;
+            main_txtInput.SelectionStart = main_txtInput.Text.Length;
+        }
+        
+        void InputText() {
             string text = main_txtInput.Text;
             if (text.Length == 0) return;
+            
+            inputLog.Insert(0, text);
+            if (inputLog.Count > 20) 
+                inputLog.RemoveAt(20);
             
             if (text[0] == '/' && text.Length > 1 && text[1] == '/') {
                 Handlers.HandleChat(text.Substring(1), WriteLine);
@@ -622,7 +647,8 @@ namespace MCGalaxy.Gui {
         
 
         #region Players tab
-        
+        PlayerProperties playerProps;
+         
         public void UpdatePlyersListBox() {
             RunOnUiThread(
                 delegate {
