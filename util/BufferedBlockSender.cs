@@ -42,21 +42,25 @@ namespace MCGalaxy {
             this.level = player.level;
         }
         
-        public void Add(int index, byte type, byte extType) {
+        public bool Add(int index, byte type, byte extType) {
             indices[count] = index;
             if (type == Block.custom_block) types[count] = extType;
             else types[count] = Block.Convert(type);
             count++;
+            return Send(false);
         }
         
         /// <summary> Sends the block change packets if either 'force' is true, 
         /// or the number of blocks in the buffer has reached the limit. </summary>
-        public void CheckIfSend(bool force) {
+        /// <returns> Whether block change packets were actually sent. </returns>
+        public bool Send(bool force) {
             if (count > 0 && (force || count == 256)) {
                 if (player != null) SendPlayer();
                 else SendLevel();
                 count = 0;
+                return false;
             }
+            return true;
         }
         
         void SendLevel() {

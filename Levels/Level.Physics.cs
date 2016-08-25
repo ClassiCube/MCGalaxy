@@ -188,10 +188,9 @@ namespace MCGalaxy {
                     } catch {
                         Server.s.Log("Phys update issue");
                     }
-                    bulkSender.CheckIfSend(false);
                 }
                 if (bulkSender != null)
-                    bulkSender.CheckIfSend(true);
+                    bulkSender.Send(true);
                 ListUpdate.Clear(); listUpdateExists.Clear();
             } catch (Exception e) {
                 Server.s.Log("Level physics error");

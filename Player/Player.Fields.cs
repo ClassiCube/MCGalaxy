@@ -72,7 +72,7 @@ namespace MCGalaxy {
         public bool IsAfk = false, AutoAfk;
         public bool cmdTimer = false;
         public bool UsingWom = false;
-        public string BrushName = "normal", DefaultBrushArgs = "";
+        public string BrushName = "normal", DefaultBrushArgs = "", TransformName = "none";
         public string afkMessage;
 
         byte[] leftBuffer = new byte[0];

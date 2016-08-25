@@ -48,14 +48,14 @@ namespace MCGalaxy.Undo {
             foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
                 if (P.LevelName != lastMap) {
                     lvl = LevelInfo.FindExact(P.LevelName);
-                    buffer.CheckIfSend(true);
+                    buffer.Send(true);
                     buffer.level = lvl;
                 }
                 
                 if (lvl == null || P.Time > end) continue;
                 UndoBlock(args.Player, lvl, P, buffer);
             }
-            buffer.CheckIfSend(true);
+            buffer.Send(true);
         }
         
         
@@ -82,7 +82,7 @@ namespace MCGalaxy.Undo {
             foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
                 if (P.LevelName != lastMap) {
                     lvl = LevelInfo.FindExact(P.LevelName);
-                    buffer.CheckIfSend(true);
+                    buffer.Send(true);
                     buffer.level = lvl;
                 }
                 
@@ -91,7 +91,7 @@ namespace MCGalaxy.Undo {
                 if (P.X > max.X || P.Y > max.Y || P.Z > max.Z) continue;
                 UndoBlock(args.Player, lvl, P, buffer);
             }
-            buffer.CheckIfSend(true);
+            buffer.Send(true);
         }
         
         
@@ -121,9 +121,8 @@ namespace MCGalaxy.Undo {
                     ? Block.red : Block.green;
                 
                 buffer.Add(lvl.PosToInt(P.X, P.Y, P.Z), highlight, 0);
-                buffer.CheckIfSend(false);
             }
-            buffer.CheckIfSend(true);
+            buffer.Send(true);
         }
         
         
@@ -149,12 +148,10 @@ namespace MCGalaxy.Undo {
             
             foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
                 if (P.Time > end) continue;
-                if (!lvl.DoBlockchange(p, P.X, P.Y, P.Z, P.Block, P.ExtBlock, true)) continue;
-                
+                if (!lvl.DoBlockchange(p, P.X, P.Y, P.Z, P.Block, P.ExtBlock, true)) continue;              
                 buffer.Add(lvl.PosToInt(P.X, P.Y, P.Z), P.Block, P.ExtBlock);
-                buffer.CheckIfSend(false);
             }
-            buffer.CheckIfSend(true);
+            buffer.Send(true);
         }
         
         
@@ -206,18 +203,14 @@ namespace MCGalaxy.Undo {
                 lvl.changed = true;
                 
                 if (pl != null) {
-                    if (lvl.DoBlockchange(pl, P.X, P.Y, P.Z, P.Block, P.ExtBlock, true)) {
+                    if (lvl.DoBlockchange(pl, P.X, P.Y, P.Z, P.Block, P.ExtBlock, true))
                         buffer.Add(lvl.PosToInt(P.X, P.Y, P.Z), P.Block, P.ExtBlock);
-                        buffer.CheckIfSend(false);
-                    }
                 } else {
                     bool diff = Block.Convert(lvlBlock) != Block.Convert(P.Block);
                     if (!diff && lvlBlock == Block.custom_block)
                         diff = lvl.GetExtTile(P.X, P.Y, P.Z) != P.ExtBlock;
-                    if (diff) {
+                    if (diff)
                         buffer.Add(lvl.PosToInt(P.X, P.Y, P.Z), P.Block, P.ExtBlock);
-                        buffer.CheckIfSend(false);
-                    }
                     
                     lvl.SetTile(P.X, P.Y, P.Z, P.Block);
                     if (P.ExtBlock == Block.custom_block)

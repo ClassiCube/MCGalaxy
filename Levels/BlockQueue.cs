@@ -78,12 +78,10 @@ namespace MCGalaxy {
                     ulong flags = lvl.blockqueue[i];
                     int index = (int)(flags >> 32);                    
                     byte type = (flags & 0x100) != 0 ? Block.custom_block : (byte)flags;
-                    byte extType = (flags & 0x100) != 0 ? (byte)flags : Block.air;
-                    
+                    byte extType = (flags & 0x100) != 0 ? (byte)flags : Block.air;                    
                     bulkSender.Add(index, type, extType);
-                    bulkSender.CheckIfSend(false);
                 }
-                bulkSender.CheckIfSend(true);
+                bulkSender.Send(true);
                 lvl.blockqueue.RemoveRange(0, count);
             } catch (Exception e)  {
                 Server.s.ErrorCase("error:" + e);

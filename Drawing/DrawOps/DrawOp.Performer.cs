@@ -68,9 +68,15 @@ namespace MCGalaxy.Drawing.Ops {
         
         static void AppendDrawOp(Player p, DrawOp op, Brush brush, Vec3S32[] marks, long affected) {
             if (p == null) {
-                foreach (var block in op.Perform(marks, p, op.Level, brush))
-                    op.Level.Blockchange(block.X, block.Y, block.Z, block.Block,
-                                         false, default(PhysicsArgs), block.ExtBlock);
+                BufferedBlockSender buffer = new BufferedBlockSender(op.Level);
+                foreach (var b in op.Perform(marks, p, op.Level, brush)) {
+                    int index = op.Level.PosToInt(b.X, b.Y, b.Z);
+                    if (!op.Level.DoPhysicsBlockchange(index, b.Block, false, 
+                                                       default(PhysicsArgs), b.ExtBlock)) continue;
+                    
+                    buffer.Add(index, b.Block, b.ExtBlock);
+                }
+                buffer.Send(true);
                 return;
             }
             
