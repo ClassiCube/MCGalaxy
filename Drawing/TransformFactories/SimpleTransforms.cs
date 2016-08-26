@@ -17,7 +17,6 @@
  */
 using System;
 using MCGalaxy.Commands.Building;
-using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Transforms {
     public sealed class NoTransformFactory : TransformFactory {        
@@ -29,9 +28,9 @@ namespace MCGalaxy.Drawing.Transforms {
             "%HDoes not affect the output of draw operations.",
         };
         
-        public override Transform Construct(BrushArgs args) { return NoTransform.Instance; }
-        
-        public override bool Validate(BrushArgs args) { return true; }
+        public override Transform Construct(Player p, string message) { 
+            return NoTransform.Instance; 
+        }
     }
 	
 	public sealed class ScaleTransformFactory : TransformFactory {        
@@ -46,8 +45,9 @@ namespace MCGalaxy.Drawing.Transforms {
             "instead of outwards from the first mark. Recommended for cuboid and cylinder.",
         };
         
-        public override Transform Construct(BrushArgs args) { 
-            return NoTransform.Instance; 
+        public override Transform Construct(Player p, string message) {
+// TODO: actually parse the arguments        	
+        	return new ScaleTransform() { XMul = 2, XDiv = 2, YMul = 1, YDiv = 2, ZMul = 2, ZDiv = 1 };
         }
     }
 }

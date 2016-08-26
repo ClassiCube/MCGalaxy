@@ -155,6 +155,7 @@
     <Compile Include="Commands\building\CmdRedo.cs" />
     <Compile Include="Commands\building\CmdReplaceBrush.cs" />
     <Compile Include="Commands\building\CmdSphere.cs" />
+    <Compile Include="Commands\building\CmdTransform.cs" />
     <Compile Include="Commands\building\CmdTriangle.cs" />
     <Compile Include="Commands\building\ReplaceCmd.cs" />
     <Compile Include="Commands\building\CmdRestartPhysics.cs" />

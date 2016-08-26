@@ -52,7 +52,7 @@ namespace MCGalaxy.Drawing.Ops {
                 return false;
             }
             
-            long affected = checkLimit ? 0L : op.GetBlocksAffected(op.Level, marks);
+            long affected = op.GetBlocksAffected(op.Level, marks);
             if (p != null && op.AffectedByTransform) 
                 p.Transform.GetBlocksAffected(ref affected);
             

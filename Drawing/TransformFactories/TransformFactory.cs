@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands;
-using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Transforms {
@@ -32,13 +31,10 @@ namespace MCGalaxy.Drawing.Transforms {
         
         /// <summary> Creates a transform from the given arguments, 
         /// returning null if invalid arguments are specified. </summary>
-        public abstract Transform Construct(BrushArgs args);
-        
-        /// <summary> Validates the given arguments, returning false if they are invalid. </summary>
-        public virtual bool Validate(BrushArgs args) { return Construct(args) != null; }
+        public abstract Transform Construct(Player p, string message);
         
         public static List<TransformFactory> Transforms = new List<TransformFactory>() {
-            new NoTransformFactory(),
+        	new NoTransformFactory(), new ScaleTransformFactory(),
         };
         
         public static string Available { get { return Transforms.Join(b => b.Name); } }
