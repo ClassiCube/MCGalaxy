@@ -52,10 +52,10 @@ namespace MCGalaxy.Drawing.Transforms {
                 int dx = b.X - P.X, dy = b.Y - P.Y, dz = b.Z - P.Z;
                 DrawOpBlock cur = b;
                 
-                for (int y = b.Y + dy * YMul / YDiv; y < b.Y + (dy + 1) * YMul / YDiv; y++)
-                    for (int z = b.Z + dz * ZMul / ZDiv; b.Z + z < (dz + 1) * ZMul / ZDiv; z++)
-                        for (int x = b.X + dx * XMul / XDiv; b.X + x < (dx + 1) * XMul / XDiv; x++)
-                {
+                for (int y = P.Y + dy * YMul / YDiv; y < P.Y + (dy + 1) * YMul / YDiv; y++)
+                    for (int z = P.Z + dz * ZMul / ZDiv; z < P.Z + (dz + 1) * ZMul / ZDiv; z++)
+                        for (int x = P.X + dx * XMul / XDiv; x < P.X + (dx + 1) * XMul / XDiv; x++)
+                {                   
                     if (!lvl.IsValidPos(x, y, z)) continue;
                     cur.X = (ushort)x; cur.Y = (ushort)y; cur.Z = (ushort)z;
                     yield return cur;

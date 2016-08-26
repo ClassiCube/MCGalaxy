@@ -55,7 +55,7 @@ namespace MCGalaxy.Drawing.Ops {
             long affected = checkLimit ? 0L : op.GetBlocksAffected(op.Level, marks);
             if (p != null) p.Transform.GetBlocksAffected(ref affected);
             
-            if (checkLimit && !op.CanDraw(marks, p, out affected))
+            if (checkLimit && !op.CanDraw(marks, p, affected))
                 return false;
             if (brush != null && affected != -1) {
                 const string format = "{0}({1}): affecting up to {2} blocks";
@@ -137,7 +137,6 @@ namespace MCGalaxy.Drawing.Ops {
         
         static void DoDrawOp(PendingDrawOp item, Player p) {
             Level lvl = item.Level;
-            //p.Transform = new Transforms.ScaleTransform() { XMul = 2, XDiv = 1, YMul = 2, YDiv = 1, ZMul = 2, ZDiv = 1 };
             IEnumerable<DrawOpBlock> iterator = 
                 p.Transform.Perform(item.Marks, p, lvl, item.Op, item.Brush);
             

@@ -69,8 +69,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public abstract IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush);
         
-        public virtual bool CanDraw(Vec3S32[] marks, Player p, out long affected) {
-            affected = GetBlocksAffected(Level, marks);
+        public virtual bool CanDraw(Vec3S32[] marks, Player p, long affected) {
             if (p != null && affected > p.group.maxBlocks) {
                 Player.Message(p, "You tried to draw " + affected + " blocks.");
                 Player.Message(p, "You cannot draw more than " + p.group.maxBlocks + ".");
