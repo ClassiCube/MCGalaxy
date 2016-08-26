@@ -19,7 +19,7 @@ using System;
 using MCGalaxy.Commands.Building;
 
 namespace MCGalaxy.Drawing.Transforms {
-    public sealed class NoTransformFactory : TransformFactory {        
+    public sealed class NoTransformFactory : TransformFactory { 
         public override string Name { get { return "None"; } }
         public override string[] Help { get { return HelpString; } }
         
@@ -33,13 +33,13 @@ namespace MCGalaxy.Drawing.Transforms {
         }
     }
     
-    public sealed class ScaleTransformFactory : TransformFactory {        
+    public sealed class ScaleTransformFactory : TransformFactory {
         public override string Name { get { return "Scale"; } }
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new [] {
             "%TArguments: [scaleX] [scaleY] [scaleZ] <centre>",
-            "%TAlternatively: [scale] <centre>",            
+            "%TAlternatively: [scale] <centre>",
             "%H[scale] values can be an integer or a fraction (e.g. 2 or 1/2).",
             "%H[centre] if given, indicates to scale from the centre of a draw operation, " +
             "instead of outwards from the first mark. Recommended for cuboid and cylinder.",

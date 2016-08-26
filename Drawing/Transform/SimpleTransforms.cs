@@ -47,15 +47,26 @@ namespace MCGalaxy.Drawing.Transforms {
         
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p,
                                                          Level lvl, DrawOp op, Brush brush) {
-            Vec3S32 P = CentreOrigin ? (op.Min + op.Max) / 2 : op.Origin;
+            Vec3S32 P = (op.Min + op.Max) / 2;
+            int dirX = 1, dirY = 1, dirZ = 1;
+            if (!CentreOrigin) {
+                // Guess the direction in which we should be scaling -
+                // for simplicity we assume we are scaling in positive direction
+                P = op.Origin;
+                dirX = (P.X == op.Max.X || op.Min.X == op.Max.X) ? -1 : 1;
+                dirY = (P.Y == op.Max.Y || op.Min.Y == op.Max.Y) ? -1 : 1;
+                dirZ = (P.Z == op.Max.Z || op.Min.Z == op.Max.Z) ? -1 : 1;
+            }
+            
             foreach (DrawOpBlock b in op.Perform(marks, p, lvl, brush)) {
                 int dx = b.X - P.X, dy = b.Y - P.Y, dz = b.Z - P.Z;
                 DrawOpBlock cur = b;
                 
-                for (int y = P.Y + dy * YMul / YDiv; y < P.Y + (dy + 1) * YMul / YDiv; y++)
-                    for (int z = P.Z + dz * ZMul / ZDiv; z < P.Z + (dz + 1) * ZMul / ZDiv; z++)
-                        for (int x = P.X + dx * XMul / XDiv; x < P.X + (dx + 1) * XMul / XDiv; x++)
-                {                   
+                // Scale out until we hit the next block
+                for (int y = P.Y + dy * YMul / YDiv; y != P.Y + (dy + dirY) * YMul / YDiv; y += dirY)
+                    for (int z = P.Z + dz * ZMul / ZDiv; z != P.Z + (dz + dirZ) * ZMul / ZDiv; z += dirZ)
+                        for (int x = P.X + dx * XMul / XDiv; x != P.X + (dx + dirX) * XMul / XDiv; x += dirX)
+                {
                     if (!lvl.IsValidPos(x, y, z)) continue;
                     cur.X = (ushort)x; cur.Y = (ushort)y; cur.Z = (ushort)z;
                     yield return cur;
