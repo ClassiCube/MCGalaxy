@@ -53,9 +53,9 @@ namespace MCGalaxy.Drawing.Transforms {
                 // Guess the direction in which we should be scaling -
                 // for simplicity we assume we are scaling in positive direction
                 P = op.Origin;
-                dirX = (P.X == op.Max.X || op.Min.X == op.Max.X) ? -1 : 1;
-                dirY = (P.Y == op.Max.Y || op.Min.Y == op.Max.Y) ? -1 : 1;
-                dirZ = (P.Z == op.Max.Z || op.Min.Z == op.Max.Z) ? -1 : 1;
+                dirX = op.Min.X == op.Max.X ? 1 : (P.X == op.Max.X ? -1 : 1);
+                dirY = op.Min.Y == op.Max.Y ? 1 : (P.Y == op.Max.Y ? -1 : 1);
+                dirZ = op.Min.Z == op.Max.Z ? 1 : (P.Z == op.Max.Z ? -1 : 1);
             }
             
             foreach (DrawOpBlock b in op.Perform(marks, p, lvl, brush)) {

@@ -30,6 +30,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         public override string Name { get { return "Replace"; } }
+        public override bool AffectedByTransform { get { return false; } }        
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
@@ -59,6 +60,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         public override string Name { get { return "ReplaceNot"; } }
+        public override bool AffectedByTransform { get { return false; } }
         
         public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
