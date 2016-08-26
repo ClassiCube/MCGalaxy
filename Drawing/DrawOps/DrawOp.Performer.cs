@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.BlockPhysics;
 using MCGalaxy.Commands;
 using MCGalaxy.Drawing.Brushes;
@@ -52,6 +53,8 @@ namespace MCGalaxy.Drawing.Ops {
             }
             
             long affected = checkLimit ? 0L : op.GetBlocksAffected(op.Level, marks);
+            if (p != null) p.Transform.GetBlocksAffected(ref affected);
+            
             if (checkLimit && !op.CanDraw(marks, p, out affected))
                 return false;
             if (brush != null && affected != -1) {
@@ -134,10 +137,13 @@ namespace MCGalaxy.Drawing.Ops {
         
         static void DoDrawOp(PendingDrawOp item, Player p) {
             Level lvl = item.Level;
+            //p.Transform = new Transforms.ScaleTransform() { XMul = 2, XDiv = 1, YMul = 2, YDiv = 1, ZMul = 2, ZDiv = 1 };
+            IEnumerable<DrawOpBlock> iterator = 
+                p.Transform.Perform(item.Marks, p, lvl, item.Op, item.Brush);
             
             if (item.Affected > Server.DrawReloadLimit) {
-                foreach (var b in item.Op.Perform(item.Marks, p, lvl, item.Brush)) {
-            		if (b.Block == Block.Zero) continue;
+                foreach (var b in iterator) {
+                    if (b.Block == Block.Zero) continue;
                     byte old = lvl.GetTile(b.X, b.Y, b.Z);
                     if (old == Block.Zero || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block, b.ExtBlock))
                         continue;
@@ -146,8 +152,8 @@ namespace MCGalaxy.Drawing.Ops {
                     p.IncrementBlockStats(b.Block, true);
                 }
             } else if (item.Level.bufferblocks) {
-                foreach (var b in item.Op.Perform(item.Marks, p, lvl, item.Brush)) {
-            		if (b.Block == Block.Zero) continue;
+                foreach (var b in iterator) {
+                    if (b.Block == Block.Zero) continue;
                     if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) continue;
                     
                     int index = lvl.PosToInt(b.X, b.Y, b.Z);
@@ -155,8 +161,8 @@ namespace MCGalaxy.Drawing.Ops {
                     BlockQueue.Addblock(p, index, b.Block, b.ExtBlock);
                 }
             } else {
-                foreach (var b in item.Op.Perform(item.Marks, p, item.Level, item.Brush)) {
-            	    if (b.Block == Block.Zero) continue;
+                foreach (var b in iterator) {
+                    if (b.Block == Block.Zero) continue;
                     if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) continue;
                     
                     int index = lvl.PosToInt(b.X, b.Y, b.Z);

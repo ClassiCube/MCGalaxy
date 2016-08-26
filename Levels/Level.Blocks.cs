@@ -407,6 +407,10 @@ namespace MCGalaxy {
             return pos.X < Width && pos.Y < Height && pos.Z < Length;
         }
         
+        public bool IsValidPos(int x, int y, int z) {
+            return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
+        }
+        
         public void AddToBlockDB(Player p, int index, byte block, byte extBlock, bool delete) {
             if (!UseBlockDB) return;
             BlockPos bP = default(BlockPos);

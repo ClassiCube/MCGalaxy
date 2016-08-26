@@ -26,6 +26,10 @@ namespace MCGalaxy.Drawing.Transforms {
         /// <summary> Human friendly name of this transform. </summary>
         public abstract string Name { get; }
         
+        /// <summary> Estimates the total number of blocks that the drawing commands affects,
+        /// after this transformation (e.g. scaling) has been applied to it. </summary>
+        public virtual void GetBlocksAffected(ref long affected) { }
+        
         /// <summary> Performs calcuations (if necessary) for the given drawop. </summary>
         public virtual void Configure(DrawOp op, Player p) { }
         

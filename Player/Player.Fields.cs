@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Transforms;
 using MCGalaxy.Games;
 using MCGalaxy.Undo;
 
@@ -72,7 +73,8 @@ namespace MCGalaxy {
         public bool IsAfk = false, AutoAfk;
         public bool cmdTimer = false;
         public bool UsingWom = false;
-        public string BrushName = "normal", DefaultBrushArgs = "", TransformName = "none";
+        public string BrushName = "normal", DefaultBrushArgs = "";
+        public Transform Transform = NoTransform.Instance;
         public string afkMessage;
 
         byte[] leftBuffer = new byte[0];

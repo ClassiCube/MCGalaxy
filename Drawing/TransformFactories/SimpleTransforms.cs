@@ -29,9 +29,7 @@ namespace MCGalaxy.Drawing.Transforms {
             "%HDoes not affect the output of draw operations.",
         };
         
-        public override Transform Construct(BrushArgs args) {
-            return new NoTransform();
-        }
+        public override Transform Construct(BrushArgs args) { return NoTransform.Instance; }
         
         public override bool Validate(BrushArgs args) { return true; }
     }
