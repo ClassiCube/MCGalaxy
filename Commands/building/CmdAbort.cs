@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using MCGalaxy.Drawing.Transforms;
+
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdAbort : Command {
         public override string name { get { return "abort"; } }
@@ -37,6 +39,7 @@ namespace MCGalaxy.Commands.Building {
             p.isFlying = false;
             p.BrushName = "normal";
             p.DefaultBrushArgs = "";
+            p.Transform = NoTransform.Instance;
             
             lock (p.level.queueLock)
                 p.level.blockqueue.RemoveAll(b => (int)((b >> 9) & Player.SessionIDMask) == p.SessionID);
