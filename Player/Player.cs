@@ -280,7 +280,8 @@ namespace MCGalaxy {
                 aiming = false;
                 
                 bool cp437 = HasCpeExt(CpeExt.FullCP437);
-                Send(Packet.MakeKick(kickMsg, cp437), sync);
+                string kickPacketMsg = ChatTokens.Apply(kickMsg, this);
+                Send(Packet.MakeKick(kickPacketMsg, cp437), sync);
                 disconnected = true;
                 if (!loggedIn) {
                     connections.Remove(this);
