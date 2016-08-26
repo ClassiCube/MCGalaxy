@@ -53,7 +53,8 @@ namespace MCGalaxy.Drawing.Ops {
             }
             
             long affected = checkLimit ? 0L : op.GetBlocksAffected(op.Level, marks);
-            if (p != null) p.Transform.GetBlocksAffected(ref affected);
+            if (p != null && op.AffectedByTransform) 
+                p.Transform.GetBlocksAffected(ref affected);
             
             if (checkLimit && !op.CanDraw(marks, p, affected))
                 return false;
@@ -137,8 +138,11 @@ namespace MCGalaxy.Drawing.Ops {
         
         static void DoDrawOp(PendingDrawOp item, Player p) {
             Level lvl = item.Level;
-            IEnumerable<DrawOpBlock> iterator = 
-                p.Transform.Perform(item.Marks, p, lvl, item.Op, item.Brush);
+            IEnumerable<DrawOpBlock> iterator = null;
+            if (item.Op.AffectedByTransform)
+                iterator = p.Transform.Perform(item.Marks, p, lvl, item.Op, item.Brush);
+            else
+                iterator = item.Op.Perform(item.Marks, p, lvl, item.Brush);
             
             if (item.Affected > Server.DrawReloadLimit) {
                 foreach (var b in iterator) {

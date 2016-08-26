@@ -26,7 +26,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public static string[] HelpString = new [] {
             "%TArguments: [block]",
             "%HDraws using the specified block.",
-            "%H   If block is not given, the currently held block is used.",
+            "%H  If [block] is not given, your currently held block is used.",
         };
         
         public override Brush Construct(BrushArgs args) {
@@ -52,8 +52,8 @@ namespace MCGalaxy.Drawing.Brushes {
         public static string[] HelpString = new [] {
             "%TArguments: [block1] [block2]",
             "%HDraws an alternating pattern of block1 and block2.",
-            "%H   If block2 is not given, air is used.",
-            "%H   If block1 is not given, the currently held block is used.",
+            "%H  If [block1] is not given, your currently held block is used.",
+            "%H  If [block2] is not given, skip block is used.",
         };
         
         public override Brush Construct(BrushArgs args) {

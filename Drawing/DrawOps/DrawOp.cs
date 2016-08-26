@@ -63,6 +63,9 @@ namespace MCGalaxy.Drawing.Ops {
         /// <summary> Human friendly name of the draw operation. </summary>
         public abstract string Name { get; }
         
+        /// <summary> Whether the output blocks this draw operation are affected by the player's current Transform. </summary>
+        public virtual bool AffectedByTransform { get { return true; } }
+        
         /// <summary> Estimates the total number of blocks that the drawing commands affects. <br/>
         /// Note that this estimate assumes that all possibly affected blocks will be changed by the drawing command. </summary>
         public abstract long GetBlocksAffected(Level lvl, Vec3S32[] marks);

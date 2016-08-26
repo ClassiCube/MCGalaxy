@@ -33,4 +33,21 @@ namespace MCGalaxy.Drawing.Transforms {
         
         public override bool Validate(BrushArgs args) { return true; }
     }
+	
+	public sealed class ScaleTransformFactory : TransformFactory {        
+        public override string Name { get { return "Scale"; } }
+        public override string[] Help { get { return HelpString; } }
+        
+        static string[] HelpString = new [] {
+            "%TArguments: [scaleX] [scaleY] [scaleZ] <centre>",
+            "%TAlternatively: [scale] <centre>",            
+            "%H[scale] values can be either an integer or a fraction (e.g. 2 or 1/2).",
+            "%H[centre] if given, indicates to scale from the centre of a draw operation, " +
+            "instead of outwards from the first mark. Recommended for cuboid and cylinder.",
+        };
+        
+        public override Transform Construct(BrushArgs args) { 
+            return NoTransform.Instance; 
+        }
+    }
 }

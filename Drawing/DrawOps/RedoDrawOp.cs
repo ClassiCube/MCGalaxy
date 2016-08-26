@@ -25,6 +25,7 @@ namespace MCGalaxy.Drawing.Ops {
     
     public class RedoSelfDrawOp : DrawOp {
         public override string Name { get { return "RedoSelf"; } }
+        public override bool AffectedByTransform { get { return false; } }
         
         /// <summary> Point in time that the /undo should go backwards up to. </summary>
         public DateTime Start = DateTime.MinValue;

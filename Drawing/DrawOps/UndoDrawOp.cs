@@ -29,6 +29,7 @@ namespace MCGalaxy.Drawing.Ops {
     
     public class UndoOnlineDrawOp : DrawOp {
         public override string Name { get { return "UndoOnline"; } }
+        public override bool AffectedByTransform { get { return false; } }
         
         /// <summary> Point in time that the /undo should go backwards up to. </summary>
         public DateTime Start = DateTime.MinValue;
@@ -67,9 +68,9 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
 
-    public class UndoOfflineDrawOp : DrawOp {
-        
+    public class UndoOfflineDrawOp : DrawOp {        
         public override string Name { get { return "UndoOffline"; } }
+        public override bool AffectedByTransform { get { return false; } }
         
         /// <summary> Point in time that the /undo should go backwards up to. </summary>
         public DateTime Start = DateTime.MinValue;
@@ -89,9 +90,9 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
 
-    public class UndoPhysicsDrawOp : DrawOp {
-        
+    public class UndoPhysicsDrawOp : DrawOp {        
         public override string Name { get { return "UndoPhysics"; } }
+        public override bool AffectedByTransform { get { return false; } }
         
         internal long seconds;
         
