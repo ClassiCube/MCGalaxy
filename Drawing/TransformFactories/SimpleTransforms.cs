@@ -32,22 +32,59 @@ namespace MCGalaxy.Drawing.Transforms {
             return NoTransform.Instance; 
         }
     }
-	
-	public sealed class ScaleTransformFactory : TransformFactory {        
+    
+    public sealed class ScaleTransformFactory : TransformFactory {        
         public override string Name { get { return "Scale"; } }
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new [] {
             "%TArguments: [scaleX] [scaleY] [scaleZ] <centre>",
             "%TAlternatively: [scale] <centre>",            
-            "%H[scale] values can be either an integer or a fraction (e.g. 2 or 1/2).",
+            "%H[scale] values can be an integer or a fraction (e.g. 2 or 1/2).",
             "%H[centre] if given, indicates to scale from the centre of a draw operation, " +
             "instead of outwards from the first mark. Recommended for cuboid and cylinder.",
         };
         
         public override Transform Construct(Player p, string message) {
-// TODO: actually parse the arguments        	
-        	return new ScaleTransform() { XMul = 2, XDiv = 2, YMul = 1, YDiv = 2, ZMul = 2, ZDiv = 1 };
+            string[] args = message.Split(' ');
+            if (args.Length > 4) { Player.MessageLines(p, Help); return null; }
+            int mul = 0, div = 0;
+            ScaleTransform scaler = new ScaleTransform();
+            
+            if (!ParseFraction(p, args[0], out mul, out div)) return null;
+            if (args.Length <= 2) {
+                scaler.XMul = mul; scaler.XDiv = div;
+                scaler.YMul = mul; scaler.YDiv = div;
+                scaler.ZMul = mul; scaler.ZDiv = div;
+            } else {
+                scaler.XMul = mul; scaler.XDiv = div;
+                if (!ParseFraction(p, args[1], out mul, out div)) return null;
+                scaler.YMul = mul; scaler.YDiv = div;
+                if (!ParseFraction(p, args[2], out mul, out div)) return null;
+                scaler.ZMul = mul; scaler.ZDiv = div;
+            }
+
+            if ((args.Length % 2) != 0) return scaler; // no centre argument
+            if (!args[args.Length - 1].CaselessEq("centre")) {
+                Player.Message(p, "The mode must be either \"centre\", or not given."); return null;
+            }
+            return scaler;
+        }
+        
+        static bool ParseFraction(Player p, string input, out int mul, out int div) {
+            int sep = input.IndexOf('/');
+            bool success = false;
+            div = 1;
+            
+            if (sep == -1) { // single whole number
+                success = int.TryParse(input, out mul);
+            } else {
+                string top = input.Substring(0, sep), bottom = input.Substring(sep + 1);
+                success = int.TryParse(top, out mul) && int.TryParse(bottom, out div);
+            }
+            
+            if (!success) { Player.MessageLines(p, HelpString); }
+            return success;
         }
     }
 }
