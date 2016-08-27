@@ -204,15 +204,22 @@ namespace MCGalaxy.Eco {
                             break;
 
                         default:
-                            Player.Message(p, "%cThat wasn't a valid command addition!");
+                            Player.Message(p, "Supported properties to edit: name, title, x, y, z, type, price");
                             break;
                     }
                     break;
 
                 default:
-                    Player.Message(p, "%cThat wasn't a valid command addition!");
-                    break;
+                    OnSetupCommandHelp(p); break;
             }
+        }
+        
+        protected internal override void OnSetupCommandHelp(Player p) {
+            base.OnSetupCommandHelp(p);
+            Player.Message(p, "%T/eco level add [name] [x] [y] [z] [type] [price]");
+            Player.Message(p, "%T/eco level remove [name]");
+            Player.Message(p, "%T/eco level edit [name] [name/x/y/z/type/price] [value]");
+            Player.Message(p, "%HAdds, removes, or edits a level preset.");
         }
         
         protected internal override void OnStoreOverview(Player p) {

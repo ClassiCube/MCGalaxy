@@ -70,6 +70,13 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal abstract void OnSetupCommandOther(Player p, string[] args);
+        
+        protected internal virtual void OnSetupCommandHelp(Player p) {
+            Player.Message(p, "%T/eco {0} enable/disable", Name.ToLower());
+            Player.Message(p, "%HEnables/disables purchasing this item.");
+            Player.Message(p, "%T/eco {0} purchaserank [rank]", Name.ToLower());
+            Player.Message(p, "%HSets the lowest rank which can purchase this item.");
+        }
 
         protected internal abstract void OnStoreOverview(Player p);
         
@@ -123,6 +130,12 @@ namespace MCGalaxy.Eco {
                 default:
                     Player.Message(p, "Supported actions: enable, disable, price [cost]"); break;
             }
+        }
+        
+        protected internal override void OnSetupCommandHelp(Player p) {
+            base.OnSetupCommandHelp(p);
+            Player.Message(p, "%T/eco {0} price [amount]", Name.ToLower());
+            Player.Message(p, "%HSets how many &3{0} %Hthis item costs.", Server.moneys);
         }
         
         protected internal override void OnStoreOverview(Player p) {

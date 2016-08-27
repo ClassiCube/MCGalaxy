@@ -61,7 +61,7 @@ namespace MCGalaxy.Games {
 
                 p.Game.BlocksLeft--;
                 if ((p.Game.BlocksLeft % 10) == 0 || (p.Game.BlocksLeft >= 0 && p.Game.BlocksLeft <= 10))
-                    p.SendMessage("Blocks Left: " + Colors.maroon + p.Game.BlocksLeft);
+                    p.SendMessage("Blocks Left: &4" + p.Game.BlocksLeft);
             }
             return false;
         }

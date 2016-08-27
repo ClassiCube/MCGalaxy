@@ -153,12 +153,16 @@ PRIMARY KEY(player)
         public static Item GetItem(string name) {
             foreach (Item item in Items) {
                 if (name.CaselessEq(item.Name)) return item;
+                
+                foreach (string alias in item.Aliases) {
+                    if (name.CaselessEq(alias)) return item;
+                }
             }
             return null;
         }
-        
-        public static string GetItemNames(string separator) {
-            string items = Items.Join(x => x.Enabled ? x.ShopName : null, separator);
+            
+        public static string GetItemNames() {
+            string items = Items.Join(x => x.Enabled ? x.ShopName : null);
             return items.Length == 0 ? "(no enabled items)" : items;
         }
         

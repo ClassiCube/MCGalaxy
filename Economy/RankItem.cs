@@ -110,8 +110,16 @@ namespace MCGalaxy.Eco {
                     UpdatePrices();
                     break;
                 default:
-                    Player.Message(p, "Supported actions: enable, disable, price [rank] [cost], maxrank [rank]"); break;
+                    OnSetupCommandHelp(p); break;
             }
+        }
+        
+        protected internal override void OnSetupCommandHelp(Player p) {
+            base.OnSetupCommandHelp(p);
+            Player.Message(p, "%T/eco rank price [rank] [amount]");
+            Player.Message(p, "%HSets how many &3{0} %Hthat rank costs.", Server.moneys);
+            Player.Message(p, "%T/eco rank maxrank [rank]");
+            Player.Message(p, "%HSets the maximum rank that can be bought.", Server.moneys);
         }
 
         protected internal override void OnStoreOverview(Player p) {

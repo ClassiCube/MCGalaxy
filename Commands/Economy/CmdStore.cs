@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.Eco;
 
-namespace MCGalaxy.Commands {  
+namespace MCGalaxy.Commands {
     public sealed class CmdStore : Command {
         public override string name { get { return "store"; } }
         public override string shortcut { get { return "shop"; } }
@@ -28,30 +28,24 @@ namespace MCGalaxy.Commands {
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("item") }; }
-        }        
+        }
 
         public override void Use(Player p, string message) {
             if (message == "") {
                 foreach (Item item in Economy.Items) {
                     if (!item.Enabled) continue;
-                    item.OnStoreOverview(p); 
+                    item.OnStoreOverview(p);
                 }
                 Player.Message(p, "%HUse %T/store [item] %Hto see more information about that item.");
-                return;
-            }
-            
-            foreach (Item item in Economy.Items)
-                foreach (string alias in item.Aliases)
-            {
-                if (message.CaselessEq(alias)) {
-                    if (!item.Enabled) { 
-                        Player.Message(p, "%cThe " + item.ShopName + " item is not currently buyable."); return; 
-                    }
-                    item.OnStoreCommand(p); 
-                    return;
+            } else {
+                Item item = Economy.GetItem(message);
+                if (item == null) { Help(p); return; }                
+
+                if (!item.Enabled) {
+                    Player.Message(p, "%cThe " + item.ShopName + " item is not currently buyable."); return;
                 }
+                item.OnStoreCommand(p);
             }
-            Help(p);
         }
         
         public override void Help(Player p) {
@@ -59,7 +53,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%HViews information about the specific item, such as its cost.");
             Player.Message(p, "%T/store");
             Player.Message(p, "%HViews information about all enabled items.");
-            Player.Message(p, "%H  Available items: %f" + Economy.GetItemNames(", "));
+            Player.Message(p, "%H  Available items: %S" + Economy.GetItemNames());
         }
     }
 }

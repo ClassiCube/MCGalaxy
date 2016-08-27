@@ -30,29 +30,24 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] parts = message.Split(' ');
+            Item item = Economy.GetItem(parts[0]);
+            if (item == null) { Help(p); return; }
 
-            foreach (Item item in Economy.Items)
-                foreach (string alias in item.Aliases)
-            {
-                if (!parts[0].CaselessEq(alias)) continue;
-                
-                if (!item.Enabled) {
-                    Player.Message(p, "%cThe {0} item is not currently buyable.", item.Name); return;
-                }
-                if (p.Rank < item.PurchaseRank) {
-                    Formatter.MessageNeedMinPerm(p, "purchase a " + item.Name, item.PurchaseRank); return;
-                }
-                item.OnBuyCommand(this, p, message, parts);
-                return;
+
+            if (!item.Enabled) {
+                Player.Message(p, "%cThe {0} item is not currently buyable.", item.Name); return;
             }
-            Help(p);
+            if (p.Rank < item.PurchaseRank) {
+                Formatter.MessageNeedMinPerm(p, "purchase a " + item.Name, item.PurchaseRank); return;
+            }
+            item.OnBuyCommand(this, p, message, parts);
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/buy [item] [value] <map name>");
             Player.Message(p, "%Hmap name is only used for %T/buy map%H.");
             Player.Message(p, "%HUse %T/store [item] %Hto see more information for an item.");
-            Player.Message(p, "%H  Available items: %f" + Economy.GetItemNames(", "));
+            Player.Message(p, "%H  Available items: %S" + Economy.GetItemNames());
         }
     }
 }
