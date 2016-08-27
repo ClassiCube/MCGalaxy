@@ -28,11 +28,7 @@ namespace MCGalaxy.BlockBehaviour {
             int dx = 0, dy = 0, dz = 0;
             p.RevertBlock(x, y, z);
             DirUtils.EightYaw(p.rot[0], out dx, out dz);
-
-            if ( p.rot[1] >= 192 && p.rot[1] <= ( 192 + 32 ) )
-                dy = 1;
-            else if ( p.rot[1] <= 64 && p.rot[1] >= 32 )
-                dy = -1;
+            DirUtils.Pitch(p.rot[1], out dy);
 
             // Looking straight up or down
             if (p.rot[1] >= 192 && p.rot[1] <= 196 || p.rot[1] >= 60 && p.rot[1] <= 64) { dx = 0; dz = 0; }

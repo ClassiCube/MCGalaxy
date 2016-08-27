@@ -34,15 +34,14 @@ namespace MCGalaxy.Commands
                 Player.Message(p, "You cannot build on this map!"); return;
             }
             
-            int yaw = p.rot[0];
             Level lvl = p.level;
             ushort x = (ushort)(p.pos[0] / 32), y = (ushort)(p.pos[1] / 32), z = (ushort)(p.pos[2] / 32);
             if (x >= lvl.Width || z >= lvl.Length) {
                 Player.Message(p, "You must be inside the map to use this command."); return;
             }
             
-            int dirX = (yaw > 16 && yaw <= 112) ? 1 : (yaw > 144 && yaw <= 240) ? -1 : 0;
-            int dirZ = (yaw > 208 || yaw < 48) ? -1 : (yaw > 80 && yaw <= 176) ? 1 : 0;
+            int dirX = 0, dirZ = 0;
+            DirUtils.EightYaw(p.rot[0], out dirX, out dirZ);
             DoChain(p, x, y, z, dirX, dirZ);       
         }
         

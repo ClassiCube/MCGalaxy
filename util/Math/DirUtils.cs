@@ -21,7 +21,7 @@ namespace MCGalaxy {
     
     public static class DirUtils {
 
-		/* How yaw works:              * How pitch works:
+        /* How yaw works:              * How pitch works:
          *         64 | +X             *         192 | +Y
          *         ___|___             *             |
          *        /   |   \            *    flipped  |
@@ -37,7 +37,7 @@ namespace MCGalaxy {
         
         public static void EightYaw(byte yaw, out int dirX, out int dirZ) {
             dirX = 0; dirZ = 0;
-            const byte extent = 48;
+            const byte extent = (64 / 4) * 3;
             
             if (yaw < (0 + extent) || yaw > (256 - extent))
                 dirZ = -1;
@@ -52,7 +52,7 @@ namespace MCGalaxy {
         
         public static void FourYaw(byte yaw, out int dirX, out int dirZ) {
             dirX = 0; dirZ = 0;
-            const byte quadrant = 32;
+            const byte quadrant = 64 / 2;
             
             if (yaw <= (0 + quadrant) || yaw >= (256 - quadrant))
                 dirZ = -1;
@@ -62,6 +62,16 @@ namespace MCGalaxy {
                 dirZ = 1;
             else 
                 dirX = -1;
-        }        
+        }
+
+        public static void Pitch(byte pitch, out int dirY) {
+            dirY = 0;
+            const byte quadrant = 32;
+            
+            if (pitch >= 192 && pitch <= (192 + quadrant))
+                dirY = 1;
+            else if (pitch >= (64 - quadrant) && pitch <= 64)
+                dirY = -1;
+        }
     }
 }
