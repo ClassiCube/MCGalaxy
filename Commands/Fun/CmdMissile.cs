@@ -51,16 +51,14 @@ namespace MCGalaxy.Commands {
             while (true) {
                 Vec3U16 start = MakePos(p);
                 total++;
-                double a = Math.Sin(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
-                double b = Math.Cos(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
-                double c = Math.Cos(((double)(p.rot[1] + 64) / 256) * 2 * Math.PI);
+                Vec3F32 dir = DirUtils.GetDirVector(p.rot[0], p.rot[1]);
 
                 Vec3U16 lookedAt;
                 int i;
                 for (i = 1; ; i++) {
-                    lookedAt.X = (ushort)Math.Round(start.X + (double)(a * i));
-                    lookedAt.Y = (ushort)Math.Round(start.Y + (double)(c * i));
-                    lookedAt.Z = (ushort)Math.Round(start.Z + (double)(b * i));
+                    lookedAt.X = (ushort)Math.Round(start.X + (double)(dir.X * i));
+                    lookedAt.Y = (ushort)Math.Round(start.Y + (double)(dir.Y * i));
+                    lookedAt.Z = (ushort)Math.Round(start.Z + (double)(dir.Z * i));
 
                     byte tile = p.level.GetTile(lookedAt.X, lookedAt.Y, lookedAt.Z);
                     if (tile == Block.Zero) break;
@@ -74,9 +72,9 @@ namespace MCGalaxy.Commands {
                     }
                 }
 
-                lookedAt.X = (ushort)Math.Round(start.X + (double)(a * (i - 1)));
-                lookedAt.Y = (ushort)Math.Round(start.Y + (double)(c * (i - 1)));
-                lookedAt.Z = (ushort)Math.Round(start.Z + (double)(b * (i - 1)));
+                lookedAt.X = (ushort)Math.Round(start.X + (double)(dir.X * (i - 1)));
+                lookedAt.Y = (ushort)Math.Round(start.Y + (double)(dir.Y * (i - 1)));
+                lookedAt.Z = (ushort)Math.Round(start.Z + (double)(dir.Z * (i - 1)));
                 FindNext(lookedAt, ref pos, buffer);
 
                 byte by = p.level.GetTile(pos.X, pos.Y, pos.Z);

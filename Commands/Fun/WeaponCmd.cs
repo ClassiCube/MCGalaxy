@@ -79,21 +79,17 @@ namespace MCGalaxy.Commands {
         void DoAim(Player p) {
             List<Vec3U16> lastSent = new List<Vec3U16>(), toSend = new List<Vec3U16>();
             while (p.aiming) {
-                double a = Math.Sin(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
-                double b = Math.Cos(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
-                double c = Math.Cos(((double)(p.rot[1] + 64) / 256) * 2 * Math.PI);
-
+                Vec3F32 dir = DirUtils.GetDirVector(p.rot[0], p.rot[1]);
                 try {
-                    ushort y = (ushort)Math.Round((ushort)(p.pos[1] / 32) + c * 3);
-                    ushort x = (ushort)Math.Round((ushort)(p.pos[0] / 32) + a * 3);
-                    ushort z = (ushort)Math.Round((ushort)(p.pos[2] / 32) + b * 3);
+                    ushort x = (ushort)Math.Round((ushort)(p.pos[0] / 32) + dir.X * 3);
+                    ushort y = (ushort)Math.Round((ushort)(p.pos[1] / 32) + dir.Y * 3);
+                    ushort z = (ushort)Math.Round((ushort)(p.pos[2] / 32) + dir.Z * 3);
 
-                    int dirX = Math.Sign(a) >= 0 ? 1 : -1;
-                    int dirZ = Math.Sign(b) >= 0 ? 1 : -1;
+                    int signX = Math.Sign(dir.X) >= 0 ? 1 : -1, signZ = Math.Sign(dir.Z) >= 0 ? 1 : -1;
                     CheckTile(p.level, toSend, x, y, z);
-                    CheckTile(p.level, toSend, x + dirX, y, z);
-                    CheckTile(p.level, toSend, x, y, z + dirZ);
-                    CheckTile(p.level, toSend, x + dirX, y, z + dirZ);
+                    CheckTile(p.level, toSend, x + signX, y, z);
+                    CheckTile(p.level, toSend, x, y, z + signZ);
+                    CheckTile(p.level, toSend, x + signX, y, z + signZ);
 
                     // Revert all glass blocks now not in the ray from the player's direction
                     for (int i = 0; i < lastSent.Count; i++) {

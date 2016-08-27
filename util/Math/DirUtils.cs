@@ -22,6 +22,7 @@ namespace MCGalaxy {
     public static class DirUtils {
 
         /* How yaw works:              * How pitch works:
+         *                             *
          *         64 | +X             *         192 | +Y
          *         ___|___             *             |
          *        /   |   \            *    flipped  |
@@ -72,6 +73,14 @@ namespace MCGalaxy {
                 dirY = 1;
             else if (pitch >= (64 - quadrant) && pitch <= 64)
                 dirY = -1;
+        }
+        
+        public static Vec3F32 GetDirVector(byte yaw, byte pitch) {
+            const double packed2Rad = (2 * Math.PI) / 256.0;
+            double x = Math.Sin(yaw * packed2Rad);
+            double y = -Math.Sin(pitch * packed2Rad); // e.g. 64 -> PI/2, result should be -1
+            double z = -Math.Cos(yaw * packed2Rad);   // e.g. 128 -> PI, result should be 1
+            return new Vec3F32((float)x, (float)y, (float)z);
         }
     }
 }

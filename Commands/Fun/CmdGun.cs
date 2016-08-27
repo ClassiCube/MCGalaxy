@@ -38,9 +38,7 @@ namespace MCGalaxy.Commands {
         
         void DoShoot(Player p, byte type, byte extType) {
             CatchPos bp = (CatchPos)p.blockchangeObject;
-            double a = Math.Sin(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
-            double b = Math.Cos(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
-            double c = Math.Cos(((double)(p.rot[1] + 64) / 256) * 2 * Math.PI);
+            Vec3F32 dir = DirUtils.GetDirVector(p.rot[0], p.rot[1]);
 
             double bigDiag = Math.Sqrt(Math.Sqrt(p.level.Width * p.level.Width + p.level.Length * p.level.Length) 
                                        + p.level.Height * p.level.Height + p.level.Width * p.level.Width);
@@ -53,14 +51,14 @@ namespace MCGalaxy.Commands {
             ushort startY = (ushort)(p.pos[1] / 32);
             ushort startZ = (ushort)(p.pos[2] / 32);
 
-            pos.X = (ushort)Math.Round(startX + (double)(a * 3));
-            pos.Y = (ushort)Math.Round(startY + (double)(c * 3));
-            pos.Z = (ushort)Math.Round(startZ + (double)(b * 3));
+            pos.X = (ushort)Math.Round(startX + dir.X * 3);
+            pos.Y = (ushort)Math.Round(startY + dir.Y * 3);
+            pos.Z = (ushort)Math.Round(startZ + dir.Z * 3);
 
             for (double t = 4; bigDiag > t; t++) {
-                pos.X = (ushort)Math.Round(startX + (double)(a * t));
-                pos.Y = (ushort)Math.Round(startY + (double)(c * t));
-                pos.Z = (ushort)Math.Round(startZ + (double)(b * t));
+                pos.X = (ushort)Math.Round(startX + (double)(dir.X * t));
+                pos.Y = (ushort)Math.Round(startY + (double)(dir.Y * t));
+                pos.Z = (ushort)Math.Round(startZ + (double)(dir.Z * t));
 
                 byte by = p.level.GetTile(pos.X, pos.Y, pos.Z);
                 if (by != Block.air && !allBlocks.Contains(pos) && HandlesHitBlock(p, by, bp, pos, true))
