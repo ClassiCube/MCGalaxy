@@ -47,9 +47,8 @@ namespace MCGalaxy.Commands {
             
             if (!TryMessage(p, p.ColoredName + " %S" + action)) return;
             p.NextEat = DateTime.UtcNow.AddSeconds(10);
-            if (Economy.Enabled) {
-                p.money -= 1; p.OnMoneyChanged();
-            }  
+            if (Economy.Enabled)
+                p.SetMoney(p.money - 1);  
         }
         
         static string[] defMessages = { "guzzled a grape", "chewed a cherry", "ate an avocado" };

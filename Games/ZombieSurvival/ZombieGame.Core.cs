@@ -196,8 +196,7 @@ namespace MCGalaxy.Games {
                                 infectCombo++;
                                 if (infectCombo >= 2) {
                                     pKiller.SendMessage("You gained " + (2 + infectCombo) + " " + Server.moneys);
-                                    pKiller.money += 2 + infectCombo;
-                                    pKiller.OnMoneyChanged();
+                                    pKiller.SetMoney(pKiller.money + (2 + infectCombo));
                                     CurLevel.ChatLevel(pKiller.ColoredName + " is on a rampage! " + (infectCombo + 1) + " infections in a row!");
                                 }
                                 if (infectCombo == 10)
@@ -263,8 +262,7 @@ namespace MCGalaxy.Games {
             if (!pAlive.Game.PledgeSurvive) return;
             pAlive.Game.PledgeSurvive = false;
             CurLevel.ChatLevel(pAlive.ColoredName + "%Sbroke their pledge of not being infected.");
-            pAlive.money = Math.Max(pAlive.money - 2, 0);
-            pAlive.OnMoneyChanged();
+            pAlive.SetMoney(Math.Max(pAlive.money - 2, 0));
         }
         
         void CheckBounty(Player pAlive, Player pKiller) {
@@ -274,10 +272,8 @@ namespace MCGalaxy.Games {
             if (bounty != null) {
                 CurLevel.ChatLevel(pKiller.ColoredName + " %Scollected the bounty of &a" +
                                    bounty.Amount + " %S" + Server.moneys + " on " + pAlive.ColoredName + "%S.");
-                bounty.Origin.money = Math.Max(0, bounty.Origin.money - bounty.Amount);
-                bounty.Origin.OnMoneyChanged();
-                pKiller.money += bounty.Amount;
-                pKiller.OnMoneyChanged();
+                bounty.Origin.SetMoney(Math.Max(0, bounty.Origin.money - bounty.Amount));
+                pKiller.SetMoney(pKiller.money + bounty.Amount);
             }
         }
         
@@ -345,8 +341,7 @@ namespace MCGalaxy.Games {
                     if (pl.Game.PledgeSurvive) {
                         pl.SendMessage("You received &a5 %3" + Server.moneys +
                                        "%S for successfully pledging that you would survive.");
-                        pl.money += 5;
-                        pl.OnMoneyChanged();
+                        pl.SetMoney(pl.money + 5);
                     }
                     if (winChance <= 10)
                         ZombieAwards.Give(pl, ZombieAwards.lowWinChance, this);
@@ -369,23 +364,22 @@ namespace MCGalaxy.Games {
             foreach (Player pl in online) {
                 pl.Game.ResetInvisibility();
                 if (!pl.level.name.CaselessEq(CurLevelName)) continue;
-                int money = GetMoney(pl, alive, rand);
+                int reward = GetReward(pl, alive, rand);
                 
                 Entities.GlobalDespawn(pl, true);
                 Entities.GlobalSpawn(pl, true);
-                if (money == -1) {
-                    pl.SendMessage("You may not hide inside a block! No " + Server.moneys + " for you."); money = 0;
-                } else if (money > 0) {
-                    pl.SendMessage( Colors.gold + "You gained " + money + " " + Server.moneys);
+                if (reward == -1) {
+                    pl.SendMessage("You may not hide inside a block! No " + Server.moneys + " for you."); reward = 0;
+                } else if (reward > 0) {
+                    pl.SendMessage(Colors.gold + "You gained " + reward + " " + Server.moneys);
                 }
                 
-                pl.money += money;
+                pl.SetMoney(pl.money + reward);
                 pl.Game.ResetZombieState();
                 if (pl.Game.Referee) {
                     pl.SendMessage("You gained one " + Server.moneys + " because you're a ref. Would you like a medal as well?");
-                    pl.money++;
+                    pl.SetMoney(pl.money + 1);
                 }
-                pl.OnMoneyChanged();
             }
             
             DoLottery();
@@ -420,13 +414,12 @@ namespace MCGalaxy.Games {
                                    + amount + " " + Server.moneys);
             }
             Lottery.Clear();
-            winner.money += 10;
-            winner.OnMoneyChanged();
+            winner.SetMoney(winner.money + 10);
             if (online.Count == 7)
                 ZombieAwards.Give(winner, ZombieAwards.luckyNumber7, this);
         }
         
-        int GetMoney(Player pl, Player[] alive, Random rand) {
+        int GetReward(Player pl, Player[] alive, Random rand) {
             if (pl.CheckIfInsideBlock()) return -1;
             
             if (alive.Length == 0) {

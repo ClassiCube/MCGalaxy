@@ -60,8 +60,7 @@ namespace MCGalaxy.Commands
                 if (!IsLegalPayment(p, payer.money, receiver.money, amount)) return;
                 
                 receiver.money = who.money;
-                who.money += amount;
-                who.OnMoneyChanged();
+                who.SetMoney(who.money + amount);
                 target = who.color + who.name;
                 Chat.MessageAll("{0} %Spaid {1} &f{2} &3{3}", 
                                 p.ColoredName, who.ColoredName, amount, Server.moneys);
@@ -70,8 +69,7 @@ namespace MCGalaxy.Commands
             payer.payment = "%f" + amount + " %3" + Server.moneys + " to " + target + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);                
             receiver.salary = "%f" + amount + " %3" + Server.moneys + " by " + p.color + p.name + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
             receiver.money += amount;
-            p.money -= amount;
-            p.OnMoneyChanged();
+            p.SetMoney(p.money - amount);
             payer.money = p.money;
             Economy.UpdateEcoStats(payer);
             Economy.UpdateEcoStats(receiver);            

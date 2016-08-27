@@ -292,5 +292,10 @@ namespace MCGalaxy {
         public bool verifiedName;
         
         public static bool IsSuper(Player p) { return p == null || p.ircNick != null; }
+        
+        public void SetMoney(int amount) {
+            money = amount;
+            OnMoneyChanged();
+        }
     }
 }

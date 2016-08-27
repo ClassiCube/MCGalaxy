@@ -61,8 +61,7 @@ namespace MCGalaxy.Commands {
                 ecos = Economy.RetrieveEcoStats(who.name);
                 ecos.money = who.money;
                 Take(all, ref ecos, ref amount);
-                who.money = ecos.money;
-                who.OnMoneyChanged();
+                who.SetMoney(ecos.money);
                 Chat.MessageAll("{0} %Stook &f{2} &3{3} %Sfrom {1}", 
                                 p.ColoredName, who.ColoredName, amount, Server.moneys);
             }

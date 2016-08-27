@@ -59,8 +59,7 @@ namespace MCGalaxy.Commands
             } else {
                 if (ReachedMax(p, who.money, amount)) return;
                 ecos.money = who.money;
-                who.money += amount;
-                who.OnMoneyChanged();
+                who.SetMoney(who.money + amount);
                 ecos = Economy.RetrieveEcoStats(who.name);
                 Chat.MessageAll("{0} %Sgave {1} &f{2} &3{3}", 
                                 giver, who.ColoredName, amount, Server.moneys);

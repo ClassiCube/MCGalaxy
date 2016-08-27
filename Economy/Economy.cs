@@ -158,14 +158,8 @@ PRIMARY KEY(player)
         }
         
         public static string GetItemNames(string separator) {
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < Items.Length; i++) {
-                if (!Items[i].Enabled) continue;
-                builder.Append(Items[i].ShopName);
-                if (i < Items.Length - 1)
-                    builder.Append(separator);
-            }
-            return builder.Length == 0 ? "(no enabled items)" : builder.ToString();
+            string items = Items.Join(x => x.Enabled ? x.ShopName : null, separator);
+            return items.Length == 0 ? "(no enabled items)" : items;
         }
         
         public static SimpleItem Color { get { return (SimpleItem)Items[0]; } }
@@ -176,8 +170,7 @@ PRIMARY KEY(player)
         
         public static void MakePurchase(Player p, int cost, string item) {
             Economy.EcoStats ecos = RetrieveEcoStats(p.name);
-            p.money -= cost;
-            p.OnMoneyChanged();
+            p.SetMoney(p.money - cost);
             ecos.money = p.money;
             ecos.totalSpent += cost;
             ecos.purchase = item + "%3 - Price: %f" + cost + " %3" + Server.moneys +

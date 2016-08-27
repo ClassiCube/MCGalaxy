@@ -44,8 +44,7 @@ namespace MCGalaxy.Commands {
                 }
             }
             
-            p.money -= 10;
-            p.OnMoneyChanged();
+            p.SetMoney(p.money - 10);
             Server.zombie.Lottery.Add(p.name);
             if (Server.zombie.CurLevel != null)
                 Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %Sentered the lottery");
