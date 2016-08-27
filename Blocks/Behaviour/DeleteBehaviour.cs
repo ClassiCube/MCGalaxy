@@ -27,22 +27,15 @@ namespace MCGalaxy.BlockBehaviour {
             
             int dx = 0, dy = 0, dz = 0;
             p.RevertBlock(x, y, z);
-            if ( p.rot[0] < 48 || p.rot[0] > ( 256 - 48 ) )
-                dz = -1;
-            else if ( p.rot[0] > ( 128 - 48 ) && p.rot[0] < ( 128 + 48 ) )
-                dz = 1;
-
-            if ( p.rot[0] > ( 64 - 48 ) && p.rot[0] < ( 64 + 48 ) )
-                dx = 1;
-            else if ( p.rot[0] > ( 192 - 48 ) && p.rot[0] < ( 192 + 48 ) )
-                dx = -1;
+            DirUtils.EightYaw(p.rot[0], out dx, out dz);
 
             if ( p.rot[1] >= 192 && p.rot[1] <= ( 192 + 32 ) )
                 dy = 1;
             else if ( p.rot[1] <= 64 && p.rot[1] >= 32 )
                 dy = -1;
 
-            if ( 192 <= p.rot[1] && p.rot[1] <= 196 || 60 <= p.rot[1] && p.rot[1] <= 64 ) { dx = 0; dz = 0; }
+            // Looking straight up or down
+            if (p.rot[1] >= 192 && p.rot[1] <= 196 || p.rot[1] >= 60 && p.rot[1] <= 64) { dx = 0; dz = 0; }
 
             byte b1 = p.level.GetTile((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ));
             byte b2 = p.level.GetTile((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz ));

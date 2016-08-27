@@ -40,10 +40,7 @@ namespace MCGalaxy.Commands.Building {
             int dist = (int)state;
 
             int dx = 0, dz = 0;
-            if (p.rot[0] <= 32 || p.rot[0] >= 224) { dz = -1; }
-            else if (p.rot[0] <= 96) { dx = 1; }
-            else if (p.rot[0] <= 160) { dz = 1; }
-            else dx = -1;
+            DirUtils.FourYaw(p.rot[0], out dx, out dz);
 
             List<int> buffer = new List<int>();
             int depth = 0;

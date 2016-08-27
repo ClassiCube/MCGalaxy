@@ -18,7 +18,7 @@
 using System;
 
 namespace MCGalaxy {  
-    public struct Vec3U16 : IEquatable<Vec3U16> {        
+	public struct Vec3U16 : IEquatable<Vec3U16> {
         public ushort X, Y, Z;
         public static Vec3U16 Zero = new Vec3U16(0);
         public static Vec3U16 MinVal = new Vec3U16(ushort.MinValue);

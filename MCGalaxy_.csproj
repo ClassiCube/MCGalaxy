@@ -607,10 +607,11 @@
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\App.cs" />
     <Compile Include="util\Formatter.cs" />
+    <Compile Include="util\Math\DirUtils.cs" />
+    <Compile Include="util\Math\Vectors.cs" />
     <Compile Include="util\SparseBitSet.cs" />
     <Compile Include="util\TimeUtils.cs" />
     <Compile Include="util\Utils.cs" />
-    <Compile Include="util\Vectors.cs" />
     <Compile Include="util\VolatileArray.cs" />
     <Compile Include="sharkbite.thresher\ChannelModeInfo.cs" />
     <Compile Include="sharkbite.thresher\CommandBuilder.cs" />
@@ -720,6 +721,7 @@
     <Folder Include="Bots" />
     <Folder Include="Events" />
     <Folder Include="Chat" />
+    <Folder Include="util\Math" />
     <Folder Include="Player\Group" />
     <Folder Include="Player\List" />
     <Folder Include="Player\Undo" />
