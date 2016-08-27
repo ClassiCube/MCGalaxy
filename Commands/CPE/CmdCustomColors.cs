@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         void AddHandler(Player p, string[] args) {
-            if (args.Length < 4) { Help(p); return; }
+            if (args.Length <= 4) { Help(p); return; }
             
             char code = args[1][0];
             if (Colors.IsStandardColor(code)) {
