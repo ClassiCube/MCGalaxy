@@ -148,9 +148,12 @@ namespace MCGalaxy.Drawing.Ops {
                 foreach (var b in iterator) {
                     if (b.Block == Block.Zero) continue;
                     byte old = lvl.GetTile(b.X, b.Y, b.Z);
-                    if (old == Block.Zero || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block, b.ExtBlock))
-                        continue;
+                    bool sameBlock = old == b.Block;
+                    if (sameBlock && b.Block == Block.custom_block)
+                        sameBlock = lvl.GetExtTile(b.X, b.Y, b.Z) == b.ExtBlock;
                     
+                    if (sameBlock || old == Block.Zero || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block, b.ExtBlock))
+                        continue;
                     lvl.SetTile(b.X, b.Y, b.Z, b.Block, p, b.ExtBlock);
                     p.IncrementBlockStats(b.Block, true);
                 }
