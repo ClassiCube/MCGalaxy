@@ -39,21 +39,17 @@ namespace MCGalaxy.Eco {
             public int price = 1000;
         }
         
-        public override void Parse(string line, string[] split) {
-            if (split[1].CaselessEq("enabled")) {
-                Enabled = split[2].CaselessEq("true");
-            } else if (split[1].CaselessEq("purchaserank")) {
-                PurchaseRank = (LevelPermission)int.Parse(split[2]);
-            } else if (split[1].CaselessEq("price")) {
-                Rank rnk = FindRank(split[2]);
+        public override void Parse(string line, string[] args) {
+            if (args[1].CaselessEq("price")) {
+                Rank rnk = FindRank(args[2]);
                 if (rnk == null) {
                     rnk = new Rank();
-                    rnk.group = Group.Find(split[2]);
+                    rnk.group = Group.Find(args[2]);
                     RanksList.Add(rnk);
                 }
-                rnk.price = int.Parse(split[3]);
-            } else if (split[1] == "maxrank") {
-                if (Group.Exists(split[2])) MaxRank = split[2];
+                rnk.price = int.Parse(args[3]);
+            } else if (args[1] == "maxrank") {
+                if (Group.Exists(args[2])) MaxRank = args[2];
             }
         }
         
@@ -87,14 +83,8 @@ namespace MCGalaxy.Eco {
             Economy.MakePurchase(p, FindRank(p.group.name).price, "%3Rank: " + p.group.ColoredName);
         }
         
-        protected internal override void OnSetupCommand(Player p, string[] args) {
+        protected internal override void OnSetupCommandOther(Player p, string[] args) {
             switch (args[1].ToLower()) {
-                case "enable":
-                    Player.Message(p, "%aThe {0} item is now enabled.", Name);
-                    Enabled = true; break;
-                case "disable":
-                    Player.Message(p, "%aThe {0} item is now disabled.", Name);
-                    Enabled = false; break;
                 case "price":
                     Rank rnk = FindRank(args[2]);
                     if (rnk == null) {

@@ -39,8 +39,8 @@ namespace MCGalaxy.Eco {
         public bool Enabled;
         
         /// <summary> Reads the given property of this item from the economy.properties file. </summary>
-        /// <remarks> split is line split by the : character. </remarks>
-        public abstract void Parse(string line, string[] split);
+        /// <remarks> args is line split by the : character. </remarks>
+        public abstract void Parse(string line, string[] args);
         
         /// <summary> Writes the properties of this item to the economy.properties file. </summary>
         public abstract void Serialise(StreamWriter writer);
@@ -48,7 +48,28 @@ namespace MCGalaxy.Eco {
         protected internal abstract void OnBuyCommand(Command cmd, Player p,
                                                       string message, string[] args);
 
-        protected internal abstract void OnSetupCommand(Player p, string[] args);
+        internal void OnSetupCommand(Player p, string[] args) {
+            switch (args[1].ToLower()) {
+                case "enable":
+                    Player.Message(p, "%aThe {0} item is now enabled.", Name);
+                    Enabled = true; break;
+                case "disable":
+                    Player.Message(p, "%aThe {0} item is now disabled.", Name);
+                    Enabled = false; break;
+                case "purchaserank":
+                    if (args.Length == 2) { Player.Message(p, "You need to provide a rank name."); return; }
+                    Group grp = Group.FindMatches(p, args[2]);
+                    if (grp == null) return;
+                    
+                    PurchaseRank = grp.Permission;
+                    Player.Message(p, "Purchase rank for {0} item set to {1}%S.", Name, grp.ColoredName);
+                    break;
+                default:
+                    OnSetupCommandOther(p, args); break;
+            }
+        }
+        
+        protected internal abstract void OnSetupCommandOther(Player p, string[] args);
 
         protected internal abstract void OnStoreOverview(Player p);
         
@@ -63,16 +84,9 @@ namespace MCGalaxy.Eco {
         
         protected bool NoArgsResetsItem;
         
-        public override void Parse(string line, string[] split) {
-            if (split.Length < 3) return;
-            
-            if (split[1].CaselessEq("enabled")) {
-                Enabled = split[2].CaselessEq("true");
-            } else if (split[1].CaselessEq("purchaserank")) {
-                PurchaseRank = (LevelPermission)int.Parse(split[2]);
-            } else if (split[1].CaselessEq("price")) {
-                Price = int.Parse(split[2]);
-            }
+        public override void Parse(string line, string[] args) {
+            if (args[1].CaselessEq("price"))
+                Price = int.Parse(args[2]);
         }
         
         public override void Serialise(StreamWriter writer) {
@@ -96,14 +110,8 @@ namespace MCGalaxy.Eco {
         
         protected abstract void OnBuyCommand(Player p, string message, string[] args);
         
-        protected internal override void OnSetupCommand(Player p, string[] args) {
+        protected internal override void OnSetupCommandOther(Player p, string[] args) {
             switch (args[1].ToLower()) {
-                case "enable":
-                    Player.Message(p, "%aThe {0} item is now enabled.", Name);
-                    Enabled = true; break;
-                case "disable":
-                    Player.Message(p, "%aThe {0} item it now enabled.", Name);
-                    Enabled = false; break;
                 case "price":
                     int cost;
                     if (!int.TryParse(args[2], out cost)) {

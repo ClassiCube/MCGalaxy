@@ -39,26 +39,22 @@ namespace MCGalaxy.Eco {
             public string type;
         }
         
-        public override void Parse(string line, string[] split) {
-            if (split[1] == "enabled") {
-                Enabled = split[2].CaselessEq("true");
-            } else if (split[1].CaselessEq("purchaserank")) {
-                PurchaseRank = (LevelPermission)int.Parse(split[2]);
-            } else if (split[1] == "levels") {
-                LevelPreset preset = FindPreset(split[2]);
-                if (preset == null) {
-                    preset = new LevelPreset();
-                    Presets.Add(preset);
-                }
-                
-                switch (split[3]) {
-                    case "name": preset.name = split[4]; break;
-                    case "price": preset.price = int.Parse(split[4]); break;
-                    case "x": preset.x = split[4]; break;
-                    case "y": preset.y = split[4]; break;
-                    case "z": preset.z = split[4]; break;
-                    case "type": preset.type = split[4]; break;
-                }
+        public override void Parse(string line, string[] args) {
+            if (!args[1].CaselessEq("levels")) return;
+            
+            LevelPreset preset = FindPreset(args[2]);
+            if (preset == null) {
+                preset = new LevelPreset();
+                Presets.Add(preset);
+            }
+            
+            switch (args[3]) {
+                case "name": preset.name = args[4]; break;
+                case "price": preset.price = int.Parse(args[4]); break;
+                case "x": preset.x = args[4]; break;
+                case "y": preset.y = args[4]; break;
+                case "z": preset.z = args[4]; break;
+                case "type": preset.type = args[4]; break;
             }
         }
         
@@ -117,7 +113,7 @@ namespace MCGalaxy.Eco {
             Economy.MakePurchase(p, preset.price, "%3Map: %f" + preset.name);
         }
         
-        protected internal override void OnSetupCommand(Player p, string[] args) {
+        protected internal override void OnSetupCommandOther(Player p, string[] args) {
             LevelPreset preset = FindPreset(args[2]);
             switch (args[1].ToLower()) {
                 case "new":
@@ -212,14 +208,6 @@ namespace MCGalaxy.Eco {
                             break;
                     }
                     break;
-
-                case "enable":
-                    Player.Message(p, "%aMaps are now enabled for the economy system");
-                    Enabled = true; break;
-
-                case "disable":
-                    Player.Message(p, "%aMaps are now disabled for the economy system");
-                    Enabled = false; break;
 
                 default:
                     Player.Message(p, "%cThat wasn't a valid command addition!");

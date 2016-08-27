@@ -77,42 +77,48 @@ PRIMARY KEY(player)
                 Server.s.Log("Economy properties don't exist, creating"); 
                 Save(); 
             }
+            
             using (StreamReader r = new StreamReader("properties/economy.properties")) {
                 string line;
-                while (!r.EndOfStream) {
-                    line = r.ReadLine().ToLower().Trim();
-                    string[] linear = line.ToLower().Trim().Split(':');
+                while ((line = r.ReadLine()) != null) {
+                    line = line.ToLower().Trim();
                     try {
-                        switch (linear[0]) {
-                            case "enabled":
-                                Enabled = linear[1].CaselessEq("true"); break;
-                             default:
-                                if (linear.Length < 3) break;
-                                Item item = GetItem(linear[0]);
-                                if (item != null) item.Parse(line, linear);
-                                break;
-                        }
+                        ParseLine(line);
                     } catch { }
                 }
-                r.Close();
             }
             Save();
+        }
+        
+        static void ParseLine(string line) {
+            string[] args = line.Split(':');
+            if (args[0].CaselessEq("enabled")) {
+                Enabled = args[1].CaselessEq("true");
+            } else if (args.Length >= 3) {
+                Item item = GetItem(args[0]);
+                if (item == null) return;
+                
+                if (args[1].CaselessEq("enabled"))
+                    item.Enabled = args[2].CaselessEq("true");
+                else if (args[1].CaselessEq("purchaserank"))
+                    item.PurchaseRank = (LevelPermission)int.Parse(args[2]);
+                else
+                    item.Parse(line, args);
+            }
         }
 
         public static void Save() {
             using (StreamWriter w = new StreamWriter("properties/economy.properties", false)) {
-                //enabled
                 w.WriteLine("enabled:" + Enabled);              
                 foreach (Item item in Items) {
                     w.WriteLine();
                     item.Serialise(w);                    
                 }
-                w.Close();
             }
         }
 
         public static EcoStats RetrieveEcoStats(string playername) {
-        	EcoStats es = default(EcoStats);
+            EcoStats es = default(EcoStats);
             es.playerName = playername;
             using (DataTable eco = Database.Fill("SELECT * FROM Economy WHERE player=@0", playername)) {
                 if (eco.Rows.Count >= 1) {
