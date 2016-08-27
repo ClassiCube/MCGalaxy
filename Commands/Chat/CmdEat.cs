@@ -21,12 +21,8 @@ using System.IO;
 
 namespace MCGalaxy.Commands {
     
-    public sealed class CmdEat : Command {
+    public sealed class CmdEat : MessageCmd {
         public override string name { get { return "eat"; } }
-        public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
@@ -38,13 +34,8 @@ namespace MCGalaxy.Commands {
             if (Economy.Enabled && p.money < 1) {
                 Player.Message(p, "You need to have at least 1 &3" + Server.moneys + 
                                    " %Sto purchase a snack."); return;
-            }
-            if (p.muted) { Player.Message(p, "You cannot use this command while muted."); return; }
-            
-            p.NextEat = DateTime.UtcNow.AddSeconds(10);
-            if (Economy.Enabled) {
-                p.money -= 1; p.OnMoneyChanged();
             }            
+                      
             if (!File.Exists("text/eatmessages.txt")) {
                 File.WriteAllLines("text/eatmessages.txt", defMessages);
             }
@@ -54,12 +45,11 @@ namespace MCGalaxy.Commands {
             if (actions.Count > 0)
                 action = actions[new Random().Next(actions.Count)];
             
-            if (!p.level.worldChat) {
-                Chat.GlobalChatLevel(p, "<Level>" + p.ColoredName + " %S" + action, false);
-            } else {
-                Player.SendChatFrom(p, p.ColoredName + " %S" + action, false);
-            }
-            p.CheckForMessageSpam();
+            if (!TryMessage(p, p.ColoredName + " %S" + action)) return;
+            p.NextEat = DateTime.UtcNow.AddSeconds(10);
+            if (Economy.Enabled) {
+                p.money -= 1; p.OnMoneyChanged();
+            }  
         }
         
         static string[] defMessages = { "guzzled a grape", "chewed a cherry", "ate an avocado" };

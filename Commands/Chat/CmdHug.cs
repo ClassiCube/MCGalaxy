@@ -15,16 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using System;
 
-namespace MCGalaxy.Commands {
-    
-    public class CmdHug : Command {
+namespace MCGalaxy.Commands {    
+    public class CmdHug : MessageCmd {
         public override string name { get { return "hug"; } }
-        public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
@@ -42,10 +36,7 @@ namespace MCGalaxy.Commands {
                 if (args[1] == "loving" || args[1] == "creepy" || args[1] == "friendly" || args[1] == "deadly")
                     type = args[1];
             }
-            if (type == null) {
-                Player.GlobalMessage(p, giver + " %Shugged " + who.ColoredName + "."); 
-                p.CheckForMessageSpam(); return;
-            }
+            if (type == null) { TryMessageAction(p, args[0], "{0} %Shugged {1}.", false); return; }
             
             if (type == "deadly") {
                 if (p != null && p.Rank < LevelPermission.Operator) {
@@ -56,8 +47,7 @@ namespace MCGalaxy.Commands {
                 }
                 who.HandleDeath(Block.rock, " died from a %cdeadly hug.");
             }
-            Player.GlobalMessage(p, giver + " %Sgave " + who.ColoredName + " %Sa " + type + " hug.");
-            p.CheckForMessageSpam();
+            TryMessageAction(p, args[0], "{0} %Sgave {1} %Sa " + type + " hug.", false); return;
         }
         
         public override void Help(Player p) {

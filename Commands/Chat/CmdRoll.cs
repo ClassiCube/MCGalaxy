@@ -18,13 +18,8 @@
 using System;
 namespace MCGalaxy.Commands {
     
-    public sealed class CmdRoll : Command {
-        
+    public sealed class CmdRoll : MessageCmd {
         public override string name { get { return "roll"; } }
-        public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdRoll() { }
 
         public override void Use(Player p, string message) {
@@ -35,9 +30,9 @@ namespace MCGalaxy.Commands {
             if (!int.TryParse(args[0], out min)) min = 1;
             if (args.Length == 1 || !int.TryParse(args[1], out max)) max = 7;
             if (min > max) { int a = min; min = max; max = a; }
-
-            Player.GlobalMessage(p, p.ColoredName + " %Srolled a &a" + rand.Next(min, max + 1) + " %S(" + min + "|" + max + ")");
-            p.CheckForMessageSpam();
+            
+            string msg = p.ColoredName + " %Srolled a &a" + rand.Next(min, max + 1) + " %S(" + min + "|" + max + ")";
+            TryMessage(p, msg);
         }
         
         public override void Help(Player p) {
