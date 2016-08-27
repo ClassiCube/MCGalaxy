@@ -83,6 +83,7 @@ namespace MCGalaxy.Drawing.Transforms {
                 success = int.TryParse(top, out mul) && int.TryParse(bottom, out div);
             }
             
+            if (mul > 32 || mul < -32) { Player.Message(p, "Scale must be between -32 and 32."); return false; }
             if (!success) { Player.MessageLines(p, HelpString); }
             return success;
         }

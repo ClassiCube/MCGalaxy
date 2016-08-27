@@ -40,12 +40,7 @@ namespace MCGalaxy.Drawing.Ops {
                 state.GetCoords(i, out locX, out locY, out locZ);
                 
                 ushort x = (ushort)(locX + x1), y = (ushort)(locY + y1), z = (ushort)(locZ + z1);
-                byte block = lvl.GetTile(x, y, z), extBlock = 0;
-                if (block == Block.custom_block) extBlock = lvl.GetExtTile(x, y, z);
-                bool diff = b != block || (b == Block.custom_block && extB != extBlock);
-                
-                bool place = lvl.InBound(x, y, z) && diff;
-                if ((b != Block.air || pasteAir) && place)
+                if ((b != Block.air || pasteAir) && lvl.InBound(x, y, z))
                     yield return Place(x, y, z, b, extB);
             }
         }
