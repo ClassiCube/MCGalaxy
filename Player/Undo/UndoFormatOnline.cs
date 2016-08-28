@@ -47,7 +47,7 @@ namespace MCGalaxy.Undo {
             
             while (node != null) {
                 Level lvl = LevelInfo.FindExact(node.MapName);
-                if (!super && !args.Player.level.name.CaselessEq(node.MapName)) continue;
+                if (!super && !args.Player.level.name.CaselessEq(node.MapName)) { node = node.Prev; continue; }
                 List<UndoCacheItem> items = node.Items;
                 pos.LevelName = node.MapName;
                 
