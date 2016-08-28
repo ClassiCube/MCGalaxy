@@ -212,7 +212,7 @@ namespace MCGalaxy.Commands {
             } else if (cmd == "BUILDABLE") {
                 CmdMap.SetMapOption(p, p.level, "buildable", "");
             } else if (cmd == "DELETABLE") {
-                CmdMap.SetMapOption(p, p.level, "deleteable", "");
+                CmdMap.SetMapOption(p, p.level, "deletable", "");
             } else {
                 Player.MessageLines(p, mapHelp);
             }

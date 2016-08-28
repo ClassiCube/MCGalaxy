@@ -47,6 +47,11 @@ namespace MCGalaxy.Commands.World {
             lvl.jaily = (ushort)(lvl.spawny * 32);
             lvl.jailz = (ushort)(lvl.spawnz * 32);
             lvl.jailrotx = lvl.rotx; lvl.jailroty = lvl.roty;
+            
+            if (args.Length == 1)
+                lvl.name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + ")";
+            else
+                lvl.name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + " " + args[1] + ")";
 
             p.Loading = true;
             Entities.DespawnEntities(p);
@@ -63,11 +68,6 @@ namespace MCGalaxy.Commands.World {
             Entities.GlobalSpawn(p, x, y, z, lvl.rotx, lvl.roty, true);
             p.ClearBlockchange();
             p.Loading = false;
-
-            if (args.Length == 1)
-                lvl.name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + ")";
-            else
-                lvl.name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + " " + args[1] + ")";
 
             Chat.MessageWhere("{0} %Swent to the {1}", 
                               pl => Entities.CanSee(pl, p), p.ColoredName, lvl.name);
