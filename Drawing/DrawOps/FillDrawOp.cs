@@ -28,7 +28,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Fill"; } }
         public override bool AffectedByTransform { get { return false; } }
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             return Positions.Count;
         }
         

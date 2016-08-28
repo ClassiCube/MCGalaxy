@@ -23,7 +23,7 @@ namespace MCGalaxy.Drawing.Ops {
     public class EllipsoidDrawOp : DrawOp {        
         public override string Name { get { return "Ellipsoid"; } }
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
             return (int)(Math.PI * 4.0/3.0 * rx * ry * rz);
         }
@@ -50,7 +50,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Ellipsoid Hollow"; } }
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
             return (int)(Math.PI * 4.0/3.0 * rx * ry * rz);
         }
@@ -82,7 +82,7 @@ namespace MCGalaxy.Drawing.Ops {
     public class CylinderDrawOp : DrawOp {       
         public override string Name { get { return "Cylinder"; } }
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             double rx = (Max.X - Min.X) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
             int height = (Max.Y - Min.Y + 1);
             return (int)(Math.PI * rx * rz * height);

@@ -68,7 +68,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         /// <summary> Estimates the total number of blocks that the drawing commands affects. <br/>
         /// Note that this estimate assumes that all possibly affected blocks will be changed by the drawing command. </summary>
-        public abstract long GetBlocksAffected(Level lvl, Vec3S32[] marks);
+        public abstract long BlocksAffected(Level lvl, Vec3S32[] marks);
         
         public abstract IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush);
         

@@ -36,7 +36,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override bool UsesHeight { get { return false; } }
         public override string Name { get { return "Adv Sphere"; } }
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             long R = Radius;
             return (long)(Math.PI * 4.0 / 3.0 * (R * R * R));
         }
@@ -61,7 +61,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override bool UsesHeight { get { return false; } }
         public override string Name { get { return "Adv Hollow Sphere"; } }
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             long R = Radius;
             double outer = (int)(Math.PI * 4.0 / 3.0 * (R * R * R));
             double inner = (int)(Math.PI * 4.0 / 3.0 * ((R - 1) * (R - 1) * (R - 1)));

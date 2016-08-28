@@ -23,7 +23,7 @@ namespace MCGalaxy.Drawing.Ops {
     public class TorusDrawOp : DrawOp {      
         public override string Name { get { return "Torus"; } }
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
             double rTube = ry, rCentre = Math.Min(rx, rz) - rTube;
             return (int)(2 * Math.PI * Math.PI * rTube * rTube * rCentre);

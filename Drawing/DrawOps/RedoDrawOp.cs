@@ -33,7 +33,7 @@ namespace MCGalaxy.Drawing.Ops {
         /// <summary> Point in time that the /undo should start updating blocks. </summary>
         public DateTime End = DateTime.MaxValue;
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             UndoCache cache = p.UndoBuffer;

@@ -39,7 +39,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         internal Player who;
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             UndoCache cache = who.UndoBuffer;
@@ -78,7 +78,7 @@ namespace MCGalaxy.Drawing.Ops {
         internal string whoName;
         internal bool found = false;
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             string target = whoName.ToLower();
@@ -96,7 +96,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         internal long seconds;
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             if (lvl.UndoBuffer.Count != Server.physUndo) {

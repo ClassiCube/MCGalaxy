@@ -39,7 +39,7 @@ namespace MCGalaxy.Drawing.Ops {
         static Brush defBrush = new SolidBrush(Block.leaf, 0);
         byte height, top, size;
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
         public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
             if (brush == null) brush = defBrush;

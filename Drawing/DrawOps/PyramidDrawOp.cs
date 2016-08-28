@@ -30,14 +30,14 @@ namespace MCGalaxy.Drawing.Ops {
             this.yDir = yDir;
         }
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             Vec3S32 oMin = Min, oMax = Max;
             baseOp.Min = oMin; baseOp.Max = oMax;
             Vec3S32 p1 = Min, p2 = Max;
             long total = 0;
             
             while (true) {
-                total += baseOp.GetBlocksAffected(lvl, marks);
+                total += baseOp.BlocksAffected(lvl, marks);
                 if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
                     break;
                 p1.X++; p2.X--;

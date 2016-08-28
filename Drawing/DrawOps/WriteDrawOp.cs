@@ -25,7 +25,7 @@ namespace MCGalaxy.Drawing.Ops {
         public string Text;
         public byte Scale, Spacing;
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             int blocks = 0;
             foreach (char c in Text) {
                 if ((int)c >= 256 || letters[(int)c] == null) {

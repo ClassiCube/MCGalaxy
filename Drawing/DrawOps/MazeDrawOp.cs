@@ -31,7 +31,7 @@ namespace MCGalaxy.Drawing.Ops {
         byte[] r = new byte[1];
         int width, length;
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             int lenX = (Math.Abs(Max.X - Min.X) + 1) / 2;
             int lenZ = (Math.Abs(Max.Z - Min.Z) + 1) / 2;
             return lenX * lenZ * 3;

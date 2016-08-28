@@ -29,7 +29,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Adv Cone"; } }
         public AdvConeDrawOp(bool invert = false) { Invert = invert; }
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             long R = Radius, H = Max.Y - Min.Y;
             return (long)(Math.PI / 3 * (R * R * H));
         }
@@ -62,7 +62,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Adv Hollow Cone"; } }
         public AdvHollowConeDrawOp(bool invert = false) { Invert = invert; }
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             long R = Radius, H = Max.Y - Min.Y;
             double outer = (int)(Math.PI / 3 * (R * R * H));
             double inner = (int)(Math.PI / 3 * ((R - 1) * (R - 1) * (H - 1)));
@@ -97,7 +97,7 @@ namespace MCGalaxy.Drawing.Ops {
     public class AdvVolcanoDrawOp : AdvDrawOp {       
         public override string Name { get { return "Adv Volcano"; } }
         
-        public override long GetBlocksAffected(Level lvl, Vec3S32[] marks) {
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             long R = Radius, H = Max.Y - Min.Y;
             return (long)(Math.PI / 3 * (R * R * H));
         }
