@@ -79,9 +79,10 @@ namespace MCGalaxy.Commands {
             if (!Server.zombie.IsZombieMap(data.Name)) return;
             Player.Message(p, "Map authors: " + data.Authors);
             int winChance = data.TotalRounds == 0 ? 100 : (data.HumanRounds * 100) / data.TotalRounds;
-            Player.Message(p, "&a" + data.TotalRounds + " %Srounds played total, with a &a"
-                           + winChance + "% %Swin chance for humans.");
-            Player.Message(p, "This map has &a" + data.Likes + " likes %Sand &c" + data.Dislikes + " dislikes");
+            Player.Message(p, "&a{0} %Srounds played total, &a{1}% %Swin chance for humans.", 
+                           data.TotalRounds, winChance);
+            Player.Message(p, "This map has &a{0} likes %Sand &c{1} dislikes", 
+                           data.Likes, data.Dislikes);
         }
         
         void ShowPermissions(Player p, MapInfoData data) {

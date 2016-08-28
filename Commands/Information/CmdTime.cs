@@ -32,13 +32,13 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "Server time: {0:HH:mm:ss} on {0:d}", DateTime.Now);
             if (!Server.zombie.Running) return;
             
-            int delta = (int)(Server.zombie.RoundEnd - DateTime.UtcNow).TotalSeconds;
-            if (delta > 0) {
-                Player.Message(p, "&a" + delta + " %Sseconds until the round ends.");
+            TimeSpan delta = Server.zombie.RoundEnd - DateTime.UtcNow;
+            if (delta.TotalSeconds > 0) {
+                Player.Message(p, "&a{0} %Suntil the round ends.", delta.Shorten(true));
             } else {
-                delta = (int)(Server.zombie.RoundStart - DateTime.UtcNow).TotalSeconds;
-                if (delta > 0)
-                    Player.Message(p, "&a" + delta + " %Sseconds until the round starts.");
+                delta = Server.zombie.RoundStart - DateTime.UtcNow;
+                if (delta.TotalSeconds > 0)
+                    Player.Message(p, "&a{0} %Suntil the round starts.", delta.Shorten(true));
             }
         }
         
