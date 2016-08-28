@@ -35,20 +35,20 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             string ip = "";
             Player who = PlayerInfo.Find(message);
+            string targetName = message;
+            
             if (who == null) {
                 Player.Message(p, "&eNo online player \"{0}\", searching database..", message);
-                string targetIP = PlayerInfo.FindOfflineIPMatches(p, message);
-                if (targetIP == null) return;
-                ip = targetIP;
+                targetName = PlayerInfo.FindOfflineIPMatches(p, message, out ip);
+                if (targetName == null) return;
             } else {
-                ip = who.ip;
+                targetName = who.name; ip = who.ip;
             }
             
             if (Player.IPInPrivateRange(ip)) {
                 Player.Message(p, Colors.red + "Player has an internal IP, cannot trace"); return;
             }        
-            string name = who != null ? who.name : message;
-            Player.Message(p, "&aThe IP of &b" + name + " &ahas been traced to: &b" + GetIPLocation(ip));
+            Player.Message(p, "The IP of &a" + targetName + " %Shas been traced to: &b" + GetIPLocation(ip));
         }
         
         static string GetIPLocation(string IP) {

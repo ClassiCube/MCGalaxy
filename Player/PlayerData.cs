@@ -109,11 +109,11 @@ namespace MCGalaxy {
         }
         
         
-        static long ParseLong(string value) {
+        internal static long ParseLong(string value) {
             return (value == "" || value.CaselessEq("null")) ? 0 : long.Parse(value);
         }
         
-        static int ParseInt(string value) {
+        internal static int ParseInt(string value) {
             return (value == "" || value.CaselessEq("null")) ? 0 : int.Parse(value);
         }
         

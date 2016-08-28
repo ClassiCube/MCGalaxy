@@ -20,7 +20,7 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy {
     public static class PlayerInfo {
-		
+        
         /// <summary> Array of all currently online players. </summary>
         /// <remarks> Note this field is highly volatile, you should cache references to the items array. </remarks>
         public static VolatileArray<Player> Online = new VolatileArray<Player>(true);
@@ -123,30 +123,25 @@ namespace MCGalaxy {
         
         
         public static PlayerData FindOfflineMatches(Player p, string name) {
-            using (DataTable results = QueryMulti(name, "*")) {
-                int matches = 0;
-                DataRow row = Utils.FindMatches<DataRow>(p, name, out matches, results.Rows,
-                                                         r => true, r => r["Name"].ToString(), "players", 20);
-                return row == null ? null : PlayerData.Fill(row);
-            }
+            DataRow row = QueryMulti(p, name, "*");
+            return row == null ? null : PlayerData.Fill(row);
         }
         
         public static string FindOfflineNameMatches(Player p, string name) {
-            using (DataTable results = QueryMulti(name, "Name")) {
-                int matches = 0;
-                DataRow row = Utils.FindMatches<DataRow>(p, name, out matches, results.Rows,
-                                                         r => true, r => r["Name"].ToString(), "players", 20);
-                return row == null ? null : row["Name"].ToString();
-            }
+            DataRow row = QueryMulti(p, name, "Name");
+            return row == null ? null : row["Name"].ToString();
         }
         
-        public static string FindOfflineIPMatches(Player p, string name) {
-            using (DataTable results = QueryMulti(name, "Name, IP")) {
-                int matches = 0;
-                DataRow row = Utils.FindMatches<DataRow>(p, name, out matches, results.Rows,
-                                                         r => true, r => r["Name"].ToString(), "players", 20);
-                return row == null ? null : row["IP"].ToString();
-            }
+        public static string FindOfflineIPMatches(Player p, string name, out string ip) {
+            DataRow row = QueryMulti(p, name, "Name, IP");
+            ip = row == null ? null : row["IP"].ToString();
+            return row == null ? null : row["Name"].ToString();
+        }
+        
+        public static string FindOfflineMoneyMatches(Player p, string name, out int money) {
+            DataRow row = QueryMulti(p, name, "Name, Money");
+            money = row == null ? 0 : PlayerData.ParseInt(row["Money"].ToString());
+            return row == null ? null : row["Name"].ToString();
         }
         
         /// <summary> Retrieves from the database the names of all players whose 
@@ -172,11 +167,16 @@ namespace MCGalaxy {
             return Database.Fill(syntax, name);
         }
         
-        static DataTable QueryMulti(string name, string selector) {
+        static DataRow QueryMulti(Player p, string name, string selector) {
             string syntax = Server.useMySQL ?
                 "SELECT " + selector + " FROM Players WHERE Name LIKE @0 LIMIT 21" :
                 "SELECT " + selector + " FROM Players WHERE Name LIKE @0 LIMIT 21 COLLATE NOCASE";
-            return Database.Fill(syntax, "%" + name + "%");
+            
+            using (DataTable results = Database.Fill(syntax, "%" + name + "%")) {
+                int matches = 0;
+                return Utils.FindMatches<DataRow>(p, name, out matches, results.Rows,
+                                                  r => true, r => r["Name"].ToString(), "players", 20);
+            }
         }
     }
 }
