@@ -40,13 +40,13 @@ namespace MCGalaxy.Commands
                 case "start": HandleStart(p, args); return;
                 case "stop": HandleStop(p, args); return;
                 case "end": HandleEnd(p, args); return;
-                case "setup" HandleSetup(p, args); return;
+                case "setup": HandleSetup(p, args); return;
             }
             Help(p);
         }
         
         void HandleGo(Player p, string[] args) {
-            if (p == null) { Player.Message(p, "/{0} go can only be used in-game.", name)); return; }
+            if (p == null) { Player.Message(p, "/{0} go can only be used in-game.", name); return; }
             if (!Server.lava.active) { Player.Message(p, "There is no Lava Survival game right now."); return; }
             PlayerActions.ChangeMap(p, Server.lava.map.name);
         }
@@ -100,17 +100,17 @@ namespace MCGalaxy.Commands
             if (p != null && p.Rank < Server.lava.setupRank) {
                 Formatter.MessageNeedMinPerm(p, "setup lava survival", Server.lava.setupRank); return;
             }
-            if (p == null) { Player.Message(p, "/{0} setup can only be used in-game.", name)); return; }            
+            if (p == null) { Player.Message(p, "/{0} setup can only be used in-game.", name); return; }            
             if (args.Length < 2) { SetupHelp(p); return; }
             if (Server.lava.active) { Player.Message(p, "You cannot configure Lava Survival while a game is active."); return; }
             
             switch (args[1]) {
                 case "map": HandleSetupMap(p, args); return;
                 case "block": HandleSetupBlock(p, args); return;
-                case "safe": HandleSafeZone(p, args); return;
-                case "safezone": HandleSafeZone(p, args); return;
-                case "settings": HandleSettings(p, args); return;
-                case "mapsettings" HandleMapSettings(p, args); return;
+                case "safe": HandleSetupSafeZone(p, args); return;
+                case "safezone": HandleSetupSafeZone(p, args); return;
+                case "settings": HandleSetupSettings(p, args); return;
+                case "mapsettings": HandleSetupMapSettings(p, args); return;
             }
             SetupHelp(p);
         }
@@ -150,30 +150,21 @@ namespace MCGalaxy.Commands
         void HandleSetupBlock(Player p, string[] args) {
             if (!Server.lava.HasMap(p.level.name)) { Player.Message(p, "Add the map before configuring it."); return; }
             if (args.Length < 3) { SetupHelp(p, "block"); return; }
-            CatchPos cpos = default(CatchPos);
 
             if (args[2] == "flood") {
                 Player.Message(p, "Place or destroy the block you want to be the total flood block spawn point.");
-                cpos.mode = 0;
+                SetBlockHandler(p, 0);
             } else if (args[2] == "layer") {
                 Player.Message(p, "Place or destroy the block you want to be the layer flood base spawn point.");
-                cpos.mode = 1;
+                SetBlockHandler(p, 1);
             } else {
-                SetupHelp(p, "block"); return;
+                SetupHelp(p, "block");
             }
-            
-            p.blockchangeObject = cpos;
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
         }
         
         void HandleSetupSafeZone(Player p, string[] args) {
             Player.Message(p, "Place two blocks to determine the edges.");
-            CatchPos cpos = default(CatchPos); 
-            cpos.mode = 2;
-            p.blockchangeObject = cpos;
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
+            SetBlockHandler(p, 2);
         }
         
         void HandleSetupSettings(Player p, string[] args) {
@@ -279,22 +270,20 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/lavasurvival <params> - Main command for Lava Survival.");
-            Player.Message(p, "The following params are available:");
-            Player.Message(p, "go - Join the fun!");
-            Player.Message(p, "info - View the current round info and time.");
+            Player.Message(p, "%T/ls go %H- Join the fun!");
+            Player.Message(p, "%T/ls info %H- View current round info and time.");
             
             if (p == null || p.Rank >= Server.lava.controlRank)  {
-                Player.Message(p, "start [map] - Start the Lava Survival game, optionally on the specified map.");
-                Player.Message(p, "stop - Stop the current Lava Survival game.");
-                Player.Message(p, "end - End the current round or vote.");
+                Player.Message(p, "%T/ls start <map> %H- Starts Lava Survival, optionally on the given map.");
+                Player.Message(p, "%T/ls stop %H- Stops the current Lava Survival game.");
+                Player.Message(p, "%T/ls end %H- End the current round or vote.");
             }
             if (p == null || p.Rank >= Server.lava.setupRank) {
-                Player.Message(p, "setup - Setup lava survival, use it for more info.");
+                Player.Message(p, "%T/ls setup %H- Setup lava survival, use it for more info.");
             }
         }
 
-        public void SetupHelp(Player p, string mode = "") {
+        void SetupHelp(Player p, string mode = "") {
             switch (mode) {
                 case "map":
                     Player.Message(p, "Add or remove maps in Lava Survival.");
@@ -334,6 +323,14 @@ namespace MCGalaxy.Commands
                     break;
             }
         }
+        
+        void SetBlockHandler(Player p, byte mode) {
+            CatchPos cpos = default(CatchPos); 
+            cpos.mode = mode;
+            p.blockchangeObject = cpos;
+            p.ClearBlockchange();
+            p.Blockchange += PlacedMark1;
+        }
 
         void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
@@ -358,12 +355,9 @@ namespace MCGalaxy.Commands
             CatchPos cpos = (CatchPos)p.blockchangeObject;
 
             if (cpos.mode == 2) {
-                ushort sx = Math.Min(cpos.x, x);
-                ushort ex = Math.Max(cpos.x, x);
-                ushort sy = Math.Min(cpos.y, y);
-                ushort ey = Math.Max(cpos.y, y);
-                ushort sz = Math.Min(cpos.z, z);
-                ushort ez = Math.Max(cpos.z, z);
+                ushort sx = Math.Min(cpos.x, x), ex = Math.Max(cpos.x, x);
+                ushort sy = Math.Min(cpos.y, y), ey = Math.Max(cpos.y, y);
+                ushort sz = Math.Min(cpos.z, z), ez = Math.Max(cpos.z, z);
 
                 LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(p.level.name);
                 settings.safeZone = new Vec3U16[] { new Vec3U16(sx, sy, sz), new Vec3U16(ex, ey, ez) };
