@@ -49,6 +49,7 @@ namespace MCGalaxy.Commands.World {
         
         static void FixDirtAndGrass(Player p, Level lvl, ref int totalFixed) {
             int index = 0, maxY = lvl.Height - 1, oneY = lvl.Width * lvl.Length;
+            BufferedBlockSender buffer = new BufferedBlockSender(lvl);
             for (int y = 0; y < lvl.Height; y++)
                 for (int z = 0; z < lvl.Length; z++)
                     for (int x = 0; x < lvl.Width; x++)
@@ -60,8 +61,10 @@ namespace MCGalaxy.Commands.World {
                         extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + 1), (ushort)z);
                     
                     if (Block.LightPass(above, extAbove, lvl.CustomBlockDefs)) {
-                        p.level.Blockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass);
-                        totalFixed++;
+                        if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass)) {
+                            buffer.Add(index, Block.grass, 0);
+                            totalFixed++;
+                        }
                     }
                 } else if (block == Block.grass) {
                     byte above = y == maxY ? Block.air : lvl.blocks[index + oneY], extAbove = 0;
@@ -69,16 +72,20 @@ namespace MCGalaxy.Commands.World {
                         extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + 1), (ushort)z);
                     
                     if (!Block.LightPass(above, extAbove, lvl.CustomBlockDefs)) {
-                        p.level.Blockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.dirt);
-                        totalFixed++;
+                        if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.dirt)) {
+                            buffer.Add(index, Block.dirt, 0);
+                            totalFixed++;
+                        }
                     }
                 }
                 index++;
             }
+            buffer.Send(true);
         }
         
         static void FixLight(Player p, Level lvl, ref int totalFixed) {
             int index = 0;
+            BufferedBlockSender buffer = new BufferedBlockSender(lvl);
             for (int y = 0; y < lvl.Height - 1; y++)
                 for (int z = 0; z < lvl.Length; z++)
                     for (int x = 0; x < lvl.Width; x++)
@@ -91,37 +98,39 @@ namespace MCGalaxy.Commands.World {
                         if (above == Block.custom_block)
                             extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + i), (ushort)z);
                         
-                        if (!Block.LightPass(above, extAbove, lvl.CustomBlockDefs)) { 
-                            inShadow = true; break; 
+                        if (!Block.LightPass(above, extAbove, lvl.CustomBlockDefs)) {
+                            inShadow = true; break;
                         }
                     }
                     
-                    if (!inShadow) {
-                        p.level.Blockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass);
+                    if (!inShadow && p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass)) {
+                        buffer.Add(index, Block.grass, 0);
                         totalFixed++;
                     }
                 } else if (block == Block.grass) {
-                    for (int i = 1; i < (lvl.Height - y); i++) {
+                    for (int i =  1; i < (lvl.Height - y); i++) {
                         byte above = lvl.blocks[index + (lvl.Width * lvl.Length) * i], extAbove = 0;
                         if (above == Block.custom_block)
                             extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + i), (ushort)z);
                         
-                        if (!Block.LightPass(above, extAbove, lvl.CustomBlockDefs)) { 
-                            inShadow = true; break; 
+                        if (!Block.LightPass(above, extAbove, lvl.CustomBlockDefs)) {
+                            inShadow = true; break;
                         }
                     }
                     
-                    if (inShadow) {
-                        p.level.Blockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.dirt);
+                    if (inShadow && p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.dirt)) {
+                        buffer.Add(index, Block.dirt, 0);
                         totalFixed++;
                     }
                 }
                 index++;
             }
+            buffer.Send(true);
         }
         
         static void FixDirt(Player p, Level lvl, ref int totalFixed) {
             int index = 0, maxY = lvl.Height - 1, oneY = lvl.Width * lvl.Length;
+            BufferedBlockSender buffer = new BufferedBlockSender(lvl);
             for (int y = 0; y < lvl.Height; y++)
                 for (int z = 0; z < lvl.Length; z++)
                     for (int x = 0; x < lvl.Width; x++)
@@ -134,15 +143,19 @@ namespace MCGalaxy.Commands.World {
                     extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + 1), (ushort)z);
                 
                 if (Block.LightPass(above, extAbove, lvl.CustomBlockDefs)) {
-                    p.level.Blockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass);
-                    totalFixed++;
+                    if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass)) {
+                        buffer.Add(index, Block.grass, 0);
+                        totalFixed++;
+                    }
                 }
                 index++;
             }
+            buffer.Send(true);
         }
         
         static void FixGrass(Player p, Level lvl, ref int totalFixed) {
             int index = 0, maxY = lvl.Height - 1, oneY = lvl.Width * lvl.Length;
+            BufferedBlockSender buffer = new BufferedBlockSender(lvl);
             for (int y = 0; y < lvl.Height; y++)
                 for (int z = 0; z < lvl.Length; z++)
                     for (int x = 0; x < lvl.Width; x++)
@@ -155,11 +168,14 @@ namespace MCGalaxy.Commands.World {
                     extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + 1), (ushort)z);
                 
                 if (!Block.LightPass(above, extAbove, lvl.CustomBlockDefs)) {
-                    p.level.Blockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.dirt);
-                    totalFixed++;
+                    if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.dirt)) {
+                        buffer.Add(index, Block.dirt, 0);
+                        totalFixed++;
+                    }
                 }
                 index++;
             }
+            buffer.Send(true);
         }
 
         public override void Help(Player p) {
