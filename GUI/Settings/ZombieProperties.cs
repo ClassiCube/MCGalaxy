@@ -114,13 +114,23 @@ namespace MCGalaxy.Gui {
 
         [Description("How many seconds an invisibility potion bought using /buy invisibility lasts.")]
         [Category("Human settings")]
-        [DisplayName("Invisibility durations")]
+        [DisplayName("Invisibility duration")]
         public int InvisibilityDuration { get; set; }
         
         [Description("Maximum number of invisibility potions a human is allowed to buy in a round.")]
         [Category("Human settings")]
         [DisplayName("Invisibility potions")]        
         public int InvisibilityPotions { get; set; }
+        
+        [Description("How many seconds an invisibility potion bought using /buy zinvisibility lasts.")]
+        [Category("Zombie settings")]
+        [DisplayName("Invisibility duration")]
+        public int ZInvisibilityDuration { get; set; }
+        
+        [Description("Maximum number of invisibility potions a zombie is allowed to buy in a round.")]
+        [Category("Zombie settings")]
+        [DisplayName("Invisibility potions")]        
+        public int ZInvisibilityPotions { get; set; }
         
         
         [Description("The percentage chance that a revive potion will actually disinfect a zombie.")]
@@ -179,6 +189,8 @@ namespace MCGalaxy.Gui {
             Model = ZombieGame.ZombieModel;
             InvisibilityDuration = ZombieGame.InvisibilityDuration;
             InvisibilityPotions = ZombieGame.InvisibilityPotions;
+            ZInvisibilityDuration = ZombieGame.ZombieInvisibilityDuration;
+            ZInvisibilityPotions = ZombieGame.ZombieInvisibilityPotions;
             
             Chance = ZombieGame.ReviveChance;
             InsufficientTime = ZombieGame.ReviveNoTime;
@@ -217,6 +229,8 @@ namespace MCGalaxy.Gui {
                 ZombieGame.ZombieModel = "zombie";
             ZombieGame.InvisibilityDuration = InvisibilityDuration;
             ZombieGame.InvisibilityPotions = InvisibilityPotions;
+            ZombieGame.ZombieInvisibilityDuration = ZInvisibilityDuration;
+            ZombieGame.ZombieInvisibilityPotions = ZInvisibilityPotions; 
             
             ZombieGame.ReviveChance = Chance;
             ZombieGame.ReviveNoTime = InsufficientTime;

@@ -218,7 +218,7 @@ namespace MCGalaxy.Games {
                     if (aliveChanged) alive = Alive.Items;
                 }
                 
-                CheckInvisibilityTime(Alive.Items);
+                CheckInvisibilityTime();
                 Thread.Sleep(25);
             }
         }
@@ -233,18 +233,13 @@ namespace MCGalaxy.Games {
             }
         }
         
-        void CheckInvisibilityTime(Player[] alive) {
+        void CheckInvisibilityTime() {
             DateTime now = DateTime.UtcNow;
-            foreach (Player p in alive) {
-                if (!p.Game.Invisible) continue;
-                DateTime end = p.Game.InvisibilityEnd;
-                
-                if (now >= end) {
-                    p.SendCpeMessage(CpeMessageType.BottomRight2, "", false);
-                    p.Game.ResetInvisibility();
-                    Entities.GlobalSpawn(p, false);
-                    continue;
-                }
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (!p.Game.Invisible || p.level != CurLevel) continue;
+                DateTime end = p.Game.InvisibilityEnd;                
+                if (now >= end) { ResetInvisibility(p); continue; }
                 
                 int left = (int)Math.Ceiling((end - now).TotalSeconds);
                 if (left == p.Game.InvisibilityTime) continue;

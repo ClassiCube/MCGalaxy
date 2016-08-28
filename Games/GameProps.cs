@@ -43,7 +43,7 @@ namespace MCGalaxy.Games {
         public bool Referee = false;
         
         /// <summary> Remaining number of blocks the player can place this round. </summary>
-        internal int BlocksLeft = 50;
+        public int BlocksLeft = 50;
         
         /// <summary> Number of blocks the player has sequentially pillared up. </summary>
         internal int BlocksStacked = 0;

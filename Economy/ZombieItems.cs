@@ -36,8 +36,8 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "Number of groups of 10 blocks to buy must be an integer between 1 and 10."); return;
             }
             if (p.money < Price * count) {
-                Player.Message(p, "&cYou don't have enough &3{2} &cto buy {1} {0}.", 
-            	               Name, count * 10, Server.moneys); return;
+                Player.Message(p, "&cYou don't have enough &3{2} &cto buy {1} {0}.",
+                               Name, count * 10, Server.moneys); return;
             }
             
             p.Game.BlocksLeft += 10 * count;
@@ -48,7 +48,7 @@ namespace MCGalaxy.Eco {
             Player.Message(p, "Syntax: %T/buy 10blocks [num]");
             Player.Message(p, "Increases the blocks you are able to place by 10 * [num].");
             Player.Message(p, "Costs &f{0} * [num] &3{1}", Price, Server.moneys);
-        }        
+        }
     }
     
     public sealed class QueueLevelItem : SimpleItem {
@@ -86,13 +86,13 @@ namespace MCGalaxy.Eco {
             string text = message.SplitSpaces(2)[1]; // keep spaces this way
             bool hasAToken = false;
             for (int i = 0; i < text.Length; i++) {
-                if (!CheckEscape(text, i, ref hasAToken)) { 
-                    Player.Message(p, "You can only use {0} and {1} for tokens in infect messages."); return; 
+                if (!CheckEscape(text, i, ref hasAToken)) {
+                    Player.Message(p, "You can only use {0} and {1} for tokens in infect messages."); return;
                 }
             }
             if (!hasAToken) {
                 Player.Message(p, "You need to include a \"{0}\" (placeholder for zombie player) " +
-                                   "and/or a \"{1}\" (placeholder for human player) in the infect message."); return;
+                               "and/or a \"{1}\" (placeholder for human player) in the infect message."); return;
             }
             
             PlayerDB.AppendInfectMessage(p.name, text);
@@ -111,54 +111,80 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class InvisibilityItem : SimpleItem {
+    public abstract class InvisibilityItem : SimpleItem {
         
-        public InvisibilityItem() {
-            Aliases = new[] { "invisibility", "invisible", "invis" };
-            Price = 3;
-        }
+        protected abstract int MaxPotions { get; }
+        protected abstract int Duration { get; }
+        protected abstract bool ForHumans { get; }
         
-        public override string Name { get { return "Invisibility"; } }
-        
-        protected internal override void OnBuyCommand(Command cmd, Player p, 
-                                             string message, string[] args) {
+        protected internal override void OnBuyCommand(Command cmd, Player p,
+                                                      string message, string[] args) {
             if (p.money < Price) {
                 Player.Message(p, "%cYou don't have enough &3{1} &c to buy a {0}.", Name, Server.moneys); return;
             }
-            if (p.Game.Invisible) {
-                Player.Message(p, "You are already invisible."); return;
+            if (p.Game.Invisible) { Player.Message(p, "You are already invisible."); return; }
+            if (p.Game.InvisibilityPotions >= MaxPotions) {
+                Player.Message(p, "You cannot buy any more invisibility potions this round."); return;
             }
-        	if (p.Game.InvisibilityPotions >= ZombieGame.InvisibilityPotions) {
-        		Player.Message(p, "You cannot buy any more invisibility potions this round."); return;
-        	}
+            if (ForHumans && p.Game.Infected) {
+                Player.Message(p, "Use %T/buy zinvisibility %Sfor buying invisibility when you are a zombie."); return;
+            }
+            if (!ForHumans && !p.Game.Infected) {
+                Player.Message(p, "Use %T/buy invisibility %Sfor buying invisibility when you are a human."); return;
+            }
+            
             if (!Server.zombie.Running || !Server.zombie.RoundInProgress) {
                 Player.Message(p, "You can only buy an invisiblity potion " +
-                                   "when a round of zombie survival is in progress."); return;
+                               "when a round of zombie survival is in progress."); return;
             }
             
             DateTime end = Server.zombie.RoundEnd;
             if (DateTime.UtcNow.AddSeconds(60) > end) {
                 Player.Message(p, "You cannot buy an invisibility potion " +
-                                   "during the last minute of a round."); return;
-            }          
-            int duration = ZombieGame.InvisibilityDuration;
+                               "during the last minute of a round."); return;
+            }
             p.Game.Invisible = true;
-            p.Game.InvisibilityEnd = DateTime.UtcNow.AddSeconds(duration);
+            p.Game.InvisibilityEnd = DateTime.UtcNow.AddSeconds(Duration);
             p.Game.InvisibilityPotions++;
-            int left = ZombieGame.InvisibilityPotions - p.Game.InvisibilityPotions;
+            int left = MaxPotions - p.Game.InvisibilityPotions;
             
-            Player.Message(p, "Lasts for &a{0} %Sseconds. You can buy &a{1} %Smore this round.", duration, left);
+            Player.Message(p, "Lasts for &a{0} %Sseconds. You can buy &a{1} %Smore this round.", Duration, left);
             Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %Svanished. &a*POOF*");
             Entities.GlobalDespawn(p, false);
-            Economy.MakePurchase(p, Price, "%3Invisibility: " + duration);
+            Economy.MakePurchase(p, Price, "%3Invisibility: " + Duration);
         }
         
         protected override void OnBuyCommand(Player p, string message, string[] args) { }
         
         protected internal override void OnStoreCommand(Player p) {
             base.OnStoreCommand(p);
-            int duration = ZombieGame.InvisibilityDuration;
-            Player.Message(p, "%HLasts for " + duration + " seconds before you reappear.");
+            Player.Message(p, "%HLasts for " + Duration + " seconds before you reappear.");
         }
+    }
+    
+    public sealed class HumanInvisibilityItem : InvisibilityItem {
+        
+        public HumanInvisibilityItem() {
+            Aliases = new[] { "invisibility", "invisible", "invis" };
+            Price = 3;
+        }
+        
+        public override string Name { get { return "Invisibility"; } }
+        protected override int MaxPotions { get { return ZombieGame.InvisibilityPotions; } }
+        protected override int Duration { get { return ZombieGame.InvisibilityDuration; } }
+        protected override bool ForHumans { get { return true; } }
+    }
+    
+    public sealed class ZombieInvisibilityItem : InvisibilityItem {
+        
+        public ZombieInvisibilityItem() {
+            Aliases = new[] { "zinvisibility", "zinvisible", "zinvis" };
+            Price = 3;
+        }
+        
+        public override string Name { get { return "ZombieInvisibility"; } }
+        protected override int MaxPotions { get { return ZombieGame.ZombieInvisibilityPotions; } }
+        protected override int Duration { get { return ZombieGame.ZombieInvisibilityDuration; } }
+        protected override bool ForHumans { get { return false; } }
     }
 }

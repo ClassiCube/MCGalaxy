@@ -123,6 +123,10 @@ namespace MCGalaxy.Games {
         public static int InvisibilityDuration = 7;
         [ConfigInt("zombie-invisibility-potions", "Zombie", null, 7, 1)]
         public static int InvisibilityPotions = 7;
+        [ConfigInt("zombie-zinvisibility-duration", "Zombie", null, 5, 1)]
+        public static int ZombieInvisibilityDuration = 5;
+        [ConfigInt("zombie-zinvisibility-potions", "Zombie", null, 4, 1)]
+        public static int ZombieInvisibilityPotions = 4;
         [ConfigBool("enable-changing-levels", "Zombie", null, true)]
         public static bool ChangeLevels = true;
         [ConfigBool("zombie-awards", "Zombie", null, false)]

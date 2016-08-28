@@ -97,12 +97,7 @@ namespace MCGalaxy.Games {
             Alive.Remove(p);
             p.Game.CurrentRoundsSurvived = 0;
             p.SetPrefix();
-            
-            if (p.Game.Invisible) {
-                p.SendCpeMessage(CpeMessageType.BottomRight2, "", false);
-                Entities.GlobalSpawn(p, false);
-                p.Game.ResetInvisibility();
-            }
+            ResetInvisibility(p);
             
             int delta = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
             if (delta >= 0 && delta <= 5)
@@ -119,11 +114,19 @@ namespace MCGalaxy.Games {
             if (!RoundInProgress || p == null) return;
             Infected.Remove(p);
             Alive.Add(p);
+            ResetInvisibility(p);
             
             p.Game.Infected = false;
             UpdatePlayerColor(p, p.color);
             UpdateAllPlayerStatus();
             PlayerMoneyChanged(p);
+        }
+        
+        void ResetInvisibility(Player p) {
+            if (!p.Game.Invisible) return;
+            p.SendCpeMessage(CpeMessageType.BottomRight2, "", false);
+            p.Game.ResetInvisibility();
+            Entities.GlobalSpawn(p, false); 
         }
 
         void ChangeLevel(string next) {
@@ -168,12 +171,8 @@ namespace MCGalaxy.Games {
             
             foreach (Player pl in online) {
                 pl.Game.Referee = false;
-                pl.Game.ResetZombieState();
-                
-                if (pl.Game.Invisible) {
-                    pl.Game.ResetInvisibility();
-                    Entities.GlobalSpawn(pl, false);
-                }
+                pl.Game.ResetZombieState();              
+                ResetInvisibility(pl);
                 pl.SetPrefix();
                 
                 if (pl.level == null || !pl.level.name.CaselessEq(CurLevelName))

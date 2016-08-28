@@ -75,10 +75,10 @@ namespace MCGalaxy {
         }
 
         public static Alias Find(string cmd) {
-            foreach (Alias alias in coreAliases) {
+            foreach (Alias alias in aliases) {
                 if (alias.Trigger == cmd) return alias;
             }
-            foreach (Alias alias in aliases) {
+            foreach (Alias alias in coreAliases) {
                 if (alias.Trigger == cmd) return alias;
             }
             return null;
