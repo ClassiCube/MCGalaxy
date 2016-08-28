@@ -65,7 +65,6 @@ namespace MCGalaxy {
                 //if (lines.Length == 0) ; // this is useless?
                 if (lines[0] == "#Version 2") ReadVersion2(lines, cmdNames);
                 else ReadVersion1(lines, cmdNames);
-                Save(allowedCommands);
             } else {
                 Save(allowedCommands);
             }

@@ -65,6 +65,9 @@ namespace MCGalaxy.Games {
                 if (p.level != CurLevel) continue;
                 PlayerJoinedLevel(p, p.level, p.level);
             }
+            
+            if (ZombieGame.SetMainLevel)
+                Server.mainLevel = CurLevel;
             return true;
         }
 
