@@ -47,7 +47,7 @@ namespace MCGalaxy.Undo {
                 // Can we safely discard the entire chunk?
                 bool inRange = chunk.BaseTime.AddTicks(65536 * TimeSpan.TicksPerSecond) >= start;
                 if (!inRange) { args.Stop = true; yield break; }
-                if (!super && !args.Player.level.name.CaselessEq(chunk.LevelName)) { node = node.Prev; continue; }
+                if (!super && !args.Player.level.name.CaselessEq(chunk.LevelName)) continue;
                 pos.LevelName = chunk.LevelName;
                 
                 s.Seek(chunk.DataPosition, SeekOrigin.Begin);
