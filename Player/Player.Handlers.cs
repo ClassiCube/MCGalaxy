@@ -436,43 +436,6 @@ return;
             lastDeath = DateTime.UtcNow;
         }
 
-        /* void HandleFly(Player p, ushort x, ushort y, ushort z) {
-FlyPos pos;
-
-ushort xx; ushort yy; ushort zz;
-
-TempFly.Clear();
-
-if (!flyGlass) y = (ushort)(y + 1);
-
-for (yy = y; yy >= (ushort)(y - 1); --yy)
-for (xx = (ushort)(x - 2); xx <= (ushort)(x + 2); ++xx)
-for (zz = (ushort)(z - 2); zz <= (ushort)(z + 2); ++zz)
-if (p.level.GetTile(xx, yy, zz) == Block.air) {
-pos.x = xx; pos.y = yy; pos.z = zz;
-TempFly.Add(pos);
-}
-
-FlyBuffer.ForEach(delegate(FlyPos pos2) {
-try { if (!TempFly.Contains(pos2)) SendBlockchange(pos2.x, pos2.y, pos2.z, Block.air); } catch { }
-});
-
-FlyBuffer.Clear();
-
-TempFly.ForEach(delegate(FlyPos pos3){
-FlyBuffer.Add(pos3);
-});
-
-if (flyGlass) {
-FlyBuffer.ForEach(delegate(FlyPos pos1) {
-try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.glass); } catch { }
-});
-} else {
-FlyBuffer.ForEach(delegate(FlyPos pos1) {
-try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
-});
-}
-} */
         void HandleChat(byte[] packet) {
             try {
                 if (!loggedIn) return;
@@ -525,33 +488,17 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
                 if (text.Length == 0) return;
                 LastAction = DateTime.UtcNow;
 
-                if ( text != "/afk" && IsAfk )
+                if (text != "/afk" && IsAfk)
                     CmdAfk.ToggleAfk(this, "");
+                
                 // Typing //Command appears in chat as /command
                 // Suggested by McMrCat
-                if ( text.StartsWith("//") ) {
+                if (text.StartsWith("//")) {
                     text = text.Remove(0, 1);
-                    goto hello;
-                }
-                // Typing / will act as /repeat
-                if ( text == "/" ) {
-                    HandleCommand("repeat", "");
+                } else if (DoCommand(text)) {
                     return;
                 }
-                if ( text[0] == '/' || text[0] == '!' ) {
-                    text = text.Remove(0, 1);
 
-                    int pos = text.IndexOf(' ');
-                    if ( pos == -1 ) {
-                        HandleCommand(text.ToLower(), "");
-                        return;
-                    }
-                    string cmd = text.Substring(0, pos).ToLower();
-                    string msg = text.Substring(pos + 1);
-                    HandleCommand(cmd, msg);
-                    return;
-                }
-            hello:
                 // People who are muted can't speak or vote
                 if (muted) { SendMessage("You are muted."); return; } //Muted: Only allow commands
 
@@ -578,36 +525,20 @@ try { SendBlockchange(pos1.x, pos1.y, pos1.z, Block.waterstill); } catch { }
 
                 if (ChatModes.Handle(this, text)) return;
 
-                if ( text[0] == ':' ) {
-                    if ( PlayingTntWars ) {
-                        string newtext = text;
-                        if ( text[0] == ':' ) newtext = text.Remove(0, 1).Trim();
-                        TntWarsGame it = TntWarsGame.GetTntWarsGame(this);
-                        if ( it.GameMode == TntWarsGame.TntWarsGameMode.TDM ) {
-                            TntWarsGame.player pl = it.FindPlayer(this);
-                            foreach ( TntWarsGame.player p in it.Players ) {
-                                if ( pl.Red && p.Red ) SendMessage(p.p, "To Team " + Colors.red + "-" + color + name + Colors.red + "- " + Server.DefaultColor + newtext);
-                                if ( pl.Blue && p.Blue ) SendMessage(p.p, "To Team " + Colors.blue + "-" + color + name + Colors.blue + "- " + Server.DefaultColor + newtext);
-                            }
-                            Server.s.Log("[TNT Wars] [TeamChat (" + ( pl.Red ? "Red" : "Blue" ) + ") " + name + " " + newtext);
-                            return;
+                if (text[0] == ':' && PlayingTntWars) {
+                    string newtext = text.Remove(0, 1).Trim();
+                    TntWarsGame it = TntWarsGame.GetTntWarsGame(this);
+                    if ( it.GameMode == TntWarsGame.TntWarsGameMode.TDM ) {
+                        TntWarsGame.player pl = it.FindPlayer(this);
+                        foreach ( TntWarsGame.player p in it.Players ) {
+                            if ( pl.Red && p.Red ) SendMessage(p.p, "To Team " + Colors.red + "-" + color + name + Colors.red + "- " + Server.DefaultColor + newtext);
+                            if ( pl.Blue && p.Blue ) SendMessage(p.p, "To Team " + Colors.blue + "-" + color + name + Colors.blue + "- " + Server.DefaultColor + newtext);
                         }
+                        Server.s.Log("[TNT Wars] [TeamChat (" + ( pl.Red ? "Red" : "Blue" ) + ") " + name + " " + newtext);
+                        return;
                     }
                 }
 
-                /*if (this.teamchat)
-{
-if (team == null)
-{
-Player.Message(this, "You are not on a team.");
-return;
-}
-foreach (Player p in team.players)
-{
-Player.Message(p, "(" + team.teamstring + ") " + this.color + this.name + ":&f " + text);
-}
-return;
-}*/
                 text = HandleJoker(text);
                 //chatroom stuff
                 if ( Chatroom != null ) {
@@ -651,6 +582,25 @@ return;
                 }
             }
             catch ( Exception e ) { Server.ErrorLog(e); Chat.MessageAll("An error occurred: {0}", e.Message); }
+        }
+        
+        bool DoCommand(string text) {
+            // Typing / will act as /repeat
+            if (text == "/") {
+                HandleCommand("repeat", ""); return true;
+            } else if ( text[0] == '/' || text[0] == '!' ) {
+                text = text.Remove(0, 1);
+                int sep = text.IndexOf(' ');
+                if (sep == -1) {
+                    HandleCommand(text.ToLower(), "");
+                } else {
+                    string cmd = text.Substring(0, sep).ToLower();
+                    string msg = text.Substring(sep + 1);
+                    HandleCommand(cmd, msg);
+                }
+                return true;
+            }
+            return false;
         }
         
         string HandleJoker(string text) {
