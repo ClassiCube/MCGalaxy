@@ -260,8 +260,8 @@ namespace MCGalaxy {
         public static bool physicsRestart = true;
         [ConfigBool("deathcount", "Other", null, true)]
         public static bool deathcount = true;
-        [ConfigBool("autoload", "Server", null, false)]
-        public static bool AutoLoad = false;
+        [ConfigBool("autoload", "Server", null, true)]
+        public static bool AutoLoad = true;
         [ConfigInt("physics-undo-max", "Other", null, 20000)]          
         public static int physUndo = 20000;
         [ConfigInt("total-undo", "Other", null, 200)]          
