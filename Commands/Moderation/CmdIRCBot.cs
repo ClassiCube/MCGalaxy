@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/ircbot connect");
             Player.Message(p, "%HCauses the IRC bot to connect to IRC.");
-            Player.Message(p, "%T/ircbot reset");
+            Player.Message(p, "%T/ircbot disconnect");
             Player.Message(p, "%HCauses the IRC bot to disconnect from IRC.");
             Player.Message(p, "%T/ircbot reset");
             Player.Message(p, "%HCauses the IRC bot to disconnect then reconnect.");
