@@ -37,15 +37,15 @@ namespace MCGalaxy.Commands.Building {
                     case 1: block = message == "" ? block :
                         DrawCmd.GetBlock(p, parts[0], out extBlock); break;
                     case 3:
-                        x = (ushort)(Convert.ToUInt16(parts[0]) * 32);
-                        y = (ushort)(Convert.ToUInt16(parts[1]) * 32);
-                        z = (ushort)(Convert.ToUInt16(parts[2]) * 32);
+                        x = (ushort)(ushort.Parse(parts[0]) * 32);
+                        y = (ushort)(ushort.Parse(parts[1]) * 32);
+                        z = (ushort)(ushort.Parse(parts[2]) * 32);
                         break;
                     case 4:
                         block = DrawCmd.GetBlock(p, parts[0], out extBlock);
-                        x = (ushort)(Convert.ToUInt16(parts[1]) * 32);
-                        y = (ushort)(Convert.ToUInt16(parts[2]) * 32);
-                        z = (ushort)(Convert.ToUInt16(parts[3]) * 32);
+                        x = (ushort)(ushort.Parse(parts[1]) * 32);
+                        y = (ushort)(ushort.Parse(parts[2]) * 32);
+                        z = (ushort)(ushort.Parse(parts[3]) * 32);
                         break;
                     default: Player.Message(p, "Invalid number of parameters"); return;
                 }

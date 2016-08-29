@@ -45,9 +45,9 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, who.ColoredName + " %Shas been exploded!");
             } else if (args.Length == 3) {
                 try {
-                    x = Convert.ToUInt16(args[0]);
-                    y = Convert.ToUInt16(args[1]);
-                    z = Convert.ToUInt16(args[2]);
+            		x = ushort.Parse(args[0]);
+                    y = ushort.Parse(args[1]);
+                    z = ushort.Parse(args[2]);
                 } catch {
                     Player.Message(p, "Invalid parameters"); return;
                 }

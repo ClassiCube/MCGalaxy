@@ -42,10 +42,9 @@ namespace MCGalaxy.Commands {
                 string newRankName = newRank == null ? parts[7] : newRank.ColoredName;
                 string oldRankName = oldRank == null ? parts[8] : oldRank.ColoredName;
                 
-                int minutes = Convert.ToInt32(parts[2]), hours = Convert.ToInt32(parts[3]);
-                int days = Convert.ToInt32(parts[4]), months = Convert.ToInt32(parts[5]);
-                int years = Convert.ToInt32(parts[6]);
-                DateTime timeRanked = new DateTime(years, months, days, hours, minutes, 0);
+                int min = int.Parse(parts[2]), hour = int.Parse(parts[3]);
+                int day = int.Parse(parts[4]), month = int.Parse(parts[5]), year = int.Parse(parts[6]);
+                DateTime timeRanked = new DateTime(year, month, day, hour, min, 0);
                 
                 string reason = parts.Length <= 9 ? "(no reason given)" :
                     CP437Reader.ConvertToRaw(parts[9].Replace("%20", " "));

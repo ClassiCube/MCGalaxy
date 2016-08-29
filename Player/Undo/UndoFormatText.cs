@@ -54,12 +54,12 @@ namespace MCGalaxy.Undo {
                 if (!super && !p.level.name.CaselessEq(map)) continue;
                 pos.LevelName = map;
                 
-                pos.X = Convert.ToUInt16(lines[(i * items) - 6]);
-                pos.Y = Convert.ToUInt16(lines[(i * items) - 5]);
-                pos.Z = Convert.ToUInt16(lines[(i * items) - 4]);
+                pos.X = ushort.Parse(lines[(i * items) - 6]);
+                pos.Y = ushort.Parse(lines[(i * items) - 5]);
+                pos.Z = ushort.Parse(lines[(i * items) - 4]);
                                 
-                pos.Block = Convert.ToByte(lines[(i * items) - 2]);
-                pos.NewBlock = Convert.ToByte(lines[(i * items) - 1]);
+                pos.Block = byte.Parse(lines[(i * items) - 2]);
+                pos.NewBlock = byte.Parse(lines[(i * items) - 1]);
                 yield return pos;
             }
         }

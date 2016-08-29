@@ -40,19 +40,19 @@ namespace MCGalaxy.Bots {
                     switch (args[0].ToLower()) {
                         case "walk":
                         case "teleport":
-                            newPos.x = Convert.ToUInt16(args[1]);
-                            newPos.y = Convert.ToUInt16(args[2]);
-                            newPos.z = Convert.ToUInt16(args[3]);
-                            newPos.rotx = Convert.ToByte(args[4]);
-                            newPos.roty = Convert.ToByte(args[5]);
+                            newPos.x = ushort.Parse(args[1]);
+                            newPos.y = ushort.Parse(args[2]);
+                            newPos.z = ushort.Parse(args[3]);
+                            newPos.rotx = byte.Parse(args[4]);
+                            newPos.roty = byte.Parse(args[5]);
                             break;
                         case "wait":
                         case "speed":
-                            newPos.seconds = Convert.ToInt16(args[1]); break;
+                            newPos.seconds = short.Parse(args[1]); break;
                         case "nod":
                         case "spin":
-                            newPos.seconds = Convert.ToInt16(args[1]);
-                            newPos.rotspeed = Convert.ToInt16(args[2]);
+                            newPos.seconds = short.Parse(args[1]);
+                            newPos.rotspeed = short.Parse(args[2]);
                             break;
                         case "linkscript":
                             newPos.newscript = args[1]; break;
