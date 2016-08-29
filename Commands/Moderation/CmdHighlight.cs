@@ -85,8 +85,8 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/highlight [player] <timespan>");
             Player.Message(p, "%HHighlights blocks modified by [player] in the past <timespan>");
+            Player.Message(p, "%H If <timespan> is not given, highlights for last 30 minutes");
             Player.Message(p, "%H e.g. to highlight for 90 minutes, <timespan> would be %S1h30m");
-            Player.Message(p, "%HIf <timespan> is not given, highlights for last 30 minutes");
             Player.Message(p, "&c/highlight cannot be disabled, use /reload to un-highlight");
         }
     }
