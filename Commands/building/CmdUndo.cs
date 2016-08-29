@@ -178,7 +178,7 @@ namespace MCGalaxy.Commands.Building {
                            "If <timespan> is not given, undoes 30 minutes.");
             Player.Message(p, "%H e.g. to undo the past 90 minutes, <timespan> would be %S1h30m");
             if (p == null || p.group.maxUndo == -1 || p.group.maxUndo == int.MaxValue)
-                Player.Message(p, "%T/undo [player] all %c- Undoes 68 years for [player]");
+                Player.Message(p, "%T/undo [player] all &c- Undoes 68 years for [player]");
             Player.Message(p, "%T/undo %H- Undoes your last draw operation.");
             Player.Message(p, "%T/undo physics [seconds] %H- Undoes physics on current map");
         }

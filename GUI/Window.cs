@@ -220,53 +220,55 @@ namespace MCGalaxy.Gui {
 
         public void UpdateMapList() {
             if (InvokeRequired) {
-                Invoke(new UpdateList(UpdateMapList));
-            } else {
-
-                if (main_Maps.DataSource == null)
-                    main_Maps.DataSource = lc;
-
-                // Try to keep the same selection on update
-                string selected = null;
-                if (lc.Count > 0 && main_Maps.SelectedRows.Count > 0) {
-                    selected = (from DataGridViewRow row in main_Maps.Rows where row.Selected select lc[row.Index]).First().name;
-                }
-
-                // Update the data source and control
-                //dgvPlayers.SuspendLayout();
-                lc.Clear();
-                string selectedLvl = null;
-                if (map_lbLoaded.SelectedItem != null)
-                    selectedLvl = map_lbLoaded.SelectedItem.ToString();
-                
-                map_lbLoaded.Items.Clear();
-                //lc = new LevelCollection(new LevelListView());
-                Server.levels.ForEach(l => lc.Add(l));
-                Server.levels.ForEach(l => map_lbLoaded.Items.Add(l.name));
-                
-                if (selectedLvl != null) {
-                    int index = map_lbLoaded.Items.IndexOf(selectedLvl);
-                    map_lbLoaded.SelectedIndex = index;
-                } else {
-                    map_lbLoaded.SelectedIndex = -1;
-                }
-                UpdateSelectedMap(null, null);
-
-                //dgvPlayers.Invalidate();
-                main_Maps.DataSource = null;
-                main_Maps.DataSource = lc;
-                // Reselect map
-                if (selected != null) {
-                    foreach (DataGridViewRow row in Server.levels.SelectMany(l => main_Maps.Rows.Cast<DataGridViewRow>().Where(row => (string)row.Cells[0].Value == selected)))
-                        row.Selected = true;
-                }
-
-                main_Maps.Refresh();
-                //dgvPlayers.ResumeLayout();
-
-                // Update the data source and control
-                //dgvPlayers.SuspendLayout();
+                Invoke(new UpdateList(UpdateMapList)); return;
             }
+        	
+        	if (main_Maps.DataSource == null)
+                main_Maps.DataSource = lc;
+
+            // Try to keep the same selection on update
+            string selected = null;
+            if (lc.Count > 0 && main_Maps.SelectedRows.Count > 0) {
+                selected = (from DataGridViewRow row in main_Maps.Rows where row.Selected select lc[row.Index]).First().name;
+            }
+
+            // Update the data source and control
+            //dgvPlayers.SuspendLayout();
+            lc.Clear();
+            string selectedLvl = null;
+            if (map_lbLoaded.SelectedItem != null)
+                selectedLvl = map_lbLoaded.SelectedItem.ToString();
+            
+            map_lbLoaded.Items.Clear();
+            //lc = new LevelCollection(new LevelListView());
+            Level[] loaded = LevelInfo.Loaded.Items;
+            foreach (Level lvl in loaded) {
+                lc.Add(lvl);
+                map_lbLoaded.Items.Add(lvl.name);
+            }
+            
+            if (selectedLvl != null) {
+                int index = map_lbLoaded.Items.IndexOf(selectedLvl);
+                map_lbLoaded.SelectedIndex = index;
+            } else {
+                map_lbLoaded.SelectedIndex = -1;
+            }
+            UpdateSelectedMap(null, null);
+
+            //dgvPlayers.Invalidate();
+            main_Maps.DataSource = null;
+            main_Maps.DataSource = lc;
+            // Reselect map
+            if (selected != null) {
+                foreach (DataGridViewRow row in Server.levels.SelectMany(l => main_Maps.Rows.Cast<DataGridViewRow>().Where(row => (string)row.Cells[0].Value == selected)))
+                    row.Selected = true;
+            }
+
+            main_Maps.Refresh();
+            //dgvPlayers.ResumeLayout();
+
+            // Update the data source and control
+            //dgvPlayers.SuspendLayout();
         }
 
         /// <summary> Places the server's URL at the top of the window </summary>
@@ -350,15 +352,6 @@ namespace MCGalaxy.Gui {
                 Command.all.Find(com).Use(null, prefix + GetSelectedPlayer().name + suffix);
         }
         
-
-        void finiteModeToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " finite"); }
-        void animalAIToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " ai"); }
-        void edgeWaterToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " edge"); }
-        void growingGrassToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " grass"); }
-        void survivalDeathToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " death"); }
-        void killerBlocksToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " killer"); }
-        void rPChatToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map", " chat"); }
-        
         Level GetSelectedLevel() {
             if (main_Maps.SelectedRows.Count <= 0) return null;
             return (Level)(main_Maps.SelectedRows[0].DataBoundItem);
@@ -374,7 +367,7 @@ namespace MCGalaxy.Gui {
                 Command.all.Find(com).Use(null, GetSelectedLevel().name + args);
         }        
 
-       void tabControl1_Click(object sender, EventArgs e)  {
+       void tabs_Click(object sender, EventArgs e)  {
             try { UpdateUnloadedList(); }
             catch { }
             try { UpdatePlyersListBox(); }
@@ -383,36 +376,50 @@ namespace MCGalaxy.Gui {
             try {
                 if (logs_txtGeneral.Text == "")
                     logs_dateGeneral.Value = DateTime.Now;
-            }
-            catch { }
-            foreach (TextBox txtBox in (from TabPage tP in tabs.TabPages from Control ctrl in tP.Controls select ctrl).OfType<TextBox>())
+            } catch { }
+            
+            foreach (TabPage page in tabs.TabPages)
+                foreach (Control control in page.Controls)
             {
-                txtBox.Update();
+                if (!control.GetType().IsSubclassOf(typeof(TextBox))) continue;
+                control.Update();
             }
             tabs.Update();
         }
 
-        void restartServerToolStripMenuItem_Click(object sender, EventArgs e) {
-            Restart_Click(sender, e);
+        void icon_restart_Click(object sender, EventArgs e) {
+            main_BtnRestart_Click(sender, e);
         }
 
-        void dgvPlayers_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e) {
+        void main_players_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e) {
             e.PaintParts &= ~DataGridViewPaintParts.Focus;
         }
 
-        void promoteToolStripMenuItem_Click(object sender, EventArgs e) {
+        void tsPlayer_promote_Click(object sender, EventArgs e) {
             PlayerCmd("rank", "+up ", "");
         }
 
-        void demoteToolStripMenuItem_Click(object sender, EventArgs e) {
+        void tsPlayer_demote_Click(object sender, EventArgs e) {
             PlayerCmd("rank", "-down ", "");
         }
         
         #region Main tab
+        void tsMap_Info_Click(object sender, EventArgs e) { LevelCmd("map"); LevelCmd("mapinfo"); }
+        void tsMap_MoveAll_Click(object sender, EventArgs e) { LevelCmd("moveall"); }
+        void tsMap_Physics0_Click(object sender, EventArgs e) { LevelCmd("physics", " 0"); }
+        void tsMap_Physics1_Click(object sender, EventArgs e) { LevelCmd("physics", " 1"); }
+        void tsMap_Physics2_Click(object sender, EventArgs e) { LevelCmd("physics", " 2"); }
+        void tsMap_Physics3_Click(object sender, EventArgs e) { LevelCmd("physics", " 3"); }
+        void tsMap_Physics4_Click(object sender, EventArgs e) { LevelCmd("physics", " 4"); }
+        void tsMap_Physics5_Click(object sender, EventArgs e) { LevelCmd("physics", " 5"); }
+        void tsMap_Save_Click(object sender, EventArgs e) { LevelCmd("save"); }
+        void tsMap_Unload_Click(object sender, EventArgs e) { LevelCmd("unload"); }
+        void tsMap_Reload_Click(object sender, EventArgs e) { LevelCmd("reload"); }
+        
         List<string> inputLog = new List<string>(21);
         int inputIndex = -1;
         
-        void txtInput_KeyDown(object sender, KeyEventArgs e) {
+        void main_TxtInput_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Up) {
                 inputIndex = Math.Min(inputIndex + 1, inputLog.Count - 1);
                 if (inputIndex > -1) SetInputText();
@@ -453,27 +460,27 @@ namespace MCGalaxy.Gui {
             main_txtInput.Clear();
         }
         
-        void Restart_Click(object sender, EventArgs e) {
+        void main_BtnRestart_Click(object sender, EventArgs e) {
             if (MessageBox.Show("Are you sure you want to restart?", "Restart", MessageBoxButtons.OKCancel) == DialogResult.OK) {
                 MCGalaxy.Gui.App.ExitProgram(true);
             }
         }
         
-        void txtUrl_DoubleClick(object sender, EventArgs e) {
+        void main_TxtUrl_DoubleClick(object sender, EventArgs e) {
             main_txtUrl.SelectAll();
         }
         
-        void button_saveall_Click(object sender, EventArgs e) {
+        void main_BtnSaveAll_Click(object sender, EventArgs e) {
             Command.all.Find("save").Use(null, "all");
         }
 
-        void killphysics_button_Click(object sender, EventArgs e) {
+        void main_BtnKillPhysics_Click(object sender, EventArgs e) {
             Command.all.Find("physics").Use(null, "kill");
             try { UpdateMapList(); }
             catch { }
         }
 
-        void Unloadempty_button_Click(object sender, EventArgs e) {
+        void main_BtnUnloadEmpty_Click(object sender, EventArgs e) {
             Command.all.Find("unload").Use(null, "empty");
             try { UpdateMapList(); }
             catch { }
@@ -492,16 +499,16 @@ namespace MCGalaxy.Gui {
             }
         }
         
-        void logs_dateGeneralValueChanged(object sender, EventArgs e) {
-            string dayofmonth = logs_dateGeneral.Value.Day.ToString().PadLeft(2, '0');
+        void logs_dateGeneral_Changed(object sender, EventArgs e) {
+            string day = logs_dateGeneral.Value.Day.ToString().PadLeft(2, '0');
             string year = logs_dateGeneral.Value.Year.ToString();
             string month = logs_dateGeneral.Value.Month.ToString().PadLeft(2, '0');
 
-            string ymd = year + "-" + month + "-" + dayofmonth;
-            string filename = ymd + ".txt";
+            string date = year + "-" + month + "-" + day;
+            string filename = date + ".txt";
 
             if (!File.Exists(Path.Combine("logs/", filename))) {
-                logs_txtGeneral.Text = "No logs found for: " + ymd;
+                logs_txtGeneral.Text = "No logs found for: " + date;
             } else {
                 logs_txtGeneral.Text = null;
                 logs_txtGeneral.Text = File.ReadAllText(Path.Combine("logs/", filename));
@@ -535,7 +542,7 @@ namespace MCGalaxy.Gui {
         
         #region Map tab
         
-        void MapGenClick(object sender, EventArgs e) {
+        void map_BtnGen_Click(object sender, EventArgs e) {
             if (mapgen) { MessageBox.Show("A map is already being generated."); return; }
             string name, x, y, z, type, seed;
 
@@ -588,7 +595,7 @@ namespace MCGalaxy.Gui {
             genThread.Start();
         }
         
-        void MapLoadClick(object sender, EventArgs e) {
+        void mao_BtnLoad_Click(object sender, EventArgs e) {
             try {
                 Command.all.Find("load").Use(null, map_lbUnloaded.SelectedItem.ToString());
             } catch { 
@@ -687,7 +694,7 @@ namespace MCGalaxy.Gui {
             pl_pgProps.Refresh();
         }
 
-        void UndoBt_Click(object sender, EventArgs e) {
+        void pl_BtnUndo_Click(object sender, EventArgs e) {
             if (curPlayer == null) { pl_statusBox.AppendTextAndScroll("No player selected"); return; }
             if (pl_txtUndo.Text.Trim() == "")  {
                 pl_statusBox.AppendTextAndScroll("You didn't specify a time"); return;
@@ -701,14 +708,14 @@ namespace MCGalaxy.Gui {
             }
         }
 
-        void MessageBt_Click(object sender, EventArgs e) {
+        void pl_BtnMessage_Click(object sender, EventArgs e) {
             if (curPlayer == null) { pl_statusBox.AppendTextAndScroll("No player selected"); return; }
             Player.SendMessage(curPlayer, "<CONSOLE> " + pl_txtMessage.Text);
             pl_statusBox.AppendTextAndScroll("Sent player message '<CONSOLE> " + pl_txtMessage.Text + "'");
             pl_txtMessage.Text = "";
         }
 
-        void ImpersonateORSendCmdBt_Click(object sender, EventArgs e) {
+        void pl_BtnImpersonate_Click(object sender, EventArgs e) {
             if (curPlayer == null) { pl_statusBox.AppendTextAndScroll("No player selected"); return; }
             
             try {
@@ -735,12 +742,12 @@ namespace MCGalaxy.Gui {
             }
         }
 
-        void SlapBt_Click(object sender, EventArgs e) { DoCmd("slap", "Slapped"); }
-        void KillBt_Click(object sender, EventArgs e) { DoCmd("kill", "Killed"); }
-        void WarnBt_Click(object sender, EventArgs e) { DoCmd("warn", "Warned"); }
-        void KickBt_Click(object sender, EventArgs e) { DoCmd("kick", "Kicked"); }
-        void BanBt_Click(object sender, EventArgs e) { DoCmd("ban", "Banned"); }
-        void IPBanBt_Click(object sender, EventArgs e) { DoCmd("banip", "IP-Banned"); }
+        void pl_BtnSlap_Click(object sender, EventArgs e) { DoCmd("slap", "Slapped"); }
+        void pl_BtnKill_Click(object sender, EventArgs e) { DoCmd("kill", "Killed"); }
+        void pl_BtnWarn_Click(object sender, EventArgs e) { DoCmd("warn", "Warned"); }
+        void pl_BtnKick_Click(object sender, EventArgs e) { DoCmd("kick", "Kicked"); }
+        void pl_BtnBan_Click(object sender, EventArgs e) { DoCmd("ban", "Banned"); }
+        void pl_BtnIPBan_Click(object sender, EventArgs e) { DoCmd("banip", "IP-Banned"); }
         
         void DoCmd(string cmdName, string action) {
             if (curPlayer == null) { pl_statusBox.AppendTextAndScroll("No player selected"); return; }
@@ -748,48 +755,38 @@ namespace MCGalaxy.Gui {
             pl_statusBox.AppendTextAndScroll(action + " player");
         }
 
-        void SendRulesTxt_Click(object sender, EventArgs e) {
+        void pl_BtnRules_Click(object sender, EventArgs e) {
             if (curPlayer == null) { pl_statusBox.AppendTextAndScroll("No Player Selected"); return; }
             Command.all.Find("rules").Use(curPlayer, "");
             pl_statusBox.AppendTextAndScroll("Sent rules to player");
         }
 
-        void SpawnBt_Click(object sender, EventArgs e) {
+        void pl_BtnSpawn_Click(object sender, EventArgs e) {
             if (curPlayer == null) { pl_statusBox.AppendTextAndScroll("No Player Selected"); return; }          
             Command.all.Find("spawn").Use(curPlayer, "");
             pl_statusBox.AppendTextAndScroll("Sent player to spawn");
         }
 
-        void PlyersListBox_Click(object sender, EventArgs e) {
+        void pl_listBox_Click(object sender, EventArgs e) {
             LoadPlayerTabDetails(sender, e);
         }
 
-        void ImpersonateORSendCmdTxt_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Enter) ImpersonateORSendCmdBt_Click(sender, e);
+        void pl_txtImpersonate_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) pl_BtnImpersonate_Click(sender, e);
         }
-        void UndoTxt_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Enter) UndoBt_Click(sender, e);
+        void pl_txtUndo_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) pl_BtnUndo_Click(sender, e);
         }
-        void PLayersMessageTxt_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Enter) MessageBt_Click(sender, e);
+        void pl_txtMessage_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) pl_BtnMessage_Click(sender, e);
         }
+        
         #endregion
+        
 
-        void infoToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("map"); LevelCmd("mapinfo"); }
-        void moveAllToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("moveall"); }
-        void toolStripMenuItem2_Click_1(object sender, EventArgs e) { LevelCmd("physics", " 0"); }
-        void toolStripMenuItem3_Click_1(object sender, EventArgs e) { LevelCmd("physics", " 1"); }
-        void toolStripMenuItem4_Click_1(object sender, EventArgs e) { LevelCmd("physics", " 2"); }
-        void toolStripMenuItem5_Click_1(object sender, EventArgs e) { LevelCmd("physics", " 3"); }
-        void toolStripMenuItem6_Click_1(object sender, EventArgs e) { LevelCmd("physics", " 4"); }
-        void toolStripMenuItem7_Click_1(object sender, EventArgs e) { LevelCmd("physics", " 5"); }
-        void saveToolStripMenuItem_Click_1(object sender, EventArgs e) { LevelCmd("save"); }
-        void unloadToolStripMenuItem_Click_1(object sender, EventArgs e) { LevelCmd("unload"); }
-        void reloadToolStripMenuItem_Click(object sender, EventArgs e) { LevelCmd("reload"); }
+        #region Main tab log - context menu
 
-        #region Colored Reader Context Menu
-
-        void nightModeToolStripMenuItem_Click_1(object sender, EventArgs e) {
+        void tsLog_Night_Click(object sender, EventArgs e) {
             if (MessageBox.Show("Changing to and from night mode will clear your logs. Do you still want to change?", "You sure?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
                 return;
 
@@ -797,31 +794,31 @@ namespace MCGalaxy.Gui {
             tsLog_night.Checked = !tsLog_night.Checked;
         }
 
-        void colorsToolStripMenuItem_Click_1(object sender, EventArgs e) {
+        void tsLog_Colored_Click(object sender, EventArgs e) {
             main_txtLog.Colorize = !tsLog_Colored.Checked;
             tsLog_Colored.Checked = !tsLog_Colored.Checked;
         }
 
-        void dateStampToolStripMenuItem_Click(object sender, EventArgs e) {
+        void tsLog_DateStamp_Click(object sender, EventArgs e) {
             main_txtLog.DateStamp = !tsLog_dateStamp.Checked;
             tsLog_dateStamp.Checked = !tsLog_dateStamp.Checked;
         }
 
-        void autoScrollToolStripMenuItem_Click(object sender, EventArgs e) {
+        void tsLog_AutoScroll_Click(object sender, EventArgs e) {
             main_txtLog.AutoScroll = !tsLog_autoScroll.Checked;
             tsLog_autoScroll.Checked = !tsLog_autoScroll.Checked;
         }
 
-        void copySelectedToolStripMenuItem_Click(object sender, EventArgs e) {
+        void tsLog_CopySelected_Click(object sender, EventArgs e) {
             if (String.IsNullOrEmpty(main_txtLog.SelectedText)) return;
             Clipboard.SetText(main_txtLog.SelectedText, TextDataFormat.Text);
         }
         
-        void copyAllToolStripMenuItem_Click(object sender, EventArgs e) {
+        void tsLog_CopyAll_Click(object sender, EventArgs e) {
             Clipboard.SetText(main_txtLog.Text, TextDataFormat.Text);
         }
         
-        void clearToolStripMenuItem_Click(object sender, EventArgs e) {
+        void tsLog_Clear_Click(object sender, EventArgs e) {
             if (MessageBox.Show("Are you sure you want to clear logs?", "You sure?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
                 main_txtLog.Clear();
             }

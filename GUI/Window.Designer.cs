@@ -104,7 +104,7 @@ namespace MCGalaxy.Gui
             this.tsLog_dateStamp = new System.Windows.Forms.ToolStripMenuItem();
             this.tsLog_autoScroll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsLog_separator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsPlayer_copySelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsLog_copySelected = new System.Windows.Forms.ToolStripMenuItem();
             this.tsLog_copyAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsLog_separator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsLog_clear = new System.Windows.Forms.ToolStripMenuItem();
@@ -209,42 +209,42 @@ namespace MCGalaxy.Gui
             this.tsMap_physics0.Name = "tsMap_physics0";
             this.tsMap_physics0.Size = new System.Drawing.Size(152, 22);
             this.tsMap_physics0.Text = "Off";
-            this.tsMap_physics0.Click += new System.EventHandler(this.toolStripMenuItem2_Click_1);
+            this.tsMap_physics0.Click += new System.EventHandler(this.tsMap_Physics0_Click);
             // 
             // tsMap_physics1
             // 
             this.tsMap_physics1.Name = "tsMap_physics1";
             this.tsMap_physics1.Size = new System.Drawing.Size(152, 22);
             this.tsMap_physics1.Text = "Normal";
-            this.tsMap_physics1.Click += new System.EventHandler(this.toolStripMenuItem3_Click_1);
+            this.tsMap_physics1.Click += new System.EventHandler(this.tsMap_Physics1_Click);
             // 
             // tsMap_physics2
             // 
             this.tsMap_physics2.Name = "tsMap_physics2";
             this.tsMap_physics2.Size = new System.Drawing.Size(152, 22);
             this.tsMap_physics2.Text = "Advanced";
-            this.tsMap_physics2.Click += new System.EventHandler(this.toolStripMenuItem4_Click_1);
+            this.tsMap_physics2.Click += new System.EventHandler(this.tsMap_Physics2_Click);
             // 
             // tsMap_physics3
             // 
             this.tsMap_physics3.Name = "tsMap_physics3";
             this.tsMap_physics3.Size = new System.Drawing.Size(152, 22);
             this.tsMap_physics3.Text = "Hardcore";
-            this.tsMap_physics3.Click += new System.EventHandler(this.toolStripMenuItem5_Click_1);
+            this.tsMap_physics3.Click += new System.EventHandler(this.tsMap_Physics3_Click);
             // 
             // tsMap_physics4
             // 
             this.tsMap_physics4.Name = "tsMap_physics4";
             this.tsMap_physics4.Size = new System.Drawing.Size(152, 22);
             this.tsMap_physics4.Text = "Instant";
-            this.tsMap_physics4.Click += new System.EventHandler(this.toolStripMenuItem6_Click_1);
+            this.tsMap_physics4.Click += new System.EventHandler(this.tsMap_Physics4_Click);
             // 
             // tsMap_physics5
             // 
             this.tsMap_physics5.Name = "tsMap_physics5";
             this.tsMap_physics5.Size = new System.Drawing.Size(152, 22);
             this.tsMap_physics5.Text = "Doors-Only";
-            this.tsMap_physics5.Click += new System.EventHandler(this.toolStripMenuItem7_Click_1);
+            this.tsMap_physics5.Click += new System.EventHandler(this.tsMap_Physics5_Click);
             // 
             // tsMap_actionsMenu
             // 
@@ -262,28 +262,28 @@ namespace MCGalaxy.Gui
             this.tsMap_Save.Name = "tsMap_Save";
             this.tsMap_Save.Size = new System.Drawing.Size(152, 22);
             this.tsMap_Save.Text = "Save";
-            this.tsMap_Save.Click += new System.EventHandler(this.saveToolStripMenuItem_Click_1);
+            this.tsMap_Save.Click += new System.EventHandler(this.tsMap_Save_Click);
             // 
             // tsMap_Reload
             // 
             this.tsMap_Reload.Name = "tsMap_Reload";
             this.tsMap_Reload.Size = new System.Drawing.Size(152, 22);
             this.tsMap_Reload.Text = "Reload";
-            this.tsMap_Reload.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
+            this.tsMap_Reload.Click += new System.EventHandler(this.tsMap_Reload_Click);
             // 
             // tsMap_Unload
             // 
             this.tsMap_Unload.Name = "tsMap_Unload";
             this.tsMap_Unload.Size = new System.Drawing.Size(152, 22);
             this.tsMap_Unload.Text = "Unload";
-            this.tsMap_Unload.Click += new System.EventHandler(this.unloadToolStripMenuItem_Click_1);
+            this.tsMap_Unload.Click += new System.EventHandler(this.tsMap_Unload_Click);
             // 
             // tsMap_moveAll
             // 
             this.tsMap_moveAll.Name = "tsMap_moveAll";
             this.tsMap_moveAll.Size = new System.Drawing.Size(152, 22);
             this.tsMap_moveAll.Text = "Move All";
-            this.tsMap_moveAll.Click += new System.EventHandler(this.moveAllToolStripMenuItem_Click);
+            this.tsMap_moveAll.Click += new System.EventHandler(this.tsMap_MoveAll_Click);
             // 
             // tsMap_separator
             // 
@@ -295,7 +295,7 @@ namespace MCGalaxy.Gui
             this.tsMap_info.Name = "tsMap_info";
             this.tsMap_info.Size = new System.Drawing.Size(137, 22);
             this.tsMap_info.Text = "Info";
-            this.tsMap_info.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
+            this.tsMap_info.Click += new System.EventHandler(this.tsMap_Info_Click);
             // 
             // tsPlayer
             // 
@@ -350,14 +350,14 @@ namespace MCGalaxy.Gui
             this.tsPlayer_promote.Name = "tsPlayer_promote";
             this.tsPlayer_promote.Size = new System.Drawing.Size(114, 22);
             this.tsPlayer_promote.Text = "Promote";
-            this.tsPlayer_promote.Click += new System.EventHandler(this.promoteToolStripMenuItem_Click);
+            this.tsPlayer_promote.Click += new System.EventHandler(this.tsPlayer_promote_Click);
             // 
             // tsPlayer_demote
             // 
             this.tsPlayer_demote.Name = "tsPlayer_demote";
             this.tsPlayer_demote.Size = new System.Drawing.Size(114, 22);
             this.tsPlayer_demote.Text = "Demote";
-            this.tsPlayer_demote.Click += new System.EventHandler(this.demoteToolStripMenuItem_Click);
+            this.tsPlayer_demote.Click += new System.EventHandler(this.tsPlayer_demote_Click);
             // 
             // icon_context
             // 
@@ -387,7 +387,7 @@ namespace MCGalaxy.Gui
             this.icon_restart.Name = "icon_restart";
             this.icon_restart.Size = new System.Drawing.Size(157, 22);
             this.icon_restart.Text = "Restart Server";
-            this.icon_restart.Click += new System.EventHandler(this.restartServerToolStripMenuItem_Click);
+            this.icon_restart.Click += new System.EventHandler(this.icon_restart_Click);
             // 
             // main_btnProps
             // 
@@ -423,7 +423,7 @@ namespace MCGalaxy.Gui
             this.main_btnRestart.TabIndex = 36;
             this.main_btnRestart.Text = "Restart";
             this.main_btnRestart.UseVisualStyleBackColor = true;
-            this.main_btnRestart.Click += new System.EventHandler(this.Restart_Click);
+            this.main_btnRestart.Click += new System.EventHandler(this.main_BtnRestart_Click);
             // 
             // logs_tp
             // 
@@ -499,7 +499,7 @@ namespace MCGalaxy.Gui
             this.logs_dateGeneral.Size = new System.Drawing.Size(200, 21);
             this.logs_dateGeneral.TabIndex = 5;
             this.logs_dateGeneral.Value = new System.DateTime(2011, 7, 20, 18, 31, 50, 0);
-            this.logs_dateGeneral.ValueChanged += new System.EventHandler(this.logs_dateGeneralValueChanged);
+            this.logs_dateGeneral.ValueChanged += new System.EventHandler(this.logs_dateGeneral_Changed);
             // 
             // logs_txtGeneral
             // 
@@ -584,7 +584,7 @@ namespace MCGalaxy.Gui
             this.main_btnUnloadEmpty.TabIndex = 41;
             this.main_btnUnloadEmpty.Text = "Unload Empty";
             this.main_btnUnloadEmpty.UseVisualStyleBackColor = true;
-            this.main_btnUnloadEmpty.Click += new System.EventHandler(this.Unloadempty_button_Click);
+            this.main_btnUnloadEmpty.Click += new System.EventHandler(this.main_BtnUnloadEmpty_Click);
             // 
             // main_btnKillPhysics
             // 
@@ -596,7 +596,7 @@ namespace MCGalaxy.Gui
             this.main_btnKillPhysics.TabIndex = 40;
             this.main_btnKillPhysics.Text = "Kill All Physics";
             this.main_btnKillPhysics.UseVisualStyleBackColor = true;
-            this.main_btnKillPhysics.Click += new System.EventHandler(this.killphysics_button_Click);
+            this.main_btnKillPhysics.Click += new System.EventHandler(this.main_BtnKillPhysics_Click);
             // 
             // main_btnSaveAll
             // 
@@ -608,7 +608,7 @@ namespace MCGalaxy.Gui
             this.main_btnSaveAll.TabIndex = 39;
             this.main_btnSaveAll.Text = "Save All";
             this.main_btnSaveAll.UseVisualStyleBackColor = true;
-            this.main_btnSaveAll.Click += new System.EventHandler(this.button_saveall_Click);
+            this.main_btnSaveAll.Click += new System.EventHandler(this.main_BtnSaveAll_Click);
             // 
             // main_Maps
             // 
@@ -648,7 +648,7 @@ namespace MCGalaxy.Gui
                                     this.tsLog_dateStamp,
                                     this.tsLog_autoScroll,
                                     this.tsLog_separator1,
-                                    this.tsPlayer_copySelected,
+                                    this.tsLog_copySelected,
                                     this.tsLog_copyAll,
                                     this.tsLog_separator2,
                                     this.tsLog_clear});
@@ -660,7 +660,7 @@ namespace MCGalaxy.Gui
             this.tsLog_night.Name = "tsLog_night";
             this.tsLog_night.Size = new System.Drawing.Size(143, 22);
             this.tsLog_night.Text = "Night Theme";
-            this.tsLog_night.Click += new System.EventHandler(this.nightModeToolStripMenuItem_Click_1);
+            this.tsLog_night.Click += new System.EventHandler(this.tsLog_Night_Click);
             // 
             // tsLog_Colored
             // 
@@ -669,7 +669,7 @@ namespace MCGalaxy.Gui
             this.tsLog_Colored.Name = "tsLog_Colored";
             this.tsLog_Colored.Size = new System.Drawing.Size(143, 22);
             this.tsLog_Colored.Text = "Colors";
-            this.tsLog_Colored.Click += new System.EventHandler(this.colorsToolStripMenuItem_Click_1);
+            this.tsLog_Colored.Click += new System.EventHandler(this.tsLog_Colored_Click);
             // 
             // tsLog_dateStamp
             // 
@@ -678,7 +678,7 @@ namespace MCGalaxy.Gui
             this.tsLog_dateStamp.Name = "tsLog_dateStamp";
             this.tsLog_dateStamp.Size = new System.Drawing.Size(143, 22);
             this.tsLog_dateStamp.Text = "Date Stamp";
-            this.tsLog_dateStamp.Click += new System.EventHandler(this.dateStampToolStripMenuItem_Click);
+            this.tsLog_dateStamp.Click += new System.EventHandler(this.tsLog_DateStamp_Click);
             // 
             // tsLog_autoScroll
             // 
@@ -687,7 +687,7 @@ namespace MCGalaxy.Gui
             this.tsLog_autoScroll.Name = "tsLog_autoScroll";
             this.tsLog_autoScroll.Size = new System.Drawing.Size(143, 22);
             this.tsLog_autoScroll.Text = "Auto Scroll";
-            this.tsLog_autoScroll.Click += new System.EventHandler(this.autoScrollToolStripMenuItem_Click);
+            this.tsLog_autoScroll.Click += new System.EventHandler(this.tsLog_AutoScroll_Click);
             // 
             // tsLog_separator1
             // 
@@ -696,17 +696,17 @@ namespace MCGalaxy.Gui
             // 
             // tsPlayer_copySelected
             // 
-            this.tsPlayer_copySelected.Name = "tsPlayer_copySelected";
-            this.tsPlayer_copySelected.Size = new System.Drawing.Size(143, 22);
-            this.tsPlayer_copySelected.Text = "Copy Selected";
-            this.tsPlayer_copySelected.Click += new System.EventHandler(this.copySelectedToolStripMenuItem_Click);
+            this.tsLog_copySelected.Name = "tsLog_copySelected";
+            this.tsLog_copySelected.Size = new System.Drawing.Size(143, 22);
+            this.tsLog_copySelected.Text = "Copy Selected";
+            this.tsLog_copySelected.Click += new System.EventHandler(this.tsLog_CopySelected_Click);
             // 
             // tsLog_copyAll
             // 
             this.tsLog_copyAll.Name = "tsLog_copyAll";
             this.tsLog_copyAll.Size = new System.Drawing.Size(143, 22);
             this.tsLog_copyAll.Text = "Copy All";
-            this.tsLog_copyAll.Click += new System.EventHandler(this.copyAllToolStripMenuItem_Click);
+            this.tsLog_copyAll.Click += new System.EventHandler(this.tsLog_CopyAll_Click);
             // 
             // tsLog_separator2
             // 
@@ -718,7 +718,7 @@ namespace MCGalaxy.Gui
             this.tsLog_clear.Name = "tsLog_clear";
             this.tsLog_clear.Size = new System.Drawing.Size(143, 22);
             this.tsLog_clear.Text = "Clear";
-            this.tsLog_clear.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            this.tsLog_clear.Click += new System.EventHandler(this.tsLog_Clear_Click);
             // 
             // main_txtInput
             // 
@@ -729,7 +729,7 @@ namespace MCGalaxy.Gui
             this.main_txtInput.TabIndex = 27;
             this.toolTip.SetToolTip(this.main_txtInput, "To send chat to players, just type the message in.\nTo enter a command, put a / be" +
                         "fore it. (e.g. /help commands)");
-            this.main_txtInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtInput_KeyDown);
+            this.main_txtInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.main_TxtInput_KeyDown);
             // 
             // main_txtUrl
             // 
@@ -741,7 +741,7 @@ namespace MCGalaxy.Gui
             this.main_txtUrl.Size = new System.Drawing.Size(498, 21);
             this.main_txtUrl.TabIndex = 25;
             this.main_txtUrl.Text = "Finding classicube.net url..";
-            this.main_txtUrl.DoubleClick += new System.EventHandler(this.txtUrl_DoubleClick);
+            this.main_txtUrl.DoubleClick += new System.EventHandler(this.main_TxtUrl_DoubleClick);
             // 
             // main_Players
             // 
@@ -759,7 +759,7 @@ namespace MCGalaxy.Gui
             this.main_Players.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.main_Players.Size = new System.Drawing.Size(246, 250);
             this.main_Players.TabIndex = 37;
-            this.main_Players.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dgvPlayers_RowPrePaint);
+            this.main_Players.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.main_players_RowPrePaint);
             // 
             // tabs
             // 
@@ -774,7 +774,7 @@ namespace MCGalaxy.Gui
             this.tabs.SelectedIndex = 0;
             this.tabs.Size = new System.Drawing.Size(775, 514);
             this.tabs.TabIndex = 2;
-            this.tabs.Click += new System.EventHandler(this.tabControl1_Click);
+            this.tabs.Click += new System.EventHandler(this.tabs_Click);
             // 
             // tp_Maps
             // 
@@ -846,7 +846,7 @@ namespace MCGalaxy.Gui
             this.map_btnLoad.TabIndex = 1;
             this.map_btnLoad.Text = "Load map";
             this.map_btnLoad.UseVisualStyleBackColor = true;
-            this.map_btnLoad.Click += new System.EventHandler(this.MapLoadClick);
+            this.map_btnLoad.Click += new System.EventHandler(this.mao_BtnLoad_Click);
             // 
             // map_lbUnloaded
             // 
@@ -887,7 +887,7 @@ namespace MCGalaxy.Gui
             this.map_btnGen.TabIndex = 17;
             this.map_btnGen.Text = "Generate";
             this.map_btnGen.UseVisualStyleBackColor = true;
-            this.map_btnGen.Click += new System.EventHandler(this.MapGenClick);
+            this.map_btnGen.Click += new System.EventHandler(this.map_BtnGen_Click);
             // 
             // map_lblType
             // 
@@ -1076,7 +1076,7 @@ namespace MCGalaxy.Gui
             this.pl_txtImpersonate.Name = "pl_txtImpersonate";
             this.pl_txtImpersonate.Size = new System.Drawing.Size(485, 21);
             this.pl_txtImpersonate.TabIndex = 38;
-            this.pl_txtImpersonate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImpersonateORSendCmdTxt_KeyDown);
+            this.pl_txtImpersonate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.pl_txtImpersonate_KeyDown);
             // 
             // pl_btnImpersonate
             // 
@@ -1086,7 +1086,7 @@ namespace MCGalaxy.Gui
             this.pl_btnImpersonate.TabIndex = 37;
             this.pl_btnImpersonate.Text = "Impersonate:";
             this.pl_btnImpersonate.UseVisualStyleBackColor = true;
-            this.pl_btnImpersonate.Click += new System.EventHandler(this.ImpersonateORSendCmdBt_Click);
+            this.pl_btnImpersonate.Click += new System.EventHandler(this.pl_BtnImpersonate_Click);
             // 
             // pl_txtMessage
             // 
@@ -1094,7 +1094,7 @@ namespace MCGalaxy.Gui
             this.pl_txtMessage.Name = "pl_txtMessage";
             this.pl_txtMessage.Size = new System.Drawing.Size(485, 21);
             this.pl_txtMessage.TabIndex = 8;
-            this.pl_txtMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PLayersMessageTxt_KeyDown);
+            this.pl_txtMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.pl_txtMessage_KeyDown);
             // 
             // pl_btnMessage
             // 
@@ -1104,7 +1104,7 @@ namespace MCGalaxy.Gui
             this.pl_btnMessage.TabIndex = 9;
             this.pl_btnMessage.Text = "Message:";
             this.pl_btnMessage.UseVisualStyleBackColor = true;
-            this.pl_btnMessage.Click += new System.EventHandler(this.MessageBt_Click);
+            this.pl_btnMessage.Click += new System.EventHandler(this.pl_BtnMessage_Click);
             // 
             // pl_gbActions
             // 
@@ -1133,7 +1133,7 @@ namespace MCGalaxy.Gui
             this.pl_btnSpawn.TabIndex = 43;
             this.pl_btnSpawn.Text = "Spawn";
             this.pl_btnSpawn.UseVisualStyleBackColor = true;
-            this.pl_btnSpawn.Click += new System.EventHandler(this.SpawnBt_Click);
+            this.pl_btnSpawn.Click += new System.EventHandler(this.pl_BtnSpawn_Click);
             // 
             // pl_txtUndo
             // 
@@ -1141,7 +1141,7 @@ namespace MCGalaxy.Gui
             this.pl_txtUndo.Name = "pl_txtUndo";
             this.pl_txtUndo.Size = new System.Drawing.Size(98, 21);
             this.pl_txtUndo.TabIndex = 42;
-            this.pl_txtUndo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UndoTxt_KeyDown);
+            this.pl_txtUndo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.pl_txtUndo_KeyDown);
             // 
             // pl_btnWarn
             // 
@@ -1151,7 +1151,7 @@ namespace MCGalaxy.Gui
             this.pl_btnWarn.TabIndex = 10;
             this.pl_btnWarn.Text = "Warn";
             this.pl_btnWarn.UseVisualStyleBackColor = true;
-            this.pl_btnWarn.Click += new System.EventHandler(this.WarnBt_Click);
+            this.pl_btnWarn.Click += new System.EventHandler(this.pl_BtnWarn_Click);
             // 
             // pl_btnRules
             // 
@@ -1161,7 +1161,7 @@ namespace MCGalaxy.Gui
             this.pl_btnRules.TabIndex = 39;
             this.pl_btnRules.Text = "Send Rules";
             this.pl_btnRules.UseVisualStyleBackColor = true;
-            this.pl_btnRules.Click += new System.EventHandler(this.SendRulesTxt_Click);
+            this.pl_btnRules.Click += new System.EventHandler(this.pl_BtnRules_Click);
             // 
             // pl_btnKick
             // 
@@ -1171,7 +1171,7 @@ namespace MCGalaxy.Gui
             this.pl_btnKick.TabIndex = 4;
             this.pl_btnKick.Text = "Kick";
             this.pl_btnKick.UseVisualStyleBackColor = true;
-            this.pl_btnKick.Click += new System.EventHandler(this.KickBt_Click);
+            this.pl_btnKick.Click += new System.EventHandler(this.pl_BtnKick_Click);
             // 
             // pl_btnBanIP
             // 
@@ -1181,7 +1181,7 @@ namespace MCGalaxy.Gui
             this.pl_btnBanIP.TabIndex = 6;
             this.pl_btnBanIP.Text = "IP Ban";
             this.pl_btnBanIP.UseVisualStyleBackColor = true;
-            this.pl_btnBanIP.Click += new System.EventHandler(this.IPBanBt_Click);
+            this.pl_btnBanIP.Click += new System.EventHandler(this.pl_BtnIPBan_Click);
             // 
             // pl_btnUndo
             // 
@@ -1191,7 +1191,7 @@ namespace MCGalaxy.Gui
             this.pl_btnUndo.TabIndex = 41;
             this.pl_btnUndo.Text = "Undo:";
             this.pl_btnUndo.UseVisualStyleBackColor = true;
-            this.pl_btnUndo.Click += new System.EventHandler(this.UndoBt_Click);
+            this.pl_btnUndo.Click += new System.EventHandler(this.pl_BtnUndo_Click);
             // 
             // pl_btnSlap
             // 
@@ -1201,7 +1201,7 @@ namespace MCGalaxy.Gui
             this.pl_btnSlap.TabIndex = 40;
             this.pl_btnSlap.Text = "Slap";
             this.pl_btnSlap.UseVisualStyleBackColor = true;
-            this.pl_btnSlap.Click += new System.EventHandler(this.SlapBt_Click);
+            this.pl_btnSlap.Click += new System.EventHandler(this.pl_BtnSlap_Click);
             // 
             // pl_btnBan
             // 
@@ -1211,7 +1211,7 @@ namespace MCGalaxy.Gui
             this.pl_btnBan.TabIndex = 5;
             this.pl_btnBan.Text = "Ban";
             this.pl_btnBan.UseVisualStyleBackColor = true;
-            this.pl_btnBan.Click += new System.EventHandler(this.BanBt_Click);
+            this.pl_btnBan.Click += new System.EventHandler(this.pl_BtnBan_Click);
             // 
             // pl_btnKill
             // 
@@ -1221,7 +1221,7 @@ namespace MCGalaxy.Gui
             this.pl_btnKill.TabIndex = 36;
             this.pl_btnKill.Text = "Kill";
             this.pl_btnKill.UseVisualStyleBackColor = true;
-            this.pl_btnKill.Click += new System.EventHandler(this.KillBt_Click);
+            this.pl_btnKill.Click += new System.EventHandler(this.pl_BtnKill_Click);
             // 
             // pl_statusBox
             // 
@@ -1243,7 +1243,7 @@ namespace MCGalaxy.Gui
             this.pl_listBox.Name = "pl_listBox";
             this.pl_listBox.Size = new System.Drawing.Size(123, 459);
             this.pl_listBox.TabIndex = 62;
-            this.pl_listBox.Click += new System.EventHandler(this.PlyersListBox_Click);
+            this.pl_listBox.Click += new System.EventHandler(this.pl_listBox_Click);
             // 
             // toolTip
             // 
@@ -1405,7 +1405,7 @@ namespace MCGalaxy.Gui
         private ToolStripMenuItem tsLog_night;
         private ToolStripMenuItem tsLog_Colored;
         private ToolStripSeparator tsLog_separator1;
-        private ToolStripMenuItem tsPlayer_copySelected;
+        private ToolStripMenuItem tsLog_copySelected;
         private ToolStripMenuItem tsLog_copyAll;
         private ToolStripSeparator tsLog_separator2;
         private ToolStripMenuItem tsLog_clear;
