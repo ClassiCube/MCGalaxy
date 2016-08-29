@@ -1195,7 +1195,7 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.label24, "Limit for custom physics set by /rp");
             // 
             // chkPhysicsRest
-            // 
+            //
             this.chkPhysicsRest.Appearance = System.Windows.Forms.Appearance.Button;
             this.chkPhysicsRest.Location = new System.Drawing.Point(8, 20);
             this.chkPhysicsRest.Name = "chkPhysicsRest";
@@ -1723,7 +1723,6 @@ namespace MCGalaxy.Gui
             // 
             // chkTpToHigherRanks
             // 
-            this.chkTpToHigherRanks.Appearance = System.Windows.Forms.Appearance.Button;
             this.chkTpToHigherRanks.AutoSize = true;
             this.chkTpToHigherRanks.Location = new System.Drawing.Point(11, 142);
             this.chkTpToHigherRanks.Name = "chkTpToHigherRanks";
@@ -1919,7 +1918,7 @@ namespace MCGalaxy.Gui
             // chkAdminsJoinSilent
             // 
             this.chkAdminsJoinSilent.AutoSize = true;
-            this.chkAdminsJoinSilent.Location = new System.Drawing.Point(14, 119);
+            this.chkAdminsJoinSilent.Location = new System.Drawing.Point(11, 119);
             this.chkAdminsJoinSilent.Name = "chkAdminsJoinSilent";
             this.chkAdminsJoinSilent.Size = new System.Drawing.Size(118, 17);
             this.chkAdminsJoinSilent.TabIndex = 41;

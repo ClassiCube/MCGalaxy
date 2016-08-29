@@ -99,7 +99,7 @@ namespace MCGalaxy {
             foreach (Level l in loaded)
                 l.Unload();
 
-            Background.QueueOnce(CombineEnvFiles);            
+            Background.QueueOnce(CombineEnvFiles);
             Background.QueueOnce(LoadMainLevel);
             Plugin.Load();
             Background.QueueOnce(LoadPlayerLists);

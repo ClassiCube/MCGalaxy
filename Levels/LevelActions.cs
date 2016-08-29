@@ -63,12 +63,17 @@ namespace MCGalaxy {
             
             object locker = ThreadSafeCache.DBCache.Get(src);
             lock (locker) {
-                if (Database.TableExists("Portals" + src))
+                if (Database.TableExists("Portals" + src)) {
                     Database.Execute(String.Format(syntax, src, dst, "Portals"));
-                if (Database.TableExists("Messages" + src))
+                    string updateSyntax = "UPDATE `Portals" + dst + "` SET ExitMap=@1 WHERE ExitMap=@0";
+                    Database.Execute(updateSyntax, src, dst);
+                }
+                if (Database.TableExists("Messages" + src)) {
                     Database.Execute(String.Format(syntax, src, dst, "Messages"));
-                if (Database.TableExists("Zone" + src))
+                }
+                if (Database.TableExists("Zone" + src)) {
                     Database.Execute(String.Format(syntax, src, dst, "Zone"));
+                }
             }
         }
         

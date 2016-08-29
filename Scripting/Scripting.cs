@@ -186,7 +186,7 @@ namespace MCGalaxy {
             List<Command> commands = new List<Command>();
             
             foreach (Type t in lib.GetTypes()) {
-                if (t.IsAbstract || !t.IsSubclassOf(typeof(Command)) )continue;
+                if (t.IsAbstract || t.IsInterface || !t.IsSubclassOf(typeof(Command)))continue;
                 object instance = Activator.CreateInstance(t);
                 
                 if (instance == null) {

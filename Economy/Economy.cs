@@ -112,7 +112,7 @@ PRIMARY KEY(player)
                 w.WriteLine("enabled:" + Enabled);              
                 foreach (Item item in Items) {
                     w.WriteLine();
-                    item.Serialise(w);                    
+                    item.Serialise(w);
                 }
             }
         }
