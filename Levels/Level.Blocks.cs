@@ -219,7 +219,9 @@ namespace MCGalaxy {
                 BuildAccess.CheckDetailed(p, false);
                 p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
             }
-            return p.AllowBuild;
+        	
+            return p.level == this 
+                ? p.AllowBuild : BuildAccess.Check(p, false);
         }
         
         public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, 

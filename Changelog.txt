@@ -1,3 +1,100 @@
+v 1.8.8.0
+Added: /resizelvl command to resize a level
+Added: Heightmap map generator (URL of heightmap image is the seed)
+Added: .cw map importer, imports env and custom blocks too (Format used by the client)
+Added: skip/none block type for drawing commands
+Added: /transform and /transform scale, which allows you to scale the output of draw operations
+Added: Start tracking total blocks draw, placed, and deleted in /whois and /top
+Fixed: Being unable to run MCGalaxy behind an IPv6 address
+Fixed: /server backup lite still including undo files on windows
+Fixed: Bots using 90% CPU on mono
+Fixed: Spawn world should use that level's motd if it has a custom one
+Fixed: /undo files no longer writes duplicate data to disc
+Fixed: When /undo data is written to disc, it is also removed from memory now
+Fixed: Draw operations logged to BlockDB when changing block to same block (e.g. /z air)
+Improved: Provide more helpful 'Only X+ can place/draw/fill/replace [block]' messages
+Improved: Only create portals/zones/message blocks tables when actually required, not on level creation
+Improved: Added perbuild whitelist/blacklist
+Improved: Allow using up/down in gui chat/command input for faster repeat
+Improved: Allow using @number as shortcut for that rule message in ban/kick/warn/tempban/rank
+Improved: Show (reconnecting) or (reconnecting from a different IP) instead of 'someone logged in as you!'
+Improved: /mark and /place should default to held block, instead of just stone
+Improved: Brushes now validate input when you use the command, instead of after placing second mark
+Added: 'empty' for /bot nick gives the bot an empty name tag.
+Added: Show reason and username in logs when disconnecting someone before they completed login
+Added: Can set a minimum rank required to /buy a particular item
+Added: Give Good [Info] title per request
+Added: HackControl CPE extension, so /map motd will change in real time
+Added: Zombie invisibility item for the economy
+Fixed: /pload reading plugin from root directory, not plugins subfolder
+Fixed: /pass using wrong calculation
+Fixed: Just changing /env preset by itself not updating the .properties file
+Fixed: /fly /ascend /descend cannot be used when you don't have hacks allowed
+Fixed: /rankinfo throwing NullReference on non-existent rank
+Fixed: Make Plugin_Simple actually work and derive it from Plugin
+Fixed: /ride only makes you not killed by train blocks, not entirely invincible
+Fixed: Fixed whitelist not saving when adding/removing from someone from console
+Fixed: Can no longer join when on the whitelist but you are banned
+Fixed: /send storing the second half of message if length > 255 characters and using mysql
+Fixed: Being unable to do /os map buildable/chat/deletable if you cannot change map options
+Fixed: /cmdunload showing 'incorrect command name' afterwards
+Fixed: pervisit/perbuild/ in /mi should show actual rank name, not its permission
+Fixed: If a player is both banned and temp-banned, /unban should remove both
+Fixed: PluginManager.Unload erroring on mono
+Fixed: /server restore reading the entire file at once, make it work
+Fixed: Make bots jumping sort of work, make bot movement consistent regardless of position interval
+Fixed: Very rare issue with players ending up with having 2016 years of 'time spent'
+Fixed: level properties not saving after doing /env fog -1
+Fixed: /copy cut always showing '0 blocks copied'
+Fixed: Actual block ID (e.g. bird_blue) is logged to BlockDB, not just held block
+Fixed: Limit .who from IRC to at most once per second
+Fixed: /resetpass not working from console
+Fixed: AFK kick not saving new value when changed via gui
+Fixed: Make /explode do proper perbuild checking
+Fixed: trees not growing when /map trees and physics is enabled
+Fixed: Being unable to use some commands on hidden players, even though you can see them in /players
+Fixed: /cmdset with extra permissions not checking if you could modify those extra permissions
+Fixed: /env var reset showing var type twice, instead of var then level
+Fixed: Not showing number of messages in /inbox (if you have any)
+Fixed: Being able to use /infoswap on higher ranked
+Fixed: /ohide not working from console
+Fixed: Some minor issues with zombie survival not changing maps
+Fixed: First zombie picked not having 'rounds survived in a row' reset
+Fixed: $tokens and custom chat tokens show in kick packets
+Fixed: /ccols add throwing IndexOutOfRange exception if 
+Fixed: /ls go not working after server restart due to maps having spaces in their name
+Fixed: /fixgrass not doing permission checking
+Improved: /rankinfo now uses relative timespans
+Improved: now if a level has a custom motd, show server name in first line and motd in second
+Improved: /time now also shows server date
+Improved: tp/abort/paint have default permission of guest
+Improved: Now you cannot /banip invalid IP addresses (like a.b.c.d)
+Improved: Use consistent method of finding IP in /banip and /unbanip
+Improved: /whitelist [name] is treated the same as /whitelist add [name]
+Improved: /emote saves the list when command is used, not in Player.Save()
+Improved: For copy rotate/mirrors, also rotate/mirror the copy offset
+Improved: Now defaults to CLI mode when not running on windows
+Improved: /unban partially matches player names
+Improved: /zg start starts on map you are currently on, /zg status shows map name
+Improved: Bot IDs are now per-world instead of global across all worlds
+Improved: /viewranks [rank] does partial rank name matching now
+Improved: If only [block] is given for r/rn/ra, replaces that block with your current held block
+Improved: Use more optimised /fill code
+Improved: /map grass actually saves, and still disables auto grass grow when physics is disabled
+Improved: Now more chat commands will auto-mute if they are being used to spam
+Improved: Show actual name of custom block in /place and /b
+Improved: /afk no longer reveals you are hidden
+Improved: Players tab in gui is tidied up and more concise
+Improved: /resetbot changed to /ircbot, which also allows connecting/disconnecting the IRC bot
+Improved: /banip only shows IP addresses to people who can see IP addresses in /whois
+Improved: Can use hacks in /ref mode
+Improved: /baninfo now uses relative timespan
+Improved: Latest backup in /mi uses relative time now
+Improved: Use more efficient bulk block sending for console draw ops
+Improved: Cleanup /eco help, make it more concise and list all items
+Improved: /fixgrass now uses bulk packet sending
+Improved: /reach now saves across sessions
+
 v 1.8.7.5
 Fix issue with database handles being left open on sqlite backend. This fixes the main memory leak in MCGalaxy.
 Fix issue with some sqlite connections rarely not being closed, which caused all other database calls to fail (preventing people from joining).

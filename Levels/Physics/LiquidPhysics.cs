@@ -62,7 +62,8 @@ namespace MCGalaxy.BlockPhysics {
                 return;
 
             int b = x + lvl.Width * (z + y * lvl.Length);
-            if (lvl.physics > 1 && lvl.physics != 5 && !lvl.CheckSpongeLava(x, y, z) && lvl.blocks[b] >= 21 && lvl.blocks[b] <= 36) {
+            if (lvl.physics > 1 && lvl.physics != 5 && !lvl.CheckSpongeLava(x, y, z) 
+                && lvl.blocks[b] >= Block.red && lvl.blocks[b] <= Block.white) {
                 lvl.AddUpdate(b, Block.air); return;
             } // Adv physics destroys cloth
             
