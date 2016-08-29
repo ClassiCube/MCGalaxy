@@ -126,29 +126,27 @@ namespace MCGalaxy {
         }
         
         void TemprankExpiryTask(SchedulerTask task) {
-            Player[] players = PlayerInfo.Online.Items;
-            const StringComparison comp = StringComparison.OrdinalIgnoreCase;
+            Player[] players = PlayerInfo.Online.Items;         
             
-            foreach (Player p in players) {
-                foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
-                    if (!line.StartsWith(p.name, comp)) continue;
-                    string[] args = line.Split(' ');
+            foreach (string line in File.ReadAllLines("text/tempranks.txt"))
+                foreach (Player p in players)
+            {
+                if (!line.CaselessStarts(p.name)) continue;
+                string[] args = line.Split(' ');
 
-                    int period = Convert.ToInt32(args[3]);
-                    int minutes = Convert.ToInt32(args[4]);
-                    int hours = Convert.ToInt32(args[5]);
-                    int days = Convert.ToInt32(args[6]);
-                    int months = Convert.ToInt32(args[7]);
-                    int years = Convert.ToInt32(args[8]);
-                    
-                    DateTime expire = new DateTime(years, months, days, hours, minutes, 0).AddHours(period);
-                    if (DateTime.Now >= expire)
-                        Command.all.Find("temprank").Use(null, p.name + " delete");
-                }
+                int min = int.Parse(args[4]), hour = int.Parse(args[5]);
+                int day = int.Parse(args[6]), month = int.Parse(args[7]), year = int.Parse(args[8]);
+                int periodH = int.Parse(args[3]), periodM = 0;
+                if (args.Length > 10) periodM = int.Parse(args[10]);
+                
+                DateTime expire = new DateTime(year, month, day, hour, min, 0)
+                    .AddHours(periodH).AddMinutes(periodM);
+                if (DateTime.Now >= expire)
+                    Command.all.Find("temprank").Use(null, p.name + " delete");
             }
             
             DateTime now = DateTime.UtcNow;
-            task.Delay = TimeSpan.FromSeconds(60 - now.Second);
+            task.Delay = TimeSpan.FromSeconds(60 - now.Second); // TODO: down to seconds
         }
     }
 }

@@ -108,12 +108,19 @@ namespace MCGalaxy {
             double yawRad = Math.Asin(dir.X / cosPitch);
             yaw = (byte)(yawRad * rad2Packed);
             pitch = (byte)(pitchRad * rad2Packed);
-            
-            // Other side of unit circle
-            if (dir.Z > 0) yaw = (byte)(128 - yaw);
-            // Almost exactly +X or -X
-            if (dir.Z >= 0 && dir.Z < +0.0000001) yaw = 192;
-            if (dir.Z <= 0 && dir.Z > -0.0000001) yaw = 64;
+            yaw = AdjustYaw(dir, yaw);
         }
+        
+        static byte AdjustYaw(Vec3F32 dir, byte yaw) {
+            // Other side of unit circle
+            if (dir.Z > 0) return (byte)(128 - yaw);
+            const double epsilon = 0.0000001;
+            
+            if (dir.Z >= 0 && dir.Z < +epsilon) return 192; // exactly +X
+            if (dir.Z <= 0 && dir.Z > -epsilon) return 64;  // exactly -X
+            if (dir.X >= 0 && dir.X < +epsilon) return 0;   // exactly -Z
+            if (dir.X <= 0 && dir.X > -epsilon) return 128; // exactly +Z
+            return yaw;
+        } 
     }
 }

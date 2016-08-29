@@ -28,7 +28,6 @@ namespace MCGalaxy.Commands.Moderation {
                     new CommandAlias("dtr", null, "delete"), new CommandAlias("temprankinfo", null, "info"),
                     new CommandAlias("trl", null, "list"), new CommandAlias("tempranklist", null, "list") }; }
         }
-        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
@@ -50,21 +49,19 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void Assign(Player p, string[] args) {
-            string player = args[0], rank = args[1], period = args[2];
+            string player = args[0];
             Player who = PlayerInfo.Find(player);
             if (who == null) {
-                player = PlayerInfo.FindName(player);
-                if (player == null) { Player.Message(p, "&cPlayer &a" + args[0] + "&c not found."); return; }
+                player = PlayerInfo.FindOfflineNameMatches(p, player);
+                if (player == null) return;
             } else {
                 player = who.name;
             }
             
-            Group group = Group.FindMatches(p, rank);
+            Group group = Group.FindMatches(p, args[1]);
             if (group == null) return;
-            int periodTime;
-            if (!Int32.TryParse(period, out periodTime)) {
-                Player.Message(p, "&cThe period needs to be a number."); return;
-            }
+            TimeSpan delta;
+            if (!args[2].TryParseShort(p, 'h', "temp rank for", out delta)) return;
 
             foreach (string line in Server.TempRanks.Find(player)) {
                 Player.Message(p, "&cThe player already has a temporary rank assigned!"); return;
@@ -83,14 +80,14 @@ namespace MCGalaxy.Commands.Moderation {
 
             DateTime now = DateTime.Now;
             string assigner = p == null ? "Console" : p.name;
-            string data = player + " " + rank + " " + pGroup.name + " " + period + " " + now.Minute + " " +
-                now.Hour + " " + now.Day + " " + now.Month + " " + now.Year + " " + assigner;
+            string data = player + " " + args[1] + " " + pGroup.name + " " + delta.Hours + " " + now.Minute + " " +
+                now.Hour + " " + now.Day + " " + now.Month + " " + now.Year + " " + assigner + " " + delta.Minutes;
             Server.TempRanks.Append(data);
             
             Command.all.Find("setrank").Use(null, player + " " + group.name + " assigning temp rank");
-            Player.Message(p, "Temp ranked {0} to {1}%S for {2} hours", player, group.ColoredName, period);
+            Player.Message(p, "Temp ranked {0} to {1}%S for {2}", player, group.ColoredName, delta.Shorten());
             if (who != null)
-                Player.Message(who, "You have been temp ranked to {0}%S for {1} hours", group.ColoredName, period);
+                Player.Message(who, "You have been temp ranked to {0}%S for {1}", group.ColoredName, delta.Shorten());
         }
         
         static void Delete(Player p, string name) {
@@ -99,7 +96,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player who = PlayerInfo.Find(name);
             
             foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
-                if (!line.StartsWith(name, comp)) { all.AppendLine(line); continue; }
+                if (!line.CaselessStarts(name)) { all.AppendLine(line); continue; }
                 
                 string[] parts = line.Split(' ');
                 Group newgroup = Group.Find(parts[2]);
@@ -118,7 +115,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         static void Info(Player p, string name) {
             foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
-                if (!line.StartsWith(name, comp)) continue;
+                if (!line.CaselessStarts(name)) continue;
                 PrintTempRankInfo(p, line); return;
             }
             Player.Message(p, "&cPlayer &a{0}&chas not been assigned a temporary rank.", name);
@@ -139,27 +136,32 @@ namespace MCGalaxy.Commands.Moderation {
         static void PrintTempRankInfo(Player p, string line) {
             string[] args = line.Split(' ');
             string temprank = args[1], oldrank = args[2], tempranker = args[9];
-            int minutes = Convert.ToInt32(args[4]), hours = Convert.ToInt32(args[5]);
-            int days = Convert.ToInt32(args[6]), months = Convert.ToInt32(args[7]);
-            int years = Convert.ToInt32(args[8]);
             
-            int period = Convert.ToInt32(args[3]);
+            int min = int.Parse(args[4]), hour = int.Parse(args[5]);
+            int day = int.Parse(args[6]), month = int.Parse(args[7]), year = int.Parse(args[8]);
+            int periodH = int.Parse(args[3]), periodM = 0;
+            if (args.Length > 10) periodM = int.Parse(args[10]);
+                
             Group oldGrp = Group.Find(oldrank), tempGrp = Group.Find(temprank);
             string oldCol = oldGrp == null ? "" : oldGrp.color;
             string tempCol = tempGrp == null ? "" : tempGrp.color;
             
-            DateTime assignmentDate = new DateTime(years, months, days, hours, minutes, 0);
-            DateTime expireDate = assignmentDate.AddHours(Convert.ToDouble(period));
+            DateTime assigned = new DateTime(year, month, day, hour, min, 0);
+            DateTime expiry = assigned.AddHours(periodH).AddMinutes(periodM);
+            TimeSpan delta = DateTime.Now - assigned;
+            TimeSpan expireDelta = expiry - DateTime.Now;
+            
             Player.Message(p, "Temp rank information for {0}:", args[0]);
-            Player.Message(p, "  From {0} %Sto {1}%S, by {2} on &a{3}%S, expires on &a{4}",
+            Player.Message(p, "  From {0} %Sto {1}%S, by {2} &a{3}%S ago, expires in &a{4}",
                            oldCol + oldrank, tempCol + temprank, tempranker,
-                           assignmentDate, expireDate);
+                           delta.Shorten(), expireDelta.Shorten());
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/temprank <player> <rank> <period(hours)>");
+            Player.Message(p, "%T/temprank [player] [rank] [timespan]");
             Player.Message(p, "%HSets a temporary rank for the specified player.");
-            Player.Message(p, "%T/temprank <player> info");
+            Player.Message(p, "%H  e.g. to temprank for 90 minutes, [timespan] would be 1h30m");
+            Player.Message(p, "%T/temprank [player] info");
             Player.Message(p, "%HLists information about the temp rank for the given player.");
             Player.Message(p, "%T/temprank <player> delete %H- Removes player's temp rank.");
             Player.Message(p, "%T/temprank list %H- Lists all current temp ranks.");
