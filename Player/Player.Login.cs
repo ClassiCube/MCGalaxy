@@ -284,6 +284,9 @@ namespace MCGalaxy {
             
             CheckLoginJailed();
             CheckReviewList();
+            if (group.commands.Contains("reachdistance"))
+                CheckLoginReach();
+            
             if (Server.agreetorulesonentry && group.Permission == LevelPermission.Guest && !Server.agreed.Contains(name)) {
                 SendMessage("&9You must read the &c/rules&9 and &c/agree&9 to them before you can build and use commands!");
                 agreed = false;
@@ -403,6 +406,20 @@ namespace MCGalaxy {
                 Leave("Error occured", true);
                 Server.ErrorLog(ex);
             }
+        }
+        
+        void CheckLoginReach() {
+            string line = Server.reach.Find(name);
+            if (line == null) return;
+            int space = line.IndexOf(' ');
+            if (space == -1) return;
+            string reach = line.Substring(space + 1);
+            
+            short reachDist;
+            if (!short.TryParse(reach, out reachDist)) return;
+            ReachDistance = reachDist / 32f;
+            if (HasCpeExt(CpeExt.ClickDistance))
+            	Send(Packet.MakeClickDistance(reachDist));
         }
     }
 }

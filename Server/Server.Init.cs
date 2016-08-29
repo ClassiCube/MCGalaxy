@@ -86,6 +86,7 @@ namespace MCGalaxy {
             jailed = PlayerExtList.Load("ranks/jailed.txt");
             models = PlayerExtList.Load("extra/models.txt");
             skins = PlayerExtList.Load("extra/skins.txt");
+            reach = PlayerExtList.Load("extra/reach.txt");
 
             foreach (Group grp in Group.GroupList)
                 grp.playerList = PlayerList.Load(grp.fileName);
