@@ -31,6 +31,13 @@ namespace MCGalaxy {
         
         public static string GetColor(string name) { return GetGroup(name).color; }
         
+        public static string GetColoredName(Player p, string name) {
+            Player target = FindExact(name);
+            return target != null && Entities.CanSee(p, target) ? 
+                target.ColoredName : GetColor(name) + name; // TODO: select color from database?
+        }
+        
+        
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         public static Player Find(string name) {
             Player[] players = PlayerInfo.Online.Items;
@@ -60,6 +67,19 @@ namespace MCGalaxy {
             return Utils.FindMatches<Player>(pl, name, out matches, Online.Items,
                                              p => Entities.CanSee(pl, p) || !onlyCanSee,
                                              p => p.name, "online players");
+        }
+        
+        public static string FindMatchesPreferOnline(Player p, string name) {
+            if (!Player.ValidName(name)) {
+                Player.Message(p, "\"{0}\" is not a valid player name.", name); return null;
+            }
+            int matches = 0;
+            Player target = FindMatches(p, name, out matches);
+            
+            if (matches > 1) return null;
+            if (target != null) return target.name;        
+            Player.Message(p, "Searching PlayerDB..");
+            return FindOfflineNameMatches(p, name);
         }
         
         /// <summary> Finds the online player whose name caselessly exactly matches the given name. </summary>

@@ -32,29 +32,33 @@ namespace MCGalaxy.Commands {
             
             if (args[0] == "add") {
                 if (args.Length < 2) { Help(p); return; }
-                Player pl = PlayerInfo.Find(args[1]);
-                if (pl != null) args[1] = pl.name;
+                args[1] = PlayerInfo.FindMatchesPreferOnline(p, args[1]);
+                if (args[1] == null) return;
                 
                 if (Server.vip.Contains(args[1])) {
-                    Player.Message(p, Name(pl, args[1]) + " %Sis already a VIP.");
+                    Player.Message(p, PlayerInfo.GetColoredName(p, args[1]) + " %Sis already a VIP.");
                 } else {
                     Server.vip.Add(args[1]);
                     Server.vip.Save(false);
-                    Player.Message(p, Name(pl, args[1]) + " %Sis now a VIP.");
-                    if (pl != null) Player.Message(pl, "You are now a VIP!");
+                    Player.Message(p, PlayerInfo.GetColoredName(p, args[1]) + " %Sis now a VIP.");
+                    
+                    Player who = PlayerInfo.FindExact(args[1]);
+                    if (who != null) Player.Message(who, "You are now a VIP!");
                 }
             } else if (args[0] == "remove") {
                 if (args.Length < 2) { Help(p); return; }
-                Player pl = PlayerInfo.Find(args[1]);
-                if (pl != null) args[1] = pl.name;
+                args[1] = PlayerInfo.FindMatchesPreferOnline(p, args[1]);
+                if (args[1] == null) return;
                 
                 if (Server.vip.Contains(args[1])) {
-                    Player.Message(p, Name(pl, args[1]) + " %Sis not a VIP.");
+                    Player.Message(p, PlayerInfo.GetColoredName(p, args[1]) + " %Sis not a VIP.");
                 } else {
                     Server.vip.Remove(args[1]);
                     Server.vip.Save(false);
-                    Player.Message(p, Name(pl, args[1]) + " %Sis no longer a VIP.");
-                    if (pl != null) Player.Message(pl, "You are no longer a VIP!");
+                    Player.Message(p, PlayerInfo.GetColoredName(p, args[1]) + " %Sis no longer a VIP.");
+                    
+                    Player who = PlayerInfo.FindExact(args[1]);
+                    if (who != null) Player.Message(who, "You are no longer a VIP!");
                 }
             } else if (args[0] == "list") {
                 List<string> list = Server.vip.All();
@@ -69,9 +73,7 @@ namespace MCGalaxy.Commands {
                 Help(p);
             }
         }
-        
-        static string Name(Player pl, string name) { return pl == null ? name : pl.ColoredName; }
-        
+
         public override void Help(Player p) {           
             Player.Message(p, "%T/vip <add/remove> [player]");
             Player.Message(p, "%HAdds or removes [player] from the VIP list.");

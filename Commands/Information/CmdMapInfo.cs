@@ -107,8 +107,8 @@ namespace MCGalaxy.Commands {
             if (String.IsNullOrEmpty(data.RealmOwner))
                 data.RealmOwner = GetRealmMapOwner(data.Name);
             if (String.IsNullOrEmpty(data.RealmOwner)) return;
-            Player.Message(p, "  This map is a personal realm of {0}{1}",
-                           Server.FindColor(data.RealmOwner), data.RealmOwner);
+            Player.Message(p, "  This map is a personal realm of {0}",
+                           PlayerInfo.GetColoredName(p, data.RealmOwner));
         }
         
         static string GetRealmMapOwner(string lvlName) {

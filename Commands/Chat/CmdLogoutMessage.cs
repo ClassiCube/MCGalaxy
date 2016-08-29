@@ -34,17 +34,12 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces(2);
             if (args.Length < 2) { Help(p); return; }
+            string target = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
+            if (target == null) return;
             
-            Player target = PlayerInfo.Find(args[0]);
-            string name = target != null ? target.name : args[0];
-
-            if (target == null && PlayerInfo.FindName(name) == null) {
-                Player.Message(p, "There is no player with the given name."); return;
-            }
-            PlayerDB.SetLogoutMessage(name, args[1]);
-            
-            string fullName = target != null ? target.ColoredName : name;
-            Player.Message(p, "The logout message of " + fullName + " %Shas been changed to: " + args[1]);
+            PlayerDB.SetLogoutMessage(target, args[1]);
+            Player.Message(p, "The logout message of {0} %Shas been changed to: {1}",
+                           PlayerInfo.GetColoredName(p, target), args[1]);
             string changer = p == null ? "(console)" : p.name;
             Server.s.Log(changer + " changed " + name + "'s logout message to:");
         }

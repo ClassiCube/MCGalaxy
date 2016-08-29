@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (reason == null) return;
             string banReason = reason == "-" ? "" : " (" + reason + ")";
             
-            Player who = PlayerInfo.Find(args[0]);            
+            Player who = PlayerInfo.Find(args[0]);
             string target = who == null ? args[0] : who.name;
             if (!ValidName(p, target, "player")) return;
             Group group = who == null ? Group.findPlayerGroup(args[0]) : who.group;

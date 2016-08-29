@@ -35,16 +35,14 @@ namespace MCGalaxy.Commands {
             int page = 0;
             string plName = "";
             if (args.Length == 2) {
-                plName = args[0];
-                Player who = PlayerInfo.Find(plName);
-                if (who != null) plName = who.name;
+                plName = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
+                if (plName == null) return;
                 
                 if (!int.TryParse(args[1], out page)) { Help(p); return; }
             } else if (message != "") {
                 if (!int.TryParse(args[0], out page)) {
-                    plName = args[0];
-                    Player who = PlayerInfo.Find(plName);
-                    if (who != null) plName = who.name;
+                    plName = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
+                    if (plName == null) return;
                 }
             }
             if (page < 0) {
@@ -81,10 +79,12 @@ namespace MCGalaxy.Commands {
         
         static void OutputAwards(Player p, int page, int start,
                                  string plName, List<Awards.Award> awards) {
-            if (plName != "")
-                Player.Message(p, Server.FindColor(plName) + plName + " %Shas the following awards:");
-            else
+        	if (plName != "") {
+                Player.Message(p, "{0} %Shas the following awards:",
+            	               PlayerInfo.GetColoredName(p, plName));
+        	} else {
                 Player.Message(p, "Awards available: ");
+        	}
 
             if (page == 0) {
                 foreach (Awards.Award award in awards)

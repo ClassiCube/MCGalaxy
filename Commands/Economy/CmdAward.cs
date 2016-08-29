@@ -34,9 +34,8 @@ namespace MCGalaxy.Commands {
             }
                     
             string[] args = message.SplitSpaces(2);
-            string plName = args[0];
-            Player who = PlayerInfo.Find(plName);
-            if (who != null) plName = who.name;
+            string plName = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
+            if (plName == null) return;
             
             string award = args.Length > 1 ? args[1] : "";
             award = Awards.Find(award);
@@ -48,13 +47,15 @@ namespace MCGalaxy.Commands {
 
             if (!take) {
                 if (Awards.GiveAward(plName, award)) {
-                    Chat.MessageAll("{0}{1} %Swas awarded: &b{2}", Server.FindColor(plName), plName, award);
+                    Chat.MessageAll("{0} %Swas awarded: &b{1}", 
+            		                PlayerInfo.GetColoredName(p, plName), award);
                 } else {
                     Player.Message(p, "The player already has that award."); return;
                 }
             } else {
                 if (Awards.TakeAward(plName, award)) {
-                    Chat.MessageAll("{0}{1} %Shad their &b{2} %Saward removed", Server.FindColor(plName), plName, award);
+                    Chat.MessageAll("{0} %Shad their &b{1} %Saward removed", 
+            		                PlayerInfo.GetColoredName(p, plName), award);
                 } else {
                     Player.Message(p, "The player didn't have the award you tried to take"); return;
                 }

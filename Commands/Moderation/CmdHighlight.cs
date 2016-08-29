@@ -63,7 +63,8 @@ namespace MCGalaxy.Commands {
             if (!done) UndoFormat.DoHighlight(p, name.ToLower(), start, ref found);
             
             if (found) {
-                Player.Message(p, "Now highlighting &b" + seconds +  " %Sseconds for " + Server.FindColor(name) + name);
+                Player.Message(p, "Now highlighting &b{0} %Sseconds for {1}",
+            	               seconds, PlayerInfo.GetColoredName(p, name));
                 Player.Message(p, "&cUse /reload to un-highlight");
             } else {
                 Player.Message(p, "Could not find player specified.");

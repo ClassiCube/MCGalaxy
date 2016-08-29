@@ -49,43 +49,42 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void Assign(Player p, string[] args) {
-            string player = args[0];
-            Player who = PlayerInfo.Find(player);
-            if (who == null) {
-                player = PlayerInfo.FindOfflineNameMatches(p, player);
-                if (player == null) return;
-            } else {
-                player = who.name;
-            }
-            
+            string target = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
+            if (target == null) return;
+            Player who = PlayerInfo.FindExact(target);
+
             Group group = Group.FindMatches(p, args[1]);
             if (group == null) return;
             TimeSpan delta;
             if (!args[2].TryParseShort(p, 'h', "temp rank for", out delta)) return;
 
-            foreach (string line in Server.TempRanks.Find(player)) {
+            foreach (string line in Server.TempRanks.Find(target)) {
                 Player.Message(p, "&cThe player already has a temporary rank assigned!"); return;
             }
             
             if (p != null && who != null && p == who) {
                 Player.Message(p, "&cYou cannot assign yourself a temporary rank."); return;
             }
-            Group pGroup = who != null ? who.group : Group.findPlayerGroup(player);
+            Group pGroup = who != null ? who.group : Group.findPlayerGroup(target);
             if (p != null && pGroup.Permission >= p.Rank) {
                 Player.Message(p, "Cannot change the temporary rank of someone equal or higher to yourself."); return;
             }
             if (p != null && group.Permission >= p.Rank) {
                 Player.Message(p, "Cannot change the temporary rank to a higher rank than yourself."); return;
             }
-
+            AssignTempRank(p, who, delta, pGroup, group, target);
+        }
+        
+        static void AssignTempRank(Player p, Player who, TimeSpan delta,
+                                   Group pGroup, Group group, string target) {
             DateTime now = DateTime.Now;
             string assigner = p == null ? "Console" : p.name;
-            string data = player + " " + args[1] + " " + pGroup.name + " " + delta.Hours + " " + now.Minute + " " +
+            string data = target + " " + group.name + " " + pGroup.name + " " + delta.Hours + " " + now.Minute + " " +
                 now.Hour + " " + now.Day + " " + now.Month + " " + now.Year + " " + assigner + " " + delta.Minutes;
             Server.TempRanks.Append(data);
             
-            Command.all.Find("setrank").Use(null, player + " " + group.name + " assigning temp rank");
-            Player.Message(p, "Temp ranked {0} to {1}%S for {2}", player, group.ColoredName, delta.Shorten());
+            Command.all.Find("setrank").Use(null, target + " " + group.name + " assigning temp rank");
+            Player.Message(p, "Temp ranked {0} to {1}%S for {2}", target, group.ColoredName, delta.Shorten());
             if (who != null)
                 Player.Message(who, "You have been temp ranked to {0}%S for {1}", group.ColoredName, delta.Shorten());
         }

@@ -32,10 +32,9 @@ namespace MCGalaxy.Commands {
             string[] parts = message.SplitSpaces(2);
             if (message == "" || parts.Length == 1) { Help(p); return; }
 
-            Player receiver = PlayerInfo.Find(parts[0]);
-            string receiverName = receiver == null ? parts[0] : receiver.name;
+            string receiverName = PlayerInfo.FindMatchesPreferOnline(p, message);
+            if (receiverName == null) return;
             string senderName = p == null ? "(console)" : p.name;
-            if (!ValidName(p, receiverName, "player")) return;
 
             message = parts[1];
             //DB
@@ -50,8 +49,10 @@ namespace MCGalaxy.Commands {
             Database.Execute("INSERT INTO `Inbox" + receiverName + "` (PlayerFrom, TimeSent, Contents) VALUES (@0, @1, @2)",
                              senderName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), message);
 
+            Player receiver = PlayerInfo.FindExact(receiverName);
             Player.Message(p, "Message sent to &5" + receiverName + ".");
-            if (receiver != null) receiver.SendMessage("Message recieved from &5" + senderName + "%S.");
+            if (receiver != null) 
+                receiver.SendMessage("Message recieved from &5" + senderName + "%S.");
         }
         
         public override void Help(Player p) {
