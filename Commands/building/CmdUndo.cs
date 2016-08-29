@@ -48,7 +48,8 @@ namespace MCGalaxy.Commands.Building {
             string[] parts = message.Split(' ');
             bool undoPhysics = parts[0].CaselessEq("physics");
             Player who = undoPhysics ? null : PlayerInfo.Find(parts[0]);
-            long seconds = GetSeconds(p, who, parts.Length > 1 ? parts[1] : "30");
+            TimeSpan delta = GetDelta(p, who, parts.Length > 1 ? parts[1] : "30");
+            if (delta == TimeSpan.MinValue) return;
             
             if (parts.Length > 1 && parts[1].CaselessEq("update")) {
                 UndoFormat.UpgradePlayerUndoFiles(parts[0]);
@@ -57,29 +58,33 @@ namespace MCGalaxy.Commands.Building {
             }
 
             if (who != null)
-                UndoOnlinePlayer(p, seconds, who);
+                UndoOnlinePlayer(p, delta, who);
             else if (undoPhysics)
-                UndoLevelPhysics(p, seconds);
+                UndoLevelPhysics(p, delta);
             else
-                UndoOfflinePlayer(p, seconds, parts[0]);
+                UndoOfflinePlayer(p, delta, parts[0]);
         }
 
         const int undoMax = -1; // allows everything to be undone.
-        internal static long GetSeconds(Player p, Player who, string param) {
-            long secs;
+        internal static TimeSpan GetDelta(Player p, Player who, string param) {
+            TimeSpan delta;
+            bool canAll = p == null || p == who || p.group.maxUndo == undoMax;
+            
             if (param.CaselessEq("all")) {
-                secs = (p == null || p.group.maxUndo == undoMax || p == who) ? int.MaxValue : p.group.maxUndo;
-            } else if (!long.TryParse(param, out secs)) {
-                Player.Message(p, "Invalid seconds, using 30 seconds.");
-                return 30;
+                return TimeSpan.FromSeconds(canAll ? int.MaxValue : p.group.maxUndo);
+            } else if (!param.TryParseShort(p, 's', "undo the past", out delta)) {
+                Player.Message(p, "Undoing for 30 seconds.");
+                return TimeSpan.MinValue;
             }
 
-            if (secs == 0) secs = 5400;
-            if (p != null && p != who && p.group.maxUndo != undoMax && secs > p.group.maxUndo) {
-                Player.Message(p, p.group.name + "s may only undo up to " + p.group.maxUndo + " seconds.");
-                return p.group.maxUndo;
+            if (delta.TotalSeconds == 0) 
+                delta = TimeSpan.FromMinutes(90);
+            if (!canAll && delta.TotalSeconds > p.group.maxUndo) {
+                Player.Message(p, "{0}%Ss may only undo up to {1} seconds.",
+                               p.group.ColoredName, p.group.maxUndo);
+                return TimeSpan.FromSeconds(p.group.maxUndo);
             }
-            return secs;
+            return delta;
         }
         
         void UndoSelf(Player p) {
@@ -108,36 +113,36 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "Try using %T/undo <seconds> %Sinstead.");
         }
         
-        void UndoOnlinePlayer(Player p, long seconds, Player who) {
+        void UndoOnlinePlayer(Player p, TimeSpan delta, Player who) {
             if (p != null && p != who && !CheckUndoPerms(p, who.group)) return;
             
             UndoOnlineDrawOp op;
             if (p == who) op = new UndoSelfDrawOp();
             else op = new UndoOnlineDrawOp();
-            op.Start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
+            op.Start = DateTime.UtcNow.Subtract(delta);
             op.who = who;
             DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
             
             if (p == who) {
-                Player.Message(p, "Undid your actions for the past &b" + seconds + " %Sseconds.");
+            	Player.Message(p, "Undid your actions for the past &b" + delta.Shorten() + "%S.");
             } else {
-                Player.SendChatFrom(who, who.ColoredName + "%S's actions for the past &b" + seconds + " seconds were undone.", false);
+            	Player.SendChatFrom(who, who.ColoredName + "%S's actions for the past &b" + delta.Shorten() + " %Swere undone.", false);
             }
-            Server.s.Log(who.name + "'s actions for the past " + seconds + " seconds were undone.");
+            Server.s.Log(who.name + "'s actions for the past " + delta.Shorten() + " were undone.");
         }
         
-        void UndoOfflinePlayer(Player p, long seconds, string whoName) {
+        void UndoOfflinePlayer(Player p, TimeSpan delta, string whoName) {
             if (p != null && !CheckUndoPerms(p, Group.findPlayerGroup(whoName))) return;
             
             UndoOfflineDrawOp op = new UndoOfflineDrawOp();
-            op.Start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
+            op.Start = DateTime.UtcNow.Subtract(delta);
             op.whoName = whoName;
             DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
 
             if (op.found) {
-            	Chat.MessageAll("{0}%S's actions for the past &b{1} %Sseconds were undone.", 
-            	                PlayerInfo.GetColoredName(p, whoName), seconds);
-                Server.s.Log(whoName + "'s actions for the past " + seconds + " seconds were undone.");
+                Chat.MessageAll("{0}%S's actions for the past &b{1} %S were undone.", 
+            	                PlayerInfo.GetColoredName(p, whoName), delta.Shorten());
+            	Server.s.Log(whoName + "'s actions for the past " + delta.Shorten() + " were undone.");
                 if (p != null) p.level.Save(true);
             } else {
                 Player.Message(p, "Could not find player specified.");
@@ -150,18 +155,18 @@ namespace MCGalaxy.Commands.Building {
              return true;
         }
         
-        void UndoLevelPhysics(Player p, long seconds) {
+        void UndoLevelPhysics(Player p, TimeSpan delta) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, "undo physics.", 2); return; }
             if (p != null && !p.group.CanExecute("physics")) {
                 Player.Message(p, "You can only undo physics if you can use /physics."); return;
             }
             CmdPhysics.SetPhysics(p.level, 0);
             UndoPhysicsDrawOp op = new UndoPhysicsDrawOp();
-            op.seconds = seconds;
+            op.Start = DateTime.UtcNow.Subtract(delta);
             DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
             
-            Chat.MessageAll("Physics were undone &b{0} %Sseconds", seconds);
-            Server.s.Log( "Physics were undone &b" + seconds + " %Sseconds");
+            Chat.MessageAll("Physics were undone &b{0}", delta.Shorten());
+            Server.s.Log("Physics were undone &b" + delta.Shorten());
             p.level.Save(true);
         }
 

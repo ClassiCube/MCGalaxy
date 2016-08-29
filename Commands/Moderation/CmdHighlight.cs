@@ -32,26 +32,22 @@ namespace MCGalaxy.Commands {
         public CmdHighlight() { }
 
         public override void Use(Player p, string message) {
-            long seconds;
+            TimeSpan delta;
             bool found = false;
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") message = p.name + " 1800";
             string[] args = message.Split(' ');
-            string name = args[0];
 
             if (args.Length >= 2) {
-                if (!long.TryParse(args[1], out seconds)) {
-                    Player.Message(p, "Invalid seconds."); return;
-                }
-            } else if (long.TryParse(args[0], out seconds)) {
+                if (!args[1].TryParseShort(p, 's', "highlight the past", out delta)) return;
+            } else if (ParseTimespan(args[0], out delta)) {
                 args[0] = p.name;
             } else {
-                seconds = 30 * 60;
+                delta = TimeSpan.FromMinutes(30);
             }
-            if (seconds <= 0) seconds = 30 * 60;
-            DateTime start = DateTime.UtcNow.AddTicks(-seconds * TimeSpan.TicksPerSecond);
-
-            Player who = PlayerInfo.Find(name);
+            
+            DateTime start = DateTime.UtcNow.Subtract(delta);
+            Player who = PlayerInfo.Find(args[0]);
             bool done = false;
             if (who != null) {
                 found = true;
@@ -60,14 +56,22 @@ namespace MCGalaxy.Commands {
                     done = HighlightBlocks(p, start, cache);
                 }
             }          
-            if (!done) UndoFormat.DoHighlight(p, name.ToLower(), start, ref found);
+            if (!done) UndoFormat.DoHighlight(p, args[0].ToLower(), start, ref found);
             
             if (found) {
-                Player.Message(p, "Now highlighting &b{0} %Sseconds for {1}",
-            	               seconds, PlayerInfo.GetColoredName(p, name));
+                Player.Message(p, "Now highlighting past &b{0} %Sfor {1}",
+            	               delta.Shorten(), PlayerInfo.GetColoredName(p, args[0]));
                 Player.Message(p, "&cUse /reload to un-highlight");
             } else {
                 Player.Message(p, "Could not find player specified.");
+            }
+        }
+        
+        static bool ParseTimespan(string input, out TimeSpan delta) {
+            delta = TimeSpan.Zero;
+            try { delta = input.ParseShort('s'); return true;
+            } catch (ArgumentException) { return false; 
+            } catch (FormatException) { return false;
             }
         }
         
@@ -79,10 +83,11 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/highlight [player] [seconds]");
-            Player.Message(p, "%HHighlights blocks modified by [player] in the last [seconds]");
-            Player.Message(p, "%HIf no [seconds] is given, highlights for last 30 minutes");
-            Player.Message(p, "&c/highlight cannot be disabled, you must use /reload to un-highlight");
+            Player.Message(p, "%T/highlight [player] <timespan>");
+            Player.Message(p, "%HHighlights blocks modified by [player] in the past <timespan>");
+            Player.Message(p, "%H e.g. to highlight for 90 minutes, <timespan> would be %S1h30m");
+            Player.Message(p, "%HIf <timespan> is not given, highlights for last 30 minutes");
+            Player.Message(p, "&c/highlight cannot be disabled, use /reload to un-highlight");
         }
     }
 }

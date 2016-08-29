@@ -94,7 +94,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "UndoPhysics"; } }
         public override bool AffectedByTransform { get { return false; } }
         
-        internal long seconds;
+        internal DateTime Start;
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
@@ -103,30 +103,30 @@ namespace MCGalaxy.Drawing.Ops {
                 int count = lvl.currentUndo;
                 for (int i = count; i >= 0; i--) {
                     try {
-                        if (!CheckBlockPhysics(p, lvl, seconds, i)) break;
+                        if (!CheckBlockPhysics(p, lvl, i)) break;
                     } catch { }
                 }
             } else {
                 int count = lvl.currentUndo;
                 for (int i = count; i >= 0; i--) {
                     try {
-                        if (!CheckBlockPhysics(p, lvl, seconds, i)) break;
+                        if (!CheckBlockPhysics(p, lvl, i)) break;
                     } catch { }
                 }
                 for (int i = lvl.UndoBuffer.Count - 1; i > count; i--) {
                     try {
-                        if (!CheckBlockPhysics(p, lvl, seconds, i)) break;
+                        if (!CheckBlockPhysics(p, lvl, i)) break;
                     } catch { }
                 }
             }
             yield break;
         }
         
-        bool CheckBlockPhysics(Player p, Level lvl, long seconds, int i) {
+        bool CheckBlockPhysics(Player p, Level lvl, int i) {
             Level.UndoPos undo = lvl.UndoBuffer[i];
             byte b = lvl.GetTile(undo.index);
             DateTime time = Server.StartTime.AddTicks((undo.flags >> 2) * TimeSpan.TicksPerSecond);
-            if (time.AddTicks(seconds * TimeSpan.TicksPerSecond) < DateTime.UtcNow) return false;
+            if (time < Start) return false;
             
             byte newType = (undo.flags & 2) != 0 ? Block.custom_block : undo.newRawType;
             if (b == newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {

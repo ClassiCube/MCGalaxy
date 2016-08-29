@@ -84,7 +84,7 @@ namespace MCGalaxy {
         DateTime startTime;
         public TimeSpan time {
             get { return DateTime.UtcNow - startTime; }
-            set { startTime = DateTime.UtcNow.Add(-value); }
+            set { startTime = DateTime.UtcNow.Subtract(value); }
         }
 
         public string name;

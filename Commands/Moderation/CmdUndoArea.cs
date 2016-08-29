@@ -35,7 +35,8 @@ namespace MCGalaxy.Commands {
             
             string[] parts = message.Split(' ');
             args.message = parts[0];
-            args.seconds = CmdUndo.GetSeconds(p, null, parts.Length > 1 ? parts[1] : "30");
+            args.delta = CmdUndo.GetDelta(p, null, parts.Length > 1 ? parts[1] : "30");
+            if (args.delta == TimeSpan.MinValue) return;
             
             Player.Message(p, "Place two blocks to determine the edges.");           
             p.MakeSelection(2, args, DoUndo);
@@ -56,13 +57,13 @@ namespace MCGalaxy.Commands {
             }
             
             UndoOnlineDrawOp op = new UndoOnlineDrawOp();
-            op.Start = DateTime.UtcNow.AddTicks(-args.seconds * TimeSpan.TicksPerSecond);
+            op.Start = DateTime.UtcNow.Subtract(args.delta);
             op.who = who;
             DrawOp.DoDrawOp(op, null, p, marks);
             
             Player.SendChatFrom(who, who.ColoredName + 
-                                "%S's actions for the past &b" + args.seconds + " seconds were undone.", false);
-            Server.s.Log(who.name + "'s actions for the past " + args.seconds + " seconds were undone.");
+                                "%S's actions for the past &b" + args.delta.Shorten() + " %Swere undone.", false);
+            Server.s.Log(who.name + "'s actions for the past " + args.delta.Shorten() + " were undone.");
         }
         
         void UndoOfflinePlayer(Player p, string whoName, UndoArgs args, Vec3S32[] marks) {
@@ -72,21 +73,21 @@ namespace MCGalaxy.Commands {
             }
             
             UndoOfflineDrawOp op = new UndoOfflineDrawOp();
-            op.Start = DateTime.UtcNow.AddTicks(-args.seconds * TimeSpan.TicksPerSecond);
+            op.Start = DateTime.UtcNow.Subtract(args.delta);
             op.whoName = whoName;
             DrawOp.DoDrawOp(op, null, p, marks);
 
             if (op.found) {
-                Chat.MessageAll("{0}{1}%S's actions for the past &b{2} %Sseconds were undone.", 
-            	                group.color, whoName, args.seconds);
-                Server.s.Log(whoName + "'s actions for the past " + args.seconds + " seconds were undone.");
+                Chat.MessageAll("{0}{1}%S's actions for the past &b{2} %Swere undone.", 
+            	                group.color, whoName, args.delta.Shorten());
+            	Server.s.Log(whoName + "'s actions for the past " + args.delta.Shorten() + " were undone.");
                 p.level.Save(true);
             } else {
                 Player.Message(p, "Could not find player specified.");
             }
         }
         
-        struct UndoArgs { public string message; public long seconds; }
+        struct UndoArgs { public string message; public TimeSpan delta; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/undoarea [player] [seconds]");

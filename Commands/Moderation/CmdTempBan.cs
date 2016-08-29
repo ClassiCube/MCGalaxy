@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Help(Player p) {
             Player.Message(p, "%T/tempban [name] [timespan] <reason>");
             Player.Message(p, "%HBans [name] for [timespan]. Max is 1 day, default is 1 hour.");
-            Player.Message(p, "%H  e.g. to tempban for 90 minutes, [timespan] would be 1h30m");
+            Player.Message(p, "%H e.g. to tempban for 90 minutes, [timespan] would be %S1h30m");
             Player.Message(p, "%HTemp bans will reset on server restart");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }

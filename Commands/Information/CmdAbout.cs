@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands {
         
         static void Output(Player p, string user, byte block, bool deleted, TimeSpan delta) {
             string bName = Block.Name(block);           
-            Player.Message(p, "{0} ago {1} {2}", 
+            Player.Message(p, "{0} ago {1} {2}",
                            delta.Shorten(true, false), PlayerInfo.GetColoredName(p, user),
                            deleted ? "&4deleted%S (using " + bName + ")" : "&3placed%S " + bName);
         }
