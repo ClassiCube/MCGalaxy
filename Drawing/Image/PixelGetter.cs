@@ -40,12 +40,14 @@ namespace MCGalaxy.Drawing {
             data = bmp.LockBits(r, ImageLockMode.ReadOnly, bmp.PixelFormat);
         }
         
-        public void Iterate(Action<Pixel> callback) {
-            if (data == null) IterateSlow(callback);
-            else IterateFast(callback);
+        public void Iterate(Action<DrawOpBlock> output,
+                            Action<Pixel, Action<DrawOpBlock>> callback) {
+            if (data == null) IterateSlow(output, callback);
+            else IterateFast(output, callback);
         }
         
-        unsafe void IterateFast(Action<Pixel> callback) {
+        unsafe void IterateFast(Action<DrawOpBlock> output,
+                                Action<Pixel, Action<DrawOpBlock>> callback) {
             Pixel pixel;
             int width = bmp.Width, height = bmp.Height;
             byte* scan0 = (byte*)data.Scan0;
@@ -61,12 +63,13 @@ namespace MCGalaxy.Drawing {
                     pixel.G = *row; row++;
                     pixel.R = *row; row++;
                     if (hasA) { pixel.A = *row; row++; }
-                    callback(pixel);
+                    callback(pixel, output);
                 }
             }
         }
         
-        void IterateSlow(Action<Pixel> callback) {
+        void IterateSlow(Action<DrawOpBlock> output,
+                         Action<Pixel, Action<DrawOpBlock>> callback) {
             Pixel pixel;
             int width = bmp.Width, height = bmp.Height;
             for (int y = 0; y < height; y++)
@@ -79,7 +82,7 @@ namespace MCGalaxy.Drawing {
                 pixel.R = (byte)(argb >> 16);
                 pixel.G = (byte)(argb >> 8);
                 pixel.B = (byte)argb;
-                callback(pixel);
+                callback(pixel, output);
             }
         }
         
