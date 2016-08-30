@@ -72,13 +72,13 @@ namespace MCGalaxy {
         }
 
         /// <summary> Inserts a boolean value into the ExtrasCollection </summary>
-        public void PutBoolean(string key, bool value) { Add(key, value); }
+        public void PutBoolean(string key, bool value) { this[key] = value; }
 
         /// <summary> Inserts an integer value into the ExtrasCollection </summary>
-        public void PutInt(string key, int value) { Add(key, value); }
+        public void PutInt(string key, int value) { this[key] = value; }
 
         /// <summary> Inserts a string value into the ExtrasCollection </summary>
-        public void PutString(string key, string value) { Add(key, value); }
+        public void PutString(string key, string value) { this[key] = value; }
 
         /// <summary> Returns true if there is no data stored </summary>
         public bool IsEmpty() { return Count == 0; }
