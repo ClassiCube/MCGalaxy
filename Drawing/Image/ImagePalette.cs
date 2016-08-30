@@ -25,7 +25,7 @@ namespace MCGalaxy.Drawing {
             null, "2-layer color", "1-layer color", "2-layer grayscale",
             "1-layer grayscale", "Black and White", "Mathematical grayscale"
         };
-        public static PaletteEntry[] GetPalette(byte type) {
+        public static PaletteEntry[] GetPalette(int type) {
             if (type == 1) return Color_2;
             if (type == 2) return Color_1;
             if (type == 3) return Grayscale_2;

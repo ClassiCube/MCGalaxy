@@ -21,6 +21,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Generator;
 
 namespace MCGalaxy.Commands.Building {
@@ -84,19 +85,13 @@ namespace MCGalaxy.Commands.Building {
         bool DoImage(Player p, Vec3S32[] m, object state, byte type, byte extType) {
             if (m[0].X == m[1].X && m[0].Z == m[1].Z) { Player.Message(p, "No direction was selected"); return false; }
 
-            int dir;
-            if (Math.Abs(m[1].X - m[0].X) > Math.Abs(m[1].Z - m[0].Z))
-                dir = m[1].X <= m[0].X ? 1 : 0;
-            else
-                dir = m[1].Z <= m[0].Z ? 3 : 2;
-            
-            Thread thread = new Thread(() => DoDrawImage(p, m[0], (DrawArgs)state, dir));
+            Thread thread = new Thread(() => DoDrawImage(p, m, (DrawArgs)state));
             thread.Name = "MCG_ImagePrint";
             thread.Start();
             return false;
         }
         
-        void DoDrawImage(Player p, Vec3S32 p0, DrawArgs dArgs, int direction) {
+        void DoDrawImage(Player p, Vec3S32[] m, DrawArgs dArgs) {
             Bitmap bmp = HeightmapGen.ReadBitmap(dArgs.name, "extra/images/", p);
             if (bmp == null) return;
             try {
@@ -106,75 +101,29 @@ namespace MCGalaxy.Commands.Building {
                 bmp.Dispose();
                 return;
             }
-            
-            byte popType = dArgs.popType;
-            bool layer = dArgs.layer;
-            if (layer) {
-                if (popType == 1) popType = 2;
-                if (popType == 3) popType = 4;
+
+            ImagePrintDrawOp op = new ImagePrintDrawOp();
+            if (Math.Abs(m[1].X - m[0].X) > Math.Abs(m[1].Z - m[0].Z)) {
+                op.Direction = m[1].X <= m[0].X ? 1 : 0;
+            } else {
+                op.Direction = m[1].Z <= m[0].Z ? 3 : 2;
             }
-            PaletteEntry[] palette = ImagePalette.GetPalette(popType);
-            PaletteEntry cur = default(PaletteEntry);
             
-            IPalette selector = null;
-            if (popType == 6) selector = new GrayscalePalette();
-            else selector = new RgbPalette();
-            selector.SetAvailableBlocks(palette);
+            op.Source = bmp;
+            op.Layer = dArgs.layer;
+            op.Mode = dArgs.popType;
+            if (op.Layer) {
+                if (op.Mode == 1) op.Mode = 2;
+                if (op.Mode == 3) op.Mode = 4;
+            }
             
-            Vec3S32 dx, dy, adj;
-            CalcMul(layer, direction, out dx, out dy, out adj);
-
-            for (int yy = 0; yy < bmp.Height; yy++)
-                for (int xx = 0; xx < bmp.Width; xx++)
-            {
-                ushort X = (ushort)(p0.X + dx.X * xx + dy.X * yy);
-                ushort Y = (ushort)(p0.Y + dx.Y * xx + dy.Y * yy);
-                ushort Z = (ushort)(p0.Z + dx.Z * xx + dy.Z * yy);
-
-                Color col = bmp.GetPixel(xx, yy);
-                cur.R = col.R; cur.G = col.G; cur.B = col.B;
-                int position;
-                cur.Block = selector.BestMatch(cur, out position);
-                if (popType == 1 || popType == 3) {
-                    int threshold = popType == 1 ? 20 : 3;
-                    // Back layer block
-                    if (position <= threshold) {
-                        X = (ushort)(X + adj.X);
-                        Z = (ushort)(Z + adj.Z);
-                    }
-                }
-
-                if (col.A < 20) cur.Block = Block.air;
-                p.level.UpdateBlock(p, X, Y, Z, cur.Block, 0, true);
+            foreach (var b in op.Perform(m, p, p.level, null)) {
+                p.level.UpdateBlock(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true);
             }
             
             if (dArgs.name == "tempImage_" + p.name)
                 File.Delete("extra/images/tempImage_" + p.name + ".bmp");
-            Player.Message(p, "Finished printing image using " + ImagePalette.Names[popType]);
-        }
-        
-        void CalcMul(bool layer, int dir,
-                     out Vec3S32 signX, out Vec3S32 signY, out Vec3S32 adj) {
-            signX = default(Vec3S32); signY = default(Vec3S32); adj = default(Vec3S32);
-            
-            // Calculate back layer offset
-            if (dir == 0) adj.Z = 1;
-            if (dir == 1) adj.Z = -1;
-            if (dir == 2) adj.X = -1;
-            if (dir == 3) adj.X = 1;
-            
-            if (layer) {
-                if (dir == 0) { signX.X = 1; signY.Z = -1; }
-                if (dir == 1) { signX.X = -1; signY.Z = 1; }
-                if (dir == 2) { signX.Z = 1; signY.X = 1; }
-                if (dir == 3) { signX.Z = -1; signY.X = -1; }
-            } else {
-                signY.Y = 1; // Oriented upwards
-                if (dir == 0) signX.X = 1;
-                if (dir == 1) signX.X = -1;
-                if (dir == 2) signX.Z = 1;
-                if (dir == 3) signX.Z = -1;
-            }
+            Player.Message(p, "Finished printing image using " + ImagePalette.Names[op.Mode]);
         }
         
         public override void Help(Player p) {
