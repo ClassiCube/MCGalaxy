@@ -36,7 +36,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
         	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
@@ -46,7 +46,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
                 
                 if (tile == Include.Block && (tile != Block.custom_block || extTile == Include.Ext))
-                    yield return Place(x, y, z, brush);
+                    output(Place(x, y, z, brush));
             }
         }
     }
@@ -66,7 +66,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
         	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
@@ -76,7 +76,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
                 
                 if (tile != Exclude.Block || (tile == Block.custom_block && extTile != Exclude.Ext))
-                    yield return Place(x, y, z, brush);
+                    output(Place(x, y, z, brush));
             }
         }
     }

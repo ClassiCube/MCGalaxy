@@ -41,10 +41,10 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             UndoCache cache = who.UndoBuffer;
             using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
-                if (UndoBlocks(who)) yield break;
+                if (UndoBlocks(who)) return;
             }      
             bool found = false;
             string target = who.name.ToLower();
@@ -53,7 +53,6 @@ namespace MCGalaxy.Drawing.Ops {
                 UndoFormat.DoUndoArea(p, target, Start, Min, Max, ref found);
             else
                 UndoFormat.DoUndo(p, target, Start, End, ref found);
-            yield break;
         }
         
         bool UndoBlocks(Player p) {
@@ -80,13 +79,12 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             string target = whoName.ToLower();
             if (Min.X != ushort.MaxValue)
                 UndoFormat.DoUndoArea(p, target, Start, Min, Max, ref found);
             else
                 UndoFormat.DoUndo(p, target, Start, DateTime.MaxValue, ref found);
-            yield break;
         }
     }
 
@@ -98,7 +96,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             if (lvl.UndoBuffer.Count != Server.physUndo) {
                 int count = lvl.currentUndo;
                 for (int i = count; i >= 0; i--) {
@@ -119,7 +117,6 @@ namespace MCGalaxy.Drawing.Ops {
                     } catch { }
                 }
             }
-            yield break;
         }
         
         bool CheckBlockPhysics(Player p, Level lvl, int i) {

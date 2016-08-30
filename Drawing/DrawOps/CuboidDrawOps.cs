@@ -25,7 +25,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Hollow"; } }
         public byte Skip;
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing.Ops {
                     hollow = false;
                 }
                 if (hollow)
-                    yield return Place(x, y, z, Block.air, 0);
+                	output(Place(x, y, z, Block.air, 0));
             }
         }
         
@@ -59,7 +59,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Outline"; } }
         public byte Block, ExtBlock, NewBlock, NewExtBlock;
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
@@ -74,7 +74,7 @@ namespace MCGalaxy.Drawing.Ops {
                 outline |= Check(lvl, x, (ushort)(y + 1), z);
 
                 if (outline && !Check(lvl, x, y, z))
-                    yield return Place(x, y, z, NewBlock, NewExtBlock);
+                	output(Place(x, y, z, NewBlock, NewExtBlock));
             }
         }
         
@@ -89,7 +89,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Rainbow"; } }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             int dx = Math.Abs(p1.X - p2.X), dy = Math.Abs(p1.Y - p2.Y), dz = Math.Abs(p1.Z - p2.Z);
             byte stepX = 0, stepY = 0, stepZ = 0;
@@ -112,7 +112,7 @@ namespace MCGalaxy.Drawing.Ops {
                     for (ushort x = p1.X; x <= p2.X; x++) {
                         i = (i + stepX) % 13;
                         if (lvl.GetTile(x, y, z) != Block.air)
-                            yield return Place(x, y, z, (byte)(Block.red + i), 0);
+                        	output(Place(x, y, z, (byte)(Block.red + i), 0));
                     }
                     i = startX;
                 }

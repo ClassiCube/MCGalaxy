@@ -41,15 +41,14 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             if (brush == null) brush = defBrush;
             Vec3U16 P = Clamp(marks[0]);
             
-            if (Type == T_Tree) return AddTree(lvl, P.X, P.Y, P.Z, brush);
-            if (Type == T_NotchTree) return AddNotchTree(lvl, P.X, P.Y, P.Z, brush);
-            if (Type == T_NotchSwamp) return AddNotchSwampTree(lvl, P.X, P.Y, P.Z, brush);
-            if (Type == T_Cactus) return AddCactus(lvl, P.X, P.Y, P.Z);
-            return null;
+            if (Type == T_Tree) AddTree(lvl, P.X, P.Y, P.Z, brush, output);
+            if (Type == T_NotchTree) AddNotchTree(lvl, P.X, P.Y, P.Z, brush, output);
+            if (Type == T_NotchSwamp) AddNotchSwampTree(lvl, P.X, P.Y, P.Z, brush, output);
+            if (Type == T_Cactus) AddCactus(lvl, P.X, P.Y, P.Z, output);
         }
         
         public override void SetMarks(Vec3S32[] marks) {
@@ -78,11 +77,11 @@ namespace MCGalaxy.Drawing.Ops {
             Max.X += size; Max.Z += size;
         }
         
-        IEnumerable<DrawOpBlock> AddTree(Level lvl, ushort x, ushort y, ushort z, Brush brush) {
+        void AddTree(Level lvl, ushort x, ushort y, ushort z, Brush brush, Action<DrawOpBlock> output) {
             for (ushort dy = 0; dy < top + height - 1; dy++) {
                 ushort yy = (ushort)(y + dy);
                 if (overwrite || lvl.GetTile(x, yy, z) == Block.air || (yy == y && lvl.GetTile(x, yy, z) == Block.shrub))
-                    yield return Place(x, yy, z, Block.trunk, 0);
+                	output(Place(x, yy, z, Block.trunk, 0));
             }
             
             for (short dy = (short)-top; dy <= top; ++dy)
@@ -94,17 +93,17 @@ namespace MCGalaxy.Drawing.Ops {
                     ushort xx = (ushort)(x + dx), yy = (ushort)(y + dy + height), zz = (ushort)(z + dz);
 
                     if ((xx != x || zz != z || dy >= top - 1) && (overwrite || lvl.GetTile(xx, yy, zz) == Block.air))
-                        yield return Place(xx, yy, zz, brush);
+                    	output(Place(xx, yy, zz, brush));
                 }
             }
         }
 
-        IEnumerable<DrawOpBlock> AddNotchTree(Level lvl, ushort x, ushort y, ushort z, Brush brush) {
+        void AddNotchTree(Level lvl, ushort x, ushort y, ushort z, Brush brush, Action<DrawOpBlock> output) {
             for (int dy = 0; dy <= height; dy++) {
                 ushort yy = (ushort)(y + dy);
                 byte tile = lvl.GetTile(x, yy, z);
                 if (overwrite || tile == Block.air || (yy == y && tile == Block.shrub))
-                    yield return Place(x, yy, z, Block.trunk, 0);
+                	output(Place(x, yy, z, Block.trunk, 0));
             }
 
             for (int dy = top; dy <= height + 1; dy++) {
@@ -121,20 +120,20 @@ namespace MCGalaxy.Drawing.Ops {
                         if (dy > height) continue;
 
                         if (random.Next(2) == 0)
-                            yield return Place(xx, yy, zz, brush);
+                        	output(Place(xx, yy, zz, brush));
                     } else {
-                        yield return Place(xx, yy, zz, brush);
+                    	output(Place(xx, yy, zz, brush));
                     }
                 }
             }
         }
 
-        IEnumerable<DrawOpBlock> AddNotchSwampTree(Level lvl, ushort x, ushort y, ushort z, Brush brush) {
+        void AddNotchSwampTree(Level lvl, ushort x, ushort y, ushort z, Brush brush, Action<DrawOpBlock> output) {
             for (int dy = 0; dy <= height; dy++) {
                 ushort yy = (ushort)(y + dy);
                 byte tile = lvl.GetTile(x, yy, z);
                 if (overwrite || tile == Block.air || (yy == y && tile == Block.shrub))
-                    yield return Place(x, yy, z, Block.trunk, 0);
+                	output(Place(x, yy, z, Block.trunk, 0));
             }
 
             for (int dy = top; dy <= height + 1; dy++) {
@@ -151,18 +150,18 @@ namespace MCGalaxy.Drawing.Ops {
                         if (dy > height) continue;
 
                         if (random.Next(2) == 0)
-                            yield return Place(xx, yy, zz, brush);
+                        	output(Place(xx, yy, zz, brush));
                     } else {
-                        yield return Place(xx, yy, zz, brush);
+                    	output(Place(xx, yy, zz, brush));
                     }
                 }
             }
         }
 
-        IEnumerable<DrawOpBlock> AddCactus(Level lvl, ushort x, ushort y, ushort z) {
+        void AddCactus(Level lvl, ushort x, ushort y, ushort z, Action<DrawOpBlock> output) {
             for (ushort dy = 0; dy <= height; dy++) {
                 if (overwrite || lvl.GetTile(z, (ushort)(y + dy), z) == Block.air)
-                    yield return Place(x, (ushort)(y + dy), z, Block.green, 0);
+                	output(Place(x, (ushort)(y + dy), z, Block.green, 0));
             }
 
             int inX = 0, inZ = 0;
@@ -174,11 +173,11 @@ namespace MCGalaxy.Drawing.Ops {
 
             for (ushort dy = height; dy <= random.Next(height + 2, height + 5); dy++) {
                 if (overwrite || lvl.GetTile((ushort)(x + inX), (ushort)(y + dy), (ushort)(z + inZ)) == Block.air)
-                    yield return Place((ushort)(x + inX), (ushort)(y + dy), (ushort)(z + inZ), Block.green, 0);
+                	output(Place((ushort)(x + inX), (ushort)(y + dy), (ushort)(z + inZ), Block.green, 0));
             }
             for (ushort dy = height; dy <= random.Next(height + 2, height + 5); dy++) {
                 if (overwrite || lvl.GetTile((ushort)(x - inX), (ushort)(y + dy), (ushort)(z - inZ)) == Block.air)
-                    yield return Place((ushort)(x - inX), (ushort)(y + dy), (ushort)(z - inZ), Block.green, 0);
+                	output(Place((ushort)(x - inX), (ushort)(y + dy), (ushort)(z - inZ), Block.green, 0));
             }
         }
 

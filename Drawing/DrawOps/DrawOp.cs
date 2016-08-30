@@ -70,7 +70,7 @@ namespace MCGalaxy.Drawing.Ops {
         /// Note that this estimate assumes that all possibly affected blocks will be changed by the drawing command. </summary>
         public abstract long BlocksAffected(Level lvl, Vec3S32[] marks);
         
-        public abstract IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush);
+        public abstract void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output);
         
         public virtual bool CanDraw(Vec3S32[] marks, Player p, long affected) {
             if (p != null && affected > p.group.maxBlocks) {

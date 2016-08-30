@@ -34,7 +34,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (long)(Math.PI / 3 * (R * R * H));
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
@@ -53,7 +53,7 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 byte ctile = lvl.GetTile(x, y, z);
                 if (ctile != 0) continue;
-                yield return Place(x, y, z, brush);
+                output(Place(x, y, z, brush));
             }
         }
     }
@@ -69,7 +69,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (long)(outer - inner);
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
@@ -89,7 +89,7 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 byte ctile = lvl.GetTile(x, y, z);
                 if (ctile != 0) continue;
-                yield return Place(x, y, z, brush);
+                output(Place(x, y, z, brush));
             }
         }
     }
@@ -102,7 +102,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (long)(Math.PI / 3 * (R * R * H));
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
@@ -124,7 +124,7 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 bool layer = dist >= (curRadius - 1) * (curRadius - 1);
                 byte block = layer ? Block.grass : Block.lavastill;
-                yield return Place(x, y, z, block, 0);
+                output(Place(x, y, z, block, 0));
             }
         }
     }

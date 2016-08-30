@@ -33,7 +33,7 @@ namespace MCGalaxy.Drawing.Ops {
         internal int Mode, Direction;
         internal bool Layer;
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p0 = Clamp(marks[0]);
             PaletteEntry[] palette = ImagePalette.GetPalette(Mode);
             PaletteEntry cur = default(PaletteEntry);
@@ -67,10 +67,9 @@ namespace MCGalaxy.Drawing.Ops {
                 }
 
                 if (col.A < 20) cur.Block = Block.air;
-                yield return Place(X, Y, Z, cur.Block, 0);
+                output(Place(X, Y, Z, cur.Block, 0));
             }
             Source = null;
-            yield break;
         }
         
         void CalcMul(bool layer, int dir,

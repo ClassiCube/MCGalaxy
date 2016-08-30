@@ -41,7 +41,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (long)(Math.PI * 4.0 / 3.0 * (R * R * R));
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             int upper = (Radius + 1) * (Radius + 1);
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
@@ -52,7 +52,7 @@ namespace MCGalaxy.Drawing.Ops {
             {
                 int dist = (C.X - x) * (C.X - x) + (C.Y - y) * (C.Y - y) + (C.Z - z) * (C.Z - z);
                 if (dist < upper)
-                    yield return Place(x, y, z, brush);
+                    output(Place(x, y, z, brush));
             }
         }
     }
@@ -68,7 +68,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (long)(outer - inner);
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             int upper = (Radius + 1) * (Radius + 1), inner = (Radius - 1) * (Radius - 1);
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
@@ -79,7 +79,7 @@ namespace MCGalaxy.Drawing.Ops {
             {
                 int dist = (C.X - x) * (C.X - x) + (C.Y - y) * (C.Y - y) + (C.Z - z) * (C.Z - z);
                 if (dist < upper && dist >= inner)
-                    yield return Place(x, y, z, brush);
+                    output(Place(x, y, z, brush));
             }
         }
     }

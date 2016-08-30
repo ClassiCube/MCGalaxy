@@ -41,7 +41,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         int dirX, dirZ;
         Vec3U16 pos;
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
         	Vec3U16 p1 = Clamp(marks[0]), p2 = Clamp(marks[1]);
             if (Math.Abs(p2.X - p1.X) > Math.Abs(p2.Z - p1.Z))
                 dirX = p2.X > p1.X? 1 : -1;
@@ -50,12 +50,11 @@ namespace MCGalaxy.Drawing.Ops {
             pos = p1;
             
             foreach (char c in Text) {
-            	foreach (var block in DrawLetter(p, lvl, c, brush))
-            	    yield return block;
+            	DrawLetter(p, lvl, c, brush, output);
             }
         }
         
-        IEnumerable<DrawOpBlock> DrawLetter(Player p, Level lvl, char c, Brush brush) {
+        void DrawLetter(Player p, Level lvl, char c, Brush brush, Action<DrawOpBlock> output) {
             if ((int)c >= 256 || letters[(int)c] == null) {
                 Player.Message(p, "\"" + c + "\" is not currently supported, replacing with space.");
                 pos.X = (ushort)(pos.X + dirX * 4 * Scale);
@@ -71,7 +70,7 @@ namespace MCGalaxy.Drawing.Ops {
                             for (int hor = 0; hor < Scale; hor++) 
                         {
                             int x = pos.X + dirX * hor, y = pos.Y + j * Scale + ver, z = pos.Z + dirZ * hor;
-                            yield return Place((ushort)x, (ushort)y, (ushort)z, brush);
+                            output(Place((ushort)x, (ushort)y, (ushort)z, brush));
                         }
                     }
                     pos.X = (ushort)(pos.X + dirX * Scale);

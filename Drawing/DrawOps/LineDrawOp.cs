@@ -37,7 +37,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
         	Vec3U16 p1 = Clamp(marks[0]), p2 = Clamp(marks[1]);
             List<Vec3U16> buffer = new List<Vec3U16>();
             DrawLine(p1.X, p1.Y, p1.Z, MaxLength, p2.X, p2.Y, p2.Z, buffer);
@@ -50,9 +50,9 @@ namespace MCGalaxy.Drawing.Ops {
                 Vec3U16 pos = buffer[i];
                 if (WallsMode) {
                     for (ushort yy = p1.Y; yy <= p2.Y; yy++)
-                        yield return Place(pos.X, yy, pos.Z, brush);
+                    	output(Place(pos.X, yy, pos.Z, brush));
                 } else {
-                    yield return Place(pos.X, pos.Y, pos.Z, brush);
+                	output(Place(pos.X, pos.Y, pos.Z, brush));
                 }
             }
         }

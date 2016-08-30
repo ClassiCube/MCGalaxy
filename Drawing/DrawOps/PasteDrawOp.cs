@@ -28,7 +28,7 @@ namespace MCGalaxy.Drawing.Ops {
             return CopyState.UsedBlocks;
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;
             // Adjust for the fact that paste origin may be outside the map.
@@ -41,7 +41,7 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 ushort x = (ushort)(locX + x1), y = (ushort)(locY + y1), z = (ushort)(locZ + z1);
                 if ((b != Block.air || pasteAir) && lvl.InBound(x, y, z))
-                    yield return Place(x, y, z, b, extB);
+                	output(Place(x, y, z, b, extB));
             }
         }
     }
@@ -57,7 +57,7 @@ namespace MCGalaxy.Drawing.Ops {
             return CopyState.UsedBlocks;
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;
             ExtBlock[] include = Include, exclude = Exclude;
@@ -81,14 +81,14 @@ namespace MCGalaxy.Drawing.Ops {
                         }
                     }
                     if (!place) continue;
-                    yield return Place(x, y, z, b, extB);
+                    output(Place(x, y, z, b, extB));
                 }
                 
                 if (include != null) {
                     for (int j = 0; j < include.Length; j++) {
                         ExtBlock block = include[j];
                         if (b == block.Block && (b != Block.custom_block || extB == block.Ext)) {
-                            yield return Place(x, y, z, b, extB); break;
+                        	output(Place(x, y, z, b, extB)); break;
                         }
                     }
                 }

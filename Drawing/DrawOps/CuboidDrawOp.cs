@@ -28,13 +28,13 @@ namespace MCGalaxy.Drawing.Ops {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                yield return Place(x, y, z, brush);
+                output(Place(x, y, z, brush));
             }
         }
     }
@@ -50,50 +50,48 @@ namespace MCGalaxy.Drawing.Ops {
             return xQuadsVol + yQuadsVol + zQuadzVol;
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             int lenX = (p2.X - p1.X + 1), lenY = (p2.Y - p1.Y + 1);
-            foreach (var block in QuadY(p1.Y, p1.X, p1.Z, p2.X, p2.Z, brush))
-                yield return block;
-            foreach (var block in QuadY(p2.Y, p1.X, p1.Z, p2.X, p2.Z, brush))
-                yield return block;
+            QuadY(p1.Y, p1.X, p1.Z, p2.X, p2.Z, brush, output);
+            QuadY(p2.Y, p1.X, p1.Z, p2.X, p2.Z, brush, output);
+            
             if (lenY > 2) {
-                foreach (var block in QuadX(p1.X, (ushort)(p1.Y + 1), p1.Z, (ushort)(p2.Y - 1), p2.Z, brush))
-                    yield return block;
-                foreach (var block in QuadX(p2.X, (ushort)(p1.Y + 1), p1.Z, (ushort)(p2.Y - 1), p2.Z, brush))
-                    yield return block;
+            	QuadX(p1.X, (ushort)(p1.Y + 1), p1.Z, (ushort)(p2.Y - 1), p2.Z, brush, output);
+            	QuadX(p2.X, (ushort)(p1.Y + 1), p1.Z, (ushort)(p2.Y - 1), p2.Z, brush, output);
             }
             if (lenX > 2 && lenY > 2) {
-                foreach (var block in QuadZ(p1.Z, (ushort)(p1.Y + 1), (ushort)(p1.X + 1),
-                                            (ushort)(p2.Y - 1), (ushort)(p2.X - 1), brush))
-                    yield return block;
-                foreach (var block in QuadZ(p2.Z, (ushort)(p1.Y + 1), (ushort)(p1.X + 1),
-                                            (ushort)(p2.Y - 1), (ushort)(p2.X - 1), brush))
-                    yield return block;
+            	QuadZ(p1.Z, (ushort)(p1.Y + 1), (ushort)(p1.X + 1), 
+            	      (ushort)(p2.Y - 1), (ushort)(p2.X - 1), brush, output);
+                QuadZ(p2.Z, (ushort)(p1.Y + 1), (ushort)(p1.X + 1),
+            	      (ushort)(p2.Y - 1), (ushort)(p2.X - 1), brush, output);
             }
         }
         
-        protected IEnumerable<DrawOpBlock> QuadX(ushort x, ushort y1, ushort z1, ushort y2, ushort z2, Brush brush) {
+        protected void QuadX(ushort x, ushort y1, ushort z1, ushort y2, ushort z2, 
+                             Brush brush, Action<DrawOpBlock> output) {
             for (ushort y = y1; y <= y2; y++)
                 for (ushort z = z1; z <= z2; z++)
             {
-                yield return Place(x, y, z, brush);
+                output(Place(x, y, z, brush));
             }
         }
         
-        protected IEnumerable<DrawOpBlock> QuadY(ushort y, ushort x1, ushort z1, ushort x2, ushort z2, Brush brush) {
+        protected void QuadY(ushort y, ushort x1, ushort z1, ushort x2, ushort z2, 
+                             Brush brush, Action<DrawOpBlock> output) {
             for (ushort z = z1; z <= z2; z++)
                 for (ushort x = x1; x <= x2; x++)
             {
-                yield return Place(x, y, z, brush);
+                output(Place(x, y, z, brush));
             }
         }
         
-        protected IEnumerable<DrawOpBlock> QuadZ(ushort z, ushort y1, ushort x1, ushort y2, ushort x2, Brush brush) {
+        protected void QuadZ(ushort z, ushort y1, ushort x1, ushort y2, ushort x2,
+                             Brush brush, Action<DrawOpBlock> output) {
             for (ushort y = y1; y <= y2; y++)
                 for (ushort x = x1; x <= x2; x++)
             {
-                yield return Place(x, y, z, brush);
+                output(Place(x, y, z, brush));
             }
         }
     }
@@ -108,19 +106,15 @@ namespace MCGalaxy.Drawing.Ops {
             return xQuadsVol + zQuadsVol;
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             int lenX = (p2.X - p1.X + 1);
-            foreach (var block in QuadX(p1.X, p1.Y, p1.Z, p2.Y, p2.Z, brush))
-                yield return block;
-            foreach (var block in QuadX(p2.X, p1.Y, p1.Z, p2.Y, p2.Z, brush))
-                yield return block;
+            QuadX(p1.X, p1.Y, p1.Z, p2.Y, p2.Z, brush, output);
+            QuadX(p2.X, p1.Y, p1.Z, p2.Y, p2.Z, brush, output);
             
-            if (lenX <= 2) yield break;
-            foreach (var block in QuadZ(p1.Z, p1.Y, (ushort)(p1.X + 1), p2.Y, (ushort)(p2.X - 1), brush))
-                yield return block;
-            foreach (var block in QuadZ(p2.Z, p1.Y, (ushort)(p1.X + 1), p2.Y, (ushort)(p2.X - 1), brush))
-                yield return block;
+            if (lenX <= 2) return;
+            QuadZ(p1.Z, p1.Y, (ushort)(p1.X + 1), p2.Y, (ushort)(p2.X - 1), brush, output);
+            QuadZ(p2.Z, p1.Y, (ushort)(p1.X + 1), p2.Y, (ushort)(p2.X - 1), brush, output);
         }
     }
     
@@ -134,27 +128,27 @@ namespace MCGalaxy.Drawing.Ops {
             return horSidesvol + verSidesVol;
         }
         
-        public override IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush) {
+        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++ ) {
-                yield return Place(p1.X, y, p1.Z, brush);
-                yield return Place(p2.X, y, p1.Z, brush);
-                yield return Place(p1.X, y, p2.Z, brush);
-                yield return Place(p2.X, y, p2.Z, brush);
+            	output(Place(p1.X, y, p1.Z, brush));
+            	output(Place(p2.X, y, p1.Z, brush));
+            	output(Place(p1.X, y, p2.Z, brush));
+                output(Place(p2.X, y, p2.Z, brush));
             }
 
             for (ushort z = p1.Z; z <= p2.Z; z++) {
-                yield return Place(p1.X, p1.Y, z, brush);
-                yield return Place(p2.X, p1.Y, z, brush);
-                yield return Place(p1.X, p2.Y, z, brush);
-                yield return Place(p2.X, p2.Y, z, brush);
+            	output(Place(p1.X, p1.Y, z, brush));
+            	output(Place(p2.X, p1.Y, z, brush));
+            	output(Place(p1.X, p2.Y, z, brush));
+            	output(Place(p2.X, p2.Y, z, brush));
             }
             
             for (ushort x = p1.X; x <= p2.X; x++) {
-                yield return Place(x, p1.Y, p1.Z, brush);
-                yield return Place(x, p1.Y, p2.Z, brush);
-                yield return Place(x, p2.Y, p1.Z, brush);
-                yield return Place(x, p2.Y, p2.Z, brush);
+            	output(Place(x, p1.Y, p1.Z, brush));
+            	output(Place(x, p1.Y, p2.Z, brush));
+            	output(Place(x, p2.Y, p1.Z, brush));
+            	output(Place(x, p2.Y, p2.Z, brush));
             }
         }
     }
