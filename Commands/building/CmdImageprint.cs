@@ -115,37 +115,21 @@ namespace MCGalaxy.Commands.Building {
             }
             PaletteEntry[] palette = ImagePalette.GetPalette(popType);
             PaletteEntry cur = default(PaletteEntry);
-            Vec3S32 P;
             
             IPalette selector = null;
             if (popType == 6) selector = new GrayscalePalette();
             else selector = new RgbPalette();
             selector.SetAvailableBlocks(palette);
+            
+            Vec3S32 dx, dy, adj;
+            CalcMul(layer, direction, out dx, out dy, out adj);
 
             for (int yy = 0; yy < bmp.Height; yy++)
                 for (int xx = 0; xx < bmp.Width; xx++)
             {
-                if (layer) {
-                    P.Y = p0.Y;
-                    if (direction <= 1) {
-                        if (direction == 0) { P.X = (ushort)(p0.X + xx); P.Z = (ushort)(p0.Z - yy); }
-                        else { P.X = (ushort)(p0.X - xx); P.Z = (ushort)(p0.Z + yy); }
-                    } else {
-                        if (direction == 2) { P.Z = (ushort)(p0.Z + xx); P.X = (ushort)(p0.X + yy); }
-                        else { P.Z = (ushort)(p0.Z - xx); P.X = (ushort)(p0.X - yy); }
-                    }
-                } else {
-                    P.Y = (ushort)(p0.Y + yy);
-                    if (direction <= 1) {
-                        if (direction == 0) P.X = (ushort)(p0.X + xx);
-                        else P.X = (ushort)(p0.X - xx);
-                        P.Z = p0.Z;
-                    } else {
-                        if (direction == 2) P.Z = (ushort)(p0.X + xx);
-                        else P.Z = (ushort)(p0.Z - xx);
-                        P.X = p0.X;
-                    }
-                }
+                ushort X = (ushort)(p0.X + dx.X * xx + dy.X * yy);
+                ushort Y = (ushort)(p0.Y + dx.Y * xx + dy.Y * yy);
+                ushort Z = (ushort)(p0.Z + dx.Z * xx + dy.Z * yy);
 
                 Color col = bmp.GetPixel(xx, yy);
                 cur.R = col.R; cur.G = col.G; cur.B = col.B;
@@ -153,20 +137,15 @@ namespace MCGalaxy.Commands.Building {
                 cur.Block = selector.BestMatch(cur, out position);
                 if (popType == 1 || popType == 3) {
                     int threshold = popType == 1 ? 20 : 3;
+                    // Back layer block
                     if (position <= threshold) {
-                        if (direction == 0)
-                            P.Z = (ushort)(P.Z + 1);
-                        else if (direction == 2)
-                            P.X = (ushort)(P.X - 1);
-                        else if (direction == 1)
-                            P.Z = (ushort)(P.Z - 1);
-                        else if (direction == 3)
-                            P.X = (ushort)(P.X + 1);
+                        X = (ushort)(X + adj.X);
+                        Z = (ushort)(Z + adj.Z);
                     }
                 }
 
                 if (col.A < 20) cur.Block = Block.air;
-                p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, cur.Block, 0, true);
+                p.level.UpdateBlock(p, X, Y, Z, cur.Block, 0, true);
             }
             
             if (dArgs.name == "tempImage_" + p.name)
@@ -174,12 +153,36 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "Finished printing image using " + ImagePalette.Names[popType]);
         }
         
+        void CalcMul(bool layer, int dir,
+                     out Vec3S32 signX, out Vec3S32 signY, out Vec3S32 adj) {
+            signX = default(Vec3S32); signY = default(Vec3S32); adj = default(Vec3S32);
+            
+            // Calculate back layer offset
+            if (dir == 0) adj.Z = 1;
+            if (dir == 1) adj.Z = -1;
+            if (dir == 2) adj.X = -1;
+            if (dir == 3) adj.X = 1;
+            
+            if (layer) {
+                if (dir == 0) { signX.X = 1; signY.Z = -1; }
+                if (dir == 1) { signX.X = -1; signY.Z = 1; }
+                if (dir == 2) { signX.Z = 1; signY.X = 1; }
+                if (dir == 3) { signX.Z = -1; signY.X = -1; }
+            } else {
+                signY.Y = 1; // Oriented upwards
+                if (dir == 0) signX.X = 1;
+                if (dir == 1) signX.X = -1;
+                if (dir == 2) signX.Z = 1;
+                if (dir == 3) signX.Z = -1;
+            }
+        }
+        
         public override void Help(Player p) {
             Player.Message(p, "/imageprint <switch> <localfile> - Print local file in extra/images/ folder.  Must be type .bmp, type filename without extension.");
             Player.Message(p, "/imageprint <switch> <imgurfile.extension> - Print IMGUR stored file.  Example: /i piCCm.gif will print www.imgur.com/piCCm.gif. Case-sensitive");
             Player.Message(p, "/imageprint <switch> <webfile> - Print web file in format domain.com/folder/image.jpg. Does not need http:// or www.");
             Player.Message(p, "Available switches: (&f1%S) 2-Layer Color image, (&f2%S) 1-Layer Color Image, " +
-                               "(&f3%S) 2-Layer Grayscale, (&f4%S) 1-Layer Grayscale, (%f5%S) Black and White, (&f6%S) Mathematical Grayscale");
+                           "(&f3%S) 2-Layer Grayscale, (&f4%S) 1-Layer Grayscale, (%f5%S) Black and White, (&f6%S) Mathematical Grayscale");
             Player.Message(p, "Local filetypes: .bmp.   Remote Filetypes: .gif .png .jpg .bmp.  PNG and GIF may use transparency");
             Player.Message(p, "Use switch (&flayer%S) or (&fl%S) to print horizontally.");
         }
