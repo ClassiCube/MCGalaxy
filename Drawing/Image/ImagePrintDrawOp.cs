@@ -34,42 +34,21 @@ namespace MCGalaxy.Drawing.Ops {
         internal int Mode, Direction;
         internal bool Layer;
         internal string Filename;
+        Vec3S32 dx, dy, adj;
+        PaletteEntry cur = default(PaletteEntry);
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p0 = Clamp(marks[0]);
             PaletteEntry[] palette = ImagePalette.GetPalette(Mode);
-            PaletteEntry cur = default(PaletteEntry);
-            
             IPalette selector = null;
             if (Mode == 6) selector = new GrayscalePalette();
             else selector = new RgbPalette();
             selector.SetAvailableBlocks(palette);
-            
-            Vec3S32 dx, dy, adj;
-            CalcMul(Layer, Direction, out dx, out dy, out adj);
+            CalcDirectionVectors(Direction);
 
-            for (int yy = 0; yy < Source.Height; yy++)
-                for (int xx = 0; xx < Source.Width; xx++)
-            {
-                ushort X = (ushort)(p0.X + dx.X * xx + dy.X * yy);
-                ushort Y = (ushort)(p0.Y + dx.Y * xx + dy.Y * yy);
-                ushort Z = (ushort)(p0.Z + dx.Z * xx + dy.Z * yy);
-
-                Draw.Color col = Source.GetPixel(xx, yy);
-                cur.R = col.R; cur.G = col.G; cur.B = col.B;
-                int position;
-                cur.Block = selector.BestMatch(cur, out position);
-                if (Mode == 1 || Mode == 3) {
-                    int threshold = Mode == 1 ? 20 : 3;
-                    // Back layer block
-                    if (position <= threshold) {
-                        X = (ushort)(X + adj.X);
-                        Z = (ushort)(Z + adj.Z);
-                    }
-                }
-
-                if (col.A < 20) cur.Block = Block.air;
-                output(Place(X, Y, Z, cur.Block, 0));
+            using (PixelGetter getter = new PixelGetter(Source)) {
+                getter.Init();
+                getter.Iterate(P => OutputPixel(P, selector, output));
             }
             
             Source.Dispose();
@@ -79,9 +58,32 @@ namespace MCGalaxy.Drawing.Ops {
             Player.Message(p, "Finished printing image using " + ImagePalette.Names[Mode]);
         }
         
-        void CalcMul(bool layer, int dir,
-                     out Vec3S32 signX, out Vec3S32 signY, out Vec3S32 adj) {
-            signX = default(Vec3S32); signY = default(Vec3S32); adj = default(Vec3S32);
+        void OutputPixel(Pixel P, IPalette selector, Action<DrawOpBlock> output) {
+            ushort x = (ushort)(Origin.X + dx.X * P.X + dy.X * P.Y);
+            ushort y = (ushort)(Origin.Y + dx.Y * P.X + dy.Y * P.Y);
+            ushort z = (ushort)(Origin.Z + dx.Z * P.X + dy.Z * P.Y);
+            
+            byte alpha = (byte)(P.ARGB >> 24);
+            if (alpha < 20) { output(Place(x, y, z, Block.air, 0)); return; }
+            cur.R = (byte)(P.ARGB >> 16);
+            cur.G = (byte)(P.ARGB >> 16);
+            cur.B = (byte)(P.ARGB >> 16);
+            
+            int position;
+            byte block = selector.BestMatch(cur, out position);
+            if (Mode == 1 || Mode == 3) {
+                int threshold = Mode == 1 ? 20 : 3;
+                // Back layer block
+                if (position <= threshold) {
+                    x = (ushort)(x + adj.X);
+                    z = (ushort)(z + adj.Z);
+                }
+            }
+            output(Place(x, y, z, cur.Block, 0));
+        }
+        
+        void CalcDirectionVectors(int dir) {
+            dx = default(Vec3S32); dy = default(Vec3S32); adj = default(Vec3S32);
             
             // Calculate back layer offset
             if (dir == 0) adj.Z = 1;
@@ -89,17 +91,17 @@ namespace MCGalaxy.Drawing.Ops {
             if (dir == 2) adj.X = -1;
             if (dir == 3) adj.X = 1;
             
-            if (layer) {
-                if (dir == 0) { signX.X = 1; signY.Z = -1; }
-                if (dir == 1) { signX.X = -1; signY.Z = 1; }
-                if (dir == 2) { signX.Z = 1; signY.X = 1; }
-                if (dir == 3) { signX.Z = -1; signY.X = -1; }
+            if (Layer) {
+                if (dir == 0) { dx.X = 1; dy.Z = -1; }
+                if (dir == 1) { dx.X = -1; dy.Z = 1; }
+                if (dir == 2) { dx.Z = 1; dy.X = 1; }
+                if (dir == 3) { dx.Z = -1; dy.X = -1; }
             } else {
-                signY.Y = 1; // Oriented upwards
-                if (dir == 0) signX.X = 1;
-                if (dir == 1) signX.X = -1;
-                if (dir == 2) signX.Z = 1;
-                if (dir == 3) signX.Z = -1;
+                dy.Y = 1; // Oriented upwards
+                if (dir == 0) dx.X = 1;
+                if (dir == 1) dx.X = -1;
+                if (dir == 2) dx.Z = 1;
+                if (dir == 3) dx.Z = -1;
             }
         }
     }

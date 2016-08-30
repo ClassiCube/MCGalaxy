@@ -54,11 +54,7 @@ namespace MCGalaxy.Drawing {
                 int* row = (int*)(scan0 + y * data.Stride);
                 for (int x = 0; x < width; x++) {
                     pixel.X = (ushort)x;
-                    int argb = row[x];
-                    
-                    pixel.R = (byte)(argb >> 16);
-                    pixel.G = (byte)(argb >> 8);
-                    pixel.B = (byte)(argb >> 8);
+                    pixel.ARGB = row[x];
                     callback(pixel);
                 }
             }
@@ -71,12 +67,7 @@ namespace MCGalaxy.Drawing {
                 for (int x = 0; x < width; x++)
             {
                 pixel.X = (ushort)x; pixel.Y = (ushort)y;
-                Color col = bmp.GetPixel(x, y);
-                int argb = col.ToArgb(); // R/G/B properties incur overhead
-                
-                pixel.R = (byte)(argb >> 16);
-                pixel.G = (byte)(argb >> 8);
-                pixel.B = (byte)(argb >> 8);
+                pixel.ARGB = bmp.GetPixel(x, y).ToArgb(); // R/G/B properties incur overhead
                 callback(pixel);
             }
         }
@@ -90,6 +81,6 @@ namespace MCGalaxy.Drawing {
     
     public struct Pixel {
         public ushort X, Y;
-        public byte R, G, B;
+        public int ARGB;
     }
 }
