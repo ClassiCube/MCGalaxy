@@ -27,15 +27,15 @@ namespace MCGalaxy.Drawing {
         
         /// <summary> Returns the best matching block for the given color,
         /// based on this palette's colourspace. </summary>
-        byte BestMatch(PaletteEntry cur, out int position);
+        byte BestMatch(byte R, byte G, byte B, out int position);
     }
     
     public sealed class GrayscalePalette : IPalette {
         
         public void SetAvailableBlocks(PaletteEntry[] blocks) { }
         
-        public byte BestMatch(PaletteEntry cur, out int position) {
-            int brightness = (cur.R + cur.G + cur.B) / 3; position = -1;
+        public byte BestMatch(byte R, byte G, byte B, out int position) {
+            int brightness = (R + G + B) / 3; position = -1;
             if (brightness < (256 / 4))
                 return Block.obsidian;
             else if (brightness >= (256 / 4) && brightness < (256 / 4) * 2)
@@ -54,13 +54,13 @@ namespace MCGalaxy.Drawing {
             this.palette = blocks;
         }
         
-        public byte BestMatch(PaletteEntry cur, out int position) {
+        public byte BestMatch(byte R, byte G, byte B, out int position) {
             int minimum = int.MaxValue; position = 0;
             for (int i = 0; i < palette.Length; i++) {
                 PaletteEntry pixel = palette[i];
-                int dist = (cur.R - pixel.R) * (cur.R - pixel.R)
-                    + (cur.G - pixel.G) * (cur.G - pixel.G)
-                    + (cur.B - pixel.B) * (cur.B - pixel.B);
+                int dist = (R - pixel.R) * (R - pixel.R)
+                         + (G - pixel.G) * (G - pixel.G)
+                         + (B - pixel.B) * (B - pixel.B);
                 
                 if (dist < minimum) {
                     minimum = dist; position = i;
@@ -79,9 +79,9 @@ namespace MCGalaxy.Drawing {
                 palette[i] = RgbToLab(blocks[i]);
         }
         
-        public byte BestMatch(PaletteEntry cur, out int position) {
+        public byte BestMatch(byte r, byte g, byte b, out int position) {
             double minimum = int.MaxValue; position = 0;
-            LabColor col = RgbToLab(cur);
+            LabColor col = RgbToLab(r, g, b);
             
             for (int i = 0; i < palette.Length; i++) {
                 LabColor pixel = palette[i];
@@ -102,9 +102,15 @@ namespace MCGalaxy.Drawing {
             public byte Block;
         }
         
-        LabColor RgbToLab(PaletteEntry block) {
+        LabColor RgbToLab(PaletteEntry cur) {
+            LabColor lab = RgbToLab(cur.R, cur.G, cur.B);
+            lab.Block = cur.Block;
+            return lab;
+        }
+        
+        LabColor RgbToLab(byte r, byte g, byte b) {
             // First convert RGB to CIE-XYZ
-            double R = block.R / 255.0, G = block.G / 255.0, B = block.B / 255.0;
+            double R = r / 255.0, G = g / 255.0, B = b / 255.0;
             if (R > 0.04045) R = Math.Pow((R + 0.055) / 1.055, 2.4);
             else R = R / 12.92;
             if (G > 0.04045) G = Math.Pow((G + 0.055) / 1.055, 2.4);
@@ -127,11 +133,10 @@ namespace MCGalaxy.Drawing {
             if (Z > 0.008856) Z = Math.Pow(Z, 1.0/3);
             else Z = (7.787 * Z) + (16.0 / 116);
 
-            LabColor lab;
+            LabColor lab = default(LabColor);
             lab.L = 116 * Y - 16;
             lab.A = 500 * (X - Y);
             lab.B = 200 * (Y - Z);
-            lab.Block = block.Block;
             return lab;
         }
     }

@@ -35,7 +35,6 @@ namespace MCGalaxy.Drawing.Ops {
         internal bool Layer;
         internal string Filename;
         Vec3S32 dx, dy, adj;
-        PaletteEntry cur = default(PaletteEntry);
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p0 = Clamp(marks[0]);
@@ -62,15 +61,10 @@ namespace MCGalaxy.Drawing.Ops {
             ushort x = (ushort)(Origin.X + dx.X * P.X + dy.X * P.Y);
             ushort y = (ushort)(Origin.Y + dx.Y * P.X + dy.Y * P.Y);
             ushort z = (ushort)(Origin.Z + dx.Z * P.X + dy.Z * P.Y);
-            
-            byte alpha = (byte)(P.ARGB >> 24);
-            if (alpha < 20) { output(Place(x, y, z, Block.air, 0)); return; }
-            cur.R = (byte)(P.ARGB >> 16);
-            cur.G = (byte)(P.ARGB >> 16);
-            cur.B = (byte)(P.ARGB >> 16);
+            if (P.A < 20) { output(Place(x, y, z, Block.air, 0)); return; }
             
             int position;
-            byte block = selector.BestMatch(cur, out position);
+            byte block = selector.BestMatch(P.R, P.G, P.B, out position);
             if (Mode == 1 || Mode == 3) {
                 int threshold = Mode == 1 ? 20 : 3;
                 // Back layer block
@@ -79,7 +73,7 @@ namespace MCGalaxy.Drawing.Ops {
                     z = (ushort)(z + adj.Z);
                 }
             }
-            output(Place(x, y, z, cur.Block, 0));
+            output(Place(x, y, z, block, 0));
         }
         
         void CalcDirectionVectors(int dir) {
