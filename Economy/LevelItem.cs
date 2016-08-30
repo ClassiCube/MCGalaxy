@@ -49,12 +49,12 @@ namespace MCGalaxy.Eco {
             }
             
             switch (args[3]) {
-                case "name": preset.name = args[4]; break;
-                case "price": preset.price = int.Parse(args[4]); break;
-                case "x": preset.x = args[4]; break;
-                case "y": preset.y = args[4]; break;
-                case "z": preset.z = args[4]; break;
-                case "type": preset.type = args[4]; break;
+                    case "name": preset.name = args[4]; break;
+                    case "price": preset.price = int.Parse(args[4]); break;
+                    case "x": preset.x = args[4]; break;
+                    case "y": preset.y = args[4]; break;
+                    case "z": preset.z = args[4]; break;
+                    case "type": preset.type = args[4]; break;
             }
         }
         
@@ -73,7 +73,7 @@ namespace MCGalaxy.Eco {
             }
         }
         
-        protected internal override void OnBuyCommand(Command cmd, Player p, 
+        protected internal override void OnBuyCommand(Command cmd, Player p,
                                                       string message, string[] args) {
             if (args.Length < 3) { cmd.Help(p); return; }
             LevelPreset preset = FindPreset(args[1]);
@@ -119,98 +119,82 @@ namespace MCGalaxy.Eco {
                 case "new":
                 case "create":
                 case "add":
-                    if (preset != null) { Player.Message(p, "%cThat preset level already exists"); return; }
-                    
-                    preset = new LevelPreset();
-                    preset.name = args[2];
-                    if (OkayAxis(args[3]) && OkayAxis(args[4]) && OkayAxis(args[5])) {
-                        preset.x = args[3]; preset.y = args[4]; preset.z = args[5];
-                    } else { Player.Message(p, "%cDimension must be a power of 2"); break; }
-                    
-                    if (!MapGen.IsRecognisedTheme(args[6])) {
-                        MapGen.PrintThemes(p); return;
-                    }                    
-                    preset.type = args[6].ToLower();
-                    if (!int.TryParse(args[7], out preset.price)) {
-                        Player.Message(p, "\"" + args[9] + "\" is not a valid integer."); return;
-                    }
-
-                    Presets.Add(preset);
-                    Player.Message(p, "%aSuccessfully added the following map preset:");
-                    Player.Message(p, "Name: %f" + preset.name);
-                    Player.Message(p, "x:" + preset.x + ", y:" + preset.y + ", z:" + preset.z);
-                    Player.Message(p, "Map Type: %f" + preset.type);
-                    Player.Message(p, "Map Price: %f" + preset.price + " %3" + Server.moneys);
-                    break;
-
+                    AddPreset(p, args, preset); break;
                 case "delete":
                 case "remove":
-                    if (preset == null) { Player.Message(p, "%cThat preset level doesn't exist"); return; }
-                    Presets.Remove(preset);
-                    Player.Message(p, "%aSuccessfully removed preset: %f" + preset.name);
-                    break;
-
+                    RemovePreset(p, args, preset); break;
                 case "edit":
                 case "change":
-                    if (preset == null) { Player.Message(p, "%cThat preset level doesn't exist"); return; }
-                    
-                    switch (args[3]) {
-                        case "name":
-                        case "title":
-                            preset.name = args[4];
-                            Player.Message(p, "%aSuccessfully changed preset name to %f" + preset.name);
-                            break;
-
-                        case "x":
-                            if (OkayAxis(args[4])) {
-                                preset.x = args[4];
-                                Player.Message(p, "%aSuccessfully changed preset x size to %f" + preset.x);
-                            } else { Player.Message(p, "%cDimension was wrong, it must be a power of 2"); break; }
-                            break;
-
-                        case "y":
-                            if (OkayAxis(args[4])) {
-                                preset.y = args[4];
-                                Player.Message(p, "%aSuccessfully changed preset y size to %f" + preset.y);
-                            } else { Player.Message(p, "%cDimension was wrong, it must be a power of 2"); break; }
-                            break;
-
-                        case "z":
-                            if (OkayAxis(args[4])) {
-                                preset.z = args[4];
-                                Player.Message(p, "%aSuccessfully changed preset z size to %f" + preset.z);
-                            } else { Player.Message(p, "%cDimension was wrong, it must be a power of 2"); break; }
-                            break;
-
-                        case "type":
-                            if (MapGen.IsRecognisedTheme(args[4])) {
-                                preset.type = args[4].ToLower();
-                            } else {
-                                MapGen.PrintThemes(p); return;
-                            }
-                            Player.Message(p, "%aSuccessfully changed preset type to %f" + preset.type);
-                            break;
-
-                        case "price":
-                            int newPrice = 0;
-                            if (!int.TryParse(args[4], out newPrice)) {
-                                Player.Message(p, "\"" + args[4] + "\" is not a valid integer."); return;
-                            }
-                            if (newPrice < 0) {
-                                Player.Message(p, "%cAmount of %3" + Server.moneys + "%c cannot be negative"); return;
-                            }
-                            preset.price = newPrice;
-                            Player.Message(p, "%aSuccessfully changed preset price to %f" + preset.price + " %3" + Server.moneys);
-                            break;
-
-                        default:
-                            Player.Message(p, "Supported properties to edit: name, title, x, y, z, type, price");
-                            break;
-                    }
-                    break;
-
+                    EditPreset(p, args, preset); break;
                 default:
                     OnSetupCommandHelp(p); break;
+            }
+        }
+        
+        void AddPreset(Player p, string[] args, LevelPreset preset) {
+            if (preset != null) { Player.Message(p, "%cThat preset level already exists"); return; }
+            
+            preset = new LevelPreset();
+            preset.name = args[2];
+            if (OkayAxis(args[3]) && OkayAxis(args[4]) && OkayAxis(args[5])) {
+                preset.x = args[3]; preset.y = args[4]; preset.z = args[5];
+            } else { 
+                Player.Message(p, "%cDimension must be a power of 2"); return; 
+            }
+            
+            if (!MapGen.IsRecognisedTheme(args[6])) {
+                MapGen.PrintThemes(p); return;
+            }
+            preset.type = args[6].ToLower();
+            if (!int.TryParse(args[7], out preset.price)) {
+                Player.Message(p, "\"" + args[9] + "\" is not a valid integer."); return;
+            }
+
+            Presets.Add(preset);
+            Player.Message(p, "%aSuccessfully added the following map preset:");
+            Player.Message(p, "Name: %f" + preset.name);
+            Player.Message(p, "x:" + preset.x + ", y:" + preset.y + ", z:" + preset.z);
+            Player.Message(p, "Map Type: %f" + preset.type);
+            Player.Message(p, "Map Price: %f" + preset.price + " %3" + Server.moneys);
+        }
+        
+        void RemovePreset(Player p, string[] args, LevelPreset preset) {
+            if (preset == null) { Player.Message(p, "%cThat preset level doesn't exist"); return; }
+            Presets.Remove(preset);
+            Player.Message(p, "%aSuccessfully removed preset: %f" + preset.name);
+        }
+        
+        void EditPreset(Player p, string[] args, LevelPreset preset) {
+            if (preset == null) { Player.Message(p, "%cThat preset level doesn't exist"); return; }
+            
+            if (args[3] == "name" || args[3] == "title") { 
+                preset.name = args[4];
+                Player.Message(p, "%aSuccessfully changed preset name to %f" + preset.name);
+            } else if (args[3] == "x" || args[3] == "y" || args[3] == "z") {
+                if (!OkayAxis(args[4])) { Player.Message(p, "%cDimension was wrong, it must be a power of 2"); return; }
+
+                if (args[3] == "x") preset.x = args[4];
+                if (args[3] == "y") preset.y = args[4];
+                if (args[3] == "z") preset.z = args[4];
+                Player.Message(p, "%aSuccessfully changed preset {0} size to %f{1}", args[3], args[4]);
+            } else if (args[3] == "type" || args[3] == "theme") {
+                if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return; }
+                
+                preset.type = args[4].ToLower();
+                Player.Message(p, "%aSuccessfully changed preset type to %f" + preset.type);
+            } else if (args[3] == "price") {
+                int newPrice = 0;
+                if (!int.TryParse(args[4], out newPrice)) {
+                    Player.Message(p, "\"" + args[4] + "\" is not a valid integer."); return;
+                }
+                if (newPrice < 0) {
+                    Player.Message(p, "%cAmount of %3" + Server.moneys + "%c cannot be negative"); return;
+                }
+                
+                preset.price = newPrice;
+                Player.Message(p, "%aSuccessfully changed preset price to %f" + preset.price + " %3" + Server.moneys);
+            } else {
+                Player.Message(p, "Supported properties to edit: name, title, x, y, z, type, price");
             }
         }
         
@@ -223,7 +207,7 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreOverview(Player p) {
-        	Player.Message(p, "Maps - see /store maps");
+            Player.Message(p, "Maps - see /store maps");
         }
         
         protected internal override void OnStoreCommand(Player p) {
@@ -232,8 +216,8 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%8-None-");
             } else {
                 foreach (LevelPreset preset in Presets) {
-                    Player.Message(p, preset.name + " (" + preset.x + "," + preset.y + "," + preset.z + ") " + 
-                                       preset.type + ": %f" + preset.price + " %3" + Server.moneys);
+                    Player.Message(p, preset.name + " (" + preset.x + "," + preset.y + "," + preset.z + ") " +
+                                   preset.type + ": %f" + preset.price + " %3" + Server.moneys);
                 }
             }
         }
