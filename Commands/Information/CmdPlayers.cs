@@ -31,17 +31,13 @@ namespace MCGalaxy.Commands
         public CmdPlayers() { }
 
         public override void Use(Player p, string message) {
-            DisplayPlayers(p, message, text => Player.Message(p, text), 
-                           true, Server.showEmptyRanks);
+            DisplayPlayers(p, message, true, Server.showEmptyRanks);
         }
         
-        public static void DisplayPlayers(Player p, string message, Action<string> output, 
-                                          bool showHidden, bool showEmptyRanks) {
+        public static void DisplayPlayers(Player p, string message, bool showHidden, bool showEmptyRanks) {
             if (message != "") {
-                Group grp = Group.Find(message);
-                if( grp == null ) {
-                    output("There is no rank with that name"); return;
-                }
+                Group grp = Group.FindMatches(p, message);
+                if(grp == null) return;
                 string title = ":" + grp.color + GetPlural(grp.trueName) + ":";
                 Section rankSec = MakeSection(grp, title);                
                 
@@ -57,9 +53,9 @@ namespace MCGalaxy.Commands
                 } 
                 
                 if (rankSec.Empty) {
-                    output( "There are no players of that rank online.");
+                    Player.Message(p, "There are no players of that rank online.");
                 } else {
-                    rankSec.Print(output, false);
+                    rankSec.Print(p, false);
                 }
                 return;
             }
@@ -83,12 +79,12 @@ namespace MCGalaxy.Commands
             }
 
             if (totalPlayers == 1)
-                output("There is &a1 %Splayer online.");
+                Player.Message(p, "There is &a1 %Splayer online.");
             else
-                output("There are &a" + totalPlayers + " %Splayers online.");
+                Player.Message(p, "There are &a" + totalPlayers + " %Splayers online.");
             
             for (int i = playerList.Count - 1; i >= 0; i--)
-                playerList[i].Print(output, showEmptyRanks);
+                playerList[i].Print(p, showEmptyRanks);
         }
         
         static void AddStates(Player pl, ref string name) {
@@ -106,13 +102,13 @@ namespace MCGalaxy.Commands
             
             public bool Empty { get { return builder.Length == 0; } }
             
-            public void Print(Action<string> output, bool showEmpty) {
+            public void Print(Player p, bool showEmpty) {
                 if (builder.Length == 0 && !showEmpty) return;
                 
                 if (builder.Length > 0)
                     builder.Remove(builder.Length - 1, 1);
                 string message = title + builder.ToString();
-                output(message);
+                Player.Message(p, message);
             }
             
             public void Append(Player pl, string name) {
