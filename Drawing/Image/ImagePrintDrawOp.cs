@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Draw = System.Drawing;
 using MCGalaxy.Drawing.Brushes;
 
@@ -32,6 +33,7 @@ namespace MCGalaxy.Drawing.Ops {
         internal Draw.Bitmap Source;
         internal int Mode, Direction;
         internal bool Layer;
+        internal string Filename;
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p0 = Clamp(marks[0]);
@@ -69,7 +71,12 @@ namespace MCGalaxy.Drawing.Ops {
                 if (col.A < 20) cur.Block = Block.air;
                 output(Place(X, Y, Z, cur.Block, 0));
             }
+            
+            Source.Dispose();
             Source = null;
+            if (Filename == "tempImage_" + p.name)
+                File.Delete("extra/images/tempImage_" + p.name + ".bmp");
+            Player.Message(p, "Finished printing image using " + ImagePalette.Names[Mode]);
         }
         
         void CalcMul(bool layer, int dir,

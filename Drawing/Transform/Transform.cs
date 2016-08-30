@@ -33,7 +33,7 @@ namespace MCGalaxy.Drawing.Transforms {
         /// <summary> Performs calcuations (if necessary) for the given drawop. </summary>
         public virtual void Configure(DrawOp op, Player p) { }
         
-        public abstract IEnumerable<DrawOpBlock> Perform(Vec3S32[] marks, Player p, 
-                                                        Level lvl, DrawOp op, Brush brush);
+        public abstract void Perform(Vec3S32[] marks, Player p, Level lvl, 
+                                     DrawOp op, Brush brush, Action<DrawOpBlock> output);
     }
 }

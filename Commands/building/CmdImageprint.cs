@@ -121,25 +121,13 @@ namespace MCGalaxy.Commands.Building {
             op.Source = bmp;
             op.Layer = dArgs.layer;
             op.Mode = dArgs.popType;
+            op.Filename = dArgs.name;
+            
             if (op.Layer) {
                 if (op.Mode == 1) op.Mode = 2;
                 if (op.Mode == 3) op.Mode = 4;
             }
-            
-            BufferedBlockSender buffer = new BufferedBlockSender(op.Level);
-            foreach (var b in op.Perform(m, p, p.level, null)) {
-                if (b.Block == Block.Zero) continue;
-                if (!op.Level.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) continue;
-                
-                int index = op.Level.PosToInt(b.X, b.Y, b.Z);
-                op.Level.AddToBlockDB(p, index, b.Block, b.ExtBlock, b.Block == 0);
-                buffer.Add(index, b.Block, b.ExtBlock);
-            }
-            buffer.Send(true);
-                
-            if (dArgs.name == "tempImage_" + p.name)
-                File.Delete("extra/images/tempImage_" + p.name + ".bmp");
-            Player.Message(p, "Finished printing image using " + ImagePalette.Names[op.Mode]);
+            DrawOp.DoDrawOp(op, null, p, m, false);
         }
         
         public override void Help(Player p) {

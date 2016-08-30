@@ -126,9 +126,8 @@ namespace MCGalaxy.BlockPhysics {
             Vec3S32[] marks = new [] { new Vec3S32(x, y, z) };
             op.SetMarks(marks);
             
-            foreach (var block in op.Perform(marks, null, lvl, null)) {
-                lvl.Blockchange(block.X, block.Y, block.Z, block.Block);
-            }
+            op.Perform(marks, null, lvl, null, 
+                       b => lvl.Blockchange(b.X, b.Y, b.Z, b.Block));
             C.data.Data = 255;
         }
         
