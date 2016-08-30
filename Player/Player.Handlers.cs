@@ -441,52 +441,8 @@ return;
                 if (!loggedIn) return;
                 byte continued = packet[1];
                 string text = GetString(packet, 2);
-
-                // handles the /womid client message, which displays the WoM vrersion
-                if ( text.Truncate(6) == "/womid" ) {
-                    string version = (text.Length <= 21 ? text.Substring(text.IndexOf(' ') + 1) : text.Substring(7, 15));
-                    Server.s.Log(Colors.red + "[INFO] " + ColoredName + "%f is using wom client");
-                    Server.s.Log(Colors.red + "[INFO] %fVersion: " + version);
-                    UsingWom = true;
-                    return;
-                }
-                
-                if( HasCpeExt(CpeExt.LongerMessages) && continued != 0 ) {
-                    if (text.Length < 64) storedMessage = storedMessage + text + " ";
-                    else storedMessage = storedMessage + text;
-                    return;
-                }
-
-                if (text.ToLower().Contains("^detail.user="))
-                {
-                    SendMessage("&cYou cannot use WoM detail strings in a chat message.");
-                    text = text.Replace("^detail.user=", "");
-                }
-
-                if ( storedMessage != "" ) {
-                    if ( !text.EndsWith(">") && !text.EndsWith("<") ) {
-                        text = storedMessage.Replace("|>|", " ").Replace("|<|", "") + text;
-                        storedMessage = "";
-                    }
-                }
-                //if (text.StartsWith(">") || text.StartsWith("<")) return;
-                if (text.EndsWith(">")) {
-                    storedMessage += text.Substring(0, text.Length - 1) + "|>|";
-                    SendMessage(Colors.teal + "Partial message: " + Colors.white + storedMessage.Replace("|>|", " ").Replace("|<|", ""));
-                    return;
-                }
-                if (text.EndsWith("<")) {
-                    storedMessage += text.Substring(0, text.Length - 1) + "|<|";
-                    SendMessage(Colors.teal + "Partial message: " + Colors.white + storedMessage.Replace("|<|", "").Replace("|>|", " "));
-                    return;
-                }
-
-                text = Regex.Replace(text, "  +", " ");
-                if (text.IndexOf('&') >= 0) {
-                    Leave("Illegal character in chat message!", true); return;
-                }
-                if (text.Length == 0) return;
                 LastAction = DateTime.UtcNow;
+                if (FilterChat(ref text, continued)) return;               
 
                 if (text != "/afk" && IsAfk)
                     CmdAfk.ToggleAfk(this, "");
@@ -540,11 +496,7 @@ return;
                 }
 
                 text = HandleJoker(text);
-                //chatroom stuff
-                if ( Chatroom != null ) {
-                    Chat.ChatRoom(this, text, true, Chatroom);
-                    return;
-                }
+                if (Chatroom != null) { Chat.ChatRoom(this, text, true, Chatroom); return; }
 
                 if ( !level.worldChat ) {
                     Server.s.Log("<" + name + ">[level] " + text);
@@ -582,6 +534,49 @@ return;
                 }
             }
             catch ( Exception e ) { Server.ErrorLog(e); Chat.MessageAll("An error occurred: {0}", e.Message); }
+        }
+        
+        bool FilterChat(ref string text, byte continued) {
+            // handles the /womid client message, which displays the WoM vrersion
+            if (text.Truncate(6) == "/womid") {
+                string version = (text.Length <= 21 ? text.Substring(text.IndexOf(' ') + 1) : text.Substring(7, 15));
+                Server.s.Log(Colors.red + "[INFO] " + ColoredName + "%f is using wom client");
+                Server.s.Log(Colors.red + "[INFO] %fVersion: " + version);
+                UsingWom = true;
+                return true;
+            }
+            
+            if (HasCpeExt(CpeExt.LongerMessages) && continued != 0) {
+                if (text.Length < 64) storedMessage = storedMessage + text + " ";
+                else storedMessage = storedMessage + text;
+                return true;
+            }
+
+            if (text.ToLower().Contains("^detail.user=")) {
+                SendMessage("&cYou cannot use WoM detail strings in a chat message.");
+                text = text.Replace("^detail.user=", "");
+            }
+
+            if (storedMessage != "" && !text.EndsWith(">") && !text.EndsWith("<")) {
+                text = storedMessage.Replace("|>|", " ").Replace("|<|", "") + text;
+                storedMessage = "";
+            }
+
+            if (text.EndsWith(">")) {
+                storedMessage += text.Substring(0, text.Length - 1) + "|>|";
+                SendMessage(Colors.teal + "Partial message: &f" + storedMessage.Replace("|>|", " ").Replace("|<|", ""));
+                return true;
+            } else if (text.EndsWith("<")) {
+                storedMessage += text.Substring(0, text.Length - 1) + "|<|";
+                SendMessage(Colors.teal + "Partial message: &f" + storedMessage.Replace("|<|", "").Replace("|>|", " "));
+                return true;
+            }
+
+            text = Regex.Replace(text, "  +", " ");
+            if (text.IndexOf('&') >= 0) {
+                Leave("Illegal character in chat message!", true); return true;
+            }
+            return text.Length == 0;
         }
         
         bool DoCommand(string text) {
