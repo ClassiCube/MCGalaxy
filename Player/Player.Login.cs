@@ -37,7 +37,7 @@ namespace MCGalaxy {
                 skinName = name;
                 
                 int altsCount = 0;
-                lock (pendingLock) {                    
+                lock (pendingLock) {
                     DateTime now = DateTime.UtcNow;
                     foreach (PendingItem item in pendingNames) {
                         if (item.Name == truename && (now - item.Connected).TotalSeconds <= 60)

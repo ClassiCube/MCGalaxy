@@ -73,25 +73,25 @@ namespace MCGalaxy.BlockPhysics {
             C.data.Data++;
         }
         
-        static void FloodAir(Level lvl, int b, byte type) {
-            if (b == -1) return;
-            byte block = Block.Convert(lvl.blocks[b]);
-            if (block == Block.water || block == Block.lava)
-                lvl.AddUpdate(b, type);
+        static void FloodAir(Level lvl, int index, byte block) {
+            if (index == -1) return;
+            byte curBlock = Block.Convert(lvl.blocks[index]);
+            if (curBlock == Block.water || curBlock == Block.lava)
+                lvl.AddUpdate(index, block);
         }
         
-        internal static void PhysAir(Level lvl, int b) {
-            if (b == -1) return;
-            byte block = lvl.blocks[b];
+        internal static void PhysAir(Level lvl, int index) {
+            if (index == -1) return;
+            byte block = lvl.blocks[index];
             byte convBlock = Block.Convert(block);
             if (convBlock == Block.water || convBlock == Block.lava ||
                 (block >= Block.red && block <= Block.white)) {
-                lvl.AddCheck(b); return;
+                lvl.AddCheck(index); return;
             }
 
             switch (block) {
-                    //case Block.water:
-                    //case Block.lava:
+                //case Block.water:
+                //case Block.lava:
                 case Block.shrub:
                 case Block.sand:
                 case Block.gravel:
@@ -104,7 +104,7 @@ namespace MCGalaxy.BlockPhysics {
                     case Block.deathwater:
                     case Block.geyser:
                     case Block.magma:*/
-                    lvl.AddCheck(b);
+                    lvl.AddCheck(index);
                     break;
                 default:
                     break;

@@ -42,10 +42,10 @@ namespace MCGalaxy {
             this.level = player.level;
         }
         
-        public bool Add(int index, byte type, byte extType) {
+        public bool Add(int index, byte block, byte extBlock) {
             indices[count] = index;
-            if (type == Block.custom_block) types[count] = extType;
-            else types[count] = Block.Convert(type);
+            if (block == Block.custom_block) types[count] = extBlock;
+            else types[count] = Block.Convert(block);
             count++;
             return Send(false);
         }

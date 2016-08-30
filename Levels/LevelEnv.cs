@@ -86,7 +86,7 @@ namespace MCGalaxy {
                 Player.Message(p, "Reset {0} color for {1}%S to normal", envTypeName, p.level.name);
                 target = "";
             } else {
-			    if (!Utils.CheckHex(p, ref value)) return;              
+			    if (!Utils.CheckHex(p, ref value)) return;
                 Player.Message(p, "Set {0} color for {1}%S to #{2}", envTypeName, p.level.name, value);
                 target = value;
             }

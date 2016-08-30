@@ -102,11 +102,11 @@ namespace MCGalaxy.Games {
         void ProcessMapLine(string key, string value, ref MapSettings map) {
             string[] sp;
             switch (key.ToLower()) {
-                case "fast-chance": map.fast = (byte)Utils.Clamp(decimal.Parse(value), 0, 100); break;
-                case "killer-chance": map.killer = (byte)Utils.Clamp(decimal.Parse(value), 0, 100); break;
-                case "destroy-chance": map.destroy = (byte)Utils.Clamp(decimal.Parse(value), 0, 100); break;
-                case "water-chance": map.water = (byte)Utils.Clamp(decimal.Parse(value), 0, 100); break;
-                case "layer-chance": map.layer = (byte)Utils.Clamp(decimal.Parse(value), 0, 100); break;
+                case "fast-chance": map.fast = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
+                case "killer-chance": map.killer = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
+                case "destroy-chance": map.destroy = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
+                case "water-chance": map.water = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
+                case "layer-chance": map.layer = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
                 case "layer-height": map.layerHeight = int.Parse(value); break;
                 case "layer-count": map.layerCount = int.Parse(value); break;
                 case "layer-interval": map.layerInterval = double.Parse(value); break;

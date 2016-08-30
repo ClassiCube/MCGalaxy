@@ -225,9 +225,9 @@ namespace MCGalaxy {
         }
         
         public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, 
-                                           byte b, byte type, byte extType = 0) {
+                                           byte b, byte block, byte extBlock = 0) {
             if (!Block.AllowBreak(b) && !Block.canPlace(p, b) && !Block.BuildIn(b)) return false;
-            if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref type)) return false;
+            if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref block)) return false;
             
             bool inZone = false;
             if (!CheckZonePerms(p, x, y, z, ref inZone)) return false;

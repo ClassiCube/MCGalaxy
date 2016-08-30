@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands {
                 foundOne = true;
                 string user = inCache[i].name.Trim();
                 DateTime time = Server.StartTimeLocal.AddSeconds(inCache[i].flags >> 2);
-                byte block = (inCache[i].flags & 2) != 0 ? Block.custom_block : inCache[i].rawType;
+                byte block = (inCache[i].flags & 2) != 0 ? Block.custom_block : inCache[i].rawBlock;
                 bool deleted = (inCache[i].flags & 1) != 0;
                 Output(p, user, block, deleted, now - time);
             }

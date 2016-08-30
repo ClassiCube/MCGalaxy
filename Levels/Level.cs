@@ -455,17 +455,17 @@ namespace MCGalaxy {
         public struct BlockPos {
             public string name;
             public int flags, index; // bit 0 = is deleted, bit 1 = is ext, rest bits = time delta
-            public byte rawType;
+            public byte rawBlock;
             
-            public void SetData(byte type, byte extType, bool delete) {
+            public void SetData(byte block, byte extBlock, bool delete) {
                 TimeSpan delta = DateTime.UtcNow.Subtract(Server.StartTime);
                 flags = (int)delta.TotalSeconds << 2;
                 flags |= (byte)(delete ? 1 : 0);
                 
-                if (type == Block.custom_block) {
-                    rawType = extType; flags |= 2;
+                if (block == Block.custom_block) {
+                    rawBlock = extBlock; flags |= 2;
                 } else {
-                    rawType = type;
+                    rawBlock = block;
                 }
             }
         }

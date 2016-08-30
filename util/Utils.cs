@@ -68,6 +68,10 @@ namespace MCGalaxy {
             for (int i = 0; i < bytes; i++)
                 *srcByte = value; srcByte++;
         }
+
+		public static int Clamp(int value, int lo, int hi) {
+            return Math.Max(Math.Min(value, hi), lo);
+        }
 		
 		public static decimal Clamp(decimal value, decimal lo, decimal hi) {
             return Math.Max(Math.Min(value, hi), lo);
@@ -89,7 +93,6 @@ namespace MCGalaxy {
                 string itemName = nameGetter(item);
                 if (itemName.Equals(name, comp)) { matches = 1; return item; }
                 if (itemName.IndexOf(name, comp) < 0) continue;
-                Queue<Queue<Queue>> queue = new Queue<Queue<Queue>>();
                 
                 match = item; matches++;
                 if (matches <= limit)

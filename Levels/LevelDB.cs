@@ -70,7 +70,7 @@ namespace MCGalaxy {
                     nameP.Value = bP.name;
                     timeP.Value = date;
                     xP.Value = x; yP.Value = y; zP.Value = z;
-                    tileP.Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawType;
+                    tileP.Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawBlock;
                     delP.Value = (bP.flags & 1) != 0;
                 } else {
                     ((NativeParameter)nameP).SetString(bP.name);
@@ -78,7 +78,7 @@ namespace MCGalaxy {
                     ((NativeParameter)xP).U16Value = x;
                     ((NativeParameter)yP).U16Value = y;
                     ((NativeParameter)zP).U16Value = z;
-                    ((NativeParameter)tileP).U8Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawType;
+                    ((NativeParameter)tileP).U8Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawBlock;
                     ((NativeParameter)delP).BoolValue = (bP.flags & 1) != 0;
                 }
 

@@ -186,7 +186,7 @@ namespace MCGalaxy.Commands
                         Player.Message(p, "Send AFK to main: " + (Server.lava.sendAfkMain ? "&aON" : "&cOFF"));
                         break;
                     case "votecount":
-                        Server.lava.voteCount = (byte)Utils.Clamp(decimal.Parse(args[3]), 2, 10);
+                        Server.lava.voteCount = (byte)Utils.Clamp(int.Parse(args[3]), 2, 10);
                         Player.Message(p, "Vote count: &b" + Server.lava.voteCount);
                         break;
                     case "votetime":
@@ -223,23 +223,23 @@ namespace MCGalaxy.Commands
             try {
                 switch (args[2]) {
                     case "fast":
-                        settings.fast = (byte)Utils.Clamp(decimal.Parse(args[3]), 0, 100);
+                        settings.fast = (byte)Utils.Clamp(int.Parse(args[3]), 0, 100);
                         Player.Message(p, "Fast lava chance: &b" + settings.fast + "%");
                         break;
                     case "killer":
-                        settings.killer = (byte)Utils.Clamp(decimal.Parse(args[3]), 0, 100);
+                        settings.killer = (byte)Utils.Clamp(int.Parse(args[3]), 0, 100);
                         Player.Message(p, "Killer lava/water chance: &b" + settings.killer + "%");
                         break;
                     case "destroy":
-                        settings.destroy = (byte)Utils.Clamp(decimal.Parse(args[3]), 0, 100);
+                        settings.destroy = (byte)Utils.Clamp(int.Parse(args[3]), 0, 100);
                         Player.Message(p, "Destroy blocks chance: &b" + settings.destroy + "%");
                         break;
                     case "water":
-                        settings.water = (byte)Utils.Clamp(decimal.Parse(args[3]), 0, 100);
+                        settings.water = (byte)Utils.Clamp(int.Parse(args[3]), 0, 100);
                         Player.Message(p, "Water flood chance: &b" + settings.water + "%");
                         break;
                     case "layer":
-                        settings.layer = (byte)Utils.Clamp(decimal.Parse(args[3]), 0, 100);
+                        settings.layer = (byte)Utils.Clamp(int.Parse(args[3]), 0, 100);
                         Player.Message(p, "Layer flood chance: &b" + settings.layer + "%");
                         break;
                     case "layerheight":

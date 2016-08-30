@@ -175,13 +175,13 @@ namespace MCGalaxy.Gui {
             lsLoadedMap = name;
             try {
                 LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(name);
-                lsNudFastLava.Value = Utils.Clamp((decimal)settings.fast, 0, 100);
-                lsNudKiller.Value = Utils.Clamp((decimal)settings.killer, 0, 100);
-                lsNudDestroy.Value = Utils.Clamp((decimal)settings.destroy, 0, 100);
-                lsNudWater.Value = Utils.Clamp((decimal)settings.water, 0, 100);
-                lsNudLayer.Value = Utils.Clamp((decimal)settings.layer, 0, 100);
-                lsNudLayerHeight.Value = Utils.Clamp((decimal)settings.layerHeight, 1, 1000);
-                lsNudLayerCount.Value = Utils.Clamp((decimal)settings.layerCount, 1, 1000);
+                lsNudFastLava.Value = Utils.Clamp(settings.fast, 0, 100);
+                lsNudKiller.Value = Utils.Clamp(settings.killer, 0, 100);
+                lsNudDestroy.Value = Utils.Clamp(settings.destroy, 0, 100);
+                lsNudWater.Value = Utils.Clamp(settings.water, 0, 100);
+                lsNudLayer.Value = Utils.Clamp(settings.layer, 0, 100);
+                lsNudLayerHeight.Value = Utils.Clamp(settings.layerHeight, 1, 1000);
+                lsNudLayerCount.Value = Utils.Clamp(settings.layerCount, 1, 1000);
                 lsNudLayerTime.Value = (decimal)Utils.Clamp(settings.layerInterval, 1, 1000);
                 lsNudRoundTime.Value = (decimal)Utils.Clamp(settings.roundTime, 1, 1000);
                 lsNudFloodTime.Value = (decimal)Utils.Clamp(settings.floodTime, 1, 1000);

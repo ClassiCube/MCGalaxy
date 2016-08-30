@@ -22,7 +22,6 @@ namespace MCGalaxy {
     public sealed partial class Player : IDisposable {
 
         public NetworkStream Stream;
-        public BinaryReader Reader;
 
         static void Receive(IAsyncResult result) {
             //Server.s.Log(result.AsyncState.ToString());
@@ -635,13 +634,6 @@ namespace MCGalaxy {
                 #endif
             }
             RemoveFromPending();
-        }
-
-        public string ReadString(int count = 64) {
-            if ( Reader == null ) return null;
-            var chars = new byte[count];
-            Reader.Read(chars, 0, count);
-            return Encoding.UTF8.GetString(chars).TrimEnd().Replace("\0", string.Empty);
         }
     }
 }
