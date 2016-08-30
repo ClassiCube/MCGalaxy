@@ -92,6 +92,14 @@ namespace MCGalaxy.Commands.Building {
         }
         
         void DoDrawImage(Player p, Vec3S32[] m, DrawArgs dArgs) {
+            try {
+                DoDrawImageCore(p, m, dArgs);
+            } catch (Exception ex) {
+                Server.ErrorLog(ex); // Do not want it taking down the whole server if error occurs
+            }
+        }
+        
+        void DoDrawImageCore(Player p, Vec3S32[] m, DrawArgs dArgs) {
             Bitmap bmp = HeightmapGen.ReadBitmap(dArgs.name, "extra/images/", p);
             if (bmp == null) return;
             try {
@@ -109,6 +117,7 @@ namespace MCGalaxy.Commands.Building {
                 op.Direction = m[1].Z <= m[0].Z ? 3 : 2;
             }
             
+            op.Level = p.level;
             op.Source = bmp;
             op.Layer = dArgs.layer;
             op.Mode = dArgs.popType;
@@ -117,10 +126,17 @@ namespace MCGalaxy.Commands.Building {
                 if (op.Mode == 3) op.Mode = 4;
             }
             
+            BufferedBlockSender buffer = new BufferedBlockSender(op.Level);
             foreach (var b in op.Perform(m, p, p.level, null)) {
-                p.level.UpdateBlock(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true);
+                if (b.Block == Block.Zero) continue;
+                if (!op.Level.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) continue;
+                
+                int index = op.Level.PosToInt(b.X, b.Y, b.Z);
+                op.Level.AddToBlockDB(p, index, b.Block, b.ExtBlock, b.Block == 0);
+                buffer.Add(index, b.Block, b.ExtBlock);
             }
-            
+            buffer.Send(true);
+                
             if (dArgs.name == "tempImage_" + p.name)
                 File.Delete("extra/images/tempImage_" + p.name + ".bmp");
             Player.Message(p, "Finished printing image using " + ImagePalette.Names[op.Mode]);
