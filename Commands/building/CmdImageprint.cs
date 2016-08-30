@@ -31,6 +31,10 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("imgprint"), new CommandAlias("printimg"),
+                    new CommandAlias("imgdraw"), new CommandAlias("drawimg") }; }
+        }
         public CmdImageprint() { }
 
         public override void Use(Player p, string message) {

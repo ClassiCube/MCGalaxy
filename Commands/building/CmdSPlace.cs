@@ -69,18 +69,21 @@ namespace MCGalaxy.Commands.Building {
             ushort endX = (ushort)(m[0].X + dirX * distance);
             ushort endY = (ushort)(m[0].Y + dirY * distance);
             ushort endZ = (ushort)(m[0].Z + dirZ * distance);
-            p.level.UpdateBlock(p, endX, endY, endZ, Block.rock, 0, true);   
+            
+            byte heldExt = 0;
+            byte heldBlock = p.GetActualHeldBlock(out heldExt);
+            p.level.UpdateBlock(p, endX, endY, endZ, heldBlock, heldExt, true);   
             
             if (interval > 0) {
                 int x = m[0].X, y = m[0].Y, z = m[0].Z;
                 int delta = 0;
                 while (x >= 0 && y >= 0 && z >= 0 && x < p.level.Width && y < p.level.Height && z < p.level.Length && delta < distance) {
-                    p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, Block.rock, 0);
+                    p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, heldBlock, heldExt, true);
                     x += dirX * interval; y += dirY * interval; z += dirZ * interval;
                     delta = Math.Abs(x - m[0].X) + Math.Abs(y - m[0].Y) + Math.Abs(z - m[0].Z);
                 }
             } else {
-                p.level.UpdateBlock(p, (ushort)m[0].X, (ushort)m[0].Y, (ushort)m[0].Z, Block.rock, 0, true);
+                p.level.UpdateBlock(p, (ushort)m[0].X, (ushort)m[0].Y, (ushort)m[0].Z, heldBlock, heldExt, true);
             }
 
             Player.Message(p, "Placed stone blocks {0} apart.", interval > 0 ? interval : distance);
@@ -91,7 +94,7 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Help(Player p) {
             Player.Message(p, "%T/splace [distance] [interval]");
-            Player.Message(p, "%HMeasures a set [distance] and places a stone block at each end.");
+            Player.Message(p, "%HMeasures a set [distance] and places your held block at each end.");
             Player.Message(p, "%HOptionally place a block at set [interval] between them.");
         }
     }
