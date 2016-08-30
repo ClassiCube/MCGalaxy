@@ -60,24 +60,26 @@ namespace MCGalaxy {
         }
         
         public static void MessageOps(Player p, string message) {
-            string displayName = p == null ? "(console)" : p.ColoredName;
-            string name = p == null ? "(console)" : p.name;
-            Chat.MessageOps("To Ops &f-" + displayName + "&f- " + message);
-            if (p != null && p.Rank < Server.opchatperm )
-                p.SendMessage("To Ops &f-" + displayName + "&f- " + message);
-            
-            Server.s.Log("(OPs): " + name + ": " + message);
-            Server.IRC.Say(displayName + "%S: " + message, true);
+            MessageStaff(p, message, Server.opchatperm, "Ops");
         }
 
         public static void MessageAdmins(Player p, string message) {
+            MessageStaff(p, message, Server.adminchatperm, "Admins");
+        }
+        
+        public static void MessageStaff(Player p, string message, 
+                                        LevelPermission perm, string group) {
             string displayName = p == null ? "(console)" : p.ColoredName;
             string name = p == null ? "(console)" : p.name;
-            Chat.MessageAdmins("To Admins &f-" + displayName + "&f- " + message);
-            if (p != null && p.Rank < Server.adminchatperm)
-                p.SendMessage("To Admins &f-" + displayName + "&f- " + message);
+            string format = "To " + group + " &f-{0}&f- {1}";
             
-            Server.s.Log("(Admins): " + name + ": " + message);
+            Chat.MessageWhere(format, 
+                              pl => pl.Rank >= perm && !pl.listignored.Contains(name),
+                              displayName, message);
+            if (p != null && p.Rank < Server.adminchatperm)
+                Player.Message(p, format, displayName, message);
+            
+            Server.s.Log("(" + group + "): " + name + ": " + message);
             Server.IRC.Say(displayName + "%S: " + message, true);
         }
         
