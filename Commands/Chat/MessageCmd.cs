@@ -30,13 +30,14 @@ namespace MCGalaxy.Commands {
 
             string giver = (p == null) ? "(console)" : p.ColoredName;
             if (!TryMessage(p, string.Format(message, giver, who.ColoredName))) return false;
-            if (messageWho)
+            if (messageWho && !who.listignored.Contains(giver))
                 Player.Message(who, string.Format(message, giver, "you"));
             return true;
         }
         
         protected bool TryMessage(Player p, string message) {
             if (p != null && p.muted) { Player.Message(p, "Cannot use /{0} while muted.", name); return false; }
+            if (Server.chatmod && !p.voice) { Player.Message(p, "Cannot use /{0} when chat moderation is enabled.", name); return false; }
             
             if (p.level.worldChat) {
                 Player.SendChatFrom(p, message, false);

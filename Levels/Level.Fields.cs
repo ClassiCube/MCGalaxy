@@ -61,6 +61,7 @@ namespace MCGalaxy {
         public string theme = "Normal";
         [ConfigBool("Unload", "General", null, true)]
         public bool unload = true;
+        /// <summary> true if this map sees server-wide chat, false if this map has level-only/isolated chat </summary>
         [ConfigBool("WorldChat", "General", null, true)]
         public bool worldChat = true;
         
