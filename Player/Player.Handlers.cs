@@ -528,9 +528,7 @@ return;
                 if (PlayerChat != null) PlayerChat(this, text);
                 OnPlayerChatEvent.Call(this, text);
                 
-                if (cancelchat) {
-                    cancelchat = false; return;
-                }
+                if (cancelchat) { cancelchat = false; return; }
                 if (Server.worldChat) {
                     SendChatFrom(this, text);
                 } else {

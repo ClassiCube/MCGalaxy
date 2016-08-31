@@ -22,12 +22,12 @@ namespace MCGalaxy {
     /// <summary> This is the player object </summary>
     public sealed partial class Player {
         
-        internal bool cancelcommand = false;
-        internal bool cancelchat = false;
-        internal bool cancelmove = false;
-        internal bool cancelBlock = false;
-        internal bool cancelmysql = false;
-        internal bool cancelmessage = false;
+        public bool cancelcommand = false;
+        public bool cancelchat = false;
+        public bool cancelmove = false;
+        public bool cancelBlock = false;
+        public bool cancelmysql = false;
+        public bool cancelmessage = false;
         internal bool HasBlockchange { get { return Blockchange != null; } }
         
         //Should people be able to cancel this event?
