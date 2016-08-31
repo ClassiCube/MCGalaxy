@@ -210,15 +210,12 @@ namespace MCGalaxy {
         public void SendMessage(byte id, string message, bool colorParse = true) {
             message = ConvertMessage(message, colorParse);
             int totalTries = 0;
-            if ( MessageRecieve != null )
+            if (MessageRecieve != null)
                 MessageRecieve(this, message);
-            if ( OnMessageRecieve != null )
+            if (OnMessageRecieve != null)
                 OnMessageRecieve(this, message);
             OnMessageRecieveEvent.Call(this, message);
-            if ( cancelmessage ) {
-                cancelmessage = false;
-                return;
-            }
+            if (cancelmessage) { cancelmessage = false; return; }
             
             retryTag: try {
                 foreach (string raw in LineWrapper.Wordwrap(message)) {

@@ -393,11 +393,19 @@ namespace MCGalaxy {
             return load;
         }
 
-        public void ChatLevel(string message) { ChatLevel(message, LevelPermission.Banned); }
+        public void ChatLevel(string message) { 
+        	ChatLevel(message, LevelPermission.Banned); 
+        }
 
-        public void ChatLevelOps(string message) { ChatLevel(message, Server.opchatperm); }
+        public void ChatLevelOps(string message) {
+            LevelPermission rank = CommandOtherPerms.FindPerm("opchat", LevelPermission.Operator);
+            ChatLevel(message, rank);
+        }
 
-        public void ChatLevelAdmins(string message) { ChatLevel(message, Server.adminchatperm); }
+        public void ChatLevelAdmins(string message) { 
+            LevelPermission rank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+            ChatLevel(message, rank);
+        }
         
         /// <summary> Sends a chat messages to all players in the level, who have at least the minPerm rank. </summary>
         public void ChatLevel(string message, LevelPermission minPerm) {

@@ -17,7 +17,7 @@
 */
 using System;
 namespace MCGalaxy.Commands {
-    public sealed class CmdMe : Command {
+    public sealed class CmdMe : MessageCmd {
         public override string name { get { return "me"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
@@ -28,17 +28,11 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Player.Message(p, "You"); return; }
             if (p == null) { MessageInGameOnly(p); return; }
-
-            if (p.joker || p.muted) { Player.Message(p, "Cannot use /me while muted or jokered."); return; }
-            if (Server.chatmod && !p.voice) { Player.Message(p, "Chat moderation is on, you cannot emote."); return; }
+            if (p.joker) { Player.Message(p, "Cannot use /me while jokered."); return; }
             
-            if (!p.level.worldChat) {
-                Chat.GlobalChatLevel(p, "<Level>" + p.color + "*" + Colors.StripColors(p.DisplayName) + " " + message, false);
-            } else {
-                Player.SendChatFrom(p, p.color + "*" + Colors.StripColors(p.DisplayName) + " " + message, false);
+            string msg = p.color + "*" + Colors.StripColors(p.DisplayName) + " " + message;
+            if (TryMessage(p, msg) && p.level.worldChat)
                 Player.RaisePlayerAction(p, PlayerAction.Me, message);
-            }
-            p.CheckForMessageSpam();
         }
         
         public override void Help(Player p) {

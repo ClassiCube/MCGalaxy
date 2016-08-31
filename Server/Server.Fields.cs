@@ -292,18 +292,18 @@ namespace MCGalaxy {
         public static string MySQLPassword = "password";
         [ConfigString("DatabaseName", "Database", null, "MCZallDB")]          
         public static string MySQLDatabaseName = "MCZallDB";
-        [ConfigBool("Pooling", "Database", null, true)]          
+        [ConfigBool("Pooling", "Database", null, true)]
         public static bool DatabasePooling = true;
 
         [ConfigColor("defaultColor", "Colors", null, "&e")]
         public static string DefaultColor = "&e";
         [ConfigColor("irc-color", "Colors", null, "&5")]
         public static string IRCColour = "&5";
-        [ConfigColor("global-chat-color", "Colors", null, "&6")]        
+        [ConfigColor("global-chat-color", "Colors", null, "&6")]
         public static string GlobalChatColor = "&6";
-        [ConfigColor("help-syntax-color", "Colors", null, "&a")]        
+        [ConfigColor("help-syntax-color", "Colors", null, "&a")]
         public static string HelpSyntaxColor = "&a";
-        [ConfigColor("help-desc-color", "Colors", null, "&e")]        
+        [ConfigColor("help-desc-color", "Colors", null, "&e")]
         public static string HelpDescriptionColor = "&e";
         
         [ConfigBool("global-chat-enabled", "Other", null, true)]
@@ -320,7 +320,7 @@ namespace MCGalaxy {
         [ConfigBool("dollar-before-dollar", "Other", null, true)]
         public static bool dollarNames = true;
         public static bool unsafe_plugin = true;
-        [ConfigBool("cheapmessage", "Other", null, true)]        
+        [ConfigBool("cheapmessage", "Other", null, true)]
         public static bool cheapMessage = true;
         
         [ConfigString("cheap-message-given", "Messages", null, " is now being cheap and being immortal")]
@@ -335,10 +335,8 @@ namespace MCGalaxy {
         public static string defaultDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";
 
         [ConfigString("money-name", "Other", null, "moneys")]        
-        public static string moneys = "moneys";
-        [ConfigPerm("opchat-perm", "Other", null, LevelPermission.Operator)]                
-        public static LevelPermission opchatperm = LevelPermission.Operator;
-        [ConfigPerm("adminchat-perm", "Other", null, LevelPermission.Admin)]        
+        public static string moneys = "moneys";             
+        public static LevelPermission opchatperm = LevelPermission.Operator;       
         public static LevelPermission adminchatperm = LevelPermission.Admin;
         
         [ConfigBool("log-heartbeat", "Other", null, false)]

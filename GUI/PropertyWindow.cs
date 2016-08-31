@@ -49,14 +49,14 @@ namespace MCGalaxy.Gui {
             ToggleMySQLSettings(Server.useMySQL);
             ToggleAutoMuteSettings(Server.checkspam);
 
-            string opchatperm = String.Empty;
-            string adminchatperm = String.Empty;
-            string verifyadminsperm = String.Empty;
-            string grieferstonerank = String.Empty;
-            string afkkickrank = String.Empty;
-            string osmaprank = String.Empty;
+            string opchatperm = "", adminchatperm = "";
+            string verifyadminsperm = "", afkkickrank = "", osmaprank = "";
+            LevelPermission adminChatRank = 
+                CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+            LevelPermission opChatRank =
+                CommandOtherPerms.FindPerm("opchat", LevelPermission.Operator);
 
-            foreach ( Group grp in Group.GroupList ) {
+            foreach (Group grp in Group.GroupList) {
                 cmbDefaultRank.Items.Add(grp.name);
                 cmbOpChat.Items.Add(grp.name);
                 cmbAdminChat.Items.Add(grp.name);
@@ -66,15 +66,15 @@ namespace MCGalaxy.Gui {
                 cmbAFKKickPerm.Items.Add(grp.name);
                 cmbOsMap.Items.Add(grp.name);
 
-                if ( grp.Permission == Server.opchatperm )
+                if (grp.Permission == opChatRank)
                     opchatperm = grp.name;
-                if ( grp.Permission == Server.adminchatperm )
+                if (grp.Permission == adminChatRank)
                     adminchatperm = grp.name;
-                if ( grp.Permission == Server.verifyadminsrank )
+                if (grp.Permission == Server.verifyadminsrank)
                     verifyadminsperm = grp.name;
-                if ( grp.Permission == Server.afkkickperm )
+                if (grp.Permission == Server.afkkickperm)
                     afkkickrank = grp.name;
-                if( grp.Permission == Server.osPerbuildDefault )
+                if (grp.Permission == Server.osPerbuildDefault)
                     osmaprank = grp.name;
             }
             
@@ -541,6 +541,7 @@ namespace MCGalaxy.Gui {
             try {
                 ApplyAll();
                 SrvProperties.Save();
+                CommandOtherPerms.Save();
             } catch( Exception ex ) {
                 Server.ErrorLog(ex);
                 Server.s.Log("SAVE FAILED! properties/server.properties");
@@ -584,10 +585,12 @@ namespace MCGalaxy.Gui {
             //Server.useWhitelist = ; //We don't have a setting for this?
             Server.moneys = txtMoneys.Text;
             
-            Server.osPerbuildDefault = Group.Find(cmbOsMap.SelectedItem.ToString()).Permission;            	
-            Server.opchatperm = Group.Find(cmbOpChat.SelectedItem.ToString()).Permission;
-            Server.adminchatperm = Group.Find(cmbAdminChat.SelectedItem.ToString()).Permission;
+            Server.osPerbuildDefault = Group.Find(cmbOsMap.SelectedItem.ToString()).Permission;
             Server.afkkickperm = Group.Find(cmbAFKKickPerm.SelectedItem.ToString()).Permission;
+            var perms = CommandOtherPerms.Find("opchat");
+            perms.Permission = (int)Group.Find(cmbOpChat.SelectedItem.ToString()).Permission;
+            perms = CommandOtherPerms.Find("adminchat");
+            perms.Permission = (int)Group.Find(cmbAdminChat.SelectedItem.ToString()).Permission;            
             
             Server.logbeat = chkLogBeat.Checked;
             Server.profanityFilter = chkProfanityFilter.Checked;
@@ -1237,7 +1240,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
         private void SaveOldExtraCustomCmdChanges() {
             if (oldcmd == null || skipExtraPermChanges) return;
-            CommandOtherPerms.Edit(CommandOtherPerms.Find(oldcmd, oldnumber), int.Parse(extracmdpermperm.Text));
+            CommandOtherPerms.Find(oldcmd, oldnumber).Permission = int.Parse(extracmdpermperm.Text);
             CommandOtherPerms.Save();
         }
 

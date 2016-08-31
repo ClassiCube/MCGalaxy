@@ -36,8 +36,8 @@ namespace MCGalaxy {
 			}
 			Server.salt = sb.ToString();
 
-			reviewPerms = new ReviewPerms();
-			if (PropertiesFile.Read(givenPath, ref reviewPerms, LineProcessor))
+			oldPerms = new OldPerms();
+			if (PropertiesFile.Read(givenPath, ref oldPerms, LineProcessor))
 				Server.s.SettingsUpdate();
 			
 			if (!Directory.Exists(Server.backupLocation))
@@ -46,7 +46,7 @@ namespace MCGalaxy {
 			Save(givenPath);
 		}
 		
-		static void LineProcessor(string key, string value, ref ReviewPerms perms) {
+		static void LineProcessor(string key, string value, ref OldPerms perms) {
             switch (key.ToLower()) {
 				// Backwards compatibility with old config, where review permissions where global
                 case "review-enter-perm":
@@ -58,6 +58,10 @@ namespace MCGalaxy {
                     perms.nextPerm = int.Parse(value); break;
                 case "review-clear-perm":
                     perms.clearPerm = int.Parse(value); break;
+                case "opchat-perm":
+                    perms.opchatPerm = int.Parse(value); break;
+                case "adminchat-perm":
+                    perms.adminchatPerm = int.Parse(value); break;
                     
                 default:
                     if (!ConfigElement.Parse(Server.serverConfig, key, value, null))
@@ -65,8 +69,9 @@ namespace MCGalaxy {
                     break;
 			}
 		}		
-		internal static ReviewPerms reviewPerms;
-		internal class ReviewPerms { public int viewPerm = -1, nextPerm = -1, clearPerm = -1; }
+		internal static OldPerms oldPerms;
+		internal class OldPerms { public int viewPerm = -1, nextPerm = -1, 
+		    clearPerm = -1, opchatPerm = -1, adminchatPerm = -1; }
 		
 		public static void Save() { Save("properties/server.properties"); }
 		static readonly object saveLock = new object();

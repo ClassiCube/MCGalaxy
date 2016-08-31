@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Cleared &cALL %Sblock changes for &d" + lvl.name);
             } else if (args[0] == "disable") {
                 lvl.UseBlockDB = false;
-                Player.Message(p, "&cDisabled %Srecording further block changesfor &d" + lvl.name);
+                Player.Message(p, "&cDisabled %Srecording further block changes for &d" + lvl.name);
                 Level.SaveSettings(lvl);
             } else if (args[0] == "enable") {
                 lvl.UseBlockDB = true;

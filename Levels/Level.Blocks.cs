@@ -175,23 +175,18 @@ namespace MCGalaxy {
         
         bool CheckZonePerms(Player p, ushort x, ushort y, ushort z, ref bool inZone) {
             if (p.Rank < LevelPermission.Admin) {
-        	    string owners = "";
-                bool zoneAllow = FindZones(p, x, y, z, ref inZone, ref owners);
+                bool zoneAllow = FindZones(p, x, y, z, ref inZone);
                 if (zoneAllow) return true;
                 if (p.ZoneSpam > DateTime.UtcNow) return false;
                 
-                if (owners != "")
-                    Player.Message(p, "This zone belongs to &b" + owners.Remove(0, 2) + ".");
-                else
-                    Player.Message(p, "This zone belongs to no one.");
+                Player.Message(p, FindZoneOwners(x, y, z));
                 p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
                 return false;
             }
             return true;
         }
         
-        bool FindZones(Player p, ushort x, ushort y, ushort z, 
-                             ref bool inZone, ref string Owners) {
+        bool FindZones(Player p, ushort x, ushort y, ushort z, ref bool inZone) {
             if (ZoneList.Count == 0) return true;
             bool zoneAllow = true;
             
@@ -204,14 +199,30 @@ namespace MCGalaxy {
                 if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
                     string grpName = zn.Owner.Substring(3);
                     if (Group.Find(grpName).Permission <= p.Rank) return true;
-                    Owners += ", " + grpName;
                 } else {
                 	if (zn.Owner.CaselessEq(p.name)) return true;
-                    Owners += ", " + zn.Owner;
                 }
                 zoneAllow = false;
             }
             return zoneAllow;
+        }
+        
+        internal string FindZoneOwners(ushort x, ushort y, ushort z) {
+            string owners = "";
+            for (int i = 0; i < ZoneList.Count; i++) {
+                Zone zn = ZoneList[i];
+                if (x < zn.smallX || x > zn.bigX || y < zn.smallY || y > zn.bigY || z < zn.smallZ || z > zn.bigZ)
+                    continue;
+                
+                if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
+                    owners += ", " + zn.Owner.Substring(3);
+                } else {
+                    owners += ", " + zn.Owner;
+                }
+            }
+            
+            if (owners == "") return "No zones affect this block";
+            return "This zone belongs to &b" + owners.Remove(0, 2) + ".";
         }
         
         bool CheckRank(Player p) {

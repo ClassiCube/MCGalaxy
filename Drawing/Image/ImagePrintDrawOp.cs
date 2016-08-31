@@ -34,21 +34,25 @@ namespace MCGalaxy.Drawing.Ops {
         internal int Mode, Direction;
         internal bool Layer;
         internal string Filename;
+        
         Vec3S32 dx, dy, adj;
-        PaletteEntry cur = default(PaletteEntry);
+        IPalette selector;
+        int threshold;
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
-            Vec3U16 p0 = Clamp(marks[0]);
+            Vec3U16 p0 = Clamp(marks[0]);            
+            selector = null;
+            CalcThreshold();
+            CalcDirectionVectors(Direction);
+            
             PaletteEntry[] palette = ImagePalette.GetPalette(Mode);
-            IPalette selector = null;
             if (Mode == 6) selector = new GrayscalePalette();
             else selector = new RgbPalette();
-            selector.SetAvailableBlocks(palette);
-            CalcDirectionVectors(Direction);
+            selector.SetAvailableBlocks(palette);            
 
             using (PixelGetter getter = new PixelGetter(Source)) {
                 getter.Init();
-                getter.Iterate(P => OutputPixel(P, selector, output));
+                getter.Iterate(output, OutputPixel);
             }
             
             Source.Dispose();
@@ -58,28 +62,27 @@ namespace MCGalaxy.Drawing.Ops {
             Player.Message(p, "Finished printing image using " + ImagePalette.Names[Mode]);
         }
         
-        void OutputPixel(Pixel P, IPalette selector, Action<DrawOpBlock> output) {
+        void OutputPixel(Pixel P, Action<DrawOpBlock> output) {
             ushort x = (ushort)(Origin.X + dx.X * P.X + dy.X * P.Y);
             ushort y = (ushort)(Origin.Y + dx.Y * P.X + dy.Y * P.Y);
             ushort z = (ushort)(Origin.Z + dx.Z * P.X + dy.Z * P.Y);
-            
-            byte alpha = (byte)(P.ARGB >> 24);
-            if (alpha < 20) { output(Place(x, y, z, Block.air, 0)); return; }
-            cur.R = (byte)(P.ARGB >> 16);
-            cur.G = (byte)(P.ARGB >> 16);
-            cur.B = (byte)(P.ARGB >> 16);
+            if (P.A < 20) { output(Place(x, y, z, Block.air, 0)); return; }
             
             int position;
-            byte block = selector.BestMatch(cur, out position);
-            if (Mode == 1 || Mode == 3) {
-                int threshold = Mode == 1 ? 20 : 3;
-                // Back layer block
-                if (position <= threshold) {
-                    x = (ushort)(x + adj.X);
-                    z = (ushort)(z + adj.Z);
-                }
+            byte block = selector.BestMatch(P.R, P.G, P.B, out position);
+            // Back layer block
+            if (position <= threshold) {
+                x = (ushort)(x + adj.X);
+                z = (ushort)(z + adj.Z);
             }
-            output(Place(x, y, z, cur.Block, 0));
+            output(Place(x, y, z, block, 0));
+        }
+        
+        void CalcThreshold() {
+            threshold = -1;
+            if (Mode == 1 || Mode == 3) {
+                threshold = Mode == 1 ? 20 : 3;
+            }
         }
         
         void CalcDirectionVectors(int dir) {

@@ -404,8 +404,12 @@ return;
             if (b == Block.rockethead) level.MakeExplosion(x, y, z, 0);
             if (b == Block.creeper) level.MakeExplosion(x, y, z, 1);
             if (b == Block.rock || b == Block.stone) {
-                if (explode) level.MakeExplosion(x, y, z, 1);
-                SendChatFrom(this, ColoredName + "%S" + customMessage, false);
+                if (explode) level.MakeExplosion(x, y, z, 1);              
+                if (b == Block.rock) {
+                    SendChatFrom(this, ColoredName + "%S" + customMessage, false);
+                } else {
+                    Chat.GlobalChatLevel(this, ColoredName + "%S" + customMessage, false);
+                }
             }
             
             if ( Game.team != null && this.level.ctfmode ) {
@@ -524,9 +528,7 @@ return;
                 if (PlayerChat != null) PlayerChat(this, text);
                 OnPlayerChatEvent.Call(this, text);
                 
-                if (cancelchat) {
-                    cancelchat = false; return;
-                }
+                if (cancelchat) { cancelchat = false; return; }
                 if (Server.worldChat) {
                     SendChatFrom(this, text);
                 } else {

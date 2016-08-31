@@ -31,44 +31,58 @@ namespace MCGalaxy.Drawing {
         
         public void Init() {
             bool fastPath = bmp.PixelFormat == PixelFormat.Format32bppRgb
-                || bmp.PixelFormat == PixelFormat.Format32bppArgb;
+                || bmp.PixelFormat == PixelFormat.Format32bppArgb
+            	|| bmp.PixelFormat == PixelFormat.Format24bppRgb;
             if (!fastPath) return;
-            // We can only use the fast path for 32bpp bitmaps
+            // We can only use the fast path for 24bpp or 32bpp bitmaps
             
             Rectangle r = new Rectangle(0, 0, bmp.Width, bmp.Height);
             data = bmp.LockBits(r, ImageLockMode.ReadOnly, bmp.PixelFormat);
         }
         
-        public void Iterate(Action<Pixel> callback) {
-            if (data == null) IterateSlow(callback);
-            else IterateFast(callback);
+        public void Iterate(Action<DrawOpBlock> output,
+                            Action<Pixel, Action<DrawOpBlock>> callback) {
+            if (data == null) IterateSlow(output, callback);
+            else IterateFast(output, callback);
         }
         
-        unsafe void IterateFast(Action<Pixel> callback) {
+        unsafe void IterateFast(Action<DrawOpBlock> output,
+                                Action<Pixel, Action<DrawOpBlock>> callback) {
             Pixel pixel;
             int width = bmp.Width, height = bmp.Height;
             byte* scan0 = (byte*)data.Scan0;
+            pixel.A = 255;
+            bool hasA = bmp.PixelFormat != PixelFormat.Format24bppRgb;
                 
             for (int y = 0; y < height; y++) {
                 pixel.Y = (ushort)y;
-                int* row = (int*)(scan0 + y * data.Stride);
+                byte* row = (scan0 + y * data.Stride);
                 for (int x = 0; x < width; x++) {
                     pixel.X = (ushort)x;
-                    pixel.ARGB = row[x];
-                    callback(pixel);
+                    pixel.B = *row; row++;
+                    pixel.G = *row; row++;
+                    pixel.R = *row; row++;
+                    if (hasA) { pixel.A = *row; row++; }
+                    callback(pixel, output);
                 }
             }
         }
         
-        void IterateSlow(Action<Pixel> callback) {
+        void IterateSlow(Action<DrawOpBlock> output,
+                         Action<Pixel, Action<DrawOpBlock>> callback) {
             Pixel pixel;
             int width = bmp.Width, height = bmp.Height;
             for (int y = 0; y < height; y++)
                 for (int x = 0; x < width; x++)
             {
                 pixel.X = (ushort)x; pixel.Y = (ushort)y;
-                pixel.ARGB = bmp.GetPixel(x, y).ToArgb(); // R/G/B properties incur overhead
-                callback(pixel);
+                int argb = bmp.GetPixel(x, y).ToArgb(); // R/G/B properties incur overhead
+                
+                pixel.A = (byte)(argb >> 24);
+                pixel.R = (byte)(argb >> 16);
+                pixel.G = (byte)(argb >> 8);
+                pixel.B = (byte)argb;
+                callback(pixel, output);
             }
         }
         
@@ -81,6 +95,6 @@ namespace MCGalaxy.Drawing {
     
     public struct Pixel {
         public ushort X, Y;
-        public int ARGB;
+        public byte A, R, G, B;
     }
 }

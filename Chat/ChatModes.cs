@@ -60,11 +60,13 @@ namespace MCGalaxy {
         }
         
         public static void MessageOps(Player p, string message) {
-            MessageStaff(p, message, Server.opchatperm, "Ops");
+            LevelPermission rank = CommandOtherPerms.FindPerm("opchat", LevelPermission.Operator);
+            MessageStaff(p, message, rank, "Ops");
         }
 
         public static void MessageAdmins(Player p, string message) {
-            MessageStaff(p, message, Server.adminchatperm, "Admins");
+            LevelPermission rank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+            MessageStaff(p, message, rank, "Admins");
         }
         
         public static void MessageStaff(Player p, string message, 
@@ -76,7 +78,7 @@ namespace MCGalaxy {
             Chat.MessageWhere(format, 
                               pl => pl.Rank >= perm && !pl.listignored.Contains(name),
                               displayName, message);
-            if (p != null && p.Rank < Server.adminchatperm)
+            if (p != null && p.Rank < perm)
                 Player.Message(p, format, displayName, message);
             
             Server.s.Log("(" + group + "): " + name + ": " + message);

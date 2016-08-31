@@ -196,6 +196,8 @@ namespace MCGalaxy {
         }
         
         void CompleteLoginProcess() {
+			LevelPermission adminChatRank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+            
             try {
                 SendUserMOTD();
                 SendMap(null);
@@ -205,7 +207,6 @@ namespace MCGalaxy {
                 PlayerInfo.Online.Add(this);
                 connections.Remove(this);
                 RemoveFromPending();
-
                 Server.s.PlayerListUpdate();
 
                 //Test code to show when people come back with different accounts on the same IP
@@ -213,14 +214,14 @@ namespace MCGalaxy {
                 bool found = false;
                 if (!ip.StartsWith("127.0.0.")) {
                     foreach (KeyValuePair<string, string> prev in left) {
-                        if (prev.Value == ip)
-                        {
+                        if (prev.Value == ip) {
                             found = true;
                             alts += " " + prev.Key;
                         }
                     }
+                	
                     if (found) {
-                        if (group.Permission < Server.adminchatperm || !Server.adminsjoinsilent) {
+                        if (group.Permission < adminChatRank || !Server.adminsjoinsilent) {
                             Chat.MessageOps(alts);
                             //IRCBot.Say(temp, true); //Tells people in op channel on IRC
                         }
@@ -264,7 +265,7 @@ namespace MCGalaxy {
 
             hidden = group.CanExecute("hide") && Server.hidden.Contains(name);
             if (hidden) SendMessage("&8Reminder: You are still hidden.");
-            if (group.Permission >= Server.adminchatperm && Server.adminsjoinsilent) {
+            if (group.Permission >= adminChatRank && Server.adminsjoinsilent) {
                 hidden = true; adminchat = true;
             }
             
