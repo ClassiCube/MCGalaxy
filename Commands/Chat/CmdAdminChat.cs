@@ -18,7 +18,10 @@ namespace MCGalaxy.Commands {
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can read adminchat messages") }; }
+        }
         public CmdAdminChat() { }
 
         public override void Use(Player p, string message) {

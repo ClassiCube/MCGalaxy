@@ -219,21 +219,27 @@ namespace MCGalaxy {
             ProfanityFilter.Init();
             Team.LoadList();
             ChatTokens.LoadCustom();
-            FixupOldReviewPerms();
+            FixupOldPerms();
         }
         
-        static void FixupOldReviewPerms() {
-            Command cmd = Command.all.Find("review");
-            var perms = SrvProperties.reviewPerms;
-            if (perms.clearPerm == -1 && perms.nextPerm == -1 && perms.viewPerm == -1) return;
+        static void FixupOldPerms() {
+            var perms = SrvProperties.oldPerms;
+            Server.opchatperm = CommandOtherPerms.FindPerm("opchat", LevelPermission.Operator);
+            Server.adminchatperm = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+            if (perms.clearPerm == -1 && perms.nextPerm == -1 && perms.viewPerm == -1
+                && perms.opchatPerm == -1 && perms.adminchatPerm == -1) return;
             
-            // Backwards compatibility with old config, where review permissions where global
+            // Backwards compatibility with old config, where some permissions were global
             if (perms.viewPerm != -1)
-                CommandOtherPerms.Edit(CommandOtherPerms.Find(cmd, 1), perms.viewPerm);
+                CommandOtherPerms.Find("review", 1).Permission = perms.viewPerm;
             if (perms.nextPerm != -1)
-                CommandOtherPerms.Edit(CommandOtherPerms.Find(cmd, 2), perms.nextPerm);
+                CommandOtherPerms.Find("review", 2).Permission = perms.nextPerm;
             if (perms.clearPerm != -1)
-                CommandOtherPerms.Edit(CommandOtherPerms.Find(cmd, 3), perms.clearPerm);
+                CommandOtherPerms.Find("review", 3).Permission = perms.clearPerm;
+            if (perms.opchatPerm != -1)
+                CommandOtherPerms.Find("opchat").Permission = perms.opchatPerm;
+            if (perms.adminchatPerm != -1)
+                CommandOtherPerms.Find("adminchat").Permission = perms.adminchatPerm;
             CommandOtherPerms.Save();
         }
 

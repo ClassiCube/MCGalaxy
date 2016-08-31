@@ -68,7 +68,7 @@ namespace MCGalaxy {
         public static void MessageWhere(string message, Predicate<Player> filter) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-            	if (filter(p)) Player.Message(p, message);
+                if (filter(p)) Player.Message(p, message);
             }
         }
         
@@ -79,12 +79,14 @@ namespace MCGalaxy {
         
         /// <summary> Sends a message to all players who are have the permission to read opchat. </summary>
         public static void MessageOps(string message) {
-            MessageWhere(message, pl => pl.Rank >= Server.opchatperm);
+            LevelPermission rank = CommandOtherPerms.FindPerm("opchat", LevelPermission.Operator);
+            MessageWhere(message, pl => pl.Rank >= rank);
         }
         
         /// <summary> Sends a message to all players who are have the permission to read adminchat. </summary>
         public static void MessageAdmins(string message) {
-            MessageWhere(message, pl => pl.Rank >= Server.adminchatperm);
+            LevelPermission rank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+            MessageWhere(message, pl => pl.Rank >= rank);
         }
         
         /// <summary> Sends a message to all players, who do not have 

@@ -335,10 +335,8 @@ namespace MCGalaxy {
         public static string defaultDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";
 
         [ConfigString("money-name", "Other", null, "moneys")]        
-        public static string moneys = "moneys";
-        [ConfigPerm("opchat-perm", "Other", null, LevelPermission.Operator)]                
-        public static LevelPermission opchatperm = LevelPermission.Operator;
-        [ConfigPerm("adminchat-perm", "Other", null, LevelPermission.Admin)]        
+        public static string moneys = "moneys";             
+        public static LevelPermission opchatperm = LevelPermission.Operator;       
         public static LevelPermission adminchatperm = LevelPermission.Admin;
         
         [ConfigBool("log-heartbeat", "Other", null, false)]
