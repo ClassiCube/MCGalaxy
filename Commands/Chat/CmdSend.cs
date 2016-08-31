@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             string[] parts = message.SplitSpaces(2);
             if (message == "" || parts.Length == 1) { Help(p); return; }
 
-            string receiverName = PlayerInfo.FindMatchesPreferOnline(p, message);
+            string receiverName = PlayerInfo.FindMatchesPreferOnline(p, parts[0]);
             if (receiverName == null) return;
             string senderName = p == null ? "(console)" : p.name;
 
