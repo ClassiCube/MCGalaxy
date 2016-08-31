@@ -103,27 +103,11 @@ namespace MCGalaxy.Commands {
         }
         
         bool CheckZone(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-            Level lvl = p.level;
             Vec3S32 P = marks[0];
-            string owners = "";
-            
-            for (int i = 0; i < lvl.ZoneList.Count; i++) {
-                Level.Zone zn = lvl.ZoneList[i];
-                if (P.X < zn.smallX || P.X > zn.bigX || P.Y < zn.smallY || P.Y > zn.bigY || P.Z < zn.smallZ || P.Z > zn.bigZ)
-                    continue;
-                
-                if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp"))
-                    owners += ", " + zn.Owner.Substring(3);
-                else if (zn.Owner != "")
-                    owners += ", " + zn.Owner;
-            }
-            
-            if (owners.Length == 0) 
-                Player.Message(p, "No zones affect this block.");
-            else
-                Player.Message(p, "This zone belongs to &b{0}.", owners.Remove(0, 2));
+            string zoneMsg = p.level.FindZoneOwners((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
+            Player.Message(p, zoneMsg);
             return true;
-        }        
+        }
 
         bool DeleteZone(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             Level lvl = p.level;
