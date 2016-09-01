@@ -79,7 +79,9 @@ namespace MCGalaxy.Commands.Moderation {
                                    Group pGroup, Group group, string target) {
             DateTime now = DateTime.Now;
             string assigner = p == null ? "Console" : p.name;
-            string data = target + " " + group.name + " " + pGroup.name + " " + delta.Hours + " " + now.Minute + " " +
+            int hours = delta.Days * 24 + delta.Hours;
+            
+            string data = target + " " + group.name + " " + pGroup.name + " " + hours + " " + now.Minute + " " +
                 now.Hour + " " + now.Day + " " + now.Month + " " + now.Year + " " + assigner + " " + delta.Minutes;
             Server.TempRanks.Append(data);
             
