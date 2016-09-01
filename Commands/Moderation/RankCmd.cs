@@ -20,7 +20,7 @@ using System.IO;
 
 namespace MCGalaxy.Commands.Moderation {
     internal static class RankCmd {
-        
+		
         internal static void ChangeRank(string name, Group oldRank, Group newRank,
                                         Player who, bool saveToNewRank = true) {
             Server.reviewlist.Remove(name);
