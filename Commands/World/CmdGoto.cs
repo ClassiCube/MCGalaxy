@@ -108,9 +108,9 @@ namespace MCGalaxy.Commands.World {
             Level oldLevel = p.level;
             p.level = lvl; p.SendUserMOTD(); p.SendMap(oldLevel);
 
-            ushort x = (ushort)((0.5 + lvl.spawnx) * 32);
-            ushort y = (ushort)((1 + lvl.spawny) * 32);
-            ushort z = (ushort)((0.5 + lvl.spawnz) * 32);
+            ushort x = (ushort)(lvl.spawnx * 32 + 16);
+            ushort y = (ushort)(lvl.spawny * 32 + 32);
+            ushort z = (ushort)(lvl.spawnz * 32 + 16);
             Entities.SpawnEntities(p, x, y, z, lvl.rotx, lvl.roty);
             p.Loading = false;
             CheckGamesJoin(p, oldLevel);

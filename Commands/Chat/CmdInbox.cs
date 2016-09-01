@@ -41,9 +41,9 @@ namespace MCGalaxy.Commands {
                     if (Inbox.Rows.Count == 0) { Player.Message(p, "No messages found."); return; }
                     int i = 0;
                     foreach (DataRow row in Inbox.Rows) {
-                        Player.Message(p, "{0}: From &5{1} %Sat &a{2}:", i, row["PlayerFrom"], row["TimeSent"]); i++;
+                        OutputMessage(p, row);
+                        i++;
                     }
-                    Player.Message(p, "Use %T/inbox [number] %Sto read the contents of that message.");
                 }
             } else if (parts[0] == "del" || parts[0] == "delete") {
                 int num = -1;
@@ -85,14 +85,18 @@ namespace MCGalaxy.Commands {
                 //safe against SQL injections because no user input is given here
                 using (DataTable Inbox = Database.Fill("SELECT * FROM `Inbox" + p.name + "` ORDER BY TimeSent")) {
                     if (num >= Inbox.Rows.Count) {
-                        Player.Message(p, "Message number \"" + num + "\" does not exist."); Inbox.Dispose(); return;
+                        Player.Message(p, "Message number \"" + num + "\" does not exist."); return;
                     }
-                    
-                    DataRow row = Inbox.Rows[num];
-                    Player.Message(p, "Message from &5{0} %Ssent at &a{1}:", row["PlayerFrom"], row["TimeSent"]);
-                    Player.Message(p, row["Contents"].ToString());
+                    OutputMessage(p, Inbox.Rows[num]);
                 }
             }
+        }
+        
+        static void OutputMessage(Player p, DataRow row) {
+            DateTime time = Convert.ToDateTime(row["TimeSent"]);
+            TimeSpan delta = DateTime.Now - time;
+            Player.Message(p, "From &5{0} &a{1} ago:", row["PlayerFrom"], delta.Shorten());
+            Player.Message(p, row["Contents"].ToString());
         }
         
         public override void Help(Player p) {
