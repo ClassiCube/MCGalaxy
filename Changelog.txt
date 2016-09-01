@@ -1,3 +1,14 @@
+v 1.8.8.1
+Added: Basic /transform rotate for rotating pastes and other draw operations
+Added: /temprank, /undo and /highlight now support timespans
+Fixed: /awardmod add could add spaces to the award name
+Fixed: Not updating portal exit maps on that map when doing /renamelvl
+Improved: Can partially match award names now
+Improved: /b shows the contents of a message block
+Improved: /inbox uses relative time, /inbox will read all messages
+Improved: Optimised /imageprint and also made it a draw op (can use with /undo and /scale)
+Improved: opchat/adminchat is now an extra permission that can be seen in the /help for their command
+
 v 1.8.8.0
 Added: /resizelvl command to resize a level
 Added: Heightmap map generator (URL of heightmap image is the seed)
