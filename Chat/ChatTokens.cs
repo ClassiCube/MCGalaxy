@@ -45,6 +45,15 @@ namespace MCGalaxy {
                 sb.Replace(token.Key, token.Value);
         }
         
+        public static string ApplyCustom(string text) {
+            if (CustomTokens.Count == 0) return text;
+            StringBuilder sb = new StringBuilder(text);
+            foreach (var token in CustomTokens)
+                sb.Replace(token.Key, token.Value);
+            return sb.ToString();
+        }
+        
+        
         internal static Dictionary<string, TokenParser> standardTokens = new Dictionary<string, TokenParser> {
             { "$name", p => p.DisplayName == null ? null :
                     (Server.dollarNames ? "$" : "") + Colors.StripColors(p.DisplayName) },

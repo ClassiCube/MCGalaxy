@@ -108,6 +108,7 @@ namespace MCGalaxy {
                 message = ".";
             message = EmotesHandler.Replace(message);
             message = FullCP437Handler.Replace(message);
+            message = ChatTokens.ApplyCustom(message);
             message = CP437Writer.ConvertToUnicode(message);
             
             if (color)
@@ -174,21 +175,15 @@ namespace MCGalaxy {
         }
         
         void Player_PlayerDisconnect(Player p, string reason) {
-            if (!Server.irc ||!IsConnected()) return;
+            if (!Server.irc ||!IsConnected() || p.hidden) return;
             if (!Server.guestLeaveNotify && p.Rank <= LevelPermission.Guest) return;
-            
-            string msg = p.DisplayName + " %Sleft the game (" + reason + ")";
-            msg = ConvertMessage(msg, true);
-            if (!p.hidden) connection.Sender.PublicMessage(channel, msg);
+            Say(p.DisplayName + " %Sjoined the game (" + reason + "%S)", false);
         }
 
         void Player_PlayerConnect(Player p) {
-            if (!Server.irc ||!IsConnected()) return;
+            if (!Server.irc ||!IsConnected() || p.hidden) return;
             if (!Server.guestJoinNotify && p.Rank <= LevelPermission.Guest) return;
-            
-            string msg = p.DisplayName + " %Sjoined the game";
-            msg = ConvertMessage(msg, true);
-            if (!p.hidden) connection.Sender.PublicMessage(channel, msg);
+            Say(p.DisplayName + " %Sjoined the game", false);
         }
         
         void Player_PlayerChat(Player p, string message) {
