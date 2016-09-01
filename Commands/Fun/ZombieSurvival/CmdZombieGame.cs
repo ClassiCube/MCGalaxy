@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("zs"), new CommandAlias("zombiesurvival") }; }
-        }        
+        }
         public CmdZombieGame() { }
         
         public override void Use(Player p, string message) {
@@ -66,8 +66,8 @@ namespace MCGalaxy.Commands {
             if (Server.zombie.Running) {
                 Player.Message(p, "There is already a Zombie Survival game currently in progress."); return;
             }
-        	Level lvl = Player.IsSuper(p) ? null : p.level;
-        	
+            Level lvl = Player.IsSuper(p) ? null : p.level;
+            
             if (args.Length == 2) {
                 int rounds = 1;
                 if (!int.TryParse(args[1], out rounds)) {

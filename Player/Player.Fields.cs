@@ -25,10 +25,6 @@ namespace MCGalaxy {
     
     public sealed partial class Player : IDisposable {
         
-        /// <summary>
-        /// Key - Name  Value - IP
-        /// All players who have left this restart.
-        /// </summary>
         public Dictionary<string, object> ExtraData = new Dictionary<string, object>();
 
         public void ClearChat() { OnChat = null; }

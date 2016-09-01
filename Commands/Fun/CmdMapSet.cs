@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace MCGalaxy.Commands {   
+namespace MCGalaxy.Commands {
     public sealed class CmdMapSet : Command {
         public override string name { get { return "mapset"; } }
         public override string shortcut { get { return "mset"; } }
@@ -27,6 +27,9 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("roundtime", null, "roundtime") }; }
+        }
         
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
@@ -62,10 +65,8 @@ namespace MCGalaxy.Commands {
                 p.level.UpdateBlockPermissions();
                 Player.Message(p, "Set build type to: " + value);
             } else if (args[0].CaselessEq("minroundtime") || args[0].CaselessEq("minround")) {
-                byte time;
-                if (!byte.TryParse(args[1], out time) || time == 0 || time > 10) {
-                    Player.Message(p, "Minutes must be an integer between 1 and 10."); return;
-                }
+                byte time = GetRoundTime(p, args[1]);
+                if (time == 0) return;
                 
                 if (time > p.level.MaxRoundTime) {
                     Player.Message(p, "Min round time must be less than or equal to max round time"); return;
@@ -73,18 +74,23 @@ namespace MCGalaxy.Commands {
                 p.level.MinRoundTime = time;
                 Player.Message(p, "Set min round time to: " + time + " minutes");
             } else if (args[0].CaselessEq("maxroundtime") || args[0].CaselessEq("maxround")) {
-                byte time;
-                if (!byte.TryParse(args[1], out time) || time == 0 || time > 10) {
-                    Player.Message(p, "Minutes must be an integer between 1 and 10."); return;
-                }
+                byte time = GetRoundTime(p, args[1]);
+                if (time == 0) return;
                 
                 if (time < p.level.MinRoundTime) {
                     Player.Message(p, "Max round time must be greater than or equal to min round time"); return;
                 }
                 p.level.MaxRoundTime = time;
                 Player.Message(p, "Set max round time to: " + time + " minutes");
+            } else if (args[0].CaselessEq("roundtime") || args[0].CaselessEq("round")) {
+                byte time = GetRoundTime(p, args[1]);
+                if (time == 0) return;
+                
+                p.level.MinRoundTime = time;
+                p.level.MaxRoundTime = time;
+                Player.Message(p, "Set round time to: " + time + " minutes");
             } else if (args[0].CaselessEq("drawingallowed") || args[0].CaselessEq("drawingenabled")) {
-            	bool value;
+                bool value;
                 if (!bool.TryParse(args[1], out value)) {
                     Player.Message(p, "Value must be 'true' or 'false'"); return;
                 }
@@ -94,6 +100,14 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Unrecognised property \"" + args[0] + "\"."); return;
             }
             Level.SaveSettings(p.level);
+        }
+        
+        static byte GetRoundTime(Player p, string arg) {
+            byte time;
+            if (!byte.TryParse(arg, out time) || time == 0 || time > 10) {
+                Player.Message(p, "Minutes must be an integer between 1 and 10."); return 0;
+            }
+            return time;
         }
         
         public override void Help(Player p) {

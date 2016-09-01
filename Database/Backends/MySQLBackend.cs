@@ -1,5 +1,6 @@
 ﻿/*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2011 MCForge
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -20,6 +21,44 @@ using System.Data;
 using MySql.Data.MySqlClient;
 
 namespace MCGalaxy.SQL {
+
+    public abstract class MySQLBackend : IDatabaseBackend {
+
+        static string connStringFormat = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4}";
+        public override string ConnectionString {
+            get { return String.Format(connStringFormat, Server.MySQLHost, Server.MySQLPort,
+                                       Server.MySQLUsername, Server.MySQLPassword, Server.DatabasePooling); }
+        }
+        
+        public override BulkTransaction CreateBulk() {
+            return new MySQLBulkTransaction(ConnectionString);
+        }
+        
+        public override ParameterisedQuery CreateParamterised() {
+            return new MySQLParameterisedQuery();
+        }
+    }
+    
+    public sealed class MySQLBulkTransaction : BulkTransaction {
+
+        public MySQLBulkTransaction(string connString) {
+            connection = new MySqlConnection(connString);
+            connection.Open();
+            connection.ChangeDatabase(Server.MySQLDatabaseName);
+
+            transaction = connection.BeginTransaction();
+        }
+
+        public override IDbCommand CreateCommand(string query) {
+            return new MySqlCommand(query, (MySqlConnection)connection, (MySqlTransaction)transaction);
+        }
+        
+        public override IDataParameter CreateParam(string paramName, DbType type) {
+            MySqlParameter arg = new MySqlParameter(paramName, null);
+            arg.DbType = type;
+            return arg;
+        }
+    }
     
     public sealed class MySQLParameterisedQuery : ParameterisedQuery {
 
@@ -52,4 +91,3 @@ namespace MCGalaxy.SQL {
         }
     }
 }
-
