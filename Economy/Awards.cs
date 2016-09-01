@@ -59,10 +59,7 @@ namespace MCGalaxy {
         
         static void AwardsListLineProcessor(string key, string value) {
             if (value == "") return;
-            Award award = new Award();
-            award.Name = key;
-            award.Description = value;
-            AwardsList.Add(award);
+            Add(key, value);
         }
         
         static void PlayerAwardsLineProcessor(string key, string value) {
@@ -110,6 +107,7 @@ namespace MCGalaxy {
                 pl.Awards.Add(name);
                 return true;
             }
+        	
             PlayerAward newPl;
             newPl.Name = playerName;
             newPl.Awards = new List<string>();
@@ -160,8 +158,8 @@ namespace MCGalaxy {
             if (Exists(name)) return false;
 
             Award award = new Award();
-            award.Name = name;
-            award.Description = desc;
+            award.Name = name.Trim();
+            award.Description = desc.Trim();
             AwardsList.Add(award);
             return true;
         }
@@ -184,10 +182,16 @@ namespace MCGalaxy {
         }
         
         /// <summary> Whether an award with that name exists. </summary>
-        public static string Find(string name) {
+        public static string FindExact(string name) {
             foreach (Award award in AwardsList)
                 if (award.Name.CaselessEq(name)) return award.Name;
             return null;
+        }
+        
+        public static string FindMatches(Player p, string name, out int matches) {
+            Award award = Utils.FindMatches<Award>(p, name, out matches, AwardsList,
+                                                   a => true, a => a.Name, "awards");
+            return award == null ? null : award.Name;
         }
         
         /// <summary> Gets the description of the award matching the given name, 
