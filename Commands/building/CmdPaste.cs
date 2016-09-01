@@ -41,10 +41,6 @@ namespace MCGalaxy.Commands.Building {
             string message = (string)state;
             CopyState cState = p.CopyBuffer;
             m[0] += cState.Offset;
-            
-            if (cState.X != cState.OriginX) m[0].X -= (cState.Width - 1);
-            if (cState.Y != cState.OriginY) m[0].Y -= (cState.Height - 1);
-            if (cState.Z != cState.OriginZ) m[0].Z -= (cState.Length - 1);
 
             if (message == "") {
                 SimplePasteDrawOp simpleOp = new SimplePasteDrawOp();

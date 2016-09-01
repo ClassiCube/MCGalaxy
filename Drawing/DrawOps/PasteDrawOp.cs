@@ -28,6 +28,17 @@ namespace MCGalaxy.Drawing.Ops {
             return CopyState.UsedBlocks;
         }
         
+        public override void SetMarks(Vec3S32[] m) {
+            Origin = m[0];
+            CopyState cState = CopyState;
+            if (cState.X != cState.OriginX) m[0].X -= (cState.Width - 1);
+            if (cState.Y != cState.OriginY) m[0].Y -= (cState.Height - 1);
+            if (cState.Z != cState.OriginZ) m[0].Z -= (cState.Length - 1);
+            
+            Min = m[0]; Max = m[0];
+            Max.X += cState.Width; Max.Y += cState.Height; Max.Z += cState.Length;
+        }
+        
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;
@@ -41,21 +52,16 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 ushort x = (ushort)(locX + x1), y = (ushort)(locY + y1), z = (ushort)(locZ + z1);
                 if ((b != Block.air || pasteAir) && lvl.InBound(x, y, z))
-                	output(Place(x, y, z, b, extB));
+                    output(Place(x, y, z, b, extB));
             }
         }
     }
     
-    public class PasteDrawOp : DrawOp {
+    public class PasteDrawOp : SimplePasteDrawOp {
         
-        public CopyState CopyState;
         public ExtBlock[] Include, Exclude;
         
         public override string Name { get { return "Paste"; } }
-        
-        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            return CopyState.UsedBlocks;
-        }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             CopyState state = CopyState;
@@ -88,7 +94,7 @@ namespace MCGalaxy.Drawing.Ops {
                     for (int j = 0; j < include.Length; j++) {
                         ExtBlock block = include[j];
                         if (b == block.Block && (b != Block.custom_block || extB == block.Ext)) {
-                        	output(Place(x, y, z, b, extB)); break;
+                            output(Place(x, y, z, b, extB)); break;
                         }
                     }
                 }
