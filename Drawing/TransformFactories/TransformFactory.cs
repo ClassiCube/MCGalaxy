@@ -35,6 +35,7 @@ namespace MCGalaxy.Drawing.Transforms {
         
         public static List<TransformFactory> Transforms = new List<TransformFactory>() {
         	new NoTransformFactory(), new ScaleTransformFactory(),
+            new RotateTransformFactory(),
         };
         
         public static string Available { get { return Transforms.Join(b => b.Name); } }

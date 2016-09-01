@@ -455,8 +455,10 @@
     <Compile Include="Drawing\Image\ImagePrintDrawOp.cs" />
     <Compile Include="Drawing\Image\IPalette.cs" />
     <Compile Include="Drawing\Image\PixelGetter.cs" />
+    <Compile Include="Drawing\TransformFactories\RotateTransform.cs" />
     <Compile Include="Drawing\TransformFactories\SimpleTransforms.cs" />
     <Compile Include="Drawing\TransformFactories\TransformFactory.cs" />
+    <Compile Include="Drawing\Transform\RotateTransform.cs" />
     <Compile Include="Drawing\Transform\SimpleTransforms.cs" />
     <Compile Include="Drawing\Transform\Transform.cs" />
     <Compile Include="Economy\Awards.cs" />
