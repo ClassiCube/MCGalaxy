@@ -95,11 +95,10 @@ namespace MCGalaxy.Commands {
         bool CheckAdd(Player p, string[] args) {
             if (!CheckExtraPerm(p, 3)) { MessageNeedExtra(p, "create zones.", 3); return false; }
             if (args.Length == 1) { Help(p); return false; }
+            if (!ValidName(p, args[1], "player or rank")) return false;
             
-            if (Group.Find(args[1]) != null)
-                args[1] = "grp" + Group.Find(args[1]).name;
-            if (!ValidName(p,  args[1], "player or rank")) return false;
-            return true;
+            args[1] = FindZoneOwner(p, args[1]);
+            return args[1] != null;
         }
         
         bool CheckZone(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
@@ -151,6 +150,12 @@ namespace MCGalaxy.Commands {
             LevelDB.CreateZone(p.level.name, Zn);
             Player.Message(p, "Added zone for &b" + (string)state);
             return false;
+        }
+        
+        internal static string FindZoneOwner(Player p, string message) {
+            if (Group.Find(message) != null)
+                return Group.Find(message).name;
+            return PlayerInfo.FindMatchesPreferOnline(p, message);
         }
         
         public override void Help(Player p) {

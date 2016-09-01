@@ -112,8 +112,8 @@ namespace MCGalaxy.Commands {
             byte mapNum = 0;
             
             if (cmd == "ADD") {
-            	string level = NextLevel(p);
-            	if (level == null) return;
+                string level = NextLevel(p);
+                if (level == null) return;
 
                 if (value == "") value = "128 64 128 flat";
                 else if (value.IndexOf(' ') == -1) value = "128 64 128 " + value;
@@ -225,6 +225,8 @@ namespace MCGalaxy.Commands {
                 if (value == "") {
                     Player.Message(p, "You did not specify a name to allow building on your map."); return;
                 }
+                value = CmdZone.FindZoneOwner(p, value);
+                if (value == null) return;
                 
                 CmdZone.ZoneAll(p.level, value);
                 Player.Message(p, "Added zone for &b" + value);
