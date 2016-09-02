@@ -32,17 +32,6 @@ namespace MCGalaxy.SQL {
                 return null;
             }
         }
-        
-        public static BulkTransaction CreateNative() {
-            try {
-                return Database.Backend.CreateBulk();
-                // TODO: Use NativeTransaction once I can figure out how to synchronise 
-                // System.Data.Sqlite and Native sqlite connection/command disposing.
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                return null;
-            }
-        }
 
         public abstract IDbCommand CreateCommand(string query);
         

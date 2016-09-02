@@ -44,6 +44,12 @@ namespace MCGalaxy.SQL {
         internal override ParameterisedQuery GetStaticParameterised() {
             return queryInstance;
         }
+        
+        public override bool TableExists(string table) {
+            const string syntax = "SELECT * FROM information_schema.tables WHERE table_schema = @1 AND table_name = @0";
+            using (DataTable results = Database.Fill(syntax, table, Server.MySQLDatabaseName))
+                return results.Rows.Count > 0;
+        }
     }
     
     public sealed class MySQLBulkTransaction : BulkTransaction {
@@ -69,8 +75,8 @@ namespace MCGalaxy.SQL {
     
     public sealed class MySQLParameterisedQuery : ParameterisedQuery {
 
-        public override void Execute(string queryString, bool createDB = false) {
-            using (var conn = new MySqlConnection(MySQL.connString)) {
+        public override void Execute(string queryString, string connString, bool createDB = false) {
+            using (var conn = new MySqlConnection(connString)) {
                 conn.Open();
                 if (!createDB) conn.ChangeDatabase(Server.MySQLDatabaseName);
                 
@@ -83,8 +89,8 @@ namespace MCGalaxy.SQL {
             }
         }
 
-        public override void Fill(string queryString, DataTable toReturn) {
-            using (var conn = new MySqlConnection(MySQL.connString)) {
+        public override void Fill(string queryString, string connString, DataTable toReturn) {
+            using (var conn = new MySqlConnection(connString)) {
                 conn.Open();
                 conn.ChangeDatabase(Server.MySQLDatabaseName);
                 using (MySqlDataAdapter da = new MySqlDataAdapter(queryString, conn)) {

@@ -25,19 +25,12 @@ namespace MCGalaxy.SQL {
 		public static IDatabaseBackend Backend;
         
         public static bool TableExists(string table) {
-            string syntax = Server.useMySQL ? MySQL.TableExists : SQLite.TableExists;
-            using (DataTable results = Fill(syntax, table, Server.MySQLDatabaseName))
-                return results.Rows.Count > 0;
+		    return Backend.TableExists(table);
         }
         
         [Obsolete("Use Execute() method instead.")]
         public static void executeQuery(string queryString, bool createDB = false) {
         	ParameterisedQuery query = Backend.GetStaticParameterised();
-            Execute(query, queryString, createDB, null);
-        }
-
-        [Obsolete("Use Execute() method instead.")]
-        public static void executeQuery(ParameterisedQuery query, string queryString, bool createDB = false) {
             Execute(query, queryString, createDB, null);
         }
         
@@ -57,11 +50,6 @@ namespace MCGalaxy.SQL {
             return Fill(query, queryString, null);
         }
         
-        [Obsolete("Use Fill() method instead.")]
-        public static DataTable fillData(ParameterisedQuery query, string queryString, bool skipError = false) {
-            return Fill(query, queryString, null);
-        }
-        
         public static DataTable Fill(string queryString) {
             ParameterisedQuery query = Backend.GetStaticParameterised();
             return Fill(query, queryString, null);
@@ -76,10 +64,12 @@ namespace MCGalaxy.SQL {
         static void Execute(ParameterisedQuery query, string queryString, 
                             bool createDB, params object[] args) {
             BindParams(query, args);
+            string connString = Backend.ConnectionString;
             Exception e = null;
+            
             for (int i = 0; i < 10; i++) {
                 try {
-                    query.Execute(queryString, createDB);
+                    query.Execute(queryString, connString, createDB);
                     query.ClearParams();
                     return;
                 } catch (Exception ex) {
@@ -95,11 +85,13 @@ namespace MCGalaxy.SQL {
         static DataTable Fill(ParameterisedQuery query, string queryString, 
                               params object[] args) {
             BindParams(query, args);
+            string connString = Backend.ConnectionString;
+            Exception e = null;
+            
             using (DataTable results = new DataTable("toReturn")) {
-                Exception e = null;
                 for (int i = 0; i < 10; i++) {
                     try {
-                        query.Fill(queryString, results);
+                        query.Fill(queryString, connString, results);
                         query.ClearParams();
                         return results;
                     } catch (Exception ex) {
@@ -133,17 +125,5 @@ namespace MCGalaxy.SQL {
             for (int i = 0; i < args.Length; i++)
                 query.AddParam(names[i], args[i]);
         }
-    }
-    
-    public static class MySQL {
-        static string connStringFormat = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4}";
-        public static string connString { get { return String.Format(connStringFormat, Server.MySQLHost, Server.MySQLPort, Server.MySQLUsername, Server.MySQLPassword, Server.DatabasePooling); } }       
-        public const string TableExists = "SELECT * FROM information_schema.tables WHERE table_schema = @1 AND table_name = @0";
-    }
-    
-    public static class SQLite {       
-        static string connStringFormat = "Data Source =" + Server.apppath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =300;";
-        public static string connString { get { return String.Format(connStringFormat, Server.DatabasePooling); } }       
-        public const string TableExists = "SELECT name FROM sqlite_master WHERE type='table' AND name=@0";
     }
 }

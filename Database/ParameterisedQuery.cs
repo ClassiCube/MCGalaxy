@@ -29,9 +29,9 @@ namespace MCGalaxy.SQL {
 		
 		public void ClearParams() { parameters.Clear(); }
         
-        public abstract void Execute(string query, bool createDB = false);
+        public abstract void Execute(string query, string connString, bool createDB = false);
         
-        public abstract void Fill(string query, DataTable results);
+        public abstract void Fill(string query, string connString, DataTable results);
         
         public static ParameterisedQuery Create() {
             return Database.Backend.CreateParameterised();

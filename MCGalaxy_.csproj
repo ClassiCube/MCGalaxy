@@ -409,13 +409,7 @@
     <Compile Include="Database\Backends\SQLiteBackend.cs" />
     <Compile Include="Database\Backends\MySQLBackend.cs" />
     <Compile Include="Database\BlockDB.cs" />
-    <Compile Include="Database\Native\NativeParamsList.cs" />
     <Compile Include="Database\ParameterisedQuery.cs" />
-    <Compile Include="Database\Native\NativeConnection.cs" />
-    <Compile Include="Database\Native\Utils.cs" />
-    <Compile Include="Database\Native\NativeBulkTransaction.cs" />
-    <Compile Include="Database\Native\NativeCommand.cs" />
-    <Compile Include="Database\Native\NativeException.cs" />
     <Compile Include="Drawing\Brushes\Brush.cs" />
     <Compile Include="Drawing\Brushes\CloudyBrush.cs" />
     <Compile Include="Drawing\Brushes\PasteBrush.cs" />
@@ -700,7 +694,6 @@
     <Folder Include="Commands\Scripting" />
     <Folder Include="Commands\World" />
     <Folder Include="Commands\other" />
-    <Folder Include="Database\Native" />
     <Folder Include="Database\Backends" />
     <Folder Include="Drawing\DrawOps" />
     <Folder Include="Drawing\Brushes" />

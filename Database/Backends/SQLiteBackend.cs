@@ -42,6 +42,12 @@ namespace MCGalaxy.SQL {
         internal override ParameterisedQuery GetStaticParameterised() {
             return queryInstance;
         }
+        
+        public override bool TableExists(string table) {
+            const string syntax = "SELECT name FROM sqlite_master WHERE type='table' AND name=@0";
+            using (DataTable results = Database.Fill(syntax, table))
+                return results.Rows.Count > 0;
+        }
     }
     
      public sealed class SQLiteBulkTransaction : BulkTransaction {
@@ -63,8 +69,8 @@ namespace MCGalaxy.SQL {
     
     public sealed class SQLiteParameterisedQuery : ParameterisedQuery {
 
-        public override void Execute(string query, bool createDB = false) {
-            using (var conn = new SQLiteConnection(SQLite.connString)) {
+        public override void Execute(string query, string connString, bool createDB = false) {
+            using (var conn = new SQLiteConnection(connString)) {
                 conn.Open();
                 using (SQLiteCommand cmd = new SQLiteCommand(query, conn)) {
                     foreach (var param in parameters)
@@ -75,8 +81,8 @@ namespace MCGalaxy.SQL {
             }
         }
 
-        public override void Fill(string query, DataTable results) {
-            using (var conn = new SQLiteConnection(SQLite.connString)) {
+        public override void Fill(string query, string connString, DataTable results) {
+            using (var conn = new SQLiteConnection(connString)) {
                 conn.Open();
     
                 using (SQLiteDataAdapter da = new SQLiteDataAdapter(query, conn)) {

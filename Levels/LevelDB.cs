@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.SQL;
-using MCGalaxy.SQL.Native;
 
 namespace MCGalaxy {
     public static class LevelDB {
@@ -32,7 +31,7 @@ namespace MCGalaxy {
             
             fixed (char* ptr = date) {
                 ptr[4] = '-'; ptr[7] = '-'; ptr[10] = ' '; ptr[13] = ':'; ptr[16] = ':';
-                using (BulkTransaction bulk = BulkTransaction.CreateNative())
+                using (BulkTransaction bulk = BulkTransaction.Create())
                     DoSaveChanges(tempCache, ptr, lvl, date, bulk);
             }
             tempCache.Clear();
@@ -56,7 +55,6 @@ namespace MCGalaxy {
             IDataParameter zP = transaction.CreateParam("@Z", DbType.UInt16); cmd.Parameters.Add(zP);
             IDataParameter tileP = transaction.CreateParam("@Tile", DbType.Byte); cmd.Parameters.Add(tileP);
             IDataParameter delP = transaction.CreateParam("@Del", DbType.Boolean); cmd.Parameters.Add(delP);
-            bool isNative = transaction is NativeBulkTransaction;
             
             for (int i = 0; i < tempCache.Count; i++) {
                 Level.BlockPos bP = tempCache[i];
@@ -65,22 +63,11 @@ namespace MCGalaxy {
                 MakeInt(time.Year, 4, 0, ptr); MakeInt(time.Month, 2, 5, ptr); MakeInt(time.Day, 2, 8, ptr);
                 MakeInt(time.Hour, 2, 11, ptr); MakeInt(time.Minute, 2, 14, ptr); MakeInt(time.Second, 2, 17, ptr);
                 
-                // For NativeParameter, we make the optimisation of avoiding boxing primitive types.
-                if (!isNative) {
-                    nameP.Value = bP.name;
-                    timeP.Value = date;
-                    xP.Value = x; yP.Value = y; zP.Value = z;
-                    tileP.Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawBlock;
-                    delP.Value = (bP.flags & 1) != 0;
-                } else {
-                    ((NativeParameter)nameP).SetString(bP.name);
-                    ((NativeParameter)timeP).SetString(date);
-                    ((NativeParameter)xP).U16Value = x;
-                    ((NativeParameter)yP).U16Value = y;
-                    ((NativeParameter)zP).U16Value = z;
-                    ((NativeParameter)tileP).U8Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawBlock;
-                    ((NativeParameter)delP).BoolValue = (bP.flags & 1) != 0;
-                }
+                nameP.Value = bP.name;
+                timeP.Value = date;
+                xP.Value = x; yP.Value = y; zP.Value = z;
+                tileP.Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawBlock;
+                delP.Value = (bP.flags & 1) != 0;
 
                 if (!BulkTransaction.Execute(template, cmd)) {
                     cmd.Dispose();

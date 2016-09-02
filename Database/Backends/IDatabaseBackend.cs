@@ -18,7 +18,7 @@
 using System;
 
 namespace MCGalaxy.SQL {
-	
+    
     public abstract class IDatabaseBackend {
         
         /// <summary> Describes the arguments for a database connection 
@@ -36,5 +36,11 @@ namespace MCGalaxy.SQL {
         /// <summary> Returns the shared static ParamterisedQuery instance, that is only used 
         /// for sql queries with no parameters. </summary>
         internal abstract ParameterisedQuery GetStaticParameterised();
+        
+        
+        // == Higher level functions ==
+        
+        /// <summary> Returns whether a table (case sensitive) exists by that name. </summary>
+        public abstract bool TableExists(string table);
     }
 }
