@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdRenameLvl : Command {
@@ -32,23 +33,27 @@ namespace MCGalaxy.Commands.World {
             
             Level lvl = LevelInfo.FindMatches(p, args[0]);
             if (lvl == null) return;
-            string newName = args[1];
+            string newName = args[1].ToLower();
             if (!ValidName(p, newName, "level")) return;
             
             if (LevelInfo.ExistsOffline(newName)) { Player.Message(p, "Level already exists."); return; }
             if (lvl == Server.mainLevel) { Player.Message(p, "Cannot rename the main level."); return; }
+            
+            List<Player> players = lvl.getPlayers();
             lvl.Unload();
             
-            LevelActions.Rename(lvl.name.ToLower(), newName.ToLower());
-            try { Command.all.Find("load").Use(p, newName); }
-            catch { }
+            LevelActions.Rename(lvl.name, newName);
+            Command.all.Find("load").Use(p, newName);
             Chat.MessageAll("Renamed {0} to {1}", lvl.name, newName);
+            // Move all the old players to the renamed map
+            foreach (Player pl in players)
+                PlayerActions.ChangeMap(pl, newName);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/renamelvl <level> <new name>");
-            Player.Message(p, "%HRenames <level> to <new name>");
-            Player.Message(p, "%HNote: Portals going to <level> will no longer work.");
+            Player.Message(p, "%T/renamelvl [level] [new name]");
+            Player.Message(p, "%HRenames [level] to [new name]");
+            Player.Message(p, "%HNote: Portals going to [level] will no longer work.");
         }
     }
 }

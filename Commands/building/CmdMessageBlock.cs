@@ -66,10 +66,14 @@ namespace MCGalaxy.Commands.Building {
         
         bool CheckCommand(Player p, string message) {
             bool allCmds = CheckExtraPerm(p);
+            string[] parts = message.SplitSpaces(2);
+            string alias = parts[0], cmdArgs = "";
+            Command.Search(ref alias, ref cmdArgs);
+                
             foreach (Command cmd in Command.all.commands) {
                 if (cmd.defaultRank <= p.Rank && (allCmds || !cmd.type.Contains("mod"))) continue;
                 
-                if (IsCommand(message, cmd.name)) {
+                if (IsCommand(message, cmd.name) || IsCommand(alias, cmd.name)) {
                     p.SendMessage("You cannot use that command in a messageblock."); return false;
                 }
                 if (cmd.shortcut != "" && IsCommand(message, cmd.shortcut)) {
@@ -149,7 +153,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Help(Player p) {
             Player.Message(p, "%T/mb [block] [message]");
             Player.Message(p, "%HPlaces a message in your next block.");
-            Player.Message(p, "%H  Valid blocks: white, black, air, water, lava");
+            Player.Message(p, "%H  Supported blocks: %Swhite, black, air, water, lava");
             Player.Message(p, "%H  Use | to separate commands, e.g. /say 1 |/say 2");
             Player.Message(p, "%H  Note: \"@p\" is a placeholder for player who clicked.");
             Player.Message(p, "%T/mb show %H- Shows or hides MBs");

@@ -76,8 +76,9 @@ namespace MCGalaxy.Commands {
                 Output(p, user, block, deleted, now - time);
             }
 
-            if (!foundOne)
-                Player.Message(p, "No block change records found for this block.");
+            if (!foundOne) Player.Message(p, "No block change records found for this block.");
+            OutputMessageBlock(p, b, x, y, z);
+            
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
@@ -87,6 +88,23 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "{0} ago {1} {2}",
                            delta.Shorten(true, false), PlayerInfo.GetColoredName(p, user),
                            deleted ? "&4deleted%S (using " + bName + ")" : "&3placed%S " + bName);
+        }
+        
+        static void OutputMessageBlock(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (!Block.Props[block].IsMessageBlock) return;
+            
+            try {
+                //safe against SQL injections because no user input is given here
+                DataTable Messages = Database.Fill("SELECT * FROM `Messages" + p.level.name +
+                                                   "` WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
+                int last = Messages.Rows.Count - 1;
+                if (last == -1) { Messages.Dispose(); return; }
+                
+                string message = Messages.Rows[last]["Message"].ToString().Trim();
+                message = message.Replace("\\'", "\'");
+                Player.Message(p, "Message Block contents: " + message);
+            } catch {
+            }
         }
         
         public override void Help(Player p) {

@@ -68,6 +68,7 @@ namespace MCGalaxy.Drawing.Transforms {
             if (!args[args.Length - 1].CaselessEq("centre")) {
                 Player.Message(p, "The mode must be either \"centre\", or not given."); return null;
             }
+            scaler.CentreOrigin = true;
             return scaler;
         }
         

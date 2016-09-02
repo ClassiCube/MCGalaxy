@@ -23,9 +23,17 @@ namespace MCGalaxy.BlockBehaviour {
     internal static class PlaceBehaviour {
 
         internal static bool Grass(Player p, byte block, ushort x, ushort y, ushort z) {
+            return DirtGrass(p, Block.grass, x, y, z);
+        }
+        
+        internal static bool Dirt(Player p, byte block, ushort x, ushort y, ushort z) {
+            return DirtGrass(p, Block.dirt, x, y, z);
+        }
+        
+        static bool DirtGrass(Player p, byte block, ushort x, ushort y, ushort z) {
             Level lvl = p.level;
             if (!lvl.GrassGrow || !(lvl.physics == 0 || lvl.physics == 5)) {
-                p.ChangeBlock(x, y, z, block, 0); return false;
+                p.ChangeBlock(x, y, z, Block.grass, 0); return false;
             }
             
             byte above = lvl.GetTile(x, (ushort)(y + 1), z), extAbove = 0;
@@ -37,6 +45,7 @@ namespace MCGalaxy.BlockBehaviour {
             p.ChangeBlock(x, y, z, block, 0);
             return false;
         }
+		
         
         internal static bool Stairs(Player p, byte block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)
