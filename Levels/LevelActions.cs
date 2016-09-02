@@ -34,18 +34,22 @@ namespace MCGalaxy {
             }
             
             try {
-                File.Move("levels/level properties/" + src + ".properties", "levels/level properties/" + dst + ".properties");
+                File.Move("levels/level properties/" + src + ".properties", 
+                          "levels/level properties/" + dst + ".properties");
             } catch {
             }
             
             try {
-                File.Move("levels/level properties/" + src, "levels/level properties/" + dst + ".properties");
+                File.Move("levels/level properties/" + src, 
+                          "levels/level properties/" + dst + ".properties");
             } catch {
             }
             
             try {
-                if (File.Exists("blockdefs/lvl_" + src + ".json"))
-                    File.Move("blockdefs/lvl_" + src + ".json", "blockdefs/lvl_" + dst + ".json");
+                if (File.Exists("blockdefs/lvl_" + src + ".json")) {
+                    File.Move("blockdefs/lvl_" + src + ".json", 
+                              "blockdefs/lvl_" + dst + ".json");
+                }
             } catch {
             }
 
@@ -54,15 +58,23 @@ namespace MCGalaxy {
             } catch {
             }
             BotsFile.MoveBots(src, dst);
-
-            Database.Backend.RenameTable("Block" + src, "Block" + dst);            
-            object locker = ThreadSafeCache.DBCache.Get(src);
-            lock (locker) {
+            RenameDatabaseTables(src, dst);
+        }
+        
+        static void RenameDatabaseTables(string src, string dst) {
+            Database.Backend.RenameTable("Block" + src, "Block" + dst);
+            object srcLocker = ThreadSafeCache.DBCache.Get(src);
+            object dstLockder = ThreadSafeCache.DBCache.Get(dst);
+            
+            lock (srcLocker)
+                lock (dstLockder)
+            {
                 if (Database.TableExists("Portals" + src)) {
                     Database.Backend.RenameTable("Portals" + src, "Portals" + dst);
                     string updateSyntax = "UPDATE `Portals" + dst + "` SET ExitMap=@1 WHERE ExitMap=@0";
                     Database.Execute(updateSyntax, src, dst);
                 }
+            	
                 if (Database.TableExists("Messages" + src)) {
                     Database.Backend.RenameTable("Messages" + src, "Messages" + dst);
                 }
@@ -167,6 +179,46 @@ namespace MCGalaxy {
             if (p != null && !p.hidden) { who.SendMessage("&bMap reloaded by " + p.name); }
             if (p != null && p.hidden) { who.SendMessage("&bMap reloaded"); }
             Player.Message(p, "&4Finished reloading for " + who.name);
+        }
+        
+        
+        public static void CopyLevel(string src, string dst) {
+            File.Copy(LevelInfo.LevelPath(src), LevelInfo.LevelPath(dst));
+            if (File.Exists(LevelInfo.PropertiesPath(src))) {
+                File.Copy(LevelInfo.PropertiesPath(src),
+                          LevelInfo.PropertiesPath(dst));
+            }
+            
+            if (File.Exists("blockdefs/lvl_" + src + ".json")) {
+                File.Copy("blockdefs/lvl_" + src + ".json",
+                          "blockdefs/lvl_" + dst + ".json");
+            }
+            CopyDatabaseTables(src, dst);
+        }
+        
+        static void CopyDatabaseTables(string src, string dst) {
+            object srcLocker = ThreadSafeCache.DBCache.Get(src);
+            object dstLockder = ThreadSafeCache.DBCache.Get(dst);
+            
+            lock (srcLocker)
+                lock (dstLockder)
+            {
+                if (Database.TableExists("Portals" + src)) {
+                    Database.Execute(String.Format(LevelDB.createPortals, dst));
+                    Database.Backend.CopyAllEntries("Portals" + src, "Portals" + dst);                    
+                    string updateSyntax = "UPDATE `Portals" + dst + "` SET ExitMap=@1 WHERE ExitMap=@0";
+                    Database.Execute(updateSyntax, src, dst);
+                }
+                
+                if (Database.TableExists("Messages" + src)) {
+                    Database.Execute(String.Format(LevelDB.createMessages, dst));
+                    Database.Backend.CopyAllEntries("Messages" + src, "Messages" + dst);
+                }                
+                if (Database.TableExists("Zone" + src)) {
+                    Database.Execute(String.Format(LevelDB.createZones, dst));
+                    Database.Backend.CopyAllEntries("Zone" + src, "Zone" + dst);
+                }
+            }
         }
     }
 }

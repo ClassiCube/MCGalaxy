@@ -51,5 +51,12 @@ namespace MCGalaxy.SQL {
         
         /// <summary> Removes all entries from the given table. </summary>
         public abstract void ClearTable(string table);
+        
+        /// <summary> Inserts/Copies all the entries from the source table into the destination table. </summary>
+        /// <remarks> Note: This may work incorrectly if the tables have different schema. </remarks>
+        public virtual void CopyAllEntries(string srcTable, string dstTable) {
+            string syntax = "INSERT INTO `" + dstTable + "` SELECT * FROM `" + srcTable + "`";
+            Database.Execute(syntax);
+        }
     }
 }

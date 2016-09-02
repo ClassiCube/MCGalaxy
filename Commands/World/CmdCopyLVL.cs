@@ -45,13 +45,7 @@ namespace MCGalaxy.Commands.World {
             if (LevelInfo.ExistsOffline(dst)) { Player.Message(p, "The level \"" + dst + "\" already exists."); return; }
             
             try {
-            	File.Copy(LevelInfo.LevelPath(src), LevelInfo.LevelPath(dst));
-            	if (File.Exists(LevelInfo.PropertiesPath(src)))
-            	    File.Copy(LevelInfo.PropertiesPath(src), LevelInfo.PropertiesPath(dst), false);
-                if (File.Exists("blockdefs/lvl_" + src + ".json"))
-                    File.Copy("blockdefs/lvl_" + src + ".json", "blockdefs/lvl_" + dst + ".json");
-            } catch (System.IO.FileNotFoundException) {
-                Player.Message(p, dst + " does not exist!"); return;
+                LevelActions.CopyLevel(src, dst);
             } catch (System.IO.IOException) {
                 Player.Message(p, "The level &c" + dst + " %S already exists!"); return;
             }
@@ -61,7 +55,7 @@ namespace MCGalaxy.Commands.World {
         public override void Help(Player p) {
             Player.Message(p, "%T/copylvl [level] [copied level]");
             Player.Message(p, "%HMakes a copy of [level] called [copied Level].");
-            Player.Message(p, "%HNote: Only the level file and level properties are copied.");
+            Player.Message(p, "%HNote: The level's BlockDB is not copied.");
         }
     }
 }
