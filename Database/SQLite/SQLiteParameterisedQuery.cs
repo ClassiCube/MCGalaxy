@@ -20,52 +20,6 @@ using System.Data;
 using System.Data.SQLite;
 
 namespace MCGalaxy.SQL {
-
-    public sealed class SQLiteBackend : IDatabaseBackend {
-
-        public static IDatabaseBackend Instance = new SQLiteBackend();
-        static ParameterisedQuery queryInstance = new SQLiteParameterisedQuery();
-        
-        static string connFormat = "Data Source =" + Server.apppath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =300;";        
-        public override string ConnectionString {
-            get { return String.Format(connFormat, Server.DatabasePooling); }
-        }
-        
-        public override BulkTransaction CreateBulk() {
-            return new SQLiteBulkTransaction(ConnectionString);
-        }
-        
-        public override ParameterisedQuery CreateParameterised() {
-            return new SQLiteParameterisedQuery();
-        }
-        
-        internal override ParameterisedQuery GetStaticParameterised() {
-            return queryInstance;
-        }
-        
-        public override bool TableExists(string table) {
-            const string syntax = "SELECT name FROM sqlite_master WHERE type='table' AND name=@0";
-            using (DataTable results = Database.Fill(syntax, table))
-                return results.Rows.Count > 0;
-        }
-    }
-    
-     public sealed class SQLiteBulkTransaction : BulkTransaction {
-
-        public SQLiteBulkTransaction(string connString) { 
-            connection = new SQLiteConnection(connString);
-            connection.Open();
-            transaction = connection.BeginTransaction();
-        }
-        
-        public override IDbCommand CreateCommand(string query) {
-            return new SQLiteCommand(query, (SQLiteConnection)connection, (SQLiteTransaction)transaction);
-        }
-        
-        public override IDataParameter CreateParam(string paramName, DbType type) {
-            return new SQLiteParameter(paramName, type);
-        }
-    }
     
     public sealed class SQLiteParameterisedQuery : ParameterisedQuery {
 
