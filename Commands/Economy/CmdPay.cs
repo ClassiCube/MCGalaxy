@@ -17,62 +17,52 @@
  */
 using System;
 using System.Globalization;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdPay : Command
-    {
+
+namespace MCGalaxy.Commands {
+    public sealed class CmdPay : MoneyCmd {
         public override string name { get { return "pay"; } }
         public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Economy; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Economy; } }        
+        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }    
         public CmdPay() { }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
-            if (args.Length != 2) { Help(p); return; }
-            int amount;
-            if (!int.TryParse(args[1], out amount)) { Player.Message(p, "Amount must be an integer."); return; }
-            if (amount < 0) { Player.Message(p, "Cannot pay negative %3" + Server.moneys); return; }
+            MoneyCmdData data;
+            if (!ParseArgs(p, message, false, "pay", out data)) return;
             
             int matches = 1;
-            Player who = PlayerInfo.FindMatches(p, args[0], out matches);
+            Player who = PlayerInfo.FindMatches(p, data.Name, out matches);
             if (matches > 1) return;
             if (p != null && p == who) { Player.Message(p, "You cannot pay yourself %3" + Server.moneys); return; }
             string target = null;
-            Economy.EcoStats payer, receiver;
+            int money;
             
             if (who == null) {
-                string dbName = PlayerInfo.FindOfflineNameMatches(p, args[0]);
-                if (dbName == null) return;
+                target = Economy.FindMatches(p, data.Name, out money);
+                if (target == null) return;
                 
-                payer = Economy.RetrieveEcoStats(p.name);
-                receiver = Economy.RetrieveEcoStats(dbName);
-                if (!IsLegalPayment(p, payer.money, receiver.money, amount)) return;
-                
-                target = receiver.playerName;
-                Chat.MessageAll("{0} %Spaid &f{1}%S(offline) &f{2} &3{3}", 
-                                p.ColoredName, receiver.playerName, amount, Server.moneys);
+                if (!IsLegalPayment(p, p.money, money, data.Amount)) return;
+                money += data.Amount;
+                Economy.UpdateMoney(target, money);
             } else {
-                payer = Economy.RetrieveEcoStats(p.name);
-                receiver = Economy.RetrieveEcoStats(who.name);
-                if (!IsLegalPayment(p, payer.money, receiver.money, amount)) return;
-                
-                receiver.money = who.money;
-                who.SetMoney(who.money + amount);
-                target = who.color + who.name;
-                Chat.MessageAll("{0} %Spaid {1} &f{2} &3{3}", 
-                                p.ColoredName, who.ColoredName, amount, Server.moneys);
+                target = who.name; money = who.money;
+                if (!IsLegalPayment(p, p.money, money, data.Amount)) return;
+                who.SetMoney(who.money + data.Amount);
             }
+
+            p.SetMoney(p.money - data.Amount);
+            string targetName = PlayerInfo.GetColoredName(p, target);
+            Chat.MessageAll("{0} %Spaid {1} &f{2} &3{3}",
+                            data.Source, targetName, data.Amount, Server.moneys);
             
-            payer.payment = "%f" + amount + " %3" + Server.moneys + " to " + target + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);                
-            receiver.salary = "%f" + amount + " %3" + Server.moneys + " by " + p.color + p.name + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-            receiver.money += amount;
-            p.SetMoney(p.money - amount);
-            payer.money = p.money;
-            Economy.UpdateEcoStats(payer);
-            Economy.UpdateEcoStats(receiver);            
+            Economy.EcoStats stats = Economy.RetrieveStats(p.name);
+            stats.Payment = "%f" + data.Amount + " %3" + Server.moneys + " to " 
+                + target + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            Economy.UpdateStats(stats);
+
+            stats = Economy.RetrieveStats(target);            
+            stats.Salary = "%f" + data.Amount + " %3" + Server.moneys + " by " 
+                + p.color + p.name + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            Economy.UpdateStats(stats);
         }
 
         bool IsLegalPayment(Player p, int payer, int receiver, int amount) {
@@ -83,7 +73,7 @@ namespace MCGalaxy.Commands
         
         public override void Help(Player p) {
             Player.Message(p, "%T/pay [player] [amount] ");
-            Player.Message(p, "%HPays <amount> %3" + Server.moneys + " %Hto [player]");
+            Player.Message(p, "%HPays [amount] &3" + Server.moneys + " %Hto [player]");
         }
     }
 }

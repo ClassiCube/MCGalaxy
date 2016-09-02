@@ -29,40 +29,42 @@ namespace MCGalaxy.Commands {
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }        
         
         public override void Use(Player p, string message) {
-            Economy.EcoStats ecos;
             if (CheckSuper(p, message, "player name")) return;
-
+            if (!ValidName(p, message, "player")) return;         
             int matches = 1;
             Player who = message == "" ? p : PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;
-            if (matches == 0) {
-                string dbName = PlayerInfo.FindOfflineNameMatches(p, message);
-                if (dbName == null) return;
-                
-                ecos = Economy.RetrieveEcoStats(dbName);
-                Player.Message(p, "%3===Economy stats for: %f" + ecos.playerName + "%7(offline)%3===");
-            } else {
-                ecos = Economy.RetrieveEcoStats(who.name);
-                Player.Message(p, "%3===Economy stats for: " + who.color + who.name + "%3===");
-            }
             
-            Player.Message(p, "Current balance: %f" + ecos.money + " %3" + Server.moneys);
-            Player.Message(p, "Total spent: %f" + ecos.totalSpent + " %3" + Server.moneys);
-            if (!(String.IsNullOrEmpty(ecos.purchase) || ecos.purchase == "%cNone"))
-                Player.Message(p, "Last purchase: " + ecos.purchase);
-            if (!(String.IsNullOrEmpty(ecos.payment) || ecos.payment == "%cNone"))
-                Player.Message(p, "Last payment: " + ecos.payment);
-            if (!(String.IsNullOrEmpty(ecos.salary) || ecos.salary == "%cNone"))
-                Player.Message(p, "Last receipt: " + ecos.salary);
-            if (!(String.IsNullOrEmpty(ecos.fine) || ecos.fine == "%cNone"))
-                Player.Message(p, "Last fine: " + ecos.fine);
+            string target = null;
+            int money = 0;           
+            if (matches == 0) {
+                target = Economy.FindMatches(p, message, out money);
+                if (target == null) return;
+            } else {
+                target = who.name; money = who.money;
+            }
+
+            string targetName = PlayerInfo.GetColoredName(p, target);
+            Chat.MessageAll("Economy stats for {0}%S:", targetName);            
+            Player.Message(p, " Current balance: &f{0} &3{1}", money, Server.moneys);
+            
+            Economy.EcoStats ecos = Economy.RetrieveStats(target);
+            Player.Message(p, " Total spent: &f" + ecos.TotalSpent + " &3" + Server.moneys);
+            if (!(String.IsNullOrEmpty(ecos.Purchase) || ecos.Purchase == "%cNone"))
+                Player.Message(p, " Last purchase: " + ecos.Purchase);
+            if (!(String.IsNullOrEmpty(ecos.Payment) || ecos.Payment == "%cNone"))
+                Player.Message(p, " Last payment: " + ecos.Payment);
+            if (!(String.IsNullOrEmpty(ecos.Salary) || ecos.Salary == "%cNone"))
+                Player.Message(p, " Last receipt: " + ecos.Salary);
+            if (!(String.IsNullOrEmpty(ecos.Fine) || ecos.Fine == "%cNone"))
+                Player.Message(p, " Last fine: " + ecos.Fine);
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/balance <player>");
+            Player.Message(p, "%T/balance [player]");
             Player.Message(p, "%HShows how much %3" + Server.moneys + " %H<player> has, " +
                                "plus their most recent transactions.");
-            Player.Message(p, "%HIf <player> is not given, shows your own balance.");
+            Player.Message(p, "%HIf [player] is not given, shows your own balance.");
         }
     }
 }

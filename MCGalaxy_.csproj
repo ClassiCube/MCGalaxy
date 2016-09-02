@@ -216,6 +216,7 @@
     <Compile Include="Commands\Economy\CmdPay.cs" />
     <Compile Include="Commands\Economy\CmdStore.cs" />
     <Compile Include="Commands\Economy\CmdTake.cs" />
+    <Compile Include="Commands\Economy\MoneyCmd.cs" />
     <Compile Include="Commands\Fun\Cmd8Ball.cs" />
     <Compile Include="Commands\Fun\CmdAka.cs" />
     <Compile Include="Commands\Fun\CmdCountdown.cs" />
