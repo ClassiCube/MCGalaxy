@@ -70,14 +70,14 @@ namespace MCGalaxy.Commands {
             if (args.Length == 1) {
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their color removed.", false);
                 who.color = who.group.color;
-                Database.Execute("UPDATE Players SET color = '' WHERE name = @0", who.name);
+                Database.Execute("UPDATE Players SET color = '' WHERE Name = @0", who.name);
             } else {
                 string color = Colors.Parse(args[1]);
                 if (color == "") { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
                 else if (color == who.color) { Player.Message(p, who.DisplayName + " already has that color."); return; }
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.color = color;
-                Database.Execute("UPDATE Players SET color = @1 WHERE name = @0", who.name, color);
+                Database.Execute("UPDATE Players SET color = @1 WHERE Name = @0", who.name, color);
             }
             Entities.GlobalDespawn(who, true);
             Entities.GlobalSpawn(who, true);

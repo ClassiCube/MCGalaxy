@@ -202,8 +202,8 @@ namespace MCGalaxy {
             
             //Delete old
             List<string> tables = GetTables();
-            foreach (string name in tables)
-                Database.Execute("DROP TABLE `" + name + "`");
+            foreach (string table in tables)
+                Database.Backend.DeleteTable(table);
 
             // Import data
             using (StreamReader reader = new StreamReader(stream))

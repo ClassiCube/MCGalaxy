@@ -65,7 +65,7 @@ PRIMARY KEY(player)
                     Database.Execute("INSERT INTO Economy (player, money) SELECT Players.Name, Players.Money FROM Players");
                 } else {
                     //this will only be needed when the server shuts down while it was copying content (or some other error)
-                    Database.Execute("DROP TABLE Economy");
+                    Database.Backend.DeleteTable("Economy");
                     goto retry;
                 }
                 players.Dispose(); eco.Dispose();

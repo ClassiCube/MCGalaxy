@@ -58,5 +58,11 @@ namespace MCGalaxy.SQL {
             string syntax = "INSERT INTO `" + dstTable + "` SELECT * FROM `" + srcTable + "`";
             Database.Execute(syntax);
         }
+        
+        /// <summary> Completely removes the given table from the database. </summary>
+        public virtual void DeleteTable(string table) {
+            string syntax = "DROP TABLE `" + table + "`";
+            Database.Execute(syntax);
+        }
     }
 }

@@ -74,7 +74,7 @@ namespace MCGalaxy {
                     string updateSyntax = "UPDATE `Portals" + dst + "` SET ExitMap=@1 WHERE ExitMap=@0";
                     Database.Execute(updateSyntax, src, dst);
                 }
-            	
+                
                 if (Database.TableExists("Messages" + src)) {
                     Database.Backend.RenameTable("Messages" + src, "Messages" + dst);
                 }
@@ -136,15 +136,18 @@ namespace MCGalaxy {
             BotsFile.DeleteBots(name);
 
             //safe against SQL injections because the levelname (message) is first being checked if it exists
-            Database.Execute("DROP TABLE `Block" + name + "`");
+            Database.Backend.DeleteTable("Block" + name);
             object locker = ThreadSafeCache.DBCache.Get(name);
             lock (locker) {
-                if (Database.TableExists("Portals" + name))
-                    Database.Execute("DROP TABLE `Portals" + name + "`");
-                if (Database.TableExists("Messages" + name))
-                    Database.Execute("DROP TABLE `Messages" + name + "`");
-                if (Database.TableExists("Zone" + name))
-                    Database.Execute("DROP TABLE `Zone" + name + "`");
+                if (Database.TableExists("Portals" + name)) {
+                    Database.Backend.DeleteTable("Portals" + name);
+                }
+                if (Database.TableExists("Messages" + name)) {
+                    Database.Backend.DeleteTable("Messages" + name);
+                }
+                if (Database.TableExists("Zone" + name)) {
+                    Database.Backend.DeleteTable("Zone" + name);
+                }
             }
         }
         

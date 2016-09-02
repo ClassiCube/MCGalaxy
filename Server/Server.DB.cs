@@ -80,7 +80,7 @@ SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE {0};";
                 foreach (string cmd in Server.Opstats)
                     Database.Execute(string.Format(insertSyntax, "cmd = '" + cmd + "'"));
                 Database.Execute(string.Format(insertSyntax, "cmd = 'review' AND cmdmsg = 'next'"));
-                Database.Execute("DROP TABLE Playercmds");
+                Database.Backend.DeleteTable("Playercmds");
             }
 
             // Here, since SQLite is a NEW thing from 5.3.0.0, we do not have to check for existing tables in SQLite.
