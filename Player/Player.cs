@@ -118,12 +118,6 @@ namespace MCGalaxy {
                              totalLogins, overallDeath, money, blocks, 
                              cuboided, totalKicked, time.ToDBTime(), name);
             
-            if (Economy.Enabled && loginMoney != money) {
-                Economy.EcoStats ecos = Economy.RetrieveEcoStats(name);
-                ecos.money = money;
-                Economy.UpdateEcoStats(ecos);
-            }
-            
             Server.zombie.SaveZombieStats(this);
             SaveUndo(this);
         }

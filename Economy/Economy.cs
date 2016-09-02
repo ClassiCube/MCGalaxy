@@ -55,21 +55,15 @@ PRIMARY KEY(player)
         }
 
         public static void LoadDatabase() {
-        retry:
-            Database.Execute(createTable); //create database
-            DataTable eco = Database.Fill("SELECT * FROM Economy");
-            try {
-                DataTable players = Database.Fill("SELECT * FROM Players");
-                if (players.Rows.Count == eco.Rows.Count) { } //move along, nothing to do here
-                else if (eco.Rows.Count == 0) { //if first time, copy content from player to economy
-                    Database.Execute("INSERT INTO Economy (player, money) SELECT Players.Name, Players.Money FROM Players");
-                } else {
-                    //this will only be needed when the server shuts down while it was copying content (or some other error)
-                    Database.Backend.DeleteTable("Economy");
-                    goto retry;
-                }
-                players.Dispose(); eco.Dispose();
-            } catch { }
+            Database.Execute(createTable);
+            DataTable eco = Database.Fill("SELECT (player, money) FROM Economy");
+            foreach (DataRow row in eco) {
+                int money = PlayerData.ParseInt(row["money"].ToString());
+                if (money == 0) continue;
+                
+                UpdateMoney(row["player"].ToString(), money);
+                // TODO: remove zero money in Economy table           
+            }
         }
 
         public static void Load() {
@@ -109,7 +103,7 @@ PRIMARY KEY(player)
 
         public static void Save() {
             using (StreamWriter w = new StreamWriter("properties/economy.properties", false)) {
-                w.WriteLine("enabled:" + Enabled);              
+                w.WriteLine("enabled:" + Enabled);
                 foreach (Item item in Items) {
                     w.WriteLine();
                     item.Serialise(w);
@@ -143,6 +137,11 @@ PRIMARY KEY(player)
             Database.Execute(type + " Economy (player, money, total, purchase, payment, salary, fine) " +
                              "VALUES (@0, @1, @2, @3, @4, @5, @6)", es.playerName, es.money, es.totalSpent,
                              es.purchase, es.payment, es.salary, es.fine);
+            UpdateMoney(es.playerName, es.money);
+        }
+        
+        public static void UpdateMoney(string name, int money) {
+            Database.Execute("UPDATE Players SET Money=@0 WHERE Name=@1", name, money);
         }
         
         public static Item[] Items = { new ColorItem(), new TitleColorItem(), 

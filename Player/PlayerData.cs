@@ -46,11 +46,6 @@ namespace MCGalaxy {
                 ", Money, totalBlocks, totalKicked, TimeSpent) VALUES (@0, @1, @2, @2, @3, @4, @5, @5, @5, @5, @6)";
             Database.Execute(query, 
                              p.name, p.ip, now, 1, "", 0, p.time.ToDBTime());
-            
-            const string ecoQuery = "INSERT INTO Economy (player, money, total, purchase, payment, salary, fine) " +
-                "VALUES (@0, @1, @2, @3, @3, @3, @3)";
-            Database.Execute(ecoQuery, 
-                             p.name, p.money, 0, "%cNone");
         }
         
         internal static void Load(DataTable playerDb, Player p) {
@@ -74,9 +69,7 @@ namespace MCGalaxy {
             p.TotalPlaced = data.TotalPlaced;
             p.TotalDeleted = data.TotalDeleted;
             
-            //money = int.Parse(data.money);
-            p.money = Economy.RetrieveEcoStats(p.name).money;
-            p.loginMoney = p.money;
+            p.money = data.Money;
             p.totalKicked = data.Kicks;
         }
         
