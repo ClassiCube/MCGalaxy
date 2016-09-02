@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands {
                            " %S: Visit rank = " + Group.findPerm(data.visit).ColoredName);
             Player.Message(p, "  BuildMax Rank = " + Group.findPerm(data.buildmax).ColoredName +
                            " %S: VisitMax Rank = " + Group.findPerm(data.visitmax).ColoredName);
-        	
+            
             List<string> vWhitelist = data.VisitWhitelist, vBlacklist = data.VisitBlacklist;
             List<string> bWhitelist = data.BuildWhitelist, bBlacklist = data.BuildBlacklist;
             GetBlacklistedPlayers(data.Name, vBlacklist);
@@ -112,11 +112,17 @@ namespace MCGalaxy.Commands {
         }
         
         static string GetRealmMapOwner(string lvlName) {
+            bool plus = Server.ClassicubeAccountPlus;
             // Early out when accounts have + and map doesn't.
-            if (Server.ClassicubeAccountPlus && lvlName.IndexOf('+') == -1) return null;
+            if (plus && lvlName.IndexOf('+') == -1) return null;
             
-            while (lvlName != "" && Char.IsNumber(lvlName[lvlName.Length - 1]))
+            while (lvlName != "" && Char.IsNumber(lvlName[lvlName.Length - 1])) {
+                // If the server does not have account with +, we have to account for the
+                // that say Player123's second level is Player1232, and the realm owner is Player123
+                string pName = plus ? null : PlayerInfo.FindName(lvlName);
+                if (pName != null) return pName;
                 lvlName = lvlName.Substring(0, lvlName.Length - 1);
+            }
             return PlayerInfo.FindName(lvlName);
         }
         

@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands {
             } else {
                 string color = Colors.Parse(args[1]);
                 if (color == "") { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
-                else if (color == who.color) { Player.Message(p, who.DisplayName + " already has that color."); return; }
+                else if (color == who.color) { Player.Message(p, who.DisplayName + " %Salready has that color."); return; }
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.color = color;
                 Database.Execute("UPDATE Players SET color = @1 WHERE Name = @0", who.name, color);
