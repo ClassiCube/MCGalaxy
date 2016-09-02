@@ -55,24 +55,19 @@ namespace MCGalaxy {
             }
             BotsFile.MoveBots(src, dst);
 
-            //safe against SQL injections because foundLevel is being checked and,
-            //newName is being split and partly checked on illegal characters reserved for Windows.
-            string syntax = Server.useMySQL
-                ? "RENAME TABLE `{2}{0}` TO `{2}{1}`" : "ALTER TABLE `{2}{0}` RENAME TO `{2}{1}`";
-            Database.Execute(String.Format(syntax, src, dst, "Block"));
-            
+            Database.Backend.RenameTable("Block" + src, "Block" + dst);            
             object locker = ThreadSafeCache.DBCache.Get(src);
             lock (locker) {
                 if (Database.TableExists("Portals" + src)) {
-                    Database.Execute(String.Format(syntax, src, dst, "Portals"));
+                    Database.Backend.RenameTable("Portals" + src, "Portals" + dst);
                     string updateSyntax = "UPDATE `Portals" + dst + "` SET ExitMap=@1 WHERE ExitMap=@0";
                     Database.Execute(updateSyntax, src, dst);
                 }
                 if (Database.TableExists("Messages" + src)) {
-                    Database.Execute(String.Format(syntax, src, dst, "Messages"));
+                    Database.Backend.RenameTable("Messages" + src, "Messages" + dst);
                 }
                 if (Database.TableExists("Zone" + src)) {
-                    Database.Execute(String.Format(syntax, src, dst, "Zone"));
+                    Database.Backend.RenameTable("Zone" + src, "Zone" + dst);
                 }
             }
         }

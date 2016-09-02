@@ -30,6 +30,7 @@ namespace MCGalaxy.SQL {
         public override string ConnectionString {
             get { return String.Format(connFormat, Server.DatabasePooling); }
         }
+        public override bool EnforcesTextLength { get { return false; } }
         
         public override BulkTransaction CreateBulk() {
             return new SQLiteBulkTransaction(ConnectionString);
@@ -48,6 +49,16 @@ namespace MCGalaxy.SQL {
             const string syntax = "SELECT name FROM sqlite_master WHERE type='table' AND name=@0";
             using (DataTable results = Database.Fill(syntax, table))
                 return results.Rows.Count > 0;
+        }
+        
+        public override void RenameTable(string srcTable, string dstTable) {
+            string syntax = "ALTER TABLE `" + srcTable + "` RENAME TO `" + dstTable + "`";
+            Database.Execute(syntax);
+        }
+        
+        public override void ClearTable(string table) {
+            string syntax = "DELETE FROM `" + table + "`";
+            Database.Execute(syntax);
         }
     }
 }

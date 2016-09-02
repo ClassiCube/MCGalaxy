@@ -42,10 +42,7 @@ namespace MCGalaxy.Commands.World {
             
             if (args[0] == "clear") {
             	Player.Message(p, "Clearing &cALL %Sblock changes for &d{0}...", lvl.name);
-                if (Server.useMySQL)
-                    Database.Execute("TRUNCATE TABLE `Block" + lvl.name + "`");
-                else
-                    Database.Execute("DELETE FROM `Block" + lvl.name + "`");
+                Database.Backend.ClearTable("Block" + lvl.name);
                 Player.Message(p, "Cleared &cALL %Sblock changes for &d" + lvl.name);
             } else if (args[0] == "disable") {
                 lvl.UseBlockDB = false;

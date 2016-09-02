@@ -25,6 +25,9 @@ namespace MCGalaxy.SQL {
         /// (such as database name or file location) </summary>
         public abstract string ConnectionString { get; }
         
+        /// <summary> Whether this backend enforces the character length in VARCHAR columns. </summary>
+        public abstract bool EnforcesTextLength { get; }
+        
         /// <summary> Returns a new BulkTransaction instance, which can be used to execute
         /// many sql statements as one single transaction. </summary>
         public abstract BulkTransaction CreateBulk();
@@ -42,5 +45,11 @@ namespace MCGalaxy.SQL {
         
         /// <summary> Returns whether a table (case sensitive) exists by that name. </summary>
         public abstract bool TableExists(string table);
+        
+        /// <summary> Renames the source table to the given name. </summary>
+        public abstract void RenameTable(string srcTable, string dstTable);
+        
+        /// <summary> Removes all entries from the given table. </summary>
+        public abstract void ClearTable(string table);
     }
 }

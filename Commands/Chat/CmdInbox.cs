@@ -65,8 +65,7 @@ namespace MCGalaxy.Commands {
 
                     //safe against SQL injections because no user input is given here
                     if (num == -1) {
-                        string syntax = Server.useMySQL ? "TRUNCATE TABLE `Inbox" + p.name + "`" : "DELETE FROM `Inbox" + p.name + "`";
-                        Database.Execute(syntax);
+                        Database.Backend.ClearTable("Inbox" + p.name);
                     } else {
                         DataRow row = Inbox.Rows[num];
                         string syntax = "DELETE FROM `Inbox" + p.name + "` WHERE PlayerFrom=@0 AND TimeSent=@1";

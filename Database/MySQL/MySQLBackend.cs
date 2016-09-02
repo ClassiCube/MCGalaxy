@@ -30,7 +30,8 @@ namespace MCGalaxy.SQL {
         public override string ConnectionString {
             get { return String.Format(connFormat, Server.MySQLHost, Server.MySQLPort,
                                        Server.MySQLUsername, Server.MySQLPassword, Server.DatabasePooling); }
-        }
+        }        
+        public override bool EnforcesTextLength { get { return true; } }
         
         public override BulkTransaction CreateBulk() {
             return new MySQLBulkTransaction(ConnectionString);
@@ -49,6 +50,16 @@ namespace MCGalaxy.SQL {
             const string syntax = "SELECT * FROM information_schema.tables WHERE table_schema = @1 AND table_name = @0";
             using (DataTable results = Database.Fill(syntax, table, Server.MySQLDatabaseName))
                 return results.Rows.Count > 0;
+        }
+        
+        public override void RenameTable(string srcTable, string dstTable) {
+            string syntax = "RENAME TABLE `" + srcTable + "` TO `" + dstTable + "`";
+            Database.Execute(syntax);
+        }
+        
+        public override void ClearTable(string table) {
+            string syntax = "TRUNCATE TABLE `" + table + "`";
+            Database.Execute(syntax);
         }
     }
 }

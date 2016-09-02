@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
 
             message = parts[1];
             //DB
-            if (message.Length >= 256 && Server.useMySQL) { 
+            if (message.Length >= 256 && Database.Backend.EnforcesTextLength) { 
                 Player.Message(p, "Message was too long. It has been trimmed to:"); 
                 Player.Message(p, message.Substring(0, 255)); 
                 message = message.Substring(0, 255);
