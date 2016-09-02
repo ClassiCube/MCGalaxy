@@ -113,10 +113,12 @@ namespace MCGalaxy.Commands
             
             public void Append(Player pl, string name) {
                 builder.Append(' ');
-                if (pl.voice) builder.Append("&f+%S");
+                if (pl.voice) {
+                    builder.Append("&f+").Append(group.color);
+                }
                 
                 builder.Append(name);
-                builder.Append(" (" + pl.level.name + "),");
+                builder.Append(" (").Append(pl.level.name).Append("),");
             }
         }
         
