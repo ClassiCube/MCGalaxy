@@ -22,8 +22,8 @@ using System.Net;
 using System.Windows.Forms;
 using MCGalaxy.Games;
 using MCGalaxy.Gui.Popups;
+using MCGalaxy.SQL;
 using MCGalaxy.Util;
-using Microsoft.Win32;
 
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
@@ -607,6 +607,8 @@ namespace MCGalaxy.Gui {
             //Server.reportBack = ;  //No setting for this?
 
             Server.useMySQL = chkUseSQL.Checked;
+            Database.Backend = Server.useMySQL ? 
+				MySQLBackend.Instance : SQLiteBackend.Instance;
             Server.MySQLHost = txtSQLHost.Text;
             Server.MySQLPort = txtSQLPort.Text;
             Server.MySQLUsername = txtSQLUsername.Text;

@@ -21,19 +21,26 @@ using System.Data.SQLite;
 
 namespace MCGalaxy.SQL {
 
-	public abstract class SQLiteBackend : IDatabaseBackend {
+    public sealed class SQLiteBackend : IDatabaseBackend {
 
-        static string connStringFormat = "Data Source =" + Server.apppath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =300;";        
+        public static IDatabaseBackend Instance = new SQLiteBackend();
+        static ParameterisedQuery queryInstance = new SQLiteParameterisedQuery();
+        
+        static string connFormat = "Data Source =" + Server.apppath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =300;";        
         public override string ConnectionString {
-            get { return String.Format(connStringFormat, Server.DatabasePooling); }
+            get { return String.Format(connFormat, Server.DatabasePooling); }
         }
         
         public override BulkTransaction CreateBulk() {
             return new SQLiteBulkTransaction(ConnectionString);
         }
         
-        public override ParameterisedQuery CreateParamterised() {
+        public override ParameterisedQuery CreateParameterised() {
             return new SQLiteParameterisedQuery();
+        }
+        
+        internal override ParameterisedQuery GetStaticParameterised() {
+            return queryInstance;
         }
     }
     

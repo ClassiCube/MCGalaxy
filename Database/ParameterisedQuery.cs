@@ -34,8 +34,7 @@ namespace MCGalaxy.SQL {
         public abstract void Fill(string query, DataTable results);
         
         public static ParameterisedQuery Create() {
-        	if (Server.useMySQL) return new MySQLParameterisedQuery();
-        	else return new SQLiteParameterisedQuery();
+            return Database.Backend.CreateParameterised();
         }
     }
 }

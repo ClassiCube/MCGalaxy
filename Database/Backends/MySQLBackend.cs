@@ -22,11 +22,14 @@ using MySql.Data.MySqlClient;
 
 namespace MCGalaxy.SQL {
 
-    public abstract class MySQLBackend : IDatabaseBackend {
+    public sealed class MySQLBackend : IDatabaseBackend {
 
-        static string connStringFormat = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4}";
+        public static IDatabaseBackend Instance = new MySQLBackend();
+        static ParameterisedQuery queryInstance = new SQLiteParameterisedQuery();
+        
+        static string connFormat = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4}";
         public override string ConnectionString {
-            get { return String.Format(connStringFormat, Server.MySQLHost, Server.MySQLPort,
+            get { return String.Format(connFormat, Server.MySQLHost, Server.MySQLPort,
                                        Server.MySQLUsername, Server.MySQLPassword, Server.DatabasePooling); }
         }
         
@@ -34,8 +37,12 @@ namespace MCGalaxy.SQL {
             return new MySQLBulkTransaction(ConnectionString);
         }
         
-        public override ParameterisedQuery CreateParamterised() {
+        public override ParameterisedQuery CreateParameterised() {
             return new MySQLParameterisedQuery();
+        }
+        
+        internal override ParameterisedQuery GetStaticParameterised() {
+            return queryInstance;
         }
     }
     

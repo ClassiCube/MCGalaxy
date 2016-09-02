@@ -18,13 +18,23 @@
 using System;
 
 namespace MCGalaxy.SQL {
-
+	
     public abstract class IDatabaseBackend {
         
+        /// <summary> Describes the arguments for a database connection 
+        /// (such as database name or file location) </summary>
         public abstract string ConnectionString { get; }
         
+        /// <summary> Returns a new BulkTransaction instance, which can be used to execute
+        /// many sql statements as one single transaction. </summary>
         public abstract BulkTransaction CreateBulk();
         
-        public abstract ParameterisedQuery CreateParamterised();
+        /// <summary> Returns a new ParameterisedQuery instance, which executes sql statements 
+        /// and manages binding of parameteries for sql queries. </summary>
+        public abstract ParameterisedQuery CreateParameterised();
+        
+        /// <summary> Returns the shared static ParamterisedQuery instance, that is only used 
+        /// for sql queries with no parameters. </summary>
+        internal abstract ParameterisedQuery GetStaticParameterised();
     }
 }

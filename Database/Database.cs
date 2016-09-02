@@ -22,10 +22,7 @@ using System.IO;
 namespace MCGalaxy.SQL {
     public static partial class Database {
         
-        [Obsolete("Use Execute() or Fill() instead, which is threadsafe.", true)]
-        public static void AddParams(string name, object param) {
-            throw new NotSupportedException("AddParams() is not threadsafe and is deprecated, use Execute() or Fill() instead.");
-        }
+		public static IDatabaseBackend Backend;
         
         public static bool TableExists(string table) {
             string syntax = Server.useMySQL ? MySQL.TableExists : SQLite.TableExists;
@@ -35,7 +32,7 @@ namespace MCGalaxy.SQL {
         
         [Obsolete("Use Execute() method instead.")]
         public static void executeQuery(string queryString, bool createDB = false) {
-            ParameterisedQuery query = Server.useMySQL ? MySQL.query : SQLite.query;
+        	ParameterisedQuery query = Backend.GetStaticParameterised();
             Execute(query, queryString, createDB, null);
         }
 
@@ -45,18 +42,18 @@ namespace MCGalaxy.SQL {
         }
         
         public static void Execute(string queryString) {
-            ParameterisedQuery query = Server.useMySQL ? MySQL.query : SQLite.query;
+            ParameterisedQuery query = Backend.GetStaticParameterised();
             Execute(query, queryString, false, null);
         }
         
         public static void Execute(string queryString, params object[] args) {
-            ParameterisedQuery query = ParameterisedQuery.Create();
+            ParameterisedQuery query = Backend.CreateParameterised();
             Execute(query, queryString, false, args);
         }
         
         [Obsolete("Use Fill() method instead.")]
         public static DataTable fillData(string queryString, bool skipError = false) {
-            ParameterisedQuery query = Server.useMySQL ? MySQL.query : SQLite.query;
+            ParameterisedQuery query = Backend.GetStaticParameterised();
             return Fill(query, queryString, null);
         }
         
@@ -66,17 +63,18 @@ namespace MCGalaxy.SQL {
         }
         
         public static DataTable Fill(string queryString) {
-            ParameterisedQuery query = Server.useMySQL ? MySQL.query : SQLite.query;
+            ParameterisedQuery query = Backend.GetStaticParameterised();
             return Fill(query, queryString, null);
         }
         
         public static DataTable Fill(string queryString, params object[] args) {
-            ParameterisedQuery query = ParameterisedQuery.Create();
+        	ParameterisedQuery query = Backend.CreateParameterised();
             return Fill(query, queryString, args);
         }
 
 
-        static void Execute(ParameterisedQuery query, string queryString, bool createDB, params object[] args) {
+        static void Execute(ParameterisedQuery query, string queryString, 
+                            bool createDB, params object[] args) {
             BindParams(query, args);
             Exception e = null;
             for (int i = 0; i < 10; i++) {
@@ -94,7 +92,8 @@ namespace MCGalaxy.SQL {
             query.ClearParams();
         }        
         
-        static DataTable Fill(ParameterisedQuery query, string queryString, params object[] args) {
+        static DataTable Fill(ParameterisedQuery query, string queryString, 
+                              params object[] args) {
             BindParams(query, args);
             using (DataTable results = new DataTable("toReturn")) {
                 Exception e = null;
@@ -136,21 +135,15 @@ namespace MCGalaxy.SQL {
         }
     }
     
-    public static class MySQL { //: Database //Extending for future improvement (Making it object oriented later)
-        
+    public static class MySQL {
         static string connStringFormat = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4}";
-        public static string connString { get { return String.Format(connStringFormat, Server.MySQLHost, Server.MySQLPort, Server.MySQLUsername, Server.MySQLPassword, Server.DatabasePooling); } }
-        internal static ParameterisedQuery query = new MySQLParameterisedQuery();
-        
+        public static string connString { get { return String.Format(connStringFormat, Server.MySQLHost, Server.MySQLPort, Server.MySQLUsername, Server.MySQLPassword, Server.DatabasePooling); } }       
         public const string TableExists = "SELECT * FROM information_schema.tables WHERE table_schema = @1 AND table_name = @0";
     }
     
-    public static class SQLite {
-        
+    public static class SQLite {       
         static string connStringFormat = "Data Source =" + Server.apppath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =300;";
-        public static string connString { get { return String.Format(connStringFormat, Server.DatabasePooling); } }
-        internal static ParameterisedQuery query = new SQLiteParameterisedQuery();
-        
+        public static string connString { get { return String.Format(connStringFormat, Server.DatabasePooling); } }       
         public const string TableExists = "SELECT name FROM sqlite_master WHERE type='table' AND name=@0";
     }
 }

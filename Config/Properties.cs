@@ -20,6 +20,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+using MCGalaxy.SQL;
 
 namespace MCGalaxy {
 	
@@ -39,6 +40,9 @@ namespace MCGalaxy {
 			oldPerms = new OldPerms();
 			if (PropertiesFile.Read(givenPath, ref oldPerms, LineProcessor))
 				Server.s.SettingsUpdate();
+			
+			Database.Backend = Server.useMySQL ? 
+				MySQLBackend.Instance : SQLiteBackend.Instance;
 			
 			if (!Directory.Exists(Server.backupLocation))
 				Server.backupLocation = Application.StartupPath + "/levels/backups";
