@@ -177,7 +177,7 @@ namespace MCGalaxy {
         void Player_PlayerDisconnect(Player p, string reason) {
             if (!Server.irc ||!IsConnected() || p.hidden) return;
             if (!Server.guestLeaveNotify && p.Rank <= LevelPermission.Guest) return;
-            Say(p.DisplayName + " %Sjoined the game (" + reason + "%S)", false);
+            Say(p.DisplayName + " %Sleft the game (" + reason + "%S)", false);
         }
 
         void Player_PlayerConnect(Player p) {
