@@ -575,7 +575,7 @@ namespace MCGalaxy {
              if (!Server.LogNotes) return;
              string src = who == null ? "(console)" : who.name;
              
-             string time = DateTime.UtcNow.ToString("dd/mm/yyyy");
+             string time = DateTime.UtcNow.ToString("dd/MM/yyyy");
              Server.Notes.Append(target + " " + type + " " + src + " " + time);
         }
         
@@ -583,7 +583,7 @@ namespace MCGalaxy {
              if (!Server.LogNotes) return;
              string src = who == null ? "(console)" : who.name;
              
-             string time = DateTime.UtcNow.ToString("dd/mm/yyyy");
+             string time = DateTime.UtcNow.ToString("dd/MM/yyyy");
              reason = reason.Replace(" ", "%20");
              Server.Notes.Append(target + " " + type + " " + src + " " + time + " " + reason);
         }
