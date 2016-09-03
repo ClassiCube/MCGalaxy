@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands {
             }
 
             string targetName = PlayerInfo.GetColoredName(p, target);
-            Chat.MessageAll("Economy stats for {0}%S:", targetName);            
+            Player.Message(p, "Economy stats for {0}%S:", targetName);            
             Player.Message(p, " Current balance: &f{0} &3{1}", money, Server.moneys);
             
             Economy.EcoStats ecos = Economy.RetrieveStats(target);
