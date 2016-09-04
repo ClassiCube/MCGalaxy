@@ -31,6 +31,7 @@ namespace MCGalaxy {
         
         public static byte[] MakeHackControl(Player p) {
             string motd = p.level.GetMotd(p);
+            motd = Colors.StripColors(motd);
             bool isOp = p.Rank >= LevelPermission.Operator;
             
             bool fly = true, noclip = true, speed = true, respawn = true, _3rdPerson = true;
