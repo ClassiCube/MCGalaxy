@@ -27,26 +27,27 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             
-            bool stealth = false;
-            if (message[0] == '#') {
-                message = message.Remove(0, 1).Trim();
-                stealth = true;
+            bool stealth = message[0] == '#';
+            if (stealth) {
+            	message = message.Remove(0, 1);
                 Server.s.Log("Stealth ban Attempted by " + (p == null ? "Console" : p.ColoredName));
             }
-            
             string[] args = message.SplitSpaces(2);
-            string reason = args.Length > 1 ? args[1] : Server.defaultBanMessage;
+            string reason = args.Length > 1 ? args[1] : "";
+            
+            string target = RankCmd.FindName(p, "ban", "", args[0], ref reason);
+            if (target == null) return;
+            Player who = PlayerInfo.FindExact(target);
+            
+            if (reason == "") reason = Server.defaultBanMessage;
             if (reason == "-") reason = "&c-";
             reason = GetReason(p, reason);
-            if (reason == null) return;
-            string banReason = reason == "-" ? "" : " (" + reason + ")";
             
-            Player who = PlayerInfo.Find(args[0]);
-            string target = who == null ? args[0] : who.name;
-            if (!Formatter.ValidName(p, target, "player")) return;
+            if (reason == null) return;
             Group group = who == null ? Group.findPlayerGroup(args[0]) : who.group;
             if (!CheckPerms(target, group, p)) return;
-            
+
+            string banReason = reason == "-" ? "" : " (" + reason + ")";            
             string banner = p == null ? "(console)" : p.ColoredName;
             string banMsg = null;
             if (who == null) {

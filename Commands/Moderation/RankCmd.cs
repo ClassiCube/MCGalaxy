@@ -45,19 +45,20 @@ namespace MCGalaxy.Commands.Moderation {
         
         internal static string FindName(Player p, string action, string cmdArgs,
                                         string name, ref string reason) {
+            if (!Formatter.ValidName(p, name, "player")) return null;
             string match = MatchName(p, ref name);
             string confirmed = IsConfirmed(reason);
-            if (confirmed != null) reason = confirmed;          
+            if (confirmed != null) reason = confirmed;
             
             if (match != null) {
                 if (match.CaselessEq(name)) return match;
-                // Not an exact match, may be wanting to ban an offline account
+                // Not an exact match, may be wanting to ban a non-existent account
                 Player.Message(p, "1 player matches \"{0}\": {1}", name, match);
             }
 
             if (confirmed != null) return name;
             string msgReason = String.IsNullOrEmpty(reason) ? "" : " " + reason;
-            Player.Message(p, "If you still want to {0} {1}, use %T/{0} {1}{2} confirm {3}",
+            Player.Message(p, "If you still want to {0} \"{1}\", use %T/{0} {1}{2} confirm {3}",
                            action, name, cmdArgs, msgReason);
             return null;
         }
