@@ -45,19 +45,20 @@ namespace MCGalaxy.Commands {
             if (!take) {
                 if (Awards.GiveAward(plName, award)) {
                     Chat.MessageAll("{0} %Swas awarded: &b{1}", 
-            		                PlayerInfo.GetColoredName(p, plName), award);
+                                    PlayerInfo.GetColoredName(p, plName), award);
+                    Awards.SavePlayers();
                 } else {
                     Player.Message(p, "The player already has that award."); return;
                 }
             } else {
                 if (Awards.TakeAward(plName, award)) {
                     Chat.MessageAll("{0} %Shad their &b{1} %Saward removed", 
-            		                PlayerInfo.GetColoredName(p, plName), award);
+                                    PlayerInfo.GetColoredName(p, plName), award);
+                    Awards.SavePlayers();
                 } else {
                     Player.Message(p, "The player didn't have the award you tried to take"); return;
                 }
             }
-            Awards.Save();
         }
         
         public override void Help(Player p) {
