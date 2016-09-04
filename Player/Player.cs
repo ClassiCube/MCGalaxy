@@ -118,12 +118,6 @@ namespace MCGalaxy {
                              totalLogins, overallDeath, money, blocks, 
                              cuboided, totalKicked, time.ToDBTime(), name);
             
-            if (Economy.Enabled && loginMoney != money) {
-                Economy.EcoStats ecos = Economy.RetrieveEcoStats(name);
-                ecos.money = money;
-                Economy.UpdateEcoStats(ecos);
-            }
-            
             Server.zombie.SaveZombieStats(this);
             SaveUndo(this);
         }
@@ -581,7 +575,7 @@ namespace MCGalaxy {
              if (!Server.LogNotes) return;
              string src = who == null ? "(console)" : who.name;
              
-             string time = DateTime.UtcNow.ToString("dd/mm/yyyy");
+             string time = DateTime.UtcNow.ToString("dd/MM/yyyy");
              Server.Notes.Append(target + " " + type + " " + src + " " + time);
         }
         
@@ -589,7 +583,7 @@ namespace MCGalaxy {
              if (!Server.LogNotes) return;
              string src = who == null ? "(console)" : who.name;
              
-             string time = DateTime.UtcNow.ToString("dd/mm/yyyy");
+             string time = DateTime.UtcNow.ToString("dd/MM/yyyy");
              reason = reason.Replace(" ", "%20");
              Server.Notes.Append(target + " " + type + " " + src + " " + time + " " + reason);
         }

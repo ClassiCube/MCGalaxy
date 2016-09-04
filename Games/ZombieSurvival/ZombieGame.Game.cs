@@ -182,7 +182,7 @@ namespace MCGalaxy.Games {
         public override void PlayerMoneyChanged(Player p) {
             if (!Running || !p.level.name.CaselessEq(CurLevelName)) return;
             string moneyMsg = "&a" + p.money + " %S" + Server.moneys;
-            string stateMsg = " and you are " + (p.Game.Infected ? "&cdead" : "&aalive");
+            string stateMsg = ", you are " + (p.Game.Infected ? "&cdead" : "&aalive");
             p.SendCpeMessage(CpeMessageType.Status3, moneyMsg + stateMsg);
         }
         

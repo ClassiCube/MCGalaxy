@@ -17,58 +17,45 @@
  */
 using System;
 using System.Globalization;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdGive : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdGive : MoneyCmd {
         public override string name { get { return "give"; } }
         public override string shortcut { get { return "gib"; } }
-        public override string type { get { return CommandTypes.Economy; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Economy; } }        
+        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }       
         public CmdGive() { }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
-            if (args.Length != 2) { Help(p); return; }
-            string giver = null, giverRaw = null;
-            if (p == null) { giverRaw = "(console)"; giver = "(console)"; } 
-            else { giverRaw = p.color + p.name; giver = p.ColoredName; }
-
-            int amount;
-            if (!int.TryParse(args[1], out amount)) {
-                Player.Message(p, "Amount must be an integer."); return;
-            }
-            if (amount < 0) { Player.Message(p, "Cannot give negative %3" + Server.moneys); return; }
+            MoneyCmdData data;
+            if (!ParseArgs(p, message, false, "give", out data)) return;
             
             int matches = 1;
-            Player who = PlayerInfo.FindMatches(p, args[0], out matches);
+            Player who = PlayerInfo.FindMatches(p, data.Name, out matches);
             if (matches > 1) return;
             if (p != null && p == who) { Player.Message(p, "You cannot give yourself %3" + Server.moneys); return; }
-            Economy.EcoStats ecos;
 
+            string target = null;
+            int money = 0;
             if (who == null) {
-                string dbName = PlayerInfo.FindOfflineNameMatches(p, args[0]);
-                if (dbName == null) return;
+                target = Economy.FindMatches(p, data.Name, out money);
+                if (target == null) return;
                 
-                ecos = Economy.RetrieveEcoStats(dbName);
-                if (ReachedMax(p, ecos.money, amount)) return;
-                Chat.MessageAll("{0} %Sgave &f{1}%S(offline) &f{2} &3{3}", 
-                                giver, ecos.playerName, amount, Server.moneys);
+                if (ReachedMax(p, money, data.Amount)) return;
+                money += data.Amount;
+                Economy.UpdateMoney(target, money);
             } else {
-                if (ReachedMax(p, who.money, amount)) return;
-                ecos.money = who.money;
-                who.SetMoney(who.money + amount);
-                ecos = Economy.RetrieveEcoStats(who.name);
-                Chat.MessageAll("{0} %Sgave {1} &f{2} &3{3}", 
-                                giver, who.ColoredName, amount, Server.moneys);
+            	target = who.name; money = who.money;
+                if (ReachedMax(p, money, data.Amount)) return;
+                who.SetMoney(who.money + data.Amount);
             }
+
+            string targetName = PlayerInfo.GetColoredName(p, target);
+            Chat.MessageAll("{0} %Sgave {1} &f{2} &3{3}",
+                            data.Source, targetName, data.Amount, Server.moneys);
             
-            ecos.money += amount;
-            ecos.salary = "%f" + amount + "%3 " + Server.moneys + " by " +
-                giverRaw + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-            Economy.UpdateEcoStats(ecos);
+            Economy.EcoStats stats = Economy.RetrieveStats(target);
+            stats.Salary = "%f" + data.Amount + "%3 " + Server.moneys + " by "
+                + data.SourceRaw + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            Economy.UpdateStats(stats);
         }
         
         static bool ReachedMax(Player p, int current, int amount) {

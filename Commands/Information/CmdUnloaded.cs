@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
             if (end == 0) {
                 StringBuilder list = ListMaps(p, all, files, 0, files.Length);
                 if (list.Length > 0) {
-                    Player.Message(p, "Unloaded levels [Accessible]: ");
+                    Player.Message(p, "Unloaded levels (&c[no] %Sif not accessible): ");
                     Player.Message(p, list.Remove(0, 2).ToString());
                     if (files.Length > 50) { Player.Message(p, "For a more structured list, use /unloaded <1/2/3/..>"); }
                 } else {
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands {
                 
                 StringBuilder list = ListMaps(p, all, files, start, end);
                 if (list.Length > 0) {
-                    Player.Message(p, "Unloaded levels [Accessible] (" + start + " to " + end + "):");
+                    Player.Message(p, "Unloaded levels (&c[no] %Sif not accessible) (" + start + " to " + end + "):");
                     Player.Message(p, list.Remove(0, 2).ToString());
                 } else {
                     Player.Message(p, "No maps are unloaded");
@@ -78,8 +78,9 @@ namespace MCGalaxy.Commands {
                 bool loadOnGoto;
                 RetrieveProps(level, out visitP, out buildP, out loadOnGoto);
                 
-                string visit = loadOnGoto && (p == null || p.Rank >= visitP) ? "%aYes" : "%cNo";
-                builder.Append(", ").Append(Group.findPerm(buildP).color + level + " &b[" + visit + "&b]");
+                string color = Group.findPerm(buildP).color;
+                string visit = loadOnGoto && (p == null || p.Rank >= visitP) ? "" : " &c[no]" + color;
+                builder.Append(", ").Append(color + level + visit);
             }
             return builder;
         }

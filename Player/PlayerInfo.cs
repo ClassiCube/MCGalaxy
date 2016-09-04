@@ -180,14 +180,14 @@ namespace MCGalaxy {
         }
         
         
-        static DataTable Query(string name, string selector) {
+        internal static DataTable Query(string name, string selector) {
             string syntax = Server.useMySQL ?
                 "SELECT " + selector + " FROM Players WHERE Name=@0 COLLATE utf8_general_ci" :
                 "SELECT " + selector + " FROM Players WHERE Name=@0 COLLATE NOCASE";
             return Database.Fill(syntax, name);
         }
         
-        static DataRow QueryMulti(Player p, string name, string selector) {
+        internal static DataRow QueryMulti(Player p, string name, string selector) {
             string syntax = Server.useMySQL ?
                 "SELECT " + selector + " FROM Players WHERE Name LIKE @0 LIMIT 21" :
                 "SELECT " + selector + " FROM Players WHERE Name LIKE @0 LIMIT 21 COLLATE NOCASE";

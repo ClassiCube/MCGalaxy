@@ -300,8 +300,10 @@ namespace MCGalaxy {
             if (OnSendMOTD != null) OnSendMOTD(this, packet);
             Send(packet);
             
-            if (HasCpeExt(CpeExt.HackControl))
-                Send(Hacks.MakeHackControl(this));
+            if (!HasCpeExt(CpeExt.HackControl)) return;
+            Send(Hacks.MakeHackControl(this));
+            if (Game.Referee)
+                Send(Packet.MakeHackControl(true, true, true, true, true, -1));
         }
         
         public void SendMap(Level oldLevel) { SendRawMap(oldLevel, level); }

@@ -39,7 +39,6 @@ namespace MCGalaxy.Games {
             RoundsDone = 0;
             if (!SetStartLevel(level)) return;
             
-            if (UseAwards) ZombieAwards.AddDefaults();
             Thread t = new Thread(MainLoop);
             t.Name = "MCG_ZombieGame";
             t.Start();
@@ -101,10 +100,6 @@ namespace MCGalaxy.Games {
             p.Game.CurrentRoundsSurvived = 0;
             p.SetPrefix();
             ResetInvisibility(p);
-            
-            int delta = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
-            if (delta >= 0 && delta <= 5)
-                ZombieAwards.Give(p, ZombieAwards.infectedEnd, this);
             
             p.Game.Infected = true;
             p.Game.TimeInfected = DateTime.UtcNow;
@@ -210,20 +205,20 @@ namespace MCGalaxy.Games {
 
         string GetStatusMessage(string timespan) {
             if (timespan.Length > 0) {
-                const string format = "&a{0} %Salive, &c{1} %Sinfected ({2})";
-                return String.Format(format, Alive.Count, Infected.Count, timespan);
+                const string format = "&a{0} %Salive %S({2}, map: {1})";
+                return String.Format(format, Alive.Count, CurLevelName, timespan);
             } else {
-                const string format = "&a{0} %Salive, &c{1} %Sinfected";
-                return String.Format(format, Alive.Count, Infected.Count);
+                const string format = "&a{0} %Salive %S(map: {1})";
+                return String.Format(format, Alive.Count, CurLevelName);
             }
         }
 
         string GetTimespan(int seconds) {
             if (seconds < 0) return "";
-            if (seconds <= 10) return "10 secs left";
-            if (seconds <= 30) return "30 secs left";
-            if (seconds <= 60) return "1 min left";
-            return ((seconds + 59) / 60) + " mins left";
+            if (seconds <= 10) return "10s left";
+            if (seconds <= 30) return "30s left";
+            if (seconds <= 60) return "1m left";
+            return ((seconds + 59) / 60) + "m left";
         }
         
         static string[] defMessages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",

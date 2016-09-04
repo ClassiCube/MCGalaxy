@@ -15,36 +15,24 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdFakePay : Command {
-        
+namespace MCGalaxy.Commands {  
+    public sealed class CmdFakePay : MoneyCmd {        
         public override string name { get { return "fakepay"; } }
         public override string shortcut { get { return "fpay"; } }
-        public override string type { get { return CommandTypes.Economy; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Economy; } }        
+        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }   
         
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-            
-            string[] args = message.Split(' ');        
-            Player who = PlayerInfo.FindMatches(p, args[0]);
-            if (who == null) return;
-            
-            int amount = 0;
-            if (args.Length == 1 || !int.TryParse(args[1], out amount)) {
-                Player.Message(p, "You must specify an integer amount to fakepay."); return;
-            }            
-            if (amount < 0) { Player.Message(p, "You can't fakepay a negative amount."); return; }        
-            if (amount >= 16777215) { Player.Message(p, "You can only fakepay up to 16777215."); return; }
+            MoneyCmdData data;
+            if (!ParseArgs(p, message, false, "fakepay", out data)) return;   
+            Player who = PlayerInfo.FindMatches(p, data.Name);
+            if (who == null) return;     
+            if (data.Amount >= 16777215) { Player.Message(p, "You can only fakepay up to 16777215."); return; }
 
-            Chat.MessageAll("{0} %Swas given {1} {2}", who.ColoredName, amount, Server.moneys);
+            Chat.MessageAll("{0} %Swas given {1} {2}", who.ColoredName, data.Amount, Server.moneys);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/fakepay <name> <amount>");
+            Player.Message(p, "%T/fakepay [name] [amount]");
             Player.Message(p, "%HSends a fake give change message.");
         }
     }

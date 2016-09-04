@@ -186,7 +186,6 @@ namespace MCGalaxy.Games {
                             && pKiller.level.name.CaselessEq(CurLevelName)
                             && pAlive.level.name.CaselessEq(CurLevelName))
                         {
-                            CheckKillerAwards(pAlive, pKiller);
                             InfectPlayer(pAlive);
                             pAlive.Game.LastInfecter = pKiller.name;
                             aliveChanged = true;
@@ -199,8 +198,6 @@ namespace MCGalaxy.Games {
                                     pKiller.SetMoney(pKiller.money + (2 + infectCombo));
                                     CurLevel.ChatLevel(pKiller.ColoredName + " is on a rampage! " + (infectCombo + 1) + " infections in a row!");
                                 }
-                                if (infectCombo == 10)
-                                    ZombieAwards.Give(pKiller, ZombieAwards.humanKiller, this);
                             } else {
                                 infectCombo = 0;
                             }
@@ -209,17 +206,19 @@ namespace MCGalaxy.Games {
                             pKiller.Game.CurrentInfected++;
                             pKiller.Game.TotalInfected++;
                             pKiller.Game.MaxInfected = Math.Max(pKiller.Game.CurrentInfected, pKiller.Game.MaxInfected);
+                            
                             ShowInfectMessage(random, pAlive, pKiller);
                             CheckHumanPledge(pAlive);
                             CheckBounty(pAlive, pKiller);
                             UpdatePlayerColor(pAlive, InfectCol);
+                            Thread.Sleep(50);
                         }
                     }
                     if (aliveChanged) alive = Alive.Items;
                 }
                 
                 CheckInvisibilityTime();
-                Thread.Sleep(25);
+                Thread.Sleep(200);
             }
         }
         
@@ -272,19 +271,6 @@ namespace MCGalaxy.Games {
             }
         }
         
-        void CheckKillerAwards(Player pAlive, Player pKiller) {
-            if (pAlive.IsAfk)
-                ZombieAwards.Give(pKiller, ZombieAwards.afkKiller, this);
-            if (pAlive.Game.Invisible)
-                ZombieAwards.Give(pKiller, ZombieAwards.killInvisHuman, this);
-            if (pAlive.Game.CurrentRoundsSurvived >= 3)
-                ZombieAwards.Give(pKiller, ZombieAwards.starKiller, this);
-            if (Alive.Count == 1)
-                ZombieAwards.Give(pKiller, ZombieAwards.killLastHuman, this);
-            if (pAlive.Game.LastInfecter == pKiller.name)
-                ZombieAwards.Give(pKiller, ZombieAwards.killHumanTwice, this);
-        }
-        
         void ShowInfectMessage(Random random, Player pAlive, Player pKiller) {
             string text = null;
             List<string> infectMsgs = pKiller.Game.InfectMessages;
@@ -330,22 +316,14 @@ namespace MCGalaxy.Games {
             } else {
                 int winChance = CurLevel.WinChance;
                 CurLevel.RoundsHumanWon++;
-                if (alive.Length == 1)
-                    ZombieAwards.Give(alive[0], ZombieAwards.onlyHuman, this);
                 foreach (Player pl in alive) {
                     if (pl.Game.PledgeSurvive) {
                         pl.SendMessage("You received &a5 %3" + Server.moneys +
                                        "%S for successfully pledging that you would survive.");
                         pl.SetMoney(pl.money + 5);
                     }
-                    if (winChance <= 10)
-                        ZombieAwards.Give(pl, ZombieAwards.lowWinChance, this);
-                    if (pl.Game.RevivesUsed > 0)
-                        ZombieAwards.Give(pl, ZombieAwards.reviveSurvive, this);
                     
                     pl.Game.CurrentRoundsSurvived++;
-                    if (pl.Game.CurrentRoundsSurvived == 5)
-                        ZombieAwards.Give(pl, ZombieAwards.survive5Rounds, this);
                     pl.Game.TotalRoundsSurvived++;
                     pl.Game.MaxRoundsSurvived = Math.Max(pl.Game.CurrentRoundsSurvived, pl.Game.MaxRoundsSurvived);
                     ResetPlayer(pl, ref playersString);
@@ -410,8 +388,6 @@ namespace MCGalaxy.Games {
             }
             Lottery.Clear();
             winner.SetMoney(winner.money + 10);
-            if (online.Count == 7)
-                ZombieAwards.Give(winner, ZombieAwards.luckyNumber7, this);
         }
         
         int GetReward(Player pl, Player[] alive, Random rand) {

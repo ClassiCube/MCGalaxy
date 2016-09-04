@@ -41,35 +41,38 @@ PRIMARY KEY(player)
             );";
 
         public struct EcoStats {
-            public string playerName, purchase, payment, salary, fine;
-            public int money, totalSpent;
-            public EcoStats(string name, int mon, int tot, string pur, string pay, string sal, string fin) {
-                playerName = name;
-                money = mon;
-                totalSpent = tot;
-                purchase = pur;
-                payment = pay;
-                salary = sal;
-                fine = fin;
+            public string Player, Purchase, Payment, Salary, Fine;
+            public int TotalSpent;
+            
+            public EcoStats(int tot, string player, string pur, 
+                            string pay, string sal, string fin) {
+                TotalSpent = tot;
+                Player = player;
+                Purchase = pur;
+                Payment = pay;
+                Salary = sal;
+                Fine = fin;
             }
         }
 
         public static void LoadDatabase() {
-        retry:
-            Database.Execute(createTable); //create database
+            Database.Execute(createTable);
             DataTable eco = Database.Fill("SELECT * FROM Economy");
-            try {
-                DataTable players = Database.Fill("SELECT * FROM Players");
-                if (players.Rows.Count == eco.Rows.Count) { } //move along, nothing to do here
-                else if (eco.Rows.Count == 0) { //if first time, copy content from player to economy
-                    Database.Execute("INSERT INTO Economy (player, money) SELECT Players.Name, Players.Money FROM Players");
-                } else {
-                    //this will only be needed when the server shuts down while it was copying content (or some other error)
-                    Database.Backend.DeleteTable("Economy");
-                    goto retry;
-                }
-                players.Dispose(); eco.Dispose();
-            } catch { }
+            foreach (DataRow row in eco.Rows) {
+                int money = PlayerData.ParseInt(row["money"].ToString());
+                if (money == 0) continue;
+                
+                EcoStats stats;
+                stats.Player = row["player"].ToString();
+                stats.Payment = row["payment"].ToString();
+                stats.Purchase = row["purchase"].ToString();
+                stats.Salary = row["salary"].ToString();
+                stats.Fine = row["fine"].ToString();
+                stats.TotalSpent = PlayerData.ParseInt(row["total"].ToString());
+                                   
+                UpdateMoney(stats.Player, money);
+                UpdateStats(stats);
+            }
         }
 
         public static void Load() {
@@ -109,40 +112,50 @@ PRIMARY KEY(player)
 
         public static void Save() {
             using (StreamWriter w = new StreamWriter("properties/economy.properties", false)) {
-                w.WriteLine("enabled:" + Enabled);              
+                w.WriteLine("enabled:" + Enabled);
                 foreach (Item item in Items) {
                     w.WriteLine();
                     item.Serialise(w);
                 }
             }
         }
-
-        public static EcoStats RetrieveEcoStats(string playername) {
-            EcoStats es = default(EcoStats);
-            es.playerName = playername;
-            using (DataTable eco = Database.Fill("SELECT * FROM Economy WHERE player=@0", playername)) {
-                if (eco.Rows.Count >= 1) {
-                    es.money = int.Parse(eco.Rows[0]["money"].ToString());
-                    es.totalSpent = int.Parse(eco.Rows[0]["total"].ToString());
-                    es.purchase = eco.Rows[0]["purchase"].ToString();
-                    es.payment = eco.Rows[0]["payment"].ToString();
-                    es.salary = eco.Rows[0]["salary"].ToString();
-                    es.fine = eco.Rows[0]["fine"].ToString();
-                } else {
-                    es.purchase = "%cNone";
-                    es.payment = "%cNone";
-                    es.salary = "%cNone";
-                    es.fine = "%cNone";
-                }
-            }
-            return es;
-        }
-
-        public static void UpdateEcoStats(EcoStats es) {
+        
+        public static void UpdateStats(EcoStats stats) {
             string type = Server.useMySQL ? "REPLACE INTO" : "INSERT OR REPLACE INTO";
             Database.Execute(type + " Economy (player, money, total, purchase, payment, salary, fine) " +
-                             "VALUES (@0, @1, @2, @3, @4, @5, @6)", es.playerName, es.money, es.totalSpent,
-                             es.purchase, es.payment, es.salary, es.fine);
+                             "VALUES (@0, @1, @2, @3, @4, @5, @6)", stats.Player, 0, stats.TotalSpent,
+                             stats.Purchase, stats.Payment, stats.Salary, stats.Fine);
+        }
+
+        public static EcoStats RetrieveStats(string name) {
+            EcoStats stats = default(EcoStats);
+            stats.Player = name;
+            
+            using (DataTable eco = Database.Fill("SELECT * FROM Economy WHERE player=@0", name)) {
+                if (eco.Rows.Count > 0) {
+                    stats.TotalSpent = int.Parse(eco.Rows[0]["total"].ToString());
+                    stats.Purchase = eco.Rows[0]["purchase"].ToString();
+                    stats.Payment = eco.Rows[0]["payment"].ToString();
+                    stats.Salary = eco.Rows[0]["salary"].ToString();
+                    stats.Fine = eco.Rows[0]["fine"].ToString();
+                } else {
+                    stats.Purchase = "%cNone";
+                    stats.Payment = "%cNone";
+                    stats.Salary = "%cNone";
+                    stats.Fine = "%cNone";
+                }
+            }
+            return stats;
+        }
+        
+        public static string FindMatches(Player p, string name, out int money) {
+            DataRow row = PlayerInfo.QueryMulti(p, name, "Name, Money");
+            money = row == null ? 0 : PlayerData.ParseInt(row["Money"].ToString());
+            return row == null ? null : row["Name"].ToString();
+        }
+        
+        public static void UpdateMoney(string name, int money) {
+            Database.Execute("UPDATE Players SET Money=@0 WHERE Name=@1", money, name);
         }
         
         public static Item[] Items = { new ColorItem(), new TitleColorItem(), 
@@ -173,15 +186,15 @@ PRIMARY KEY(player)
         public static RankItem Ranks { get { return (RankItem)Items[3]; } }
         public static LevelItem Levels { get { return (LevelItem)Items[4]; } }
         
-        public static void MakePurchase(Player p, int cost, string item) {
-            Economy.EcoStats ecos = RetrieveEcoStats(p.name);
+        public static void MakePurchase(Player p, int cost, string item) {            
             p.SetMoney(p.money - cost);
-            ecos.money = p.money;
-            ecos.totalSpent += cost;
-            ecos.purchase = item + "%3 - Price: %f" + cost + " %3" + Server.moneys +
-                " - Date: %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-            UpdateEcoStats(ecos);
-            Player.Message(p, "%aYour balance is now %f" + p.money + " %3" + Server.moneys);
+            Player.Message(p, "Your balance is now &f{0} &3{1}", p.money, Server.moneys);
+
+            Economy.EcoStats stats = RetrieveStats(p.name);
+            stats.TotalSpent += cost;
+            stats.Purchase = item + "%3 for %f" + cost + " %3" + Server.moneys +
+                " on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            Economy.UpdateStats(stats);            
         }
     }
 }

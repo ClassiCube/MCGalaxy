@@ -127,6 +127,13 @@ namespace MCGalaxy {
         	return true;
         }
         
+        public bool ShouldShowJoinMessage(Level prev) {
+            if (Server.zombie.Running && name.CaselessEq(Server.zombie.CurLevelName)
+        	    && (prev == this || prev.name.CaselessEq(Server.zombie.LastLevelName))) return false;
+            if (Server.lava.active && Server.lava.HasMap(name)) return false;
+            return true;
+        }
+        
         /// <summary> The currently active game running on this map, 
         /// or null if there is no game running. </summary>
         public IGame CurrentGame() {

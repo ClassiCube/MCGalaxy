@@ -116,8 +116,7 @@ namespace MCGalaxy.Commands.World {
             CheckGamesJoin(p, oldLevel);
             p.prevMsg = "";
             
-            bool showJoin = p.level.ShouldSaveChanges() || (oldLevel != null && oldLevel.ShouldSaveChanges());
-            if (!p.hidden && showJoin) {
+            if (!p.hidden && p.level.ShouldShowJoinMessage(oldLevel)) {
                 Player.SendChatFrom(p, p.color + "*" + p.DisplayName + " %Swent to &b" + lvl.name, false);
                 Player.RaisePlayerAction(p, PlayerAction.JoinWorld, lvl.name);
             }

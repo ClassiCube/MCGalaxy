@@ -54,7 +54,6 @@ namespace MCGalaxy {
             PropertiesFile.Read("text/awardsList.txt", AwardsListLineProcessor, ':');
             PlayerAwards = new List<PlayerAward>();
             PropertiesFile.Read("text/playerAwards.txt", PlayerAwardsLineProcessor, ':');
-            Save();
         }
         
         static void AwardsListLineProcessor(string key, string value) {
@@ -76,8 +75,11 @@ namespace MCGalaxy {
             PlayerAwards.Add(pl);
         }
 
-        public static void Save() {
-            using (CP437Writer w = new CP437Writer("text/awardsList.txt"))  {
+        static readonly object awardLock = new object();
+        public static void SaveAwards() {
+            lock (awardLock)
+                using (CP437Writer w = new CP437Writer("text/awardsList.txt"))
+            {
                 w.WriteLine("# This is a full list of awards. The server will load these and they can be awarded as you please");
                 w.WriteLine("# Format is:");
                 w.WriteLine("# AwardName : Description of award goes after the colon");
@@ -85,10 +87,15 @@ namespace MCGalaxy {
                 foreach (Award award in AwardsList)
                     w.WriteLine(award.Name + " : " + award.Description);
             }
-            
-            using (StreamWriter w = new StreamWriter("text/playerAwards.txt")) {
+        }
+        
+        static readonly object playerLock = new object();
+        public static void SavePlayers() {
+            lock (playerLock)
+                using (StreamWriter w = new StreamWriter("text/playerAwards.txt"))
+            {
                 foreach (PlayerAward pA in PlayerAwards)
-                	w.WriteLine(pA.Name.ToLower() + " : " + pA.Awards.Join(","));
+                    w.WriteLine(pA.Name.ToLower() + " : " + pA.Awards.Join(","));
             }
         }
         #endregion
@@ -107,7 +114,7 @@ namespace MCGalaxy {
                 pl.Awards.Add(name);
                 return true;
             }
-        	
+            
             PlayerAward newPl;
             newPl.Name = playerName;
             newPl.Awards = new List<string>();

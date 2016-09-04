@@ -74,12 +74,12 @@ namespace MCGalaxy {
         }
         
         static void ReadVersion2(string[] lines, List<string> cmdNames) {
-            string[] colon = new[] { " : " };
+            char[] colon = new char[] { ':' };
             foreach (string line in lines) {
                 if (line == "" || line[0] == '#') continue;
                 rankAllowance perms = new rankAllowance();
                 //Name : Lowest : Disallow : Allow
-                string[] args = line.Split(colon, StringSplitOptions.None);
+                string[] args = line.Replace(" ", "").Split(colon);
 
                 if (!cmdNames.Contains(args[0])) {
                     Server.s.Log("Incorrect command name: " + args[0]); continue;

@@ -104,8 +104,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleMapCommand(Player p, string message, string cmd, string value) {
-            bool mapOnly = cmd == "PHYSICS" || cmd == "MOTD" || cmd == "GUNS" || cmd == "CHAT" || cmd == "RESTORE" ||
-                cmd == "PERVISIT" || cmd == "TEXTURE" || cmd == "BUILDABLE" || cmd == "DELETEABLE";
+            bool mapOnly = !(cmd == "ADD" || cmd == "DELETE" || cmd == "SAVE");            
             if (mapOnly && !OwnsMap(p, p.level)) {
                 Player.Message(p, "You may only perform that action on your own map."); return;
             }
@@ -339,8 +338,15 @@ namespace MCGalaxy.Commands {
             return p.name.ToLower();
         }
         
+        static char[] splitChars = new [] { ',' };
         static bool OwnsMap(Player p, Level lvl) {
-            return lvl.RealmOwner.CaselessEq(p.name) || p.level.name.CaselessStarts(p.name);
+            if (lvl.name.CaselessStarts(p.name)) return true;
+            string[] owners = lvl.RealmOwner.Replace(" ", "").Split(splitChars);
+            
+            foreach (string owner in owners) {
+                if (owner.CaselessEq(p.name)) return true;
+            }
+            return false;
         }
         
         public override void Help(Player p) {

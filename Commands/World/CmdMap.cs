@@ -130,7 +130,7 @@ namespace MCGalaxy.Commands.World {
                 case "realmowner":
                     lvl.RealmOwner = value;
                     if (value == "") Player.Message(p, "Removed realm owner for this level.");
-                    else Player.Message(p, "Set realm owner of this level to {0}.", value);
+                    else Player.Message(p, "Set realm owner/owners of this level to {0}.", value);
                     break;
                 default:
                     Player.Message(p, "Could not find option entered."); return;
