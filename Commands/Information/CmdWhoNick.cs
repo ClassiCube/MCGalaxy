@@ -22,7 +22,7 @@ namespace MCGalaxy.Commands {
     public sealed class CmdWhoNick : Command {
         
         public override string name { get { return "whonick"; } }
-        public override string shortcut { get { return ""; } }
+        public override string shortcut { get { return "realname"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/whonick <nickname>");
+            Player.Message(p, "%T/whonick [nickname]");
             Player.Message(p, "%HDisplays the player's real username");
         }
     }
