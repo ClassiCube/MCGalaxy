@@ -68,7 +68,6 @@ namespace MCGalaxy.Eco {
             if (map == null) return;
             
             Command.all.Find("queue").Use(p, "level " + map);
-            ZombieAwards.Give(p, ZombieAwards.buyQueue, Server.zombie);
             Economy.MakePurchase(p, Price, "%3QueueLevel: " + map);
         }
     }

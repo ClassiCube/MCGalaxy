@@ -39,7 +39,6 @@ namespace MCGalaxy.Games {
             RoundsDone = 0;
             if (!SetStartLevel(level)) return;
             
-            if (UseAwards) ZombieAwards.AddDefaults();
             Thread t = new Thread(MainLoop);
             t.Name = "MCG_ZombieGame";
             t.Start();
@@ -101,10 +100,6 @@ namespace MCGalaxy.Games {
             p.Game.CurrentRoundsSurvived = 0;
             p.SetPrefix();
             ResetInvisibility(p);
-            
-            int delta = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
-            if (delta >= 0 && delta <= 5)
-                ZombieAwards.Give(p, ZombieAwards.infectedEnd, this);
             
             p.Game.Infected = true;
             p.Game.TimeInfected = DateTime.UtcNow;
