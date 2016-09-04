@@ -31,17 +31,22 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return; }
             string rank = null, name = null;
-            
-            if (args[0].CaselessEq("+up") || args[0].CaselessEq("-down")) {
-                rank = args[0]; name = args[1];
-            } else {
-                rank = args[1]; name = args[0];
-            }
-            
             string reason = args.Length > 2 ? args[2] : null, rankMsg = null;
-            Player who = PlayerInfo.Find(name);
+            
+            if (args[0].CaselessEq("+up")) {
+                rank = args[0];
+                name = RankCmd.FindName(p, "promote", "", args[1], ref reason);
+            } else if (args[0].CaselessEq("-down")) {
+                rank = args[0];
+                name = RankCmd.FindName(p, "demote", "", args[1], ref reason);
+            } else {
+                rank = args[1];
+                name = RankCmd.FindName(p, "rank", " " + rank, args[0], ref reason);
+            }
+            if (name == null) return;
+            
+            Player who = PlayerInfo.FindExact(name);
             if (who == p && who != null) { Player.Message(p, "Cannot change your own rank."); return; }
-            if (who != null) name = who.name;
             
             Group curRank = who != null ? who.group : PlayerInfo.GetGroup(name);
             Group newRank = TargetRank(p, rank.ToLower(), curRank);

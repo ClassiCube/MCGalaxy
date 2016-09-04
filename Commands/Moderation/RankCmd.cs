@@ -20,7 +20,7 @@ using System.IO;
 
 namespace MCGalaxy.Commands.Moderation {
     internal static class RankCmd {
-		
+        
         internal static void ChangeRank(string name, Group oldRank, Group newRank,
                                         Player who, bool saveToNewRank = true) {
             Server.reviewlist.Remove(name);
@@ -41,6 +41,42 @@ namespace MCGalaxy.Commands.Moderation {
             who.SetPrefix();
             who.Send(Packet.MakeUserType(who));
             Entities.SpawnEntities(who, false);
+        }
+        
+        internal static string FindName(Player p, string action, string cmdArgs,
+                                        string name, ref string reason) {
+            string match = MatchName(p, ref name);
+            if (match != null) {
+                if (match.CaselessEq(name)) return match;
+                // Not an exact match, may be wanting to ban an offline account
+                Player.Message(p, "1 player matches \"{0}\": {1}", name, match);
+            }
+
+            string confirmed = IsConfirmed(reason);
+            if (confirmed != null) { reason = confirmed; return name; }
+            string msgReason = String.IsNullOrEmpty(reason) ? "" : " " + reason;
+            Player.Message(p, "If you still want to {0} {1}, use %T/{0} {1}{2} confirm {3}",
+                           action, name, cmdArgs, msgReason);
+            return null;
+        }
+        
+        static string MatchName(Player p, ref string name) {
+            int matches = 0;
+            Player target = PlayerInfo.FindMatches(p, name, out matches);
+            if (matches > 1) return null;
+            if (matches == 1) { name = target.name; return name; }
+            
+            Player.Message(p, "Searching PlayerDB...");
+            return PlayerInfo.FindOfflineNameMatches(p, name);
+        }
+        
+        static string IsConfirmed(string reason) {
+            if (reason == null) return null;
+            if (reason.CaselessEq("confirm"))
+                return "";
+            if (reason.CaselessStarts("confirm "))
+                return reason.Substring("confirm ".Length);
+            return null;
         }
     }
 }

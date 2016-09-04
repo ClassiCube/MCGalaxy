@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             string[] args = message.SplitSpaces(2);
-            string reason = args.Length > 1 ? args[1] : Server.defaultBanMessage;            
+            string reason = args.Length > 1 ? args[1] : Server.defaultBanMessage;
             if (reason == "-") reason = "&c-";
             reason = GetReason(p, reason);
             if (reason == null) return;
