@@ -209,17 +209,19 @@ namespace MCGalaxy.Games {
                             pKiller.Game.CurrentInfected++;
                             pKiller.Game.TotalInfected++;
                             pKiller.Game.MaxInfected = Math.Max(pKiller.Game.CurrentInfected, pKiller.Game.MaxInfected);
+                            
                             ShowInfectMessage(random, pAlive, pKiller);
                             CheckHumanPledge(pAlive);
                             CheckBounty(pAlive, pKiller);
                             UpdatePlayerColor(pAlive, InfectCol);
+                            Thread.Sleep(50);
                         }
                     }
                     if (aliveChanged) alive = Alive.Items;
                 }
                 
                 CheckInvisibilityTime();
-                Thread.Sleep(25);
+                Thread.Sleep(200);
             }
         }
         
