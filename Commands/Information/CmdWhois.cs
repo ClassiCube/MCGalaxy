@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
             if (matches == 1) {
                 info = FromOnline(pl);
             } else {
-                if (!ValidName(p, message, "player")) return;
+                if (!Formatter.ValidName(p, message, "player")) return;
                 Player.Message(p, "Searching database for the player..");           
                 PlayerData target = PlayerInfo.FindOfflineMatches(p, message);
                 if (target == null) return;

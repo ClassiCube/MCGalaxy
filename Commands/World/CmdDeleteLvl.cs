@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             if (message == "" || message.Split(' ').Length > 1) { Help(p); return; }
-            if (!ValidName(p, message, "level")) return;
+            if (!Formatter.ValidName(p, message, "level")) return;
             string map = LevelInfo.FindMapMatches(p, message);
             if (map == null) return;
             

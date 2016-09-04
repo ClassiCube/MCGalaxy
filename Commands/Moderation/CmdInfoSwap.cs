@@ -31,8 +31,8 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string text) {
             string[] args = text.Split(' ');
             if (args.Length != 2) { Help(p); return; }
-            if (!ValidName(p, args[0], "player")) return;
-            if (!ValidName(p, args[1], "player")) return;
+            if (!Formatter.ValidName(p, args[0], "player")) return;
+            if (!Formatter.ValidName(p, args[1], "player")) return;
             
             if (PlayerInfo.FindExact(args[0]) != null) {
             	Player.Message(p, "\"{0}\" must be offline to use /infoswap.", args[0]); return;

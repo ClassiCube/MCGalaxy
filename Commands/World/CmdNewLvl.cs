@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.World {
             if (!MapGen.OkayAxis(z)) { Player.Message(p, "length must be divisible by 16, and >= 16."); return; }
             if (!CheckMapSize(p, x, y, z)) return;
  
-            if (!ValidName(p, name, "level")) return;
+            if (!Formatter.ValidName(p, name, "level")) return;
             if (LevelInfo.ExistsOffline(name)) {
                 Player.Message(p, "Level \"{0}\" already exists", name); return;
             }

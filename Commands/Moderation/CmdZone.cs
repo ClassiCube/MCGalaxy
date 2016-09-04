@@ -95,7 +95,7 @@ namespace MCGalaxy.Commands {
         bool CheckAdd(Player p, string[] args) {
             if (!CheckExtraPerm(p, 3)) { MessageNeedExtra(p, "create zones.", 3); return false; }
             if (args.Length == 1) { Help(p); return false; }
-            if (!ValidName(p, args[1], "player or rank")) return false;
+            if (!Formatter.ValidName(p, args[1], "player or rank")) return false;
             
             args[1] = FindZoneOwner(p, args[1]);
             return args[1] != null;

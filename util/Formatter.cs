@@ -113,5 +113,11 @@ namespace MCGalaxy {
             else
                 Player.Message(p, "Only {0}%S+ can {1}", grp.ColoredName, action);
         }
+        
+        public static bool ValidName(Player p, string name, string type) {
+            if (Player.ValidName(name)) return true;
+            Player.Message(p, "\"{0}\" is not a valid {1} name.", name, type);
+            return false;
+        }
     }
 }

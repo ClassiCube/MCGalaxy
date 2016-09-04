@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.CPE {
                 skin = message;
             }
 
-            if (!ValidName(p, skin, "skin")) return;
+            if (!Formatter.ValidName(p, skin, "skin")) return;
             if (p != null && who != null && who.Rank > p.Rank) {
                 MessageTooHighRank(p, "change the skin of", true); return;
             }

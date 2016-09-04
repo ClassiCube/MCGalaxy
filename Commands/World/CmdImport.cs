@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            if (!ValidName(p, message, "level")) return;
+            if (!Formatter.ValidName(p, message, "level")) return;
             
             string file = "extra/import/" + message;
             if (!Directory.Exists("extra/import"))

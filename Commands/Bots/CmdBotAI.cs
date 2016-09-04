@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands
             if (args.Length < 2) { Help(p); return; }
             string ai = args[1].ToLower();
 
-            if (!ValidName(p, ai, "bot AI")) return;
+            if (!Formatter.ValidName(p, ai, "bot AI")) return;
             if (ai == "hunt" || ai == "kill") { Player.Message(p, "Reserved for special AI."); return; }
 
             switch (args[0].ToLower()) {

@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
 
             if (args[0].CaselessEq("map")) {
                 args[1] = args[1].ToLower();
-                if (!ValidName(p, args[1], "level")) return;
+                if (!Formatter.ValidName(p, args[1], "level")) return;
                 
                 string path = "text/lockdown/map/" + args[1];
                 if (!File.Exists(path)) {

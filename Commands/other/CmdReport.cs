@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "You need to provide a player's name."); return;
             }
             if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "view the details of a report."); return; }
-            if (!ValidName(p, args[1], "player")) return;
+            if (!Formatter.ValidName(p, args[1], "player")) return;
             
             if (!File.Exists("extra/reported/" + args[1] + ".txt")) {
                 Player.Message(p, "The player you specified has not been reported."); return;
@@ -95,7 +95,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "You need to provide a player's name."); return;
             }
             if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "delete reports."); return; }
-            if (!ValidName(p, args[1], "player")) return;
+            if (!Formatter.ValidName(p, args[1], "player")) return;
             
             if (!File.Exists("extra/reported/" + args[1] + ".txt")) {
                 Player.Message(p, "The player you specified has not been reported."); return;

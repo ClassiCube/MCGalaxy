@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands {
                         Save(true, true, p, true);
                     } else if (type == "table") {
                         if (args.Length == 2) { Player.Message(p, "You need to provide the table name to backup."); return; }
-                        if (!ValidName(p, args[2], "table")) return;                        
+                        if (!Formatter.ValidName(p, args[2], "table")) return;
                         if (!Database.TableExists(args[2])) { Player.Message(p, "Table \"{0}\" does not exist.", args[2]); return; }
                         
                         Player.Message(p, "Backing up table {0} started. Please wait while backup finishes.", args[2]);

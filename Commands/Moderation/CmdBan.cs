@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             Player who = PlayerInfo.Find(args[0]);
             string target = who == null ? args[0] : who.name;
-            if (!ValidName(p, target, "player")) return;
+            if (!Formatter.ValidName(p, target, "player")) return;
             Group group = who == null ? Group.findPlayerGroup(args[0]) : who.group;
             if (!CheckPerms(target, group, p)) return;
             

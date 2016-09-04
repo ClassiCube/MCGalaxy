@@ -62,6 +62,7 @@ namespace MCGalaxy.Commands.Moderation {
                 who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
             }
             
+            if (p == null) Player.Message(p, rankMsg);            
             RankCmd.ChangeRank(name, curRank, newRank, who);
             WriteRankInfo(p, name, newRank, curRank, reason);
             Server.IRC.Say(rankMsg);

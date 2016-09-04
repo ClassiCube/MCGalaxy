@@ -81,12 +81,6 @@ namespace MCGalaxy {
                 Player.Message(p, "Can only {0} players ranked below {1}", action, grp.ColoredName);
         }
         
-        protected static bool ValidName(Player p, string name, string type) {
-            if (Player.ValidName(name)) return true;
-            Player.Message(p, "\"{0}\" is not a valid {1} name.", name, type);
-            return false;
-        }
-        
         internal void MessageCannotUse(Player p) {
             var perms = GrpCommands.allowedCommands.Find(C => C.commandName == name);
             StringBuilder builder = new StringBuilder("Only ");

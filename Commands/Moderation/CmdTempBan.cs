@@ -26,10 +26,13 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces(3);
-            Player who = PlayerInfo.Find(args[0]);
+            string reason = args.Length > 2 ? args[2] : "";
             
-            string target = who == null ? args[0] : who.name;
-            if (!ValidName(p, target, "player")) return;
+            string target = RankCmd.FindName(p, "tempban", args.Length == 1 ? "" : " " + args[1],
+                                             args[0], ref reason);
+            if (target == null) return;
+            Player who = PlayerInfo.FindExact(target);
+            
             Group grp = who == null ? PlayerInfo.GetGroup(target) : who.group;
             if (p != null && grp.Permission >= p.Rank) {
                 MessageTooHighRank(p, "temp ban", false); return;
@@ -42,15 +45,14 @@ namespace MCGalaxy.Commands.Moderation {
             
             Server.TempBan tBan;
             tBan.name = target;
-            tBan.reason = args.Length > 2 ? args[2] : "";
-            tBan.reason = GetReason(p, tBan.reason);
+            tBan.reason = GetReason(p, reason);
             if (tBan.reason == null) return;
             
             tBan.expiryTime = DateTime.UtcNow.Add(time);
             AddTempban(tBan);            
             if (who != null) {
-                string reason = tBan.reason == "" ? "" : " - (" + tBan.reason + ")";
-                who.Kick("Banned for " + time.Shorten(true) + "." + reason);
+                string kickReason = tBan.reason == "" ? "" : " - (" + tBan.reason + ")";
+                who.Kick("Banned for " + time.Shorten(true) + "." + kickReason);
             }
             
             Player.Message(p, "Temp banned " + target + " for " + time.Shorten(true) + ".");
