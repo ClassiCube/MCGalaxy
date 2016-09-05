@@ -57,8 +57,9 @@ PRIMARY KEY(player)
 
         public static void LoadDatabase() {
             Database.Execute(createTable);
-            DataTable eco = Database.Fill("SELECT * FROM Economy");
-            foreach (DataRow row in eco.Rows) {
+            using (DataTable eco = Database.Backend.GetAllRows("Economy", "*"))
+                foreach (DataRow row in eco.Rows)
+            {
                 int money = PlayerData.ParseInt(row["money"].ToString());
                 if (money == 0) continue;
                 
@@ -69,7 +70,7 @@ PRIMARY KEY(player)
                 stats.Salary = row["salary"].ToString();
                 stats.Fine = row["fine"].ToString();
                 stats.TotalSpent = PlayerData.ParseInt(row["total"].ToString());
-                                   
+                
                 UpdateMoney(stats.Player, money);
                 UpdateStats(stats);
             }

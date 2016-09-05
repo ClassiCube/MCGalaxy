@@ -59,9 +59,9 @@ namespace MCGalaxy {
             try {
                 if (group.commands.Contains("inbox") && Database.TableExists("Inbox" + name) ) {
                     //safe against SQL injections because no user input is given here
-                    using (DataTable Inbox = Database.Fill("SELECT * FROM `Inbox" + name + "`")) {
-                    	if (Inbox.Rows.Count > 0)
-                    	    SendMessage("You have &a" + Inbox.Rows.Count + " %Smessages in /inbox");
+                    using (DataTable table = Database.Backend.GetAllRows("Inbox" + name, "*")) {
+                    	if (table.Rows.Count > 0)
+                    	    SendMessage("You have &a" + table.Rows.Count + " %Smessages in /inbox");
                     }
                 }
             } catch {

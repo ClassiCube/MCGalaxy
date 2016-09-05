@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Building {
             string[] parts = message.SplitSpaces(2);
             string alias = parts[0], cmdArgs = "";
             Command.Search(ref alias, ref cmdArgs);
-                
+            
             foreach (Command cmd in Command.all.commands) {
                 if (cmd.defaultRank <= p.Rank && (allCmds || !cmd.type.Contains("mod"))) continue;
                 
@@ -132,23 +132,30 @@ namespace MCGalaxy.Commands.Building {
 
         void ShowMessageBlocks(Player p) {
             p.showMBs = !p.showMBs;
-            //safe against SQL injections because no user input is given here
-            using (DataTable table = Database.Fill("SELECT * FROM `Messages" + p.level.name + "`")) {
+            using (DataTable table = Database.Backend.GetAllRows("Messages" + p.level.name, "*")) {
                 if (p.showMBs) {
-                    for (int i = 0; i < table.Rows.Count; i++) {
-                        DataRow row = table.Rows[i];
-                        p.SendBlockchange(ushort.Parse(row["X"].ToString()), ushort.Parse(row["Y"].ToString()), ushort.Parse(row["Z"].ToString()), Block.MsgWhite);
-                    }
-                    Player.Message(p, "Now showing &a" + table.Rows.Count + " %SMBs.");
+                    ShowMessageBlocks(p, table);
                 } else {
-                    for (int i = 0; i < table.Rows.Count; i++) {
-                        DataRow row = table.Rows[i];
-                        p.RevertBlock(ushort.Parse(row["X"].ToString()), ushort.Parse(row["Y"].ToString()), ushort.Parse(row["Z"].ToString()));
-                    }
-                    Player.Message(p, "Now hiding MBs.");
+                    HideMessageBlocks(p, table);
                 }
             }
         }
+        
+        static void ShowMessageBlocks(Player p, DataTable table) {
+            foreach (DataRow row in table.Rows) {
+                p.SendBlockchange(U16(row["X"]), U16(row["Y"]), U16(row["Z"]), Block.green);
+            }
+            Player.Message(p, "Now showing &a" + table.Rows.Count + " %SMBs.");
+        }
+        
+        static void HideMessageBlocks(Player p, DataTable table) {
+            foreach (DataRow row in table.Rows) {
+                p.RevertBlock(U16(row["X"]), U16(row["Y"]), U16(row["Z"]));
+            }
+            Player.Message(p, "Now hiding MBs.");
+        }
+        
+        static ushort U16(object x) { return Convert.ToUInt16(x); }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/mb [block] [message]");

@@ -94,7 +94,7 @@ namespace MCGalaxy {
         
         internal static void LoadZones(Level level, string name) {
             if (!Database.TableExists("Zone" + name)) return;
-            using (DataTable table = Database.Fill("SELECT * FROM `Zone" + name + "`")) {
+            using (DataTable table = Database.Backend.GetAllRows("Zone" + name, "*")) {
                 Level.Zone Zn;
                 foreach (DataRow row in table.Rows) {
                     Zn.smallX = ushort.Parse(row["SmallX"].ToString());
@@ -111,7 +111,7 @@ namespace MCGalaxy {
         
         internal static void LoadPortals(Level level, string name) {
             if (!Database.TableExists("Portals" + name)) return;
-            using (DataTable table = Database.Fill("SELECT * FROM `Portals" + name + "`")) {
+            using (DataTable table = Database.Backend.GetAllRows("Portals" + name, "*")) {
                 foreach (DataRow row in table.Rows) {
                     byte tile = level.GetTile(ushort.Parse(row["EntryX"].ToString()),
                                               ushort.Parse(row["EntryY"].ToString()),
@@ -126,7 +126,7 @@ namespace MCGalaxy {
         
         internal static void LoadMessages(Level level, string name) {
             if (!Database.TableExists("Messages" + name)) return;
-            using (DataTable table = Database.Fill("SELECT * FROM `Messages" + name + "`")) {
+            using (DataTable table = Database.Backend.GetAllRows("Messages" + name, "*")) {
                 foreach (DataRow row in table.Rows) {
                     byte tile = level.GetTile(ushort.Parse(row["X"].ToString()),
                                               ushort.Parse(row["Y"].ToString()),

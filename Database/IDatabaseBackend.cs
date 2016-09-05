@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Data;
 
 namespace MCGalaxy.SQL {
     
@@ -52,9 +53,9 @@ namespace MCGalaxy.SQL {
         /// <summary> Removes all entries from the given table. </summary>
         public abstract void ClearTable(string table);
         
-        /// <summary> Inserts/Copies all the entries from the source table into the destination table. </summary>
+        /// <summary> Inserts/Copies all the rows from the source table into the destination table. </summary>
         /// <remarks> Note: This may work incorrectly if the tables have different schema. </remarks>
-        public virtual void CopyAllEntries(string srcTable, string dstTable) {
+        public virtual void CopyAllRows(string srcTable, string dstTable) {
             string syntax = "INSERT INTO `" + dstTable + "` SELECT * FROM `" + srcTable + "`";
             Database.Execute(syntax);
         }
@@ -63,6 +64,12 @@ namespace MCGalaxy.SQL {
         public virtual void DeleteTable(string table) {
             string syntax = "DROP TABLE `" + table + "`";
             Database.Execute(syntax);
+        }
+        
+        /// <summary> Retrieves all rows for the given table from the database. </summary>
+        public virtual DataTable GetAllRows(string table, string columns) {
+            string syntax = "SELECT " + columns + " FROM `" + table + "`";
+            return Database.Fill(syntax);
         }
     }
 }

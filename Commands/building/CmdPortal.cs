@@ -122,26 +122,32 @@ namespace MCGalaxy.Commands.Building {
 
         void ShowPortals(Player p) {
             p.showPortals = !p.showPortals;
-            //safe against SQL injections because no user input is given here
-            DataTable Portals = Database.Fill("SELECT * FROM `Portals" + p.level.name + "`");
-
-            if (p.showPortals) {
-                foreach (DataRow row in Portals.Rows) {
-                    if (row["ExitMap"].ToString() == p.level.name)
-                        p.SendBlockchange(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]), Block.red);
-                    p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), Block.green);
+            using (DataTable table = Database.Backend.GetAllRows("Portals" + p.level.name, "*")) {
+                if (p.showPortals) {
+                    ShowPortals(p, table);
+                } else {
+                    HidePortals(p, table);
                 }
-
-                Player.Message(p, "Now showing &a" + Portals.Rows.Count + " %Sportals.");
-            } else {
-                foreach (DataRow row in Portals.Rows) {
-                    if (row["ExitMap"].ToString() == p.level.name)
-                        p.RevertBlock(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]));
-                    p.RevertBlock(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]));
-                }
-                Player.Message(p, "Now hiding portals.");
             }
-            Portals.Dispose();
+        }
+        
+        static void ShowPortals(Player p, DataTable table) {
+            foreach (DataRow row in table.Rows) {
+                if (row["ExitMap"].ToString() == p.level.name)
+                    p.SendBlockchange(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]), Block.red);
+                p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), Block.green);
+            }
+
+            Player.Message(p, "Now showing &a" + table.Rows.Count + " %Sportals.");
+        }
+        
+        static void HidePortals(Player p, DataTable table) {
+            foreach (DataRow row in table.Rows) {
+                if (row["ExitMap"].ToString() == p.level.name)
+                    p.RevertBlock(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]));
+                p.RevertBlock(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]));
+            }
+            Player.Message(p, "Now hiding portals.");
         }
         
         static ushort U16(object x) { return Convert.ToUInt16(x); }
