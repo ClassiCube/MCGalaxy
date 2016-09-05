@@ -346,7 +346,7 @@ namespace MCGalaxy {
             try {
                 Level level = LvlFile.Load(name, path);
                 level.setPhysics(phys);
-                level.backedup = true;              
+                level.backedup = true;
 
                 level.jailx = (ushort)(level.spawnx * 32);
                 level.jaily = (ushort)(level.spawny * 32);

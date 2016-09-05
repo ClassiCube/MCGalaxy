@@ -254,7 +254,7 @@ namespace MCGalaxy.Commands {
         
         void HandleEnable(Player p) {
             if (Server.Countdown.gamestatus == CountdownGameStatus.Disabled) {
-                Command.all.Find("load").Use(null, "countdown");
+                CmdLoad.LoadLevel(null, "countdown");
                 Server.Countdown.mapon = LevelInfo.FindExact("countdown");
                 
                 if (Server.Countdown.mapon == null) {

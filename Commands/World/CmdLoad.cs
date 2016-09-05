@@ -18,7 +18,7 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.World {
     public sealed class CmdLoad : Command {
         public override string name { get { return "load"; } }
         public override string shortcut { get { return ""; } }
@@ -34,50 +34,53 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
             if (args.Length > 2) { Help(p); return; }
-            string name = args[0].ToLower(), phys = args.Length > 1 ? args[1] : "0";
-            
-            Level[] loaded = LevelInfo.Loaded.Items;
-            foreach (Level l in loaded) {
-                if (l.name == name) { Player.Message(p, "{0} is already loaded.", name); return; }
-            }
-            if (!LevelInfo.ExistsOffline(name)) {
-                Player.Message(p, "Level \"{0}\" does not exist", name); return;
-            }
-            
+
+            string phys = args.Length > 1 ? args[1] : "0";
+            LoadLevel(p, args[0], phys, false);
+        }
+        
+        public static Level LoadLevel(Player p, string name,
+                                      string phys = "0", bool autoLoaded = false) {
+            name = name.ToLower();
             try {
-                LoadLevel(p, name, phys);
+                return LoadLevelCore(p, name, phys, autoLoaded);
             } finally {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
         }
         
-        internal static Level LoadLevel(Player p, string name, string phys) {
-            Level lvl = GetLevel(p, name);
-            if (lvl == null || !lvl.CanJoin(p)) return null;
-
+        static Level LoadLevelCore(Player p, string name,
+                                   string phys, bool autoLoaded) {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level l in loaded) {
-                if (l.name == name) { Player.Message(p, name + " is already loaded!"); return null; }
+                if (l.name == name) { Player.Message(p, "{0} is already loaded.", name); return null; }
+            }
+            if (!LevelInfo.ExistsOffline(name)) {
+                Player.Message(p, "Level \"{0}\" does not exist", name); return null;
+            }
+            
+            Level lvl = ReadLevel(p, name);
+            if (lvl == null || !lvl.CanJoin(p)) return null;
+
+            loaded = LevelInfo.Loaded.Items;
+            foreach (Level l in loaded) {
+                if (l.name == name) { Player.Message(p, "{0} is already loaded.", name); return null; }
             }
 
             LevelInfo.Loaded.Add(lvl);
-            Chat.MessageWhere("Level \"{0}\" loaded.", pl => Entities.CanSee(pl, p), lvl.name);
-            /*try {
-                Gui.Window.thisWindow.UpdatePlayerMapCombo();
-                Gui.Window.thisWindow.UnloadedlistUpdate();
-                Gui.Window.thisWindow.UpdateMapList("'");
-            } catch { }*/
+            if (!autoLoaded)
+                Chat.MessageWhere("Level \"{0}\" loaded.", pl => Entities.CanSee(pl, p), lvl.name);
             
-            int temp;
-            if (!int.TryParse(phys, out temp)) { 
-                Player.Message(p, "Physics must be an integer between 0 and 5."); return null; 
+            int physLevel;
+            if (!int.TryParse(phys, out physLevel)) {
+                Player.Message(p, "Physics must be an integer between 0 and 5."); return lvl;
             }
-            if (temp >= 1 && temp <= 5) lvl.setPhysics(temp);
+            if (physLevel >= 1 && physLevel <= 5) lvl.setPhysics(physLevel);
             return lvl;
         }
         
-        static Level GetLevel(Player p, string name) {
+        static Level ReadLevel(Player p, string name) {
             Level level = Level.Load(name);
             if (level != null) return level;
             if (!File.Exists(LevelInfo.LevelPath(name) + ".backup")) {
@@ -111,7 +114,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/load <level> <physics>");
+            Player.Message(p, "%T/load [level] <physics>");
             Player.Message(p, "%HLoads a level.");
         }
     }

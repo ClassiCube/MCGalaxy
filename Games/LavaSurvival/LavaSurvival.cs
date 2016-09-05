@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Timers;
+using MCGalaxy.Commands.World;
 
 namespace MCGalaxy.Games
 {
@@ -268,7 +269,7 @@ namespace MCGalaxy.Games
             name = name.ToLower();
             Level oldMap = null;
             if (active && map != null) oldMap = map;
-            Command.all.Find("load").Use(null, name);
+            CmdLoad.LoadLevel(null, name);
             map = LevelInfo.Find(name);
 
             if (map != null)

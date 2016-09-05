@@ -19,8 +19,8 @@ using System;
 using System.IO;
 using MCGalaxy.Levels.IO;
 
-namespace MCGalaxy.Commands.World {    
-    public sealed class CmdImport : Command {       
+namespace MCGalaxy.Commands.World {
+    public sealed class CmdImport : Command {
         public override string name { get { return "import"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.World {
                     Player.Message(p, "The map conversion failed."); return;
                 }
                 Player.Message(p, "Converted map!");
-                Command.all.Find("load").Use(p, message);
+                CmdLoad.LoadLevel(p, message);
             }
         }
         

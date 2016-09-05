@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using MCGalaxy.Commands.World;
 using MCGalaxy.Generator;
 
 namespace MCGalaxy.Eco {
@@ -88,10 +89,8 @@ namespace MCGalaxy.Eco {
                 Command.all.Find("newlvl").Use(null, name + " " + preset.x + " " + preset.y + " " + preset.z + " " + preset.type);
                 Player.Message(p, "%aCreating level: '%f" + name + "%a' . . .");
                 
-                Command.all.Find("load").Use(null, name);
-                Thread.Sleep(250);
-                
-                Level level = LevelInfo.Find(name);
+                CmdLoad.LoadLevel(null, name);
+                Level level = LevelInfo.FindExact(name);
                 if (level.permissionbuild > p.Rank) { level.permissionbuild = p.Rank; }
                 if (level.permissionvisit > p.Rank) { level.permissionvisit = p.Rank; }
                 PlayerActions.ChangeMap(p, name);

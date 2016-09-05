@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
+using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
 
@@ -121,18 +122,17 @@ namespace MCGalaxy {
             }
         }
         
-        static void AutoLoadLineProcessor(string key, string value) {
-            key = key.ToLower();
-            if (value == "") value = "0";
+        static void AutoLoadLineProcessor(string name, string phys) {
+            name = name.ToLower();
+            if (phys == "") phys = "0";
 
-            if (key != mainLevel.name) {
-                Command.all.Find("load").Use(null, key + " " + value);
-                Level l = LevelInfo.FindExact(key);
+            if (name != mainLevel.name) {
+                CmdLoad.LoadLevel(null, name, phys);
             } else {
                 try {
-                    int temp = int.Parse(value);
-                    if (temp >= 0 && temp <= 5)
-                        mainLevel.setPhysics(temp);
+                    int physLevel = int.Parse(phys);
+                    if (physLevel >= 0 && physLevel <= 5)
+                        mainLevel.setPhysics(physLevel);
                 } catch {
                     s.Log("Physics variable invalid");
                 }

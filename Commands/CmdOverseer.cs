@@ -47,21 +47,21 @@ namespace MCGalaxy.Commands {
             }
 
             if (cmd == "GO" || cmd == "GOTO") {
-                string mapname = null;
+                string map = null;
                 if (arg == "" || arg == "1") {
-                    mapname = FirstMapName(p);
+                    map = FirstMapName(p);
                 } else {
                     if (!byte.TryParse(arg, out mapNum)) {
                         Help(p); return;
                     }
-                    mapname = p.name.ToLower() + arg;
+                    map = p.name.ToLower() + arg;
                 }
                 
                 Level[] loaded = LevelInfo.Loaded.Items;
-                if (LevelInfo.FindExact(mapname) == null)
-                    Command.all.Find("load").Use(p, mapname);
-                if (LevelInfo.FindExact(mapname) != null)
-                    PlayerActions.ChangeMap(p, mapname);
+                if (LevelInfo.FindExact(map) == null)
+                    CmdLoad.LoadLevel(p, map);
+                if (LevelInfo.FindExact(map) != null)
+                    PlayerActions.ChangeMap(p, map);
             } else if (cmd == "LB" || cmd == "LEVELBLOCK") {
                 string[] lbArgs = message.SplitSpaces(2);
                 string lbArg = lbArgs.Length > 1 ? lbArgs[1] : "";
@@ -124,7 +124,7 @@ namespace MCGalaxy.Commands {
                 Command.all.Find("newlvl").Use(p, level + " " + value);
                 
                 // Set default perbuild permissions
-                Command.all.Find("load").Use(null, level);
+                CmdLoad.LoadLevel(null, level);
                 Level lvl = LevelInfo.FindExact(level);
                 if (lvl == null) return;
                 Command.all.Find("perbuild").Use(null, lvl.name + " +" + p.name);

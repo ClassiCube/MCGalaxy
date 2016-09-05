@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using MCGalaxy.Commands.World;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Games
@@ -140,7 +141,7 @@ namespace MCGalaxy.Games
             if (File.Exists("levels/ctf.lvl"))
                 File.Delete("levels/ctf.lvl");
             File.Copy("CTF/maps/" + mapname + ".lvl", "levels/ctf.lvl");
-            Command.all.Find("load").Use(null, "ctf");
+            CmdLoad.LoadLevel(null, "ctf");
             mainlevel = LevelInfo.FindExact("ctf");
         }
         

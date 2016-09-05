@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands.World {    
-    public sealed class CmdGoto : Command {        
+namespace MCGalaxy.Commands.World {
+    public sealed class CmdGoto : Command {
         public override string name { get { return "goto"; } }
         public override string shortcut { get { return "g"; } }
         public override string type { get { return CommandTypes.World; } }
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands.World {
         
         static bool GotoOfflineLevel(Player p, string message) {
             if (Level.CheckLoadOnGoto(message)) {
-                Command.all.Find("load").Use(p, message);
+        		CmdLoad.LoadLevel(p, message, "0", true);
                 Level lvl = LevelInfo.Find(message);
                 if (lvl != null) {
                     return GoToLevel(p, lvl, message);

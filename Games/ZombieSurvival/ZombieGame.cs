@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Threading;
-using MCGalaxy.Commands;
+using MCGalaxy.Commands.World;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Games {
@@ -51,7 +51,7 @@ namespace MCGalaxy.Games {
                 
                 CurLevelName = GetRandomLevel(new Random(), levels);
                 CurLevel = LevelInfo.FindExact(CurLevelName) 
-                    ?? CmdLoad.LoadLevel(null, CurLevelName, "0");
+                    ?? CmdLoad.LoadLevel(null, CurLevelName);
                 if (CurLevel == null) return false;
             } else {
                 CurLevelName = level.name;
@@ -138,7 +138,7 @@ namespace MCGalaxy.Games {
             
             CurLevelName = next;
             QueuedLevel = null;
-            Command.all.Find("load").Use(null, next.ToLower() + " 0");
+            CmdLoad.LoadLevel(null, next);
             CurLevel = LevelInfo.Find(next);
             if (ZombieGame.SetMainLevel)
                 Server.mainLevel = CurLevel;
