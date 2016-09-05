@@ -1,7 +1,7 @@
 /*
     Copyright 2011 MCForge
         
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -42,32 +42,35 @@ namespace MCGalaxy.Commands {
                 return;
             }
             
-            Player pl = PlayerInfo.FindMatches(p, message);
-            if (pl == null) return;
+            Player who = PlayerInfo.FindMatches(p, message);
+            if (who == null) return;
+            if (p != null && who.Rank >= p.Rank) { 
+                MessageTooHighRank(p, "xjail", false); return;
+            }
 
             Command spawn = Command.all.Find("spawn");
             Command freeze = Command.all.Find("freeze");
             Command mute = Command.all.Find("mute");
             
-            string data = Server.jailed.Find(pl.name);
+            string data = Server.jailed.Find(who.name);
             if (data == null) {
-                if (!pl.muted) mute.Use(p, message);
-                if (!pl.frozen) freeze.Use(p, message);
+                if (!who.muted) mute.Use(p, message);
+                if (!who.frozen) freeze.Use(p, message);
                 
-                PlayerActions.ChangeMap(pl, xjailMap);
-                pl.BlockUntilLoad(10);
+                PlayerActions.ChangeMap(who, xjailMap);
+                who.BlockUntilLoad(10);
                 jail.Use(p, message);
-                Chat.MessageAll("{0} %Swas XJailed!", pl.ColoredName);
+                Chat.MessageAll("{0} %Swas XJailed!", who.ColoredName);
             } else {
-                if (pl.muted) mute.Use(p, message);
-                if (pl.frozen) freeze.Use(p, message);
+                if (who.muted) mute.Use(p, message);
+                if (who.frozen) freeze.Use(p, message);
                 
-                PlayerActions.ChangeMap(pl, Server.mainLevel.name);
-                pl.BlockUntilLoad(10);
+                PlayerActions.ChangeMap(who, Server.mainLevel.name);
+                who.BlockUntilLoad(10);
                 
                 jail.Use(p, message);
-                spawn.Use(pl, "");
-                Chat.MessageAll("{0} %Swas released from XJail!", pl.ColoredName);
+                spawn.Use(who, "");
+                Chat.MessageAll("{0} %Swas released from XJail!", who.ColoredName);
             }
         }
         
