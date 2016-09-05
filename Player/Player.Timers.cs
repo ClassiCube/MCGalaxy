@@ -60,8 +60,8 @@ namespace MCGalaxy {
                 if (group.commands.Contains("inbox") && Database.TableExists("Inbox" + name) ) {
                     //safe against SQL injections because no user input is given here
                     using (DataTable table = Database.Backend.GetAllRows("Inbox" + name, "*")) {
-                    	if (table.Rows.Count > 0)
-                    	    SendMessage("You have &a" + table.Rows.Count + " %Smessages in /inbox");
+                        if (table.Rows.Count > 0)
+                            SendMessage("You have &a" + table.Rows.Count + " %Smessages in /inbox");
                     }
                 }
             } catch {
@@ -107,11 +107,12 @@ namespace MCGalaxy {
             } else {
                 if (Moved()) LastAction = DateTime.UtcNow;
 
-                if (LastAction.AddMinutes(Server.afkminutes) < DateTime.UtcNow) {
-                    if (name != null && !String.IsNullOrEmpty(name.Trim()) && !hidden) {
-                        CmdAfk.ToggleAfk(this, "auto: Not moved for " + Server.afkminutes + " minutes");
-                        AutoAfk = true;
-                    }
+                DateTime lastAction = LastAction;
+                if (LastAction.AddMinutes(Server.afkminutes) < DateTime.UtcNow
+                    && !String.IsNullOrEmpty(name)) {
+                    CmdAfk.ToggleAfk(this, "auto: Not moved for " + Server.afkminutes + " minutes");
+                    AutoAfk = true;
+                    LastAction = lastAction;
                 }
             }
         }

@@ -156,9 +156,9 @@ namespace MCGalaxy {
             if (!Server.irc ||!IsConnected()) return;
             string msg = null;
             
-            if (action == PlayerAction.AFK)
+            if (action == PlayerAction.AFK && !p.hidden)
                 msg = p.ColoredName + " %Sis AFK " + message;
-            else if (action == PlayerAction.UnAFK)
+            else if (action == PlayerAction.UnAFK && !p.hidden)
                 msg = p.ColoredName + " %Sis no longer AFK";
             else if (action == PlayerAction.Joker)
                 msg = p.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S";
