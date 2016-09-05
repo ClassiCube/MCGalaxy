@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands {
             ushort[] pos = bot != null ? bot.pos : target.pos;
             byte[] rot = bot != null ? bot.rot : target.rot;
             p.BlockUntilLoad(10);  //Wait for player to spawn in new map
-            p.SendOwnHeadPos(pos[0], pos[1], pos[2], rot[0], 0);
+            p.SendOwnHeadPos(pos[0], pos[1], pos[2], rot[0], rot[1]);
         }
         
         static bool CheckPlayer(Player p, Player target) {

@@ -35,25 +35,35 @@ namespace MCGalaxy {
         }
         
         /// <summary> Queues an action that is asynchronously executed one time, as soon as possible. </summary>
-        public void QueueOnce(Action callback) {
-            EnqueueTask(new SchedulerTask(obj => callback(), null, TimeSpan.Zero, false));
+        public SchedulerTask QueueOnce(Action callback) {
+            return EnqueueTask(new SchedulerTask(obj => callback(), null, TimeSpan.Zero, false));
         }
         
         /// <summary> Queues an action that is asynchronously executed one time, after a certain delay. </summary>
-        public void QueueOnce(Action<SchedulerTask> callback, object state, TimeSpan delay) {
-            EnqueueTask(new SchedulerTask(callback, state, delay, false));
+        public SchedulerTask QueueOnce(Action<SchedulerTask> callback, object state, TimeSpan delay) {
+            return EnqueueTask(new SchedulerTask(callback, state, delay, false));
         }
         
-         /// <summary> Queues an action that is asynchronously executed repeatedly, after a certain delay. </summary>
-        public void QueueRepeat(Action<SchedulerTask> callback, object state, TimeSpan delay) {
-            EnqueueTask(new SchedulerTask(callback, state, delay, true));
+        /// <summary> Queues an action that is asynchronously executed repeatedly, after a certain delay. </summary>
+        public SchedulerTask QueueRepeat(Action<SchedulerTask> callback, object state, TimeSpan delay) {
+            return EnqueueTask(new SchedulerTask(callback, state, delay, true));
         }
         
-        void EnqueueTask(SchedulerTask task) {
+        /// <summary> Cancels a task if it is in the tasks list.
+        /// <remarks> Does not cancel the task if it is currently executing. </remarks>
+        public bool Cancel(SchedulerTask task) {
+            lock (taskLock) {
+                return tasks.Remove(task);
+            }
+        }
+        
+        
+        SchedulerTask EnqueueTask(SchedulerTask task) {
             lock (taskLock) {
                 tasks.Add(task);
                 handle.Set();
             }
+            return task;
         }
 
         void Loop() {
@@ -68,11 +78,8 @@ namespace MCGalaxy {
         SchedulerTask GetNextTask() {
             DateTime now = DateTime.UtcNow;
             lock (taskLock) {
-                for (int i = 0; i < tasks.Count; i++) {
-                    SchedulerTask task = tasks[i];
-                    if (task.NextRun < now) {
-                        tasks.RemoveAt(i); return task;
-                    }
+                foreach (SchedulerTask task in tasks) {
+                    if (task.NextRun < now) return task;
                 }
             }
             return null;
@@ -84,11 +91,13 @@ namespace MCGalaxy {
             } catch (Exception ex) {
                 MCGalaxy.Server.ErrorLog(ex);
             }
-            if (!task.Repeating) return;
             
-            task.NextRun = DateTime.UtcNow.Add(task.Delay);
-            lock (taskLock)
-                tasks.Add(task);
+            if (task.Repeating) {
+                task.NextRun = DateTime.UtcNow.Add(task.Delay);
+            } else {
+                lock (taskLock)
+                    tasks.Remove(task);
+            }
         }
         
         int GetWaitTime() {
@@ -96,9 +105,8 @@ namespace MCGalaxy {
             DateTime now = DateTime.UtcNow;
             
             lock (taskLock) {
-                for (int i = 0; i < tasks.Count; i++) {
-                    SchedulerTask task = tasks[i];
-                    int remaining = (int)(task.NextRun - now).TotalMilliseconds;                    
+                foreach (SchedulerTask task in tasks) {
+                    int remaining = (int)(task.NextRun - now).TotalMilliseconds;
                     // minimum wait time is 10 milliseconds
                     remaining = Math.Max(10, remaining);
                     wait = Math.Min(wait, remaining);
@@ -121,7 +129,7 @@ namespace MCGalaxy {
         /// <summary> Whether this task should continue repeating. </summary>
         public bool Repeating;
         
-        public SchedulerTask(Action<SchedulerTask> callback, object state, 
+        public SchedulerTask(Action<SchedulerTask> callback, object state,
                              TimeSpan delay, bool repeating) {
             Callback = callback;
             State = state;
