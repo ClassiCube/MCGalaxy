@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
             if (message != "") { Help(p); return; }
             
             Player.Message(p, "Server's name: &b{0}%S", Server.name);
-            Player.Message(p, "&a{0}%S players total. (&a{1}%S online, &8{2} banned%S)",
+            Player.Message(p, "&a{0} %Splayers total. (&a{1} %Sonline, &8{2} banned%S)",
                            GetPlayerCount(), Player.number, Player.GetBannedCount());
             Player.Message(p, "&a{0} %Slevels currently loaded. Currency is &3{1}%S.",
                            LevelInfo.Loaded.Count, Server.moneys);
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
             TimeSpan up = DateTime.UtcNow - Server.StartTime;
             Player.Message(p, "Been up for &b" + up.Shorten(true) +
                            "%S, running &bMCGalaxy &a" + Server.VersionString +
-                           "%S (based on &bMCForge %Sand &bMCLawl%S).");
+                           " %S(based on &bMCForge %Sand &bMCLawl%S).");
 
             Player.Message(p, "Player positions are updated every &b"
                            + Server.updateTimer.Interval + " %Smilliseconds.");
@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands {
             int mem = (int)Math.Round(proc.PrivateMemorySize64 / 1048576.0);
             double cpu = Server.ProcessCounter.NextValue(), all = Server.PCCounter.NextValue();
             Player.Message(p, "&a{0}% %SCPU usage, &a{1}% %Sby all processes", cpu.ToString("F2"), all.ToString("F2"));
-            Player.Message(p, "&a{0}%S threads, using &a{1}%S megabytes of memory", threads, mem);
+            Player.Message(p, "&a{0} %Sthreads, using &a{1} %Smegabytes of memory", threads, mem);
         }
         
         public override void Help(Player p) {

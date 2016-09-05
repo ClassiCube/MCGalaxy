@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands {
             }
 
             int width = maxX - minX + 1, height = maxY - minY + 1, length = maxZ - minZ + 1;
-            Player.Message(p, "Measuring from &a({0}, {1}, {2})%S to &a({3}, {4}, {5})", 
+            Player.Message(p, "Measuring from &a({0}, {1}, {2}) %Sto &a({3}, {4}, {5})", 
                            minX, minY, minZ, maxX, maxY, maxZ);
             Player.Message(p, "Area is {0} wide, {1} high, {2} long. Volume is {3} blocks.", 
                            width, height, length, width * height * length);

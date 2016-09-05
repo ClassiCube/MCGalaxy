@@ -29,10 +29,10 @@ namespace MCGalaxy.Commands
         public override void Use(Player p, string message) {
             if (message == "" && Server.updateTimer.Interval > 1000) {
                 Server.PositionInterval = 100;
-                Chat.MessageAll("&dLow lag %Sturned &cOFF %S- positions update every &b100%S ms.");
+                Chat.MessageAll("&dLow lag %Sturned &cOFF %S- positions update every &b100 %Sms.");
             } else if (message == "") {
                 Server.PositionInterval = 2000;
-                Chat.MessageAll("&dLow lag %Sturned &aON %S- positions update every &b2000%S ms.");
+                Chat.MessageAll("&dLow lag %Sturned &aON %S- positions update every &b2000 %Sms.");
             } else {
                 int interval;
                 if (!int.TryParse(message, out interval)) {

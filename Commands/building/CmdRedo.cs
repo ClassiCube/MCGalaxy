@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Building {
         static void PerformRedo(Player p) {
             UndoDrawOpEntry[] entries = p.DrawOps.Items;
             if (entries.Length == 0) {
-                Player.Message(p, "You have no %T/undo%S or %T/undo <seconds>%S to redo."); return;
+                Player.Message(p, "You have no %T/undo %Sor %T/undo [seconds] %Sto redo."); return;
             }
             
             for (int i = entries.Length - 1; i >= 0; i--) {
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "Redo performed.");
                 return;
             }          
-            Player.Message(p, "No %T/undo%S or %T/undo <seconds>%S calls were " +
+            Player.Message(p, "No %T/undo %Sor %T/undo [seconds] %Scalls were " +
                                "found in the last 200 draw operations.");
         }
 

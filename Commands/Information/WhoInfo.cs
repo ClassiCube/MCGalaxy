@@ -52,10 +52,10 @@ namespace MCGalaxy.Commands {
                            who.TotalPlaced, who.TotalDeleted, who.TotalDrawn);
 
             if (who.TimeOnline.Ticks > 0)
-                Player.Message(p, "  Spent &a{0}%S on the server, &a{1}%S this session", 
+                Player.Message(p, "  Spent &a{0} %Son the server, &a{1} %Sthis session", 
                                who.TimeSpent.Shorten(), who.TimeOnline.Shorten());
             else
-                Player.Message(p, "  Spent &a{0}%S on the server", who.TimeSpent.Shorten());
+                Player.Message(p, "  Spent &a{0} %Son the server", who.TimeSpent.Shorten());
             
             if (who.Last.Ticks > 0)
                 Player.Message(p, "  First login &a" + who.First.ToString("yyyy-MM-dd")

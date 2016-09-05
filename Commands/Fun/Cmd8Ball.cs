@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands {
             }
            
             string final = builder.ToString();
-            Chat.MessageAll("{0}%S asked the &b8-Ball: &f{1}", p.ColoredName, message);
+            Chat.MessageAll("{0} %Sasked the &b8-Ball: &f{1}", p.ColoredName, message);
             Server.MainScheduler.QueueOnce(EightBallCallback, final, delay);
         }
         

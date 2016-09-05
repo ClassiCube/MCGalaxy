@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             Player.Message(p, "Unable to undo any draw operations, as all of the " +
-                               "past 50 draw operations are %T/undo%S or %T/undo <seconds>.");
+                               "past 50 draw operations are %T/undo %Sor %T/undo [seconds].");
             Player.Message(p, "Try using %T/undo <seconds> %Sinstead.");
         }
         
@@ -157,7 +157,7 @@ namespace MCGalaxy.Commands.Building {
             DrawOp.DoDrawOp(op, null, p, marks);
 
             if (op.found) {
-                Chat.MessageAll("{0}%S's actions for the past &b{1} %S were undone.", 
+                Chat.MessageAll("{0}%S's actions for the past &b{1} %Swere undone.", 
                                 PlayerInfo.GetColoredName(p, whoName), delta.Shorten(true));
                 Server.s.Log(whoName + "'s actions for the past " + delta.Shorten(true) + " were undone.");
                 if (p != null) p.level.Save(true);

@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands {
             lvl.setPhysics(state);
             if (state == 0) lvl.ClearPhysics();
             string stateDesc = states[state];
-            lvl.ChatLevel("Physics are now " + stateDesc + "%S on &b" + lvl.name + "%S.");
+            lvl.ChatLevel("Physics are now " + stateDesc + " %Son &b" + lvl.name + "%S.");
             
             stateDesc = stateDesc.Substring( 2 );
             string logInfo = "Physics are now " + stateDesc + " on " + lvl.name + ".";

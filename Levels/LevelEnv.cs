@@ -24,7 +24,7 @@ namespace MCGalaxy {
         public static void SetWeather(Player p, Level lvl, string value) {
             byte weather = 255;
             if (IsResetString(value)) {
-                Player.Message(p, "Reset weather for {0}%S to 0 (%SSun)", lvl.name);
+                Player.Message(p, "Reset weather for {0} %Sto 0 (%SSun)", lvl.name);
                 weather = 0;
             } else {
                 if (byte.TryParse(value, out weather)) {
@@ -51,7 +51,7 @@ namespace MCGalaxy {
         public static void SetBlock(Player p, string value, EnvProp prop,
                                     string variable, byte defValue, ref int target) {
             if (IsResetString(value)) {
-                Player.Message(p, "Reset {0} for {1}%S to normal", variable, p.level.name);
+                Player.Message(p, "Reset {0} for {1} %Sto normal", variable, p.level.name);
                 target = defValue;
             } else {
                 if (!CheckBlock(p, value, variable, ref target)) return;
@@ -62,7 +62,7 @@ namespace MCGalaxy {
         public static void SetShort(Player p, string value, EnvProp prop,
                                     string variable, short defValue, ref int target) {
             if (IsResetString(value)) {
-                Player.Message(p, "Reset {0} for {1}%S to normal", variable, p.level.name);
+                Player.Message(p, "Reset {0} for {1} %Sto normal", variable, p.level.name);
                 target = defValue;
             } else {
                 if (!CheckShort(p, value, variable, ref target)) return;
@@ -73,7 +73,7 @@ namespace MCGalaxy {
         public static void SetFloat(Player p, string value, EnvProp prop, int scale, string variable,
                                     short defValue, ref int target, int min, int max) {
             if (IsResetString(value)) {
-                Player.Message(p, "Reset {0} for {0}%S to normal", variable, p.level.name);
+                Player.Message(p, "Reset {0} for {0} %Sto normal", variable, p.level.name);
                 target = defValue;
             } else {
                 if (!CheckFloat(p, value, variable, ref target, scale, min, max)) return;
@@ -83,11 +83,11 @@ namespace MCGalaxy {
         
         public static void SetColor(Player p, string value, byte envType, string envTypeName, ref string target) {
             if (IsResetString(value)) {
-                Player.Message(p, "Reset {0} color for {1}%S to normal", envTypeName, p.level.name);
+                Player.Message(p, "Reset {0} color for {1} %Sto normal", envTypeName, p.level.name);
                 target = "";
             } else {
 			    if (!Utils.CheckHex(p, ref value)) return;
-                Player.Message(p, "Set {0} color for {1}%S to #{2}", envTypeName, p.level.name, value);
+                Player.Message(p, "Set {0} color for {1} %Sto #{2}", envTypeName, p.level.name, value);
                 target = value;
             }
             SendEnvColorPackets(p, envType, value);
@@ -106,7 +106,7 @@ namespace MCGalaxy {
                 Player.Message(p, "Env: Cannot use {0} for {1}.", block, variable);
             } else {
             	modify = block == Block.custom_block ? extBlock : (byte)block;
-                Player.Message(p, "Set {0} for {1}%S to {2}", variable, p.level.name, modify);
+                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.name, modify);
                 return true;
             }
             return false;
@@ -119,7 +119,7 @@ namespace MCGalaxy {
                 return false;
             } else {
                 modify = value;
-                Player.Message(p, "Set {0} for {1}%S to {2}", variable, p.level.name, value);
+                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.name, value);
                 return true;
             }
         }
@@ -138,7 +138,7 @@ namespace MCGalaxy {
                 return false;
             } else {
                 modify = (int)(value * scale);
-                Player.Message(p, "Set {0} for {1}%S to {2}", variable, p.level.name, value.ToString("F2"));
+                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.name, value.ToString("F2"));
                 return true;
             }
         }

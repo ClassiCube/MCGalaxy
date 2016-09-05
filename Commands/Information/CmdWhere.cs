@@ -36,9 +36,9 @@ namespace MCGalaxy.Commands {
             }
             
             short x = (short)pl.pos[0], y = (short)pl.pos[1], z = (short)pl.pos[2];
-            Player.Message(p, "{0}%S is on {1} (X:&b{2}%S Y:&b{3}%S Z:&b{4}%S)",
+            Player.Message(p, "{0} %Sis on {1} (X:&b{2} %SY:&b{3} %SZ:&b{4}%S)",
                            pl.ColoredName, pl.level.name, x >> 5, (y - 51) >> 5, z >> 5);
-            Player.Message(p, "Yaw: &b{0}%S degrees, Pitch: &b{1}%S degrees",
+            Player.Message(p, "Yaw: &b{0} %Sdegrees, Pitch: &b{1} %Sdegrees",
                            (int)(p.rot[0] * 360 / 256), (int)(p.rot[1] * 360 / 256));
         }      
 

@@ -86,9 +86,9 @@ namespace MCGalaxy.Commands.Moderation {
             Server.TempRanks.Append(data);
             
             Command.all.Find("setrank").Use(null, target + " " + group.name + " assigning temp rank");
-            Player.Message(p, "Temp ranked {0} to {1}%S for {2}", target, group.ColoredName, delta.Shorten());
+            Player.Message(p, "Temp ranked {0} to {1} %Sfor {2}", target, group.ColoredName, delta.Shorten());
             if (who != null)
-                Player.Message(who, "You have been temp ranked to {0}%S for {1}", group.ColoredName, delta.Shorten());
+                Player.Message(who, "You have been temp ranked to {0} %Sfor {1}", group.ColoredName, delta.Shorten());
         }
         
         static void Delete(Player p, string name) {
@@ -153,7 +153,7 @@ namespace MCGalaxy.Commands.Moderation {
             TimeSpan expireDelta = expiry - DateTime.Now;
             
             Player.Message(p, "Temp rank information for {0}:", args[0]);
-            Player.Message(p, "  From {0} %Sto {1}%S, by {2} &a{3}%S ago, expires in &a{4}",
+            Player.Message(p, "  From {0} %Sto {1}%S, by {2} &a{3} %Sago, expires in &a{4}",
                            oldCol + oldrank, tempCol + temprank, tempranker,
                            delta.Shorten(), expireDelta.Shorten());
         }

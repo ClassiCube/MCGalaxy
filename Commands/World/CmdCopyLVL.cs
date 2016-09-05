@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.World {
             try {
                 LevelActions.CopyLevel(src, dst);
             } catch (System.IO.IOException) {
-                Player.Message(p, "The level &c" + dst + " %S already exists!"); return;
+                Player.Message(p, "The level &c" + dst + " %Salready exists!"); return;
             }
             Player.Message(p, "The level &a" + src + " %Shas been copied to &a" + dst + ".");
         }

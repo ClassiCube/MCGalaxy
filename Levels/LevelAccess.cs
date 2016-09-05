@@ -95,7 +95,7 @@ namespace MCGalaxy {
             if (p.Rank > Max && !p.group.CanExecute(maxCmd)) {
                 Group grp = Group.findPerm(Max);
                 string grpName = grp == null ? "&f" + Max : grp.ColoredName;
-                Player.Message(p, "Only {2}%S and below may {1} {0}.", name, action, grpName); return false;
+                Player.Message(p, "Only {2} %Sand below may {1} {0}.", name, action, grpName); return false;
             }
             return true;
         }
@@ -145,7 +145,7 @@ namespace MCGalaxy {
             Server.s.Log(lvl.name + " " + target + " permission changed to " + grp.Permission + ".");
             Chat.MessageLevel(lvl, target + " permission changed to " + grp.ColoredName + "%S.");
             if (p == null || p.level != lvl)
-                Player.Message(p, "{0} permission changed to {1}%S on {2}.", target, grp.ColoredName, lvl.name);
+                Player.Message(p, "{0} permission changed to {1} %Son {2}.", target, grp.ColoredName, lvl.name);
         }
         
         internal void UpdateAllowBuild() {

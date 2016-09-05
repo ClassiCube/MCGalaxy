@@ -319,7 +319,7 @@ namespace MCGalaxy.Games {
                 foreach (Player pl in alive) {
                     if (pl.Game.PledgeSurvive) {
                         pl.SendMessage("You received &a5 %3" + Server.moneys +
-                                       "%S for successfully pledging that you would survive.");
+                                       " %Sfor successfully pledging that you would survive.");
                         pl.SetMoney(pl.money + 5);
                     }
                     

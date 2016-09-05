@@ -99,11 +99,11 @@ namespace MCGalaxy.Commands {
             if (list1) {
                 Player.Message(p, "Available shortcuts (1):");
                 Player.Message(p, cmds.ToString(2, cmds.Length - 2));
-                Player.Message(p, "Type %T/cmds shortcuts 2%S to view the rest of the list ");
+                Player.Message(p, "Type %T/cmds shortcuts 2 %Sto view the rest of the list ");
             } else {
                 Player.Message(p, "Available shortcuts (2):");
                 Player.Message(p, cmds.ToString(2, cmds.Length - 2));
-                Player.Message(p, "Type %T/cmds shortcuts 1%S to view the rest of the list ");
+                Player.Message(p, "Type %T/cmds shortcuts 1 %Sto view the rest of the list ");
             }
         }
         
