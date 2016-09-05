@@ -54,7 +54,7 @@ namespace MCGalaxy {
             sql.WriteLine("-- --------------------------------------------------------");
             sql.WriteLine("-- Table structure for table `{0}`", tableName);
             sql.WriteLine();
-            List<string[]> schema = WriteTableSchema(tableName, sql);
+            WriteTableSchema(tableName, sql);
             
             using (DataTable data = Database.Fill("SELECT * FROM `" + tableName + "`")) {
                 if (data.Rows.Count == 0) {
@@ -67,16 +67,20 @@ namespace MCGalaxy {
                 sql.WriteLine("-- Dumping data for table `{0}`", tableName);
                 sql.WriteLine("--");
                 sql.WriteLine();
+                
                 List<DataColumn> allCols = new List<DataColumn>();
-                foreach (DataColumn col in data.Columns)
+                List<string> colNames = new List<string>();
+                foreach (DataColumn col in data.Columns) {
                     allCols.Add(col);
+                    colNames.Add(col.ColumnName);
+                }
                 
                 foreach (DataRow row in data.Rows) { //We rely on the correct datatype being given here.
                     sql.WriteLine();
                     sql.Write("INSERT INTO `{0}` (`", tableName);
-                    foreach (string[] rParams in schema) {
-                        sql.Write(rParams[0]);
-                        sql.Write((schema[schema.Count - 1].Equals(rParams) ? "`) VALUES" : "`, `"));
+                    for (int col = 0; col < colNames.Count; col++) {
+                        string suffix = col < allCols.Count - 1 ? "`, `" : "`) VALUES";
+                        sql.Write(colNames[col] + suffix);
                     }
 
                     sql.WriteLine();
@@ -106,15 +110,13 @@ namespace MCGalaxy {
             }
         }
         
-        static List<string[]> WriteTableSchema(string tableName, StreamWriter sql) {
-            List<string[]> tableSchema = new List<string[]>();
+        static void WriteTableSchema(string tableName, StreamWriter sql) {
             if (Server.useMySQL) {
-                string[] rowParams;
-                string pri;
+                string pri = "";
                 sql.WriteLine("CREATE TABLE IF NOT EXISTS `{0}` (", tableName);
+                
                 using (DataTable schema = Database.Fill("DESCRIBE `" + tableName + "`")) {
-                    rowParams = new string[schema.Columns.Count];
-                    pri = "";
+                	string[] rowParams = new string[schema.Columns.Count];
                     foreach (DataRow row in schema.Rows) {
                         //Save the info contained to file
                         List<string> tmp = new List<string>();
@@ -125,7 +127,6 @@ namespace MCGalaxy {
                         rowParams[2] = (rowParams[2].ToLower().Equals("no") ? "NOT " : "DEFAULT ") + "NULL";
                         pri += (rowParams[3].ToLower().Equals("pri") ? rowParams[0] + ";" : "");
                         sql.WriteLine("`{0}` {1} {2}" + (rowParams[5].Equals("") ? "" : " {5}") + (pri.Equals("") && row == schema.Rows[schema.Rows.Count - 1] ? "" : ","), rowParams);
-                        tableSchema.Add(rowParams);
                     }
                 }
                 
@@ -151,36 +152,10 @@ namespace MCGalaxy {
                     	string tableSQLString = row[0].ToString();
                         sql.WriteLine(tableSQLString.Replace(" " + tableName, " `" + tableName + "`").Replace("CREATE TABLE `" + tableName + "`", "CREATE TABLE IF NOT EXISTS `" + tableName + "`") + ";");
                         //We parse this ourselves to find the actual types.
-                        tableSchema = getSchema(tableSQLString);
                     }
                 }
             }
             sql.WriteLine();
-            return tableSchema;
-        }
-
-        static List<string[]> getSchema(string tableSQLString) {
-            // All SQL for creating tables looks like "CREATE TABLE [IF NOT EXISTS] <TableName> (<ColumnDef>[, ... [, PRIMARY KEY (<ColumnName>[, ...])]])
-            // <ColumnDef> = <name> <type> [[NOT|DEFAULT] NULL] [PRIMARY KEY] [AUTO_INCREMENT]
-            List<string[]> schema = new List<string[]>();
-            int foundStart = tableSQLString.IndexOf("(") + 1;
-            int foundLength = tableSQLString.LastIndexOf(")") - foundStart;
-            tableSQLString = tableSQLString.Substring(foundStart, foundLength);
-            
-            // Now we have everything inside the parenthisies.
-            string[] column = tableSQLString.Split(',');
-            foreach (string col in column) {
-                if (!col.ToUpper().StartsWith("PRIMARY KEY")) {
-                    bool autoInc = col.IndexOf("AUTOINCREMENT") >= 0 || col.IndexOf("AUTO_INCREMENT") >= 0;
-                    string[] split = col.TrimStart('\n', '\r', '\t').Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    //Just to make it the same as the MySQL schema.
-                    schema.Add(new string[] { split[0].Trim('`'), split[1].Trim('\t', '`'),
-                                   ( split.Length > 2 ? (split[2].Trim('\t', '`').ToUpper() == "NOT" ? "NOT NULL" : "DEFAULT NULL") : ""),
-                                   ( split.Length > 2 ? (split[split.Length - 2].Trim('\t', '`').ToUpper() == "PRIMARY" && split[split.Length - 1].Trim('\t', '`').ToUpper() == "KEY" ? "PRI" : "") : ""),
-                                   "NULL", autoInc ? "AUTO_INCREMENT" : ""});
-                }
-            }
-            return schema;
         }
 
         static List<string> GetTables() {
