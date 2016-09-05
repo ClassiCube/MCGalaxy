@@ -90,9 +90,9 @@ namespace MCGalaxy {
                         	sql.Write("'{0:yyyy-MM-dd HH:mm:ss.ffff}'", (DateTime)row[col]);
                         } else if (type == typeof(bool)) {
                         	sql.Write((bool)row[col] ? "1" : "0");
-                        } else if (type == typeof(string)) { // Requires ''
+                        } else if (type == typeof(string)) {
                         	string value = row[col].ToString();
-                        	if (value.IndexOf(' ') >= 0)
+                        	if (value.IndexOf('\'') >= 0) // escape '
                         	    value = value.Replace("'", "''");
                         	sql.Write("'{0}'", value);
                         } else {
