@@ -79,7 +79,8 @@ namespace MCGalaxy.Commands.Building {
         }
 
         
-        internal static int GetBlock(Player p, string msg, out byte extBlock, bool checkPlacePerm = true) {
+        public static int GetBlock(Player p, string msg, out byte extBlock, 
+                                   bool checkPlacePerm = true) {
             byte block = Block.Byte(msg);
             extBlock = 0;
             if (msg.CaselessEq("skip") || msg.CaselessEq("none")) return Block.Zero;

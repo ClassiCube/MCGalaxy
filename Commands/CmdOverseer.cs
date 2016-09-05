@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands {
                 
                 Level[] loaded = LevelInfo.Loaded.Items;
                 if (LevelInfo.FindExact(map) == null)
-                    CmdLoad.LoadLevel(p, map, Server.AutoLoad);
+                    CmdLoad.LoadLevel(p, map, "0", Server.AutoLoad);
                 if (LevelInfo.FindExact(map) != null)
                     PlayerActions.ChangeMap(p, map);
             } else if (cmd == "LB" || cmd == "LEVELBLOCK") {
