@@ -79,7 +79,6 @@ namespace MCGalaxy.Gui {
                     Console.Title = Server.name + " - MCGalaxy " + Server.Version;
                     MCGalaxy.Gui.App.usingConsole = true;
                     ConsoleLoop();
-                    //Application.Run();
                 } else {
                     IntPtr hConsole = GetConsoleWindow();
                     if (IntPtr.Zero != hConsole)

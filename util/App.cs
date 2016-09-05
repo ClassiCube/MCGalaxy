@@ -186,20 +186,18 @@ namespace MCGalaxy.Gui
         
         static void ShutdownThread(bool restarting, string msg) {
             saveAll(restarting, msg);
-            if (restarting) {
-                if (!usingConsole) {
-                    Process.Start(parent);
-                    Environment.Exit(0);
-                } else {
-                    Process.Start(Application.ExecutablePath);
-                    Application.Exit();
-                }
-            } else {
-                Application.Exit();
-                if (usingConsole)
-                    Process.GetCurrentProcess().Kill();
-                Environment.Exit(0);
-            }
+            if (restarting) StartProcess();
+            ExitProcess();
+        }
+        
+        static void StartProcess() {
+            if (usingConsole) Process.Start(parent);
+            else Process.Start(Application.ExecutablePath);
+        }
+        
+        static void ExitProcess() {
+            if (!usingConsole) Application.Exit();
+            Environment.Exit(0);
         }
 
         public static void saveAll(bool restarting, string msg) {

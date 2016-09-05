@@ -288,10 +288,8 @@ namespace MCGalaxy.Gui {
                 notifyIcon1.Dispose();
             }
             if (Server.shuttingDown || MessageBox.Show("Really Shutdown the Server? All Connections will break!", "Exit", MessageBoxButtons.OKCancel) == DialogResult.OK) {
-                if (!Server.shuttingDown) {
-                    MCGalaxy.Gui.App.ExitProgram(false);
-                    notifyIcon1.Dispose();
-                }
+                if (!Server.shuttingDown) MCGalaxy.Gui.App.ExitProgram(false);
+        		notifyIcon1.Dispose();
             } else {
                 // Prevents form from closing when user clicks the X and then hits 'cancel'
                 e.Cancel = true;
