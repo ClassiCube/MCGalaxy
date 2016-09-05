@@ -31,10 +31,10 @@ namespace MCGalaxy.Commands.Moderation {
             Player who = PlayerInfo.Find(args[0]);
             string name = who == null ? args[0] : who.name;
             string reason = args.Length > 1 ? args[1] : "(none given)";
-            Unban(p, name, who, reason);
+            Unban(p, name, reason);
         }
         
-        void Unban(Player p, string name, Player who, string reason) {
+        void Unban(Player p, string name, string reason) {
             string srcFull = p == null ? "(console)" : p.ColoredName + "%S";
             string src = p == null ? "(console)" : p.name;
             Group banned = Group.findPerm(LevelPermission.Banned);

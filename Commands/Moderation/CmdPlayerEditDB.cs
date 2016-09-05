@@ -32,12 +32,10 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces(3);
-            Player who = PlayerInfo.Find(args[0]);
-            if (who == null) {
-                string target = PlayerInfo.FindOfflineNameMatches(p, args[0]);
-                if (target == null) return;
-                args[0] = target;
-            }
+            args[0] = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
+            
+            if (args[0] == null) return;
+            Player who = PlayerInfo.FindExact(args[0]);
             if (args.Length == 1) {
                 Player.Message(p, Colors.red + "You must specify a type to modify.");
                 MessageValidTypes(p); return;
