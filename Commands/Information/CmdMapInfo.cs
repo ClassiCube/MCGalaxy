@@ -107,10 +107,12 @@ namespace MCGalaxy.Commands {
             if (String.IsNullOrEmpty(data.RealmOwner))
                 data.RealmOwner = GetRealmMapOwner(data.Name);
             if (String.IsNullOrEmpty(data.RealmOwner)) return;
+            
+            string[] owners = data.RealmOwner.Replace(" ", "").Split(',');
             Player.Message(p, "  This map is a personal realm of {0}",
-                           PlayerInfo.GetColoredName(p, data.RealmOwner));
+                           owners.Join(n => PlayerInfo.GetColoredName(p, n)));
         }
-        
+   
         static string GetRealmMapOwner(string lvlName) {
             bool plus = Server.ClassicubeAccountPlus;
             // Early out when accounts have + and map doesn't.

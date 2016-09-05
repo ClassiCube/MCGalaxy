@@ -338,10 +338,9 @@ namespace MCGalaxy.Commands {
             return p.name.ToLower();
         }
         
-        static char[] splitChars = new [] { ',' };
         static bool OwnsMap(Player p, Level lvl) {
             if (lvl.name.CaselessStarts(p.name)) return true;
-            string[] owners = lvl.RealmOwner.Replace(" ", "").Split(splitChars);
+            string[] owners = lvl.RealmOwner.Replace(" ", "").Split(',');
             
             foreach (string owner in owners) {
                 if (owner.CaselessEq(p.name)) return true;
