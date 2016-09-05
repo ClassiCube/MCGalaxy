@@ -174,49 +174,38 @@ namespace MCGalaxy.Gui
             }
         }
 
-        public static void ExitProgram(bool AutoRestart) {
-            Server.restarting = AutoRestart;
+        public static void ExitProgram(bool restarting) { ExitProgram(restarting, ""); }        
+        public static void ExitProgram(bool restarting, string msg) {
+            Server.restarting = restarting;
             Server.shuttingDown = true;
-            Server.Exit(AutoRestart);
-
-            new Thread(new ThreadStart(delegate {
-                /*try
-                {
-                    if (MCGalaxy.Gui.Window.thisWindow.notifyIcon1 != null)
-                    {
-                        MCGalaxy.Gui.Window.thisWindow.notifyIcon1.Icon = null;
-                        MCGalaxy.Gui.Window.thisWindow.notifyIcon1.Visible = false;
-                        MCGalaxy.Gui.Window.thisWindow.notifyIcon1.Dispose();
-                    }
-                }
-                catch { }
-                */
-                if (AutoRestart) {
-                    saveAll(true);
-
-                    if (Server.listen != null) Server.listen.Close();
-                    if (!usingConsole) {
-                        Process.Start(parent);
-                        Environment.Exit(0);
-                    } else {
-                        Process.Start(Application.ExecutablePath);
-                        Application.Exit();
-                    }
-                } else {
-                    saveAll(false);
-                    Application.Exit();
-                    if (usingConsole)
-                    	Process.GetCurrentProcess().Kill();
+            if (msg == "")
+                msg = restarting ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage;
+            Server.Exit(restarting, msg);
+            new Thread(() => ShutdownThread(restarting, msg)).Start();
+        }
+        
+        static void ShutdownThread(bool restarting, string msg) {
+            saveAll(restarting, msg);
+            if (restarting) {
+                if (!usingConsole) {
+                    Process.Start(parent);
                     Environment.Exit(0);
+                } else {
+                    Process.Start(Application.ExecutablePath);
+                    Application.Exit();
                 }
-            })).Start();
+            } else {
+                Application.Exit();
+                if (usingConsole)
+                    Process.GetCurrentProcess().Kill();
+                Environment.Exit(0);
+            }
         }
 
-        public static void saveAll(bool restarting) {
+        public static void saveAll(bool restarting, string msg) {
             try {
                 Player[] players = PlayerInfo.Online.Items; 
                 foreach (Player p in players) {
-                    string msg = restarting ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage;
                     p.Leave(msg);
                 }
             } catch (Exception ex) { 

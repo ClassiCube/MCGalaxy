@@ -233,7 +233,7 @@ namespace MCGalaxy {
         #endregion
         #region == DISCONNECTING ==
         
-        public void Disconnect() { LeaveServer("Disconnected", PlayerDB.GetLogoutMessage(this)); }
+        public void Disconnect() { LeaveServer("disconnected", PlayerDB.GetLogoutMessage(this)); }
         public void Kick(string kickString) { LeaveServer(kickString, null); }
         public void Kick(string kickString, bool sync = false) { LeaveServer(kickString, null, sync); }
         public void Leave(string discMsg, bool sync = false) { LeaveServer(discMsg, discMsg, sync); }

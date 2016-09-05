@@ -276,8 +276,7 @@ namespace MCGalaxy {
 
         }
 
-        public static void Exit(bool AutoRestart) {
-            string msg = AutoRestart ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage;
+        public static void Exit(bool restarting, string msg) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) { p.save(); }
             foreach (Player p in players) { p.Leave(msg); }
@@ -289,7 +288,7 @@ namespace MCGalaxy {
             Plugin.Unload();
             if (listen != null) listen.Close();
             try {
-                IRC.Disconnect(!AutoRestart ? "Server is shutting down." : "Server is restarting.");
+                IRC.Disconnect(restarting ? "Server is restarting." : "Server is shutting down.");
             } catch { 
             }
         }

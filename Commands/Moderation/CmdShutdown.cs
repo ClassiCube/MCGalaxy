@@ -29,53 +29,76 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
+        static SchedulerTask shutdownTask;
         public override void Use(Player p, string message) {
-            int secTime = 10;
-            bool shutdown = message != "cancel";
-            Server.abortShutdown = false;
-            
-            if (message == "") {
-                message = "Server is going to shutdown in " + secTime + " seconds";
-            } else if (message == "cancel") {
-                Server.abortShutdown = true; message = "Shutdown cancelled";
+            if (message.CaselessEq("abort") || message.CaselessEq("cancel")) {
+                if (shutdownTask == null) {
+                    Player.Message(p, "No server shutdown is in progress."); return;
+                }
+                
+                Log("Shutdown aborted.");
+                Server.MainScheduler.Cancel(shutdownTask);
+                shutdownTask = null;
             } else {
+                if (shutdownTask != null) {
+                    Player.Message(p, "Server is already shutting down, use " +
+                                   "%T/shutdown abort %Sto abort the shutdown."); return;
+                }
+                
+                string reason = "";
+                int secTime = 0;
                 string[] args = message.SplitSpaces(2);
+                
                 if (int.TryParse(args[0], out secTime)) {
-                    message = args.Length > 1 ? args[1] : message;
+                    reason = args.Length > 1 ? args[1] : "";
                 } else {
-                    secTime = 10;
+                    reason = args[0]; secTime = 10;
                 }
-            }
-            
-            if (secTime <= 0) {
-                Player.Message(p, "Countdown time must be greater than zero"); return;
-            }
-            if (!shutdown) return;
-            
-            Log(message);
-            for (int t = secTime; t > 0; t--) {
-                if (!Server.abortShutdown) {
-                    Log("Server shutdown in " + t + " seconds"); Thread.Sleep(1000);
-                } else {
-                    Server.abortShutdown = false; Log("Shutdown cancelled"); return;
-                }
-            }
-            
-            if (!Server.abortShutdown) {
-                MCGalaxy.Gui.App.ExitProgram(false);
-            } else {
-                Server.abortShutdown = false; Log("Shutdown cancelled");
+                if (secTime <= 0) { Player.Message(p, "Countdown time must be greater than zero"); return; } 
+                DoShutdown(secTime, reason);
             }
         }
         
+        static void DoShutdown(int secTime, string reason) {
+            ShutdownArgs args = new ShutdownArgs();
+            args.Delay = secTime - 1;
+            args.Reason = reason;
+            
+            if (reason != "") reason = ": " + reason;
+            Log("Server shutdown started" + reason);
+            Log("Server shutdown in " + secTime + " seconds");
+            
+            shutdownTask = Server.MainScheduler.QueueRepeat(
+                ShutdownCallback, args, TimeSpan.FromSeconds(1));
+        }
+        
+        
         static void Log(string message) {
-             Chat.MessageAll("&4" + message); 
-             Server.s.Log(message);
+            Chat.MessageAll("&4" + message);
+            Server.s.Log(message);
+        }
+        
+        static void ShutdownCallback(SchedulerTask task) {
+            ShutdownArgs args = (ShutdownArgs)task.State;
+            if (args.Delay == 0) {
+                MCGalaxy.Gui.App.ExitProgram(false, args.Reason);
+            } else {
+                Log("Server shutdown in " + args.Delay + " seconds");
+                args.Delay--;
+                task.State = args;
+            }
+        }
+        
+        struct ShutdownArgs {
+            public int Delay;
+            public string Reason;
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/shutdown [time] [message]");
-            Player.Message(p, "%HShuts the server down");
+            Player.Message(p, "%T/shutdown [delay] <reason>");
+            Player.Message(p, "%HShuts the server down after [delay] seconds.");
+            Player.Message(p, "%T/shutdown abort");
+            Player.Message(p, "%HAborts the current server shutdown.");
         }
     }
 }

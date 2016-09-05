@@ -126,7 +126,7 @@ namespace MCGalaxy {
         public static string salt = "";
         public static bool chatmod = false, flipHead = false;
 
-        public static bool shuttingDown = false, restarting = false, abortShutdown = false;
+        public static bool shuttingDown = false, restarting = false;
         
         #region Settings
         
