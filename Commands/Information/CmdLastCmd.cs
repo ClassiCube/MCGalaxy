@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using System;
+
 namespace MCGalaxy.Commands {
     
     public sealed class CmdLastCmd : Command {
@@ -40,10 +42,14 @@ namespace MCGalaxy.Commands {
         }
         
         static void ShowLastCommand(Player p, Player who) {
-            if (who.lastCMD == "")
-                Player.Message(p, who.ColoredName + " %Shas not used any commands yet.");
-            else
-                Player.Message(p, who.ColoredName + " %Slast used \"" + who.lastCMD + "\" on " + who.lastCmdTime);
+            if (who.lastCMD == "") {
+                Player.Message(p, "{0} %Shas not used any commands yet.", 
+                               who.ColoredName);
+            } else {
+                TimeSpan delta = DateTime.UtcNow - who.lastCmdTime;
+                Player.Message(p, "{0} %Slast used \"{1}\" {2} ago", 
+                               who.ColoredName, who.lastCMD, delta.Shorten(true));
+            }
         }
         
         public override void Help(Player p) {

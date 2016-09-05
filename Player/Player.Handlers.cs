@@ -760,8 +760,8 @@ return;
         bool UseCommand(Command command, string message) {
             string cmd = command.name;
             if (cmd != "repeat" && cmd != "pass") {
-                lastCMD = cmd + " " + message;
-                lastCmdTime = DateTime.Now;
+            	lastCMD = message == "" ? cmd : cmd + " " + message;
+                lastCmdTime = DateTime.UtcNow;
             }
             if (cmd != "pass") Server.s.CommandUsed(name + " used /" + cmd + " " + message);
 

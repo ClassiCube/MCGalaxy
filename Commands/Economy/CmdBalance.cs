@@ -60,18 +60,22 @@ namespace MCGalaxy.Commands {
         static void Output(Player p, string value, string type) {
             if (String.IsNullOrEmpty(value) || value == "%cNone") return;
             
-            int timeIndex = value.IndexOf(" on %f");
-            if (timeIndex == -1) {
+            const string dateStart = " on %f";
+            int dateIndex = value.IndexOf(dateStart);
+            if (dateIndex == -1) {
                 Player.Message(p, " Last {0}: {1}", type, value); return;
-            }            
-            string msg = value.Substring(0, timeIndex);
-            string date = value.Substring(timeIndex + 6);
+            }
+            
+            string msg = value.Substring(0, dateIndex);
+            dateIndex += dateStart.Length;
+            string date = value.Substring(dateIndex, 19);
+            string suffix = value.Substring(dateIndex + 19);
             
             // Attempt to show relative time
             DateTime time;
             if (DateTime.TryParseExact(date, dateFormat, null, 0, out time)) {
                 TimeSpan delta = DateTime.Now - time;
-                value = msg + " %f" + delta.Shorten() + " ago";
+                value = msg + " %f" + delta.Shorten() + " ago" + suffix;
             }
             Player.Message(p, " Last {0}: {1}", type, value);
         }

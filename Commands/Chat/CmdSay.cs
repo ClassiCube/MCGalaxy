@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/say");
+            Player.Message(p, "%T/say [message]");
             Player.Message(p, "%HBroadcasts a global message to everyone in the server.");
         }
     }
