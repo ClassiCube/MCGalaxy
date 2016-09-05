@@ -53,6 +53,11 @@ namespace MCGalaxy.SQL {
         /// <summary> Removes all entries from the given table. </summary>
         public abstract void ClearTable(string table);
         
+        /// <summary> Adds a new coloumn to the given table. </summary>
+        /// <remarks> Note colAfter is only a hint - some database backends ignore this. </remarks>
+        public abstract void AddColumn(string table, string column, 
+                                       string colype, string colAfter);
+        
         /// <summary> Inserts/Copies all the rows from the source table into the destination table. </summary>
         /// <remarks> Note: This may work incorrectly if the tables have different schema. </remarks>
         public virtual void CopyAllRows(string srcTable, string dstTable) {

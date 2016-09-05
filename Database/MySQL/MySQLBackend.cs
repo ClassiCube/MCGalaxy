@@ -63,5 +63,14 @@ namespace MCGalaxy.SQL {
             string syntax = "TRUNCATE TABLE `" + table + "`";
             Database.Execute(syntax);
         }
+        
+        
+        public override void AddColumn(string table, string column, 
+                                       string colType, string colAfter) {
+            string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " 
+                + column + " " + colType;
+            if (colAfter != "") syntax += " AFTER " + colAfter;
+            Database.Execute(syntax);
+        }
     }
 }

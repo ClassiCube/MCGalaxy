@@ -59,12 +59,12 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Cannot /infoswap for a player ranked equal or higher to yours."); return;
             }
             
-            Swap(src, dst); Swap(dst, src);
+            SetData(src, dst.Name); SetData(dst, src.Name);
             SwapGroups(src, dst, srcGroup, dstGroup);
         }
         
         const string format = "yyyy-MM-dd HH:mm:ss";
-        void Swap(PlayerData src, PlayerData dst) {
+        void SetData(PlayerData src, string dstName) {
             string first = src.FirstLogin.ToString(format);
             string last = src.LastLogin.ToString(format);
             const string syntax = "UPDATE Players SET totalBlocks=@0, totalCuboided=@1" +
@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands {
             long cuboided = PlayerData.CuboidPacked(src.TotalDeleted, src.TotalDrawn);
             Database.Execute(syntax, blocks, cuboided, src.Color, src.Deaths,
                              first, src.IP, src.Kicks, last, src.Logins,
-                             src.Money, src.Title, src.TitleColor, src.TotalTime, dst.Name);            
+                             src.Money, src.Title, src.TitleColor, src.TotalTime, dstName); 
         }
         
         void SwapGroups(PlayerData src, PlayerData dst, Group srcGroup, Group dstGroup) {

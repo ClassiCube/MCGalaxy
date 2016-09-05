@@ -47,7 +47,7 @@ namespace MCGalaxy.SQL {
         
         public override bool TableExists(string table) {
             using (DataTable results = GetRows("sqlite_master", "name",
-        	                                   "WHERE type='table' AND name=@0", table)) {
+                                               "WHERE type='table' AND name=@0", table)) {
                 return results.Rows.Count > 0;
             }
         }
@@ -59,6 +59,13 @@ namespace MCGalaxy.SQL {
         
         public override void ClearTable(string table) {
             string syntax = "DELETE FROM `" + table + "`";
+            Database.Execute(syntax);
+        }
+        
+        public override void AddColumn(string table, string column, 
+                                       string colType, string colAfter) {
+            string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " 
+                + column + " " + colType;
             Database.Execute(syntax);
         }
     }

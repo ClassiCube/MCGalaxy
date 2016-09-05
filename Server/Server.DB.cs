@@ -88,22 +88,22 @@ SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE {0};";
             // Check if the color column exists.
             DataTable colorExists = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='color'");
             if (colorExists.Rows.Count == 0)
-                Database.Execute("ALTER TABLE Players ADD COLUMN color VARCHAR(6) AFTER totalKicked");
+                Database.Backend.AddColumn("Players", "color", "VARCHAR(6)", "totalKicked");
             colorExists.Dispose();
 
             DataTable tcolorExists = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='title_color'");
             if (tcolorExists.Rows.Count == 0)
-                Database.Execute("ALTER TABLE Players ADD COLUMN title_color VARCHAR(6) AFTER color");
+                Database.Backend.AddColumn("Players", "title_color", "VARCHAR(6)", "color");
             tcolorExists.Dispose();
 
             DataTable timespent = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='TimeSpent'");
             if (timespent.Rows.Count == 0)
-                Database.Execute("ALTER TABLE Players ADD COLUMN TimeSpent VARCHAR(20) AFTER totalKicked");
+                Database.Backend.AddColumn("Players", "TimeSpent", "VARCHAR(20)", "totalKicked");
             timespent.Dispose();
 
             DataTable totalCuboided = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='totalCuboided'");
             if (totalCuboided.Rows.Count == 0)
-                Database.Execute("ALTER TABLE Players ADD COLUMN totalCuboided BIGINT AFTER totalBlocks");
+                Database.Backend.AddColumn("Players", "totalCuboided", "BIGINT", "totalBlocks");
             totalCuboided.Dispose();
         }
     }

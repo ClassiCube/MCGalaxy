@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
         
         void DoRide(Player p) {
             while (p.onTrain) {
-                Thread.Sleep(3);
+                Thread.Sleep(10);
                 ushort x = (ushort)(p.pos[0] / 32);
                 ushort y = (ushort)(p.pos[1] / 32);
                 ushort z = (ushort)(p.pos[2] / 32);
@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands {
                     goto skip;
                 }
 
-                Thread.Sleep(3);
+                Thread.Sleep(10);
                 p.trainGrab = false;
             skip:
                 ;
