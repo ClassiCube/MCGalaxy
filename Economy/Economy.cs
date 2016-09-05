@@ -132,7 +132,7 @@ PRIMARY KEY(player)
             EcoStats stats = default(EcoStats);
             stats.Player = name;
             
-            using (DataTable eco = Database.Fill("SELECT * FROM Economy WHERE player=@0", name)) {
+            using (DataTable eco = Database.Backend.GetRows("Economy", "*", "WHERE player=@0", name)) {
                 if (eco.Rows.Count > 0) {
                     stats.TotalSpent = int.Parse(eco.Rows[0]["total"].ToString());
                     stats.Purchase = eco.Rows[0]["purchase"].ToString();

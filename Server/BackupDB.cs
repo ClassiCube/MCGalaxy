@@ -56,7 +56,7 @@ namespace MCGalaxy {
             sql.WriteLine();
             WriteTableSchema(tableName, sql);
             
-            using (DataTable data = Database.Fill("SELECT * FROM `" + tableName + "`")) {
+            using (DataTable data = Database.Backend.GetAllRows(tableName, "*")) {
                 if (data.Rows.Count == 0) {
                     sql.WriteLine("-- No data in table `{0}`!", tableName);
                     sql.WriteLine();

@@ -36,8 +36,7 @@ namespace MCGalaxy.Commands {
             }
 
             if (message == "") {
-                //safe against SQL injections because no user input is given here
-                using (DataTable Inbox = Database.Fill("SELECT * FROM `Inbox" + p.name + "` ORDER BY TimeSent")) {
+                using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
                     if (Inbox.Rows.Count == 0) { Player.Message(p, "No messages found."); return; }
                     int i = 0;
                     foreach (DataRow row in Inbox.Rows) {
@@ -57,8 +56,7 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "Message number must be greater than or equal to 0."); return;
                 }
                 
-                //safe against SQL injections because no user input is given here
-                using (DataTable Inbox = Database.Fill("SELECT * FROM `Inbox" + p.name + "` ORDER BY TimeSent")) {
+                using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
                     if (num != -1 && num >= Inbox.Rows.Count) {
                         Player.Message(p, "\"" + num + "\" does not exist."); return;
                     }
@@ -81,8 +79,7 @@ namespace MCGalaxy.Commands {
                 if (!int.TryParse(message, out num)) { Player.Message(p, "Incorrect number given."); return; }
                 if (num < 0) { Player.Message(p, "Message number must be greater than or equal to 0."); return; }
 
-                //safe against SQL injections because no user input is given here
-                using (DataTable Inbox = Database.Fill("SELECT * FROM `Inbox" + p.name + "` ORDER BY TimeSent")) {
+                using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
                     if (num >= Inbox.Rows.Count) {
                         Player.Message(p, "Message number \"" + num + "\" does not exist."); return;
                     }

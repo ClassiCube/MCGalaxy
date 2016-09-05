@@ -51,9 +51,8 @@ namespace MCGalaxy.Commands {
             DateTime now = DateTime.Now;
             bool foundOne = false;
             
-            //safe against SQL injections because no user input is given here
-            DataTable Blocks = Database.Fill("SELECT * FROM `Block" + p.level.name + 
-                                             "` WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
+            DataTable Blocks = Database.Backend.GetRows("Block" + p.level.name, "*",
+                                                        "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
             for (int i = 0; i < Blocks.Rows.Count; i++) {
                 foundOne = true;
                 DataRow row = Blocks.Rows[i];
@@ -94,9 +93,8 @@ namespace MCGalaxy.Commands {
             if (!Block.Props[block].IsMessageBlock) return;
             
             try {
-                //safe against SQL injections because no user input is given here
-                DataTable Messages = Database.Fill("SELECT * FROM `Messages" + p.level.name +
-                                                   "` WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
+                DataTable Messages = Database.Backend.GetRows("Messages" + p.level.name, "*",
+                                                              "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
                 int last = Messages.Rows.Count - 1;
                 if (last == -1) { Messages.Dispose(); return; }
                 

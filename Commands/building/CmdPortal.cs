@@ -97,11 +97,12 @@ namespace MCGalaxy.Commands.Building {
                     Database.Execute(String.Format(LevelDB.createPortals, lvlName));
 
                     int count = 0;
-                    string syntax = "SELECT * FROM `Portals" + lvlName + "` WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2";
-                    using (DataTable portals = Database.Fill(syntax, P.x, P.y, P.z))
+                    using (DataTable portals = Database.Backend.GetRows("Portals" + lvlName, "*",
+                                                                        "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", P.x, P.y, P.z)) {
                         count = portals.Rows.Count;
+                    }
                     
-                    syntax = count == 0 ?
+                    string syntax = count == 0 ?
                         "INSERT INTO `Portals" + lvlName + "` (EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap) VALUES (@0, @1, @2, @3, @4, @5, @6)"
                         : "UPDATE `Portals" + lvlName + "` SET ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5 WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2";
                     Database.Execute(syntax, P.x, P.y, P.z, x, y, z, p.level.name);

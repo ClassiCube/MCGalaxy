@@ -239,7 +239,7 @@ namespace MCGalaxy {
             timeLogged = DateTime.Now;
             lastLogin = DateTime.Now;
             time = new TimeSpan(0, 0, 0, 1);
-            DataTable playerDb = Database.Fill("SELECT * FROM Players WHERE Name=@0", name);
+            DataTable playerDb = Database.Backend.GetRows("Players", "*", "WHERE Name=@0", name);
             
             if (playerDb.Rows.Count == 0)
                 InitPlayerStats(playerDb);

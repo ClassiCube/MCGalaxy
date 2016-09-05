@@ -46,9 +46,10 @@ namespace MCGalaxy.SQL {
         
         
         public override bool TableExists(string table) {
-            const string syntax = "SELECT name FROM sqlite_master WHERE type='table' AND name=@0";
-            using (DataTable results = Database.Fill(syntax, table))
+            using (DataTable results = GetRows("sqlite_master", "name",
+        	                                   "WHERE type='table' AND name=@0", table)) {
                 return results.Rows.Count > 0;
+            }
         }
         
         public override void RenameTable(string srcTable, string dstTable) {

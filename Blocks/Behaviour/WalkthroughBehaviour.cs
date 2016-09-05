@@ -37,9 +37,8 @@ namespace MCGalaxy.BlockBehaviour {
             if (checkPos && p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
             p.RevertBlock(x, y, z);
             try {
-                //safe against SQL injections because no user input is given here
-                DataTable Portals = Database.Fill("SELECT * FROM `Portals" + p.level.name +
-                                                  "` WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+                DataTable Portals = Database.Backend.GetRows("Portals" + p.level.name, "*",
+                                                             "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
                 int last = Portals.Rows.Count - 1;
                 if (last == -1) { Portals.Dispose(); return true; }
                 byte rotX = p.rot[0], rotY = p.rot[1];
@@ -74,9 +73,8 @@ namespace MCGalaxy.BlockBehaviour {
             if (checkPos && p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
             p.RevertBlock(x, y, z);
             try {
-                //safe against SQL injections because no user input is given here
-                DataTable Messages = Database.Fill("SELECT * FROM `Messages" + p.level.name +
-                                                   "` WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
+                DataTable Messages = Database.Backend.GetRows("Messages" + p.level.name, "*",
+                                                              "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
                 int last = Messages.Rows.Count - 1;
                 if (last == -1) { Messages.Dispose(); return true; }
                 string message = Messages.Rows[last]["Message"].ToString().Trim();

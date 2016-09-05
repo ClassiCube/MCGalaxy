@@ -117,11 +117,12 @@ namespace MCGalaxy.Commands.Building {
                 Database.Execute(String.Format(LevelDB.createMessages, lvlName));
                 
                 int count = 0;
-                string syntax = "SELECT * FROM `Messages" + lvlName + "` WHERE X=@0 AND Y=@1 AND Z=@2";
-                using (DataTable Messages = Database.Fill(syntax, x, y, z))
+                using (DataTable Messages = Database.Backend.GetRows("Messages" + lvlName, "*",
+                                                                     "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z)) {
                     count = Messages.Rows.Count;
+                }
                 
-                syntax = count == 0 ?
+                string syntax = count == 0 ?
                     "INSERT INTO `Messages" + lvlName + "` (X, Y, Z, Message) VALUES (@0, @1, @2, @3)"
                     : "UPDATE `Messages" + lvlName + "` SET Message=@3 WHERE X=@0 AND Y=@1 AND Z=@2";
                 Database.Execute(syntax, x, y, z, data.message);

@@ -71,5 +71,14 @@ namespace MCGalaxy.SQL {
             string syntax = "SELECT " + columns + " FROM `" + table + "`";
             return Database.Fill(syntax);
         }
+        
+        /// <summary> Retrieves rows for the given table from the database. </summary>
+        /// <remarks> modifier is SQL which can be used to retrieve only certain rows, 
+        /// return rows in a certain order, etc.</remarks>
+        public virtual DataTable GetRows(string table, string columns, 
+                                         string modifier, params object[] args) {
+            string syntax = "SELECT " + columns + " FROM `" + table + "` " + modifier;
+            return Database.Fill(syntax, args);
+        }
     }
 }

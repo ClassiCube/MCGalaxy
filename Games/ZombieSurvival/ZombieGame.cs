@@ -270,7 +270,7 @@ Additional4 INT{2});"; // reserve space for possible future additions
         }
         
         public ZombieStats LoadZombieStats(string name) {
-            DataTable table = Database.Fill("SELECT * FROM ZombieStats WHERE Name=@0", name);
+            DataTable table = Database.Backend.GetRows("ZombieStats", "*", "WHERE Name=@0", name);
             ZombieStats stats = default(ZombieStats);
             
             if (table.Rows.Count > 0) {
@@ -286,7 +286,7 @@ Additional4 INT{2});"; // reserve space for possible future additions
         
         public void SaveZombieStats(Player p) {
             if (p.Game.TotalRoundsSurvived == 0 && p.Game.TotalInfected == 0) return;
-            DataTable table = Database.Fill("SELECT * FROM ZombieStats WHERE Name=@0", p.name);
+            DataTable table = Database.Backend.GetRows("ZombieStats", "*", "WHERE Name=@0", p.name);
 
             string syntax = table.Rows.Count == 0 ?
                 "INSERT INTO ZombieStats (TotalRounds, MaxRounds, TotalInfected, MaxInfected, Name) VALUES (@0, @1, @2, @3, @4)"

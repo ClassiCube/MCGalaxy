@@ -167,7 +167,7 @@ namespace MCGalaxy {
         /// <summary> Retrieves from the database the names of all players whose 
         /// last IP address matches the given IP address. </summary>
         public static List<string> FindAccounts(string ip) {
-            DataTable clones = Database.Fill("SELECT Name FROM Players WHERE IP=@0", ip);
+            DataTable clones = Database.Backend.GetRows("Players", "Name", "WHERE IP=@0", ip);
             List<string> alts = new List<string>();
             
             foreach (DataRow row in clones.Rows) {
@@ -180,19 +180,17 @@ namespace MCGalaxy {
         }
         
         
-        internal static DataTable Query(string name, string selector) {
-            string syntax = Server.useMySQL ?
-                "SELECT " + selector + " FROM Players WHERE Name=@0 COLLATE utf8_general_ci" :
-                "SELECT " + selector + " FROM Players WHERE Name=@0 COLLATE NOCASE";
-            return Database.Fill(syntax, name);
+        internal static DataTable Query(string name, string columns) {
+            string suffix = Server.useMySQL ? " utf8_general_ci" : " NOCASE";
+            return Database.Backend.GetRows("Players", columns,
+                                            "WHERE Name=@0 COLLATE" + suffix, name);
         }
         
-        internal static DataRow QueryMulti(Player p, string name, string selector) {
-            string syntax = Server.useMySQL ?
-                "SELECT " + selector + " FROM Players WHERE Name LIKE @0 LIMIT 21" :
-                "SELECT " + selector + " FROM Players WHERE Name LIKE @0 LIMIT 21 COLLATE NOCASE";
-            
-            using (DataTable results = Database.Fill(syntax, "%" + name + "%")) {
+        internal static DataRow QueryMulti(Player p, string name, string columns) {
+            string suffix = Server.useMySQL ? "" : " COLLATE NOCASE";
+            using (DataTable results = Database.Backend.GetRows("Players", columns,
+                                                                "WHERE Name LIKE @0 LIMIT 21" + suffix,
+                                                                "%" + name + "%")) {
                 int matches = 0;
                 return Utils.FindMatches<DataRow>(p, name, out matches, results.Rows,
                                                   r => true, r => r["Name"].ToString(), "players", 20);
