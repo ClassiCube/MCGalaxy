@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands {
-	
+    
     public sealed class CmdAwards : Command {
-		
+        
         public override string name { get { return "awards"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Economy; } }
@@ -31,22 +31,18 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length > 2) { Help(p); return; }
-
-            int page = 0;
-            string plName = "";
+            string plName = "", modifier = args[args.Length - 1];
+            int ignored;
+            
             if (args.Length == 2) {
                 plName = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
                 if (plName == null) return;
-                
-                if (!int.TryParse(args[1], out page)) { Help(p); return; }
-            } else if (message != "") {
-                if (!int.TryParse(args[0], out page)) {
+            } else if (message != "" && !message.CaselessEq("all")) {
+                if (!int.TryParse(args[0], out ignored)) {
+                    modifier = "";
                     plName = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
                     if (plName == null) return;
                 }
-            }
-            if (page < 0) {
-                Player.Message(p, "Cannot display pages less than 0"); return;
             }
 
             List<Awards.Award> awards = GetAwards(plName);
@@ -55,13 +51,10 @@ namespace MCGalaxy.Commands {
                 else Player.Message(p, "There are no awards in this server yet");
                 return;
             }
-
-            int start = (page - 1) * 5;
-            if (start > awards.Count) {
-                Player.Message(p, "There aren't that many awards, try a smaller number.");
-                return;
-            }
-            OutputAwards(p, page, start, plName, awards);
+            
+            string cmd = plName == "" ? "awards" : "awards " + plName;
+            MultiPageOutput.Output(p, awards, FormatAward,
+                                   cmd, "awards", modifier, true);
         }
         
         static List<Awards.Award> GetAwards(string plName) {
@@ -77,27 +70,8 @@ namespace MCGalaxy.Commands {
             return awards;
         }
         
-        static void OutputAwards(Player p, int page, int start,
-                                 string plName, List<Awards.Award> awards) {
-        	if (plName != "") {
-                Player.Message(p, "{0} %Shas the following awards:",
-            	               PlayerInfo.GetColoredName(p, plName));
-        	} else {
-                Player.Message(p, "Awards available: ");
-        	}
-
-            if (page == 0) {
-                foreach (Awards.Award award in awards)
-                    Player.Message(p, "&6" + award.Name + ": &7" + award.Description);
-
-                if (awards.Count > 8) 
-                    Player.Message(p, "&5Use &b/awards " + plName + " 1/2/3/... &5for a more ordered list");
-            } else {
-                for (int i = start; i < Math.Min(awards.Count, start + 5); i++) {
-                    Awards.Award award = awards[i];
-                    Player.Message(p, "&6" + award.Name + ": &7" + award.Description);
-                }
-            }
+        static string FormatAward(Awards.Award award, int i) {
+            return "&6" + award.Name + ": &7" + award.Description;
         }
         
         public override void Help(Player p) {
