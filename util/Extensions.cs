@@ -88,8 +88,11 @@ namespace MCGalaxy {
             StringBuilder builder = new StringBuilder();
             bool first = true;
             foreach (T item in items) {
-                if (!first) builder.Append(separator);
-                builder.Append(formatter(item));
+                string value = formatter(item);
+                if (value == null) continue;
+                 
+                if (!first) builder.Append(separator);              
+                builder.Append(value);
                 first = false;
             }
             return builder.ToString();

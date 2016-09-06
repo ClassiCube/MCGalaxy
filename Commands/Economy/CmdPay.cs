@@ -34,46 +34,47 @@ namespace MCGalaxy.Commands {
             if (matches > 1) return;
             if (p != null && p == who) { Player.Message(p, "You cannot pay yourself %3" + Server.moneys); return; }
             string target = null;
-            int money;
+            int money, srcMoney = Player.IsSuper(p) ? int.MaxValue : p.money;
             
             if (who == null) {
                 target = Economy.FindMatches(p, data.Name, out money);
                 if (target == null) return;
                 
-                if (!IsLegalPayment(p, p.money, money, data.Amount)) return;
+                if (!IsLegalPayment(p, srcMoney, money, data.Amount)) return;
                 money += data.Amount;
                 Economy.UpdateMoney(target, money);
             } else {
                 target = who.name; money = who.money;
-                if (!IsLegalPayment(p, p.money, money, data.Amount)) return;
+                if (!IsLegalPayment(p, srcMoney, money, data.Amount)) return;
                 who.SetMoney(who.money + data.Amount);
             }
+            if (!Player.IsSuper(p)) p.SetMoney(p.money - data.Amount);
+            MessageAll(p, "{0} %Spaid {1} &f{2} &3{3}{4}", target, data);
 
-            p.SetMoney(p.money - data.Amount);
-            string targetName = PlayerInfo.GetColoredName(p, target);
-            Chat.MessageAll("{0} %Spaid {1} &f{2} &3{3}",
-                            data.Source, targetName, data.Amount, Server.moneys);
-            
-            Economy.EcoStats stats = Economy.RetrieveStats(p.name);
-            stats.Payment = "%f" + data.Amount + " %3" + Server.moneys + " to " 
-                + target + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            Economy.EcoStats stats = Economy.RetrieveStats(target);
+            stats.Salary = Format(p, " by " + data.SourceRaw, data);
             Economy.UpdateStats(stats);
-
-            stats = Economy.RetrieveStats(target);            
-            stats.Salary = "%f" + data.Amount + " %3" + Server.moneys + " by " 
-                + p.color + p.name + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            
+            if (Player.IsSuper(p)) return;
+            stats = Economy.RetrieveStats(p.name);
+            string targetName = PlayerInfo.GetColoredName(p, target);
+            stats.Payment = Format(p, " to " + targetName, data);
             Economy.UpdateStats(stats);
         }
 
-        bool IsLegalPayment(Player p, int payer, int receiver, int amount) {
-            if (receiver + amount > 16777215) { Player.Message(p, "%cPlayers cannot have over %f16777215 %3" + Server.moneys); return false; }
-            if (payer - amount < 0) { Player.Message(p, "%cYou don't have enough %3" + Server.moneys); return false; }
+        static bool IsLegalPayment(Player p, int payer, int receiver, int amount) {
+            if (receiver + amount > 16777215) { 
+                Player.Message(p, "%cPlayers cannot have over %f16777215 %3" + Server.moneys); return false; 
+            }
+            if (payer < amount) { 
+                Player.Message(p, "%cYou don't have enough %3" + Server.moneys); return false; 
+            }
             return true;
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/pay [player] [amount] ");
-            Player.Message(p, "%HPays [amount] &3" + Server.moneys + " %Hto [player]");
+            Player.Message(p, "%T/pay [player] [amount] <reason>");
+            Player.Message(p, "%HPays [amount] &3{0} %Hto [player]", Server.moneys);
         }
     }
 }

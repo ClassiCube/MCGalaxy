@@ -28,12 +28,12 @@ namespace MCGalaxy.Commands {
             if (who == null) return;     
             if (data.Amount >= 16777215) { Player.Message(p, "You can only fakepay up to 16777215."); return; }
 
-            Chat.MessageAll("{0} %Swas given {1} {2}", who.ColoredName, data.Amount, Server.moneys);
+            MessageAll(p, "{0} %Sgave {1} &f{2} &3{3}{4}", who.name, data);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/fakepay [name] [amount]");
-            Player.Message(p, "%HSends a fake give change message.");
+            Player.Message(p, "%T/fakepay [name] [amount] <reason>");
+            Player.Message(p, "%HSends a fake %T/give %Hchange message.");
         }
     }
 }

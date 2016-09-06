@@ -47,14 +47,10 @@ namespace MCGalaxy.Commands {
                 if (ReachedMax(p, money, data.Amount)) return;
                 who.SetMoney(who.money + data.Amount);
             }
-
-            string targetName = PlayerInfo.GetColoredName(p, target);
-            Chat.MessageAll("{0} %Sgave {1} &f{2} &3{3}",
-                            data.Source, targetName, data.Amount, Server.moneys);
+            MessageAll(p, "{0} %Sgave {1} &f{2} &3{3}{4}", target, data);
             
             Economy.EcoStats stats = Economy.RetrieveStats(target);
-            stats.Salary = "%f" + data.Amount + "%3 " + Server.moneys + " by "
-                + data.SourceRaw + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            stats.Salary = Format(p, " by " + data.SourceRaw, data);
             Economy.UpdateStats(stats);
         }
         
@@ -66,8 +62,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/give [player] <amount>");
-            Player.Message(p, "%HGives [player] <amount> %3" + Server.moneys);
+            Player.Message(p, "%T/give [player] [amount] <reason>");
+            Player.Message(p, "%HGives [player] [amount] %3" + Server.moneys);
         }
     }
 }

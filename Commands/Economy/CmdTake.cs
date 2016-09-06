@@ -46,14 +46,10 @@ namespace MCGalaxy.Commands {
                 Take(ref money, ref data);
                 who.SetMoney(money);
             }
-            
-            string targetName = PlayerInfo.GetColoredName(p, target);
-            Chat.MessageAll("{0} %Stook &f{2} &3{3} %Sfrom {1}",
-                            data.Source, targetName, data.Amount, Server.moneys);
+            MessageAll(p, "{0} %Stook &f{2} &3{3} %Sfrom {1}{4}", target, data);
             
             Economy.EcoStats stats = Economy.RetrieveStats(target);
-            stats.Fine = "%f" + data.Amount + "%3 " + Server.moneys + " by "
-                + data.SourceRaw + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            stats.Fine = Format(p, " by " + data.SourceRaw, data);
             Economy.UpdateStats(stats);
         }
         
@@ -67,9 +63,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p){
-            Player.Message(p, "%T/take [player] [amount[");
+            Player.Message(p, "%T/take [player] [amount] <reason>");
             Player.Message(p, "%HTakes [amount] of &3" + Server.moneys + " %Sfrom [player]");
-            Player.Message(p, "%T/take [player] all");
+            Player.Message(p, "%T/take [player] all <reason>");
             Player.Message(p, "%HTakes all the &3" + Server.moneys + " %Sfrom [player]");
         }
     }

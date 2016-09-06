@@ -424,7 +424,7 @@ namespace MCGalaxy {
                 Player.GlobalIRCMessage("%I[IRC] " + newNick + " %Sis back");
                 Server.ircafkset.Remove(newNick);
             } else {
-                Player.GlobalIRCMessage("%I[IRC] " + user.Nick + " %Sis now known as " + newNick);
+                Player.GlobalIRCMessage("%I[IRC] " + user.Nick + " %Sis now known as %I" + newNick);
             }
         }
         
