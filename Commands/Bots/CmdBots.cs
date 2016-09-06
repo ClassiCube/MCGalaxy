@@ -30,7 +30,15 @@ namespace MCGalaxy.Commands {
             StringBuilder text = new StringBuilder();
             PlayerBot[] bots = PlayerBot.Bots.Items;
             
+            Level lvl = null;
+            if (message != "") {
+                lvl = LevelInfo.FindMatches(p, message);
+                if (lvl == null) return;
+            }
+            
             foreach (PlayerBot bot in bots) {
+                if (lvl != null && bot.level != lvl) continue;
+                
                 text.Append(", ").Append(bot.name)
                     .Append("(").Append(bot.level.name).Append(")");
                                                               
@@ -42,11 +50,12 @@ namespace MCGalaxy.Commands {
             if (text.Length > 0) 
                 Player.Message(p, "&1Bots: %S" + text.ToString(2, text.Length - 2));
             else 
-                Player.Message(p, "No bots are alive.");
+                Player.Message(p, "There are no bots.");
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/bots %H- Shows a list of bots, their AIs and levels");
+            Player.Message(p, "%T/bots [level] %H- Only shows bots on the given level");        
         }
     }
 }
