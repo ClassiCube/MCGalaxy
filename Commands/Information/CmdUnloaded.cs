@@ -33,28 +33,30 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             string[] files = Directory.GetFiles("levels", "*.lvl");
             Player.Message(p, "Unloaded maps (&c[no] %Sif not accessible): ");
-            MultiPageOutput.Output(p, GetMaps(files), file => FormatMap(p, file), 
+            MultiPageOutput.Output(p, GetMaps(files), map => FormatMap(p, map), 
                                    "unloaded", "maps", message);
         }
         
-        static IEnumerable<string> GetMaps(string[] files) {
+        static List<string> GetMaps(string[] files) {
+            List<string> maps = new List<string>(files.Length);
+            Level[] loaded = LevelInfo.Loaded.Items;
+            
             foreach (string file in files) {
-                Level[] loaded = LevelInfo.Loaded.Items;
-                string level = Path.GetFileNameWithoutExtension(file);
-                if (IsLoaded(loaded, level)) continue;
-                yield return level;
+                string map = Path.GetFileNameWithoutExtension(file);                
+                if (IsLoaded(loaded, map)) continue;
+                maps.Add(map);
             }
+            return maps;
         }
         
-        static string FormatMap(Player p, string file) {
-            string level = Path.GetFileNameWithoutExtension(file);
+        static string FormatMap(Player p, string map) {
             LevelPermission visitP, buildP;
             bool loadOnGoto;
-            RetrieveProps(level, out visitP, out buildP, out loadOnGoto);
+            RetrieveProps(map, out visitP, out buildP, out loadOnGoto);
             
             string color = Group.findPerm(buildP).color;
             string visit = loadOnGoto && (p == null || p.Rank >= visitP) ? "" : " &c[no]" + color;
-            return color + level + visit;
+            return color + map + visit;
         }
         
         static bool IsLoaded(Level[] loaded, string level) {
@@ -97,10 +99,9 @@ namespace MCGalaxy.Commands {
         struct SearchArgs { public string Visit, Build, LoadOnGoto; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%f/unloaded %S- Lists all unloaded levels, and their accessible state.");
-            Player.Message(p, "%f/unloaded all %S- Lists all loaded and unloaded levels, and their accessible state.");
-            Player.Message(p, "%f/unloaded <1/2/3/..> %S- Shows a compact list.");
-            Player.Message(p, "%f/unloaded all <1/2/3/..> %S- Shows a compact list.");
+            Player.Message(p, "%T/unloaded all %H- Lists all maps.");
+            Player.Message(p, "%T/unloaded [1/2/3/..] %H- Shows only a few maps.");
+            Player.Message(p, "%H Lists unloaded maps/levels, and their accessible state.");
         }
     }
 }

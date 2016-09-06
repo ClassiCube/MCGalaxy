@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/awardmod <add/del> [award name] : [description]");
+            Player.Message(p, "%T/awardmod add/del [award name] : [description]");
             Player.Message(p, "%HAdds or deletes a reward with the name [award name]");
             Player.Message(p, "%T/awardmod add Bomb joy : Bomb lots of people %His an example");
         }

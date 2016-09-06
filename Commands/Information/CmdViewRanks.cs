@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace MCGalaxy.Commands {
@@ -32,17 +33,23 @@ namespace MCGalaxy.Commands {
         public CmdViewRanks() { }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Player.Message(p, "Available ranks: " + Group.concatList()); return; }
+        	string[] args = message.SplitSpaces(2);
+            if (message == "") { 
+        		Player.Message(p, "Available ranks: " + Group.concatList()); return; 
+        	}
+        	string modifer = args.Length > 1 ? args[1] : "";
+        	
             Group grp = message.CaselessEq("banned") ? 
-                Group.findPerm(LevelPermission.Banned) : Group.FindMatches(p, message);
+            	Group.findPerm(LevelPermission.Banned) : Group.FindMatches(p, args[0]);
             if (grp == null) return;
 
-            string list = grp.playerList.All().Join(", ");            
-            if (list.Length == 0) {
+            List<string> list = grp.playerList.All();
+            if (list.Count == 0) {
                 Player.Message(p, "No one has the rank of " + grp.ColoredName);
             } else {
                 Player.Message(p, "People with the rank of " + grp.ColoredName + ":");
-                Player.Message(p, list);
+                MultiPageOutput.Output(p, list, name => name, 
+                                       "viewranks " + args[0], "players", modifer);
             }
         }
         

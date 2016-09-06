@@ -62,8 +62,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/award <give/take> [player] [award] %H- Gives/Takes [player] the [award]");
-            Player.Message(p, "%HIf only [player] and [aware] are given, Give is used.");
+            Player.Message(p, "%T/award give/take [player] [award] %H- Gives/Takes [player] the [award]");
+            Player.Message(p, "%HIf only [player] and [award] are given, Give is used.");
             Player.Message(p, "%H[award] needs to be the full award's name. Not partial");
         }
     }
