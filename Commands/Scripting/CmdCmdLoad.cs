@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using System.IO;
+
 namespace MCGalaxy.Commands {
     public sealed class CmdCmdLoad : Command {
         public override string name { get { return "cmdload"; } }
@@ -24,21 +26,24 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
 
         public override void Use(Player p, string message) {
-        	string cmdName = message.Split(' ')[0];
-        	if (Command.all.Contains(cmdName)) {
+            if (!Formatter.ValidName(p, message, "command")) return;            
+            if (Command.all.Contains(message)) {
                 Player.Message(p, "That command is already loaded!"); return;
+            }           
+            if (!File.Exists(Scripting.DllDir + "Cmd" + message + ".dll")) {
+                Player.Message(p, "File &9Cmd" + message + ".dll %Snot found."); return;
             }
             
-        	string error = Scripting.Load("Cmd" + cmdName);
-        	if (error != null) { Player.Message(p, error); return; }
-        	GrpCommands.fillRanks();
-        	Player.Message(p, "Command was successfully loaded.");
+            string error = Scripting.Load("Cmd" + message);
+            if (error != null) { Player.Message(p, error); return; }
+            GrpCommands.fillRanks();
+            Player.Message(p, "Command was successfully loaded.");
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/cmdload <command>");
+            Player.Message(p, "%T/cmdload [command name]");
             Player.Message(p, "%HLoads a compiled command into the server for use.");
-            Player.Message(p, "%HThis method load both C# and Visual Basic compiled commands.");
+            Player.Message(p, "%H  Loads both C# and Visual Basic compiled commands.");
         }
     }
 }

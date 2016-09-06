@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
             }
 
             if (!File.Exists(Scripting.SourceDir + "Cmd" + args[0] + engine.Ext)) {
-            	Player.Message(p, "File &9Cmd" + args[0] + engine.Ext + " %Snot found!"); return;
+            	Player.Message(p, "File &9Cmd" + args[0] + engine.Ext + " %Snot found."); return;
             }
             bool success = false;
             try {
@@ -59,10 +59,10 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/compile <class name>");
+            Player.Message(p, "%T/compile [class name]");
             Player.Message(p, "%HCompiles a command class file into a DLL.");
-            Player.Message(p, "%T/compile <class name> vb");
-            Player.Message(p, "%HCompiles a command class (that was written in visual basic) file into a DLL.");
+            Player.Message(p, "%T/compile [class name] vb");
+            Player.Message(p, "%HCompiles a command class (written in visual basic) file into a DLL.");
             Player.Message(p, "%H  class name: &9Cmd&e<class name>&9.cs");
         }
     }

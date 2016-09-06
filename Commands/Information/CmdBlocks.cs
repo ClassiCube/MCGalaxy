@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Blocks;
 
 namespace MCGalaxy.Commands
@@ -29,113 +30,98 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("materials") }; }
-        }        
+        }
         public CmdBlocks() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (message == "")
-            {
+        public override void Use(Player p, string message) {
+            string[] args = message.Split(' ');
+            string modifier = args.Length > 1 ? args[1] : "";
+            
+            if (args[0] == "" || args[0].CaselessEq("basic")) {
                 Player.Message(p, "Basic blocks: ");
-                for (byte i = 0; i < Block.CpeCount; i++)
-                {
-                    message += ", " + Block.Name(i);
-                }
-                Player.Message(p, message.Remove(0, 2));
-                Player.Message(p, "&d/blocks all <0/1/2/3/4> %Swill show the rest.");
-            }
-            else if (message.ToLower() == "all")
-            {
-                message = "";
+                MultiPageOutput.Output(p, BasicBlocks(), (name, i) => name,
+                                       "blocks basic", "blocks", modifier, false);
+            } else if (args[0].CaselessEq("all") || args[0].CaselessEq("complex")) {
                 Player.Message(p, "Complex blocks: ");
-                for (byte i = Block.CpeCount; i < 255; i++)
-                {
-                    if (Block.Name(i).ToLower() != "unknown") message += ", " + Block.Name(i);
+                MultiPageOutput.Output(p, ComplexBlocks(), (name, i) => name,
+                                       "blocks complex", "blocks", modifier, false);
+            } else if (Block.Byte(args[0]) != Block.Zero) {
+                OutputBlockData(p, args[0]);
+            } else if (Group.Find(args[0]) != null) {
+                Group grp = Group.Find(args[0]);
+                List<string> blocks = RankBlocks(grp.Permission);
+                
+                if (blocks.Count == 0) {
+                    Player.Message(p, "{0} %Scannot modify any blocks.", grp.ColoredName);
+                } else {
+                    Player.Message(p, "Blocks which {0} %Scan place: ", grp.ColoredName);
+                    MultiPageOutput.Output(p, blocks, (name, i) => name,
+                                           "blocks " + args[0], "blocks", modifier, false);
                 }
-                Player.Message(p, message.Remove(0, 2));
-                Player.Message(p, "Use &d/blocks all <0/1/2/3/4> %Sfor a readable list.");
-            }
-            else if (message.ToLower().IndexOf(' ') != -1 && message.Split(' ')[0] == "all")
-            {
-                int foundRange = 0;
-                try { foundRange = int.Parse(message.Split(' ')[1]); }
-                catch { Player.Message(p, "Incorrect syntax"); return; }
-
-                if (foundRange >= 5 || foundRange < 0) { Player.Message(p, "Number must be between 0 and 4"); return; }
-
-                message = "";
-                Player.Message(p, "Blocks between " + foundRange * 51 + " and " + (foundRange + 1) * 51);
-                for (byte i = (byte)(foundRange * 51); i < (byte)((foundRange + 1) * 51); i++)
-                {
-                    if (Block.Name(i).ToLower() != "unknown") message += ", " + Block.Name(i);
-                }
-                Player.Message(p, message.Remove(0, 2));
-            }
-            else
-            {
-                string printMessage = ">>>&b";
-
-                if (Block.Byte(message) != Block.Zero)
-                {
-                    byte b = Block.Byte(message);
-                    if (b < Block.CpeCount)
-                    {
-                        for (byte i = Block.CpeCount; i < 255; i++)
-                        {
-                            if (Block.Convert(i) == b)
-                                printMessage += Block.Name(i) + ", ";
-                        }
-
-                        if (printMessage != ">>>&b")
-                        {
-                            Player.Message(p, "Blocks which look like \"" + message + "\":");
-                            Player.Message(p, printMessage.Remove(printMessage.Length - 2));
-                        }
-                        else Player.Message(p, "No Complex Blocks look like \"" + message + "\"");
-                    }
-                    else
-                    {
-                        Player.Message(p, "&bComplex information for \"" + message + "\":");
-                        Player.Message(p, "&cBlock will appear as a \"" + Block.Name(Block.Convert(b)) + "\" block");
-                        OutputProperties(p, b);
-                    }
-                }
-                else if (Group.Find(message) != null)
-                {
-                    LevelPermission Perm = Group.Find(message).Permission;
-                    foreach (Block.Blocks bL in Block.BlockList)
-                    {
-                        if (Block.canPlace(Perm, bL.type) && Block.Name(bL.type).ToLower() != "unknown") 
-                            printMessage += Block.Name(bL.type) + ", ";
-                    }
-
-                    if (printMessage != ">>>&b")
-                    {
-                        Player.Message(p, "Blocks which " + Group.Find(message).ColoredName + " %Scan place: ");
-                        Player.Message(p, printMessage.Remove(printMessage.Length - 2));
-                    }
-                    else Player.Message(p, "No blocks are specific to this rank");
-                }
-                else if (message.IndexOf(' ') == -1)
-                {
-                    if (message.ToLower() == "count") Player.Message(p, "Blocks in this map: " + p.level.blocks.Length);
-                    else Help(p);
-                }
-                else
-                {
-                    Player.Message(p, "Unable to find block or rank");
-                }
+            } else if (args.Length > 1) {
+                Help(p);
+            } else {
+                Player.Message(p, "Unable to find block or rank");
             }
         }
         
-        static void OutputProperties(Player p, byte b) {
+        static List<string> BasicBlocks() {
+            List<string> items = new List<string>(Block.CpeCount);
+            for (int i = 0; i < Block.CpeCount; i++)
+                items.Add(Block.Props[i].Name);
+            return items;
+        }
+        
+        static List<string> ComplexBlocks() {
+            List<string> items = new List<string>(256);
+            for (int i = Block.CpeCount; i < Block.Zero; i++) {
+                if (Block.Props[i].Name.CaselessEq("unknown")) continue;
+                items.Add(Block.Props[i].Name);
+            }
+            return items;
+        }
+        
+        static List<string> RankBlocks(LevelPermission perm) {
+            List<string> items = new List<string>(256);
+            foreach (Block.Blocks bl in Block.BlockList) {
+                if (!Block.canPlace(perm, bl.type)) continue;
+                if (Block.Name(bl.type).CaselessEq("unknown")) continue;
+                items.Add(Block.Name(bl.type));
+            }
+            return items;
+        }
+        
+        
+        static void OutputBlockData(Player p, string block) {
+            byte b = Block.Byte(block);
+            if (b >= Block.CpeCount) {
+                Player.Message(p, "&bComplex information for \"{0}\":", block);
+                Player.Message(p, "&cBlock will appear as a \"{0}\" block", Block.Name(Block.Convert(b)));
+                OutputBlockProps(p, b);
+                return;
+            }
+            
+            string msg = "";
+            for (byte i = Block.CpeCount; i < Block.Zero; i++) {
+                if (Block.Convert(i) == b)
+                    msg += Block.Name(i) + ", ";
+            }
+
+            if (msg != "") {
+                Player.Message(p, "Blocks which look like \"{0}\":", block);
+                Player.Message(p, msg.Remove(msg.Length - 2));
+            } else {
+                Player.Message(p, "No Complex Blocks look like \"{0}\"", block);
+            }
+        }
+        static void OutputBlockProps(Player p, byte b) {
             BlockProperties props = Block.Props[b];
 
             if (Block.LightPass(b, 0, BlockDefinition.GlobalDefs))
                 Player.Message(p, "Block will allow light through");
-            if (Block.Physics(b)) 
+            if (Block.Physics(b))
                 Player.Message(p, "Block affects physics in some way"); //AFFECT!
-            else 
+            else
                 Player.Message(p, "Block will not affect physics in any way"); //It's AFFECT!
             if (Block.NeedRestart(b)) Player.Message(p, "The block's physics will auto-start");
 
@@ -154,7 +140,7 @@ namespace MCGalaxy.Commands
         
         public override void Help(Player p) {
             Player.Message(p, "%T/blocks %H- Lists all basic blocks");
-            Player.Message(p, "%T/blocks all %H- Lists all complex blocks");
+            Player.Message(p, "%T/blocks complex %H- Lists all complex blocks");
             Player.Message(p, "%T/blocks [basic block] %H- Lists all blocks which look the same");
             Player.Message(p, "%T/blocks [complex block] %H- Lists specific info on that block");
             Player.Message(p, "%T/blocks [rank] %H- Lists all blocks [rank] can use");
