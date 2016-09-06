@@ -287,6 +287,7 @@ namespace MCGalaxy {
         public bool isDev, isMod;
         public bool verifiedName;
         
+        /// <summary> Returns whether the given player is console or IRC. </summary>
         public static bool IsSuper(Player p) { return p == null || p.ircNick != null; }
         
         public void SetMoney(int amount) {

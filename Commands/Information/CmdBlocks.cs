@@ -97,25 +97,7 @@ namespace MCGalaxy.Commands
                     {
                         Player.Message(p, "&bComplex information for \"" + message + "\":");
                         Player.Message(p, "&cBlock will appear as a \"" + Block.Name(Block.Convert(b)) + "\" block");
-                        BlockProperties props = Block.Props[b];
-
-                        if (Block.LightPass(b, 0, BlockDefinition.GlobalDefs))
-                            Player.Message(p, "Block will allow light through");
-                        if (Block.Physics(b)) Player.Message(p, "Block affects physics in some way"); //AFFECT!
-                        else Player.Message(p, "Block will not affect physics in any way"); //It's AFFECT!
-                        if (Block.NeedRestart(b)) Player.Message(p, "The block's physics will auto-start");
-
-                        if (props.OPBlock) Player.Message(p, "Block is unaffected by explosions");
-
-                        if (Block.AllowBreak(b)) Player.Message(p, "Anybody can activate the block");
-                        if (Block.Walkthrough(b)) Player.Message(p, "Block can be walked through");
-                        if (Block.Death(b)) Player.Message(p, "Walking through block will kill you");
-
-                        if (props.DoorAirId != 0) Player.Message(p, "Block is an ordinary door");
-                        if (props.IsTDoor) Player.Message(p, "Block is a tdoor, which allows other blocks through when open");
-                        if (props.ODoorId != Block.Zero) Player.Message(p, "Block is an odoor, which toggles (GLITCHY)");
-
-                        if (Block.Mover(b)) Player.Message(p, "Block can be activated by walking through it");
+                        OutputProperties(p, b);
                     }
                 }
                 else if (Group.Find(message) != null)
@@ -124,7 +106,7 @@ namespace MCGalaxy.Commands
                     foreach (Block.Blocks bL in Block.BlockList)
                     {
                         if (Block.canPlace(Perm, bL.type) && Block.Name(bL.type).ToLower() != "unknown") 
-                        	printMessage += Block.Name(bL.type) + ", ";
+                            printMessage += Block.Name(bL.type) + ", ";
                     }
 
                     if (printMessage != ">>>&b")
@@ -139,20 +121,6 @@ namespace MCGalaxy.Commands
                     if (message.ToLower() == "count") Player.Message(p, "Blocks in this map: " + p.level.blocks.Length);
                     else Help(p);
                 }
-                else if (message.Split(' ')[0].ToLower() == "count")
-                {
-                    int foundNum = 0; byte foundBlock = Block.Byte(message.Split(' ')[1]);
-                    if (foundBlock == Block.Zero) { Player.Message(p, "Could not find block specified"); return; }
-
-                    for (int i = 0; i < p.level.blocks.Length; i++)
-                    {
-                        if (foundBlock == p.level.blocks[i]) foundNum++;
-                    }
-
-                    if (foundNum == 0) Player.Message(p, "No blocks were of type \"" + message.Split(' ')[1] + "\"");
-                    else if (foundNum == 1) Player.Message(p, "1 block was of type \"" + message.Split(' ')[1] + "\"");
-                    else Player.Message(p, foundNum.ToString() + " blocks were of type \"" + message.Split(' ')[1] + "\"");
-                }
                 else
                 {
                     Player.Message(p, "Unable to find block or rank");
@@ -160,15 +128,37 @@ namespace MCGalaxy.Commands
             }
         }
         
-        public override void Help(Player p)
-        {
-            Player.Message(p, "/blocks - Lists all basic blocks");
-            Player.Message(p, "/blocks all - Lists all complex blocks");
-            Player.Message(p, "/blocks [basic block] - Lists all blocks which look the same");
-            Player.Message(p, "/blocks [complex block] - Lists specific information on block");
-            Player.Message(p, "/blocks <rank> - Lists all blocks <rank> can use");
-            Player.Message(p, ">> " + Group.concatList());
-            Player.Message(p, "/blocks count <block> - Finds total count for <block> in map");
+        static void OutputProperties(Player p, byte b) {
+            BlockProperties props = Block.Props[b];
+
+            if (Block.LightPass(b, 0, BlockDefinition.GlobalDefs))
+                Player.Message(p, "Block will allow light through");
+            if (Block.Physics(b)) 
+                Player.Message(p, "Block affects physics in some way"); //AFFECT!
+            else 
+                Player.Message(p, "Block will not affect physics in any way"); //It's AFFECT!
+            if (Block.NeedRestart(b)) Player.Message(p, "The block's physics will auto-start");
+
+            if (props.OPBlock) Player.Message(p, "Block is unaffected by explosions");
+
+            if (Block.AllowBreak(b)) Player.Message(p, "Anybody can activate the block");
+            if (Block.Walkthrough(b)) Player.Message(p, "Block can be walked through");
+            if (Block.Death(b)) Player.Message(p, "Walking through block will kill you");
+
+            if (props.DoorAirId != 0) Player.Message(p, "Block is an ordinary door");
+            if (props.IsTDoor) Player.Message(p, "Block is a tdoor, which allows other blocks through when open");
+            if (props.ODoorId != Block.Zero) Player.Message(p, "Block is an odoor, which toggles (GLITCHY)");
+
+            if (Block.Mover(b)) Player.Message(p, "Block can be activated by walking through it");
+        }
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/blocks %H- Lists all basic blocks");
+            Player.Message(p, "%T/blocks all %H- Lists all complex blocks");
+            Player.Message(p, "%T/blocks [basic block] %H- Lists all blocks which look the same");
+            Player.Message(p, "%T/blocks [complex block] %H- Lists specific info on that block");
+            Player.Message(p, "%T/blocks [rank] %H- Lists all blocks [rank] can use");
+            Player.Message(p, "  %HSee %T/viewranks %Hfor a list of ranks");
         }
     }
 }

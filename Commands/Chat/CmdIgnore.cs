@@ -20,15 +20,14 @@
 using System.IO;
 namespace MCGalaxy.Commands {
     
-    public sealed class CmdIgnore : Command {
-        
+    public sealed class CmdIgnore : Command {       
         public override string name { get { return "ignore"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("deafen", "ignore all") }; }
+            get { return new [] { new CommandAlias("deafen", "all") }; }
         }
 
         public override void Use(Player p, string message) {
