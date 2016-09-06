@@ -33,8 +33,8 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             string[] files = Directory.GetFiles("levels", "*.lvl");
             Player.Message(p, "Unloaded maps (&c[no] %Sif not accessible): ");
-            MultiPageOutput.Output(p, GetMaps(files), map => FormatMap(p, map), 
-                                   "unloaded", "maps", message);
+            MultiPageOutput.Output(p, GetMaps(files), (map, i) => FormatMap(p, map),
+                                   "unloaded", "maps", message, false);
         }
         
         static List<string> GetMaps(string[] files) {

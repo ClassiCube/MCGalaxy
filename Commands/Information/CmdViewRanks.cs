@@ -48,8 +48,8 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "No one has the rank of " + grp.ColoredName);
             } else {
                 Player.Message(p, "People with the rank of " + grp.ColoredName + ":");
-                MultiPageOutput.Output(p, list, name => name, 
-                                       "viewranks " + args[0], "players", modifer);
+                MultiPageOutput.Output(p, list, (name, i) => name,
+                                       "viewranks " + args[0], "players", modifer, false);
             }
         }
         

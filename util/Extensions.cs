@@ -91,7 +91,7 @@ namespace MCGalaxy {
                 string value = formatter(item);
                 if (value == null) continue;
                  
-                if (!first) builder.Append(separator);              
+                if (!first) builder.Append(separator);
                 builder.Append(value);
                 first = false;
             }
