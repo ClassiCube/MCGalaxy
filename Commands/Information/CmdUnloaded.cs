@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -30,59 +31,30 @@ namespace MCGalaxy.Commands {
         public CmdUnloaded() { }
 
         public override void Use(Player p, string message) {
-            bool all = false;
-            int start = 0, end = 0;
-            if (message.CaselessStarts("all")) { 
-                all = true;
-                int index = message.IndexOf(' ');
-                message = message.Substring(index == -1 ? message.Length : (index + 1));
-            }
-            if (message != "") {
-                if (!int.TryParse(message, out end) || end <= 0) { Help(p); return; }
-                end *= 50;
-                start = end - 50;
-            }
-
             string[] files = Directory.GetFiles("levels", "*.lvl");
-            if (end == 0) {
-                StringBuilder list = ListMaps(p, all, files, 0, files.Length);
-                if (list.Length > 0) {
-                    Player.Message(p, "Unloaded levels (&c[no] %Sif not accessible): ");
-                    Player.Message(p, list.Remove(0, 2).ToString());
-                    if (files.Length > 50) { Player.Message(p, "For a more structured list, use /unloaded <1/2/3/..>"); }
-                } else {
-                    Player.Message(p, "No maps are unloaded");
-                }
-            } else {
-                if (end > files.Length) end = files.Length;
-                if (start > files.Length) { Player.Message(p, "No maps beyond number " + files.Length); return; }
-                
-                StringBuilder list = ListMaps(p, all, files, start, end);
-                if (list.Length > 0) {
-                    Player.Message(p, "Unloaded levels (&c[no] %Sif not accessible) (" + start + " to " + end + "):");
-                    Player.Message(p, list.Remove(0, 2).ToString());
-                } else {
-                    Player.Message(p, "No maps are unloaded");
-                }
+            Player.Message(p, "Unloaded maps (&c[no] %Sif not accessible): ");
+            MultiPageOutput.Output(p, GetMaps(files), file => FormatMap(p, file), 
+                                   "unloaded", "maps", message);
+        }
+        
+        static IEnumerable<string> GetMaps(string[] files) {
+            foreach (string file in files) {
+                Level[] loaded = LevelInfo.Loaded.Items;
+                string level = Path.GetFileNameWithoutExtension(file);
+                if (IsLoaded(loaded, level)) continue;
+                yield return level;
             }
         }
         
-        static StringBuilder ListMaps(Player p, bool all, string[] files, int start, int end) {
-            StringBuilder builder = new StringBuilder();
-            Level[] loaded = LevelInfo.Loaded.Items;
-            for (int i = start; i < end; i++) {
-                string level = Path.GetFileNameWithoutExtension(files[i]);
-                if (!all && IsLoaded(loaded, level)) continue;
-                
-                LevelPermission visitP, buildP;
-                bool loadOnGoto;
-                RetrieveProps(level, out visitP, out buildP, out loadOnGoto);
-                
-                string color = Group.findPerm(buildP).color;
-                string visit = loadOnGoto && (p == null || p.Rank >= visitP) ? "" : " &c[no]" + color;
-                builder.Append(", ").Append(color + level + visit);
-            }
-            return builder;
+        static string FormatMap(Player p, string file) {
+            string level = Path.GetFileNameWithoutExtension(file);
+            LevelPermission visitP, buildP;
+            bool loadOnGoto;
+            RetrieveProps(level, out visitP, out buildP, out loadOnGoto);
+            
+            string color = Group.findPerm(buildP).color;
+            string visit = loadOnGoto && (p == null || p.Rank >= visitP) ? "" : " &c[no]" + color;
+            return color + level + visit;
         }
         
         static bool IsLoaded(Level[] loaded, string level) {
@@ -107,7 +79,7 @@ namespace MCGalaxy.Commands {
             grp = args.Visit == null ? null : Group.Find(args.Visit);
             if (grp != null) visit = grp.Permission;
             grp = args.Build == null ? null : Group.Find(args.Build);
-            if (grp != null) build = grp.Permission;            
+            if (grp != null) build = grp.Permission;
             if (!bool.TryParse(args.LoadOnGoto, out loadOnGoto))
                 loadOnGoto = true;
         }

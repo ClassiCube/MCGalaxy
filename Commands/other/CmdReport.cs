@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleClear(Player p, string[] args) {
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "clear the list of reports."); return; }
+           if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "clear the list of reports."); return; }
            if (!Directory.Exists("extra/reportedbackups"))
                 Directory.CreateDirectory("extra/reportedbackups");            
             string[] files = Directory.GetFiles("extra/reported", "*.txt");

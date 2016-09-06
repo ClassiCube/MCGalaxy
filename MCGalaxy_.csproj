@@ -610,6 +610,7 @@
     <Compile Include="util\Formatter.cs" />
     <Compile Include="util\Math\DirUtils.cs" />
     <Compile Include="util\Math\Vectors.cs" />
+    <Compile Include="util\MultiPageOutput.cs" />
     <Compile Include="util\SparseBitSet.cs" />
     <Compile Include="util\TimeUtils.cs" />
     <Compile Include="util\Utils.cs" />
