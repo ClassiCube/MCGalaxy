@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System.Collections.Generic;
+
 namespace MCGalaxy.Commands {
     public sealed class CmdWhitelist : Command {
         public override string name { get { return "whitelist"; } }
@@ -27,20 +29,18 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (!Server.useWhitelist) { Player.Message(p, "Whitelist is not enabled."); return; }
             if (message == "") { Help(p); return; }
-            int sep = message.IndexOf(' ');
-            string action = sep >= 0 ? message.Substring(0, sep) : message;
-            string player = sep >= 0 ? message.Substring(sep + 1) : "";
-            
-            if (action.CaselessEq("list")) {
-                string names = Server.whiteList.All().Join(", ");
-                Player.Message(p, "Whitelist: &f" + names); return;
-            }
-            if (player == "") { Add(p, action); return; }
-            
-            if (action.CaselessEq("add")) {
-                Add(p, player);
-            } else if (action.CaselessEq("del") || action.CaselessEq("remove")) {
-                Remove(p, player);
+            string[] args = message.Split(' ');
+
+            if (args[0].CaselessEq("add")) {
+                if (args.Length < 2) { Help(p); return; }
+                Add(p, args[1]);
+            } else if (args[0].CaselessEq("del") || args[0].CaselessEq("remove")) {
+                if (args.Length < 2) { Help(p); return; }
+                Remove(p, args[1]);
+            } else if (args[0].CaselessEq("list")) {
+                List(p, args);
+            } else if (args.Length == 1) {
+                Add(p, args[0]);
             } else {
                 Help(p);
             }
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
         
         static void Add(Player p, string player) {
             if (Server.whiteList.Contains(player)) {
-                Player.Message(p, "&f" + player + " %Sis already on the whitelist!"); return;
+                Player.Message(p, player + " %Sis already on the whitelist!"); return;
             }
             
             Server.whiteList.Add(player);
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
         
         static void Remove(Player p, string player) {
             if (!Server.whiteList.Contains(player)) {
-                Player.Message(p, "&f" + player + " %Sis not on the whitelist!"); return;
+                Player.Message(p, player + " %Sis not on the whitelist!"); return;
             }
             
             Server.whiteList.Remove(player);
@@ -69,9 +69,23 @@ namespace MCGalaxy.Commands {
             Server.whiteList.Save();
             Server.s.Log("WHITELIST: Removed " + player);
         }
+        
+        static void List(Player p, string[] args) {
+            List<string> list = Server.whiteList.All();
+            string modifier = args.Length > 1 ? args[1] : "";
+            
+            if (list.Count == 0) {
+                Player.Message(p, "There are no whitelisted players.");
+            } else {
+                Player.Message(p, "Whitelisted players:");
+                MultiPageOutput.Output(p, list, 
+                                       (name, i) => PlayerInfo.GetColoredName(p, name),
+                                       "whitelist list", "players", modifier, false);
+            }
+        }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/whitelist <add/del> [player]");
+            Player.Message(p, "%T/whitelist add/del [player]");
             Player.Message(p, "%HAdds or removes [player] from the whitelist.");
             Player.Message(p, "%T/whitelist list");
             Player.Message(p, "%HLists all players who are on the whitelist.");
