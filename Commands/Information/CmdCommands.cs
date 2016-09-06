@@ -35,32 +35,42 @@ namespace MCGalaxy.Commands {
         
         internal static bool DoCommand(Player p, string message) {
             string[] args = message.Split(' ');
-            string sort = args.Length > 1 ? args[1].ToLower() : null;
+            string sort = args.Length > 1 ? args[1].ToLower() : "";
+            string modifier = args.Length > 2 ? args[2] : sort;
             
+            // if user only provided name/names/rank/ranks, don't treat that as the modifier
+            if (args.Length == 2) {
+                if (modifier == "name" || modifier == "names" || modifier == "rank" || modifier == "ranks") {
+                    modifier = "";
+                } else {
+                    sort = "";
+                }
+            }
+
             switch (args[0].ToLower()) {
                 case "build":
                 case "building":
-                    PrintHelpForGroup(p, sort, "build", "Building"); break;
+                    PrintHelpForGroup(p, sort, modifier, "build", "Building"); break;
                 case "chat":
-                    PrintHelpForGroup(p, sort, "chat", "Chat"); break;
+                    PrintHelpForGroup(p, sort, modifier, "chat", "Chat"); break;
                 case "eco":
                 case "economy":
-                    PrintHelpForGroup(p, sort, "eco", "Economy"); break;
+                    PrintHelpForGroup(p, sort, modifier, "eco", "Economy"); break;
                 case "mod":
                 case "moderation":
-                    PrintHelpForGroup(p, sort, "mod", "Moderation"); break;
+                    PrintHelpForGroup(p, sort, modifier, "mod", "Moderation"); break;
                 case "info":
                 case "information":
-                    PrintHelpForGroup(p, sort, "info", "Information"); break;
+                    PrintHelpForGroup(p, sort, modifier, "info", "Information"); break;
                 case "game":
                 case "games":
-                    PrintHelpForGroup(p, sort, "game", "Game"); break;
+                    PrintHelpForGroup(p, sort, modifier, "game", "Game"); break;
                 case "other":
                 case "others":
-                    PrintHelpForGroup(p, sort, "other", "Other");  break;
+                    PrintHelpForGroup(p, sort, modifier, "other", "Other");  break;
                 case "maps":
                 case "world":
-                    PrintHelpForGroup(p, sort, "world", "World"); break;
+                    PrintHelpForGroup(p, sort, modifier, "world", "World"); break;
                 case "short":
                 case "shortcut":
                 case "shortcuts":
@@ -70,79 +80,76 @@ namespace MCGalaxy.Commands {
                 case "command":
                 case "":
                     Group pGroup = p != null ? p.group : Group.findPerm(LevelPermission.Nobody);
-                    PrintRankCommands(p, sort, pGroup, true); break;
+                    PrintRankCommands(p, sort, modifier, pGroup, true); break;
                 case "commandsall":
                 case "commandall":
                 case "all":
-                    PrintAllCommands(p, sort); break;
+                    PrintAllCommands(p, sort, modifier); break;
                 default:
                     Group grp = Group.Find(args[0]);
                     if (grp == null) return false;
-                    PrintRankCommands(p, sort, grp, false); break;
+                    PrintRankCommands(p, sort, modifier, grp, false); break;
             }
             return true;
         }
         
-        static void PrintShortcuts(Player p, string sort) {
-            bool list1 = sort == null || sort != "2";
-            List<string> shortcuts = new List<string>();
-            foreach (Command c in Command.all.commands) {
-                if (p != null && !p.group.CanExecute(c) || c.shortcut == "") continue;
-                shortcuts.Add(c.shortcut + " %S[" + c.name + "]");
+        static void PrintShortcuts(Player p, string modifier) {
+            List<Command> shortcuts = new List<Command>();
+            foreach (Command cmd in Command.all.commands) {
+                if (cmd.shortcut == "") continue;
+                if (p != null && !p.group.CanExecute(cmd)) continue;
+                shortcuts.Add(cmd);
             }
             
-            int top = list1 ? shortcuts.Count / 2 : shortcuts.Count;
-            StringBuilder cmds = new StringBuilder();
-            for (int i = list1 ? 0 : shortcuts.Count / 2; i < top; i++)
-                cmds.Append(", &b").Append(shortcuts[i]);
-            
-            if (list1) {
-                Player.Message(p, "Available shortcuts (1):");
-                Player.Message(p, cmds.ToString(2, cmds.Length - 2));
-                Player.Message(p, "Type %T/cmds shortcuts 2 %Sto view the rest of the list ");
-            } else {
-                Player.Message(p, "Available shortcuts (2):");
-                Player.Message(p, cmds.ToString(2, cmds.Length - 2));
-                Player.Message(p, "Type %T/cmds shortcuts 1 %Sto view the rest of the list ");
-            }
+            MultiPageOutput.Output(p, shortcuts,
+                                   (cmd, i) => "&b" + cmd.shortcut + " %S[" + cmd.name + "]",
+                                   "cmds shortcuts", "shortcuts", modifier, false);
         }
         
-        static void PrintRankCommands(Player p, string sort, Group group, bool own) {
+        static void PrintRankCommands(Player p, string sort, string modifier, Group group, bool own) {
             List<Command> cmds = new List<Command>();
             foreach (Command c in Command.all.commands) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
                 if (!group.CanExecute(c) || disabled != null || c.name == null) continue;
                 cmds.Add(c);
-            }
+            }   
             
-            StringBuilder list = FormatCommands(cmds, sort);
+            if (cmds.Count == 0) {
+                Player.Message(p, "{0} %Scannot use any commands.", group.ColoredName); return;
+            }            
+            SortCommands(cmds, sort);            
             if (own)
                 Player.Message(p, "Available commands:");
             else
                 Player.Message(p, "Commands available to " + group.ColoredName + " %Srank:");
             
-            Player.Message(p, list.ToString(2, list.Length - 2));
+            string type = "cmds " + group.name;
+            if (sort != "") type += " " + sort;
+            MultiPageOutput.Output(p, cmds,
+                                   (cmd, i) => CmdHelp.GetColor(cmd) + cmd.name,
+                                   type, "commands", modifier, false);
             Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
-            Player.Message(p, "Type %T/cmds shortcuts %Sfor a list of command shortcuts.");
-            Player.Message(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
         }
         
-        static void PrintAllCommands(Player p, string sort) {
+        static void PrintAllCommands(Player p, string sort, string modifier) {
             List<Command> cmds = new List<Command>();
             foreach (Command c in Command.all.commands) {
                 if (c.name == null) continue;
                 cmds.Add(c);
             }
 
-            StringBuilder list = FormatCommands(cmds, sort);
+            SortCommands(cmds, sort);
             Player.Message(p, "All commands:");
-            Player.Message(p, list.ToString(2, list.Length - 2));
+            
+            string type = "cmds all";
+            if (sort != "") type += " " + sort;
+            MultiPageOutput.Output(p, cmds,
+                                   (cmd, i) => CmdHelp.GetColor(cmd) + cmd.name,
+                                   type, "commands", modifier, false);            
             Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
-            Player.Message(p, "Type %T/cmds shortcuts %Sfor a list of command shortcuts.");
-            Player.Message(p, "%bIf you can't see all commands, type %f/help %band choose a help category.");
         }
         
-        static void PrintHelpForGroup(Player p, string sort, 
+        static void PrintHelpForGroup(Player p, string sort, string modifier,
                                       string type, string category) {
             List<Command> cmds = new List<Command>();
             foreach (Command c in Command.all.commands) {
@@ -151,37 +158,37 @@ namespace MCGalaxy.Commands {
                     if (!c.type.Contains(type) || c.name == null) continue;
                     cmds.Add(c);
                 }
-            }
+            }    
             
-            StringBuilder list = FormatCommands(cmds, sort);
-            if (list.Length == 0) {
-                Player.Message(p, "You cannot use any of the " + category + " commands.");
-            } else {
-                Player.Message(p, category + " commands you may use:");
-                Player.Message(p, list.ToString(2, list.Length - 2) + ".");
-            }
+            if (cmds.Count == 0) {
+                Player.Message(p, "You cannot use any of the " + category + " commands."); return;
+            }            
+            SortCommands(cmds, sort);            
+            Player.Message(p, category + " commands you may use:");
+
+            type = "cmds " + category;
+            if (sort != "") type += " " + sort;            
+            MultiPageOutput.Output(p, cmds,
+                                   (cmd, i) => CmdHelp.GetColor(cmd) + cmd.name,
+                                   type, "commands", modifier, false);
+            Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
         }
         
-        static StringBuilder FormatCommands(List<Command> cmds, string sort) {
-            if (sort != null && (sort == "name" || sort == "names")) {
+        static void SortCommands(List<Command> cmds, string sort) {
+            if (sort == "name" || sort == "names") {
                 cmds.Sort((a, b) => a.name
                           .CompareTo(b.name));
             }
-            if (sort != null && (sort == "rank" || sort == "ranks")) {
+            if (sort == "rank" || sort == "ranks") {
                 cmds.Sort((a, b) => GrpCommands.MinPerm(a)
                           .CompareTo(GrpCommands.MinPerm(b)));
             }
-            
-            StringBuilder list = new StringBuilder();
-            foreach (Command c in cmds)
-                list.Append(", ").Append(CmdHelp.GetColor(c)).Append(c.name);
-            return list;
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/commands [category] [sort]");
+            Player.Message(p, "%T/commands [category] <sort>");
             Player.Message(p, "%HIf no category is given, outputs all commands you can use.");
-            Player.Message(p, "  %H\"shortcuts\" category outputs all command shortcuts.");            
+            Player.Message(p, "  %H\"shortcuts\" category outputs all command shortcuts.");
             Player.Message(p, "  %H\"all\" category outputs all commands.");
             Player.Message(p, "  %HIf category is a rank name, outputs all commands that rank can use.");
             Player.Message(p, "%HOther command categories:");

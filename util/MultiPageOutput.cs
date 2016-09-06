@@ -24,18 +24,18 @@ namespace MCGalaxy {
     public static class MultiPageOutput {
 
         public static void Output<T>(Player p, IList<T> items, Func<T, int, string> formatter,
-                                     string cmd, string type, string input, bool lines) {
+                                     string cmd, string type, string modifier, bool lines) {
             int page = 0, total = items.Count;
             int perPage = lines ? 10 : 30;
             
-            if (input == "") {
+            if (modifier == "") {
                 OutputPage(p, items, formatter, cmd, type, 1, lines);
                 if (total <= perPage) return;
                 Player.Message(p, "To see all {0}, use %T/{1} all", type, cmd);
-            } else if (input.CaselessEq("all")) {
+            } else if (modifier.CaselessEq("all")) {
             	OutputItems(p, items, 0, items.Count, lines, formatter);
                 Player.Message(p, "Showing {0} 1-{1} (out of {1})", type, items.Count);
-            } else if (!int.TryParse(input, out page)) {
+            } else if (!int.TryParse(modifier, out page)) {
                 Player.Message(p, "Page must be either \"all\" or an integer.");
             } else {
                 OutputPage(p, items, formatter, cmd, type, page, lines);

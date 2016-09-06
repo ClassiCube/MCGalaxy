@@ -525,7 +525,6 @@ namespace MCGalaxy {
             try {
                 using (StreamWriter w = new StreamWriter(path)) {
                     if (ignoreAll) w.WriteLine("&all");
-                    if (ignoreGlobal) w.WriteLine("&global");
                     if (ignoreIRC) w.WriteLine("&irc");
                     if (ignoreTitles) w.WriteLine("&titles");
                     if (ignoreNicks) w.WriteLine("&nicks");
@@ -546,8 +545,8 @@ namespace MCGalaxy {
             try {
                 string[] lines = File.ReadAllLines(path);
                 foreach (string line in lines) {
-                    if (line == "&global") ignoreGlobal = true;
-                    else if (line == "&all") ignoreAll = true;
+                    if (line == "&global") continue; // deprecated /ignore global
+                    if (line == "&all") ignoreAll = true;
                     else if (line == "&irc") ignoreIRC = true;
                     else if (line == "&titles") ignoreTitles = true;
                     else if (line == "&nicks") ignoreNicks = true;
@@ -558,8 +557,7 @@ namespace MCGalaxy {
                 Server.s.Log("Failed to load ignore list for: " + name);
             }
             
-            if (ignoreAll || ignoreGlobal || ignoreIRC 
-                || ignoreTitles || ignoreNicks || listignored.Count > 0)
+            if (ignoreAll || ignoreIRC || ignoreTitles || ignoreNicks || listignored.Count > 0)
                 SendMessage("&cType &a/ignore list &cto see who you are still ignoring");
         }
         
