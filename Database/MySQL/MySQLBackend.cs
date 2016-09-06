@@ -47,9 +47,8 @@ namespace MCGalaxy.SQL {
         
         
         public override bool TableExists(string table) {
-            using (DataTable results = GetRows("information_schema.tables", "*",
-        	                                   "WHERE table_schema = @1 AND table_name = @", 
-        	                                   table, Server.MySQLDatabaseName)) {
+            const string syntax = "SELECT * FROM information_schema.tables WHERE table_name = @0 AND table_schema = @1";
+            using (DataTable results = Database.Fill(syntax, table, Server.MySQLDatabaseName)) {
                 return results.Rows.Count > 0;
             }
         }
