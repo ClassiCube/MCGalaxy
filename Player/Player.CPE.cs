@@ -203,12 +203,16 @@ namespace MCGalaxy {
             SendEnvColor(4, level.LightColor);
         }
         
-        void SendEnvColor(byte type, string src) {
+        public void SendEnvColor(byte type, string hex) {
+            if (String.IsNullOrEmpty(hex)) {
+        		Send(Packet.MakeEnvColor(type, -1, -1, -1)); return;
+            }
+            
             try {
-                Color col = System.Drawing.ColorTranslator.FromHtml("#" + src.ToUpper());
-                SendEnvColor(type, col.R, col.G, col.B);
-            } catch {
-                SendEnvColor(type, -1, -1, -1);
+                CustomColor c = Colors.ParseHex(hex);
+                Send(Packet.MakeEnvColor(type, c.R, c.G, c.B));
+            } catch (Exception ex) {
+                Send(Packet.MakeEnvColor(type, -1, -1, -1));
             }
         }
         

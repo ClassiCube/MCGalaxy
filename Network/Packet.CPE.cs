@@ -62,6 +62,16 @@ namespace MCGalaxy {
             return buffer;
         }
         
+        public static byte[] MakeEnvColor(byte type, short r, short g, short b) {
+            byte[] buffer = new byte[8];
+            buffer[0] = Opcode.CpeEnvColors;
+            buffer[1] = type;
+            NetUtils.WriteI16(r, buffer, 2);
+            NetUtils.WriteI16(g, buffer, 4);
+            NetUtils.WriteI16(b, buffer, 6);
+            return buffer;
+        }
+        
         public static byte[] MakeMakeSelection(byte id, string label, Vec3U16 p1, Vec3U16 p2,
                                                short r, short g, short b, short opacity ) {
             byte[] buffer = new byte[86];
@@ -80,6 +90,13 @@ namespace MCGalaxy {
             NetUtils.WriteI16(g, buffer, 80);
             NetUtils.WriteI16(b, buffer, 82);
             NetUtils.WriteI16(opacity, buffer, 84);
+            return buffer;
+        }
+        
+        public static byte[] MakeDeleteSelection(byte id) {
+            byte[] buffer = new byte[2];
+            buffer[0] = Opcode.CpeMakeSelection;
+            buffer[1] = id;
             return buffer;
         }
         

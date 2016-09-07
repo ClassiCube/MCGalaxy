@@ -86,11 +86,11 @@ namespace MCGalaxy {
                 Player.Message(p, "Reset {0} color for {1} %Sto normal", envTypeName, p.level.name);
                 target = "";
             } else {
-			    if (!Utils.CheckHex(p, ref value)) return;
+                if (!Utils.CheckHex(p, ref value)) return;
                 Player.Message(p, "Set {0} color for {1} %Sto #{2}", envTypeName, p.level.name, value);
                 target = value;
             }
-            SendEnvColorPackets(p, envType, value);
+            UpdateEnvColor(p, envType, value);
         }
         
         static bool CheckBlock(Player p, string value, string variable, ref int modify) {
@@ -105,7 +105,7 @@ namespace MCGalaxy {
                 block == Block.mushroom || block == Block.redmushroom || block == Block.rope || block == Block.fire) {
                 Player.Message(p, "Env: Cannot use {0} for {1}.", block, variable);
             } else {
-            	modify = block == Block.custom_block ? extBlock : (byte)block;
+                modify = block == Block.custom_block ? extBlock : (byte)block;
                 Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.name, modify);
                 return true;
             }
@@ -161,22 +161,11 @@ namespace MCGalaxy {
             }
         }
         
-        internal static void SendEnvColorPackets(Player p, byte envType, string value) {
+        internal static void UpdateEnvColor(Player p, byte type, string hex) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level == p.level)
-                    SendEnvColorPacket(pl, envType, value);
-            }
-        }
-        
-        static void SendEnvColorPacket(Player p, byte envType, string value) {
-            if (p.HasCpeExt(CpeExt.EnvColors)) {
-                try {
-                    System.Drawing.Color col = System.Drawing.ColorTranslator.FromHtml("#" + value.ToUpper());
-                    p.SendEnvColor(envType, col.R, col.G, col.B);
-                } catch {
-                    p.SendEnvColor(envType, -1, -1, -1);
-                }
+                if (pl.level != p.level || !pl.HasCpeExt(CpeExt.EnvColors)) continue;
+                pl.SendEnvColor(type, hex);
             }
         }
     }

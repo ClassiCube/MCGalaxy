@@ -161,15 +161,15 @@ namespace MCGalaxy.Commands {
             }            
             if (preset == null) { SendPresetsMessage(p); return false; }
             
-            LevelEnv.SendEnvColorPackets(p, 0, preset.Sky);
+            LevelEnv.UpdateEnvColor(p, 0, preset.Sky);
             p.level.SkyColor = preset.Sky;
-            LevelEnv.SendEnvColorPackets(p, 1, preset.Clouds);
+            LevelEnv.UpdateEnvColor(p, 1, preset.Clouds);
             p.level.CloudColor = preset.Clouds;
-            LevelEnv.SendEnvColorPackets(p, 2, preset.Fog);
+            LevelEnv.UpdateEnvColor(p, 2, preset.Fog);
             p.level.FogColor = preset.Fog;
-            LevelEnv.SendEnvColorPackets(p, 3, preset.Shadow);
+            LevelEnv.UpdateEnvColor(p, 3, preset.Shadow);
             p.level.ShadowColor = preset.Shadow;
-            LevelEnv.SendEnvColorPackets(p, 4, preset.Sun);
+            LevelEnv.UpdateEnvColor(p, 4, preset.Sun);
             p.level.LightColor = preset.Sun;
             
             Level.SaveSettings(p.level);
