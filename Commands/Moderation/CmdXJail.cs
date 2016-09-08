@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands {
                 if (who.muted) mute.Use(p, message);
                 if (who.frozen) freeze.Use(p, message);
                 
-                PlayerActions.ChangeMap(who, Server.mainLevel.name);
+                PlayerActions.ChangeMap(who, Server.mainLevel);
                 who.BlockUntilLoad(10);
                 
                 jail.Use(p, message);

@@ -297,9 +297,9 @@ namespace MCGalaxy.Games
                         if (pl.level == oldMap)
                         {
                             if (sendAfkMain && pl.IsAfk) 
-                                PlayerActions.ChangeMap(pl, Server.mainLevel.name);
+                                PlayerActions.ChangeMap(pl, Server.mainLevel);
                             else 
-                                PlayerActions.ChangeMap(pl, map.name);
+                                PlayerActions.ChangeMap(pl, map);
                         }
                     }
                     if (OnMapChange != null)

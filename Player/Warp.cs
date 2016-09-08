@@ -48,7 +48,7 @@ namespace MCGalaxy {
             
             Level lvl = LevelInfo.FindExact(wp.lvlname);
             if (p.level != lvl)
-                PlayerActions.ChangeMap(p, wp.lvlname);
+                PlayerActions.ChangeMap(p, lvl);
             
             if (p.level.name.CaselessEq(wp.lvlname)) {
                 p.SendPos(0xFF, wp.x, wp.y, wp.z, wp.rotx, wp.roty);

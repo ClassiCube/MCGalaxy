@@ -308,7 +308,7 @@ namespace MCGalaxy {
             rot = new byte[2] { level.rotx, level.roty };
             
             Entities.SpawnEntities(this, x, y, z, rot[0], rot[1]);
-            CmdGoto.CheckGamesJoin(this, null);
+            PlayerActions.CheckGamesJoin(this, null);
             Loading = false;
         }
         

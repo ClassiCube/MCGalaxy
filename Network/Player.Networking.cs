@@ -359,7 +359,7 @@ namespace MCGalaxy {
                 }
             } catch (Exception ex) {
                 success = false;
-                PlayerActions.ChangeMap(this, Server.mainLevel.name);
+                PlayerActions.ChangeMap(this, Server.mainLevel);
                 SendMessage("There was an error sending the map data, you have been sent to the main level.");
                 Server.ErrorLog(ex);
             } finally {

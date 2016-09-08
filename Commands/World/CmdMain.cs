@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.World {
                 if (p.level.name == Server.mainLevel.name) {
                     Player.Message(p, "You are already on the server's main level."); return;
                 }
-                PlayerActions.ChangeMap(p, Server.mainLevel.name);
+                PlayerActions.ChangeMap(p, Server.mainLevel);
             } else {
                 if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "change the main level"); return; }
                 if (!Formatter.ValidName(p, message, "level")) return;

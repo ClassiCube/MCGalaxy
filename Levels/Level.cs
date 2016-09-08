@@ -208,7 +208,7 @@ namespace MCGalaxy {
             foreach (Player p in players) {
                 if (p.level == this) {
                     Player.Message(p, "You were moved to the main level as " + name + " was unloaded.");
-                    PlayerActions.ChangeMap(p, Server.mainLevel.name);
+                    PlayerActions.ChangeMap(p, Server.mainLevel);
                 }
             }
         }        
