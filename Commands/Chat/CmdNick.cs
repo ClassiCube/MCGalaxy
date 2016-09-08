@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
             }
             
             Player who = null;
-            PlayerBot bot = null;            
+            PlayerBot bot = null;
             if (isBot) bot = PlayerBot.FindMatchesPreferLevel(p, args[1]);
             else who = PlayerInfo.FindMatches(p, args[0]);
             if (bot == null && who == null) return;

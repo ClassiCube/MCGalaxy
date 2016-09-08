@@ -59,11 +59,11 @@ namespace MCGalaxy.Commands {
                 Player.SendChatFrom(who, who.FullName + " %Shad their title removed.", false);
                 Database.Execute("UPDATE Players SET Title = '' WHERE Name = @0", who.name);
             } else {
-                Player.SendChatFrom(who, who.FullName + " %Swas given the title of &b[" + title + "%b]", false);
+                Player.SendChatFrom(who, who.FullName + " %Swas given the title of &b[" + title + "&b]", false);
                 Database.Execute("UPDATE Players SET Title = @1 WHERE Name = @0", who.name, title);
             }        
             who.title = title;
-            who.SetPrefix();            
+            who.SetPrefix();
         }
         
         public override void Help(Player p) {

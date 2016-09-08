@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
                 args = args[1].Split(awardArgs, 2);
                 if (args.Length == 1) { 
                     Player.Message(p, "&cUse a : to separate the award name from its description."); 
-                    Help(p); return; 
+                    Help(p); return;
                 }
 
                 if (!Awards.Add(args[0], args[1])) {

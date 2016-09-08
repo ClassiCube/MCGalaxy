@@ -403,7 +403,7 @@
     <Compile Include="Config\ConfigAttribute.cs" />
     <Compile Include="Config\OtherAttributes.cs" />
     <Compile Include="Config\ConfigElement.cs" />
-    <Compile Include="Config\Properties.cs" />
+    <Compile Include="Config\ServerProperties.cs" />
     <Compile Include="Config\PropertiesFile.cs" />
     <Compile Include="Config\StringAttributes.cs" />
     <Compile Include="Database\BlockDB.cs" />

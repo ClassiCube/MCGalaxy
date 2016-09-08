@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
             int money = 0;
             if (who == null) {
                 target = Economy.FindMatches(p, data.Name, out money);
-                if (target == null) return;                
+                if (target == null) return;
                 Take(ref money, ref data);
                 Economy.UpdateMoney(target, money);
             } else {

@@ -26,17 +26,23 @@ namespace MCGalaxy {
 	
 	public static class SrvProperties {
 		
-		public static void Load(string givenPath, bool skipsalt = false) {
-			RandomNumberGenerator prng = RandomNumberGenerator.Create();
-			StringBuilder sb = new StringBuilder();
-			byte[] oneChar = new byte[1];
-			while (sb.Length < 16) {
-				prng.GetBytes(oneChar);
-				if (Char.IsLetterOrDigit((char)oneChar[0]))
-					sb.Append((char)oneChar[0]);
+		static void GenerateSalt() {
+			RandomNumberGenerator rng = RandomNumberGenerator.Create();
+			char[] chars = new char[16];
+			byte[] one = new byte[1];
+			
+			for (int i = 0; i < chars.Length; ) {
+				rng.GetBytes(one);
+				if (!Char.IsLetterOrDigit((char)one[0])) continue;
+				
+				chars[i] = (char)one[0]; i++;
 			}
-			Server.salt = sb.ToString();
-
+			Server.salt = new string(chars);
+		}
+		
+		public static void Load(string givenPath, bool skipSalt = false) {
+			if (!skipSalt) GenerateSalt();
+			Server.s.Log(Server.salt);
 			oldPerms = new OldPerms();
 			if (PropertiesFile.Read(givenPath, ref oldPerms, LineProcessor))
 				Server.s.SettingsUpdate();
