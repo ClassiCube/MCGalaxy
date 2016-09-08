@@ -61,13 +61,13 @@ namespace MCGalaxy.Commands.World {
         bool HandleGoto(Player p, string message) {
             Level lvl = LevelInfo.FindExact(message);
             if (lvl != null) {
-                return GoToLevel(p, lvl, message);
+                return GoToLevel(p, lvl);
             } else if (Server.AutoLoad) {
             	// First try exactly matching unloaded levels
             	if (LevelInfo.ExistsOffline(message))
             		return GotoOfflineLevel(p, message);
                 lvl = LevelInfo.Find(message);
-                if (lvl != null) return GoToLevel(p, lvl, message);
+                if (lvl != null) return GoToLevel(p, lvl);
                 
                 string map = LevelInfo.FindMapMatches(p, message);
                 if (map == null) return false;
@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.World {
                     Command.all.Find("search").Use(p, "levels " + message);
                     return false;
                 }
-                return GoToLevel(p, lvl, message);
+                return GoToLevel(p, lvl);
             }
         }
         
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.World {
         		CmdLoad.LoadLevel(p, message, "0", true);
                 Level lvl = LevelInfo.Find(message);
                 if (lvl != null) {
-                    return GoToLevel(p, lvl, message);
+                    return GoToLevel(p, lvl);
                 } else {
                     Player.Message(p, "Level \"{0}\" failed to be auto-loaded.", message);
                     return false;
@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands.World {
             return false;
         }
         
-        static bool GoToLevel(Player p, Level lvl, string message) {
+        static bool GoToLevel(Player p, Level lvl) {
             if (p.level == lvl) { Player.Message(p, "You are already in \"" + lvl.name + "\"."); return false; }
             if (!lvl.CanJoin(p)) return false;
             if (!Server.zombie.PlayerCanJoinLevel(p, lvl, p.level)) return false;

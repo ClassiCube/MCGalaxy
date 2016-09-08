@@ -62,15 +62,21 @@ namespace MCGalaxy {
         }
         
         
-        /// <summary> Returns whether the given player is allowed by these access permissions. </summary>
-        public bool Check(Player p, bool ignoreRankPerm = false) {
-            if (Blacklisted.CaselessContains(p.name)) return false;
-            if (Whitelisted.CaselessContains(p.name) || ignoreRankPerm) return true;
+        /// <summary> Returns the allowed state for the given player. </summary>
+        public LevelAccessResult Check(Player p, bool ignoreRankPerm = false) {
+            if (Blacklisted.CaselessContains(p.name)) 
+                return LevelAccessResult.Blacklisted;
+            if (Whitelisted.CaselessContains(p.name)) 
+                return LevelAccessResult.Whitelisted;            
+            if (ignoreRankPerm) 
+                return LevelAccessResult.Allowed;
             
-            if (p.Rank < Min) return false;
+            if (p.Rank < Min) 
+                return LevelAccessResult.BelowMinRank;           
             string maxCmd = IsVisit ? "pervisitmax" : "perbuildmax";
-            if (p.Rank > Max && !p.group.CanExecute(maxCmd)) return false;
-            return true;
+            if (p.Rank > Max && !p.group.CanExecute(maxCmd)) 
+                return LevelAccessResult.AboveMaxRank;
+            return LevelAccessResult.Allowed;
         }
         
         /// <summary> Returns whether the given player is allowed for these access permissions. </summary>
@@ -134,7 +140,7 @@ namespace MCGalaxy {
         bool CheckRank(Player p, LevelPermission perm, string target, bool newPerm) {
             if (p != null && perm > p.Rank) {
                 Player.Message(p, "You cannot change the {0} of a level {1} a {0} higher than your rank.", 
-        		               target, newPerm ? "to" : "with");
+                               target, newPerm ? "to" : "with");
                 return false;
             }
             return true;
@@ -153,8 +159,29 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != lvl) continue;
-                p.AllowBuild = lvl.BuildAccess.Check(p, false);
+                
+                LevelAccessResult access = lvl.BuildAccess.Check(p, false);
+                p.AllowBuild = access == LevelAccessResult.Whitelisted 
+                    || access == LevelAccessResult.Allowed;
             }
         }
+    }
+    
+    public enum LevelAccessResult {
+        
+        /// <summary> The player is whitelisted and always allowed. </summary>
+        Whitelisted,
+        
+        /// <summary> The player is blacklisted and never allowed. </summary>
+        Blacklisted,
+        
+        /// <summary> The player is allowed (by their rank) </summary>
+        Allowed,
+        
+        /// <summary> The player's rank is below the minimum rank allowed. </summary>
+        BelowMinRank,
+        
+        /// <summary> The player's rank is above the maximum rank allowed. </summary>
+        AboveMaxRank,
     }
 }
