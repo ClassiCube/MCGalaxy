@@ -185,6 +185,7 @@ namespace MCGalaxy {
         public static bool pub = true;
         [ConfigBool("verify-names", "Server", null, true)]
         public static bool verify = true;
+        /// <summary> true if maps sees server-wide chat, false if maps have level-only/isolated chat </summary>
         [ConfigBool("world-chat", "Server", null, true)]
         public static bool worldChat = true;
 

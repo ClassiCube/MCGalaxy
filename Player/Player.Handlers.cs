@@ -481,7 +481,6 @@ return;
                 
                 // Put this after vote collection so that people can vote even when chat is moderated
                 if (Server.chatmod && !voice) { SendMessage("Chat moderation is on, you cannot speak."); return; }
-                CheckForMessageSpam();
 
                 if (ChatModes.Handle(this, text)) return;
 
@@ -502,38 +501,23 @@ return;
                 text = HandleJoker(text);
                 if (Chatroom != null) { Chat.ChatRoom(this, text, true, Chatroom); return; }
 
-                if ( !level.worldChat ) {
+                if (!level.worldChat) {
                     Server.s.Log("<" + name + ">[level] " + text);
                     Chat.GlobalChatLevel(this, text, true);
-                    return;
-                }
-
-                if ( text[0] == '%' ) {
-                    string newtext = text;
-                    if (!Server.worldChat) {
-                        newtext = text.Remove(0, 1).Trim();
-                        Chat.GlobalChatLevel(this, newtext, true);
-                    } else {
-                        SendChatFrom(this, newtext);
-                    }
-                    Server.s.Log("<" + name + "> " + newtext);
-                    //IRCBot.Say("<" + name + "> " + newtext);
+                } else {
+                    Server.s.Log("<" + name + "> " + text);
                     if (OnChat != null) OnChat(this, text);
                     if (PlayerChat != null) PlayerChat(this, text);
                     OnPlayerChatEvent.Call(this, text);
-                    return;
+                    
+                    if (cancelchat) { cancelchat = false; return; }
+                    if (Server.worldChat) {
+                        SendChatFrom(this, text);
+                    } else {
+                        Chat.GlobalChatLevel(this, text, true);
+                    }
                 }
-                Server.s.Log("<" + name + "> " + text);
-                if (OnChat != null) OnChat(this, text);
-                if (PlayerChat != null) PlayerChat(this, text);
-                OnPlayerChatEvent.Call(this, text);
-                
-                if (cancelchat) { cancelchat = false; return; }
-                if (Server.worldChat) {
-                    SendChatFrom(this, text);
-                } else {
-                    Chat.GlobalChatLevel(this, text, true);
-                }
+                CheckForMessageSpam();
             }
             catch ( Exception e ) { Server.ErrorLog(e); Chat.MessageAll("An error occurred: {0}", e.Message); }
         }

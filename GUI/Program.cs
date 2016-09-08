@@ -48,19 +48,23 @@ namespace MCGalaxy.Gui {
             if (Server.restartOnError)
                 App.ExitProgram(true);
         }
+        
+        static void CheckDuplicateProcesses() {
+            Process[] duplicates = Process.GetProcessesByName("MCGalaxy");
+            if (duplicates.Length == 1) return;
+            
+            Process proc = Process.GetCurrentProcess();
+            foreach (Process pr in duplicates) {
+                if (pr.MainModule.BaseAddress == proc.MainModule.BaseAddress)
+                    if (pr.Id != proc.Id) pr.Kill();
+            }
+        }
 
         static bool useConsole, useHighQualityGui;
         [STAThread]
         public static void Main(string[] args) {
             DateTime startTime = DateTime.UtcNow;
-            Process[] duplicates = Process.GetProcessesByName("MCGalaxy");
-            if (duplicates.Length != 1) {
-                Process proc = Process.GetCurrentProcess();
-                foreach (Process pr in duplicates) {
-                    if (pr.MainModule.BaseAddress == proc.MainModule.BaseAddress)
-                        if (pr.Id != proc.Id) pr.Kill();
-                }
-            }
+            CheckDuplicateProcesses();
             
             Logger.Init();
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;

@@ -27,7 +27,7 @@ namespace MCGalaxy {
             buffer[1] = Server.version;
             
             bool cp437 = p.HasCpeExt(CpeExt.FullCP437);
-            string motd = p.level.GetMotd(p);            
+            string motd = p.level.GetMotd(p);
             if (motd.Length > 64) {
                 NetUtils.Write(motd, buffer, 2, cp437);
                 NetUtils.Write(motd.Substring(64), buffer, 66, cp437);
