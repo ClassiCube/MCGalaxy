@@ -522,20 +522,6 @@ namespace MCGalaxy {
             Send(buffer);
         }
         
-        public void SendEnvColor( byte type, short r, short g, short b ) {
-            byte[] buffer = new byte[8];
-            buffer[0] = Opcode.CpeEnvColors;
-            buffer[1] = type;
-            NetUtils.WriteI16(r, buffer, 2);
-            NetUtils.WriteI16(g, buffer, 4);
-            NetUtils.WriteI16(b, buffer, 6);
-            Send(buffer);
-        }
-        
-        public void SendDeleteSelection( byte id ) {
-            SendRaw(Opcode.CpeRemoveSelection, id);
-        }
-        
         public void SendSetBlockPermission( byte type, bool canplace, bool candelete ) {
             byte[] buffer = new byte[4];
             buffer[0] = Opcode.CpeSetBlockPermission;

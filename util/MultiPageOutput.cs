@@ -36,27 +36,25 @@ namespace MCGalaxy {
             	OutputItems(p, items, 0, items.Count, lines, formatter);
                 Player.Message(p, "Showing {0} 1-{1} (out of {1})", type, items.Count);
             } else if (!int.TryParse(modifier, out page)) {
-                Player.Message(p, "Page must be either \"all\" or an integer.");
+                Player.Message(p, "Input must be either \"all\" or an integer.");
             } else {
                 OutputPage(p, items, formatter, cmd, type, page, lines);
             }
         }
         
         static void OutputPage<T>(Player p, IList<T> items, Func<T, int, string> formatter,
-                                  string cmd, string type, int page, bool lines) {
+                                  string cmd, string type, int start, bool lines) {
             int perPage = lines ? 10 : 30;
-            int total = items.Count, maxPage = total / perPage;
-            page = Utils.Clamp(page - 1, 0, maxPage); // want page numbers to start at 1
+            start = Utils.Clamp(start - 1, 0, items.Count - 1); // want item numbers to start at 1         
+            int end = Math.Min(start + perPage, items.Count);
+            OutputItems(p, items, start, end, lines, formatter);
             
-            int entriesEnd = Math.Min((page + 1) * perPage, total);
-            OutputItems(p, items, page * perPage, entriesEnd, lines, formatter);
-            
-            if (page < maxPage) {
+            if (end < items.Count) {
                 Player.Message(p, "Showing {0} {1}-{2} (out of {3}) Next: %T/{4} {5}",
-                               type, page * perPage + 1, entriesEnd, total, cmd, page + 2);
+                               type, start + 1, end, items.Count, cmd, start + 1 + perPage);
             } else {
                 Player.Message(p, "Showing {0} {1}-{2} (out of {3})",
-                               type, page * perPage + 1, entriesEnd, total);
+                               type, start + 1, end, items.Count);
             }
         }
         

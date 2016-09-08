@@ -251,10 +251,10 @@ namespace MCGalaxy {
                 RawHeldBlock = block;
                 
                 if ((action == 0 || block == 0) && !level.Deletable) {
-                    SendMessage("You cannot currently delete blocks in this level.");
+                    SendMessage("Deleting blocks is disabled in this level.");
                     RevertBlock(x, y, z); return;
                 } else if (action == 1 && !level.Buildable) {
-                    SendMessage("You cannot currently place blocks in this level.");
+                    SendMessage("Placing blocks is disabled in this level.");
                     RevertBlock(x, y, z); return;
                 }
                 

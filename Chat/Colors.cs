@@ -264,6 +264,37 @@ namespace MCGalaxy {
                 ExtColors[col.Code] = col;
             }
         }
+        
+        public static CustomColor ParseHex(string hex) {
+            if (hex.Length > 0 && hex[0] == '#') hex = hex.Remove(0, 1);
+            if (hex.Length != 3 && hex.Length != 6)
+                throw new ArgumentException("hex must be either 3 or 6 chars long");
+            
+            CustomColor c = default(CustomColor);
+            int R, G, B;
+            if (hex.Length == 6) {
+                R = (Hex(hex[0]) << 4) | Hex(hex[1]);
+                G = (Hex(hex[2]) << 4) | Hex(hex[3]);
+                B = (Hex(hex[4]) << 4) | Hex(hex[5]);
+            } else {
+                R = Hex(hex[0]); R |= (R << 4);
+                G = Hex(hex[1]); G |= (G << 4);
+                B = Hex(hex[2]); B |= (B << 4);
+            }
+            
+            c.R = (byte)R; c.G = (byte)G; c.B = (byte)B; c.A = 255;
+            return c;
+        }
+        
+        static int Hex(char value) {
+            if (value >= '0' && value <= '9')
+                return (int)(value - '0');
+            if (value >= 'a' && value <= 'f')
+                return (int)(value - 'a') + 10;
+            if (value >= 'A' && value <= 'F')
+                return (int)(value - 'A') + 10;
+            throw new ArgumentException("Non hex char: " + value);
+        }
     }    
     
     public struct CustomColor {
