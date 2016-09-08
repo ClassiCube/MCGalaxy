@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands {
                 string ipMsg = who.IP;
                 if (Server.bannedIP.Contains(who.IP)) ipMsg = "&8" + who.IP + ", which is banned";
                 Player.Message(p, "  The IP of " + ipMsg);
-                if (Server.useWhitelist&& Server.whiteList.Contains(who.Name))
+                if (Server.useWhitelist && Server.whiteList.Contains(who.Name))
                     Player.Message(p, "  Player is &fWhitelisted");
             }
             if (who.AfkMessage != null)

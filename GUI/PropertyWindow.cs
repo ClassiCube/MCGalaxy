@@ -45,6 +45,7 @@ namespace MCGalaxy.Gui {
             chat_cmbDesc.Items.AddRange(colors);
             cmbColor.Items.AddRange(colors);
 
+            sec_cmbVerifyRank.Enabled = Server.verifyadmins;
             ToggleIrcSettings(Server.irc);
             ToggleMySQLSettings(Server.useMySQL);
             ToggleAutoMuteSettings(Server.checkspam);
@@ -60,7 +61,7 @@ namespace MCGalaxy.Gui {
                 cmbDefaultRank.Items.Add(grp.name);
                 cmbOpChat.Items.Add(grp.name);
                 cmbAdminChat.Items.Add(grp.name);
-                cmbVerificationRank.Items.Add(grp.name);
+                sec_cmbVerifyRank.Items.Add(grp.name);
                 lsCmbSetupRank.Items.Add(grp.name);
                 lsCmbControlRank.Items.Add(grp.name);
                 cmbAFKKickPerm.Items.Add(grp.name);
@@ -78,21 +79,10 @@ namespace MCGalaxy.Gui {
                     osmaprank = grp.name;
             }
             
-            listPasswords.Items.Clear();
-            if (Directory.Exists("extra/passwords")) {
-                string[] files = Directory.GetFiles("extra/passwords", "*.dat");
-                listPasswords.BeginUpdate();
-                foreach (string file in files) {
-                    string name = Path.GetFileNameWithoutExtension(file);
-                    listPasswords.Items.Add(name);
-                }
-                listPasswords.EndUpdate();
-            }
-            
             cmbDefaultRank.SelectedIndex = 1;
             cmbOpChat.SelectedIndex = ( opchatperm != String.Empty ? cmbOpChat.Items.IndexOf(opchatperm) : 1 );
             cmbAdminChat.SelectedIndex = ( adminchatperm != String.Empty ? cmbAdminChat.Items.IndexOf(adminchatperm) : 1 );
-            cmbVerificationRank.SelectedIndex = ( verifyadminsperm != String.Empty ? cmbVerificationRank.Items.IndexOf(verifyadminsperm) : 1 );
+            sec_cmbVerifyRank.SelectedIndex = ( verifyadminsperm != String.Empty ? sec_cmbVerifyRank.Items.IndexOf(verifyadminsperm) : 1 );
             cmbAFKKickPerm.SelectedIndex = ( afkkickrank != String.Empty ? cmbAFKKickPerm.Items.IndexOf(afkkickrank) : 1 );
             cmbOsMap.SelectedIndex = ( osmaprank != String.Empty ? cmbOsMap.Items.IndexOf(osmaprank) : 1 );
 
@@ -450,7 +440,7 @@ namespace MCGalaxy.Gui {
                 case "guest-limit-notify":
                     chkGuestLimitNotify.Checked = value.ToLower() == "true"; break;
                 case "admin-verification":
-                    chkEnableVerification.Checked = value.ToLower() == "true"; break;
+                    sec_cbVerifyAdmins.Checked = value.ToLower() == "true"; break;
                 case "usemysql":
                     chkUseSQL.Checked = value.ToLower() == "true"; break;
                 case "username":
@@ -481,7 +471,7 @@ namespace MCGalaxy.Gui {
                     }
                     break;
                 case "mute-on-spam":
-                    spam_cbAuto.Checked = value.ToLower() == "true";
+                    sec_cbAutoMute.Checked = value.ToLower() == "true";
                     break;
                 case "spam-messages":
                     try {
@@ -494,23 +484,24 @@ namespace MCGalaxy.Gui {
                 case "spam-mute-time":
                     try {
                         spam_numMute.Value = Convert.ToInt16(value);
-                    }
-                    catch {
+                    } catch {
                         spam_numMute.Value = 60;
                     }
                     break;
                 case "log-notes":
-                    cbLogNotes.Checked = value.ToLower() == "true";
+                    sec_cbLogNotes.Checked = value.ToLower() == "true";
                     break;
                 case "show-empty-ranks":
                     chkShowEmptyRanks.Checked = value.ToLower() == "true";
                     break;
-
+                case "use-whitelist":
+                    sec_cbWhitelist.Checked = value.ToLower() == "true";
+                    break;
+                    
                 case "cooldown":
                     try {
                         Server.reviewcooldown = Convert.ToInt32(value.ToLower()) < 600 ? Convert.ToInt32(value.ToLower()) : 600;
-                    }
-                    catch {
+                    } catch {
                         Server.reviewcooldown = 600;
                         Server.s.Log("An error occurred reading the review cooldown value");
                     }
@@ -638,14 +629,17 @@ namespace MCGalaxy.Gui {
 
             Server.hackrank_kick = hackrank_kick.Checked;
             Server.hackrank_kick_time = int.Parse(hackrank_kick_time.Text);
-            Server.verifyadmins = chkEnableVerification.Checked;
-            Server.verifyadminsrank = Group.GroupList.Find(grp => grp.name == cmbVerificationRank.SelectedItem.ToString()).Permission;
-
-            Server.checkspam = spam_cbAuto.Checked;
+            Server.verifyadmins = sec_cbVerifyAdmins.Checked;
+            Server.verifyadminsrank = Group.GroupList.Find(grp => grp.name == sec_cmbVerifyRank.SelectedItem.ToString()).Permission;
+            Server.useWhitelist = sec_cbWhitelist.Checked;
+            if (Server.useWhitelist && Server.whiteList == null)
+                Server.whiteList = PlayerList.Load("whitelist.txt");
+            
+            Server.checkspam = sec_cbAutoMute.Checked;
             Server.spamcounter = (int)spam_numMsgs.Value;
             Server.mutespamtime = (int)spam_numMute.Value;
             Server.spamcountreset = (int)spam_numSecs.Value;
-            Server.LogNotes = cbLogNotes.Checked;
+            Server.LogNotes = sec_cbLogNotes.Checked;
             Server.showEmptyRanks = chkShowEmptyRanks.Checked;
             Server.reviewcooldown = (int)nudCooldownTime.Value;
         }
@@ -1175,29 +1169,6 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             }
         }
 
-        private void btnReset_Click(object sender, EventArgs e) {
-            if ( listPasswords.Text == "" ) {
-                MessageBox.Show("You have not selected a user's password to reset!");
-                return;
-            }
-            try {
-                File.Delete("extra/passwords/" + listPasswords.Text + ".dat");
-                listPasswords.Items.Clear();                
-                string[] files = Directory.GetFiles("extra/passwords", "*.dat");
-                
-                listPasswords.BeginUpdate();
-                foreach (string file in files) {
-                    string name = Path.GetFileNameWithoutExtension(file);
-                    listPasswords.Items.Add(name);
-                }
-                listPasswords.EndUpdate();
-            }
-            catch {
-                MessageBox.Show("Failed to reset password!");
-            }
-
-        }
-
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             try {
                 System.Diagnostics.Process.Start("http://dev.mysql.com/downloads/");
@@ -1277,7 +1248,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         }
         
         void spam_cbAuto_CheckedChanged(object sender, EventArgs e) {
-            ToggleAutoMuteSettings(spam_cbAuto.Checked);
+            ToggleAutoMuteSettings(sec_cbAutoMute.Checked);
         }
 
 
@@ -1304,6 +1275,10 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             spam_numMsgs.Enabled = enabled;
             spam_numMute.Enabled = enabled;
             spam_numSecs.Enabled = enabled;
+        }
+        
+        void VerifyAdminsChecked(object sender, System.EventArgs e) {
+            sec_cmbVerifyRank.Enabled = sec_cbVerifyAdmins.Checked;
         }
     }
 }

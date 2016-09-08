@@ -136,8 +136,8 @@ namespace MCGalaxy.Gui
             this.txtPort = new System.Windows.Forms.TextBox();
             this.chkLogBeat = new System.Windows.Forms.CheckBox();
             this.chkUseSQL = new System.Windows.Forms.CheckBox();
-            this.cmbVerificationRank = new System.Windows.Forms.ComboBox();
-            this.chkEnableVerification = new System.Windows.Forms.CheckBox();
+            this.sec_cmbVerifyRank = new System.Windows.Forms.ComboBox();
+            this.sec_cbVerifyAdmins = new System.Windows.Forms.CheckBox();
             this.lsChkSendAFKMain = new System.Windows.Forms.CheckBox();
             this.lsChkStartOnStartup = new System.Windows.Forms.CheckBox();
             this.lsNudVoteCount = new System.Windows.Forms.NumericUpDown();
@@ -161,9 +161,10 @@ namespace MCGalaxy.Gui
             this.cmbOpChat = new System.Windows.Forms.ComboBox();
             this.chkTpToHigherRanks = new System.Windows.Forms.CheckBox();
             this.cmbDefaultRank = new System.Windows.Forms.ComboBox();
-            this.cbLogNotes = new System.Windows.Forms.CheckBox();
             this.cmbOsMap = new System.Windows.Forms.ComboBox();
-            this.spam_cbAuto = new System.Windows.Forms.CheckBox();
+            this.sec_cbWhitelist = new System.Windows.Forms.CheckBox();
+            this.sec_cbLogNotes = new System.Windows.Forms.CheckBox();
+            this.sec_cbAutoMute = new System.Windows.Forms.CheckBox();
             this.pageBlocks = new System.Windows.Forms.TabPage();
             this.btnBlHelp = new System.Windows.Forms.Button();
             this.txtBlRanks = new System.Windows.Forms.TextBox();
@@ -364,6 +365,7 @@ namespace MCGalaxy.Gui
             this.propsZG = new System.Windows.Forms.PropertyGrid();
             this.pageSecurity = new System.Windows.Forms.TabPage();
             this.gbSec_Other = new System.Windows.Forms.GroupBox();
+            this.sec_lblRank = new System.Windows.Forms.Label();
             this.gbSec_Spam = new System.Windows.Forms.GroupBox();
             this.spam_lblOnMute = new System.Windows.Forms.Label();
             this.spam_numMsgs = new System.Windows.Forms.NumericUpDown();
@@ -373,11 +375,6 @@ namespace MCGalaxy.Gui
             this.spam_lblForMute = new System.Windows.Forms.Label();
             this.spam_numMute = new System.Windows.Forms.NumericUpDown();
             this.spam_lblForSecs = new System.Windows.Forms.Label();
-            this.gbSec_Passwords = new System.Windows.Forms.GroupBox();
-            this.btnReset = new System.Windows.Forms.Button();
-            this.listPasswords = new System.Windows.Forms.ListBox();
-            this.label39 = new System.Windows.Forms.Label();
-            this.label38 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabChat.SuspendLayout();
             this.chat_gbTab.SuspendLayout();
@@ -458,7 +455,6 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.spam_numMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spam_numSecs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spam_numMute)).BeginInit();
-            this.gbSec_Passwords.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabChat
@@ -1195,7 +1191,7 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.label24, "Limit for custom physics set by /rp");
             // 
             // chkPhysicsRest
-            //
+            // 
             this.chkPhysicsRest.Appearance = System.Windows.Forms.Appearance.Button;
             this.chkPhysicsRest.Location = new System.Drawing.Point(8, 20);
             this.chkPhysicsRest.Name = "chkPhysicsRest";
@@ -1315,7 +1311,7 @@ namespace MCGalaxy.Gui
             this.chkWorld.AutoSize = true;
             this.chkWorld.Location = new System.Drawing.Point(9, 72);
             this.chkWorld.Name = "chkWorld";
-            this.chkWorld.Size = new System.Drawing.Size(78, 17);
+            this.chkWorld.Size = new System.Drawing.Size(105, 17);
             this.chkWorld.TabIndex = 4;
             this.chkWorld.Text = "Server-wide chat";
             this.toolTip.SetToolTip(this.chkWorld, "If disabled, every map has isolated chat.\nIf enabled, every map is able to commun" +
@@ -1399,28 +1395,27 @@ namespace MCGalaxy.Gui
             this.chkUseSQL.UseVisualStyleBackColor = true;
             this.chkUseSQL.CheckedChanged += new System.EventHandler(this.chkUseSQL_CheckedChanged);
             // 
-            // cmbVerificationRank
+            // sec_cmbVerifyRank
             // 
-            this.cmbVerificationRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbVerificationRank.FormattingEnabled = true;
-            this.cmbVerificationRank.Location = new System.Drawing.Point(60, 64);
-            this.cmbVerificationRank.Name = "cmbVerificationRank";
-            this.cmbVerificationRank.Size = new System.Drawing.Size(103, 21);
-            this.cmbVerificationRank.TabIndex = 22;
-            this.toolTip.SetToolTip(this.cmbVerificationRank, "The rank that verification is required for admins to gain access to commands.");
+            this.sec_cmbVerifyRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.sec_cmbVerifyRank.FormattingEnabled = true;
+            this.sec_cmbVerifyRank.Location = new System.Drawing.Point(72, 95);
+            this.sec_cmbVerifyRank.Name = "sec_cmbVerifyRank";
+            this.sec_cmbVerifyRank.Size = new System.Drawing.Size(103, 21);
+            this.sec_cmbVerifyRank.TabIndex = 22;
+            this.toolTip.SetToolTip(this.sec_cmbVerifyRank, "Minimum rank that is required to use /pass before they can use commands.");
             // 
-            // chkEnableVerification
+            // sec_cbVerifyAdmins
             // 
-            this.chkEnableVerification.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkEnableVerification.AutoSize = true;
-            this.chkEnableVerification.Location = new System.Drawing.Point(24, 20);
-            this.chkEnableVerification.Name = "chkEnableVerification";
-            this.chkEnableVerification.Size = new System.Drawing.Size(49, 23);
-            this.chkEnableVerification.TabIndex = 23;
-            this.chkEnableVerification.Text = "Enable";
-            this.toolTip.SetToolTip(this.chkEnableVerification, "Whether or not the server will ask for verification from admins before they can u" +
-                        "se commands.");
-            this.chkEnableVerification.UseVisualStyleBackColor = true;
+            this.sec_cbVerifyAdmins.AutoSize = true;
+            this.sec_cbVerifyAdmins.Location = new System.Drawing.Point(15, 74);
+            this.sec_cbVerifyAdmins.Name = "sec_cbVerifyAdmins";
+            this.sec_cbVerifyAdmins.Size = new System.Drawing.Size(111, 17);
+            this.sec_cbVerifyAdmins.TabIndex = 23;
+            this.sec_cbVerifyAdmins.Text = "Admin verification";
+            this.toolTip.SetToolTip(this.sec_cbVerifyAdmins, "If enabled, admins must verify with /pass before they can use commands.");
+            this.sec_cbVerifyAdmins.UseVisualStyleBackColor = true;
+            this.sec_cbVerifyAdmins.CheckedChanged += new System.EventHandler(this.VerifyAdminsChecked);
             // 
             // lsChkSendAFKMain
             // 
@@ -1726,7 +1721,7 @@ namespace MCGalaxy.Gui
             this.chkTpToHigherRanks.AutoSize = true;
             this.chkTpToHigherRanks.Location = new System.Drawing.Point(11, 142);
             this.chkTpToHigherRanks.Name = "chkTpToHigherRanks";
-            this.chkTpToHigherRanks.Size = new System.Drawing.Size(127, 23);
+            this.chkTpToHigherRanks.Size = new System.Drawing.Size(136, 17);
             this.chkTpToHigherRanks.TabIndex = 42;
             this.chkTpToHigherRanks.Text = "Allow tp to higher ranks";
             this.toolTip.SetToolTip(this.chkTpToHigherRanks, "Allows the use of /tp to players of higher rank");
@@ -1742,17 +1737,6 @@ namespace MCGalaxy.Gui
             this.cmbDefaultRank.TabIndex = 44;
             this.toolTip.SetToolTip(this.cmbDefaultRank, "Default rank assigned to new visitors to the server.");
             // 
-            // cbLogNotes
-            // 
-            this.cbLogNotes.AutoSize = true;
-            this.cbLogNotes.Location = new System.Drawing.Point(15, 20);
-            this.cbLogNotes.Name = "cbLogNotes";
-            this.cbLogNotes.Size = new System.Drawing.Size(178, 17);
-            this.cbLogNotes.TabIndex = 22;
-            this.cbLogNotes.Text = "Log notes (/ban, /warn, /kick etc)";
-            this.toolTip.SetToolTip(this.cbLogNotes, "\"Bob has died 10 times.\"");
-            this.cbLogNotes.UseVisualStyleBackColor = true;
-            // 
             // cmbOsMap
             // 
             this.cmbOsMap.FormattingEnabled = true;
@@ -1763,16 +1747,37 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.cmbOsMap, "Default min rank that can build on maps made with /os map add.\nIf \'nobody\' is sel" +
                         "ected, the default min rank used is the min rank that can use /os.");
             // 
+            // sec_cbWhitelist
+            // 
+            this.sec_cbWhitelist.Location = new System.Drawing.Point(15, 44);
+            this.sec_cbWhitelist.Name = "sec_cbWhitelist";
+            this.sec_cbWhitelist.Size = new System.Drawing.Size(104, 24);
+            this.sec_cbWhitelist.TabIndex = 23;
+            this.sec_cbWhitelist.Text = "Use whitelist";
+            this.toolTip.SetToolTip(this.sec_cbWhitelist, "If enabled, only players who have been whitelisted with /whitelist are allowed to" +
+                        " join");
+            this.sec_cbWhitelist.UseVisualStyleBackColor = true;
+            // 
+            // cbLogNotes
+            // 
+            this.sec_cbLogNotes.AutoSize = true;
+            this.sec_cbLogNotes.Location = new System.Drawing.Point(15, 20);
+            this.sec_cbLogNotes.Name = "sec_cbLogNotes";
+            this.sec_cbLogNotes.Size = new System.Drawing.Size(178, 17);
+            this.sec_cbLogNotes.TabIndex = 22;
+            this.sec_cbLogNotes.Text = "Log notes (/ban, /warn, /kick etc)";
+            this.sec_cbLogNotes.UseVisualStyleBackColor = true;
+            // 
             // spam_cbAuto
             // 
-            this.spam_cbAuto.AutoSize = true;
-            this.spam_cbAuto.Location = new System.Drawing.Point(10, 20);
-            this.spam_cbAuto.Name = "spam_cbAuto";
-            this.spam_cbAuto.Size = new System.Drawing.Size(142, 17);
-            this.spam_cbAuto.TabIndex = 24;
-            this.spam_cbAuto.Text = "Enable automatic muting";
-            this.spam_cbAuto.UseVisualStyleBackColor = true;
-            this.spam_cbAuto.CheckedChanged += new System.EventHandler(this.spam_cbAuto_CheckedChanged);
+            this.sec_cbAutoMute.AutoSize = true;
+            this.sec_cbAutoMute.Location = new System.Drawing.Point(10, 20);
+            this.sec_cbAutoMute.Name = "sec_cbAutoMute";
+            this.sec_cbAutoMute.Size = new System.Drawing.Size(142, 17);
+            this.sec_cbAutoMute.TabIndex = 24;
+            this.sec_cbAutoMute.Text = "Enable automatic muting";
+            this.sec_cbAutoMute.UseVisualStyleBackColor = true;
+            this.sec_cbAutoMute.CheckedChanged += new System.EventHandler(this.spam_cbAuto_CheckedChanged);
             // 
             // pageBlocks
             // 
@@ -1901,7 +1906,7 @@ namespace MCGalaxy.Gui
             this.gbRankGeneral.Controls.Add(this.label37);
             this.gbRankGeneral.Location = new System.Drawing.Point(11, 317);
             this.gbRankGeneral.Name = "gbRankGeneral";
-            this.gbRankGeneral.Size = new System.Drawing.Size(191, 185);
+            this.gbRankGeneral.Size = new System.Drawing.Size(191, 179);
             this.gbRankGeneral.TabIndex = 19;
             this.gbRankGeneral.TabStop = false;
             this.gbRankGeneral.Text = "General settings";
@@ -2686,7 +2691,7 @@ namespace MCGalaxy.Gui
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(6, 213);
+            this.label49.Location = new System.Drawing.Point(25, 213);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(56, 13);
             this.label49.TabIndex = 29;
@@ -3987,7 +3992,6 @@ namespace MCGalaxy.Gui
             this.pageSecurity.BackColor = System.Drawing.SystemColors.Control;
             this.pageSecurity.Controls.Add(this.gbSec_Other);
             this.pageSecurity.Controls.Add(this.gbSec_Spam);
-            this.pageSecurity.Controls.Add(this.gbSec_Passwords);
             this.pageSecurity.Location = new System.Drawing.Point(4, 22);
             this.pageSecurity.Name = "pageSecurity";
             this.pageSecurity.Padding = new System.Windows.Forms.Padding(3);
@@ -3997,17 +4001,30 @@ namespace MCGalaxy.Gui
             // 
             // gbSec_Other
             // 
-            this.gbSec_Other.Controls.Add(this.cbLogNotes);
-            this.gbSec_Other.Location = new System.Drawing.Point(225, 133);
+            this.gbSec_Other.Controls.Add(this.sec_lblRank);
+            this.gbSec_Other.Controls.Add(this.sec_cbWhitelist);
+            this.gbSec_Other.Controls.Add(this.sec_cbLogNotes);
+            this.gbSec_Other.Controls.Add(this.sec_cbVerifyAdmins);
+            this.gbSec_Other.Controls.Add(this.sec_cmbVerifyRank);
+            this.gbSec_Other.Location = new System.Drawing.Point(273, 6);
             this.gbSec_Other.Name = "gbSec_Other";
-            this.gbSec_Other.Size = new System.Drawing.Size(248, 45);
+            this.gbSec_Other.Size = new System.Drawing.Size(208, 138);
             this.gbSec_Other.TabIndex = 2;
             this.gbSec_Other.TabStop = false;
             this.gbSec_Other.Text = "Other settings";
             // 
+            // sec_lblRank
+            // 
+            this.sec_lblRank.AutoSize = true;
+            this.sec_lblRank.Location = new System.Drawing.Point(33, 98);
+            this.sec_lblRank.Name = "sec_lblRank";
+            this.sec_lblRank.Size = new System.Drawing.Size(33, 13);
+            this.sec_lblRank.TabIndex = 24;
+            this.sec_lblRank.Text = "Rank:";
+            // 
             // gbSec_Spam
             // 
-            this.gbSec_Spam.Controls.Add(this.spam_cbAuto);
+            this.gbSec_Spam.Controls.Add(this.sec_cbAutoMute);
             this.gbSec_Spam.Controls.Add(this.spam_lblOnMute);
             this.gbSec_Spam.Controls.Add(this.spam_numMsgs);
             this.gbSec_Spam.Controls.Add(this.spam_lblOnMsgs);
@@ -4016,9 +4033,9 @@ namespace MCGalaxy.Gui
             this.gbSec_Spam.Controls.Add(this.spam_lblForMute);
             this.gbSec_Spam.Controls.Add(this.spam_numMute);
             this.gbSec_Spam.Controls.Add(this.spam_lblForSecs);
-            this.gbSec_Spam.Location = new System.Drawing.Point(225, 18);
+            this.gbSec_Spam.Location = new System.Drawing.Point(8, 6);
             this.gbSec_Spam.Name = "gbSec_Spam";
-            this.gbSec_Spam.Size = new System.Drawing.Size(248, 109);
+            this.gbSec_Spam.Size = new System.Drawing.Size(248, 138);
             this.gbSec_Spam.TabIndex = 1;
             this.gbSec_Spam.TabStop = false;
             this.gbSec_Spam.Text = "Chat spam control";
@@ -4118,57 +4135,6 @@ namespace MCGalaxy.Gui
             this.spam_lblForSecs.Size = new System.Drawing.Size(46, 13);
             this.spam_lblForSecs.TabIndex = 33;
             this.spam_lblForSecs.Text = "seconds";
-            // 
-            // gbSec_Passwords
-            // 
-            this.gbSec_Passwords.Controls.Add(this.btnReset);
-            this.gbSec_Passwords.Controls.Add(this.listPasswords);
-            this.gbSec_Passwords.Controls.Add(this.label39);
-            this.gbSec_Passwords.Controls.Add(this.chkEnableVerification);
-            this.gbSec_Passwords.Controls.Add(this.cmbVerificationRank);
-            this.gbSec_Passwords.Controls.Add(this.label38);
-            this.gbSec_Passwords.Location = new System.Drawing.Point(19, 18);
-            this.gbSec_Passwords.Name = "gbSec_Passwords";
-            this.gbSec_Passwords.Size = new System.Drawing.Size(191, 322);
-            this.gbSec_Passwords.TabIndex = 0;
-            this.gbSec_Passwords.TabStop = false;
-            this.gbSec_Passwords.Text = "Admin Verification";
-            // 
-            // btnReset
-            // 
-            this.btnReset.Location = new System.Drawing.Point(45, 276);
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(91, 27);
-            this.btnReset.TabIndex = 25;
-            this.btnReset.Text = "Reset";
-            this.btnReset.UseVisualStyleBackColor = true;
-            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-            // 
-            // listPasswords
-            // 
-            this.listPasswords.FormattingEnabled = true;
-            this.listPasswords.Location = new System.Drawing.Point(24, 132);
-            this.listPasswords.Name = "listPasswords";
-            this.listPasswords.Size = new System.Drawing.Size(139, 121);
-            this.listPasswords.TabIndex = 1;
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(21, 106);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(98, 13);
-            this.label39.TabIndex = 24;
-            this.label39.Text = "Remove Passwords";
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(21, 67);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(33, 39);
-            this.label38.TabIndex = 1;
-            this.label38.Text = "Rank:\r\n\r\n\r\n";
             // 
             // PropertyWindow
             // 
@@ -4303,17 +4269,17 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.spam_numMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spam_numSecs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spam_numMute)).EndInit();
-            this.gbSec_Passwords.ResumeLayout(false);
-            this.gbSec_Passwords.PerformLayout();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.CheckBox sec_cbWhitelist;
+        private System.Windows.Forms.Label sec_lblRank;
         private System.Windows.Forms.CheckBox chat_cbTabBots;
         private System.Windows.Forms.CheckBox chat_cbTabLevel;
         private System.Windows.Forms.CheckBox chat_cbTabRank;
         private System.Windows.Forms.GroupBox chat_gbTab;
         private System.Windows.Forms.ComboBox cmbOsMap;
         private System.Windows.Forms.Label lblOsMap;
-        private System.Windows.Forms.CheckBox cbLogNotes;
+        private System.Windows.Forms.CheckBox sec_cbLogNotes;
         private System.Windows.Forms.GroupBox gbSec_Other;
         private System.Windows.Forms.TextBox txtPrefix;
         private System.Windows.Forms.TextBox txtOSMaps;
@@ -4485,14 +4451,9 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label spam_lblOnMsgs;
         private System.Windows.Forms.NumericUpDown spam_numMsgs;
         private System.Windows.Forms.Label spam_lblOnMute;
-        private System.Windows.Forms.CheckBox spam_cbAuto;
-        private System.Windows.Forms.GroupBox gbSec_Passwords;
-        private System.Windows.Forms.Button btnReset;
-        private System.Windows.Forms.ListBox listPasswords;
-        private System.Windows.Forms.Label label39;
-        private System.Windows.Forms.CheckBox chkEnableVerification;
-        private System.Windows.Forms.ComboBox cmbVerificationRank;
-        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.CheckBox sec_cbAutoMute;
+        private System.Windows.Forms.CheckBox sec_cbVerifyAdmins;
+        private System.Windows.Forms.ComboBox sec_cmbVerifyRank;
         private System.Windows.Forms.TabPage pageGames;
         private System.Windows.Forms.TabControl tabGames;
         private System.Windows.Forms.TabPage tabPage11;
