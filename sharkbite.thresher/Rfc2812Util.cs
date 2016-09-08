@@ -21,7 +21,7 @@
 */
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -44,7 +44,6 @@ namespace Sharkbite.Irc
 		private const string ActionModes = "+-";
 		private const string UserModes = "awiorOs";
 		private const string ChannelModes = "OohvaimnqpsrtklbeI";
-		private const string Space = " ";
 
 		internal static TraceSwitch IrcTrace = new TraceSwitch("IrcTraceSwitch", "Debug level for RFC2812 classes.");
 		// Odd chars that IRC allows in nicknames 
@@ -197,142 +196,98 @@ namespace Sharkbite.Irc
 			return true;
 		}	
 
-		/// <summary>
-		/// Convert a ModeAction into its RFC2812 character.
-		/// </summary>
+		/// <summary> Convert a ModeAction into its RFC2812 character. </summary>
 		/// <param name="action">The action enum.</param>
 		/// <returns>Either '+' or '-'.</returns>
-		public static char ModeActionToChar( ModeAction action ) 
-		{
-			return Convert.ToChar( (byte) action, CultureInfo.InvariantCulture ) ;
+		public static char ModeActionToChar( ModeAction action ) {
+			return (char)((byte)action);
 		}
 
-		/// <summary>
-		/// Converts the char received from the IRC server into
-		/// its enum equivalent.
-		/// </summary>
+		/// <summary> Converts the char received from the IRC server into its enum equivalent. </summary>
 		/// <param name="action">Either '+' or '-'.</param>
 		/// <returns>An action enum.</returns>
-		public static ModeAction CharToModeAction( char action ) 
-		{
-			byte b = Convert.ToByte( action, CultureInfo.InvariantCulture );
+		public static ModeAction CharToModeAction( char action ) {
+			byte b = (byte)action;
 			return (ModeAction) Enum.Parse( typeof( ModeAction), b.ToString( CultureInfo.InvariantCulture), false );
 		}
 
-		/// <summary>
-		/// Converts a UserMode into its RFC2812 character.
-		/// </summary>
+		/// <summary> Converts a UserMode into its RFC2812 character. </summary>
 		/// <param name="mode">The mode enum.</param>
 		/// <returns>The corresponding char.</returns>
-		public static char UserModeToChar( UserMode mode ) 
-		{
-			return Convert.ToChar( (byte) mode, CultureInfo.InvariantCulture ) ;
+		public static char UserModeToChar( UserMode mode ) {
+			return (char)((byte)mode);
 		}
 
-		/// <summary>
-		/// Convert a string of UserModes characters to
-		/// an array of UserMode enums.
-		/// </summary>
+		/// <summary> Convert a string of UserModes characters to an array of UserMode enums. </summary>
 		/// <param name="modes">A string of UserMode chars from the IRC server.</param>
 		/// <returns>An array of UserMode enums. Charactres that are not from RFC2812 will be droppped.</returns>
-		public static UserMode[] UserModesToArray( string modes ) 
-		{
-			ArrayList list = new ArrayList();
-			for( int i = 0; i < modes.Length; i++ ) 
-			{
-				if( IsValidModeChar( modes[i], UserModes ) ) 
-				{
+		public static UserMode[] UserModesToArray( string modes ) {
+			List<UserMode> list = new List<UserMode>();
+			for( int i = 0; i < modes.Length; i++ ) {
+				if( IsValidModeChar( modes[i], UserModes ) ) {
 					list.Add( CharToUserMode( modes[i] ));
 				}
 			}
-			return (UserMode[]) list.ToArray( typeof(UserMode) );
+			return list.ToArray();
 		}
 
-		/// <summary>
-		/// Converts the char recived from the IRC server into
-		/// its enum equivalent.
-		/// </summary>
+		/// <summary> Converts the char recived from the IRC server into its enum equivalent. </summary>
 		/// <param name="mode">One of the IRC mode characters, e.g. 'a','i', etc...</param>
 		/// <returns>An mode enum.</returns>
-		public static UserMode CharToUserMode( char mode ) 
-		{
-			byte b = Convert.ToByte( mode, CultureInfo.InvariantCulture );
+		public static UserMode CharToUserMode( char mode ) {
+			byte b = (byte)mode;
 			return (UserMode) Enum.Parse( typeof( UserMode), b.ToString(CultureInfo.InvariantCulture), false );
 		}
 
-		/// <summary>
-		/// Convert a string of ChannelModes characters to
-		/// an array of ChannelMode enums.
-		/// </summary>
+		/// <summary> Convert a string of ChannelModes characters to an array of ChannelMode enums. </summary>
 		/// <param name="modes">A string of ChannelMode chars from the IRC server.</param>
 		/// <returns>An array of ChannelMode enums. Charactres that are not from RFC2812 will be droppped.</returns>
-		public static ChannelMode[] ChannelModesToArray( string modes ) 
-		{
-			ArrayList list = new ArrayList();
-			for( int i = 0; i < modes.Length; i++ ) 
-			{
-				if( IsValidModeChar( modes[i], ChannelModes ) ) 
-				{
+		public static ChannelMode[] ChannelModesToArray( string modes ) {
+			List<ChannelMode> list = new List<ChannelMode>();
+			for( int i = 0; i < modes.Length; i++ ) {
+				if( IsValidModeChar( modes[i], ChannelModes ) ) {
 					list.Add( CharToChannelMode( modes[i] ));
 				}
 			}
-			return (ChannelMode[]) list.ToArray( typeof(ChannelMode) );
+			return list.ToArray();
 		}
 
-		/// <summary>
-		/// Converts a ChannelMode into its RFC2812 character.
-		/// </summary>
+		/// <summary> Converts a ChannelMode into its RFC2812 character. </summary>
 		/// <param name="mode">The mode enum.</param>
 		/// <returns>The corresponding char.</returns>
-		public static char ChannelModeToChar( ChannelMode mode ) 
-		{
-			return Convert.ToChar( (byte) mode, CultureInfo.InvariantCulture ) ;
+		public static char ChannelModeToChar( ChannelMode mode ) {
+			return (char)((byte)mode);
 		}
-		/// <summary>
-		/// Converts the char recived from the IRC server into
-		/// its enum equivalent.
-		/// </summary>
+		
+		/// <summary> Converts the char recived from the IRC server into its enum equivalent. </summary>
 		/// <param name="mode">One of the IRC mode characters, e.g. 'O','i', etc...</param>
 		/// <returns>An mode enum.</returns>
-		public static ChannelMode CharToChannelMode( char mode ) 
-		{
-			byte b = Convert.ToByte( mode, CultureInfo.InvariantCulture );
-			return (ChannelMode) Enum.Parse( typeof( ChannelMode), b.ToString( CultureInfo.InvariantCulture), false );
+		public static ChannelMode CharToChannelMode( char mode )  {
+			byte b = (byte)mode;
+			return (ChannelMode) Enum.Parse( typeof( ChannelMode ), b.ToString(CultureInfo.InvariantCulture), false );
 		}
 
-		/// <summary>
-		/// Converts a StatQuery enum value to its RFC2812 character.
-		/// </summary>
+		/// <summary> Converts a StatQuery enum value to its RFC2812 character. </summary>
 		/// <param name="query">The query enum.</param>
 		/// <returns>The corresponding char.</returns>
-		public static char StatsQueryToChar( StatsQuery query ) 
-		{
-			return Convert.ToChar( (byte) query, CultureInfo.InvariantCulture ) ;
+		public static char StatsQueryToChar( StatsQuery query ) {
+			return (char)((byte)query);
 		}
 
-		/// <summary>
-		/// Converts the char recived from the IRC server into
-		/// its enum equivalent.
-		/// </summary>
+		/// <summary> Converts the char recived from the IRC server into its enum equivalent. </summary>
 		/// <param name="queryType">One of the IRC stats query characters, e.g. 'u','l', etc...</param>
 		/// <returns>An StatsQuery enum.</returns>
-		public static StatsQuery CharToStatsQuery( char queryType ) 
-		{
-			byte b = Convert.ToByte( queryType, CultureInfo.InvariantCulture );
+		public static StatsQuery CharToStatsQuery( char queryType )  {
+			byte b = (byte)queryType;
 			return (StatsQuery) Enum.Parse( typeof( StatsQuery), b.ToString(CultureInfo.InvariantCulture), false );
 		}
-
-
-
 		
-		private static bool IsValidModeChar( char c, string validList ) 
-		{
+		private static bool IsValidModeChar( char c, string validList ) {
 			return validList.IndexOf( c ) != -1;
 		}
 
-		private static bool ContainsSpace( string text ) 
-		{
-			return text.IndexOf( Space, 0, text.Length ) != -1;
+		private static bool ContainsSpace( string text ) {
+			return text.IndexOf( ' ' ) != -1;
 		}
 	}
 }

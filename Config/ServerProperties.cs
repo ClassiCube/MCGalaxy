@@ -42,7 +42,6 @@ namespace MCGalaxy {
 		
 		public static void Load(string givenPath, bool skipSalt = false) {
 			if (!skipSalt) GenerateSalt();
-			Server.s.Log(Server.salt);
 			oldPerms = new OldPerms();
 			if (PropertiesFile.Read(givenPath, ref oldPerms, LineProcessor))
 				Server.s.SettingsUpdate();
