@@ -74,10 +74,12 @@ namespace MCGalaxy.Commands {
             }
             Player.Message(p, "  BlockDB (Used for /b) is {0}", data.blockDB ? "&aEnabled" : "&cDisabled");
             ShowPermissions(p, data);
-            Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.Name);
+            Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.Name);            
+            if (!Server.zombie.IsZombieMap(data.Name)) return;         
             
-            if (!Server.zombie.IsZombieMap(data.Name)) return;
-            Player.Message(p, "Map authors: " + data.Authors);
+            string[] authors = data.Authors.Replace(" ", "").Split(',');
+            Player.Message(p, "Map authors: {0}",
+                           authors.Join(n => PlayerInfo.GetColoredName(p, n)));
             int winChance = data.TotalRounds == 0 ? 100 : (data.HumanRounds * 100) / data.TotalRounds;
             Player.Message(p, "&a{0} %Srounds played total, &a{1}% %Swin chance for humans.", 
                            data.TotalRounds, winChance);

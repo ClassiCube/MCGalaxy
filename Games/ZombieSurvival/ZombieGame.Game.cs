@@ -83,10 +83,14 @@ namespace MCGalaxy.Games {
             if (Server.votingforlevel && HandleVote(p, message)) return true;
             
             if (message[0] == '~' && message.Length > 1) {
-                Player[] players = p.Game.Infected ? Infected.Items : Alive.Items;
+                Player[] players = PlayerInfo.Online.Items;
                 string type = p.Game.Infected ? " &cto zombies%S: " : " &ato humans%S: ";
-                foreach (Player pl in players)
-                    pl.SendMessage(p.ColoredName + type + message.Substring(1));
+                
+                foreach (Player pl in players) {
+                    if (!pl.level.name.CaselessEq(CurLevelName)) continue;
+                    if (pl.Game.Referee || pl.Game.Infected == p.Game.Infected)
+                        pl.SendMessage(p.ColoredName + type + message.Substring(1));
+                }
                 return true;
             } else if (message[0] == '`' && message.Length > 1) {
                 if (p.Game.Team == null) {
@@ -142,8 +146,11 @@ namespace MCGalaxy.Games {
                                  "%SPillaring " + (CurLevel.Pillaring ? "&aYes" : "&cNo") +
                                  "%S, Type is &a" + CurLevel.BuildType);
                 
-                if (CurLevel.Authors != "")
-                    p.SendMessage("It was created by " + CurLevel.Authors);
+                if (CurLevel.Authors != "") {
+                    string[] authors = CurLevel.Authors.Replace(" ", "").Split(',');
+                    Player.Message(p, "It was created by {0}",
+                                   authors.Join(n => PlayerInfo.GetColoredName(p, n)));
+                }
                 PlayerMoneyChanged(p);
                 UpdatePlayerStatus(p);
                 
