@@ -21,7 +21,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to move towards the closest human, within a defined search radius. </summary>
     public sealed class HuntInstruction : BotInstruction {
-        public override string Name { get { return "Hunt"; } }
+        public override string Name { get { return "hunt"; } }
         
         const int searchRadius = 75;
         public override bool Execute(PlayerBot bot, InstructionData data) {
@@ -68,7 +68,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to kill nearby humans. </summary>
     public sealed class KillInstruction : BotInstruction {
-        public override string Name { get { return "Kill"; } }
+        public override string Name { get { return "kill"; } }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             Player[] players = PlayerInfo.Online.Items;

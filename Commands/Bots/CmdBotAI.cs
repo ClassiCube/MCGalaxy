@@ -59,38 +59,44 @@ namespace MCGalaxy.Commands
         }
         
         void HandleDelete(Player p, string ai, string[] args) {
-            if (!Directory.Exists("bots/deleted")) Directory.CreateDirectory("bots/deleted");
-
-            int currentTry = 0;
+            if (!Directory.Exists("bots/deleted"))
+                Directory.CreateDirectory("bots/deleted");
             if (!File.Exists("bots/" + ai)) {
                 Player.Message(p, "Could not find specified AI."); return;
             }
             
-        retry:
-            try {
-                if (args.Length == 2) {
-                    if (currentTry == 0)
-                        File.Move("bots/" + ai, "bots/deleted/" + ai);
-                    else
-                        File.Move("bots/" + ai, "bots/deleted/" + ai + currentTry);
-                } else {
-                    if (args[2].ToLower() == "last") {
-                        string[] Lines = File.ReadAllLines("bots/" + ai);
-                        string[] outLines = new string[Lines.Length - 1];
-                        for (int i = 0; i < Lines.Length - 1; i++) {
-                            outLines[i] = Lines[i];
-                        }
-
-                        File.WriteAllLines("bots/" + ai, outLines);
-                        Player.Message(p, "Deleted the last instruction from " + ai);
-                        return;
+            for (int attempt = 0; attempt < 10; attempt++) {
+                try {
+                    if (args.Length == 2) {
+                        DeleteAI(p, ai); return;
+                    } else if (args[2].ToLower() == "last") {
+                        DeleteLast(p, ai); return;
                     } else {
                         Help(p); return;
                     }
+                } catch (IOException) {
                 }
             }
-            catch (IOException) { currentTry++; goto retry; }
+        }
+        
+        static void DeleteAI(Player p, string ai, int attempt) {
+            if (attempt == 0) {
+                File.Move("bots/" + ai, "bots/deleted/" + ai);
+            } else {
+                File.Move("bots/" + ai, "bots/deleted/" + ai + attempt);
+            }
             Player.Message(p, "Deleted &b" + ai);
+        }
+        
+        static void DeleteLast(Player p, string ai) {
+            string[] Lines = File.ReadAllLines("bots/" + ai);
+            string[] outLines = new string[Lines.Length - 1];
+            for (int i = 0; i < Lines.Length - 1; i++) {
+                outLines[i] = Lines[i];
+            }
+
+            File.WriteAllLines("bots/" + ai, outLines);
+            Player.Message(p, "Deleted the last instruction from " + ai);
         }
 
         void HandleAdd(Player p, string ai, string action = "", string extra = "10", string more = "2") {
@@ -127,8 +133,8 @@ namespace MCGalaxy.Commands
                     }
                     return;
                 }
-            } catch { 
-                Player.Message(p, "Invalid parameter"); 
+            } catch {
+                Player.Message(p, "Invalid parameter");
             }
         }
         
@@ -149,8 +155,8 @@ namespace MCGalaxy.Commands
             Player.Message(p, "%T/botai info [name] %H- prints list of instructions that AI has");
             Player.Message(p, "%T/botai add [name] [instruction] <args>");
             
-            var instructions = Instructions.Defined.Keys;
-            Player.Message(p, "%HInstructions: %S{0}, reverse", instructions.Join());
+            Player.Message(p, "%HInstructions: %S{0}, reverse",
+                           BotInstruction.Instructions.Join(ins => ins.Name.ToLower()));
             Player.Message(p, "%HTo see extended help, type %T/help botai [instruction]");
             Player.Message(p, "%Hwait, nod, spin %S- optional arg specifies '0.1 seconds'");
             Player.Message(p, "%Hnod, spin %S- optional second arg specifies 'speed'");
