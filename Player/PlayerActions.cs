@@ -14,8 +14,11 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
+using MCGalaxy.Games;
+using MCGalaxy.Commands.World;
+
 namespace MCGalaxy {
     public static class PlayerActions {
 
@@ -25,7 +28,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Moves the player to the specified block coordinates. </summary>
-        public static void MoveCoords(Player p, int bX, int bY, int bZ, 
+        public static void MoveCoords(Player p, int bX, int bY, int bZ,
                                       byte rotX, byte rotY) {
             ushort x = (ushort)(bX * 32 + 16);
             ushort y = (ushort)(bY * 32);
@@ -34,8 +37,121 @@ namespace MCGalaxy {
         }
         
         /// <summary> Moves the player to the specified map. </summary>
-        public static void ChangeMap(Player p, string name) {
-            Command.all.Find("goto").Use(p, name);
+        public static bool ChangeMap(Player p, string name) { return ChangeMap(p, null, name); }
+        
+        /// <summary> Moves the player to the specified map. </summary>
+        public static bool ChangeMap(Player p, Level lvl) { return ChangeMap(p, lvl, null); }        
+        
+        static bool ChangeMap(Player p, Level lvl, string name) {
+            if (p.usingGoto) { Player.Message(p, "Cannot use /goto, already loading a map."); return false; }
+            Level oldLevel = p.level;
+            p.usingGoto = true;
+            bool didJoin = false;
+            
+            try {
+                didJoin = name == null ? 
+                    GotoLevel(p, lvl) : GotoMap(p, name);
+            } finally {
+                p.usingGoto = false;
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+            
+            if (!didJoin) return false;
+            Unload(oldLevel);
+            return true;
+        }
+        
+        
+        static bool GotoMap(Player p, string name) {
+            Level lvl = LevelInfo.FindExact(name);
+            if (lvl != null) return GotoLevel(p, lvl);
+            
+            if (Server.AutoLoad) {
+                // First try exactly matching unloaded levels
+                if (LevelInfo.ExistsOffline(name))
+                    return LoadOfflineLevel(p, name);
+                lvl = LevelInfo.Find(name);
+                if (lvl != null) return GotoLevel(p, lvl);
+                
+                string matches = LevelInfo.FindMapMatches(p, name);
+                if (matches == null) return false;
+                return LoadOfflineLevel(p, matches);
+            } else {
+                lvl = LevelInfo.Find(name);
+                if (lvl == null) {
+                    Player.Message(p, "There is no level \"{0}\" loaded. Did you mean..", name);
+                    Command.all.Find("search").Use(p, "levels " + name);
+                    return false;
+                }
+                return GotoLevel(p, lvl);
+            }
+        }
+        
+        static bool LoadOfflineLevel(Player p, string name) {
+            if (!Level.CheckLoadOnGoto(name)) {
+                Player.Message(p, "Level \"{0}\" cannot be loaded using /goto.", name);
+                return false;
+            }
+            
+            CmdLoad.LoadLevel(p, name, "0", true);
+            Level lvl = LevelInfo.FindExact(name);
+            if (lvl != null) return GotoLevel(p, lvl);
+
+            Player.Message(p, "Level \"{0}\" failed to be auto-loaded.", name);
+            return false;
+        }
+        
+        static bool GotoLevel(Player p, Level lvl) {
+            if (p.level == lvl) { Player.Message(p, "You are already in \"" + lvl.name + "\"."); return false; }
+            if (!lvl.CanJoin(p)) return false;
+            if (!Server.zombie.PlayerCanJoinLevel(p, lvl, p.level)) return false;
+
+            p.Loading = true;
+            Entities.DespawnEntities(p);
+            Level oldLevel = p.level;
+            p.level = lvl; p.SendUserMOTD(); p.SendMap(oldLevel);
+
+            ushort x = (ushort)(lvl.spawnx * 32 + 16);
+            ushort y = (ushort)(lvl.spawny * 32 + 32);
+            ushort z = (ushort)(lvl.spawnz * 32 + 16);
+            Entities.SpawnEntities(p, x, y, z, lvl.rotx, lvl.roty);
+            p.Loading = false;
+            CheckGamesJoin(p, oldLevel);
+            p.prevMsg = "";
+            
+            if (!p.hidden && p.level.ShouldShowJoinMessage(oldLevel)) {
+                Player.SendChatFrom(p, p.color + "*" + p.DisplayName + " %Swent to &b" + lvl.name, false);
+                Player.RaisePlayerAction(p, PlayerAction.JoinWorld, lvl.name);
+            }
+            return true;
+        }
+        
+        internal static void CheckGamesJoin(Player p, Level oldLvl) {
+            Server.lava.PlayerJoinedLevel(p, p.level, oldLvl);
+            Server.zombie.PlayerJoinedLevel(p, p.level, oldLvl);
+            
+            if (p.inTNTwarsMap) p.canBuild = true;
+            TntWarsGame game = TntWarsGame.Find(p.level);
+            if (game == null) return;
+            
+            if (game.GameStatus != TntWarsGame.TntWarsGameStatus.Finished &&
+                game.GameStatus != TntWarsGame.TntWarsGameStatus.WaitingForPlayers) {
+                p.canBuild = false;
+                Player.Message(p, "TNT Wars: Disabled your building because you are in a TNT Wars map!");
+            }
+            p.inTNTwarsMap = true;
+        }
+        
+        static void Unload(Level lvl) {
+            bool unloadOld = true;
+            if (lvl.IsMuseum || !lvl.unload) return;
+            
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level == lvl) { unloadOld = false; break; }
+            }
+            if (unloadOld && Server.AutoLoad) lvl.Unload(true);
         }
     }
 }

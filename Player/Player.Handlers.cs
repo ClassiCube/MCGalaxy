@@ -187,8 +187,8 @@ namespace MCGalaxy {
                 byte[] remaining = new byte[buffer.Length - size];
                 Buffer.BlockCopy(buffer, size, remaining, 0, remaining.Length);
                 return ProcessReceived(remaining);
-            } catch (Exception e) {
-                Server.ErrorLog(e);
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
             }
             return buffer;
         }
@@ -441,7 +441,6 @@ return;
         }
 
         void HandleChat(byte[] packet) {
-            try {
                 if (!loggedIn) return;
                 byte continued = packet[1];
                 string text = GetString(packet, 2);
@@ -518,8 +517,6 @@ return;
                     }
                 }
                 CheckForMessageSpam();
-            }
-            catch ( Exception e ) { Server.ErrorLog(e); Chat.MessageAll("An error occurred: {0}", e.Message); }
         }
         
         bool FilterChat(ref string text, byte continued) {

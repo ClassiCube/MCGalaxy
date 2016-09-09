@@ -20,14 +20,14 @@ using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy {    
+namespace MCGalaxy {
     public sealed partial class Player : IDisposable {
-     
+        
         void HandleLogin(byte[] packet) {
             LastAction = DateTime.UtcNow;
-            try {
-                if (loggedIn) return;
+            if (loggedIn) return;
 
+<<<<<<< HEAD
                 byte version = packet[1];
                 name = enc.GetString(packet, 2, 64).Trim();
                 if (name.Length > 16) {
@@ -47,89 +47,116 @@ namespace MCGalaxy {
                 }
                 if (altsCount > 0) {
                     Leave("Already logged in!", true); return;
+=======
+            byte version = packet[1];
+            name = enc.GetString(packet, 2, 64).Trim();
+            if (name.Length > 16) {
+                Leave("Usernames must be 16 characters or less", true); return;
+            }
+            truename = name;
+            skinName = name;
+            
+            int altsCount = 0;
+            lock (pendingLock) {
+                DateTime now = DateTime.UtcNow;
+                foreach (PendingItem item in pendingNames) {
+                    if (item.Name == truename && (now - item.Connected).TotalSeconds <= 60)
+                        altsCount++;
+>>>>>>> 22ce3355275dac2590aae6a9ecc600706f28e377
                 }
+                pendingNames.Add(new PendingItem(name));
+            }
+            if (altsCount > 0) {
+                Leave("Already logged in!", true); return;
+            }
 
-                string verify = enc.GetString(packet, 66, 32).Trim();
-                verifiedName = false;
-                if (Server.verify) {
-                    byte[] hash = null;
-                    lock (md5Lock)
-                        hash = md5.ComputeHash(enc.GetBytes(Server.salt + truename));
-                    
-                    string hashHex = BitConverter.ToString(hash);
-                    if (!verify.CaselessEq(hashHex.Replace("-", ""))) {
-                        if (!IPInPrivateRange(ip)) {
-                            Leave("Login failed! Try signing in again.", true); return;
-                        }
-                    } else {
-                        verifiedName = true;
-                    }
-                }
+            string verify = enc.GetString(packet, 66, 32).Trim();
+            verifiedName = false;
+            if (Server.verify) {
+                byte[] hash = null;
+                lock (md5Lock)
+                    hash = md5.ComputeHash(enc.GetBytes(Server.salt + truename));
                 
-                DisplayName = name;
-                if (Server.ClassicubeAccountPlus) name += "+";
-                isDev = Server.Devs.CaselessContains(truename);
-                isMod = Server.Mods.CaselessContains(truename);
+                string hashHex = BitConverter.ToString(hash);
+                if (!verify.CaselessEq(hashHex.Replace("-", ""))) {
+                    if (!IPInPrivateRange(ip)) {
+                        Leave("Login failed! Try signing in again.", true); return;
+                    }
+                } else {
+                    verifiedName = true;
+                }
+            }
+            
+            DisplayName = name;
+            if (Server.ClassicubeAccountPlus) name += "+";
+            isDev = Server.Devs.CaselessContains(truename);
+            isMod = Server.Mods.CaselessContains(truename);
 
-                try {
-                    Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.ToLower() == name.ToLower());
-                    if (tBan.expiryTime < DateTime.UtcNow) {
-                        Server.tempBans.Remove(tBan);
-                    } else {
-                        string reason = String.IsNullOrEmpty(tBan.reason) ? "" :
-                            " (" + tBan.reason + ")";
-                        Kick("You're still temp banned!" + reason, true);
-                    }
-                } catch { }
+            try {
+                Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.ToLower() == name.ToLower());
+                if (tBan.expiryTime < DateTime.UtcNow) {
+                    Server.tempBans.Remove(tBan);
+                } else {
+                    string reason = String.IsNullOrEmpty(tBan.reason) ? "" :
+                        " (" + tBan.reason + ")";
+                    Kick("You're still temp banned!" + reason, true);
+                }
+            } catch { }
 
-                if (!CheckWhitelist()) { Leave("This is a private server!", true); return; }
-                Group foundGrp = Group.findPlayerGroup(name);
-                
-                // ban check
-                if (Server.bannedIP.Contains(ip) && (!Server.useWhitelist || !onWhitelist)) {
-                    Kick(Server.defaultBanMessage, true);  return;
+            if (!CheckWhitelist()) { Leave("This is a private server!", true); return; }
+            Group foundGrp = Group.findPlayerGroup(name);
+            
+            // ban check
+            if (Server.bannedIP.Contains(ip) && (!Server.useWhitelist || !onWhitelist)) {
+                Kick(Server.defaultBanMessage, true);  return;
+            }
+            
+            if (foundGrp.Permission == LevelPermission.Banned) {
+                string[] data = Ban.GetBanData(name);
+                if (data != null) {
+                    Kick(Ban.FormatBan(data[0], data[1]), true);
+                } else {
+                    Kick(Server.defaultBanMessage, true);
                 }
-                
-                if (foundGrp.Permission == LevelPermission.Banned) {
-                    string[] data = Ban.GetBanData(name);
-                    if (data != null) {
-                        Kick(Ban.FormatBan(data[0], data[1]), true);
-                    } else {
-                        Kick(Server.defaultBanMessage, true);
-                    }
-                    return;
-                }
-
-                // maxplayer check
-                if (!CheckPlayersCount(foundGrp)) return;
-                if (version != Server.version) { Leave("Wrong version!", true); return; }
-                
-                Player[] players = PlayerInfo.Online.Items;
-                foreach (Player p in players) {
-                    if (p.name != name) continue;
-                    
-                    if (Server.verify) {
-                        string reason = p.ip == ip ? "(Reconnecting)" : "(Reconnecting from a different IP)";
-                        p.Leave(reason); break;
-                    } else {
-                        Leave("Already logged in!", true); return;
-                    }
-                }
+<<<<<<< HEAD
                 
                 byte type = packet[130];
                 if (type == 0x42) { hasCpe = true; SendCpeExtensions(); }
-
-                group = foundGrp;
-                Loading = true;
-                if (disconnected) return;
-                id = NextFreeId();
-                
-                if (type != 0x42)
-                    CompleteLoginProcess();
-            } catch (Exception e) {
-                Server.ErrorLog(e);
-                Chat.MessageAll("An error occurred: {0}", e.Message);
+=======
+                return;
             }
+>>>>>>> 22ce3355275dac2590aae6a9ecc600706f28e377
+
+            // maxplayer check
+            if (!CheckPlayersCount(foundGrp)) return;
+            if (version != Server.version) { Leave("Wrong version!", true); return; }
+            
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.name != name) continue;
+                
+                if (Server.verify) {
+                    string reason = p.ip == ip ? "(Reconnecting)" : "(Reconnecting from a different IP)";
+                    p.Leave(reason); break;
+                } else {
+                    Leave("Already logged in!", true); return;
+                }
+            }
+            
+            LoadIgnores();
+            byte type = packet[130];
+            if (type == 0x42) { hasCpe = true; SendCpeExtensions(); }
+            
+            try { left.Remove(name.ToLower()); }
+            catch { }
+
+            group = foundGrp;
+            Loading = true;
+            if (disconnected) return;
+            id = NextFreeId();
+            
+            if (type != 0x42)
+                CompleteLoginProcess();
         }
         
         bool CheckPlayersCount(Group foundGrp) {
@@ -194,20 +221,15 @@ namespace MCGalaxy {
         void CompleteLoginProcess() {
             LevelPermission adminChatRank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
             
-            try {
-                SendUserMOTD();
-                SendMap(null);
-                if (disconnected) return;
-                loggedIn = true;
+            SendUserMOTD();
+            SendMap(null);
+            if (disconnected) return;
+            loggedIn = true;
 
-                PlayerInfo.Online.Add(this);
-                connections.Remove(this);
-                RemoveFromPending();
-                Server.s.PlayerListUpdate();
-            } catch (Exception e) {
-                Server.ErrorLog(e);
-                Chat.MessageAll("An error occurred: {0}", e.Message);
-            }
+            PlayerInfo.Online.Add(this);
+            connections.Remove(this);
+            RemoveFromPending();
+            Server.s.PlayerListUpdate();
             
             //OpenClassic Client Check
             SendBlockchange(0, 0, 0, 0);
@@ -275,17 +297,15 @@ namespace MCGalaxy {
             Server.s.Log(name + " [" + ip + "] has joined the server.");
             Game.InfectMessages = PlayerDB.GetInfectMessages(this);
             Server.zombie.PlayerJoinedServer(this);
-            try {
-                ushort x = (ushort)((0.5 + level.spawnx) * 32);
-                ushort y = (ushort)((1 + level.spawny) * 32);
-                ushort z = (ushort)((0.5 + level.spawnz) * 32);
-                pos = new ushort[3] { x, y, z }; rot = new byte[2] { level.rotx, level.roty };
-                Entities.SpawnEntities(this, x, y, z, rot[0], rot[1]);
-            } catch (Exception e) {
-                Server.ErrorLog(e);
-                Server.s.Log("Error spawning player \"" + name + "\"");
-            }
-            CmdGoto.CheckGamesJoin(this, null);
+            
+            ushort x = (ushort)((0.5 + level.spawnx) * 32);
+            ushort y = (ushort)((1 + level.spawny) * 32);
+            ushort z = (ushort)((0.5 + level.spawnz) * 32);
+            pos = new ushort[3] { x, y, z };
+            rot = new byte[2] { level.rotx, level.roty };
+            
+            Entities.SpawnEntities(this, x, y, z, rot[0], rot[1]);
+            PlayerActions.CheckGamesJoin(this, null);
             Loading = false;
         }
         
@@ -340,6 +360,7 @@ namespace MCGalaxy {
             }
             if (alts.Count == 0) return;
             
+<<<<<<< HEAD
             LevelPermission adminChatRank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
             string altsMsg = p.ColoredName + " %Sis lately known as: " + alts.Join();
             if (p.group.Permission < adminChatRank || !Server.adminsjoinsilent) {
@@ -347,6 +368,13 @@ namespace MCGalaxy {
                 //IRCBot.Say(temp, true); //Tells people in op channel on IRC
             }
             Server.s.Log(altsMsg);
+=======
+            short reachDist;
+            if (!short.TryParse(reach, out reachDist)) return;
+            ReachDistance = reachDist / 32f;
+            if (HasCpeExt(CpeExt.ClickDistance))
+                Send(Packet.MakeClickDistance(reachDist));
+>>>>>>> 22ce3355275dac2590aae6a9ecc600706f28e377
         }
     }
 }

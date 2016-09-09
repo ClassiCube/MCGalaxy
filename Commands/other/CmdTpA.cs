@@ -85,8 +85,7 @@ namespace MCGalaxy.Commands {
             sender.currentTpa = "";
             Thread.Sleep(1000);
             if (p.level != sender.level) {
-                Level where = p.level;
-                PlayerActions.ChangeMap(sender, where.name);
+                PlayerActions.ChangeMap(sender, p.level);
                 Thread.Sleep(1000);
             }
 

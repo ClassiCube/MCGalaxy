@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands {
                     }
                     if (p != null && who.level != p.level) {
                         Player.Message(p, "Moving player to your map...");
-                        PlayerActions.ChangeMap(who, p.level.name);
+                        PlayerActions.ChangeMap(who, p.level);
                         who.BlockUntilLoad(500);
                     }
                     Chat.MessageAll("{0} %Shas been locked down!", who.ColoredName);

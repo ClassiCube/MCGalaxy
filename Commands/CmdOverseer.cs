@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl.level == p.level && pl.name != p.name)
-                        PlayerActions.ChangeMap(pl, Server.mainLevel.name);
+                        PlayerActions.ChangeMap(pl, Server.mainLevel);
                 }
             } else if (cmd == "KICK") {
                 if (arg == "") { p.SendMessage("You must specify a player to kick."); return; }
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands {
                 Player pl = PlayerInfo.FindMatches(p, arg);
                 if (pl != null) {
                     if (pl.level.name == p.level.name)
-                        PlayerActions.ChangeMap(pl, Server.mainLevel.name);
+                        PlayerActions.ChangeMap(pl, Server.mainLevel);
                     else
                         p.SendMessage("Player is not on your level!");
                 }
@@ -257,7 +257,7 @@ namespace MCGalaxy.Commands {
                 }
                 Player.Message(p, blocked.name + " has been blacklisted from your map.");
                 if (blocked.level.name == p.level.name) {
-                    PlayerActions.ChangeMap(blocked, Server.mainLevel.name); return;
+                    PlayerActions.ChangeMap(blocked, Server.mainLevel); return;
                 }
             } else if (cmd == "UNBLOCK") {
                 if (value == "") {
