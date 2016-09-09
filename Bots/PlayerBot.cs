@@ -230,13 +230,9 @@ namespace MCGalaxy {
         }
         
         bool DoInstruction() {
-            Func<PlayerBot, bool> instruction;
-            if (!Instructions.Defined.TryGetValue(Waypoints[cur].type, out instruction)) {
-                BotInstruction botIns = BotInstruction.Find(Waypoints[cur].type);
-                if (botIns == null) return false;
-                return botIns.Execute(this, Waypoints[cur]);
-            }
-            return instruction(this);
+            BotInstruction ins = BotInstruction.Find(Waypoints[cur].Name);
+            if (ins == null) return false;
+            return ins.Execute(this, Waypoints[cur]);
         }
         
         public void AdvanceRotation() {

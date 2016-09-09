@@ -27,44 +27,21 @@ namespace MCGalaxy.Bots {
             string[] codes = File.ReadAllLines(file);
             if (codes[0] != "#Version 2") { Player.Message(p, "Invalid file version. Remake"); return false; }
 
-            InstructionData newPos = new InstructionData();
-            try { bot.Waypoints.Clear(); } catch { }
+            bot.Waypoints.Clear();
             bot.cur = 0; bot.countdown = 0; bot.movementSpeed = 3;
 
             foreach (string line in codes) {
                 if (line == "" || line[0] == '#') continue;
                 string[] args = line.Split(' ');
-                newPos.type = args[0];
-                
+
                 try {
-                    switch (args[0].ToLower()) {
-                        case "walk":
-                        case "teleport":
-                            newPos.x = ushort.Parse(args[1]);
-                            newPos.y = ushort.Parse(args[2]);
-                            newPos.z = ushort.Parse(args[3]);
-                            newPos.rotx = byte.Parse(args[4]);
-                            newPos.roty = byte.Parse(args[5]);
-                            break;
-                        case "wait":
-                        case "speed":
-                            newPos.seconds = short.Parse(args[1]); break;
-                        case "nod":
-                        case "spin":
-                            newPos.seconds = short.Parse(args[1]);
-                            newPos.rotspeed = short.Parse(args[2]);
-                            break;
-                        case "linkscript":
-                            newPos.newscript = args[1]; break;
-                        case "reset":
-                        case "jump":
-                        case "remove": 
-                            break;
-                        default: 
-                            continue;
-                    }
-                    bot.Waypoints.Add(newPos);
-                } catch { 
+                    BotInstruction ins = BotInstruction.Find(args[0]);
+                    if (ins == null) continue;
+                    
+                    InstructionData data = ins.Parse(args);
+                    data.Name = args[0];
+                    bot.Waypoints.Add(data);
+                } catch {
                     Player.Message(p, "AI file corrupt."); return false;
                 }
             }

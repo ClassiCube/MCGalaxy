@@ -40,7 +40,7 @@ namespace MCGalaxy.Bots {
             
             if (closest == null) return true;
             MoveTowards(bot, closest);
-            return false;
+            bot.NextInstruction(); return false;
         }
         
         static void MoveTowards(PlayerBot bot, Player p) {
@@ -64,10 +64,6 @@ namespace MCGalaxy.Bots {
             }
             bot.rot[1] = pitch;
         }
-        
-        public override InstructionData Parse(string[] args) {
-            return default(InstructionData);
-        }
     }
     
     /// <summary> Causes the bot to kill nearby humans. </summary>
@@ -75,7 +71,7 @@ namespace MCGalaxy.Bots {
         public override string Name { get { return "Kill"; } }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
-            Player[] players = PlayerInfo.Online.Items;            
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 int dx = Math.Abs(bot.pos[0] - p.pos[0]);
                 int dy = Math.Abs(bot.pos[1] - p.pos[1]);
@@ -85,11 +81,7 @@ namespace MCGalaxy.Bots {
                     p.HandleDeath(Block.Zero);
                 }
             }
-            return true;
-        }
-        
-        public override InstructionData Parse(string[] args) {
-            return default(InstructionData);
+            bot.NextInstruction(); return true;
         }
     }
 }

@@ -111,9 +111,10 @@
     <Compile Include="Blocks\Block.Permissions.cs" />
     <Compile Include="Blocks\BlockProperties.cs" />
     <Compile Include="Bots\BotsFile.cs" />
-    <Compile Include="Bots\Instructions.cs" />
-    <Compile Include="Bots\Instructions\BasicInstructions.cs" />
-    <Compile Include="Bots\Instructions\ComplexInstructions.cs" />
+    <Compile Include="Bots\Instructions\FunInstructions.cs" />
+    <Compile Include="Bots\Instructions\MoveInstructions.cs" />
+    <Compile Include="Bots\Instructions\OtherInstructions.cs" />
+    <Compile Include="Bots\Instructions\HunterInstructions.cs" />
     <Compile Include="Bots\Instructions\Instruction.cs" />
     <Compile Include="Bots\PlayerBot.cs" />
     <Compile Include="Bots\ScriptFile.cs" />

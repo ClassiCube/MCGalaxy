@@ -27,17 +27,21 @@ namespace MCGalaxy.Bots {
         /// <summary> Gets the identifying name for this instruction. </summary>
         public abstract string Name { get; }
         
-        /// <summary> Performs a step for this instruction. </summary>
-        /// <returns> true if the instruction has finished, and that the
-        /// bot should proceed to execute the next instruction. </returns>
+        /// <summary> Performs a tick for this instruction. </summary>
+        /// <returns> false if the bot should proceed to execute the 
+        /// next instruction in the same tick. </returns>
         public abstract bool Execute(PlayerBot bot, InstructionData data);
         
         /// <summary> Parses the given line which contains the metadata for this instruction. </summary>
-        public abstract InstructionData Parse(string[] args);
+        public virtual InstructionData Parse(string[] args) {
+            return default(InstructionData);
+        }
         
         /// <summary> All instructions that bots can execute. </summary>
         public static List<BotInstruction> Instructions = new List<BotInstruction>() {
-        	new HuntInstruction(), new KillInstruction(),
+            new NodInstruction(), new SpinInstruction(), new HuntInstruction(), new KillInstruction(),      	
+        	new TeleportInstruction(), new WalkInstruction(), new JumpInstruction(), new SpeedInstruction(),        	
+        	new RemoveInstruction(), new ResetInstruction(), new LinkScriptInstruction(), new WaitInstruction(),
         };
         
         /// <summary> Finds the instruction which has the given identifying name. </summary>
@@ -50,9 +54,8 @@ namespace MCGalaxy.Bots {
     }
     
     public struct InstructionData { 
-        public string type, newscript; 
+        public string Name;
         public int seconds, rotspeed; 
-        public ushort x, y, z; 
-        public byte rotx, roty;
+        public object Metadata;
     }
 }
