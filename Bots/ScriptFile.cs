@@ -27,7 +27,7 @@ namespace MCGalaxy.Bots {
             string[] codes = File.ReadAllLines(file);
             if (codes[0] != "#Version 2") { Player.Message(p, "Invalid file version. Remake"); return false; }
 
-            bot.Waypoints.Clear();
+            bot.Instructions.Clear();
             bot.cur = 0; bot.countdown = 0; bot.movementSpeed = 3;
 
             foreach (string line in codes) {
@@ -40,7 +40,7 @@ namespace MCGalaxy.Bots {
                     
                     InstructionData data = ins.Parse(args);
                     data.Name = args[0];
-                    bot.Waypoints.Add(data);
+                    bot.Instructions.Add(data);
                 } catch {
                     Player.Message(p, "AI file corrupt."); return false;
                 }

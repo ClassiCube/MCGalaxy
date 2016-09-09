@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
             if (bot == null) return;
                 
             if (args.Length == 1) {
-                try { bot.Waypoints.Clear(); } catch { }
+                try { bot.Instructions.Clear(); } catch { }
                 bot.kill = false;
                 bot.hunt = false;
                 bot.AIName = "";
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands {
 
             if (ai == "hunt") {
                 bot.hunt = !bot.hunt;
-                try { bot.Waypoints.Clear(); }
+                try { bot.Instructions.Clear(); }
                 catch { }
                 bot.AIName = "";
                 if (p != null) Chat.GlobalChatLevel(p, bot.ColoredName + "%S's hunt instinct: " + bot.hunt, false);

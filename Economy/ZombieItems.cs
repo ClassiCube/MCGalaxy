@@ -32,7 +32,7 @@ namespace MCGalaxy.Eco {
 
         protected override void OnBuyCommand(Player p, string message, string[] args) {
             byte count = 1;
-            if (args.Length >= 3 && !byte.TryParse(args[2], out count) || count == 0 || count > 10) {
+            if (args.Length >= 2 && !byte.TryParse(args[1], out count) || count == 0 || count > 10) {
                 Player.Message(p, "Number of groups of 10 blocks to buy must be an integer between 1 and 10."); return;
             }
             if (p.money < Price * count) {

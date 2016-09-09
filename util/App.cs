@@ -196,7 +196,6 @@ namespace MCGalaxy.Gui
         }
         
         static void ExitProcess() {
-            if (!usingConsole) Application.Exit();
             Environment.Exit(0);
         }
 

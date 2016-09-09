@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.IO;
 
 namespace MCGalaxy.Bots {
     
@@ -23,8 +24,11 @@ namespace MCGalaxy.Bots {
     public sealed class HuntInstruction : BotInstruction {
         public override string Name { get { return "hunt"; } }
         
-        const int searchRadius = 75;
         public override bool Execute(PlayerBot bot, InstructionData data) {
+            int searchRadius = 75;
+            if (data.Metadata != null)
+                searchRadius = (ushort)data.Metadata;
+            
             int dist = searchRadius * 32;
             Player[] players = PlayerInfo.Online.Items;
             Player closest = null;
@@ -38,12 +42,13 @@ namespace MCGalaxy.Bots {
                 closest = p;
             }
             
-            if (closest == null) return true;
-            MoveTowards(bot, closest);
-            bot.NextInstruction(); return false;
+            if (closest == null) { bot.NextInstruction(); return false; }
+            bool overlapsPlayer = MoveTowards(bot, closest);
+            if (overlapsPlayer) { bot.NextInstruction(); return false; }
+            return true;
         }
         
-        static void MoveTowards(PlayerBot bot, Player p) {
+        static bool MoveTowards(PlayerBot bot, Player p) {
             int dx = p.pos[0] - bot.pos[0], dy = p.pos[1] - bot.pos[1], dz = p.pos[2] - bot.pos[2];
             bot.foundPos = p.pos;
             bot.movement = true;
@@ -63,6 +68,23 @@ namespace MCGalaxy.Bots {
                 bot.rot[0] = (byte)(p.rot[0] - 128);
             }
             bot.rot[1] = pitch;
+            
+            return dx <= 8 && dy <= 16 && dz <= 8;
+        }
+        
+        public override InstructionData Parse(string[] args) {
+            InstructionData data = default(InstructionData);
+            if (args.Length > 1)
+                data.Metadata = ushort.Parse(args[1]);
+            return data;
+        }
+        
+       public override void Output(Player p, string[] args, StreamWriter w) {
+            if (args.Length > 3) {
+                w.WriteLine(Name + " " + ushort.Parse(args[3]));
+            } else {
+                w.WriteLine(Name);
+            }
         }
     }
     

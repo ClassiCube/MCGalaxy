@@ -41,7 +41,7 @@ namespace MCGalaxy {
         public int cur = 0;
         public int countdown = 0;
         public bool nodUp = false;
-        public List<InstructionData> Waypoints = new List<InstructionData>();
+        public List<InstructionData> Instructions = new List<InstructionData>();
         
         public ushort[] pos = new ushort[3], oldpos = new ushort[3], foundPos = new ushort[3];
         public byte[] rot = new byte[2], oldrot = new byte[2];
@@ -212,17 +212,17 @@ namespace MCGalaxy {
         	}
             movement = false;
 
-            if (Waypoints.Count == 0) {
+            if (Instructions.Count == 0) {
                 if (hunt) {
                     InstructionData data = default(InstructionData);
                     BotInstruction.Find("hunt").Execute(this, data);
                 }
             } else {
                 bool doNextInstruction = !DoInstruction();
-                if (cur == Waypoints.Count) cur = 0;
+                if (cur == Instructions.Count) cur = 0;
                 if (doNextInstruction) {
                     DoInstruction();
-                    if (cur == Waypoints.Count) cur = 0;
+                    if (cur == Instructions.Count) cur = 0;
                 }
             }
             
@@ -230,13 +230,13 @@ namespace MCGalaxy {
         }
         
         bool DoInstruction() {
-            BotInstruction ins = BotInstruction.Find(Waypoints[cur].Name);
+            BotInstruction ins = BotInstruction.Find(Instructions[cur].Name);
             if (ins == null) return false;
-            return ins.Execute(this, Waypoints[cur]);
+            return ins.Execute(this, Instructions[cur]);
         }
         
         public void AdvanceRotation() {
-            if (!movement && Waypoints.Count > 0) {
+            if (!movement && Instructions.Count > 0) {
                 if (rot[0] < 245) rot[0] += 8;
                 else rot[0] = 0;
 
@@ -248,7 +248,7 @@ namespace MCGalaxy {
         
         public void NextInstruction() {
             cur++;
-            if (cur == Waypoints.Count) cur = 0;
+            if (cur == Instructions.Count) cur = 0;
         }
         
         void DoMove() {
