@@ -60,7 +60,6 @@ namespace MCGalaxy.Bots {
     
     public struct InstructionData { 
         public string Name;
-        public int seconds, rotspeed; 
         public object Metadata;
     }
 }

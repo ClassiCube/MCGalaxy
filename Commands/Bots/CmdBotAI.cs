@@ -40,21 +40,10 @@ namespace MCGalaxy.Commands
             if (ai == "hunt" || ai == "kill") { Player.Message(p, "Reserved for special AI."); return; }
 
             switch (args[0].ToLower()) {
-                case "add":
-                    if (args.Length == 2) HandleAdd(p, ai);
-                    else if (args.Length == 3) HandleAdd(p, ai, args[2]);
-                    else if (args.Length == 4) HandleAdd(p, ai, args[2], args[3]);
-                    else HandleAdd(p, ai, args[2], args[3], args[4]);
-                    break;
-                case "del":
-                    HandleDelete(p, ai, args);
-                    break;
-                case "info":
-                    HandleInfo(p, ai);
-                    break;
-                default:
-                    Help(p);
-                    return;
+                case "add": HandleAdd(p, ai, args); break;
+                case "del": HandleDelete(p, ai, args); break;
+                case "info": HandleInfo(p, ai); break;
+                default: Help(p); break;
             }
         }
         
@@ -68,7 +57,7 @@ namespace MCGalaxy.Commands
             for (int attempt = 0; attempt < 10; attempt++) {
                 try {
                     if (args.Length == 2) {
-                        DeleteAI(p, ai); return;
+                        DeleteAI(p, ai, attempt); return;
                     } else if (args[2].ToLower() == "last") {
                         DeleteLast(p, ai); return;
                     } else {
@@ -99,7 +88,7 @@ namespace MCGalaxy.Commands
             Player.Message(p, "Deleted the last instruction from " + ai);
         }
 
-        void HandleAdd(Player p, string ai, string action = "", string extra = "10", string more = "2") {
+        void HandleAdd(Player p, string ai, string[] args) {
             string[] allLines;
             try { allLines = File.ReadAllLines("bots/" + ai); }
             catch { allLines = new string[1]; }
@@ -122,8 +111,9 @@ namespace MCGalaxy.Commands
             }
 
             try {
-                if (action != "reverse") {
-                    ScriptFile.Append(p, ai, action, extra, more); return;
+            	string action = args.Length > 2 ? args[2] : "";
+            	if (action != "reverse") {
+                    ScriptFile.Append(p, ai, action, args); return;
                 }
                 
                 using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
@@ -131,7 +121,6 @@ namespace MCGalaxy.Commands
                         if (allLines[i][0] != '#' && allLines[i] != "")
                             w.WriteLine(allLines[i]);
                     }
-                    return;
                 }
             } catch {
                 Player.Message(p, "Invalid parameter");

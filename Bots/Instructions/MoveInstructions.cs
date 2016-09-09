@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.IO;
 
 namespace MCGalaxy.Bots {
     
@@ -42,6 +43,10 @@ namespace MCGalaxy.Bots {
             InstructionData data = default(InstructionData);
             data.Metadata = coords;
             return data;
+        }
+        
+        public override void Output(Player p, string[] args, StreamWriter w) {
+            w.WriteLine(Name + " " + p.pos[0] + " " + p.pos[1] + " " + p.pos[2] + " " + p.rot[0] + " " + p.rot[1]);
         }
         
         protected struct Coords {
@@ -95,6 +100,11 @@ namespace MCGalaxy.Bots {
             InstructionData data = default(InstructionData);
             data.Metadata = short.Parse(args[1]);
             return data;
+        }
+        
+        public override void Output(Player p, string[] args, StreamWriter w) {
+            string time = args.Length > 3 ? args[3] : "10";
+            w.WriteLine(Name + " " + short.Parse(time));
         }
     }
 }

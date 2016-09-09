@@ -48,37 +48,16 @@ namespace MCGalaxy.Bots {
             return true;
         }
         
-        public static void Append(Player p, string ai, string action = "", 
-                                  string extra = "10", string more = "2") {
+        public static void Append(Player p, string ai, string action, string[] args) {
             using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
-                switch (action.ToLower()) {
-                    case "":
-                    case "walk":
-                        w.WriteLine("walk " + p.pos[0] + " " + p.pos[1] + " " + p.pos[2] + " " + p.rot[0] + " " + p.rot[1]);
-                        break;
-                    case "teleport":
-                    case "tp":
-                        w.WriteLine("teleport " + p.pos[0] + " " + p.pos[1] + " " + p.pos[2] + " " + p.rot[0] + " " + p.rot[1]);
-                        break;
-                    case "wait":
-                        w.WriteLine("wait " + int.Parse(extra)); break;
-                    case "nod":
-                        w.WriteLine("nod " + int.Parse(extra) + " " + int.Parse(more)); break;
-                    case "speed":
-                        w.WriteLine("speed " + int.Parse(extra)); break;
-                    case "remove":
-                        w.WriteLine("remove"); break;
-                    case "reset":
-                        w.WriteLine("reset"); break;
-                    case "spin":
-                        w.WriteLine("spin " + int.Parse(extra) + " " + int.Parse(more)); break;
-                    case "linkscript":
-                        if (extra != "10") w.WriteLine("linkscript " + extra); else Player.Message(p, "Linkscript requires a script as a parameter");
-                        break;
-                    case "jump":
-                        w.WriteLine("jump"); break;
-                    default:
-                        Player.Message(p, "Could not find \"" + action + "\""); break;
+                if (action == "") action = "walk";
+                if (action.CaselessEq("tp")) action = "teleport";
+
+                BotInstruction ins = BotInstruction.Find(action);
+                if (ins == null) {
+                    Player.Message(p, "Could not find instruction \"" + action + "\"");
+                } else {
+                    ins.Output(p, args, w);
                 }
             }
         }

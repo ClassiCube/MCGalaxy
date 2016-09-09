@@ -56,6 +56,15 @@ namespace MCGalaxy.Bots {
             data.Metadata = args[1];
             return data;
         }
+        
+        public override void Output(Player p, string[] args, StreamWriter w) {
+            string script = args.Length > 3 ? args[3] : "";
+            if (script == "") {
+                Player.Message(p, "LinkScript requires a script name as a parameter");
+            } else {
+                w.WriteLine(Name + " " + script);
+            }
+        }
     }
     
     /// <summary> Causes the bot to wait/do nothing for a certain interval. </summary>
@@ -77,6 +86,11 @@ namespace MCGalaxy.Bots {
             InstructionData data = default(InstructionData);
             data.Metadata = short.Parse(args[1]);
             return data;
+        }
+        
+        public override void Output(Player p, string[] args, StreamWriter w) {
+            string time = args.Length > 3 ? args[3] : "10";
+            w.WriteLine(Name + " " + short.Parse(time));
         }
     }
 }
