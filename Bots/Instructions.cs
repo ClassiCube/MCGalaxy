@@ -165,19 +165,30 @@ namespace MCGalaxy.Bots {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != bot.level || p.invincible) continue;
-                int curDist = Math.Abs(p.pos[0] - bot.pos[0]) + Math.Abs(p.pos[1] - bot.pos[1]) + Math.Abs(p.pos[2] - bot.pos[2]);
+                
+                int dx = p.pos[0] - bot.pos[0], dy = p.pos[1] - bot.pos[1], dz = p.pos[2] - bot.pos[2];
+                int curDist = Math.Abs(dx) + Math.Abs(dy) + Math.Abs(dz);
                 if (curDist >= dist) continue;
                 
                 dist = curDist;
                 bot.foundPos = p.pos;
-                bot.foundRot = p.rot;
                 bot.movement = true;
                 
-                bot.rot[1] = (byte)(255 - bot.foundRot[1]);
-                if (bot.foundRot[0] < 128)
-                    bot.rot[0] = (byte)(bot.foundRot[0] + 128);
-                else
-                    bot.rot[0] = (byte)(bot.foundRot[0] - 128);
+                Vec3F32 dir = new Vec3F32(dx, dy, dz);
+                dir = Vec3F32.Normalise(dir);
+                byte yaw, pitch;
+                DirUtils.GetYawPitch(dir, out yaw, out pitch);
+                
+                // If we are very close to a player, switch from trying to look 
+                // at them to just facing the opposite direction to them
+                if (Math.Abs(dx) >= 4 || Math.Abs(dz) >= 4) {
+                	bot.rot[0] = yaw;
+                } else if (p.rot[0] < 128) {
+                    bot.rot[0] = (byte)(p.rot[0] + 128);
+                } else {
+                    bot.rot[0] = (byte)(p.rot[0] - 128);
+                }
+                bot.rot[1] = pitch;
             }
         }
     }

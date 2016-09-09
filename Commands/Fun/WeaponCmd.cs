@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands {
         void DoAim(Player p) {
             List<Vec3U16> lastSent = new List<Vec3U16>(), toSend = new List<Vec3U16>();
             while (p.aiming) {
-                Vec3F32 dir = DirUtils.GetDirVector(p.rot[0], p.rot[1]);
+                Vec3F32 dir = DirUtils.GetFlatDirVector(p.rot[0], p.rot[1]);
                 try {
                     ushort x = (ushort)Math.Round((ushort)(p.pos[0] / 32) + dir.X * 3);
                     ushort y = (ushort)Math.Round((ushort)(p.pos[1] / 32) + dir.Y * 3);
