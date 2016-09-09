@@ -266,7 +266,6 @@ namespace MCGalaxy {
                     return;
                 }
                 // FlyBuffer.Clear();
-                SaveIgnores();
                 DisposeTimers();
                 LastAction = DateTime.UtcNow;
                 IsAfk = false;
@@ -514,26 +513,6 @@ namespace MCGalaxy {
                 return true;
             }
             return false;
-        }
-        
-        void SaveIgnores() {
-            string path = "ranks/ignore/" + name + ".txt";
-            if (!File.Exists(path)) return;
-            
-            try {
-                using (StreamWriter w = new StreamWriter(path)) {
-                    if (ignoreAll) w.WriteLine("&all");
-                    if (ignoreIRC) w.WriteLine("&irc");
-                    if (ignoreTitles) w.WriteLine("&titles");
-                    if (ignoreNicks) w.WriteLine("&nicks");
-                    
-                    foreach (string line in listignored)
-                        w.WriteLine(line);
-                }
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                Server.s.Log("Failed to save ignored list for player: " + name);
-            }
         }
 
         internal void RemoveInvalidUndos() {

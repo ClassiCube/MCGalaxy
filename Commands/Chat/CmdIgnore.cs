@@ -17,7 +17,9 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System;
 using System.IO;
+
 namespace MCGalaxy.Commands {
     
     public sealed class CmdIgnore : Command {       
@@ -38,21 +40,21 @@ namespace MCGalaxy.Commands {
             if (action == "all") {
                 p.ignoreAll = !p.ignoreAll;
                 Player.Message(p, "{0} ignoring all chat", p.ignoreAll ? "&cNow " : "&aNo longer ");
-                CreateIgnoreFile(p); return;
+                SaveIgnores(p); return;
             } else if (action == "irc") {
                 p.ignoreIRC = !p.ignoreIRC;
                 Player.Message(p, "{0} ignoring IRC chat", p.ignoreIRC ? "&cNow " : "&aNo longer ");
-                CreateIgnoreFile(p); return;
+                SaveIgnores(p); return;
             } else if (action == "titles") {
                 p.ignoreTitles = !p.ignoreTitles;
                 Player.Message(p, "{0} show before names in chat", 
                                p.ignoreTitles ? "&cPlayer titles no longer" : "&aPlayer titles now");
-                CreateIgnoreFile(p); return;
+                SaveIgnores(p); return;
             } else if (action == "nicks") {
                 p.ignoreNicks = !p.ignoreNicks;
                 Player.Message(p, "{0} show in chat", 
                                p.ignoreNicks ? "&cCustom player nicks no longer" : "&aCustom player nicks");
-                CreateIgnoreFile(p); return;
+                SaveIgnores(p); return;
             } else if (action == "list") {
                 Player.Message(p, "&cCurrently ignoring the following players:");
                 string names = p.listignored.Join();
@@ -64,7 +66,6 @@ namespace MCGalaxy.Commands {
                 return;
             }
             
-            CreateIgnoreFile(p);
             string unignore = null;
             for (int i = 0; i < p.listignored.Count; i++) {
                 if (!action.CaselessEq(p.listignored[i])) continue;
@@ -92,12 +93,28 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "&cNow ignoring {0}", who.ColoredName);
                 }
             }
+            SaveIgnores(p);
         }
         
-        static void CreateIgnoreFile(Player p) {
+        static void SaveIgnores(Player p) {
             string path = "ranks/ignore/" + p.name + ".txt";
-            if (!Directory.Exists("ranks/ignore")) Directory.CreateDirectory("ranks/ignore");
-            if (!File.Exists(path)) File.Create(path).Dispose();
+            if (!Directory.Exists("ranks/ignore")) 
+                Directory.CreateDirectory("ranks/ignore");
+            
+            try {
+                using (StreamWriter w = new StreamWriter(path)) {
+                    if (p.ignoreAll) w.WriteLine("&all");
+                    if (p.ignoreIRC) w.WriteLine("&irc");
+                    if (p.ignoreTitles) w.WriteLine("&titles");
+                    if (p.ignoreNicks) w.WriteLine("&nicks");
+                    
+                    foreach (string line in p.listignored)
+                        w.WriteLine(line);
+                }
+            } catch (IOException ex) {
+                Server.ErrorLog(ex);
+                Server.s.Log("Failed to save ignored list for player: " + p.name);
+            }
         }
 
         public override void Help(Player p) {
