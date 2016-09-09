@@ -116,7 +116,6 @@ namespace MCGalaxy {
                     }
                 }
                 
-                LoadIgnores();
                 byte type = packet[130];
                 if (type == 0x42) { hasCpe = true; SendCpeExtensions(); }
                 
@@ -228,7 +227,6 @@ namespace MCGalaxy {
                         Server.s.Log(alts);
                     }
                 }
-                CheckOutdatedClient();
             } catch (Exception e) {
                 Server.ErrorLog(e);
                 Chat.MessageAll("An error occurred: {0}", e.Message);
@@ -284,9 +282,6 @@ namespace MCGalaxy {
             OnPlayerConnectEvent.Call(this);
             
             CheckLoginJailed();
-            CheckReviewList();
-            if (group.commands.Contains("reachdistance"))
-                CheckLoginReach();
             
             if (Server.agreetorulesonentry && group.Permission == LevelPermission.Guest && !Server.agreed.Contains(name)) {
                 SendMessage("&9You must read the &c/rules&9 and &c/agree&9 to them before you can build and use commands!");
@@ -298,13 +293,6 @@ namespace MCGalaxy {
                     SendMessage("&cPlease set your admin verification password with &a/setpass [Password]!");
                 else
                     SendMessage("&cPlease complete admin verification with &a/pass [Password]!");
-            }
-            
-            try {
-                Waypoints.Load(this);
-            } catch (Exception ex) {
-                SendMessage("Error loading waypoints!");
-                Server.ErrorLog(ex);
             }
 
             Server.s.Log(name + " [" + ip + "] has joined the server.");
@@ -324,18 +312,6 @@ namespace MCGalaxy {
             Loading = false;
         }
         
-        void CheckReviewList() {
-            Command cmd = Command.all.Find("review");
-            int perm = CommandOtherPerms.GetPerm(cmd, 1);
-            
-            if ((int)group.Permission < perm || !group.commands.Contains(cmd)) return;
-            int count = Server.reviewlist.Count;
-            if (count == 0) return;
-            
-            string suffix = count == 1 ? " player is " : " players are ";
-            SendMessage(count + suffix + "waiting for a review. Type %T/review view");
-        }
-        
         void LoadCpeData() {
             string line = Server.skins.Find(name);
             if (line != null) {
@@ -347,25 +323,6 @@ namespace MCGalaxy {
             if (line != null) {
                 int sep = line.IndexOf(' ');
                 if (sep >= 0) model = line.Substring(sep + 1);
-            }
-        }
-        
-        void CheckOutdatedClient() {
-            if (appName == null || !appName.StartsWith("ClassicalSharp ")) return;
-            int spaceIndex = appName.IndexOf(' ');
-            string version = appName.Substring(spaceIndex, appName.Length - spaceIndex);
-            Version ver;
-            try {
-                ver = new Version(version);
-            } catch {
-                return;
-            }
-            
-            if (ver < new Version("0.98.6")) {
-                SendMessage("%aYou are using an outdated version of ClassicalSharp.");
-                SendMessage("%aYou can click %eCheck for updates %ain the launcher to update. " +
-                            "(make sure to close the client first)");
-                outdatedClient = true;
             }
         }
         
@@ -407,20 +364,6 @@ namespace MCGalaxy {
                 Leave("Error occured", true);
                 Server.ErrorLog(ex);
             }
-        }
-        
-        void CheckLoginReach() {
-            string line = Server.reach.Find(name);
-            if (line == null) return;
-            int space = line.IndexOf(' ');
-            if (space == -1) return;
-            string reach = line.Substring(space + 1);
-            
-            short reachDist;
-            if (!short.TryParse(reach, out reachDist)) return;
-            ReachDistance = reachDist / 32f;
-            if (HasCpeExt(CpeExt.ClickDistance))
-            	Send(Packet.MakeClickDistance(reachDist));
         }
     }
 }

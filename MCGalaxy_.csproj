@@ -406,6 +406,8 @@
     <Compile Include="Config\ServerProperties.cs" />
     <Compile Include="Config\PropertiesFile.cs" />
     <Compile Include="Config\StringAttributes.cs" />
+    <Compile Include="CorePlugin\CorePlugin.cs" />
+    <Compile Include="CorePlugin\ConnectHandler.cs" />
     <Compile Include="Database\BlockDB.cs" />
     <Compile Include="Database\IDatabaseBackend.cs" />
     <Compile Include="Database\MySQL\MySQLBackend.cs" />
@@ -722,6 +724,7 @@
     <Folder Include="Bots" />
     <Folder Include="Events" />
     <Folder Include="Chat" />
+    <Folder Include="CorePlugin" />
     <Folder Include="util\Math" />
     <Folder Include="Player\Group" />
     <Folder Include="Player\List" />

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using MCGalaxy.Core;
 
 namespace MCGalaxy {
     /// <summary> This class provides for more advanced modification to MCGalaxy </summary>
@@ -120,6 +121,8 @@ namespace MCGalaxy {
         
         /// <summary> Load all plugins </summary>
         public static void Load() {
+            LoadInternalPlugins();
+            
             if (Directory.Exists("plugins")) {
                 foreach (string path in Directory.GetFiles("plugins", "*.dll")) {
                     string name = Path.GetFileNameWithoutExtension(path);
@@ -128,12 +131,16 @@ namespace MCGalaxy {
             } else {
                 Directory.CreateDirectory("plugins");
             }
+        }
+        
+        static void LoadInternalPlugins() {
+            CTF.Setup ctf = new CTF.Setup();
+            ctf.Load(true);
+            Plugin.all.Add(ctf);
             
-            // Load Internal Plugins
-            CTF.Setup temp = new CTF.Setup();
-            temp.Load(true);
-            Plugin.all.Add(temp);
+            CorePlugin core = new CorePlugin();
+            core.Load(true);
+            Plugin.all.Add(core);
         }
     }
 }
-

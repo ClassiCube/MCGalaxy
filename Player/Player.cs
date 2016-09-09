@@ -537,30 +537,7 @@ namespace MCGalaxy {
                 Server.s.Log("Failed to save ignored list for player: " + name);
             }
         }
-        
-        void LoadIgnores() {
-            string path = "ranks/ignore/" + name + ".txt";
-            if (!File.Exists(path)) return;
-            
-            try {
-                string[] lines = File.ReadAllLines(path);
-                foreach (string line in lines) {
-                    if (line == "&global") continue; // deprecated /ignore global
-                    if (line == "&all") ignoreAll = true;
-                    else if (line == "&irc") ignoreIRC = true;
-                    else if (line == "&titles") ignoreTitles = true;
-                    else if (line == "&nicks") ignoreNicks = true;
-                    else listignored.Add(line);
-                }
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                Server.s.Log("Failed to load ignore list for: " + name);
-            }
-            
-            if (ignoreAll || ignoreIRC || ignoreTitles || ignoreNicks || listignored.Count > 0)
-                SendMessage("&cType &a/ignore list &cto see who you are still ignoring");
-        }
-        
+
         internal void RemoveInvalidUndos() {
             UndoDrawOpEntry[] items = DrawOps.Items;
             for (int i = 0; i < items.Length; i++) {
