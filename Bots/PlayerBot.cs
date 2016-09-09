@@ -206,11 +206,17 @@ namespace MCGalaxy {
         
         // Script handling
         void BotTimerFunc(object sender, ElapsedEventArgs e) {
-            if (kill) Instructions.DoKill(this);
+        	if (kill) {
+                InstructionData data = default(InstructionData);
+                BotInstruction.Find("kill").Execute(this, data);
+        	}
             movement = false;
 
             if (Waypoints.Count == 0) {
-                if (hunt) Instructions.DoHunt(this);
+                if (hunt) {
+                    InstructionData data = default(InstructionData);
+                    BotInstruction.Find("hunt").Execute(this, data);
+                }
             } else {
                 bool doNextInstruction = !DoInstruction();
                 if (cur == Waypoints.Count) cur = 0;
@@ -225,8 +231,11 @@ namespace MCGalaxy {
         
         bool DoInstruction() {
             Func<PlayerBot, bool> instruction;
-            if (!Instructions.Defined.TryGetValue(Waypoints[cur].type, out instruction))
-                return false;
+            if (!Instructions.Defined.TryGetValue(Waypoints[cur].type, out instruction)) {
+                BotInstruction botIns = BotInstruction.Find(Waypoints[cur].type);
+                if (botIns == null) return false;
+                return botIns.Execute(this, Waypoints[cur]);
+            }
             return instruction(this);
         }
         

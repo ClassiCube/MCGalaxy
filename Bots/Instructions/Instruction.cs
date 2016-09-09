@@ -22,7 +22,7 @@ using System.IO;
 namespace MCGalaxy.Bots {
     
     /// <summary> Represents an action that a bot will perform </summary>
-    public abstract class Instruction {
+    public abstract class BotInstruction {
         
         /// <summary> Gets the identifying name for this instruction. </summary>
         public abstract string Name { get; }
@@ -34,12 +34,25 @@ namespace MCGalaxy.Bots {
         
         /// <summary> Parses the given line which contains the metadata for this instruction. </summary>
         public abstract InstructionData Parse(string[] args);
+        
+        /// <summary> All instructions that bots can execute. </summary>
+        public static List<BotInstruction> Instructions = new List<BotInstruction>() {
+        	new HuntInstruction(), new KillInstruction(),
+        };
+        
+        /// <summary> Finds the instruction which has the given identifying name. </summary>
+        public static BotInstruction Find(string name) {
+            foreach (BotInstruction ins in Instructions) {
+                if (ins.Name.CaselessEq(name)) return ins;
+            }
+            return null;
+        }
     }
     
     public struct InstructionData { 
         public string type, newscript; 
         public int seconds, rotspeed; 
         public ushort x, y, z; 
-        public byte rotx, roty; 
+        public byte rotx, roty;
     }
 }

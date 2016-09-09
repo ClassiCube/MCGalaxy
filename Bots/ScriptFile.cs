@@ -27,7 +27,7 @@ namespace MCGalaxy.Bots {
             string[] codes = File.ReadAllLines(file);
             if (codes[0] != "#Version 2") { Player.Message(p, "Invalid file version. Remake"); return false; }
 
-            PlayerBot.InstructionData newPos = new PlayerBot.InstructionData();
+            InstructionData newPos = new InstructionData();
             try { bot.Waypoints.Clear(); } catch { }
             bot.cur = 0; bot.countdown = 0; bot.movementSpeed = 3;
 
