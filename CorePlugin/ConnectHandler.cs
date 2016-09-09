@@ -21,54 +21,55 @@ using MCGalaxy;
 
 namespace MCGalaxy.Core {
 
-	internal static class ConnectHandler {
-		
-		internal static void HandleConnect(Player p) {
-			CheckReviewList(p);
-			if (p.group.commands.Contains("reachdistance"))
-				LoadReach(p);
-			
-			LoadWaypoints(p);
-			LoadIgnores(p);
-			CheckOutdatedClient(p);
-		}
-		
-		static void CheckReviewList(Player p) {
-			Command cmd = Command.all.Find("review");
-			int perm = CommandOtherPerms.GetPerm(cmd, 1);
-			
-			if ((int)p.group.Permission < perm || !p.group.commands.Contains(cmd)) return;
-			int count = Server.reviewlist.Count;
-			if (count == 0) return;
-			
-			string suffix = count == 1 ? " player is " : " players are ";
-			p.SendMessage(count + suffix + "waiting for a review. Type %T/review view");
-		}
-		
-		static void LoadReach(Player p) {
-			string line = Server.reach.Find(p.name);
-			if (line == null) return;
-			int space = line.IndexOf(' ');
-			if (space == -1) return;
-			string reach = line.Substring(space + 1);
-			
-			short reachDist;
-			if (!short.TryParse(reach, out reachDist)) return;
-			p.ReachDistance = reachDist / 32f;
-			if (p.HasCpeExt(CpeExt.ClickDistance))
-				p.Send(Packet.MakeClickDistance(reachDist));
-		}
-		
-		static void LoadWaypoints(Player p) {
-			try {
-				p.Waypoints.Load(p);
-			} catch (IOException ex) {
-				p.SendMessage("Error loading waypoints.");
-				Server.ErrorLog(ex);
-			}
-		}
-		
-		static void LoadIgnores(Player p) {
+    internal static class ConnectHandler {
+        
+        internal static void HandleConnect(Player p) {
+            CheckReviewList(p);
+            if (p.group.commands.Contains("reachdistance"))
+                LoadReach(p);
+            
+            LoadWaypoints(p);
+            LoadIgnores(p);
+            CheckOutdatedClient(p);
+            CheckLoginJailed(p);
+        }
+        
+        static void CheckReviewList(Player p) {
+            Command cmd = Command.all.Find("review");
+            int perm = CommandOtherPerms.GetPerm(cmd, 1);
+            
+            if ((int)p.group.Permission < perm || !p.group.commands.Contains(cmd)) return;
+            int count = Server.reviewlist.Count;
+            if (count == 0) return;
+            
+            string suffix = count == 1 ? " player is " : " players are ";
+            p.SendMessage(count + suffix + "waiting for a review. Type %T/review view");
+        }
+        
+        static void LoadReach(Player p) {
+            string line = Server.reach.Find(p.name);
+            if (line == null) return;
+            int space = line.IndexOf(' ');
+            if (space == -1) return;
+            string reach = line.Substring(space + 1);
+            
+            short reachDist;
+            if (!short.TryParse(reach, out reachDist)) return;
+            p.ReachDistance = reachDist / 32f;
+            if (p.HasCpeExt(CpeExt.ClickDistance))
+                p.Send(Packet.MakeClickDistance(reachDist));
+        }
+        
+        static void LoadWaypoints(Player p) {
+            try {
+                p.Waypoints.Load(p);
+            } catch (IOException ex) {
+                p.SendMessage("Error loading waypoints.");
+                Server.ErrorLog(ex);
+            }
+        }
+        
+        static void LoadIgnores(Player p) {
             string path = "ranks/ignore/" + p.name + ".txt";
             if (!File.Exists(path)) return;
             
@@ -90,8 +91,8 @@ namespace MCGalaxy.Core {
             if (p.ignoreAll || p.ignoreIRC || p.ignoreTitles || p.ignoreNicks || p.listignored.Count > 0)
                 p.SendMessage("&cType &a/ignore list &cto see who you are still ignoring");
         }
-		
-		static void CheckOutdatedClient(Player p) {
+        
+        static void CheckOutdatedClient(Player p) {
             if (p.appName == null || !p.appName.StartsWith("ClassicalSharp ")) return;
             int spaceIndex = p.appName.IndexOf(' ');
             string version = p.appName.Substring(spaceIndex, p.appName.Length - spaceIndex);
@@ -109,5 +110,21 @@ namespace MCGalaxy.Core {
                 p.outdatedClient = true;
             }
         }
-	}
+        
+        static void CheckLoginJailed(Player p) {
+            string line = Server.jailed.Find(p.name);
+            if (line == null) return;
+            int space = line.IndexOf(' ');
+            if (space == -1) return;
+            string level = line.Substring(space + 1);
+            
+            try {
+                PlayerActions.ChangeMap(p, level);
+                Command.all.Find("jail").Use(null, p.name);
+            } catch (Exception ex) {
+                p.Leave("Error occured", true);
+                Server.ErrorLog(ex);
+            }
+        }
+    }
 }

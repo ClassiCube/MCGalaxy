@@ -26,6 +26,9 @@ namespace MCGalaxy {
     /// <summary> This class provides for more advanced modification to MCGalaxy </summary>
     public abstract partial class Plugin {
 
+        /// <summary> List of core plugins. </summary>
+        internal static List<Plugin> core = new List<Plugin>();
+        
         /// <summary> List of all plugins. </summary>
         public static List<Plugin> all = new List<Plugin>();
 
@@ -141,6 +144,7 @@ namespace MCGalaxy {
             CorePlugin core = new CorePlugin();
             core.Load(true);
             Plugin.all.Add(core);
+            Plugin.core.Add(core);
         }
     }
 }

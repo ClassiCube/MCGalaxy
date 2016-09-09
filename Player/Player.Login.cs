@@ -42,7 +42,7 @@ namespace MCGalaxy {
                     foreach (PendingItem item in pendingNames) {
                         if (item.Name == truename && (now - item.Connected).TotalSeconds <= 60)
                             altsCount++;
-                    }                    
+                    }
                     pendingNames.Add(new PendingItem(name));
                 }
                 if (altsCount > 0) {
@@ -118,9 +118,6 @@ namespace MCGalaxy {
                 
                 byte type = packet[130];
                 if (type == 0x42) { hasCpe = true; SendCpeExtensions(); }
-                
-                try { left.Remove(name.ToLower()); }
-                catch { }
 
                 group = foundGrp;
                 Loading = true;
@@ -195,7 +192,7 @@ namespace MCGalaxy {
         }
         
         void CompleteLoginProcess() {
-			LevelPermission adminChatRank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+            LevelPermission adminChatRank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
             
             try {
                 SendUserMOTD();
@@ -207,26 +204,6 @@ namespace MCGalaxy {
                 connections.Remove(this);
                 RemoveFromPending();
                 Server.s.PlayerListUpdate();
-
-                //Test code to show when people come back with different accounts on the same IP
-                string alts = name + " is lately known as:";
-                bool found = false;
-                if (!ip.StartsWith("127.0.0.")) {
-                    foreach (KeyValuePair<string, string> prev in left) {
-                        if (prev.Value == ip) {
-                            found = true;
-                            alts += " " + prev.Key;
-                        }
-                    }
-                	
-                    if (found) {
-                        if (group.Permission < adminChatRank || !Server.adminsjoinsilent) {
-                            Chat.MessageOps(alts);
-                            //IRCBot.Say(temp, true); //Tells people in op channel on IRC
-                        }
-                        Server.s.Log(alts);
-                    }
-                }
             } catch (Exception e) {
                 Server.ErrorLog(e);
                 Chat.MessageAll("An error occurred: {0}", e.Message);
@@ -243,6 +220,8 @@ namespace MCGalaxy {
                 InitPlayerStats(playerDb);
             else
                 LoadPlayerStats(playerDb);
+            
+            Server.MainScheduler.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
             CheckState();
             ZombieStats stats = Server.zombie.LoadZombieStats(name);
             Game.MaxInfected = stats.MaxInfected; Game.TotalInfected = stats.TotalInfected;
@@ -280,9 +259,7 @@ namespace MCGalaxy {
             if (PlayerConnect != null)
                 PlayerConnect(this);
             OnPlayerConnectEvent.Call(this);
-            
-            CheckLoginJailed();
-            
+
             if (Server.agreetorulesonentry && group.Permission == LevelPermission.Guest && !Server.agreed.Contains(name)) {
                 SendMessage("&9You must read the &c/rules&9 and &c/agree&9 to them before you can build and use commands!");
                 agreed = false;
@@ -350,20 +327,26 @@ namespace MCGalaxy {
             }
         }
         
-        void CheckLoginJailed() {
-            string line = Server.jailed.Find(name);
-            if (line == null) return;
-            int space = line.IndexOf(' ');
-            if (space == -1) return;
-            string level = line.Substring(space + 1);
+        static void ShowAltsTask(SchedulerTask task) {
+            string name = (string)task.State;
+            Player p = PlayerInfo.FindExact(name);
+            if (p == null /*|| p.ip == "127.0.0.1"*/) return;
             
-            try {
-                PlayerActions.ChangeMap(this, level);
-                Command.all.Find("jail").Use(null, name);
-            } catch (Exception ex) {
-                Leave("Error occured", true);
-                Server.ErrorLog(ex);
+            List<string> alts = PlayerInfo.FindAccounts(p.ip);
+            // Remove online accounts from the list of accounts on the IP
+            for (int i = alts.Count - 1; i >= 0; i--) {
+                if (PlayerInfo.FindExact(alts[i]) == null) continue;
+                alts.RemoveAt(i);
             }
+            if (alts.Count == 0) return;
+            
+            LevelPermission adminChatRank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+            string altsMsg = p.ColoredName + " %Sis lately known as: " + alts.Join();
+            if (p.group.Permission < adminChatRank || !Server.adminsjoinsilent) {
+                Chat.MessageOps(altsMsg);
+                //IRCBot.Say(temp, true); //Tells people in op channel on IRC
+            }
+            Server.s.Log(altsMsg);
         }
     }
 }

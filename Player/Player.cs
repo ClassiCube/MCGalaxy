@@ -307,8 +307,6 @@ namespace MCGalaxy {
 
                 PlayerInfo.Online.Remove(this);
                 Server.s.PlayerListUpdate();
-                if (name != null)
-                    left[name.ToLower()] = ip;
                 if (PlayerDisconnect != null)
                     PlayerDisconnect(this, discMsg ?? kickMsg);
                 if (Server.AutoLoad && level.unload && !level.IsMuseum && IsAloneOnCurrentLevel())

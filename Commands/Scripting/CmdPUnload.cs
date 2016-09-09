@@ -25,7 +25,12 @@ namespace MCGalaxy.Commands {
         public CmdPUnload() { }
         
         public override void Use(Player p, string message) {
-        	Plugin plugin = Plugin.Find(message);
+            Plugin plugin = Plugin.Find(message);
+            if (Plugin.core.Contains(plugin)) {
+                Player.Message(p, plugin.name + " is a core plugin and cannot be unloaded.");
+                return;
+            }
+            
             if (plugin != null)
                 Plugin.Unload(plugin, false);
             else

@@ -28,7 +28,6 @@ namespace MCGalaxy {
         public Dictionary<string, object> ExtraData = new Dictionary<string, object>();
 
         public void ClearChat() { OnChat = null; }
-        public static Dictionary<string, string> left = new Dictionary<string, string>();
         
         class PendingItem {
             public string Name;
