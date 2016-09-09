@@ -118,14 +118,8 @@ namespace MCGalaxy {
                 } else {
                     Kick(Server.defaultBanMessage, true);
                 }
-<<<<<<< HEAD
-                
-                byte type = packet[130];
-                if (type == 0x42) { hasCpe = true; SendCpeExtensions(); }
-=======
                 return;
             }
->>>>>>> 22ce3355275dac2590aae6a9ecc600706f28e377
 
             // maxplayer check
             if (!CheckPlayersCount(foundGrp)) return;
@@ -146,9 +140,6 @@ namespace MCGalaxy {
             LoadIgnores();
             byte type = packet[130];
             if (type == 0x42) { hasCpe = true; SendCpeExtensions(); }
-            
-            try { left.Remove(name.ToLower()); }
-            catch { }
 
             group = foundGrp;
             Loading = true;
@@ -350,7 +341,7 @@ namespace MCGalaxy {
         static void ShowAltsTask(SchedulerTask task) {
             string name = (string)task.State;
             Player p = PlayerInfo.FindExact(name);
-            if (p == null /*|| p.ip == "127.0.0.1"*/) return;
+            if (p == null || p.ip == "127.0.0.1") return;
             
             List<string> alts = PlayerInfo.FindAccounts(p.ip);
             // Remove online accounts from the list of accounts on the IP
@@ -360,7 +351,6 @@ namespace MCGalaxy {
             }
             if (alts.Count == 0) return;
             
-<<<<<<< HEAD
             LevelPermission adminChatRank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
             string altsMsg = p.ColoredName + " %Sis lately known as: " + alts.Join();
             if (p.group.Permission < adminChatRank || !Server.adminsjoinsilent) {
@@ -368,13 +358,6 @@ namespace MCGalaxy {
                 //IRCBot.Say(temp, true); //Tells people in op channel on IRC
             }
             Server.s.Log(altsMsg);
-=======
-            short reachDist;
-            if (!short.TryParse(reach, out reachDist)) return;
-            ReachDistance = reachDist / 32f;
-            if (HasCpeExt(CpeExt.ClickDistance))
-                Send(Packet.MakeClickDistance(reachDist));
->>>>>>> 22ce3355275dac2590aae6a9ecc600706f28e377
         }
     }
 }
