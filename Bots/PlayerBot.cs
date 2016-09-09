@@ -41,9 +41,8 @@ namespace MCGalaxy {
         public int cur = 0;
         public int countdown = 0;
         public bool nodUp = false;
-        public List<Pos> Waypoints = new List<Pos>();
-        public struct Pos { public string type, newscript; public int seconds, rotspeed; public ushort x, y, z; public byte rotx, roty; }
-
+        public List<InstructionData> Waypoints = new List<InstructionData>();
+        
         public ushort[] pos = new ushort[3], oldpos = new ushort[3], foundPos = new ushort[3];
         public byte[] rot = new byte[2], oldrot = new byte[2];
         public bool movement = false;

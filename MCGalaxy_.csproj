@@ -112,6 +112,9 @@
     <Compile Include="Blocks\BlockProperties.cs" />
     <Compile Include="Bots\BotsFile.cs" />
     <Compile Include="Bots\Instructions.cs" />
+    <Compile Include="Bots\Instructions\BasicInstructions.cs" />
+    <Compile Include="Bots\Instructions\ComplexInstructions.cs" />
+    <Compile Include="Bots\Instructions\Instruction.cs" />
     <Compile Include="Bots\PlayerBot.cs" />
     <Compile Include="Bots\ScriptFile.cs" />
     <Compile Include="Chat\Chat.cs" />
@@ -690,6 +693,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blocks\Behaviour" />
+    <Folder Include="Bots\Instructions" />
     <Folder Include="Commands" />
     <Folder Include="Commands\building" />
     <Folder Include="Commands\Fun" />
