@@ -28,10 +28,10 @@ namespace MCGalaxy.Commands {
             if (message != "") { Help(p); return; }
 
             if (Server.irc) {
-                Player.Message(p, "IRC is &aEnabled %S.");
+                Player.Message(p, "IRC is &aEnabled%S.");
                 Player.Message(p, "Location: " + Server.ircServer + " > " + Server.ircChannel);
             } else {
-                Player.Message(p, "IRC is &cDisabled %S.");
+                Player.Message(p, "IRC is &cDisabled%S.");
             }
         }
 

@@ -28,13 +28,15 @@ using MCGalaxy.Util;
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
         string lsLoadedMap = "";
-        ZombieProperties zSettings = new ZombieProperties();
+        ZombieProperties zsSettings = new ZombieProperties();
+        LavaProperties lsSettings = new LavaProperties();
 
         public PropertyWindow() {
             InitializeComponent();
-            propsZG.SelectedObject = zSettings;
-            zSettings.LoadFromServer();
-            propsZG.Invalidate();
+            lsSettings.LoadFromServer();
+            zsSettings.LoadFromServer();
+            propsZG.SelectedObject = zsSettings;
+            pg_lava.SelectedObject = lsSettings;
         }
 
         void PropertyWindow_Load(object sender, EventArgs e) {
@@ -62,8 +64,6 @@ namespace MCGalaxy.Gui {
                 cmbOpChat.Items.Add(grp.name);
                 cmbAdminChat.Items.Add(grp.name);
                 sec_cmbVerifyRank.Items.Add(grp.name);
-                lsCmbSetupRank.Items.Add(grp.name);
-                lsCmbControlRank.Items.Add(grp.name);
                 cmbAFKKickPerm.Items.Add(grp.name);
                 cmbOsMap.Items.Add(grp.name);
 
@@ -409,33 +409,33 @@ namespace MCGalaxy.Gui {
                 case "server-owner":
                     txtServerOwner.Text = value; break;
                 case "zombie-on-server-start":
-                    zSettings.StartImmediately = value.ToLower() == "true"; break;
+                    zsSettings.StartImmediately = value.ToLower() == "true"; break;
                 case "no-respawning-during-zombie":
-                    zSettings.Respawning = value.ToLower() != "true"; break;
+                    zsSettings.Respawning = value.ToLower() != "true"; break;
                 case "no-level-saving-during-zombie":
-                    zSettings.SaveLevelChanges = value.ToLower() != "true"; break;
+                    zsSettings.SaveLevelChanges = value.ToLower() != "true"; break;
                 case "no-pillaring-during-zombie":
-                    zSettings.Pillaring = value.ToLower() != "true"; break;
+                    zsSettings.Pillaring = value.ToLower() != "true"; break;
                 case "zombie-name-while-infected":
-                    zSettings.Name = value; break;
+                    zsSettings.Name = value; break;
                 case "zombie-model-while-infected":
-                    zSettings.Model = value; break;                    
+                    zsSettings.Model = value; break;                    
                 case "enable-changing-levels":
-                    zSettings.ChangeLevels = value.ToLower() == "true"; break;
+                    zsSettings.ChangeLevels = value.ToLower() == "true"; break;
                 case "zombie-survival-only-server":
-                    zSettings.SetMainLevel = value.ToLower() == "true"; break;
+                    zsSettings.SetMainLevel = value.ToLower() == "true"; break;
                 case "zombie-levels-list":
-                    zSettings.LevelsList = value.Replace(" ", ""); break;
+                    zsSettings.LevelsList = value.Replace(" ", ""); break;
                 case "zombie-save-blockchanges":
-                    zSettings.SaveLevelChanges = value.ToLower() == "true"; break;
+                    zsSettings.SaveLevelChanges = value.ToLower() == "true"; break;
                 case "zombie-hitbox-precision":
-                    zSettings.HitboxPrecision = int.Parse(value); break;
+                    zsSettings.HitboxPrecision = int.Parse(value); break;
                 case "zombie-maxmove-distance":
-                    zSettings.MaxMoveDistance = int.Parse(value); break;
+                    zsSettings.MaxMoveDistance = int.Parse(value); break;
                 case "zombie-ignore-personalworlds":
-                    zSettings.IgnorePersonalWorlds = value.ToLower() == "true"; break;
+                    zsSettings.IgnorePersonalWorlds = value.ToLower() == "true"; break;
                 case "zombie-map-inheartbeat":
-                    zSettings.IncludeMapInHeartbeat = value.ToLower() == "true"; break;                    
+                    zsSettings.IncludeMapInHeartbeat = value.ToLower() == "true"; break;                    
                     
                 case "guest-limit-notify":
                     chkGuestLimitNotify.Checked = value.ToLower() == "true"; break;
@@ -590,7 +590,8 @@ namespace MCGalaxy.Gui {
             Server.agreetorulesonentry = chkAgreeToRules.Checked;
             Server.adminsjoinsilent = chkAdminsJoinSilent.Checked;
             Server.server_owner = txtServerOwner.Text;
-            zSettings.ApplyToServer();
+            zsSettings.ApplyToServer();
+            lsSettings.ApplyToServer();
             Server.guestLimitNotify = chkGuestLimitNotify.Checked;
 
             Server.backupInterval = int.Parse(txtBackup.Text);

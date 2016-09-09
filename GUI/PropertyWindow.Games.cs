@@ -25,24 +25,11 @@ namespace MCGalaxy.Gui {
         System.Timers.Timer lavaUpdateTimer;
 
         private void LoadLavaSettings() {
-            lsCmbSetupRank.SelectedIndex = ( Group.findPerm(Server.lava.setupRank) == null ) ? 0 : lsCmbSetupRank.Items.IndexOf(Group.findPerm(Server.lava.setupRank).name);
-            lsCmbControlRank.SelectedIndex = ( Group.findPerm(Server.lava.controlRank) == null ) ? 0 : lsCmbControlRank.Items.IndexOf(Group.findPerm(Server.lava.controlRank).name);
-            lsChkStartOnStartup.Checked = Server.lava.startOnStartup;
-            lsChkSendAFKMain.Checked = Server.lava.sendAfkMain;
-            lsNudVoteCount.Value = Server.lava.voteCount;
-            lsNudLives.Value = Utils.Clamp((decimal)Server.lava.lifeNum, 0, 1000);
-            lsNudVoteTime.Value = (decimal)Utils.Clamp(Server.lava.voteTime, 1, 1000);
         }
 
         private void SaveLavaSettings() {
-            Server.lava.setupRank = Group.GroupList.Find(grp => grp.name == lsCmbSetupRank.Items[lsCmbSetupRank.SelectedIndex].ToString()).Permission;
-            Server.lava.controlRank = Group.GroupList.Find(grp => grp.name == lsCmbControlRank.Items[lsCmbControlRank.SelectedIndex].ToString()).Permission;
-            Server.lava.startOnStartup = lsChkStartOnStartup.Checked;
-            Server.lava.sendAfkMain = lsChkSendAFKMain.Checked;
-            Server.lava.voteCount = (byte)lsNudVoteCount.Value;
-            Server.lava.voteTime = (double)lsNudVoteTime.Value;
-            Server.lava.lifeNum = (int)lsNudLives.Value;
             Server.lava.SaveSettings();
+            SaveLavaMapSettings();
         }
 
         private void UpdateLavaControls() {
@@ -91,7 +78,7 @@ namespace MCGalaxy.Gui {
                     string[] files = Directory.GetFiles("levels", "*.lvl");
                     foreach (string file in files) {
                         try {
-                    	    string name = Path.GetFileNameWithoutExtension(file);
+                            string name = Path.GetFileNameWithoutExtension(file);
                             if ( name.ToLower() != Server.mainLevel.name && !Server.lava.HasMap(name) )
                                 lsMapNoUse.Items.Add(name);
                         }
@@ -168,50 +155,29 @@ namespace MCGalaxy.Gui {
         }
 
         private void lsMapUse_SelectedIndexChanged(object sender, EventArgs e) {
-            string name;
-            try { name = lsMapUse.Items[lsMapUse.SelectedIndex].ToString(); }
-            catch { return; }
-
+            SaveLavaMapSettings();
+            string name = lsMapUse.Items[lsMapUse.SelectedIndex].ToString();
             lsLoadedMap = name;
+            groupBox22.Text = "Map settings (" + name + ")";
+            
             try {
-                LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(name);
-                lsNudFastLava.Value = Utils.Clamp(settings.fast, 0, 100);
-                lsNudKiller.Value = Utils.Clamp(settings.killer, 0, 100);
-                lsNudDestroy.Value = Utils.Clamp(settings.destroy, 0, 100);
-                lsNudWater.Value = Utils.Clamp(settings.water, 0, 100);
-                lsNudLayer.Value = Utils.Clamp(settings.layer, 0, 100);
-                lsNudLayerHeight.Value = Utils.Clamp(settings.layerHeight, 1, 1000);
-                lsNudLayerCount.Value = Utils.Clamp(settings.layerCount, 1, 1000);
-                lsNudLayerTime.Value = (decimal)Utils.Clamp(settings.layerInterval, 1, 1000);
-                lsNudRoundTime.Value = (decimal)Utils.Clamp(settings.roundTime, 1, 1000);
-                lsNudFloodTime.Value = (decimal)Utils.Clamp(settings.floodTime, 1, 1000);
+                LavaSurvival.MapSettings m = Server.lava.LoadMapSettings(name);
+                pg_lavaMap.SelectedObject = new LavaMapProperties(m);
+            } catch ( Exception ex ) { 
+                Server.ErrorLog(ex); 
+                pg_lavaMap.SelectedObject = null;
             }
-            catch ( Exception ex ) { Server.ErrorLog(ex); }
+        }
+        
+        void SaveLavaMapSettings() {
+            if (pg_lavaMap.SelectedObject == null) return;
+                LavaMapProperties props = (LavaMapProperties)pg_lavaMap.SelectedObject;
+                Server.lava.SaveMapSettings(props.m);
         }
 
         private void lsBtnEndVote_Click(object sender, EventArgs e) {
             if ( Server.lava.voteActive ) Server.lava.EndVote();
             UpdateLavaControls();
-        }
-
-        private void lsBtnSaveSettings_Click(object sender, EventArgs e) {
-            if ( String.IsNullOrEmpty(lsLoadedMap) ) return;
-
-            try {
-                LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(lsLoadedMap);
-                settings.fast = (byte)lsNudFastLava.Value;
-                settings.killer = (byte)lsNudKiller.Value;
-                settings.destroy = (byte)lsNudDestroy.Value;
-                settings.water = (byte)lsNudWater.Value;
-                settings.layer = (byte)lsNudLayer.Value;
-                settings.layerHeight = (int)lsNudLayerHeight.Value;
-                settings.layerCount = (int)lsNudLayerCount.Value;
-                settings.layerInterval = (double)lsNudLayerTime.Value;
-                settings.roundTime = (double)lsNudRoundTime.Value;
-                settings.floodTime = (double)lsNudFloodTime.Value;
-                Server.lava.SaveMapSettings(settings);
-            }
-            catch ( Exception ex ) { Server.ErrorLog(ex); }
         }
 
         public void LoadTNTWarsTab(object sender, EventArgs e) {

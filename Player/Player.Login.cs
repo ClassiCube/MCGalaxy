@@ -27,27 +27,6 @@ namespace MCGalaxy {
             LastAction = DateTime.UtcNow;
             if (loggedIn) return;
 
-<<<<<<< HEAD
-                byte version = packet[1];
-                name = enc.GetString(packet, 2, 64).Trim();
-                if (name.Length > 16) {
-                    Leave("Usernames must be 16 characters or less", true); return;
-                }
-                truename = name;
-                skinName = name;
-                
-                int altsCount = 0;
-                lock (pendingLock) {
-                    DateTime now = DateTime.UtcNow;
-                    foreach (PendingItem item in pendingNames) {
-                        if (item.Name == truename && (now - item.Connected).TotalSeconds <= 60)
-                            altsCount++;
-                    }
-                    pendingNames.Add(new PendingItem(name));
-                }
-                if (altsCount > 0) {
-                    Leave("Already logged in!", true); return;
-=======
             byte version = packet[1];
             name = enc.GetString(packet, 2, 64).Trim();
             if (name.Length > 16) {
@@ -62,7 +41,6 @@ namespace MCGalaxy {
                 foreach (PendingItem item in pendingNames) {
                     if (item.Name == truename && (now - item.Connected).TotalSeconds <= 60)
                         altsCount++;
->>>>>>> 22ce3355275dac2590aae6a9ecc600706f28e377
                 }
                 pendingNames.Add(new PendingItem(name));
             }
@@ -137,7 +115,6 @@ namespace MCGalaxy {
                 }
             }
             
-            LoadIgnores();
             byte type = packet[130];
             if (type == 0x42) { hasCpe = true; SendCpeExtensions(); }
 

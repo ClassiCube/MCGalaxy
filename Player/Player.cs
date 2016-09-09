@@ -500,8 +500,8 @@ namespace MCGalaxy {
         
         public static bool BlacklistCheck(string name, string foundLevel) {
             string path = "levels/blacklists/" + foundLevel + ".txt";
-            if (!File.Exists(path)) { return false; }
-            if (File.ReadAllText(path).Contains(name)) { return true; }
+            if (!File.Exists(path)) return false;
+            if (File.ReadAllText(path).Contains(name)) return true;
             return false;
         }
         

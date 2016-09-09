@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Commands.CPE;
 using MCGalaxy.Commands.World;
@@ -238,50 +239,33 @@ namespace MCGalaxy.Commands {
                 if (value == "") {
                     Player.Message(p, "You did not specify a name to blacklist from your map."); return;
                 }
-                Player blocked = PlayerInfo.Find(value);
-                if (blocked == null) { Player.Message(p, "Cannot find player."); return; }
+                Player blocked = PlayerInfo.FindMatches(p, value);
+                if (blocked == null) return;
                 if (blocked.name.CaselessEq(p.name)) { Player.Message(p, "You can't blacklist yourself"); return; }
                 
-                string path = "levels/blacklists/" + p.level.name + ".txt";
-                if (File.Exists(path) && File.ReadAllText(path).Contains(blocked.name)) {
+                List<string> blacklist = p.level.VisitAccess.Blacklisted;
+                if (blacklist.CaselessContains(blocked.name)) {
                     Player.Message(p, blocked.name + " is already blacklisted."); return;
                 }
-                EnsureFileExists(path);
-                try {
-                    using (StreamWriter sw = File.AppendText(path)) {
-                        DateTime when = DateTime.Now;
-                        sw.WriteLine(when.Day + "." + when.Month + "." + when.Year + ": " + blocked.name + "+");
-                    }
-                } catch {
-                    Server.s.Log("Error saving level blacklist");
-                }
+                blacklist.Add(blocked.name);
+                
+                Level.SaveSettings(p.level);
                 Player.Message(p, blocked.name + " has been blacklisted from your map.");
                 if (blocked.level.name == p.level.name) {
-                    PlayerActions.ChangeMap(blocked, Server.mainLevel); return;
+                    PlayerActions.ChangeMap(blocked, Server.mainLevel);
                 }
             } else if (cmd == "UNBLOCK") {
                 if (value == "") {
                     Player.Message(p, "You did not specify a name to blacklist from your map."); return;
                 }
                 
-                string path = "levels/blacklists/" + p.level.name + ".txt";
-                EnsureFileExists(path);
-                if (!value.EndsWith("+")) value += "+";
-                if (!File.ReadAllText(path).Contains(value)) {
+                List<string> blacklist = p.level.VisitAccess.Blacklisted;
+                if (!blacklist.CaselessContains(value)) {
                     Player.Message(p, value + " is not blacklisted."); return;
-                }
+                }                
+                blacklist.CaselessRemove(value);
                 
-                try {
-                    string[] lines = File.ReadAllLines(path);
-                    using (StreamWriter w = new StreamWriter(path)) {
-                        foreach (string line in lines) {
-                            if (line.Contains(value)) continue;
-                            w.WriteLine(line);
-                        }
-                    }
-                } catch {
-                    Server.s.Log("Error saving level unblock");
-                }
+                Level.SaveSettings(p.level);
                 Player.Message(p, value + " has been removed from your map's blacklist.");
             } else if (cmd == "BLACKLIST") {
                 string path = "levels/blacklists/" + p.level.name + ".txt";
@@ -297,6 +281,10 @@ namespace MCGalaxy.Commands {
                     }
                     Player.Message(p, blocked);
                 }
+                
+                List<string> blacklist = p.level.VisitAccess.Blacklisted;
+                if (blacklist.Count > 0)
+                    Player.Message(p, "Blacklisted players: " + blacklist.Join());
             } else {
                 Player.MessageLines(p, zoneHelp);
             }

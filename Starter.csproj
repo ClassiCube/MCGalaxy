@@ -52,7 +52,9 @@
     <Compile Include="GUI\Formatter.cs" />
     <Compile Include="GUI\Handlers.cs" />
     <Compile Include="GUI\Program.cs" />
+    <Compile Include="GUI\Settings\LavaMapProperties.cs" />
     <Compile Include="GUI\Settings\LevelProperties.cs" />
+    <Compile Include="GUI\Settings\LavaProperties.cs" />
     <Compile Include="GUI\Settings\PlayerProperties.cs" />
     <Compile Include="GUI\Settings\TypeConverters.cs" />
     <Compile Include="GUI\Settings\ZombieProperties.cs" />
