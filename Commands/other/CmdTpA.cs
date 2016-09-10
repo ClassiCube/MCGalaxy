@@ -50,9 +50,9 @@ namespace MCGalaxy.Commands {
         }
         
         static void ShowRequestMessage(Player p, Player target) {
-            Player.Message(target, p.ColoredName + " %Swould like to teleport to you.");
-            Player.Message(target, "Type &2/tpaccept %Sor &4/tpdeny%S.");
-            Player.Message(target, "This request will timeout after &b90 %Sseconds.");
+            p.MessageTo(target, p.ColoredName + " %Swould like to teleport to you.");
+            p.MessageTo(target, "Type &2/tpaccept %Sor &4/tpdeny%S.");
+            p.MessageTo(target, "This request will timeout after &b90 %Sseconds.");
         }
 
         public override void Help(Player p) {

@@ -143,6 +143,15 @@ namespace MCGalaxy {
             }
         }
         
+        /// <summary> Sends a message to the target player, unless the 
+        /// target player is ignoring this player. </summary>
+        /// <returns> Whether the target player is ignoring this player. </returns>
+        public bool MessageTo(Player other, string message) {
+            if (other.ignoreAll || other.listignored.CaselessContains(name)) return false;
+            other.SendMessage(message);
+            return true;
+        }
+        
         public void SendBlankMessage() {
             byte[] buffer = new byte[66];
             buffer[0] = Opcode.Message;

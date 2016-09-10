@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%HDisplays all your messages.");
             Player.Message(p, "%T/inbox [num]");
             Player.Message(p, "%HDisplays the message at [num]");
-            Player.Message(p, "%T/inbox del [num/\"all\"]");
+            Player.Message(p, "%T/inbox del [num]/all");
             Player.Message(p, "%HDeletes the message at [num], deletes all messages if \"all\".");
         }
     }
