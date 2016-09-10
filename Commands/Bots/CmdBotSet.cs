@@ -37,41 +37,38 @@ namespace MCGalaxy.Commands {
             if (bot == null) return;
                 
             if (args.Length == 1) {
-                try { bot.Instructions.Clear(); } catch { }
+                bot.Instructions.Clear();
                 bot.kill = false;
                 bot.hunt = false;
                 bot.AIName = "";
-                Player.Message(p, bot.ColoredName + "%S's AI was turned off.");
-                Server.s.Log(bot.name + "'s AI was turned off.");
+                UpdateBot(bot, "'s AI was turned off.");
                 return;
             } else if (args.Length != 2) {
                 Help(p); return;
             }
 
             string ai = args[1].ToLower();
-
             if (ai == "hunt") {
                 bot.hunt = !bot.hunt;
-                try { bot.Instructions.Clear(); }
-                catch { }
+                bot.Instructions.Clear();
                 bot.AIName = "";
-                if (p != null) Chat.GlobalChatLevel(p, bot.ColoredName + "%S's hunt instinct: " + bot.hunt, false);
-                Server.s.Log(bot.name + "'s hunt instinct: " + bot.hunt);
-                BotsFile.UpdateBot(bot);
+                UpdateBot(bot, "'s hunt instinct: " + bot.hunt);
                 return;
             } else if (ai == "kill") {
                 if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "toggle a bot's killer instinct."); return; }
                 bot.kill = !bot.kill;
-                if (p != null) Chat.GlobalChatLevel(p, bot.ColoredName + "%S's kill instinct: " + bot.kill, false);
-                Server.s.Log(bot.name + "'s kill instinct: " + bot.kill);
-                BotsFile.UpdateBot(bot);
+                UpdateBot(bot, "'s kill instinct: " + bot.kill);
                 return;
             }
             
             if (!ScriptFile.Parse(p, bot, "bots/" + ai)) return;
             bot.AIName = ai;
-            if (p != null) Chat.GlobalChatLevel(p, bot.ColoredName + "%S's AI is now set to " + ai, false);
-            Server.s.Log(bot.name + "'s AI was set to " + ai);
+            UpdateBot(bot, "'s AI was set to " + ai);
+        }
+        
+        static void UpdateBot(PlayerBot bot, string msg) {
+            Chat.MessageLevel(bot.level, bot.ColoredName + "%S" + msg);
+            Server.s.Log(bot.name + msg);
             BotsFile.UpdateBot(bot);
         }
         

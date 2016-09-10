@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.CPE {
                 bot.SkinName = skin;
                 bot.GlobalDespawn();
                 bot.GlobalSpawn();
-                Chat.MessageAll("Bot {0}'s %Sskin was changed to &c{1}", bot.ColoredName, skin);
+                Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Sskin was changed to &c" + skin);
                 BotsFile.UpdateBot(bot);
             } else {
                 who.skinName = skin;

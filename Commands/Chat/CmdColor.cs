@@ -58,8 +58,9 @@ namespace MCGalaxy.Commands {
         static void SetBotColor(Player p, PlayerBot bot, string[] args) {
             string color = args.Length == 2 ? "&1" : Colors.Parse(args[2]);
             if (color == "") { Player.Message(p, "There is no color \"" + args[2] + "\"."); return; }
-            Chat.MessageAll("Bot {0}'s %Scolor was changed to {1}{2}", bot.DisplayName, color, Colors.Name(color));
-             
+            Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Scolor was set to " 
+                              + color + Colors.Name(color));
+            
             bot.color = color;
             bot.GlobalDespawn();
             bot.GlobalSpawn();

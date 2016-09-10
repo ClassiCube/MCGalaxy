@@ -60,11 +60,11 @@ namespace MCGalaxy.Commands {
             string newName = args.Length > 2 ? args[2] : "";
             if (newName == "") {
                 bot.DisplayName = bot.name;
-                Chat.MessageAll("Bot {0}'s %Sreverted to their original name.", bot.ColoredName);
+                Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + " %Sreverted to their original name.");
             } else {
                 string nameTag = newName.CaselessEq("empty") ? "" : newName;
                 if (newName.Length >= 30) { Player.Message(p, "Name must be under 30 letters."); return; }
-                Chat.MessageAll("Bot {0}'s %Sname was set to {1}%S.", bot.ColoredName, nameTag);
+                Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Sname was set to " + nameTag + "%S.");
                 bot.DisplayName = newName;
             }
             

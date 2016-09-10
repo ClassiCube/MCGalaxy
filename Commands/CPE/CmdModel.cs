@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.CPE {
             if (isBot) {
                 bot.model = model;
                 Entities.UpdateModel(bot.id, model, bot.level, null);
-                Chat.MessageAll("Bot {0}'s %Smodel was changed to a &c{1}", bot.ColoredName, model);
+                Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Smodel was changed to a &c" + model);
                 BotsFile.UpdateBot(bot);
             } else {
                 who.model = model;
