@@ -37,9 +37,11 @@ namespace MCGalaxy.Bots {
                 if (p.level != bot.level || p.invincible) continue;
                 
                 int dx = p.pos[0] - bot.pos[0], dy = p.pos[1] - bot.pos[1], dz = p.pos[2] - bot.pos[2];
-                int curDist = Math.Abs(dx) + Math.Abs(dy) + Math.Abs(dz);
-                if (curDist >= dist) continue;
+                int playerDist = Math.Abs(dx) + Math.Abs(dy) + Math.Abs(dz);
+                if (playerDist >= dist) continue;
+                
                 closest = p;
+                dist = playerDist;
             }
             
             if (closest == null) { bot.NextInstruction(); return false; }
