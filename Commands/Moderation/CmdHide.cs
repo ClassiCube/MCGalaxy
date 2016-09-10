@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands
                     Chat.MessageOps("To Ops -" + p.ColoredName + "%S- is now &finvisible%S.");
                 string discMsg = PlayerDB.GetLogoutMessage(p);
                 Player.SendChatFrom(p, "&c- " + p.FullName + " %S" + discMsg, false);
-                Server.IRC.Say(p.DisplayName + " left the game (" + discMsg + ")");
+                Server.IRC.Say(p.DisplayName + " %Sleft the game (" + discMsg + "%S)");
                 if (messageOps && !p.opchat) opchat.Use(p, message);
                 Server.hidden.AddOrReplace(p.name);
             } else {
@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands
                     Chat.MessageAdmins("To Admins -" + p.ColoredName + "%S- is now &fvisible%S.");
                 
                 Player.SendChatFrom(p, "&a+ " + p.FullName + " %S" + PlayerDB.GetLoginMessage(p), false);
-                Server.IRC.Say(p.DisplayName + " joined the game");
+                Server.IRC.Say(p.DisplayName + " %Sjoined the game");
                 if (messageOps && p.opchat) opchat.Use(p, message);
                 if (p.adminchat) adminchat.Use(p, message);
                 Server.hidden.Remove(p.name);
