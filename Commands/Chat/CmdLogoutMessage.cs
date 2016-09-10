@@ -1,6 +1,4 @@
 /*
-    Written By Jack1312
-
     Copyright 2011 MCForge
         
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -16,36 +14,35 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System.IO;
 
 namespace MCGalaxy.Commands {
-    
-    public sealed class CmdLogoutMessage : Command {
-        
+    public sealed class CmdLogoutMessage : EntityPropertyCmd {
         public override string name { get { return "logoutmessage"; } }
         public override string shortcut { get { return "logoutmsg"; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdLogoutMessage() { }
-
-        public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-            string[] args = message.SplitSpaces(2);
-            if (args.Length < 2) { Help(p); return; }
-            string target = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
-            if (target == null) return;
-            
-            PlayerDB.SetLogoutMessage(target, args[1]);
-            Player.Message(p, "The logout message of {0} %Shas been changed to: {1}",
-                           PlayerInfo.GetColoredName(p, target), args[1]);
-            string changer = p == null ? "(console)" : p.name;
-            Server.s.Log(changer + " changed " + name + "'s logout message to:");
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the logout message of others") }; }
+        }
+        public override void Use(Player p, string message) { UsePlayer(p, message, "logout message"); }
+        
+        protected override void SetPlayerData(Player p, Player who, string[] args) {
+            if (args.Length == 1) {
+                string path = PlayerDB.LogoutPath(who.name);
+                if (File.Exists(path)) File.Delete(path);
+                Player.Message(p, "The logout message of {0} %Shas been removed.",
+                               who.ColoredName);
+            } else {
+                PlayerDB.SetLogoutMessage(who.name, args[1]);
+                Player.Message(p, "The logout message of {0} %Shas been changed to: {1}",
+                               who.ColoredName, args[1]);
+            }
         }
         
-         public override void Help(Player p) {
-            Player.Message(p, "%T/logoutmessage [Player] [Message]");
+        public override void Help(Player p) {
+            Player.Message(p, "%T/logoutmessage [player] [message]");
             Player.Message(p, "%HSets the logout message shown for that player.");
         }
     }

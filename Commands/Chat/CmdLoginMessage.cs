@@ -1,6 +1,4 @@
 /*
-    Written By Jack1312
-
     Copyright 2011 MCForge
         
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -20,32 +18,31 @@
 using System.IO;
 
 namespace MCGalaxy.Commands {
-    
-    public sealed class CmdLoginMessage : Command {
-        
+    public sealed class CmdLoginMessage : EntityPropertyCmd {
         public override string name { get { return "loginmessage"; } }
         public override string shortcut { get { return "loginmsg"; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdLoginMessage() { }
-
-        public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-            string[] args = message.SplitSpaces(2);
-            if (args.Length < 2) { Help(p); return; }
-            string target = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
-            if (target == null) return;
-            
-            PlayerDB.SetLoginMessage(target, args[1]);
-            Player.Message(p, "The login message of {0} %Shas been changed to: {1}",
-                           PlayerInfo.GetColoredName(p, target), args[1]);
-            string changer = p == null ? "(console)" : p.name;
-            Server.s.Log(changer + " changed " + target + "'s login message to: " + args[1]);
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the login message of others") }; }
+        }
+        public override void Use(Player p, string message) { UsePlayer(p, message, "login message"); }
+        
+        protected override void SetPlayerData(Player p, Player who, string[] args) {
+            if (args.Length == 1) {
+                string path = PlayerDB.LoginPath(who.name);
+                if (File.Exists(path)) File.Delete(path);
+                Player.Message(p, "The login message of {0} %Shas been removed.",
+                               who.ColoredName);
+            } else {
+                PlayerDB.SetLoginMessage(who.name, args[1]);
+                Player.Message(p, "The login message of {0} %Shas been changed to: {1}",
+                               who.ColoredName, args[1]);
+            }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/loginmessage [Player] [Message]");
+            Player.Message(p, "%T/loginmessage [player] [message]");
             Player.Message(p, "%HSets the login message shown for that player.");
         }
     }

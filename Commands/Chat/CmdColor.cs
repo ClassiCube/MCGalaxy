@@ -29,8 +29,7 @@ namespace MCGalaxy.Commands {
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("colour"), new CommandAlias("xcolor", "-own") }; }
-        }
-        
+        }        
         public override void Use(Player p, string message) { UseBotOrPlayer(p, message, "color"); }
 
         protected override void SetBotData(Player p, PlayerBot bot, string[] args) {

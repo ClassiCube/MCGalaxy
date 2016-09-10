@@ -17,7 +17,7 @@
  */
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands {
     public class CmdTColor : EntityPropertyCmd {
         public override string name { get { return "tcolor"; } }
         public override string shortcut { get { return ""; } }
@@ -29,22 +29,21 @@ namespace MCGalaxy.Commands {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("tcolour"), new CommandAlias("xtcolor", "-own") }; }
         }
-
         public override void Use(Player p, string message) { UsePlayer(p, message, "title color"); }
         
         protected override void SetPlayerData(Player p, Player who, string[] args) {
-            if (args.Length == 1) {                
+            string color = "";
+            if (args.Length == 1) {
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their title color removed.", false);
-                who.titlecolor = "";
-                Database.Execute("UPDATE Players SET title_color = '' WHERE Name = @0", who.name);
             } else  {
-                string color = Colors.Parse(args[1]);
+                color = Colors.Parse(args[1]);
                 if (color == "") { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
                 else if (color == who.titlecolor) { Player.Message(p, who.DisplayName + " %Salready has that title color."); return; }
-                Player.SendChatFrom(who, who.ColoredName + " %Shad their title color changed to " + color + Colors.Name(color) + "%S.", false);
-                who.titlecolor = color;
-                Database.Execute("UPDATE Players SET title_color = @1 WHERE Name = @0", who.name, color);                
+                Player.SendChatFrom(who, who.ColoredName + " %Shad their title color changed to " + color + Colors.Name(color) + "%S.", false);                
             }
+            
+            who.titlecolor = color;
+            Database.Execute("UPDATE Players SET title_color = @1 WHERE Name = @0", who.name, color);
             who.SetPrefix();
         }
 

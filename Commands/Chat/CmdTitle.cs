@@ -29,7 +29,6 @@ namespace MCGalaxy.Commands {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("xtitle", "-own") }; }
         }
-
         public override void Use(Player p, string message) { UsePlayer(p, message, "title"); }
         
         protected override void SetPlayerData(Player p, Player who, string[] args) {

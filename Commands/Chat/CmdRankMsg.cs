@@ -35,11 +35,8 @@ namespace MCGalaxy.Commands {
             Group grp = Group.FindMatches(p, rank);
             if (grp == null) return;
             
-            Player[] players = PlayerInfo.Online.Items;
-            string toSend = p.color + p.name + ": %S" + text.Trim();
-            foreach (Player pl in players) {
-                if (pl.group.name == grp.name) pl.SendMessage(toSend);
-            }
+            Chat.MessageWhere("{0}: %S{1}", pl => pl.group == grp,
+                              p.DisplayName, text.Trim());
         }
         
         public override void Help(Player p) {

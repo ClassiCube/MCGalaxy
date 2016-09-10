@@ -6,6 +6,19 @@ namespace MCGalaxy {
     
     public static class PlayerDB {
         
+        public static string LoginPath(string name) {
+            return "text/login/" + name.ToLower() + ".txt";
+        }
+        
+        public static string LogoutPath(string name) {
+            return "text/logout/" + name.ToLower() + ".txt";
+        }
+        
+        public static string InfectPath(string name) {
+            return "text/infect/" + name.ToLower() + ".txt";
+        }
+
+        
         static char[] trimChars = {'='};
         public static bool Load( Player p ) {
             if (!File.Exists("players/" + p.name + "DB.txt")) return false;
@@ -30,8 +43,9 @@ namespace MCGalaxy {
         
         public static string GetLoginMessage(Player p) {
             if (!Directory.Exists("text/login"))
-                Directory.CreateDirectory("text/login");            
-            string path = "text/login/" + p.name.ToLower() + ".txt";
+                Directory.CreateDirectory("text/login");
+            
+            string path = LoginPath(p.name);
             if (File.Exists(path)) return CP437Reader.ReadAllText(path); 
             // Unix is case sensitive (older files used correct casing of name)
             path = "text/login/" + p.name + ".txt";
@@ -41,8 +55,9 @@ namespace MCGalaxy {
         public static string GetLogoutMessage(Player p) {
             if (p.name == null) return "disconnected";
             if (!Directory.Exists("text/logout"))
-                Directory.CreateDirectory("text/logout");            
-            string path = "text/logout/" + p.name.ToLower() + ".txt";
+                Directory.CreateDirectory("text/logout");
+            
+            string path = LogoutPath(p.name);
             if (File.Exists(path)) return CP437Reader.ReadAllText(path); 
             
             path = "text/logout/" + p.name + ".txt";
@@ -50,23 +65,23 @@ namespace MCGalaxy {
         }
         
         public static void SetLoginMessage(string name, string value) {
-            CP437Writer.WriteAllText("text/login/" + name.ToLower() + ".txt", value);
+            CP437Writer.WriteAllText(LoginPath(name), value);
         }
         
         public static void SetLogoutMessage(string name, string value) {
-            CP437Writer.WriteAllText("text/logout/" + name.ToLower() + ".txt", value);
+            CP437Writer.WriteAllText(LogoutPath(name), value);
         }
         
         public static List<string> GetInfectMessages(Player p) {
             if (p.name == null || !Directory.Exists("text/infect")) return null;
-            string path = "text/infect/" + p.name.ToLower() + ".txt";
+            string path = InfectPath(p.name);
             return File.Exists(path) ? CP437Reader.ReadAllLines(path) : null;
         }
         
         public static void AppendInfectMessage(string name, string value) {
             if (!Directory.Exists("text/infect"))
                 Directory.CreateDirectory("text/infect");
-            CP437Writer.AppendLine("text/infect/" + name.ToLower() + ".txt", value);
+            CP437Writer.AppendLine(InfectPath(name), value);
         }
     }
 }
