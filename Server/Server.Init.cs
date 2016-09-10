@@ -70,7 +70,7 @@ namespace MCGalaxy {
         void LoadPlayerLists() {
             agreed = new PlayerList("ranks/agreed.txt");
             try {
-                CheckOldAgreed();
+                UpgradeOldAgreed();
                 agreed = PlayerList.Load("agreed.txt");
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
@@ -95,7 +95,34 @@ namespace MCGalaxy {
                 whiteList = PlayerList.Load("whitelist.txt");
         }
         
-        void CheckOldAgreed() {
+        static void UpgradeOldBlacklist() {
+            if (!Directory.Exists("levels/blacklists")) return;
+            string[] files = Directory.GetFiles("levels/blacklists");
+            for (int i = 0; i < files.Length; i++) {
+                string[] blacklist = File.ReadAllLines(files[i]);
+                List<string> names = new List<string>();
+                
+                // Lines are in the format: day.month.year name+
+                foreach (string entry in blacklist) {
+                    string[] parts = entry.Split(' ');
+                    string name = parts[parts.Length - 1];
+                    name = name.Substring(0, name.Length - 1);
+                    names.Add(name);
+                }
+                
+                if (names.Count > 0) {
+                    string lvlName = Path.GetFileNameWithoutExtension(files[i]);
+                    string propsPath = LevelInfo.PropertiesPath(lvlName);
+                    using (StreamWriter w = new StreamWriter(propsPath, true)) {
+                        w.WriteLine("VisitBlacklist = " + names.Join());
+                    }
+                }
+                File.Delete(files[i]);
+            }
+            Directory.Delete("levels/blacklists");
+        }
+        
+        static void UpgradeOldAgreed() {
             // agreed.txt format used to be names separated by spaces, we need to fix that up.
             if (!File.Exists("ranks/agreed.txt")) return;
             

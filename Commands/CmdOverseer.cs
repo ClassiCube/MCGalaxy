@@ -267,24 +267,13 @@ namespace MCGalaxy.Commands {
                 
                 Level.SaveSettings(p.level);
                 Player.Message(p, value + " has been removed from your map's blacklist.");
-            } else if (cmd == "BLACKLIST") {
-                string path = "levels/blacklists/" + p.level.name + ".txt";
-                if (!File.Exists(path)) {
-                    Player.Message(p, "There are no blacklisted players on this map.");
-                } else {
-                    Player.Message(p, "Current blocked players on level &b" + p.level.name + "%S:");
-                    string blocked = "";
-                    string[] lines = File.ReadAllLines(path);
-                    foreach (string line in lines) {
-                        string player = line.Split(' ')[1];
-                        blocked += player + ", ";
-                    }
-                    Player.Message(p, blocked);
-                }
-                
+            } else if (cmd == "BLACKLIST") {                
                 List<string> blacklist = p.level.VisitAccess.Blacklisted;
-                if (blacklist.Count > 0)
+                if (blacklist.Count > 0) {
                     Player.Message(p, "Blacklisted players: " + blacklist.Join());
+                } else {
+                    Player.Message(p, "There are no blacklisted players on this map.");
+                }
             } else {
                 Player.MessageLines(p, zoneHelp);
             }

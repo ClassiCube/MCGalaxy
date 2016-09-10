@@ -146,10 +146,6 @@ namespace MCGalaxy {
         
         public bool CanJoin(Player p) {
             if (p == null) return true;
-            if (Player.BlacklistCheck(p.name, name)) {
-                Player.Message(p, "You are blacklisted from going to {0}.", name); return false;
-            }
-            
             if (!VisitAccess.CheckDetailed(p, p.ignorePermission)) return false;
             if (File.Exists("text/lockdown/map/" + name)) {
                 Player.Message(p, "The level " + name + " is locked."); return false;

@@ -498,13 +498,6 @@ namespace MCGalaxy {
             CurrentAmountOfTnt--;
         }
         
-        public static bool BlacklistCheck(string name, string foundLevel) {
-            string path = "levels/blacklists/" + foundLevel + ".txt";
-            if (!File.Exists(path)) return false;
-            if (File.ReadAllText(path).Contains(name)) return true;
-            return false;
-        }
-        
         internal static bool CheckVote(string message, Player p, string a, string b, ref int totalVotes) {
             if (!p.voted && (message == a || message == b)) {
                 totalVotes++;

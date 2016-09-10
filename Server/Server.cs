@@ -102,6 +102,7 @@ namespace MCGalaxy {
             Background.QueueOnce(CombineEnvFiles);
             Background.QueueOnce(LoadMainLevel);
             Plugin.Load();
+            Background.QueueOnce(UpgradeOldBlacklist);
             Background.QueueOnce(LoadPlayerLists);
             Background.QueueOnce(LoadAutoloadCommands);
             Background.QueueOnce(MovePreviousLevelFiles);
