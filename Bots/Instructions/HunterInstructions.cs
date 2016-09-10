@@ -20,7 +20,7 @@ using System.IO;
 
 namespace MCGalaxy.Bots {
     
-    /// <summary> Causes the bot to move towards the closest human, within a defined search radius. </summary>
+    /// <summary> Causes the bot to move towards the closest player, within a defined search radius. </summary>
     public sealed class HuntInstruction : BotInstruction {
         public override string Name { get { return "hunt"; } }
         
@@ -96,7 +96,7 @@ namespace MCGalaxy.Bots {
         };
     }
     
-    /// <summary> Causes the bot to kill nearby humans. </summary>
+    /// <summary> Causes the bot to kill nearby players. </summary>
     public sealed class KillInstruction : BotInstruction {
         public override string Name { get { return "kill"; } }
 
