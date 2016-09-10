@@ -16,13 +16,12 @@
     permissions and limitations under the Licenses.
  */
 using MCGalaxy.SQL;
+
 namespace MCGalaxy.Commands {    
-    public class CmdTColor : Command {
-        
+    public class CmdTColor : EntityPropertyCmd {
         public override string name { get { return "tcolor"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the title color of others") }; }
@@ -31,24 +30,9 @@ namespace MCGalaxy.Commands {
             get { return new[] { new CommandAlias("tcolour"), new CommandAlias("xtcolor", "-own") }; }
         }
 
-        public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-            string[] args = message.Split(' ');
-            if (args[0].CaselessEq("-own")) {
-                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
-                args[0] = p.name;
-            }
-            
-            Player who = PlayerInfo.FindMatches(p, args[0]);
-            if (who == null) return;
-            if (p != null && who.Rank > p.Rank) {
-                MessageTooHighRank(p, "change the title color of", true); return;
-            }
-            if (who != p && !CheckExtraPerm(p)) { MessageNeedExtra(p, "change the title color of others."); return; }
-            SetTColor(p, who, args);
-        }
+        public override void Use(Player p, string message) { UsePlayer(p, message, "title color"); }
         
-        static void SetTColor(Player p, Player who, string[] args) {
+        protected override void SetPlayerData(Player p, Player who, string[] args) {
             if (args.Length == 1) {                
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their title color removed.", false);
                 who.titlecolor = "";
@@ -65,9 +49,9 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/tcolor <player> [color]");
+            Player.Message(p, "%T/tcolor [player] [color]");
             Player.Message(p, "%HSets the title color of [player]");
-            Player.Message(p, "%HIf no [color] is specified, title color is removed.");
+            Player.Message(p, "%H  If [color] is not given, title color is removed.");
             Player.Message(p, "%HTo see a list of all colors, use /help colors.");
         }
     }

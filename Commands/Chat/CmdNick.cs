@@ -20,11 +20,10 @@ using MCGalaxy;
 using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands {    
-    public class CmdNick : Command {       
+    public class CmdNick : EntityPropertyCmd {       
         public override string name { get { return "nick"; } }
         public override string shortcut { get { return "nickname"; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the nick of other players") }; }
@@ -32,31 +31,9 @@ namespace MCGalaxy.Commands {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("xnick", "-own") }; }
         }
+        public override void Use(Player p, string message) { UseBotOrPlayer(p, message, "nick"); }       
 
-        public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-            bool isBot = message.CaselessStarts("bot ");
-            string[] args = message.SplitSpaces(isBot ? 3 : 2);
-            if (args[0].CaselessEq("-own")) {
-                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
-                args[0] = p.name;
-            }
-            
-            Player who = null;
-            PlayerBot bot = null;
-            if (isBot) bot = PlayerBot.FindMatchesPreferLevel(p, args[1]);
-            else who = PlayerInfo.FindMatches(p, args[0]);
-            if (bot == null && who == null) return;
-            
-            if (p != null && who != null && who.Rank > p.Rank) {
-                MessageTooHighRank(p, "change the nick of", true); return;
-            }
-            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedExtra(p, "change the nick of others."); return; }
-            if (isBot) SetBotNick(p, bot, args);
-            else SetNick(p, who, args);
-        }
-        
-        static void SetBotNick(Player p, PlayerBot bot, string[] args) {
+        protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
             string newName = args.Length > 2 ? args[2] : "";
             if (newName == "") {
                 bot.DisplayName = bot.name;
@@ -73,7 +50,7 @@ namespace MCGalaxy.Commands {
             BotsFile.UpdateBot(bot);
         }
         
-        static void SetNick(Player p, Player who, string[] args) {
+        protected override void SetPlayerData(Player p, Player who, string[] args) {
             string newName = args.Length > 1 ? args[1] : "";
             if (newName == "") {
                 who.DisplayName = who.truename;
@@ -92,7 +69,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/nick [player] [nick]");
             Player.Message(p, "%HSets the nick of that player.");
-            Player.Message(p, "%HIf no [nick] is given, reverts player's nick to their original name.");
+            Player.Message(p, "%H  If [nick] is not given, reverts [player]'s nick to their account name.");
             Player.Message(p, "%T/nick bot [bot] [name]");
             Player.Message(p, "%HSets the name shown above that bot in game.");
             Player.Message(p, "%H  If [name] is \"empty\", the bot will not have a name shown.");

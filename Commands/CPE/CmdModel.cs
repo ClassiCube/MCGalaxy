@@ -18,14 +18,11 @@
 using System;
 using MCGalaxy.Bots;
 
-namespace MCGalaxy.Commands.CPE {
-    
-    public class CmdModel : Command {
-        
+namespace MCGalaxy.Commands.CPE {   
+	public class CmdModel : EntityPropertyCmd {
         public override string name { get { return "model"; } }
         public override string shortcut { get { return "setmodel"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the model of others") }; }
@@ -35,63 +32,46 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         public override void Use(Player p, string message) {
-            if (CheckSuper(p, message, "player or bot name")) return;
-            if (message == "") message = "humanoid";
-            
-            Player who = p;
-            PlayerBot bot = null;
-            bool isBot = message.CaselessStarts("bot ");
-            string[] args = message.SplitSpaces(isBot ? 3 : 2);
-            string model = null;
-            
-            if (args[0].CaselessEq("-own")) {
-                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
-                args[0] = p.name;
-                if (args.Length == 1) message = "humanoid";
+            if (message.IndexOf(' ') == -1) {
+                message = "-own " + message;
+                message = message.TrimEnd();
             }
-
-            if (isBot && args.Length > 2) {
-                bot = PlayerBot.FindMatchesPreferLevel(p, args[1]);
-                if (bot == null) return;
-                model = args[2];
-            } else if (args.Length > 1) {
-                isBot = false;
-                who = PlayerInfo.FindMatches(p, args[0]);
-                if (who == null) return;
-                model = args.Length >= 2 ? args[1] : "humanoid";
-            } else {
-                isBot = false;
-                who = p;
-                if (who == null) { SuperRequiresArgs(p, "player name"); return; }
-                model = message;
-            }
-            
+            UseBotOrPlayer(p, message, "model");
+        }
+        
+        protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
+            string model = GetModel(p, args, 2);
+        	bot.model = model;
+        	Entities.UpdateModel(bot.id, model, bot.level, null);
+        	
+        	Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Smodel was changed to a &c" + model);
+        	BotsFile.UpdateBot(bot);
+        }
+        
+        protected override void SetPlayerData(Player p, Player who, string[] args) {
+            string model = GetModel(p, args, 1);
+        	who.model = model;
+        	Entities.UpdateModel(who.id, model, who.level, who);
+        	
+        	if (p != who) {
+        		Player.GlobalMessage(who, who.ColoredName + "'s %Smodel was changed to a &c" + model);
+        	} else {
+        		Player.Message(who, "Changed your own model to a &c" + model);
+        	}
+        	
+        	if (model != "humanoid") {
+        		Server.models.AddOrReplace(who.name, model);
+        	} else {
+        		Server.models.Remove(who.name);
+        	}
+        	Server.models.Save();
+        }
+        
+        static string GetModel(Player p, string[] args, int i) {
+            string model = args.Length > i ? args[i] : "humanoid";
             model = model.ToLower();
             model = model.Replace(':', '|'); // since many assume : is for scale instead of |.
-            if (p != null && who != null && who.Rank > p.Rank) {
-                MessageTooHighRank(p, "change the model of", true); return;
-            }
-            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedExtra(p, "change the model of others."); return; }
-
-            if (isBot) {
-                bot.model = model;
-                Entities.UpdateModel(bot.id, model, bot.level, null);
-                Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Smodel was changed to a &c" + model);
-                BotsFile.UpdateBot(bot);
-            } else {
-                who.model = model;
-                Entities.UpdateModel(who.id, model, who.level, who);
-                if (p != who)
-                    Player.GlobalMessage(who, who.ColoredName + "'s %Smodel was changed to a &c" + model);
-                else
-                    Player.Message(who, "Changed your own model to a &c" + model);
-                                
-                if (model != "humanoid")
-                    Server.models.AddOrReplace(who.name, model);
-                else
-                    Server.models.Remove(who.name);
-                Server.models.Save();
-            }
+            return model;
         }
 
         public override void Help(Player p) {

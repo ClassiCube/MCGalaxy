@@ -19,11 +19,10 @@ using MCGalaxy.Bots;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands {    
-    public class CmdColor : Command {        
+    public class CmdColor : EntityPropertyCmd {
         public override string name { get { return "color"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the color of others") }; }
@@ -32,42 +31,21 @@ namespace MCGalaxy.Commands {
             get { return new[] { new CommandAlias("colour"), new CommandAlias("xcolor", "-own") }; }
         }
         
-        public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-            string[] args = message.Split(' ');
-            if (args[0].CaselessEq("-own")) {
-                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
-                args[0] = p.name;
-            }
-            
-            Player who = null;
-            PlayerBot bot = null;
-            bool isBot = message.CaselessStarts("bot ");
-            if (isBot) bot = PlayerBot.FindMatchesPreferLevel(p, args[1]);
-            else who = PlayerInfo.FindMatches(p, args[0]);
-            if (bot == null && who == null) return;
-            
-            if (p != null && who != null && who.Rank > p.Rank) {
-                MessageTooHighRank(p, "change the color of", true); return;
-            }
-            if ((isBot || who != p) && !CheckExtraPerm(p)) { MessageNeedExtra(p, "change the color of others."); return; }
-            if (isBot) SetBotColor(p, bot, args);
-            else SetColor(p, who, args);
-        }
+        public override void Use(Player p, string message) { UseBotOrPlayer(p, message, "color"); }
 
-        static void SetBotColor(Player p, PlayerBot bot, string[] args) {
-            string color = args.Length == 2 ? "&1" : Colors.Parse(args[2]);
+        protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
+        	string color = args.Length > 2 ? Colors.Parse(args[2]) : "&1";
             if (color == "") { Player.Message(p, "There is no color \"" + args[2] + "\"."); return; }
             Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Scolor was set to " 
-                              + color + Colors.Name(color));
-            
+                              + color + Colors.Name(color));            
             bot.color = color;
+            
             bot.GlobalDespawn();
             bot.GlobalSpawn();
             BotsFile.UpdateBot(bot);
         }
         
-        static void SetColor(Player p, Player who, string[] args) {
+        protected override void SetPlayerData(Player p, Player who, string[] args) {
             if (args.Length == 1) {
                 Player.SendChatFrom(who, who.ColoredName + " %Shad their color removed.", false);
                 who.color = who.group.color;
@@ -80,6 +58,7 @@ namespace MCGalaxy.Commands {
                 who.color = color;
                 Database.Execute("UPDATE Players SET color = @1 WHERE Name = @0", who.name, color);
             }
+            
             Entities.GlobalDespawn(who, true);
             Entities.GlobalSpawn(who, true);
             who.SetPrefix();
@@ -88,7 +67,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/color [player] [color]");
             Player.Message(p, "%HSets the nick color of that player");
-            Player.Message(p, "%HIf no [color] is given, reverts to player's rank color.");
+            Player.Message(p, "%H  If [color] is not given, reverts to player's rank color.");
             Player.Message(p, "%H/color bot [bot] [color]");
             Player.Message(p, "%TSets the name color of that bot.");
             Player.Message(p, "%HTo see a list of all colors, use /help colors.");

@@ -18,12 +18,10 @@
 using MCGalaxy.SQL;
 namespace MCGalaxy.Commands {
     
-    public class CmdTitle : Command {
-        
+	public class CmdTitle : EntityPropertyCmd {        
         public override string name { get { return "title"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can change the title of others") }; }
@@ -32,27 +30,11 @@ namespace MCGalaxy.Commands {
             get { return new[] { new CommandAlias("xtitle", "-own") }; }
         }
 
-        public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-            string[] args = message.SplitSpaces(2);
-            if (args[0].CaselessEq("-own")) {
-                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
-                args[0] = p.name;
-            }
-            
-            Player who = PlayerInfo.FindMatches(p, args[0]);
-            if (who == null) return;
-            if (p != null && who.Rank > p.Rank) {
-                MessageTooHighRank(p, "change the title of", true); return;
-            }
-            if (who != p && !CheckExtraPerm(p)) { MessageNeedExtra(p, "change the title of others."); return; }
-            SetTitle(p, who, args);
-        }
+        public override void Use(Player p, string message) { UsePlayer(p, message, "title"); }
         
-        static void SetTitle(Player p, Player who, string[] args) {
+        protected override void SetPlayerData(Player p, Player who, string[] args) {
             string title = args.Length > 1 ? args[1] : "";
-            if (title != "")
-                title = title.Replace("[", "").Replace("]", "");
+            title = title.Replace("[", "").Replace("]", "");
             if (title.Length >= 20) { Player.Message(p, "Title must be under 20 letters."); return; }
 
             if (title == "") {
@@ -67,9 +49,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/title <player> [title]");
-            Player.Message(p, "%HSets the title of <player>");
-            Player.Message(p, "%HIf no [title] is given, removes player's title.");
+            Player.Message(p, "%T/title [player] [title]");
+            Player.Message(p, "%HSets the title of [player]");
+            Player.Message(p, "%H  If [title] is not given, removes [player]'s title.");
         }
     }
 }

@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -159,7 +160,7 @@ PRIMARY KEY(player)
             Database.Execute("UPDATE Players SET Money=@0 WHERE Name=@1", money, name);
         }
         
-        public static Item[] Items = { new ColorItem(), new TitleColorItem(), 
+        public static List<Item> Items = new List<Item>() { new ColorItem(), new TitleColorItem(),
             new TitleItem(), new RankItem(), new LevelItem(), new LoginMessageItem(), 
             new LogoutMessageItem(), new BlocksItem(), new QueueLevelItem(), 
             new InfectMessageItem(), new NickItem(), new ReviveItem(),
