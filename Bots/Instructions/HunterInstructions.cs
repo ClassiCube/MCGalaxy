@@ -34,7 +34,7 @@ namespace MCGalaxy.Bots {
             Player closest = null;
             
             foreach (Player p in players) {
-                if (p.level != bot.level || p.invincible) continue;
+                if (p.level != bot.level || p.invincible || p.hidden) continue;
                 
                 int dx = p.pos[0] - bot.pos[0], dy = p.pos[1] - bot.pos[1], dz = p.pos[2] - bot.pos[2];
                 int playerDist = Math.Abs(dx) + Math.Abs(dy) + Math.Abs(dz);
@@ -117,6 +117,43 @@ namespace MCGalaxy.Bots {
         public override string[] Help { get { return help; } }
         static string[] help = { "%T/botai add [name] kill",
             "%HCauses the bot to kill any players it is touching.",
+        };
+    }
+    
+    public sealed class StareInstruction : BotInstruction {
+        public override string Name { get { return "stare"; } }
+        
+        public override bool Execute(PlayerBot bot, InstructionData data) {
+            int dist = 20000 * 32;
+            Player[] players = PlayerInfo.Online.Items;
+            Player closest = null;
+            
+            foreach (Player p in players) {
+                if (p.level != bot.level || p.hidden) continue;
+                
+                int dx = p.pos[0] - bot.pos[0], dy = p.pos[1] - bot.pos[1], dz = p.pos[2] - bot.pos[2];
+                int playerDist = Math.Abs(dx) + Math.Abs(dy) + Math.Abs(dz);
+                if (playerDist >= dist) continue;
+                
+                closest = p;
+                dist = playerDist;
+            }
+            
+            if (closest == null) return true;
+            FaceTowards(bot, closest);
+            return true;
+        }
+        
+        static void FaceTowards(PlayerBot bot, Player p) {
+            int dx = p.pos[0] - bot.pos[0], dy = p.pos[1] - bot.pos[1], dz = p.pos[2] - bot.pos[2];
+            Vec3F32 dir = new Vec3F32(dx, dy, dz);
+            dir = Vec3F32.Normalise(dir);
+            DirUtils.GetYawPitch(dir, out bot.rot[0], out bot.rot[1]);
+        }
+        
+        public override string[] Help { get { return help; } }
+        static string[] help = { "%T/botai add [name] stare",
+            "%HCauses the bot to stare at the closest player.",
         };
     }
 }
