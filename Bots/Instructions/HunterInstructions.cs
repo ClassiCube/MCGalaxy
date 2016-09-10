@@ -88,6 +88,12 @@ namespace MCGalaxy.Bots {
                 w.WriteLine(Name);
             }
         }
+        
+        public override string[] Help { get { return help; } }
+        static string[] help = { "%T/botai add [name] hunt <radius>",
+            "%HCauses the bot to move towards the closest player in the search radius.",
+            "%H  <radius> defaults to 75 blocks.",
+        };
     }
     
     /// <summary> Causes the bot to kill nearby humans. </summary>
@@ -107,5 +113,10 @@ namespace MCGalaxy.Bots {
             }
             bot.NextInstruction(); return true;
         }
+        
+        public override string[] Help { get { return help; } }
+        static string[] help = { "%T/botai add [name] kill",
+            "%HCauses the bot to kill any players it is touching.",
+        };
     }
 }

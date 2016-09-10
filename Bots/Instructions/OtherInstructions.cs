@@ -27,6 +27,11 @@ namespace MCGalaxy.Bots {
         public override bool Execute(PlayerBot bot, InstructionData data) {
             bot.cur = 0; return false;
         }
+        
+        public override string[] Help { get { return help; } }
+        static string[] help = { "%T/botai add [name] reset",
+            "%HCauses the bot to go back to the first instruction",
+        };
     }
     
     /// <summary> Causes the bot to be removed from the world. </summary>
@@ -36,6 +41,11 @@ namespace MCGalaxy.Bots {
         public override bool Execute(PlayerBot bot, InstructionData data) {
             PlayerBot.Remove(bot); return true;
         }
+        
+        public override string[] Help { get { return help; } }
+        static string[] help = { "%T/botai add [name] remove",
+            "%HCauses the bot to be removed from the world",
+        };
     }
     
     /// <summary> Causes the bot to switch to a different AI. </summary>
@@ -65,6 +75,11 @@ namespace MCGalaxy.Bots {
                 w.WriteLine(Name + " " + script);
             }
         }
+        
+        public override string[] Help { get { return help; } }
+        static string[] help = { "%T/botai add [name] linkscript [ai name]",
+            "%HCauses the bot to switch to the given AI, and execute that AI's instructions instead.",
+        };
     }
     
     /// <summary> Causes the bot to wait/do nothing for a certain interval. </summary>
@@ -92,5 +107,12 @@ namespace MCGalaxy.Bots {
             string time = args.Length > 3 ? args[3] : "10";
             w.WriteLine(Name + " " + short.Parse(time));
         }
+        
+        public override string[] Help { get { return help; } }
+        static string[] help = { "%T/botai add [name] wait <interval>",
+            "%HCauses the bot to stay still for a period of time.",
+            "%H  <interval> is in tenths of a second, so an interval of 20 means " +
+            "stay still for two seconds. (defaults to 1 second)",
+        };
     }
 }

@@ -42,6 +42,9 @@ namespace MCGalaxy.Bots {
             w.WriteLine(Name);
         }
         
+        /// <summary> Returns the help for this instruction. n</summary>
+        public abstract string[] Help { get; }
+        
         /// <summary> All instructions that bots can execute. </summary>
         public static List<BotInstruction> Instructions = new List<BotInstruction>() {
             new NodInstruction(), new SpinInstruction(), new HuntInstruction(), new KillInstruction(),      	

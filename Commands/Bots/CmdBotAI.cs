@@ -111,8 +111,8 @@ namespace MCGalaxy.Commands
             }
 
             try {
-            	string action = args.Length > 2 ? args[2] : "";
-            	if (action != "reverse") {
+                string action = args.Length > 2 ? args[2] : "";
+                if (action != "reverse") {
                     ScriptFile.Append(p, ai, action, args); return;
                 }
                 
@@ -146,36 +146,16 @@ namespace MCGalaxy.Commands
             
             Player.Message(p, "%HInstructions: %S{0}, reverse",
                            BotInstruction.Instructions.Join(ins => ins.Name.ToLower()));
-            Player.Message(p, "%HTo see extended help, type %T/help botai [instruction]");
-            Player.Message(p, "%Hwait, nod, spin %S- optional arg specifies '0.1 seconds'");
-            Player.Message(p, "%Hnod, spin %S- optional second arg specifies 'speed'");
-            Player.Message(p, "%Hlinkscript %S- arg specifies another AI name");
+            Player.Message(p, "%HTo see detailed help, type %T/help botai [instruction]");
         }
         
         public override void Help(Player p, string message) {
-            switch (message.ToLower()) {
-                case "wait":
-                    Player.Message(p, "%T/botai add [name] wait [interval]");
-                    Player.Message(p, "%HCauses the bot to stay still for a period of time.");
-                    Player.Message(p, "%HNote interval is in 10ths of a second, so an " +
-                                   "interval of 20 means stay still for two seconds.");
-                    Player.Message(p, "%HIf interval is not given, stays still for one second.");
-                    break;
-                case "speed":
-                    Player.Message(p, "%T/botai add [name] speed [percentage]");
-                    Player.Message(p, "%HSets how fast the bot moves, relative to its normal speed.");
-                    Player.Message(p, "%H100 means it moves at normal speed, " +
-                                   "50 means it moves half as fast as normal");
-                    break;
-                case "linkscript":
-                    Player.Message(p, "%T/botai add [name] linkscript [AI name]");
-                    Player.Message(p, "%HCauses the bot to execute all of " +
-                                   "the instructions defined in the given AI.");
-                    break;
-                default:
-                    Player.Message(p, "%HInstructions: %Swalk, teleport, wait, nod, speed, " +
-                                   "spin, reset, remove, reverse, linkscript, jump");
-                    break;
+            BotInstruction ins = BotInstruction.Find(message);
+            if (ins == null) {
+                Player.Message(p, "%HInstructions: %S{0}, reverse",
+                               BotInstruction.Instructions.Join(ins2 => ins2.Name.ToLower()));
+            } else {
+                Player.MessageLines(p, ins.Help);
             }
         }
     }

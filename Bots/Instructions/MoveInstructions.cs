@@ -53,6 +53,12 @@ namespace MCGalaxy.Bots {
             public ushort X, Y, Z;
             public byte RotX, RotY;
         }
+        
+        public override string[] Help { get { return help; } }
+        static string[] help = { "%T/botai add [name] teleport",
+            "%HCauses the bot to instantly teleport to a position.",
+            "%H  Note: The position saved to the AI is your current position.",
+        };
     }
     
     /// <summary> Causes the bot to gradually move to to a position. </summary>
@@ -74,6 +80,12 @@ namespace MCGalaxy.Bots {
             bot.AdvanceRotation();
             return true;
         }
+        
+        public override string[] Help { get { return help; } }
+        static string[] help = { "%T/botai add [name] walk",
+            "%HCauses the bot to walk towards to a position.",
+            "%H  Note: The position saved to the AI is your current position.",
+        };
     }
     
     /// <summary> Causes the bot to begin jumping. </summary>
@@ -84,6 +96,13 @@ namespace MCGalaxy.Bots {
             bot.jumping = true;
             bot.NextInstruction(); return false;
         }
+        
+        public override string[] Help { get { return help; } }
+        static string[] help = { "%T/botai add [name] jump",
+            "%HCauses the bot to perform a jump.",
+            "%H  Note bots can also do other instructions while jumping",
+            "%H  (e.g. For a \"jump\" then a \"walk\" instruction, the bot will jump while also walking",
+        };
     }
     
     /// <summary> Causes the bot to change how fast it moves. </summary>
@@ -106,5 +125,12 @@ namespace MCGalaxy.Bots {
             string time = args.Length > 3 ? args[3] : "10";
             w.WriteLine(Name + " " + short.Parse(time));
         }
+        
+        public override string[] Help { get { return help; } }
+        static string[] help = { "%T/botai add [name] speed [percentage]",
+            "%HSets how fast the bot moves, relative to its normal speed.",
+            "%H  100 means it moves at normal speed",
+            "%H  50 means it moves at half speed",
+        };
     }
 }
