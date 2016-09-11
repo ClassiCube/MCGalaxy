@@ -97,14 +97,18 @@ namespace MCGalaxy.Commands {
             List<string> bWhitelist = data.BuildWhitelist, bBlacklist = data.BuildBlacklist;
             GetBlacklistedPlayers(data.Name, vBlacklist);
             
-            if (vWhitelist.Count > 0)
-                Player.Message(p, "  Visit whitelist: &a" + vWhitelist.Join("%S, &a"));
-            if (vBlacklist.Count > 0)
-                Player.Message(p, "  Visit blacklist: &c" + vBlacklist.Join("%S, &c"));
-            if (bWhitelist.Count > 0)
-                Player.Message(p, "  Build whitelist: &a" + bWhitelist.Join("%S, &a"));
-            if (bBlacklist.Count > 0)
-                Player.Message(p, "  Build blacklist: &c" + bBlacklist.Join("%S, &c"));
+            if (vWhitelist.Count > 0) {
+                Player.Message(p, "  &aVisit whitelist: " + JoinNames(vWhitelist, p));
+            }
+            if (vBlacklist.Count > 0) {
+                Player.Message(p, "  &cVisit blacklist: " + JoinNames(vBlacklist, p));
+            }
+            if (bWhitelist.Count > 0) {
+                Player.Message(p, "  &aBuild whitelist: " + JoinNames(bWhitelist, p));
+            }
+            if (bBlacklist.Count > 0) {
+                Player.Message(p, "  &Build blacklist: " + JoinNames(bBlacklist, p));
+            }
             
             if (String.IsNullOrEmpty(data.RealmOwner))
                 data.RealmOwner = GetRealmMapOwner(data.Name);
@@ -113,6 +117,10 @@ namespace MCGalaxy.Commands {
             string[] owners = data.RealmOwner.Replace(" ", "").Split(',');
             Player.Message(p, "  This map is a personal realm of {0}",
                            owners.Join(n => PlayerInfo.GetColoredName(p, n)));
+        }
+        
+        static string JoinNames(List<string> items, Player p) {
+            return items.Join(name => PlayerInfo.GetColoredName(p, name));
         }
    
         static string GetRealmMapOwner(string lvlName) {
