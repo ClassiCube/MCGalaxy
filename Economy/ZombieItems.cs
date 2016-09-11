@@ -30,7 +30,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "10Blocks"; } }
 
-        protected override void OnBuyCommand(Player p, string message, string[] args) {
+        protected override void DoPurchase(Player p, string message, string[] args) {
             byte count = 1;
             if (args.Length >= 2 && !byte.TryParse(args[1], out count) || count == 0 || count > 10) {
                 Player.Message(p, "Number of groups of 10 blocks to buy must be an integer between 1 and 10."); return;
@@ -60,7 +60,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "QueueLevel"; } }
         
-        protected override void OnBuyCommand(Player p, string message, string[] args) {
+        protected override void DoPurchase(Player p, string message, string[] args) {
             if (Server.zombie.QueuedLevel != null) {
                 Player.Message(p, "Someone else has already queued a level."); return;
             }
@@ -81,7 +81,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "InfectMessage"; } }
         
-        protected override void OnBuyCommand(Player p, string message, string[] args) {
+        protected override void DoPurchase(Player p, string message, string[] args) {
             string text = message.SplitSpaces(2)[1]; // keep spaces this way
             bool hasAToken = false;
             for (int i = 0; i < text.Length; i++) {
@@ -116,8 +116,7 @@ namespace MCGalaxy.Eco {
         protected abstract int Duration { get; }
         protected abstract bool ForHumans { get; }
         
-        protected internal override void OnBuyCommand(Command cmd, Player p,
-                                                      string message, string[] args) {
+        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (p.money < Price) {
                 Player.Message(p, "%cYou don't have enough &3{1} &c to buy a {0}.", Name, Server.moneys); return;
             }
@@ -153,7 +152,7 @@ namespace MCGalaxy.Eco {
             Economy.MakePurchase(p, Price, "%3Invisibility: " + Duration);
         }
         
-        protected override void OnBuyCommand(Player p, string message, string[] args) { }
+        protected override void DoPurchase(Player p, string message, string[] args) { }
         
         protected internal override void OnStoreCommand(Player p) {
             base.OnStoreCommand(p);

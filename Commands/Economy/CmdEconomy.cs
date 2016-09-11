@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands {
             } else {
                 Item item = Economy.GetItem(args[0]);
                 if (item != null) {
-                    item.OnSetupCommand(p, args);
+                    item.Setup(p, args);
                     Economy.Save(); return;
                 }
                 

@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
             if (p.Rank < item.PurchaseRank) {
                 Formatter.MessageNeedMinPerm(p, "purchase a " + item.Name, item.PurchaseRank); return;
             }
-            item.OnBuyCommand(this, p, message, parts);
+            item.OnBuyCommand(p, message, parts);
         }
         
         public override void Help(Player p) {

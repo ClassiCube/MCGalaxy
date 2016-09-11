@@ -74,9 +74,8 @@ namespace MCGalaxy.Eco {
             }
         }
         
-        protected internal override void OnBuyCommand(Command cmd, Player p,
-                                                      string message, string[] args) {
-            if (args.Length < 3) { cmd.Help(p); return; }
+        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
+        	if (args.Length < 3) { OnStoreCommand(p); return; }
             LevelPreset preset = FindPreset(args[1]);
             if (preset == null) { Player.Message(p, "%cThat isn't a level preset"); return; }
             
@@ -112,7 +111,7 @@ namespace MCGalaxy.Eco {
             Economy.MakePurchase(p, preset.price, "%3Map: %f" + preset.name);
         }
         
-        protected internal override void OnSetupCommandOther(Player p, string[] args) {
+        protected internal override void OnSetupCommand(Player p, string[] args) {
             LevelPreset preset = FindPreset(args[2]);
             switch (args[1].ToLower()) {
                 case "new":

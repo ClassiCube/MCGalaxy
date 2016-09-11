@@ -29,6 +29,7 @@ namespace MCGalaxy {
 
         public static bool Enabled;
         
+        const string propertiesFile = "properties/economy.properties";
         const string createTable =
             @"CREATE TABLE if not exists Economy (
 player      VARCHAR(20),
@@ -78,21 +79,22 @@ PRIMARY KEY(player)
         }
 
         public static void Load() {
-            if (!File.Exists("properties/economy.properties")) { 
+            if (!File.Exists(propertiesFile)) { 
                 Server.s.Log("Economy properties don't exist, creating"); 
                 Save(); 
             }
             
-            using (StreamReader r = new StreamReader("properties/economy.properties")) {
+            using (StreamReader r = new StreamReader(propertiesFile)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {
                     line = line.ToLower().Trim();
                     try {
                         ParseLine(line);
-                    } catch { }
+                    } catch (Exception ex) {
+                        Server.ErrorLog(ex);
+                    }
                 }
             }
-            Save();
         }
         
         static void ParseLine(string line) {
@@ -113,7 +115,7 @@ PRIMARY KEY(player)
         }
 
         public static void Save() {
-            using (StreamWriter w = new StreamWriter("properties/economy.properties", false)) {
+            using (StreamWriter w = new StreamWriter(propertiesFile, false)) {
                 w.WriteLine("enabled:" + Enabled);
                 foreach (Item item in Items) {
                     w.WriteLine();

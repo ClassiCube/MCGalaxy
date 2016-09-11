@@ -64,8 +64,7 @@ namespace MCGalaxy.Eco {
             }
         }
         
-        protected internal override void OnBuyCommand(Command cmd, Player p, 
-                                                      string message, string[] args) {
+        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length >= 2) {
                 Player.Message(p, "%cYou cannot provide a rank name, use %a/buy rank %cto buy the NEXT rank."); return;
             }
@@ -79,11 +78,11 @@ namespace MCGalaxy.Eco {
             }
             
             Command.all.Find("setrank").Use(null, "+up " + p.name);
-            Player.Message(p, "%aYou've successfully bought the rank " + p.group.ColoredName);
+            Player.Message(p, "You bought the rank " + p.group.ColoredName);
             Economy.MakePurchase(p, FindRank(p.group.name).price, "%3Rank: " + p.group.ColoredName);
         }
         
-        protected internal override void OnSetupCommandOther(Player p, string[] args) {
+        protected internal override void OnSetupCommand(Player p, string[] args) {
             switch (args[1].ToLower()) {
                 case "price":
                     Rank rnk = FindRank(args[2]);
@@ -133,8 +132,8 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnStoreCommand(Player p) {
             Group maxrank = Group.Find(MaxRank);
-            Player.Message(p, "Syntax: %T/buy rankup");            
-            Player.Message(p, "%fThe max buyable rank is: " + maxrank.ColoredName);
+            Player.Message(p, "%T/buy rankup");            
+            Player.Message(p, "%fThe highest buyable rank is: " + maxrank.ColoredName);
             Player.Message(p, "%cYou can only buy ranks one at a time, in sequential order.");
             
             foreach (Rank rnk in RanksList) {

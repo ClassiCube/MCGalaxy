@@ -44,11 +44,9 @@ namespace MCGalaxy.Eco {
         
         /// <summary> Writes the properties of this item to the economy.properties file. </summary>
         public abstract void Serialise(StreamWriter writer);
+        
 
-        protected internal abstract void OnBuyCommand(Command cmd, Player p,
-                                                      string message, string[] args);
-
-        internal void OnSetupCommand(Player p, string[] args) {
+        internal void Setup(Player p, string[] args) {
             switch (args[1].ToLower()) {
                 case "enable":
                     Player.Message(p, "%aThe {0} item is now enabled.", Name);
@@ -62,15 +60,20 @@ namespace MCGalaxy.Eco {
                     if (grp == null) return;
                     
                     PurchaseRank = grp.Permission;
-                    Player.Message(p, "Purchase rank for {0} item set to {1}%S.", Name, grp.ColoredName);
+                    Player.Message(p, "Min purchase rank for {0} item set to {1}%S.", Name, grp.ColoredName);
                     break;
                 default:
-                    OnSetupCommandOther(p, args); break;
+                    OnSetupCommand(p, args); break;
             }
         }
         
-        protected internal abstract void OnSetupCommandOther(Player p, string[] args);
+        /// <summary> Called when the player does /buy [item name] &lt;value&gt; </summary>
+        protected internal abstract void OnBuyCommand(Player p, string message, string[] args);
         
+        /// <summary> Called when the player does /eco [item name] [option] &lt;value&gt; </summary>
+        protected internal abstract void OnSetupCommand(Player p, string[] args);
+        
+        /// <summary> Called when the player does /eco help [item name] </summary>
         protected internal virtual void OnSetupCommandHelp(Player p) {
             Player.Message(p, "%T/eco {0} enable/disable", Name.ToLower());
             Player.Message(p, "%HEnables/disables purchasing this item.");
@@ -78,8 +81,10 @@ namespace MCGalaxy.Eco {
             Player.Message(p, "%HSets the lowest rank which can purchase this item.");
         }
 
+        /// <summary> Called when the player does /store </summary>
         protected internal abstract void OnStoreOverview(Player p);
         
+        /// <summary> Called when the player does /store [item name] </summary>
         protected internal abstract void OnStoreCommand(Player p);
     }
     
@@ -89,6 +94,8 @@ namespace MCGalaxy.Eco {
         /// <summary> How much this item costs to purchase. </summary>
         public int Price = 100;
         
+        /// <summary> Whether providing no arguments should be treated as 
+        /// resetting the item for the player to its default value. </summary>
         protected bool NoArgsResetsItem;
         
         public override void Parse(string line, string[] args) {
@@ -102,33 +109,31 @@ namespace MCGalaxy.Eco {
             writer.WriteLine(Name + ":purchaserank:" + (int)PurchaseRank);
         }
         
-        protected internal override void OnBuyCommand(Command cmd, Player p,
-                                                      string message, string[] args) {
+        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (NoArgsResetsItem && args.Length == 1) {
-                OnBuyCommand(p, message, args); return;
+                DoPurchase(p, message, args); return;
             }
             // Must always provide an argument.
-            if (args.Length < 2) { cmd.Help(p); return; }
+            if (args.Length < 2) { OnStoreCommand(p); return; }
             if (p.money < Price) {
                 Player.Message(p, "%cYou don't have enough &3{1}&c to buy a {0}.", Name, Server.moneys); return;
             }
-            OnBuyCommand(p, message, args);
+            DoPurchase(p, message, args);
         }
         
-        protected abstract void OnBuyCommand(Player p, string message, string[] args);
+        protected abstract void DoPurchase(Player p, string message, string[] args);
         
-        protected internal override void OnSetupCommandOther(Player p, string[] args) {
-            switch (args[1].ToLower()) {
-                case "price":
-                    int cost;
-                    if (!int.TryParse(args[2], out cost)) {
-                        Player.Message(p, "\"{0}\" is not a valid integer.", args[2]); return;
-                    }
-                    
-                    Player.Message(p, "%aSuccessfully changed the {0} price to &f{1} &3{2}", Name, cost, Server.moneys);
-                    Price = cost; break;
-                default:
-                    Player.Message(p, "Supported actions: enable, disable, price [cost]"); break;
+        protected internal override void OnSetupCommand(Player p, string[] args) {
+            if (args[1].CaselessEq("price")) {
+                int cost;
+                if (!int.TryParse(args[2], out cost)) {
+                    Player.Message(p, "\"{0}\" is not a valid integer.", args[2]); return;
+                }
+                
+                Player.Message(p, "Changed price of {0} item to &f{1} &3{2}", Name, cost, Server.moneys);
+                Price = cost;
+            } else {
+                Player.Message(p, "Supported actions: enable, disable, price [cost]");
             }
         }
         
@@ -149,8 +154,8 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.Message(p, "Syntax: %T/buy {0} [value]", Name);
-            Player.Message(p, "Costs &f{0} &3{1} %Seach time the item is bought.", Price, Server.moneys);
+            Player.Message(p, "%T/buy {0} [value]", Name);
+            Player.Message(p, "%hCosts &f{0} &3{1} %Seach time the item is bought.", Price, Server.moneys);
         }
     }
 }

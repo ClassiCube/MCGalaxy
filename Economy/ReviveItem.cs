@@ -30,8 +30,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "Revive"; } }
         
-        protected internal override void OnBuyCommand(Command cmd, Player p, 
-                                             string message, string[] args) {
+        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (p.money < Price) {
                 Player.Message(p, "&cYou don't have enough &3" + Server.moneys + "&c to buy a " + Name + "."); return;
             }
@@ -69,13 +68,13 @@ namespace MCGalaxy.Eco {
             Economy.MakePurchase(p, Price, "%3Revive:");
         }
         
-        protected override void OnBuyCommand(Player p, string message, string[] args) { }
+        protected override void DoPurchase(Player p, string message, string[] args) { }
         
         protected internal override void OnStoreCommand(Player p) {
             base.OnStoreCommand(p);
             int time = ZombieGame.ReviveNoTime, expiry = ZombieGame.ReviveTooSlow;
             int potions = ZombieGame.ReviveTimes;
-            Player.Message(p, "Syntax: %T/buy " + Name);
+            Player.Message(p, "%T/buy " + Name);
             Player.Message(p, "%HCannot be used in the last &a" + time + " %Hseconds of a round.");
             Player.Message(p, "%HCan only be used within &a" + expiry + " %Hseconds after being infected.");
             Player.Message(p, "%HYou can only buy &a" + potions + " %Hrevive potions per round.");

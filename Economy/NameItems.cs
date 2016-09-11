@@ -28,7 +28,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "Title"; } }
         
-        protected override void OnBuyCommand(Player p, string message, string[] args) {
+        protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
                 Command.all.Find("title").Use(null, p.name);
                 Player.Message(p, "%aYour title was removed for free."); return;
@@ -57,7 +57,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "Nickname"; } }
         
-        protected override void OnBuyCommand(Player p, string message, string[] args) {
+        protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
                 Command.all.Find("nick").Use(null, p.name);
                 Player.Message(p, "%aYour nickname was removed for free."); return;
@@ -85,7 +85,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "TitleColor"; } }
         
-        protected override void OnBuyCommand(Player p, string message, string[] args) {            
+        protected override void DoPurchase(Player p, string message, string[] args) {            
             if (!args[1].StartsWith("&") || !args[1].StartsWith("%")) {
                 args[1] = Colors.Parse(args[1]);
                 if (args[1] == "") { Player.Message(p, "%cThat wasn't a color"); return; }
@@ -108,7 +108,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "Color"; } }
 
-        protected override void OnBuyCommand(Player p, string message, string[] args) {
+        protected override void DoPurchase(Player p, string message, string[] args) {
             if (!args[1].StartsWith("&") || !args[1].StartsWith("%")) {
                 args[1] = Colors.Parse(args[1]);
                 if (args[1] == "") { Player.Message(p, "%cThat wasn't a color"); return; }
