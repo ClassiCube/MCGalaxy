@@ -450,15 +450,16 @@ namespace MCGalaxy {
         }
         
         public string BlockName(byte block, byte extBlock) {
-            if (block == Block.custom_block) {
-                BlockDefinition[] defs = CustomBlockDefs;
-                for (int i = 1; i < 255; i++) {
-                    BlockDefinition def = defs[i];
-                    if (def == null) continue;
-                    if (def.BlockID == extBlock) return def.Name.Replace(" ", "");
-                }
+            if (block != Block.custom_block)
+                return Block.Name(block);
+            
+            BlockDefinition[] defs = CustomBlockDefs;
+            for (int i = 1; i < 255; i++) {
+                BlockDefinition def = defs[i];
+                if (def == null) continue;
+                if (def.BlockID == extBlock) return def.Name.Replace(" ", "");
             }
-            return Block.Name(block);
+            return extBlock.ToString();
         }
     }
 }
