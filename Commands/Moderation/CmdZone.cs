@@ -154,7 +154,7 @@ namespace MCGalaxy.Commands {
         
         internal static string FindZoneOwner(Player p, string message) {
             if (Group.Find(message) != null)
-                return Group.Find(message).name;
+                return "grp" + Group.Find(message).name;
             return PlayerInfo.FindMatchesPreferOnline(p, message);
         }
         
