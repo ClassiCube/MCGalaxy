@@ -54,7 +54,7 @@ namespace MCGalaxy {
             IDataParameter yP = transaction.CreateParam("@Y", DbType.UInt16); cmd.Parameters.Add(yP);
             IDataParameter zP = transaction.CreateParam("@Z", DbType.UInt16); cmd.Parameters.Add(zP);
             IDataParameter tileP = transaction.CreateParam("@Tile", DbType.Byte); cmd.Parameters.Add(tileP);
-            IDataParameter delP = transaction.CreateParam("@Del", DbType.Boolean); cmd.Parameters.Add(delP);
+            IDataParameter delP = transaction.CreateParam("@Del", DbType.Byte); cmd.Parameters.Add(delP);
             
             for (int i = 0; i < tempCache.Count; i++) {
                 Level.BlockPos bP = tempCache[i];
@@ -66,8 +66,8 @@ namespace MCGalaxy {
                 nameP.Value = bP.name;
                 timeP.Value = date;
                 xP.Value = x; yP.Value = y; zP.Value = z;
-                tileP.Value = (bP.flags & 2) != 0 ? Block.custom_block : bP.rawBlock;
-                delP.Value = (bP.flags & 1) != 0;
+                tileP.Value = bP.rawBlock;
+                delP.Value = (byte)(bP.flags & 3);
 
                 if (!BulkTransaction.Execute(template, cmd)) {
                     cmd.Dispose();

@@ -57,10 +57,12 @@ namespace MCGalaxy.Commands {
                 foundOne = true;
                 DataRow row = Blocks.Rows[i];
                 string user = row["Username"].ToString().Trim();
-                DateTime time = DateTime.Parse(row["TimePerformed"].ToString());
-                byte block = Convert.ToByte(row["Type"]);
-                bool deleted = Convert.ToBoolean(row["Deleted"]);
-                Output(p, user, block, deleted, now - time);
+                DateTime time = DateTime.Parse(row["TimePerformed"].ToString());                
+                byte block = byte.Parse(row["Type"].ToString());
+                
+                byte flags = byte.Parse(row["Deleted"].ToString());
+                bool deleted = (flags & 1) != 0, isExt = (flags & 2) != 0;
+                Output(p, user, block, isExt, deleted, now - time);
             }
             Blocks.Dispose();
 
@@ -68,11 +70,13 @@ namespace MCGalaxy.Commands {
             List<Level.BlockPos> inCache = p.level.blockCache.FindAll(bP => bP.index == bpIndex);
             for (int i = 0; i < inCache.Count; i++) {
                 foundOne = true;
-                string user = inCache[i].name.Trim();
-                DateTime time = Server.StartTimeLocal.AddSeconds(inCache[i].flags >> 2);
-                byte block = (inCache[i].flags & 2) != 0 ? Block.custom_block : inCache[i].rawBlock;
-                bool deleted = (inCache[i].flags & 1) != 0;
-                Output(p, user, block, deleted, now - time);
+                Level.BlockPos entry = inCache[i];
+                string user = entry.name.Trim();
+                DateTime time = Server.StartTimeLocal.AddSeconds(entry.flags >> 2);
+                
+                bool deleted = (entry.flags & 1) != 0;
+                bool extBlock = (entry.flags & 2) != 0;               
+                Output(p, user, entry.rawBlock, extBlock, deleted, now - time);
             }
 
             if (!foundOne) Player.Message(p, "No block change records found for this block.");
@@ -82,11 +86,14 @@ namespace MCGalaxy.Commands {
             GC.WaitForPendingFinalizers();
         }
         
-        static void Output(Player p, string user, byte block, bool deleted, TimeSpan delta) {
-            string bName = Block.Name(block);           
+        static void Output(Player p, string user, byte raw, bool isExt, bool deleted, TimeSpan delta) {
+            byte block = isExt ? Block.custom_block : raw;
+            byte extBlock = isExt ? raw : (byte)0;
+            string blockName = p.level.BlockName(block, extBlock);
+                                              
             Player.Message(p, "{0} ago {1} {2}",
                            delta.Shorten(true, false), PlayerInfo.GetColoredName(p, user),
-                           deleted ? "&4deleted %S(using " + bName + ")" : "&3placed %S" + bName);
+                           deleted ? "&4deleted %S(using " + blockName + ")" : "&3placed %S" + blockName);
         }
         
         static void OutputMessageBlock(Player p, byte block, ushort x, ushort y, ushort z) {
