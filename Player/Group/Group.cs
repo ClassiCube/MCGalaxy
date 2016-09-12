@@ -50,16 +50,14 @@ namespace MCGalaxy {
         public CommandList commands;
         public string fileName;
         public PlayerList playerList;
-        public string MOTD = String.Empty;
+        public string MOTD = "";
 
         /// <summary> Create a new group object </summary>
         public Group() {
             Permission = LevelPermission.Null;
         }
 
-        /// <summary>
-        /// Create a new group object
-        /// </summary>
+        /// <summary> Create a new group object </summary>
         /// <param name="Perm">The permission of the group</param>
         /// <param name="maxB">The maxblocks this group can cuboid</param>
         /// <param name="maxUn">The max undo this group can do</param>

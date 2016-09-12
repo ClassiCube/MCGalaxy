@@ -22,36 +22,20 @@ using System.Globalization;
 namespace MCGalaxy {
     public sealed class GroupProperties {
         
+        const string filename = "properties/ranks.properties";
         public static void InitAll() {
-            List<string> lines = CP437Reader.ReadAllLines("properties/ranks.properties");
-
+            List<string> lines = CP437Reader.ReadAllLines(filename);
             Group grp = null;
-            int version = 1;
-            if (lines.Count > 0 && lines[0].StartsWith("#Version ")) {
-                try { version = int.Parse(lines[0].Remove(0, 9)); }
-                catch { Server.s.Log("The ranks.properties version header is invalid! Ranks may fail to load!"); }
-            }
-
-            foreach (string s in lines) {
-                try {
-                    if (s == "" || s[0] == '#') continue;
-                    string[] parts = s.Split('=');
-                    if (parts.Length != 2) {
-                        Server.s.Log("In ranks.properties, the line " + s + " is wrongly formatted"); continue;
-                    }
-                    ParseProperty(parts[0].Trim(), parts[1].Trim(), s, ref grp, version);
-                } catch (Exception e) {
-                    Server.s.Log("Encountered an error at line \"" + s + "\" in ranks.properties"); Server.ErrorLog(e);
-                }
-            }            
-            if (grp != null)
-                AddGroup(ref grp, version);
+            PropertiesFile.Read(filename, ref grp, ParseProperty, '=', false);
+            if (grp != null) AddGroup(ref grp);
         }
         
-        static void ParseProperty(string key, string value, string s, ref Group grp, int version) {
+        static void ParseProperty(string key, string value, ref Group grp) {
+            string raw = value; // for prefix we need to keep space
+            value = value.Trim();
+            
             if (key.ToLower() == "rankname") {
-                if (grp != null)
-                    AddGroup(ref grp, version);
+                if (grp != null) AddGroup(ref grp);
                 string name = value.ToLower();
 
                 if (name == "adv" || name == "op" || name == "super" || name == "nobody" || name == "noone") {
@@ -71,7 +55,7 @@ namespace MCGalaxy {
                     int perm;
                     
                     if (!int.TryParse(value, out perm)) {
-                        Server.s.Log("Invalid permission on " + s);
+                        Server.s.Log("Invalid permission: " + value);
                         grp = null;
                     } if (perm > 119 || perm < -50) {
                         Server.s.Log("Permission must be between -50 and 119 for ranks");
@@ -83,22 +67,11 @@ namespace MCGalaxy {
                         grp = null;
                     } break;
                 case "limit":
-                    int foundLimit;
-                    
-                    if (!int.TryParse(value, out foundLimit)) {
-                        Server.s.Log("Invalid limit on " + s);
-                    } else {
-                        grp.maxBlocks = foundLimit;
-                    } break;
+                    grp.maxBlocks = int.Parse(value);
+                    break;
                 case "maxundo":
-                    int foundMax;
-                    
-                    if (!int.TryParse(value, out foundMax)) {
-                        Server.s.Log("Invalid max undo on " + s);
-                        grp = null;
-                    } else {
-                        grp.maxUndo = foundMax;
-                    } break;
+                    grp.maxUndo = int.Parse(value);
+                    break;
                 case "color":
                     char col;
                     char.TryParse(value, out col);
@@ -106,19 +79,18 @@ namespace MCGalaxy {
                     if (Colors.IsStandardColor(col) || Colors.GetFallback(col) != '\0') {
                         grp.color = col.ToString(CultureInfo.InvariantCulture);
                     } else {
-                        Server.s.Log("Invalid color code at " + s);
+                        Server.s.Log("Invalid color code: " + value);
                         grp = null;
                     } break;
                 case "filename":
                     if (value.Contains("\\") || value.Contains("/")) {
-                        Server.s.Log("Invalid filename on " + s);
+                        Server.s.Log("Invalid filename: " + value);
                         grp = null;
                     } else {
                         grp.fileName = value;
                     } break;
                 case "motd":
-                    if (!String.IsNullOrEmpty(value))
-                        grp.MOTD = value;
+                    grp.MOTD = value;
                     break;
                 case "osmaps":
                     byte osmaps;
@@ -127,20 +99,13 @@ namespace MCGalaxy {
                     grp.OverseerMaps = osmaps;
                     break;
                 case "prefix":
-                    grp.prefix = value;
+                    if (!String.IsNullOrEmpty(value))
+                        grp.prefix = raw.TrimStart();
                     break;
-                    
             }
         }
         
-        static void AddGroup(ref Group grp, int version) {
-            if (version < 2) {
-                if ((int)grp.Permission >= 100)
-                    grp.maxUndo = int.MaxValue;
-                else if ((int)grp.Permission >= 80)
-                    grp.maxUndo = 5400;
-            }
-
+        static void AddGroup(ref Group grp) {
             Group.GroupList.Add(
                 new Group(grp.Permission, grp.maxBlocks, grp.maxUndo, grp.trueName,
                           grp.color[0], grp.MOTD, grp.fileName, grp.OverseerMaps, grp.prefix));
