@@ -20,44 +20,68 @@ using System.IO;
 
 namespace MCGalaxy {
     
-	public delegate void LineProcessor<T>(string key, string value, ref T state);
-	
-    /// <summary> Handles text files that have multiple key-value lines in the format 'key=value'. 
+    public delegate void LineProcessor<T>(string key, string value, ref T state);
+    
+    /// <summary> Handles text files that have multiple key-value lines in the format 'key=value'.
     /// Also supports # for commented lines. </summary>
     public static class PropertiesFile {
         
-        public static bool Read(string path, Action<string, string> processor, char separator = '=') {
+        public static bool Read(string path, Action<string, string> processor,
+                                char separator = '=', bool trimValue = true) {
             if (!File.Exists(path)) return false;
             
             using (CP437Reader reader = new CP437Reader(path)) {
                 string line;
                 while ((line = reader.ReadLine()) != null) {
-                    if (line == "" || line[0] == '#') continue;
-                    int index = line.IndexOf(separator);
+                    int index = ParseLine(line, path, separator);
+                    if (index == -1) continue;
                     
-                    string key = index < 0 ? line : line.Substring(0, index);
-                    string value = index < 0 ? "" : line.Substring(index + 1);
-                    processor(key.Trim(), value.Trim());
+                    string key = line.Substring(0, index), value = line.Substring(index + 1);
+                    if (trimValue) value = value.Trim();
+                    
+                    try {
+                        processor(key.Trim(), value);
+                    } catch (Exception ex) {
+                        Server.ErrorLog(ex);
+                        Server.s.Log("Line \"" + line + "\" in " + path + " caused an error");
+                    }
                 }
             }
             return true;
         }
-    	
-    	public static bool Read<T>(string path, ref T state, LineProcessor<T> processor, char separator = '=') {
+        
+        public static bool Read<T>(string path, ref T state, LineProcessor<T> processor,
+                                   char separator = '=', bool trimValue = true) {
             if (!File.Exists(path)) return false;
             
             using (CP437Reader reader = new CP437Reader(path)) {
                 string line;
                 while ((line = reader.ReadLine()) != null) {
-                    if (line == "" || line[0] == '#') continue;
-                    int index = line.IndexOf(separator);
+                    int index = ParseLine(line, path, separator);
+                    if (index == -1) continue;
                     
-                    string key = index < 0 ? line : line.Substring(0, index);
-                    string value = index < 0 ? "" : line.Substring(index + 1);
-                    processor(key.Trim(), value.Trim(), ref state);
+                    string key = line.Substring(0, index), value = line.Substring(index + 1);
+                    if (trimValue) value = value.Trim();
+                    
+                    try {
+                        processor(key.Trim(), value, ref state);
+                    } catch (Exception ex) {
+                        Server.ErrorLog(ex);
+                        Server.s.Log("Line \"" + line + "\" in " + path + " caused an error");
+                    }
                 }
             }
             return true;
+        }
+        
+        static int ParseLine(string line, string path, char separator) {
+            if (line == "" || line[0] == '#') return -1;
+            int index = line.IndexOf(separator);
+            if (index == -1) {
+                Server.s.Log("Line \"" + line + "\" in " + path + " is missing a value");
+                return -1;
+            }
+            return index;
         }
     }
 }
