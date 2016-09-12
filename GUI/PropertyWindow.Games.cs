@@ -156,14 +156,19 @@ namespace MCGalaxy.Gui {
 
         private void lsMapUse_SelectedIndexChanged(object sender, EventArgs e) {
             SaveLavaMapSettings();
+            if (lsMapUse.SelectedIndex == -1) {
+                groupBox22.Text = "Map settings";
+                pg_lavaMap.SelectedObject = null;
+                return;
+            }
+            
             string name = lsMapUse.Items[lsMapUse.SelectedIndex].ToString();
-            lsLoadedMap = name;
             groupBox22.Text = "Map settings (" + name + ")";
             
             try {
                 LavaSurvival.MapSettings m = Server.lava.LoadMapSettings(name);
                 pg_lavaMap.SelectedObject = new LavaMapProperties(m);
-            } catch ( Exception ex ) { 
+            } catch (Exception ex) { 
                 Server.ErrorLog(ex); 
                 pg_lavaMap.SelectedObject = null;
             }
@@ -171,8 +176,8 @@ namespace MCGalaxy.Gui {
         
         void SaveLavaMapSettings() {
             if (pg_lavaMap.SelectedObject == null) return;
-                LavaMapProperties props = (LavaMapProperties)pg_lavaMap.SelectedObject;
-                Server.lava.SaveMapSettings(props.m);
+            LavaMapProperties props = (LavaMapProperties)pg_lavaMap.SelectedObject;
+            Server.lava.SaveMapSettings(props.m);
         }
 
         private void lsBtnEndVote_Click(object sender, EventArgs e) {

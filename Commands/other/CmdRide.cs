@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands {
                 ;
             }
 
-        	p.trainGrab = false;
+            p.trainGrab = false;
             Player.Message(p, "Dismounted");
             Thread.Sleep(1000);
             p.trainInvincible = false;

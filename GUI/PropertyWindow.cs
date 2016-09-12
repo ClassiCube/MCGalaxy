@@ -27,7 +27,6 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
-        string lsLoadedMap = "";
         ZombieProperties zsSettings = new ZombieProperties();
         LavaProperties lsSettings = new LavaProperties();
 
