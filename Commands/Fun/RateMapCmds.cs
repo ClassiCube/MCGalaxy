@@ -16,12 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.Threading;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdMapLike : Command {
+namespace MCGalaxy.Commands {   
+    public class CmdMapLike : Command {
         public override string name { get { return "maplike"; } }
         public override string shortcut { get { return "like"; } }
         public override string type { get { return CommandTypes.Games; } }
@@ -29,12 +26,34 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
         
-        public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
-            if (p.Game.RatedMap) { Player.Message(p, "You have already liked this map."); return; }
-            p.level.Likes++;
+        public override void Use(Player p, string message) { RateMap(p, true); }
+        
+        protected static bool RateMap(Player p, bool like) {
+            string action = like ? "like" : "dislike";
+            if (p == null) { MessageInGameOnly(p); return false; }
+            
+            if (p.Game.RatedMap) { 
+                Player.Message(p, "You have already {0}d this map.", action); return false; 
+            }
+            if (CheckIsAuthor(p)) {
+                Player.Message(p, "Cannot {0} this map as you are an author of it.", action); return false;
+            }
+            
+            if (like) p.level.Likes++;
+            else p.level.Dislikes++;
             p.Game.RatedMap = true;
-            Player.Message(p, "You have liked this map.");
+            
+            action = like ? "&aliked" : "&cdisliked";
+            Player.Message(p, "You have {0} %Sthis map.", action);
+            return true;
+        }
+        
+        protected bool CheckIsAuthor(Player p) {
+            string[] authors = p.level.Authors.Split(',');
+            for (int i = 0; i < authors.Length; i++) {
+                if (authors[i].CaselessEq(p.name)) return true;
+            }
+            return false;
         }
         
         public override void Help(Player p) {
@@ -43,21 +62,10 @@ namespace MCGalaxy.Commands {
         }
     }
     
-    public sealed class CmdMapDislike : Command {
+    public sealed class CmdMapDislike : CmdMapLike {
         public override string name { get { return "mapdislike"; } }
-        public override string shortcut { get { return "dislike"; } }
-        public override string type { get { return CommandTypes.Games; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
-        
-        public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
-            if (p.Game.RatedMap) { Player.Message(p, "You have already disliked this map."); return; }
-            p.level.Dislikes++;
-            p.Game.RatedMap = true;
-            Player.Message(p, "You have disliked this map.");
-        }
+        public override string shortcut { get { return "dislike"; } }        
+        public override void Use(Player p, string message) { RateMap(p, false); }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/mapdislike");

@@ -103,9 +103,9 @@ namespace MCGalaxy.Commands {
             
             Player.Message(p, "&9Players in the review queue:");
             int pos = 1;
-            foreach (string who in Server.reviewlist) {
-                string rank = Group.findPlayer(who.ToLower());
-                Player.Message(p, "&a" + pos + ". &f" + who + "&a - Current Rank: " + Group.Find(rank).color + rank);
+            foreach (string name in Server.reviewlist) {
+                Group grp = Group.findPlayerGroup(name);
+                Player.Message(p, "&a" + pos + ". &f" + name + "&a - Current Rank: " + grp.ColoredName);
                 pos++;
             }
         }
