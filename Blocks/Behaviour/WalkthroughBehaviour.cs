@@ -29,7 +29,7 @@ namespace MCGalaxy.BlockBehaviour {
         }
         
         internal static bool Train(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (!p.onTrain) p.HandleDeath(Block.train);
+            if (!p.trainInvincible) p.HandleDeath(Block.train);
             return true;
         }
         

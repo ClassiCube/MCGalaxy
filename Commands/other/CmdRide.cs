@@ -36,6 +36,7 @@ namespace MCGalaxy.Commands {
         }
         
         void DoRide(Player p) {
+           p.trainInvincible = true;
             while (p.onTrain) {
                 Thread.Sleep(10);
                 ushort x = (ushort)(p.pos[0] / 32);
@@ -80,10 +81,10 @@ namespace MCGalaxy.Commands {
                 ;
             }
 
+        	p.trainGrab = false;
             Player.Message(p, "Dismounted");
             Thread.Sleep(1000);
-            p.trainGrab = false;
-            p.onTrain = false;
+            p.trainInvincible = false;
         }
         
         public override void Help(Player p) {

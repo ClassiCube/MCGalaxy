@@ -115,7 +115,7 @@ namespace MCGalaxy {
         /// <summary> Save givenList group </summary>
         /// <param name="givenList">The list of groups to save</param>
         public static void SaveGroups(List<Group> givenList) {
-            using (CP437Writer w = new CP437Writer("properties/ranks.properties")) {
+            using (CP437Writer w = new CP437Writer(filename)) {
                 w.WriteLine("#Version 3");
                 w.WriteLine("#RankName = string");
                 w.WriteLine("#\tThe name of the rank, use capitalization.");

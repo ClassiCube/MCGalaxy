@@ -136,7 +136,7 @@ namespace MCGalaxy {
         public string storedMessage = "";
 
         public bool trainGrab = false;
-        public bool onTrain = false;
+        public bool onTrain = false, trainInvincible = false;
         public bool allowTnt = true;
 
         public bool frozen = false;
