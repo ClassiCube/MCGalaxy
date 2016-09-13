@@ -456,33 +456,25 @@ namespace MCGalaxy.Gui {
                 case "Easy":
                     TntWarsGame.GuiLoaded.GameDifficulty = TntWarsGame.TntWarsDifficulty.Easy;
                     TntWarsGame.GuiLoaded.SendAllPlayersMessage("TNT Wars: Changed difficulty to easy!");
-                    if ( TntWarsGame.GuiLoaded.TeamKills ) {
-                        TntWarsGame.GuiLoaded.TeamKills = false;
-                    }
+                    TntWarsGame.GuiLoaded.TeamKills = false;
                     break;
 
                 case "Normal":
                     TntWarsGame.GuiLoaded.GameDifficulty = TntWarsGame.TntWarsDifficulty.Normal;
                     TntWarsGame.GuiLoaded.SendAllPlayersMessage("TNT Wars: Changed difficulty to normal!");
-                    if ( TntWarsGame.GuiLoaded.TeamKills ) {
-                        TntWarsGame.GuiLoaded.TeamKills = false;
-                    }
+                    TntWarsGame.GuiLoaded.TeamKills = false;
                     break;
 
                 case "Hard":
                     TntWarsGame.GuiLoaded.GameDifficulty = TntWarsGame.TntWarsDifficulty.Hard;
                     TntWarsGame.GuiLoaded.SendAllPlayersMessage("TNT Wars: Changed difficulty to hard!");
-                    if ( TntWarsGame.GuiLoaded.TeamKills == false ) {
-                        TntWarsGame.GuiLoaded.TeamKills = true;
-                    }
+                    TntWarsGame.GuiLoaded.TeamKills = true;
                     break;
 
                 case "Extreme":
                     TntWarsGame.GuiLoaded.GameDifficulty = TntWarsGame.TntWarsDifficulty.Extreme;
                     TntWarsGame.GuiLoaded.SendAllPlayersMessage("TNT Wars: Changed difficulty to extreme!");
-                    if ( TntWarsGame.GuiLoaded.TeamKills == false ) {
-                        TntWarsGame.GuiLoaded.TeamKills = true;
-                    }
+                    TntWarsGame.GuiLoaded.TeamKills = true;
                     break;
             }
             LoadTNTWarsTab(sender, e);

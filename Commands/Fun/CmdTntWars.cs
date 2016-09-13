@@ -556,7 +556,7 @@ namespace MCGalaxy.Commands {
 								text[2] = text[3];
 							}
 							int numb = -1;
-							if (int.TryParse(text[2], out numb) == false)
+							if (!int.TryParse(text[2], out numb))
 							{ Player.Message(p, "TNT Wars Error: Invalid number '" + text[2] + "'"); return; }
 							if (numb <= -1) { Player.Message(p, "TNT Wars Error: Invalid number '" + text[2] + "'"); return; }
 							if (numb >= (60 * 5)) { Player.Message(p, "TNT Wars Error: Grace time cannot be above 5 minutes!!"); return; }
@@ -720,7 +720,7 @@ namespace MCGalaxy.Commands {
 										text[3] = text[4];
 									}
 									int numb = -1;
-									if (int.TryParse(text[3], out numb) == false)
+									if (!int.TryParse(text[3], out numb))
 									{ Player.Message(p, "TNT Wars Error: Invalid number '" + text[3] + "'"); return; }
 									if (numb <= it.ScorePerKill) { Player.Message(p, "TNT Wars Error: Minimum score limit of " + it.ScorePerKill.ToString() + " points"); return; }
 									else
@@ -778,7 +778,7 @@ namespace MCGalaxy.Commands {
 										text[3] = text[4];
 									}
 									int numb = -1;
-									if (int.TryParse(text[3], out numb) == false)
+									if (!int.TryParse(text[3], out numb))
 									{ Player.Message(p, "TNT Wars Error: Invalid number '" + text[3] + "'"); return; }
 									if (numb <= -1) { Player.Message(p, "TNT Wars Error: Invalid number '" + text[3] + "'"); return; }
 									else
@@ -1187,7 +1187,7 @@ namespace MCGalaxy.Commands {
 			RevertAndClearState(p, x, y, z);
 			CatchPos bp = (CatchPos)p.blockchangeObject;
 			bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
-			if (DeleteZone == false && CheckZone == false) {
+			if (!DeleteZone && !CheckZone) {
 				Player.Message(p, "TNT Wars: Place another block to mark the other corner of the zone!");
 				p.Blockchange += PlacedMark2;
 				return;
@@ -1208,13 +1208,13 @@ namespace MCGalaxy.Commands {
 				} else {
 					Player.Message(p, "TNT Wars: You are not currently in a no TNT zone!");
 				}
-			} else if (CheckZone && NoTntZone == false) {
+			} else if (CheckZone && !NoTntZone) {
 				if (it == null) {
 					Player.Message(p, "TNT Wars Error: Couldn't find your game!");
 				} else if (it.InZone(x, y, z, true)) {
-					Player.Message(p, "TNT Wars: You are currently in a no TNT block explosion zone (explosions won't destory blocks)!");
+					Player.Message(p, "TNT Wars: You are currently in a no TNT block explosion zone (explosions won't destroy blocks)!");
 				} else {
-					Player.Message(p, "TNT Wars: You are currently in a TNT block explosion zone (explosions will destory blocks)!");
+					Player.Message(p, "TNT Wars: You are currently in a TNT block explosion zone (explosions will destroy blocks)!");
 				}
 			}
 		}

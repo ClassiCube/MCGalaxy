@@ -223,10 +223,11 @@ namespace MCGalaxy.Games {
                 group = "&2Referees";
             } else if (p.Game.Infected) {
                 group = "&cZombies";
-                if (ZombieGame.ZombieName != "" && !dst.Game.Aka)
+                if (ZombieGame.ZombieName != "" && !dst.Game.Aka) {
                     name = "&c" + ZombieGame.ZombieName;
-                else
+                } else {
                     name = "&c" + p.truename;
+                }
             } else {
                 group = "&fHumans";
             }

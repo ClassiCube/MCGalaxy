@@ -481,7 +481,7 @@ namespace Sharkbite.Irc
 				sender.Quit( reason );
 				listener.Disconnected();
 				//Thanks to Thomas for this next block
-				if ( socketListenThread.Join( TimeSpan.FromSeconds( 1 ) ) == false )
+				if ( !socketListenThread.Join( TimeSpan.FromSeconds( 1 ) ) )
 					socketListenThread.Abort();
 			}
 		}

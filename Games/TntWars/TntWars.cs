@@ -265,7 +265,7 @@ namespace MCGalaxy.Games
             GameStatus = TntWarsGameStatus.InProgress;
             foreach (player p in Players)
             {
-                if (p.spec == false)
+                if (!p.spec)
                 {
                     p.p.canBuild = true;
                 }

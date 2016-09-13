@@ -45,13 +45,13 @@ using System.Threading;
             int zBegin = 0;
             Player p = (Player)person;
 
-            if (zombiesNum % 2 == 0 && isRandom == false)
+            if (zombiesNum % 2 == 0 && !isRandom)
             {
                 xBegin = thex - (zombiesNum / 2);
                 zBegin = thez - (zombiesNum / 2);
             }
 
-            if (zombiesNum % 2 == 1 && isRandom == false)
+            if (zombiesNum % 2 == 1 && !isRandom)
             {
                 xBegin = thex - ((zombiesNum - 1) / 2);
                 zBegin = thez - ((zombiesNum - 1) / 2);
@@ -63,7 +63,7 @@ using System.Threading;
             Command.all.Find("say").Use(p, "&a" + wavesLength + " second(s) each wave");
             for (int num = 1; num <= wavesNum; num++)
             {
-                if (isRandom == true)
+                if (isRandom)
                     randomZombies(p);
                 else
                     placedZombies(p, xBegin, zBegin);
@@ -139,7 +139,7 @@ using System.Threading;
                 wavesLength = Int32.Parse(param[2]);
                 zombiesNum = Int32.Parse(param[3]);
 
-                if (isRandom == false)
+                if (!isRandom)
                 {
                     CatchPos cpos;
                     cpos.x = 0;
