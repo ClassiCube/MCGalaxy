@@ -58,7 +58,7 @@ namespace MCGalaxy.BlockPhysics {
                 Raw |= (uint)value << 22; }
         }
         
-        public bool Door {
+        public bool TDoor {
             get { return (Raw & (1u << 30)) != 0; }
             set { Raw &= ~(1u << 30);
                 Raw |= (value ? 1u : 0u) << 30; }

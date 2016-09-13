@@ -26,7 +26,7 @@ namespace MCGalaxy.BlockPhysics {
             	C.data.ResetTypes();
             if (C.data.Type1 == PhysicsArgs.TntWars) return true;
 
-            bool wait = false, door = C.data.Door;
+            bool wait = false, door = C.data.TDoor;
             int waitTime = 0;
             if (C.data.Type1 == PhysicsArgs.Wait) {
                 wait = true; waitTime = C.data.Value1;
@@ -60,9 +60,9 @@ namespace MCGalaxy.BlockPhysics {
             
             if (Block.Props[block].IsTDoor) {
                 PhysicsArgs args = default(PhysicsArgs);
-                args.Type1 = PhysicsArgs.Wait; args.Value1 = 10;
+                args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
                 args.Type2 = PhysicsArgs.Revert; args.Value2 = block;
-                args.Door = true;
+                args.TDoor = true;
                 lvl.AddUpdate(index, Block.air, false, args);
             }
         }
@@ -73,12 +73,12 @@ namespace MCGalaxy.BlockPhysics {
             if (C.data.Type1 == PhysicsArgs.TntWars) return true;
             
             ExtraInfoArgs args = default(ExtraInfoArgs);
-            args.Door = C.data.Door;
+            args.TDoor = C.data.TDoor;
             ParseType(C.data.Type1, ref args, C.data.Value1);
             ParseType(C.data.Type2, ref args, C.data.Value2);
             
             if (args.Wait) {
-                if (args.Door && C.data.Data < 2) {
+                if (args.TDoor && C.data.Data < 2) {
                     Checktdoor(lvl, lvl.IntOffset(C.b, -1, 0, 0));
                     Checktdoor(lvl, lvl.IntOffset(C.b, 1, 0, 0));
                     Checktdoor(lvl, lvl.IntOffset(C.b, 0, -1, 0));
@@ -182,7 +182,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         struct ExtraInfoArgs {
-            public bool Wait, Drop, Dissipate, Revert, Door, Explode, Rainbow;
+            public bool Wait, Drop, Dissipate, Revert, TDoor, Explode, Rainbow;
             public int WaitTime, DropNum, DissipateNum, ExplodeNum, RainbowNum;
             public byte RevertType;
         }

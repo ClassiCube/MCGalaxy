@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) { RateMap(p, true); }
         
-        protected static bool RateMap(Player p, bool like) {
+        protected bool RateMap(Player p, bool like) {
             string action = like ? "like" : "dislike";
             if (p == null) { MessageInGameOnly(p); return false; }
             
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
             return true;
         }
         
-        protected bool CheckIsAuthor(Player p) {
+        protected static bool CheckIsAuthor(Player p) {
             string[] authors = p.level.Authors.Split(',');
             for (int i = 0; i < authors.Length; i++) {
                 if (authors[i].CaselessEq(p.name)) return true;
