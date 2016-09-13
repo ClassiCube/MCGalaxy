@@ -1,20 +1,20 @@
 /*
-	Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
-*/
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    
+    Dual-licensed under the    Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
 using System.Threading;
 
@@ -26,7 +26,10 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("fetch") }; }
+            get { return new[] { new CommandAlias("fetch"), new CommandAlias("bring") }; }
+        }
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can summon all players") }; }
         }
         public CmdSummon() { }
 
@@ -35,17 +38,24 @@ namespace MCGalaxy.Commands {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             
             if (message.CaselessEq("all")) {
-                Player[] players = PlayerInfo.Online.Items;
-                foreach (Player pl in players) {
-                    if (pl.level == p.level && pl != p && p.Rank > pl.Rank) {
-                        pl.SendOwnHeadPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
-                        pl.SendMessage("You were summoned by " + p.ColoredName + "%S.");
-                    }
-                }
-                Chat.MessageAll("{0} %Ssummoned everyone!", p.ColoredName);
-                return;
+                if (CheckExtraPerm(p)) SummonAll(p);
+            } else {
+                SummonPlayer(p, message);
             }
-
+        }
+        
+        static void SummonAll(Player p) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level == p.level && pl != p && p.Rank > pl.Rank) {
+                    pl.SendOwnHeadPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
+                    pl.SendMessage("You were summoned by " + p.ColoredName + "%S.");
+                }
+            }
+            Chat.MessageLevel(p.level, p.ColoredName + " %Ssummoned everyone");
+        }
+        
+        static void SummonPlayer(Player p, string message) {
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             if (p.Rank < who.Rank) {
@@ -53,19 +63,19 @@ namespace MCGalaxy.Commands {
             }
             
             if (p.level != who.level) {
-                Player.Message(p, who.ColoredName + " %Sis in a different Level. Forcefetching has started!");
+                Player.Message(p, who.ColoredName + " %Sis in a different Level, moving them..");
                 PlayerActions.ChangeMap(who, p.level);
-                Thread.Sleep(1000);
-                // Sleep for a bit while they load
+                p.BlockUntilLoad(10); // wait for them to load
             }
 
+            if (p.level != who.level) return; // in case they were unable to move to this level
             who.SendOwnHeadPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
             who.SendMessage("You were summoned by " + p.ColoredName + "%S.");
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/summon <player>");
-            Player.Message(p, "%HSummons a player to your position.");
+            Player.Message(p, "%T/summon [player]");
+            Player.Message(p, "%HSummons [player] to your position.");
             Player.Message(p, "%T/summon all");
             Player.Message(p, "%HSummons all players in your map");
         }

@@ -66,7 +66,7 @@ namespace MCGalaxy.Undo {
                 lock (cache.AddLock)
                     cache.Clear();
             }
-        }   
+        }
         
         /// <summary> Gets a list of all undo file names for the given player. </summary>
         /// <remarks> This list is sorted, such that the first element is the
