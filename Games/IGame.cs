@@ -26,7 +26,7 @@ namespace MCGalaxy.Games {
         
         /// <summary> Returns whether this game handed the player manually placing a block. </summary>
         public virtual bool HandlesManualChange(Player p, ushort x, ushort y, ushort z, 
-                                                byte action, byte tile, byte b) {
+                                                byte action, byte block, byte old) {
             return false;
         }
         

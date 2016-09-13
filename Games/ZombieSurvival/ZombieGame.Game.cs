@@ -26,26 +26,28 @@ namespace MCGalaxy.Games {
         public override bool TeleportAllowed { get { return !RoundInProgress; } }
         
         public override bool HandlesManualChange(Player p, ushort x, ushort y, ushort z,
-                                                 byte action, byte tile, byte b) {
+                                                 byte action, byte block, byte old) {
             if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
             if (CurLevel.BuildType == BuildType.NoModify) {
                 p.RevertBlock(x, y, z); return true;
-            } else if (CurLevel.BuildType == BuildType.ModifyOnly 
-                       && p.level.GetTile(x, y, z) == Block.op_air) {
+            }
+            if (CurLevel.BuildType == BuildType.ModifyOnly && Block.Props[old].OPBlock) {
                 p.RevertBlock(x, y, z); return true;
             }
             
             if (action == 1 && !CurLevel.Pillaring && !p.Game.Referee) {
-                if (p.Game.LastY == y - 1 && p.Game.LastX == x && p.Game.LastZ == z ) {
+                if (NotPillaring(block, old)) {
+                    p.Game.BlocksStacked = 0;
+                } else if (p.Game.LastY == y - 1 && p.Game.LastX == x && p.Game.LastZ == z ) {
                     p.Game.BlocksStacked++;
                 } else {
                     p.Game.BlocksStacked = 0;
                 }
                 
-                if (p.Game.BlocksStacked == 2 ) {
+                if (p.Game.BlocksStacked == 2) {
                     p.SendMessage("You are pillaring! Stop before you get kicked!");
                 }
-                if (p.Game.BlocksStacked == 4 ) {
+                if (p.Game.BlocksStacked == 4) {
                     p.Kick("No pillaring allowed!"); return true;
                 }
             }
@@ -64,6 +66,14 @@ namespace MCGalaxy.Games {
                     p.SendMessage("Blocks Left: &4" + p.Game.BlocksLeft);
             }
             return false;
+        }
+        
+        static bool NotPillaring(byte block, byte old) {
+            if (block == Block.shrub) return true;
+            if (block >= Block.yellowflower && block <= Block.redmushroom) return true;
+            
+            old = Block.Convert(old);
+            return old >= Block.water && block <= Block.lavastill;
         }
         
         public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z,
