@@ -88,10 +88,10 @@ namespace MCGalaxy.Commands {
         }
         
         void ShowPermissions(Player p, MapInfoData data) {
-            Player.Message(p, "  Build rank = " + Group.findPerm(data.build).ColoredName +
-                           " %S: Visit rank = " + Group.findPerm(data.visit).ColoredName);
-            Player.Message(p, "  BuildMax Rank = " + Group.findPerm(data.buildmax).ColoredName +
-                           " %S: VisitMax Rank = " + Group.findPerm(data.visitmax).ColoredName);
+            Player.Message(p, "  Build rank = " + Group.GetColoredName(data.build) +
+        	               " %S: Visit rank = " + Group.GetColoredName(data.visit));
+            Player.Message(p, "  BuildMax Rank = " + Group.GetColoredName(data.buildmax) +
+                           " %S: VisitMax Rank = " + Group.GetColoredName(data.visitmax));
             
             List<string> vWhitelist = data.VisitWhitelist, vBlacklist = data.VisitBlacklist;
             List<string> bWhitelist = data.BuildWhitelist, bBlacklist = data.BuildBlacklist;

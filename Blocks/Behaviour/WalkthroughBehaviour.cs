@@ -50,11 +50,9 @@ namespace MCGalaxy.BlockBehaviour {
                         Player.Message(p, "You do not have the adequate rank to visit this map!"); return true;
                     }
                     
-                    p.ignorePermission = true;
                     Level curLevel = p.level;
-                    PlayerActions.ChangeMap(p, map);
+                    PlayerActions.ChangeMap(p, map, true);
                     if (curLevel == p.level) { Player.Message(p, "The map the portal goes to isn't loaded."); return true; }
-                    p.ignorePermission = false;
                     p.BlockUntilLoad(10);
                 }
                 

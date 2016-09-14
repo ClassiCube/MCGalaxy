@@ -170,8 +170,8 @@ namespace MCGalaxy.Commands
         void HandleSetupSettings(Player p, string[] args) {
             if (args.Length < 3) {
                 Player.Message(p, "Maps: &b" + Server.lava.Maps.Join(", "));
-                Player.Message(p, "Setup rank: " + Group.findPerm(Server.lava.setupRank).ColoredName);
-                Player.Message(p, "Control rank: " + Group.findPerm(Server.lava.controlRank).ColoredName);
+                Player.Message(p, "Setup rank: " + Group.GetColoredName(Server.lava.setupRank));
+                Player.Message(p, "Control rank: " + Group.GetColoredName(Server.lava.controlRank));
                 Player.Message(p, "Start on server startup: " + (Server.lava.startOnStartup ? "&aON" : "&cOFF"));
                 Player.Message(p, "Send AFK to main: " + (Server.lava.sendAfkMain ? "&aON" : "&cOFF"));
                 Player.Message(p, "Vote count: &b" + Server.lava.voteCount);

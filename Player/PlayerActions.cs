@@ -37,12 +37,16 @@ namespace MCGalaxy {
         }
         
         /// <summary> Moves the player to the specified map. </summary>
-        public static bool ChangeMap(Player p, string name) { return ChangeMap(p, null, name); }
+        public static bool ChangeMap(Player p, string name, bool ignorePerms = false) { 
+            return ChangeMap(p, null, name, ignorePerms); 
+        }
         
         /// <summary> Moves the player to the specified map. </summary>
-        public static bool ChangeMap(Player p, Level lvl) { return ChangeMap(p, lvl, null); }        
+        public static bool ChangeMap(Player p, Level lvl, bool ignorePerms = false) { 
+            return ChangeMap(p, lvl, null, ignorePerms); 
+        }
         
-        static bool ChangeMap(Player p, Level lvl, string name) {
+        static bool ChangeMap(Player p, Level lvl, string name, bool ignorePerms) {
             if (p.usingGoto) { Player.Message(p, "Cannot use /goto, already loading a map."); return false; }
             Level oldLevel = p.level;
             p.usingGoto = true;
@@ -50,7 +54,7 @@ namespace MCGalaxy {
             
             try {
                 didJoin = name == null ? 
-                    GotoLevel(p, lvl) : GotoMap(p, name);
+                    GotoLevel(p, lvl, ignorePerms) : GotoMap(p, name, ignorePerms);
             } finally {
                 p.usingGoto = false;
                 GC.Collect();
@@ -63,20 +67,20 @@ namespace MCGalaxy {
         }
         
         
-        static bool GotoMap(Player p, string name) {
+        static bool GotoMap(Player p, string name, bool ignorePerms) {
             Level lvl = LevelInfo.FindExact(name);
-            if (lvl != null) return GotoLevel(p, lvl);
+            if (lvl != null) return GotoLevel(p, lvl, ignorePerms);
             
             if (Server.AutoLoad) {
                 // First try exactly matching unloaded levels
                 if (LevelInfo.ExistsOffline(name))
-                    return LoadOfflineLevel(p, name);
+                    return LoadOfflineLevel(p, name, ignorePerms);
                 lvl = LevelInfo.Find(name);
-                if (lvl != null) return GotoLevel(p, lvl);
+                if (lvl != null) return GotoLevel(p, lvl, ignorePerms);
                 
                 string matches = LevelInfo.FindMapMatches(p, name);
                 if (matches == null) return false;
-                return LoadOfflineLevel(p, matches);
+                return LoadOfflineLevel(p, matches, ignorePerms);
             } else {
                 lvl = LevelInfo.Find(name);
                 if (lvl == null) {
@@ -84,11 +88,11 @@ namespace MCGalaxy {
                     Command.all.Find("search").Use(p, "levels " + name);
                     return false;
                 }
-                return GotoLevel(p, lvl);
+                return GotoLevel(p, lvl, ignorePerms);
             }
         }
         
-        static bool LoadOfflineLevel(Player p, string name) {
+        static bool LoadOfflineLevel(Player p, string name, bool ignorePerms) {
             if (!Level.CheckLoadOnGoto(name)) {
                 Player.Message(p, "Level \"{0}\" cannot be loaded using /goto.", name);
                 return false;
@@ -96,15 +100,15 @@ namespace MCGalaxy {
             
             CmdLoad.LoadLevel(p, name, "0", true);
             Level lvl = LevelInfo.FindExact(name);
-            if (lvl != null) return GotoLevel(p, lvl);
+            if (lvl != null) return GotoLevel(p, lvl, ignorePerms);
 
             Player.Message(p, "Level \"{0}\" failed to be auto-loaded.", name);
             return false;
         }
         
-        static bool GotoLevel(Player p, Level lvl) {
-            if (p.level == lvl) { Player.Message(p, "You are already in \"" + lvl.name + "\"."); return false; }
-            if (!lvl.CanJoin(p)) return false;
+        static bool GotoLevel(Player p, Level lvl, bool ignorePerms) {
+        	if (p.level == lvl) { Player.Message(p, "You are already in \"{0}\".", lvl.name); return false; }
+            if (!lvl.CanJoin(p, ignorePerms)) return false;
             if (!Server.zombie.PlayerCanJoinLevel(p, lvl, p.level)) return false;
 
             p.Loading = true;

@@ -66,13 +66,13 @@ namespace MCGalaxy {
         public LevelAccessResult Check(Player p, bool ignoreRankPerm = false) {
             if (Blacklisted.CaselessContains(p.name)) 
                 return LevelAccessResult.Blacklisted;
-            if (Whitelisted.CaselessContains(p.name)) 
-                return LevelAccessResult.Whitelisted;            
+            if (Whitelisted.CaselessContains(p.name))
+                return LevelAccessResult.Whitelisted;
             if (ignoreRankPerm) 
                 return LevelAccessResult.Allowed;
             
             if (p.Rank < Min) 
-                return LevelAccessResult.BelowMinRank;           
+                return LevelAccessResult.BelowMinRank;
             string maxCmd = IsVisit ? "pervisitmax" : "perbuildmax";
             if (p.Rank > Max && !p.group.CanExecute(maxCmd)) 
                 return LevelAccessResult.AboveMaxRank;
@@ -83,27 +83,23 @@ namespace MCGalaxy {
         /// <remarks> If the player is not allowed by these access permissions,
         /// sends a message to the player describing why they are not. </remarks>
         public bool CheckDetailed(Player p, bool ignoreRankPerm = false) {
-            string name = lvl.name;
-            string action = IsVisit ? "going to" : "building in";
-            if (Blacklisted.CaselessContains(p.name)) {
-                Player.Message(p, "You are blacklisted from {1} {0}.", name, action); return false;
-            }
-            if (Whitelisted.CaselessContains(p.name) || ignoreRankPerm) return true;
+            LevelAccessResult result = Check(p, ignoreRankPerm);           
+            if (result == LevelAccessResult.Allowed) return true;
+            if (result == LevelAccessResult.Whitelisted) return true;
             
-            action = IsVisit? "go to" : "build in";
-            if (p.Rank < Min) {
-                Group grp = Group.findPerm(Min);
-                string grpName = grp == null ? "&f" + Min : grp.ColoredName;
-                Player.Message(p, "Only {2}%S+ may {1} {0}.", name, action, grpName); return false;
+            if (result == LevelAccessResult.Blacklisted) {
+                string action = IsVisit ? "going to" : "building in";
+                Player.Message(p, "You are blacklisted from {1} {0}.", lvl.name, action);
+            } else if (result == LevelAccessResult.BelowMinRank) {
+                string action = IsVisit? "go to" : "build in";
+                Player.Message(p, "Only {2}%S+ may {1} {0}.", 
+                               lvl.name, action, Group.GetColoredName(Min));
+            } else if (result == LevelAccessResult.AboveMaxRank) {
+                string action = IsVisit? "go to" : "build in";
+                Player.Message(p, "Only {2} %Sand below may {1} {0}.", 
+                               lvl.name, action, Group.GetColoredName(Max));
             }
-            
-            string maxCmd = IsVisit ? "pervisitmax" : "perbuildmax";
-            if (p.Rank > Max && !p.group.CanExecute(maxCmd)) {
-                Group grp = Group.findPerm(Max);
-                string grpName = grp == null ? "&f" + Max : grp.ColoredName;
-                Player.Message(p, "Only {2} %Sand below may {1} {0}.", name, action, grpName); return false;
-            }
-            return true;
+            return false;
         }
         
         

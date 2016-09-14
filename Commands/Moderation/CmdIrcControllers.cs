@@ -67,11 +67,8 @@ namespace MCGalaxy.Commands {
                     
                 case "rank":
                     if (parts.Length < 2) { 
-                        Group exist = Group.findPerm(Server.ircControllerRank);
-                        if (exist == null)
-                            Player.Message(p, "IRC controllers have permission level {0}.", (int)Server.ircControllerRank);
-                        else
-                            Player.Message(p, "IRC controllers have the rank {0}", exist.ColoredName);
+                        Player.Message(p, "IRC controllers have the rank {0}", 
+                                       Group.GetColoredName(Server.ircControllerRank));
                         return;
                     }
                     

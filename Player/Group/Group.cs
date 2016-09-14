@@ -208,7 +208,7 @@ namespace MCGalaxy {
         /// <returns>The group object that the player is in</returns>
         public static Group findPlayerGroup(string name) {
             foreach (Group grp in Group.GroupList) {
-        	    if (grp.playerList.Contains(name)) return grp;
+                if (grp.playerList.Contains(name)) return grp;
             }
             return Group.standard;
         }
@@ -217,7 +217,7 @@ namespace MCGalaxy {
             string sum = "";
             foreach (Group grp in Group.GroupList) {
                 if (skipExtra && (grp.Permission < LevelPermission.Guest || grp.Permission >= LevelPermission.Nobody)) continue;
-            	
+                
                 if (includeColor) sum += ", " + grp.ColoredName + Server.DefaultColor;
                 else if (permissions) sum += ", " + ((int)grp.Permission);
                 else sum += ", " + grp.name;
@@ -227,10 +227,17 @@ namespace MCGalaxy {
             return sum.Remove(0, 2);
         }
         
+        
         /// <summary> Returns whether the given player is in the banned rank. </summary>
         public static bool IsBanned(string name) {
             Group grp = findPerm(LevelPermission.Banned);
             return grp != null && grp.playerList.Contains(name);
+        }
+        
+        public static string GetColoredName(LevelPermission perm) {
+            Group grp = findPerm(perm);
+            if (grp != null) return grp.ColoredName;
+            return "&f" + ((int)perm);
         }
     }
 }

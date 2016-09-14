@@ -102,7 +102,7 @@ namespace MCGalaxy {
         static void DoFakePM(Player p, Player who, string message) {
             string name = p == null ? "(console)" : p.name;
             Server.s.Log(name + " @" + who.name + ": " + message);
-            Player.Message(p, "[<] " + who.ColoredName + ": &f" + message);
+            Player.Message(p, "[<] {0}: &f{1}", who.ColoredName, message);
         }
         
         static void DoPM(Player p, Player who, string message) {
@@ -110,8 +110,8 @@ namespace MCGalaxy {
             string fullName = p == null ? "%S(console)" : p.ColoredName;
             
             Server.s.Log(name + " @" + who.name + ": " + message);
-            Player.Message(p, "[<] " + who.ColoredName + ": &f" + message);
-            Player.Message(who, "&9[>] " + fullName + ": &f" + message);
+            Player.Message(p, "[<] {0}: &f{1}", who.ColoredName, message);
+            Player.Message(who, "&9[>] {0}: &f{1}", fullName, message);
         }
     }
 }

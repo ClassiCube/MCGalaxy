@@ -54,7 +54,8 @@ namespace MCGalaxy.Commands {
             bool loadOnGoto;
             RetrieveProps(map, out visitP, out buildP, out loadOnGoto);
             
-            string color = Group.findPerm(buildP).color;
+            Group grp = Group.findPerm(buildP);
+            string color = grp == null ? "&f" : grp.color;
             string visit = loadOnGoto && (p == null || p.Rank >= visitP) ? "" : " &c[no]" + color;
             return color + map + visit;
         }

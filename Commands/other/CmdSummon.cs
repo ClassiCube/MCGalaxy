@@ -56,7 +56,10 @@ namespace MCGalaxy.Commands {
         }
         
         static void SummonPlayer(Player p, string message) {
-            Player who = PlayerInfo.FindMatches(p, message);
+            string[] args = message.Split(' ');
+            bool confirmed = args.Length > 1 && args[1].CaselessEq("confirm");
+            
+            Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             if (p.Rank < who.Rank) {
                 MessageTooHighRank(p, "summon", true); return;

@@ -24,16 +24,16 @@ namespace MCGalaxy {
         
         public static void PrintRanks(LevelPermission minRank, List<LevelPermission> allowed,
                                         List<LevelPermission> disallowed, StringBuilder builder) {
-            builder.Append(GetColoredRank(minRank) + "%S+");
+            builder.Append(Group.GetColoredName(minRank) + "%S+");
             if (allowed != null && allowed.Count > 0) {
                 foreach (LevelPermission perm in allowed)
-                    builder.Append(", " + GetColoredRank(perm) + "%S");
+                    builder.Append(", " + Group.GetColoredName(perm) + "%S");
             }
             
             if (disallowed != null && disallowed.Count > 0) {
                 builder.Append( " (but not ");
                 foreach (LevelPermission perm in disallowed)
-                    builder.Append(GetColoredRank(perm) + "%S, ");
+                    builder.Append(Group.GetColoredName(perm) + "%S, ");
                 builder.Remove(builder.Length - 2, 2);
                 builder.Append(")");
             }
@@ -44,7 +44,7 @@ namespace MCGalaxy {
             StringBuilder builder = new StringBuilder();
             builder.Append("Usable by: ");
             if (perms == null) {
-                builder.Append(GetColoredRank(cmd.defaultRank) + "%S+");
+                builder.Append(Group.GetColoredName(cmd.defaultRank) + "%S+");
             } else {
                 PrintRanks(perms.lowestRank, perms.allow, perms.disallow, builder);
             }
@@ -58,7 +58,7 @@ namespace MCGalaxy {
             for (int i = 0; i < addPerms.Length; i++) {
                 var extra = CommandOtherPerms.Find(cmd, i + 1);
                 LevelPermission perm = (LevelPermission)extra.Permission;
-                Player.Message(p, "{0}) {1}%S{2}", i + 1, GetColoredRank(perm), extra.Description);
+                Player.Message(p, "{0}) {1}%S{2}", i + 1, Group.GetColoredName(perm), extra.Description);
             }
         }
         
@@ -81,20 +81,12 @@ namespace MCGalaxy {
                 dst.Append('/').Append(a.Trigger);
                 string args = a.Prefix == null ? a.Suffix : a.Prefix;
                 if (args != null) {
-                    string name = String.IsNullOrEmpty(cmd.shortcut)
-                        ? cmd.name : cmd.shortcut;
+                    string name = String.IsNullOrEmpty(cmd.shortcut) ? cmd.name : cmd.shortcut;
                     dst.Append(" for /").Append(name + " " + args);
                 }
                 dst.Append(", ");
             }
         }
-        
-        static string GetColoredRank(LevelPermission perm) {
-            Group grp = Group.findPerm(perm);
-            if (grp != null) return grp.ColoredName;
-            return "&f" + (int)perm;
-        }
-		
 		
 		public static void MessageBlock(Player p, string action, byte block) {
             StringBuilder builder = new StringBuilder("Only ");
