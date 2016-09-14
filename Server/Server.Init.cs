@@ -28,7 +28,7 @@ using MCGalaxy.Tasks;
 namespace MCGalaxy {
     
     public sealed partial class Server {
-        
+
         void LoadMainLevel() {
             try {
                 if (LevelInfo.ExistsOffline(level)) {
@@ -67,7 +67,7 @@ namespace MCGalaxy {
                 ErrorLog(e);
             }
         }
-        
+		
         void LoadPlayerLists() {
             agreed = new PlayerList("ranks/agreed.txt");
             try {
@@ -171,7 +171,7 @@ namespace MCGalaxy {
             IRC = new IRCBot();
             if (Server.irc) IRC.Connect();
 
-            locationChecker = new Thread(DoLocationChecks);
+            locationChecker = new Thread(ServerTasks.LocationChecks);
             locationChecker.Name = "MCG_LocationCheck";
             locationChecker.Start();
              
@@ -191,26 +191,6 @@ namespace MCGalaxy {
                 if (oldMain != null && oldMain != Server.mainLevel)
                     oldMain.Unload(true, false);
             } catch (Exception e) { Server.ErrorLog(e); }
-        }
-
-        const string staffUrl = "https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Uploads/devs.txt";       
-        void UpdateStaffListTask() {
-            try {
-                using (WebClient web = new WebClient()) {
-                    string[] result = web.DownloadString(staffUrl).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-                    foreach (string line in result) {
-                        string type = line.Split(':')[0].ToLower();
-                        List<string> staffList = type.Equals("devs") ? Devs : type.Equals("mods") ? Mods : null;
-                        foreach (string name in line.Split(':')[1].Split())
-                        	staffList.Add(name.TrimEnd('+'));
-                    }
-                }
-            } catch (Exception e) {
-                ErrorLog(e);
-                s.Log("Failed to update MCGalaxy staff list.");
-                Devs.Clear();
-                Mods.Clear();
-            }
         }
     }
 }

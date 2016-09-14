@@ -24,7 +24,7 @@ using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
 
-namespace MCGalaxy.Tasks {    
+namespace MCGalaxy.Tasks {
     internal static class UpgradeTasks {
         
         internal static void UpgradeOldBlacklist() {

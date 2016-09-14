@@ -116,16 +116,16 @@ namespace MCGalaxy {
             
             Devs.Clear();
             Mods.Clear();
-            Background.QueueOnce(UpdateStaffListTask);
+            Background.QueueOnce(InitTasks.UpdateStaffList);
             
-            MainScheduler.QueueRepeat(TemprankExpiryTask, null, 
-                                      TimeSpan.FromMinutes(1));
-            Background.QueueRepeat(AutoSaveTask, 1, 
-                                   TimeSpan.FromSeconds(Server.backupInterval));
-            Background.QueueRepeat(BlockUpdatesTask, null,
-                                   TimeSpan.FromSeconds(Server.blockInterval));
-            Background.QueueRepeat(ThreadSafeCache.CleanupTask, null,
-                                   TimeSpan.FromMinutes(5));
+            MainScheduler.QueueRepeat(ServerTasks.TemprankExpiry, 
+                                      null, TimeSpan.FromMinutes(1));
+            Background.QueueRepeat(ServerTasks.AutoSave, 
+                                   1, TimeSpan.FromSeconds(Server.backupInterval));
+            Background.QueueRepeat(ServerTasks.BlockUpdates, 
+                                   null, TimeSpan.FromSeconds(Server.blockInterval));
+            Background.QueueRepeat(ThreadSafeCache.CleanupTask, 
+                                   null, TimeSpan.FromMinutes(5));
         }
         
         void EnsureFilesExist() {
