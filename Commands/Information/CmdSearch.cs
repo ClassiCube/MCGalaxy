@@ -39,6 +39,8 @@ namespace MCGalaxy.Commands {
                 SearchBlocks(p, keyword, modifier);
             } else if (args[0] == "rank" || args[0] == "ranks") {
                 SearchRanks(p, keyword, modifier);
+            } else if (args[0] == "command" || args[0] == "commands" || args[0] == "cmd" || args[0] == "cmds") {
+                SearchCommands(p, keyword, modifier);
             } else if (args[0] == "user" || args[0] == "users" || args[0] == "player" || args[0] == "players") {
                 SearchPlayers(p, keyword, modifier);
             } else if (args[0] == "loaded") {
@@ -67,6 +69,22 @@ namespace MCGalaxy.Commands {
             return prefix + block;
         }
         
+        static void SearchCommands(Player p, string keyword, string modifier) {
+            List<Command> cmds = new List<Command>();
+            foreach (Command cmd in Command.all.commands) {
+                if (cmd.name.CaselessContains(keyword)) {
+                    cmds.Add(cmd); continue;
+                }
+                
+                if (String.IsNullOrEmpty(cmd.shortcut)) continue;
+                if (cmd.shortcut.CaselessContains(keyword))
+                    cmds.Add(cmd);
+            }    
+            
+            OutputList(p, keyword, "search commands", "commands", 
+                       modifier, cmds, (cmd, i) => CmdHelp.GetColor(cmd) + cmd.name);
+        }
+        
         static void SearchRanks(Player p, string keyword, string modifier) {
             List<string> ranks = new List<string>();
             foreach (Group g in Group.GroupList) {
@@ -91,7 +109,7 @@ namespace MCGalaxy.Commands {
         }
         
         static void SearchLoaded(Player p, string keyword, string modifier) {
-        	List<string> levels = new List<string>();
+            List<string> levels = new List<string>();
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level level in loaded) {
                 if (level.name.CaselessContains(level.name)) 
@@ -125,7 +143,8 @@ namespace MCGalaxy.Commands {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/search blocks [keyword] %H- finds blocks with that keyword");
-            Player.Message(p, "%T/search ranks [keyword] %H- finds blocks with that keyword");
+            Player.Message(p, "%T/search blocks [keyword] %H- finds commands with that keyword");
+            Player.Message(p, "%T/search ranks [keyword] %H- finds ranks with that keyword");
             Player.Message(p, "%T/search players [keyword] %H- find players with that keyword");
             Player.Message(p, "%T/search loaded [keyword] %H- finds loaded levels with that keyword");
             Player.Message(p, "%T/search levels [keyword] %H- find all levels with that keyword");
