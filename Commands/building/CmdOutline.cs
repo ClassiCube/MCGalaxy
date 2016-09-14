@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Building {
             
             int newBlock = DrawCmd.GetBlock(p, args[1], out dArgs.newExtBlock);
             if (newBlock == -1) return;
-            dArgs.newBlock = (byte)block;
+            dArgs.newBlock = (byte)newBlock;
 
             Player.Message(p, "Place two blocks to determine the edges.");
             p.MakeSelection(2, dArgs, DoOutline);
