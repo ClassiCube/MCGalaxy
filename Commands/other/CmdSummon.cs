@@ -66,14 +66,37 @@ namespace MCGalaxy.Commands {
             }
             
             if (p.level != who.level) {
-                Player.Message(p, who.ColoredName + " %Sis in a different Level, moving them..");
-                PlayerActions.ChangeMap(who, p.level);
+                if (!CheckVisitPerm(p, who, confirmed)) return;
+                Player.Message(p, who.ColoredName + " %Sis in a different level, moving them..");
+                PlayerActions.ChangeMap(who, p.level, confirmed);
                 p.BlockUntilLoad(10); // wait for them to load
             }
 
             if (p.level != who.level) return; // in case they were unable to move to this level
             who.SendOwnHeadPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
             who.SendMessage("You were summoned by " + p.ColoredName + "%S.");
+        }
+        
+        static bool CheckVisitPerm(Player p, Player who, bool confirmed) {
+            LevelAccessResult result = p.level.VisitAccess.Check(who, confirmed);
+            if (result == LevelAccessResult.Allowed) return true;
+            if (result == LevelAccessResult.Whitelisted) return true;
+            
+            if (result == LevelAccessResult.Blacklisted) {
+                Player.Message(p, "{0} %Sis blacklisted from visiting this map.", who.ColoredName);
+                return false;
+            } else if (result == LevelAccessResult.BelowMinRank) {
+                Player.Message(p, "Only {0}%S+ may normally visit this map. {1}%S is ranked {2}",
+                               Group.GetColoredName(p.level.permissionvisit),
+                               who.ColoredName, who.group.ColoredName);
+            } else if (result == LevelAccessResult.AboveMaxRank) {
+                Player.Message(p, "Only {0}%S and below may normally visit this map. {1}%S is ranked {2}",
+                               Group.GetColoredName(p.level.pervisitmax),
+                               who.ColoredName, who.group.ColoredName);
+            }
+            
+            Player.Message(p, "If you still want to summon them, type %T/summon {0} confirm", who.name);
+            return false;
         }
         
         public override void Help(Player p) {
