@@ -56,33 +56,42 @@ namespace MCGalaxy.Commands {
             Output(p, ecos.Fine, "fine");
         }
         
-        const string dateFormat = "MM'/'dd'/'yyyy hh:mm:ss";
+        const string dateFormat = "MM'/'dd'/'yyyy HH:mm:ss";
         static void Output(Player p, string value, string type) {
             if (String.IsNullOrEmpty(value) || value == "%cNone") return;
             
-            const string dateStart = " on %f";
-            int dateIndex = value.IndexOf(dateStart);
-            if (dateIndex == -1) {
-                Player.Message(p, " Last {0}: {1}", type, value); return;
-            }
-            
-            string msg = value.Substring(0, dateIndex);
-            dateIndex += dateStart.Length;
-            string date = value.Substring(dateIndex, 19);
-            string suffix = value.Substring(dateIndex + 19);
-            
-            // Attempt to show relative time
-            DateTime time;
-            if (DateTime.TryParseExact(date, dateFormat, null, 0, out time)) {
-                TimeSpan delta = DateTime.Now - time;
-                value = msg + " %f" + delta.Shorten() + " ago" + suffix;
+            if (!AdjustRelative(ref value, " on %f")) {
+                AdjustRelative(ref value, " - Date: %f"); // old date format for purchases
             }
             Player.Message(p, " Last {0}: {1}", type, value);
+        }
+        
+        static bool AdjustRelative(ref string value, string dateStart) {
+            int index = value.IndexOf(dateStart);
+            if (index == -1) return false;
+            
+            string prefix = value.Substring(0, index);
+            index += dateStart.Length; // skip over the date start bit
+            
+            const int dateLength = 19;
+            string date = value.Substring(index, dateLength);
+
+            index += dateLength;
+            string suffix = "";
+            if (index < value.Length)
+                suffix = value.Substring(index + dateLength);
+            
+            DateTime time;
+            if (!DateTime.TryParseExact(date, dateFormat, null, 0, out time)) return false;
+            
+            TimeSpan delta = DateTime.Now - time;
+            value = prefix + " %f" + delta.Shorten() + " ago" + suffix;
+            return true;
         }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/balance [player]");
-            Player.Message(p, "%HShows how much %3" + Server.moneys + " %H<player> has, " +
+            Player.Message(p, "%HShows how much %3" + Server.moneys + " %H[player] has, " +
                            "plus their most recent transactions.");
             Player.Message(p, "%HIf [player] is not given, shows your own balance.");
         }
