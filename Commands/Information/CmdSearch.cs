@@ -29,93 +29,106 @@ namespace MCGalaxy.Commands {
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;
 
         public override void Use(Player p, string message) {
-            string[] args = message.SplitSpaces(2);
+            string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return; }
             args[0] = args[0].ToLower();
             string keyword = args[1];
+            string modifier = args.Length > 2 ? args[2] : "";
             
             if (args[0] == "block" || args[0] == "blocks") {
-                SearchBlocks(p, keyword);
+                SearchBlocks(p, keyword, modifier);
             } else if (args[0] == "rank" || args[0] == "ranks") {
-                SearchRanks(p, keyword);
+                SearchRanks(p, keyword, modifier);
             } else if (args[0] == "user" || args[0] == "users" || args[0] == "player" || args[0] == "players") {
-                SearchPlayers(p, keyword);
+                SearchPlayers(p, keyword, modifier);
             } else if (args[0] == "loaded") {
-                SearchLoaded(p, keyword);
+                SearchLoaded(p, keyword, modifier);
             } else if (args[0] == "level" || args[0] == "levels") {
-                SearchUnloaded(p, keyword);
+                SearchUnloaded(p, keyword, modifier);
             } else {
                 Help(p);
             }
         }
         
-        static void SearchBlocks(Player p, string keyword) {
-            StringBuilder blocks = new StringBuilder();
-            bool mode = true;
+        static void SearchBlocks(Player p, string keyword, string modifier) {
+            List<string> blocks = new List<string>();
             for (byte id = 0; id < 255; id++) {
                 string name = Block.Name(id);
-                if (name.ToLower() != "unknown" && name.Contains(keyword)) {
-                    blocks.Append(mode ? "%S, &9" : "%S, &2").Append(name);
-                    mode = !mode;
-                }
-            }
-            if (blocks.Length == 0) { Player.Message(p, "No blocks found containing &b" + keyword); return; }
-            Player.Message(p, blocks.ToString(4, blocks.Length - 4));
-        }
-        
-        static void SearchRanks(Player p, string keyword) {
-            StringBuilder ranks = new StringBuilder();
-            foreach (Group g in Group.GroupList) {
-                if (g.name.IndexOf(keyword, comp) >= 0)
-                    ranks.Append(", ").Append(g.ColoredName);
-            }
-            if (ranks.Length == 0) { Player.Message(p, "No ranks found containing &b" + keyword); return; }
-            Player.Message(p, ranks.ToString(2, ranks.Length - 2));
-        }
-        
-        static void SearchPlayers(Player p, string keyword) {
-            StringBuilder players = new StringBuilder();
-            Player[] online = PlayerInfo.Online.Items;
-            foreach (Player who in online) {
-                if (who.name.IndexOf(keyword, comp) >= 0 && Entities.CanSee(p, who))
-                    players.Append(", ").Append(who.color).Append(who.name);
-            }
-            if (players.Length == 0) { Player.Message(p, "No usernames found containing &b" + keyword); return; }
-            Player.Message(p, players.ToString(2, players.Length - 2));
-        }
-        
-        static void SearchLoaded(Player p, string keyword) {
-            StringBuilder levels = new StringBuilder();
-            Level[] loaded = LevelInfo.Loaded.Items;
-            foreach (Level level in loaded) {
-                if (level.name.IndexOf(keyword, comp) >= 0)
-                    levels.Append(", ").Append(level.name);
-            }
-            if (levels.Length == 0) { Player.Message(p, "No loaded levels found containing &b" + keyword); return; }
-            Player.Message(p, levels.ToString(2, levels.Length - 2));
-        }
-        
-        static void SearchUnloaded(Player p, string keyword) {
-            List<string> matches = new List<string>();
-            string[] files = Directory.GetFiles("levels", "*.lvl");
-            foreach (string file in files) {
-                string level = Path.GetFileNameWithoutExtension(file);
-                if (level.IndexOf(keyword, comp) >= 0)
-                matches.Add(level);
+                if (name.CaselessContains(keyword) && !name.CaselessEq("unknown"))
+                    blocks.Add(name);
             }
             
-            if (matches.Count == 0) 
-            Player.Message(p, "No levels found containing &b" + keyword);
-            else
-            Player.Message(p, matches.Join());
+            OutputList(p, keyword, "search blocks", "blocks", 
+                       modifier, blocks, FormatBlockName);
+        }
+        
+        static string FormatBlockName(string block, int i) {
+            string prefix = (i & 1) == 0 ? "&2" : "&9";
+            return prefix + block;
+        }
+        
+        static void SearchRanks(Player p, string keyword, string modifier) {
+            List<string> ranks = new List<string>();
+            foreach (Group g in Group.GroupList) {
+                if (g.name.Contains(keyword))
+                    ranks.Add(g.ColoredName);
+            }
+            
+            OutputList(p, keyword, "search ranks", "ranks", 
+                       modifier, ranks, (name, i) => name);
+        }
+        
+        static void SearchPlayers(Player p, string keyword, string modifier) {
+            List<string> players = new List<string>();
+            Player[] online = PlayerInfo.Online.Items;
+            foreach (Player who in online) {
+                if (who.name.CaselessContains(keyword) && Entities.CanSee(p, who))
+                    players.Add(who.ColoredName);
+            }
+            
+            OutputList(p, keyword, "search players", "players", 
+                       modifier, players, (name, i) => name);
+        }
+        
+        static void SearchLoaded(Player p, string keyword, string modifier) {
+        	List<string> levels = new List<string>();
+            Level[] loaded = LevelInfo.Loaded.Items;
+            foreach (Level level in loaded) {
+                if (level.name.CaselessContains(level.name)) 
+                    levels.Add(level.name);
+            }
+            
+            OutputList(p, keyword, "search loaded", "loaded levels", 
+                       modifier, levels, (level, i) => level);
+        }
+        
+        static void SearchUnloaded(Player p, string keyword, string modifier) {
+            List<string> maps = new List<string>();
+            string[] files = Directory.GetFiles("levels", "*.lvl");
+            foreach (string file in files) {
+                string map = Path.GetFileNameWithoutExtension(file);
+                if (map.CaselessContains(keyword)) maps.Add(map);
+            }
+
+            OutputList(p, keyword, "search levels", "maps", 
+                       modifier, maps, (map, i) => map);
+        }
+        
+        static void OutputList<T>(Player p, string keyword, string cmd, string type, string modifier,
+                                  List<T> items, Func<T, int, string> formatter) {
+            if (items.Count == 0) {
+                Player.Message(p, "No {0} found containing \"{1}\"", type, keyword);
+            } else {
+                MultiPageOutput.Output(p, items, formatter, cmd + " " + keyword, type, modifier, false);
+            }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/search blocks <keyword> %H- finds blocks with that keyword");
-            Player.Message(p, "%T/search ranks <keyword> %H- finds blocks with that keyword");
-            Player.Message(p, "%T/search players <keyword> %H- find players with that keyword");
-            Player.Message(p, "%T/search loaded <keyword> %H- finds loaded levels with that keyword");
-            Player.Message(p, "%T/search levels <keyword> %H- find all levels with that keyword");
+            Player.Message(p, "%T/search blocks [keyword] %H- finds blocks with that keyword");
+            Player.Message(p, "%T/search ranks [keyword] %H- finds blocks with that keyword");
+            Player.Message(p, "%T/search players [keyword] %H- find players with that keyword");
+            Player.Message(p, "%T/search loaded [keyword] %H- finds loaded levels with that keyword");
+            Player.Message(p, "%T/search levels [keyword] %H- find all levels with that keyword");
         }
     }
 }

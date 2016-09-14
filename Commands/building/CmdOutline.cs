@@ -54,8 +54,8 @@ namespace MCGalaxy.Commands.Building {
         struct DrawArgs { public byte block, extBlock, newBlock, newExtBlock; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/outline [type] [type2]");
-            Player.Message(p, "%HOutlines [type] with [type2]");
+            Player.Message(p, "%T/outline [block] [block2]");
+            Player.Message(p, "%HOutlines [block] with [block2]");
         }
     }
 }
