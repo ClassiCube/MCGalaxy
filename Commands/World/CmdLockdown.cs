@@ -38,19 +38,20 @@ namespace MCGalaxy.Commands {
             }
 
             if (args[0].CaselessEq("map")) {
-                args[1] = args[1].ToLower();
                 if (!Formatter.ValidName(p, args[1], "level")) return;
                 
-                string path = "text/lockdown/map/" + args[1];
-                if (!File.Exists(path)) {
-                    File.Create(path).Dispose();
-                    Chat.MessageAll("The map {0} has been locked", args[1]);
-                    Chat.MessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
+                bool unlocking = Server.lockdown.Contains(args[1]);
+                Chat.MessageAll("The map {0} has been {0}locked", args[1], unlocking ? "un" : "");
+                string srcName = (p == null) ? "(console)" : p.ColoredName;
+                
+                if (unlocking) {
+                    Server.lockdown.Remove(args[1]);
+                    Chat.MessageOps("Unlocked by: " + srcName);
                 } else {
-                    File.Delete(path);
-                    Chat.MessageAll("The map {0} has been unlocked", args[1]);
-                    Chat.MessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
+                    Server.lockdown.AddOrReplace(args[1]);
+                    Chat.MessageOps("Locked by: " + srcName);
                 }
+                Server.lockdown.Save();
             } else {
                 Player who = PlayerInfo.FindMatches(p, args[1]);
                 if (who == null) return;
@@ -67,7 +68,7 @@ namespace MCGalaxy.Commands {
                     Chat.MessageAll("{0} %Shas been locked down!", who.ColoredName);
                     Chat.MessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
                 } else {
-                	Chat.MessageAll("{0} %Shas been unlocked.", who.ColoredName);
+                    Chat.MessageAll("{0} %Shas been unlocked.", who.ColoredName);
                     Chat.MessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
                 }
                 who.jailed = !who.jailed;
@@ -75,9 +76,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/lockdown [map/player] [name]");
-            Player.Message(p, "%H'map' - prevents new players from joining that map.");
-            Player.Message(p, "%H'player' - prevents that player from using commands.");
+            Player.Message(p, "%T/lockdown map/player [name]");
+            Player.Message(p, "%H\"map\" - prevents new players from joining that map.");
+            Player.Message(p, "%H\"player\" - prevents that player from using commands.");
             Player.Message(p, "%HUsing /lockdown again will unlock that map/player.");
         }
     }

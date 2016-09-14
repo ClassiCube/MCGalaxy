@@ -608,6 +608,7 @@
     <Compile Include="Server\Server.Fields.cs" />
     <Compile Include="Server\Server.Init.cs" />
     <Compile Include="Server\Server.Tasks.cs" />
+    <Compile Include="Server\Tasks\UpgradeTasks.cs" />
     <Compile Include="Server\ThreadSafeCache.cs" />
     <Compile Include="Server\Updater.cs" />
     <Compile Include="API\WebServer.cs" />
@@ -731,6 +732,7 @@
     <Folder Include="Events" />
     <Folder Include="Chat" />
     <Folder Include="CorePlugin" />
+    <Folder Include="Server\Tasks" />
     <Folder Include="util\Math" />
     <Folder Include="Player\Group" />
     <Folder Include="Player\List" />

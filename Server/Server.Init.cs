@@ -23,6 +23,7 @@ using System.Threading;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
     
@@ -70,7 +71,7 @@ namespace MCGalaxy {
         void LoadPlayerLists() {
             agreed = new PlayerList("ranks/agreed.txt");
             try {
-                UpgradeOldAgreed();
+                UpgradeTasks.UpgradeOldAgreed();
                 agreed = PlayerList.Load("agreed.txt");
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
@@ -83,6 +84,7 @@ namespace MCGalaxy {
             hidden = PlayerList.Load("hidden.txt");
             vip = PlayerList.Load("text/vip.txt");
             noEmotes = PlayerList.Load("text/emotelist.txt");
+            lockdown = PlayerList.Load("text/lockdown.txt");
             
             jailed = PlayerExtList.Load("ranks/jailed.txt");
             models = PlayerExtList.Load("extra/models.txt");
@@ -93,46 +95,6 @@ namespace MCGalaxy {
                 grp.playerList = PlayerList.Load(grp.fileName);
             if (useWhitelist)
                 whiteList = PlayerList.Load("whitelist.txt");
-        }
-        
-        static void UpgradeOldBlacklist() {
-            if (!Directory.Exists("levels/blacklists")) return;
-            string[] files = Directory.GetFiles("levels/blacklists");
-            for (int i = 0; i < files.Length; i++) {
-                string[] blacklist = File.ReadAllLines(files[i]);
-                List<string> names = new List<string>();
-                
-                // Lines are in the format: day.month.year name+
-                foreach (string entry in blacklist) {
-                    string[] parts = entry.Split(' ');
-                    string name = parts[parts.Length - 1];
-                    name = name.Substring(0, name.Length - 1);
-                    names.Add(name);
-                }
-                
-                if (names.Count > 0) {
-                    string lvlName = Path.GetFileNameWithoutExtension(files[i]);
-                    string propsPath = LevelInfo.PropertiesPath(lvlName);
-                    using (StreamWriter w = new StreamWriter(propsPath, true)) {
-                        w.WriteLine("VisitBlacklist = " + names.Join());
-                    }
-                }
-                File.Delete(files[i]);
-            }
-            Directory.Delete("levels/blacklists");
-        }
-        
-        static void UpgradeOldAgreed() {
-            // agreed.txt format used to be names separated by spaces, we need to fix that up.
-            if (!File.Exists("ranks/agreed.txt")) return;
-            
-            string data = null;
-            using (FileStream fs = File.OpenRead("ranks/agreed.txt")) {
-                if (fs.ReadByte() != ' ') return;
-                data = new StreamReader(fs).ReadToEnd();
-                data = data.Replace(" ", Environment.NewLine);
-            }
-            File.WriteAllText("ranks/agreed.txt", data);
         }
         
         void LoadAutoloadCommands() {
@@ -164,69 +126,6 @@ namespace MCGalaxy {
                     s.Log("Physics variable invalid");
                 }
             }
-        }
-		
-        void MovePreviousLevelFiles() {
-            if (!Directory.Exists("levels")) return;
-            try {
-                string[] files = Directory.GetFiles("levels", "*.prev");
-                if (files.Length == 0) return;
-                if (!Directory.Exists("levels/prev"))
-                    Directory.CreateDirectory("levels/prev");
-                
-                foreach (string file in files) {
-                    string name = Path.GetFileName(file);
-                    string newFile = "levels/prev/" + name;
-                    
-                    try {
-                        File.Move(file, newFile);
-                    } catch (Exception ex) {
-                        Server.s.Log("Error while trying to move .lvl.prev file");
-                        Server.ErrorLog(ex);
-                    }
-                }
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-            }
-        }
-        
-        void CombineEnvFiles() {
-            if (!Directory.Exists("levels/level properties")) return;
-            try {
-                string[] files = Directory.GetFiles("levels/level properties", "*.env");
-                if (files.Length == 0) return;
-                
-                Server.s.Log("Combining " + files.Length + " .env and .properties files..");
-                foreach (string envFile in files) {
-                    try {
-                        Combine(envFile);
-                    } catch (Exception ex) {
-                        Server.s.Log("Error while trying to combine .env and .properties file");
-                        Server.ErrorLog(ex);
-                    }
-                }
-                Server.s.Log("Finished combining .env and .properties files.");
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-            }
-        }
-        
-        static void Combine(string envFile) {
-            string name = Path.GetFileNameWithoutExtension(envFile);
-            string propFile = LevelInfo.FindPropertiesFile(name);
-            List<string> lines = new List<string>();
-            if (propFile != null)
-                lines = CP437Reader.ReadAllLines(propFile);
-            
-            using (StreamReader r = new StreamReader(envFile)) {
-                string line = null;
-                while ((line = r.ReadLine()) != null)
-                    lines.Add(line);
-            }
-            
-            propFile = LevelInfo.PropertiesPath(name);
-            CP437Writer.WriteAllLines(propFile, lines.ToArray());
-            File.Delete(envFile);
         }
         
         void SetupSocket() {

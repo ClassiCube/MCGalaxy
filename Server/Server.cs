@@ -20,6 +20,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using MCGalaxy.Games;
+using MCGalaxy.Tasks;
 using Newtonsoft.Json;
 
 namespace MCGalaxy {
@@ -99,13 +100,14 @@ namespace MCGalaxy {
             foreach (Level l in loaded)
                 l.Unload();
 
-            Background.QueueOnce(CombineEnvFiles);
+            Background.QueueOnce(UpgradeTasks.CombineEnvFiles);
             Background.QueueOnce(LoadMainLevel);
             Plugin.Load();
-            Background.QueueOnce(UpgradeOldBlacklist);
+            Background.QueueOnce(UpgradeTasks.UpgradeOldBlacklist);
             Background.QueueOnce(LoadPlayerLists);
             Background.QueueOnce(LoadAutoloadCommands);
-            Background.QueueOnce(MovePreviousLevelFiles);
+            Background.QueueOnce(UpgradeTasks.MovePreviousLevelFiles);
+            Background.QueueOnce(UpgradeTasks.UpgradeOldLockdown);
 
             Background.QueueOnce(SetupSocket);
             Background.QueueOnce(InitTimers);
