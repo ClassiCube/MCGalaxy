@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Building {
             
             int newBlock = DrawCmd.GetBlock(p, args[1], out dArgs.newExtBlock);
             if (newBlock == -1) return;
-            dArgs.newBlock = (byte)block;
+            dArgs.newBlock = (byte)newBlock;
 
             Player.Message(p, "Place two blocks to determine the edges.");
             p.MakeSelection(2, dArgs, DoOutline);
@@ -54,8 +54,8 @@ namespace MCGalaxy.Commands.Building {
         struct DrawArgs { public byte block, extBlock, newBlock, newExtBlock; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/outline [type] [type2]");
-            Player.Message(p, "%HOutlines [type] with [type2]");
+            Player.Message(p, "%T/outline [block] [block2]");
+            Player.Message(p, "%HOutlines [block] with [block2]");
         }
     }
 }
