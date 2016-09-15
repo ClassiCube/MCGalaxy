@@ -125,7 +125,7 @@ namespace MCGalaxy {
             p.prevMsg = "";
             
             if (!p.hidden && p.level.ShouldShowJoinMessage(oldLevel)) {
-                Player.SendChatFrom(p, p.color + "*" + p.DisplayName + " %Swent to &b" + lvl.name, false);
+                Player.SendChatFrom(p, p.DisplayName + " %Swent to &b" + lvl.name, false);
                 Player.RaisePlayerAction(p, PlayerAction.JoinWorld, lvl.name);
             }
             return true;
