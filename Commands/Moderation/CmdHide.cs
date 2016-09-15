@@ -16,10 +16,8 @@
     permissions and limitations under the Licenses.
 */
 using System.IO;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdHide : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdHide : Command {
         public override string name { get { return "hide"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -30,7 +28,7 @@ namespace MCGalaxy.Commands
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("xhide", "silent") }; }
-        }        
+        }
         public CmdHide() { }
 
         public override void Use(Player p, string message) {
