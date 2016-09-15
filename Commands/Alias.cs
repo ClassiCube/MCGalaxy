@@ -50,7 +50,9 @@ namespace MCGalaxy {
         }
 
         public static void Load(){
-            aliases = new List<Alias>();
+            aliases.Clear();
+            coreAliases.Clear();
+            
             if (!File.Exists(file)) { Save(); return; }
             PropertiesFile.Read(file, LineProcessor, ':');
         }

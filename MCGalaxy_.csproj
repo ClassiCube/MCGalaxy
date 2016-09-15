@@ -125,6 +125,7 @@
     <Compile Include="Chat\FullCP437Handler.cs" />
     <Compile Include="Chat\ChatTokens.cs" />
     <Compile Include="Chat\LineWrapper.cs" />
+    <Compile Include="Commands\Alias.cs" />
     <Compile Include="Commands\Bots\CmdBotAdd.cs" />
     <Compile Include="Commands\Bots\CmdBotAI.cs" />
     <Compile Include="Commands\Bots\CmdBotRemove.cs" />
@@ -575,7 +576,6 @@
     <Compile Include="Network\NetUtils.cs" />
     <Compile Include="Network\Opcode.cs" />
     <Compile Include="Network\Player.Networking.cs" />
-    <Compile Include="Player\Alias.cs" />
     <Compile Include="API\API.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\Plugin.Events.cs" />
