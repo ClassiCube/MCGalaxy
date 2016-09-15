@@ -412,6 +412,7 @@
     <Compile Include="Config\ServerProperties.cs" />
     <Compile Include="Config\PropertiesFile.cs" />
     <Compile Include="Config\StringAttributes.cs" />
+    <Compile Include="CorePlugin\ChatHandler.cs" />
     <Compile Include="CorePlugin\CorePlugin.cs" />
     <Compile Include="CorePlugin\ConnectHandler.cs" />
     <Compile Include="Database\BlockDB.cs" />

@@ -23,7 +23,7 @@ using MCGalaxy.Commands;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy {   
+namespace MCGalaxy {
     public sealed partial class Player : IDisposable {
         
         bool removedFromPending = false;
@@ -119,7 +119,7 @@ namespace MCGalaxy {
             
             byte heldExt = 0;
             byte heldBlock = GetActualHeldBlock(out heldExt);
-            int index = level.PosToInt(x, y, z);            
+            int index = level.PosToInt(x, y, z);
             if (doDelete) {
                 if (DeleteBlock(old, x, y, z, block, extBlock))
                     level.AddToBlockDB(this, index, heldBlock, heldExt, true);
@@ -178,7 +178,7 @@ namespace MCGalaxy {
             try {
                 int size = PacketSize(buffer);
                 if (size == -2) return new byte[1]; // WoM get request
-                if (size == -1) return new byte[0]; // invalid packet 
+                if (size == -1) return new byte[0]; // invalid packet
                 
                 if (buffer.Length < size) return buffer;
                 HandlePacket(buffer);
@@ -195,8 +195,8 @@ namespace MCGalaxy {
         
         int PacketSize(byte[] buffer) {
             switch (buffer[0]) {
-                case (byte)'G': return -2; //For wom
-                case Opcode.Handshake: return 131;
+                    case (byte)'G': return -2; //For wom
+                    case Opcode.Handshake: return 131;
                 case Opcode.SetBlockClient:
                     if (!loggedIn) goto default;
                     return 9;
@@ -206,9 +206,9 @@ namespace MCGalaxy {
                 case Opcode.Message:
                     if (!loggedIn) goto default;
                     return 66;
-                case Opcode.CpeExtInfo: return 67;
-                case Opcode.CpeExtEntry: return 69;
-                case Opcode.CpeCustomBlockSupportLevel: return 2;
+                    case Opcode.CpeExtInfo: return 67;
+                    case Opcode.CpeExtEntry: return 69;
+                    case Opcode.CpeCustomBlockSupportLevel: return 2;
                 default:
                     if (!dontmindme)
                         Leave("Unhandled message id \"" + buffer[0] + "\"!", true);
@@ -242,7 +242,7 @@ namespace MCGalaxy {
 
         void HandleBlockchange(byte[] packet) {
             try {
-                if (!loggedIn || CheckBlockSpam()) return;              
+                if (!loggedIn || CheckBlockSpam()) return;
                 ushort x = NetUtils.ReadU16(packet, 1);
                 ushort y = NetUtils.ReadU16(packet, 3);
                 ushort z = NetUtils.ReadU16(packet, 5);
@@ -285,7 +285,7 @@ return;
             byte heldBlock = packet[1];
             if (HasCpeExt(CpeExt.HeldBlock))
                 RawHeldBlock = heldBlock;
-                
+            
             ushort x = NetUtils.ReadU16(packet, 2);
             ushort y = NetUtils.ReadU16(packet, 4);
             ushort z = NetUtils.ReadU16(packet, 6);
@@ -404,7 +404,7 @@ return;
             if (b == Block.rockethead) level.MakeExplosion(x, y, z, 0);
             if (b == Block.creeper) level.MakeExplosion(x, y, z, 1);
             if (b == Block.rock || b == Block.stone) {
-                if (explode) level.MakeExplosion(x, y, z, 1);              
+                if (explode) level.MakeExplosion(x, y, z, 1);
                 if (b == Block.rock) {
                     SendChatFrom(this, ColoredName + "%S" + customMessage, false);
                 } else {
@@ -441,82 +441,82 @@ return;
         }
 
         void HandleChat(byte[] packet) {
-                if (!loggedIn) return;
-                byte continued = packet[1];
-                string text = GetString(packet, 2);
-                LastAction = DateTime.UtcNow;
-                if (FilterChat(ref text, continued)) return;               
+            if (!loggedIn) return;
+            byte continued = packet[1];
+            string text = GetString(packet, 2);
+            LastAction = DateTime.UtcNow;
+            if (FilterChat(ref text, continued)) return;
 
-                if (text != "/afk" && IsAfk)
-                    CmdAfk.ToggleAfk(this, "");
-                
-                // Typing //Command appears in chat as /command
-                // Suggested by McMrCat
-                if (text.StartsWith("//")) {
-                    text = text.Remove(0, 1);
-                } else if (DoCommand(text)) {
+            if (text != "/afk" && IsAfk)
+                CmdAfk.ToggleAfk(this, "");
+            
+            // Typing //Command appears in chat as /command
+            // Suggested by McMrCat
+            if (text.StartsWith("//")) {
+                text = text.Remove(0, 1);
+            } else if (DoCommand(text)) {
+                return;
+            }
+
+            // People who are muted can't speak or vote
+            if (muted) { SendMessage("You are muted."); return; } //Muted: Only allow commands
+
+            // Lava Survival map vote recorder
+            if ( Server.lava.HasPlayer(this) && Server.lava.HasVote(text.ToLower()) ) {
+                if ( Server.lava.AddVote(this, text.ToLower()) ) {
+                    SendMessage("Your vote for &5" + text.ToLower().Capitalize() + " %Shas been placed. Thanks!");
+                    Server.lava.map.ChatLevelOps(name + " voted for &5" + text.ToLower().Capitalize() + "%S.");
                     return;
                 }
-
-                // People who are muted can't speak or vote
-                if (muted) { SendMessage("You are muted."); return; } //Muted: Only allow commands
-
-                // Lava Survival map vote recorder
-                if ( Server.lava.HasPlayer(this) && Server.lava.HasVote(text.ToLower()) ) {
-                    if ( Server.lava.AddVote(this, text.ToLower()) ) {
-                        SendMessage("Your vote for &5" + text.ToLower().Capitalize() + " %Shas been placed. Thanks!");
-                        Server.lava.map.ChatLevelOps(name + " voted for &5" + text.ToLower().Capitalize() + "%S.");
-                        return;
-                    }
-                    else {
-                        SendMessage("&cYou already voted!");
-                        return;
-                    }
+                else {
+                    SendMessage("&cYou already voted!");
+                    return;
                 }
-                // Filter out bad words
-                if (Server.profanityFilter) text = ProfanityFilter.Parse(text);
-                
-                if (IsHandledMessage(text)) return;
-                
-                // Put this after vote collection so that people can vote even when chat is moderated
-                if (Server.chatmod && !voice) { SendMessage("Chat moderation is on, you cannot speak."); return; }
+            }
+            // Filter out bad words
+            if (Server.profanityFilter) text = ProfanityFilter.Parse(text);
+            
+            if (IsHandledMessage(text)) return;
+            
+            // Put this after vote collection so that people can vote even when chat is moderated
+            if (Server.chatmod && !voice) { SendMessage("Chat moderation is on, you cannot speak."); return; }
 
-                if (ChatModes.Handle(this, text)) return;
+            if (ChatModes.Handle(this, text)) return;
 
-                if (text[0] == ':' && PlayingTntWars) {
-                    string newtext = text.Remove(0, 1).Trim();
-                    TntWarsGame it = TntWarsGame.GetTntWarsGame(this);
-                    if ( it.GameMode == TntWarsGame.TntWarsGameMode.TDM ) {
-                        TntWarsGame.player pl = it.FindPlayer(this);
-                        foreach ( TntWarsGame.player p in it.Players ) {
-                            if ( pl.Red && p.Red ) SendMessage(p.p, "To Team " + Colors.red + "-" + color + name + Colors.red + "- " + Server.DefaultColor + newtext);
-                            if ( pl.Blue && p.Blue ) SendMessage(p.p, "To Team " + Colors.blue + "-" + color + name + Colors.blue + "- " + Server.DefaultColor + newtext);
-                        }
-                        Server.s.Log("[TNT Wars] [TeamChat (" + ( pl.Red ? "Red" : "Blue" ) + ") " + name + " " + newtext);
-                        return;
+            if (text[0] == ':' && PlayingTntWars) {
+                string newtext = text.Remove(0, 1).Trim();
+                TntWarsGame it = TntWarsGame.GetTntWarsGame(this);
+                if ( it.GameMode == TntWarsGame.TntWarsGameMode.TDM ) {
+                    TntWarsGame.player pl = it.FindPlayer(this);
+                    foreach ( TntWarsGame.player p in it.Players ) {
+                        if ( pl.Red && p.Red ) SendMessage(p.p, "To Team " + Colors.red + "-" + color + name + Colors.red + "- " + Server.DefaultColor + newtext);
+                        if ( pl.Blue && p.Blue ) SendMessage(p.p, "To Team " + Colors.blue + "-" + color + name + Colors.blue + "- " + Server.DefaultColor + newtext);
                     }
+                    Server.s.Log("[TNT Wars] [TeamChat (" + ( pl.Red ? "Red" : "Blue" ) + ") " + name + " " + newtext);
+                    return;
                 }
+            }
 
-                text = HandleJoker(text);
-                if (Chatroom != null) { Chat.ChatRoom(this, text, true, Chatroom); return; }
+            text = HandleJoker(text);
+            if (Chatroom != null) { Chat.ChatRoom(this, text, true, Chatroom); return; }
 
-                if (!level.worldChat) {
-                    Server.s.Log("<" + name + ">[level] " + text);
-                    Chat.GlobalChatLevel(this, text, true);
+            if (!level.worldChat) {
+                Server.s.Log("<" + name + ">[level] " + text);
+                Chat.GlobalChatLevel(this, text, true);
+            } else {
+                Server.s.Log("<" + name + "> " + text);
+                if (OnChat != null) OnChat(this, text);
+                if (PlayerChat != null) PlayerChat(this, text);
+                OnPlayerChatEvent.Call(this, text);
+                
+                if (cancelchat) { cancelchat = false; return; }
+                if (Server.worldChat) {
+                    SendChatFrom(this, text);
                 } else {
-                    Server.s.Log("<" + name + "> " + text);
-                    if (OnChat != null) OnChat(this, text);
-                    if (PlayerChat != null) PlayerChat(this, text);
-                    OnPlayerChatEvent.Call(this, text);
-                    
-                    if (cancelchat) { cancelchat = false; return; }
-                    if (Server.worldChat) {
-                        SendChatFrom(this, text);
-                    } else {
-                        Chat.GlobalChatLevel(this, text, true);
-                    }
+                    Chat.GlobalChatLevel(this, text, true);
                 }
-                CheckForMessageSpam();
+            }
+            CheckForMessageSpam();
         }
         
         bool FilterChat(ref string text, byte continued) {
@@ -679,25 +679,6 @@ return;
             if (Server.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
                 SendMessage("&cYou must verify first with %T/pass [Password]"); return false;
             }
-
-            //DO NOT REMOVE THE TWO COMMANDS BELOW, /PONY AND /RAINBOWDASHLIKESCOOLTHINGS. -EricKilla
-            if (cmd == "pony") {
-                if (ponycount < 2) {
-                    Chat.MessageAll("{0} %Sjust so happens to be a proud brony! Everyone give {0} %Sa brohoof!", ColoredName);
-                    ponycount++;
-                } else {
-                    SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
-                }
-                return false;
-            } else if (cmd == "rainbowdashlikescoolthings") {
-                if (rdcount < 2) {
-                    Chat.MessageAll("&1T&2H&3I&4S &5S&6E&7R&8V&9E&aR &bJ&cU&dS&eT &fG&0O&1T &22&30 &4P&CE&7R&DC&EE&9N&1T &5C&6O&7O&8L&9E&aR&b!");
-                    rdcount++;
-                } else {
-                    SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
-                }
-                return false;
-            }
             return true;
         }
         
@@ -741,7 +722,7 @@ return;
         bool UseCommand(Command command, string message) {
             string cmd = command.name;
             if (cmd != "repeat" && cmd != "pass") {
-            	lastCMD = message == "" ? cmd : cmd + " " + message;
+                lastCMD = message == "" ? cmd : cmd + " " + message;
                 lastCmdTime = DateTime.UtcNow;
             }
             if (cmd != "pass") Server.s.CommandUsed(name + " used /" + cmd + " " + message);

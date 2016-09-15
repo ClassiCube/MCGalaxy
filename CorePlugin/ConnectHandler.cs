@@ -20,7 +20,6 @@ using System.IO;
 using MCGalaxy;
 
 namespace MCGalaxy.Core {
-
     internal static class ConnectHandler {
         
         internal static void HandleConnect(Player p) {

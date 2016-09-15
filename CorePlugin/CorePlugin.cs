@@ -28,10 +28,13 @@ namespace MCGalaxy.Core {
         public override void Load(bool startup) {
             OnPlayerConnectEvent.Register(ConnectHandler.HandleConnect,
                                           Priority.System_Level, this, false);
+            OnPlayerCommandEvent.Register(ChatHandler.HandleCommand,
+                                          Priority.System_Level, this, false);
         }
         
         public override void Unload(bool shutdown) {
             OnPlayerConnectEvent.UnRegister(this);
+            OnPlayerCommandEvent.UnRegister(this);
         }
     }
 }

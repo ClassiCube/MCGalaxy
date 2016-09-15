@@ -188,7 +188,7 @@ namespace MCGalaxy {
         
         void Player_PlayerChat(Player p, string message) {
             if (!Server.irc ||!IsConnected()) return;
-            if (String.IsNullOrEmpty(message.Trim(trimChars))) return;
+            if (message.Trim(trimChars) == "") return;
             
             string name = Server.ircPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;
             Say(name + "%S: " + message, p.opchat);
