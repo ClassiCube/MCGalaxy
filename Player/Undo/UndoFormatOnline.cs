@@ -42,7 +42,7 @@ namespace MCGalaxy.Undo {
             if (node == null) yield break;
             
             UndoFormatEntry pos;
-            bool super = args.Player == null || args.Player.ircNick != null;
+            bool super = Player.IsSuper(args.Player);
             DateTime start = args.Start;
             
             while (node != null) {

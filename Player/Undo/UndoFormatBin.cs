@@ -38,7 +38,7 @@ namespace MCGalaxy.Undo {
         protected override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
             List<ChunkHeader> list = new List<ChunkHeader>();
             UndoFormatEntry pos;
-            bool super = args.Player == null || args.Player.ircNick != null;
+            bool super = Player.IsSuper(args.Player);
             DateTime start = args.Start;
             
             ReadHeaders(list, s);

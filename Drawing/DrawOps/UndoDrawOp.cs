@@ -44,25 +44,27 @@ namespace MCGalaxy.Drawing.Ops {
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             UndoCache cache = who.UndoBuffer;
             using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
-                if (UndoBlocks(who)) return;
+                if (UndoBlocks(p, who)) return;
             }      
             bool found = false;
             string target = who.name.ToLower();
             
-            if (Min.X != ushort.MaxValue)
+            if (Min.X != ushort.MaxValue) {
                 UndoFormat.DoUndoArea(p, target, Start, Min, Max, ref found);
-            else
+            } else {
                 UndoFormat.DoUndo(p, target, Start, End, ref found);
+            }
         }
         
-        bool UndoBlocks(Player p) {
+        bool UndoBlocks(Player p, Player who) {
             UndoFormatArgs args = new UndoFormatArgs(p, Start);
-            UndoFormat format = new UndoFormatOnline(p.UndoBuffer);
+            UndoFormat format = new UndoFormatOnline(who.UndoBuffer);
             
-            if (Min.X != ushort.MaxValue)
+            if (Min.X != ushort.MaxValue) {
                 UndoFormat.DoUndoArea(null, Min, Max, format, args);
-            else
+            } else {
                 UndoFormat.DoUndo(null, End, format, args);
+            }
             return args.Stop;
         }
     }

@@ -102,7 +102,7 @@ namespace MCGalaxy.Undo {
             List<ChunkHeader> list = new List<ChunkHeader>();
             UndoFormatEntry pos;
             UndoCacheItem item = default(UndoCacheItem);
-            bool super = args.Player == null || args.Player.ircNick != null;
+            bool super = Player.IsSuper(args.Player);
             DateTime start = args.Start;            
 
             ReadHeaders(list, s);
