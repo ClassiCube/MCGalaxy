@@ -22,7 +22,7 @@ namespace MCGalaxy.BlockPhysics {
     public static class DoorPhysics {
         
         public static void odoorPhysics(Level lvl, ref Check C) {
-            if (C.data.Data != 0) { C.data.Data = 0; return; }
+            if (C.data.Data != 0) { C.data.Data = 255; return; }
             
             odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, -1, 0, 0));
             odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, +1, 0, 0));
@@ -33,12 +33,11 @@ namespace MCGalaxy.BlockPhysics {
             C.data.Data++;
         }
         
-        static void odoorNeighbour(Level lvl, ref Check C, int offset) {
-            int index = C.b + offset;
-            byte block = Block.odoor(lvl.GetTile(index));
-            
-            if (block == lvl.blocks[C.b])
+        static void odoorNeighbour(Level lvl, ref Check C, int index) {
+            byte block = Block.odoor(lvl.GetTile(index));            
+            if (block == lvl.blocks[C.b]) {
                 lvl.AddUpdate(index, block, true);
+            }
         }
         
         //Change any door blocks nearby into door_air
