@@ -17,17 +17,14 @@
  */
 using System;
 namespace MCGalaxy.Commands {
-    public sealed class CmdAfk : Command {
+    public sealed class CmdAfk : MessageCmd {
         public override string name { get { return "afk"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public static string keywords { get { return ""; } }
         public CmdAfk() { }
 
         public override void Use(Player p, string message) {
-        	if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "list") {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
@@ -50,26 +47,25 @@ namespace MCGalaxy.Commands {
             bool send = !Server.chatmod && !p.muted;
             if (p.IsAfk) {
                 if (send) {
-                    Chat.MessageWhere("-{0}%S- is AFK {1}", 
-            		                  pl => Entities.CanSee(pl, p), p.ColoredName, message);
+                    string msg = "-" + p.ColoredName + "%S- is AFK " + message; 
+                    MessageCmd.TryMessage(p, msg, "afk");
                     Player.RaisePlayerAction(p, PlayerAction.AFK, message);
                 } else {
                     Player.Message(p, "You are now marked as being AFK.");
                 }
                 
-            	p.RaiseONAFK();
-            	Player.RaiseAFK(p);
+                p.RaiseONAFK();
+                Player.RaiseAFK(p);
                 OnPlayerAFKEvent.Call(p);
             } else {
                 if (send) {
-            		Chat.MessageWhere("-{0}%S- is no longer AFK", 
-            		                  pl => Entities.CanSee(pl, p), p.ColoredName);
+                    string msg = "-" + p.ColoredName + "%S- is no longer AFK"; 
+                    MessageCmd.TryMessage(p, msg, "afk");
                     Player.RaisePlayerAction(p, PlayerAction.UnAFK, message);
                 } else {
                     Player.Message(p, "You are no longer marked as being AFK.");
                 }
             }
-            p.CheckForMessageSpam();
         }
         
         public override void Help(Player p) {

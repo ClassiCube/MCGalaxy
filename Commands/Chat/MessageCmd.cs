@@ -35,9 +35,15 @@ namespace MCGalaxy.Commands {
             return true;
         }
         
-        protected bool TryMessage(Player p, string message) {
-            if (p != null && p.muted) { Player.Message(p, "Cannot use /{0} while muted.", name); return false; }
-            if (Server.chatmod && !p.voice) { Player.Message(p, "Cannot use /{0} when chat moderation is enabled.", name); return false; }
+        protected bool TryMessage(Player p, string message) { return TryMessage(p, message, name); }
+        
+        protected static bool TryMessage(Player p, string message, string cmd) {
+            if (p != null && p.muted) { 
+                Player.Message(p, "Cannot use /{0} while muted.", cmd); return false; 
+            }
+            if (Server.chatmod && !p.voice) { 
+                Player.Message(p, "Cannot use /{0} when chat moderation is enabled.", cmd); return false; 
+            }
             
             if (p.level.worldChat) {
                 Player.SendChatFrom(p, message, false);
@@ -48,7 +54,7 @@ namespace MCGalaxy.Commands {
             return true;
         }
     }
-	
+    
     public sealed class CmdHigh5 : MessageCmd {
         public override string name { get { return "high5"; } }
         

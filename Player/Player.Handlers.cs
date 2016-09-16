@@ -195,8 +195,8 @@ namespace MCGalaxy {
         
         int PacketSize(byte[] buffer) {
             switch (buffer[0]) {
-                    case (byte)'G': return -2; //For wom
-                    case Opcode.Handshake: return 131;
+                case (byte)'G': return -2; //For wom
+                case Opcode.Handshake: return 131;
                 case Opcode.SetBlockClient:
                     if (!loggedIn) goto default;
                     return 9;
@@ -206,14 +206,13 @@ namespace MCGalaxy {
                 case Opcode.Message:
                     if (!loggedIn) goto default;
                     return 66;
-                    case Opcode.CpeExtInfo: return 67;
-                    case Opcode.CpeExtEntry: return 69;
-                    case Opcode.CpeCustomBlockSupportLevel: return 2;
+                case Opcode.CpeExtInfo: return 67;
+                case Opcode.CpeExtEntry: return 69;
+                case Opcode.CpeCustomBlockSupportLevel: return 2;
                 default:
-                    if (!dontmindme)
+                    if (!dontmindme) {
                         Leave("Unhandled message id \"" + buffer[0] + "\"!", true);
-                    else
-                        Server.s.Log(Encoding.UTF8.GetString(buffer, 0, buffer.Length));
+                    }
                     return -1;
             }
         }
