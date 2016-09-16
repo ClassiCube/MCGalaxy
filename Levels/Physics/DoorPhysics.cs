@@ -22,15 +22,13 @@ namespace MCGalaxy.BlockPhysics {
     public static class DoorPhysics {
         
         public static void odoorPhysics(Level lvl, ref Check C) {
-            if (C.data.Data != 0) { C.data.Data = 255; return; }
-            
             odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, -1, 0, 0));
             odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, +1, 0, 0));
             odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, -1, 0));
             odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, +1, 0));
             odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, 0, -1));
             odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, 0, +1));
-            C.data.Data++;
+            C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
         static void odoorNeighbour(Level lvl, ref Check C, int index) {
@@ -66,7 +64,7 @@ namespace MCGalaxy.BlockPhysics {
                 C.data.Data++;
             } else {
                 lvl.AddUpdate(C.b, Block.Props[lvl.blocks[C.b]].DoorId);
-                C.data.Data = 255;
+                C.data.Data = PhysicsArgs.RemoveFromChecks;
             }
         }
     }

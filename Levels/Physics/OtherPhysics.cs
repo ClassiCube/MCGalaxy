@@ -24,7 +24,6 @@ namespace MCGalaxy.BlockPhysics {
     public static class OtherPhysics {
         
         public static void DoFalling(Level lvl, ref Check C) {
-            if (lvl.physics == 0 || lvl.physics == 5) { C.data.Data = 255; return; }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             int index = C.b;
@@ -70,7 +69,7 @@ namespace MCGalaxy.BlockPhysics {
                 AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z - 1)));
                 AirPhysics.PhysAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
             }
-            C.data.Data = 255;
+            C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
 
         public static void DoStairs(Level lvl, ref Check C) {
@@ -84,7 +83,7 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.AddUpdate(C.b, Block.air);
                 lvl.AddUpdate(bBelow, Block.stone);
             }
-            C.data.Data = 255;
+            C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
         public static void DoFloatwood(Level lvl, ref Check C) {
@@ -99,7 +98,7 @@ namespace MCGalaxy.BlockPhysics {
                     lvl.AddUpdate(index, Block.wood_float);
                 }
             }
-            C.data.Data = 255;
+            C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
         public static void DoShrub(Level lvl, ref Check C) {
@@ -114,7 +113,7 @@ namespace MCGalaxy.BlockPhysics {
                 AirPhysics.PhysAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
             }
 
-            if (!lvl.growTrees) { C.data.Data = 255; return; }
+            if (!lvl.growTrees) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
             if (C.data.Data < 20) {
                 if (rand.Next(20) == 0) C.data.Data++;
                 return;
@@ -128,11 +127,11 @@ namespace MCGalaxy.BlockPhysics {
             
             op.Perform(marks, null, lvl, null, 
                        b => lvl.Blockchange(b.X, b.Y, b.Z, b.Block));
-            C.data.Data = 255;
+            C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
         public static void DoDirt(Level lvl, ref Check C) {
-            if (!lvl.GrassGrow) { C.data.Data = 255; return; }
+            if (!lvl.GrassGrow) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
@@ -143,7 +142,7 @@ namespace MCGalaxy.BlockPhysics {
                 
                 if (Block.LightPass(block, extBlock, lvl.CustomBlockDefs))
                     lvl.AddUpdate(C.b, Block.grass);
-                C.data.Data = 255;
+                C.data.Data = PhysicsArgs.RemoveFromChecks;
             } else {
                 C.data.Data++;
             }
@@ -161,7 +160,7 @@ namespace MCGalaxy.BlockPhysics {
                 if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
                     lvl.AddUpdate(index, Block.air);
             }
-            C.data.Data = 255;
+            C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
 		
 		public static void DoSpongeRemoved(Level lvl, int b, bool lava = false) {
@@ -182,7 +181,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public static void DoOther(Level lvl, ref Check C) {
-            if (lvl.physics <= 1) { C.data.Data = 255; return; }
+            if (lvl.physics <= 1) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
@@ -192,7 +191,7 @@ namespace MCGalaxy.BlockPhysics {
             AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z + 1)));
             AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z - 1)));
             AirPhysics.PhysAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
-            C.data.Data = 255;
+            C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
     }
 }

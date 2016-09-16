@@ -138,10 +138,11 @@ namespace MCGalaxy {
                             
                             if ((C.data.Raw & mask) == 0 || ExtraInfoPhysics.DoDoorsOnly(this, ref C, null)) {
                                 Block.HandlePhysics handler = Block.physicsDoorsHandlers[blocks[C.b]];
-                                if (handler != null)
+                                if (handler != null) {
                                     handler(this, ref C);
-                                else if ((C.data.Raw & mask) == 0 || !C.data.HasWait)
-                                    C.data.Data = 255;
+                                } else if ((C.data.Raw & mask) == 0 || !C.data.HasWait) {
+                                    C.data.Data = PhysicsArgs.RemoveFromChecks;
+                                }
                             }
                             ListCheck.Items[i] = C;
                         } catch {
@@ -160,10 +161,11 @@ namespace MCGalaxy {
                             
                             if ((C.data.Raw & mask) == 0 || ExtraInfoPhysics.DoComplex(this, ref C)) {
                                 Block.HandlePhysics handler = Block.physicsHandlers[blocks[C.b]];
-                                if (handler != null)
+                                if (handler != null) {
                                     handler(this, ref C);
-                                else if ((C.data.Raw & mask) == 0 || !C.data.HasWait)
-                                    C.data.Data = 255;
+                                } else if ((C.data.Raw & mask) == 0 || !C.data.HasWait) {
+                                    C.data.Data = PhysicsArgs.RemoveFromChecks;
+                                }
                             }
                             ListCheck.Items[i] = C;
                         } catch {
@@ -271,7 +273,7 @@ namespace MCGalaxy {
             ushort x, y, z;
             
             for (int i = 0; i < count; i++) {
-                if (items[i].data.Data == 255) {
+                if (items[i].data.Data == PhysicsArgs.RemoveFromChecks) {
                     IntToPos(items[i].b, out x, out y, out z);
                     listCheckExists.Set(x, y, z, false);
                     continue;
@@ -326,7 +328,7 @@ namespace MCGalaxy {
             }
 
             try {
-                PhysicsArgs args = (PhysicsArgs)C.data;
+                PhysicsArgs args = C.data;
                 if (args.Type1 == PhysicsArgs.Revert)
                     Blockchange(x, y, z, args.Value1, true);
                 if (args.Type2 == PhysicsArgs.Revert)

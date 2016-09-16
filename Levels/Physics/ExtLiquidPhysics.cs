@@ -106,7 +106,7 @@ namespace MCGalaxy.BlockPhysics {
             {
                 case Block.air:
                     lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.WaterDown);
-                    if (!C.data.HasWait) C.data.Data = 255;
+                    if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
                     break;
                 case Block.air_flood_down:
                 case Block.lavastill:
@@ -119,7 +119,7 @@ namespace MCGalaxy.BlockPhysics {
                     LiquidPhysics.PhysWater(lvl, (ushort)(x - 1), y, z, block);
                     LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z + 1),block);
                     LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z - 1), block);
-                    if (!C.data.HasWait) C.data.Data = 255;
+                    if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
                     break;
             }
         }
@@ -134,7 +134,7 @@ namespace MCGalaxy.BlockPhysics {
             {
                 case Block.air:
                     lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.LavaDown);
-                    if (!C.data.HasWait) C.data.Data = 255;
+                    if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
                     break;
                 case Block.air_flood_down:
                 case Block.lavastill:
@@ -147,7 +147,7 @@ namespace MCGalaxy.BlockPhysics {
                     LiquidPhysics.PhysLava(lvl, (ushort)(x - 1), y, z, block);
                     LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z + 1),block);
                     LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
-                    if (!C.data.HasWait) C.data.Data = 255;
+                    if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
                     break;
             }
         }

@@ -39,14 +39,14 @@ namespace MCGalaxy.BlockPhysics {
                 if (x == 0 || x == lvl.Width - 1 || z == 0 || z == lvl.Length - 1)
                     lvl.AddUpdate(C.b, Block.water);
             }
-            if (!C.data.HasWait) C.data.Data = 255;
+            if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
         public static void DoFlood(Level lvl, ref Check C, AirFlood mode, byte block) {
             Random rand = lvl.physRandom;    		
             if (C.data.Data >= 1) {
                 lvl.AddUpdate(C.b, Block.air);
-                C.data.Data = 255; return;
+                C.data.Data = PhysicsArgs.RemoveFromChecks; return;
             }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);

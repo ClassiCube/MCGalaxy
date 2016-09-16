@@ -56,7 +56,7 @@ namespace MCGalaxy.BlockPhysics {
                     break;
             }
             lvl.AddUpdate(C.b, Block.air);
-            C.data.Data = 255;
+            C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
         static void FlyTo(Level lvl, ref Check C, int x, int y, int z) {

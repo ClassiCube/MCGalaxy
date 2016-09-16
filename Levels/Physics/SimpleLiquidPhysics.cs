@@ -112,14 +112,14 @@ namespace MCGalaxy.BlockPhysics {
             } else { //was placed near sponge
                 lvl.liquids.TryGetValue(C.b, out blocked);
                 lvl.AddUpdate(C.b, Block.air);
-                if (!C.data.HasWait) C.data.Data = 255;
+                if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
             }
 
             if (!C.data.HasWait && blocked != null)
                 if (blocked[0] && blocked[1] && blocked[2] && blocked[3] && blocked[4])
             {
                 lvl.liquids.Remove(C.b);
-                C.data.Data = 255;
+                C.data.Data = PhysicsArgs.RemoveFromChecks;
             }
         }
         
@@ -141,7 +141,7 @@ namespace MCGalaxy.BlockPhysics {
             } else { //was placed near sponge
                 lvl.AddUpdate(C.b, Block.air);
             }
-            if (!C.data.HasWait) C.data.Data = 255;
+            if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
         static bool WaterBlocked(Level lvl, ushort x, ushort y, ushort z) {
@@ -224,14 +224,14 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.liquids.TryGetValue(C.b, out blocked);
                 lvl.AddUpdate(C.b, Block.air);
                 if (!checkWait || !C.data.HasWait)
-                    C.data.Data = 255;
+                    C.data.Data = PhysicsArgs.RemoveFromChecks;
             }
 
             if (blocked != null && (!checkWait || !C.data.HasWait))
                 if (blocked[0] && blocked[1] && blocked[2] && blocked[3] && blocked[4])
             {
                 lvl.liquids.Remove(C.b);
-                C.data.Data = 255;
+                C.data.Data = PhysicsArgs.RemoveFromChecks;
             }
         }
         
@@ -251,7 +251,7 @@ namespace MCGalaxy.BlockPhysics {
             } else { //was placed near sponge
                 lvl.AddUpdate(C.b, Block.air);
             }
-            if (!checkWait || !C.data.HasWait) C.data.Data = 255;
+            if (!checkWait || !C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
         static bool LavaBlocked(Level lvl, ushort x, ushort y, ushort z) {

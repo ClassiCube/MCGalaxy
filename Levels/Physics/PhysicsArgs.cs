@@ -28,6 +28,10 @@ namespace MCGalaxy.BlockPhysics {
         public const uint TypeBitsMask = 0x07;
         public const uint ValueBitsMask = 0xFF;
         
+        /// <summary> Indicates that this physics entry should be removed from the list of 
+        /// entries that are checked for physics, at the end of the current tick. </summary>
+        public const byte RemoveFromChecks = 255;
+        
         public byte Type1 {
             get { return (byte)(Raw & TypeBitsMask); }
             set { Raw &= ~TypeBitsMask;

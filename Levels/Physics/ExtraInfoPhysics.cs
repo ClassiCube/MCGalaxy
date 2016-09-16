@@ -26,7 +26,7 @@ namespace MCGalaxy.BlockPhysics {
             	C.data.ResetTypes();
             if (C.data.Type1 == PhysicsArgs.TntWars) return true;
 
-            bool wait = false, door = C.data.TDoor;
+            bool wait = false, tdoor = C.data.TDoor;
             int waitTime = 0;
             if (C.data.Type1 == PhysicsArgs.Wait) {
                 wait = true; waitTime = C.data.Value1;
@@ -35,7 +35,7 @@ namespace MCGalaxy.BlockPhysics {
             }
             if (!wait) return false;
             
-            if (door && C.data.Data < 2) {
+            if (tdoor && C.data.Data < 2) {
                 // TODO: perhaps do proper bounds checking
                 Checktdoor(lvl, lvl.IntOffset(C.b, -1, 0, 0));
                 Checktdoor(lvl, lvl.IntOffset(C.b, 1, 0, 0));
