@@ -28,26 +28,9 @@ namespace MCGalaxy {
         
         public static bool Read(string path, Action<string, string> processor,
                                 char separator = '=', bool trimValue = true) {
-            if (!File.Exists(path)) return false;
-            
-            using (CP437Reader reader = new CP437Reader(path)) {
-                string line;
-                while ((line = reader.ReadLine()) != null) {
-                    int index = ParseLine(line, path, separator);
-                    if (index == -1) continue;
-                    
-                    string key = line.Substring(0, index), value = line.Substring(index + 1);
-                    if (trimValue) value = value.Trim();
-                    
-                    try {
-                        processor(key.Trim(), value);
-                    } catch (Exception ex) {
-                        Server.ErrorLog(ex);
-                        Server.s.Log("Line \"" + line + "\" in " + path + " caused an error");
-                    }
-                }
-            }
-            return true;
+            object obj = null;
+            LineProcessor<object> del = (string key, string value, ref object state) => { processor(key, value); };
+            return Read(path, ref obj, del, separator, trimValue);
         }
         
         public static bool Read<T>(string path, ref T state, LineProcessor<T> processor,
