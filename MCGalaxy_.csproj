@@ -519,6 +519,7 @@
     <Compile Include="Levels\LevelActions.cs" />
     <Compile Include="Levels\LevelEnv.cs" />
     <Compile Include="Levels\LevelInfo.cs" />
+    <Compile Include="Levels\Physics\ActivateablePhysics.cs" />
     <Compile Include="Levels\Physics\AIPhysics.cs" />
     <Compile Include="Levels\Physics\AirPhysics.cs" />
     <Compile Include="Levels\Physics\BirdPhysics.cs" />

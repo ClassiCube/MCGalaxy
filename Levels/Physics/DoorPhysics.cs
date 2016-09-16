@@ -41,99 +41,34 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.AddUpdate(index, block, true);
         }
         
-		//Change any door blocks nearby into door_air
-        public static void AnyDoor(Level lvl, ref Check C, int timer, bool instaUpdate = false) {
-			ushort x, y, z;
+        //Change any door blocks nearby into door_air
+        public static void AnyDoor(Level lvl, ref Check C, int timer, bool instant = false) {
+            ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             if (C.data.Data != 0) {
                 CheckDoorRevert(lvl, ref C, timer); return;
             }
             
-            PhysDoor(lvl, (ushort)(x + 1), y, z, instaUpdate);
-            PhysDoor(lvl, (ushort)(x - 1), y, z, instaUpdate);
-            PhysDoor(lvl, x, y, (ushort)(z + 1), instaUpdate);
-            PhysDoor(lvl, x, y, (ushort)(z - 1), instaUpdate);
-            PhysDoor(lvl, x, (ushort)(y - 1), z, instaUpdate);
-            PhysDoor(lvl, x, (ushort)(y + 1), z, instaUpdate);
+            ActivateablePhysics.DoDoors(lvl, (ushort)(x + 1), y, z, instant);
+            ActivateablePhysics.DoDoors(lvl, (ushort)(x - 1), y, z, instant);
+            ActivateablePhysics.DoDoors(lvl, x, y, (ushort)(z + 1), instant);
+            ActivateablePhysics.DoDoors(lvl, x, y, (ushort)(z - 1), instant);
+            ActivateablePhysics.DoDoors(lvl, x, (ushort)(y - 1), z, instant);
+            ActivateablePhysics.DoDoors(lvl, x, (ushort)(y + 1), z, instant);
             
-            if (lvl.blocks[C.b] != Block.door_green_air) {
-                CheckDoorRevert(lvl, ref C, timer); return;
+            if (lvl.blocks[C.b] == Block.door_green_air && lvl.physics != 5) {
+                ActivateablePhysics.DoNeighbours(lvl, C.b, x, y, z);
             }
-            
-            if (lvl.physics != 5)
-                ActivateNeighbours(lvl, ref C, x, y, z);           
             CheckDoorRevert(lvl, ref C, timer);
         }
         
-        static void ActivateNeighbours(Level lvl, ref Check C, ushort x, ushort y, ushort z) {
-            for (int yy = -1; yy <= 1; yy++)
-                for (int zz = -1; zz <= 1; zz++)
-                    for (int xx = -1; xx <= 1; xx++)
-            {
-                byte b = lvl.GetTile(lvl.IntOffset(C.b, xx, yy, zz));
-                if (b == Block.rocketstart) {
-                    int b1 = lvl.IntOffset(C.b, xx * 3, yy * 3, zz * 3);
-                    int b2 = lvl.IntOffset(C.b, xx * 2, yy * 2, zz * 2);
-                    bool unblocked = lvl.GetTile(b1) == Block.air && lvl.GetTile(b2) == Block.air &&
-                        !lvl.listUpdateExists.Get(x + xx * 3, y + yy * 3, z + zz * 3) &&
-                        !lvl.listUpdateExists.Get(x + xx * 2, y + yy * 2, z + zz * 2);
-                    
-                    if (unblocked) {
-                        lvl.AddUpdate(b1, Block.rockethead);
-                        lvl.AddUpdate(b2, Block.lava_fire);
-                    }
-                } else if (b == Block.firework) {
-                    int b1 = lvl.IntOffset(C.b, xx, yy + 1, zz);
-                    int b2 = lvl.IntOffset(C.b, xx, yy + 2, zz);
-                    bool unblocked = lvl.GetTile(b1) == Block.air && lvl.GetTile(b2) == Block.air &&
-                        !lvl.listUpdateExists.Get(x + xx, y + yy + 1, z + zz) &&
-                        !lvl.listUpdateExists.Get(x + xx, y + yy + 2, z + zz);
-                    
-                    if (unblocked) {
-                        lvl.AddUpdate(b2, Block.firework);
-                        PhysicsArgs args = default(PhysicsArgs);
-					    args.Type1 = PhysicsArgs.Dissipate; args.Value1 = 100;
-                        lvl.AddUpdate(b1, Block.lavastill, false, args);
-                    }
-                } else if (b == Block.tnt) {
-                    lvl.MakeExplosion((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz), 0);
-                }
-            }
-        }
-
         static void CheckDoorRevert(Level lvl, ref Check C, int timer) {
             if (C.data.Data < timer) {
                 C.data.Data++;
             } else {
-				lvl.AddUpdate(C.b, Block.Props[lvl.blocks[C.b]].DoorId);
+                lvl.AddUpdate(C.b, Block.Props[lvl.blocks[C.b]].DoorId);
                 C.data.Data = 255;
             }
-        }
-
-        static void PhysDoor(Level lvl, ushort x, ushort y, ushort z, bool instaUpdate) {
-            int index = lvl.PosToInt(x, y, z);
-            if (index < 0) return;
-            byte rawBlock = lvl.blocks[index];
-            
-            byte airDoor = Block.DoorAirs(rawBlock);
-            if (airDoor != 0) {
-                if (!instaUpdate)
-                    lvl.AddUpdate(index, airDoor);
-                else
-                    lvl.Blockchange(x, y, z, airDoor);
-                return;
-            }
-
-            if (Block.Props[rawBlock].IsTDoor) {
-            	PhysicsArgs args = default(PhysicsArgs);
-                args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
-                args.Type2 = PhysicsArgs.Revert; args.Value2 = rawBlock;
-                args.TDoor = true;
-                lvl.AddUpdate(index, Block.air, false, args);
-            }
-            byte oDoor = Block.odoor(rawBlock);
-            if (oDoor != Block.Zero)
-                lvl.AddUpdate(index, oDoor, true);
         }
     }
 }
