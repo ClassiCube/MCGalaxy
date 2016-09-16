@@ -42,6 +42,7 @@ namespace MCGalaxy.Commands {
             if (like) p.level.Likes++;
             else p.level.Dislikes++;
             p.Game.RatedMap = true;
+            Level.SaveSettings(p.level);
             
             action = like ? "&aliked" : "&cdisliked";
             Player.Message(p, "You have {0} %Sthis map.", action);
