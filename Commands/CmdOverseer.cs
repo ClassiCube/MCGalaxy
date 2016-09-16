@@ -282,13 +282,6 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        static void EnsureFileExists(string path) {
-            if (!Directory.Exists("levels/blacklists/"))
-                Directory.CreateDirectory("levels/blacklists/");
-            if (!File.Exists(path))
-                File.Create(path).Dispose();
-        }
-        
         static string NextLevel(Player p) {
             string level = p.name.ToLower();
             if (LevelInfo.ExistsOffline(level) || LevelInfo.ExistsOffline(level + "00")) {

@@ -58,9 +58,9 @@ namespace MCGalaxy.Commands {
 
             if (p.hidden) {
                 Entities.GlobalDespawn(p, false);
-                TabList.Add(p, p, 0xFF);
                 if (messageOps && !p.otherRankHidden)
                     Chat.MessageOps("To Ops -" + p.ColoredName + "%S- is now &finvisible%S.");
+                
                 string discMsg = PlayerDB.GetLogoutMessage(p);
                 Player.SendChatFrom(p, "&c- " + p.FullName + " %S" + discMsg, false);
                 Server.IRC.Say(p.DisplayName + " %Sleft the game (" + discMsg + "%S)");
@@ -68,7 +68,6 @@ namespace MCGalaxy.Commands {
                 Server.hidden.AddOrReplace(p.name);
             } else {
                 Entities.GlobalSpawn(p, false);
-                p.hidden = false;
                 p.otherRankHidden = false;
                 p.oHideRank = LevelPermission.Null;
                 if (messageOps)
@@ -80,6 +79,8 @@ namespace MCGalaxy.Commands {
                 if (p.adminchat) adminchat.Use(p, message);
                 Server.hidden.Remove(p.name);
             }
+            
+            TabList.Add(p, p, 0xFF);
             Server.hidden.Save(false);
         }
 
