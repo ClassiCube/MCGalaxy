@@ -23,7 +23,7 @@ namespace MCGalaxy.BlockPhysics {
         
         const StringComparison comp = StringComparison.Ordinal;
         public static void DoWater(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;        	
+            Random rand = lvl.physRandom;            
             if (lvl.finite) {
                 lvl.liquids.Remove(C.b);
                 FinitePhysics.DoWaterOrLava(lvl, ref C);
@@ -44,25 +44,26 @@ namespace MCGalaxy.BlockPhysics {
                 FinitePhysics.DoWaterOrLava(lvl, ref C);
                 return;
             }
-            if (lvl.randomFlow)
+            
+            if (lvl.randomFlow) {
                 DoLavaRandowFlow(lvl, ref C, true);
-            else
+            } else {
                 DoLavaUniformFlow(lvl, ref C, true);
+            }
         }
         
         public static void DoFastLava(Level lvl, ref Check C) {
-            if (lvl.randomFlow) {
-                byte oldTime = C.data.Data;
+            if (lvl.randomFlow) {               
                 DoLavaRandowFlow(lvl, ref C, false);
                 if (C.data.Data != 255)
-                    C.data.Data = oldTime;
+                    C.data.Data = 0; // no lava delay
             } else {
                 DoLavaUniformFlow(lvl, ref C, false);
             }
         }
         
         static void DoWaterRandowFlow(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;        	
+            Random rand = lvl.physRandom;            
             bool[] blocked = null;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -110,7 +111,7 @@ namespace MCGalaxy.BlockPhysics {
                     blocked[4] = true;
             } else { //was placed near sponge
                 lvl.liquids.TryGetValue(C.b, out blocked);
-                lvl.AddUpdate(C.b, Block.air);                
+                lvl.AddUpdate(C.b, Block.air);
                 if (!C.data.HasWait) C.data.Data = 255;
             }
 
@@ -123,7 +124,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         static void DoWaterUniformFlow(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;        	
+            Random rand = lvl.physRandom;            
             lvl.liquids.Remove(C.b);
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -175,7 +176,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         static void DoLavaRandowFlow(Level lvl, ref Check C, bool checkWait) {
-            Random rand = lvl.physRandom;        	
+            Random rand = lvl.physRandom;            
             bool[] blocked = null;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
