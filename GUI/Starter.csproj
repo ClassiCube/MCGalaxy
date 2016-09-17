@@ -15,6 +15,7 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <NoWin32Manifest>False</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -39,7 +40,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Starter.Program</StartupObject>
+    <StartupObject>MCGalaxy.Gui.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Galaxy.ico</ApplicationIcon>
@@ -50,9 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Descriptors.cs" />
-    <Compile Include="Formatter.cs" />
+    <Compile Include="LineFormatter.cs" />
     <Compile Include="Handlers.cs" />
-    <Compile Include="GUI\Program.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Settings\LavaMapProperties.cs" />
     <Compile Include="Settings\LevelProperties.cs" />
     <Compile Include="Settings\LavaProperties.cs" />
@@ -108,7 +109,6 @@
     <Compile Include="PropertyWindow.Designer.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
     <Compile Include="..\MCGalaxy\properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Eco\EcoLevelWindow.resx">
       <DependentUpon>EcoLevelWindow.cs</DependentUpon>

@@ -29,7 +29,6 @@ namespace MCGalaxy {
         public static string LogPath { get { return msgPath; } set { msgPath = value; } }
         public static string ErrorLogPath { get { return errPath; } set { errPath = value; } }
 
-        static bool NeedRestart = false;
         static bool disposed;
         static bool reportBack = false; // TODO: implement report back
 
@@ -74,12 +73,6 @@ namespace MCGalaxy {
                 string output = sb.ToString();
                 if (Server.s != null) Server.s.ErrorCase(output);
                 lock (logLock) errCache.Enqueue(output);
-
-                if (NeedRestart) {
-                    Server.listen.Close();
-                    Server.Setup();
-                    NeedRestart = false;
-                }
             } catch (Exception e) {
                 try {
                     StringBuilder temp = new StringBuilder();
@@ -118,9 +111,6 @@ namespace MCGalaxy {
             try { sb.AppendLine("Message: " + e.Message); } catch { }
             try { sb.AppendLine("Target: " + e.TargetSite.Name); } catch { }
             try { sb.AppendLine("Trace: " + e.StackTrace); } catch { }
-
-            if (e.Message != null && e.Message.IndexOf("An existing connection was forcibly closed by the remote host") != -1)
-                NeedRestart = true;
         }
 
         public static void Dispose() {

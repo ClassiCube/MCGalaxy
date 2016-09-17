@@ -26,7 +26,7 @@ namespace MCGalaxy.Gui {
         public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) { return true; }
         
         public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context) {
-            return new StandardValuesCollection(Formatter.GetColorsList());
+            return new StandardValuesCollection(LineFormatter.GetColorsList());
         }
     }
     

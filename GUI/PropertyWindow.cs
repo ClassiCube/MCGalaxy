@@ -39,7 +39,7 @@ namespace MCGalaxy.Gui {
         }
 
         void PropertyWindow_Load(object sender, EventArgs e) {
-        	string[] colors = Formatter.GetColorsList().ToArray();
+        	string[] colors = LineFormatter.GetColorsList().ToArray();
             chat_cmbDefault.Items.AddRange(colors);
             chat_cmbIRC.Items.AddRange(colors);
             chat_cmbSyntax.Items.AddRange(colors);
@@ -1184,12 +1184,13 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
         private void forceUpdateBtn_Click(object sender, EventArgs e) {
             forceUpdateBtn.Enabled = false;
-            if ( MessageBox.Show("Would you like to force update MCGalaxy now?", "Force Update", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK ) {
+            DialogResult result = MessageBox.Show("Would you like to force update MCGalaxy now?", "Force Update", 
+                                                  MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            if (result == DialogResult.OK) {
                 saveStuff();
-                MCGalaxy.Gui.App.PerformUpdate();
+                Updater.PerformUpdate();
                 Dispose();
-            }
-            else {
+            } else {
                 forceUpdateBtn.Enabled = true;
             }
         }

@@ -114,7 +114,7 @@ namespace MCGalaxy.Gui.Components {
                 if (AutoScroll) ScrollToEnd(line);
                 return;
             }
-            Formatter.Format(text, (c, s) => Formatter.FormatGui(c, s, this, foreColor));
+            LineFormatter.Format(text, (c, s) => LineFormatter.FormatGui(c, s, this, foreColor));
             if (AutoScroll) ScrollToEnd(line);
         }
 

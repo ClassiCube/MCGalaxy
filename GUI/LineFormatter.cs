@@ -21,7 +21,7 @@ using System.Drawing;
 using MCGalaxy.Gui.Components;
 
 namespace MCGalaxy.Gui {
-    public static class Formatter {
+    public static class LineFormatter {
         
         public static void Format(string message, Action<char, string> output) {
             int index = 0;
