@@ -25,123 +25,127 @@ namespace MCGalaxy.Levels.IO {
     //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
     public static class LvlFile {
         
-        public static void Save(Level level, string file) {
-    		using (Stream fs = File.Create(file))
-                using (Stream gs = new GZipStream(fs, CompressionMode.Compress, true))
-            {
-                byte[] header = new byte[18];
-                BitConverter.GetBytes(1874).CopyTo(header, 0);
-                BitConverter.GetBytes(level.Width).CopyTo(header, 2);
-                BitConverter.GetBytes(level.Length).CopyTo(header, 4);
-                BitConverter.GetBytes(level.Height).CopyTo(header, 6);
-                BitConverter.GetBytes(level.spawnx).CopyTo(header, 8);
-                BitConverter.GetBytes(level.spawnz).CopyTo(header, 10);
-                BitConverter.GetBytes(level.spawny).CopyTo(header, 12);
-                header[14] = level.rotx;
-                header[15] = level.roty;
-                header[16] = (byte)level.permissionvisit;
-                header[17] = (byte)level.permissionbuild;
-                gs.Write(header, 0, header.Length);
-                
-                byte[] blocks = level.blocks;
-                int start = 0, len = 0;
-                for (int i = 0; i < blocks.Length; ++i) {
-                    byte block = blocks[i], convBlock = 0;
-                    if (block < Block.CpeCount || (convBlock = Block.SaveConvert(block)) == block) {
-                    	if (len == 0) start = i;
-                        len++;
-                    } else {
-                    	if (len > 0) gs.Write(blocks, start, len);
-                    	len = 0;
-                    	gs.WriteByte(convBlock);
-                    }
-                }
-                if (len > 0) gs.Write(blocks, start, len);
-                
-                // write out new blockdefinitions data
-                gs.WriteByte(0xBD);
-                int index = 0;
-                for (int y = 0; y < level.ChunksY; y++)
-                	for (int z = 0; z < level.ChunksZ; z++)
-                		for (int x = 0; x < level.ChunksX; x++)
-                {
-                    byte[] chunk = level.CustomBlocks[index];
-                    if (chunk == null) {
-                        gs.WriteByte(0);
-                    } else {
-                        gs.WriteByte(1);
-                        gs.Write(chunk, 0, chunk.Length);
-                    }
-                    index++;
-                }
+        public static void Save(Level lvl, string file) {
+            using (Stream fs = File.Create(file), gs = new GZipStream(fs, CompressionMode.Compress, true)) {
+                WriteHeader(lvl, gs);
+                WriteBlocksSection(lvl, gs);
+                WriteBlockDefsSection(lvl, gs);
             }
         }
         
-        public static Level Load(string name, string file) {
-            using (Stream fs = File.OpenRead(file), gs = new GZipStream(fs, CompressionMode.Decompress, true))
-            {
-                byte[] header = new byte[16];
-                gs.Read(header, 0, 2);
-                ushort[] vars = new ushort[6];
-                vars[0] = BitConverter.ToUInt16(header, 0);
-
-                int offset = 0;
-                if (vars[0] == 1874) { // version field, width is next ushort
-                    gs.Read(header, 0, 16);
-                    vars[0] = BitConverter.ToUInt16(header, 0);
-                    offset = 2;
+        static void WriteHeader(Level lvl, Stream gs) {
+            byte[] header = new byte[18];
+            BitConverter.GetBytes(1874).CopyTo(header, 0);
+            BitConverter.GetBytes(lvl.Width).CopyTo(header, 2);
+            BitConverter.GetBytes(lvl.Length).CopyTo(header, 4);
+            BitConverter.GetBytes(lvl.Height).CopyTo(header, 6);
+            BitConverter.GetBytes(lvl.spawnx).CopyTo(header, 8);
+            BitConverter.GetBytes(lvl.spawnz).CopyTo(header, 10);
+            BitConverter.GetBytes(lvl.spawny).CopyTo(header, 12);
+            header[14] = lvl.rotx;
+            header[15] = lvl.roty;
+            header[16] = (byte)lvl.permissionvisit;
+            header[17] = (byte)lvl.permissionbuild;
+            gs.Write(header, 0, header.Length);
+        }
+        
+        static void WriteBlocksSection(Level lvl, Stream gs) {
+            byte[] blocks = lvl.blocks;
+            int start = 0, len = 0;
+            for (int i = 0; i < blocks.Length; ++i) {
+                byte block = blocks[i], convBlock = 0;
+                if (block < Block.CpeCount || (convBlock = Block.SaveConvert(block)) == block) {
+                    if (len == 0) start = i;
+                    len++;
                 } else {
-                    gs.Read(header, 0, 12);
+                    if (len > 0) gs.Write(blocks, start, len);
+                    len = 0;
+                    gs.WriteByte(convBlock);
                 }
-                vars[1] = BitConverter.ToUInt16(header, offset);
-                vars[2] = BitConverter.ToUInt16(header, offset + 2);
-
-                Level level = new Level(name, vars[0], vars[2], vars[1]);
-                level.spawnx = BitConverter.ToUInt16(header, offset + 4);
-                level.spawnz = BitConverter.ToUInt16(header, offset + 6);
-                level.spawny = BitConverter.ToUInt16(header, offset + 8);
-                level.rotx = header[offset + 10];
-                level.roty = header[offset + 11];
-                
-                gs.Read(level.blocks, 0, level.blocks.Length);
-                if (gs.ReadByte() != 0xBD) 
-                    return level;
-                
-                int index = 0;
-                for (int y = 0; y < level.ChunksY; y++)
-                	for (int z = 0; z < level.ChunksZ; z++)
-                		for (int x = 0; x < level.ChunksX; x++)
-                {
-                    if (gs.ReadByte() == 1) {
-                        byte[] chunk = new byte[16 * 16 * 16];
-                        gs.Read(chunk, 0, chunk.Length);
-                        level.CustomBlocks[index] = chunk;
-                    }
-                    index++;
+            }
+            if (len > 0) gs.Write(blocks, start, len);
+        }
+        
+        static void WriteBlockDefsSection(Level lvl, Stream gs) {
+            gs.WriteByte(0xBD);
+            int index = 0;
+            for (int y = 0; y < lvl.ChunksY; y++)
+                for (int z = 0; z < lvl.ChunksZ; z++)
+                    for (int x = 0; x < lvl.ChunksX; x++)
+            {
+                byte[] chunk = lvl.CustomBlocks[index];
+                if (chunk == null) {
+                    gs.WriteByte(0);
+                } else {
+                    gs.WriteByte(1);
+                    gs.Write(chunk, 0, chunk.Length);
                 }
-                return level;
+                index++;
             }
         }
-		
+        
+    	
         public static void LoadDimensions(string file, out ushort width, out ushort height, out ushort length) {
-            using (Stream fs = File.OpenRead(file), gs = new GZipStream(fs, CompressionMode.Decompress, true))
-            {
+            using (Stream fs = File.OpenRead(file), gs = new GZipStream(fs, CompressionMode.Decompress, true)) {
                 byte[] header = new byte[16];
-                gs.Read(header, 0, 2);
-                ushort[] vars = new ushort[6];
-                vars[0] = BitConverter.ToUInt16(header, 0);
-
                 int offset = 0;
-                if (vars[0] == 1874) { // version field, width is next ushort
-                    gs.Read(header, 0, 16);
-                    vars[0] = BitConverter.ToUInt16(header, 0);
-                    offset = 2;
-                } else {
-                    gs.Read(header, 0, 12);
+                Vec3U16 dims = ReadHeader(gs, header, out offset);
+                width = dims.X; height = dims.Y; length = dims.Z;
+            }
+        }
+    	
+        public static Level Load(string name, string file) {
+            using (Stream fs = File.OpenRead(file), gs = new GZipStream(fs, CompressionMode.Decompress, true)) {
+                byte[] header = new byte[16];
+                int offset = 0;
+                Vec3U16 dims = ReadHeader(gs, header, out offset);
+
+                Level lvl = new Level(name, dims.X, dims.Y, dims.Z);
+                lvl.spawnx = BitConverter.ToUInt16(header, offset + 4);
+                lvl.spawnz = BitConverter.ToUInt16(header, offset + 6);
+                lvl.spawny = BitConverter.ToUInt16(header, offset + 8);
+                lvl.rotx = header[offset + 10];
+                lvl.roty = header[offset + 11];
+                
+                gs.Read(lvl.blocks, 0, lvl.blocks.Length);
+                ReadBlockDefsSection(lvl, gs);
+                return lvl;
+            }
+        }
+        
+        static Vec3U16 ReadHeader(Stream gs, byte[] header, out int offset) {
+            gs.Read(header, 0, 2);
+            Vec3U16 dims = default(Vec3U16);
+            dims.X = BitConverter.ToUInt16(header, 0);
+
+            if (dims.X == 1874) { // version field, width is next ushort
+                gs.Read(header, 0, 16);
+                dims.X = BitConverter.ToUInt16(header, 0);
+                offset = 2;
+            } else {
+                gs.Read(header, 0, 12);
+                offset = 0;
+            }
+            
+            dims.Z = BitConverter.ToUInt16(header, offset);
+            dims.Y = BitConverter.ToUInt16(header, offset + 2);
+            return dims;
+        }
+        
+        static void ReadBlockDefsSection(Level lvl, Stream gs) {
+            if (gs.ReadByte() != 0xBD) return;
+            
+            int index = 0;
+            for (int y = 0; y < lvl.ChunksY; y++)
+                for (int z = 0; z < lvl.ChunksZ; z++)
+                    for (int x = 0; x < lvl.ChunksX; x++)
+            {
+                if (gs.ReadByte() == 1) {
+                    byte[] chunk = new byte[16 * 16 * 16];
+                    gs.Read(chunk, 0, chunk.Length);
+                    lvl.CustomBlocks[index] = chunk;
                 }
-                vars[1] = BitConverter.ToUInt16(header, offset);
-                vars[2] = BitConverter.ToUInt16(header, offset + 2);
-                width = vars[0]; height = vars[2]; length = vars[1];
+                index++;
             }
         }
     }
