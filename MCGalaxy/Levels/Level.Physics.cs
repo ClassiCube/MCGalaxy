@@ -71,7 +71,8 @@ namespace MCGalaxy {
                     DateTime start = DateTime.UtcNow;
                     if (physics > 0) {
                         try {
-                            CalcPhysics();
+                    		lock (physStepLock)
+                                CalcPhysics();
                         } catch (Exception ex) {
                             Server.s.Log("Level physics error");
                             Server.ErrorLog(ex);

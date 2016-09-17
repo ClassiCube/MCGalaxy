@@ -30,6 +30,7 @@ namespace MCGalaxy.Levels.IO {
                 WriteHeader(lvl, gs);
                 WriteBlocksSection(lvl, gs);
                 WriteBlockDefsSection(lvl, gs);
+                WritePhysicsSection(lvl, gs);
             }
         }
         
@@ -52,6 +53,7 @@ namespace MCGalaxy.Levels.IO {
         static void WriteBlocksSection(Level lvl, Stream gs) {
             byte[] blocks = lvl.blocks;
             int start = 0, len = 0;
+            
             for (int i = 0; i < blocks.Length; ++i) {
                 byte block = blocks[i], convBlock = 0;
                 if (block < Block.CpeCount || (convBlock = Block.SaveConvert(block)) == block) {
@@ -67,8 +69,9 @@ namespace MCGalaxy.Levels.IO {
         }
         
         static void WriteBlockDefsSection(Level lvl, Stream gs) {
-            gs.WriteByte(0xBD);
+            gs.WriteByte(0xBD); // 'B'lock 'D'efinitions
             int index = 0;
+            
             for (int y = 0; y < lvl.ChunksY; y++)
                 for (int z = 0; z < lvl.ChunksZ; z++)
                     for (int x = 0; x < lvl.ChunksX; x++)
@@ -84,7 +87,55 @@ namespace MCGalaxy.Levels.IO {
             }
         }
         
-    	
+        const int fxBulkCount = 1024, fxEntrySize = 2 * sizeof(int);
+        unsafe static void WritePhysicsSection(Level lvl, Stream gs) {
+            lock (lvl.physStepLock) {
+                // Count the number of physics checks with extra info
+                int used = 0, count = lvl.ListCheck.Count;
+                Check[] checks = lvl.ListCheck.Items;
+                for (int i = 0; i < count; i++) {
+                    if (checks[i].data.Raw == 0) continue;
+                    used++;
+                }
+                if (used == 0) return;
+                
+                gs.WriteByte(0xFC); // 'Ph'ysics 'C'hecks
+                int bulkCount = Math.Min(used, fxBulkCount);
+                byte[] buffer = new byte[bulkCount * fxEntrySize];
+                NetUtils.WriteI32(used, buffer, 0);
+                gs.Write(buffer, 0, sizeof(int));
+                
+                fixed (byte* ptr = buffer) {
+                    WritePhysicsEntries(gs, lvl.ListCheck, buffer, ptr);
+                }
+            }
+        }
+        
+        unsafe static void WritePhysicsEntries(Stream gs, FastList<Check> items,
+                                               byte[] buffer, byte* ptr) {
+            Check[] checks = items.Items;
+            int entries = 0, count = items.Count;
+            int* ptrInt = (int*)ptr;
+            
+            for (int i = 0; i < count; i++) {
+                Check C = checks[i];
+                // Does this check have extra physics data
+                if (C.data.Raw == 0) continue;
+                *ptrInt = C.b; ptrInt++;
+                *ptrInt = (int)C.data.Raw; ptrInt++;
+                entries++;
+                
+                // Have we filled the temp buffer?
+                if (entries != fxBulkCount) continue;
+                ptrInt = (int*)ptr;
+                gs.Write(buffer, 0, entries * 8);
+                entries = 0;
+            }
+            
+            if (entries == 0) return;
+            gs.Write(buffer, 0, entries * 8);
+        }
+        
         public static void LoadDimensions(string file, out ushort width, out ushort height, out ushort length) {
             using (Stream fs = File.OpenRead(file), gs = new GZipStream(fs, CompressionMode.Decompress, true)) {
                 byte[] header = new byte[16];
@@ -93,8 +144,8 @@ namespace MCGalaxy.Levels.IO {
                 width = dims.X; height = dims.Y; length = dims.Z;
             }
         }
-    	
-        public static Level Load(string name, string file) {
+        
+        public static Level Load(string name, string file, bool loadPhysics = false) {
             using (Stream fs = File.OpenRead(file), gs = new GZipStream(fs, CompressionMode.Decompress, true)) {
                 byte[] header = new byte[16];
                 int offset = 0;
@@ -109,6 +160,9 @@ namespace MCGalaxy.Levels.IO {
                 
                 gs.Read(lvl.blocks, 0, lvl.blocks.Length);
                 ReadBlockDefsSection(lvl, gs);
+                if (!loadPhysics) return lvl;
+                
+                ReadPhysicsSection(lvl, gs);
                 return lvl;
             }
         }
@@ -146,6 +200,38 @@ namespace MCGalaxy.Levels.IO {
                     lvl.CustomBlocks[index] = chunk;
                 }
                 index++;
+            }
+        }
+        
+        unsafe static void ReadPhysicsSection(Level lvl, Stream gs) {
+            if (gs.ReadByte() != 0xFC) return;
+            byte[] buffer = new byte[sizeof(int)];
+            int read = gs.Read(buffer, 0, sizeof(int));
+            if (read < sizeof(int)) return;
+            
+            int count = NetUtils.ReadI32(buffer, 0);
+            lvl.ListCheck.Count = count;
+            lvl.ListCheck.Items = new Check[count];
+            ReadPhysicsEntries(lvl, gs, count);           
+        }
+        
+        unsafe static void ReadPhysicsEntries(Level lvl, Stream gs, int count) {
+            byte[] buffer = new byte[Math.Min(count, fxBulkCount) * fxEntrySize];
+            Check C;
+            
+            fixed (byte* ptr = buffer)
+                for (int i = 0; i < count; i += fxBulkCount)
+            {
+                int entries = Math.Min(count - i, fxBulkCount);
+                int read = gs.Read(buffer, 0, entries * fxEntrySize);
+                if (read < entries * fxEntrySize) return;
+                
+                int* ptrInt = (int*)ptr;
+                for (int j = 0; j < entries; j++) {
+                	C.b = *ptrInt; ptrInt++;
+                    C.data.Raw = (uint)(*ptrInt); ptrInt++;
+                    lvl.ListCheck.Items[i + j] = C;
+                }
             }
         }
     }

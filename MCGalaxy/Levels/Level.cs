@@ -244,11 +244,11 @@ namespace MCGalaxy {
                 if (!Directory.Exists("levels/level properties")) Directory.CreateDirectory("levels/level properties");
                 if (!Directory.Exists("levels/prev")) Directory.CreateDirectory("levels/prev");
                 
-                if (changed || !File.Exists(path) || Override || (physicschanged && clearPhysics)) {
-                    if (clearPhysics) ClearPhysics();
-                    
+                if (changed || !File.Exists(path) || Override || (physicschanged && clearPhysics)) {            
                     lock (saveLock)
                         SaveCore(path);
+                    
+                    if (clearPhysics) ClearPhysics();
                 } else {
                     Server.s.Log("Skipping level save for " + name + ".");
                 }
@@ -340,7 +340,7 @@ namespace MCGalaxy {
             }
             
             try {
-                Level level = LvlFile.Load(name, path);
+                Level level = LvlFile.Load(name, path, true);
                 level.setPhysics(phys);
                 level.backedup = true;
 

@@ -201,6 +201,7 @@ namespace MCGalaxy {
         public bool physPause;
         public Thread physThread;
         readonly object physThreadLock = new object();
+        internal readonly object physStepLock = new object();
         bool physThreadStarted = false;
         
         public List<C4Data> C4list = new List<C4Data>();
