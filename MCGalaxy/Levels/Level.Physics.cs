@@ -69,7 +69,14 @@ namespace MCGalaxy {
                     }
 
                     DateTime start = DateTime.UtcNow;
-                    if (physics > 0) CalcPhysics();
+                    if (physics > 0) {
+                        try {
+                            CalcPhysics();
+                        } catch (Exception ex) {
+                            Server.s.Log("Level physics error");
+                            Server.ErrorLog(ex);
+                        }
+                    }
 
                     TimeSpan delta = DateTime.UtcNow - start;
                     wait = speedPhysics - (int)delta.TotalMilliseconds;
@@ -119,83 +126,60 @@ namespace MCGalaxy {
         }
 
         public void CalcPhysics() {
-            if (physics == 0) return;
-            try {
-                ushort x, y, z;
-                lastCheck = ListCheck.Count;
-                const uint mask = PhysicsArgs.TypeMask;
-                
-                if (physics == 5) {
-                    for (int i = 0; i < ListCheck.Count; i++) {
-                        Check C = ListCheck.Items[i];
-                        IntToPos(C.b, out x, out y, out z);
-                        try {                    
-                            if (PhysicsUpdate != null)
-                                PhysicsUpdate(x, y, z, C.data, this);
-                            OnPhysicsUpdateEvent.Call(x, y, z, C.data, this);
-                            
-                            if ((C.data.Raw & mask) == 0 || ExtraInfoPhysics.DoDoorsOnly(this, ref C, null)) {
-                                Block.HandlePhysics handler = Block.physicsDoorsHandlers[blocks[C.b]];
-                                if (handler != null) {
-                                    handler(this, ref C);
-                                } else if ((C.data.Raw & mask) == 0 || !C.data.HasWait) {
-                                    C.data.Data = PhysicsArgs.RemoveFromChecks;
-                                }
-                            }
-                            ListCheck.Items[i] = C;
-                        } catch {
-                            listCheckExists.Set(x, y, z, false);
-                            ListCheck.RemoveAt(i);
-                        }
-                    }
-                } else {
-                    for (int i = 0; i < ListCheck.Count; i++) {
-                        Check C = ListCheck.Items[i];
-                        IntToPos(C.b, out x, out y, out z);
-                        try {
-                            if (PhysicsUpdate != null)
-                                PhysicsUpdate(x, y, z,  C.data, this);
-                            OnPhysicsUpdateEvent.Call(x, y, z, C.data, this);
-                            
-                            if ((C.data.Raw & mask) == 0 || ExtraInfoPhysics.DoComplex(this, ref C)) {
-                                Block.HandlePhysics handler = Block.physicsHandlers[blocks[C.b]];
-                                if (handler != null) {
-                                    handler(this, ref C);
-                                } else if ((C.data.Raw & mask) == 0 || !C.data.HasWait) {
-                                    C.data.Data = PhysicsArgs.RemoveFromChecks;
-                                }
-                            }
-                            ListCheck.Items[i] = C;
-                        } catch {
-                            listCheckExists.Set(x, y, z, false);
-                            ListCheck.RemoveAt(i);
-                        }
-                    }
-                }
-                RemoveExpiredChecks();
-                
-                lastUpdate = ListUpdate.Count;
-                if (ListUpdate.Count > 0 && bulkSender == null)
-                    bulkSender = new BufferedBlockSender(this);
-                
-                for (int i = 0; i < ListUpdate.Count; i++) {
-                    Update C = ListUpdate.Items[i];
-                    try {
-                        byte block = C.data.Data;
-                        C.data.Data = 0;
-                        if (DoPhysicsBlockchange(C.b, block, false, C.data, 0, true))
-                            bulkSender.Add(C.b, block, 0);
-                    } catch {
-                        Server.s.Log("Phys update issue");
-                    }
-                }
-                if (bulkSender != null)
-                    bulkSender.Send(true);
-                ListUpdate.Clear(); listUpdateExists.Clear();
-            } catch (Exception e) {
-                Server.s.Log("Level physics error");
-                Server.ErrorLog(e);
+            ushort x, y, z;
+            lastCheck = ListCheck.Count;
+            const uint mask = PhysicsArgs.TypeMask;
+            
+            Block.HandlePhysics[] handlers = Block.physicsHandlers;
+            ExtraInfoHandler extraHandler = ExtraInfoPhysics.DoNormal;
+            if (physics == 5) {
+                handlers = Block.physicsDoorsHandlers;
+                extraHandler = ExtraInfoPhysics.DoDoorsOnly;
             }
+            
+            for (int i = 0; i < ListCheck.Count; i++) {
+                Check C = ListCheck.Items[i];
+                IntToPos(C.b, out x, out y, out z);
+                try {
+                    if (PhysicsUpdate != null)
+                        PhysicsUpdate(x, y, z,  C.data, this);
+                    OnPhysicsUpdateEvent.Call(x, y, z, C.data, this);
+                    
+                    if ((C.data.Raw & mask) == 0 || extraHandler(this, ref C)) {
+                        Block.HandlePhysics handler = handlers[blocks[C.b]];
+                        if (handler != null) {
+                            handler(this, ref C);
+                        } else if ((C.data.Raw & mask) == 0 || !C.data.HasWait) {
+                            C.data.Data = PhysicsArgs.RemoveFromChecks;
+                        }
+                    }
+                    ListCheck.Items[i] = C;
+                } catch {
+                    listCheckExists.Set(x, y, z, false);
+                    ListCheck.RemoveAt(i);
+                }
+            }
+            RemoveExpiredChecks();
+            
+            lastUpdate = ListUpdate.Count;
+            if (ListUpdate.Count > 0 && bulkSender == null)
+                bulkSender = new BufferedBlockSender(this);
+            
+            for (int i = 0; i < ListUpdate.Count; i++) {
+                Update C = ListUpdate.Items[i];
+                try {
+                    byte block = C.data.Data;
+                    C.data.Data = 0;
+                    if (DoPhysicsBlockchange(C.b, block, false, C.data, 0, true))
+                        bulkSender.Add(C.b, block, 0);
+                } catch {
+                    Server.s.Log("Phys update issue");
+                }
+            }
+            
+            if (bulkSender != null)
+                bulkSender.Send(true);
+            ListUpdate.Clear(); listUpdateExists.Clear();
         }
         
         public void AddCheck(int b, bool overRide = false) { 

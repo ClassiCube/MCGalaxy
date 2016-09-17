@@ -19,23 +19,17 @@ using System;
 
 namespace MCGalaxy.BlockPhysics {
     
+    public delegate bool ExtraInfoHandler(Level lvl, ref Check C);
+    
     public static class ExtraInfoPhysics {
         
-        public static bool DoDoorsOnly(Level lvl, ref Check C, Random rand) {
+        public static bool DoDoorsOnly(Level lvl, ref Check C) {
             if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
-            	C.data.ResetTypes();
+                C.data.ResetTypes();
             if (C.data.Type1 == PhysicsArgs.TntWars) return true;
-
-            bool wait = false, tdoor = C.data.TDoor;
-            int waitTime = 0;
-            if (C.data.Type1 == PhysicsArgs.Wait) {
-                wait = true; waitTime = C.data.Value1;
-            } else if (C.data.Type2 == PhysicsArgs.Wait) {
-                wait = true; waitTime = C.data.Value2;
-            }
-            if (!wait) return false;
+            if (!C.data.HasWait) return false;
             
-            if (tdoor && C.data.Data < 2) {
+            if (C.data.TDoor && C.data.Data < 2) {
                 // TODO: perhaps do proper bounds checking
                 Checktdoor(lvl, lvl.IntOffset(C.b, -1, 0, 0));
                 Checktdoor(lvl, lvl.IntOffset(C.b, 1, 0, 0));
@@ -44,14 +38,15 @@ namespace MCGalaxy.BlockPhysics {
                 Checktdoor(lvl, lvl.IntOffset(C.b, 0, 0, -1));
                 Checktdoor(lvl, lvl.IntOffset(C.b, 0, 0, 1));
             }
-
-            if (C.data.Data > waitTime) {
-                if (C.data.Type1 == PhysicsArgs.Wait) C.data.Type1 = 0;
-                if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
-                return false;
-            }
-            C.data.Data++;
-            return true;
+            
+            int waitTime = 0;
+            if (C.data.Type1 == PhysicsArgs.Wait) waitTime = C.data.Value1;
+            if (C.data.Type2 == PhysicsArgs.Wait) waitTime = C.data.Value2;
+            
+            if (C.data.Data <= waitTime) { C.data.Data++; return true; }
+            if (C.data.Type1 == PhysicsArgs.Wait) C.data.Type1 = 0;
+            if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
+            return false;
         }
         
         static void Checktdoor(Level lvl, int index) {
@@ -67,18 +62,17 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        public static bool DoComplex(Level lvl, ref Check C) {
+        public static bool DoNormal(Level lvl, ref Check C) {
             if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
-            	C.data.ResetTypes();
+                C.data.ResetTypes();
             if (C.data.Type1 == PhysicsArgs.TntWars) return true;
             
             ExtraInfoArgs args = default(ExtraInfoArgs);
-            args.TDoor = C.data.TDoor;
             ParseType(C.data.Type1, ref args, C.data.Value1);
             ParseType(C.data.Type2, ref args, C.data.Value2);
             
             if (args.Wait) {
-                if (args.TDoor && C.data.Data < 2) {
+                if (C.data.TDoor && C.data.Data < 2) {
                     Checktdoor(lvl, lvl.IntOffset(C.b, -1, 0, 0));
                     Checktdoor(lvl, lvl.IntOffset(C.b, 1, 0, 0));
                     Checktdoor(lvl, lvl.IntOffset(C.b, 0, -1, 0));
@@ -87,14 +81,9 @@ namespace MCGalaxy.BlockPhysics {
                     Checktdoor(lvl, lvl.IntOffset(C.b, 0, 0, 1));
                 }
 
-                if (C.data.Data > args.WaitTime) {
-                    if (C.data.Type1 == PhysicsArgs.Wait) C.data.Type1 = 0;
-                    if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
-                    DoOther(lvl, ref C, ref args);
-                    return false;
-                }
-                C.data.Data++;
-                return true;
+                if (C.data.Data <= args.WaitTime) { C.data.Data++; return true; }
+                if (C.data.Type1 == PhysicsArgs.Wait) C.data.Type1 = 0;
+                if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
             }
             DoOther(lvl, ref C, ref args);
             return false;
@@ -118,11 +107,11 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         static void DoOther(Level lvl, ref Check C, ref ExtraInfoArgs args) {
-            Random rand = lvl.physRandom;            
+            Random rand = lvl.physRandom;
             if (args.Rainbow) {
-            	if (C.data.Data < 4) C.data.Data++;
-            	else DoRainbow(lvl, ref C, rand, args.RainbowNum); 
-            	return;
+                if (C.data.Data < 4) C.data.Data++;
+                else DoRainbow(lvl, ref C, rand, args.RainbowNum);
+                return;
             }
             if (args.Revert) {
                 lvl.AddUpdate(C.b, args.RevertType);
@@ -153,7 +142,7 @@ namespace MCGalaxy.BlockPhysics {
                 DoDrop(lvl, ref C, rand, args.DropNum, x, y, z);
         }
         
-        static void DoRainbow(Level lvl, ref Check C, Random rand, int rainbownum) {          
+        static void DoRainbow(Level lvl, ref Check C, Random rand, int rainbownum) {
             if (rainbownum > 2) {
                 byte block = lvl.blocks[C.b];
                 if (block < Block.red || block > Block.darkpink) {
@@ -182,7 +171,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         struct ExtraInfoArgs {
-            public bool Wait, Drop, Dissipate, Revert, TDoor, Explode, Rainbow;
+            public bool Wait, Drop, Dissipate, Revert, Explode, Rainbow;
             public int WaitTime, DropNum, DissipateNum, ExplodeNum, RainbowNum;
             public byte RevertType;
         }
