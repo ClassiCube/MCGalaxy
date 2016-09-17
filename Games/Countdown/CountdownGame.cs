@@ -67,9 +67,8 @@ namespace MCGalaxy.Games {
             }
             
             squaresLeft.Clear();
-            int maxX = mapon.Width - 1, maxZ = mapon.Length - 1;
-            for(int zz = 6; zz < maxZ - 6; zz += 3)
-                for (int xx = 6; xx < maxX - 6; xx += 3)
+            for(int zz = 6; zz < mapon.Length - 6; zz += 3)
+                for (int xx = 6; xx < mapon.Width - 6; xx += 3)
                     squaresLeft.Add(new SquarePos(xx, zz));            
             
             if (freezemode)

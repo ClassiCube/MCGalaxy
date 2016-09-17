@@ -105,8 +105,8 @@ namespace MCGalaxy.Games {
         static void MakeSquares(Level lvl) {
             int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
             Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.glass, lvl);        
-            for(int zz = 6; zz < maxZ - 6; zz += 3)
-                for (int xx = 6; xx < maxX - 6; xx += 3)
+            for(int zz = 6; zz < lvl.Length - 6; zz += 3)
+                for (int xx = 6; xx < lvl.Width - 6; xx += 3)
                     Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.green, lvl);
         }
         

@@ -74,10 +74,8 @@ namespace MCGalaxy {
                     TimeSpan delta = DateTime.UtcNow - start;
                     wait = speedPhysics - (int)delta.TotalMilliseconds;
 
-                    if (wait < (int)(-overload * 0.75f))
-                    {
-                        if (wait < -overload)
-                        {
+                    if (wait < (int)(-overload * 0.75f)) {
+                        if (wait < -overload) {
                             if (!Server.physicsRestart)
                                 setPhysics(0);
                             ClearPhysics();
