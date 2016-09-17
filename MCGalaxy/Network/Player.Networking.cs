@@ -69,17 +69,17 @@ namespace MCGalaxy {
         
         void HandleExtInfo(byte[] packet) {
             appName = GetString(packet, 1);
-            extensionCount = packet[66];
-            // NOTE: Workaround as ClassiCube violates the CPE specification here.
-            // If server sends version 2, the client should reply with version 1.
-            // Except ClassiCube just doesn't reply at all if server sends version 2.
-            if (appName == "ClassiCube Client")
-                EnvMapAppearance = 1;
+            extensionCount = packet[66];          
+            CheckReadAllExtensions(); // in case client supports 0 CPE packets
         }
 
         void HandleExtEntry(byte[] packet) {
             AddExtension(GetString(packet, 1), NetUtils.ReadI32(packet, 65));
             extensionCount--;
+            CheckReadAllExtensions();
+        }
+        
+        void CheckReadAllExtensions() {
             if (extensionCount <= 0 && !finishedCpeLogin) {
                 CompleteLoginProcess();
                 finishedCpeLogin = true;
