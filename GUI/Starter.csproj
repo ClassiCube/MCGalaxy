@@ -10,6 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Starter</RootNamespace>
     <AssemblyName>MCGalaxy</AssemblyName>
+    <IntermediateOutputPath>..\obj\$(Configuration)\</IntermediateOutputPath>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -20,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -30,7 +31,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -48,97 +49,97 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GUI\Descriptors.cs" />
-    <Compile Include="GUI\Formatter.cs" />
-    <Compile Include="GUI\Handlers.cs" />
+    <Compile Include="Descriptors.cs" />
+    <Compile Include="Formatter.cs" />
+    <Compile Include="Handlers.cs" />
     <Compile Include="GUI\Program.cs" />
-    <Compile Include="GUI\Settings\LavaMapProperties.cs" />
-    <Compile Include="GUI\Settings\LevelProperties.cs" />
-    <Compile Include="GUI\Settings\LavaProperties.cs" />
-    <Compile Include="GUI\Settings\PlayerProperties.cs" />
-    <Compile Include="GUI\Settings\TypeConverters.cs" />
-    <Compile Include="GUI\Settings\ZombieProperties.cs" />
-    <Compile Include="GUI\Window.cs">
+    <Compile Include="Settings\LavaMapProperties.cs" />
+    <Compile Include="Settings\LevelProperties.cs" />
+    <Compile Include="Settings\LavaProperties.cs" />
+    <Compile Include="Settings\PlayerProperties.cs" />
+    <Compile Include="Settings\TypeConverters.cs" />
+    <Compile Include="Settings\ZombieProperties.cs" />
+    <Compile Include="Window.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\Window.Designer.cs">
+    <Compile Include="Window.Designer.cs">
       <DependentUpon>Window.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\AutoScrollTextBox.cs">
+    <Compile Include="AutoScrollTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\Win32\Natives.cs" />
-    <Compile Include="GUI\PropertyWindow.Games.cs">
+    <Compile Include="Win32\Natives.cs" />
+    <Compile Include="PropertyWindow.Games.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\ColoredTextBox.cs">
+    <Compile Include="ColoredTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\ColoredTextBox.Designer.cs">
+    <Compile Include="ColoredTextBox.Designer.cs">
       <DependentUpon>ColoredTextBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Eco\EcoLevelWindow.cs">
+    <Compile Include="Eco\EcoLevelWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\Eco\EcoLevelWindow.Designer.cs">
+    <Compile Include="Eco\EcoLevelWindow.Designer.cs">
       <DependentUpon>EcoLevelWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Eco\EconomyWindow.cs">
+    <Compile Include="Eco\EconomyWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\Eco\EconomyWindow.Designer.cs">
+    <Compile Include="Eco\EconomyWindow.Designer.cs">
       <DependentUpon>EconomyWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\PortTools.cs">
+    <Compile Include="PortTools.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\PortTools.Designer.cs">
+    <Compile Include="PortTools.Designer.cs">
       <DependentUpon>PortTools.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\EditText.cs">
+    <Compile Include="EditText.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\EditText.Designer.cs">
+    <Compile Include="EditText.Designer.cs">
       <DependentUpon>EditText.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\PropertyWindow.cs">
+    <Compile Include="PropertyWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\PropertyWindow.Designer.cs">
+    <Compile Include="PropertyWindow.Designer.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="GUI\Eco\EcoLevelWindow.resx">
+    <Compile Include="..\MCGalaxy\properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Eco\EcoLevelWindow.resx">
       <DependentUpon>EcoLevelWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Eco\EconomyWindow.resx">
+    <EmbeddedResource Include="Eco\EconomyWindow.resx">
       <DependentUpon>EconomyWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\EditText.resx">
+    <EmbeddedResource Include="EditText.resx">
       <DependentUpon>EditText.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\PortTools.resx">
+    <EmbeddedResource Include="PortTools.resx">
       <DependentUpon>PortTools.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\PropertyWindow.resx">
+    <EmbeddedResource Include="PropertyWindow.resx">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Window.resx">
+    <EmbeddedResource Include="Window.resx">
       <DependentUpon>Window.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="..\app.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="MCGalaxy_.csproj">
+    <ProjectReference Include="..\MCGalaxy\MCGalaxy_.csproj">
       <Project>{12597DB0-7C34-4DE1-88EA-9250FF3372EB}</Project>
       <Name>MCGalaxy_</Name>
     </ProjectReference>
@@ -147,7 +148,7 @@
     <Content Include="Galaxy.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="GUI\Settings" />
+    <Folder Include="Settings" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
