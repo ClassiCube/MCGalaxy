@@ -171,16 +171,16 @@ namespace MCGalaxy {
                 byte odoor = Block.odoor((byte)i);
                 byte door = Block.DoorAirs((byte)i);
                 if (odoor != Block.Zero) {
-                    physicsHandlers[i] = DoorPhysics.odoorPhysics;
-                    physicsDoorsHandlers[i] = DoorPhysics.odoorPhysics;
+                    physicsHandlers[i] = DoorPhysics.oDoor;
+                    physicsDoorsHandlers[i] = DoorPhysics.oDoor;
                 } else if (door == Block.door_tnt_air) {
-                    physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 4);
+                    physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.Door(lvl, ref C, 4);
                     physicsDoorsHandlers[door] = physicsHandlers[door];
                 } else if (door == Block.air_switch_air || door == Block.air_door_air) {
-                    physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 4, true);
+                    physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.Door(lvl, ref C, 4, true);
                     physicsDoorsHandlers[door] = physicsHandlers[door];
                 } else if (door != Block.air) {
-                    physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.AnyDoor(lvl, ref C, 16);
+                    physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.Door(lvl, ref C, 16);
                     physicsDoorsHandlers[door] = physicsHandlers[door];
                 }
             }

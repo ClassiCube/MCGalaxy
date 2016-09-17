@@ -376,6 +376,7 @@ namespace MCGalaxy {
                 }
 
                 blocks[b] = block;
+                changed = true;
                 if (block == Block.custom_block) {
                     ushort x, y, z;
                     IntToPos(b, out x, out y, out z);

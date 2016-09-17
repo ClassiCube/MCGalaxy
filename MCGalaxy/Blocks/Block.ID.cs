@@ -253,7 +253,7 @@ namespace MCGalaxy
         public const byte magma = 195;
         public const byte geyser = 196;
         public const byte checkpoint = 197;
-
+        
         public const byte air_flood = 200;
         public const byte door_tree_air = 201;
         public const byte air_flood_layer = 202;

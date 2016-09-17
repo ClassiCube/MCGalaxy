@@ -18,28 +18,10 @@
 using System;
 
 namespace MCGalaxy.BlockPhysics {
-    
     public static class DoorPhysics {
-        
-        public static void odoorPhysics(Level lvl, ref Check C) {
-            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, -1, 0, 0));
-            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, +1, 0, 0));
-            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, -1, 0));
-            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, +1, 0));
-            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, 0, -1));
-            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, 0, +1));
-            C.data.Data = PhysicsArgs.RemoveFromChecks;
-        }
-        
-        static void odoorNeighbour(Level lvl, ref Check C, int index) {
-            byte block = Block.odoor(lvl.GetTile(index));            
-            if (block == lvl.blocks[C.b]) {
-                lvl.AddUpdate(index, block, true);
-            }
-        }
-        
-        //Change any door blocks nearby into door_air
-        public static void AnyDoor(Level lvl, ref Check C, int timer, bool instant = false) {
+
+        // Change anys door blocks nearby into air forms
+        public static void Door(Level lvl, ref Check C, int timer, bool instant = false) {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             if (C.data.Data != 0) {
@@ -66,6 +48,48 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.AddUpdate(C.b, Block.Props[lvl.blocks[C.b]].DoorId);
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
             }
+        }
+        
+        
+        public static void oDoor(Level lvl, ref Check C) {
+            // TODO: perhaps do proper bounds checking
+            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, -1, 0, 0));
+            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, +1, 0, 0));
+            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, -1, 0));
+            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, +1, 0));
+            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, 0, -1));
+            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, 0, +1));
+            C.data.Data = PhysicsArgs.RemoveFromChecks;
+        }
+        
+        static void odoorNeighbour(Level lvl, ref Check C, int index) {
+            byte block = Block.odoor(lvl.GetTile(index));
+            if (block == lvl.blocks[C.b]) {
+                lvl.AddUpdate(index, block, true);
+            }
+        }
+        
+        
+        public static void tDoor(Level lvl, ref Check C) {
+            // TODO: perhaps do proper bounds checking
+            tdoorNeighbour(lvl, lvl.IntOffset(C.b, -1, 0, 0));
+            tdoorNeighbour(lvl, lvl.IntOffset(C.b, 1, 0, 0));
+            tdoorNeighbour(lvl, lvl.IntOffset(C.b, 0, -1, 0));
+            tdoorNeighbour(lvl, lvl.IntOffset(C.b, 0, 1, 0));
+            tdoorNeighbour(lvl, lvl.IntOffset(C.b, 0, 0, -1));
+            tdoorNeighbour(lvl, lvl.IntOffset(C.b, 0, 0, 1));
+        }
+        
+        static void tdoorNeighbour(Level lvl, int index) {
+            if (index < 0 || index >= lvl.blocks.Length) return;
+            byte block = lvl.blocks[index];
+            
+            if (!Block.Props[block].IsTDoor) return;
+            PhysicsArgs args = default(PhysicsArgs);
+            args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
+            args.Type2 = PhysicsArgs.Revert; args.Value2 = block;
+            args.Door = true;
+            lvl.AddUpdate(index, Block.air, false, args);
         }
     }
 }

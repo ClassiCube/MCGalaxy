@@ -50,14 +50,10 @@ namespace MCGalaxy {
                     Props[i].ODoorId = (byte)(odoor1_air + (i - odoor1));
                 if (i >= odoor8 && i <= odoor12)
                     Props[i].ODoorId = (byte)(odoor8_air + (i - odoor8));
-                if (i >= odoor1_air && i <= odoor7_air) {
-                    Props[i].ODoorId = (byte)(odoor1 + (i - odoor1_air));
-                    Props[i].SaveConvertId = Props[i].ODoorId;
-                }                    
-                if (i >= odoor8_air && i <= odoor12_air) {
+                if (i >= odoor1_air && i <= odoor7_air)
+                    Props[i].ODoorId = (byte)(odoor1 + (i - odoor1_air));                
+                if (i >= odoor8_air && i <= odoor12_air)
                     Props[i].ODoorId = (byte)(odoor8 + (i - odoor8_air));
-                    Props[i].SaveConvertId = Props[i].ODoorId;
-                }
                 
                 if ((i >= red && i <= white) || (i >= lightpink && i <= turquoise))
                     Props[i].LavaKills = true;

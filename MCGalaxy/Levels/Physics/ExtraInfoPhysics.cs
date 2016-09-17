@@ -29,14 +29,8 @@ namespace MCGalaxy.BlockPhysics {
             if (C.data.Type1 == PhysicsArgs.TntWars) return true;
             if (!C.data.HasWait) return false;
             
-            if (C.data.TDoor && C.data.Data < 2) {
-                // TODO: perhaps do proper bounds checking
-                Checktdoor(lvl, lvl.IntOffset(C.b, -1, 0, 0));
-                Checktdoor(lvl, lvl.IntOffset(C.b, 1, 0, 0));
-                Checktdoor(lvl, lvl.IntOffset(C.b, 0, -1, 0));
-                Checktdoor(lvl, lvl.IntOffset(C.b, 0, 1, 0));
-                Checktdoor(lvl, lvl.IntOffset(C.b, 0, 0, -1));
-                Checktdoor(lvl, lvl.IntOffset(C.b, 0, 0, 1));
+            if (C.data.Door && C.data.Data < 2) {
+                DoorPhysics.tDoor(lvl, ref C);
             }
             
             int waitTime = 0;
@@ -49,19 +43,6 @@ namespace MCGalaxy.BlockPhysics {
             return false;
         }
         
-        static void Checktdoor(Level lvl, int index) {
-            if (index < 0 || index >= lvl.blocks.Length) return;
-            byte block = lvl.blocks[index];
-            
-            if (Block.Props[block].IsTDoor) {
-                PhysicsArgs args = default(PhysicsArgs);
-                args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
-                args.Type2 = PhysicsArgs.Revert; args.Value2 = block;
-                args.TDoor = true;
-                lvl.AddUpdate(index, Block.air, false, args);
-            }
-        }
-        
         public static bool DoNormal(Level lvl, ref Check C) {
             if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
                 C.data.ResetTypes();
@@ -72,13 +53,8 @@ namespace MCGalaxy.BlockPhysics {
             ParseType(C.data.Type2, ref args, C.data.Value2);
             
             if (args.Wait) {
-                if (C.data.TDoor && C.data.Data < 2) {
-                    Checktdoor(lvl, lvl.IntOffset(C.b, -1, 0, 0));
-                    Checktdoor(lvl, lvl.IntOffset(C.b, 1, 0, 0));
-                    Checktdoor(lvl, lvl.IntOffset(C.b, 0, -1, 0));
-                    Checktdoor(lvl, lvl.IntOffset(C.b, 0, 1, 0));
-                    Checktdoor(lvl, lvl.IntOffset(C.b, 0, 0, -1));
-                    Checktdoor(lvl, lvl.IntOffset(C.b, 0, 0, 1));
+                if (C.data.Door && C.data.Data < 2) {
+                    DoorPhysics.tDoor(lvl, ref C);
                 }
 
                 if (C.data.Data <= args.WaitTime) { C.data.Data++; return true; }
