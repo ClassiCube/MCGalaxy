@@ -131,7 +131,7 @@ namespace MCGalaxy.Commands
             if (Block.Walkthrough(b)) Player.Message(p, "Block can be walked through");
             if (Block.Death(b)) Player.Message(p, "Walking through block will kill you");
 
-            if (props.DoorAirId != 0) Player.Message(p, "Block is an ordinary door");
+            if (props.IsDoor) Player.Message(p, "Block is an ordinary door");
             if (props.IsTDoor) Player.Message(p, "Block is a tdoor, which allows other blocks through when open");
             if (props.ODoorId != Block.Zero) Player.Message(p, "Block is an odoor, which toggles (GLITCHY)");
 

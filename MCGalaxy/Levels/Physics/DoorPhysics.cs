@@ -21,12 +21,11 @@ namespace MCGalaxy.BlockPhysics {
     public static class DoorPhysics {
 
         // Change anys door blocks nearby into air forms
-        public static void Door(Level lvl, ref Check C, int timer, bool instant = false) {
+        public static void Door(Level lvl, ref Check C) {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            if (C.data.Data != 0) {
-                CheckDoorRevert(lvl, ref C, timer); return;
-            }
+            byte block = C.data.Value2;
+            bool instant = block == Block.air_door || block == Block.air_switch;
             
             ActivateablePhysics.DoDoors(lvl, (ushort)(x + 1), y, z, instant);
             ActivateablePhysics.DoDoors(lvl, (ushort)(x - 1), y, z, instant);
@@ -35,21 +34,10 @@ namespace MCGalaxy.BlockPhysics {
             ActivateablePhysics.DoDoors(lvl, x, (ushort)(y - 1), z, instant);
             ActivateablePhysics.DoDoors(lvl, x, (ushort)(y + 1), z, instant);
             
-            if (lvl.blocks[C.b] == Block.door_green_air && lvl.physics != 5) {
+            if (block == Block.door_green && lvl.physics != 5) {
                 ActivateablePhysics.DoNeighbours(lvl, C.b, x, y, z);
             }
-            CheckDoorRevert(lvl, ref C, timer);
-        }
-        
-        static void CheckDoorRevert(Level lvl, ref Check C, int timer) {
-            if (C.data.Data < timer) {
-                C.data.Data++;
-            } else {
-                lvl.AddUpdate(C.b, Block.Props[lvl.blocks[C.b]].DoorId);
-                C.data.Data = PhysicsArgs.RemoveFromChecks;
-            }
-        }
-        
+        }        
         
         public static void oDoor(Level lvl, ref Check C) {
             // TODO: perhaps do proper bounds checking

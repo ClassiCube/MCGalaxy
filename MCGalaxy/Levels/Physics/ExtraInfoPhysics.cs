@@ -29,8 +29,10 @@ namespace MCGalaxy.BlockPhysics {
             if (C.data.Type1 == PhysicsArgs.TntWars) return true;
             if (!C.data.HasWait) return false;
             
-            if (C.data.Door && C.data.Data < 2) {
-                DoorPhysics.tDoor(lvl, ref C);
+            if (C.data.Door && C.data.Data == 0) {
+                bool tdoor = Block.Props[C.data.Value2].IsTDoor;
+                if (tdoor) DoorPhysics.tDoor(lvl, ref C);
+                else DoorPhysics.Door(lvl, ref C);
             }
             
             int waitTime = 0;
@@ -40,6 +42,8 @@ namespace MCGalaxy.BlockPhysics {
             if (C.data.Data <= waitTime) { C.data.Data++; return true; }
             if (C.data.Type1 == PhysicsArgs.Wait) C.data.Type1 = 0;
             if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
+            
+            if (C.data.Door) { lvl.AddUpdate(C.b, C.data.Value2); C.data.ResetTypes(); }
             return false;
         }
         
@@ -53,8 +57,10 @@ namespace MCGalaxy.BlockPhysics {
             ParseType(C.data.Type2, ref args, C.data.Value2);
             
             if (args.Wait) {
-                if (C.data.Door && C.data.Data < 2) {
-                    DoorPhysics.tDoor(lvl, ref C);
+                if (C.data.Door && C.data.Data == 0) {
+                    bool tdoor = Block.Props[C.data.Value2].IsTDoor;
+                    if (tdoor) DoorPhysics.tDoor(lvl, ref C);
+                    else DoorPhysics.Door(lvl, ref C);
                 }
 
                 if (C.data.Data <= args.WaitTime) { C.data.Data++; return true; }

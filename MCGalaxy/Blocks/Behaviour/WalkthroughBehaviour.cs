@@ -18,13 +18,17 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using MCGalaxy.BlockPhysics;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.BlockBehaviour {    
+namespace MCGalaxy.BlockBehaviour {
     internal static class WalkthroughBehaviour {
 
         internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
-            p.level.Blockchange(x, y, z, Block.DoorAirs(block));
+            if (p.level.physics == 0) return true;
+            byte physForm;
+            PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, out physForm);
+            p.level.Blockchange(x, y, z, physForm, false, args);
             return true;
         }
         

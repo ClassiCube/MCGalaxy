@@ -53,11 +53,6 @@ namespace MCGalaxy {
             if (action > 1) { Leave("Unknown block action!", true); return; }
             bool doDelete = !painting && action == 0;
 
-            if (!deleteMode) {
-                PhysicsArgs args = level.foundInfo(x, y, z);
-                if (args.HasWait) return;
-            }
-
             if (Server.verifyadmins && adminpen) {
                 SendMessage("&cYou must first verify with %T/pass [Password]");
                 RevertBlock(x, y, z); return;
@@ -78,7 +73,17 @@ namespace MCGalaxy {
             if (PlayerBlockChange != null)
                 PlayerBlockChange(this, x, y, z, block, extBlock);
             OnBlockChangeEvent.Call(this, x, y, z, block, extBlock);
-            if (cancelBlock) { cancelBlock = false; return; }
+            if (cancelBlock) { cancelBlock = false; return; }            
+
+            if (old >= Block.air_flood && old <= Block.air_door_air) {
+                SendMessage("Block is active, you cannot disturb it.");
+                RevertBlock(x, y, z); return;
+            }
+            
+            if (!deleteMode) {
+                PhysicsArgs args = level.foundInfo(x, y, z);
+                if (args.HasWait) return;
+            }
 
             if (group.Permission == LevelPermission.Banned) return;
             if (checkPlaceDist && group.Permission == LevelPermission.Guest) {
@@ -98,11 +103,6 @@ namespace MCGalaxy {
 
             if (!Block.canPlace(this, block)) {
                 Formatter.MessageBlock(this, "place ", block);
-                RevertBlock(x, y, z); return;
-            }
-
-            if (old >= Block.air_flood && old <= Block.air_door_air) {
-                SendMessage("Block is active, you cannot disturb it.");
                 RevertBlock(x, y, z); return;
             }
 

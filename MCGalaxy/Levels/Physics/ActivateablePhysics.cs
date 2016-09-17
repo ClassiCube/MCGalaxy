@@ -20,7 +20,7 @@ using System;
 namespace MCGalaxy.BlockPhysics {
     public static class ActivateablePhysics {
         
-		/// <summary> Activates fireworks, rockets, and TNT in 1 block radius around (x, y, z) </summary>
+        /// <summary> Activates fireworks, rockets, and TNT in 1 block radius around (x, y, z) </summary>
         public static void DoNeighbours(Level lvl, int index, ushort x, ushort y, ushort z) {
             for (int yy = -1; yy <= 1; yy++)
                 for (int zz = -1; zz <= 1; zz++)
@@ -57,16 +57,17 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
 
-		/// <summary> Activates doors, tdoors and toggles odoors at (x, y, z) </summary>
+        /// <summary> Activates doors, tdoors and toggles odoors at (x, y, z) </summary>
         public static void DoDoors(Level lvl, ushort x, ushort y, ushort z, bool instant) {
             int index = lvl.PosToInt(x, y, z);
             if (index < 0) return;
             byte b = lvl.blocks[index];
             
-            byte airDoor = Block.DoorAirs(b);
-            if (airDoor != 0) {
-                if (!instant) lvl.AddUpdate(index, airDoor);
-                else lvl.Blockchange(x, y, z, airDoor);
+            if (Block.Props[b].IsDoor) {
+            	byte physForm;
+            	PhysicsArgs args = GetDoorArgs(b, out physForm);
+            	if (!instant) lvl.AddUpdate(index, physForm, false, args);
+            	else lvl.Blockchange(index, physForm, false, args);
             } else if (Block.Props[b].IsTDoor) {
                 PhysicsArgs args = default(PhysicsArgs);
                 args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
@@ -78,6 +79,23 @@ namespace MCGalaxy.BlockPhysics {
                 if (oDoor != Block.Zero)
                     lvl.AddUpdate(index, oDoor, true);
             }
+        }
+        
+        internal static PhysicsArgs GetDoorArgs(byte b, out byte physForm) {
+            PhysicsArgs args = default(PhysicsArgs);
+            args.Type1 = PhysicsArgs.Wait; args.Value1 = 16 - 1;
+            args.Type2 = PhysicsArgs.Revert; args.Value2 = b;
+            args.Door = true;
+            
+            physForm = Block.door_tree_air; // air
+            if (b == Block.air_door || b == Block.air_switch) {
+                args.Value1 = 4 - 1;
+            } else if (b == Block.door_green) {
+                physForm = Block.door_green_air; // red wool
+            } else if (b == Block.door_tnt) {
+                args.Value1 = 4 - 1; physForm = Block.door_tnt_air; // lava
+            }
+            return args;
         }
     }
 }

@@ -51,7 +51,7 @@ namespace MCGalaxy {
                 if (i >= odoor8 && i <= odoor12)
                     Props[i].ODoorId = (byte)(odoor8_air + (i - odoor8));
                 if (i >= odoor1_air && i <= odoor7_air)
-                    Props[i].ODoorId = (byte)(odoor1 + (i - odoor1_air));                
+                    Props[i].ODoorId = (byte)(odoor1 + (i - odoor1_air));
                 if (i >= odoor8_air && i <= odoor12_air)
                     Props[i].ODoorId = (byte)(odoor8 + (i - odoor8_air));
                 
@@ -64,21 +64,22 @@ namespace MCGalaxy {
                 
                 // Door blocks
                 if (i >= door_obsidian && i <= door_stair)
-                    Door((byte)i, (byte)(door_obsidian_air + (i - door_obsidian)));
+                    Props[i].IsDoor = true;
                 if (i >= door_iron && i <= door_book)
-                     Door((byte)i, (byte)(door_iron_air + (i - door_iron)));
-                if (i >= door_darkpink && i <= door_white)
-                    Door((byte)i, (byte)(door_darkpink_air + (i - door_darkpink)));
+                    Props[i].IsDoor = true;
+                if (i >= door_orange && i <= door_white)
+                    Props[i].IsDoor = true;
             }
+            
             // Other door blocks, since they aren't in a consistent order
-            Door(door_tree, door_tree_air);
-            Door(door_red, door_red_air);
-            Door(door_cobblestone, door_cobblestone_air);
-            Door(door_gold, door_gold_air);
-            Door(air_door, air_door_air);
-            Door(air_switch, air_switch_air);
-            Door(water_door, water_door_air);
-            Door(lava_door, lava_door_air);
+            Props[door_tree].IsDoor = true;
+            Props[door_red].IsDoor = true;
+            Props[door_cobblestone].IsDoor = true;
+            Props[door_gold].IsDoor = true;
+            Props[air_door].IsDoor = true;
+            Props[air_switch].IsDoor = true;
+            Props[water_door].IsDoor = true;
+            Props[lava_door].IsDoor = true;
             
             // Block specific properties
             Props[air_flood].SaveConvertId = air;
@@ -93,61 +94,54 @@ namespace MCGalaxy {
             SetupDefaultDeaths();
         }
         
-        static void Door(byte doorId, byte airId, bool saveConvert = true) {
-            Props[doorId].DoorAirId = airId;
-            Props[airId].DoorId = doorId;
-            if (saveConvert)
-                Props[airId].SaveConvertId = doorId;
-        }
-        
         static void SetupDefaultNames() {
-            string[] names = { "air", "stone", "grass", "dirt", "cobblestone", "wood", "sapling", 
-                "bedrock", "active_water", "water", "active_lava", "lava", "sand", "gravel", 
-                "gold_ore", "iron_ore", "coal", "log", "leaves", "sponge", "glass", "red", 
-                "orange", "yellow", "lime", "green", "teal", "aqua", "cyan", 
-                "blue", "indigo", "violet", "magenta", "pink", "black", "gray", "white", 
-                "dandelion", "rose", "brown_shroom", "red_shroom", "gold", "iron", 
-                "doubleslab", "slab", "brick", "tnt", "bookshelf", "mossyrocks", 
-                "obsidian", "cobblestoneslab", "rope", "sandstone", "snow", "fire", "lightpink", 
-                "forestgreen", "brown", "deepblue", "turquoise", "ice", "ceramictile", "magmablock", 
-                "pillar", "crate", "stonebrick", "door_darkpink_air", "door_darkgrey_air", 
-                "door_lightgrey_air", "door_white_air", "flagbase", "unknown", "unknown", 
-                "fast_hot_lava", "c4", "c4_det", "unknown", "unknown", "unknown", "unknown", 
-                "door_cobblestone", "door_cobblestone_air", "unknown", "door_red", "door_red_air", 
-                "door_orange", "door_yellow", "door_lightgreen", "unknown", "door_aquagreen", 
-                "door_cyan", "door_lightblue", "door_purple", "door_lightpurple", "door_pink", 
-                "door_darkpink", "door_darkgrey", "door_lightgrey", "door_white", "unknown", 
-                "op_glass", "opsidian", "op_brick", "op_stone", "op_cobblestone", "op_air", 
-                "op_water", "op_lava", "griefer_stone", "lava_sponge", "wood_float", "door", 
-                "lava_fast", "door_obsidian", "door_glass", "door_stone", "door_leaves", "door_sand", 
-                "door_wood", "door_green", "door_tnt", "door_stair", "tdoor", "tdoor_obsidian", 
-                "tdoor_glass", "tdoor_stone", "tdoor_leaves", "tdoor_sand", "tdoor_wood", 
-                "tdoor_green", "white_message", "black_message", "air_message", "water_message", 
-                "lava_message", "tdoor_tnt", "tdoor_stair", "tdoor_air", "tdoor_water", "tdoor_lava", 
-                "waterfall", "lavafall", "unknown", "water_faucet", "lava_faucet", "finite_water", 
-                "finite_lava", "finite_faucet", "odoor", "odoor_obsidian", "odoor_glass", 
-                "odoor_stone", "odoor_leaves", "odoor_sand", "odoor_wood", "odoor_green", 
-                "odoor_tnt", "odoor_stair", "odoor_lava", "odoor_water", "air_portal", "water_portal", 
-                "lava_portal", "custom_block", "air_door", "air_switch", "door_water", "door_lava", 
-                "odoor_wood_air", "odoor_obsidian_air", "odoor_glass_air", "odoor_stone_air", 
-                "odoor_leaves_air", "odoor_sand_air", "odoor_wood_air", "blue_portal", "orange_portal", 
-                "odoor_red", "odoor_tnt_air", "odoor_stair_air", "odoor_lava_air", "odoor_water_air", 
-                "small_tnt", "big_tnt", "tnt_explosion", "lava_fire", "nuke_tnt", "rocketstart", 
-                "rockethead", "firework", "hot_lava", "cold_water", "nerve_gas", "active_cold_water", 
+            string[] names = { "air", "stone", "grass", "dirt", "cobblestone", "wood", "sapling",
+                "bedrock", "active_water", "water", "active_lava", "lava", "sand", "gravel",
+                "gold_ore", "iron_ore", "coal", "log", "leaves", "sponge", "glass", "red",
+                "orange", "yellow", "lime", "green", "teal", "aqua", "cyan",
+                "blue", "indigo", "violet", "magenta", "pink", "black", "gray", "white",
+                "dandelion", "rose", "brown_shroom", "red_shroom", "gold", "iron",
+                "doubleslab", "slab", "brick", "tnt", "bookshelf", "mossyrocks",
+                "obsidian", "cobblestoneslab", "rope", "sandstone", "snow", "fire", "lightpink",
+                "forestgreen", "brown", "deepblue", "turquoise", "ice", "ceramictile", "magmablock",
+                "pillar", "crate", "stonebrick", "door_darkpink_air", "door_darkgrey_air",
+                "door_lightgrey_air", "door_white_air", "flagbase", "unknown", "unknown",
+                "fast_hot_lava", "c4", "c4_det", "unknown", "unknown", "unknown", "unknown",
+                "door_cobblestone", "door_cobblestone_air", "unknown", "door_red", "door_red_air",
+                "door_orange", "door_yellow", "door_lightgreen", "unknown", "door_aquagreen",
+                "door_cyan", "door_lightblue", "door_purple", "door_lightpurple", "door_pink",
+                "door_darkpink", "door_darkgrey", "door_lightgrey", "door_white", "unknown",
+                "op_glass", "opsidian", "op_brick", "op_stone", "op_cobblestone", "op_air",
+                "op_water", "op_lava", "griefer_stone", "lava_sponge", "wood_float", "door",
+                "lava_fast", "door_obsidian", "door_glass", "door_stone", "door_leaves", "door_sand",
+                "door_wood", "door_green", "door_tnt", "door_stair", "tdoor", "tdoor_obsidian",
+                "tdoor_glass", "tdoor_stone", "tdoor_leaves", "tdoor_sand", "tdoor_wood",
+                "tdoor_green", "white_message", "black_message", "air_message", "water_message",
+                "lava_message", "tdoor_tnt", "tdoor_stair", "tdoor_air", "tdoor_water", "tdoor_lava",
+                "waterfall", "lavafall", "unknown", "water_faucet", "lava_faucet", "finite_water",
+                "finite_lava", "finite_faucet", "odoor", "odoor_obsidian", "odoor_glass",
+                "odoor_stone", "odoor_leaves", "odoor_sand", "odoor_wood", "odoor_green",
+                "odoor_tnt", "odoor_stair", "odoor_lava", "odoor_water", "air_portal", "water_portal",
+                "lava_portal", "custom_block", "air_door", "air_switch", "door_water", "door_lava",
+                "odoor_wood_air", "odoor_obsidian_air", "odoor_glass_air", "odoor_stone_air",
+                "odoor_leaves_air", "odoor_sand_air", "odoor_wood_air", "blue_portal", "orange_portal",
+                "odoor_red", "odoor_tnt_air", "odoor_stair_air", "odoor_lava_air", "odoor_water_air",
+                "small_tnt", "big_tnt", "tnt_explosion", "lava_fire", "nuke_tnt", "rocketstart",
+                "rockethead", "firework", "hot_lava", "cold_water", "nerve_gas", "active_cold_water",
                 "active_hot_lava", "magma", "geyser", "checkpoint", "unknown", "unknown", "air_flood",
-                "door_air", "air_flood_layer", "air_flood_down", "air_flood_up", "door2_air", 
-                "door3_air", "door4_air", "door5_air", "door6_air", "door7_air", "door8_air", 
-                "door9_air", "door10_air", "door11_air", "door12_air", "door13_air", "door14_air", 
-                "unknown", "unknown", "door_iron", "door_dirt", "door_grass", "door_blue", "door_book", 
-                "door_iron_air", "door_dirt_air", "door_grass_air", "door_blue_air", "door_book_air", 
-                "train", "creeper", "zombie", "zombie_head", "unknown", "dove", "pidgeon", "duck", 
-                "phoenix", "red_robin", "blue_bird", "unknown", "killer_phoenix", "unknown", "unknown", 
-                "goldfish", "sea_sponge", "shark", "salmon", "betta_fish", "lava_shark", "snake", 
+                "door_air", "air_flood_layer", "air_flood_down", "air_flood_up", "door2_air",
+                "door3_air", "door4_air", "door5_air", "door6_air", "door7_air", "door8_air",
+                "door9_air", "door10_air", "door11_air", "door12_air", "door13_air", "door14_air",
+                "unknown", "unknown", "door_iron", "door_dirt", "door_grass", "door_blue", "door_book",
+                "door_iron_air", "door_dirt_air", "door_grass_air", "door_blue_air", "door_book_air",
+                "train", "creeper", "zombie", "zombie_head", "unknown", "dove", "pidgeon", "duck",
+                "phoenix", "red_robin", "blue_bird", "unknown", "killer_phoenix", "unknown", "unknown",
+                "goldfish", "sea_sponge", "shark", "salmon", "betta_fish", "lava_shark", "snake",
                 "snake_tail", "door_gold", "door_gold_air", "unknown" };
             for (int i = 0; i < names.Length; i++) {
                 Props[i].Name = names[i];
-                if (names[i] != "unknown") 
-                    Aliases[names[i]] = (byte)i;               
+                if (names[i] != "unknown")
+                    Aliases[names[i]] = (byte)i;
                 if (names[i].IndexOf('_') >= 0)
                     Aliases[names[i].Replace("_", "")] = (byte)i;
             }
@@ -169,23 +163,23 @@ namespace MCGalaxy {
             Aliases["water_door"] = water_door; Aliases["lava_door"] = lava_door;
             Aliases["acw"] = activedeathwater; Aliases["ahl"] = activedeathlava;
             
-            Aliases["door_tree"] = door_tree; Aliases["door2"] = door_obsidian; 
-            Aliases["door3"] = door_glass; Aliases["door4"] = door_stone; 
-            Aliases["door5"] = door_leaves; Aliases["door6"] = door_sand; 
-            Aliases["door7"] = door_wood; Aliases["door8"] = door_green; 
-            Aliases["door9"] = door_tnt; Aliases["door10"] = door_stair; 
-            Aliases["door11"] = door_iron; Aliases["door12"] = door_dirt; 
-            Aliases["door13"] = door_grass; Aliases["door14"] = door_blue; 
-            Aliases["door15"] = door_book; Aliases["door16"] = door_gold; 
-            Aliases["door17"] = door_cobblestone; Aliases["door18"] = door_red; 
+            Aliases["door_tree"] = door_tree; Aliases["door2"] = door_obsidian;
+            Aliases["door3"] = door_glass; Aliases["door4"] = door_stone;
+            Aliases["door5"] = door_leaves; Aliases["door6"] = door_sand;
+            Aliases["door7"] = door_wood; Aliases["door8"] = door_green;
+            Aliases["door9"] = door_tnt; Aliases["door10"] = door_stair;
+            Aliases["door11"] = door_iron; Aliases["door12"] = door_dirt;
+            Aliases["door13"] = door_grass; Aliases["door14"] = door_blue;
+            Aliases["door15"] = door_book; Aliases["door16"] = door_gold;
+            Aliases["door17"] = door_cobblestone; Aliases["door18"] = door_red;
             
             Aliases["tdoor_tree"] = tdoor; Aliases["tdoor2"] = tdoor2;
-            Aliases["tdoor3"] = tdoor3; Aliases["tdoor4"] = tdoor4; 
-            Aliases["tdoor5"] = tdoor5; Aliases["tdoor6"] = tdoor6; 
-            Aliases["tdoor7"] = tdoor7; Aliases["tdoor8"] = tdoor8; 
-            Aliases["tdoor9"] = tdoor9; Aliases["tdoor10"] = tdoor10; 
-            Aliases["tair_switch"] = tdoor11; Aliases["tdoor11"] = tdoor11; 
-            Aliases["tdoor12"] = tdoor12; Aliases["tdoor13"] = tdoor13; 
+            Aliases["tdoor3"] = tdoor3; Aliases["tdoor4"] = tdoor4;
+            Aliases["tdoor5"] = tdoor5; Aliases["tdoor6"] = tdoor6;
+            Aliases["tdoor7"] = tdoor7; Aliases["tdoor8"] = tdoor8;
+            Aliases["tdoor9"] = tdoor9; Aliases["tdoor10"] = tdoor10;
+            Aliases["tair_switch"] = tdoor11; Aliases["tdoor11"] = tdoor11;
+            Aliases["tdoor12"] = tdoor12; Aliases["tdoor13"] = tdoor13;
             
             Aliases["odoor_tree"] = odoor1; Aliases["odoor2"] = odoor2;
             Aliases["odoor3"] = odoor3; Aliases["odoor4"] = odoor4;

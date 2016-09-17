@@ -74,16 +74,18 @@ namespace MCGalaxy {
                         WalkthroughBehaviour.Portal(p, block, x, y, z, false);
                 }
                 
-                byte doorAir = Block.DoorAirs((byte)i); // if not 0, means i is a door block
                 if (Block.Props[i].IsTDoor) {
                     deleteHandlers[i] = DeleteBehaviour.RevertDoor;
-                } else if (Block.odoor((byte)i) != Block.Zero) {
+                } else if (Props[i].ODoorId != Block.Zero) {
                     deleteHandlers[i] = DeleteBehaviour.ODoor;
-                } else if (doorAir != 0) {
-                    deleteHandlers[doorAir] = DeleteBehaviour.RevertDoor;
+                } else if (Block.Props[i].IsDoor) {
                     deleteHandlers[i] = DeleteBehaviour.Door;
                 }
             }
+            
+            deleteHandlers[Block.door_tree_air] = DeleteBehaviour.RevertDoor;
+            deleteHandlers[Block.door_tnt_air] = DeleteBehaviour.RevertDoor;
+            deleteHandlers[Block.door_green_air] = DeleteBehaviour.RevertDoor;
             SetupCorePhysicsHandlers();
         }
         
@@ -168,20 +170,9 @@ namespace MCGalaxy {
                     continue;
                 }
                 
-                byte odoor = Block.odoor((byte)i);
-                byte door = Block.DoorAirs((byte)i);
-                if (odoor != Block.Zero) {
+                if (Block.odoor((byte)i) != Block.Zero) {
                     physicsHandlers[i] = DoorPhysics.oDoor;
                     physicsDoorsHandlers[i] = DoorPhysics.oDoor;
-                } else if (door == Block.door_tnt_air) {
-                    physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.Door(lvl, ref C, 4);
-                    physicsDoorsHandlers[door] = physicsHandlers[door];
-                } else if (door == Block.air_switch_air || door == Block.air_door_air) {
-                    physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.Door(lvl, ref C, 4, true);
-                    physicsDoorsHandlers[door] = physicsHandlers[door];
-                } else if (door != Block.air) {
-                    physicsHandlers[door] = (Level lvl, ref Check C) => DoorPhysics.Door(lvl, ref C, 16);
-                    physicsDoorsHandlers[door] = physicsHandlers[door];
                 }
             }
         }

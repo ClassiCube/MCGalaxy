@@ -296,18 +296,6 @@ namespace MCGalaxy {
                 case Block.air_flood_down:
                 case Block.air_flood_up:
                     blocks[C.b] = 0; break;
-                case Block.door_tree_air:
-                    //blocks[C.b] = 111;
-                    Blockchange(x, y, z, Block.door_tree); break;
-                case Block.door_obsidian_air:
-                    //blocks[C.b] = 113;
-                    Blockchange(x, y, z, Block.door_obsidian); break;
-                case Block.door_glass_air:
-                    //blocks[C.b] = 114;
-                    Blockchange(x, y, z, Block.door_glass); break;
-                case Block.door_stone_air:
-                    //blocks[C.b] = 115;
-                    Blockchange(x, y, z, Block.door_stone); break;
             }
 
             try {

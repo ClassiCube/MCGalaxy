@@ -277,8 +277,6 @@ namespace MCGalaxy
                     return true;
             }
         }
-        
-        public static byte DoorAirs(byte block) { return Props[block].DoorAirId; }
 
         public static bool tDoor(byte block) { return Props[block].IsTDoor; }
 

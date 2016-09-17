@@ -35,7 +35,7 @@ namespace MCGalaxy.BlockBehaviour {
 
             byte b1 = p.level.GetTile((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ));
             byte b2 = p.level.GetTile((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz ));
-            if ( b1 == Block.air && b2 == Block.air && p.level.CheckClear((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 )) 
+            if ( b1 == Block.air && b2 == Block.air && p.level.CheckClear((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ))
                 && p.level.CheckClear((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz )) ) {
                 p.level.Blockchange((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ), Block.rockethead);
                 p.level.Blockchange((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz ), Block.lava_fire);
@@ -70,24 +70,28 @@ namespace MCGalaxy.BlockBehaviour {
         }
         
         internal static bool RevertDoor(Player p, byte block, ushort x, ushort y, ushort z) {
-            p.RevertBlock(x, y, z); 
+            p.RevertBlock(x, y, z);
             return true;
         }
         
         internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics != 0) {
-                p.level.Blockchange(x, y, z, Block.Props[block].DoorAirId, 0); return true;
+                byte physForm;
+                PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, out physForm);
+                p.level.Blockchange(x, y, z, physForm, false, args);
             } else {
-                p.RevertBlock(x, y, z); return true;
+                p.RevertBlock(x, y, z);
             }
+            return true;
         }
         
         internal static bool ODoor(Player p, byte block, ushort x, ushort y, ushort z) {
             if (block == Block.odoor8 || block == Block.odoor8_air) {
-                p.level.Blockchange(x, y, z, Block.Props[block].ODoorId, 0); return true;
+                p.level.Blockchange(x, y, z, Block.Props[block].ODoorId, 0);
             } else {
-                p.RevertBlock(x, y, z); return true;
+                p.RevertBlock(x, y, z);
             }
+            return true;
         }
     }
 }
