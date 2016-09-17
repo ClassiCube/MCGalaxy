@@ -124,14 +124,17 @@ namespace MCGalaxy {
             GroupList.Add(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', String.Empty, "nobody.txt"));            
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
 
-            if (Group.Find(Server.defaultRank) != null) 
+            if (Group.Find(Server.defaultRank) != null) {
                 standard = Group.Find(Server.defaultRank);
-            else 
+            } else {
                 standard = Group.findPerm(LevelPermission.Guest);
+            }
 
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players)
-                pl.group = Find(pl.group.name);
+            foreach (Player pl in players) {
+                pl.group = findPerm(pl.group.Permission);
+                if (pl.group == null) pl.group = standard;
+            }
             if (OnGroupLoad != null)
                 OnGroupLoad();
             OnGroupLoadEvent.Call();
