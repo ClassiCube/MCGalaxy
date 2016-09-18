@@ -481,6 +481,7 @@
     <Compile Include="Games\ZombieSurvival\LevelPicker.cs" />
     <Compile Include="Games\ZombieSurvival\Pillaring.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Core.cs" />
+    <Compile Include="Games\ZombieSurvival\Rewards.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Props.cs" />

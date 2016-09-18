@@ -170,7 +170,7 @@ namespace MCGalaxy.Games {
             
             foreach (Player pl in online) {
                 pl.Game.Referee = false;
-                pl.Game.ResetZombieState();              
+                pl.Game.ResetZombieState();
                 ResetInvisibility(pl);
                 pl.SetPrefix();
                 

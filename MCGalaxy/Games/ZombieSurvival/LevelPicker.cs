@@ -131,6 +131,7 @@ namespace MCGalaxy.Games.ZS {
         internal static void SendVoteMessage(Player p, string lvl1, string lvl2) {
             const string line1 = "&eLevel vote - type &a1&e, &c2&e or &93";
             string line2 = "&a" + lvl1 + "&e, &c" + lvl2 + "&e, &9random";
+            
             if (p.HasCpeExt(CpeExt.MessageTypes)) {
                 p.SendCpeMessage(CpeMessageType.BottomRight2, line1);
                 p.SendCpeMessage(CpeMessageType.BottomRight1, line2);
