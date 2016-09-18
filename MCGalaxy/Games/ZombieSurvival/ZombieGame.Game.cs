@@ -36,18 +36,7 @@ namespace MCGalaxy.Games {
                 p.RevertBlock(x, y, z); return true;
             }
             
-            if (action == 1 && !CurLevel.Pillaring && !p.Game.Referee) {
-                if (NotPillaring(block, old)) {
-                    p.Game.BlocksStacked = 0;
-                } else if (p.Game.LastY == y - 1 && p.Game.LastX == x && p.Game.LastZ == z ) {
-                    p.Game.BlocksStacked++;
-                } else {
-                    p.Game.BlocksStacked = 0;
-                }
-                
-                if (MessagePillaring(p)) return true;
-            }
-            p.Game.LastX = x; p.Game.LastY = y; p.Game.LastZ = z;
+            if (Pillaring.Handles(p, x, y, z, action, block, old, this)) return true;
             
             if (action == 1 || (action == 0 && p.painting)) {
                 if (!p.level.name.CaselessEq(CurLevelName) || p.Game.Referee) return false;
@@ -62,41 +51,6 @@ namespace MCGalaxy.Games {
                     p.SendMessage("Blocks Left: &4" + p.Game.BlocksLeft);
             }
             return false;
-        }
-        
-        static bool MessagePillaring(Player p) {
-            if (p.Game.BlocksStacked == 2) {
-                TimeSpan delta = DateTime.UtcNow - p.Game.LastPillarWarn;
-                if (delta.TotalSeconds >= 5) {
-                    Chat.MessageOps(  "&cWarning: " + p.ColoredName + " %Sis pillaring!");
-                    p.Game.LastPillarWarn = DateTime.UtcNow;
-                }
-                
-                string action = p.Game.PillarFined ? "kicked" : "fined 10 " + Server.moneys;
-                p.SendMessage("You are pillaring! &cStop before you are " + action + "!");
-            } else if (p.Game.BlocksStacked == 4) {
-                if (!p.Game.PillarFined) {
-                    Chat.MessageOps("  &cWarning: " + p.ColoredName + " %Sis pillaring!");
-                    Command.all.Find("take").Use(null, p.name + " 10 Auto fine for pillaring");
-                    p.SendMessage("  &cThe next time you pillar, you will be &4kicked&c.");
-                } else {
-                    p.Kick("No pillaring allowed!");
-                    Player.AddNote(p.name, null, "K", "Auto kick for pillaring");
-                    return true;
-                }
-        		
-        	    p.Game.PillarFined = true;
-                p.Game.BlocksStacked = 0;
-            }
-            return false;
-        }
-        
-        static bool NotPillaring(byte block, byte old) {
-            if (block == Block.shrub) return true;
-            if (block >= Block.yellowflower && block <= Block.redmushroom) return true;
-            
-            old = Block.Convert(old);
-            return old >= Block.water && block <= Block.lavastill;
         }
         
         public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z,
