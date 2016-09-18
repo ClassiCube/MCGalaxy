@@ -103,11 +103,11 @@ namespace MCGalaxy.Commands {
         static void HandleHitbox(Player p, string message, string[] args) {
             byte precision;
             if (args.Length == 1) {
-                Player.Message(p, "Hitbox detection is currently &a" + ZombieGame.HitboxPrecision + " %Sunits apart.");
+                Player.Message(p, "Hitbox detection is currently &a" + ZombieGameProps.HitboxPrecision + " %Sunits apart.");
             } else if (!byte.TryParse(args[1], out precision)) {
                 Player.Message(p, "Hitbox detection must be an integer between 0 and 256.");
             } else {
-                ZombieGame.HitboxPrecision = precision;
+                ZombieGameProps.HitboxPrecision = precision;
                 Player.Message(p, "Hitbox detection set to &a" + precision + " %Sunits apart.");
                 SrvProperties.Save();
             }
@@ -116,11 +116,11 @@ namespace MCGalaxy.Commands {
         static void HandleMaxMove(Player p, string message, string[] args) {
             byte distance;
             if (args.Length == 1) {
-                Player.Message(p, "Maxmium move distance is currently &a" + ZombieGame.MaxMoveDistance + " %Sunits apart.");
+                Player.Message(p, "Maxmium move distance is currently &a" + ZombieGameProps.MaxMoveDistance + " %Sunits apart.");
             } else if (!byte.TryParse(args[1], out distance)) {
                 Player.Message(p, "Maximum move distance must be an integer between 0 and 256.");
             } else {
-                ZombieGame.MaxMoveDistance = distance;
+                ZombieGameProps.MaxMoveDistance = distance;
                 Player.Message(p, "Maximum move distance set to &a" + distance + " %Sunits apart.");
                 SrvProperties.Save();
             }

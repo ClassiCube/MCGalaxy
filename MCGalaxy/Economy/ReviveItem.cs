@@ -43,27 +43,27 @@ namespace MCGalaxy.Eco {
             }
             
             DateTime end = Server.zombie.RoundEnd;
-            if (DateTime.UtcNow.AddSeconds(ZombieGame.ReviveNoTime) > end) {
-                Player.Message(p, ZombieGame.ReviveNoTimeMessage); return;
+            if (DateTime.UtcNow.AddSeconds(ZombieGameProps.ReviveNoTime) > end) {
+                Player.Message(p, ZombieGameProps.ReviveNoTimeMessage); return;
             }
             int count = Server.zombie.Infected.Count;
-            if (count < ZombieGame.ReviveFewZombies) {
-                Player.Message(p, ZombieGame.ReviveFewZombiesMessage); return;
+            if (count < ZombieGameProps.ReviveFewZombies) {
+                Player.Message(p, ZombieGameProps.ReviveFewZombiesMessage); return;
             }
-            if (p.Game.RevivesUsed >= ZombieGame.ReviveTimes) {
+            if (p.Game.RevivesUsed >= ZombieGameProps.ReviveTimes) {
                 Player.Message(p, "You cannot buy any more revive potions."); return;
             }
-            if (p.Game.TimeInfected.AddSeconds(ZombieGame.ReviveTooSlow) < DateTime.UtcNow) {
-                Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZombieGame.ReviveTooSlowMessage); return;
+            if (p.Game.TimeInfected.AddSeconds(ZombieGameProps.ReviveTooSlow) < DateTime.UtcNow) {
+                Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZombieGameProps.ReviveTooSlowMessage); return;
             }
             
             int chance = new Random().Next(0, 101);
-            if (chance <= ZombieGame.ReviveChance) {
+            if (chance <= ZombieGameProps.ReviveChance) {
                 Server.zombie.DisinfectPlayer(p);
                 p.Game.RevivesUsed++;
-                Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZombieGame.ReviveSuccessMessage);
+                Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZombieGameProps.ReviveSuccessMessage);
             } else {
-                Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZombieGame.ReviveFailureMessage);
+                Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZombieGameProps.ReviveFailureMessage);
             }
             Economy.MakePurchase(p, Price, "%3Revive:");
         }
@@ -72,8 +72,8 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnStoreCommand(Player p) {
             base.OnStoreCommand(p);
-            int time = ZombieGame.ReviveNoTime, expiry = ZombieGame.ReviveTooSlow;
-            int potions = ZombieGame.ReviveTimes;
+            int time = ZombieGameProps.ReviveNoTime, expiry = ZombieGameProps.ReviveTooSlow;
+            int potions = ZombieGameProps.ReviveTimes;
             Player.Message(p, "%T/buy " + Name);
             Player.Message(p, "%HCannot be used in the last &a" + time + " %Hseconds of a round.");
             Player.Message(p, "%HCan only be used within &a" + expiry + " %Hseconds after being infected.");

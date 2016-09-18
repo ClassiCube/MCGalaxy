@@ -86,8 +86,8 @@ namespace MCGalaxy {
             }
             
             string name = p.truename, skinName = p.skinName;
-            if (ZombieGame.ZombieName != "" && !dst.Game.Aka) {
-                name = ZombieGame.ZombieName; skinName = name;
+            if (ZombieGameProps.ZombieName != "" && !dst.Game.Aka) {
+                name = ZombieGameProps.ZombieName; skinName = name;
             }
             
             if (dst.hasExtList) {
@@ -97,7 +97,7 @@ namespace MCGalaxy {
             }
             
             if (dst.hasChangeModel && id != 0xFF)
-                dst.SendChangeModel(id, ZombieGame.ZombieModel);
+                dst.SendChangeModel(id, ZombieGameProps.ZombieModel);
         }
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>

@@ -55,7 +55,7 @@ namespace MCGalaxy {
         
         internal static ConfigElement[] serverConfig, levelConfig;
         public void Start() {
-            serverConfig = ConfigElement.GetAll(typeof(Server), typeof(ZombieGame));
+            serverConfig = ConfigElement.GetAll(typeof(Server), typeof(ZombieGameProps));
             levelConfig = ConfigElement.GetAll(typeof(Level));
         	
             #pragma warning disable 0618

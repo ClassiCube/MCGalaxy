@@ -52,7 +52,8 @@ namespace MCGalaxy.Games {
                     return;
                 } else if (Status == ZombieGameStatus.InfiniteRounds) {
                     DoRound();
-                    if (ChangeLevels) LevelPicker.ChooseNextLevel(this);
+                    if (ZombieGameProps.ChangeLevels) 
+                        LevelPicker.ChooseNextLevel(this);
                 } else if (Status == ZombieGameStatus.SingleRound) {
                     DoRound();
                     ResetState(); return;
@@ -61,7 +62,8 @@ namespace MCGalaxy.Games {
                         ResetState(); return;
                     } else {
                         DoRound();
-                        if (ChangeLevels) LevelPicker.ChooseNextLevel(this);
+                        if (ZombieGameProps.ChangeLevels) 
+                            LevelPicker.ChooseNextLevel(this);
                     }
                 } else if (Status == ZombieGameStatus.LastRound) {
                     ResetState(); return;
@@ -149,11 +151,11 @@ namespace MCGalaxy.Games {
         }
         
         void DoCoreGame(Random random) {
-            Player[] alive = null;
+            Player[] alive = Alive.Items;
             string lastTimespan = null;
             int lastTime = -1;
             
-            while ((alive = Alive.Items).Length > 0 && Running) {
+            while (alive.Length > 0 && Running) {
                 Player[] infected = Infected.Items;
                 // Do round end.
                 int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
@@ -171,16 +173,17 @@ namespace MCGalaxy.Games {
                     lastTimespan = timespan;
                 }
                 
+                int dist = ZombieGameProps.HitboxPrecision;
                 foreach (Player pKiller in infected) {
                     pKiller.Game.Infected = true;
                     UpdatePlayerColor(pKiller, InfectCol);
-                    bool aliveChanged = false;
+
                     foreach (Player pAlive in alive) {
                         UpdatePlayerColor(pAlive, pAlive.color);
-                        if (Math.Abs(pAlive.pos[0] - pKiller.pos[0]) > HitboxPrecision
-                            || Math.Abs(pAlive.pos[1] - pKiller.pos[1]) > HitboxPrecision
-                            || Math.Abs(pAlive.pos[2] - pKiller.pos[2]) > HitboxPrecision)
-                            continue;
+                        int dx = Math.Abs(pAlive.pos[0] - pKiller.pos[0]);
+                        int dy = Math.Abs(pAlive.pos[1] - pKiller.pos[1]);
+                        int dz = Math.Abs(pAlive.pos[2] - pKiller.pos[2]);                        
+                        if (dx > dist || dy > dist || dz > dist) continue;
                         
                         if (!pAlive.Game.Infected && pKiller.Game.Infected && !pAlive.Game.Referee
                             && !pKiller.Game.Referee && pKiller != pAlive
@@ -189,7 +192,6 @@ namespace MCGalaxy.Games {
                         {
                             InfectPlayer(pAlive);
                             pAlive.Game.LastInfecter = pKiller.name;
-                            aliveChanged = true;
                             pAlive.Game.BlocksLeft = 25;
                             
                             if (lastPlayerToInfect == pKiller.name) {
@@ -215,11 +217,12 @@ namespace MCGalaxy.Games {
                             Thread.Sleep(50);
                         }
                     }
-                    if (aliveChanged) alive = Alive.Items;
+                    alive = Alive.Items;
                 }
                 
                 CheckInvisibilityTime();
                 Thread.Sleep(200);
+                alive = Alive.Items;
             }
         }
         

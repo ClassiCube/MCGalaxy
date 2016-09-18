@@ -183,7 +183,7 @@ namespace MCGalaxy {
         }
         
         void InitZombieSurvival() {
-            if (!ZombieGame.StartImmediately) return;
+            if (!ZombieGameProps.StartImmediately) return;
             try {
                 Level oldMain = Server.mainLevel;
                 Server.zombie.Start(ZombieGameStatus.InfiniteRounds, null, 0);

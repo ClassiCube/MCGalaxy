@@ -164,74 +164,74 @@ namespace MCGalaxy.Gui {
         public string FailureMessage { get; set; }
         
         public void LoadFromServer() {
-            ChangeLevels = ZombieGame.ChangeLevels;
-            IgnoredLevelsList = String.Join(",", ZombieGame.IgnoredLevelList);
-            LevelsList = String.Join(",", ZombieGame.LevelList);
-            SaveLevelChanges = ZombieGame.SaveLevelBlockchanges;
-            IgnorePersonalWorlds = ZombieGame.IgnorePersonalWorlds;
+            ChangeLevels = ZombieGameProps.ChangeLevels;
+            IgnoredLevelsList = String.Join(",", ZombieGameProps.IgnoredLevelList);
+            LevelsList = String.Join(",", ZombieGameProps.LevelList);
+            SaveLevelChanges = ZombieGameProps.SaveLevelBlockchanges;
+            IgnorePersonalWorlds = ZombieGameProps.IgnorePersonalWorlds;
             
-            Pillaring = !ZombieGame.noPillaring;
-            Respawning = !ZombieGame.noRespawn;
-            SetMainLevel = ZombieGame.SetMainLevel;
-            StartImmediately = ZombieGame.StartImmediately;
+            Pillaring = !ZombieGameProps.NoPillaring;
+            Respawning = !ZombieGameProps.NoRespawn;
+            SetMainLevel = ZombieGameProps.SetMainLevel;
+            StartImmediately = ZombieGameProps.StartImmediately;
             
-            MaxMoveDistance = ZombieGame.MaxMoveDistance;
-            HitboxPrecision = ZombieGame.HitboxPrecision;
-            IncludeMapInHeartbeat = ZombieGame.IncludeMapInHeartbeat;
+            MaxMoveDistance = ZombieGameProps.MaxMoveDistance;
+            HitboxPrecision = ZombieGameProps.HitboxPrecision;
+            IncludeMapInHeartbeat = ZombieGameProps.IncludeMapInHeartbeat;
             
-            Name = ZombieGame.ZombieName;
-            Model = ZombieGame.ZombieModel;
-            InvisibilityDuration = ZombieGame.InvisibilityDuration;
-            InvisibilityPotions = ZombieGame.InvisibilityPotions;
-            ZInvisibilityDuration = ZombieGame.ZombieInvisibilityDuration;
-            ZInvisibilityPotions = ZombieGame.ZombieInvisibilityPotions;
+            Name = ZombieGameProps.ZombieName;
+            Model = ZombieGameProps.ZombieModel;
+            InvisibilityDuration = ZombieGameProps.InvisibilityDuration;
+            InvisibilityPotions = ZombieGameProps.InvisibilityPotions;
+            ZInvisibilityDuration = ZombieGameProps.ZombieInvisibilityDuration;
+            ZInvisibilityPotions = ZombieGameProps.ZombieInvisibilityPotions;
             
-            Chance = ZombieGame.ReviveChance;
-            InsufficientTime = ZombieGame.ReviveNoTime;
-            InsufficientTimeMessage = ZombieGame.ReviveNoTimeMessage;
-            ExpiryTime = ZombieGame.ReviveTooSlow;
-            ExpiryTimeMessage = ZombieGame.ReviveTooSlowMessage;
-            FailureMessage = ZombieGame.ReviveFailureMessage;
-            SuccessMessage = ZombieGame.ReviveSuccessMessage;
+            Chance = ZombieGameProps.ReviveChance;
+            InsufficientTime = ZombieGameProps.ReviveNoTime;
+            InsufficientTimeMessage = ZombieGameProps.ReviveNoTimeMessage;
+            ExpiryTime = ZombieGameProps.ReviveTooSlow;
+            ExpiryTimeMessage = ZombieGameProps.ReviveTooSlowMessage;
+            FailureMessage = ZombieGameProps.ReviveFailureMessage;
+            SuccessMessage = ZombieGameProps.ReviveSuccessMessage;
         }
         
         public void ApplyToServer() {
-            ZombieGame.ChangeLevels = ChangeLevels;
+            ZombieGameProps.ChangeLevels = ChangeLevels;
             string list = IgnoredLevelsList.Replace(" ", "");
-            if (list == "") ZombieGame.IgnoredLevelList = new List<string>();
-            else ZombieGame.IgnoredLevelList = new List<string>(list.Replace(" ", "").Split(','));
+            if (list == "") ZombieGameProps.IgnoredLevelList = new List<string>();
+            else ZombieGameProps.IgnoredLevelList = new List<string>(list.Replace(" ", "").Split(','));
                 
             list = LevelsList.Replace(" ", "");
-            if (list == "") ZombieGame.LevelList = new List<string>();
-            else ZombieGame.LevelList = new List<string>(list.Replace(" ", "").Split(','));
-            ZombieGame.SaveLevelBlockchanges = SaveLevelChanges;
-            ZombieGame.IgnorePersonalWorlds = IgnorePersonalWorlds;
+            if (list == "") ZombieGameProps.LevelList = new List<string>();
+            else ZombieGameProps.LevelList = new List<string>(list.Replace(" ", "").Split(','));
+            ZombieGameProps.SaveLevelBlockchanges = SaveLevelChanges;
+            ZombieGameProps.IgnorePersonalWorlds = IgnorePersonalWorlds;
             
-            ZombieGame.noPillaring = !Pillaring;
-            ZombieGame.noRespawn = !Respawning;
-            ZombieGame.SetMainLevel = SetMainLevel;
-            ZombieGame.StartImmediately = StartImmediately;
+            ZombieGameProps.NoPillaring = !Pillaring;
+            ZombieGameProps.NoRespawn = !Respawning;
+            ZombieGameProps.SetMainLevel = SetMainLevel;
+            ZombieGameProps.StartImmediately = StartImmediately;
             
-            ZombieGame.MaxMoveDistance = MaxMoveDistance;
-            ZombieGame.HitboxPrecision = HitboxPrecision;
-            ZombieGame.IncludeMapInHeartbeat = IncludeMapInHeartbeat;
+            ZombieGameProps.MaxMoveDistance = MaxMoveDistance;
+            ZombieGameProps.HitboxPrecision = HitboxPrecision;
+            ZombieGameProps.IncludeMapInHeartbeat = IncludeMapInHeartbeat;
             
-            ZombieGame.ZombieName = Name.Trim();
-            ZombieGame.ZombieModel = Model.Trim();
-            if (ZombieGame.ZombieModel == "")
-                ZombieGame.ZombieModel = "zombie";
-            ZombieGame.InvisibilityDuration = InvisibilityDuration;
-            ZombieGame.InvisibilityPotions = InvisibilityPotions;
-            ZombieGame.ZombieInvisibilityDuration = ZInvisibilityDuration;
-            ZombieGame.ZombieInvisibilityPotions = ZInvisibilityPotions; 
+            ZombieGameProps.ZombieName = Name.Trim();
+            ZombieGameProps.ZombieModel = Model.Trim();
+            if (ZombieGameProps.ZombieModel == "")
+                ZombieGameProps.ZombieModel = "zombie";
+            ZombieGameProps.InvisibilityDuration = InvisibilityDuration;
+            ZombieGameProps.InvisibilityPotions = InvisibilityPotions;
+            ZombieGameProps.ZombieInvisibilityDuration = ZInvisibilityDuration;
+            ZombieGameProps.ZombieInvisibilityPotions = ZInvisibilityPotions; 
             
-            ZombieGame.ReviveChance = Chance;
-            ZombieGame.ReviveNoTime = InsufficientTime;
-            ZombieGame.ReviveNoTimeMessage = InsufficientTimeMessage;
-            ZombieGame.ReviveTooSlow = ExpiryTime;
-            ZombieGame.ReviveTooSlowMessage = ExpiryTimeMessage;
-            ZombieGame.ReviveFailureMessage = FailureMessage;
-            ZombieGame.ReviveSuccessMessage = SuccessMessage;
+            ZombieGameProps.ReviveChance = Chance;
+            ZombieGameProps.ReviveNoTime = InsufficientTime;
+            ZombieGameProps.ReviveNoTimeMessage = InsufficientTimeMessage;
+            ZombieGameProps.ReviveTooSlow = ExpiryTime;
+            ZombieGameProps.ReviveTooSlowMessage = ExpiryTimeMessage;
+            ZombieGameProps.ReviveFailureMessage = FailureMessage;
+            ZombieGameProps.ReviveSuccessMessage = SuccessMessage;
         }
     }
 }

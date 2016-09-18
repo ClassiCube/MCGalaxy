@@ -44,14 +44,6 @@ namespace MCGalaxy.Games {
         /// <summary> The maximum number of rounds that can be played before the game ends. </summary>
         public int MaxRounds = 0;
         
-        /// <summary> How precise collision detection is between alive and dead players. (Where 1 block = 32 units) </summary>
-        [ConfigInt("zombie-hitbox-precision", "Zombie", null, 32)]
-        public static int HitboxPrecision = 32;
-        
-        /// <summary> The maximum distance a player is allowed to move between movement packets. </summary>
-        [ConfigInt("zombie-maxmove-distance", "Zombie", null, 70)]
-        public static int MaxMoveDistance = 70;
-        
         /// <summary> Current round status of the game. </summary>
         public ZombieGameStatus Status = ZombieGameStatus.NotStarted;
         
@@ -88,6 +80,29 @@ namespace MCGalaxy.Games {
         /// <summary> Name of the level queued to be used for the next round. </summary>
         public string QueuedLevel;
         
+        List<string> messages = new List<string>();      
+        
+        internal string lastLevel1 = "", lastLevel2 = "";
+        internal int Level1Vote = 0, Level2Vote = 0, Level3Vote = 0;
+        
+        string lastPlayerToInfect = "";
+        int infectCombo = 0;
+        public Dictionary<string, BountyData> Bounties = new Dictionary<string, BountyData>();
+        
+        /// <summary> List of players who are in the lottery. </summary>
+        public VolatileArray<string> Lottery = new VolatileArray<string>(false);
+    }
+    
+    public static class ZombieGameProps {
+        
+        /// <summary> How precise collision detection is between alive and dead players. (Where 1 block = 32 units) </summary>
+        [ConfigInt("zombie-hitbox-precision", "Zombie", null, 32)]
+        public static int HitboxPrecision = 32;
+        
+        /// <summary> The maximum distance a player is allowed to move between movement packets. </summary>
+        [ConfigInt("zombie-maxmove-distance", "Zombie", null, 70)]
+        public static int MaxMoveDistance = 70;
+        
         /// <summary> Whether the server's main level should be set to the current level at the end of each round. </summary>
         [ConfigBool("zombie-survival-only-server", "Zombie", null, false)]
         public static bool SetMainLevel;
@@ -107,13 +122,11 @@ namespace MCGalaxy.Games {
         /// <summary> Whether the current level name should be shown in the heartbeats sent. </summary>
         [ConfigBool("zombie-map-inheartbeat", "Zombie", null, false)]
         public static bool IncludeMapInHeartbeat = false;
-        
-        List<string> messages = new List<string>();
 
         [ConfigBool("no-respawning-during-zombie", "Zombie", null, true)]
-        public static bool noRespawn = true;
+        public static bool NoRespawn = true;
         [ConfigBool("no-pillaring-during-zombie", "Zombie", null, true)]
-        public static bool noPillaring = true;
+        public static bool NoPillaring = true;
         [ConfigString("zombie-name-while-infected", "Zombie", null, "", true)]
         public static string ZombieName = "";
         [ConfigString("zombie-model-while-infected", "Zombie", null, "zombie")]
@@ -128,10 +141,7 @@ namespace MCGalaxy.Games {
         [ConfigInt("zombie-zinvisibility-potions", "Zombie", null, 4, 1)]
         public static int ZombieInvisibilityPotions = 4;
         [ConfigBool("enable-changing-levels", "Zombie", null, true)]
-        public static bool ChangeLevels = true;
-        [ConfigBool("zombie-awards", "Zombie", null, false)]
-        public static bool UseAwards = false;
-        
+        public static bool ChangeLevels = true;       
         
         [ConfigString("revive-notime-msg", "Revive", null, 
                       "It's too late. The humans do not have enough time left to make more revive potions.")]
@@ -165,8 +175,7 @@ namespace MCGalaxy.Games {
 
         [ConfigString("revive-failure", "Revive", null, "tried using a revive potion. &cIt was not very effective..")]
         public static string ReviveFailureMessage = "tried using a revive potion. &cIt was not very effective..";        
-        
-        
+                
         /// <summary> List of levels that are randomly picked for zombie survival. 
         /// If this left blank, then all level files are picked from instead. </summary>
         [ConfigStringList("zombie-levels-list", "Zombie", null)]
@@ -175,15 +184,5 @@ namespace MCGalaxy.Games {
         /// <summary> List of levels that are never picked for zombie survival. </summary>
         [ConfigStringList("zombie-ignores-list", "Zombie", null)]
         public static List<string> IgnoredLevelList = new List<string>();
-        
-        internal string lastLevel1 = "", lastLevel2 = "";
-        internal int Level1Vote = 0, Level2Vote = 0, Level3Vote = 0;
-        
-        string lastPlayerToInfect = "";
-        int infectCombo = 0;
-        public Dictionary<string, BountyData> Bounties = new Dictionary<string, BountyData>();
-        
-        /// <summary> List of players who are in the lottery. </summary>
-        public VolatileArray<string> Lottery = new VolatileArray<string>(false);
-    }
+    }    
 }

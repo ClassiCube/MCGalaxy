@@ -56,8 +56,9 @@ namespace MCGalaxy.Games {
         public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z,
                                              byte rotX, byte rotY) {
             if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
-            if (!p.Game.Referee && noRespawn) {
-                if (Math.Abs(p.pos[0] - x) >= MaxMoveDistance || Math.Abs(p.pos[2] - z) >= MaxMoveDistance) {
+            if (!p.Game.Referee && ZombieGameProps.NoRespawn) {
+                int dx = Math.Abs(p.pos[0] - x), dz = Math.Abs(p.pos[2] - z);
+                if (dx >= ZombieGameProps.MaxMoveDistance || dz >= ZombieGameProps.MaxMoveDistance) {
                     p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
                     return true;
                 }
@@ -107,7 +108,7 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerJoinedServer(Player p) {
-            if (!Running || ZombieGame.SetMainLevel) return;
+            if (!Running || ZombieGameProps.SetMainLevel) return;
             Player.Message(p, "Zombie Survival is running! Type %T/g " + CurLevelName + " %Sto join.");
         }
         
@@ -181,7 +182,7 @@ namespace MCGalaxy.Games {
         }
         
         public override void OnHeartbeat(ref string name) {
-            if (!Running || !IncludeMapInHeartbeat || CurLevelName == null) return;
+            if (!Running || !ZombieGameProps.IncludeMapInHeartbeat || CurLevelName == null) return;
             name += " (" + CurLevelName + ")";
         }
         
@@ -200,8 +201,8 @@ namespace MCGalaxy.Games {
                 group = "&2Referees";
             } else if (p.Game.Infected) {
                 group = "&cZombies";
-                if (ZombieGame.ZombieName != "" && !dst.Game.Aka) {
-                    name = "&c" + ZombieGame.ZombieName;
+                if (ZombieGameProps.ZombieName != "" && !dst.Game.Aka) {
+                    name = "&c" + ZombieGameProps.ZombieName;
                 } else {
                     name = "&c" + p.truename;
                 }

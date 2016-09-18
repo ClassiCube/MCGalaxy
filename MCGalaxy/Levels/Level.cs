@@ -120,7 +120,7 @@ namespace MCGalaxy {
         /// saved to the BlockDB and .lvl files. </summary>
         public bool ShouldSaveChanges() {
             if (!saveLevel) return false;
-        	if (Server.zombie.Running && !ZombieGame.SaveLevelBlockchanges &&
+        	if (Server.zombie.Running && !ZombieGameProps.SaveLevelBlockchanges &&
         	    (name.CaselessEq(Server.zombie.CurLevelName)
         	     || name.CaselessEq(Server.zombie.LastLevelName))) return false;
         	if (Server.lava.active && Server.lava.HasMap(name)) return false;

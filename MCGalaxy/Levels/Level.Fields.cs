@@ -233,7 +233,7 @@ namespace MCGalaxy {
         [ConfigString("Authors", "Game", null, "", true)]
         public string Authors = "";
         [ConfigBool("Pillaring", "Game", null, false)]
-        public bool Pillaring = !ZombieGame.noPillaring;
+        public bool Pillaring = !ZombieGameProps.NoPillaring;
         
         [ConfigEnum("BuildType", "Game", null, BuildType.Normal, typeof(BuildType))]
         public BuildType BuildType = BuildType.Normal;

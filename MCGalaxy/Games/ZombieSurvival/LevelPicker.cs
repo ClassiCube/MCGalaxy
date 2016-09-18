@@ -25,7 +25,7 @@ namespace MCGalaxy.Games.ZS {
         
         internal static void ChooseNextLevel(ZombieGame game) {
             if (game.QueuedLevel != null) { game.ChangeLevel(game.QueuedLevel); return; }
-            if (!ZombieGame.ChangeLevels) return;
+            if (!ZombieGameProps.ChangeLevels) return;
             
             try {
                 List<string> levels = GetCandidateLevels();
@@ -102,11 +102,11 @@ namespace MCGalaxy.Games.ZS {
         /// <summary> Returns a list of maps that can be used for a round of zombie survival. </summary>
         /// <returns> null if not enough levels are available, otherwise the list of levels. </returns>
         internal static List<string> GetCandidateLevels() {
-            List<string> maps = ZombieGame.LevelList.Count > 0 ? ZombieGame.LevelList : GetAllMaps();
-            foreach (string ignore in ZombieGame.IgnoredLevelList)
+            List<string> maps = ZombieGameProps.LevelList.Count > 0 ? ZombieGameProps.LevelList : GetAllMaps();
+            foreach (string ignore in ZombieGameProps.IgnoredLevelList)
                 maps.Remove(ignore);
             
-            bool useLevelList = ZombieGame.LevelList.Count > 0;
+            bool useLevelList = ZombieGameProps.LevelList.Count > 0;
             if (maps.Count <= 2 && !useLevelList) { 
                 Server.s.Log("You must have more than 2 levels to change levels in Zombie Survival"); return null; }
             if (maps.Count <= 2 && useLevelList) { 
@@ -120,7 +120,7 @@ namespace MCGalaxy.Games.ZS {
             string[] files = Directory.GetFiles("levels", "*.lvl");
             foreach (string file in files) {
                 string name = Path.GetFileNameWithoutExtension(file);
-                if (name.IndexOf('+') >= 0 && ZombieGame.IgnorePersonalWorlds)
+                if (name.IndexOf('+') >= 0 && ZombieGameProps.IgnorePersonalWorlds)
                     continue;
                 maps.Add(name);
             }
