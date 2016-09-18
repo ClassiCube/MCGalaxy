@@ -23,6 +23,7 @@ using System.IO;
 using System.Threading;
 using MCGalaxy.Commands.World;
 using MCGalaxy.SQL;
+using MCGalaxy.Games.ZS;
 
 namespace MCGalaxy.Games {
     
@@ -46,10 +47,10 @@ namespace MCGalaxy.Games {
         
         bool SetStartLevel(Level level) {
             if (level == null) {
-                List<string> levels = GetCandidateLevels();
+                List<string> levels = LevelPicker.GetCandidateLevels();
                 if (levels == null) return false;
                 
-                CurLevelName = GetRandomLevel(new Random(), levels);
+                CurLevelName = LevelPicker.GetRandomLevel(new Random(), levels, this);
                 CurLevel = LevelInfo.FindExact(CurLevelName) 
                     ?? CmdLoad.LoadLevel(null, CurLevelName);
                 if (CurLevel == null) return false;
@@ -127,7 +128,7 @@ namespace MCGalaxy.Games {
             Entities.GlobalSpawn(p, false); 
         }
 
-        void ChangeLevel(string next) {
+        internal void ChangeLevel(string next) {
             Player[] online = PlayerInfo.Online.Items;
             if (CurLevel != null) {
                 Level.SaveSettings(CurLevel);

@@ -176,8 +176,8 @@ namespace MCGalaxy.Games {
         [ConfigStringList("zombie-ignores-list", "Zombie", null)]
         public static List<string> IgnoredLevelList = new List<string>();
         
-        string lastLevel1 = "", lastLevel2 = "";
-        int Level1Vote = 0, Level2Vote = 0, Level3Vote = 0;
+        internal string lastLevel1 = "", lastLevel2 = "";
+        internal int Level1Vote = 0, Level2Vote = 0, Level3Vote = 0;
         
         string lastPlayerToInfect = "";
         int infectCombo = 0;

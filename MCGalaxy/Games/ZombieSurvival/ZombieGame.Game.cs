@@ -17,6 +17,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Games.ZS;
 
 namespace MCGalaxy.Games {
     
@@ -187,7 +188,7 @@ namespace MCGalaxy.Games {
                 UpdatePlayerStatus(p);
                 
                 if (Server.votingforlevel)
-                    SendVoteMessage(p, lastLevel1, lastLevel2);
+                    LevelPicker.SendVoteMessage(p, lastLevel1, lastLevel2);
                 return;
             }
 

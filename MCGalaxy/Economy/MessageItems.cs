@@ -23,7 +23,7 @@ namespace MCGalaxy.Eco {
         
         public LoginMessageItem() {
             Aliases = new[] { "login", "loginmsg", "loginmessage" };
-            NoArgsResetsItem = true;
+            AllowsNoArgs = true;
         }
         
         public override string Name { get { return "LoginMessage"; } }
@@ -52,7 +52,7 @@ namespace MCGalaxy.Eco {
         
         public LogoutMessageItem() {
             Aliases = new[] { "logout", "logoutmsg", "logoutmessage" };
-            NoArgsResetsItem = true;
+            AllowsNoArgs = true;
         }
         
         public override string Name { get { return "LogoutMessage"; } }

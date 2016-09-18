@@ -94,9 +94,8 @@ namespace MCGalaxy.Eco {
         /// <summary> How much this item costs to purchase. </summary>
         public int Price = 100;
         
-        /// <summary> Whether providing no arguments should be treated as 
-        /// resetting the item for the player to its default value. </summary>
-        protected bool NoArgsResetsItem;
+        /// <summary> Whether providing no arguments is allowed. </summary>
+        protected bool AllowsNoArgs;
         
         public override void Parse(string line, string[] args) {
             if (args[1].CaselessEq("price"))
@@ -110,7 +109,7 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
-            if (NoArgsResetsItem && args.Length == 1) {
+            if (AllowsNoArgs && args.Length == 1) {
                 DoPurchase(p, message, args); return;
             }
             // Must always provide an argument.

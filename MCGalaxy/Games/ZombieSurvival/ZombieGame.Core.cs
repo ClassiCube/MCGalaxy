@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Timers;
+using MCGalaxy.Games.ZS;
 
 namespace MCGalaxy.Games {
     
@@ -51,7 +52,7 @@ namespace MCGalaxy.Games {
                     return;
                 } else if (Status == ZombieGameStatus.InfiniteRounds) {
                     DoRound();
-                    if (ChangeLevels) ChooseNextLevel();
+                    if (ChangeLevels) LevelPicker.ChooseNextLevel(this);
                 } else if (Status == ZombieGameStatus.SingleRound) {
                     DoRound();
                     ResetState(); return;
@@ -60,7 +61,7 @@ namespace MCGalaxy.Games {
                         ResetState(); return;
                     } else {
                         DoRound();
-                        if (ChangeLevels) ChooseNextLevel();
+                        if (ChangeLevels) LevelPicker.ChooseNextLevel(this);
                     }
                 } else if (Status == ZombieGameStatus.LastRound) {
                     ResetState(); return;
@@ -409,116 +410,6 @@ namespace MCGalaxy.Games {
             
             if (p.level.name.CaselessEq(CurLevelName))
                 playersString += p.ColoredName + Colors.white + ", ";
-        }
-        
-        void ChooseNextLevel() {
-            if (QueuedLevel != null) { ChangeLevel(QueuedLevel); return; }
-            if (!ChangeLevels) return;
-            
-            try {
-                List<string> levels = GetCandidateLevels();
-                if (levels == null) return;
-
-                string picked1 = "", picked2 = "";
-                Random r = new Random();
-
-            LevelChoice:
-                string level = levels[r.Next(0, levels.Count)];
-                string level2 = levels[r.Next(0, levels.Count)];
-
-                if (level == lastLevel1 || level == lastLevel2 || level == CurLevelName ||
-                    level2 == lastLevel1 || level2 == lastLevel2 || level2 == CurLevelName ||
-                    level == picked1) {
-                    goto LevelChoice;
-                } else if (picked1 == "") {
-                    picked1 = level; goto LevelChoice;
-                } else {
-                    picked2 = level2;
-                }
-
-                Level1Vote = 0; Level2Vote = 0; Level3Vote = 0;
-                lastLevel1 = picked1; lastLevel2 = picked2;
-                if (!Running || Status == ZombieGameStatus.LastRound) return;
-
-                Server.votingforlevel = true;
-                Player[] players = PlayerInfo.Online.Items;
-                foreach (Player pl in players) {
-                    if (pl.level != CurLevel) continue;
-                    SendVoteMessage(pl, picked1, picked2);
-                }
-                System.Threading.Thread.Sleep(15000);
-                Server.votingforlevel = false;
-
-                if (!Running || Status == ZombieGameStatus.LastRound) return;
-                MoveToNextLevel(r, levels, picked1, picked2);
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-            }
-        }
-        
-        void MoveToNextLevel(Random r, List<string> levels, string picked1, string picked2) {
-            if (Level1Vote >= Level2Vote) {
-                if (Level3Vote > Level1Vote && Level3Vote > Level2Vote) {
-                    ChangeLevel(GetRandomLevel(r, levels));
-                } else {
-                    ChangeLevel(picked1);
-                }
-            } else {
-                if (Level3Vote > Level1Vote && Level3Vote > Level2Vote) {
-                    ChangeLevel(GetRandomLevel(r, levels));
-                } else {
-                    ChangeLevel(picked2);
-                }
-            }
-            Player[] online = PlayerInfo.Online.Items;
-            foreach (Player pl in online)
-                pl.voted = false;
-        }
-        
-        string GetRandomLevel(Random r, List<string> levels) {
-            for (int i = 0; i < 100; i++) {
-                string lvl = levels[r.Next(0, levels.Count)];
-                if (!lvl.CaselessEq(CurLevelName)) return lvl;
-            }
-            return levels[r.Next(0, levels.Count)];
-        }
-        
-        List<string> GetCandidateLevels() {
-            List<string> maps = LevelList.Count > 0 ? LevelList : GetAllMaps();
-            foreach (string ignore in IgnoredLevelList)
-                maps.Remove(ignore);
-            
-            bool useLevelList = LevelList.Count > 0;
-            if (maps.Count <= 2 && !useLevelList) { 
-                Server.s.Log("You must have more than 2 levels to change levels in Zombie Survival"); return null; }
-            if (maps.Count <= 2 && useLevelList) { 
-                Server.s.Log("You must have more than 2 levels in your level list to change levels in Zombie Survival"); return null; }
-            return maps;
-        }
-        
-        static List<string> GetAllMaps() {
-            List<string> maps = new List<string>();
-            string[] files = Directory.GetFiles("levels", "*.lvl");
-            foreach (string file in files) {
-                string name = Path.GetFileNameWithoutExtension(file);
-                if (name.IndexOf('+') >= 0 && IgnorePersonalWorlds)
-                    continue;
-                maps.Add(name);
-            }
-            return maps;
-        }
-        
-        
-        void SendVoteMessage(Player p, string lvl1, string lvl2) {
-            const string line1 = "&eLevel vote - type &a1&e, &c2&e or &93";
-            string line2 = "&a" + lvl1 + "&e, &c" + lvl2 + "&e, &9random";
-            if (p.HasCpeExt(CpeExt.MessageTypes)) {
-                p.SendCpeMessage(CpeMessageType.BottomRight2, line1);
-                p.SendCpeMessage(CpeMessageType.BottomRight1, line2);
-            } else {
-                p.SendMessage(line1);
-                p.SendMessage(line2);
-            }
         }
     }
 }

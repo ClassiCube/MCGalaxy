@@ -23,7 +23,7 @@ namespace MCGalaxy.Eco {
         
         public TitleItem() {
             Aliases = new[] { "titles", "title" };
-            NoArgsResetsItem = true;
+            AllowsNoArgs = true;
         }
         
         public override string Name { get { return "Title"; } }
@@ -52,7 +52,7 @@ namespace MCGalaxy.Eco {
         
         public NickItem() {
             Aliases = new[] { "nickname", "nick", "nicks", "name", "names" };
-            NoArgsResetsItem = true;
+            AllowsNoArgs = true;
         }
         
         public override string Name { get { return "Nickname"; } }

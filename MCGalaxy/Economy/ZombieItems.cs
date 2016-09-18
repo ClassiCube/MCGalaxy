@@ -26,6 +26,7 @@ namespace MCGalaxy.Eco {
         public BlocksItem() {
             Aliases = new[] { "blocks", "bl", "b" };
             Price = 1;
+            AllowsNoArgs = true;
         }
         
         public override string Name { get { return "10Blocks"; } }

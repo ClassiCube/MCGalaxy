@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "  BlockDB (Used for /b) is {0}", data.blockDB ? "&aEnabled" : "&cDisabled");
             ShowPermissions(p, data);
             Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.Name);            
-            if (!Server.zombie.IsZombieMap(data.Name)) return;         
+            if (!Server.zombie.IsZombieMap(data.Name)) return;
             
             string[] authors = data.Authors.Replace(" ", "").Split(',');
             Player.Message(p, "Map authors: {0}",
