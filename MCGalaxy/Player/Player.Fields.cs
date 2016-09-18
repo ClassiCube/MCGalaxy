@@ -241,7 +241,7 @@ namespace MCGalaxy {
 
         public Level level = Server.mainLevel;
         public bool Loading = true; //True if player is loading a map.
-        internal bool usingGoto = false;
+        internal int UsingGoto = 0, GeneratingMap = 0, LoadingMap = 0;
         public Vec3U16 lastClick = Vec3U16.Zero;
         public ushort[] beforeTeleportPos = new ushort[3];
         public string beforeTeleportMap = "";

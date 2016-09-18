@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Threading;
 using MCGalaxy.Games;
 using MCGalaxy.Commands.World;
 
@@ -47,16 +48,17 @@ namespace MCGalaxy {
         }
         
         static bool ChangeMap(Player p, Level lvl, string name, bool ignorePerms) {
-            if (p.usingGoto) { Player.Message(p, "Cannot use /goto, already loading a map."); return false; }
+            if (Interlocked.CompareExchange(ref p.UsingGoto, 1, 0) == 1) {
+                Player.Message(p, "Cannot use /goto, already joining a map."); return false; 
+            }
             Level oldLevel = p.level;
-            p.usingGoto = true;
             bool didJoin = false;
             
             try {
                 didJoin = name == null ? 
                     GotoLevel(p, lvl, ignorePerms) : GotoMap(p, name, ignorePerms);
             } finally {
-                p.usingGoto = false;
+                Interlocked.Exchange(ref p.UsingGoto, 0);
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
@@ -107,7 +109,7 @@ namespace MCGalaxy {
         }
         
         static bool GotoLevel(Player p, Level lvl, bool ignorePerms) {
-        	if (p.level == lvl) { Player.Message(p, "You are already in \"{0}\".", lvl.name); return false; }
+            if (p.level == lvl) { Player.Message(p, "You are already in \"{0}\".", lvl.name); return false; }
             if (!lvl.CanJoin(p, ignorePerms)) return false;
             if (!Server.zombie.PlayerCanJoinLevel(p, lvl, p.level)) return false;
 

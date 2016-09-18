@@ -123,9 +123,9 @@ namespace MCGalaxy.Commands {
                 
                 string[] args = value.TrimEnd().Split(' ');
                 if (args.Length == 3) value += " flat";
-                
-                Player.Message(p, "Creating a new map for you: " + level);
-                Command.all.Find("newlvl").Use(p, level + " " + value);
+
+                CmdNewLvl newLvl = (CmdNewLvl)Command.all.Find("newlvl"); // TODO: this is a nasty hack, find a better way
+                if (!newLvl.GenerateMap(p, level + " " + value)) return;
                 
                 // Set default perbuild permissions
                 CmdLoad.LoadLevel(null, level);

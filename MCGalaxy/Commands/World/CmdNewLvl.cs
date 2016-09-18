@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using System.Threading;
 using MCGalaxy.Generator;
 
 namespace MCGalaxy.Commands.World {
@@ -31,45 +32,55 @@ namespace MCGalaxy.Commands.World {
         }
         public CmdNewLvl() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message) { GenerateMap(p, message); }
+        
+        internal bool GenerateMap(Player p, string message) {
             string[] args = message.Split(' ');
-            if (args.Length < 5 || args.Length > 6) { Help(p); return; }
-            if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return; }
+            if (args.Length < 5 || args.Length > 6) { Help(p); return false; }
+            if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return false; }
 
             ushort x, y, z;
             string name = args[0].ToLower();
             if (!UInt16.TryParse(args[1], out x) || !UInt16.TryParse(args[2], out y) || !UInt16.TryParse(args[3], out z)) {
-                Player.Message(p, "Invalid dimensions."); return;
+                Player.Message(p, "Invalid dimensions."); return false;
             }
             
             string seed = args.Length == 6 ? args[5] : "";
-            if (!MapGen.OkayAxis(x)) { Player.Message(p, "width must be divisible by 16, and >= 16"); return; }
-            if (!MapGen.OkayAxis(y)) { Player.Message(p, "height must be divisible by 16, and >= 16"); return; }
-            if (!MapGen.OkayAxis(z)) { Player.Message(p, "length must be divisible by 16, and >= 16."); return; }
-            if (!CheckMapSize(p, x, y, z)) return;
+            if (!MapGen.OkayAxis(x)) { Player.Message(p, "width must be divisible by 16, and >= 16"); return false; }
+            if (!MapGen.OkayAxis(y)) { Player.Message(p, "height must be divisible by 16, and >= 16"); return false; }
+            if (!MapGen.OkayAxis(z)) { Player.Message(p, "length must be divisible by 16, and >= 16."); return false; }
+            if (!CheckMapSize(p, x, y, z)) return false;
  
-            if (!Formatter.ValidName(p, name, "level")) return;
+            if (!Formatter.ValidName(p, name, "level")) return false;
             if (LevelInfo.ExistsOffline(name)) {
-                Player.Message(p, "Level \"{0}\" already exists", name); return;
+                Player.Message(p, "Level \"{0}\" already exists", name); return false;
             }
             if (!MapGen.IsSimpleTheme(args[4]) && !CheckExtraPerm(p)) { 
-                MessageNeedExtra(p, "generate maps with advanced themes."); return;
+                MessageNeedExtra(p, "generate maps with advanced themes."); return false;
             }
 
+            if (p != null && Interlocked.CompareExchange(ref p.GeneratingMap, 1, 0) == 1) {
+                Player.Message(p, "You are already generating a map, please wait until that map has finished generating first.");
+                return false;
+            }
+            
             try {
+                Player.Message(p, "Generating map \"{0}\"..", Level);
                 using (Level lvl = new Level(name, x, y, z)) {
-                    if (!MapGen.Generate(lvl, args[4], seed, p)) return;
+                    if (!MapGen.Generate(lvl, args[4], seed, p)) return false;
                     LevelDB.CreateTables(name);
                     lvl.Save(true);
                     lvl.Dispose();
                 }
+                
+                string format = seed != "" ? "Level \"{0}\" created with seed \"{1}\"" : "Level \"{0}\" created";
+                Chat.MessageAll(format, name, seed);
             } finally {
+                if (p != null) Interlocked.Exchange(ref p.GeneratingMap, 0);
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
-            
-            string format = seed != "" ? "Level \"{0}\" created with seed \"{1}\"" : "Level \"{0}\" created";
-            Chat.MessageAll(format, name, seed);
+            return true;
         }
         
         internal static bool CheckMapSize(Player p, int x, int y, int z) {
