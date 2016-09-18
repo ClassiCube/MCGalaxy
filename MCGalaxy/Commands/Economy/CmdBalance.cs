@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands {
             index += dateLength;
             string suffix = "";
             if (index < value.Length)
-                suffix = value.Substring(index + dateLength);
+                suffix = value.Substring(index);
             
             DateTime time;
             if (!DateTime.TryParseExact(date, dateFormat, null, 0, out time)) return false;

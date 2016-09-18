@@ -80,7 +80,13 @@ namespace MCGalaxy.Games {
         public int InvisibilityPotions;
         
         /// <summary> Number of successful revives this round. </summary>
-        public int RevivesUsed;    
+        public int RevivesUsed;
+        
+        /// <summary> Last time a message was sent to ops warning about pillaring. </summary>
+        public DateTime LastPillarWarn;
+        
+        /// <summary> Whether the player has already been fined for pillaring. </summary>
+        public bool PillarFined;
         
         /// <summary> Resets all the invisibility variables back to default. </summary>
         public void ResetInvisibility() {

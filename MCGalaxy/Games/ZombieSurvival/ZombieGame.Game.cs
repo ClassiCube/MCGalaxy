@@ -44,12 +44,7 @@ namespace MCGalaxy.Games {
                     p.Game.BlocksStacked = 0;
                 }
                 
-                if (p.Game.BlocksStacked == 2) {
-                    p.SendMessage("You are pillaring! Stop before you get kicked!");
-                }
-                if (p.Game.BlocksStacked == 4) {
-                    p.Kick("No pillaring allowed!"); return true;
-                }
+                if (MessagePillaring(p)) return true;
             }
             p.Game.LastX = x; p.Game.LastY = y; p.Game.LastZ = z;
             
@@ -64,6 +59,33 @@ namespace MCGalaxy.Games {
                 p.Game.BlocksLeft--;
                 if ((p.Game.BlocksLeft % 10) == 0 || (p.Game.BlocksLeft >= 0 && p.Game.BlocksLeft <= 10))
                     p.SendMessage("Blocks Left: &4" + p.Game.BlocksLeft);
+            }
+            return false;
+        }
+        
+        static bool MessagePillaring(Player p) {
+            if (p.Game.BlocksStacked == 2) {
+                TimeSpan delta = DateTime.UtcNow - p.Game.LastPillarWarn;
+                if (delta.TotalSeconds >= 5) {
+                    Chat.MessageOps(  "&cWarning: " + p.ColoredName + " %Sis pillaring!");
+                    p.Game.LastPillarWarn = DateTime.UtcNow;
+                }
+                
+                string action = p.Game.PillarFined ? "kicked" : "fined 10 " + Server.moneys;
+                p.SendMessage("You are pillaring! &cStop before you are " + action + "!");
+            } else if (p.Game.BlocksStacked == 4) {
+                if (!p.Game.PillarFined) {
+                    Chat.MessageOps("  &cWarning: " + p.ColoredName + " %Sis pillaring!");
+                    Command.all.Find("take").Use(null, p.name + " 10 Auto fine for pillaring");
+                    p.SendMessage("  &cThe next time you pillar, you will be &4kicked&c.");
+                } else {
+                    p.Kick("No pillaring allowed!");
+                    Player.AddNote(p.name, null, "K", "Auto kick for pillaring");
+                    return true;
+                }
+        		
+        	    p.Game.PillarFined = true;
+                p.Game.BlocksStacked = 0;
             }
             return false;
         }
@@ -106,7 +128,7 @@ namespace MCGalaxy.Games {
                 if (p.Game.Team == null) {
                     p.SendMessage("You are not on a team, so cannot send a team message."); return true;
                 }
-                p.Game.Team.Chat(p, message.Substring(1)); 
+                p.Game.Team.Chat(p, message.Substring(1));
                 return true;
             }
             return false;
@@ -149,10 +171,10 @@ namespace MCGalaxy.Games {
                 double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
                 if (startLeft >= 0)
                     p.SendMessage("%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
-                p.SendMessage("This map has &a" + CurLevel.Likes + 
+                p.SendMessage("This map has &a" + CurLevel.Likes +
                               " likes %Sand &c" + CurLevel.Dislikes + " dislikes");
                 p.SendMessage("This map's win chance is &a" + CurLevel.WinChance + "%S%");
-                p.SendCpeMessage(CpeMessageType.Status2, 
+                p.SendCpeMessage(CpeMessageType.Status2,
                                  "%SPillaring " + (CurLevel.Pillaring ? "&aYes" : "&cNo") +
                                  "%S, Type is &a" + CurLevel.BuildType);
                 
