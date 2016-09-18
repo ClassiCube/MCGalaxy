@@ -191,7 +191,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "Valid types: Cartoon/Midnight/Midnight2/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");           
             if (!Directory.Exists("presets")) return;
             
-            string[] files = Directory.GetFiles("preset", "*.env");
+            string[] files = Directory.GetFiles("presets", "*.env");
             string all = files.Join(f => Path.GetFileNameWithoutExtension(f));
             if (all != "")
                 Player.Message(p, "Custom preset types: " + all);

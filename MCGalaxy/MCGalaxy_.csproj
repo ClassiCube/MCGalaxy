@@ -68,21 +68,21 @@
     <Reference Include="LibNoise">
       <HintPath>..\LibNoise.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite">
       <HintPath>..\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="MySql.Data, Version=6.3.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d">
-      <HintPath>..\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -588,7 +588,7 @@
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
-    <Compile Include="Server\Extra\ProfanityFilter.cs"/>
+    <Compile Include="Server\Extra\ProfanityFilter.cs" />
     <Compile Include="Scripting\Backends.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\Server.DB.cs" />
