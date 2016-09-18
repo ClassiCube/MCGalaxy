@@ -28,6 +28,7 @@ namespace MCGalaxy {
         public bool cancelBlock = false;
         public bool cancelmysql = false;
         public bool cancelmessage = false;
+        public bool cancellogin = false;
         internal bool HasBlockchange { get { return Blockchange != null; } }
         
         //Should people be able to cancel this event?

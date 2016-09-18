@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.Bots;
 
-namespace MCGalaxy.Commands.CPE {    
+namespace MCGalaxy.Commands.CPE {
     public class CmdSkin : EntityPropertyCmd {
         public override string name { get { return "skin"; } }
         public override string shortcut { get { return ""; } }

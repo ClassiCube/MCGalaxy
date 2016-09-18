@@ -39,6 +39,8 @@ namespace MCGalaxy {
                     return Group.cancelrank;
                 case PlayerEvents.MessageRecieve:
                     return p.cancelmessage;
+                case PlayerEvents.PlayerLogin:
+                    return p.cancellogin;
                 default:
                     return false;
             }
@@ -130,6 +132,8 @@ namespace MCGalaxy {
                     Group.cancelrank = true; break;
                 case PlayerEvents.MessageRecieve:
                     p.cancelmessage = true; break;
+                case PlayerEvents.PlayerLogin:
+                    p.cancellogin = true; break;
             }
         }
 	}

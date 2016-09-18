@@ -239,6 +239,12 @@ namespace MCGalaxy {
                 hidden = true; adminchat = true;
             }
             
+            if (PlayerConnect != null)
+                PlayerConnect(this);
+            OnPlayerConnectEvent.Call(this);
+            if (cancellogin) { cancellogin = false; return; }
+            
+            
             string joinm = "&a+ " + FullName + " %S" + PlayerDB.GetLoginMessage(this);
             if (hidden) joinm = "&8(hidden)" + joinm;
             const LevelPermission perm = LevelPermission.Guest;
@@ -248,10 +254,6 @@ namespace MCGalaxy {
                     if (Entities.CanSee(pl, this)) Player.Message(pl, joinm);
                 }
             }
-            
-            if (PlayerConnect != null)
-                PlayerConnect(this);
-            OnPlayerConnectEvent.Call(this);
 
             if (Server.agreetorulesonentry && group.Permission == LevelPermission.Guest && !Server.agreed.Contains(name)) {
                 SendMessage("&9You must read the &c/rules&9 and &c/agree&9 to them before you can build and use commands!");

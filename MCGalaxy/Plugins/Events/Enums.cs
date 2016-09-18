@@ -37,7 +37,8 @@ namespace MCGalaxy
         BlockChange,
         PlayerMove,
         MYSQLSave,
-        PlayerRankChange
+        PlayerRankChange,
+        PlayerLogin,
     }
     
     /// <summary> These are Global (static) level events that can be canceled </summary>
