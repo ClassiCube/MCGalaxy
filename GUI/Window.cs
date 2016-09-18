@@ -107,15 +107,17 @@ namespace MCGalaxy.Gui {
         public void RunOnUiThread(Action act) { Invoke(act); }
         
         void Player_PlayerConnect(Player p) {
-            UpdatePlyersListBox();
+            UpdatePlayersListBox();
         }
         
         void Player_PlayerDisconnect(Player p, string reason) {
-            UpdatePlyersListBox();
+            UpdatePlayersListBox();
         }
         
         void Player_OnSendMap(Player p, byte[] buffer) {
-            UpdatePlayerMapCombo();
+            RunOnUiThread(() => {
+                UpdatePlayerMapCombo();
+            });
         }
         
         void Level_LevelUnload(Level l) {
@@ -222,8 +224,8 @@ namespace MCGalaxy.Gui {
             if (InvokeRequired) {
                 Invoke(new UpdateList(UpdateMapList)); return;
             }
-        	
-        	if (main_Maps.DataSource == null)
+            
+            if (main_Maps.DataSource == null)
                 main_Maps.DataSource = lc;
 
             // Try to keep the same selection on update
@@ -289,7 +291,7 @@ namespace MCGalaxy.Gui {
             }
             if (Server.shuttingDown || MessageBox.Show("Really Shutdown the Server? All Connections will break!", "Exit", MessageBoxButtons.OKCancel) == DialogResult.OK) {
                 if (!Server.shuttingDown) MCGalaxy.Gui.App.ExitProgram(false);
-        		notifyIcon1.Dispose();
+                notifyIcon1.Dispose();
             } else {
                 // Prevents form from closing when user clicks the X and then hits 'cancel'
                 e.Cancel = true;
@@ -368,7 +370,7 @@ namespace MCGalaxy.Gui {
        void tabs_Click(object sender, EventArgs e)  {
             try { UpdateUnloadedList(); }
             catch { }
-            try { UpdatePlyersListBox(); }
+            try { UpdatePlayersListBox(); }
             catch { }
             
             try {
@@ -654,7 +656,7 @@ namespace MCGalaxy.Gui {
         #region Players tab
         PlayerProperties playerProps;
          
-        public void UpdatePlyersListBox() {
+        public void UpdatePlayersListBox() {
             RunOnUiThread(
                 delegate {
                     pl_listBox.Items.Clear();
