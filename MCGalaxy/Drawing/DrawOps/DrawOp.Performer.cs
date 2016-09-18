@@ -51,6 +51,8 @@ namespace MCGalaxy.Drawing.Ops {
                 Player.Message(p, "Drawing commands are turned off on this map.");
                 return false;
             }
+            if (op.Level != null && !op.Level.BuildAccess.CheckDetailed(p))
+                return false;
             
             long affected = op.BlocksAffected(op.Level, marks);
             if (p != null && op.AffectedByTransform)
