@@ -153,7 +153,7 @@ namespace MCGalaxy.Gui
             this.pl_btnSlap = new System.Windows.Forms.Button();
             this.pl_btnBan = new System.Windows.Forms.Button();
             this.pl_btnKill = new System.Windows.Forms.Button();
-            this.pl_statusBox = new MCGalaxy.Gui.AutoScrollTextBox();
+            this.pl_statusBox = new System.Windows.Forms.TextBox();
             this.pl_listBox = new System.Windows.Forms.ListBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.tsMap.SuspendLayout();
@@ -1381,7 +1381,7 @@ namespace MCGalaxy.Gui
         private Button pl_btnUndo;
         private Button pl_btnSlap;
         private Button pl_btnRules;
-        private AutoScrollTextBox pl_statusBox;
+        private TextBox pl_statusBox;
         private ListBox pl_listBox;
         private Button main_btnSaveAll;
         private Button main_btnUnloadEmpty;

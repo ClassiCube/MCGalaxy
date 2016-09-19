@@ -674,14 +674,24 @@ namespace MCGalaxy.Gui {
                 });
         }
         
+        void AppendPlayerStatus(string text) {
+            if (InvokeRequired) {
+                Action<string> d = AppendPlayerStatus;
+                Invoke(d, new object[] { text, true });
+            } else {
+                pl_statusBox.AppendText(text + Environment.NewLine);
+            }
+        }
+        
         void LoadPlayerTabDetails(object sender, EventArgs e) {
             Player p = PlayerInfo.FindExact(pl_listBox.Text);
-            if (p == null) return;
+            if (p == null || p == curPlayer) return;
             
-            pl_statusBox.AppendTextAndScroll("==" + p.name + "==");
+            pl_statusBox.Text = "";
+            AppendPlayerStatus("==" + p.name + "==");
             playerProps = new PlayerProperties(p);
             pl_gbProps.Text = "Properties for " + p.name;
-            pl_pgProps.SelectedObject = playerProps;           
+            pl_pgProps.SelectedObject = playerProps;
             curPlayer = p;
             
             try {
@@ -695,50 +705,50 @@ namespace MCGalaxy.Gui {
         }
 
         void pl_BtnUndo_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { pl_statusBox.AppendTextAndScroll("No player selected"); return; }
+            if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
             if (pl_txtUndo.Text.Trim() == "")  {
-                pl_statusBox.AppendTextAndScroll("You didn't specify a time"); return;
+                AppendPlayerStatus("You didn't specify a time"); return;
             }
 
             try {
                 Command.core.Find("undo").Use(null, curPlayer.name + " " + pl_txtUndo.Text);
-                pl_statusBox.AppendTextAndScroll("Undid player for " + pl_txtUndo.Text + " Seconds");
+                AppendPlayerStatus("Undid player for " + pl_txtUndo.Text + " seconds");
             } catch {
-                pl_statusBox.AppendTextAndScroll("Something went wrong!!");
+                AppendPlayerStatus("Something went wrong!!");
             }
         }
 
         void pl_BtnMessage_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { pl_statusBox.AppendTextAndScroll("No player selected"); return; }
+            if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
             Player.SendMessage(curPlayer, "<CONSOLE> " + pl_txtMessage.Text);
-            pl_statusBox.AppendTextAndScroll("Sent player message '<CONSOLE> " + pl_txtMessage.Text + "'");
+            AppendPlayerStatus("Sent player message '<CONSOLE> " + pl_txtMessage.Text + "'");
             pl_txtMessage.Text = "";
         }
 
         void pl_BtnImpersonate_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { pl_statusBox.AppendTextAndScroll("No player selected"); return; }
+            if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
             
             try {
                 if (pl_txtImpersonate.Text.StartsWith("/")) {
                     string[] args = pl_txtImpersonate.Text.Trim().SplitSpaces(2);
                     Command cmd = Command.all.Find(args[0].Replace("/", ""));
-                    if (cmd == null) {
-                        pl_statusBox.AppendTextAndScroll("That isn't a command!!"); return;
+                    if (cmd == null) { 
+                        AppendPlayerStatus("There is no command '" + args[0] + "'"); return; 
                     }
                     
                     cmd.Use(curPlayer, args.Length > 1 ? args[1] : "");
                     if (args.Length > 1) {
-                        pl_statusBox.AppendTextAndScroll("Used command '" + args[0] + "' with parameters '" + args[1] + "' as player");
+                        AppendPlayerStatus("Used command '" + args[0] + "' with parameters '" + args[1] + "' as player");
                     } else {
-                        pl_statusBox.AppendTextAndScroll("Used command '" + args[0] + "' with no parameters as player");
+                        AppendPlayerStatus("Used command '" + args[0] + "' with no parameters as player");
                     }
                 } else {
                     Command.all.Find("impersonate").Use(null, curPlayer.name + " " + pl_txtImpersonate.Text);
-                    pl_statusBox.AppendTextAndScroll("Sent Message '" + pl_txtImpersonate.Text + "' as player");
+                    AppendPlayerStatus("Sent Message '" + pl_txtImpersonate.Text + "' as player");
                 }
                 pl_txtImpersonate.Text = "";
             } catch {
-                pl_statusBox.AppendTextAndScroll("Something went wrong");
+                AppendPlayerStatus("Something went wrong");
             }
         }
 
@@ -750,21 +760,21 @@ namespace MCGalaxy.Gui {
         void pl_BtnIPBan_Click(object sender, EventArgs e) { DoCmd("banip", "IP-Banned"); }
         
         void DoCmd(string cmdName, string action) {
-            if (curPlayer == null) { pl_statusBox.AppendTextAndScroll("No player selected"); return; }
+            if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
             Command.all.Find(cmdName).Use(null, curPlayer.name);
-            pl_statusBox.AppendTextAndScroll(action + " player");
+            AppendPlayerStatus(action + " player");
         }
 
         void pl_BtnRules_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { pl_statusBox.AppendTextAndScroll("No Player Selected"); return; }
+            if (curPlayer == null) { AppendPlayerStatus("No Player Selected"); return; }
             Command.all.Find("rules").Use(curPlayer, "");
-            pl_statusBox.AppendTextAndScroll("Sent rules to player");
+            AppendPlayerStatus("Sent rules to player");
         }
 
         void pl_BtnSpawn_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { pl_statusBox.AppendTextAndScroll("No Player Selected"); return; }          
+            if (curPlayer == null) { AppendPlayerStatus("No Player Selected"); return; }
             Command.all.Find("spawn").Use(curPlayer, "");
-            pl_statusBox.AppendTextAndScroll("Sent player to spawn");
+            AppendPlayerStatus("Sent player to spawn");
         }
 
         void pl_listBox_Click(object sender, EventArgs e) {

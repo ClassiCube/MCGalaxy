@@ -66,9 +66,6 @@
     <Compile Include="Window.Designer.cs">
       <DependentUpon>Window.cs</DependentUpon>
     </Compile>
-    <Compile Include="AutoScrollTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Win32\Natives.cs" />
     <Compile Include="PropertyWindow.Games.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
