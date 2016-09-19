@@ -14,11 +14,9 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MCGalaxy.Commands {
-    public sealed class CmdCommands : Command {
-        
+    public sealed class CmdCommands : Command {       
         public override string name { get { return "commands"; } }
         public override string shortcut { get { return "cmds"; } }
         public override string type { get { return CommandTypes.Information; } }

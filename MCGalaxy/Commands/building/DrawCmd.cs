@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Building {
             dArgs.Message = message;
             dArgs.Player = p;
             dArgs.Mode = GetMode(parts);
-            dArgs.Op = GetDrawOp(dArgs);            
+            dArgs.Op = GetDrawOp(dArgs);
             if (dArgs.Op == null) return;
             
             // Validate the brush syntax is correct

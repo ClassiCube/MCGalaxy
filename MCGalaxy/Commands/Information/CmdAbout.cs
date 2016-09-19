@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands {
                 foundOne = true;
                 DataRow row = Blocks.Rows[i];
                 string user = row["Username"].ToString().Trim();
-                DateTime time = DateTime.Parse(row["TimePerformed"].ToString());                
+                DateTime time = DateTime.Parse(row["TimePerformed"].ToString());
                 byte block = byte.Parse(row["Type"].ToString());
                 
                 byte flags = byte.Parse(row["Deleted"].ToString());

@@ -29,7 +29,14 @@ namespace MCGalaxy.Commands.Building {
         public override int MarksCount { get { return 1; } }
         
         protected override DrawMode GetMode(string[] parts) {
-            string msg = parts[parts.Length - 1];
+            if (parts[parts.Length - 1].CaselessEq("confirm")) {
+                string prev = parts.Length >= 2 ? parts[parts.Length - 2] : "";
+                return ParseFillMode(prev);
+            }
+            return ParseFillMode(parts[parts.Length - 1]);
+        }
+        
+        DrawMode ParseFillMode(string msg) {
             if (msg == "normal") return DrawMode.solid;
             else if (msg == "up") return DrawMode.up;
             else if (msg == "down") return DrawMode.down;
@@ -39,8 +46,12 @@ namespace MCGalaxy.Commands.Building {
             return DrawMode.normal;
         }
         
-        protected override DrawOp GetDrawOp(DrawArgs dArg) {
-            return new CuboidDrawOp();
+        protected override DrawOp GetDrawOp(DrawArgs dArg) { return new FillDrawOp(); }
+
+        protected override string GetBrush(Player p, DrawArgs dArgs, ref int offset) {
+            offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
+            if (IsConfirmed(dArgs.Message)) offset++;
+            return p.BrushName;
         }
         
         protected override bool DoDraw(Player p, Vec3S32[] marks,
@@ -51,22 +62,26 @@ namespace MCGalaxy.Commands.Building {
             if (oldBlock == Block.custom_block)
                 oldExtBlock = p.level.GetExtTile(x, y, z);
 
-            dArgs.Block = block; dArgs.ExtBlock = extBlock;
             if (!Block.canPlace(p, oldBlock) && !Block.BuildIn(oldBlock)) {
                 Formatter.MessageBlock(p, "fill over ", oldBlock); return false;
-            }           
-            FillDrawOp op = new FillDrawOp();
+            }
+            
+            FillDrawOp op = (FillDrawOp)dArgs.Op;
             op.Positions = FloodFill(p, p.level.PosToInt(x, y, z), oldBlock, oldExtBlock, dArgs.Mode);
+            int count = op.Positions.Count;
             
-            int offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
-            BrushFactory factory = BrushFactory.Find(p.BrushName);
-            BrushArgs bArgs = GetBrushArgs(dArgs, offset);
-            Brush brush = factory.Construct(bArgs);
-            
-            if (brush == null || !DrawOp.DoDrawOp(op, brush, p, marks)) return false;
+            bool confirmed = IsConfirmed(dArgs.Message), success = true;
+            if (count < p.group.maxBlocks && count > Server.DrawReloadLimit && !confirmed) {
+                Player.Message(p, "This fill would affect {0} blocks.", count);
+                Player.Message(p, "If you still want to fill, type %T/fill {0} confirm", dArgs.Message);
+            } else {
+                success = base.DoDraw(p, marks, state, block, extBlock);
+            }            
+  
             op.Positions = null;
-            return true;
+            return success;
         }
+        
         
         unsafe List<int> FloodFill(Player p, int index, byte block, byte extBlock, DrawMode mode) {
             Level lvl = p.level;
@@ -139,6 +154,10 @@ namespace MCGalaxy.Commands.Building {
                 return curExtBlock == extBlock;
             }
             return curBlock == block;
+        }
+        
+        static bool IsConfirmed(string message) {
+            return message.CaselessEq("confirm") || message.CaselessEnds(" confirm");
         }
         
         public override void Help(Player p) {
