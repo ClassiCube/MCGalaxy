@@ -198,9 +198,9 @@ namespace MCGalaxy {
         public static int mutespamtime = 60;
         [ConfigInt("spam-counter-reset-time", "Spam control", null, 5)]
         public static int spamcountreset = 5;
+        
         [ConfigString("host-state", "Other", null, "Alive")]
         public static string ZallState = "Alive";
-
         [ConfigString("main-name", "General", null, "main", false, "._+")]
         public static string level = "main";
         [ConfigString("xjail-map-name", "Other", null, "(main)", false, "()._+")]

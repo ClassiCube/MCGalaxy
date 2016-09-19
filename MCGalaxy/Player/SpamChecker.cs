@@ -20,14 +20,13 @@ namespace MCGalaxy {
         
         public SpamChecker(Player p) {
             this.p = p;
-            blockLog = new Queue<DateTime>(Player.spamBlockCount);
+            blockLog = new List<DateTime>(Player.spamBlockCount);
             chatLog = new List<DateTime>(Server.spamcounter);
         }
         
         Player p;
         readonly object chatLock = new object();
-        readonly Queue<DateTime> blockLog;
-        readonly List<DateTime> chatLog;
+        readonly List<DateTime> blockLog, chatLog;
         
         public void Clear() {
             blockLog.Clear();
@@ -37,47 +36,41 @@ namespace MCGalaxy {
         }
         
         public bool CheckBlockSpam() {
-            if (blockLog.Count >= Player.spamBlockCount) {
-                DateTime oldestTime = blockLog.Dequeue();
-                double oldestDelta = DateTime.UtcNow.Subtract(oldestTime).TotalSeconds;
-                
-                if (!p.ignoreGrief && oldestDelta < Player.spamBlockTimer) {
-                    p.Kick("You were kicked by antigrief system. Slow down.");
-                    Chat.MessageOps(p.ColoredName + " &cwas kicked for suspected griefing.");
-                    Server.s.Log(p.name + " was kicked for block spam (" + blockLog.Count
-                                 + " blocks in " + oldestDelta + " seconds)");
-                    return true;
-                }
-            }            
-            blockLog.Enqueue(DateTime.UtcNow);
-            return false;
+            if (p.ignoreGrief) return false;
+            if (AddEntry(blockLog, Player.spamBlockCount, Player.spamBlockTimer)) return false;
+
+            TimeSpan oldestDelta = DateTime.UtcNow - blockLog[0];
+            p.Kick("You were kicked by antigrief system. Slow down.");
+            Chat.MessageOps(p.ColoredName + " &cwas kicked for suspected griefing.");
+            Server.s.Log(p.name + " was kicked for block spam (" + blockLog.Count
+                         + " blocks in " + oldestDelta + " seconds)");
+            return true;            
         }
         
-        public void CheckChatSpam() {
+        public bool CheckChatSpam() {
             Player.lastMSG = p.name;
-            if (!Server.checkspam || p.ircNick != null) return;
+            if (!Server.checkspam || p.ircNick != null) return false;
             
             lock (chatLock) {
-                DateTime now = DateTime.UtcNow;
-                int count = chatLog.Count, inThreshold = 0;
-                if (count > 0 && count >= Server.spamcounter)
-                    chatLog.RemoveAt(0);
-                chatLog.Add(now);
-                
-                // Count number of messages that are within the chat spam dection threshold
-                count = chatLog.Count;
-                for (int i = 0; i < count; i++) {
-                    TimeSpan delta = now - chatLog[i];
-                    if (delta.TotalSeconds <= Server.spamcountreset)
-                        inThreshold++;
-                }
-                if (inThreshold < Server.spamcounter) return;
+                if (AddEntry(chatLog, Server.spamcounter, Server.spamcountreset)) return false;
                 
                 Command.all.Find("mute").Use(null, p.name);
                 Chat.MessageAll("{0} %Shas been &0muted %Sfor spamming!", p.ColoredName);
                 Server.MainScheduler.QueueOnce(UnmuteTask, p.name,
                                                TimeSpan.FromSeconds(Server.mutespamtime));
+                return true;
             }
+        }
+        
+        static bool AddEntry(List<DateTime> log, int maxEntries, int checkInterval) {
+            DateTime now = DateTime.UtcNow;
+            if (log.Count > 0 && log.Count >= maxEntries) 
+                log.RemoveAt(0);
+            log.Add(now);
+            
+            if (log.Count < maxEntries) return true;
+            TimeSpan oldestDelta = now - log[0];
+            return oldestDelta.TotalSeconds > checkInterval;
         }
         
         static void UnmuteTask(SchedulerTask task) {
