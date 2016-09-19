@@ -51,8 +51,11 @@ namespace MCGalaxy.Drawing.Ops {
                 Player.Message(p, "Drawing commands are turned off on this map.");
                 return false;
             }
-            if (op.Level != null && !op.Level.BuildAccess.CheckDetailed(p))
+            if (op.Level != null && op.Level.BuildAccess.Check(p) == LevelAccessResult.Blacklisted) {
+                Player.Message(p, "You are blacklisted from building in this map, " +
+            	               "hence you cannot draw in this map");
                 return false;
+            }
             
             long affected = op.BlocksAffected(op.Level, marks);
             if (p != null && op.AffectedByTransform)
