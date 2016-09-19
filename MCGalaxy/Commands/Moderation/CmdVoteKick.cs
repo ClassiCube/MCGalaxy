@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands {
             foreach (Player pl in players) {
                 if (pl.voteKickChoice == VoteKickChoice.Yes) votesYes++;
                 if (pl.voteKickChoice == VoteKickChoice.No) votesNo++;
-                pl.voteKickChoice = VoteKickChoice.HasntVoted;
+                pl.voteKickChoice = VoteKickChoice.NotYetVoted;
             }
             
             string name = (string)task.State;

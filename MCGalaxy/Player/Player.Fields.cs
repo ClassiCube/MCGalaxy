@@ -23,6 +23,8 @@ using MCGalaxy.Undo;
 
 namespace MCGalaxy {
     
+    public enum VoteKickChoice { NotYetVoted, Yes, No }
+	
     public sealed partial class Player : IDisposable {
         
         public Dictionary<string, object> ExtraData = new Dictionary<string, object>();
@@ -115,12 +117,6 @@ namespace MCGalaxy {
         public string FullName { get { return color + prefix + DisplayName; } }
         
         public string ColoredName { get { return color + DisplayName; } }
-
-        //Gc checks
-        public string lastmsg = "";
-        public int spamcount = 0, capscount = 0, floodcount = 0, multi = 0;
-        public DateTime lastmsgtime = DateTime.MinValue;
-        public bool canusegc = true;
 
         public bool deleteMode = false;
         public bool ignorePermission = false;
@@ -253,23 +249,17 @@ namespace MCGalaxy {
         //ushort[] clippos = new ushort[3] { 0, 0, 0 };
         //byte[] cliprot = new byte[2] { 0, 0 };
 
-        // grief/spam detection
         public static int spamBlockCount = 200;
         public static int spamBlockTimer = 5;
-        Queue<DateTime> spamBlockLog = new Queue<DateTime>(spamBlockCount);
-
         public int consecutivemessages;
-        internal readonly object lastMessageLock = new object();
-        public List<DateTime> LastMessageTimes;
-        //public static int spamChatCount = 3;
-        //public static int spamChatTimer = 4;
-        //Queue<DateTime> spamChatLog = new Queue<DateTime>(spamChatCount);
 
         // CmdVoteKick
-        public VoteKickChoice voteKickChoice = VoteKickChoice.HasntVoted;
+        public VoteKickChoice voteKickChoice = VoteKickChoice.NotYetVoted;
 
         // Extra storage for custom commands
         public ExtrasCollection Extras = new ExtrasCollection();
+        
+        SpamChecker spamChecker;
 
         //Chatrooms
         public string Chatroom;

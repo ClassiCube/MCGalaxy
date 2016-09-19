@@ -549,6 +549,7 @@
     <Compile Include="Player\PlayerActions.cs" />
     <Compile Include="Player\PlayerData.cs" />
     <Compile Include="Player\PlayerInfo.cs" />
+    <Compile Include="Player\SpamCheck.cs" />
     <Compile Include="Player\TabList.cs" />
     <Compile Include="Player\Undo\UndoCache.cs" />
     <Compile Include="Player\Undo\UndoFormat.Helpers.cs" />
@@ -639,7 +640,6 @@
     <Compile Include="util\Hasher.cs" />
     <Compile Include="Player\Player.CPE.cs" />
     <Compile Include="Database\PlayerDB.cs" />
-    <Compile Include="Player\VoteKickChoice.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

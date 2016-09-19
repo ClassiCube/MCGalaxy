@@ -85,9 +85,11 @@ namespace MCGalaxy {
             truename = playername;
             DisplayName = playername;
             SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
+            spamChecker = new SpamChecker(this);
         }
 
         public Player(Socket s) {
+            spamChecker = new SpamChecker(this);
             try {
                 socket = s;
                 ip = socket.RemoteEndPoint.ToString().Split(':')[0];
@@ -102,7 +104,6 @@ namespace MCGalaxy {
             }
             catch ( Exception e ) { Leave("Login failed!"); Server.ErrorLog(e); }
         }
-
 
         public void save() {
             const string query = "UPDATE Players SET IP=@0, LastLogin=@1, totalLogin=@2, totalDeaths=@3, " +
@@ -352,8 +353,7 @@ namespace MCGalaxy {
                 CopyBuffer.Clear();
             DrawOps.Clear();
             UndoBuffer.Clear();
-            spamBlockLog.Clear();
-            //spamChatLog.Clear();
+            spamChecker.Clear();
             spyChatRooms.Clear();
         }
 
@@ -423,21 +423,6 @@ namespace MCGalaxy {
         public void RevertBlock(ushort x, ushort y, ushort z) {
             byte b = level.GetTile(x, y, z);
             SendBlockchange(x, y, z, b);
-        }
-        
-        bool CheckBlockSpam() {
-            if ( spamBlockLog.Count >= spamBlockCount ) {
-                DateTime oldestTime = spamBlockLog.Dequeue();
-                double spamTimer = DateTime.UtcNow.Subtract(oldestTime).TotalSeconds;
-                if ( spamTimer < spamBlockTimer && !ignoreGrief ) {
-                    Kick("You were kicked by antigrief system. Slow down.");
-                    SendMessage(Colors.red + DisplayName + " was kicked for suspected griefing.");
-                    Server.s.Log(name + " was kicked for block spam (" + spamBlockCount + " blocks in " + spamTimer + " seconds)");
-                    return true;
-                }
-            }
-            spamBlockLog.Enqueue(DateTime.UtcNow);
-            return false;
         }
 
         public static bool IPInPrivateRange(string ip) {
@@ -568,34 +553,7 @@ namespace MCGalaxy {
         
         
         public void CheckForMessageSpam() {
-            Player.lastMSG = name; 
-            if (!Server.checkspam || ircNick != null) return;
-            
-            lock (lastMessageLock) {
-                if (LastMessageTimes == null) 
-                    LastMessageTimes = new List<DateTime>(Server.spamcounter);
-                
-                DateTime now = DateTime.UtcNow;
-                int count = LastMessageTimes.Count, inThreshold = 0;
-                if (count > 0 && count >= Server.spamcounter)
-                    LastMessageTimes.RemoveAt(0);
-                LastMessageTimes.Add(now);
-                
-                // Count number of messages that are within the chat spam dection threshold
-                count = LastMessageTimes.Count;
-                for (int i = 0; i < count; i++) {
-                    TimeSpan delta = now - LastMessageTimes[i];
-                    if (delta.TotalSeconds <= Server.spamcountreset)
-                        inThreshold++;
-                }            
-                if (inThreshold < Server.spamcounter) return;
-                
-                muteCooldown = Server.mutespamtime;
-                Command.all.Find("mute").Use(null, name);
-                Chat.MessageAll("{0} %Shas been &0muted %Sfor spamming!", ColoredName);
-                muteTimer.Elapsed += MuteTimerElapsed;
-                muteTimer.Start();
-            }
+            spamChecker.CheckChatSpam();
         }        
     }
 }

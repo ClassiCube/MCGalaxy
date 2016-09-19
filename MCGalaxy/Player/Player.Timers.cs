@@ -119,18 +119,6 @@ namespace MCGalaxy {
         
         bool Moved() { return oldrot[0] != rot[0] || oldrot[1] != rot[1]; }
         
-        int muteCooldown = 0;
-        void MuteTimerElapsed(object sender, ElapsedEventArgs e) {
-            muteCooldown--;
-            if ( muteCooldown > 0) return;
-            
-            muteTimer.Stop();
-            muteTimer.Elapsed -= MuteTimerElapsed;
-            if (muted) Command.all.Find("mute").Use(null, name);
-            consecutivemessages = 0;
-            Player.Message(this, "Remember, no &cspamming %Snext time!");
-        }
-        
         void DisposeTimers() {
             loginTimer.Stop();
             loginTimer.Elapsed -= LoginTimerElapsed;
@@ -143,10 +131,6 @@ namespace MCGalaxy {
             checkTimer.Stop();
             checkTimer.Elapsed -= CheckTimerElapsed;
             checkTimer.Dispose();
-            
-            muteTimer.Stop();
-            muteTimer.Elapsed -= MuteTimerElapsed;
-            muteTimer.Dispose();
         }
     }
 }

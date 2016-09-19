@@ -241,7 +241,7 @@ namespace MCGalaxy {
 
         void HandleBlockchange(byte[] packet) {
             try {
-                if (!loggedIn || CheckBlockSpam()) return;
+                if (!loggedIn || spamChecker.CheckBlockSpam()) return;
                 ushort x = NetUtils.ReadU16(packet, 1);
                 ushort y = NetUtils.ReadU16(packet, 3);
                 ushort z = NetUtils.ReadU16(packet, 5);
@@ -565,7 +565,7 @@ return;
             // Typing / will act as /repeat
             if (text == "/") {
                 HandleCommand("repeat", ""); return true;
-            } else if ( text[0] == '/' || text[0] == '!' ) {
+            } else if (text[0] == '/' || text[0] == '!') {
                 text = text.Remove(0, 1);
                 int sep = text.IndexOf(' ');
                 if (sep == -1) {
@@ -678,6 +678,7 @@ return;
             if (Server.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
                 SendMessage("&cYou must verify first with %T/pass [Password]"); return false;
             }
+            
             return true;
         }
         
