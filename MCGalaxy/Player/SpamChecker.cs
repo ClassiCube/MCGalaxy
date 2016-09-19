@@ -20,30 +20,33 @@ namespace MCGalaxy {
         
         public SpamChecker(Player p) {
             this.p = p;
-            blockLog = new List<DateTime>(Player.spamBlockCount);
+            blockLog = new List<DateTime>(Server.BlockSpamCount);
             chatLog = new List<DateTime>(Server.spamcounter);
+            cmdLog = new List<DateTime>(Server.CmdSpamCount);
         }
         
         Player p;
-        readonly object chatLock = new object();
-        readonly List<DateTime> blockLog, chatLog;
+        readonly object chatLock = new object(), cmdLock = new object();
+        readonly List<DateTime> blockLog, chatLog, cmdLog;
         
         public void Clear() {
             blockLog.Clear();
             lock (chatLock)
                 chatLog.Clear();
+            lock (cmdLock)
+                cmdLog.Clear();
             p = null;
         }
         
         public bool CheckBlockSpam() {
-            if (p.ignoreGrief) return false;
-            if (AddEntry(blockLog, Player.spamBlockCount, Player.spamBlockTimer)) return false;
+            if (p.ignoreGrief || !Server.BlockSpamCheck) return false;
+            if (AddEntry(blockLog, Server.BlockSpamCount, Server.BlockSpamInterval)) return false;
 
             TimeSpan oldestDelta = DateTime.UtcNow - blockLog[0];
-            p.Kick("You were kicked by antigrief system. Slow down.");
             Chat.MessageOps(p.ColoredName + " &cwas kicked for suspected griefing.");
             Server.s.Log(p.name + " was kicked for block spam (" + blockLog.Count
                          + " blocks in " + oldestDelta + " seconds)");
+            p.Kick("You were kicked by antigrief system. Slow down.");
             return true;            
         }
         
@@ -61,6 +64,20 @@ namespace MCGalaxy {
                 return true;
             }
         }
+        
+        public bool CheckCommandSpam() {
+            if (!Server.CmdSpamCheck || p.ircNick != null) return false;
+            
+            lock (cmdLock) {
+                if (AddEntry(cmdLog, Server.CmdSpamCount, Server.CmdSpamInterval)) return false;
+                
+                p.SendMessage("You have been blocked from using commands for " +
+                              Server.CmdSpamBlockTime + " seconds due to spamming");
+                p.cmdUnblocked = DateTime.UtcNow.AddSeconds(Server.CmdSpamBlockTime);
+                return true;
+            }
+        }
+        
         
         static bool AddEntry(List<DateTime> log, int maxEntries, int checkInterval) {
             DateTime now = DateTime.UtcNow;

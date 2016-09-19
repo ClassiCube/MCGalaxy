@@ -189,6 +189,7 @@ namespace MCGalaxy {
         [ConfigBool("world-chat", "Server", null, true)]
         public static bool worldChat = true;
 
+        
         //Spam Prevention
         [ConfigBool("mute-on-spam", "Spam control", null, false)]
         public static bool checkspam = false;
@@ -198,6 +199,23 @@ namespace MCGalaxy {
         public static int mutespamtime = 60;
         [ConfigInt("spam-counter-reset-time", "Spam control", null, 5)]
         public static int spamcountreset = 5;
+        
+        [ConfigBool("cmd-spam-check", "Spam control", null, true)]
+        public static bool CmdSpamCheck = true;
+        [ConfigInt("cmd-spam-count", "Spam control", null, 25)]
+        public static int CmdSpamCount = 25;
+        [ConfigInt("cmd-spam-block-time", "Spam control", null, 30)]
+        public static int CmdSpamBlockTime = 30;
+        [ConfigInt("cmd-spam-interval", "Spam control", null, 1)]
+        public static int CmdSpamInterval = 1;
+        
+        [ConfigBool("block-spam-check", "Spam control", null, true)]
+        public static bool BlockSpamCheck = true;
+        [ConfigInt("block-spam-count", "Spam control", null, 200)]
+        public static int BlockSpamCount = 200;
+        [ConfigInt("block-spam-interval", "Spam control", null, 5)]
+        public static int BlockSpamInterval = 5;
+        
         
         [ConfigString("host-state", "Other", null, "Alive")]
         public static string ZallState = "Alive";

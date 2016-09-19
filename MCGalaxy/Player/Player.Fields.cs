@@ -248,9 +248,6 @@ namespace MCGalaxy {
 
         //ushort[] clippos = new ushort[3] { 0, 0, 0 };
         //byte[] cliprot = new byte[2] { 0, 0 };
-
-        public static int spamBlockCount = 200;
-        public static int spamBlockTimer = 5;
         public int consecutivemessages;
 
         // CmdVoteKick
@@ -260,6 +257,7 @@ namespace MCGalaxy {
         public ExtrasCollection Extras = new ExtrasCollection();
         
         SpamChecker spamChecker;
+        internal DateTime cmdUnblocked;
 
         //Chatrooms
         public string Chatroom;
@@ -271,7 +269,6 @@ namespace MCGalaxy {
         public Random random = new Random();
         public LevelPermission Rank { get { return group.Permission; } }
 
-        //Global Chat
         public bool loggedIn;
         public bool isDev, isMod;
         public bool verifiedName;

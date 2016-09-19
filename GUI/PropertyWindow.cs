@@ -49,7 +49,9 @@ namespace MCGalaxy.Gui {
             sec_cmbVerifyRank.Enabled = Server.verifyadmins;
             ToggleIrcSettings(Server.irc);
             ToggleMySQLSettings(Server.useMySQL);
-            ToggleAutoMuteSettings(Server.checkspam);
+            ToggleChatSpamSettings(Server.checkspam);
+            ToggleCmdSpamSettings(Server.CmdSpamCheck);
+            ToggleBlocksSpamSettings(Server.BlockSpamCheck);
 
             string opchatperm = "", adminchatperm = "";
             string verifyadminsperm = "", afkkickrank = "", osmaprank = "";
@@ -238,8 +240,7 @@ namespace MCGalaxy.Gui {
                             value = "1";
                         }
                         numPlayers.Value = Convert.ToInt16(value);
-                    }
-                    catch {
+                    } catch {
                         Server.s.Log("max-players invalid! setting to default.");
                         numPlayers.Value = 12;
                     }
@@ -263,32 +264,23 @@ namespace MCGalaxy.Gui {
                     }
                     break;
                 case "irc":
-                    chkIRC.Checked = ( value.ToLower() == "true" );
-                    break;
+                    chkIRC.Checked = value.ToLower() == "true"; break;
                 case "irc-server":
-                    txtIRCServer.Text = value;
-                    break;
+                    txtIRCServer.Text = value; break;
                 case "irc-port":
-                    txtIRCPort.Text = value;
-                    break;
+                    txtIRCPort.Text = value; break;
                 case "irc-nick":
-                    txtNick.Text = value;
-                    break;
+                    txtNick.Text = value; break;
                 case "irc-channel":
-                    txtChannel.Text = value;
-                    break;
+                    txtChannel.Text = value; break;
                 case "irc-opchannel":
-                    txtOpChannel.Text = value;
-                    break;
+                    txtOpChannel.Text = value; break;
                 case "irc-identify":
-                    chkIrcId.Checked = value.ToLower() == "true";
-                    break;
+                    chkIrcId.Checked = value.ToLower() == "true"; break;
                 case "irc-password":
-                    txtIrcId.Text = value;
-                    break;
+                    txtIrcId.Text = value; break;
                 case "irc-player-titles":
-                    irc_cbTitles.Checked = value.ToLower() == "true";
-                    break;
+                    irc_cbTitles.Checked = value.ToLower() == "true"; break;
                     
                 case "rplimit":
                     try { txtRP.Text = value; }
@@ -300,16 +292,13 @@ namespace MCGalaxy.Gui {
                     break;
 
                 case "log-heartbeat":
-                    chkLogBeat.Checked = ( value.ToLower() == "true" );
-                    break;
+                    chkLogBeat.Checked = value.ToLower() == "true"; break;
 
                 case "profanity-filter":
-                    chkProfanityFilter.Checked = ( value.ToLower() == "true" );
-                    break;
+                    chkProfanityFilter.Checked = value.ToLower() == "true"; break;
 
                 case "backup-time":
-                    txtBackup.Text = Convert.ToInt32(value) > 1 ? value : "300";
-                    break;
+                    txtBackup.Text = Convert.ToInt32(value) > 1 ? value : "300"; break;
 
                 case "backup-location":
                     if ( !value.Contains("System.Windows.Forms.TextBox, Text:") )
@@ -407,6 +396,9 @@ namespace MCGalaxy.Gui {
                     hackrank_kick_time.Text = value; break;
                 case "server-owner":
                     txtServerOwner.Text = value; break;
+                case "guest-limit-notify":
+                    chkGuestLimitNotify.Checked = value.ToLower() == "true"; break;
+                    
                 case "zombie-on-server-start":
                     zsSettings.StartImmediately = value.ToLower() == "true"; break;
                 case "no-respawning-during-zombie":
@@ -434,12 +426,8 @@ namespace MCGalaxy.Gui {
                 case "zombie-ignore-personalworlds":
                     zsSettings.IgnorePersonalWorlds = value.ToLower() == "true"; break;
                 case "zombie-map-inheartbeat":
-                    zsSettings.IncludeMapInHeartbeat = value.ToLower() == "true"; break;                    
-                    
-                case "guest-limit-notify":
-                    chkGuestLimitNotify.Checked = value.ToLower() == "true"; break;
-                case "admin-verification":
-                    sec_cbVerifyAdmins.Checked = value.ToLower() == "true"; break;
+                    zsSettings.IncludeMapInHeartbeat = value.ToLower() == "true"; break;
+
                 case "usemysql":
                     chkUseSQL.Checked = value.ToLower() == "true"; break;
                 case "username":
@@ -455,8 +443,7 @@ namespace MCGalaxy.Gui {
                     try {
                         IPAddress.Parse(value);
                         txtSQLHost.Text = value;
-                    }
-                    catch {
+                    } catch {
                         txtSQLHost.Text = "127.0.0.1";
                     }
                     break;
@@ -464,39 +451,83 @@ namespace MCGalaxy.Gui {
                     try {
                         int.Parse(value);
                         txtSQLPort.Text = value;
-                    }
-                    catch {
+                    } catch {
                         txtSQLPort.Text = "3306";
                     }
                     break;
+
+                case "log-notes":
+                    sec_cbLogNotes.Checked = value.ToLower() == "true"; break;
+                case "use-whitelist":
+                    sec_cbWhitelist.Checked = value.ToLower() == "true"; break;                    
+                case "admin-verification":
+                    sec_cbVerifyAdmins.Checked = value.ToLower() == "true"; break;
                 case "mute-on-spam":
-                    sec_cbAutoMute.Checked = value.ToLower() == "true";
-                    break;
+                    sec_cbChatAuto.Checked = value.ToLower() == "true"; break;
                 case "spam-messages":
                     try {
-                        spam_numMsgs.Value = Convert.ToInt16(value);
+                        sec_numChatMsgs.Value = Convert.ToInt16(value);
+                    } catch {
+                        sec_numChatMsgs.Value = 8;
                     }
-                    catch {
-                        spam_numMsgs.Value = 8;
+                    break;
+                case "spam-counter-reset-time":
+                    try {
+                        sec_numChatSecs.Value = Convert.ToInt16(value);
+                    } catch {
+                        sec_numChatSecs.Value = 60;
                     }
                     break;
                 case "spam-mute-time":
                     try {
-                        spam_numMute.Value = Convert.ToInt16(value);
+                        sec_numChatMute.Value = Convert.ToInt16(value);
                     } catch {
-                        spam_numMute.Value = 60;
+                        sec_numChatMute.Value = 60;
+                    }
+                    break;                    
+                case "cmd-spam-check":
+                    sec_cbCmdAuto.Checked = value.ToLower() == "true"; break; 
+                case "cmd-spam-count":
+                    try {
+                        sec_numCmdMsgs.Value = Convert.ToInt16(value);
+                    } catch {
+                        sec_numCmdMsgs.Value = 25;
                     }
                     break;
-                case "log-notes":
-                    sec_cbLogNotes.Checked = value.ToLower() == "true";
+                case "cmd-spam-interval":
+                    try {
+                        sec_numCmdSecs.Value = Convert.ToInt16(value);
+                    } catch {
+                        sec_numCmdSecs.Value = 1;
+                    }
                     break;
+                case "cmd-spam-block-time":
+                    try {
+                        sec_numCmdMute.Value = Convert.ToInt16(value);
+                    } catch {
+                        sec_numCmdMute.Value = 30;
+                    }
+                    break;                    
+                case "block-spam-check":
+                    sec_cbBlocksAuto.Checked = value.ToLower() == "true"; break;        
+                case "block-spam-count":
+                    try {
+                        sec_numBlocksMsgs.Value = Convert.ToInt16(value);
+                    } catch {
+                        sec_numBlocksMsgs.Value = 200;
+                    }
+                    break;
+                case "block-spam-interval":
+                    try {
+                        sec_numBlocksSecs.Value = Convert.ToInt16(value);
+                    } catch {
+                        sec_numBlocksSecs.Value = 5;
+                    }
+                    break;
+                    
                 case "show-empty-ranks":
                     chkShowEmptyRanks.Checked = value.ToLower() == "true";
                     break;
-                case "use-whitelist":
-                    sec_cbWhitelist.Checked = value.ToLower() == "true";
-                    break;
-                    
                 case "cooldown":
                     try {
                         Server.reviewcooldown = Convert.ToInt32(value.ToLower()) < 600 ? Convert.ToInt32(value.ToLower()) : 600;
@@ -635,10 +666,18 @@ namespace MCGalaxy.Gui {
             if (Server.useWhitelist && Server.whiteList == null)
                 Server.whiteList = PlayerList.Load("whitelist.txt");
             
-            Server.checkspam = sec_cbAutoMute.Checked;
-            Server.spamcounter = (int)spam_numMsgs.Value;
-            Server.mutespamtime = (int)spam_numMute.Value;
-            Server.spamcountreset = (int)spam_numSecs.Value;
+            Server.checkspam = sec_cbChatAuto.Checked;
+            Server.spamcounter = (int)sec_numChatMsgs.Value;
+            Server.spamcountreset = (int)sec_numChatSecs.Value;
+            Server.mutespamtime = (int)sec_numChatMute.Value;
+            Server.CmdSpamCheck = sec_cbCmdAuto.Checked;
+            Server.CmdSpamCount = (int)sec_numCmdMsgs.Value;
+            Server.CmdSpamInterval = (int)sec_numCmdSecs.Value;
+            Server.CmdSpamBlockTime = (int)sec_numCmdMute.Value;
+            Server.BlockSpamCheck = sec_cbBlocksAuto.Checked;
+            Server.BlockSpamCount = (int)sec_numBlocksMsgs.Value;
+            Server.BlockSpamInterval = (int)sec_numBlocksSecs.Value;      
+            
             Server.LogNotes = sec_cbLogNotes.Checked;
             Server.showEmptyRanks = chkShowEmptyRanks.Checked;
             Server.reviewcooldown = (int)nudCooldownTime.Value;
@@ -1248,12 +1287,20 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             btnUnload.Enabled = lstCommands.SelectedIndex != -1;
         }
         
-        void spam_cbAuto_CheckedChanged(object sender, EventArgs e) {
-            ToggleAutoMuteSettings(sec_cbAutoMute.Checked);
+        void sec_cbChatAuto_Checked(object sender, EventArgs e) {
+            ToggleChatSpamSettings(sec_cbChatAuto.Checked);
         }
 
-
-       void ToggleIrcSettings(bool enabled) {
+        void sec_cbCmdAuto_Checked(object sender, EventArgs e) {
+            ToggleCmdSpamSettings(sec_cbCmdAuto.Checked);
+        }
+        
+        void sec_cbBlocksAuto_Checked(object sender, EventArgs e) {
+            ToggleBlocksSpamSettings(sec_cbBlocksAuto.Checked);
+        }
+        
+        
+        void ToggleIrcSettings(bool enabled) {
             txtIRCServer.Enabled = enabled;
             txtIRCPort.Enabled = enabled;
             txtNick.Enabled = enabled;
@@ -1272,10 +1319,21 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             txtSQLDatabase.Enabled = enabled;
         }
         
-        void ToggleAutoMuteSettings(bool enabled) {
-            spam_numMsgs.Enabled = enabled;
-            spam_numMute.Enabled = enabled;
-            spam_numSecs.Enabled = enabled;
+        void ToggleChatSpamSettings(bool enabled) {
+            sec_numChatMsgs.Enabled = enabled;
+            sec_numChatMute.Enabled = enabled;
+            sec_numChatSecs.Enabled = enabled;
+        }
+        
+        void ToggleCmdSpamSettings(bool enabled) {
+            sec_numCmdMsgs.Enabled = enabled;
+            sec_numCmdMute.Enabled = enabled;
+            sec_numCmdSecs.Enabled = enabled;
+        }
+        
+        void ToggleBlocksSpamSettings(bool enabled) {
+            sec_numBlocksMsgs.Enabled = enabled;
+            sec_numBlocksSecs.Enabled = enabled;
         }
         
         void VerifyAdminsChecked(object sender, System.EventArgs e) {

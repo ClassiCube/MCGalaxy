@@ -147,7 +147,7 @@ namespace MCGalaxy.Gui
             this.cmbOsMap = new System.Windows.Forms.ComboBox();
             this.sec_cbWhitelist = new System.Windows.Forms.CheckBox();
             this.sec_cbLogNotes = new System.Windows.Forms.CheckBox();
-            this.sec_cbAutoMute = new System.Windows.Forms.CheckBox();
+            this.sec_cbChatAuto = new System.Windows.Forms.CheckBox();
             this.pageBlocks = new System.Windows.Forms.TabPage();
             this.btnBlHelp = new System.Windows.Forms.Button();
             this.txtBlRanks = new System.Windows.Forms.TextBox();
@@ -333,17 +333,34 @@ namespace MCGalaxy.Gui
             this.tabPage11 = new System.Windows.Forms.TabPage();
             this.propsZG = new System.Windows.Forms.PropertyGrid();
             this.pageSecurity = new System.Windows.Forms.TabPage();
-            this.gbSec_Other = new System.Windows.Forms.GroupBox();
+            this.sec_gbBlocks = new System.Windows.Forms.GroupBox();
+            this.sec_cbBlocksAuto = new System.Windows.Forms.CheckBox();
+            this.sec_lblBlocksOnMute = new System.Windows.Forms.Label();
+            this.sec_numBlocksMsgs = new System.Windows.Forms.NumericUpDown();
+            this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
+            this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
+            this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
+            this.sec_gbCmd = new System.Windows.Forms.GroupBox();
+            this.sec_cbCmdAuto = new System.Windows.Forms.CheckBox();
+            this.sec_lblCmdOnMute = new System.Windows.Forms.Label();
+            this.sec_numCmdMsgs = new System.Windows.Forms.NumericUpDown();
+            this.sec_lblCmdOnMsgs = new System.Windows.Forms.Label();
+            this.sec_numCmdSecs = new System.Windows.Forms.NumericUpDown();
+            this.sec_lblCmdOnSecs = new System.Windows.Forms.Label();
+            this.sec_lblCmdForMute = new System.Windows.Forms.Label();
+            this.sec_numCmdMute = new System.Windows.Forms.NumericUpDown();
+            this.sec_lblCmdForSecs = new System.Windows.Forms.Label();
+            this.sec_gbOther = new System.Windows.Forms.GroupBox();
             this.sec_lblRank = new System.Windows.Forms.Label();
-            this.gbSec_Spam = new System.Windows.Forms.GroupBox();
-            this.spam_lblOnMute = new System.Windows.Forms.Label();
-            this.spam_numMsgs = new System.Windows.Forms.NumericUpDown();
-            this.spam_lblOnMsgs = new System.Windows.Forms.Label();
-            this.spam_numSecs = new System.Windows.Forms.NumericUpDown();
-            this.spam_lblOnSecs = new System.Windows.Forms.Label();
-            this.spam_lblForMute = new System.Windows.Forms.Label();
-            this.spam_numMute = new System.Windows.Forms.NumericUpDown();
-            this.spam_lblForSecs = new System.Windows.Forms.Label();
+            this.sec_gbChat = new System.Windows.Forms.GroupBox();
+            this.sec_lblChatOnMute = new System.Windows.Forms.Label();
+            this.sec_numChatMsgs = new System.Windows.Forms.NumericUpDown();
+            this.sec_lblChatOnMsgs = new System.Windows.Forms.Label();
+            this.sec_numChatSecs = new System.Windows.Forms.NumericUpDown();
+            this.sec_lblChatOnSecs = new System.Windows.Forms.Label();
+            this.sec_lblChatForMute = new System.Windows.Forms.Label();
+            this.sec_numChatMute = new System.Windows.Forms.NumericUpDown();
+            this.sec_lblChatForSecs = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabChat.SuspendLayout();
             this.chat_gbTab.SuspendLayout();
@@ -406,11 +423,18 @@ namespace MCGalaxy.Gui
             this.groupBox30.SuspendLayout();
             this.tabPage11.SuspendLayout();
             this.pageSecurity.SuspendLayout();
-            this.gbSec_Other.SuspendLayout();
-            this.gbSec_Spam.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.spam_numMsgs)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spam_numSecs)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spam_numMute)).BeginInit();
+            this.sec_gbBlocks.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).BeginInit();
+            this.sec_gbCmd.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numCmdMsgs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numCmdSecs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numCmdMute)).BeginInit();
+            this.sec_gbOther.SuspendLayout();
+            this.sec_gbChat.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numChatMsgs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numChatSecs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numChatMute)).BeginInit();
             this.SuspendLayout();
             // 
             // tabChat
@@ -1465,16 +1489,16 @@ namespace MCGalaxy.Gui
             this.sec_cbLogNotes.Text = "Log notes (/ban, /warn, /kick etc)";
             this.sec_cbLogNotes.UseVisualStyleBackColor = true;
             // 
-            // sec_cbAutoMute
+            // sec_cbChatAuto
             // 
-            this.sec_cbAutoMute.AutoSize = true;
-            this.sec_cbAutoMute.Location = new System.Drawing.Point(10, 20);
-            this.sec_cbAutoMute.Name = "sec_cbAutoMute";
-            this.sec_cbAutoMute.Size = new System.Drawing.Size(142, 17);
-            this.sec_cbAutoMute.TabIndex = 24;
-            this.sec_cbAutoMute.Text = "Enable automatic muting";
-            this.sec_cbAutoMute.UseVisualStyleBackColor = true;
-            this.sec_cbAutoMute.CheckedChanged += new System.EventHandler(this.spam_cbAuto_CheckedChanged);
+            this.sec_cbChatAuto.AutoSize = true;
+            this.sec_cbChatAuto.Location = new System.Drawing.Point(10, 20);
+            this.sec_cbChatAuto.Name = "sec_cbChatAuto";
+            this.sec_cbChatAuto.Size = new System.Drawing.Size(142, 17);
+            this.sec_cbChatAuto.TabIndex = 24;
+            this.sec_cbChatAuto.Text = "Enable automatic muting";
+            this.sec_cbChatAuto.UseVisualStyleBackColor = true;
+            this.sec_cbChatAuto.CheckedChanged += new System.EventHandler(this.sec_cbChatAuto_Checked);
             // 
             // pageBlocks
             // 
@@ -3529,8 +3553,10 @@ namespace MCGalaxy.Gui
             // pageSecurity
             // 
             this.pageSecurity.BackColor = System.Drawing.SystemColors.Control;
-            this.pageSecurity.Controls.Add(this.gbSec_Other);
-            this.pageSecurity.Controls.Add(this.gbSec_Spam);
+            this.pageSecurity.Controls.Add(this.sec_gbBlocks);
+            this.pageSecurity.Controls.Add(this.sec_gbCmd);
+            this.pageSecurity.Controls.Add(this.sec_gbOther);
+            this.pageSecurity.Controls.Add(this.sec_gbChat);
             this.pageSecurity.Location = new System.Drawing.Point(4, 22);
             this.pageSecurity.Name = "pageSecurity";
             this.pageSecurity.Padding = new System.Windows.Forms.Padding(3);
@@ -3538,19 +3564,231 @@ namespace MCGalaxy.Gui
             this.pageSecurity.TabIndex = 7;
             this.pageSecurity.Text = "Security";
             // 
-            // gbSec_Other
+            // sec_gbBlocks
             // 
-            this.gbSec_Other.Controls.Add(this.sec_lblRank);
-            this.gbSec_Other.Controls.Add(this.sec_cbWhitelist);
-            this.gbSec_Other.Controls.Add(this.sec_cbLogNotes);
-            this.gbSec_Other.Controls.Add(this.sec_cbVerifyAdmins);
-            this.gbSec_Other.Controls.Add(this.sec_cmbVerifyRank);
-            this.gbSec_Other.Location = new System.Drawing.Point(273, 6);
-            this.gbSec_Other.Name = "gbSec_Other";
-            this.gbSec_Other.Size = new System.Drawing.Size(208, 138);
-            this.gbSec_Other.TabIndex = 2;
-            this.gbSec_Other.TabStop = false;
-            this.gbSec_Other.Text = "Other settings";
+            this.sec_gbBlocks.Controls.Add(this.sec_cbBlocksAuto);
+            this.sec_gbBlocks.Controls.Add(this.sec_lblBlocksOnMute);
+            this.sec_gbBlocks.Controls.Add(this.sec_numBlocksMsgs);
+            this.sec_gbBlocks.Controls.Add(this.sec_lblBlocksOnMsgs);
+            this.sec_gbBlocks.Controls.Add(this.sec_numBlocksSecs);
+            this.sec_gbBlocks.Controls.Add(this.sec_lblBlocksOnSecs);
+            this.sec_gbBlocks.Location = new System.Drawing.Point(264, 150);
+            this.sec_gbBlocks.Name = "sec_gbBlocks";
+            this.sec_gbBlocks.Size = new System.Drawing.Size(217, 83);
+            this.sec_gbBlocks.TabIndex = 36;
+            this.sec_gbBlocks.TabStop = false;
+            this.sec_gbBlocks.Text = "Block spam control";
+            // 
+            // sec_cbBlocksAuto
+            // 
+            this.sec_cbBlocksAuto.AutoSize = true;
+            this.sec_cbBlocksAuto.Location = new System.Drawing.Point(10, 20);
+            this.sec_cbBlocksAuto.Name = "sec_cbBlocksAuto";
+            this.sec_cbBlocksAuto.Size = new System.Drawing.Size(142, 17);
+            this.sec_cbBlocksAuto.TabIndex = 24;
+            this.sec_cbBlocksAuto.Text = "Enable automatic kicking";
+            this.sec_cbBlocksAuto.UseVisualStyleBackColor = true;
+            this.sec_cbBlocksAuto.CheckedChanged += new System.EventHandler(this.sec_cbBlocksAuto_Checked);
+            // 
+            // sec_lblBlocksOnMute
+            // 
+            this.sec_lblBlocksOnMute.AutoSize = true;
+            this.sec_lblBlocksOnMute.Location = new System.Drawing.Point(6, 48);
+            this.sec_lblBlocksOnMute.Name = "sec_lblBlocksOnMute";
+            this.sec_lblBlocksOnMute.Size = new System.Drawing.Size(40, 13);
+            this.sec_lblBlocksOnMute.TabIndex = 25;
+            this.sec_lblBlocksOnMute.Text = "Kick on";
+            // 
+            // sec_numBlocksMsgs
+            // 
+            this.sec_numBlocksMsgs.Location = new System.Drawing.Point(46, 45);
+            this.sec_numBlocksMsgs.Maximum = new decimal(new int[] {
+                                    500,
+                                    0,
+                                    0,
+                                    0});
+            this.sec_numBlocksMsgs.Name = "sec_numBlocksMsgs";
+            this.sec_numBlocksMsgs.Size = new System.Drawing.Size(46, 21);
+            this.sec_numBlocksMsgs.TabIndex = 30;
+            this.sec_numBlocksMsgs.Value = new decimal(new int[] {
+                                    200,
+                                    0,
+                                    0,
+                                    0});
+            // 
+            // sec_lblBlocksOnMsgs
+            // 
+            this.sec_lblBlocksOnMsgs.AutoSize = true;
+            this.sec_lblBlocksOnMsgs.Location = new System.Drawing.Point(93, 48);
+            this.sec_lblBlocksOnMsgs.Name = "sec_lblBlocksOnMsgs";
+            this.sec_lblBlocksOnMsgs.Size = new System.Drawing.Size(48, 13);
+            this.sec_lblBlocksOnMsgs.TabIndex = 31;
+            this.sec_lblBlocksOnMsgs.Text = "blocks in";
+            // 
+            // sec_numBlocksSecs
+            // 
+            this.sec_numBlocksSecs.Location = new System.Drawing.Point(142, 45);
+            this.sec_numBlocksSecs.Maximum = new decimal(new int[] {
+                                    128,
+                                    0,
+                                    0,
+                                    0});
+            this.sec_numBlocksSecs.Name = "sec_numBlocksSecs";
+            this.sec_numBlocksSecs.Size = new System.Drawing.Size(42, 21);
+            this.sec_numBlocksSecs.TabIndex = 34;
+            this.sec_numBlocksSecs.Value = new decimal(new int[] {
+                                    5,
+                                    0,
+                                    0,
+                                    0});
+            // 
+            // sec_lblBlocksOnSecs
+            // 
+            this.sec_lblBlocksOnSecs.AutoSize = true;
+            this.sec_lblBlocksOnSecs.Location = new System.Drawing.Point(185, 48);
+            this.sec_lblBlocksOnSecs.Name = "sec_lblBlocksOnSecs";
+            this.sec_lblBlocksOnSecs.Size = new System.Drawing.Size(28, 13);
+            this.sec_lblBlocksOnSecs.TabIndex = 33;
+            this.sec_lblBlocksOnSecs.Text = "secs";
+            // 
+            // sec_gbCmd
+            // 
+            this.sec_gbCmd.Controls.Add(this.sec_cbCmdAuto);
+            this.sec_gbCmd.Controls.Add(this.sec_lblCmdOnMute);
+            this.sec_gbCmd.Controls.Add(this.sec_numCmdMsgs);
+            this.sec_gbCmd.Controls.Add(this.sec_lblCmdOnMsgs);
+            this.sec_gbCmd.Controls.Add(this.sec_numCmdSecs);
+            this.sec_gbCmd.Controls.Add(this.sec_lblCmdOnSecs);
+            this.sec_gbCmd.Controls.Add(this.sec_lblCmdForMute);
+            this.sec_gbCmd.Controls.Add(this.sec_numCmdMute);
+            this.sec_gbCmd.Controls.Add(this.sec_lblCmdForSecs);
+            this.sec_gbCmd.Location = new System.Drawing.Point(14, 123);
+            this.sec_gbCmd.Name = "sec_gbCmd";
+            this.sec_gbCmd.Size = new System.Drawing.Size(238, 110);
+            this.sec_gbCmd.TabIndex = 35;
+            this.sec_gbCmd.TabStop = false;
+            this.sec_gbCmd.Text = "Command spam control";
+            // 
+            // sec_cbCmdAuto
+            // 
+            this.sec_cbCmdAuto.AutoSize = true;
+            this.sec_cbCmdAuto.Location = new System.Drawing.Point(10, 20);
+            this.sec_cbCmdAuto.Name = "sec_cbCmdAuto";
+            this.sec_cbCmdAuto.Size = new System.Drawing.Size(149, 17);
+            this.sec_cbCmdAuto.TabIndex = 24;
+            this.sec_cbCmdAuto.Text = "Enable automatic blocking";
+            this.sec_cbCmdAuto.UseVisualStyleBackColor = true;
+            this.sec_cbCmdAuto.CheckedChanged += new System.EventHandler(this.sec_cbCmdAuto_Checked);
+            // 
+            // sec_lblCmdOnMute
+            // 
+            this.sec_lblCmdOnMute.AutoSize = true;
+            this.sec_lblCmdOnMute.Location = new System.Drawing.Point(6, 48);
+            this.sec_lblCmdOnMute.Name = "sec_lblCmdOnMute";
+            this.sec_lblCmdOnMute.Size = new System.Drawing.Size(46, 13);
+            this.sec_lblCmdOnMute.TabIndex = 25;
+            this.sec_lblCmdOnMute.Text = "Block on";
+            // 
+            // sec_numCmdMsgs
+            // 
+            this.sec_numCmdMsgs.Location = new System.Drawing.Point(53, 45);
+            this.sec_numCmdMsgs.Maximum = new decimal(new int[] {
+                                    128,
+                                    0,
+                                    0,
+                                    0});
+            this.sec_numCmdMsgs.Name = "sec_numCmdMsgs";
+            this.sec_numCmdMsgs.Size = new System.Drawing.Size(37, 21);
+            this.sec_numCmdMsgs.TabIndex = 30;
+            this.sec_numCmdMsgs.Value = new decimal(new int[] {
+                                    25,
+                                    0,
+                                    0,
+                                    0});
+            // 
+            // sec_lblCmdOnMsgs
+            // 
+            this.sec_lblCmdOnMsgs.AutoSize = true;
+            this.sec_lblCmdOnMsgs.Location = new System.Drawing.Point(91, 48);
+            this.sec_lblCmdOnMsgs.Name = "sec_lblCmdOnMsgs";
+            this.sec_lblCmdOnMsgs.Size = new System.Drawing.Size(70, 13);
+            this.sec_lblCmdOnMsgs.TabIndex = 31;
+            this.sec_lblCmdOnMsgs.Text = "commands in";
+            // 
+            // sec_numCmdSecs
+            // 
+            this.sec_numCmdSecs.Location = new System.Drawing.Point(161, 45);
+            this.sec_numCmdSecs.Maximum = new decimal(new int[] {
+                                    128,
+                                    0,
+                                    0,
+                                    0});
+            this.sec_numCmdSecs.Name = "sec_numCmdSecs";
+            this.sec_numCmdSecs.Size = new System.Drawing.Size(42, 21);
+            this.sec_numCmdSecs.TabIndex = 34;
+            this.sec_numCmdSecs.Value = new decimal(new int[] {
+                                    1,
+                                    0,
+                                    0,
+                                    0});
+            // 
+            // sec_lblCmdOnSecs
+            // 
+            this.sec_lblCmdOnSecs.AutoSize = true;
+            this.sec_lblCmdOnSecs.Location = new System.Drawing.Point(204, 48);
+            this.sec_lblCmdOnSecs.Name = "sec_lblCmdOnSecs";
+            this.sec_lblCmdOnSecs.Size = new System.Drawing.Size(28, 13);
+            this.sec_lblCmdOnSecs.TabIndex = 33;
+            this.sec_lblCmdOnSecs.Text = "secs";
+            // 
+            // sec_lblCmdForMute
+            // 
+            this.sec_lblCmdForMute.AutoSize = true;
+            this.sec_lblCmdForMute.Location = new System.Drawing.Point(6, 83);
+            this.sec_lblCmdForMute.Name = "sec_lblCmdForMute";
+            this.sec_lblCmdForMute.Size = new System.Drawing.Size(47, 13);
+            this.sec_lblCmdForMute.TabIndex = 25;
+            this.sec_lblCmdForMute.Text = "Block for";
+            // 
+            // sec_numCmdMute
+            // 
+            this.sec_numCmdMute.Location = new System.Drawing.Point(53, 79);
+            this.sec_numCmdMute.Maximum = new decimal(new int[] {
+                                    128,
+                                    0,
+                                    0,
+                                    0});
+            this.sec_numCmdMute.Name = "sec_numCmdMute";
+            this.sec_numCmdMute.Size = new System.Drawing.Size(37, 21);
+            this.sec_numCmdMute.TabIndex = 32;
+            this.sec_numCmdMute.Value = new decimal(new int[] {
+                                    60,
+                                    0,
+                                    0,
+                                    0});
+            // 
+            // sec_lblCmdForSecs
+            // 
+            this.sec_lblCmdForSecs.AutoSize = true;
+            this.sec_lblCmdForSecs.Location = new System.Drawing.Point(91, 83);
+            this.sec_lblCmdForSecs.Name = "sec_lblCmdForSecs";
+            this.sec_lblCmdForSecs.Size = new System.Drawing.Size(46, 13);
+            this.sec_lblCmdForSecs.TabIndex = 33;
+            this.sec_lblCmdForSecs.Text = "seconds";
+            // 
+            // sec_gbOther
+            // 
+            this.sec_gbOther.Controls.Add(this.sec_lblRank);
+            this.sec_gbOther.Controls.Add(this.sec_cbWhitelist);
+            this.sec_gbOther.Controls.Add(this.sec_cbLogNotes);
+            this.sec_gbOther.Controls.Add(this.sec_cbVerifyAdmins);
+            this.sec_gbOther.Controls.Add(this.sec_cmbVerifyRank);
+            this.sec_gbOther.Location = new System.Drawing.Point(264, 6);
+            this.sec_gbOther.Name = "sec_gbOther";
+            this.sec_gbOther.Size = new System.Drawing.Size(217, 138);
+            this.sec_gbOther.TabIndex = 2;
+            this.sec_gbOther.TabStop = false;
+            this.sec_gbOther.Text = "Other settings";
             // 
             // sec_lblRank
             // 
@@ -3561,119 +3799,119 @@ namespace MCGalaxy.Gui
             this.sec_lblRank.TabIndex = 24;
             this.sec_lblRank.Text = "Rank:";
             // 
-            // gbSec_Spam
+            // sec_gbChat
             // 
-            this.gbSec_Spam.Controls.Add(this.sec_cbAutoMute);
-            this.gbSec_Spam.Controls.Add(this.spam_lblOnMute);
-            this.gbSec_Spam.Controls.Add(this.spam_numMsgs);
-            this.gbSec_Spam.Controls.Add(this.spam_lblOnMsgs);
-            this.gbSec_Spam.Controls.Add(this.spam_numSecs);
-            this.gbSec_Spam.Controls.Add(this.spam_lblOnSecs);
-            this.gbSec_Spam.Controls.Add(this.spam_lblForMute);
-            this.gbSec_Spam.Controls.Add(this.spam_numMute);
-            this.gbSec_Spam.Controls.Add(this.spam_lblForSecs);
-            this.gbSec_Spam.Location = new System.Drawing.Point(8, 6);
-            this.gbSec_Spam.Name = "gbSec_Spam";
-            this.gbSec_Spam.Size = new System.Drawing.Size(248, 138);
-            this.gbSec_Spam.TabIndex = 1;
-            this.gbSec_Spam.TabStop = false;
-            this.gbSec_Spam.Text = "Chat spam control";
+            this.sec_gbChat.Controls.Add(this.sec_cbChatAuto);
+            this.sec_gbChat.Controls.Add(this.sec_lblChatOnMute);
+            this.sec_gbChat.Controls.Add(this.sec_numChatMsgs);
+            this.sec_gbChat.Controls.Add(this.sec_lblChatOnMsgs);
+            this.sec_gbChat.Controls.Add(this.sec_numChatSecs);
+            this.sec_gbChat.Controls.Add(this.sec_lblChatOnSecs);
+            this.sec_gbChat.Controls.Add(this.sec_lblChatForMute);
+            this.sec_gbChat.Controls.Add(this.sec_numChatMute);
+            this.sec_gbChat.Controls.Add(this.sec_lblChatForSecs);
+            this.sec_gbChat.Location = new System.Drawing.Point(14, 6);
+            this.sec_gbChat.Name = "sec_gbChat";
+            this.sec_gbChat.Size = new System.Drawing.Size(238, 111);
+            this.sec_gbChat.TabIndex = 1;
+            this.sec_gbChat.TabStop = false;
+            this.sec_gbChat.Text = "Chat spam control";
             // 
-            // spam_lblOnMute
+            // sec_lblChatOnMute
             // 
-            this.spam_lblOnMute.AutoSize = true;
-            this.spam_lblOnMute.Location = new System.Drawing.Point(6, 48);
-            this.spam_lblOnMute.Name = "spam_lblOnMute";
-            this.spam_lblOnMute.Size = new System.Drawing.Size(46, 13);
-            this.spam_lblOnMute.TabIndex = 25;
-            this.spam_lblOnMute.Text = "Mute on";
+            this.sec_lblChatOnMute.AutoSize = true;
+            this.sec_lblChatOnMute.Location = new System.Drawing.Point(6, 48);
+            this.sec_lblChatOnMute.Name = "sec_lblChatOnMute";
+            this.sec_lblChatOnMute.Size = new System.Drawing.Size(46, 13);
+            this.sec_lblChatOnMute.TabIndex = 25;
+            this.sec_lblChatOnMute.Text = "Mute on";
             // 
-            // spam_numMsgs
+            // sec_numChatMsgs
             // 
-            this.spam_numMsgs.Location = new System.Drawing.Point(53, 45);
-            this.spam_numMsgs.Maximum = new decimal(new int[] {
+            this.sec_numChatMsgs.Location = new System.Drawing.Point(53, 45);
+            this.sec_numChatMsgs.Maximum = new decimal(new int[] {
                                     128,
                                     0,
                                     0,
                                     0});
-            this.spam_numMsgs.Name = "spam_numMsgs";
-            this.spam_numMsgs.Size = new System.Drawing.Size(37, 21);
-            this.spam_numMsgs.TabIndex = 30;
-            this.spam_numMsgs.Value = new decimal(new int[] {
+            this.sec_numChatMsgs.Name = "sec_numChatMsgs";
+            this.sec_numChatMsgs.Size = new System.Drawing.Size(37, 21);
+            this.sec_numChatMsgs.TabIndex = 30;
+            this.sec_numChatMsgs.Value = new decimal(new int[] {
                                     8,
                                     0,
                                     0,
                                     0});
             // 
-            // spam_lblOnMsgs
+            // sec_lblChatOnMsgs
             // 
-            this.spam_lblOnMsgs.AutoSize = true;
-            this.spam_lblOnMsgs.Location = new System.Drawing.Point(91, 48);
-            this.spam_lblOnMsgs.Name = "spam_lblOnMsgs";
-            this.spam_lblOnMsgs.Size = new System.Drawing.Size(65, 13);
-            this.spam_lblOnMsgs.TabIndex = 31;
-            this.spam_lblOnMsgs.Text = "messages in";
+            this.sec_lblChatOnMsgs.AutoSize = true;
+            this.sec_lblChatOnMsgs.Location = new System.Drawing.Point(91, 48);
+            this.sec_lblChatOnMsgs.Name = "sec_lblChatOnMsgs";
+            this.sec_lblChatOnMsgs.Size = new System.Drawing.Size(65, 13);
+            this.sec_lblChatOnMsgs.TabIndex = 31;
+            this.sec_lblChatOnMsgs.Text = "messages in";
             // 
-            // spam_numSecs
+            // sec_numChatSecs
             // 
-            this.spam_numSecs.Location = new System.Drawing.Point(157, 45);
-            this.spam_numSecs.Maximum = new decimal(new int[] {
+            this.sec_numChatSecs.Location = new System.Drawing.Point(156, 45);
+            this.sec_numChatSecs.Maximum = new decimal(new int[] {
                                     128,
                                     0,
                                     0,
                                     0});
-            this.spam_numSecs.Name = "spam_numSecs";
-            this.spam_numSecs.Size = new System.Drawing.Size(42, 21);
-            this.spam_numSecs.TabIndex = 34;
-            this.spam_numSecs.Value = new decimal(new int[] {
+            this.sec_numChatSecs.Name = "sec_numChatSecs";
+            this.sec_numChatSecs.Size = new System.Drawing.Size(42, 21);
+            this.sec_numChatSecs.TabIndex = 34;
+            this.sec_numChatSecs.Value = new decimal(new int[] {
                                     5,
                                     0,
                                     0,
                                     0});
             // 
-            // spam_lblOnSecs
+            // sec_lblChatOnSecs
             // 
-            this.spam_lblOnSecs.AutoSize = true;
-            this.spam_lblOnSecs.Location = new System.Drawing.Point(200, 48);
-            this.spam_lblOnSecs.Name = "spam_lblOnSecs";
-            this.spam_lblOnSecs.Size = new System.Drawing.Size(46, 13);
-            this.spam_lblOnSecs.TabIndex = 33;
-            this.spam_lblOnSecs.Text = "seconds";
+            this.sec_lblChatOnSecs.AutoSize = true;
+            this.sec_lblChatOnSecs.Location = new System.Drawing.Point(199, 48);
+            this.sec_lblChatOnSecs.Name = "sec_lblChatOnSecs";
+            this.sec_lblChatOnSecs.Size = new System.Drawing.Size(28, 13);
+            this.sec_lblChatOnSecs.TabIndex = 33;
+            this.sec_lblChatOnSecs.Text = "secs";
             // 
-            // spam_lblForMute
+            // sec_lblChatForMute
             // 
-            this.spam_lblForMute.AutoSize = true;
-            this.spam_lblForMute.Location = new System.Drawing.Point(6, 81);
-            this.spam_lblForMute.Name = "spam_lblForMute";
-            this.spam_lblForMute.Size = new System.Drawing.Size(47, 13);
-            this.spam_lblForMute.TabIndex = 25;
-            this.spam_lblForMute.Text = "Mute for";
+            this.sec_lblChatForMute.AutoSize = true;
+            this.sec_lblChatForMute.Location = new System.Drawing.Point(6, 83);
+            this.sec_lblChatForMute.Name = "sec_lblChatForMute";
+            this.sec_lblChatForMute.Size = new System.Drawing.Size(47, 13);
+            this.sec_lblChatForMute.TabIndex = 25;
+            this.sec_lblChatForMute.Text = "Mute for";
             // 
-            // spam_numMute
+            // sec_numChatMute
             // 
-            this.spam_numMute.Location = new System.Drawing.Point(53, 79);
-            this.spam_numMute.Maximum = new decimal(new int[] {
+            this.sec_numChatMute.Location = new System.Drawing.Point(53, 79);
+            this.sec_numChatMute.Maximum = new decimal(new int[] {
                                     128,
                                     0,
                                     0,
                                     0});
-            this.spam_numMute.Name = "spam_numMute";
-            this.spam_numMute.Size = new System.Drawing.Size(37, 21);
-            this.spam_numMute.TabIndex = 32;
-            this.spam_numMute.Value = new decimal(new int[] {
+            this.sec_numChatMute.Name = "sec_numChatMute";
+            this.sec_numChatMute.Size = new System.Drawing.Size(37, 21);
+            this.sec_numChatMute.TabIndex = 32;
+            this.sec_numChatMute.Value = new decimal(new int[] {
                                     60,
                                     0,
                                     0,
                                     0});
             // 
-            // spam_lblForSecs
+            // sec_lblChatForSecs
             // 
-            this.spam_lblForSecs.AutoSize = true;
-            this.spam_lblForSecs.Location = new System.Drawing.Point(91, 81);
-            this.spam_lblForSecs.Name = "spam_lblForSecs";
-            this.spam_lblForSecs.Size = new System.Drawing.Size(46, 13);
-            this.spam_lblForSecs.TabIndex = 33;
-            this.spam_lblForSecs.Text = "seconds";
+            this.sec_lblChatForSecs.AutoSize = true;
+            this.sec_lblChatForSecs.Location = new System.Drawing.Point(91, 83);
+            this.sec_lblChatForSecs.Name = "sec_lblChatForSecs";
+            this.sec_lblChatForSecs.Size = new System.Drawing.Size(46, 13);
+            this.sec_lblChatForSecs.TabIndex = 33;
+            this.sec_lblChatForSecs.Text = "seconds";
             // 
             // PropertyWindow
             // 
@@ -3786,15 +4024,41 @@ namespace MCGalaxy.Gui
             this.groupBox30.ResumeLayout(false);
             this.tabPage11.ResumeLayout(false);
             this.pageSecurity.ResumeLayout(false);
-            this.gbSec_Other.ResumeLayout(false);
-            this.gbSec_Other.PerformLayout();
-            this.gbSec_Spam.ResumeLayout(false);
-            this.gbSec_Spam.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.spam_numMsgs)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spam_numSecs)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spam_numMute)).EndInit();
+            this.sec_gbBlocks.ResumeLayout(false);
+            this.sec_gbBlocks.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
+            this.sec_gbCmd.ResumeLayout(false);
+            this.sec_gbCmd.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numCmdMsgs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numCmdSecs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numCmdMute)).EndInit();
+            this.sec_gbOther.ResumeLayout(false);
+            this.sec_gbOther.PerformLayout();
+            this.sec_gbChat.ResumeLayout(false);
+            this.sec_gbChat.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numChatMsgs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numChatSecs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numChatMute)).EndInit();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.Label sec_lblCmdForSecs;
+        private System.Windows.Forms.NumericUpDown sec_numCmdMute;
+        private System.Windows.Forms.Label sec_lblCmdForMute;
+        private System.Windows.Forms.Label sec_lblCmdOnSecs;
+        private System.Windows.Forms.NumericUpDown sec_numCmdSecs;
+        private System.Windows.Forms.Label sec_lblCmdOnMsgs;
+        private System.Windows.Forms.NumericUpDown sec_numCmdMsgs;
+        private System.Windows.Forms.Label sec_lblCmdOnMute;
+        private System.Windows.Forms.CheckBox sec_cbCmdAuto;
+        private System.Windows.Forms.GroupBox sec_gbCmd;
+        private System.Windows.Forms.Label sec_lblBlocksOnSecs;
+        private System.Windows.Forms.NumericUpDown sec_numBlocksSecs;
+        private System.Windows.Forms.Label sec_lblBlocksOnMsgs;
+        private System.Windows.Forms.NumericUpDown sec_numBlocksMsgs;
+        private System.Windows.Forms.Label sec_lblBlocksOnMute;
+        private System.Windows.Forms.CheckBox sec_cbBlocksAuto;
+        private System.Windows.Forms.GroupBox sec_gbBlocks;
         private System.Windows.Forms.PropertyGrid pg_lavaMap;
         private System.Windows.Forms.PropertyGrid pg_lava;
         private System.Windows.Forms.CheckBox sec_cbWhitelist;
@@ -3806,7 +4070,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.ComboBox cmbOsMap;
         private System.Windows.Forms.Label lblOsMap;
         private System.Windows.Forms.CheckBox sec_cbLogNotes;
-        private System.Windows.Forms.GroupBox gbSec_Other;
+        private System.Windows.Forms.GroupBox sec_gbOther;
         private System.Windows.Forms.TextBox txtPrefix;
         private System.Windows.Forms.TextBox txtOSMaps;
         private System.Windows.Forms.Label label10;
@@ -3971,13 +4235,13 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox txtSQLUsername;
         private System.Windows.Forms.CheckBox chkUseSQL;
         private System.Windows.Forms.TabPage pageSecurity;
-        private System.Windows.Forms.GroupBox gbSec_Spam;
-        private System.Windows.Forms.Label spam_lblForMute;
-        private System.Windows.Forms.NumericUpDown spam_numMute;
-        private System.Windows.Forms.Label spam_lblOnMsgs;
-        private System.Windows.Forms.NumericUpDown spam_numMsgs;
-        private System.Windows.Forms.Label spam_lblOnMute;
-        private System.Windows.Forms.CheckBox sec_cbAutoMute;
+        private System.Windows.Forms.GroupBox sec_gbChat;
+        private System.Windows.Forms.Label sec_lblChatForMute;
+        private System.Windows.Forms.NumericUpDown sec_numChatMute;
+        private System.Windows.Forms.Label sec_lblChatOnMsgs;
+        private System.Windows.Forms.NumericUpDown sec_numChatMsgs;
+        private System.Windows.Forms.Label sec_lblChatOnMute;
+        private System.Windows.Forms.CheckBox sec_cbChatAuto;
         private System.Windows.Forms.CheckBox sec_cbVerifyAdmins;
         private System.Windows.Forms.ComboBox sec_cmbVerifyRank;
         private System.Windows.Forms.TabPage pageGames;
@@ -4007,9 +4271,9 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Button lsBtnStopGame;
         private System.Windows.Forms.Button lsBtnStartGame;
         private System.Windows.Forms.Button lsBtnEndVote;
-        private System.Windows.Forms.NumericUpDown spam_numSecs;
-        private System.Windows.Forms.Label spam_lblOnSecs;
-        private System.Windows.Forms.Label spam_lblForSecs;
+        private System.Windows.Forms.NumericUpDown sec_numChatSecs;
+        private System.Windows.Forms.Label sec_lblChatOnSecs;
+        private System.Windows.Forms.Label sec_lblChatForSecs;
         private System.Windows.Forms.TextBox txtSQLPort;
         private System.Windows.Forms.Label label70;
         private System.Windows.Forms.GroupBox grpUpdate;

@@ -679,6 +679,12 @@ return;
                 SendMessage("&cYou must verify first with %T/pass [Password]"); return false;
             }
             
+            TimeSpan delta = cmdUnblocked - DateTime.UtcNow;
+            if (delta.TotalSeconds > 0) {
+                int secs = (int)Math.Ceiling(delta.TotalSeconds);
+                SendMessage("Blocked from using commands for " +
+                            "another " + secs + " seconds"); return false;
+            }            
             return true;
         }
         
@@ -742,6 +748,7 @@ return;
                 Player.Message(this, e.GetType() + ": " + e.Message);
                 return false;
             }
+            if (spamChecker.CheckCommandSpam()) return false;
             return true;
         }
         
