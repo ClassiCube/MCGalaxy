@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using System.Threading;
 using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Commands.World {
@@ -29,29 +30,38 @@ namespace MCGalaxy.Commands.World {
         public CmdMuseum() { }
 
         public override void Use(Player p, string message) {
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] args = message.Split(' ');
             string path = args.Length == 1 ? LevelInfo.LevelPath(args[0]) :
                 LevelInfo.BackupPath(args[0], args[1]);
-            Server.s.Log(path);
-            
             if (!File.Exists(path)) {
                 Player.Message(p, "Level or backup could not be found."); return;
             }
             
-            Level lvl = LvlFile.Load("museum", path);
-            lvl.setPhysics(0);
-            lvl.backedup = true;
-            lvl.permissionbuild = LevelPermission.Nobody;
-
-            lvl.jailx = (ushort)(lvl.spawnx * 32);
-            lvl.jaily = (ushort)(lvl.spawny * 32);
-            lvl.jailz = (ushort)(lvl.spawnz * 32);
-            lvl.jailrotx = lvl.rotx; lvl.jailroty = lvl.roty;
+            string name = null;
+            if (args.Length == 1) {
+                name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + ")";
+            } else {
+                name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + " " + args[1] + ")";
+            }
             
-            if (args.Length == 1)
-                lvl.name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + ")";
-            else
-                lvl.name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + " " + args[1] + ")";
+            if (p.level.name.CaselessEq(name)) {
+                Player.Message(p, "You are already in this museum."); return;
+            }
+            if (Interlocked.CompareExchange(ref p.LoadingMuseum, 1, 0) == 1) {
+                Player.Message(p, "You are already loading a museum level."); return;
+            }
+            
+            try {
+                JoinMuseum(p, name, path);
+            } finally {
+                Interlocked.Exchange(ref p.LoadingMuseum, 0);
+            }
+        }
+        
+        static void JoinMuseum(Player p, string name, string path) {
+            Level lvl = LvlFile.Load(name, path);
+            SetLevelProps(lvl);
 
             p.Loading = true;
             Entities.DespawnEntities(p);
@@ -60,17 +70,28 @@ namespace MCGalaxy.Commands.World {
             p.SendMotd();
             if (!p.SendRawMap(oldLevel, lvl)) return;
 
-            ushort x = (ushort)((0.5 + lvl.spawnx) * 32);
-            ushort y = (ushort)((1 + lvl.spawny) * 32);
-            ushort z = (ushort)((0.5 + lvl.spawnz) * 32);
+            ushort x = (ushort)(lvl.spawnx * 32 + 16);
+            ushort y = (ushort)(lvl.spawny * 32 + 32);
+            ushort z = (ushort)(lvl.spawnz * 32 + 16);
 
             p.aiming = false;
             Entities.GlobalSpawn(p, x, y, z, lvl.rotx, lvl.roty, true);
             p.ClearBlockchange();
             p.Loading = false;
 
-            Chat.MessageWhere("{0} %Swent to the {1}", 
+            Chat.MessageWhere("{0} %Swent to the {1}",
                               pl => Entities.CanSee(pl, p), p.ColoredName, lvl.name);
+        }
+        
+        static void SetLevelProps(Level lvl) {
+            lvl.setPhysics(0);
+            lvl.backedup = true;
+            lvl.permissionbuild = LevelPermission.Nobody;
+
+            lvl.jailx = (ushort)(lvl.spawnx * 32);
+            lvl.jaily = (ushort)(lvl.spawny * 32);
+            lvl.jailz = (ushort)(lvl.spawnz * 32);
+            lvl.jailrotx = lvl.rotx; lvl.jailroty = lvl.roty;
         }
         
         public override void Help(Player p) {
