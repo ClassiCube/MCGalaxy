@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Level or backup could not be found."); return;
             }
             
-            Level lvl = LvlFile.Load(name, path);
+            Level lvl = LvlFile.Load("museum", path);
             lvl.setPhysics(0);
             lvl.backedup = true;
             lvl.permissionbuild = LevelPermission.Nobody;

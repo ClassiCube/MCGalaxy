@@ -49,7 +49,9 @@ namespace MCGalaxy {
             int end = Math.Min(start + perPage, items.Count);
             OutputItems(p, items, start, end, lines, formatter);
             
-            if (end < items.Count) {
+            if (items.Count == 0) {
+                Player.Message(p, "Showing {0} 0-0 (out of 0)", type);
+            } else if (end < items.Count) {
                 Player.Message(p, "Showing {0} {1}-{2} (out of {3}) Next: %T/{4} {5}",
                                type, start + 1, end, items.Count, cmd, start + 1 + perPage);
             } else {

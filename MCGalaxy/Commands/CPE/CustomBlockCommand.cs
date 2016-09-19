@@ -153,27 +153,20 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void ListHandler(Player p, string[] parts, bool global, string cmd) {
-            int offset = 0, index = 0, count = 0;
-            if (parts.Length > 1) int.TryParse(parts[1], out offset);
+            string modifier = parts.Length > 1 ? parts[1] : "";
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
-
+            List<BlockDefinition> defsInScope = new List<BlockDefinition>();
+            
             for( int i = 1; i < 256; i++ ) {
                 BlockDefinition def = defs[i];
                 if (!ExistsInScope(def, i, global)) continue;
-                
-                if (index >= offset) {
-                    count++;
-                    const string format = "Custom block %T{0} %Shas name %T{1}";
-                    Player.Message(p, format, def.BlockID, def.Name);
-                    
-                    if (count >= 8) {
-                        const string helpFormat = "To see the next set of custom blocks, type %T{1} list {0}";
-                        Player.Message(p, helpFormat, offset + 8, cmd);
-                        return;
-                    }
-                }
-                index++;
+                defsInScope.Add(def);
             }
+            MultiPageOutput.Output(p, defsInScope, FormatBlock, cmd.Substring(1), "custom blocks", modifier, true);
+        }
+        
+        static string FormatBlock(BlockDefinition def, int i) {
+            return "Custom block %T" + def.BlockID + " %Shas name %T" + def.Name;
         }
         
         static void RemoveHandler(Player p, string[] parts, bool global, string cmd) {
