@@ -99,11 +99,7 @@ namespace MCGalaxy {
         
         void LoadAutoloadCommands() {
             if (File.Exists("text/autoload.txt")) {
-                try {
-                    PropertiesFile.Read("text/autoload.txt", AutoLoadLineProcessor);
-                } catch {
-                    s.Log("autoload.txt error");
-                }
+                PropertiesFile.Read("text/autoload.txt", AutoLoadLineProcessor);
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             } else {

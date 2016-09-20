@@ -132,7 +132,7 @@ namespace MCGalaxy.Commands {
         static void SetTimespan(Player p, string[] args, string column, Player who, Action<string> setter) {
             if (args.Length < 3) {
                 Player.Message(p, "Timespan must be in the format: <number><quantifier>..");
-                Player.Message(p, TimeUtils.Help, "set time spent to");
+                Player.Message(p, TimeExts.Help, "set time spent to");
                 return;
             }
             

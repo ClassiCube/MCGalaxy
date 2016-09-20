@@ -39,7 +39,8 @@ namespace MCGalaxy {
         
         public bool CheckBlockSpam() {
             if (p.ignoreGrief || !Server.BlockSpamCheck) return false;
-            if (AddEntry(blockLog, Server.BlockSpamCount, Server.BlockSpamInterval)) return false;
+            if (blockLog.AddSpamEntry(Server.BlockSpamCount, Server.BlockSpamInterval)) 
+                return false;
 
             TimeSpan oldestDelta = DateTime.UtcNow - blockLog[0];
             Chat.MessageOps(p.ColoredName + " &cwas kicked for suspected griefing.");
@@ -54,7 +55,8 @@ namespace MCGalaxy {
             if (!Server.checkspam || p.ircNick != null) return false;
             
             lock (chatLock) {
-                if (AddEntry(chatLog, Server.spamcounter, Server.spamcountreset)) return false;
+                if (chatLog.AddSpamEntry(Server.spamcounter, Server.spamcountreset)) 
+                    return false;
                 
                 Command.all.Find("mute").Use(null, p.name);
                 Chat.MessageAll("{0} %Shas been &0muted %Sfor spamming!", p.ColoredName);
@@ -68,7 +70,8 @@ namespace MCGalaxy {
             if (!Server.CmdSpamCheck || p.ircNick != null) return false;
             
             lock (cmdLock) {
-                if (AddEntry(cmdLog, Server.CmdSpamCount, Server.CmdSpamInterval)) return false;
+                if (cmdLog.AddSpamEntry(Server.CmdSpamCount, Server.CmdSpamInterval)) 
+                    return false;
                 
                 p.SendMessage("You have been blocked from using commands for " +
                               Server.CmdSpamBlockTime + " seconds due to spamming");
@@ -77,17 +80,6 @@ namespace MCGalaxy {
             }
         }
         
-        
-        static bool AddEntry(List<DateTime> log, int maxEntries, int checkInterval) {
-            DateTime now = DateTime.UtcNow;
-            if (log.Count > 0 && log.Count >= maxEntries) 
-                log.RemoveAt(0);
-            log.Add(now);
-            
-            if (log.Count < maxEntries) return true;
-            TimeSpan oldestDelta = now - log[0];
-            return oldestDelta.TotalSeconds > checkInterval;
-        }
         
         static void UnmuteTask(SchedulerTask task) {
             string name = (string)task.State;

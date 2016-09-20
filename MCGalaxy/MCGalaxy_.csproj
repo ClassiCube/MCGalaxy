@@ -607,6 +607,10 @@
     <Compile Include="Server\Updater.cs" />
     <Compile Include="API\WebServer.cs" />
     <Compile Include="util\BufferedBlockSender.cs" />
+    <Compile Include="util\Extensions\DateExts.cs" />
+    <Compile Include="util\Extensions\Extensions.cs" />
+    <Compile Include="util\Extensions\RWLockExts.cs" />
+    <Compile Include="util\Extensions\TimeExts.cs" />
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\App.cs" />
     <Compile Include="util\Formatter.cs" />
@@ -614,7 +618,6 @@
     <Compile Include="util\Math\Vectors.cs" />
     <Compile Include="util\MultiPageOutput.cs" />
     <Compile Include="util\SparseBitSet.cs" />
-    <Compile Include="util\TimeUtils.cs" />
     <Compile Include="util\Utils.cs" />
     <Compile Include="util\VolatileArray.cs" />
     <Compile Include="sharkbite.thresher\ChannelModeInfo.cs" />
@@ -638,7 +641,6 @@
     <Compile Include="util\ExtrasCollection.cs" />
     <Compile Include="Network\ClassiCube.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
-    <Compile Include="util\Extensions.cs" />
     <Compile Include="util\Hasher.cs" />
     <Compile Include="Player\Player.CPE.cs" />
     <Compile Include="Database\PlayerDB.cs" />
@@ -730,6 +732,7 @@
     <Folder Include="Player\Undo" />
     <Folder Include="Plugins" />
     <Folder Include="Plugins\Events" />
+    <Folder Include="util\Extensions" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

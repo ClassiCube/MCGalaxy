@@ -118,42 +118,5 @@ namespace MCGalaxy {
             }
             return false;
         }
-
-
-        public static IDisposable AccquireReadLock(this ReaderWriterLockSlim locker) {
-            return new ReadLock(locker);
-        }
-        
-        public static IDisposable AccquireWriteLock(this ReaderWriterLockSlim locker) {
-            return new WriteLock(locker);
-        }
-               
-        struct ReadLock : IDisposable {
-            ReaderWriterLockSlim locker;
-            
-            public ReadLock(ReaderWriterLockSlim locker) {
-                locker.EnterReadLock();
-                this.locker = locker;
-            }
-            
-            public void Dispose() {
-                locker.ExitReadLock();
-                locker = null;
-            }
-        }
-        
-        struct WriteLock : IDisposable {
-            ReaderWriterLockSlim locker;
-            
-            public WriteLock(ReaderWriterLockSlim locker) {
-                locker.EnterWriteLock();
-                this.locker = locker;
-            }
-            
-            public void Dispose() {
-                locker.ExitWriteLock();
-                locker = null;
-            }
-        }
     }
 }

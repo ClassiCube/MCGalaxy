@@ -18,7 +18,7 @@
 using System;
 
 namespace MCGalaxy {
-    public static class TimeUtils {
+    public static class TimeExts {
         
         public static string Shorten(this TimeSpan value, 
                                      bool seconds = false, bool spaces = true) {
@@ -73,16 +73,6 @@ namespace MCGalaxy {
         }
         
         public const string Help = "For example, to {0} 25 and a half hours, use \"1d1h30m\".";
-        
-        public static string ToDBTime(this TimeSpan value) {
-            return value.Days + " " + value.Hours + " " + value.Minutes + " " + value.Seconds;
-        }
-        
-        public static TimeSpan ParseDBTime(this string value) {
-            string[] parts = value.Split(' ');
-            return new TimeSpan(int.Parse(parts[0]), int.Parse(parts[1]),
-                                int.Parse(parts[2]), int.Parse(parts[3]));
-        }
         
         static void Add(ref string time, int amount, char suffix, bool spaces) {
             if (amount == 0) return;

@@ -211,7 +211,7 @@ namespace MCGalaxy {
             try {
                 CustomColor c = Colors.ParseHex(hex);
                 Send(Packet.MakeEnvColor(type, c.R, c.G, c.B));
-            } catch (Exception ex) {
+        	} catch (ArgumentException) {
                 Send(Packet.MakeEnvColor(type, -1, -1, -1));
             }
         }

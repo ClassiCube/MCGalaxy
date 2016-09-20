@@ -96,8 +96,8 @@ namespace MCGalaxy {
             
             using (StreamReader r = new StreamReader(path, Encoding.UTF8)) {
                 string line = null;
-                while ((line = r.ReadLine()) != null) {                                        
-                    list.lines.Add(line);                    
+                while ((line = r.ReadLine()) != null) {
+                    list.lines.Add(line);
                     int space = line.IndexOf(' ');
                     string name = space >= 0 ? line.Substring(0, space) : line;
                     
