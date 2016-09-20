@@ -28,62 +28,70 @@ namespace MCGalaxy.Games.ZS {
             if (!ZombieGameProps.ChangeLevels) return;
             
             try {
-                List<string> levels = GetCandidateLevels();
-                if (levels == null) return;
-
-                string picked1 = "", picked2 = "";
-                Random r = new Random();
-
-            LevelChoice:
-                string level = levels[r.Next(0, levels.Count)];
-                string level2 = levels[r.Next(0, levels.Count)];
-
-                if (level == game.lastLevel1 || level == game.lastLevel2 || level == game.CurLevelName ||
-                    level2 == game.lastLevel1 || level2 == game.lastLevel2 || level2 == game.CurLevelName ||
-                    level == picked1) {
-                    goto LevelChoice;
-                } else if (picked1 == "") {
-                    picked1 = level; goto LevelChoice;
-                } else {
-                    picked2 = level2;
-                }
-
-                game.Level1Vote = 0; game.Level2Vote = 0; game.Level3Vote = 0;
-                game.lastLevel1 = picked1; game.lastLevel2 = picked2;
+                List<string> maps = GetCandidateLevels();
+                if (maps == null) return;
+                RemoveRecentLevels(maps, game);
+                game.Votes1 = 0; game.Votes2 = 0; game.Votes3 = 0;
+                
+                Random r = new Random();               
+                game.Candidate1 = GetRandomLevel(r, maps);
+                game.Candidate2 = GetRandomLevel(r, maps);
+                game.Candidate3 = GetRandomLevel(r, maps);
+                
                 if (!game.Running || game.Status == ZombieGameStatus.LastRound) return;
-
-                Server.votingforlevel = true;
-                Player[] players = PlayerInfo.Online.Items;
-                foreach (Player pl in players) {
-                    if (pl.level != game.CurLevel) continue;
-                    SendVoteMessage(pl, picked1, picked2);
-                }
-                System.Threading.Thread.Sleep(15000);
-                Server.votingforlevel = false;
+                DoLevelVote(game);
 
                 if (!game.Running || game.Status == ZombieGameStatus.LastRound) return;
-                MoveToNextLevel(r, levels, game, picked1, picked2);
+                MoveToNextLevel(r, maps, game);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
             }
         }
         
-		/// <summary> Moves all players to the level which has the highest number of votes. </summary>
-        internal static void MoveToNextLevel(Random r, List<string> levels, ZombieGame game,
-                                             string picked1, string picked2) {
-            int v1 = game.Level1Vote, v2 = game.Level2Vote, v3 = game.Level3Vote;
+        static void RemoveRecentLevels(List<string> maps, ZombieGame game) {
+            // Try to avoid recently played levels, avoiding most recent
+            List<string> recent = game.RecentMaps;
+            for (int i = recent.Count - 1; i >= 0; i--) {
+                if (maps.Count > 3 && maps.CaselessContains(recent[i]))
+                    maps.CaselessRemove(recent[i]);
+            }
+            
+            // Try to avoid maps voted last round if possible
+            if (maps.Count > 3 && maps.CaselessContains(game.Candidate1))
+                maps.CaselessRemove(game.Candidate1);
+            if (maps.Count > 3 && maps.CaselessContains(game.Candidate2))
+                maps.CaselessRemove(game.Candidate2);
+            if (maps.Count > 3 && maps.CaselessContains(game.Candidate3))
+                maps.CaselessRemove(game.Candidate3);
+        }
+        
+        static void DoLevelVote(ZombieGame game) {
+            Server.votingforlevel = true;
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level != game.CurLevel) continue;
+                SendVoteMessage(pl, game);
+            }
+            System.Threading.Thread.Sleep(15000);
+            Server.votingforlevel = false;
+        }
+        
+        
+        /// <summary> Moves all players to the level which has the highest number of votes. </summary>
+        static void MoveToNextLevel(Random r, List<string> levels, ZombieGame game) {
+            int v1 = game.Votes1, v2 = game.Votes2, v3 = game.Votes3;
             
             if (v1 >= v2) {
                 if (v3 > v1 && v3 > v2) {
-                    game.ChangeLevel(GetRandomLevel(r, levels, game));
+                    game.ChangeLevel(game.Candidate3);
                 } else {
-                    game.ChangeLevel(picked1);
+                    game.ChangeLevel(game.Candidate1);
                 }
             } else {
                 if (v3 > v1 && v3 > v2) {
-                    game.ChangeLevel(GetRandomLevel(r, levels, game));
+                    game.ChangeLevel(game.Candidate3);
                 } else {
-                    game.ChangeLevel(picked2);
+                    game.ChangeLevel(game.Candidate2);
                 }
             }
             Player[] online = PlayerInfo.Online.Items;
@@ -91,12 +99,12 @@ namespace MCGalaxy.Games.ZS {
                 pl.voted = false;
         }
         
-        internal static string GetRandomLevel(Random r, List<string> levels, ZombieGame game) {
-            for (int i = 0; i < 100; i++) {
-                string lvl = levels[r.Next(0, levels.Count)];
-                if (!lvl.CaselessEq(game.CurLevelName)) return lvl;
-            }
-            return levels[r.Next(0, levels.Count)];
+        internal static string GetRandomLevel(Random r, List<string> maps) {
+            int i = r.Next(0, maps.Count);
+            string map = maps[i];
+            
+            maps.RemoveAt(i);
+            return map;
         }
         
         /// <summary> Returns a list of maps that can be used for a round of zombie survival. </summary>
@@ -107,10 +115,10 @@ namespace MCGalaxy.Games.ZS {
                 maps.Remove(ignore);
             
             bool useLevelList = ZombieGameProps.LevelList.Count > 0;
-            if (maps.Count <= 2 && !useLevelList) { 
-                Server.s.Log("You must have more than 2 levels to change levels in Zombie Survival"); return null; }
-            if (maps.Count <= 2 && useLevelList) { 
-                Server.s.Log("You must have more than 2 levels in your level list to change levels in Zombie Survival"); return null; }
+            if (maps.Count <= 3 && !useLevelList) {
+                Server.s.Log("You must have more than 3 levels to change levels in Zombie Survival"); return null; }
+            if (maps.Count <= 3 && useLevelList) {
+                Server.s.Log("You must have more than 3 levels in your level list to change levels in Zombie Survival"); return null; }
             return maps;
         }
         
@@ -128,9 +136,10 @@ namespace MCGalaxy.Games.ZS {
         }
         
         /// <summary> Sends the formatted vote message to the player (using bottom right if supported) </summary>
-        internal static void SendVoteMessage(Player p, string lvl1, string lvl2) {
-            const string line1 = "&eLevel vote - type &a1&e, &c2&e or &93";
-            string line2 = "&a" + lvl1 + "&e, &c" + lvl2 + "&e, &9random";
+        internal static void SendVoteMessage(Player p, ZombieGame game) {
+            const string line1 = "&eLevel vote - type &a1&e, &b2&e or &c3";
+            string line2 = "&a" + game.Candidate1 + "&e, &b" 
+                + game.Candidate2 + "&e, &c" + game.Candidate3;
             
             if (p.HasCpeExt(CpeExt.MessageTypes)) {
                 p.SendCpeMessage(CpeMessageType.BottomRight2, line1);

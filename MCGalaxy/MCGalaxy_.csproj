@@ -235,6 +235,7 @@
     <Compile Include="Commands\Fun\ZombieSurvival\CmdHuman.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdInfect.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdInfected.cs" />
+    <Compile Include="Commands\Fun\ZombieSurvival\CmdLastLevels.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdQueue.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdReferee.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdShowQueue.cs" />

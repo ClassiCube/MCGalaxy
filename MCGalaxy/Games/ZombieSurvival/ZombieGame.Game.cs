@@ -92,9 +92,9 @@ namespace MCGalaxy.Games {
         
         bool HandleVote(Player p, string message) {
             message = message.ToLower();
-            if (Player.CheckVote(message, p, "1", "one", ref Level1Vote) ||
-                Player.CheckVote(message, p, "2", "two", ref Level2Vote) ||
-                Player.CheckVote(message, p, "3", "three", ref Level3Vote))
+            if (Player.CheckVote(message, p, "1", "one", ref Votes1) ||
+                Player.CheckVote(message, p, "2", "two", ref Votes2) ||
+                Player.CheckVote(message, p, "3", "three", ref Votes3))
                 return true;
             return false;
         }
@@ -143,7 +143,7 @@ namespace MCGalaxy.Games {
                 UpdatePlayerStatus(p);
                 
                 if (Server.votingforlevel)
-                    LevelPicker.SendVoteMessage(p, lastLevel1, lastLevel2);
+                    LevelPicker.SendVoteMessage(p, this);
                 return;
             }
 

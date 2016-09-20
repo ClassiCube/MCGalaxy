@@ -74,19 +74,22 @@ namespace MCGalaxy.Games {
         /// <summary> List of dead/infected players. </summary>
         public VolatileArray<Player> Infected = new VolatileArray<Player>(false);
         
+        public List<string> RecentMaps = new List<string>();
+        
         /// <summary> Name of the player queued to be the first zombie in the next round. </summary>
         public string QueuedZombie;
         
         /// <summary> Name of the level queued to be used for the next round. </summary>
         public string QueuedLevel;
         
-        List<string> messages = new List<string>();      
+        List<string> infectMessages = new List<string>();      
         
-        internal string lastLevel1 = "", lastLevel2 = "";
-        internal int Level1Vote = 0, Level2Vote = 0, Level3Vote = 0;
+        internal string Candidate1 = "", Candidate2 = "", Candidate3 = "";
+        internal int Votes1 = 0, Votes2 = 0, Votes3 = 0;
         
         string lastPlayerToInfect = "";
         int infectCombo = 0;
+        
         public Dictionary<string, BountyData> Bounties = new Dictionary<string, BountyData>();
         
         /// <summary> List of players who are in the lottery. </summary>

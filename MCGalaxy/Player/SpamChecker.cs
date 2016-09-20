@@ -35,7 +35,6 @@ namespace MCGalaxy {
                 chatLog.Clear();
             lock (cmdLock)
                 cmdLog.Clear();
-            p = null;
         }
         
         public bool CheckBlockSpam() {

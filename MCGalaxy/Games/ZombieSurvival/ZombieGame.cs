@@ -22,8 +22,8 @@ using System.Data;
 using System.IO;
 using System.Threading;
 using MCGalaxy.Commands.World;
-using MCGalaxy.SQL;
 using MCGalaxy.Games.ZS;
+using MCGalaxy.SQL;
 
 namespace MCGalaxy.Games {
     
@@ -50,7 +50,7 @@ namespace MCGalaxy.Games {
                 List<string> levels = LevelPicker.GetCandidateLevels();
                 if (levels == null) return false;
                 
-                CurLevelName = LevelPicker.GetRandomLevel(new Random(), levels, this);
+                CurLevelName = LevelPicker.GetRandomLevel(new Random(), levels);
                 CurLevel = LevelInfo.FindExact(CurLevelName) 
                     ?? CmdLoad.LoadLevel(null, CurLevelName);
                 if (CurLevel == null) return false;
@@ -165,8 +165,10 @@ namespace MCGalaxy.Games {
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
             Player[] online = PlayerInfo.Online.Items;
+            
             Lottery.Clear();
             Bounties.Clear();
+            RecentMaps.Clear();
             
             foreach (Player pl in online) {
                 pl.Game.Referee = false;
@@ -229,16 +231,16 @@ namespace MCGalaxy.Games {
             "{0} transplanted {1}'s living brain" };
         
         public void LoadInfectMessages() {
-            messages.Clear();
+            infectMessages.Clear();
             try {
                 if (!File.Exists("text/infectmessages.txt"))
                     File.WriteAllLines("text/infectmessages.txt", defMessages);
-                messages = CP437Reader.ReadAllLines("text/infectmessages.txt");
+                infectMessages = CP437Reader.ReadAllLines("text/infectmessages.txt");
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
             }
-            if (messages.Count == 0)
-                messages = new List<string>(defMessages);
+            if (infectMessages.Count == 0)
+                infectMessages = new List<string>(defMessages);
         }
         
         public bool IsZombieMap(string name) {

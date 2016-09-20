@@ -100,6 +100,10 @@ namespace MCGalaxy.Games {
             } else {
                 HandOutRewards();
             }
+            
+            if (RecentMaps.Count > 20)
+                RecentMaps.RemoveAt(0);
+            RecentMaps.Add(CurLevelName);
         }
         
         Player PickFirstZombie(Random random, List<Player> players) {
@@ -281,7 +285,7 @@ namespace MCGalaxy.Games {
             if (infectMsgs != null && random.Next(0, 10) < 5)
                 text = infectMsgs[random.Next(infectMsgs.Count)];
             else
-                text = messages[random.Next(messages.Count)];
+                text = infectMessages[random.Next(infectMessages.Count)];
             
             CurLevel.ChatLevel(String.Format(text,
                                              Colors.red + pKiller.DisplayName + Colors.yellow,
