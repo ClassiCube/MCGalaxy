@@ -27,7 +27,7 @@ namespace MCGalaxy {
     public sealed partial class Level : IDisposable {
         
         public string name;
-        [ConfigString("MOTD", "General", null, "ignore", true)]
+        [ConfigString("MOTD", "General", null, "ignore", true, null, 128)]
         public string motd = "ignore";
         
         public byte rotx, roty;
@@ -90,7 +90,7 @@ namespace MCGalaxy {
         // Environment settings
         [ConfigInt("Weather", "Env", null, 0, 0, 2)]
         public int Weather;
-        [ConfigString("Texture", "Env", null, "", true)]
+        [ConfigString("Texture", "Env", null, "", true, null, 64)]
         public string terrainUrl = "";
         [ConfigString("TexturePack", "Env", null, "", true)]
         public string texturePackUrl = "";

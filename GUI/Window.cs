@@ -142,7 +142,7 @@ namespace MCGalaxy.Gui {
                 Invoke(new VoidDelegate(SettingsUpdate));
             } else {
                 Text = Server.name + " - MCGalaxy " + Server.VersionString;
-                notifyIcon1.Text = ("MCGalaxy Server: " + Server.name).Truncate(64);
+                notifyIcon1.Text = ("MCGalaxy Server: " + Server.name).Truncate(63);
             }
         }
 

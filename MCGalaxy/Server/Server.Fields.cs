@@ -169,10 +169,10 @@ namespace MCGalaxy {
         public static bool TablistBots = false;
 
         [ConfigString("server-name", "General", null, 
-                      "[MCGalaxy] Default", false, "![]&:.,{}~-+()?_/\\' ")]
+                      "[MCGalaxy] Default", false, "![]&:.,{}~-+()?_/\\' ", 64)]
         public static string name = "[MCGalaxy] Default";
         [ConfigString("motd", "General", null, "Welcome",
-                     false,  "=![]&:.,{}~-+()?_/\\' ")]
+                     false,  "=![]&:.,{}~-+()?_/\\' ", 128)]
         public static string motd = "Welcome!";
         [ConfigInt("max-players", "Server", null, 12, 1, 128)]
         public static int players = 12;
@@ -372,9 +372,9 @@ namespace MCGalaxy {
         public static bool guestJoinNotify = true;
         [ConfigBool("guest-leave-notify", "Other", null, true)]        
         public static bool guestLeaveNotify = true;
-        [ConfigString("default-texture-url", "General", null, "", true)]
+        [ConfigString("default-texture-url", "General", null, "", true, null, 64)]
         public static string defaultTerrainUrl = "";
-        [ConfigString("default-texture-pack-url", "General", null, "", true)]        
+        [ConfigString("default-texture-pack-url", "General", null, "", true, null, 64)]        
         public static string defaultTextureUrl = "";
 
         //hackrank stuff
