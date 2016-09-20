@@ -64,10 +64,13 @@ namespace MCGalaxy {
         
         /// <summary> Modifies the parameters if they match any command shortcut or command alias. </summary>
         public static void Search(ref string cmd, ref string cmdArgs) {
-            string shortcut = all.FindShort(cmd);
-            if (shortcut != "") cmd = shortcut;
             Alias alias = Alias.Find(cmd);
-            if (alias == null) return;
+            // Aliases should be able to override built in shortcuts
+            if (alias == null) {
+                string shortcut = all.FindShort(cmd);
+                if (shortcut != "") cmd = shortcut;
+                return;
+            }
             
             cmd = alias.Target;
             if (alias.Prefix != null)

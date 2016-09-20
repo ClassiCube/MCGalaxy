@@ -56,14 +56,7 @@ namespace MCGalaxy.Games {
         public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z,
                                              byte rotX, byte rotY) {
             if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
-            if (!p.Game.Referee && ZombieGameProps.NoRespawn) {
-                int dx = Math.Abs(p.pos[0] - x), dz = Math.Abs(p.pos[2] - z);
-                if (dx >= ZombieGameProps.MaxMoveDistance || dz >= ZombieGameProps.MaxMoveDistance) {
-                    p.SendOwnHeadPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
-                    return true;
-                }
-            }
-            return false;
+            return Movement.DetectNoclip(p, x, y, z) || Movement.DetectSpeedhack(p, x, y, z);
         }
         
         public override bool HandlesChatMessage(Player p, string message) {

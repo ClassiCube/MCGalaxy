@@ -43,10 +43,11 @@ namespace MCGalaxy.Commands {
                 ushort y = (ushort)(p.pos[1] / 32);
                 ushort z = (ushort)(p.pos[2] / 32);
 
-                for (ushort xx = (ushort)(x - 1); xx <= x + 1; xx++)
-                    for (ushort yy = (ushort)(y - 1); yy <= y + 1; yy++)
-                        for (ushort zz = (ushort)(z - 1); zz <= z + 1; zz++)
+                for (int dx = -1; dx <= 1; dx++)
+                    for (int dy = -1; dy <= 1; dy++)
+                        for (int dz = -1; dz <= 1; dz++)
                 {
+                    ushort xx = (ushort)(x + dx), yy = (ushort)(y + dy), zz = (ushort)(z + dz);
                     if (p.level.GetTile(xx, yy, zz) != Block.train) continue;
                     p.trainGrab = true;
                     byte yaw = 0, pitch = 0;

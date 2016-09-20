@@ -23,7 +23,7 @@ namespace MCGalaxy {
     public static class Formatter {
         
         public static void PrintRanks(LevelPermission minRank, List<LevelPermission> allowed,
-                                        List<LevelPermission> disallowed, StringBuilder builder) {
+                                      List<LevelPermission> disallowed, StringBuilder builder) {
             builder.Append(Group.GetColoredName(minRank) + "%S+");
             if (allowed != null && allowed.Count > 0) {
                 foreach (LevelPermission perm in allowed)
@@ -80,15 +80,16 @@ namespace MCGalaxy {
                 
                 dst.Append('/').Append(a.Trigger);
                 string args = a.Prefix == null ? a.Suffix : a.Prefix;
-                if (args != null) {
-                    string name = String.IsNullOrEmpty(cmd.shortcut) ? cmd.name : cmd.shortcut;
-                    dst.Append(" for /").Append(name + " " + args);
-                }
+                if (args == null) { dst.Append(", "); continue; }
+                
+                string name = String.IsNullOrEmpty(cmd.shortcut) ? cmd.name : cmd.shortcut;
+                if (name.Length > cmd.name.Length) name = cmd.name;
+                dst.Append(" for /").Append(name + " " + args);
                 dst.Append(", ");
             }
         }
-		
-		public static void MessageBlock(Player p, string action, byte block) {
+        
+        public static void MessageBlock(Player p, string action, byte block) {
             StringBuilder builder = new StringBuilder("Only ");
             Block.Blocks perms = Block.BlockList[block];
             PrintRanks(perms.lowestRank, perms.allow, perms.disallow, builder);

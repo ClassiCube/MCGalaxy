@@ -203,7 +203,7 @@ namespace MCGalaxy.Games {
                                 if (infectCombo >= 2) {
                                     pKiller.SendMessage("You gained " + (2 + infectCombo) + " " + Server.moneys);
                                     pKiller.SetMoney(pKiller.money + (2 + infectCombo));
-                                    CurLevel.ChatLevel(pKiller.ColoredName + " is on a rampage! " + (infectCombo + 1) + " infections in a row!");
+                                    CurLevel.ChatLevel(pKiller.ColoredName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
                                 }
                             } else {
                                 infectCombo = 0;

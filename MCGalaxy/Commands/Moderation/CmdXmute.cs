@@ -61,8 +61,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/xmute <player> <seconds>");
-            Player.Message(p, "%HMutes <player> for <seconds> seconds");
+            Player.Message(p, "%T/xmute [player] [seconds]");
+            Player.Message(p, "%HMutes [player] for [seconds] seconds");
         }
     }
 }
