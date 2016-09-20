@@ -110,7 +110,12 @@ namespace MCGalaxy.Games.ZS {
         /// <summary> Returns a list of maps that can be used for a round of zombie survival. </summary>
         /// <returns> null if not enough levels are available, otherwise the list of levels. </returns>
         internal static List<string> GetCandidateLevels() {
-            List<string> maps = ZombieGameProps.LevelList.Count > 0 ? ZombieGameProps.LevelList : GetAllMaps();
+            List<string> maps = null;
+            if (ZombieGameProps.LevelList.Count > 0) {
+                maps = new List<string>(ZombieGameProps.LevelList);
+            } else {
+                maps = GetAllMaps();
+            }
             foreach (string ignore in ZombieGameProps.IgnoredLevelList)
                 maps.Remove(ignore);
             

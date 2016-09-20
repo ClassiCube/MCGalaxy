@@ -32,11 +32,11 @@ namespace MCGalaxy {
         AdvBuilder = 50, Operator = 80,
         Admin = 100, Nobody = 120, Null = 150
     }
-	
+    
     public enum BuildType { Normal, ModifyOnly, NoModify };
 
     public sealed partial class Level : IDisposable {    
-    	
+        
         public Level(string n, ushort x, ushort y, ushort z) { Init(n, x, y, z); }
         
         [Obsolete("Use MapGen.Generate instead")]
@@ -120,17 +120,23 @@ namespace MCGalaxy {
         /// saved to the BlockDB and .lvl files. </summary>
         public bool ShouldSaveChanges() {
             if (!saveLevel) return false;
-        	if (Server.zombie.Running && !ZombieGameProps.SaveLevelBlockchanges &&
-        	    (name.CaselessEq(Server.zombie.CurLevelName)
-        	     || name.CaselessEq(Server.zombie.LastLevelName))) return false;
-        	if (Server.lava.active && Server.lava.HasMap(name)) return false;
-        	return true;
+            ZombieGame zs = Server.zombie;
+            
+            if (zs.Running && !ZombieGameProps.SaveLevelBlockchanges &&
+               (name.CaselessEq(zs.CurLevelName) || name.CaselessEq(zs.LastLevelName))) 
+                return false;
+            if (Server.lava.active && Server.lava.HasMap(name)) 
+                return false;
+            return true;
         }
         
         public bool ShouldShowJoinMessage(Level prev) {
-            if (Server.zombie.Running && name.CaselessEq(Server.zombie.CurLevelName)
-        	    && (prev == this || prev.name.CaselessEq(Server.zombie.LastLevelName))) return false;
-            if (Server.lava.active && Server.lava.HasMap(name)) return false;
+            ZombieGame zs = Server.zombie;
+            if (zs.Running && name.CaselessEq(zs.CurLevelName) && 
+               (prev == this || zs.LastLevelName == "" || prev.name.CaselessEq(zs.LastLevelName))) 
+                return false;
+            if (Server.lava.active && Server.lava.HasMap(name)) 
+                return false;
             return true;
         }
         
@@ -200,7 +206,7 @@ namespace MCGalaxy {
         }
 
         void MovePlayersToMain() {
-        	Player[] players = PlayerInfo.Online.Items; 
+            Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 if (p.level == this) {
                     Player.Message(p, "You were moved to the main level as " + name + " was unloaded.");
@@ -222,13 +228,13 @@ namespace MCGalaxy {
 
         public static void SaveSettings(Level lvl) {
             lock (lvl.savePropsLock)
-            	LvlProperties.Save(lvl, LevelInfo.PropertiesPath(lvl.name));
+                LvlProperties.Save(lvl, LevelInfo.PropertiesPath(lvl.name));
         }
 
         // Returns true if ListCheck does not already have an check in the position.
         // Useful for fireworks, which depend on two physics blocks being checked, one with extraInfo.
         public bool CheckClear(ushort x, ushort y, ushort z) {
-        	return x >= Width || y >= Height || z >= Length || !listCheckExists.Get(x, y, z);
+            return x >= Width || y >= Height || z >= Length || !listCheckExists.Get(x, y, z);
         }
 
         public void Save(bool Override = false, bool clearPhysics = false) {
@@ -397,7 +403,7 @@ namespace MCGalaxy {
         }
 
         public void ChatLevel(string message) { 
-        	ChatLevel(message, LevelPermission.Banned); 
+            ChatLevel(message, LevelPermission.Banned); 
         }
 
         public void ChatLevelOps(string message) {
@@ -412,21 +418,21 @@ namespace MCGalaxy {
         
         /// <summary> Sends a chat messages to all players in the level, who have at least the minPerm rank. </summary>
         public void ChatLevel(string message, LevelPermission minPerm) {
-        	Player[] players = PlayerInfo.Online.Items; 
+            Player[] players = PlayerInfo.Online.Items; 
             foreach (Player pl in players) {
-            	if (pl.level != this) continue;
-            	if (pl.Rank < minPerm) continue;
+                if (pl.level != this) continue;
+                if (pl.Rank < minPerm) continue;
                 pl.SendMessage(message);
             }
         }
         
         public void UpdateBlockPermissions() {
-        	Player[] players = PlayerInfo.Online.Items; 
-        	foreach (Player p in players) {
-        		if (p.level != this) continue;
-        		if (!p.HasCpeExt(CpeExt.BlockPermissions)) continue;
-        		p.SendCurrentBlockPermissions();
-        	}
+            Player[] players = PlayerInfo.Online.Items; 
+            foreach (Player p in players) {
+                if (p.level != this) continue;
+                if (!p.HasCpeExt(CpeExt.BlockPermissions)) continue;
+                p.SendCurrentBlockPermissions();
+            }
         }
 
         public static LevelPermission PermissionFromName(string name) {

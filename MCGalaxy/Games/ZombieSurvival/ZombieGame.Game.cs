@@ -59,7 +59,7 @@ namespace MCGalaxy.Games {
             if (!p.Game.Referee && ZombieGameProps.NoRespawn) {
                 int dx = Math.Abs(p.pos[0] - x), dz = Math.Abs(p.pos[2] - z);
                 if (dx >= ZombieGameProps.MaxMoveDistance || dz >= ZombieGameProps.MaxMoveDistance) {
-                    p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
+                    p.SendOwnHeadPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
                     return true;
                 }
             }

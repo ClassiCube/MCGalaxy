@@ -42,13 +42,12 @@ namespace MCGalaxy {
         	string col = Entities.GetSupportedCol(dst, p.color);          
             group = Server.TablistGlobal ? "On " + p.level.name : "&fPlayers";    	
             name = col + p.truename;
+            IGame game = p.level.CurrentGame();
+            if (game != null) game.GetTabName(p, dst, ref name, ref group);
             
             if (p.hidden && p.IsAfk) { name += " &f(Hid, &7AFK)"; return; }
             if (p.hidden) name += " &f(Hid)";
-            if (p.IsAfk) { name += " &7(AFK)"; return; }
-            
-            IGame game = p.level.CurrentGame();
-            if (game != null) game.GetTabName(p, dst, ref name, ref group);
+            if (p.IsAfk) name += " &7(AFK)";
         }
         
         /// <summary> Adds the given bot to that player's tab list (if their client support it). </summary>
