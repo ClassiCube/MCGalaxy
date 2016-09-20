@@ -24,11 +24,11 @@ using MCGalaxy.Config;
 namespace MCGalaxy.Games {
     
     public class BountyData {
-        public Player Origin;
+        public string Origin, Target;
         public int Amount;
         
-        public BountyData(Player origin, int amount) {
-            Origin = origin; Amount = amount;
+        public BountyData(string origin, string target, int amount) {
+            Origin = origin; Target = target; Amount = amount;
         }
     }
     
@@ -90,7 +90,8 @@ namespace MCGalaxy.Games {
         string lastPlayerToInfect = "";
         int infectCombo = 0;
         
-        public Dictionary<string, BountyData> Bounties = new Dictionary<string, BountyData>();
+        /// <summary> List of players who have a bounty on them. </summary>
+        public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>(false);
         
         /// <summary> List of players who are in the lottery. </summary>
         public VolatileArray<string> Lottery = new VolatileArray<string>(false);

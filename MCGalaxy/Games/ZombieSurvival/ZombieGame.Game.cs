@@ -97,8 +97,21 @@ namespace MCGalaxy.Games {
             Alive.Remove(p);
             Infected.Remove(p);
             p.Game.Infected = false;
+            RemoveBounties(p);
+            
             AssignFirstZombie();
             UpdateAllPlayerStatus();
+        }
+        
+        void RemoveBounties(Player p) {
+            BountyData[] bounties = Bounties.Items;
+            foreach (BountyData b in bounties) {
+                if (!(b.Origin.CaselessEq(p.name) || b.Target.CaselessEq(p.name))) continue;
+                
+                string target = PlayerInfo.GetColoredName(p, b.Target);
+                CurLevel.ChatLevel("Bounty on " + target + " %Sis no longer active.");
+                Bounties.Remove(b);
+            }
         }
         
         public override void PlayerJoinedServer(Player p) {

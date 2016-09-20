@@ -52,7 +52,7 @@ namespace MCGalaxy.Games {
                     return;
                 } else if (Status == ZombieGameStatus.InfiniteRounds) {
                     DoRound();
-                    if (ZombieGameProps.ChangeLevels) 
+                    if (ZombieGameProps.ChangeLevels)
                         LevelPicker.ChooseNextLevel(this);
                 } else if (Status == ZombieGameStatus.SingleRound) {
                     DoRound();
@@ -62,7 +62,7 @@ namespace MCGalaxy.Games {
                         ResetState(); return;
                     } else {
                         DoRound();
-                        if (ZombieGameProps.ChangeLevels) 
+                        if (ZombieGameProps.ChangeLevels)
                             LevelPicker.ChooseNextLevel(this);
                     }
                 } else if (Status == ZombieGameStatus.LastRound) {
@@ -94,7 +94,7 @@ namespace MCGalaxy.Games {
             CurLevel.ChatLevel(first.ColoredName + " %Sstarted the infection!");
             InfectPlayer(first);
 
-            DoCoreGame(random); 
+            DoCoreGame(random);
             if (!Running) {
                 Status = ZombieGameStatus.LastRound; return;
             } else {
@@ -186,7 +186,7 @@ namespace MCGalaxy.Games {
                         UpdatePlayerColor(pAlive, pAlive.color);
                         int dx = Math.Abs(pAlive.pos[0] - pKiller.pos[0]);
                         int dy = Math.Abs(pAlive.pos[1] - pKiller.pos[1]);
-                        int dz = Math.Abs(pAlive.pos[2] - pKiller.pos[2]);                        
+                        int dz = Math.Abs(pAlive.pos[2] - pKiller.pos[2]);
                         if (dx > dist || dy > dist || dz > dist) continue;
                         
                         if (!pAlive.Game.Infected && pKiller.Game.Infected && !pAlive.Game.Referee
@@ -245,7 +245,7 @@ namespace MCGalaxy.Games {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (!p.Game.Invisible || p.level != CurLevel) continue;
-                DateTime end = p.Game.InvisibilityEnd;                
+                DateTime end = p.Game.InvisibilityEnd;
                 if (now >= end) { ResetInvisibility(p); continue; }
                 
                 int left = (int)Math.Ceiling((end - now).TotalSeconds);
@@ -268,13 +268,18 @@ namespace MCGalaxy.Games {
         }
         
         void CheckBounty(Player pAlive, Player pKiller) {
-            BountyData bounty;
-            if (Bounties.TryGetValue(pAlive.name, out bounty))
-                Bounties.Remove(pAlive.name);
-            if (bounty != null) {
+            BountyData bounty = FindBounty(pAlive.name);
+            if (bounty == null) return;
+            Bounties.Remove(bounty);
+            
+            Player origin = PlayerInfo.FindExact(bounty.Origin);
+            if (origin == null) {
+                Player.Message(pKiller, "Cannot collect the bounty, as the player who set it is offline.");
+            } else {                
                 CurLevel.ChatLevel(pKiller.ColoredName + " %Scollected the bounty of &a" +
                                    bounty.Amount + " %S" + Server.moneys + " on " + pAlive.ColoredName + "%S.");
-                bounty.Origin.SetMoney(Math.Max(0, bounty.Origin.money - bounty.Amount));
+                
+                origin.SetMoney(Math.Max(0, origin.money - bounty.Amount));
                 pKiller.SetMoney(pKiller.money + bounty.Amount);
             }
         }
@@ -304,7 +309,6 @@ namespace MCGalaxy.Games {
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
-            Bounties.Clear();
             
             if (!Running) return;
             Rewards.HandOut(this);

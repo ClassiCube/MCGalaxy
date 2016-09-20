@@ -42,19 +42,20 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "You do not have enough " + Server.moneys + " to place such a large bountry."); return;
             }
             
-            BountyData old;
-            if (Server.zombie.Bounties.TryGetValue(who.name, out old) && old.Amount >= amount) {
+            BountyData old = Server.zombie.FindBounty(who.name);
+            if (old != null && old.Amount >= amount) {
                 Player.Message(p, "There is already a larger active bounty for " + who.name + "."); return;
             }
             
             if (old == null) {
                 Chat.MessageAll("Looks like someone really wants the brains of {0}%S! A bounty of &a{1} %S{2} was placed on them.", 
-            	                who.ColoredName, amount, Server.moneys);
+                                who.ColoredName, amount, Server.moneys);
             } else {
                 Chat.MessageAll("{0} %Sis popular! The bounty on them was increased from &a{3} %Sto &a{1} %S{2}.", 
-            	                who.ColoredName, amount, Server.moneys, old.Amount);
+                                who.ColoredName, amount, Server.moneys, old.Amount);
+                Server.zombie.Bounties.Remove(old);
             }
-            Server.zombie.Bounties[who.name] = new BountyData(p, amount);
+            Server.zombie.Bounties.Add(new BountyData(p.name, who.name, amount));
         }
         
         public override void Help(Player p) {

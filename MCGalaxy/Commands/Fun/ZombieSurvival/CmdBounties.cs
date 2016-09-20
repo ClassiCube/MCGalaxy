@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System.Collections.Generic;
 using MCGalaxy.Games;
 
@@ -27,20 +27,20 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }      
+        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         public CmdBounties() { }
         
         public override void Use(Player p, string message) {
-            Dictionary<string, BountyData> bounties = Server.zombie.Bounties;
-            if (bounties.Count == 0) {
-                Player.Message(p, "There are no active bounties.");
-            } else {
-                foreach (var pair in bounties) {
-                    Player pl = PlayerInfo.FindExact(pair.Key);
-                    if (pl == null) continue;
-                    Player.Message(p, "Bounty for " + pl.ColoredName + " %Sis &a" 
-                                       + pair.Value.Amount + "%S" + Server.moneys + ".");
-                }
+            BountyData[] bounties = Server.zombie.Bounties.Items;
+            if (bounties.Length == 0) {
+                Player.Message(p, "There are no active bounties."); return;
+            }
+            
+            foreach (BountyData bounty in bounties) {
+                Player pl = PlayerInfo.FindExact(bounty.Target);
+                if (pl == null) continue;
+                Player.Message(p, "Bounty for {0} %Sis &a{1} %S{2}.", 
+                               pl.ColoredName, bounty.Amount, Server.moneys);
             }
         }
         

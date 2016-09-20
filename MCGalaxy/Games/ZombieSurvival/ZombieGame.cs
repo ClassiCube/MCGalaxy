@@ -186,6 +186,15 @@ namespace MCGalaxy.Games {
             CurLevel = null;
         }
         
+        public BountyData FindBounty(string target) {
+            BountyData[] bounties = Bounties.Items;
+            foreach (BountyData bounty in bounties) {
+                if (bounty.Target.CaselessEq(target)) return bounty;
+            }
+            return null;
+        }
+        
+        
         void UpdatePlayerStatus(Player p) {
             int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
             string status = GetStatusMessage(GetTimespan(seconds));
