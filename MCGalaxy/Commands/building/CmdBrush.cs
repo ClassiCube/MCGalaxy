@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Building {
             if (args[0].CaselessEq("list")) {
                 Player.Message(p, "%HAvailable brushes: %S" + BrushFactory.Available);
             } else if (brush == null) {
-            	Player.Message(p, "No brush found with name \"{0}\".", args[0]);
+                Player.Message(p, "No brush found with name \"{0}\".", args[0]);
                 Player.Message(p, "Available brushes: " + BrushFactory.Available);
             } else {
                 Player.Message(p, "Set your brush to: " + brush.Name);

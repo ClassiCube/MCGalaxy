@@ -19,7 +19,7 @@ using System;
 using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands.CPE {   
-	public class CmdModel : EntityPropertyCmd {
+    public class CmdModel : EntityPropertyCmd {
         public override string name { get { return "model"; } }
         public override string shortcut { get { return "setmodel"; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -41,30 +41,30 @@ namespace MCGalaxy.Commands.CPE {
         
         protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
             string model = GetModel(p, args, 2);
-        	bot.model = model;
-        	Entities.UpdateModel(bot.id, model, bot.level, null);
-        	
-        	Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Smodel was changed to a &c" + model);
-        	BotsFile.UpdateBot(bot);
+            bot.model = model;
+            Entities.UpdateModel(bot.id, model, bot.level, null);
+            
+            Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Smodel was changed to a &c" + model);
+            BotsFile.UpdateBot(bot);
         }
         
         protected override void SetPlayerData(Player p, Player who, string[] args) {
             string model = GetModel(p, args, 1);
-        	who.model = model;
-        	Entities.UpdateModel(who.id, model, who.level, who);
-        	
-        	if (p != who) {
-        		Player.GlobalMessage(who, who.ColoredName + "'s %Smodel was changed to a &c" + model);
-        	} else {
-        		Player.Message(who, "Changed your own model to a &c" + model);
-        	}
-        	
-        	if (model != "humanoid") {
-        		Server.models.AddOrReplace(who.name, model);
-        	} else {
-        		Server.models.Remove(who.name);
-        	}
-        	Server.models.Save();
+            who.model = model;
+            Entities.UpdateModel(who.id, model, who.level, who);
+            
+            if (p != who) {
+                Player.GlobalMessage(who, who.ColoredName + "'s %Smodel was changed to a &c" + model);
+            } else {
+                Player.Message(who, "Changed your own model to a &c" + model);
+            }
+            
+            if (model != "humanoid") {
+                Server.models.AddOrReplace(who.name, model);
+            } else {
+                Server.models.Remove(who.name);
+            }
+            Server.models.Save();
         }
         
         static string GetModel(Player p, string[] args, int i) {

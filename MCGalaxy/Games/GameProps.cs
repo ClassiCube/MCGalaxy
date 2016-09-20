@@ -126,5 +126,10 @@ namespace MCGalaxy.Games {
         
         /// <summary> The current number of other players this player infected in the current round. </summary>
         public int CurrentInfected;
+        
+        
+        internal List<DateTime> NoclipLog = new List<DateTime>(5);
+        internal List<DateTime> SpeedhackLog = new List<DateTime>(5);
+        internal DateTime LastNoclipWarn, LastSpeedhackWarn;
     }
 }

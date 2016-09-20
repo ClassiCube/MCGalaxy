@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) { UseBotOrPlayer(p, message, "color"); }
 
         protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
-        	string color = args.Length > 2 ? Colors.Parse(args[2]) : "&1";
+            string color = args.Length > 2 ? Colors.Parse(args[2]) : "&1";
             if (color == "") { Player.Message(p, "There is no color \"" + args[2] + "\"."); return; }
             Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Scolor was set to " 
                               + color + Colors.Name(color));            

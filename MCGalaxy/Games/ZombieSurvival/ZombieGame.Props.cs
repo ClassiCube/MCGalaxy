@@ -103,8 +103,8 @@ namespace MCGalaxy.Games {
         public static int HitboxPrecision = 32;
         
         /// <summary> The maximum distance a player is allowed to move between movement packets. </summary>
-        [ConfigInt("zombie-maxmove-distance", "Zombie", null, 70)]
-        public static int MaxMoveDistance = 70;
+        [ConfigInt("zombie-maxmove-distance", "Zombie", null, 50)]
+        public static int MaxMoveDistance = 50;
         
         /// <summary> Whether the server's main level should be set to the current level at the end of each round. </summary>
         [ConfigBool("zombie-survival-only-server", "Zombie", null, false)]

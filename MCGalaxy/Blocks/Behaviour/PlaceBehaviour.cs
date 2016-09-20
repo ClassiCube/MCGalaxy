@@ -45,7 +45,7 @@ namespace MCGalaxy.BlockBehaviour {
             p.ChangeBlock(x, y, z, block, 0);
             return false;
         }
-		
+        
         
         internal static bool Stairs(Player p, byte block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)

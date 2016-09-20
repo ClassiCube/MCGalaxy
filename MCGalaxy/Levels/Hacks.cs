@@ -18,12 +18,11 @@
 using System;
 
 namespace MCGalaxy {
-
     public static class Hacks {
         
         public static bool CanUseHacks(Player p, Level lvl) {
             string motd = lvl.GetMotd(p);
-            bool noHacks = motd.Contains("-hax") || lvl.ctfmode || lvl.CurrentGame() != null;
+            bool noHacks = motd.Contains("-hax");
             if (noHacks && p.Rank >= LevelPermission.Operator && motd.Contains("+ophax"))
                 return true;
             return !noHacks;

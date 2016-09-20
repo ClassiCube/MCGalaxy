@@ -44,7 +44,7 @@ namespace MCGalaxy.Bots {
         }
         
         static void Save() {
-        	BotProperties[] bots = SavedBots.ToArray();
+            BotProperties[] bots = SavedBots.ToArray();
             string json = JsonConvert.SerializeObject(bots);
             try {
                 File.WriteAllText("extra/bots.json", json);

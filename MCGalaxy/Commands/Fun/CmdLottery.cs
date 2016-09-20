@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
             for (int i = 0; i < players.Length; i++) {
                 if (players[i].CaselessEq(p.name)) {
                     Player.Message(p, "You are already in the lottery, which has &a"
-            		                   + players.Length + " %Splayers in it."); return;
+                                       + players.Length + " %Splayers in it."); return;
                 }
             }
             

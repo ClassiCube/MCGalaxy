@@ -203,10 +203,10 @@ namespace MCGalaxy {
         
         // Script handling
         void BotTimerFunc(object sender, ElapsedEventArgs e) {
-        	if (kill) {
+            if (kill) {
                 InstructionData data = default(InstructionData);
                 BotInstruction.Find("kill").Execute(this, data);
-        	}
+            }
             movement = false;
 
             if (Instructions.Count == 0) {

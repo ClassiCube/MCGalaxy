@@ -80,7 +80,7 @@ namespace MCGalaxy {
             { "$infected", p => p.Game.TotalInfected.ToString() },
             { "$survived", p => p.Game.TotalRoundsSurvived.ToString() },            
         };
-		
+        
         public static Dictionary<string, string> CustomTokens = new Dictionary<string, string>();        
         internal static void LoadCustom() {
             CustomTokens.Clear();

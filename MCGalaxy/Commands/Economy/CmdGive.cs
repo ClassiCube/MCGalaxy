@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
                 money += data.Amount;
                 Economy.UpdateMoney(target, money);
             } else {
-            	target = who.name; money = who.money;
+                target = who.name; money = who.money;
                 if (ReachedMax(p, money, data.Amount)) return;
                 who.SetMoney(who.money + data.Amount);
             }

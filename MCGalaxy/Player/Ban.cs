@@ -144,7 +144,7 @@ namespace MCGalaxy {
             foreach (string line in File.ReadAllLines(list.file)) {
                 string[] parts = line.Split(' ');
                 if (parts.Length > 2 && parts[1] == who) {
-                    parts[2] = CP437Writer.ConvertToUnicode(reason);                
+                    parts[2] = CP437Writer.ConvertToUnicode(reason);
                     success = true;
                     sb.AppendLine(String.Join(" ", parts));
                 } else {
