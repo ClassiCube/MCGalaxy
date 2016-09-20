@@ -41,29 +41,33 @@ namespace MCGalaxy.Config {
     
     public sealed class ConfigStringAttribute : ConfigAttribute {
         
-        /// <summary> Whether the empty string is an allowed, or if is treated as the default value. </summary>
+        /// <summary> Whether an empty string is an allowed for the value, or if it is treated as the default value. </summary>
         public bool AllowEmpty;
         
-        /// <summary> Specifies the restricted set of characters (asides from alphanumeric characters) 
-        /// that this field is allowed to have. </summary>
+        /// <summary> Specifies the restricted set of characters (asides from alphanumeric characters)
+        /// that the value is allowed to have. </summary>
         public string AllowedChars;
         
+        /// <summary> Maximum number of characters allowed in the value. 0 means no limit. </summary>
+        public int MaxLength = 0;
+        
         public ConfigStringAttribute(string name, string section, string desc, string defValue,
-                                    bool allowEmpty = false, string allowedChars = null)
+                                     bool allowEmpty = false, string allowedChars = null, int maxLength = 0)
             : base(name, section, desc, defValue) {
             AllowEmpty = allowEmpty;
             AllowedChars = allowedChars;
+            MaxLength = maxLength;
         }
         
         public override object Parse(string value) {
             if (value == "") {
                 if (!AllowEmpty) {
-                      Server.s.Log("Config key \"" + Name + "\" has no value, using default of " + DefaultValue);
-                      return DefaultValue;
+                    Server.s.Log("Config key \"" + Name + "\" has no value, using default of " + DefaultValue);
+                    return DefaultValue;
                 }
                 return "";
             } else if (AllowedChars == null) {
-                return value;
+                return Truncate(value);
             }
             
             foreach (char c in value) {
@@ -71,10 +75,18 @@ namespace MCGalaxy.Config {
                     continue;
                 
                 if (AllowedChars.IndexOf(c) == -1) {
-                      Server.s.Log("Config key \"" + Name + "\" contains " +
+                    Server.s.Log("Config key \"" + Name + "\" contains " +
                                  "a non-allowed character, using default of " + DefaultValue);
-                      return DefaultValue;
+                    return DefaultValue;
                 }
+            }
+            return Truncate(value);
+        }
+        
+        string Truncate(string value) {
+            if (MaxLength > 0 && value.Length > MaxLength) {
+                value = value.Substring(0, MaxLength);
+                Server.s.Log("Config key \"" + Name + "\" is too long, truncating to " + value);
             }
             return value;
         }
