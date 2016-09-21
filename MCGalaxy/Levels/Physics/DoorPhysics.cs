@@ -37,21 +37,24 @@ namespace MCGalaxy.BlockPhysics {
             if (block == Block.door_green && lvl.physics != 5) {
                 ActivateablePhysics.DoNeighbours(lvl, C.b, x, y, z);
             }
-        }        
+        }
         
         public static void oDoor(Level lvl, ref Check C) {
-            // TODO: perhaps do proper bounds checking
-            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, -1, 0, 0));
-            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, +1, 0, 0));
-            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, -1, 0));
-            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, +1, 0));
-            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, 0, -1));
-            odoorNeighbour(lvl, ref C, lvl.IntOffset(C.b, 0, 0, +1));
+            ushort x, y, z;
+            lvl.IntToPos(C.b, out x, out y, out z);
+            
+            int oneY = lvl.Width * lvl.Length;
+            if (x > 0) ActivateODoor(lvl, ref C, C.b - 1);
+            if (x < lvl.Width - 1) ActivateODoor(lvl, ref C, C.b + 1);
+            if (y > 0) ActivateODoor(lvl, ref C, C.b - oneY);
+            if (y < lvl.Height - 1) ActivateODoor(lvl, ref C, C.b + oneY);
+            if (z > 0) ActivateODoor(lvl, ref C, C.b - lvl.Width);
+            if (z < lvl.Length - 1) ActivateODoor(lvl, ref C, C.b + lvl.Width);
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
-        static void odoorNeighbour(Level lvl, ref Check C, int index) {
-            byte block = Block.odoor(lvl.GetTile(index));
+        static void ActivateODoor(Level lvl, ref Check C, int index) {
+        	byte block = Block.odoor(lvl.blocks[index]);
             if (block == lvl.blocks[C.b]) {
                 lvl.AddUpdate(index, block, true);
             }
@@ -59,20 +62,22 @@ namespace MCGalaxy.BlockPhysics {
         
         
         public static void tDoor(Level lvl, ref Check C) {
-            // TODO: perhaps do proper bounds checking
-            tdoorNeighbour(lvl, lvl.IntOffset(C.b, -1, 0, 0));
-            tdoorNeighbour(lvl, lvl.IntOffset(C.b, 1, 0, 0));
-            tdoorNeighbour(lvl, lvl.IntOffset(C.b, 0, -1, 0));
-            tdoorNeighbour(lvl, lvl.IntOffset(C.b, 0, 1, 0));
-            tdoorNeighbour(lvl, lvl.IntOffset(C.b, 0, 0, -1));
-            tdoorNeighbour(lvl, lvl.IntOffset(C.b, 0, 0, 1));
+            ushort x, y, z;
+            lvl.IntToPos(C.b, out x, out y, out z);
+            
+            int oneY = lvl.Width * lvl.Length;
+            if (x > 0) ActivateTDoor(lvl, C.b - 1);
+            if (x < lvl.Width - 1) ActivateTDoor(lvl, C.b + 1);
+            if (y > 0) ActivateTDoor(lvl, C.b - oneY);
+            if (y < lvl.Height - 1) ActivateTDoor(lvl, C.b + oneY);
+            if (z > 0) ActivateTDoor(lvl, C.b - lvl.Width);
+            if (z < lvl.Length - 1) ActivateTDoor(lvl, C.b + lvl.Width);
         }
         
-        static void tdoorNeighbour(Level lvl, int index) {
-            if (index < 0 || index >= lvl.blocks.Length) return;
+        static void ActivateTDoor(Level lvl, int index) {
             byte block = lvl.blocks[index];
-            
             if (!Block.Props[block].IsTDoor) return;
+            
             PhysicsArgs args = default(PhysicsArgs);
             args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
             args.Type2 = PhysicsArgs.Revert; args.Value2 = block;
