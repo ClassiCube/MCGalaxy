@@ -96,7 +96,6 @@ namespace MCGalaxy.Commands {
             
             string src = p == null ? "(console)" : p.name;
             Server.s.Log("Zombie Survival ended forcefully by " + src);
-            Server.zombie.Alive.Clear();
             Server.zombie.ResetState();
         }
         

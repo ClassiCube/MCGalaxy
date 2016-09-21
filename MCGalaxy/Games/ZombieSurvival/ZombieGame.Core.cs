@@ -156,77 +156,80 @@ namespace MCGalaxy.Games {
         
         void DoCoreGame(Random random) {
             Player[] alive = Alive.Items;
-            string lastTimespan = null;
-            int lastTime = -1;
+            string lastTimeLeft = null;
+            int lastCountdown = -1;
             
             while (alive.Length > 0 && Running) {
                 Player[] infected = Infected.Items;
                 // Do round end.
                 int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
                 if (seconds <= 0) { HandOutRewards(); return; }
-                if (seconds <= 5 && seconds != lastTime) {
+                if (seconds <= 5 && seconds != lastCountdown) {
                     string suffix = seconds == 1 ? " &4second" : " &4seconds";
                     SendLevelRaw("&4Ending in &f" + seconds + suffix, true);
-                    lastTime = seconds;
+                    lastCountdown = seconds;
                 }
                 
                 // Update the round time left shown in the top right
-                string timespan = GetTimespan(seconds);
-                if (lastTimespan != timespan) {
-                    UpdateAllPlayerStatus(timespan);
-                    lastTimespan = timespan;
+                string timeLeft = GetTimeLeft(seconds);
+                if (lastTimeLeft != timeLeft) {
+                    UpdateAllPlayerStatus(timeLeft);
+                    lastTimeLeft = timeLeft;
                 }
                 
-                int dist = ZombieGameProps.HitboxPrecision;
-                foreach (Player pKiller in infected) {
-                    pKiller.Game.Infected = true;
-                    UpdatePlayerColor(pKiller, InfectCol);
-
-                    foreach (Player pAlive in alive) {
-                        UpdatePlayerColor(pAlive, pAlive.color);
-                        int dx = Math.Abs(pAlive.pos[0] - pKiller.pos[0]);
-                        int dy = Math.Abs(pAlive.pos[1] - pKiller.pos[1]);
-                        int dz = Math.Abs(pAlive.pos[2] - pKiller.pos[2]);
-                        if (dx > dist || dy > dist || dz > dist) continue;
-                        
-                        if (!pAlive.Game.Infected && pKiller.Game.Infected && !pAlive.Game.Referee
-                            && !pKiller.Game.Referee && pKiller != pAlive
-                            && pKiller.level.name.CaselessEq(CurLevelName)
-                            && pAlive.level.name.CaselessEq(CurLevelName))
-                        {
-                            InfectPlayer(pAlive);
-                            pAlive.Game.LastInfecter = pKiller.name;
-                            pAlive.Game.BlocksLeft = 25;
-                            
-                            if (lastPlayerToInfect == pKiller.name) {
-                                infectCombo++;
-                                if (infectCombo >= 2) {
-                                    pKiller.SendMessage("You gained " + (2 + infectCombo) + " " + Server.moneys);
-                                    pKiller.SetMoney(pKiller.money + (2 + infectCombo));
-                                    CurLevel.ChatLevel(pKiller.ColoredName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
-                                }
-                            } else {
-                                infectCombo = 0;
-                            }
-                            
-                            lastPlayerToInfect = pKiller.name;
-                            pKiller.Game.CurrentInfected++;
-                            pKiller.Game.TotalInfected++;
-                            pKiller.Game.MaxInfected = Math.Max(pKiller.Game.CurrentInfected, pKiller.Game.MaxInfected);
-                            
-                            ShowInfectMessage(random, pAlive, pKiller);
-                            CheckHumanPledge(pAlive);
-                            CheckBounty(pAlive, pKiller);
-                            UpdatePlayerColor(pAlive, InfectCol);
-                            Thread.Sleep(50);
-                        }
-                    }
-                    alive = Alive.Items;
-                }
-                
+                DoCollisions(alive, infected, random);
                 CheckInvisibilityTime();
                 Thread.Sleep(200);
                 alive = Alive.Items;
+            }
+        }
+        
+        void DoCollisions(Player[] aliveList, Player[] deadList, Random random) {
+            int dist = ZombieGameProps.HitboxPrecision;
+            foreach (Player dead in deadList) {
+                dead.Game.Infected = true;
+                UpdatePlayerColor(dead, InfectCol);
+                aliveList = Alive.Items;
+
+                foreach (Player alive in aliveList) {
+                    if (alive == null || alive == dead) continue;
+                    UpdatePlayerColor(alive, alive.color);
+                    int dx = Math.Abs(alive.pos[0] - dead.pos[0]);
+                    int dy = Math.Abs(alive.pos[1] - dead.pos[1]);
+                    int dz = Math.Abs(alive.pos[2] - dead.pos[2]);
+                    if (dx > dist || dy > dist || dz > dist) continue;
+                    
+                    if (dead.Game.Infected && !alive.Game.Infected 
+                        && !alive.Game.Referee && !dead.Game.Referee
+                        && dead.level.name.CaselessEq(CurLevelName)
+                        && alive.level.name.CaselessEq(CurLevelName))
+                    {
+                        InfectPlayer(alive);
+                        alive.Game.LastInfecter = dead.name;
+                        
+                        if (lastPlayerToInfect == dead.name) {
+                            infectCombo++;
+                            if (infectCombo >= 2) {
+                                dead.SendMessage("You gained " + (2 + infectCombo) + " " + Server.moneys);
+                                dead.SetMoney(dead.money + (2 + infectCombo));
+                                CurLevel.ChatLevel(dead.ColoredName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
+                            }
+                        } else {
+                            infectCombo = 0;
+                        }
+                        
+                        lastPlayerToInfect = dead.name;
+                        dead.Game.CurrentInfected++;
+                        dead.Game.TotalInfected++;
+                        dead.Game.MaxInfected = Math.Max(dead.Game.CurrentInfected, dead.Game.MaxInfected);
+                        
+                        ShowInfectMessage(random, alive, dead);
+                        CheckHumanPledge(alive);
+                        CheckBounty(alive, dead);
+                        UpdatePlayerColor(alive, InfectCol);
+                        Thread.Sleep(50);
+                    }
+                }
             }
         }
         

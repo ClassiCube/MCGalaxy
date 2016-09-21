@@ -98,25 +98,27 @@ namespace MCGalaxy.Games {
             if (!RoundInProgress || p == null) return;
             Infected.Add(p);
             Alive.Remove(p);
-            p.Game.CurrentRoundsSurvived = 0;
-            p.SetPrefix();
-            ResetInvisibility(p);
             
-            p.Game.Infected = true;
+            p.Game.CurrentRoundsSurvived = 0;
             p.Game.TimeInfected = DateTime.UtcNow;
-            UpdatePlayerColor(p, Colors.red);
-            UpdateAllPlayerStatus();
-            PlayerMoneyChanged(p);
+            p.SetPrefix();
+            ResetPlayerState(p, true);
         }
 
         public void DisinfectPlayer(Player p) {
             if (!RoundInProgress || p == null) return;
             Infected.Remove(p);
-            Alive.Add(p);
-            ResetInvisibility(p);
+            Alive.Add(p);            
+            ResetPlayerState(p, false);
+        }
+        
+        void ResetPlayerState(Player p, bool infected) {
+            p.Game.Infected = infected;
+            p.Game.BlocksLeft = infected ? 25 : 50;
+            string col = infected ? Colors.red : p.color;
             
-            p.Game.Infected = false;
-            UpdatePlayerColor(p, p.color);
+            ResetInvisibility(p);
+            UpdatePlayerColor(p, col);
             UpdateAllPlayerStatus();
             PlayerMoneyChanged(p);
         }
@@ -166,6 +168,9 @@ namespace MCGalaxy.Games {
             RoundEnd = DateTime.MinValue;
             Player[] online = PlayerInfo.Online.Items;
             
+            Alive.Clear();
+            Infected.Clear();
+            
             Lottery.Clear();
             Bounties.Clear();
             RecentMaps.Clear();
@@ -197,13 +202,13 @@ namespace MCGalaxy.Games {
         
         void UpdatePlayerStatus(Player p) {
             int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
-            string status = GetStatusMessage(GetTimespan(seconds));
+            string status = GetStatusMessage(GetTimeLeft(seconds));
             p.SendCpeMessage(CpeMessageType.Status1, status);
         }
         
         internal void UpdateAllPlayerStatus() {
             int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
-            UpdateAllPlayerStatus(GetTimespan(seconds));
+            UpdateAllPlayerStatus(GetTimeLeft(seconds));
         }
         
         internal void UpdateAllPlayerStatus(string timespan) {
@@ -225,7 +230,7 @@ namespace MCGalaxy.Games {
             }
         }
 
-        string GetTimespan(int seconds) {
+        string GetTimeLeft(int seconds) {
             if (seconds < 0) return "";
             if (seconds <= 10) return "10s left";
             if (seconds <= 30) return "30s left";
