@@ -145,7 +145,6 @@ namespace MCGalaxy {
                     if (PhysicsUpdate != null)
                         PhysicsUpdate(x, y, z,  C.data, this);
                     OnPhysicsUpdateEvent.Call(x, y, z, C.data, this);
-                    
                     if ((C.data.Raw & mask) == 0 || extraHandler(this, ref C)) {
                         Block.HandlePhysics handler = handlers[blocks[C.b]];
                         if (handler != null) {

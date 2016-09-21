@@ -41,22 +41,25 @@ namespace MCGalaxy {
             if (useList) list = new List<T>();
         }
         
-        public void Add(T value) {
+        public bool Add(T value) {
             lock (locker) {
-                if (useList) list.Add(value);
                 T[] newItems = new T[Items.Length + 1];
-                for (int i = 0; i < Items.Length; i++)
+                for (int i = 0; i < Items.Length; i++) {
+                    if (object.ReferenceEquals(Items[i], value)) return false;
                     newItems[i] = Items[i];
-                
+                }
+
+                if (useList) list.Add(value);                
                 newItems[Items.Length] = value;
                 Items = newItems;
             }
+            return true;
         }
         
-        public void Remove(T value) {
+        public bool Remove(T value) {
             lock (locker) {
+                if (Items.Length == 0) return false;
                 if (useList) list.Remove(value);
-                if (Items.Length == 0) return;
                 
                 T[] newItems = new T[Items.Length - 1];
                 int j = 0;
@@ -64,7 +67,7 @@ namespace MCGalaxy {
                     if (object.ReferenceEquals(Items[i], value)) continue;
                     
                     // For some reason item wasn't in the list
-                    if (j == newItems.Length) return;
+                    if (j == newItems.Length) return false;
                     newItems[j] = Items[i]; j++;
                 }
                 
@@ -78,18 +81,20 @@ namespace MCGalaxy {
                     Items = newItems;
                 }
             }
+            return true;
         }
         
-        public void RemoveFirst() {
+        public bool RemoveFirst() {
             lock (locker) {
+                if (Items.Length == 0) return false;
                 if (useList) list.RemoveAt(0);
-                if (Items.Length == 0) return;
                 
                 T[] newItems = new T[Items.Length - 1];
                 for (int i = 1; i < Items.Length; i++)
                     newItems[i - 1] = Items[i];
                 Items = newItems;
             }
+            return true;
         }
         
         public void Clear() {
