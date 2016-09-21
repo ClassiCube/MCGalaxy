@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
                 if (!Formatter.ValidName(p, args[1], "level")) return;
                 
                 bool unlocking = Server.lockdown.Contains(args[1]);
-                Chat.MessageAll("The map {0} has been {0}locked", args[1], unlocking ? "un" : "");
+                Chat.MessageAll("The map {0} has been {1}locked", args[1], unlocking ? "un" : "");
                 string srcName = (p == null) ? "(console)" : p.ColoredName;
                 
                 if (unlocking) {

@@ -36,29 +36,21 @@ namespace MCGalaxy.Commands {
             string[] args = message.SplitSpaces(2);
 
             switch (args[0].ToLower()) {
-                case "owner":
-                    HandleOwner(p, args); break;
-                case "kick":
-                    HandleKick(p, args); break;
-                case "color":
-                    HandleColor(p, args); break;
-                case "create":
-                    HandleCreate(p, args); break;
-                case "join":
-                    HandleJoin(p, args); break;
-                case "invite":
-                    HandleInvite(p, args); break;
-                case "leave":
-                    HandleLeave(p, args); break;
-                case "members":
-                    HandleMembers(p, args); break;
-                default:
-                    Team team = p.Game.Team;
-                    if (team == null) { 
-                        Player.Message(p, "You need to be in a team first to send a team message."); return; 
-                    }
-                    team.Chat(p, message); break;
+                case "owner": HandleOwner(p, args); return;
+                case "kick": HandleKick(p, args); return;
+                case "color": HandleColor(p, args); return;
+                case "create": HandleCreate(p, args); return;
+                case "join": HandleJoin(p, args); return;
+                case "invite": HandleInvite(p, args); return;
+                case "leave": HandleLeave(p, args); return;
+                case "members": HandleMembers(p, args); return;
             }
+            
+            Team team = p.Game.Team;
+            if (team == null) {
+                Player.Message(p, "You need to be in a team first to send a team message."); return;
+            }
+            team.Chat(p, message);
         }
 
         void HandleOwner(Player p, string[] args) {
@@ -71,6 +63,10 @@ namespace MCGalaxy.Commands {
             
             Player who = PlayerInfo.FindMatches(p, args[1]);
             if (who == null) return;
+            
+            if (p.name != team.Owner) {
+                Player.Message(p, "Only the team owner can set a new team owner."); return;
+            }
             team.Owner = who.name;
             team.Action(who, "set the team owner to " + who.ColoredName);
             Team.SaveList();
