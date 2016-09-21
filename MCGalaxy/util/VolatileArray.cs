@@ -59,14 +59,24 @@ namespace MCGalaxy {
                 if (Items.Length == 0) return;
                 
                 T[] newItems = new T[Items.Length - 1];
-                for (int i = 0, j = 0; i < Items.Length; i++) {
+                int j = 0;
+                for (int i = 0; i < Items.Length; i++) {
                     if (object.ReferenceEquals(Items[i], value)) continue;
                     
                     // For some reason item wasn't in the list
                     if (j == newItems.Length) return;
                     newItems[j] = Items[i]; j++;
                 }
-                Items = newItems;
+                
+                // Handle very rare case when an item has been added twice
+                if (newItems.Length != j) {
+                    T[] temp = new T[j];
+                    for (int i = 0; i < temp.Length; i++)
+                        temp[i] = newItems[i];
+                    Items = temp;
+                } else {
+                    Items = newItems;
+                }
             }
         }
         

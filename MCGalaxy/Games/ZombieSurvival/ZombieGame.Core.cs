@@ -192,7 +192,7 @@ namespace MCGalaxy.Games {
                 aliveList = Alive.Items;
 
                 foreach (Player alive in aliveList) {
-                    if (alive == null || alive == dead) continue;
+                    if (alive == dead) continue;
                     UpdatePlayerColor(alive, alive.color);
                     int dx = Math.Abs(alive.pos[0] - dead.pos[0]);
                     int dy = Math.Abs(alive.pos[1] - dead.pos[1]);
