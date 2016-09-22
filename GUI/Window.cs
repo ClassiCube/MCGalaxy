@@ -52,7 +52,8 @@ namespace MCGalaxy.Gui {
             
             InitServer();
 
-            notifyIcon1.Text = ("MCGalaxy Server: " + Server.name).Truncate(64);
+            Text = Server.name + " - MCGalaxy " + Server.VersionString;
+            notifyIcon1.Text = ("MCGalaxy Server: " + Server.name).Truncate(63);
             notifyIcon1.ContextMenuStrip = this.icon_context;
             notifyIcon1.Icon = this.Icon;
             notifyIcon1.Visible = true;
