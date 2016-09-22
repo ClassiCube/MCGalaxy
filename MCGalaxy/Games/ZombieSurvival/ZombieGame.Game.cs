@@ -125,7 +125,7 @@ namespace MCGalaxy.Games {
             if (RoundInProgress && lvl.name.CaselessEq(CurLevelName)) {
                 if (Running && p != null) {
                     p.SendMessage("You joined in the middle of a round. &cYou are now infected!");
-                    p.Game.BlocksLeft = 50;
+                    p.Game.BlocksLeft = 25;
                     InfectPlayer(p, null);
                 }
             }
@@ -190,7 +190,7 @@ namespace MCGalaxy.Games {
         
         public override void OnHeartbeat(ref string name) {
             if (!Running || !ZombieGameProps.IncludeMapInHeartbeat || CurLevelName == null) return;
-            name += " (" + CurLevelName + ")";
+            name += " (map: " + CurLevelName + ")";
         }
         
         public override void AdjustPrefix(Player p, ref string prefix) {
