@@ -1,3 +1,59 @@
+v 1.8.8.2
+Added: Can provide reasons for /shutdown, mention /shutdown abort in its help
+Added: Command spam blocking (to prevent spam using commands)
+Added: Physics state now saves to level file (trains/doors work properly after unload)
+Fixed: /copylvl should also copy portals,message blocks,zones
+Fixed: 'disconnect' showing 'joined the game' on IRC.
+Fixed: /outline not working
+Fixed: /zone add with rank name not working
+Improved: [yes] no longer shows in /unloaded to make it less spammy
+Improved: Ask to confirm before ranking/temp-banning non existent players
+Improved: Don't show 'level X loaded' for autoloads
+Improved: sleep(10) instead of sleep(3) in player pos check thread to reduce CPU
+Improved: Make many commands (/unloaded,/vip list,/whitelist list,/commands) use paginated output
+Improved: Track custom block ids in /b
+Improved: Allow spaces at end of rank prefix
+Improved: /summon lets you summon players who cannot normally visit
+Improved: Keep track of recent levels in ZS to avoid replaying them
+Added: can toggle whether whitelist is used in gui
+Added: can set blocks/command spam limits in gui
+Added: Allow providing reasons in give/pay/take
+Added: /bots [level] to only show bots on that level
+Added: /search commands is back
+Fixed: Voicing someone giving them wrong colour in /who
+Fixed: -hax not working if motd has colour in it
+Fixed: ' not being escaped properly in /server backup
+Fixed: /server backup lite saving level backups
+Fixed: /xjail still moving higher ranked players to xjail map
+Fixed: /mi colours with multiple realm owners
+Fixed: /shutdown on linux (without display) always raising an error
+Fixed: /pay not working from console
+Fixed: /hide incorrect colours on IRC
+Fixed: If ignoring someone, you shouldn't see /send or /tpa
+Fixed: Turning off /ride instantly killing you
+Fixed: relative time in /balance with hours component > 12
+Fixed: Aliases being duplicated in /help [cmd] after restart
+Fixed: Own tab list name not being updated after unhiding
+Fixed: Going AFK putting you in wrong group in tab list when playing ZS
+Fixed: Bounties not persisting between rounds in ZS
+Fixed: /env preset erroring
+Fixed: Not being auto-unmuted for spamming if left before timer finished
+Fixed: Server crashing if server name was too long
+Fixed: tdoors/odoors on map borders activating tdoors/odoors on other map side (and trains)
+Improved: money data is now stored in players table, instead of Economy table
+Improved: awards saving overhead reduced
+Improved: cleaned up lava survival in gui
+Improved: Bots now rotate to face the targetted player in hunt AI
+Improved: Show all previous alts, not just alts since last server restart
+Improved: Allow using hunt and kill instructions in bot AIs
+Improved: loginmsg/logoutmsg require extra perm to change messages of other players
+Improved: Changing properties shouldn't change server salt
+Improved: You are first fined 10 moneys for pillaring in ZS, second time is a kick
+Improved: Announce best zombies at end of round in ZS
+Improved: players are now limited so can only /newlvl one at a time
+Improved: Warn ops when a player tries to speedhack or noclip in ZS
+Removed: /blocks count
+
 v 1.8.8.1
 Added: Basic /transform rotate for rotating pastes and other draw operations
 Added: /temprank, /undo and /highlight now support timespans
