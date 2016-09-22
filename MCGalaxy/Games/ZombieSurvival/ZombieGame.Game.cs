@@ -55,7 +55,9 @@ namespace MCGalaxy.Games {
         
         public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z,
                                              byte rotX, byte rotY) {
-            if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
+            if (!Running || !RoundInProgress) return false;
+            if (p.level == null || !p.level.name.CaselessEq(CurLevelName)) return false;
+            
             return MovementCheck.DetectNoclip(p, x, y, z) 
                 || MovementCheck.DetectSpeedhack(p, x, y, z, ZombieGameProps.MaxMoveDistance);
         }
