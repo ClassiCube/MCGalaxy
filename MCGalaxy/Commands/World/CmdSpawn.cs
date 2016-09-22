@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             byte rotY = cpSpawn ? p.checkpointRotY : p.level.roty;
             
             if (!p.Game.Referee && !p.Game.Infected && Server.zombie.RoundInProgress)
-                Server.zombie.InfectPlayer(p);
+                Server.zombie.InfectPlayer(p, null);
             
             if (p.PlayingTntWars) {
                 TntWarsGame game = TntWarsGame.GetTntWarsGame(p);

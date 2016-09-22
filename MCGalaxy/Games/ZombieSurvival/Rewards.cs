@@ -84,12 +84,10 @@ namespace MCGalaxy.Games.ZS {
             Random rand = new Random();
             
             foreach (Player pl in online) {
-                pl.Game.ResetInvisibility();
                 if (!pl.level.name.CaselessEq(game.CurLevelName)) continue;
+                pl.Game.ResetInvisibility();
                 int reward = GetMoneyReward(pl, alive, rand);
                 
-                Entities.GlobalDespawn(pl, true);
-                Entities.GlobalSpawn(pl, true);
                 if (reward == -1) {
                     pl.SendMessage("You may not hide inside a block! No " + Server.moneys + " for you."); reward = 0;
                 } else if (reward > 0) {
@@ -102,6 +100,9 @@ namespace MCGalaxy.Games.ZS {
                     pl.SendMessage("You gained one " + Server.moneys + " because you're a ref. Would you like a medal as well?");
                     pl.SetMoney(pl.money + 1);
                 }
+                
+                Entities.GlobalDespawn(pl, true);
+                Entities.GlobalSpawn(pl, true);
             }
         }
 

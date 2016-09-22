@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             if (who.Game.Infected || !Server.zombie.RoundInProgress) {
                 Player.Message(p, "Cannot infect player");
             } else if (!who.Game.Referee) {
-                Server.zombie.InfectPlayer(who);
+                Server.zombie.InfectPlayer(who, p);
                 Chat.MessageAll("{0} %Swas infected.", who.ColoredName);
             }
         }

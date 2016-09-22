@@ -92,7 +92,7 @@ namespace MCGalaxy.Games {
 
             Player first = PickFirstZombie(random, players);
             CurLevel.ChatLevel(first.ColoredName + " %Sstarted the infection!");
-            InfectPlayer(first);
+            InfectPlayer(first, null);
 
             DoCoreGame(random);
             if (!Running) {
@@ -186,46 +186,44 @@ namespace MCGalaxy.Games {
         
         void DoCollisions(Player[] aliveList, Player[] deadList, Random random) {
             int dist = ZombieGameProps.HitboxPrecision;
-            foreach (Player dead in deadList) {
-                dead.Game.Infected = true;
-                UpdatePlayerColor(dead, InfectCol);
+            foreach (Player killer in deadList) {
+                killer.Game.Infected = true;
+                UpdatePlayerColor(killer, InfectCol);
                 aliveList = Alive.Items;
 
                 foreach (Player alive in aliveList) {
-                    if (alive == dead) continue;
+                    if (alive == killer) continue;
                     UpdatePlayerColor(alive, alive.color);
-                    int dx = Math.Abs(alive.pos[0] - dead.pos[0]);
-                    int dy = Math.Abs(alive.pos[1] - dead.pos[1]);
-                    int dz = Math.Abs(alive.pos[2] - dead.pos[2]);
+                    int dx = Math.Abs(alive.pos[0] - killer.pos[0]);
+                    int dy = Math.Abs(alive.pos[1] - killer.pos[1]);
+                    int dz = Math.Abs(alive.pos[2] - killer.pos[2]);
                     if (dx > dist || dy > dist || dz > dist) continue;
                     
-                    if (dead.Game.Infected && !alive.Game.Infected 
-                        && !alive.Game.Referee && !dead.Game.Referee
-                        && dead.level.name.CaselessEq(CurLevelName)
+                    if (killer.Game.Infected && !alive.Game.Infected
+                        && !alive.Game.Referee && !killer.Game.Referee
+                        && killer.level.name.CaselessEq(CurLevelName)
                         && alive.level.name.CaselessEq(CurLevelName))
                     {
-                        InfectPlayer(alive);
-                        alive.Game.LastInfecter = dead.name;
+                        InfectPlayer(alive, killer);
+                        alive.Game.LastInfecter = killer.name;
                         
-                        if (lastPlayerToInfect == dead.name) {
+                        if (lastPlayerToInfect == killer.name) {
                             infectCombo++;
                             if (infectCombo >= 2) {
-                                dead.SendMessage("You gained " + (2 + infectCombo) + " " + Server.moneys);
-                                dead.SetMoney(dead.money + (2 + infectCombo));
-                                CurLevel.ChatLevel(dead.ColoredName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
+                                killer.SendMessage("You gained " + (2 + infectCombo) + " " + Server.moneys);
+                                killer.SetMoney(killer.money + (2 + infectCombo));
+                                CurLevel.ChatLevel(killer.ColoredName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
                             }
                         } else {
                             infectCombo = 0;
                         }
                         
-                        lastPlayerToInfect = dead.name;
-                        dead.Game.CurrentInfected++;
-                        dead.Game.TotalInfected++;
-                        dead.Game.MaxInfected = Math.Max(dead.Game.CurrentInfected, dead.Game.MaxInfected);
+                        lastPlayerToInfect = killer.name;
+                        killer.Game.CurrentInfected++;
+                        killer.Game.TotalInfected++;
+                        killer.Game.MaxInfected = Math.Max(killer.Game.CurrentInfected, killer.Game.MaxInfected);
                         
-                        ShowInfectMessage(random, alive, dead);
-                        CheckHumanPledge(alive);
-                        CheckBounty(alive, dead);
+                        ShowInfectMessage(random, alive, killer);
                         UpdatePlayerColor(alive, InfectCol);
                         Thread.Sleep(50);
                     }
@@ -263,26 +261,33 @@ namespace MCGalaxy.Games {
             }
         }
         
-        void CheckHumanPledge(Player pAlive) {
-            if (!pAlive.Game.PledgeSurvive) return;
-            pAlive.Game.PledgeSurvive = false;
-            CurLevel.ChatLevel(pAlive.ColoredName + "%Sbroke their pledge of not being infected.");
-            pAlive.SetMoney(Math.Max(pAlive.money - 2, 0));
+        void CheckHumanPledge(Player p, Player killer) {
+            if (!p.Game.PledgeSurvive) return;
+            p.Game.PledgeSurvive = false;
+            CurLevel.ChatLevel(p.ColoredName + " %Sbroke their pledge of not being infected.");
+            
+            if (killer == null) {
+                Player.Message(p, "As this was an automatic infection, you have not lost any &3" + Server.moneys);
+            } else {
+                p.SetMoney(Math.Max(p.money - 2, 0));
+            }
         }
         
-        void CheckBounty(Player pAlive, Player pKiller) {
-            BountyData bounty = FindBounty(pAlive.name);
+        void CheckBounty(Player p, Player pKiller) {
+            BountyData bounty = FindBounty(p.name);
             if (bounty == null) return;
             Bounties.Remove(bounty);
             
-            Player origin = PlayerInfo.FindExact(bounty.Origin);
-            if (origin == null) {
+            Player setter = PlayerInfo.FindExact(bounty.Origin);
+            if (pKiller == null) {
+                CurLevel.ChatLevel("Bounty on " + p.ColoredName + " %Sis no longer active.");
+            } else if (setter == null) {
                 Player.Message(pKiller, "Cannot collect the bounty, as the player who set it is offline.");
-            } else {                
+            } else {
                 CurLevel.ChatLevel(pKiller.ColoredName + " %Scollected the bounty of &a" +
-                                   bounty.Amount + " %S" + Server.moneys + " on " + pAlive.ColoredName + "%S.");
+                                   bounty.Amount + " %S" + Server.moneys + " on " + p.ColoredName + "%S.");
                 
-                origin.SetMoney(Math.Max(0, origin.money - bounty.Amount));
+                setter.SetMoney(Math.Max(0, setter.money - bounty.Amount));
                 pKiller.SetMoney(pKiller.money + bounty.Amount);
             }
         }

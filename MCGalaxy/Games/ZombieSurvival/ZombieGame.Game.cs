@@ -126,7 +126,7 @@ namespace MCGalaxy.Games {
                 if (Running && p != null) {
                     p.SendMessage("You joined in the middle of a round. &cYou are now infected!");
                     p.Game.BlocksLeft = 50;
-                    InfectPlayer(p);
+                    InfectPlayer(p, null);
                 }
             }
             

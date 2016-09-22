@@ -91,10 +91,10 @@ namespace MCGalaxy.Games {
             
             Player zombie = alive[index];
             CurLevel.ChatLevel(zombie.ColoredName + " %Scontinued the infection!");
-            InfectPlayer(zombie);
+            InfectPlayer(zombie, null);
         }
 
-        public void InfectPlayer(Player p) {
+        public void InfectPlayer(Player p, Player killer) {
             if (!RoundInProgress || p == null) return;
             Infected.Add(p);
             Alive.Remove(p);
@@ -103,6 +103,9 @@ namespace MCGalaxy.Games {
             p.Game.TimeInfected = DateTime.UtcNow;
             p.SetPrefix();
             ResetPlayerState(p, true);
+            
+            CheckHumanPledge(p, killer);
+            CheckBounty(p, killer);
         }
 
         public void DisinfectPlayer(Player p) {
