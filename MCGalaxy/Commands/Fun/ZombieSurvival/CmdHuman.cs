@@ -15,6 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using System;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands {    
@@ -34,6 +35,19 @@ namespace MCGalaxy.Commands {
             }
             if (p.Game.Infected) {
                 Player.Message(p, "You cannot use /human as you are currently infected."); return;
+            }
+            
+            if (Economy.Enabled && p.money < 5) {
+                Player.Message(p, "You need to have at least 5 &3" + Server.moneys + 
+                                   " %Sto pledge that you will not be infected."); return;
+            }
+            if (!Server.zombie.RoundInProgress) {
+                Player.Message(p, "Can only use /human when a round is in progress."); return;
+            }
+            
+            TimeSpan delta = Server.zombie.RoundEnd - DateTime.UtcNow;
+            if (delta < TimeSpan.FromMinutes(3)) {
+                Player.Message(p, "Cannot use /human in last three minutes of a round."); return;
             }
             
             p.Game.PledgeSurvive = true;
