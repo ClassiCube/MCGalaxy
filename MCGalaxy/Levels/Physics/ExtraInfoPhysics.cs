@@ -43,7 +43,7 @@ namespace MCGalaxy.BlockPhysics {
             if (C.data.Type1 == PhysicsArgs.Wait) C.data.Type1 = 0;
             if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
             
-            if (C.data.Door) { C.data.ResetTypes(); C.data.Data = PhysicsArgs.RemoveFromChecks; }
+            if (C.data.Door) { lvl.AddUpdate(C.b, C.data.Value2); C.data.ResetTypes(); C.data.Data = PhysicsArgs.RemoveFromChecks; }
             return false;
         }
         
