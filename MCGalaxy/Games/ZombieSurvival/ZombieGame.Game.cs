@@ -122,6 +122,7 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) {
+            p.SendCpeMessage(CpeMessageType.BottomRight3, "");
             p.SendCpeMessage(CpeMessageType.BottomRight2, "");
             p.SendCpeMessage(CpeMessageType.BottomRight1, "");
             if (RoundInProgress && lvl.name.CaselessEq(CurLevelName)) {

@@ -101,8 +101,9 @@ namespace MCGalaxy.Games.ZS {
                     pl.SetMoney(pl.money + 1);
                 }
                 
-                Entities.GlobalDespawn(pl, true);
-                Entities.GlobalSpawn(pl, true);
+                Entities.GlobalDespawn(pl, false);
+                Entities.GlobalSpawn(pl, false);
+                TabList.Add(pl, pl, 0xFF);
                 game.PlayerMoneyChanged(pl);
             }
         }

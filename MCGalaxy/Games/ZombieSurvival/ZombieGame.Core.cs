@@ -258,10 +258,11 @@ namespace MCGalaxy.Games {
                 p.Game.InvisibilityTime = left;
                 
                 string msg = "&bInvisibility for &a" + left;
-                if (p.HasCpeExt(CpeExt.MessageTypes))
+                if (p.HasCpeExt(CpeExt.MessageTypes)) {
                     p.SendCpeMessage(CpeMessageType.BottomRight2, msg);
-                else
+                } else {
                     p.SendMessage(msg);
+                }
             }
         }
         
@@ -299,10 +300,11 @@ namespace MCGalaxy.Games {
         void ShowInfectMessage(Random random, Player pAlive, Player pKiller) {
             string text = null;
             List<string> infectMsgs = pKiller.Game.InfectMessages;
-            if (infectMsgs != null && random.Next(0, 10) < 5)
+            if (infectMsgs != null && infectMsgs.Count > 0 && random.Next(0, 10) < 5) {
                 text = infectMsgs[random.Next(infectMsgs.Count)];
-            else
+            } else {
                 text = infectMessages[random.Next(infectMessages.Count)];
+            }
             
             CurLevel.ChatLevel(String.Format(text,
                                              Colors.red + pKiller.DisplayName + Colors.yellow,
@@ -312,8 +314,9 @@ namespace MCGalaxy.Games {
         static void UpdatePlayerColor(Player p, string color) {
             if (p.Game.lastSpawnColor == color) return;
             p.Game.lastSpawnColor = color;
-            Entities.GlobalDespawn(p, true);
-            Entities.GlobalSpawn(p, true);
+            Entities.GlobalDespawn(p, false);
+            Entities.GlobalSpawn(p, false);
+            TabList.Add(p, p, 0xFF);
         }
 
         public void HandOutRewards() {

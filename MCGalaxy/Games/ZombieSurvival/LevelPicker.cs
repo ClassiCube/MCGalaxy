@@ -72,7 +72,14 @@ namespace MCGalaxy.Games.ZS {
                 if (pl.level != game.CurLevel) continue;
                 SendVoteMessage(pl, game);
             }
-            System.Threading.Thread.Sleep(15000);
+            
+            for (int i = 0; i < 20; i++) {
+                foreach (Player pl in players) {
+                    if (pl.level != game.CurLevel || !pl.HasCpeExt(CpeExt.MessageTypes)) continue;
+                    pl.SendCpeMessage(CpeMessageType.BottomRight1, "&e" + (20 - i) + "s %Sleft to vote");
+                }
+                System.Threading.Thread.Sleep(1000);
+            }
             Server.votingforlevel = false;
         }
         
@@ -147,8 +154,8 @@ namespace MCGalaxy.Games.ZS {
                 + game.Candidate2 + "&e, &c" + game.Candidate3;
             
             if (p.HasCpeExt(CpeExt.MessageTypes)) {
-                p.SendCpeMessage(CpeMessageType.BottomRight2, line1);
-                p.SendCpeMessage(CpeMessageType.BottomRight1, line2);
+                p.SendCpeMessage(CpeMessageType.BottomRight3, line1);
+                p.SendCpeMessage(CpeMessageType.BottomRight2, line2);
             } else {
                 p.SendMessage(line1);
                 p.SendMessage(line2);
