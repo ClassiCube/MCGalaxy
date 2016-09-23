@@ -1,3 +1,10 @@
+v 1.8.8.3
+--- It is highly recommended you update to this ---
+Fixed: Doors not working
+Fixed: Changing maps resetting AFK
+Fixed: Some minor issues with zombie survival
+Fixed: Window title always showing 'starting mcgalaxy' on first run
+
 v 1.8.8.2
 Added: Can provide reasons for /shutdown, mention /shutdown abort in its help
 Added: Command spam blocking (to prevent spam using commands)
