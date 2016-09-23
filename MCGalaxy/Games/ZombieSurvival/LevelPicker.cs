@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace MCGalaxy.Games.ZS {
     internal static class LevelPicker {
@@ -33,7 +34,7 @@ namespace MCGalaxy.Games.ZS {
                 RemoveRecentLevels(maps, game);
                 game.Votes1 = 0; game.Votes2 = 0; game.Votes3 = 0;
                 
-                Random r = new Random();               
+                Random r = new Random();
                 game.Candidate1 = GetRandomLevel(r, maps);
                 game.Candidate2 = GetRandomLevel(r, maps);
                 game.Candidate3 = GetRandomLevel(r, maps);
@@ -73,14 +74,24 @@ namespace MCGalaxy.Games.ZS {
                 SendVoteMessage(pl, game);
             }
             
+            VoteCountdown(game, players);
+            Server.votingforlevel = false;
+        }
+        
+        static void VoteCountdown(ZombieGame game, Player[] players) {
+            // Show message for non-CPE clients
+            foreach (Player pl in players) {
+                if (pl.level != game.CurLevel || pl.HasCpeExt(CpeExt.MessageTypes)) continue;
+                pl.SendMessage("You have 20 seconds to vote for the next map");
+            }
+            
             for (int i = 0; i < 20; i++) {
                 foreach (Player pl in players) {
                     if (pl.level != game.CurLevel || !pl.HasCpeExt(CpeExt.MessageTypes)) continue;
                     pl.SendCpeMessage(CpeMessageType.BottomRight1, "&e" + (20 - i) + "s %Sleft to vote");
                 }
-                System.Threading.Thread.Sleep(1000);
+                Thread.Sleep(1000);
             }
-            Server.votingforlevel = false;
         }
         
         
@@ -150,7 +161,7 @@ namespace MCGalaxy.Games.ZS {
         /// <summary> Sends the formatted vote message to the player (using bottom right if supported) </summary>
         internal static void SendVoteMessage(Player p, ZombieGame game) {
             const string line1 = "&eLevel vote - type &a1&e, &b2&e or &c3";
-            string line2 = "&a" + game.Candidate1 + "&e, &b" 
+            string line2 = "&a" + game.Candidate1 + "&e, &b"
                 + game.Candidate2 + "&e, &c" + game.Candidate3;
             
             if (p.HasCpeExt(CpeExt.MessageTypes)) {

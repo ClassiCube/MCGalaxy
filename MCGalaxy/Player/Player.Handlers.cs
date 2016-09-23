@@ -309,7 +309,7 @@ return;
             
             pos = new ushort[3] { x, y, z };
             rot = new byte[2] { rotx, roty };
-            if (!Moved()) return;
+            if (!Moved() || Loading) return;
             
             LastAction = DateTime.UtcNow;
             if (IsAfk) CmdAfk.ToggleAfk(this, "");
