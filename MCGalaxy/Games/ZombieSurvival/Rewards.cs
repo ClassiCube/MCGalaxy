@@ -103,6 +103,7 @@ namespace MCGalaxy.Games.ZS {
                 
                 Entities.GlobalDespawn(pl, true);
                 Entities.GlobalSpawn(pl, true);
+                game.PlayerMoneyChanged(pl);
             }
         }
 

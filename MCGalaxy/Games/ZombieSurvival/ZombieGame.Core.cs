@@ -163,7 +163,11 @@ namespace MCGalaxy.Games {
                 Player[] infected = Infected.Items;
                 // Do round end.
                 int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
-                if (seconds <= 0) { HandOutRewards(); return; }
+                if (seconds <= 0) { 
+                    SendLevelRaw("", true); 
+                    HandOutRewards(); 
+                    return; 
+                }                
                 if (seconds <= 5 && seconds != lastCountdown) {
                     string suffix = seconds == 1 ? " &4second" : " &4seconds";
                     SendLevelRaw("&4Ending in &f" + seconds + suffix, true);
