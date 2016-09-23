@@ -101,7 +101,7 @@ namespace MCGalaxy {
                 
                 if (Server.afkkick > 0 && group.Permission < Server.afkkickperm) {
                     if (LastAction.AddMinutes(time) < DateTime.UtcNow)
-                        Kick("Auto-kick, AFK for " + Server.afkkick + " minutes");
+                        Leave("Auto-kick, AFK for " + Server.afkkick + " minutes");
                 }
                 if (Moved()) CmdAfk.ToggleAfk(this, "");
             } else {
