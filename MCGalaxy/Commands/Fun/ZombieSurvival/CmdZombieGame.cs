@@ -85,7 +85,8 @@ namespace MCGalaxy.Commands {
             if (!Server.zombie.Running) {
                 Player.Message(p, "There is no Zombie Survival game currently in progress."); return;
             }
-            Chat.MessageAll("The current game of Zombie Survival will end this round!");
+        	
+            Chat.MessageLevel(Server.zombie.CurLevel, "The current game of Zombie Survival will end this round!");
             Server.zombie.Status = ZombieGameStatus.LastRound;
         }
         
