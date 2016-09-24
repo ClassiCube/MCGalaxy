@@ -171,6 +171,7 @@ namespace MCGalaxy.Games {
             p.SendCpeMessage(CpeMessageType.Status3, "");
             p.SendCpeMessage(CpeMessageType.BottomRight1, "");
             p.SendCpeMessage(CpeMessageType.BottomRight2, "");
+            p.SendCpeMessage(CpeMessageType.BottomRight3, "");
         }
         
         public override bool PlayerCanJoinLevel(Player p, Level lvl, Level oldLvl) {
