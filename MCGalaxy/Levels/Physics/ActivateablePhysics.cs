@@ -64,15 +64,12 @@ namespace MCGalaxy.BlockPhysics {
             byte b = lvl.blocks[index];
             
             if (Block.Props[b].IsDoor) {
-            	byte physForm;
-            	PhysicsArgs args = GetDoorArgs(b, out physForm);
-            	if (!instant) lvl.AddUpdate(index, physForm, false, args);
-            	else lvl.Blockchange(index, physForm, false, args);
+                byte physForm;
+                PhysicsArgs args = GetDoorArgs(b, out physForm);
+                if (!instant) lvl.AddUpdate(index, physForm, false, args);
+                else lvl.Blockchange(index, physForm, false, args);
             } else if (Block.Props[b].IsTDoor) {
-                PhysicsArgs args = default(PhysicsArgs);
-                args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
-                args.Type2 = PhysicsArgs.Revert; args.Value2 = b;
-                args.Door = true;
+                PhysicsArgs args = GetTDoorArgs(b);
                 lvl.AddUpdate(index, Block.air, false, args);
             } else {
                 byte oDoor = Block.odoor(b);
@@ -95,6 +92,14 @@ namespace MCGalaxy.BlockPhysics {
             } else if (b == Block.door_tnt) {
                 args.Value1 = 4 - 1; physForm = Block.door_tnt_air; // lava
             }
+            return args;
+        }
+        
+        internal static PhysicsArgs GetTDoorArgs(byte b) {
+            PhysicsArgs args = default(PhysicsArgs);
+            args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
+            args.Type2 = PhysicsArgs.Revert; args.Value2 = b;
+            args.Door = true;
             return args;
         }
     }

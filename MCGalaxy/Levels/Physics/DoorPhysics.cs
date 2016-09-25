@@ -78,10 +78,7 @@ namespace MCGalaxy.BlockPhysics {
             byte block = lvl.blocks[index];
             if (!Block.Props[block].IsTDoor) return;
             
-            PhysicsArgs args = default(PhysicsArgs);
-            args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
-            args.Type2 = PhysicsArgs.Revert; args.Value2 = block;
-            args.Door = true;
+            PhysicsArgs args = ActivateablePhysics.GetTDoorArgs(block);
             lvl.AddUpdate(index, Block.air, false, args);
         }
     }
