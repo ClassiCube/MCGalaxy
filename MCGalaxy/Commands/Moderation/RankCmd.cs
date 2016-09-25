@@ -32,11 +32,15 @@ namespace MCGalaxy.Commands.Moderation {
                 newRank.playerList.Save();
             }
             if (who == null) return;
-            
+
             Entities.DespawnEntities(who, false);
             if (who.color == "" || who.color == who.group.color)
                 who.color = newRank.color;
+            
             who.group = newRank;
+            LevelAccessResult access = who.level.BuildAccess.Check(who, false);
+            who.AllowBuild = access == LevelAccessResult.Whitelisted
+                || access == LevelAccessResult.Allowed;
             
             who.SetPrefix();
             who.Send(Packet.MakeUserType(who));
