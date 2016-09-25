@@ -63,25 +63,36 @@ namespace MCGalaxy.Bots {
                     bot.AIName = props.AI; bot.hunt = props.Hunt; bot.kill = props.Kill;
                     bot.DisplayName = props.DisplayName;
                     
+                    LoadAi(props, bot);
                     PlayerBot.Add(bot, false);
-                    if (String.IsNullOrEmpty(props.AI)) continue;
-                    try {
-                        ScriptFile.Parse(null, bot, "bots/" + props.AI);
-                    } catch (Exception ex)  {
-                        Server.ErrorLog(ex);
-                    }
                 }
             }
+        }
+        
+        static void LoadAi(BotProperties props, PlayerBot bot) {
+            if (String.IsNullOrEmpty(props.AI)) return;
+            try {
+                ScriptFile.Parse(null, bot, "bots/" + props.AI);
+            } catch (Exception ex)  {
+                Server.ErrorLog(ex);
+            }
+            
+            bot.cur = props.CurInstruction;
+            if (bot.cur >= bot.Instructions.Count)
+                bot.cur = 0;
         }
         
         public static void UnloadBots(Level lvl) {
             lock (locker) {
                 PlayerBot[] bots = PlayerBot.Bots.Items;
+                bool hasBots = false;
+                
                 foreach (PlayerBot bot in bots) {
                     if (bot.level != lvl) continue;
                     DoUpdateBot(bot, false);
+                    hasBots = true;
                 }
-                Save();
+                if (hasBots) Save();
             }
         }
         
@@ -115,7 +126,7 @@ namespace MCGalaxy.Bots {
                     BotProperties props = SavedBots[i];
                     if (!props.Level.CaselessEq(level)) continue;
                     
-                    SavedBots.RemoveAt(i); 
+                    SavedBots.RemoveAt(i);
                     removed++; i--;
                 }
                 if (removed > 0) Save();
@@ -127,7 +138,7 @@ namespace MCGalaxy.Bots {
                 int moved = 0;
                 for (int i = 0; i < SavedBots.Count; i++) {
                     BotProperties props = SavedBots[i];
-                    if (!props.Level.CaselessEq(srcLevel)) continue;                    
+                    if (!props.Level.CaselessEq(srcLevel)) continue;
                     props.Level = dstLevel; moved++;
                 }
                 if (moved > 0) Save();
@@ -164,6 +175,7 @@ namespace MCGalaxy.Bots {
         public string AI { get; set; }
         public bool Kill { get; set; }
         public bool Hunt { get; set; }
+        public int CurInstruction { get; set; }
         
         public ushort X { get; set; }
         public ushort Y { get; set; }
@@ -177,6 +189,7 @@ namespace MCGalaxy.Bots {
             Model = bot.model; Color = bot.color;
             Kill = bot.kill; Hunt = bot.hunt;
             DisplayName = bot.DisplayName;
+            CurInstruction = bot.cur;
             
             X = bot.pos[0]; Y = bot.pos[1]; Z = bot.pos[2];
             RotX = bot.rot[0]; RotY = bot.rot[1];
