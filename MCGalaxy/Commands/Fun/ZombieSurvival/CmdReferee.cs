@@ -17,8 +17,7 @@
 */
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands {    
     public sealed class CmdReferee : Command {
         public override string name { get { return "ref"; } }
         public override string shortcut { get { return ""; } }
@@ -39,6 +38,7 @@ namespace MCGalaxy.Commands {
                 
                 if (p.HasCpeExt(CpeExt.HackControl))
                     p.Send(Hacks.MakeHackControl(p));
+                Command.all.Find("spawn").Use(p, "");
             } else {
                 Player.SendChatFrom(p, p.ColoredName + " %Sis now a referee", false);               
                 Server.zombie.PlayerLeftServer(p);
@@ -48,6 +48,7 @@ namespace MCGalaxy.Commands {
                 if (p.HasCpeExt(CpeExt.HackControl))
                     p.Send(Packet.MakeHackControl(true, true, true, true, true, -1));
             }
+            
             Entities.GlobalSpawn(p, true, "");
             p.SetPrefix();
         }
