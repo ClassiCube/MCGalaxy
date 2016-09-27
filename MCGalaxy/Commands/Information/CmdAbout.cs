@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
                 DateTime time = DateTime.Parse(row["TimePerformed"].ToString());
                 byte block = byte.Parse(row["Type"].ToString());
                 
-                byte flags = byte.Parse(row["Deleted"].ToString());
+                byte flags = ParseFlags(row["Deleted"].ToString());
                 bool deleted = (flags & 1) != 0, isExt = (flags & 2) != 0;
                 Output(p, user, block, isExt, deleted, now - time);
             }
@@ -86,10 +86,20 @@ namespace MCGalaxy.Commands {
             GC.WaitForPendingFinalizers();
         }
         
+        static byte ParseFlags(string value) {
+            // This used to be a 'deleted' boolean, so we need to make sure we account for that
+            if (value.CaselessEq("true")) return 1;
+            if (value.CaselessEq("false")) return 0;
+            return byte.Parse(value);
+        }
+        
         static void Output(Player p, string user, byte raw, bool isExt, bool deleted, TimeSpan delta) {
             byte block = isExt ? Block.custom_block : raw;
             byte extBlock = isExt ? raw : (byte)0;
+            
             string blockName = p.level.BlockName(block, extBlock);
+            if (raw == Block.custom_block && !isExt) // Before started tracking IsExt in BlockDB
+                blockName = Block.Name(raw);
                                               
             Player.Message(p, "{0} ago {1} {2}",
                            delta.Shorten(true, false), PlayerInfo.GetColoredName(p, user),
