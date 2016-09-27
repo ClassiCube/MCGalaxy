@@ -155,7 +155,7 @@ namespace MCGalaxy.Commands {
                 case "sea_sponge":
                 case "salmon":
                 case "betta_fish":
-                    Player.Message(p, "The fish blocks are different colored blocks that swim around in active_water (lava_shark in active_lava), sharks and lava sharks players they touch."); break;
+                    Player.Message(p, "The fish blocks are different colored blocks that swim around in active_water (lava_shark in active_lava), sharks and lava sharks eat players they touch."); break;
                 case "phoenix":
                 case "killer_phoenix":
                 case "dove":

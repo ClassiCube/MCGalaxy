@@ -85,16 +85,18 @@ namespace MCGalaxy.Commands {
                 if (Server.useWhitelist && Server.whiteList.Contains(who.Name))
                     Player.Message(p, "  Player is &fWhitelisted");
             }
-            if (who.AfkMessage != null)
+            
+            if (who.AfkMessage != null) {
                 Player.Message(p, "  Idle for {0} (AFK {1}%S)", who.IdleTime.Shorten(), who.AfkMessage);
-            else if (who.IdleTime.TotalMinutes >= 1)
+            } else if (who.IdleTime.TotalMinutes >= 1) {
                 Player.Message(p, "  Idle for {0}", who.IdleTime.Shorten());
+            }
             
             if (!Server.zombie.Running) return;
-            Player.Message(p, "  Survived &a" + who.RoundsTotal +
-                               " %Srounds total, most in a row was &e" + who.RoundsMax);
-            Player.Message(p, "  Infected &a" + who.InfectedTotal +
-                               " %Splayers total, most in a round was &e" + who.InfectedMax);
+            Player.Message(p, "  Survived &a{0} %Srounds (max &e{1}%S)", 
+                           who.RoundsTotal, who.RoundsMax);
+            Player.Message(p, "  Infected &a{0} %Splayers (max &e{1}%S)",
+                           who.InfectedTotal, who.InfectedMax);
         }
     }
 }
