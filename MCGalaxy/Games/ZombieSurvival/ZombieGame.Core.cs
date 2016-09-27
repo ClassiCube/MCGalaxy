@@ -251,7 +251,11 @@ namespace MCGalaxy.Games {
             foreach (Player p in players) {
                 if (!p.Game.Invisible || p.level != CurLevel) continue;
                 DateTime end = p.Game.InvisibilityEnd;
-                if (now >= end) { ResetInvisibility(p); continue; }
+                if (now >= end) {
+                    p.SendMessage("&cYou are &bvisible &cagain");
+                    ResetInvisibility(p); 
+                    continue;
+                }
                 
                 int left = (int)Math.Ceiling((end - now).TotalSeconds);
                 if (left == p.Game.InvisibilityTime) continue;
