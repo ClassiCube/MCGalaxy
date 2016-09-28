@@ -95,12 +95,9 @@ namespace MCGalaxy.Games {
             InfectPlayer(first, null);
 
             DoCoreGame(random);
-            if (!Running) {
-                Status = ZombieGameStatus.LastRound; return;
-            } else {
-                HandOutRewards();
-            }
+            if (!Running) { Status = ZombieGameStatus.LastRound; return; }
             
+            EndRound();
             if (RecentMaps.Count > 20)
                 RecentMaps.RemoveAt(0);
             RecentMaps.Add(CurLevelName);
@@ -165,7 +162,7 @@ namespace MCGalaxy.Games {
                 int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
                 if (seconds <= 0) { 
                     SendLevelRaw("", true); 
-                    HandOutRewards(); 
+                    EndRound();
                     return; 
                 }                
                 if (seconds <= 5 && seconds != lastCountdown) {
@@ -323,11 +320,17 @@ namespace MCGalaxy.Games {
             TabList.Add(p, p, 0xFF);
         }
 
-        public void HandOutRewards() {
+        public void EndRound() {
             if (!RoundInProgress) return;
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
+            
+            Player[] online = PlayerInfo.Online.Items;
+            foreach (Player p in online) {
+                if (!p.level.name.CaselessEq(CurLevelName)) continue;
+                UpdatePlayerStatus(p);
+            }
             
             if (!Running) return;
             Rewards.HandOut(this);
