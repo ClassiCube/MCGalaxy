@@ -28,7 +28,7 @@ namespace MCGalaxy.Games.ZS {
             if (action == 1 && !game.CurLevel.Pillaring && !p.Game.Referee) {
                 if (NotPillaring(block, old)) {
                     p.Game.BlocksStacked = 0;
-                } else if (p.Game.LastY == y - 1 && p.Game.LastX == x && p.Game.LastZ == z ) {
+                } else if (CheckCoords(p, x, y, z)) {
                     p.Game.BlocksStacked++;
                 } else {
                     p.Game.BlocksStacked = 0;
@@ -38,6 +38,24 @@ namespace MCGalaxy.Games.ZS {
             }
             p.Game.LastX = x; p.Game.LastY = y; p.Game.LastZ = z;
             return false;
+        }
+
+        static bool NotPillaring(byte block, byte old) {
+            if (block == Block.shrub) return true;
+            if (block >= Block.yellowflower && block <= Block.redmushroom) return true;
+            
+            old = Block.Convert(old);
+            return old >= Block.water && block <= Block.lavastill;
+        }
+        
+        static bool CheckCoords(Player p, ushort x, ushort y, ushort z) {
+            if (p.Game.LastY != y - 1 || p.Game.LastX != x || p.Game.LastZ != z) return false;
+            int minX = (p.pos[0] - 8) / 32, minZ = (p.pos[2] - 8) / 32;
+            int maxX = (p.pos[0] + 8) / 32, maxZ = (p.pos[2] + 8) / 32;
+            
+            // Check the four possible coords/blocks the player could be pillaring up on
+            return (minX == x && minZ == z) || (minX == x && maxZ == z)
+                || (maxX == x && minZ == z) || (maxX == x && maxZ == z);
         }
         
         static bool MessagePillaring(Player p, ushort x, ushort y, ushort z) {
@@ -60,20 +78,12 @@ namespace MCGalaxy.Games.ZS {
                     Player.AddNote(p.name, null, "K", "Auto kick for pillaring");
                 }
                 
-				p.RevertBlock(x, y, z);
+                p.RevertBlock(x, y, z);
                 p.Game.PillarFined = true;
                 p.Game.BlocksStacked = 0;
                 return true;
             }
             return false;
-        }
-        
-        static bool NotPillaring(byte block, byte old) {
-            if (block == Block.shrub) return true;
-            if (block >= Block.yellowflower && block <= Block.redmushroom) return true;
-            
-            old = Block.Convert(old);
-            return old >= Block.water && block <= Block.lavastill;
         }
     }
 }
