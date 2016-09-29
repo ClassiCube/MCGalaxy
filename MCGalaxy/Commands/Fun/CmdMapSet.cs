@@ -16,8 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.Threading;
 using MCGalaxy.Games.ZS;
 
 namespace MCGalaxy.Commands {
@@ -62,7 +60,7 @@ namespace MCGalaxy.Commands {
             } else if (args[0].CaselessEq("build") || args[0].CaselessEq("buildtype")) {
                 BuildType value;
                 if (!Enum.TryParse(args[1], true, out value)) {
-                    Player.Message(p, "Value must be 'normal', 'modifyonly', or 'momodify'"); return;
+                    Player.Message(p, "Value must be 'normal', 'modifyonly', or 'nomodify'"); return;
                 }
                 
                 p.level.BuildType = value;

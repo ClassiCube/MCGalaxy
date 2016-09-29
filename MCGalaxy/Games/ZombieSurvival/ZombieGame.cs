@@ -123,7 +123,7 @@ namespace MCGalaxy.Games {
             ResetInvisibility(p);
             UpdatePlayerColor(p, col);
             HUD.UpdateAllPrimary(this);
-            PlayerMoneyChanged(p);
+            HUD.UpdateTertiary(p);
         }
         
         void ResetInvisibility(Player p) {

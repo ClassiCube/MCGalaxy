@@ -143,7 +143,7 @@ namespace MCGalaxy.Commands {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/search blocks [keyword] %H- finds blocks with that keyword");
-            Player.Message(p, "%T/search blocks [keyword] %H- finds commands with that keyword");
+            Player.Message(p, "%T/search commands [keyword] %H- finds commands with that keyword");
             Player.Message(p, "%T/search ranks [keyword] %H- finds ranks with that keyword");
             Player.Message(p, "%T/search players [keyword] %H- find players with that keyword");
             Player.Message(p, "%T/search loaded [keyword] %H- finds loaded levels with that keyword");
