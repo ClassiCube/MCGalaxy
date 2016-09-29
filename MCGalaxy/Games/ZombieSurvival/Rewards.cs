@@ -104,7 +104,7 @@ namespace MCGalaxy.Games.ZS {
                 Entities.GlobalDespawn(pl, false);
                 Entities.GlobalSpawn(pl, false);
                 TabList.Add(pl, pl, 0xFF);
-                game.PlayerMoneyChanged(pl);
+                HUD.UpdateTertiary(pl);
             }
         }
 

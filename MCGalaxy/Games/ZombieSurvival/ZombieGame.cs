@@ -122,7 +122,7 @@ namespace MCGalaxy.Games {
             
             ResetInvisibility(p);
             UpdatePlayerColor(p, col);
-            UpdateAllPlayerStatus();
+            HUD.UpdateAllPrimary(this);
             PlayerMoneyChanged(p);
         }
         
@@ -186,7 +186,7 @@ namespace MCGalaxy.Games {
                 
                 if (pl.level == null || !pl.level.name.CaselessEq(CurLevelName))
                     continue;
-                ResetCpeMessages(pl);
+                HUD.Reset(pl);
             }
             
             LastLevelName = "";
@@ -200,45 +200,6 @@ namespace MCGalaxy.Games {
                 if (bounty.Target.CaselessEq(target)) return bounty;
             }
             return null;
-        }
-        
-        
-        void UpdatePlayerStatus(Player p) {
-            int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
-            string status = GetStatusMessage(GetTimeLeft(seconds));
-            p.SendCpeMessage(CpeMessageType.Status1, status);
-        }
-        
-        internal void UpdateAllPlayerStatus() {
-            int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
-            UpdateAllPlayerStatus(GetTimeLeft(seconds));
-        }
-        
-        internal void UpdateAllPlayerStatus(string timespan) {
-            string message = GetStatusMessage(timespan);
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.level != CurLevel) continue;
-                p.SendCpeMessage(CpeMessageType.Status1, message);
-            }
-        }
-
-        string GetStatusMessage(string timespan) {
-            if (timespan.Length > 0) {
-                const string format = "&a{0} %Salive %S({2}, map: {1})";
-                return String.Format(format, Alive.Count, CurLevelName, timespan);
-            } else {
-                const string format = "&a{0} %Salive %S(map: {1})";
-                return String.Format(format, Alive.Count, CurLevelName);
-            }
-        }
-
-        string GetTimeLeft(int seconds) {
-            if (seconds < 0) return "";
-            if (seconds <= 10) return "10s left";
-            if (seconds <= 30) return "30s left";
-            if (seconds <= 60) return "1m left";
-            return ((seconds + 59) / 60) + "m left";
         }
         
         static string[] defMessages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",

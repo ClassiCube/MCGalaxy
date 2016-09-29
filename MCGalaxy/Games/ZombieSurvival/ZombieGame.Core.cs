@@ -172,9 +172,9 @@ namespace MCGalaxy.Games {
                 }
                 
                 // Update the round time left shown in the top right
-                string timeLeft = GetTimeLeft(seconds);
+                string timeLeft = HUD.GetTimeLeft(seconds);
                 if (lastTimeLeft != timeLeft) {
-                    UpdateAllPlayerStatus(timeLeft);
+                    HUD.UpdateAllPrimary(this);
                     lastTimeLeft = timeLeft;
                 }
                 
@@ -325,12 +325,7 @@ namespace MCGalaxy.Games {
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
-            
-            Player[] online = PlayerInfo.Online.Items;
-            foreach (Player p in online) {
-                if (!p.level.name.CaselessEq(CurLevelName)) continue;
-                UpdatePlayerStatus(p);
-            }
+            HUD.UpdateAllPrimary(this);
             
             if (!Running) return;
             Rewards.HandOut(this);

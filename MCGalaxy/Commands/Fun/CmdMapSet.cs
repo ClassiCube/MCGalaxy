@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using MCGalaxy.Games.ZS;
 
 namespace MCGalaxy.Commands {
     public sealed class CmdMapSet : Command {
@@ -54,16 +55,20 @@ namespace MCGalaxy.Commands {
                 if (!bool.TryParse(args[1], out value)) {
                     Player.Message(p, "Value must be 'true' or 'false'"); return;
                 }
+                
                 p.level.Pillaring = value;
                 Player.Message(p, "Set pillaring allowed to: " + value);
+                HUD.UpdateAllSecondary(Server.zombie);
             } else if (args[0].CaselessEq("build") || args[0].CaselessEq("buildtype")) {
                 BuildType value;
                 if (!Enum.TryParse(args[1], true, out value)) {
                     Player.Message(p, "Value must be 'normal', 'modifyonly', or 'momodify'"); return;
                 }
+                
                 p.level.BuildType = value;
                 p.level.UpdateBlockPermissions();
                 Player.Message(p, "Set build type to: " + value);
+                HUD.UpdateAllSecondary(Server.zombie);
             } else if (args[0].CaselessEq("minroundtime") || args[0].CaselessEq("minround")) {
                 byte time = GetRoundTime(p, args[1]);
                 if (time == 0) return;
