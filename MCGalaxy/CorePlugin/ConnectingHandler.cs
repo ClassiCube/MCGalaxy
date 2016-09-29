@@ -26,7 +26,7 @@ namespace MCGalaxy {
         }
         
         static bool HandleConnectingCore(Player p, string mppass) {
-            if (p.name.Length > 16) {
+            if (p.truename.Length > 16) {
                 p.Leave("Usernames must be 16 characters or less", true); return false;
             }            
             if (!CheckPendingAlts(p)) return false;            
@@ -56,10 +56,10 @@ namespace MCGalaxy {
             lock (Player.pendingLock) {
                 DateTime now = DateTime.UtcNow;
                 foreach (Player.PendingItem item in Player.pendingNames) {
-                    if (item.Name == p.name && (now - item.Connected).TotalSeconds <= 60)
+                    if (item.Name == p.truename && (now - item.Connected).TotalSeconds <= 60)
                         altsCount++;
                 }
-                Player.pendingNames.Add(new Player.PendingItem(p.name));
+                Player.pendingNames.Add(new Player.PendingItem(p.truename));
             }
             
             if (altsCount > 0) {
@@ -74,7 +74,7 @@ namespace MCGalaxy {
             
             byte[] hash = null;
             lock (md5Lock)
-                hash = md5.ComputeHash(enc.GetBytes(Server.salt + p.name));
+                hash = md5.ComputeHash(enc.GetBytes(Server.salt + p.truename));
             
             string hashHex = BitConverter.ToString(hash);
             if (!mppass.CaselessEq(hashHex.Replace("-", ""))) {
@@ -125,8 +125,8 @@ namespace MCGalaxy {
             }
             if (guests < Server.maxGuests) return true;
             
-            if (Server.guestLimitNotify) Chat.MessageOps("Guest " + p.name + " couldn't log in - too many guests.");
-            Server.s.Log("Guest " + p.name + " couldn't log in - too many guests.");
+            if (Server.guestLimitNotify) Chat.MessageOps("Guest " + p.truename + " couldn't log in - too many guests.");
+            Server.s.Log("Guest " + p.truename + " couldn't log in - too many guests.");
             p.Leave("Server has reached max number of guests", true);
             return false;
         }

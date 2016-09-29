@@ -26,20 +26,18 @@ namespace MCGalaxy {
         void HandleLogin(byte[] packet) {
             LastAction = DateTime.UtcNow;
             if (loggedIn) return;
-
             byte version = packet[1];
             if (version != Server.version) { Leave("Wrong version!", true); return; }
-            name = enc.GetString(packet, 2, 64).Trim();
-            truename = name;
-            string mppass = enc.GetString(packet, 66, 32).Trim();
             
+            name = enc.GetString(packet, 2, 64).Trim();
+            skinName = name; DisplayName = name; truename = name;
+            if (Server.ClassicubeAccountPlus) name += "+";
+            
+            string mppass = enc.GetString(packet, 66, 32).Trim();            
             if (PlayerConnecting != null) PlayerConnecting(this, mppass);
             OnPlayerConnectingEvent.Call(this, mppass);
             if (cancelconnecting) { cancelconnecting = false; return; }
-                        
-            skinName = name;
-            DisplayName = name;           
-            if (Server.ClassicubeAccountPlus) name += "+";
+                                   
             isDev = Server.Devs.CaselessContains(truename);
             isMod = Server.Mods.CaselessContains(truename);
             
