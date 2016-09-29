@@ -31,7 +31,7 @@ namespace MCGalaxy {
 
         public void ClearChat() { OnChat = null; }
         
-        class PendingItem {
+        internal class PendingItem {
             public string Name;
             public DateTime Connected;
             
@@ -40,17 +40,14 @@ namespace MCGalaxy {
                 Connected = DateTime.UtcNow;
             }
         }
-        static List<PendingItem> pendingNames = new List<PendingItem>();
-        static object pendingLock = new object();
+        internal static List<PendingItem> pendingNames = new List<PendingItem>();
+        internal static object pendingLock = new object();
+        static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
         
         public static List<Player> connections = new List<Player>(Server.players);
         System.Timers.Timer muteTimer = new System.Timers.Timer(1000);
         public List<string> listignored = new List<string>();
         public static byte number { get { return (byte)PlayerInfo.Online.Count; } }
-        
-        static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-        static MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
-        static object md5Lock = new object();
         public static string lastMSG = "";
         
         //TpA

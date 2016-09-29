@@ -96,6 +96,17 @@ namespace MCGalaxy {
         	CallImpl(pl => pl(p));
         }
     }
+
+    /// <summary> This event is called whenever a player tries connecting to the server </summary>
+    public sealed class OnPlayerConnectingEvent: IPluginEvent<Player.OnPlayerConnecting> {       
+        internal OnPlayerConnectingEvent(Player.OnPlayerConnecting method, Priority priority, Plugin plugin)
+            : base(method, priority, plugin) { }
+        
+        public static void Call(Player p, string mppass) {
+        	if (handlers.Count == 0) return;
+        	CallImpl(pl => pl(p, mppass));
+        }
+    }
     
     /// <summary> This event is called whenever a player dies in-game </summary>
     public sealed class OnPlayerDeathEvent : IPluginEvent<Player.OnPlayerDeath> {        

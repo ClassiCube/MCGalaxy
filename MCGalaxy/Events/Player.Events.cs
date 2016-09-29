@@ -29,6 +29,7 @@ namespace MCGalaxy {
         public bool cancelmysql = false;
         public bool cancelmessage = false;
         public bool cancellogin = false;
+        public bool cancelconnecting = false;
         internal bool HasBlockchange { get { return Blockchange != null; } }
         
         //Should people be able to cancel this event?
@@ -77,6 +78,11 @@ namespace MCGalaxy {
         public delegate void OnPlayerConnect(Player p);
         /// <summary> Called when a player connects to the server. </summary>
         public static event OnPlayerConnect PlayerConnect;
+
+        /// <summary> Called when a player tries connecting to the server. </summary>
+        public delegate void OnPlayerConnecting(Player p, string mppass);
+        /// <summary> Called when a player tries connecting to the server. </summary>
+        public static event OnPlayerConnecting PlayerConnecting;
         
         /// <summary> Called when a player disconnects. </summary>
         public delegate void OnPlayerDisconnect(Player p, string reason);        

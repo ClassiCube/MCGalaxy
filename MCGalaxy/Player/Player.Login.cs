@@ -28,123 +28,29 @@ namespace MCGalaxy {
             if (loggedIn) return;
 
             byte version = packet[1];
+            if (version != Server.version) { Leave("Wrong version!", true); return; }
             name = enc.GetString(packet, 2, 64).Trim();
-            if (name.Length > 16) {
-                Leave("Usernames must be 16 characters or less", true); return;
-            }
+            string mppass = enc.GetString(packet, 66, 32).Trim();
+            
+            if (PlayerConnecting != null) PlayerConnecting(this, mppass);
+            OnPlayerConnectingEvent.Call(this, mppass);
+            if (cancelconnecting) { cancelconnecting = false; return; }
+            
             truename = name;
             skinName = name;
-            
-            int altsCount = 0;
-            lock (pendingLock) {
-                DateTime now = DateTime.UtcNow;
-                foreach (PendingItem item in pendingNames) {
-                    if (item.Name == truename && (now - item.Connected).TotalSeconds <= 60)
-                        altsCount++;
-                }
-                pendingNames.Add(new PendingItem(name));
-            }
-            if (altsCount > 0) {
-                Leave("Already logged in!", true); return;
-            }
-
-            string verify = enc.GetString(packet, 66, 32).Trim();
-            verifiedName = false;
-            if (Server.verify) {
-                byte[] hash = null;
-                lock (md5Lock)
-                    hash = md5.ComputeHash(enc.GetBytes(Server.salt + truename));
-                
-                string hashHex = BitConverter.ToString(hash);
-                if (!verify.CaselessEq(hashHex.Replace("-", ""))) {
-                    if (!IPInPrivateRange(ip)) {
-                        Leave("Login failed! Try signing in again.", true); return;
-                    }
-                } else {
-                    verifiedName = true;
-                }
-            }
-            
             DisplayName = name;
+            
             if (Server.ClassicubeAccountPlus) name += "+";
             isDev = Server.Devs.CaselessContains(truename);
             isMod = Server.Mods.CaselessContains(truename);
-
-            try {
-                Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.ToLower() == name.ToLower());
-                if (tBan.expiryTime < DateTime.UtcNow) {
-                    Server.tempBans.Remove(tBan);
-                } else {
-                    string reason = String.IsNullOrEmpty(tBan.reason) ? "" :
-                        " (" + tBan.reason + ")";
-                    Kick("You're still temp banned!" + reason, true);
-                }
-            } catch { }
-
-            if (!CheckWhitelist()) { Leave("This is a private server!", true); return; }
-            Group foundGrp = Group.findPlayerGroup(name);
-            
-            // ban check
-            if (Server.bannedIP.Contains(ip) && (!Server.useWhitelist || !onWhitelist)) {
-                Kick(Server.defaultBanMessage, true);  return;
-            }
-            
-            if (foundGrp.Permission == LevelPermission.Banned) {
-                string[] data = Ban.GetBanData(name);
-                if (data != null) {
-                    Kick(Ban.FormatBan(data[0], data[1]), true);
-                } else {
-                    Kick(Server.defaultBanMessage, true);
-                }
-                return;
-            }
-
-            // maxplayer check
-            if (!CheckPlayersCount(foundGrp)) return;
-            if (version != Server.version) { Leave("Wrong version!", true); return; }
-            
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.name != name) continue;
-                
-                if (Server.verify) {
-                    string reason = p.ip == ip ? "(Reconnecting)" : "(Reconnecting from a different IP)";
-                    p.Leave(reason); break;
-                } else {
-                    Leave("Already logged in!", true); return;
-                }
-            }
             
             byte type = packet[130];
-            if (type == 0x42) { hasCpe = true; SendCpeExtensions(); }
-
-            group = foundGrp;
             Loading = true;
             if (disconnected) return;
             id = NextFreeId();
             
-            if (type != 0x42)
-                CompleteLoginProcess();
-        }
-        
-        bool CheckPlayersCount(Group foundGrp) {
-            if (Server.vip.Contains(name)) return true;
-            
-            Player[] online = PlayerInfo.Online.Items;
-            if (online.Length >= Server.players && !IPInPrivateRange(ip)) { Leave("Server full!", true); return false; }
-            if (foundGrp.Permission > LevelPermission.Guest) return true;
-            
-            online = PlayerInfo.Online.Items;
-            int guests = 0;
-            foreach (Player p in online) {
-                if (p.Rank <= LevelPermission.Guest) guests++;
-            }
-            if (guests < Server.maxGuests) return true;
-            
-            if (Server.guestLimitNotify) Chat.MessageOps("Guest " + DisplayName + " couldn't log in - too many guests.");
-            Server.s.Log("Guest " + name + " couldn't log in - too many guests.");
-            Leave("Server has reached max number of guests", true);
-            return false;
+            if (type == 0x42) { hasCpe = true; SendCpeExtensions(); }
+            if (type != 0x42) CompleteLoginProcess();
         }
         
         void SendCpeExtensions() {
@@ -179,14 +85,6 @@ namespace MCGalaxy {
             Send(Packet.MakeExtEntry(CpeExt.ExtPlayerList, 2), true);
             
             Send(Packet.MakeExtEntry(CpeExt.EnvMapAspect, 1), true);
-        }
-        
-        bool CheckWhitelist() {
-            if (!Server.useWhitelist) return true;
-            if (Server.verify) return Server.whiteList.Contains(name);
-            
-            // Verify names is off, check if the player is on the same IP.
-            return Server.whiteList.Contains(name) && PlayerInfo.FindAccounts(ip).Contains(name);
         }
         
         void CompleteLoginProcess() {
@@ -239,8 +137,7 @@ namespace MCGalaxy {
                 hidden = true; adminchat = true;
             }
             
-            if (PlayerConnect != null)
-                PlayerConnect(this);
+            if (PlayerConnect != null) PlayerConnect(this);
             OnPlayerConnectEvent.Call(this);
             if (cancellogin) { cancellogin = false; return; }
             
@@ -323,7 +220,7 @@ namespace MCGalaxy {
         static void ShowAltsTask(SchedulerTask task) {
             string name = (string)task.State;
             Player p = PlayerInfo.FindExact(name);
-            if (p == null || p.ip == "127.0.0.1") return;
+            if (p == null || p.ip == "127.0.0.1" || p.disconnected) return;
             
             List<string> alts = PlayerInfo.FindAccounts(p.ip);
             // Remove online accounts from the list of accounts on the IP
