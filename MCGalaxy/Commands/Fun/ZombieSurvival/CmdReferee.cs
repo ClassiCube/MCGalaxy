@@ -42,14 +42,15 @@ namespace MCGalaxy.Commands {
             } else {
                 Player.SendChatFrom(p, p.ColoredName + " %Sis now a referee", false);               
                 Server.zombie.PlayerLeftServer(p);
-                Entities.GlobalDespawn(p, false);
+                Entities.GlobalDespawn(p, false, true);
                 p.Game.Referee = !p.Game.Referee;
                 
                 if (p.HasCpeExt(CpeExt.HackControl))
                     p.Send(Packet.MakeHackControl(true, true, true, true, true, -1));
             }
             
-            Entities.GlobalSpawn(p, true, "");
+            Entities.GlobalSpawn(p, false, "");
+            TabList.Add(p, p, 0xFF);
             p.SetPrefix();
         }
         
