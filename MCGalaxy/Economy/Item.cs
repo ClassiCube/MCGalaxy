@@ -155,12 +155,11 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnStoreCommand(Player p) {
             Player.Message(p, "%T/buy {0} [value]", Name);
-            OutputItemInfo(p);
+            Player.Message(p, "%HCosts &a{0} {1} %Heach time the item is bought.", Price, Server.moneys);
+            OutputShortcuts(p);
         }
         
-        protected void OutputItemInfo(Player p) {
-            Player.Message(p, "%HCosts &a{0} {1} %Heach time the item is bought.", Price, Server.moneys);
-            
+        protected void OutputShortcuts(Player p) {
             List<string> shortcuts = new List<string>();
             foreach (Alias a in Alias.aliases) {
                 if (!a.Target.CaselessEq("buy") || a.Prefix == null) continue;

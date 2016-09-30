@@ -94,6 +94,7 @@ namespace MCGalaxy {
             if (name == "") return;
             SendRaw(Opcode.Ping);
             if (Server.afkminutes <= 0) return;
+            if (DateTime.UtcNow < AFKCooldown) return;
             
             if (IsAfk) {
                 int time = Server.afkkick;

@@ -54,6 +54,7 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "You are now marked as being AFK.");
                 }
                 
+                p.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
                 p.RaiseONAFK();
                 Player.RaiseAFK(p);
                 OnPlayerAFKEvent.Call(p);

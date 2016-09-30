@@ -63,7 +63,7 @@ namespace MCGalaxy {
         System.Timers.Timer loginTimer = new System.Timers.Timer(1000);
         System.Timers.Timer extraTimer = new System.Timers.Timer(22000);
         public System.Timers.Timer checkTimer = new System.Timers.Timer(2000);
-        public DateTime LastAction;
+        public DateTime LastAction, AFKCooldown;
         public bool IsAfk = false, AutoAfk;
         public bool cmdTimer = false;
         public bool UsingWom = false;

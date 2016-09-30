@@ -276,11 +276,6 @@ namespace MCGalaxy {
         
         void HandleMovement(byte[] packet) {
             if (!loggedIn || trainGrab || following != "" || frozen) return;
-            /*if (CheckIfInsideBlock())
-{
-this.SendPos(0xFF, (ushort)(clippos[0] - 18), (ushort)(clippos[1] - 18), (ushort)(clippos[2] - 18), cliprot[0], cliprot[1]);
-return;
-}*/
             byte heldBlock = packet[1];
             if (HasCpeExt(CpeExt.HeldBlock))
                 RawHeldBlock = heldBlock;
@@ -310,7 +305,8 @@ return;
             pos = new ushort[3] { x, y, z };
             rot = new byte[2] { rotx, roty };
             if (!Moved() || Loading) return;
-            
+            if (DateTime.UtcNow < AFKCooldown) return;
+                       
             LastAction = DateTime.UtcNow;
             if (IsAfk) CmdAfk.ToggleAfk(this, "");
             /*if (!CheckIfInsideBlock()) { clippos = pos; cliprot = rot; }*/

@@ -350,6 +350,7 @@ namespace MCGalaxy {
                 NetUtils.WriteI16((short)level.Height, buffer, 3);
                 NetUtils.WriteI16((short)level.Length, buffer, 5);
                 Send(buffer);
+                AFKCooldown = DateTime.UtcNow.AddSeconds(2);
                 Loading = false;
                 
                 if (HasCpeExt(CpeExt.EnvWeatherType))
