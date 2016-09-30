@@ -75,7 +75,7 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
-        	if (args.Length < 3) { OnStoreCommand(p); return; }
+            if (args.Length < 3) { OnStoreCommand(p); return; }
             LevelPreset preset = FindPreset(args[1]);
             if (preset == null) { Player.Message(p, "%cThat isn't a level preset"); return; }
             
@@ -136,8 +136,8 @@ namespace MCGalaxy.Eco {
             preset.name = args[2];
             if (OkayAxis(args[3]) && OkayAxis(args[4]) && OkayAxis(args[5])) {
                 preset.x = args[3]; preset.y = args[4]; preset.z = args[5];
-            } else { 
-                Player.Message(p, "%cDimension must be a power of 2"); return; 
+            } else {
+                Player.Message(p, "%cDimension must be a power of 2"); return;
             }
             
             if (!MapGen.IsRecognisedTheme(args[6])) {
@@ -165,7 +165,7 @@ namespace MCGalaxy.Eco {
         void EditPreset(Player p, string[] args, LevelPreset preset) {
             if (preset == null) { Player.Message(p, "%cThat preset level doesn't exist"); return; }
             
-            if (args[3] == "name" || args[3] == "title") { 
+            if (args[3] == "name" || args[3] == "title") {
                 preset.name = args[4];
                 Player.Message(p, "%aSuccessfully changed preset name to %f" + preset.name);
             } else if (args[3] == "x" || args[3] == "y" || args[3] == "z") {
@@ -205,18 +205,19 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreOverview(Player p) {
-            Player.Message(p, "Maps - see /store maps");
+            Player.Message(p, "&6Maps %S- see /store maps");
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.Message(p, "%aAvailable maps to buy:");
+            Player.Message(p, "&aAvailable maps to buy:");
             if (Presets.Count == 0) {
-                Player.Message(p, "%8-None-");
-            } else {
-                foreach (LevelPreset preset in Presets) {
-                    Player.Message(p, preset.name + " (" + preset.x + "," + preset.y + "," + preset.z + ") " +
-                                   preset.type + ": %f" + preset.price + " %3" + Server.moneys);
-                }
+                Player.Message(p, "&6-None-"); return;
+            }
+            
+            foreach (LevelPreset preset in Presets) {
+                Player.Message(p, "&6{0} %S({1}, {2}, {3}) {4}: &a{6} %S{7}",
+                               preset.name, preset.x, preset.y, preset.z,
+                               preset.type, preset.price, Server.moneys);
             }
         }
         

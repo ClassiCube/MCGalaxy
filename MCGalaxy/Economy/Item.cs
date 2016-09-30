@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace MCGalaxy.Eco {
@@ -144,17 +145,39 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnStoreOverview(Player p) {
             if (p == null || p.Rank >= PurchaseRank) {
-                Player.Message(p, "{0} - costs &f{1} &3{2}", Name, Price, Server.moneys);
+                Player.Message(p, "&6{0} %S- &a{1} %S{2}", Name, Price, Server.moneys);
             } else {
                 Group grp = Group.findPerm(PurchaseRank);
                 string grpName = grp == null ? ((int)PurchaseRank).ToString() : grp.ColoredName;
-                Player.Message(p, "{0} ({3}%S+) - costs &f{1} &3{2}", Name, Price, Server.moneys, grpName);
+                Player.Message(p, "&6{0} %S({3}%S+) - &a{1} %S{2}", Name, Price, Server.moneys, grpName);
             }
         }
         
         protected internal override void OnStoreCommand(Player p) {
             Player.Message(p, "%T/buy {0} [value]", Name);
-            Player.Message(p, "%hCosts &f{0} &3{1} %Seach time the item is bought.", Price, Server.moneys);
+            OutputItemInfo(p);
+        }
+        
+        protected void OutputItemInfo(Player p) {
+            Player.Message(p, "%HCosts &a{0} {1} %Heach time the item is bought.", Price, Server.moneys);
+            
+            List<string> shortcuts = new List<string>();
+            foreach (Alias a in Alias.aliases) {
+                if (!a.Target.CaselessEq("buy") || a.Prefix == null) continue;
+                
+                // Find if there are any custom aliases for this item
+                bool matchFound = false;
+                foreach (string alias in Aliases) {
+                    if (a.Prefix != alias) continue;
+                    matchFound = true; break;
+                }
+                
+                if (!matchFound) continue;
+                shortcuts.Add("/" + a.Trigger);
+            }
+            
+            if (shortcuts.Count == 0) return;
+            Player.Message(p, "Shortcuts: {0}", shortcuts.Join());
         }
     }
 }

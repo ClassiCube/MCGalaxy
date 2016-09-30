@@ -124,10 +124,10 @@ namespace MCGalaxy.Eco {
         protected internal override void OnStoreOverview(Player p) {
             Group maxrank = Group.Find(MaxRank);
             if (p == null || p.Rank >= maxrank.Permission) {
-                Player.Message(p, "Rankup - &calready at max rank."); return;
+                Player.Message(p, "&6Rankup %S- &calready at max rank."); return;
             }
             Rank rnk = NextRank(p);
-            Player.Message(p, "Rankup to {0} %S- costs &f{1} &3{2}", rnk.group.ColoredName, rnk.price, Server.moneys);
+            Player.Message(p, "&6Rankup to {0} %S- &a{1} %S{2}", rnk.group.ColoredName, rnk.price, Server.moneys);
         }
         
         protected internal override void OnStoreCommand(Player p) {
@@ -137,7 +137,7 @@ namespace MCGalaxy.Eco {
             Player.Message(p, "%cYou can only buy ranks one at a time, in sequential order.");
             
             foreach (Rank rnk in RanksList) {
-                Player.Message(p, "{0} %S- costs &f{1} &3{2}", rnk.group.ColoredName, rnk.price, Server.moneys);
+                Player.Message(p, "&6{0} %S- &a{1} %S{2}", rnk.group.ColoredName, rnk.price, Server.moneys);
                 if (rnk.group.name.CaselessEq(maxrank.name)) break;
             }
         }
