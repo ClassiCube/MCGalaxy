@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Moderation {
 
             if (confirmed != null) return name;
             string msgReason = String.IsNullOrEmpty(reason) ? "" : " " + reason;
-            Player.Message(p, "If you still want to {0} \"{1}\", use %T/{3} {1}{4} confirm {2}",
+            Player.Message(p, "If you still want to {0} \"{1}\", use %T/{3} {1}{4} confirm{2}",
                            action, name, msgReason, cmd, cmdSuffix);
             return null;
         }

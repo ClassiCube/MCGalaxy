@@ -17,8 +17,9 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Commands.Building;
 
-namespace MCGalaxy.Commands.CPE {    
+namespace MCGalaxy.Commands.CPE {
     internal static class CustomBlockCommand {
         
         public static void Execute(Player p, string message, bool global, string cmd) {
@@ -27,10 +28,11 @@ namespace MCGalaxy.Commands.CPE {
                 parts[i] = parts[i].ToLower();
             
             if (message == "") {
-                if (GetBD(p, global) != null)
-                    SendStepHelp(p, GetStep(p, global));
-                else
+                if (GetBD(p, global) != null) {
+                    SendStepHelp(p, global);
+                } else {
                     Help(p, cmd);
+                }
                 return;
             }
             
@@ -75,14 +77,14 @@ namespace MCGalaxy.Commands.CPE {
                 
                 if (ExistsInScope(def, targetId, global)) {
                     Player.Message(p, "There is already a custom block with the id " + id +
-                                       ", you must either use a different id or use \"" + cmd + " remove " + id + "\"");
+                                   ", you must either use a different id or use \"" + cmd + " remove " + id + "\"");
                     return;
                 }
             } else {
                 targetId = GetFreeId(global, p == null ? null : p.level);
                 if (targetId == Block.Zero) {
                     Player.Message(p, "There are no custom block ids left, " +
-                                       "you must " + cmd +" remove a custom block first.");
+                                   "you must " + cmd +" remove a custom block first.");
                     return;
                 }
             }
@@ -91,16 +93,17 @@ namespace MCGalaxy.Commands.CPE {
             GetBD(p, global).Version2 = true;
             GetBD(p, global).BlockID = (byte)targetId;
             SetTargetId(p, global, targetId);
-            Player.Message(p, "Type '" + cmd + " abort' at anytime to abort the creation process.");
-            Player.Message(p, "Type '" + cmd + " revert' to go back a step in the creation process.");
-            Player.Message(p, "Use '" + cmd + " <arg>' to enter arguments for the creation process.");
+            Player.Message(p, "Use %T{0} abort %Sat anytime to abort the creation process.", cmd);
+            Player.Message(p, "  Use %T{0} revert %Sto go back a step", cmd);
+            Player.Message(p, "  Use %T{0} [input] %Sto provide input", cmd);
             Player.Message(p, "%f----------------------------------------------------------");
+            
             SetStep(p, global, 2);
-            SendStepHelp(p, GetStep(p, global));
+            SendStepHelp(p, global);
         }
         
         static void CopyHandler(Player p, string[] parts, bool global, string cmd) {
-            if (parts.Length <= 2) { Help(p, cmd); return; }          
+            if (parts.Length <= 2) { Help(p, cmd); return; }
             int srcId, dstId;
             if (!CheckBlockId(p, parts[1], global, out srcId)) return;
             if (!CheckBlockId(p, parts[2], global, out dstId)) return;
@@ -124,32 +127,32 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void InfoHandler(Player p, string[] parts, bool global, string cmd) {
-            if (parts.Length == 1) { Help(p, cmd); return; }          
+            if (parts.Length == 1) { Help(p, cmd); return; }
             int id;
             if (!CheckBlockId(p, parts[1], global, out id)) return;
             
-            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;         
+            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition def = defs[id];
             if (!ExistsInScope(def, id, global)) { MessageNoBlock(p, id, global, cmd); return; }
             
             Player.Message(p, "About " + def.Name + " (" + def.BlockID + ")");
-            Player.Message(p, "  DrawType: " + def.BlockDraw + ", BlocksLight: " + 
-                               def.BlocksLight + ", Solidity: " + def.CollideType);
-            Player.Message(p, "  Fallback ID: " + def.FallBack + ", Sound: " + 
-                               def.WalkSound + ", Speed: " + def.Speed.ToString("F2"));
+            Player.Message(p, "  DrawType: " + def.BlockDraw + ", BlocksLight: " +
+                           def.BlocksLight + ", Solidity: " + def.CollideType);
+            Player.Message(p, "  Fallback ID: " + def.FallBack + ", Sound: " +
+                           def.WalkSound + ", Speed: " + def.Speed.ToString("F2"));
             
             if (def.FogDensity == 0)
                 Player.Message(p, "  Block does not use fog");
             else
-                Player.Message(p, "  Fog density: " + def.FogDensity + ", R: " + 
-                                   def.FogR + ", G: " + def.FogG + ", B: " + def.FogB);
+                Player.Message(p, "  Fog density: " + def.FogDensity + ", R: " +
+                               def.FogR + ", G: " + def.FogG + ", B: " + def.FogB);
             
             if (def.Shape == 0)
                 Player.Message(p, "  Block is a sprite");
             else
-                Player.Message(p, "  Block is a cube from (" + 
-                                   def.MinX + "," + def.MinY + "," + def.MinZ + ") to (" 
-                                   + def.MaxX + "," + def.MaxY + "," + def.MaxZ + ")");
+                Player.Message(p, "  Block is a cube from (" +
+                               def.MinX + "," + def.MinY + "," + def.MinZ + ") to ("
+                               + def.MaxX + "," + def.MaxY + "," + def.MaxZ + ")");
         }
         
         static void ListHandler(Player p, string[] parts, bool global, string cmd) {
@@ -188,69 +191,76 @@ namespace MCGalaxy.Commands.CPE {
         static void DefineBlockStep(Player p, string value, bool global, string cmd) {
             string opt = value.ToLower();
             int step = GetStep(p, global);
-            if (opt == "revert" && step > 2) {
-                step--;
-                SendStepHelp(p, step);
-                SetStep(p, global, step); return;
-            }
             BlockDefinition bd = GetBD(p, global);
             
+            if (opt == "revert" && step > 2) {
+                if (step == 19 && bd.FogDensity == 0) step -= 4;
+                else if (step == 9 && bd.Shape == 0) step -= 5;
+                else step--;
+
+                SetStep(p, global, step);
+                SendStepHelp(p, global);
+                return;
+            }
+
             if (step == 2) {
                 bd.Name = value;
                 step++;
             } else if (step == 3) {
-                if (value == "0" || value == "1" || value == "2") {
-                    bd.CollideType = byte.Parse(value);
+                if (value == "0" || value == "1") {
+                    bd.Shape = value == "1" ? (byte)0 : (byte)16;
                     step++;
                 }
             } else if (step == 4) {
-                if (float.TryParse(value, out bd.Speed) && bd.Speed >= 0.25f && bd.Speed <= 3.96f)
-                    step++;
+                if (byte.TryParse(value, out bd.TopTex)) {
+                    step += (bd.Shape == 0 ? 5 : 1); // skip other texture steps for sprites
+                    if (bd.Shape == 0) SetAllTextures(bd);
+                }
             } else if (step == 5) {
-                if (byte.TryParse(value, out bd.TopTex))
-                    step++;
-            } else if (step == 6) {
                 if (byte.TryParse(value, out bd.SideTex)) {
                     bd.LeftTex = bd.SideTex; bd.RightTex = bd.SideTex;
                     bd.FrontTex = bd.SideTex; bd.BackTex = bd.SideTex;
                     step++;
                 }
-            } else if (step == 7) {
+            } else if (step == 6) {
                 if (byte.TryParse(value, out bd.BottomTex))
                     step++;
+            } else if (step == 7) {
+                if (ParseCoords(value, ref bd.MinX, ref bd.MinY, ref bd.MinZ))
+                    step++;
             } else if (step == 8) {
-                if (value == "0" || value == "1") {
-                    bd.BlocksLight = value == "0";
+                if (ParseCoords(value, ref bd.MaxX, ref bd.MaxY, ref bd.MaxZ))
+                    step++;
+                bd.Shape = bd.MaxY;
+            } else if (step == 9) {
+                if (value == "0" || value == "1" || value == "2") {
+                    bd.CollideType = byte.Parse(value);
                     step++;
                 }
-            } else if (step == 9) {
+            } else if (step == 10) {
+                if (float.TryParse(value, out bd.Speed) && bd.Speed >= 0.25f && bd.Speed <= 3.96f)
+                    step++;
+            } else if (step == 11) {
+                if (value == "0" || value == "1") {
+                    bd.BlocksLight = value != "0";
+                    step++;
+                }
+            } else if (step == 12) {
                 bool result = byte.TryParse(value, out bd.WalkSound);
                 if (result && bd.WalkSound <= 11)
                     step++;
-            } else if (step == 10) {
+            } else if (step == 13) {
                 if (value == "0" || value == "1") {
                     bd.FullBright = value != "0";
                     step++;
                 }
-            } else if (step == 11) {
+            } else if (step == 14) {
                 bool result = byte.TryParse(value, out bd.BlockDraw);
                 if (result && bd.BlockDraw >= 0 && bd.BlockDraw <= 4)
                     step++;
-            } else if (step == 12) {
-                if (value == "0" || value == "1") {
-                    bd.Shape = value == "1" ? (byte)0 : (byte)16;
-                    step = bd.Shape == 0 ? 15 : 13;
-                }
-            } else if (step == 13) {
-                if (ParseCoords(value, out bd.MinX, out bd.MinY, out bd.MinZ))
-                    step++;
-            } else if (step == 14) {
-                if (ParseCoords(value, out bd.MaxX, out bd.MaxY, out bd.MaxZ))
-                    step++;
-                bd.Shape = bd.MaxY;
             } else if (step == 15) {
                 if (byte.TryParse(value, out bd.FogDensity))
-                    step = bd.FogDensity == 0 ? 19 : 16;
+                    step += (bd.FogDensity == 0 ? 4 : 1);
             } else if (step == 16) {
                 if (byte.TryParse(value, out bd.FogR))
                     step++;
@@ -261,43 +271,26 @@ namespace MCGalaxy.Commands.CPE {
                 if (byte.TryParse(value, out bd.FogB))
                     step++;
             } else if (step == 19) {
-                if (Block.Byte(value) == Block.Zero) {
-                    SendStepHelp(p, step); return;
-                }
-                bd.FallBack = Block.Byte(value);
-                BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
-                BlockDefinition def = defs[bd.BlockID];
-                if (!global && def == BlockDefinition.GlobalDefs[bd.BlockID]) def = null;
+                byte fallback = GetFallback(p, value);
+                if (fallback == Block.Zero) { SendStepHelp(p, global); return; }
+                bd.FallBack = fallback;
                 
-                // in case the list is modified before we finish the command.
-                if (def != null) {
-                    bd.BlockID = GetFreeId(global, p == null ? null : p.level);
-                    if (bd.BlockID == Block.Zero) {
-                        Player.Message(p, "There are no custom block ids left, " +
-                                           "you must " + cmd + " remove a custom block first.");
-                        if (!global)
-                            Player.Message(p, "You may also manually specify the same existing id of a global custom block.");
-                        return;
-                    }
-                }
-                
-                string scope = global ? "global" : "level";
-                Player.Message(p, "Created a new " + scope + " custom block " + bd.Name + "(" + bd.BlockID + ")");
-                BlockDefinition.Add(bd, defs, p == null ? null : p.level);
+                if (!AddCustomBlock(p, bd, global, cmd)) return;
                 SetBD(p, global, null);
                 SetStep(p, global, 0);
                 return;
             }
-            SendStepHelp(p, step);
+            
             SetStep(p, global, step);
+            SendStepHelp(p, global);
         }
         
         static void EditHandler(Player p, string[] parts, bool global, string cmd) {
             if (parts.Length <= 3) {
                 if (parts.Length == 1)
                     Player.Message(p, "Valid properties: name, collide, speed, toptex, sidetex, " +
-                                       "bottomtex, blockslight, sound, fullbright, shape, blockdraw, min, max, " +
-                                       "fogdensity, fogred, foggreen, fogblue, fallback, lefttex, righttex, fronttex, backtex");
+                                   "bottomtex, blockslight, sound, fullbright, shape, blockdraw, min, max, " +
+                                   "fogdensity, fogred, foggreen, fogblue, fallback, lefttex, righttex, fronttex, backtex");
                 else
                     Help(p, cmd);
                 return;
@@ -310,7 +303,6 @@ namespace MCGalaxy.Commands.CPE {
             
             string value = parts[3];
             float fTemp;
-            byte tempX, tempY, tempZ;
             
             switch (parts[2].ToLower()) {
                 case "name":
@@ -382,17 +374,15 @@ namespace MCGalaxy.Commands.CPE {
                     break;
                 case "min":
                 case "mincoords":
-                    if (!ParseCoords(value, out tempX, out tempY, out tempZ)) {
+                    if (!ParseCoords(value, ref def.MinX, ref def.MinY, ref def.MinZ)) {
                         SendEditHelp(p, 13, 0); return;
                     }
-                    def.MinX = tempX; def.MinY = tempY; def.MinZ = tempZ;
                     break;
                 case "max":
                 case "maxcoords":
-                    if (!ParseCoords(value, out tempX, out tempY, out tempZ)) {
+                    if (!ParseCoords(value, ref def.MaxX, ref def.MaxY, ref def.MaxZ)) {
                         SendEditHelp(p, 14, 0); return;
                     }
-                    def.MaxX = tempX; def.MaxY = tempY; def.MaxZ = tempZ; def.Shape = def.MaxZ;
                     break;
                 case "density":
                 case "fogdensity":
@@ -413,16 +403,64 @@ namespace MCGalaxy.Commands.CPE {
                 case "fallback":
                 case "fallbackid":
                 case "fallbackblock":
-                    tempX = Block.Byte(value);
-                    if (tempX == Block.Zero) {
-                        Player.Message(p, "'" + value + "' is not a valid standard tile."); return;
-                    }
-                    def.FallBack = tempX; break;
+                    byte fallback = GetFallback(p, value);
+                    if (fallback == Block.Zero) return;
+                    def.FallBack = fallback; break;
                 default:
                     Player.Message(p, "Unrecognised property: " + parts[2]); return;
-            }            
-            BlockDefinition.Add(def, defs, p == null ? null : p.level);    
+            }
+            BlockDefinition.Add(def, defs, p == null ? null : p.level);
             ReloadMap(p, global);
+        }
+        
+        
+        static bool AddCustomBlock(Player p, BlockDefinition bd, bool global, string cmd) {
+            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            BlockDefinition def = defs[bd.BlockID];
+            if (!global && def == BlockDefinition.GlobalDefs[bd.BlockID]) def = null;
+            
+            // in case the list is modified before we finish the command.
+            if (def != null) {
+                bd.BlockID = GetFreeId(global, p == null ? null : p.level);
+                if (bd.BlockID == Block.Zero) {
+                    Player.Message(p, "There are no custom block ids left, " +
+                                   "you must " + cmd + " remove a custom block first.");
+                    if (!global) {
+                        Player.Message(p, "You may also manually specify the same existing id of a global custom block.");
+                    }
+                    return false;
+                }
+            }
+            
+            string scope = global ? "global" : "level";
+            Player.Message(p, "Created a new " + scope + " custom block " + bd.Name + "(" + bd.BlockID + ")");
+            BlockDefinition.Add(bd, defs, p == null ? null : p.level);
+            return true;
+        }
+        
+        static void SetAllTextures(BlockDefinition def) {
+            def.SideTex = def.TopTex; def.BottomTex = def.TopTex;
+            def.LeftTex = def.TopTex; def.RightTex = def.TopTex;
+            def.BackTex = def.TopTex; def.FrontTex = def.TopTex;
+        }
+        
+        static byte GetFallback(Player p, string value) {
+            byte extBlock;
+            int block = DrawCmd.GetBlock(p, value, out extBlock, false);
+            
+            if (block == Block.custom_block) {
+                Player.Message(p, "&cCustom blocks cannot be used as fallback blocks.");
+                return Block.Zero;
+            }
+            if (block >= Block.CpeCount) {
+                Player.Message(p, "&cPhysics block cannot be used as fallback blocks.");
+                return Block.Zero;
+            }
+            if (block == Block.Zero) {
+                Player.Message(p, "&cCannot use 'skip block' as fallback block.");
+                return Block.Zero;
+            }
+            return (byte)block;
         }
         
         static void ReloadMap(Player p, bool global) {
@@ -449,19 +487,19 @@ namespace MCGalaxy.Commands.CPE {
                 for (int i = 254; i >= Block.CpeCount; i--) {
                     if (defs[i] == null) return (byte)i;
                 }
-            }         
+            }
             return Block.Zero;
         }
         
         static void MessageNoBlock(Player p, int id, bool global, string cmd) {
             string scope = global ? "global" : "level";
-            Player.Message(p, "There is no {1} custom block with the id \"{0}\".", id, scope);
+            Player.Message(p, "&cThere is no {1} custom block with the id \"{0}\".", id, scope);
             Player.Message(p, "Type \"%T{0} list\" %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
         static void MessageAlreadyBlock(Player p, int id, bool global, string cmd) {
             string scope = global ? "global" : "level";
-            Player.Message(p, "There is already a {1} custom block with the id \"{0}\".", id, scope);
+            Player.Message(p, "&cThere is already a {1} custom block with the id \"{0}\".", id, scope);
             Player.Message(p, "Type \"%T{0} list\" %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
@@ -481,83 +519,28 @@ namespace MCGalaxy.Commands.CPE {
             return true;
         }
         
-        static bool ParseCoords(string parts, out byte x, out byte y, out byte z) {
-            x = 0; y = 0; z = 0;
+        static bool ParseCoords(string parts, ref byte x, ref byte y, ref byte z) {            
             string[] coords = parts.Split(' ');
             if (coords.Length != 3) return false;
             
-            if (!byte.TryParse(coords[0], out x) || !byte.TryParse(coords[1], out y) ||
-                !byte.TryParse(coords[2], out z)) return false;
-            if (x > 16 || y > 16 || z > 16) return false;
+            byte tx = 0, ty = 0, tz = 0;
+            if (!byte.TryParse(coords[0], out tx) || !byte.TryParse(coords[1], out ty)
+                || !byte.TryParse(coords[2], out tz)) return false;
+            if (tx > 16 || ty > 16 || tz > 16) return false;
+            
+            x = tx; z = ty; y = tz; // blockdef files have z being height, we use y being height
             return true;
-        }
-        
-        static string[][] stepsHelp = new string[][] {
-            null, // step 0
-            null, // step 1
-            new[] { "Type the name of this block." },
-            new[] { "Type '0' if this block is walk-through.", "Type '1' if this block is swim-through.",
-                "Type '2' if this block is solid.",
-            },
-            new[] { "Type a number between '0.25' (0.25% speed) and '3.96' (3.96% speed).",
-                "This speed is used inside or swimming in the block, or when you are walking on it.",
-            },
-            new[] { "Type a number between '0' and '255' to identify which texture tile to use for the top of the block.",
-                "Textures tile numbers are left to right in terrain.png (The file the textures are located).",
-            },
-            new[] { "Type a number between '0' and '255' to identify which texture tile to use for the sides of the block.",
-                "Textures tile numbers are left to right in terrain.png (The file the textures are located).",
-            },
-            new[] { "Type a number between '0' and '255' to identify which texture tile to use for the bottom of the block.",
-                "Textures tile numbers are left to right in terrain.png (The file the textures are located).",
-            },
-            new[] { "Type '0' if this block blocks light, otherwise '1' if it doesn't" },
-            new[] { "Type a number between 0 and 9 to choose the sound heard when walking on it and breaking.",
-                "0 = None, 1 = Wood, 2 = Gravel, 3 = Grass, 4 = Stone",
-                "5 = Metal, 6 = Glass, 7 = Cloth, 8 = Sand, 9 = Snow",
-            },
-            new[] { "Type '0' if the block should be darkened when in shadow, '1' if not(e.g lava)." },
-            new[] { "Define the block's draw method.", "0 = Opaque, 1 = Transparent (Like glass)",
-                "2 = Transparent (Like leaves), 3 = Translucent (Like ice), 4 = Gas (Like air)",
-            },
-            new[] { "Type '0' if the block is treated as a cube, '1' if a sprite(e.g roses)." },
-            new[] { "Enter the three minimum coordinates of the cube in pixels (separated by spaces). There are 16 pixels per block.",
-                "Minimum coordinates for a normal block are 0 0 0." },
-            new[] { "Enter the three maximum coordinates of the cube in pixels (separated by spaces). There are 16 pixels per block.",
-                "Maximum coordinates for a normal block are 16 16 16." },
-            new[] { "Define the block's fog density (The density of it inside, i.e water, lava",
-                "0 = No fog at all; 1-255 = Less to greater density",
-            },
-            new[] { "Define the fog's red value of its RGB (0-255)", },
-            new[] { "Define the fog's green value of its RGB (0-255)", },
-            new[] { "Define the fog's blue value of its RGB (0-255)", },
-            new[] { "Define a fallback for this block (Clients that can't see this block).",
-                "You can use the block name or block ID",
-            },
-        };
-        
-        static void SendStepHelp(Player p, int step) {
-            string[] help = stepsHelp[step];
-            for (int i = 0; i < help.Length; i++)
-                Player.Message(p, help[i]);
-            Player.Message(p, "%f--------------------------");
-        }
-        
-        static void SendEditHelp(Player p, int step, int offset) {
-            string[] help = stepsHelp[step];
-            for (int i = offset; i < help.Length; i++)
-                Player.Message(p, help[i].Replace("Type", "Use"));
         }
         
         static bool CheckBlockId(Player p, string arg, bool global, out int blockId) {
             if (!int.TryParse(arg, out blockId)) {
-                Player.Message(p, "Provided block id is not a number."); return false;
+                Player.Message(p, "&cProvided block id is not a number."); return false;
             }
             if (blockId <= 0 || blockId >= 255) {
-                Player.Message(p, "Block id must be between 1-254"); return false;
+                Player.Message(p, "&cBlock id must be between 1-254"); return false;
             }
             if (!global && blockId < Block.CpeCount) {
-                Player.Message(p, "You can only redefine standard blocks with /gb."); return false;
+                Player.Message(p, "&cYou can only redefine standard blocks with /gb."); return false;
             }
             return true;
         }
@@ -591,19 +574,87 @@ namespace MCGalaxy.Commands.CPE {
             else p.lbStep = step;
         }
         
+        
+        static void SendStepHelp(Player p, bool global) {
+            int step = GetStep(p, global);
+            string[] help = stepsHelp[step];
+            
+            BlockDefinition bd = GetBD(p, global);
+            if (step == 4 && bd.Shape == 0)
+                help[0] = help[0].Replace("top texture", "texture");
+            
+            for (int i = 0; i < help.Length; i++)
+                Player.Message(p, help[i]);
+            Player.Message(p, "%f--------------------------");
+        }
+        
+        static void SendEditHelp(Player p, int step, int offset) {
+            string[] help = stepsHelp[step];
+            for (int i = offset; i < help.Length; i++)
+                Player.Message(p, help[i].Replace("Type", "Use"));
+        }
+        
+        static string[][] stepsHelp = new string[][] {
+            null, // step 0
+            null, // step 1
+            new[] { "Type the name for the block." },
+            new[] { "Type '0' if the block is a cube, '1' if a sprite (e.g roses)." },
+            
+            new[] { "Type a number between '0' and '255' for the top texture.",
+                "Textures in terrain.png are numbered from left to right, increasing downwards",
+            },
+            new[] { "Type a number between '0' and '255' for the sides texture.",
+                "Textures in terrain.png are numbered from left to right, increasing downwards.",
+            },
+            new[] { "Type a number between '0' and '255' for the bottom texture.",
+                "Textures in terrain.png are numbered from left to right, increasing downwards.",
+            },
+            
+            new[] { "Enter the three minimum coordinates of the cube in units (separated by spaces). 1 block = 16 units.",
+                "Minimum coordinates for a normal block are 0 0 0." },
+            new[] { "Enter the three maximum coordinates of the cube in units (separated by spaces). 1 block = 16 units.",
+                "Maximum coordinates for a normal block are 16 16 16." },
+            
+            new[] { "Type '0' if the block is walk-through.", "Type '1' if the block is swim-through.",
+                "Type '2' if the block is solid.",
+            },
+            new[] { "Type a number between '0.25' (25% speed) and '3.96' (396% speed).",
+                "This speed is used when inside or walking on the block. Default speed is 1",
+            },
+            new[] { "Type '1' if the block casts a shadow, '0' if it doesn't" },
+            new[] { "Type a number between '0' and '9' for the sound played when walking on it and breaking.",
+                "0 = None, 1 = Wood, 2 = Gravel, 3 = Grass, 4 = Stone",
+                "5 = Metal, 6 = Glass, 7 = Cloth, 8 = Sand, 9 = Snow",
+            },
+            new[] { "Type '1' if the block is fully lit (e.g. lava), '0' if not." },
+            new[] { "Enter the block's draw method.", "0 = Opaque, 1 = Transparent (Like glass)",
+                "2 = Transparent (Like leaves), 3 = Translucent (Like ice), 4 = Gas (Like air)",
+            },
+
+            new[] { "Enter the fog density for the block. 0 = No fog at all",
+                "1 - 255 = Increasing density (e.g. water has 12, lava 255)",
+            },
+            new[] { "Enter the red part of the fog's colour (0 - 255)", },
+            new[] { "Enter the green part of the fog's colour (0 - 255)", },
+            new[] { "Enter the blue part of the fog's colour (0 - 255)", },
+            new[] { "Enter the fallback block (Block shown to players who can't see custom blocks).",
+                "You can use any block name or block ID from the normal blocks.",
+            },
+        };
+        
         internal static void Help(Player p, string cmd) {
             // TODO: find a nicer way of doing this
             string fullCmd = cmd.Replace("lb", "levelblock")
                 .Replace("gb", "globalblock");
             
-            Player.Message(p, "%T" + fullCmd + " <add/copy/edit/list/remove>");
-            Player.Message(p, "%H  " + cmd + " add [id] - begins creating a new custom block.");
-            Player.Message(p, "%H  " + cmd + " copy [source id] [new id] - clones a new custom block from an existing custom block.");
-            Player.Message(p, "%H  " + cmd + " edit [id] [property] [value] - edits the given property of that custom block.");
-            Player.Message(p, "%H  " + cmd + " list [offset] - lists all custom blocks.");
-            Player.Message(p, "%H  " + cmd + " remove [id] - removes that custom block.");
-            Player.Message(p, "%H  " + cmd + " info [id] - shows info about that custom block."); 
-            Player.Message(p, "%HTo see the list of editable properties, type " + cmd + " edit.");
+            Player.Message(p, "%T{0} add/copy/edit/list/remove", fullCmd);
+            Player.Message(p, "%H  {0} add [id] - begins creating a new custom block.", cmd);
+            Player.Message(p, "%H  {0} copy [source id] [new id] - clones a new custom block from an existing custom block.", cmd);
+            Player.Message(p, "%H  {0} edit [id] [property] [value] - edits the given property of that custom block.", cmd);
+            Player.Message(p, "%H  {0} list <offset> - lists all custom blocks.", cmd);
+            Player.Message(p, "%H  {0} remove [id] - removes that custom block.", cmd);
+            Player.Message(p, "%H  {0} info [id] - shows info about that custom block.", cmd);
+            Player.Message(p, "%HTo see the list of editable properties, type {0} edit.", cmd);
         }
     }
     
@@ -620,7 +671,7 @@ namespace MCGalaxy.Commands.CPE {
             CustomBlockCommand.Execute(p, message, true, "/gb");
         }
         
-        public override void Help(Player p) { 
+        public override void Help(Player p) {
             CustomBlockCommand.Help(p, "/gb");
         }
     }
@@ -639,8 +690,8 @@ namespace MCGalaxy.Commands.CPE {
             CustomBlockCommand.Execute(p, message, false, "/lb");
         }
         
-        public override void Help(Player p) { 
-            CustomBlockCommand.Help(p, "/lb"); 
+        public override void Help(Player p) {
+            CustomBlockCommand.Help(p, "/lb");
         }
     }
 }

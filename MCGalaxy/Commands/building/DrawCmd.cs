@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.Building {
                 // try treat as a block definition id.
                 block = BlockDefinition.GetBlock(msg, p);
                 if (block == Block.Zero) {
-                    Player.Message(p, "There is no block \"{0}\".", msg);
+                    Player.Message(p, "&cThere is no block \"{0}\".", msg);
                     return -1;
                 }
                 extBlock = block;
