@@ -33,7 +33,7 @@ namespace MCGalaxy.BlockBehaviour {
         static bool DirtGrass(Player p, byte block, ushort x, ushort y, ushort z) {
             Level lvl = p.level;
             if (!lvl.GrassGrow || !(lvl.physics == 0 || lvl.physics == 5)) {
-                p.ChangeBlock(x, y, z, Block.grass, 0); return false;
+                p.ChangeBlock(x, y, z, block, 0); return false;
             }
             
             byte above = lvl.GetTile(x, (ushort)(y + 1), z), extAbove = 0;

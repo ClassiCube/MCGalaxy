@@ -611,9 +611,9 @@ namespace MCGalaxy.Commands.CPE {
             },
             
             new[] { "Enter the three minimum coordinates of the cube in units (separated by spaces). 1 block = 16 units.",
-                "Minimum coordinates for a normal block are 0 0 0." },
+                "Minimum coordinates for a normal block are &40 &20 &10." },
             new[] { "Enter the three maximum coordinates of the cube in units (separated by spaces). 1 block = 16 units.",
-                "Maximum coordinates for a normal block are 16 16 16." },
+                "Maximum coordinates for a normal block are &416 &216 &116." },
             
             new[] { "Type '0' if the block is walk-through.", "Type '1' if the block is swim-through.",
                 "Type '2' if the block is solid.",
