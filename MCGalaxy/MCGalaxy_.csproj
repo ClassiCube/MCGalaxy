@@ -490,6 +490,7 @@
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Props.cs" />
     <Compile Include="Generator\AdvNoiseGen.cs" />
+    <Compile Include="Generator\Foilage\ForesterTrees.cs" />
     <Compile Include="Generator\Foilage\StandardTrees.cs" />
     <Compile Include="Generator\Foilage\Tree.cs" />
     <Compile Include="Generator\HeightmapGen.cs" />

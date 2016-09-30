@@ -121,7 +121,7 @@ namespace MCGalaxy.BlockPhysics {
             lvl.SetTile(x, y, z, Block.air);        
             Tree tree = new NormalTree();
             tree.SetData(rand);
-            tree.Output(x, (ushort)(y + 1), z, (xT, yT, zT, bT) =>
+            tree.Output(x, y, z, (xT, yT, zT, bT) =>
                         {
                             if (lvl.GetTile(xT, yT, zT) == Block.air)
                                 lvl.Blockchange(xT, yT, zT, bT);

@@ -48,6 +48,7 @@ namespace MCGalaxy.Generator.Foilage {
             new Dictionary<string, Func<Tree>>() {
             { "Fern", () => new NormalTree() }, { "Cactus", () => new CactusTree() },
             { "Notch", () => new ClassicTree() }, { "Swamp", () => new SwampTree() },
+            { "Bamboo", () => new BambooTree() }, { "Palm", () => new PalmTree() },
         };
         
         public static Tree Find(string name) {

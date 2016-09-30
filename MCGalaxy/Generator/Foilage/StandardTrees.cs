@@ -33,8 +33,7 @@ namespace MCGalaxy.Generator.Foilage {
         
         public override void SetData(Random rnd) {
             height = (byte)rnd.Next(3, 6);
-            top = 0;
-            size = 0;
+            size = 1;
             this.rnd = rnd;
         }
         
@@ -98,14 +97,14 @@ namespace MCGalaxy.Generator.Foilage {
                 output(x, (ushort)(y + dy), z, Block.trunk);
 
             for (int dy = top; dy <= height + 1; dy++) {
-                int dist = dy > height - 1 ? 1 : 2;
-                for (int dz = -dist; dz <= dist; dz++)
-                    for (int dx = -dist; dx <= dist; dx++)
+                int extent = dy > height - 1 ? 1 : 2;
+                for (int dz = -extent; dz <= extent; dz++)
+                    for (int dx = -extent; dx <= extent; dx++)
                 {
                     ushort xx = (ushort)(x + dx), yy = (ushort)(y + dy), zz = (ushort)(z + dz);
                     if (xx == x && zz == z && dy <= height) continue;
 
-                    if (Math.Abs(dx) == dist && Math.Abs(dz) == dist) {
+                    if (Math.Abs(dx) == extent && Math.Abs(dz) == extent) {
                         if (dy > height) continue;
                         if (rnd.Next(2) == 0) output(xx, yy, zz, Block.leaf);
                     } else {
@@ -130,14 +129,14 @@ namespace MCGalaxy.Generator.Foilage {
                 output(x, (ushort)(y + dy), z, Block.trunk);
 
             for (int dy = top; dy <= height + 1; dy++) {
-                int dist = dy > height - 1 ? 2 : 3;
-                for (int dz = (short)-dist; dz <= dist; dz++)
-                    for (int dx = (short)-dist; dx <= dist; dx++)
+                int extent = dy > height - 1 ? 2 : 3;
+                for (int dz = -extent; dz <= extent; dz++)
+                    for (int dx = -extent; dx <= extent; dx++)
                 {
                     ushort xx = (ushort)(x + dx), yy = (ushort)(y + dy), zz = (ushort)(z + dz);
                     if (xx == x && zz == z && dy <= height) continue;
 
-                    if (Math.Abs(dz) == dist && Math.Abs(dx) == dist) {
+                    if (Math.Abs(dx) == extent && Math.Abs(dz) == extent) {
                         if (dy > height) continue;
                         if (rnd.Next(2) == 0) output(xx, yy, zz, Block.leaf);
                     } else {
