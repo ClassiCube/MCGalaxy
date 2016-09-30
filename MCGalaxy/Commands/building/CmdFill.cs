@@ -163,8 +163,8 @@ namespace MCGalaxy.Commands.Building {
         public override void Help(Player p) {
             Player.Message(p, "%T/fill [brush args] <mode>");
             Player.Message(p, "%HFills the area specified with the output of the current brush.");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
             Player.Message(p, "   %HModes: &fnormal/up/down/layer/vertical_x/vertical_z");
+            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
         }
     }
 }

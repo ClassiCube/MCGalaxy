@@ -27,17 +27,15 @@ Ideas, concepts, and code were used from the following two sources:
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Generator.Foilage;
 
-namespace MCGalaxy.Drawing.Ops {   
-    public class TreeDrawOp : DrawOp {       
+namespace MCGalaxy.Drawing.Ops {
+    public class TreeDrawOp : DrawOp {
         public override string Name { get { return "Tree"; } }
         
         public Random random;
-        public bool overwrite = false;
-        public int Type;
-        public const int T_Tree = 0, T_NotchTree = 1, T_NotchSwamp = 2, T_Cactus = 3;
+        public Tree Tree;
         static Brush defBrush = new SolidBrush(Block.leaf, 0);
-        byte height, top, size;
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
@@ -45,151 +43,23 @@ namespace MCGalaxy.Drawing.Ops {
             if (brush == null) brush = defBrush;
             Vec3U16 P = Clamp(marks[0]);
             
-            if (Type == T_Tree) AddTree(lvl, P.X, P.Y, P.Z, brush, output);
-            if (Type == T_NotchTree) AddNotchTree(lvl, P.X, P.Y, P.Z, brush, output);
-            if (Type == T_NotchSwamp) AddNotchSwampTree(lvl, P.X, P.Y, P.Z, brush, output);
-            if (Type == T_Cactus) AddCactus(lvl, P.X, P.Y, P.Z, output);
+            Tree.Output(P.X, P.Y, P.Z, (xT, yT, zT, bT) =>
+                        {
+                            if (lvl.GetTile(xT, yT, zT) != Block.air) return;
+                            if (bT != Block.leaf) {
+                                output(Place(xT, yT, zT, bT, 0));
+                            } else {
+                                output(Place(xT, yT, zT, brush));
+                            }
+                        });
         }
         
         public override void SetMarks(Vec3S32[] marks) {
             base.SetMarks(marks);
-            switch (Type) {
-                case T_Tree:
-                    height = (byte)random.Next(5, 8);
-                    top = (byte)(height - random.Next(2, 4));
-                    size = top; break;
-                case T_NotchTree:
-                    height = (byte)random.Next(3, 7);
-                    top = (byte)(height - 2);
-                    size = 2; break;
-                case T_NotchSwamp:
-                    height = (byte)random.Next(4, 8);
-                    top = (byte)(height - 2);
-                    size = 3; break;
-                case T_Cactus:
-                    height = (byte)random.Next(3, 6);
-                    top = 0;
-                    size = 0; break;
-            }
-            
-            Max.Y += height;
-            Min.X -= size; Min.Z -= size; 
-            Max.X += size; Max.Z += size;
-        }
-        
-        void AddTree(Level lvl, ushort x, ushort y, ushort z, Brush brush, Action<DrawOpBlock> output) {
-            for (ushort dy = 0; dy < top + height - 1; dy++) {
-                ushort yy = (ushort)(y + dy);
-                if (overwrite || lvl.GetTile(x, yy, z) == Block.air || (yy == y && lvl.GetTile(x, yy, z) == Block.shrub))
-                	output(Place(x, yy, z, Block.trunk, 0));
-            }
-            
-            for (short dy = (short)-top; dy <= top; ++dy)
-                for (short dz = (short)-top; dz <= top; ++dz)
-                    for (short dx = (short)-top; dx <= top; ++dx)
-            {
-                short dist = (short)(Math.Sqrt(dx * dx + dy * dy + dz * dz));
-                if ((dist < top + 1) && random.Next(dist) < 2) {
-                    ushort xx = (ushort)(x + dx), yy = (ushort)(y + dy + height), zz = (ushort)(z + dz);
-
-                    if ((xx != x || zz != z || dy >= top - 1) && (overwrite || lvl.GetTile(xx, yy, zz) == Block.air))
-                    	output(Place(xx, yy, zz, brush));
-                }
-            }
-        }
-
-        void AddNotchTree(Level lvl, ushort x, ushort y, ushort z, Brush brush, Action<DrawOpBlock> output) {
-            for (int dy = 0; dy <= height; dy++) {
-                ushort yy = (ushort)(y + dy);
-                byte tile = lvl.GetTile(x, yy, z);
-                if (overwrite || tile == Block.air || (yy == y && tile == Block.shrub))
-                	output(Place(x, yy, z, Block.trunk, 0));
-            }
-
-            for (int dy = top; dy <= height + 1; dy++) {
-                int dist = dy > height - 1 ? 1 : 2;
-                for (int dz = -dist; dz <= dist; dz++)
-                    for (int dx = -dist; dx <= dist; dx++)
-                {
-                    ushort xx = (ushort)(x + dx), yy = (ushort)(y + dy), zz = (ushort)(z + dz);
-                    byte tile = lvl.GetTile(xx, yy, zz);
-                    if ((xx == x && zz == z && dy <= height) || (!overwrite && tile != Block.air))
-                        continue;
-
-                    if (Math.Abs(dx) == dist && Math.Abs(dz) == dist) {
-                        if (dy > height) continue;
-
-                        if (random.Next(2) == 0)
-                        	output(Place(xx, yy, zz, brush));
-                    } else {
-                    	output(Place(xx, yy, zz, brush));
-                    }
-                }
-            }
-        }
-
-        void AddNotchSwampTree(Level lvl, ushort x, ushort y, ushort z, Brush brush, Action<DrawOpBlock> output) {
-            for (int dy = 0; dy <= height; dy++) {
-                ushort yy = (ushort)(y + dy);
-                byte tile = lvl.GetTile(x, yy, z);
-                if (overwrite || tile == Block.air || (yy == y && tile == Block.shrub))
-                	output(Place(x, yy, z, Block.trunk, 0));
-            }
-
-            for (int dy = top; dy <= height + 1; dy++) {
-                int dist = dy > height - 1 ? 2 : 3;
-                for (int dz = (short)-dist; dz <= dist; dz++)
-                    for (int dx = (short)-dist; dx <= dist; dx++)
-                {
-                    ushort xx = (ushort)(x + dx), yy = (ushort)(y + dy), zz = (ushort)(z + dz);
-                    byte tile = lvl.GetTile(xx, yy, zz);
-                    if ((xx == x && zz == z && dy <= height) || (!overwrite && tile != Block.air))
-                        continue;
-
-                    if (Math.Abs(dz) == dist && Math.Abs(dx) == dist) {
-                        if (dy > height) continue;
-
-                        if (random.Next(2) == 0)
-                        	output(Place(xx, yy, zz, brush));
-                    } else {
-                    	output(Place(xx, yy, zz, brush));
-                    }
-                }
-            }
-        }
-
-        void AddCactus(Level lvl, ushort x, ushort y, ushort z, Action<DrawOpBlock> output) {
-            for (ushort dy = 0; dy <= height; dy++) {
-                if (overwrite || lvl.GetTile(z, (ushort)(y + dy), z) == Block.air)
-                	output(Place(x, (ushort)(y + dy), z, Block.green, 0));
-            }
-
-            int inX = 0, inZ = 0;
-            switch (random.Next(1, 3)) {
-                    case 1: inX = -1; break;
-                case 2:
-                    default: inZ = -1; break;
-            }
-
-            for (ushort dy = height; dy <= random.Next(height + 2, height + 5); dy++) {
-                if (overwrite || lvl.GetTile((ushort)(x + inX), (ushort)(y + dy), (ushort)(z + inZ)) == Block.air)
-                	output(Place((ushort)(x + inX), (ushort)(y + dy), (ushort)(z + inZ), Block.green, 0));
-            }
-            for (ushort dy = height; dy <= random.Next(height + 2, height + 5); dy++) {
-                if (overwrite || lvl.GetTile((ushort)(x - inX), (ushort)(y + dy), (ushort)(z - inZ)) == Block.air)
-                	output(Place((ushort)(x - inX), (ushort)(y + dy), (ushort)(z - inZ), Block.green, 0));
-            }
-        }
-
-        public static bool TreeCheck(Level lvl, ushort x, ushort z, ushort y, short dist) { //return true if tree is near
-            for (short dy = (short)-dist; dy <= +dist; ++dy)
-                for (short dz = (short)-dist; dz <= +dist; ++dz)
-                    for (short dx = (short)-dist; dx <= +dist; ++dx)
-            {
-                byte tile = lvl.GetTile((ushort)(x + dx), (ushort)(z + dz), (ushort)(y + dy));
-                if (tile == Block.trunk || tile == Block.green) return true;
-            }
-            return false;
+            Tree.SetData(random);
+            Max.Y += Tree.height;
+            Min.X -= Tree.size; Min.Z -= Tree.size;
+            Max.X += Tree.size; Max.Z += Tree.size;
         }
     }
 }

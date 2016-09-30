@@ -15,8 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
+using MCGalaxy.Generator.Foilage;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdTree : Command {
@@ -28,41 +30,34 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            int mode = TreeDrawOp.T_Tree;
             string[] parts = message.SplitSpaces(2);
             string brushMsg = parts.Length >= 2 ? parts[1] : "";
             
-            switch (parts[0].ToLower()) {
-                case "1":
-                    case "fern": mode = TreeDrawOp.T_Tree; break;
-                case "2":
-                    case "cactus": mode = TreeDrawOp.T_Cactus; break;
-                case "3":
-                    case "notch": mode = TreeDrawOp.T_NotchTree; break;
-                case "4":
-                    case "swamp": mode = TreeDrawOp.T_NotchSwamp; break;
-                    default: brushMsg = message; break;
+            Tree tree = Tree.Find(parts[0]);
+            if (tree == null) {
+                brushMsg = message;
+                tree = new NormalTree();
             }
             
             DrawArgs dArgs = default(DrawArgs);
-            dArgs.mode = mode;
+            dArgs.tree = tree;
             dArgs.brushMsg = brushMsg;
             Player.Message(p, "Select where you wish your tree to grow");
             p.MakeSelection(1, dArgs, DoTree);
         }
 
         bool DoTree(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-            DrawArgs cpos = (DrawArgs)state;
+            DrawArgs dArgs = (DrawArgs)state;
             TreeDrawOp op = new TreeDrawOp();
-            op.Type = cpos.mode;
-            op.random = p.random;
+            op.Tree = dArgs.tree;
+            op.random = new System.Random();
             Brush brush = null;
             
-            if (cpos.brushMsg != "") {
+            if (dArgs.brushMsg != "") {
                 if (!p.group.CanExecute("brush")) {
                     Player.Message(p, "You cannot use /brush, so therefore cannot use /tree with a brush."); return false;
                 }
-                brush = ParseBrush(cpos.brushMsg, p, type, extType);
+                brush = ParseBrush(dArgs.brushMsg, p, type, extType);
                 if (brush == null) return false;
             }
             return DrawOp.DoDrawOp(op, brush, p, marks);
@@ -82,13 +77,13 @@ namespace MCGalaxy.Commands.Building {
             return brush.Construct(args);
         }
         
-        struct DrawArgs { public int mode; public string brushMsg; }
+        struct DrawArgs { public Tree tree; public string brushMsg; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/tree [type] %H- Draws a tree.");
-            Player.Message(p, "%HTypes - &fFern/1, Cactus/2, Notch/3, Swamp/4");
             Player.Message(p, "%T/tree [type] [brush name] <brush args>");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, "%H  Types: &f{0}", Tree.TreeTypes.Join(t => t.Key));
+            Player.Message(p, "%H  For help about brushes, type %T/help brush%H.");
         }
     }
 }

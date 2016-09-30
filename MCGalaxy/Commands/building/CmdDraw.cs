@@ -121,11 +121,11 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%T/draw [brush args] <height> <baseradius> <mode>");
             Player.Message(p, "%T/draw [brush args] <radius> <mode>");
             Player.Message(p, "%HDraws an object at the specified point.");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
             Player.Message(p, "   %HObjects: &fcone/hcone/icone/hicone");
             Player.Message(p, "     &fpyramid/hpyramid/ipyramid/hipyramid/volcano");
             Player.Message(p, "   %HObjects with only radius: &fsphere/hsphere");
             Player.Message(p, "   %HNote 'h' means hollow, 'i' means inverse");
+            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
         }
     }
 }

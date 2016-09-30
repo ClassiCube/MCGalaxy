@@ -84,8 +84,8 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%T/sphere [brush args] <mode>");
             Player.Message(p, "%HCreates a sphere, with the first point as the centre, " +
                            "and second being the radius.");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
             Player.Message(p, "   %HModes: &fsolid/hollow/circle");
+            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
         }
     }
 }

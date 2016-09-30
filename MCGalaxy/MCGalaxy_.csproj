@@ -490,6 +490,8 @@
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Props.cs" />
     <Compile Include="Generator\AdvNoiseGen.cs" />
+    <Compile Include="Generator\Foilage\StandardTrees.cs" />
+    <Compile Include="Generator\Foilage\Tree.cs" />
     <Compile Include="Generator\HeightmapGen.cs" />
     <Compile Include="Generator\ImprovedNoise.cs" />
     <Compile Include="Generator\MapGen.cs" />
@@ -717,6 +719,7 @@
     <Folder Include="Games\LavaSurvival" />
     <Folder Include="Games\TntWars" />
     <Folder Include="Games\ZombieSurvival" />
+    <Folder Include="Generator\Foilage" />
     <Folder Include="Levels\IO" />
     <Folder Include="Generator" />
     <Folder Include="Levels\Physics" />

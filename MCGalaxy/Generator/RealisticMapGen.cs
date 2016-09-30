@@ -27,6 +27,7 @@ Ideas, concepts, and code were used from the following two sources:
 using System;
 using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
+using MCGalaxy.Generator.Foilage;
 
 namespace MCGalaxy.Generator {    
     public sealed class RealisticMapGen {        
@@ -36,8 +37,6 @@ namespace MCGalaxy.Generator {
         Random rand;
         ushort LiquidLevel;
         RealisticGenParams genParams;
-        TreeDrawOp treeDrawer;
-        Vec3S32[] treeCoords;
         
         public bool GenerateMap(MapGenArgs args) {
             DateTime start = DateTime.UtcNow;
@@ -47,12 +46,6 @@ namespace MCGalaxy.Generator {
             
             if (!RealisticGenParams.Themes.TryGetValue(args.Theme, out genParams))
                 genParams = new RealisticGenParams();
-            if (genParams.GenTrees) {
-                treeDrawer = new TreeDrawOp();
-                treeDrawer.Level = lvl;
-                treeDrawer.random = rand;
-                treeCoords = new Vec3S32[1];
-            }
             
             try {
                 terrain = new float[lvl.Width * lvl.Length];
@@ -142,13 +135,17 @@ namespace MCGalaxy.Generator {
                 if (genParams.GenTrees && overlay[index] < 0.65f && overlay2[index] < treeDens) {
                     if (Lvl.GetTile(x, (ushort)(y + 1), z) == Block.air) {
                         if (Lvl.GetTile(x, y, z) == Block.grass || genParams.UseCactus) {
-                            if (rand.Next(13) == 0 && !TreeDrawOp.TreeCheck(Lvl, x, y, z, treeDist)) {
-                                treeDrawer.Type = genParams.UseCactus ? TreeDrawOp.T_Cactus : TreeDrawOp.T_Tree;
-                                treeCoords[0].X = x; treeCoords[0].Y = (ushort)(y + 1); treeCoords[0].Z = z;
-                                treeDrawer.SetMarks(treeCoords);
+                            if (rand.Next(13) == 0 && !Tree.TreeCheck(Lvl, x, y, z, treeDist)) {
+                                Tree tree = null;
+                                if (genParams.UseCactus) tree = new CactusTree();
+                                else tree = new NormalTree();
                                 
-                                treeDrawer.Perform(treeCoords, null, Lvl, null, 
-                                                   b => Lvl.SetTile(b.X, b.Y, b.Z, b.Block));
+                                tree.SetData(rand);
+                                tree.Output(x, (ushort)(y + 1), z, (xT, yT, zT, bT) =>
+                                            {
+                                                if (Lvl.GetTile(xT, yT, zT) == Block.air)
+                                                    Lvl.SetTile(xT, yT, zT, bT);
+                                            });
                             }
                         }
                     }

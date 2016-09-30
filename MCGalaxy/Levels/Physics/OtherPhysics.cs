@@ -16,8 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Drawing;
-using MCGalaxy.Drawing.Ops;
+using MCGalaxy.Generator.Foilage;
 
 namespace MCGalaxy.BlockPhysics {
 
@@ -102,7 +101,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public static void DoShrub(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;			
+            Random rand = lvl.physRandom;            
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             if (lvl.physics > 1) { //Adv physics kills flowers and mushroos in water/lava
@@ -119,14 +118,15 @@ namespace MCGalaxy.BlockPhysics {
                 return;
             }
             
-            TreeDrawOp op = new TreeDrawOp();
-            op.Level = lvl;
-            op.random = rand;
-            Vec3S32[] marks = new [] { new Vec3S32(x, y, z) };
-            op.SetMarks(marks);
+            lvl.SetTile(x, y, z, Block.air);        
+            Tree tree = new NormalTree();
+            tree.SetData(rand);
+            tree.Output(x, (ushort)(y + 1), z, (xT, yT, zT, bT) =>
+                        {
+                            if (lvl.GetTile(xT, yT, zT) == Block.air)
+                                lvl.Blockchange(xT, yT, zT, bT);
+                        });
             
-            op.Perform(marks, null, lvl, null, 
-                       b => lvl.Blockchange(b.X, b.Y, b.Z, b.Block));
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
@@ -147,7 +147,7 @@ namespace MCGalaxy.BlockPhysics {
                 C.data.Data++;
             }
         }
-		
+        
         public static void DoSponge(Level lvl, ref Check C, bool lava) {
             for (int y = -2; y <= +2; ++y)
                 for (int z = -2; z <= +2; ++z)
@@ -162,8 +162,8 @@ namespace MCGalaxy.BlockPhysics {
             }
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
-		
-		public static void DoSpongeRemoved(Level lvl, int b, bool lava = false) {
+        
+        public static void DoSpongeRemoved(Level lvl, int b, bool lava = false) {
             for (int y = -3; y <= +3; ++y)
                 for (int z = -3; z <= +3; ++z)
                     for (int x = -3; x <= +3; ++x)
