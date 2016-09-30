@@ -221,28 +221,32 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        void HandleZoneCommand(Player p, string cmd, string value) {
+        void HandleZoneCommand(Player p, string cmd, string name) {
             if (cmd == "LIST") {
                 Command.all.Find("zone").Use(p, "");
             } else if (cmd == "ADD") {
-                if (value == "") {
+                if (name == "") {
                     Player.Message(p, "You did not specify a name to allow building on your map."); return;
                 }
-                value = CmdZone.FindZoneOwner(p, value);
-                if (value == null) return;
                 
-                CmdZone.ZoneAll(p.level, value);
-                Player.Message(p, "Added zone for &b" + value);
-                Player.Message(p, value + " has been allowed building on your map.");
+                string[] zoneArgs = name.Split(' ');
+                name = zoneArgs[0];
+                string reason = zoneArgs.Length > 1 ? zoneArgs[1] : "";
+                name = CmdZone.FindZoneOwner(p, "os zone add", name, ref reason);
+                if (name == null) return;
+                
+                CmdZone.ZoneAll(p.level, name);
+                Player.Message(p, "Added zone for &b" + name);
+                Player.Message(p, name + " has been allowed building on your map.");
             } else if (cmd == "DEL") {
                 // TODO: Delete zone by name
-                if (value.CaselessEq("ALL") || value == "")
+                if (name.CaselessEq("ALL") || name == "")
                     CmdZone.DeleteAll(p);
             } else if (cmd == "BLOCK") {
-                if (value == "") {
+                if (name == "") {
                     Player.Message(p, "You did not specify a name to blacklist from your map."); return;
                 }
-                Player blocked = PlayerInfo.FindMatches(p, value);
+                Player blocked = PlayerInfo.FindMatches(p, name);
                 if (blocked == null) return;
                 if (blocked.name.CaselessEq(p.name)) { Player.Message(p, "You can't blacklist yourself"); return; }
                 
@@ -258,18 +262,18 @@ namespace MCGalaxy.Commands {
                     PlayerActions.ChangeMap(blocked, Server.mainLevel);
                 }
             } else if (cmd == "UNBLOCK") {
-                if (value == "") {
+                if (name == "") {
                     Player.Message(p, "You did not specify a name to blacklist from your map."); return;
                 }
                 
                 List<string> blacklist = p.level.VisitAccess.Blacklisted;
-                if (!blacklist.CaselessContains(value)) {
-                    Player.Message(p, value + " is not blacklisted."); return;
+                if (!blacklist.CaselessContains(name)) {
+                    Player.Message(p, name + " is not blacklisted."); return;
                 }                
-                blacklist.CaselessRemove(value);
+                blacklist.CaselessRemove(name);
                 
                 Level.SaveSettings(p.level);
-                Player.Message(p, value + " has been removed from your map's blacklist.");
+                Player.Message(p, name + " has been removed from your map's blacklist.");
             } else if (cmd == "BLACKLIST") {                
                 List<string> blacklist = p.level.VisitAccess.Blacklisted;
                 if (blacklist.Count > 0) {

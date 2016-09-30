@@ -35,13 +35,13 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (args[0].CaselessEq("+up")) {
                 rank = args[0];
-                name = RankCmd.FindName(p, "promote", "", args[1], ref reason);
+                name = RankCmd.FindName(p, "promote", "promote", "", args[1], ref reason);
             } else if (args[0].CaselessEq("-down")) {
                 rank = args[0];
-                name = RankCmd.FindName(p, "demote", "", args[1], ref reason);
+                name = RankCmd.FindName(p, "demote", "demote", "", args[1], ref reason);
             } else {
                 rank = args[1];
-                name = RankCmd.FindName(p, "rank", " " + rank, args[0], ref reason);
+                name = RankCmd.FindName(p, "rank", "rank", " " + rank, args[0], ref reason);
             }
             if (name == null) return;
             

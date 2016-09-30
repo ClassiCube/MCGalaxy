@@ -57,6 +57,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/referee");
             Player.Message(p, "%HTurns referee mode on/off.");
+            Player.Message(p, "%H  Note that leaving referee mode sends you back to spawn.");
         }
     }
 }

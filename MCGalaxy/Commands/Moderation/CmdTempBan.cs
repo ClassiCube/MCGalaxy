@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.SplitSpaces(3);
             string reason = args.Length > 2 ? args[2] : "";
             
-            string target = RankCmd.FindName(p, "tempban", args.Length == 1 ? "" : " " + args[1],
+            string target = RankCmd.FindName(p, "temp ban", "tempban",
+                                             args.Length == 1 ? "" : " " + args[1],
                                              args[0], ref reason);
             if (target == null) return;
             Player who = PlayerInfo.FindExact(target);

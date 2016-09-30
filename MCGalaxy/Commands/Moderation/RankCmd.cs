@@ -47,7 +47,8 @@ namespace MCGalaxy.Commands.Moderation {
             Entities.SpawnEntities(who, false);
         }
         
-        internal static string FindName(Player p, string action, string cmdArgs,
+        internal static string FindName(Player p, string action, 
+		                                string cmd, string cmdSuffix,
                                         string name, ref string reason) {
             if (!Formatter.ValidName(p, name, "player")) return null;
             string match = MatchName(p, ref name);
@@ -62,8 +63,8 @@ namespace MCGalaxy.Commands.Moderation {
 
             if (confirmed != null) return name;
             string msgReason = String.IsNullOrEmpty(reason) ? "" : " " + reason;
-            Player.Message(p, "If you still want to {0} \"{1}\", use %T/{0} {1}{2} confirm {3}",
-                           action, name, cmdArgs, msgReason);
+            Player.Message(p, "If you still want to {0} \"{1}\", use %T/{3} {1}{4} confirm {2}",
+                           action, name, msgReason, cmd, cmdSuffix);
             return null;
         }
         

@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands.Moderation;
 
 namespace MCGalaxy.Commands {
     public sealed class CmdZone : Command {
@@ -41,13 +42,13 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Place a block where you would like to check for zones.");
                 p.MakeSelection(1, null, CheckZone);
             } else if (args[0].CaselessEq("add")) {
-                if (!CheckAdd(p, args)) return;
+                if (!CheckAdd(p, args, "zone map")) return;
 
                 Player.Message(p, "Place two blocks to determine the edges.");
                 Player.Message(p, "Zone for: &b" + args[1] + ".");
                 p.MakeSelection(2, args[1], AddZone);
             } else if (args[0].CaselessEq("map")) {
-                if (!CheckAdd(p, args)) return;
+                if (!CheckAdd(p, args, "zone add")) return;
 
                 ZoneAll(p.level, args[1]);
                 Player.Message(p, "Added zone for &b" + args[1]);
@@ -92,12 +93,13 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        bool CheckAdd(Player p, string[] args) {
+        bool CheckAdd(Player p, string[] args, string cmd) {
             if (!CheckExtraPerm(p, 3)) { MessageNeedExtra(p, "create zones.", 3); return false; }
             if (args.Length == 1) { Help(p); return false; }
             if (!Formatter.ValidName(p, args[1], "player or rank")) return false;
             
-            args[1] = FindZoneOwner(p, args[1]);
+            string reason = args.Length > 2 ? args[2] : "";
+            args[1] = FindZoneOwner(p, cmd, args[1], ref reason);
             return args[1] != null;
         }
         
@@ -152,10 +154,10 @@ namespace MCGalaxy.Commands {
             return false;
         }
         
-        internal static string FindZoneOwner(Player p, string message) {
-            if (Group.Find(message) != null)
-                return "grp" + Group.Find(message).name;
-            return PlayerInfo.FindMatchesPreferOnline(p, message);
+        internal static string FindZoneOwner(Player p, string cmd, string name, ref string reason) {
+            if (Group.Find(name) != null)
+                return "grp" + Group.Find(name).name;
+            return RankCmd.FindName(p, "zone", cmd, "", name, ref reason);
         }
         
         public override void Help(Player p) {
