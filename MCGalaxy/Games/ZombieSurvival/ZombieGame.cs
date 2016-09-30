@@ -51,7 +51,7 @@ namespace MCGalaxy.Games {
                 if (levels == null) return false;
                 
                 CurLevelName = LevelPicker.GetRandomLevel(new Random(), levels);
-                CurLevel = LevelInfo.FindExact(CurLevelName) 
+                CurLevel = LevelInfo.FindExact(CurLevelName)
                     ?? CmdLoad.LoadLevel(null, CurLevelName);
                 if (CurLevel == null) return false;
             } else {
@@ -111,7 +111,7 @@ namespace MCGalaxy.Games {
         public void DisinfectPlayer(Player p) {
             if (!RoundInProgress || p == null) return;
             Infected.Remove(p);
-            Alive.Add(p);            
+            Alive.Add(p);
             ResetPlayerState(p, false);
         }
         
@@ -130,7 +130,7 @@ namespace MCGalaxy.Games {
             if (!p.Game.Invisible) return;
             p.SendCpeMessage(CpeMessageType.BottomRight2, "");
             p.Game.ResetInvisibility();
-            Entities.GlobalSpawn(p, false); 
+            Entities.GlobalSpawn(p, false);
         }
 
         internal void ChangeLevel(string next) {
@@ -150,17 +150,31 @@ namespace MCGalaxy.Games {
                 Server.mainLevel = CurLevel;
             
             online = PlayerInfo.Online.Items;
+            List<Player> players = new List<Player>(online.Length);
             foreach (Player pl in online) {
                 pl.Game.RatedMap = false;
                 pl.Game.PledgeSurvive = false;
                 if (!pl.level.name.CaselessEq(next) && pl.level.name.CaselessEq(lastLevel)) {
-                    pl.SendMessage("Going to the next map - &a" + next);
-                    PlayerActions.ChangeMap(pl, next);
+                    players.Add(pl);
                 }
             }
+            JoinInRandomOrder(players, next);
+            
             if (LastLevelName != "")
                 Command.all.Find("unload").Use(null, LastLevelName);
             LastLevelName = next;
+        }
+        
+        static void JoinInRandomOrder(List<Player> players, string next) {
+            Random rnd = new Random();
+            while (players.Count > 0) {
+                int index = rnd.Next(0, players.Count);
+                Player pl = players[index];
+                
+                pl.SendMessage("Going to the next map - &a" + next);
+                PlayerActions.ChangeMap(pl, next);
+                players.RemoveAt(index);
+            }
         }
 
         public void ResetState() {
@@ -223,12 +237,12 @@ namespace MCGalaxy.Games {
         
         public bool IsZombieMap(string name) {
             if (!Running) return false;
-            if (ZombieGameProps.IgnorePersonalWorlds && name.IndexOf('+') >= 0) 
+            if (ZombieGameProps.IgnorePersonalWorlds && name.IndexOf('+') >= 0)
                 return false;
-            if (ZombieGameProps.IgnoredLevelList.CaselessContains(name)) 
+            if (ZombieGameProps.IgnoredLevelList.CaselessContains(name))
                 return false;
             
-            return ZombieGameProps.LevelList.Count == 0 ? 
+            return ZombieGameProps.LevelList.Count == 0 ?
                 true : ZombieGameProps.LevelList.CaselessContains(name);
         }
         
