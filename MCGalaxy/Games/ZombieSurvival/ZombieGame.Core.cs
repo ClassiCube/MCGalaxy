@@ -91,7 +91,7 @@ namespace MCGalaxy.Games {
             Infected.Clear();
 
             Player first = PickFirstZombie(random, players);
-            CurLevel.ChatLevel(first.ColoredName + " %Sstarted the infection!");
+            CurLevel.ChatLevel("&c" + first.DisplayName + " %Sstarted the infection!");
             InfectPlayer(first, null);
 
             DoCoreGame(random);
@@ -213,7 +213,7 @@ namespace MCGalaxy.Games {
                             if (infectCombo >= 2) {
                                 killer.SendMessage("You gained " + (2 + infectCombo) + " " + Server.moneys);
                                 killer.SetMoney(killer.money + (2 + infectCombo));
-                                CurLevel.ChatLevel(killer.ColoredName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
+                                CurLevel.ChatLevel("&c" + killer.DisplayName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
                             }
                         } else {
                             infectCombo = 0;
@@ -270,7 +270,7 @@ namespace MCGalaxy.Games {
         void CheckHumanPledge(Player p, Player killer) {
             if (!p.Game.PledgeSurvive) return;
             p.Game.PledgeSurvive = false;
-            CurLevel.ChatLevel(p.ColoredName + " %Sbroke their pledge of not being infected.");
+            CurLevel.ChatLevel("&c" + p.DisplayName + " %Sbroke their pledge of not being infected.");
             
             if (killer == null) {
                 Player.Message(p, "As this was an automatic infection, you have not lost any &3" + Server.moneys);
@@ -290,7 +290,7 @@ namespace MCGalaxy.Games {
             } else if (setter == null) {
                 Player.Message(pKiller, "Cannot collect the bounty, as the player who set it is offline.");
             } else {
-                CurLevel.ChatLevel(pKiller.ColoredName + " %Scollected the bounty of &a" +
+                CurLevel.ChatLevel("&c" + pKiller.DisplayName + " %Scollected the bounty of &a" +
                                    bounty.Amount + " %S" + Server.moneys + " on " + p.ColoredName + "%S.");
                 
                 setter.SetMoney(Math.Max(0, setter.money - bounty.Amount));
@@ -308,8 +308,8 @@ namespace MCGalaxy.Games {
             }
             
             CurLevel.ChatLevel(String.Format(text,
-                                             Colors.red + pKiller.DisplayName + Colors.yellow,
-                                             Colors.red + pAlive.DisplayName + Colors.yellow));
+                                             "&c" + pKiller.DisplayName + "%S",
+                                             pAlive.ColoredName + "%S"));
         }
 
         static void UpdatePlayerColor(Player p, string color) {
