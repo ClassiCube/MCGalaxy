@@ -23,8 +23,9 @@ namespace MCGalaxy
     public sealed partial class Block
     {
         public static bool Walkthrough(byte block) {
-            return block == air || block == shrub || (block >= water && block <= lavastill) 
-                || (block >= yellowflower && block <= redmushroom) || block == rope;
+            return block == air || block == shrub || block == fire || block == rope
+                || (block >= water && block <= lavastill)
+                || (block >= yellowflower && block <= redmushroom);
         }
 
         public static bool AllowBreak(byte block) {    

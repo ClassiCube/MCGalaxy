@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "You may only perform that action on your own map."); return;
             }
 
-            if (cmd == "GO" || cmd == "GOTO") {
+            if (cmd == "GO" || cmd == "GOTO" || cmd == "JOIN") {
                 string map = null;
                 if (arg == "" || arg == "1") {
                     map = FirstMapName(p);
