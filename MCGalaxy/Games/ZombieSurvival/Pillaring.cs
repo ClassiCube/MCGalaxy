@@ -40,12 +40,12 @@ namespace MCGalaxy.Games.ZS {
             return false;
         }
 
-        static bool NotPillaring(byte block, byte old) {
-            if (block == Block.shrub) return true;
-            if (block >= Block.yellowflower && block <= Block.redmushroom) return true;
+        static bool NotPillaring(byte b, byte old) {
+            if (b == Block.shrub || b == Block.fire || b == Block.rope) return true;
+            if (b >= Block.yellowflower && b <= Block.redmushroom) return true;
             
             old = Block.Convert(old);
-            return old >= Block.water && block <= Block.lavastill;
+            return old >= Block.water && old <= Block.lavastill;
         }
         
         static bool CheckCoords(Player p, ushort x, ushort y, ushort z) {
