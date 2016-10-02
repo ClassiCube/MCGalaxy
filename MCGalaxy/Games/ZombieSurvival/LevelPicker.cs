@@ -74,18 +74,20 @@ namespace MCGalaxy.Games.ZS {
                 SendVoteMessage(pl, game);
             }
             
-            VoteCountdown(game, players);
+            VoteCountdown(game);
             Server.votingforlevel = false;
         }
         
-        static void VoteCountdown(ZombieGame game, Player[] players) {
+        static void VoteCountdown(ZombieGame game) {
             // Show message for non-CPE clients
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level != game.CurLevel || pl.HasCpeExt(CpeExt.MessageTypes)) continue;
                 pl.SendMessage("You have 20 seconds to vote for the next map");
             }
             
             for (int i = 0; i < 20; i++) {
+                players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl.level != game.CurLevel || !pl.HasCpeExt(CpeExt.MessageTypes)) continue;
                     pl.SendCpeMessage(CpeMessageType.BottomRight1, "&e" + (20 - i) + "s %Sleft to vote");
