@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             Player.Message(p, "Temp banned " + target + " for " + time.Shorten(true) + ".");
             if (args.Length <= 2) Player.AddNote(target, p, "T");
-            else Player.AddNote(target, p, "T", args[2]);
+            else Player.AddNote(target, p, "T", reason);
         }
         
         void AddTempban(Server.TempBan tBan) {

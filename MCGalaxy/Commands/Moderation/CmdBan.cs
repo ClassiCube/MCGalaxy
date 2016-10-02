@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Moderation {
             RankCmd.ChangeRank(target, group, Group.findPerm(LevelPermission.Banned), who);
             
             if (args.Length == 1) Player.AddNote(target, p, "B");
-            else Player.AddNote(target, p, "B", args[1]);
+            else Player.AddNote(target, p, "B", reason);
             Server.IRC.Say(banMsg);
             Server.s.Log("BANNED: " + target.ToLower() + " by " + banner);
         }

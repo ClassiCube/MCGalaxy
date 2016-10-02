@@ -59,7 +59,6 @@ namespace MCGalaxy.Commands {
             if (arg.CaselessEq("K")) return "Kicked";
             if (arg.CaselessEq("M")) return "Muted";
             if (arg.CaselessEq("B")) return "Banned";
-            if (arg.CaselessEq("W")) return "Warned";
             if (arg.CaselessEq("J")) return "Jailed";
             if (arg.CaselessEq("F")) return "Frozen";
             if (arg.CaselessEq("T")) return "Temp-Banned";

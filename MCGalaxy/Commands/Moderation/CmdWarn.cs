@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Moderation {
             reason = GetReason(p, reason);
             if (reason == null) return;
             
-            if (who == null) { WarnOffline(p, args); return; }
+            if (who == null) { WarnOffline(p, args, reason); return; }
             if (who == p) { Player.Message(p, "you can't warn yourself"); return; }
             if (p != null && p.Rank <= who.Rank) {
                 MessageTooHighRank(p, "warn", false); return;
@@ -52,10 +52,10 @@ namespace MCGalaxy.Commands.Moderation {
             
             who.warn++;
             if (args.Length == 1) Player.AddNote(who.name, p, "W");
-            else Player.AddNote(who.name, p, "W", args[1]);
+            else Player.AddNote(who.name, p, "W", reason);
         }
         
-        static void WarnOffline(Player p, string[] args) {
+        static void WarnOffline(Player p, string[] args, string reason) {
             if (!Server.LogNotes) { 
                 Player.Message(p, "Notes logging must be enabled to warn offline players."); return;
             }
@@ -64,8 +64,8 @@ namespace MCGalaxy.Commands.Moderation {
             if (offName == null) return;
             
             if (args.Length == 1) Player.AddNote(offName, p, "W");
-            else Player.AddNote(offName, p, "W", args[1]);
-            string reason = args.Length > 1 ? " for: " + args[1] : "";
+            else Player.AddNote(offName, p, "W", reason);
+            reason = args.Length > 1 ? " for: " + reason : "";
             Player.Message(p, "Warned {0}{1}.", offName, reason);
         }
         
