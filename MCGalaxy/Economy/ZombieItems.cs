@@ -46,9 +46,9 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.Message(p, "Syntax: %T/buy 10blocks [num]");
+            Player.Message(p, "%T/buy 10blocks [num]");
+            Player.Message(p, "%HCosts &a{0} * [num] %H{1}", Price, Server.moneys);
             Player.Message(p, "Increases the blocks you are able to place by 10 * [num].");
-            Player.Message(p, "Costs &f{0} * [num] &3{1}", Price, Server.moneys);
         }
     }
     
@@ -70,6 +70,13 @@ namespace MCGalaxy.Eco {
             
             Command.all.Find("queue").Use(p, "level " + map);
             Economy.MakePurchase(p, Price, "%3QueueLevel: " + map);
+        }
+        
+        protected internal override void OnStoreCommand(Player p) {
+            Player.Message(p, "%T/buy {0} [map name]", Name);
+            OutputItemInfo(p);
+            Player.Message(p, "The map used for the next round of " +
+                           "zombie survival will be the given map.");
         }
     }
     
@@ -156,8 +163,13 @@ namespace MCGalaxy.Eco {
         protected override void DoPurchase(Player p, string message, string[] args) { }
         
         protected internal override void OnStoreCommand(Player p) {
-            base.OnStoreCommand(p);
-            Player.Message(p, "%HLasts for " + Duration + " seconds before you reappear.");
+            Player.Message(p, "%T/buy " + Name);
+            OutputItemInfo(p);
+            
+            Player.Message(p, "Makes you invisibile to {0} - &cyou can still {1}",
+                           ForHumans ? "zombies" : "humans",
+                           ForHumans ? "be infected" : "infect humans");
+            Player.Message(p, "Lasts for " + Duration + " seconds before you reappear.");
         }
     }
     

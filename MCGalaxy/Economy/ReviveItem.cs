@@ -71,13 +71,15 @@ namespace MCGalaxy.Eco {
         protected override void DoPurchase(Player p, string message, string[] args) { }
         
         protected internal override void OnStoreCommand(Player p) {
-            base.OnStoreCommand(p);
             int time = ZombieGameProps.ReviveNoTime, expiry = ZombieGameProps.ReviveTooSlow;
             int potions = ZombieGameProps.ReviveTimes;
             Player.Message(p, "%T/buy " + Name);
-            Player.Message(p, "%HCannot be used in the last &a" + time + " %Hseconds of a round.");
-            Player.Message(p, "%HCan only be used within &a" + expiry + " %Hseconds after being infected.");
-            Player.Message(p, "%HYou can only buy &a" + potions + " %Hrevive potions per round.");
+            OutputItemInfo(p);
+            
+            Player.Message(p, "Lets you rejoin the humans - &cnot guaranteed to always work");
+            Player.Message(p, "  Cannot be used in the last &a" + time + " %Sseconds of a round.");
+            Player.Message(p, "  Can only be used within &a" + expiry + " %Sseconds after being infected.");
+            Player.Message(p, "  Can only buy &a" + potions + " %Srevive potions per round.");
         }
     }
 }
