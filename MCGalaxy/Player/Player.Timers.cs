@@ -33,7 +33,7 @@ namespace MCGalaxy {
         
         void LoginTimerElapsed(object sender, ElapsedEventArgs e) {
             if ( !Loading ) {
-                loginTimer.Stop();
+                DisposeTimer(loginTimer, LoginTimerElapsed);
                 if ( File.Exists("text/welcome.txt") ) {
                     try {
                         List<string> welcome = CP437Reader.ReadAllLines("text/welcome.txt");
@@ -46,15 +46,13 @@ namespace MCGalaxy {
                     CP437Writer.WriteAllText("text/welcome.txt", "Welcome to my server!");
                     SendMessage("Welcome to my server!");
                 }
-                loginTimer.Elapsed -= LoginTimerElapsed;
-                loginTimer.Dispose();
                 extraTimer.Start();
             }
             LastAction = DateTime.UtcNow;
         }
         
         void ExtraTimerElapsed(object sender, ElapsedEventArgs e) {
-            extraTimer.Stop();
+            DisposeTimer(extraTimer, ExtraTimerElapsed);
 
             try {
                 if (group.commands.Contains("inbox") && Database.TableExists("Inbox" + name) ) {
@@ -86,8 +84,6 @@ namespace MCGalaxy {
             
             if (Server.lava.active)
                 SendMessage("There is a &aLava Survival %Sgame active! Join it by typing /ls go");
-            extraTimer.Elapsed -= ExtraTimerElapsed;
-            extraTimer.Dispose();
         }
         
         void CheckTimerElapsed(object sender, ElapsedEventArgs e) {
@@ -121,17 +117,22 @@ namespace MCGalaxy {
         bool Moved() { return oldrot[0] != rot[0] || oldrot[1] != rot[1]; }
         
         void DisposeTimers() {
-            loginTimer.Stop();
-            loginTimer.Elapsed -= LoginTimerElapsed;
-            loginTimer.Dispose();
-
-            extraTimer.Stop();
-            extraTimer.Elapsed -= ExtraTimerElapsed;
-            extraTimer.Dispose();
-            
-            checkTimer.Stop();
-            checkTimer.Elapsed -= CheckTimerElapsed;
-            checkTimer.Dispose();
+            DisposeTimer(loginTimer, LoginTimerElapsed);
+            DisposeTimer(extraTimer, ExtraTimerElapsed);
+            DisposeTimer(checkTimer, CheckTimerElapsed);
+            ushort x = 0; x -= 1;
+        }
+        
+        void DisposeTimer(Timer timer, ElapsedEventHandler handler) {
+            // Note: Some frameworks throw an ObjectDisposedException, 
+            //       if a timer has already been disposed and we try to stop it
+            try {
+                timer.Stop();
+                timer.Elapsed -= handler;
+                timer.Dispose();
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+            }
         }
     }
 }
