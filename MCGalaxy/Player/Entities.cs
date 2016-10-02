@@ -33,7 +33,7 @@ namespace MCGalaxy {
                                        byte rotx, byte roty, bool self, string possession = "") {
             Player[] players = PlayerInfo.Online.Items;
             p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;  
-            TabList.UpdateAll(p, self);
+            TabList.Update(p, self);
             
             foreach (Player other in players) {
                 if ((other.Loading && p != other) || p.level != other.level) continue;

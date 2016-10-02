@@ -23,7 +23,7 @@ namespace MCGalaxy {
     /// <summary> Contains methods related to the management of tab list of player names. </summary>
     public static class TabList {
         
-    	 // Want nobody to be at top of list, banned to be bottom of list.
+         // Want nobody to be at top of list, banned to be bottom of list.
         const LevelPermission offset = LevelPermission.Nobody;
         
         /// <summary> Adds the given player to that player's tab list (if their client supports it). </summary>
@@ -39,8 +39,8 @@ namespace MCGalaxy {
         
         /// <summary> Gets the name and the group name for the given player. </summary>
         public static void GetEntry(Player p, Player dst, out string name, out string group) {
-        	string col = Entities.GetSupportedCol(dst, p.color);          
-            group = Server.TablistGlobal ? "On " + p.level.name : "&fPlayers";    	
+            string col = Entities.GetSupportedCol(dst, p.color);          
+            group = Server.TablistGlobal ? "On " + p.level.name : "&fPlayers";        
             name = col + p.truename;
             IGame game = p.level.CurrentGame();
             if (game != null) game.GetTabName(p, dst, ref name, ref group);
@@ -65,22 +65,14 @@ namespace MCGalaxy {
         /// <summary> Updates the tab list entry for this player to all other players 
         /// (whose clients support it) who can see the player in the tab list. </summary>
         internal static void Update(Player p, bool self) {
-        	if (Server.TablistGlobal) UpdateAll(p, self);
-        	else UpdateToLevel(p, self);
-        }
-        
-        
-    	/// <summary> Updates the tab list entry for this player to all other players 
-        /// (whose clients support it) in the server. </summary>
-        internal static void UpdateAll(Player p, bool self) {
-        	if (!Server.TablistGlobal) return;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {
-            	if (p == other) {
-            		if (self) Add(other, p, 0xFF);
-            		continue;
-            	}
-            	
+                if (p == other) {
+                    if (self) Add(other, p, 0xFF);
+                    continue;
+                }
+                if (!Server.TablistGlobal && p.level != other.level) continue;
+                
                 if (Entities.CanSeeEntity(other, p))
                     Add(other, p, p.id);
                 if (Entities.CanSeeEntity(p, other))
@@ -91,14 +83,14 @@ namespace MCGalaxy {
         /// <summary> Updates the tab list entry for this player to all other players 
         /// (whose clients support it) in the server. </summary>
         internal static void RemoveAll(Player p, bool self, bool toVisible) {
-        	if (!Server.TablistGlobal) return;
+            if (!Server.TablistGlobal) return;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {               
-            	if (p == other) {
-            		if (self) Remove(other, 0xFF); 
-            		continue;
-            	}
-            	
+                if (p == other) {
+                    if (self) Remove(other, 0xFF); 
+                    continue;
+                }
+                
                 bool despawn = !Entities.CanSeeEntity(other, p);
                 if (toVisible) despawn = !despawn;
                 if (despawn) Remove(other, p.id);
@@ -106,22 +98,6 @@ namespace MCGalaxy {
                 despawn = !Entities.CanSeeEntity(p, other);
                 if (toVisible) despawn = !despawn;
                 if (despawn) Remove(p, other.id);
-            }
-        }
-        
-        /// <summary> Updates the tab list entry for this player to all other players 
-        /// (whose clients support it) in the player's world. </summary>
-        internal static void UpdateToLevel(Player p, bool self) {
-        	if (Server.TablistGlobal) return;
-            Player[] players = PlayerInfo.Online.Items;          
-            foreach (Player other in players) {
-                if ((other.Loading && p != other) || p.level != other.level) continue;
-                
-                if (p != other && Entities.CanSeeEntity(other, p)) {
-                    Add(other, p, p.id);
-                } else if (p == other && self) {
-                    Add(other, p, 0xFF);
-                }
             }
         }
     }
