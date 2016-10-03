@@ -69,20 +69,15 @@ namespace MCGalaxy.SQL {
         public virtual void DeleteTable(string table) {
             string syntax = "DROP TABLE `" + table + "`";
             Database.Execute(syntax);
-        }
-        
-        /// <summary> Retrieves all rows for the given table from the database. </summary>
-        public virtual DataTable GetAllRows(string table, string columns) {
-            string syntax = "SELECT " + columns + " FROM `" + table + "`";
-            return Database.Fill(syntax);
-        }
+        }        
         
         /// <summary> Retrieves rows for the given table from the database. </summary>
-        /// <remarks> modifier is SQL which can be used to retrieve only certain rows, 
+        /// <remarks> modifier is optional SQL which can be used to retrieve only certain rows, 
         /// return rows in a certain order, etc.</remarks>
         public virtual DataTable GetRows(string table, string columns, 
-                                         string modifier, params object[] args) {
-            string syntax = "SELECT " + columns + " FROM `" + table + "` " + modifier;
+                                         string modifier = "", params object[] args) {
+            string syntax = "SELECT " + columns + " FROM `" + table + "`";
+            if (modifier != "") syntax += " " + modifier;
             return Database.Fill(syntax, args);
         }
     }

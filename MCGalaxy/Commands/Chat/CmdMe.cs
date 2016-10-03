@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
             if (p.joker) { Player.Message(p, "Cannot use /me while jokered."); return; }
             
             string msg = p.color + "*" + Colors.StripColors(p.DisplayName) + " " + message;
-            if (TryMessage(p, msg) && p.level.worldChat)
+            if (TryMessage(p, msg))
                 Player.RaisePlayerAction(p, PlayerAction.Me, message);
         }
         

@@ -123,7 +123,7 @@ namespace MCGalaxy.Commands.Building {
 
         void ShowPortals(Player p) {
             p.showPortals = !p.showPortals;
-            using (DataTable table = Database.Backend.GetAllRows("Portals" + p.level.name, "*")) {
+            using (DataTable table = Database.Backend.GetRows("Portals" + p.level.name, "*")) {
                 if (p.showPortals) {
                     ShowPortals(p, table);
                 } else {

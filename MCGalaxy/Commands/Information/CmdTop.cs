@@ -52,66 +52,64 @@ namespace MCGalaxy.Commands {
                 return;
             }
             
-            string columnName, title;
-            string select = "Name", table = "Players";
-            string order = "desc";
+            string col, title;
+            string table = "Players", order = "desc";
             switch (args[0]) {
                 case "1":
-                    columnName = "TotalLogin";
+                    col = "TotalLogin";
                     title = "&aTop " + strLimit + " number of logins:";
                     break;
                 case "2":
-                    columnName = "TotalDeaths";
+                    col = "TotalDeaths";
                     title = "&aTop " + strLimit + " number of deaths:";
                     break;
                 case "3":
-                    columnName = "money";
+                    col = "money";
                     title = "&aTop " + strLimit + " amounts of money:";
-                    select = "player"; table = "Economy";
                     break;
                 case "4":
-                    columnName = "firstlogin";
+                    col = "firstlogin";
                     title = "&aFirst players:";
                     order = "asc";
                     break;
                 case "5":
-                    columnName = "lastlogin";
+                    col = "lastlogin";
                     title = "&aMost recent players:";
                     break;
                 case "6":
-                    columnName = "TotalKicked";
+                    col = "TotalKicked";
                     title = "&aTop " + strLimit + " number of kicks:";
                     break;
                 case "7":
-                    columnName = "totalBlocks & " + PlayerData.LowerBitsMask;
+                    col = "totalBlocks & " + PlayerData.LowerBitsMask;
                     title = "&aTop " + strLimit + " number of blocks modified:";
                     break;
                 case "8":
-                    columnName = "totalCuboided & " + PlayerData.LowerBitsMask;
+                    col = "totalCuboided & " + PlayerData.LowerBitsMask;
                     title = "&aTop " + strLimit + " number of blocks drawn:";
                     break;
                 case "9":
-                    columnName = "totalBlocks >> " + PlayerData.LowerBits;
+                    col = "totalBlocks >> " + PlayerData.LowerBits;
                     title = "&aTop " + strLimit + " number of blocks placed:";
                     break;
                 case "10":
-                    columnName = "totalCuboided >> " + PlayerData.LowerBits;
+                    col = "totalCuboided >> " + PlayerData.LowerBits;
                     title = "&aTop " + strLimit + " number of blocks deleted:";
                     break;
                 case "11":
-                    columnName = "TotalInfected";
+                    col = "TotalInfected";
                     title = "&aTop total infections:";
                     table = "ZombieStats"; break;
                 case "12":
-                    columnName = "TotalRounds";
+                    col = "TotalRounds";
                     title = "&aTop rounds survived:";
                     table = "ZombieStats"; break;
                 case "13":
-                    columnName = "MaxInfected";
+                    col = "MaxInfected";
                     title = "&aTop consecutive infections:";
                     table = "ZombieStats"; break;
                 case "14":
-                    columnName = "MaxRounds";
+                    col = "MaxRounds";
                     title = "&aTop consecutive rounds survived:";
                     table = "ZombieStats"; break;
                 default:
@@ -119,14 +117,12 @@ namespace MCGalaxy.Commands {
                     return;
             }
             
-            const string query = "SELECT distinct {0}, {1} from {2} order by {3} {4} limit {5}";
-            DataTable db = Database.Fill(
-                string.Format(query, select, columnName.ToLower(), table,
-                              columnName.ToLower(), order, limit));
+            DataTable db = Database.Backend.GetRows(table, "DISTINCT Name, " + col, 
+                                                    "ORDER BY " + col + " " + order + " LIMIT " + limit);
             
             Player.Message(p, title);
             for (int i = 0; i < db.Rows.Count; i++) {
-                Player.Message(p, (i + 1) + ") " + db.Rows[i][select] + " - [" + db.Rows[i][columnName] + "]");
+                Player.Message(p, (i + 1) + ") " + db.Rows[i]["Name"] + " - [" + db.Rows[i][col] + "]");
             }
             db.Dispose();
         }

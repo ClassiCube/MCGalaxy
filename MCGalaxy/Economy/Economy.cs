@@ -59,7 +59,7 @@ PRIMARY KEY(player)
 
         public static void LoadDatabase() {
             Database.Execute(createTable);
-            using (DataTable eco = Database.Backend.GetAllRows("Economy", "*"))
+            using (DataTable eco = Database.Backend.GetRows("Economy", "*"))
                 foreach (DataRow row in eco.Rows)
             {
                 int money = PlayerData.ParseInt(row["money"].ToString());

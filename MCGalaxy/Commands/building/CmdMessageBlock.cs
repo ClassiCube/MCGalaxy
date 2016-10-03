@@ -133,7 +133,7 @@ namespace MCGalaxy.Commands.Building {
 
         void ShowMessageBlocks(Player p) {
             p.showMBs = !p.showMBs;
-            using (DataTable table = Database.Backend.GetAllRows("Messages" + p.level.name, "*")) {
+            using (DataTable table = Database.Backend.GetRows("Messages" + p.level.name, "*")) {
                 if (p.showMBs) {
                     ShowMessageBlocks(p, table);
                 } else {
