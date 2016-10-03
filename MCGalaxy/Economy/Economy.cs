@@ -159,7 +159,8 @@ PRIMARY KEY(player)
         }
         
         public static void UpdateMoney(string name, int money) {
-            Database.Execute("UPDATE Players SET Money=@0 WHERE Name=@1", money, name);
+            Database.Backend.UpdateRows("Players", "Money = @1", 
+                                        "WHERE Name = @0", name, money);
         }
         
         public static List<Item> Items = new List<Item>() { new ColorItem(), new TitleColorItem(),

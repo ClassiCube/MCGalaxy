@@ -71,8 +71,8 @@ namespace MCGalaxy {
             {
                 if (Database.TableExists("Portals" + src)) {
                     Database.Backend.RenameTable("Portals" + src, "Portals" + dst);
-                    string updateSyntax = "UPDATE `Portals" + dst + "` SET ExitMap=@1 WHERE ExitMap=@0";
-                    Database.Execute(updateSyntax, src, dst);
+                    Database.Backend.UpdateRows("Portals" + dst, "ExitMap = @1", 
+                                                "WHERE ExitMap = @0", src, dst);
                 }
                 
                 if (Database.TableExists("Messages" + src)) {
@@ -209,8 +209,8 @@ namespace MCGalaxy {
                 if (Database.TableExists("Portals" + src)) {
                     Database.Execute(String.Format(LevelDB.createPortals, dst));
                     Database.Backend.CopyAllRows("Portals" + src, "Portals" + dst);                    
-                    string updateSyntax = "UPDATE `Portals" + dst + "` SET ExitMap=@1 WHERE ExitMap=@0";
-                    Database.Execute(updateSyntax, src, dst);
+                    Database.Backend.UpdateRows("Portals" + dst, "ExitMap = @1", 
+                                                "WHERE ExitMap = @0", src, dst);
                 }
                 
                 if (Database.TableExists("Messages" + src)) {

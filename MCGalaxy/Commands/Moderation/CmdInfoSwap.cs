@@ -35,10 +35,10 @@ namespace MCGalaxy.Commands {
             if (!Formatter.ValidName(p, args[1], "player")) return;
             
             if (PlayerInfo.FindExact(args[0]) != null) {
-            	Player.Message(p, "\"{0}\" must be offline to use /infoswap.", args[0]); return;
+                Player.Message(p, "\"{0}\" must be offline to use /infoswap.", args[0]); return;
             }
             if (PlayerInfo.FindExact(args[1]) != null) {
-            	Player.Message(p, "\"{0}\" must be offline to use /infoswap.", args[1]); return;
+                Player.Message(p, "\"{0}\" must be offline to use /infoswap.", args[1]); return;
             }
             
             PlayerData src = PlayerInfo.FindData(args[0]);
@@ -67,15 +67,17 @@ namespace MCGalaxy.Commands {
         void SetData(PlayerData src, string dstName) {
             string first = src.FirstLogin.ToString(format);
             string last = src.LastLogin.ToString(format);
-            const string syntax = "UPDATE Players SET totalBlocks=@0, totalCuboided=@1" +
-            	", color=@2, totalDeaths=@3, FirstLogin=@4, IP=@5, totalKicked=@6, LastLogin=@7" +
-            	", totalLogin=@8, Money=@9, Title=@10, title_color=@11, TimeSpent=@12 WHERE Name=@13";
-            
             long blocks = PlayerData.BlocksPacked(src.TotalPlaced, src.TotalModified);
             long cuboided = PlayerData.CuboidPacked(src.TotalDeleted, src.TotalDrawn);
-            Database.Execute(syntax, blocks, cuboided, src.Color, src.Deaths,
-                             first, src.IP, src.Kicks, last, src.Logins,
-                             src.Money, src.Title, src.TitleColor, src.TotalTime, dstName); 
+            
+            const string columns = "totalBlocks=@0, totalCuboided=@1, color=@2" +
+                ", totalDeaths=@3, FirstLogin=@4, IP=@5, totalKicked=@6, LastLogin=@7" +
+                ", totalLogin=@8, Money=@9, Title=@10, title_color=@11, TimeSpent=@12";
+            Database.Backend.UpdateRows(
+                "Players", columns, "WHERE Name=@13",
+                blocks, cuboided, src.Color,
+                src.Deaths, first, src.IP, src.Kicks, last, src.Logins,
+                src.Money, src.Title, src.TitleColor, src.TotalTime, dstName);
         }
         
         void SwapGroups(PlayerData src, PlayerData dst, Group srcGroup, Group dstGroup) {

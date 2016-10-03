@@ -427,8 +427,8 @@ tags     MEDIUMINT UNSIGNED{1});";
             //MYSQL!
             cache.ForEach(delegate(Data d) {
                 d.hasflag = false;
-                Database.Execute("UPDATE CTF SET Points=@1, Captures=@2, tags=@3 WHERE Name=@0", 
-                                 d.p.name, d.points, d.cap, d.tag);
+                Database.Backend.UpdateRows("CTF", "Points=@1, Captures=@2, tags=@3", 
+                                            "WHERE Name = @0", d.p.name, d.points, d.cap, d.tag);
             });
             nextmap = Vote();
             Chat.MessageLevel(mainlevel, "Starting a new game!");

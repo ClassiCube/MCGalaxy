@@ -174,11 +174,7 @@ namespace MCGalaxy.Commands {
         }
         
         static void UpdateDB(string name, string value, string column) {
-            if (value != "") {
-                Database.Execute("UPDATE Players SET " + column + "=@1 WHERE Name=@0", name, value);
-            } else {
-                Database.Execute("UPDATE Players SET " + column + "='' WHERE Name=@0", name);
-            }
+            Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, value);
         }
         
         static void MessageDataChanged(Player p, string name, string type, string value) {

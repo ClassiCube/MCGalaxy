@@ -38,13 +38,13 @@ namespace MCGalaxy.Commands {
 
             if (title == "") {
                 Player.SendChatFrom(who, who.FullName + " %Shad their title removed.", false);
-                Database.Execute("UPDATE Players SET Title = '' WHERE Name = @0", who.name);
             } else {
                 Player.SendChatFrom(who, who.FullName + " %Swas given the title of &b[" + title + "&b]", false);
-                Database.Execute("UPDATE Players SET Title = @1 WHERE Name = @0", who.name, title);
-            }        
+            }
+            
             who.title = title;
             who.SetPrefix();
+            Database.Backend.UpdateRows("Players", "Title = @1", "WHERE Name = @0", who.name, title);
         }
         
         public override void Help(Player p) {
