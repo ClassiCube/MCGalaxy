@@ -34,7 +34,7 @@ namespace MCGalaxy.SQL {
         public abstract BulkTransaction CreateBulk();
         
         /// <summary> Returns a new ParameterisedQuery instance, which executes sql statements 
-        /// and manages binding of parameteries for sql queries. </summary>
+        /// and manages binding of parameters for sql queries. </summary>
         public abstract ParameterisedQuery CreateParameterised();
         
         /// <summary> Returns the shared static ParamterisedQuery instance, that is only used 
