@@ -381,7 +381,7 @@ namespace MCGalaxy {
         
         void RemoveOldLevelCustomBlocks(Level oldLevel) {
             BlockDefinition[] defs = oldLevel.CustomBlockDefs;
-            for (int i = Block.CpeCount; i < 256; i++) {
+            for (int i = 1; i < 256; i++) {
                 BlockDefinition def = defs[i];
                 if (def == null || def == BlockDefinition.GlobalDefs[i]) continue;
                 SendRaw(Opcode.CpeRemoveBlockDefinition, (byte)i);

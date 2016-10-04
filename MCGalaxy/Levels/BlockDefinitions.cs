@@ -187,12 +187,13 @@ namespace MCGalaxy {
             for (int i = 1; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
                 if (def == null) continue;
-                if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0)
+                if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
                     SendDefineBlockExt(pl, def, true);
-                else if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0)
+                } else if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0) {
                     SendDefineBlockExt(pl, def, false);
-                else
+                } else {
                     SendDefineBlock(pl, def);
+                }
                 
                 if (pl.HasCpeExt(CpeExt.BlockPermissions))
                     pl.SendSetBlockPermission(def.BlockID, pl.level.CanPlace, pl.level.CanDelete);

@@ -539,9 +539,6 @@ namespace MCGalaxy.Commands.CPE {
             if (blockId <= 0 || blockId >= 255) {
                 Player.Message(p, "&cBlock id must be between 1-254"); return false;
             }
-            if (!global && blockId < Block.CpeCount) {
-                Player.Message(p, "&cYou can only redefine standard blocks with /gb."); return false;
-            }
             return true;
         }
         
