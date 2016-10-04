@@ -51,77 +51,60 @@ namespace MCGalaxy.Generator {
             }
             return true;
         }
-        
-        unsafe static void MapSet(int width, int length, byte* ptr, int yStart, int yEnd, byte block) {
-            int start = yStart * length * width;
-            int end = (yEnd * length + (length - 1)) * width + (width - 1);
-            Utils.memset((IntPtr)ptr, block, start, end - start + 1);
+
+        static bool GenEmpty(MapGenArgs args) {
+            int maxX = args.Level.Width - 1, maxZ = args.Level.Length - 1;
+            Cuboid(args, 0, 0, 0, maxX, 0, maxZ, () => Block.blackrock);
+            return true;
         }
         
         static bool GenPixel(MapGenArgs args) {
-            int width = args.Level.Width, height = args.Level.Height, length = args.Level.Length;
-            int index = 0;
-            byte[] blocks = args.Level.blocks;
+            int maxX = args.Level.Width - 1, maxY = args.Level.Height - 1, maxZ = args.Level.Length - 1;
+            Func<byte> block = () => Block.white;
             
-            for (int y = 0; y < height; ++y)
-                for (int z = 0; z < length; ++z)
-                    for (int x = 0; x < width; ++x)
-            {
-                if (y == 0)
-                    blocks[index] = Block.blackrock;
-                else if (x == 0 || x == width - 1 || z == 0 || z == length - 1)
-                    blocks[index] = Block.white;
-                index++;
-            }
-            return true;
-        }
-
-        static bool GenEmpty(MapGenArgs args) {
-            int width = args.Level.Width, length = args.Level.Length;
-            int index = 0;
-            byte[] blocks = args.Level.blocks;
+            // Cuboid the four walls
+            Cuboid(args, 0, 1, 0,    maxX, maxY, 0, block);
+            Cuboid(args, 0, 1, maxZ, maxX, maxY, maxZ, block);
+            Cuboid(args, 0, 1, 0,    0, maxY, maxZ, block);
+            Cuboid(args, maxX, 1, 0, maxX, maxY, maxZ, block);
             
-            for (int z = 0; z < length; ++z)
-                for (int x = 0; x < width; ++x)
-            {
-                blocks[index++] = Block.blackrock;
-            }
+            // Cuboid base
+            Cuboid(args, 0, 0, 0, maxX, 0, maxZ, () => Block.blackrock);
             return true;
         }
         
         static bool GenSpace(MapGenArgs args) {
+            int maxX = args.Level.Width - 1, maxY = args.Level.Height - 1, maxZ = args.Level.Length - 1;
             Random rand = args.UseSeed ? new Random(args.Seed) : new Random();
-            int width = args.Level.Width, height = args.Level.Height, length = args.Level.Length;
-            int index = 0;
-            byte[] blocks = args.Level.blocks;
+            Func<byte> block = () => rand.Next(100) == 0 ? Block.iron : Block.obsidian;
+
+            // Cuboid the four walls
+            Cuboid(args, 0, 2, 0,    maxX, maxY, 0, block);
+            Cuboid(args, 0, 2, maxZ, maxX, maxY, maxZ, block);
+            Cuboid(args, 0, 2, 0,    0, maxY, maxZ, block);
+            Cuboid(args, maxX, 2, 0, maxX, maxY, maxZ, block);
             
-            for (int y = 0; y < height; ++y)
-                for (int z = 0; z < length; ++z)
-                    for (int x = 0; x < width; ++x)
-            {
-                if (y == 0)
-                    blocks[index] = Block.blackrock;
-                else if (x == 0 || x == width - 1 || z == 0 || z == length - 1 || y == 1 || y == height - 1)
-                    blocks[index] = rand.Next(100) == 0 ? Block.iron : Block.obsidian;
-                index++;
-            }
+            // Cuboid base and top
+            Cuboid(args, 0, 0, 0,    maxX, 0, maxZ, () => Block.blackrock);
+            Cuboid(args, 0, 1, 0,    maxX, 1, maxZ, block);
+            Cuboid(args, 0, maxY, 0, maxX, maxY, maxZ, block);
             return true;
         }
         
         static bool GenRainbow(MapGenArgs args) {
+            int maxX = args.Level.Width - 1, maxY = args.Level.Height - 1, maxZ = args.Level.Length - 1;
             Random rand = args.UseSeed ? new Random(args.Seed) : new Random();
-            int width = args.Level.Width, height = args.Level.Height, length = args.Level.Length;
-            int index = 0;
-            byte[] blocks = args.Level.blocks;
+            Func<byte> block = () => (byte)rand.Next(Block.red, Block.white);
+
+            // Cuboid the four walls
+            Cuboid(args, 0, 1, 0,    maxX, maxY, 0, block);
+            Cuboid(args, 0, 1, maxZ, maxX, maxY, maxZ, block);
+            Cuboid(args, 0, 1, 0,    0, maxY, maxZ, block);
+            Cuboid(args, maxX, 1, 0, maxX, maxY, maxZ, block);
             
-            for (int y = 0; y < height; ++y)
-                for (int z = 0; z < length; ++z)
-                    for (int x = 0; x < width; ++x)
-            {
-                if (y == 0 || y == height - 1 || x == 0 || x == width - 1 || z == 0 || z == length - 1)
-                    blocks[index] = (byte)rand.Next(Block.red, Block.white);
-                index++;
-            }
+            // Cuboid base and top
+            Cuboid(args, 0, 0, 0,    maxX, 0, maxZ, block);
+            Cuboid(args, 0, maxY, 0, maxX, maxY, maxZ, block);
             return true;
         }
         
@@ -153,8 +136,29 @@ namespace MCGalaxy.Generator {
             return GenSimple(args);
         }
         
+        
         static bool GenSimple(MapGenArgs args) {
             return new RealisticMapGen().GenerateMap(args);
+        }
+        
+        unsafe static void MapSet(int width, int length, byte* ptr, 
+                                  int yStart, int yEnd, byte block) {
+            int start = (yStart * length) * width;
+            int end = (yEnd * length + (length - 1)) * width + (width - 1);
+            Utils.memset((IntPtr)ptr, block, start, end - start + 1);
+        }
+        
+        static void Cuboid(MapGenArgs args, int minX, int minY, int minZ,
+                           int maxX, int maxY, int maxZ, Func<byte> block) {
+            int width = args.Level.Width, height = args.Level.Height, length = args.Level.Length;
+            byte[] blocks = args.Level.blocks;
+            
+            for (int y = minY; y <= maxY; y++)
+                for (int z = minZ; z <= maxZ; z++)
+                    for (int x = minX; x <= maxX; x++)
+            {
+                blocks[x + width * (z + y * length)] = block();
+            }
         }
     }
 }

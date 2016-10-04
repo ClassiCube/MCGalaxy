@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands {
                 }             
             }
             
-            DataTable table = Database.Backend.GetAllRows("Players", "COUNT(id)");
+            DataTable table = Database.Backend.GetRows("Players", "COUNT(id)");
             count = int.Parse(table.Rows[0]["COUNT(id)"].ToString());
             table.Dispose();
             return count;

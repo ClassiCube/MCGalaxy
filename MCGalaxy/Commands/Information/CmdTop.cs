@@ -33,106 +33,119 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Use(Player p, string message) {
-            string[] args;
-            if (message == "" || (args = message.Split(' ')).Length < 2) {
-                Help(p); return;
-            }
+            string[] args = message.Split(' ');
+            if (args.Length < 2) { Help(p); return; }
             
-            string strLimit = args[1];
-            int limit = 0;
-            if (!Int32.TryParse(strLimit, out limit)) {
-                Player.Message(p, "/Top: Invalid limit \"{0}\".", strLimit);
-                return;
-            }
-            if (limit < 1) {
-                Player.Message(p, "/Top: \"{0}\" is too small a limit, the min is 1.", strLimit);
-                return;
-            } else if (limit > 15) {
-                Player.Message(p, "/Top: \"{0}\" is too big a limit, the max is 15.", strLimit);
-                return;
-            }
+            int limit = ParseLimit(p, args);
+            int offset = ParseOffset(p, args);
+            if (limit == -1 || offset == -1) return;
             
-            string columnName, title;
-            string select = "Name", table = "Players";
-            string order = "desc";
+            string col, title;
+            string table = "Players", order = "desc";
             switch (args[0]) {
                 case "1":
-                    columnName = "TotalLogin";
-                    title = "&aTop " + strLimit + " number of logins:";
+                    col = "TotalLogin";
+                    title = "&aMost logins:";
                     break;
                 case "2":
-                    columnName = "TotalDeaths";
-                    title = "&aTop " + strLimit + " number of deaths:";
+                    col = "TotalDeaths";
+                    title = "&aMost deaths:";
                     break;
                 case "3":
-                    columnName = "money";
-                    title = "&aTop " + strLimit + " amounts of money:";
-                    select = "player"; table = "Economy";
+                    col = "money";
+                    title = "&aMost " + Server.moneys + ":";
                     break;
                 case "4":
-                    columnName = "firstlogin";
-                    title = "&aFirst players:";
+                    col = "firstlogin";
+                    title = "&aOldest players:";
                     order = "asc";
                     break;
                 case "5":
-                    columnName = "lastlogin";
+                    col = "lastlogin";
                     title = "&aMost recent players:";
                     break;
                 case "6":
-                    columnName = "TotalKicked";
-                    title = "&aTop " + strLimit + " number of kicks:";
+                    col = "TotalKicked";
+                    title = "&aMost times kicked:";
                     break;
                 case "7":
-                    columnName = "totalBlocks & " + PlayerData.LowerBitsMask;
-                    title = "&aTop " + strLimit + " number of blocks modified:";
+                    col = "totalBlocks & " + PlayerData.LowerBitsMask;
+                    title = "&aMost blocks modified:";
                     break;
                 case "8":
-                    columnName = "totalCuboided & " + PlayerData.LowerBitsMask;
-                    title = "&aTop " + strLimit + " number of blocks drawn:";
+                    col = "totalCuboided & " + PlayerData.LowerBitsMask;
+                    title = "&aMost blocks drawn:";
                     break;
                 case "9":
-                    columnName = "totalBlocks >> " + PlayerData.LowerBits;
-                    title = "&aTop " + strLimit + " number of blocks placed:";
+                    col = "totalBlocks >> " + PlayerData.LowerBits;
+                    title = "&aMost blocks placed:";
                     break;
                 case "10":
-                    columnName = "totalCuboided >> " + PlayerData.LowerBits;
-                    title = "&aTop " + strLimit + " number of blocks deleted:";
+                    col = "totalCuboided >> " + PlayerData.LowerBits;
+                    title = "&aMost blocks deleted:";
                     break;
                 case "11":
-                    columnName = "TotalInfected";
-                    title = "&aTop total infections:";
+                    col = "TotalInfected";
+                    title = "&aMost players infected:";
                     table = "ZombieStats"; break;
                 case "12":
-                    columnName = "TotalRounds";
-                    title = "&aTop rounds survived:";
+                    col = "TotalRounds";
+                    title = "&aMost rounds survived:";
                     table = "ZombieStats"; break;
                 case "13":
-                    columnName = "MaxInfected";
-                    title = "&aTop consecutive infections:";
+                    col = "MaxInfected";
+                    title = "&aMost consecutive infections:";
                     table = "ZombieStats"; break;
                 case "14":
-                    columnName = "MaxRounds";
-                    title = "&aTop consecutive rounds survived:";
+                    col = "MaxRounds";
+                    title = "&aMost consecutive rounds survived:";
                     table = "ZombieStats"; break;
                 default:
                     Player.Message(p, "/Top: Unrecognised type \"{0}\".", args[0]);
                     return;
             }
             
-            const string query = "SELECT distinct {0}, {1} from {2} order by {3} {4} limit {5}";
-            DataTable db = Database.Fill(
-                string.Format(query, select, columnName.ToLower(), table,
-                              columnName.ToLower(), order, limit));
+            string strLimit = " LIMIT " + offset + "," + limit;
+            DataTable db = Database.Backend.GetRows(table, "DISTINCT Name, " + col, 
+                                                    "ORDER BY " + col + " " + order + strLimit);
             
             Player.Message(p, title);
             for (int i = 0; i < db.Rows.Count; i++) {
-                Player.Message(p, (i + 1) + ") " + db.Rows[i][select] + " - [" + db.Rows[i][columnName] + "]");
+                Player.Message(p, (i + 1) + ") " + db.Rows[i]["Name"] + " - [" + db.Rows[i][col] + "]");
             }
             db.Dispose();
         }
         
+        static int ParseLimit(Player p, string[] args) {
+            int limit = 0;
+            if (!Int32.TryParse(args[1], out limit)) {
+                Player.Message(p, "&c\"{0}\" is not an integer.", args[1]); return -1;
+            }
+            
+            if (limit < 1) {
+                Player.Message(p, "&c\"{0}\" is too small, the min limit is 1.", args[1]); return -1;
+            }
+            if (limit > 15) {
+                Player.Message(p, "&c\"{0}\" is too large, the max limit is 15.", args[1]); return -1;
+            }
+            return limit;
+        }
+        
+        static int ParseOffset(Player p, string[] args) {
+            if (args.Length <= 2) return 0;
+            int offset = 0;
+            if (!Int32.TryParse(args[2], out offset)) {
+                Player.Message(p, "&c\"{0}\" is not an integer.", args[2]); return -1;
+            }            
+
+            if (offset < 0) {
+                Player.Message(p, "&cOffset must be greater than or equal to 0.", args[2]); return -1;
+            }
+            return offset;         
+        }
+        
         public override void Help(Player p) {
-            Player.Message(p, "%T/top [stat] [number of players to show]");
+            Player.Message(p, "%T/top [stat] [number of players to show] <offset>");
             Player.Message(p, "%HPrints a list of players who have the " +
                            "most/top of a particular stat. Available stats:");
             

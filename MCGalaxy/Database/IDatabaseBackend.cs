@@ -34,7 +34,7 @@ namespace MCGalaxy.SQL {
         public abstract BulkTransaction CreateBulk();
         
         /// <summary> Returns a new ParameterisedQuery instance, which executes sql statements 
-        /// and manages binding of parameteries for sql queries. </summary>
+        /// and manages binding of parameters for sql queries. </summary>
         public abstract ParameterisedQuery CreateParameterised();
         
         /// <summary> Returns the shared static ParamterisedQuery instance, that is only used 
@@ -56,7 +56,14 @@ namespace MCGalaxy.SQL {
         /// <summary> Adds a new coloumn to the given table. </summary>
         /// <remarks> Note colAfter is only a hint - some database backends ignore this. </remarks>
         public abstract void AddColumn(string table, string column, 
-                                       string colype, string colAfter);
+                                       string colType, string colAfter);
+        
+        /// <summary> Completely removes the given table from the database. </summary>
+        public virtual void DeleteTable(string table) {
+            string syntax = "DROP TABLE `" + table + "`";
+            Database.Execute(syntax);
+        }
+        
         
         /// <summary> Inserts/Copies all the rows from the source table into the destination table. </summary>
         /// <remarks> Note: This may work incorrectly if the tables have different schema. </remarks>
@@ -65,25 +72,23 @@ namespace MCGalaxy.SQL {
             Database.Execute(syntax);
         }
         
-        /// <summary> Completely removes the given table from the database. </summary>
-        public virtual void DeleteTable(string table) {
-            string syntax = "DROP TABLE `" + table + "`";
-            Database.Execute(syntax);
-        }
-        
-        /// <summary> Retrieves all rows for the given table from the database. </summary>
-        public virtual DataTable GetAllRows(string table, string columns) {
-            string syntax = "SELECT " + columns + " FROM `" + table + "`";
-            return Database.Fill(syntax);
-        }
-        
         /// <summary> Retrieves rows for the given table from the database. </summary>
-        /// <remarks> modifier is SQL which can be used to retrieve only certain rows, 
+        /// <remarks> modifier is optional SQL which can be used to retrieve only certain rows, 
         /// return rows in a certain order, etc.</remarks>
         public virtual DataTable GetRows(string table, string columns, 
-                                         string modifier, params object[] args) {
-            string syntax = "SELECT " + columns + " FROM `" + table + "` " + modifier;
+                                         string modifier = "", params object[] args) {
+            string syntax = "SELECT " + columns + " FROM `" + table + "`";
+            if (modifier != "") syntax += " " + modifier;
             return Database.Fill(syntax, args);
+        }
+        
+        /// <summary> Updates rows for the given table from the database. </summary>
+        /// <remarks> modifier is optional SQL which can be used to update only certain rows.</remarks>
+        public virtual void UpdateRows(string table, string columns, 
+                                       string modifier = "", params object[] args) {
+            string syntax = "UPDATE `" + table + "` SET " + columns;
+            if (modifier != "") syntax += " " + modifier;
+            Database.Execute(syntax, args);
         }
     }
 }

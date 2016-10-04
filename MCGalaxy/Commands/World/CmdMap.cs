@@ -62,10 +62,8 @@ namespace MCGalaxy.Commands.World {
         }
         
         static bool IsMapOption(string[] args) {
-            string opt = args[0].ToLower();
-            const string opts = "theme|finite|ai|edge|grass|ps|physicspeed|overload|motd|death|killer|fall|drown|unload"
-                + "|realmowner|chat|load|loadongoto|leaf|leafdecay|flow|randomflow|tree|growtrees|buildable|deletable";
-            if (!opts.Contains(opt)) return false;
+        	string opt = LevelOptions.Map(args[0].ToLower());
+            if (!LevelOptions.Options.ContainsKey(opt)) return false;
             // In rare case someone uses /map motd motd My MOTD
             if (opt == "motd" && (args.Length == 1 || !args[1].CaselessStarts("motd "))) return true;
             
