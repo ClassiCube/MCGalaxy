@@ -18,7 +18,7 @@
 using MCGalaxy.BlockPhysics;
 using System;
 
-namespace MCGalaxy.BlockBehaviour {
+namespace MCGalaxy.Blocks {
     
     internal static class PlaceBehaviour {
 

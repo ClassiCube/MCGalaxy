@@ -87,7 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\WhoWas.cs" />
-    <Compile Include="Blocks\Behaviour\Block.Behaviour.cs" />
+    <Compile Include="Blocks\Behaviour\BlockBehaviour.cs" />
     <Compile Include="Blocks\Behaviour\DeleteBehaviour.cs" />
     <Compile Include="Blocks\Behaviour\PlaceBehaviour.cs" />
     <Compile Include="Blocks\Behaviour\WalkthroughBehaviour.cs" />
@@ -370,6 +370,7 @@
     <Compile Include="Commands\Scripting\CmdPLoad.cs" />
     <Compile Include="Commands\Scripting\CmdPUnload.cs" />
     <Compile Include="Commands\World\CmdBlockDB.cs" />
+    <Compile Include="Commands\World\CmdBlockProperties.cs" />
     <Compile Include="Commands\World\CmdCopyLVL.cs" />
     <Compile Include="Commands\World\CmdDeleteLvl.cs" />
     <Compile Include="Commands\World\CmdFixGrass.cs" />

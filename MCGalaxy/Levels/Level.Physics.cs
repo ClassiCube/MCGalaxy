@@ -17,6 +17,7 @@
  */
 using System;
 using System.Threading;
+using MCGalaxy.Blocks;
 using MCGalaxy.BlockPhysics;
 using MCGalaxy.Games;
 
@@ -131,10 +132,10 @@ namespace MCGalaxy {
             lastCheck = ListCheck.Count;
             const uint mask = PhysicsArgs.TypeMask;
             
-            Block.HandlePhysics[] handlers = Block.physicsHandlers;
+            HandlePhysics[] handlers = BlockBehaviour.physicsHandlers;
             ExtraInfoHandler extraHandler = ExtraInfoPhysics.DoNormal;
             if (physics == 5) {
-                handlers = Block.physicsDoorsHandlers;
+                handlers = BlockBehaviour.physicsDoorsHandlers;
                 extraHandler = ExtraInfoPhysics.DoDoorsOnly;
             }
             
@@ -146,7 +147,7 @@ namespace MCGalaxy {
                         PhysicsUpdate(x, y, z,  C.data, this);
                     OnPhysicsUpdateEvent.Call(x, y, z, C.data, this);
                     if ((C.data.Raw & mask) == 0 || extraHandler(this, ref C)) {
-                        Block.HandlePhysics handler = handlers[blocks[C.b]];
+                        HandlePhysics handler = handlers[blocks[C.b]];
                         if (handler != null) {
                             handler(this, ref C);
                         } else if ((C.data.Raw & mask) == 0 || !C.data.HasWait) {

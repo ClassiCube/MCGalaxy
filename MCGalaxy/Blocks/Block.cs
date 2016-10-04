@@ -104,7 +104,7 @@ namespace MCGalaxy
             return block >= water && block <= lavastill;
         }
 
-        public static bool Mover(byte block) { return walkthroughHandlers[block] != null; }
+        public static bool Mover(byte block) { return BlockBehaviour.walkthroughHandlers[block] != null; }
 
         public static bool FireKill(byte block) { return block != air && Props[block].LavaKills; }
         

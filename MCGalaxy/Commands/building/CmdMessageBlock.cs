@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using MCGalaxy.BlockBehaviour;
+using MCGalaxy.Blocks;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Building {

@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MCGalaxy.Blocks;
 
 namespace MCGalaxy
 {
@@ -47,7 +48,8 @@ namespace MCGalaxy
 
         public static void SetBlocks() {
             SetCoreProperties();
-            SetupCoreHandlers();          
+            BlockBehaviour.SetupCoreHandlers(); 
+            BlockBehaviour.SetupCorePhysicsHandlers();
             InitDefaults();
             
             // Custom permissions set by the user.
