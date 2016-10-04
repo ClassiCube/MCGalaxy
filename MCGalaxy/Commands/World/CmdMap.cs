@@ -62,86 +62,34 @@ namespace MCGalaxy.Commands.World {
         }
         
         static bool IsMapOption(string[] args) {
-        	string opt = LevelOptions.Map(args[0].ToLower());
-            if (!LevelOptions.Options.ContainsKey(opt)) return false;
+            string opt = LevelOptions.Map(args[0].ToLower());
+            if (!HasOption(opt)) return false;
             // In rare case someone uses /map motd motd My MOTD
             if (opt == "motd" && (args.Length == 1 || !args[1].CaselessStarts("motd "))) return true;
             
-            bool optHasArg = opt == "ps" || opt == "physicspeed" || opt == "overload" 
+            bool optHasArg = opt == "physicspeed" || opt == "overload" 
                 || opt == "fall" || opt == "drown" || opt == "realmowner";
             return args.Length == (optHasArg ? 2 : 1);
         }
         
         internal static void SetMapOption(Player p, Level lvl, string opt, string value) {
-            switch (opt.ToLower()) {
-                case "theme":
-                    lvl.theme = value;
-                    lvl.ChatLevel("Map theme: &b" + lvl.theme); break;
-                case "finite":
-                    SetBool(p, lvl, ref lvl.finite, "Finite mode: "); break;
-                case "ai":
-                    SetBool(p, lvl, ref lvl.ai, "Animal AI: "); break;
-                case "edge":
-                    SetBool(p, lvl, ref lvl.edgeWater, "Edge water: "); break;
-                case "grass":
-                    SetBool(p, lvl, ref lvl.GrassGrow, "Growing grass: "); break;
-                case "ps":
-                case "physicspeed":
-                    SetInt(p, lvl, ref lvl.speedPhysics, value, "Physics speed", PhysicsSpeedValidator); break;
-                case "overload":
-                    SetInt(p, lvl, ref lvl.overload, value, "Physics overload", PhysicsOverloadValidator); break;
-                case "motd":
-                    lvl.motd = value == "" ? "ignore" : value;
-                    lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.motd);
-                    UpdateMotd(lvl);
-                    break;
-                case "death":
-                    SetBool(p, lvl, ref lvl.Death, "Survival death: "); break;
-                case "killer":
-                    SetBool(p, lvl, ref lvl.Killer, "Killer blocks: "); break;
-                case "fall":
-                    SetInt(p, lvl, ref lvl.fall, value, "Fall distance", null); break;
-                case "drown":
-                    SetInt(p, lvl, ref lvl.drown, value, "Drown time (in tenths of a second)", null); break;
-                case "unload":
-                    SetBool(p, lvl, ref lvl.unload, "Auto unload: "); break;
-                case "chat":
-                    SetBool(p, lvl, ref lvl.worldChat, "Roleplay (level only) chat: ", true); break;
-                case "load":
-                case "loadongoto":
-                    SetBool(p, lvl, ref lvl.loadOnGoto, "Load on goto: "); break;
-                case "leaf":
-                case "leafdecay":
-                    SetBool(p, lvl, ref lvl.leafDecay, "Leaf deacy: "); break;
-                case "flow":
-                case "randomflow":
-                    SetBool(p, lvl, ref lvl.randomFlow, "Random flow: "); break;
-                case "tree":
-                case "growtrees":
-                    SetBool(p, lvl, ref lvl.growTrees, "Tree growing: "); break;
-                case "buildable":
-                    SetBool(p, lvl, ref lvl.Buildable, "Buildable: ");
-                    lvl.UpdateBlockPermissions(); break;
-                case "deletable":
-                    SetBool(p, lvl, ref lvl.Deletable, "Deletable: ");
-                    lvl.UpdateBlockPermissions(); break;
-                case "realmowner":
-                    lvl.RealmOwner = value;
-                    if (value == "") Player.Message(p, "Removed realm owner for this level.");
-                    else Player.Message(p, "Set realm owner/owners of this level to {0}.", value);
-                    break;
-                default:
-                    Player.Message(p, "Could not find option entered."); return;
+            opt = LevelOptions.Map(opt.ToLower());
+            foreach (var option in LevelOptions.Options) {
+                if (!option.Key.CaselessEq(opt)) continue;
+                
+                option.Value(p, lvl, value);
+                Level.SaveSettings(lvl);
+                return;
             }
-            Level.SaveSettings(lvl);
+            Player.Message(p, "Could not find option entered.");
         }
         
-        static void UpdateMotd(Level lvl) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-            	if (p.level != lvl || !p.HasCpeExt(CpeExt.HackControl)) continue;
-                p.Send(Hacks.MakeHackControl(p));
+        
+        static bool HasOption(string opt) {
+            foreach (var option in LevelOptions.Options) {
+                if (option.Key.CaselessEq(opt)) return true;
             }
+            return false;
         }
         
         static void PrintMapInfo(Player p, Level lvl) {
@@ -172,22 +120,6 @@ namespace MCGalaxy.Commands.World {
                            GetBool(lvl.Buildable), GetBool(lvl.Deletable));
         }
         
-        
-        static bool PhysicsSpeedValidator(Player p, int raw) {
-            if (raw < 10) { Player.Message(p, "Physics speed cannot be below 10 milliseconds."); return false; }
-            return true;
-        }
-        
-        static bool PhysicsOverloadValidator(Player p, int raw) {
-            if (raw < 500) { 
-                Player.Message(p, "Physics overload cannot go below 500 (default is 1500)"); return false; 
-            }
-            if (p != null && p.Rank < LevelPermission.Admin && raw > 2500) { 
-                Player.Message(p, "Only SuperOPs may set physics overload higher than 2500"); return false; 
-            }
-            return true;
-        }
-        
         internal static void SetBool(Player p, Level lvl, ref bool target, string name, bool negate = false) {
             target = !target;
             bool display = negate ? !target : target;
@@ -195,17 +127,6 @@ namespace MCGalaxy.Commands.World {
             
             if (p == null || p.level != lvl)
                 Player.Message(p, name + GetBool(display, p == null));
-        }
-        
-        static void SetInt(Player p, Level lvl, ref int target, string value, string name,
-                           Func<Player, int, bool> validator) {
-            if (value == "") { Player.Message(p, "You must provide an integer."); return; }
-            int raw;
-            if (!int.TryParse(value, out raw)) { Player.Message(p, "\"{0}\" is not a valid integer.", value); return; }
-            
-            if (validator != null && !validator(p, raw)) return;
-            target = raw;
-            lvl.ChatLevel(name + ": &b" + target);
         }
         
         static string GetBool(bool value, bool console = false) {

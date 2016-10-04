@@ -26,32 +26,32 @@ namespace MCGalaxy {
         
         public static Dictionary<string, OptionSetter> Options =
             new Dictionary<string, OptionSetter>() {
-            { "theme", SetTheme },
+            { "Theme", SetTheme },
             { "motd", SetMotd },
-            { "realmowner", SetRealmOwner },
-            { "physicsspeed", (p, l, value) => SetPhysicsSpeed(p, l, value, "Physics speed") },
-            { "overload", (p, l, value) => SetPhysicsOverload(p, l, value, "Physics overload") },
-            { "fall", (p, l, value) => SetInt(p, l, ref l.fall, value, "Fall distance") },
-            { "drown", (p, l, value) => SetInt(p, l, ref l.drown, value, "Drown time (in tenths of a second)") },
-            { "finite", (p, l, value) => Set(p, l, ref l.finite, "Finite mode") },
-            { "ai", (p, l, value) => Set(p, l, ref l.ai, "Animal AI") },
-            { "edge", (p, l, value) => Set(p, l, ref l.edgeWater, "Edge water") },
-            { "grass", (p, l, value) => Set(p, l, ref l.GrassGrow, "Growing grass") },
-            { "death", (p, l, value) => Set(p, l, ref l.Death, "Survival death") },
-            { "killer", (p, l, value) => Set(p, l, ref l.Killer, "Killer blocks") },
-            { "unload", (p, l, value) => Set(p, l, ref l.unload, "Auto unload") },
-            { "loadongoto", (p, l, value) => Set(p, l, ref l.loadOnGoto, "Load on goto") },
-            { "leafdecay", (p, l, value) => Set(p, l, ref l.leafDecay, "Leaf decay") },
-            { "randomflow", (p, l, value) => Set(p, l, ref l.randomFlow, "Random flow") },
-            { "growtrees", (p, l, value) => Set(p, l, ref l.growTrees, "Tree growing") },
-            { "chat", (p, l, value) => Set(p, l, ref l.worldChat, "Roleplay (level only) chat: ", true) },
-            { "buildable", (p, l, value) => SetPerms(p, l, ref l.Buildable, "Buildable") },
-            { "deletable", (p, l, value) => SetPerms(p, l, ref l.Deletable, "Deletable") },
+            { "RealmOwner", SetRealmOwner },
+            { "PhysicSpeed", (p, l, value) => SetPhysicsSpeed(p, l, value, "Physics speed") },
+            { "Overload", (p, l, value) => SetPhysicsOverload(p, l, value, "Physics overload") },
+            { "Fall", (p, l, value) => SetInt(p, l, ref l.fall, value, "Fall distance") },
+            { "Drown", (p, l, value) => SetInt(p, l, ref l.drown, value, "Drown time (in tenths of a second)") },
+            { "Finite", (p, l, value) => Set(p, l, ref l.finite, "Finite mode") },
+            { "AI", (p, l, value) => Set(p, l, ref l.ai, "Animal AI") },
+            { "Edge", (p, l, value) => Set(p, l, ref l.edgeWater, "Edge water") },
+            { "Grass", (p, l, value) => Set(p, l, ref l.GrassGrow, "Growing grass") },
+            { "Death", (p, l, value) => Set(p, l, ref l.Death, "Survival death") },
+            { "Killer", (p, l, value) => Set(p, l, ref l.Killer, "Killer blocks") },
+            { "Unload", (p, l, value) => Set(p, l, ref l.unload, "Auto unload") },
+            { "LoadOnGoto", (p, l, value) => Set(p, l, ref l.loadOnGoto, "Load on goto") },
+            { "LeafDecay", (p, l, value) => Set(p, l, ref l.leafDecay, "Leaf decay") },
+            { "RandomFlow", (p, l, value) => Set(p, l, ref l.randomFlow, "Random flow") },
+            { "GrowTrees", (p, l, value) => Set(p, l, ref l.growTrees, "Tree growing") },
+            { "Chat", (p, l, value) => Set(p, l, ref l.worldChat, "Roleplay (level only) chat: ", true) },
+            { "Buildable", (p, l, value) => SetPerms(p, l, ref l.Buildable, "Buildable") },
+            { "Deletable", (p, l, value) => SetPerms(p, l, ref l.Deletable, "Deletable") },
         };
         
         
         public static string Map(string opt) {
-            if (opt == "ps") return "physicsspeed";
+            if (opt == "ps") return "physicspeed";
             if (opt == "load") return "loadongoto";
             if (opt == "leaf") return "leafdecay";
             if (opt == "flow") return "randomflow";
