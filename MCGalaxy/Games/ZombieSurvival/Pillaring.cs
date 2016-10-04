@@ -41,9 +41,7 @@ namespace MCGalaxy.Games.ZS {
         }
 
         static bool NotPillaring(byte b, byte old) {
-            if (b == Block.shrub || b == Block.fire || b == Block.rope) return true;
-            if (b >= Block.yellowflower && b <= Block.redmushroom) return true;
-            
+            if (Block.Walkthrough(b)) return true;
             old = Block.Convert(old);
             return old >= Block.water && old <= Block.lavastill;
         }
