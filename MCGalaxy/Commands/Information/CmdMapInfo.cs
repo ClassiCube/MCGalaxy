@@ -255,7 +255,7 @@ namespace MCGalaxy.Commands {
                     
                     case "authors": Authors = value; break;
                     case "roundsplayed": TotalRounds = int.Parse(value); break;
-                    case "RoundsHumanWon": HumanRounds = int.Parse(value); break;
+                    case "roundshumanwon": HumanRounds = int.Parse(value); break;
                     case "likes": Likes = int.Parse(value); break;
                     case "dislikes": Dislikes = int.Parse(value); break;
                     
