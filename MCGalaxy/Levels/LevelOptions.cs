@@ -24,9 +24,7 @@ namespace MCGalaxy {
         
         public delegate void OptionSetter(Player p, Level lvl, string value);
         
-        public static Dictionary<string, OptionSetter> Options =
-            new Dictionary<string, OptionSetter>() {
-            { "Theme", SetTheme },
+        public static Dictionary<string, OptionSetter> Options = new Dictionary<string, OptionSetter>() {
             { "motd", SetMotd },
             { "RealmOwner", SetRealmOwner },
             { "PhysicSpeed", (p, l, value) => SetPhysicsSpeed(p, l, value, "Physics speed") },
@@ -47,6 +45,29 @@ namespace MCGalaxy {
             { "Chat", (p, l, value) => Set(p, l, ref l.worldChat, "Roleplay (level only) chat: ", true) },
             { "Buildable", (p, l, value) => SetPerms(p, l, ref l.Buildable, "Buildable") },
             { "Deletable", (p, l, value) => SetPerms(p, l, ref l.Deletable, "Deletable") },
+        };
+        
+        public static Dictionary<string, string> Help = new Dictionary<string, string>() {
+            { "motd", "%HSets the custom motd for this map. (leave blank to remove)" },
+            { "RealmOwner", "%HSets the players allowed to use /realm on this map." },
+            { "PhysicSpeed", "%HSets the delay (in milliseconds) between physics ticks." },
+            { "Overload", "%HSets how hard (high values) or easy (low values) it is to kill physics." },
+            { "Fall", "%HSets how many blocks you can fall before dying." },
+            { "Drown", "%HSets how long you can stay underwater (in tenths of a second) before drowning." },
+            { "Finite", "%HWhether all liquids are finite." },
+            { "AI", "%HAI will make animals hunt or flee." },
+            { "Edge", "%HWhether water flows from the map edges." },
+            { "Grass", "%HWhether grass auto grows or not." },
+            { "Death", "%HWhether you can die from falling or drowning." },
+            { "Killer", "%HWhether certain blocks (e.g. nerve_gas) kill you." },
+            { "Unload", "%HWhether the map auto unloads when no one's there." },
+            { "LoadOnGoto", "%HWhether the map auto loads when /goto is used." },
+            { "LeafDecay", "%HWhether leaves not connected to log blocks within 4 blocks randomly disappear." },
+            { "RandomFlow", "%HWhether flooding liquids flow less uniformly." },
+            { "GrowTrees", "%HWhether saplings grow into trees after a while." },
+            { "Chat", "%HWhether chat is only seen from and sent to players in the map." },
+            { "Buildable", "%HWhether any blocks can be placed by players." },
+            { "Deletable", "%HWhether any blocks can be deleted by players." },
         };
         
         
@@ -84,11 +105,6 @@ namespace MCGalaxy {
             return true;
         }
         
-        
-        static void SetTheme(Player p, Level lvl, string value) {
-            lvl.theme = value;
-            lvl.ChatLevel("Map theme: &b" + lvl.theme);
-        }
 
         static void SetMotd(Player p, Level lvl, string value) {
             lvl.motd = value == "" ? "ignore" : value;
