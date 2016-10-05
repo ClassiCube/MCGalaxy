@@ -173,7 +173,7 @@ namespace MCGalaxy.Commands {
                 }
             } else if (cmd == "SAVE") {
                 if (value == "") {
-                    Player.Message(p, "To save one of your maps type /os map save <map number>");
+                    Player.Message(p, "To save one of your maps type %T/os map save [map number]");
                 } else if (value == "1") {
                     Command.all.Find("save").Use(p, FirstMapName(p));
                     Player.Message(p, "Map 1 has been saved.");

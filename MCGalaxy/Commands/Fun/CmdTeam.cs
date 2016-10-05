@@ -185,7 +185,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/team owner <name> %H-Sets the player who has owner privileges for the team.");
+            Player.Message(p, "%T/team owner [name] %H-Sets the player who has owner privileges for the team.");
             Player.Message(p, "%T/team kick [name] %H-Removes that player from the team you are in.");
             Player.Message(p, "%T/team color [color] %H-Sets the color of the team name shown in chat.");
 

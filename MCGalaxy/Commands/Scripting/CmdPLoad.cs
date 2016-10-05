@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/pload <filename>");
+            Player.Message(p, "%T/pload [filename]");
             Player.Message(p, "%HLoad a plugin in your plugins folder!");
         }  
     }

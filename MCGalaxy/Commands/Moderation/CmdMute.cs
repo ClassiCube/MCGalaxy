@@ -57,8 +57,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/mute <player>");
-            Player.Message(p, "%HMutes or unmutes the player.");
+            Player.Message(p, "%T/mute [player]");
+            Player.Message(p, "%HMutes or unmutes that player.");
         }
     }
 }

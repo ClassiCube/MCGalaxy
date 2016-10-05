@@ -189,7 +189,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/pe <username> <type> <value>");
+            Player.Message(p, "%T/pe [username] [type] <value>");
             Player.Message(p, "%HEdits an online or offline player's information. Use with caution!");
             MessageValidTypes(p);
             Player.Message(p, "%HTo see value format for a specific type, leave <value> blank.");

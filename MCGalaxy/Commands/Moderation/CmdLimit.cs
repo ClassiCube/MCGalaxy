@@ -88,12 +88,12 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/limit <type> <amount> [rank]");
-            Player.Message(p, "%HSets the limit for <type>");
-            Player.Message(p, "%HValid types: reloadthreshold(rt), restartphysics(rp), " +
+            Player.Message(p, "%T/limit [type] [amount] <rank>");
+            Player.Message(p, "%HSets the limit for [type]");
+            Player.Message(p, "%HValid types: %Sreloadthreshold(rt), restartphysics(rp), " +
                                "rpnormal, physicsundo(pu), drawlimit(dl), maxundo(mu), genlimit(gen), " +
                                "admingenlimit(admingen)");
-            Player.Message(p, "%HRank is required for drawlimit and maxundo types.");
+            Player.Message(p, "%H<rank> is required for drawlimit and maxundo types.");
         }
     }
 }

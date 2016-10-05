@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/possess <player> [skin as #] - DEMONIC POSSESSION HUE HUE");
+            Player.Message(p, "/possess [player] <skin as #> - DEMONIC POSSESSION HUE HUE");
             Player.Message(p, "Using # after player name makes possessed keep their custom skin during possession.");
             Player.Message(p, "Not using it makes them lose their skin, and makes their name show as \"Player (YourName)\".");
         }

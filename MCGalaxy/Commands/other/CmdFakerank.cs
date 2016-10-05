@@ -45,7 +45,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/fakerank <name> <rank> - Sends a fake rank change message.");
+            Player.Message(p, "%T/fakerank [name] [rank]");
+            Player.Message(p, "%HSends a fake rank change message.");
         }
     }
 }

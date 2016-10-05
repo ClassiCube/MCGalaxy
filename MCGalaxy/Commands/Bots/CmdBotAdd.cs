@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/botadd <name>");
+            Player.Message(p, "%T/botadd [name]");
             Player.Message(p, "%HAdds a new bot at your position.");
         }
     }

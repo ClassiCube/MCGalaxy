@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/punload <Plugin name>");
+            Player.Message(p, "%T/punload [Plugin name]");
             Player.Message(p, "%HUnload a plugin that is loaded");
         }
     }

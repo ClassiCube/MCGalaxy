@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/whisper <name>");
+            Player.Message(p, "%T/whisper [name]");
             Player.Message(p, "%HMakes all messages act like whispers");
         }
     }

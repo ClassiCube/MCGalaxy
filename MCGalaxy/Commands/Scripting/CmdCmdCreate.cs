@@ -55,9 +55,11 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/cmdcreate <message>");
-            Player.Message(p, "%HCreates a dummy command class named Cmd<Message> from which you can make a new command.");
-            Player.Message(p, "%HOr use \"/cmdcreate <name of command> vb\" to create a dummy class in visual basic");
+            Player.Message(p, "%T/cmdcreate [name]");
+            Player.Message(p, "%HCreates a dummy C# command named Cmd[Name]");
+            Player.Message(p, "%T/cmdcreate [name] vb");
+            Player.Message(p, "%HCreates a dummy Visual Basic command named Cmd[Name].");
+            Player.Message(p, "%This file can be used as the basis for creating a new command.");
         }
     }
 }

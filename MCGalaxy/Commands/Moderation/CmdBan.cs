@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Moderation {
             Group group = who == null ? Group.findPlayerGroup(args[0]) : who.group;
             if (!CheckPerms(target, group, p)) return;
 
-            string banReason = reason == "-" ? "" : " (" + reason + ")";            
+            string banReason = reason == "-" ? "" : " (" + reason + ")";
             string banner = p == null ? "(console)" : p.ColoredName;
             string banMsg = null;
             if (who == null) {
