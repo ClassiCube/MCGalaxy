@@ -148,11 +148,6 @@ namespace MCGalaxy.Gui {
         [DisplayName("Expiry time")]
         public int ExpiryTime { get; set; }
         
-        [Description("Message shown when using /buy revive and the seconds since being infected is more than 'ExpiryTime'.")]
-        [Category("Revive settings")]
-        [DisplayName("Expiry time message")]
-        public string ExpiryTimeMessage { get; set; }
-        
         [Description("Message shown when a player uses /buy revive, and it actually disinfects them.")]
         [Category("Revive settings")]
         [DisplayName("Success message")]
@@ -190,7 +185,6 @@ namespace MCGalaxy.Gui {
             InsufficientTime = ZombieGameProps.ReviveNoTime;
             InsufficientTimeMessage = ZombieGameProps.ReviveNoTimeMessage;
             ExpiryTime = ZombieGameProps.ReviveTooSlow;
-            ExpiryTimeMessage = ZombieGameProps.ReviveTooSlowMessage;
             FailureMessage = ZombieGameProps.ReviveFailureMessage;
             SuccessMessage = ZombieGameProps.ReviveSuccessMessage;
         }
@@ -229,7 +223,6 @@ namespace MCGalaxy.Gui {
             ZombieGameProps.ReviveNoTime = InsufficientTime;
             ZombieGameProps.ReviveNoTimeMessage = InsufficientTimeMessage;
             ZombieGameProps.ReviveTooSlow = ExpiryTime;
-            ZombieGameProps.ReviveTooSlowMessage = ExpiryTimeMessage;
             ZombieGameProps.ReviveFailureMessage = FailureMessage;
             ZombieGameProps.ReviveSuccessMessage = SuccessMessage;
         }

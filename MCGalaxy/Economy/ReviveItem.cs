@@ -54,18 +54,19 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "You cannot buy any more revive potions."); return;
             }
             if (p.Game.TimeInfected.AddSeconds(ZombieGameProps.ReviveTooSlow) < DateTime.UtcNow) {
-                Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZombieGameProps.ReviveTooSlowMessage); return;
+                Player.Message(p, "&cYou can only revive within the first {0} seconds after you were infected.",
+                               ZombieGameProps.ReviveTooSlow); return;
             }
             
-            int chance = new Random().Next(0, 101);
+            int chance = new Random().Next(1, 101);
             if (chance <= ZombieGameProps.ReviveChance) {
                 Server.zombie.DisinfectPlayer(p);
-                p.Game.RevivesUsed++;
                 Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZombieGameProps.ReviveSuccessMessage);
             } else {
                 Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZombieGameProps.ReviveFailureMessage);
             }
             Economy.MakePurchase(p, Price, "%3Revive:");
+            p.Game.RevivesUsed++;
         }
         
         protected override void DoPurchase(Player p, string message, string[] args) { }

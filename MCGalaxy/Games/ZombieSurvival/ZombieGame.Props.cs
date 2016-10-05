@@ -161,10 +161,6 @@ namespace MCGalaxy.Games {
         [ConfigInt("revive-fewzombies", "Revive", null, 3, 0)]
         public static int ReviveFewZombies = 3;
         
-        [ConfigString("revive-tooslow-msg", "Revive", null, 
-                      "tried using a revive potion, but their brain had already turned to mush")]
-        public static string ReviveTooSlowMessage = "tried using a revive potion, but their brain had already turned to mush";
-        
         [ConfigInt("revive-tooslow", "Revive", null, 60, 0)]
         public static int ReviveTooSlow = 60;
         
