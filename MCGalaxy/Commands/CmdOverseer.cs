@@ -108,70 +108,23 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleMapCommand(Player p, string message, string cmd, string value) {
-            bool mapOnly = !(cmd == "ADD" || cmd == "DELETE" || cmd == "SAVE");            
+            bool mapOnly = !(cmd == "ADD" || cmd == "DELETE" || cmd == "SAVE");
             if (mapOnly && !OwnsMap(p, p.level)) {
                 Player.Message(p, "You may only perform that action on your own map."); return;
             }
-            byte mapNum = 0;
             
             if (cmd == "ADD") {
-                string level = NextLevel(p);
-                if (level == null) return;
-
-                if (value == "") value = "128 64 128 flat";
-                else if (value.IndexOf(' ') == -1) value = "128 64 128 " + value;
-                
-                string[] args = value.TrimEnd().Split(' ');
-                if (args.Length == 3) value += " flat";
-
-                CmdNewLvl newLvl = (CmdNewLvl)Command.all.Find("newlvl"); // TODO: this is a nasty hack, find a better way
-                if (!newLvl.GenerateMap(p, level + " " + value)) return;
-                
-                // Set default perbuild permissions
-                CmdLoad.LoadLevel(null, level);
-                Level lvl = LevelInfo.FindExact(level);
-                if (lvl == null) return;
-                Command.all.Find("perbuild").Use(null, lvl.name + " +" + p.name);
-                
-                LevelPermission osPerm = Server.osPerbuildDefault;
-                if (osPerm == LevelPermission.Nobody)
-                    osPerm = GrpCommands.MinPerm(this);
-                Group grp = Group.findPerm(osPerm);
-                if (grp == null) return;
-                
-                Command.all.Find("perbuild").Use(null, lvl.name + " " + grp.name);                
-                Player.Message(p, "Use %T/os zone add [name] %Sto allow " +
-                               "players ranked below " + grp.ColoredName + " %Sto build in the map.");
+                AddMap(p, value);
             } else if (cmd == "PHYSICS") {
-                if (value == "0" || value == "1" || value == "2" || value == "3" || value == "4" || value == "5")
+                if (value == "0" || value == "1" || value == "2" || value == "3" || value == "4" || value == "5") {
                     CmdPhysics.SetPhysics(p.level, int.Parse(value));
-                else
-                    Player.Message(p, "Accepted numbers are: 0, 1, 2, 3, 4 or 5");
-            } else if (cmd == "DELETE") {
-                if (value == "") {
-                    Player.Message(p, "To delete one of your maps, type %T/os map delete [map number]");
-                } else if (value == "1") {
-                    string map = FirstMapName(p);
-                    if (!LevelInfo.ExistsOffline(map)) {
-                        Player.Message(p, "You don't have a map with that map number."); return;
-                    }
-                    
-                    Player.Message(p, "Created backup.");
-                    LevelActions.Delete(map);
-                    Player.Message(p, "Map 1 has been removed.");
-                } else if (byte.TryParse(value, out mapNum)) {
-                    string map = p.name.ToLower() + value;
-                    if (!LevelInfo.ExistsOffline(map)) {
-                        Player.Message(p, "You don't have a map with that map number."); return;
-                    }
-                    
-                    Player.Message(p, "Created backup.");
-                    LevelActions.Delete(map);
-                    Player.Message(p, "Map " + value + " has been removed.");
                 } else {
-                    Help(p);
+                    Player.Message(p, "Accepted numbers are: 0, 1, 2, 3, 4 or 5");
                 }
+            } else if (cmd == "DELETE") {
+                DeleteMap(p, value);
             } else if (cmd == "SAVE") {
+                byte mapNum = 0;
                 if (value == "") {
                     Player.Message(p, "To save one of your maps type %T/os map save [map number]");
                 } else if (value == "1") {
@@ -183,15 +136,6 @@ namespace MCGalaxy.Commands {
                 } else {
                     Help(p);
                 }
-            } else if (cmd == "MOTD") {
-                int pos = message.IndexOf("motd ");
-                string motd = "";
-                if (message.Split(' ').Length > 2) motd = message.Substring(pos + 5);
-                CmdMap.SetMapOption(p, p.level, "motd", motd);
-            } else if (cmd == "GUNS") {
-                Command.all.Find("allowguns").Use(p, "");
-            } else if (cmd == "CHAT") {
-                CmdMap.SetMapOption(p, p.level, "chat", "");
             } else if (cmd == "RESTORE") {
                 Command.all.Find("restore").Use(p, value);
             } else if (cmd == "PERVISIT") {
@@ -212,15 +156,73 @@ namespace MCGalaxy.Commands {
                 } else {
                     Command.all.Find("texture").Use(p, "levelzip " + value);
                 }
-            } else if (cmd == "BUILDABLE") {
-                CmdMap.SetMapOption(p, p.level, "buildable", "");
-            } else if (cmd == "DELETABLE") {
-                CmdMap.SetMapOption(p, p.level, "deletable", "");
             } else {
+                string opt = LevelOptions.Map(cmd.ToLower());
+                if (opt == "physicspeed" || opt == "overload" || opt == "realmowner") {
+                    Player.Message(p, "&cYou cannot change that map option via /os map."); return;
+                }
+                if (CmdMap.SetMapOption(p, p.level, opt, value)) return;
+                
                 Player.MessageLines(p, mapHelp);
             }
         }
         
+        void AddMap(Player p, string value) {
+            string level = NextLevel(p);
+            if (level == null) return;
+
+            if (value == "") value = "128 64 128 flat";
+            else if (value.IndexOf(' ') == -1) value = "128 64 128 " + value;
+            
+            string[] args = value.TrimEnd().Split(' ');
+            if (args.Length == 3) value += " flat";
+
+            CmdNewLvl newLvl = (CmdNewLvl)Command.all.Find("newlvl"); // TODO: this is a nasty hack, find a better way
+            if (!newLvl.GenerateMap(p, level + " " + value)) return;
+            
+            // Set default perbuild permissions
+            CmdLoad.LoadLevel(null, level);
+            Level lvl = LevelInfo.FindExact(level);
+            if (lvl == null) return;
+            Command.all.Find("perbuild").Use(null, lvl.name + " +" + p.name);
+            
+            LevelPermission osPerm = Server.osPerbuildDefault;
+            if (osPerm == LevelPermission.Nobody)
+                osPerm = GrpCommands.MinPerm(this);
+            Group grp = Group.findPerm(osPerm);
+            if (grp == null) return;
+            
+            Command.all.Find("perbuild").Use(null, lvl.name + " " + grp.name);
+            Player.Message(p, "Use %T/os zone add [name] %Sto allow " +
+                           "players ranked below " + grp.ColoredName + " %Sto build in the map.");
+        }
+        
+        void DeleteMap(Player p, string value) {
+            byte mapNum = 0;
+            if (value == "") {
+                Player.Message(p, "To delete one of your maps, type %T/os map delete [map number]");
+            } else if (value == "1") {
+                string map = FirstMapName(p);
+                if (!LevelInfo.ExistsOffline(map)) {
+                    Player.Message(p, "You don't have a map with that map number."); return;
+                }
+                
+                Player.Message(p, "Created backup.");
+                LevelActions.Delete(map);
+                Player.Message(p, "Map 1 has been removed.");
+            } else if (byte.TryParse(value, out mapNum)) {
+                string map = p.name.ToLower() + value;
+                if (!LevelInfo.ExistsOffline(map)) {
+                    Player.Message(p, "You don't have a map with that map number."); return;
+                }
+                
+                Player.Message(p, "Created backup.");
+                LevelActions.Delete(map);
+                Player.Message(p, "Map " + value + " has been removed.");
+            } else {
+                Help(p);
+            }
+        }
         void HandleZoneCommand(Player p, string cmd, string name) {
             if (cmd == "LIST") {
                 Command.all.Find("zone").Use(p, "");
@@ -269,12 +271,12 @@ namespace MCGalaxy.Commands {
                 List<string> blacklist = p.level.VisitAccess.Blacklisted;
                 if (!blacklist.CaselessContains(name)) {
                     Player.Message(p, name + " is not blacklisted."); return;
-                }                
+                }
                 blacklist.CaselessRemove(name);
                 
                 Level.SaveSettings(p.level);
                 Player.Message(p, name + " has been removed from your map's blacklist.");
-            } else if (cmd == "BLACKLIST") {                
+            } else if (cmd == "BLACKLIST") {
                 List<string> blacklist = p.level.VisitAccess.Blacklisted;
                 if (blacklist.Count > 0) {
                     Player.Message(p, "Blacklisted players: " + blacklist.Join());
@@ -285,6 +287,7 @@ namespace MCGalaxy.Commands {
                 Player.MessageLines(p, zoneHelp);
             }
         }
+        
         
         static string NextLevel(Player p) {
             string level = p.name.ToLower();
@@ -350,21 +353,17 @@ namespace MCGalaxy.Commands {
         static string[] mapHelp = {
             "%T/os map add [type - default is flat] %H- Creates your map (128x64x128)",
             "%T/os map add [width] [height] [length] [type]",
-            " See %T/help newlvl types %Sfor a list of map types.",
+            "%H  See %T/help newlvl types %Hfor a list of map types.",
             "%T/os map physics [level] %H- Sets the physics on your map.",
             "%T/os map delete %H- Deletes your map",
             "%T/os map restore [num] %H- Restores backup [num] of your map",
             "%T/os map save %H- Saves your map",
-            "%T/os map chat %H- Sets if roleplay(level only) chat is used.",
-            "%T/os map motd [message] %H- Sets the motd of your map",
-            " Motd: If message is not given, server default is used.",
-            "%T/os map guns %H- Toggles if guns can be used on your map",
             "%T/os map pervisit [rank] %H- Sets the pervisit of you map",
             "%T/os map perbuild [rank] %H- Sets the perbuild of you map",
             "%T/os map texture [url] %H- Sets terrain.png for your map",
             "%T/os map texturezip [url] %H- Sets texture .zip for your map",
-            "%T/os map buildable %H- Sets whether any blocks can be placed",
-            "%T/os map deletable %H- Sets whether any blocks can be deleted",
+            "%T/os map [option] <value> %H- Toggles that map option.",
+            "%H  See %T/help map %Hfor a list of map options",
         };
         
         static string[] zoneHelp = {

@@ -59,7 +59,9 @@ namespace MCGalaxy.Commands.World {
             if (opt.CaselessEq("realmowner") && !CheckExtraPerm(p, 2)) {
                 MessageNeedExtra(p, "set personal realm owners.", 2); return;
             }
-            SetMapOption(p, lvl, opt, value);
+            
+            if (SetMapOption(p, lvl, opt, value)) return;
+            Player.Message(p, "Could not find option entered.");
         }
         
         static bool IsMapOption(string[] args) {
@@ -72,16 +74,16 @@ namespace MCGalaxy.Commands.World {
             return args.Length == argsCount;
         }
         
-        internal static void SetMapOption(Player p, Level lvl, string opt, string value) {
+        internal static bool SetMapOption(Player p, Level lvl, string opt, string value) {
             opt = LevelOptions.Map(opt.ToLower());
             foreach (var option in LevelOptions.Options) {
                 if (!option.Key.CaselessEq(opt)) continue;
                 
                 option.Value(p, lvl, value);
                 Level.SaveSettings(lvl);
-                return;
+                return true;
             }
-            Player.Message(p, "Could not find option entered.");
+            return false;
         }
         
         
