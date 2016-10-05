@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.BlockPhysics;
 
-namespace MCGalaxy.BlockBehaviour {
+namespace MCGalaxy.Blocks {
     
     internal static class DeleteBehaviour {
 

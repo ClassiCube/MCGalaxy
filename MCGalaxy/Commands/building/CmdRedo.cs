@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Help(Player p) {
             Player.Message(p, "%T/redo");
-            Player.Message(p, "%HRedoes the last /undo or /undo <seconds> you performed.");
+            Player.Message(p, "%HRedoes the last /undo or /undo [seconds] you performed.");
         }
     }
 }

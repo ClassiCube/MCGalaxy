@@ -92,10 +92,10 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/irccontrollers <add/remove> [name]");
+            Player.Message(p, "%T/irccontrollers add/remove [name]");
             Player.Message(p, "%HAdds or removes [name] from list of IRC controllers");
-            Player.Message(p, "%T/irccontrollers <reload/list>");
-            Player.Message(p, "%HReloads or outputslist of IRC controllers");
+            Player.Message(p, "%T/irccontrollers reload/list");
+            Player.Message(p, "%HReloads or outputs list of IRC controllers");
             Player.Message(p, "%T/irccontrollers rank [rank]");
             Player.Message(p, "%HSets which rank IRC controllers are treated as having in-game.");
         }

@@ -42,9 +42,9 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/botremove <name>");
+            Player.Message(p, "%T/botremove [name]");
             Player.Message(p, "%HRemove a bot on the same level as you");
-            Player.Message(p, "%HIf 'all' is used, all bots on the current level are removed");
+            Player.Message(p, "%HIf [name] is \"all\", all bots on your map are removed");
         }
     }
 }

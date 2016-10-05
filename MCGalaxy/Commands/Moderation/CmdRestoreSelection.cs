@@ -70,8 +70,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/restoreselection <number>");
-            Player.Message(p, "%Hrestores a previous backup of the current selection");
+            Player.Message(p, "%T/restoreselection [number]");
+            Player.Message(p, "%HRestores a previous backup of the current selection");
         }
     }
 }

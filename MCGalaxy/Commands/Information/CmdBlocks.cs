@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands
             }
         }
         static void OutputBlockProps(Player p, byte b) {
-            BlockProperties props = Block.Props[b];
+            BlockProps props = Block.Props[b];
 
             if (Block.LightPass(b, 0, BlockDefinition.GlobalDefs))
                 Player.Message(p, "Block will allow light through");

@@ -287,12 +287,13 @@ namespace MCGalaxy.Commands.CPE {
         
         static void EditHandler(Player p, string[] parts, bool global, string cmd) {
             if (parts.Length <= 3) {
-                if (parts.Length == 1)
+                if (parts.Length == 1) {
                     Player.Message(p, "Valid properties: name, collide, speed, toptex, sidetex, " +
                                    "bottomtex, blockslight, sound, fullbright, shape, blockdraw, min, max, " +
                                    "fogdensity, fogred, foggreen, fogblue, fallback, lefttex, righttex, fronttex, backtex");
-                else
+                } else {
                     Help(p, cmd);
+                }
                 return;
             }
             int blockId;
@@ -309,12 +310,12 @@ namespace MCGalaxy.Commands.CPE {
                     def.Name = value; break;
                 case "collide":
                     if( !(value == "0" || value == "1" || value == "2")) {
-                        SendEditHelp(p, 3, 0); return;
+                        SendEditHelp(p, 9, 0); return;
                     }
                     def.CollideType = byte.Parse(value); break;
                 case "speed":
                     if (!float.TryParse(value, out fTemp) || fTemp < 0.25f || fTemp > 3.96f) {
-                        SendEditHelp(p, 4, 0); return;
+                        SendEditHelp(p, 10, 0); return;
                     }
                     def.Speed = fTemp; break;
                 case "top":
@@ -350,38 +351,38 @@ namespace MCGalaxy.Commands.CPE {
                 case "light":
                 case "blockslight":
                     if( !(value == "0" || value == "1")) {
-                        SendEditHelp(p, 8, 0); return;
+                        SendEditHelp(p, 11, 0); return;
                     }
                     def.BlocksLight = value != "0"; break;
                 case "sound":
                 case "walksound":
-                    if (!EditByte(p, value, "Walk sound", ref def.WalkSound, 9, 1, 0, 11)) return;
+                    if (!EditByte(p, value, "Walk sound", ref def.WalkSound, 12, 1, 0, 11)) return;
                     break;
                 case "bright":
                 case "fullbright":
                     if( !(value == "0" || value == "1")) {
-                        SendEditHelp(p, 10, 0); return;
+                        SendEditHelp(p, 13, 0); return;
                     }
                     def.FullBright = value != "0"; break;
                 case "shape":
                     if( !(value == "0" || value == "1")) {
-                        SendEditHelp(p, 12, 0); return;
+                        SendEditHelp(p, 3, 0); return;
                     }
                     def.Shape = value == "1" ? (byte)0 : def.MaxZ; break;
                 case "draw":
                 case "blockdraw":
-                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, 11, 1, 0, 4)) return;
+                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, 14, 1, 0, 4)) return;
                     break;
                 case "min":
                 case "mincoords":
                     if (!ParseCoords(value, ref def.MinX, ref def.MinY, ref def.MinZ)) {
-                        SendEditHelp(p, 13, 0); return;
+                        SendEditHelp(p, 7, 0); return;
                     }
                     break;
                 case "max":
                 case "maxcoords":
                     if (!ParseCoords(value, ref def.MaxX, ref def.MaxY, ref def.MaxZ)) {
-                        SendEditHelp(p, 14, 0); return;
+                        SendEditHelp(p, 8, 0); return;
                     }
                     break;
                 case "density":

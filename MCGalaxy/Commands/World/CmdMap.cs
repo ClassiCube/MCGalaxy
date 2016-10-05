@@ -26,10 +26,11 @@ namespace MCGalaxy.Commands.World {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can edit map options"),
-                  new CommandPerm(LevelPermission.Admin, "+ can set realm owners") }; }
+                    new CommandPerm(LevelPermission.Admin, "+ can set realm owners") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("ps", "ps") }; }
+            get { return new[] { new CommandAlias("ps", "physicspeed"),
+                    new CommandAlias("allowguns", null, "guns") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -55,54 +56,60 @@ namespace MCGalaxy.Commands.World {
             }
             
             if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "set map options."); return; }
-            if (opt.CaselessEq("realmowner") && !CheckExtraPerm(p, 2)) { 
-                MessageNeedExtra(p, "set personal realm owners.", 2); return; 
+            if (opt.CaselessEq("realmowner") && !CheckExtraPerm(p, 2)) {
+                MessageNeedExtra(p, "set personal realm owners.", 2); return;
             }
-            SetMapOption(p, lvl, opt, value);
+            
+            if (SetMapOption(p, lvl, opt, value)) return;
+            Player.Message(p, "Could not find option entered.");
         }
         
         static bool IsMapOption(string[] args) {
             string opt = LevelOptions.Map(args[0].ToLower());
-            if (!HasOption(opt)) return false;
+            if (!ValidOption(opt)) return false;
             // In rare case someone uses /map motd motd My MOTD
             if (opt == "motd" && (args.Length == 1 || !args[1].CaselessStarts("motd "))) return true;
             
-            bool optHasArg = opt == "physicspeed" || opt == "overload" 
-                || opt == "fall" || opt == "drown" || opt == "realmowner";
-            return args.Length == (optHasArg ? 2 : 1);
+            int argsCount = HasArgument(opt) ? 2 : 1;
+            return args.Length == argsCount;
         }
         
-        internal static void SetMapOption(Player p, Level lvl, string opt, string value) {
+        internal static bool SetMapOption(Player p, Level lvl, string opt, string value) {
             opt = LevelOptions.Map(opt.ToLower());
             foreach (var option in LevelOptions.Options) {
                 if (!option.Key.CaselessEq(opt)) continue;
                 
                 option.Value(p, lvl, value);
                 Level.SaveSettings(lvl);
-                return;
+                return true;
             }
-            Player.Message(p, "Could not find option entered.");
+            return false;
         }
         
         
-        static bool HasOption(string opt) {
+        static bool ValidOption(string opt) {
             foreach (var option in LevelOptions.Options) {
                 if (option.Key.CaselessEq(opt)) return true;
             }
             return false;
         }
         
+        static bool HasArgument(string opt) {
+            return opt == "physicspeed" || opt == "overload"
+                || opt == "fall" || opt == "drown" || opt == "realmowner";
+        }
+        
         static void PrintMapInfo(Player p, Level lvl) {
             Player.Message(p, "%TPhysics settings:");
-            Player.Message(p, "  Finite mode: {0}%S, Random flow: {1}", 
+            Player.Message(p, "  Finite mode: {0}%S, Random flow: {1}",
                            GetBool(lvl.finite), GetBool(lvl.randomFlow));
-            Player.Message(p, "  Animal AI: {0}%S, Edge water: {1}", 
+            Player.Message(p, "  Animal AI: {0}%S, Edge water: {1}",
                            GetBool(lvl.ai), GetBool(lvl.edgeWater));
-            Player.Message(p, "  Grass growing: {0}%S, Tree growing: {1}", 
+            Player.Message(p, "  Grass growing: {0}%S, Tree growing: {1}",
                            GetBool(lvl.GrassGrow), GetBool(lvl.growTrees));
-            Player.Message(p, "  Leaf decay: {0}%S, Physics overload: {1}", 
+            Player.Message(p, "  Leaf decay: {0}%S, Physics overload: {1}",
                            GetBool(lvl.leafDecay), lvl.overload);
-            Player.Message(p, "  Physics speed: &b{0} %Smilliseconds between ticks", 
+            Player.Message(p, "  Physics speed: &b{0} %Smilliseconds between ticks",
                            lvl.speedPhysics);
             
             Player.Message(p, "%TSurvival settings:");
@@ -114,9 +121,9 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "%TGeneral settings:");
             Player.Message(p, "  MOTD: &b" + lvl.motd);
             Player.Message(p, "  Roleplay (level only) chat: " + GetBool(!lvl.worldChat));
-            Player.Message(p, "  Load on /goto: {0}%S, Auto unload: {1}", 
+            Player.Message(p, "  Load on /goto: {0}%S, Auto unload: {1}",
                            GetBool(lvl.loadOnGoto), GetBool(lvl.unload));
-            Player.Message(p, "  Buildable: {0}%S, Deletable: {1}", 
+            Player.Message(p, "  Buildable: {0}%S, Deletable: {1}",
                            GetBool(lvl.Buildable), GetBool(lvl.Deletable));
         }
         
@@ -134,28 +141,25 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/map [level] [toggle] - Sets [toggle] on [level]");
-            Player.Message(p, "Possible toggles: Theme, Finite, RandomFlow, AI, Edge, Grass, GrowTrees, LeafDecay, ps, Overload, motd, " +
-                           "Death, Fall, Drown, Unload, LoadOnGoto, Killer, Chat, Buildable, Deletable, RealmOwner");
-            Player.Message(p, "Edge will cause edge water to flow.");
-            Player.Message(p, "Grass will make grass not grow without physics.");
-            Player.Message(p, "Tree growing will make saplings grow into trees after a while.");
-            Player.Message(p, "Leaf decay will make leaves not connected to a log within 4 blocks disappear randomly.");
-            Player.Message(p, "Finite will cause all liquids to be finite.");
-            Player.Message(p, "Random flow makes mass flooding liquids flow less uniformly.");
-            Player.Message(p, "AI will make animals hunt or flee.");
-            Player.Message(p, "PS will set the map's physics speed.");
-            Player.Message(p, "Overload will change how easy/hard it is to kill physics.");
-            Player.Message(p, "MOTD will set a custom motd for the map. (leave blank to reset)");
-            Player.Message(p, "Death will allow survival-style dying (falling, drowning)");
-            Player.Message(p, "Fall/drown set the distance/time before dying from each.");
-            Player.Message(p, "Drowning value is 10 for one second of air.");
-            Player.Message(p, "Killer turns killer blocks on and off.");
-            Player.Message(p, "Unload sets whether the map unloads when no one's there.");
-            Player.Message(p, "Load on /goto sets whether the map can be loaded when some uses /goto. Only works if the load on /goto server option is enabled.");
-            Player.Message(p, "Buildable sets whether any blocks can be placed by any player");
-            Player.Message(p, "Deletable sets whether any blocks can be deleted by any player");
-            Player.Message(p, "RealmOwner allows that person to use /os commands in the map.");
+            Player.Message(p, "%T/map [level] [option] <value> %H- Sets [option] on [level]");
+            Player.Message(p, "%HPossible options: %S{0}", LevelOptions.Options.Keys.Join());
+            Player.Message(p, "%HUse %T/help map [option] %Hto see a description for that option.");
+        }
+        
+        public override void Help(Player p, string message) {
+            string opt = LevelOptions.Map(message.ToLower());
+            foreach (var help in LevelOptions.Help) {
+                if (!help.Key.CaselessEq(opt)) continue;
+                Player.Message(p, "%T/map [level] {0}{1}", opt, Suffix(opt));
+                Player.Message(p, "%H" + help.Value);
+                return;
+            }
+            Player.Message(p, "Could not find option entered.");
+        }
+        
+        static string Suffix(string opt) {
+            if (opt == "motd") return " <value>";
+            return HasArgument(opt) ? " [value]" : "";
         }
     }
 }

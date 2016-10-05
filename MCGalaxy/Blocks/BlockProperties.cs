@@ -19,7 +19,7 @@ using System;
 
 namespace MCGalaxy.Blocks {
     
-    public struct BlockProperties {
+    public struct BlockProps {
         
         /// <summary> ID of block these properties are associated with. </summary>
         public byte BlockId;
@@ -64,8 +64,8 @@ namespace MCGalaxy.Blocks {
         /// <summary> Whether this block should allow trains to go over them. </summary>
         public bool IsRails;
         
-        public BlockProperties(byte block) {
-            this = default(BlockProperties);
+        public BlockProps(byte block) {
+            this = default(BlockProps);
             BlockId = block;
             ConvertId = block;
             SaveConvertId = block;

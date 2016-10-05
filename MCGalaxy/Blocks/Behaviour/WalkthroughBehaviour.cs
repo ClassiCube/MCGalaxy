@@ -21,7 +21,7 @@ using System.Data;
 using MCGalaxy.BlockPhysics;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.BlockBehaviour {
+namespace MCGalaxy.Blocks {
     internal static class WalkthroughBehaviour {
 
         internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {

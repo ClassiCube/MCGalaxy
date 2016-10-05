@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/reload %H- Reloads the map you are in, just for you.");
-            Player.Message(p, "%T/reload <name> %H- Reloads the map for [name].");
+            Player.Message(p, "%T/reload [name] %H- Reloads the map for [name].");
             Player.Message(p, "%T/reload all %H- Reloads for all players in map you are in.");
             Player.Message(p, "%T/reload all [map] %H- Reloads for all players in [map]");
         }

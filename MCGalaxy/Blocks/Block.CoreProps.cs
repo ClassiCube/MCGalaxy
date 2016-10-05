@@ -23,12 +23,12 @@ namespace MCGalaxy {
     
     public sealed partial class Block {
         
-        public static BlockProperties[] Props = new BlockProperties[256];
+        public static BlockProps[] Props = new BlockProps[256];
         public static Dictionary<string, byte> Aliases = new Dictionary<string, byte>();
         
         static void SetCoreProperties() {
             for (int i = 0; i < 256; i++)
-                Props[i] = new BlockProperties((byte)i);
+                Props[i] = new BlockProps((byte)i);
             for (int i = 0; i < 256; i++) {
                 // Fallback for unrecognised physics blocks
                 if (i >= CpeCount) Props[i].ConvertId = Block.orange;

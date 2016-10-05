@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.Building {
             UndoDrawOpEntry[] entries = p.DrawOps.Items;
             if (entries.Length == 0) {
                 Player.Message(p, "You have no draw operations to undo.");
-                Player.Message(p, "Try using %T/undo <seconds> %Sinstead.");
+                Player.Message(p, "Try using %T/undo [seconds] %Sinstead.");
                 return;
             }
             
@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.Building {
             
             Player.Message(p, "Unable to undo any draw operations, as all of the " +
                                "past 50 draw operations are %T/undo %Sor %T/undo [seconds].");
-            Player.Message(p, "Try using %T/undo <seconds> %Sinstead.");
+            Player.Message(p, "Try using %T/undo [seconds] %Sinstead.");
         }
         
         void UndoLevelPhysics(Player p, TimeSpan delta) {

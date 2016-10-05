@@ -52,10 +52,10 @@ namespace MCGalaxy.Commands.World {
                 
                 oldMain.unload = true;
                 Server.mainLevel.unload = false;
-                Server.level = map;     
+                Server.level = map;
                 
-                SrvProperties.Save();                
-                Player.Message(p, "Set main level to \"{0}\"", map);              
+                SrvProperties.Save();
+                Player.Message(p, "Set main level to \"{0}\"", map);
             }
         }
         

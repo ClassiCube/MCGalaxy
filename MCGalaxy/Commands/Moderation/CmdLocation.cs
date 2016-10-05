@@ -72,8 +72,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/location <name>");
-            Player.Message(p, "%HTracks down the location of the IP associated with <name>.");
+            Player.Message(p, "%T/location [name]");
+            Player.Message(p, "%HTracks down the location of the IP associated with [name].");
         }
     }
 }

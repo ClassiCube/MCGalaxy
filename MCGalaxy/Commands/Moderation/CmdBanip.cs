@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/banip <ip/player>");
+            Player.Message(p, "%T/banip [ip/player]");
             Player.Message(p, "%HBans an IP, or the IP the given player is on.");
         }
     }

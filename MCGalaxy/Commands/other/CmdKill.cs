@@ -55,10 +55,11 @@ namespace MCGalaxy.Commands {
             }
             who.HandleDeath(Block.rock, deathMessage, explode);
         }
-        public override void Help(Player p)
-        {
-            Player.Message(p, "%T/kill <name> [explode] <message>");
-            Player.Message(p, "%HKills <name> with <message>. Causes explosion if [explode] is written");
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/kill [name] <message>");
+            Player.Message(p, "%HKills [name] with <message>.");
+            Player.Message(p, "%HCauses explosion if \"explode\" is used for <message>");
         }
     }
 }

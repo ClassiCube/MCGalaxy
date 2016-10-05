@@ -77,8 +77,8 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/save %H- Saves the level you are currently in");
             Player.Message(p, "%T/save all %H- Saves all loaded levels.");
-            Player.Message(p, "%T/save <map> %H- Saves the specified map.");
-            Player.Message(p, "%T/save <map> <name> %H- Backups the map with a given restore name");
+            Player.Message(p, "%T/save [map] %H- Saves the specified map.");
+            Player.Message(p, "%T/save [map] [name] %H- Backups the map with a given restore name");
         }
     }
 }

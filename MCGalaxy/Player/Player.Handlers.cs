@@ -18,6 +18,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using MCGalaxy.Blocks;
 using MCGalaxy.BlockPhysics;
 using MCGalaxy.Commands;
 using MCGalaxy.Games;
@@ -133,7 +134,7 @@ namespace MCGalaxy {
             if (deleteMode) { return ChangeBlock(x, y, z, Block.air, 0); }
             bool changed = true;
 
-            Block.HandleDelete handler = Block.deleteHandlers[old];
+            HandleDelete handler = BlockBehaviour.deleteHandlers[old];
             if (handler != null) {
                 if (handler(this, old, x, y, z)) return false;
             } else {
@@ -153,7 +154,7 @@ namespace MCGalaxy {
                 return true;
             }
             
-            Block.HandlePlace handler = Block.placeHandlers[block];
+            HandlePlace handler = BlockBehaviour.placeHandlers[block];
             if (handler != null) {
                 if (handler(this, old, x, y, z)) return false;
             } else {
@@ -367,11 +368,11 @@ namespace MCGalaxy {
             byte bHead = level.GetTile(x, y, z);
             byte bFeet = level.GetTile(x, (ushort)(y - 1), z);
 
-            Block.HandleWalkthrough handler = Block.walkthroughHandlers[bHead];
+            HandleWalkthrough handler = BlockBehaviour.walkthroughHandlers[bHead];
             if (handler != null && handler(this, bHead, x, y, z)) {
                 lastWalkthrough = level.PosToInt(x, y, z); return;
             }
-            handler = Block.walkthroughHandlers[bFeet];
+            handler = BlockBehaviour.walkthroughHandlers[bFeet];
             if (handler != null && handler(this, bFeet, x, (ushort)(y - 1), z)) {
                 lastWalkthrough = level.PosToInt(x, (ushort)(y - 1), z); return;
             }
