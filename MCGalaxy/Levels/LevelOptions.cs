@@ -31,20 +31,21 @@ namespace MCGalaxy {
             { "Overload", (p, l, value) => SetPhysicsOverload(p, l, value, "Physics overload") },
             { "Fall", (p, l, value) => SetInt(p, l, ref l.fall, value, "Fall distance") },
             { "Drown", (p, l, value) => SetInt(p, l, ref l.drown, value, "Drown time (in tenths of a second)") },
-            { "Finite", (p, l, value) => Set(p, l, ref l.finite, "Finite mode") },
-            { "AI", (p, l, value) => Set(p, l, ref l.ai, "Animal AI") },
-            { "Edge", (p, l, value) => Set(p, l, ref l.edgeWater, "Edge water") },
-            { "Grass", (p, l, value) => Set(p, l, ref l.GrassGrow, "Growing grass") },
-            { "Death", (p, l, value) => Set(p, l, ref l.Death, "Survival death") },
-            { "Killer", (p, l, value) => Set(p, l, ref l.Killer, "Killer blocks") },
-            { "Unload", (p, l, value) => Set(p, l, ref l.unload, "Auto unload") },
-            { "LoadOnGoto", (p, l, value) => Set(p, l, ref l.loadOnGoto, "Load on goto") },
-            { "LeafDecay", (p, l, value) => Set(p, l, ref l.leafDecay, "Leaf decay") },
-            { "RandomFlow", (p, l, value) => Set(p, l, ref l.randomFlow, "Random flow") },
-            { "GrowTrees", (p, l, value) => Set(p, l, ref l.growTrees, "Tree growing") },
-            { "Chat", (p, l, value) => Set(p, l, ref l.worldChat, "Roleplay (level only) chat: ", true) },
-            { "Buildable", (p, l, value) => SetPerms(p, l, ref l.Buildable, "Buildable") },
-            { "Deletable", (p, l, value) => SetPerms(p, l, ref l.Deletable, "Deletable") },
+            { "Finite", (p, l, value) => Toggle(p, l, ref l.finite, "Finite mode") },
+            { "AI", (p, l, value) => Toggle(p, l, ref l.ai, "Animal AI") },
+            { "Edge", (p, l, value) => Toggle(p, l, ref l.edgeWater, "Edge water") },
+            { "Grass", (p, l, value) => Toggle(p, l, ref l.GrassGrow, "Growing grass") },
+            { "Death", (p, l, value) => Toggle(p, l, ref l.Death, "Survival death") },
+            { "Killer", (p, l, value) => Toggle(p, l, ref l.Killer, "Killer blocks") },
+            { "Unload", (p, l, value) => Toggle(p, l, ref l.unload, "Auto unload") },
+            { "LoadOnGoto", (p, l, value) => Toggle(p, l, ref l.loadOnGoto, "Load on goto") },
+            { "LeafDecay", (p, l, value) => Toggle(p, l, ref l.leafDecay, "Leaf decay") },
+            { "RandomFlow", (p, l, value) => Toggle(p, l, ref l.randomFlow, "Random flow") },
+            { "GrowTrees", (p, l, value) => Toggle(p, l, ref l.growTrees, "Tree growing") },
+            { "Chat", (p, l, value) => Toggle(p, l, ref l.worldChat, "Roleplay (level only) chat: ", true) },
+            { "Guns", ToggleGuns },
+            { "Buildable", (p, l, value) => TogglePerms(p, l, ref l.Buildable, "Buildable") },
+            { "Deletable", (p, l, value) => TogglePerms(p, l, ref l.Deletable, "Deletable") },
         };
         
         public static Dictionary<string, string> Help = new Dictionary<string, string>() {
@@ -66,6 +67,7 @@ namespace MCGalaxy {
             { "RandomFlow", "%HWhether flooding liquids flow less uniformly." },
             { "GrowTrees", "%HWhether saplings grow into trees after a while." },
             { "Chat", "%HWhether chat is only seen from and sent to players in the map." },
+            { "Guns", "%HWhether guns and missiles can be used" },
             { "Buildable", "%HWhether any blocks can be placed by players." },
             { "Deletable", "%HWhether any blocks can be deleted by players." },
         };
@@ -81,6 +83,24 @@ namespace MCGalaxy {
         }
         
         static string GetBool(bool value) { return value ? "&aON" : "&cOFF"; }
+
+        static void SetMotd(Player p, Level lvl, string value) {
+            lvl.motd = value == "" ? "ignore" : value;
+            lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.motd);
+            
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level != lvl || !pl.HasCpeExt(CpeExt.HackControl)) continue;
+                pl.Send(Hacks.MakeHackControl(pl));
+            }
+        }
+        
+        static void SetRealmOwner(Player p, Level lvl, string value) {
+            lvl.RealmOwner = value;
+            if (value == "") Player.Message(p, "Removed realm owner for this level.");
+            else Player.Message(p, "Set realm owner/owners of this level to {0}.", value);
+        }
+        
         
         static void SetPhysicsSpeed(Player p, Level lvl, string value, string name) {
             SetInt(p, lvl, ref lvl.speedPhysics, value, name, PhysicsSpeedValidator);
@@ -105,38 +125,6 @@ namespace MCGalaxy {
             return true;
         }
         
-
-        static void SetMotd(Player p, Level lvl, string value) {
-            lvl.motd = value == "" ? "ignore" : value;
-            lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.motd);
-            
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (pl.level != lvl || !pl.HasCpeExt(CpeExt.HackControl)) continue;
-                pl.Send(Hacks.MakeHackControl(pl));
-            }
-        }
-        
-        static void SetRealmOwner(Player p, Level lvl, string value) {
-            lvl.RealmOwner = value;
-            if (value == "") Player.Message(p, "Removed realm owner for this level.");
-            else Player.Message(p, "Set realm owner/owners of this level to {0}.", value);
-        }
-        
-        static void SetPerms(Player p, Level lvl, ref bool target, string name) {
-            Set(p, lvl, ref target, name);
-            lvl.UpdateBlockPermissions();
-        }
-        
-        static void Set(Player p, Level lvl, ref bool target, string name, bool not = false) {
-            target = !target;
-            bool display = not ? !target : target;
-            lvl.ChatLevel(name + ": " + GetBool(display));
-            
-            if (p == null || p.level != lvl)
-                Player.Message(p, name + ": " + GetBool(display));
-        }
-        
         static void SetInt(Player p, Level lvl, ref int target, string value, string name,
                            Func<Player, int, bool> validator = null) {
             if (value == "") { Player.Message(p, "You must provide an integer."); return; }
@@ -146,6 +134,32 @@ namespace MCGalaxy {
             if (validator != null && !validator(p, raw)) return;
             target = raw;
             lvl.ChatLevel(name + ": &b" + target);
+        }
+        
+        
+        static void ToggleGuns(Player p, Level lvl, string value) {
+        	Toggle(p, lvl, ref lvl.guns, "Guns allowed");
+            if (lvl.guns) return;
+            
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level.name.CaselessEq(lvl.name))
+                    pl.aiming = false;
+            }
+        }
+        
+        static void TogglePerms(Player p, Level lvl, ref bool target, string name) {
+            Toggle(p, lvl, ref target, name);
+            lvl.UpdateBlockPermissions();
+        }
+        
+        static void Toggle(Player p, Level lvl, ref bool target, string name, bool not = false) {
+            target = !target;
+            bool display = not ? !target : target;
+            lvl.ChatLevel(name + ": " + GetBool(display));
+            
+            if (p == null || p.level != lvl)
+                Player.Message(p, name + ": " + GetBool(display));
         }
     }
 }
