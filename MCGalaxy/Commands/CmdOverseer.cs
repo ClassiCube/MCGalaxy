@@ -184,6 +184,8 @@ namespace MCGalaxy.Commands {
             CmdLoad.LoadLevel(null, level);
             Level lvl = LevelInfo.FindExact(level);
             if (lvl == null) return;
+            
+            lvl.RealmOwner = p.name;
             Command.all.Find("perbuild").Use(null, lvl.name + " +" + p.name);
             
             LevelPermission osPerm = Server.osPerbuildDefault;
