@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
                 string nameTag = newName.CaselessEq("empty") ? "" : newName;
                 if (newName.Length >= 30) { Player.Message(p, "Name must be under 30 letters."); return; }
                 Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Sname was set to " + nameTag + "%S.");
-                bot.DisplayName = newName;
+                bot.DisplayName = Colors.EscapeColors(newName);
             }
             
             bot.GlobalDespawn();
