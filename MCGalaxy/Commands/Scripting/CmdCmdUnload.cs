@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             
             Command cmd = Command.all.Find(cmdName);
             if (cmd == null) {
-                Player.Message(p, "\"{0}\" is not a valid or loaded command.", cmd); return;
+                Player.Message(p, "\"{0}\" is not a valid or loaded command.", cmdName); return;
             }
             
             Command.all.Remove(cmd);

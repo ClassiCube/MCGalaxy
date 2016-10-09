@@ -217,7 +217,7 @@ namespace MCGalaxy {
         }
         
         public void SendMessage(byte id, string message, bool colorParse = true) {
-            message = ConvertMessage(message, colorParse);
+            message = Chat.Format(message, this, colorParse);
             int totalTries = 0;
             if (MessageRecieve != null)
                 MessageRecieve(this, message);
@@ -251,7 +251,7 @@ namespace MCGalaxy {
                 if (id == CpeMessageType.Announcement) id = CpeMessageType.Normal;
                 else return;
             }
-            message = ConvertMessage(message, colorParse);
+            message = Chat.Format(message, this, colorParse);
             SendRawMessage(id, message);
         }
         
@@ -262,43 +262,6 @@ namespace MCGalaxy {
             buffer[1] = (byte)id;
             NetUtils.Write(message, buffer, 2, HasCpeExt(CpeExt.FullCP437));
             Send(buffer);
-        }
-
-        string ConvertMessage(string message, bool colorParse) {
-            if (colorParse) message = Colors.EscapeColors(message);
-            StringBuilder sb = new StringBuilder(message);
-            if (colorParse) ParseColors(sb);
-            
-            ChatTokens.Apply(sb, this);
-            if (parseEmotes) {
-                sb.Replace(":)", "(darksmile)");
-                sb.Replace(":D", "(smile)");
-                sb.Replace("<3", "(heart)");
-            }
-
-            message = EmotesHandler.Replace(sb.ToString());
-            message = FullCP437Handler.Replace(message);
-            return message;
-        }
-        
-        void ParseColors(StringBuilder sb) {
-            for (int i = 0; i < sb.Length; i++) {
-                char c = sb[i];
-                if (c != '&' || i == sb.Length - 1) continue;
-                
-                char code = sb[i + 1];
-                if (Colors.IsStandardColor(code)) {
-                    if (code >= 'A' && code <= 'F')
-                        sb[i + 1] += ' '; // WoM does not work with uppercase color codes.
-                } else {
-                    char fallback = Colors.GetFallback(code);
-                    if (fallback == '\0') {
-                        sb.Remove(i, 2); i--; // now need to check char at i again
-                    } else if (!hasTextColors) {
-                        sb[i + 1] = fallback;
-                    }
-                }
-            }
         }
         
         public void SendMotd() { SendMapMotd(); }

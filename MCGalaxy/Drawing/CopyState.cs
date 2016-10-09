@@ -89,6 +89,8 @@ namespace MCGalaxy.Drawing {
 			w.Write(blocks);
 			
 			w.Write(OriginX); w.Write(OriginY); w.Write(OriginZ);
+			w.Write((byte)0x0f); // 0ffset
+			w.Write(Offset.X); w.Write(Offset.Y); w.Write(Offset.Z);
 		}
 		
 		public void LoadFrom(Stream stream) {
@@ -109,8 +111,11 @@ namespace MCGalaxy.Drawing {
 				blocksLen = r.ReadInt32();
 				ExtBlocks = r.ReadBytes(blocksLen).Decompress(uncompressedLen);
 			}
+			
 			UsedBlocks = Volume;
 			OriginX = r.ReadInt32(); OriginY = r.ReadInt32(); OriginZ = r.ReadInt32();
+			if (stream.ReadByte() != 0x0f) return;
+			Offset.X = r.ReadInt32(); Offset.Y = r.ReadInt32(); Offset.Z = r.ReadInt32();
 		}
 		
 		public void LoadFromOld(Stream stream, Stream underlying) {

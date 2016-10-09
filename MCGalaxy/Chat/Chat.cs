@@ -13,6 +13,7 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
+using System.Text;
 
 namespace MCGalaxy {
     public static class Chat {
@@ -97,6 +98,44 @@ namespace MCGalaxy {
             foreach (Player p in players) {
                 if (!p.ignoreAll && p.level.worldChat && p.Chatroom == null)
                     p.SendMessage(message, true);
+            }
+        }
+                
+        public static string Format(string message, Player p, bool colors = true, 
+                                    bool tokens = true, bool emotes = true) {
+            if (colors) message = Colors.EscapeColors(message);
+            StringBuilder sb = new StringBuilder(message);
+            if (colors) ParseColors(p, sb);          
+            if (tokens) ChatTokens.Apply(sb, p);
+            if (!emotes) return sb.ToString();
+            
+            if (p.parseEmotes) {
+                sb.Replace(":)", "(darksmile)");
+                sb.Replace(":D", "(smile)");
+                sb.Replace("<3", "(heart)");
+            }
+            message = EmotesHandler.Replace(sb.ToString());
+            message = FullCP437Handler.Replace(message);
+            return message;
+        }
+        
+        static void ParseColors(Player p, StringBuilder sb) {
+            for (int i = 0; i < sb.Length; i++) {
+                char c = sb[i];
+                if (c != '&' || i == sb.Length - 1) continue;
+                
+                char code = sb[i + 1];
+                if (Colors.IsStandardColor(code)) {
+                    if (code >= 'A' && code <= 'F')
+                        sb[i + 1] += ' '; // WoM does not work with uppercase color codes.
+                } else {
+                    char fallback = Colors.GetFallback(code);
+                    if (fallback == '\0') {
+                        sb.Remove(i, 2); i--; // now need to check char at i again
+                    } else if (!p.hasTextColors) {
+                        sb[i + 1] = fallback;
+                    }
+                }
             }
         }
         
