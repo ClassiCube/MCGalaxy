@@ -83,7 +83,6 @@ namespace MCGalaxy.Commands {
             DoQuery(p, "Reviews - ", spanStart, spanEnd, message, "review", "LIKE 'next'");
             DoQuery(p, "Promotes - ", spanStart, spanEnd, message, "promote", "!=''");
             DoQuery(p, "Demotes - ", spanStart, spanEnd, message, "demote", "!=''");
-            DoQuery(p, "Griefers - ", spanStart, spanEnd, message, "griefer", "!=''");
             DoQuery(p, "Undo - ", spanStart, spanEnd, message, "undo", "!=''");
             DoQuery(p, "Freezes - ", spanStart, spanEnd, message, "freeze", "!=''");
             DoQuery(p, "Mutes - ", spanStart, spanEnd, message, "mute", "!=''");
@@ -108,7 +107,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/opstats [player] [today]|[yesterday]|[thismonth]|[lastmonth]|[all]");
+            Player.Message(p, "%T/opstats [player] today/yesterday/thismonth]/lastmonth/all");
             Player.Message(p, "%HDisplays information about operator command usage.");
         }
     }
