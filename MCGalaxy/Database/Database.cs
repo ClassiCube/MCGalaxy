@@ -22,15 +22,15 @@ using System.IO;
 namespace MCGalaxy.SQL {
     public static partial class Database {
         
-		public static IDatabaseBackend Backend;
+        public static IDatabaseBackend Backend;
         
         public static bool TableExists(string table) {
-		    return Backend.TableExists(table);
+            return Backend.TableExists(table);
         }
         
         [Obsolete("Use Execute() method instead.")]
         public static void executeQuery(string queryString, bool createDB = false) {
-        	ParameterisedQuery query = Backend.GetStaticParameterised();
+            ParameterisedQuery query = Backend.GetStaticParameterised();
             Execute(query, queryString, createDB, null);
         }
         
@@ -56,13 +56,13 @@ namespace MCGalaxy.SQL {
         }
         
         public static DataTable Fill(string queryString, params object[] args) {
-        	ParameterisedQuery query = Backend.CreateParameterised();
+            ParameterisedQuery query = Backend.CreateParameterised();
             return Fill(query, queryString, args);
         }
 
 
-        static void Execute(ParameterisedQuery query, string queryString, 
-                            bool createDB, params object[] args) {
+        internal static void Execute(ParameterisedQuery query, string queryString,
+                                     bool createDB, params object[] args) {
             BindParams(query, args);
             string connString = Backend.ConnectionString;
             Exception e = null;
@@ -80,10 +80,10 @@ namespace MCGalaxy.SQL {
             File.AppendAllText("MySQL_error.log", DateTime.Now + " " + queryString + "\r\n");
             Server.ErrorLog(e);
             query.ClearParams();
-        }        
+        }
         
-        static DataTable Fill(ParameterisedQuery query, string queryString, 
-                              params object[] args) {
+        internal static DataTable Fill(ParameterisedQuery query, string queryString,
+                                       params object[] args) {
             BindParams(query, args);
             string connString = Backend.ConnectionString;
             Exception e = null;

@@ -30,8 +30,13 @@ namespace MCGalaxy.SQL {
         public override string ConnectionString {
             get { return String.Format(connFormat, Server.MySQLHost, Server.MySQLPort,
                                        Server.MySQLUsername, Server.MySQLPassword, Server.DatabasePooling); }
-        }        
+        }
         public override bool EnforcesTextLength { get { return true; } }
+        
+        public override void CreateDatabase() {
+            ParameterisedQuery query = GetStaticParameterised();
+            Database.Execute(query, "CREATE DATABASE if not exists `" + Server.MySQLDatabaseName + "`", true);
+        }
         
         public override BulkTransaction CreateBulk() {
             return new MySQLBulkTransaction(ConnectionString);

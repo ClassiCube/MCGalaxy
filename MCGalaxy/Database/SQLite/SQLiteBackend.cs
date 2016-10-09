@@ -32,6 +32,8 @@ namespace MCGalaxy.SQL {
         }
         public override bool EnforcesTextLength { get { return false; } }
         
+        public override void CreateDatabase() { }
+        
         public override BulkTransaction CreateBulk() {
             return new SQLiteBulkTransaction(ConnectionString);
         }

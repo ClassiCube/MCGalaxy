@@ -202,7 +202,6 @@ namespace MCGalaxy {
             //AUTO_INCREMENT is changed to AUTOINCREMENT for MySQL -> SQLite
             //AUTOINCREMENT is changed to AUTO_INCREMENT for SQLite -> MySQL
             // All we should have in the script file is CREATE TABLE and INSERT INTO commands.
-            //executeQuery(sb.ToString().Replace(" unsigned", "").Replace(" UNSIGNED", ""));
         }
         
         static string NextStatement(StreamReader reader, List<string> buffer) {
@@ -215,7 +214,7 @@ namespace MCGalaxy {
                 if (line.Length == 0) continue; // whitespace
                 
                 buffer.Add(line);
-                if (line.EndsWith(";")) break;
+                if (line[line.Length - 1] == ';') break;
             }
             return buffer.Join("");
         }

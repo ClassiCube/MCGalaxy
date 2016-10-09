@@ -55,8 +55,7 @@ SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE {0};";
         
         void InitDatabase() {
             try {
-                if (Server.useMySQL)
-                    Database.executeQuery("CREATE DATABASE if not exists `" + MySQLDatabaseName + "`", true);
+        	    Database.Backend.CreateDatabase();
             } catch (Exception e) {
                 ErrorLog(e);
                 s.Log("MySQL settings have not been set! Please Setup using the properties window.");

@@ -29,6 +29,9 @@ namespace MCGalaxy.SQL {
         /// <summary> Whether this backend enforces the character length in VARCHAR columns. </summary>
         public abstract bool EnforcesTextLength { get; }
         
+        /// <summary> Creates the schema for this database (if required). </summary>
+        public abstract void CreateDatabase();
+        
         /// <summary> Returns a new BulkTransaction instance, which can be used to execute
         /// many sql statements as one single transaction. </summary>
         public abstract BulkTransaction CreateBulk();
