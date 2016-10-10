@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands
                 playerList.Add(MakeSection(grp, title));
             }
 
-            int totalPlayers = 0;            
+            int totalPlayers = 0;
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
                 if (pl.hidden && !showHidden) continue;

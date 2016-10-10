@@ -70,7 +70,8 @@ namespace MCGalaxy {
                 "&public=" + Server.pub +
                 "&version=7" +
                 "&salt=" + Server.salt +
-                "&users=" + PlayerCount() + "&software=MCGalaxy";
+                "&users=" + PlayerCount() + 
+                "&software=MCGalaxy";
         }
         
         static int PlayerCount() {
