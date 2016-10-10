@@ -62,10 +62,13 @@ namespace MCGalaxy.BlockPhysics {
                 return;
 
             int b = x + lvl.Width * (z + y * lvl.Length);
-            if (lvl.physics > 1 && lvl.physics != 5 && !lvl.CheckSpongeLava(x, y, z) 
-                && lvl.blocks[b] >= Block.red && lvl.blocks[b] <= Block.white) {
+            // only do expensive sponge check when necessary
+            if (lvl.physics > 1 && lvl.physics != 5 &&
+                ((lvl.blocks[b] >= Block.red && lvl.blocks[b] <= Block.white) ||
+                 (lvl.blocks[b] >= Block.lightpink && lvl.blocks[b] <= Block.turquoise))
+                && !lvl.CheckSpongeLava(x, y, z)) {
                 lvl.AddUpdate(b, Block.air); return;
-            } // Adv physics destroys cloth
+            }
             
             switch (lvl.blocks[b]) {
                 case Block.air:

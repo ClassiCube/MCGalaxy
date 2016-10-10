@@ -261,7 +261,10 @@ namespace MCGalaxy.BlockPhysics {
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return true;
 
-            if (lvl.physics > 1 && lvl.blocks[b] >= Block.red && lvl.blocks[b] <= Block.white 
+            // only do expensive sponge check when necessary
+            if (lvl.physics > 1 && lvl.physics != 5 &&
+                ((lvl.blocks[b] >= Block.red && lvl.blocks[b] <= Block.white) ||
+                 (lvl.blocks[b] >= Block.lightpink && lvl.blocks[b] <= Block.turquoise))
                 && !lvl.CheckSpongeLava(x, y, z))
                 return false; // Adv physics destroys cloth
             
