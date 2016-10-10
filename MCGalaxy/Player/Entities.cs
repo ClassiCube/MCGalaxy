@@ -139,7 +139,7 @@ namespace MCGalaxy {
         
         internal static void Spawn(Player dst, PlayerBot b) {
             string name = Chat.Format(b.color + b.DisplayName, dst, true, true, false);
-            if (name.CaselessEq("empty")) name = "";
+            if (b.DisplayName.CaselessEq("empty")) name = "";
             string skin = Chat.Format(b.SkinName, dst, true, true, false);
         	
             if (dst.hasExtList) {

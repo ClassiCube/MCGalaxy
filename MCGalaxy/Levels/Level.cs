@@ -145,7 +145,7 @@ namespace MCGalaxy {
         public IGame CurrentGame() {
             if (Server.zombie.Running && name.CaselessEq(Server.zombie.CurLevelName))
                 return Server.zombie;
-            if (Server.lava.active && Server.lava.HasMap(name)) 
+            if (Server.lava.active && Server.lava.map == this) 
                 return Server.lava;
             return null;
         }
