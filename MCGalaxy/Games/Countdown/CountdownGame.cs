@@ -63,7 +63,7 @@ namespace MCGalaxy.Games {
                     pl.SendMessage("Sending you to the correct map.");
                     PlayerActions.ChangeMap(pl, mapon.name);
                 }
-                p.SpawnEntity(p, 0xFF, x1, y1, z1, 0, 0);
+                p.SpawnEntity(p, Entities.SelfID, x1, y1, z1, 0, 0);
             }
             
             squaresLeft.Clear();

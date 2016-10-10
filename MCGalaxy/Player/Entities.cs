@@ -21,6 +21,8 @@ namespace MCGalaxy {
     /// <summary> Contains methods related to the management of entities (such as players). </summary>
     public static class Entities {
 
+        public const byte SelfID = 0xFF;
+        
         #region Spawning / Despawning
         
         /// <summary> Spawns this player to all other players that can see the player in the current world. </summary>
@@ -43,7 +45,7 @@ namespace MCGalaxy {
                 } else if (p == other && self) {
                     other.pos = new ushort[3] { x, y, z }; other.rot = new byte[2] { rotx, roty };
                     other.oldpos = other.pos; other.oldrot = other.rot;
-                    Spawn(other, p, 0xFF, x, y, z, rotx, roty, possession);
+                    Spawn(other, p, Entities.SelfID, x, y, z, rotx, roty, possession);
                 }
             }
         }
@@ -62,7 +64,7 @@ namespace MCGalaxy {
                 if (p != other && despawn) {
                     Despawn(other, p.id);
                 } else if (p == other && self) {
-                    Despawn(other, 0xFF);
+                    Despawn(other, Entities.SelfID);
                 }
             }
         }
@@ -96,7 +98,7 @@ namespace MCGalaxy {
                 dst.SendSpawn(id, Colors.red + name + possession, x, y, z, rotx, roty);
             }
             
-            if (dst.hasChangeModel && id != 0xFF)
+            if (dst.hasChangeModel && id != Entities.SelfID)
                 dst.SendChangeModel(id, ZombieGameProps.ZombieModel);
         }
         
@@ -198,7 +200,7 @@ namespace MCGalaxy {
                 if (pl.level != lvl || !pl.HasCpeExt(CpeExt.ChangeModel)) continue;
                 if (who != null && !CanSeeEntity(pl, who)) continue;
                 
-                byte sendId = (pl.id == id) ? (byte)0xFF : id;
+                byte sendId = (pl.id == id) ? Entities.SelfID : id;
                 pl.SendChangeModel(sendId, model);
             }
         }

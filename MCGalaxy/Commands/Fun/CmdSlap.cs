@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands {
                 who.level.ChatLevel(who.ColoredName + " %Swas slapped sky high by " + src);
                 foundHeight = 1000;
             }
-            who.SendPos(0xFF, who.pos[0], (ushort)(foundHeight * 32), who.pos[2], who.rot[0], who.rot[1]);
+            who.SendPos(Entities.SelfID, who.pos[0], (ushort)(foundHeight * 32), who.pos[2], who.rot[0], who.rot[1]);
         }
         
         public override void Help(Player p) {

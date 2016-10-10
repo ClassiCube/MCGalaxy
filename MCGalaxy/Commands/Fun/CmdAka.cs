@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
                 p.DespawnEntity(pl.id);
                 p.SpawnEntity(pl, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
             }
-            TabList.Add(p, p, 0xFF);
+            TabList.Add(p, p, Entities.SelfID);
         }
         
         public override void Help(Player p) {

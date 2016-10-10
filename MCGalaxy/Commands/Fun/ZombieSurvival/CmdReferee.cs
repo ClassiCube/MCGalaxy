@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands {
             }
             
             Entities.GlobalSpawn(p, false, "");
-            TabList.Add(p, p, 0xFF);
+            TabList.Add(p, p, Entities.SelfID);
             p.SetPrefix();
         }
         

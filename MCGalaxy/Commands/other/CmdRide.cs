@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands {
                         else if (z - zz == 0) yaw = 192;
                         else yaw = 224;
                     }
-                    p.SendPos(0xFF, xT, yT, zT, yaw, pitch);
+                    p.SendPos(Entities.SelfID, xT, yT, zT, yaw, pitch);
                     goto skip;
                 }
 

@@ -34,7 +34,7 @@ namespace MCGalaxy.Tasks {
                         Player p = players[i];
 
                         if (p.frozen) {
-                            p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]); continue;
+                            p.SendPos(Entities.SelfID, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]); continue;
                         } else if (p.following != "") {
                             Player who = PlayerInfo.FindExact(p.following);
                             if (who == null || who.level != p.level) {
@@ -47,9 +47,9 @@ namespace MCGalaxy.Tasks {
                             }
                             
                             if (p.canBuild) {
-                                p.SendPos(0xFF, who.pos[0], (ushort)(who.pos[1] - 16), who.pos[2], who.rot[0], who.rot[1]);
+                                p.SendPos(Entities.SelfID, who.pos[0], (ushort)(who.pos[1] - 16), who.pos[2], who.rot[0], who.rot[1]);
                             } else {
-                                p.SendPos(0xFF, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1]);
+                                p.SendPos(Entities.SelfID, who.pos[0], who.pos[1], who.pos[2], who.rot[0], who.rot[1]);
                             }
                         } else if (p.possess != "") {
                             Player who = PlayerInfo.FindExact(p.possess);

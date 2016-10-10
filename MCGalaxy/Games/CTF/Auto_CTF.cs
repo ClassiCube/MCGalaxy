@@ -86,10 +86,10 @@ namespace MCGalaxy.Games
                     yy = (ushort)(rand.Next(0, mainlevel.Height));
                     zz = (ushort)(rand.Next(0, mainlevel.Length));
                 }
-                p1.SendPos(0xFF, (ushort)(xx * 32), (ushort)(yy * 32), (ushort)(zz * 32), p1.rot[0], p1.rot[1]);
+                p1.SendPos(Entities.SelfID, (ushort)(xx * 32), (ushort)(yy * 32), (ushort)(zz * 32), p1.rot[0], p1.rot[1]);
             }
             else
-                p1.SendPos(0xFF, spawnx, spawny, spawnz, p1.rot[0], p1.rot[1]);
+                p1.SendPos(Entities.SelfID, spawnx, spawny, spawnz, p1.rot[0], p1.rot[1]);
 
         }
         public Base(ushort x, ushort y, ushort z, Teams team)

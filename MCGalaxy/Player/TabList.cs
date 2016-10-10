@@ -68,7 +68,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {
                 if (p == other) {
-                    if (self) Add(other, p, 0xFF);
+            		if (self) Add(other, p, Entities.SelfID);
                     continue;
                 }
                 if (!Server.TablistGlobal && p.level != other.level) continue;
@@ -87,7 +87,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {               
                 if (p == other) {
-                    if (self) Remove(other, 0xFF); 
+                    if (self) Remove(other, Entities.SelfID); 
                     continue;
                 }
                 

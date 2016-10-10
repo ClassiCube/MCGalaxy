@@ -138,7 +138,7 @@ namespace MCGalaxy {
             foreach (Player p in players) {
                 if (p.level != level) continue;
                 if (p == this) {
-                    if (model != "humanoid") SendChangeModel(0xFF, model);
+                    if (model != "humanoid") SendChangeModel(Entities.SelfID, model);
                     continue;
                 }
                 

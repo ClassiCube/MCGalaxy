@@ -37,7 +37,7 @@ namespace MCGalaxy.Games {
                 return false;
             
             Warn(ref p.Game.LastSpeedhackWarn, p, "speedhack");
-            p.SendPos(0xFF, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
+            p.SendPos(Entities.SelfID, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
             return true;
         }
         

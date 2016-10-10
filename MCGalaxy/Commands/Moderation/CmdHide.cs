@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands {
                 Server.hidden.Remove(p.name);
             }
             
-            TabList.Add(p, p, 0xFF);
+            TabList.Add(p, p, Entities.SelfID);
             Server.hidden.Save(false);
         }
 

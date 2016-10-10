@@ -151,7 +151,8 @@ namespace MCGalaxy.Commands {
         
         protected static void DoTeleport(Player p, Vec3U16 pos) {
             try {
-                p.SendPos(0xFF, (ushort)(pos.X * 32), (ushort)(pos.Y * 32 + 32), (ushort)(pos.Z * 32), p.rot[0], p.rot[1]);
+                p.SendPos(Entities.SelfID, (ushort)(pos.X * 32), (ushort)(pos.Y * 32 + 32), 
+        		          (ushort)(pos.Z * 32), p.rot[0], p.rot[1]);
             } catch {
             }
         }

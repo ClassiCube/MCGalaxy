@@ -197,7 +197,7 @@ namespace MCGalaxy {
             for (byte i = 127; i >= 64; i-- ) {
                 if (used[i] == 0) return i;
             }
-            return 0xFF;
+            return Entities.SelfID;
         }
         
         

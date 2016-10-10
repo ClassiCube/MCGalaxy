@@ -300,7 +300,7 @@ namespace MCGalaxy {
             PlayerRotateEvent.Call(this, rot);
             
             if (cancelmove) {
-                SendPos(0xFF, pos[0], pos[1], pos[2], rot[0], rot[1]); return;
+                SendPos(Entities.SelfID, pos[0], pos[1], pos[2], rot[0], rot[1]); return;
             }
             
             pos = new ushort[3] { x, y, z };

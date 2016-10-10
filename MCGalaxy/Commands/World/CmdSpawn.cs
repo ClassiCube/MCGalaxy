@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
                 if (game.GameMode == TntWarsGame.TntWarsGameMode.TDM && game.GameStatus != TntWarsGame.TntWarsGameStatus.WaitingForPlayers
                     && game.GameStatus != TntWarsGame.TntWarsGameStatus.Finished && game.RedSpawn != null && game.BlueSpawn != null) {
                     bool blue = game.FindPlayer(p).Blue;
-                    p.SendPos(0xFF,
+                    p.SendPos(Entities.SelfID,
                               (ushort)((0.5 + (blue ? game.BlueSpawn[0] : game.RedSpawn[0]) * 32)),
                               (ushort)((1 + (blue ? game.BlueSpawn[1] : game.RedSpawn[1]) * 32)),
                               (ushort)((0.5 + (blue ? game.BlueSpawn[2] : game.RedSpawn[2]) * 32)),
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands {
                     return;
                 }
             }
-            p.SendPos(0xFF, x, y, z, rotX, rotY);
+            p.SendPos(Entities.SelfID, x, y, z, rotX, rotY);
         }
         
         public override void Help(Player p) {

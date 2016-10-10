@@ -317,7 +317,7 @@ namespace MCGalaxy.Games {
             p.Game.lastSpawnColor = color;
             Entities.GlobalDespawn(p, false);
             Entities.GlobalSpawn(p, false);
-            TabList.Add(p, p, 0xFF);
+            TabList.Add(p, p, Entities.SelfID);
         }
 
         public void EndRound() {

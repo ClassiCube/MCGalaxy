@@ -103,7 +103,7 @@ namespace MCGalaxy.Games.ZS {
                 
                 Entities.GlobalDespawn(pl, false);
                 Entities.GlobalSpawn(pl, false);
-                TabList.Add(pl, pl, 0xFF);
+                TabList.Add(pl, pl, Entities.SelfID);
                 HUD.UpdateTertiary(pl);
             }
         }
