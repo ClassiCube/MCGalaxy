@@ -31,8 +31,8 @@ namespace MCGalaxy.Commands {
         public CmdOpStats() { }
         
         public override void Use(Player p, string message) {
-            string spanEnd = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            string spanStart = "thismonth";
+            string end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            string start = "thismonth";
             string spanName = null;
             string[] args = message.Split(' ');
             
@@ -41,55 +41,70 @@ namespace MCGalaxy.Commands {
                 if (p == null) { Help(p); return; }
                 target = p;
                 if (message != "")
-                    spanStart = message.ToLower();
+                    start = message.ToLower();
             } else {
                 target = PlayerInfo.Find(args[0]);
                 if (args.Length > 1 && ValidTimespan(args[1].ToLower()))
-                    spanStart = args[1].ToLower();
+                    start = args[1].ToLower();
             }
             
-            if (spanStart == "today") {
-                spanStart = DateTime.Now.ToString("yyyy-MM-dd 00:00:00");
+            if (start == "today") {
+                start = DateTime.Now.ToString("yyyy-MM-dd 00:00:00");
                 spanName = "Today";
-            } else if (spanStart == "yesterday")  {
-                spanStart = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd 00:00:00");
-                spanEnd = DateTime.Now.ToString("yyyy-MM-dd 00:00:00");
+            } else if (start == "yesterday")  {
+                start = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd 00:00:00");
+                end = DateTime.Now.ToString("yyyy-MM-dd 00:00:00");
                 spanName = "Yesterday";
-            } else if (spanStart == "thismonth") {
-                spanStart = DateTime.Now.ToString("yyyy-MM-01 00:00:00");
+            } else if (start == "thismonth") {
+                start = DateTime.Now.ToString("yyyy-MM-01 00:00:00");
                 spanName = "This Month";
-            } else if (spanStart == "lastmonth") {
-                spanStart = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-01 00:00:00");
-                spanEnd = DateTime.Now.ToString("yyyy-MM-01 00:00:00");
+            } else if (start == "lastmonth") {
+                start = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-01 00:00:00");
+                end = DateTime.Now.ToString("yyyy-MM-01 00:00:00");
                 spanName = "Last Month";
-            } else if (spanStart == "all") {
-                spanStart = "0000-00-00 00:00:00";
+            } else if (start == "all") {
+                start = "0000-00-00 00:00:00";
                 spanName = "ALL";
             } else {
                 Help(p); return;
             }
             
+            string name = null;
             if (target != null) {
-                message = target.name;
+                name = target.name;
             } else {
-                message = PlayerInfo.FindOfflineNameMatches(p, message);
-                if (message == null) return;
+                name = PlayerInfo.FindOfflineNameMatches(p, args[0]);
+                if (name == null) return;
             }
 
-            Player.Message(p, (p == null ? "" : "&d") + "OpStats for " + (p == null ? "" : "&c") + message); // Use colorcodes if in game, don't use color if in console
-            Player.Message(p, (p == null ? "" : "&d") + "Showing " + spanName + " Starting from " + spanStart);
-            Player.Message(p, (p == null ? "" : "&0") + "----------------");
+            Player.Message(p, "OpStats for {0} %Ssince {1}",
+                           PlayerInfo.GetColoredName(p, name), start);
             
-            DoQuery(p, "Reviews - ", spanStart, spanEnd, message, "review", "LIKE 'next'");
-            DoQuery(p, "Promotes - ", spanStart, spanEnd, message, "promote", "!=''");
-            DoQuery(p, "Demotes - ", spanStart, spanEnd, message, "demote", "!=''");
-            DoQuery(p, "Undo - ", spanStart, spanEnd, message, "undo", "!=''");
-            DoQuery(p, "Freezes - ", spanStart, spanEnd, message, "freeze", "!=''");
-            DoQuery(p, "Mutes - ", spanStart, spanEnd, message, "mute", "!=''");
-            DoQuery(p, "Warns - ", spanStart, spanEnd, message, "warn", "!=''");
-            DoQuery(p, "Kicks - ", spanStart, spanEnd, message, "kick", "!=''");
-            DoQuery(p, "Tempbans - ", spanStart, spanEnd, message, "tempban", "!=''");
-            DoQuery(p, "Bans - ", spanStart, spanEnd, message, "ban", "!=''");
+            int reviews = Query(start, end, name, "review", "LIKE 'next'");
+            int ranks = Query(start, end, name, "setrank", "!=''");
+            int promotes = Query(start, end, name, "setrank", "LIKE '+up%'");
+            int demotes = Query(start, end, name, "setrank", "LIKE '-down%'");
+            int promotesOld = Query(start, end, name, "promote");
+            int demotesOld = Query(start, end, name, "demote");
+            
+            int mutes = Query(start, end, name, "mute");
+            int freezes = Query(start, end, name, "freeze");
+            int warns = Query(start, end, name, "warn");
+            int kicks = Query(start, end, name, "kick");
+            
+            int bans = Query(start, end, name, "ban");
+            int kickbans = Query(start, end, name, "kickban");
+            int ipbans = Query(start, end, name, "banip");
+            int xbans = Query(start, end, name, "xban");
+            int tempbans = Query(start, end, name, "tempban");
+
+            Player.Message(p, "  &a{0}%S bans, &a{1}%S IP-bans, &a{2}%S tempbans",
+                           bans + kickbans + xbans, ipbans + xbans, tempbans);
+            Player.Message(p, "  &a{0}%S mutes, &a{1}%S warns, &a{2}%S freezes, &a{3}%S kicks",
+                           mutes, warns, freezes, kicks + kickbans + xbans);
+            Player.Message(p, "  &a{0}%S reviews, &a{1}%S ranks (&a{2}%S promotes, &a{3}%S demotes)",
+                           reviews, ranks + promotesOld + demotesOld,
+                           promotes + promotesOld, demotes + demotesOld);
         }
         
         static bool ValidTimespan(string value) {
@@ -104,6 +119,15 @@ namespace MCGalaxy.Commands {
             // don't use colour codes in cli or gui
             Player.Message(p, (p == null ? "" : "&a") + group + (p == null ? "" : "&5") + table.Rows[0]["COUNT(id)"]);
             table.Dispose();
+        }
+        
+        static int Query(string start, string end, string name, string cmd, string msg = "!=''") {
+            using (DataTable table = Database.Backend.GetRows(
+                "Opstats", "COUNT(ID)" ,"WHERE Time >= @0 AND Time < @1 AND " +
+                "Name LIKE @2 AND Cmd LIKE @3 AND Cmdmsg " + msg, start, end, name, cmd)) {
+                string count = table.Rows[0]["COUNT(id)"].ToString();
+                return PlayerData.ParseInt(count);
+            }
         }
         
         public override void Help(Player p) {

@@ -84,8 +84,11 @@ namespace MCGalaxy {
 
         public static readonly List<string> Devs = new List<string>(), Mods = new List<string>();
 
-        internal static readonly List<string> opstats = new List<string>(new [] { "ban", "tempban", "kick", "warn", "mute", "freeze", "undo", "kickban", "demote", "promote" });
-        public static List<string> Opstats { get { return new List<string>(opstats); } }
+        internal static readonly List<string> opstats = new List<string>(
+            new [] { "ban", "tempban", "xban", "banip", "kickban", "kick", 
+                "warn", "mute", "freeze", "demote", "promote", "setrank" }
+        );
+        public static List<string> Opstats { get { return opstats; } }
 
         public static List<TempBan> tempBans = new List<TempBan>();
         public struct TempBan { public string name, reason; public DateTime expiryTime; }
