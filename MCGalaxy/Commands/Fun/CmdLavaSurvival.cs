@@ -123,7 +123,6 @@ namespace MCGalaxy.Commands
             
             if (Server.lava.HasMap(lvl.name)) {
                 Server.lava.RemoveMap(lvl.name);
-                lvl.motd = "ignore";
                 lvl.overload = 1500;
                 lvl.unload = true;
                 lvl.loadOnGoto = true;
@@ -138,7 +137,6 @@ namespace MCGalaxy.Commands
                 settings.safeZone = new Vec3U16[] { new Vec3U16((ushort)(x - 3), y, (ushort)(z - 3)), new Vec3U16((ushort)(x + 3), (ushort)(y + 4), (ushort)(z + 3)) };
                 Server.lava.SaveMapSettings(settings);
 
-                lvl.motd = "Lava Survival: " + lvl.name.Capitalize();
                 lvl.overload = 1000000;
                 lvl.unload = false;
                 lvl.loadOnGoto = false;

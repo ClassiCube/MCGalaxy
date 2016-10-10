@@ -396,7 +396,7 @@ namespace MCGalaxy {
          /// <summary> Sends a packet indicating an absolute position + orientation change for the player. </summary>
         /// <remarks>This method treats Y as head Y, and adjusts for client increasing Y by 22/32 blocks. </remarks>
         public void SendOwnFeetPos(ushort x, ushort y, ushort z, byte rotx, byte roty) {
-            SendPod(Entities.SelfID, x, (ushort)(y + 51 - 22), z, rotx, roty);
+            SendPos(Entities.SelfID, x, (ushort)(y + 51 - 22), z, rotx, roty);
         }
         
         /// <summary> Sends a packet indicating an absolute position + orientation change for the player. </summary>
