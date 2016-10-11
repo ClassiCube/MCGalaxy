@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands {
                 canVisit = canVisit.Remove(0, 2);
             Player.Message(p, "Loaded levels [physics_level]: " + canVisit);
             if (canBuild != "")
-                Player.Message(p, "Loaded levsl you cannot visit: " + canBuild.Remove(0, 2));
+                Player.Message(p, "Loaded levels you cannot visit: " + canBuild.Remove(0, 2));
             Player.Message(p, "Use %T/unloaded %Sfor unloaded levels.");
         }
         

@@ -26,14 +26,14 @@ namespace MCGalaxy.BlockPhysics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             int dirsVisited = 0, index = 0;
-            Player foundPlayer = AIPhysics.ClosestPlayer(lvl, ref C);
+            Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
             
-            if (foundPlayer != null && rand.Next(1, 20) < 19) {
+            if (closest != null && rand.Next(1, 20) < 19) {
                 switch (rand.Next(1, 10)) {
                     case 1:
                     case 2:
                     case 3:
-                        index = lvl.PosToInt((ushort)(x + Math.Sign((foundPlayer.pos[0] / 32) - x)), y, z);
+                        index = lvl.PosToInt((ushort)(x + Math.Sign((closest.pos[0] / 32) - x)), y, z);
                         if (index != C.b && MoveSnake(lvl, ref C, index)) return;
                         
                         dirsVisited++;
@@ -42,7 +42,7 @@ namespace MCGalaxy.BlockPhysics {
                     case 4:
                     case 5:
                     case 6:
-                        index = lvl.PosToInt(x, (ushort) (y + Math.Sign((foundPlayer.pos[1] / 32) - y)), z);
+                        index = lvl.PosToInt(x, (ushort) (y + Math.Sign((closest.pos[1] / 32) - y)), z);
                         if (index != C.b && MoveSnakeY(lvl, ref C, index)) return;
                         
                         dirsVisited++;
@@ -51,7 +51,7 @@ namespace MCGalaxy.BlockPhysics {
                     case 7:
                     case 8:
                     case 9:
-                        index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign((foundPlayer.pos[2] / 32) - z)));
+                        index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign((closest.pos[2] / 32) - z)));
                         if (index != C.b && MoveSnake(lvl, ref C, index)) return;
                         
                         dirsVisited++;

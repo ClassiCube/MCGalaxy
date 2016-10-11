@@ -21,15 +21,12 @@ namespace MCGalaxy.BlockPhysics {
 
 	public static class AIPhysics {
 		
-		public static Player ClosestPlayer(Level lvl, ref Check C) {
-			if (!lvl.ai) return null;
-			
+		public static Player ClosestPlayer(Level lvl, ushort x, ushort y, ushort z) {
+			if (!lvl.ai) return null;			
 			int closestDist = 75;
-			Player closetPlayer = null;
-			ushort x, y, z;
-			lvl.IntToPos(C.b, out x, out y, out z);
+			Player closetPlayer = null;			
+			Player[] players = PlayerInfo.Online.Items;
 			
-			Player[] players = PlayerInfo.Online.Items; 
 			foreach (Player p in players) {
                 if (p.level == lvl && !p.invincible) {
                     int curDist = Math.Abs((p.pos[0] / 32) - x) +

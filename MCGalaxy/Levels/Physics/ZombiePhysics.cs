@@ -35,7 +35,7 @@ namespace MCGalaxy.BlockPhysics {
             }
             bool checkTime = true;
             int index = 0;
-            Player closest = AIPhysics.ClosestPlayer(lvl, ref C);
+            Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
 
             if (closest != null && rand.Next(1, 20) < 18) {
                 if (rand.Next(1, 7) <= 3) {
