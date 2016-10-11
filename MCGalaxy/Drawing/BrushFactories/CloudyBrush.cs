@@ -51,27 +51,18 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         // Only want to handle non block options.
-        static bool Filter(string arg) {
-            return arg.Length < 2 || arg[1] != '_';
-        }
+        static bool Filter(string arg) { return arg.Length < 2 || arg[1] != '_'; }
         
         static bool Handler(string arg, Player p, ref NoiseArgs args) {
             char opt = arg[0];
             arg = arg.Substring(arg.IndexOf('_') + 1);
             
-            if (opt == 'l') {
-                if (float.TryParse(arg, out args.Lacunarity)) return true;
-                Player.Message(p, "\"{0}\" was not a valid decimal.", arg);
-            } else if (opt == 'a') {
-                if (float.TryParse(arg, out args.Amplitude)) return true;
-                Player.Message(p, "\"{0}\" was not a valid decimal.", arg);
-            } else if (opt == 'f') {
-                if (float.TryParse(arg, out args.Frequency)) return true;
-                Player.Message(p, "\"{0}\" was not a valid decimal.", arg);
-            } else if (opt == 'p') {
-                if (float.TryParse(arg, out args.Persistence)) return true;
-                Player.Message(p, "\"{0}\" was not a valid decimal.", arg);
-            } else if (opt == 'o') {
+            if (opt == 'l') return ParseDecimal(p, arg, ref args.Lacunarity, 2.00f);
+            if (opt == 'a') return ParseDecimal(p, arg, ref args.Amplitude, 1.00f);
+            if (opt == 'f') return ParseDecimal(p, arg, ref args.Frequency, 0.08f);
+            if (opt == 'p') return ParseDecimal(p, arg, ref args.Persistence, 0.75f);
+            
+            if (opt == 'o') {
                 if (byte.TryParse(arg, out args.Octaves)
                     && args.Octaves > 0 && args.Octaves <= 16) return true;
                 Player.Message(p, "\"{0}\" was not an integer between 1 and 16.", arg);
@@ -82,6 +73,16 @@ namespace MCGalaxy.Drawing.Brushes {
                 Player.Message(p, "\"{0}\" was not a valid argument name.", opt);
             }
             return false;
+        }
+        
+        static bool ParseDecimal(Player p, string arg, ref float target, float baseValue) {
+        	float temp;
+        	if (!float.TryParse(arg, out temp)) {
+        		Player.Message(p, "\"{0}\" was not a valid decimal.", arg); return false;
+        	}
+        	
+        	target = temp * baseValue;
+        	return true;
         }
     }
     
