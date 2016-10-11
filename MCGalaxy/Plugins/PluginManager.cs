@@ -137,7 +137,7 @@ namespace MCGalaxy {
         }
         
         static void LoadInternalPlugins() {
-            CTF.Setup ctf = new CTF.Setup();
+            Games.CtfSetup ctf = new Games.CtfSetup();
             ctf.Load(true);
             Plugin.all.Add(ctf);
             
