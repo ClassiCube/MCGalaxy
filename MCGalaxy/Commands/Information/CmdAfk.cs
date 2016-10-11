@@ -44,14 +44,15 @@ namespace MCGalaxy.Commands {
             TabList.Update(p, true);
             p.LastAction = DateTime.UtcNow;
 
-            bool send = !Server.chatmod && !p.muted;
+            bool cantSend = p.muted || (Server.chatmod && !p.voice);
             if (p.IsAfk) {
-                if (send) {
-                    string msg = "-" + p.ColoredName + "%S- is AFK " + message; 
-                    MessageCmd.TryMessage(p, msg, "afk");
-                    Player.RaisePlayerAction(p, PlayerAction.AFK, message);
+                if (cantSend) {
+                    Player.Message(p, "You are now marked as being AFK.");                    
                 } else {
-                    Player.Message(p, "You are now marked as being AFK.");
+                    Chat.MessageWhere("-{0}%S- is AFK {1}", pl => Entities.CanSee(pl, p),
+                                      p.ColoredName, message);
+                    Player.RaisePlayerAction(p, PlayerAction.AFK, message);
+                    p.CheckForMessageSpam();
                 }
                 
                 p.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
@@ -59,12 +60,13 @@ namespace MCGalaxy.Commands {
                 Player.RaiseAFK(p);
                 OnPlayerAFKEvent.Call(p);
             } else {
-                if (send) {
-                    string msg = "-" + p.ColoredName + "%S- is no longer AFK"; 
-                    MessageCmd.TryMessage(p, msg, "afk");
-                    Player.RaisePlayerAction(p, PlayerAction.UnAFK, message);
-                } else {
+                if (cantSend) {
                     Player.Message(p, "You are no longer marked as being AFK.");
+                } else {
+                    Chat.MessageWhere("-{0}%S- is no longer AFK", pl => Entities.CanSee(pl, p),
+                                      p.ColoredName);
+                    Player.RaisePlayerAction(p, PlayerAction.UnAFK, message);
+                    p.CheckForMessageSpam();
                 }
             }
         }
