@@ -55,14 +55,17 @@ namespace MCGalaxy.BlockPhysics {
 					if (lvl.GetTile(posX, (ushort)(y - 1), posZ) == Block.air &&
 					    lvl.GetTile(posX, y, posZ) == Block.air)
 					{
-						if (posX < x)
-							posX = (ushort)(Math.Floor((double)(posX + x) / 2));
-						else
-							posX = (ushort)(Math.Ceiling((double)(posX + x) / 2));
-						if (posZ < z)
-							posZ = (ushort)(Math.Floor((double)(posZ + z) / 2));
-						else
-							posZ = (ushort)(Math.Ceiling((double)(posZ + z) / 2));
+						if (posX < x) {
+							posX = (ushort)((posX + x) / 2);
+						} else {
+							posX = (ushort)((posX + x + 1) / 2); // ceiling division
+						}
+						
+						if (posZ < z) {
+							posZ = (ushort)((posZ + z) / 2);
+						} else {
+							posZ = (ushort)((posZ + z + 1) / 2);
+						}
 
 						int index = lvl.PosToInt(posX, y, posZ);
 						if (index >= 0 && lvl.blocks[index] == Block.air &&
