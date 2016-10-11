@@ -64,8 +64,7 @@ namespace MCGalaxy.Gui {
         }
 
         static ConsoleColor GetConsoleCol(char c) {
-            if (c == 's' || c == 'S') 
-                return ConsoleColor.White;
+            if (c == 'S') return ConsoleColor.White;
             Colors.MapColor(ref c);
             
             switch (c) {
@@ -98,7 +97,7 @@ namespace MCGalaxy.Gui {
         }
         
         static Color GetGuiCol(char c, Color foreCol) {
-            if (c == 's' || c == 'S') return foreCol;
+            if (c == 'S') return foreCol;
             Colors.MapColor(ref c);
             
             switch (c) {
