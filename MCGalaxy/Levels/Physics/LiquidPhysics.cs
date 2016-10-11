@@ -55,50 +55,37 @@ namespace MCGalaxy.BlockPhysics {
                     break;
             }
         }
-		
-		public static void PhysLava(Level lvl, ushort x, ushort y, ushort z, byte type) {
-            if (x >= lvl.Width || y >= lvl.Height || z >= lvl.Length) return;
+        
+        public static void PhysLava(Level lvl, ushort x, ushort y, ushort z, byte type) {
+            int b = lvl.PosToInt(x, y, z);
+            if (b == -1) return;
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return;
 
-            int b = x + lvl.Width * (z + y * lvl.Length);
-            // only do expensive sponge check when necessary
-            if (lvl.physics > 1 && lvl.physics != 5 &&
-                ((lvl.blocks[b] >= Block.red && lvl.blocks[b] <= Block.white) ||
-                 (lvl.blocks[b] >= Block.lightpink && lvl.blocks[b] <= Block.turquoise))
-                && !lvl.CheckSpongeLava(x, y, z)) {
-                lvl.AddUpdate(b, Block.air); return;
-            }
-            
             switch (lvl.blocks[b]) {
                 case Block.air:
                     if (!lvl.CheckSpongeLava(x, y, z)) lvl.AddUpdate(b, type);
                     break;
-
+                    
                 case Block.water:
                 case Block.activedeathwater:
                     if (!lvl.CheckSpongeLava(x, y, z)) lvl.AddUpdate(b, Block.rock); 
                     break;
-
+                    
                 case Block.sand:
                     if (lvl.physics > 1) { //Adv physics changes sand to glass next to lava
                         if (lvl.physics != 5) lvl.AddUpdate(b, Block.glass);
                     } else {
                         lvl.AddCheck(b);
                     } break;
-
+                    
                 case Block.gravel:
                     lvl.AddCheck(b); break;
 
-                case Block.wood:
-                case Block.shrub:
-                case Block.trunk:
-                case Block.leaf:
-                case Block.yellowflower:
-                case Block.redflower:
-                case Block.mushroom:
-                case Block.redmushroom:
-                    if (lvl.physics > 1 && lvl.physics != 5) //Adv physics kills flowers and mushrooms plus wood in lava
+                default:
+                    //Adv physics kills flowers, wool, mushrooms, and wood type blocks in lava
+                    if (!Block.Props[lvl.blocks[b]].LavaKills) break;
+                    if (lvl.physics > 1 && lvl.physics != 5) 
                         if (!lvl.CheckSpongeLava(x, y, z)) lvl.AddUpdate(b, Block.air);
                     break;
             }

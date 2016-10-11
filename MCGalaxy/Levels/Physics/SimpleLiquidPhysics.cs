@@ -28,11 +28,13 @@ namespace MCGalaxy.BlockPhysics {
                 lvl.liquids.Remove(C.b);
                 FinitePhysics.DoWaterOrLava(lvl, ref C);
                 return;
-            }        
-            if (lvl.randomFlow)
+            }
+            
+            if (lvl.randomFlow) {
                 DoWaterRandowFlow(lvl, ref C);
-            else
+            } else {
                 DoWaterUniformFlow(lvl, ref C);
+            }
         }
         
         public static void DoLava(Level lvl, ref Check C) {
@@ -124,7 +126,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         static void DoWaterUniformFlow(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;            
+        	Random rand = lvl.physRandom;
             lvl.liquids.Remove(C.b);
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -176,7 +178,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         static void DoLavaRandowFlow(Level lvl, ref Check C, bool checkWait) {
-            Random rand = lvl.physRandom;            
+            Random rand = lvl.physRandom;
             bool[] blocked = null;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -256,17 +258,9 @@ namespace MCGalaxy.BlockPhysics {
         
         static bool LavaBlocked(Level lvl, ushort x, ushort y, ushort z) {
             int b = lvl.PosToInt(x, y, z);
-            if (b == -1)
-                return true;
+            if (b == -1) return true;
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return true;
-
-            // only do expensive sponge check when necessary
-            if (lvl.physics > 1 && lvl.physics != 5 &&
-                ((lvl.blocks[b] >= Block.red && lvl.blocks[b] <= Block.white) ||
-                 (lvl.blocks[b] >= Block.lightpink && lvl.blocks[b] <= Block.turquoise))
-                && !lvl.CheckSpongeLava(x, y, z))
-                return false; // Adv physics destroys cloth
             
             switch (lvl.blocks[b]) {
                 case Block.air:
@@ -274,21 +268,16 @@ namespace MCGalaxy.BlockPhysics {
 
                 case Block.water:
                 case Block.activedeathwater:
-                    if (!lvl.CheckSpongeLava(x, y, z))  return false;
+                    if (!lvl.CheckSpongeLava(x, y, z)) return false;
                     break;
 
                 case Block.sand:
                 case Block.gravel:
                     return false;
 
-                case Block.wood:
-                case Block.shrub:
-                case Block.trunk:
-                case Block.leaf:
-                case Block.yellowflower:
-                case Block.redflower:
-                case Block.mushroom:
-                case Block.redmushroom:
+                default:
+                    //Adv physics kills flowers, wool, mushrooms, and wood type blocks in lava
+                    if (!Block.Props[lvl.blocks[b]].LavaKills) return true;
                     if (lvl.physics > 1 && !lvl.CheckSpongeLava(x, y, z)) return false;
                     break;
             }

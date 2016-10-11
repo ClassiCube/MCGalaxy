@@ -107,22 +107,22 @@ namespace MCGalaxy.BlockPhysics {
 				int i = indices[j];
 				switch (i) {
 					case 0:
-						if (Expand(lvl, x - 1, y, z ) ) return;
+						if (Expand(lvl, x - 1, y, z)) return;
 						break;
 					case 1:
-						if (Expand(lvl, x + 1, y, z ) ) return;
+						if (Expand(lvl, x + 1, y, z)) return;
 						break;
 					case 2:
-						if (Expand(lvl, x, y - 1, z ) ) return;
+						if (Expand(lvl, x, y - 1, z)) return;
 						break;
 					case 3:
-						if (Expand(lvl, x, y + 1, z ) ) return;
+						if (Expand(lvl, x, y + 1, z)) return;
 						break;
 					case 4:
-						if (Expand(lvl, x, y, z - 1 ) ) return;
+						if (Expand(lvl, x, y, z - 1)) return;
 						break;
 					case 5:
-						if (Expand(lvl, x, y, z + 1 ) ) return;
+						if (Expand(lvl, x, y, z + 1)) return;
 						break;
 				}
 			}
