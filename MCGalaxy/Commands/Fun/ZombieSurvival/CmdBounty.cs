@@ -55,7 +55,9 @@ namespace MCGalaxy.Commands {
                                 who.ColoredName, amount, Server.moneys, old.Amount);
                 Server.zombie.Bounties.Remove(old);
             }
+            
             Server.zombie.Bounties.Add(new BountyData(p.name, who.name, amount));
+            p.SetMoney(p.money - amount);
         }
         
         public override void Help(Player p) {

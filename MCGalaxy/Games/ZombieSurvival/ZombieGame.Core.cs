@@ -287,13 +287,12 @@ namespace MCGalaxy.Games {
             Player setter = PlayerInfo.FindExact(bounty.Origin);
             if (pKiller == null) {
                 CurLevel.ChatLevel("Bounty on " + p.ColoredName + " %Sis no longer active.");
+                if (setter != null) setter.SetMoney(setter.money + bounty.Amount);
             } else if (setter == null) {
                 Player.Message(pKiller, "Cannot collect the bounty, as the player who set it is offline.");
             } else {
                 CurLevel.ChatLevel("&c" + pKiller.DisplayName + " %Scollected the bounty of &a" +
                                    bounty.Amount + " %S" + Server.moneys + " on " + p.ColoredName + "%S.");
-                
-                setter.SetMoney(Math.Max(0, setter.money - bounty.Amount));
                 pKiller.SetMoney(pKiller.money + bounty.Amount);
             }
         }
