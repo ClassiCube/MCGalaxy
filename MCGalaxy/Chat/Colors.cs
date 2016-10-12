@@ -167,10 +167,10 @@ namespace MCGalaxy {
                 return true;
             }
             
-            if (color == 's' || color == 'S') { color = Server.DefaultColor[1]; return true; }
-            if (color == 'h' || color == 'H') { color = Server.HelpDescriptionColor[1]; return true; }
-            if (color == 't' || color == 'T') { color = Server.HelpSyntaxColor[1]; return true; }
-            if (color == 'i' || color == 'I') { color = Server.IRCColour[1]; return true; }    
+            if (color == 'S') { color = Server.DefaultColor[1]; return true; }
+            if (color == 'H') { color = Server.HelpDescriptionColor[1]; return true; }
+            if (color == 'T') { color = Server.HelpSyntaxColor[1]; return true; }
+            if (color == 'I') { color = Server.IRCColour[1]; return true; }    
             return Colors.GetFallback(color) != '\0';
         }        
         
