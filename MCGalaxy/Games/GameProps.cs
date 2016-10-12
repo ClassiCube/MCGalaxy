@@ -100,7 +100,6 @@ namespace MCGalaxy.Games {
             BlocksLeft = 50;
             CurrentInfected = 0;
             Infected = false;
-            RatedMap = false;
             PledgeSurvive = false;
             InvisibilityPotions = 0;
             RevivesUsed = 0;
