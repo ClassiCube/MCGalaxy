@@ -46,7 +46,6 @@ namespace MCGalaxy.Commands {
             } else {
                 string map = LevelInfo.FindMapMatches(p, level);
                 if (map == null) return;
-                Server.s.Log(map);
                 data.FromOfflineLevel(map);
             }
             
