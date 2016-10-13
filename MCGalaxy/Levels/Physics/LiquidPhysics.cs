@@ -22,11 +22,11 @@ namespace MCGalaxy.BlockPhysics {
     public static class LiquidPhysics {
         
         public static void PhysWater(Level lvl, ushort x, ushort y, ushort z, byte type) {
-            if (x >= lvl.Width || y >= lvl.Height || z >= lvl.Length) return;
+            int b = lvl.PosToInt(x, y, z);
+            if (b == -1) return;
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return;
-            
-            int b = x + (z * lvl.Width) + (y * lvl.Width * lvl.Length);
+
             switch (lvl.blocks[b]) {
                 case Block.air:
                     if (!lvl.CheckSpongeWater(x, y, z)) lvl.AddUpdate(b, type);
@@ -38,20 +38,16 @@ namespace MCGalaxy.BlockPhysics {
                     if (!lvl.CheckSpongeWater(x, y, z)) lvl.AddUpdate(b, Block.rock);
                     break;
 
-                case Block.shrub:
-                case Block.yellowflower:
-                case Block.redflower:
-                case Block.mushroom:
-                case Block.redmushroom:
-                    if (lvl.physics > 1 && lvl.physics != 5 && !lvl.CheckSpongeWater(x, y, z))
-                        lvl.AddUpdate(b, Block.air); //Adv physics kills flowers and mushrooms in water
-                    break;
-
                 case Block.sand:
                 case Block.gravel:
                 case Block.wood_float:
                     lvl.AddCheck(b); break;
+                    
                 default:
+                    // //Adv physics kills flowers and mushrooms in water
+                    if (!Block.Props[lvl.blocks[b]].WaterKills) break;
+                    if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) 
+                        lvl.AddUpdate(b, Block.air);
                     break;
             }
         }
@@ -85,8 +81,8 @@ namespace MCGalaxy.BlockPhysics {
                 default:
                     //Adv physics kills flowers, wool, mushrooms, and wood type blocks in lava
                     if (!Block.Props[lvl.blocks[b]].LavaKills) break;
-                    if (lvl.physics > 1 && lvl.physics != 5) 
-                        if (!lvl.CheckSpongeLava(x, y, z)) lvl.AddUpdate(b, Block.air);
+                    if (lvl.physics > 1 && !lvl.CheckSpongeLava(x, y, z)) 
+                        lvl.AddUpdate(b, Block.air);
                     break;
             }
         }

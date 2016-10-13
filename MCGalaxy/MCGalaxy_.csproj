@@ -405,6 +405,7 @@
     <Compile Include="CorePlugin\CorePlugin.cs" />
     <Compile Include="CorePlugin\ConnectHandler.cs" />
     <Compile Include="Database\BlockDB.cs" />
+    <Compile Include="Database\ColumnParams.cs" />
     <Compile Include="Database\IDatabaseBackend.cs" />
     <Compile Include="Database\MySQL\MySQLBackend.cs" />
     <Compile Include="Database\MySQL\MySQLBulkTransaction.cs" />

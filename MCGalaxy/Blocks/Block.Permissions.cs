@@ -371,7 +371,7 @@ namespace MCGalaxy
         static void SaveBlocksCore(IEnumerable<Blocks> givenList) {
             using (StreamWriter w = new StreamWriter("properties/block.properties")) {
                 w.WriteLine("#Version 2");
-                w.WriteLine("#   This file dictates what levels may use what blocks");
+                w.WriteLine("#   This file dictates which ranks may use what blocks");
                 w.WriteLine("#   If someone has royally screwed up the ranks, just delete this file and let the server restart");
                 w.WriteLine("#   Allowed ranks: " + Group.concatList(false, false, true));
                 w.WriteLine("#   Disallow and allow can be left empty, just make sure there's 2 spaces between the colons");
@@ -381,10 +381,10 @@ namespace MCGalaxy
                 w.WriteLine("");
 
                 foreach (Blocks bs in givenList) {
-                    if (bs.IncludeInBlockProperties()) {
-                        string line = Block.Name(bs.type) + " : " + (int)bs.lowestRank + " : " + GrpCommands.getInts(bs.disallow) + " : " + GrpCommands.getInts(bs.allow);
-                        w.WriteLine(line);
-                    }
+                    if (!bs.IncludeInBlockProperties()) continue;
+                    string line = Block.Name(bs.type) + " : " + (int)bs.lowestRank + " : " 
+                        + GrpCommands.getInts(bs.disallow) + " : " + GrpCommands.getInts(bs.allow);
+                    w.WriteLine(line);
                 }
             }
         }

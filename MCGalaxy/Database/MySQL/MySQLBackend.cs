@@ -17,6 +17,7 @@
  */
 using System;
 using System.Data;
+using System.Text;
 using MySql.Data.MySqlClient;
 
 namespace MCGalaxy.SQL {
@@ -66,8 +67,7 @@ namespace MCGalaxy.SQL {
         public override void ClearTable(string table) {
             string syntax = "TRUNCATE TABLE `" + table + "`";
             Database.Execute(syntax);
-        }
-        
+        }        
         
         public override void AddColumn(string table, string column, 
                                        string colType, string colAfter) {
@@ -75,6 +75,32 @@ namespace MCGalaxy.SQL {
                 + column + " " + colType;
             if (colAfter != "") syntax += " AFTER " + colAfter;
             Database.Execute(syntax);
+        }
+        
+        public override void CreateTable(string table, ColumnParams[] columns) {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("CREATE TABLE if not exists `" + table + "` (");
+            string priKey = null;
+            
+            for (int i = 0; i < columns.Length; i++) {
+                ColumnParams col = columns[i];
+                sql.Append(col.Column).Append(' ').Append(col.FormatType());
+                
+                if (col.PrimaryKey) priKey = col.Column;
+                if (col.AutoIncrement) sql.Append(" AUTO_INCREMENT");
+                if (col.NotNull) sql.Append(" NOT NULL");
+                if (col.DefaultValue != null)
+                    sql.Append(" DEFAULT ").Append(col.DefaultValue);
+                
+                if (i < columns.Length - 1) {
+                    sql.Append(',');
+                } else if (priKey != null) {
+                    sql.Append(", PRIMARY KEY(").Append(priKey).Append(") ");
+                }
+                sql.AppendLine();
+            }
+            sql.AppendLine(");");
+            Database.Execute(sql.ToString());
         }
     }
 }

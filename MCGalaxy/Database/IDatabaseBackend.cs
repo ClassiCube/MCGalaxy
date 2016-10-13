@@ -61,6 +61,9 @@ namespace MCGalaxy.SQL {
         public abstract void AddColumn(string table, string column, 
                                        string colType, string colAfter);
         
+        /// <summary> Creates a new table in the database (unless it already exists). </summary>
+        public abstract void CreateTable(string table, ColumnParams[] columns);
+        
         /// <summary> Completely removes the given table from the database. </summary>
         public virtual void DeleteTable(string table) {
             string syntax = "DROP TABLE `" + table + "`";

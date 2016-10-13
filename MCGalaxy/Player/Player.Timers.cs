@@ -125,7 +125,6 @@ namespace MCGalaxy {
             DisposeTimer(loginTimer, LoginTimerElapsed);
             DisposeTimer(extraTimer, ExtraTimerElapsed);
             DisposeTimer(checkTimer, CheckTimerElapsed);
-            ushort x = 0; x -= 1;
         }
         
         void DisposeTimer(Timer timer, ElapsedEventHandler handler) {

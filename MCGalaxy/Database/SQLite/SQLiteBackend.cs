@@ -18,6 +18,7 @@
 using System;
 using System.Data;
 using System.Data.SQLite;
+using System.Text;
 
 namespace MCGalaxy.SQL {
 
@@ -69,6 +70,27 @@ namespace MCGalaxy.SQL {
             string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " 
                 + column + " " + colType;
             Database.Execute(syntax);
+        }
+        
+        public override void CreateTable(string table, ColumnParams[] columns) {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("CREATE TABLE if not exists `" + table + "` (");            
+            for (int i = 0; i < columns.Length; i++) {
+                ColumnParams col = columns[i];
+                sql.Append(col.Column).Append(' ').Append(col.FormatType());
+                
+                if (col.PrimaryKey) sql.Append(" PRIMARY KEY");
+                if (col.AutoIncrement) sql.Append(" AUTOINCREMENT");
+                if (col.NotNull) sql.Append(" NOT NULL");
+                if (col.DefaultValue != null)
+                    sql.Append(" DEFAULT ").Append(col.DefaultValue);
+                
+                if (i < columns.Length - 1)
+                    sql.Append(',');
+                sql.AppendLine();
+            }
+            sql.AppendLine(");");
+            Database.Execute(sql.ToString());
         }
     }
 }

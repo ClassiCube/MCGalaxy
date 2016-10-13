@@ -161,18 +161,16 @@ namespace MCGalaxy.BlockPhysics {
                     if (!lvl.CheckSpongeWater(x, y, z)) return false;
                     break;
 
-                case Block.shrub:
-                case Block.yellowflower:
-                case Block.redflower:
-                case Block.mushroom:
-                case Block.redmushroom:
-                    if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) return false;
-                    break;
-
                 case Block.sand:
                 case Block.gravel:
                 case Block.wood_float:
                     return false;
+                    
+                default:
+                    //Adv physics kills flowers, mushroom blocks in water
+                    if (!Block.Props[lvl.blocks[b]].WaterKills) return true;
+                    if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) return false;
+                    break;
             }
             return true;
         }
