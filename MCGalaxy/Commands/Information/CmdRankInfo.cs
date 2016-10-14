@@ -28,11 +28,15 @@ namespace MCGalaxy.Commands {
         public CmdRankInfo() { }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message == "") {
+                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player"); return; }
+                message = p.name;
+            }
             Player who = PlayerInfo.Find(message);
             string target = who == null ? message : who.name;
 
-            Player.Message(p, "&1Rank information for " + target);
+            Player.Message(p, "  Rank information for {0}:", 
+                           PlayerInfo.GetColoredName(p, target));
             bool found = false;
             DateTime now = DateTime.Now;
             
@@ -56,7 +60,7 @@ namespace MCGalaxy.Commands {
                 found = true;
             }
             if (!found)
-                Player.Message(p, "&cPlayer &a" + target + "&c has not been ranked yet.");
+                Player.Message(p, "&cPlayer has not been ranked yet.");
         }
         
         public override void Help(Player p) {
