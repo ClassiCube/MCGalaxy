@@ -23,7 +23,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override string shortcut { get { return "rank"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("promote", "+up"), new CommandAlias("demote", "-down") }; }
+            get { return new[] { new CommandAlias("pr", "+up"), new CommandAlias("de", "-down"),
+                    new CommandAlias("promote", "+up"), new CommandAlias("demote", "-down") };
         }
         public CmdSetRank() { }
 
