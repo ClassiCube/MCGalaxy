@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") {
-                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player"); return; }
+                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
                 message = p.name;
             }
             Player who = PlayerInfo.Find(message);

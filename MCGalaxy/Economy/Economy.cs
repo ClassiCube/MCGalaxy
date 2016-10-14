@@ -27,20 +27,18 @@ using MCGalaxy.SQL;
 namespace MCGalaxy {
     public static class Economy {
 
-        public static bool Enabled;
-        
+        public static bool Enabled;        
         const string propertiesFile = "properties/economy.properties";
-        const string createTable =
-            @"CREATE TABLE if not exists Economy (
-player      VARCHAR(20),
-money       INT UNSIGNED,
-total       INT UNSIGNED NOT NULL DEFAULT 0,
-purchase    VARCHAR(255) NOT NULL DEFAULT '%cNone',
-payment     VARCHAR(255) NOT NULL DEFAULT '%cNone',
-salary      VARCHAR(255) NOT NULL DEFAULT '%cNone',
-fine        VARCHAR(255) NOT NULL DEFAULT '%cNone',
-PRIMARY KEY(player)
-            );";
+        
+        static ColumnParams[] createEconomy = {
+            new ColumnParams("player", ColumnType.VarChar, 20, priKey: true),
+            new ColumnParams("money", ColumnType.Int32),
+            new ColumnParams("total", ColumnType.Integer, notNull: true, def: "0"),
+            new ColumnParams("purchase", ColumnType.VarChar, 255, notNull: true, def: "'%cNone'"),
+            new ColumnParams("payment", ColumnType.VarChar, 255, notNull: true, def: "'%cNone'"),
+            new ColumnParams("salary", ColumnType.VarChar, 255, notNull: true, def: "'%cNone'"),
+            new ColumnParams("fine", ColumnType.VarChar, 255, notNull: true, def: "'%cNone'"),
+        };
 
         public struct EcoStats {
             public string Player, Purchase, Payment, Salary, Fine;
@@ -58,7 +56,7 @@ PRIMARY KEY(player)
         }
 
         public static void LoadDatabase() {
-            Database.Execute(createTable);
+        	Database.Backend.CreateTable("Economy", createEconomy);
             using (DataTable eco = Database.Backend.GetRows("Economy", "*"))
                 foreach (DataRow row in eco.Rows)
             {

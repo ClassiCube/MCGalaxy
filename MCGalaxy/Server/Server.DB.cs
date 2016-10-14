@@ -23,31 +23,30 @@ using MCGalaxy.SQL;
 namespace MCGalaxy {
     public sealed partial class Server {
         
-        const string createPlayers =
-            @"CREATE TABLE if not exists Players (
-ID            INTEGER {0}{2}INCREMENT NOT NULL,
-Name          TEXT, 
-IP            CHAR(15), 
-FirstLogin    DATETIME, 
-LastLogin     DATETIME, 
-totalLogin    MEDIUMINT,
-Title         CHAR(20), 
-TotalDeaths   SMALLINT, 
-Money         MEDIUMINT UNSIGNED, 
-totalBlocks   BIGINT,
-totalCuboided BIGINT, 
-totalKicked   MEDIUMINT, 
-TimeSpent     VARCHAR(20), 
-color         VARCHAR(6),
-title_color   VARCHAR(6){1});";
+        static ColumnParams[] createPlayers = {
+            new ColumnParams("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
+            new ColumnParams("Name", ColumnType.Text),
+            new ColumnParams("IP", ColumnType.Char, 15),
+            new ColumnParams("FirstLogin", ColumnType.DateTime),
+            new ColumnParams("LastLogin", ColumnType.DateTime),
+            new ColumnParams("totalLogin", ColumnType.Int24),
+            new ColumnParams("Title", ColumnType.Char, 20),
+            new ColumnParams("TotalDeaths", ColumnType.Int16),
+            new ColumnParams("Money", ColumnType.UInt24),
+            new ColumnParams("totalBlocks", ColumnType.Int64),
+            new ColumnParams("totalCuboided", ColumnType.Int64),
+            new ColumnParams("totalKicked", ColumnType.Int24),
+            new ColumnParams("TimeSpent", ColumnType.VarChar, 20),
+            new ColumnParams("color", ColumnType.VarChar, 6),
+            new ColumnParams("title_color", ColumnType.VarChar, 6),
+        };
         
-        const string createOpstats = 
-            @"CREATE TABLE if not exists Opstats (
-ID     INTEGER {0}{2}INCREMENT NOT NULL,
-Time   DATETIME, 
-Name   TEXT, 
-Cmd    VARCHAR(40), 
-Cmdmsg VARCHAR(40){1});";
+        static ColumnParams[] createOpstats = {
+            new ColumnParams("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
+            new ColumnParams("Time", ColumnType.DateTime),
+            new ColumnParams("Cmd", ColumnType.VarChar, 40),
+            new ColumnParams("Cmdmsg", ColumnType.VarChar, 40),
+        };
         
         const string insertSyntax = 
             @"INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) 
@@ -55,18 +54,15 @@ SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE {0};";
         
         void InitDatabase() {
             try {
-        	    Database.Backend.CreateDatabase();
+                Database.Backend.CreateDatabase();
             } catch (Exception e) {
                 ErrorLog(e);
                 s.Log("MySQL settings have not been set! Please Setup using the properties window.");
                 return;
             }
-            
-            string prim1 = useMySQL ? "" : "PRIMARY KEY ";
-            string prim2 = useMySQL ? ", PRIMARY KEY (ID)" : "";
-            string autoI = useMySQL ? "AUTO_" : "AUTO";
-            Database.Execute(string.Format(createPlayers, prim1, prim2, autoI));
-            Database.Execute(string.Format(createOpstats, prim1, prim2, autoI));
+
+            Database.Backend.CreateTable("Opstats", createOpstats);
+            Database.Backend.CreateTable("Players", createPlayers);
             if (!File.Exists("extra/alter.txt") && useMySQL) {
                 Database.Execute("ALTER TABLE Players MODIFY Name TEXT");
                 Database.Execute("ALTER TABLE Opstats MODIFY Name TEXT");

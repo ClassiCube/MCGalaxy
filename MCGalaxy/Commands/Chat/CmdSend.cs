@@ -43,9 +43,9 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, message.Substring(0, 255));
                 message = message.Substring(0, 255);
             }
+            
             //safe against SQL injections because whoTo is checked for illegal characters
-            Database.Execute("CREATE TABLE if not exists `Inbox" + receiverName +
-                             "` (PlayerFrom CHAR(20), TimeSent DATETIME, Contents VARCHAR(255));");
+            Database.Backend.CreateTable("Inbox" + receiverName, createInbox);
             Database.Execute("INSERT INTO `Inbox" + receiverName + "` (PlayerFrom, TimeSent, Contents) VALUES (@0, @1, @2)",
                              senderName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), message);
 
@@ -54,6 +54,12 @@ namespace MCGalaxy.Commands {
             if (receiver == null) return;
             p.MessageTo(receiver, "Message recieved from &5" + senderName + "%S.");
         }
+        
+        static ColumnParams[] createInbox = {
+            new ColumnParams("PlayerFrom", ColumnType.Char, 20),
+            new ColumnParams("TimeSent", ColumnType.DateTime),
+            new ColumnParams("Contents", ColumnType.VarChar, 255),
+        };
         
         public override void Help(Player p) {
             Player.Message(p, "%T/send [name] [message]");

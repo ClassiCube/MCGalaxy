@@ -77,11 +77,8 @@ namespace MCGalaxy.SQL {
             Database.Execute(syntax);
         }
         
-        public override void CreateTable(string table, ColumnParams[] columns) {
-            StringBuilder sql = new StringBuilder();
-            sql.AppendLine("CREATE TABLE if not exists `" + table + "` (");
+        protected override void CreateTableColumns(StringBuilder sql, ColumnParams[] columns) {
             string priKey = null;
-            
             for (int i = 0; i < columns.Length; i++) {
                 ColumnParams col = columns[i];
                 sql.Append(col.Column).Append(' ').Append(col.FormatType());
@@ -99,8 +96,6 @@ namespace MCGalaxy.SQL {
                 }
                 sql.AppendLine();
             }
-            sql.AppendLine(");");
-            Database.Execute(sql.ToString());
         }
     }
 }

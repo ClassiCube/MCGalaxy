@@ -89,7 +89,7 @@ namespace MCGalaxy {
         }
         
         public static void CreateTables(string givenName) {
-            Database.Execute(String.Format(createBlock, givenName, Server.useMySQL ? "BOOL" : "INT"));
+            Database.Backend.CreateTable("Block" + givenName, LevelDB.createBlock);
         }
         
         internal static void LoadZones(Level level, string name) {
@@ -153,49 +153,49 @@ namespace MCGalaxy {
         public static void CreateZone(string level, Level.Zone zn) {
             object locker = ThreadSafeCache.DBCache.Get(level);
             lock (locker) {
-                Database.Execute(String.Format(LevelDB.createZones, level));
+                Database.Backend.CreateTable("Zone" + level, LevelDB.createZones);
                 Database.Execute("INSERT INTO `Zone" + level +  "` (Owner, SmallX, SmallY, " +
                                  "SmallZ, BigX, BigY, BigZ) VALUES (@0, @1, @2, @3, @4, @5, @6)",
                                  zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
             }
         }
+
         
+        internal static ColumnParams[] createBlock = {
+            new ColumnParams("Username", ColumnType.Char, 20),
+            new ColumnParams("TimePerformed", ColumnType.DateTime),
+            new ColumnParams("X", ColumnType.UInt16),
+            new ColumnParams("Y", ColumnType.UInt16),
+            new ColumnParams("Z", ColumnType.UInt16),
+            new ColumnParams("Type", ColumnType.UInt8),
+            new ColumnParams("Deleted", ColumnType.Bool),
+        };
         
-        internal const string createBlock =
-            @"CREATE TABLE if not exists `Block{0}` (
-Username      CHAR(20),
-TimePerformed DATETIME,
-X             SMALLINT  UNSIGNED,
-Y             SMALLINT UNSIGNED,
-Z             SMALLINT UNSIGNED,
-Type          TINYINT UNSIGNED,
-Deleted       {1})";
+        internal static ColumnParams[] createPortals = {
+            new ColumnParams("EntryX", ColumnType.UInt16),
+            new ColumnParams("EntryY", ColumnType.UInt16),
+            new ColumnParams("EntryZ", ColumnType.UInt16),
+            new ColumnParams("ExitMap", ColumnType.Char, 20),
+            new ColumnParams("ExitX", ColumnType.UInt16),
+            new ColumnParams("ExitY", ColumnType.UInt16),
+            new ColumnParams("ExitZ", ColumnType.UInt16),
+        };
         
-        internal const string createPortals =
-            @"CREATE TABLE if not exists `Portals{0}` (
-EntryX  SMALLINT UNSIGNED,
-EntryY  SMALLINT UNSIGNED,
-EntryZ  SMALLINT UNSIGNED,
-ExitMap CHAR(20),
-ExitX   SMALLINT UNSIGNED,
-ExitY   SMALLINT UNSIGNED,
-ExitZ   SMALLINT UNSIGNED)";
-        
-        internal const string createMessages =
-            @"CREATE TABLE if not exists `Messages{0}` (
-X       SMALLINT UNSIGNED,
-Y       SMALLINT UNSIGNED,
-Z       SMALLINT UNSIGNED,
-Message CHAR(255))";
-        
-        internal const string createZones =
-            @"CREATE TABLE if not exists `Zone{0}` (
-SmallX SMALLINT UNSIGNED,
-SmallY SMALLINT UNSIGNED,
-SmallZ SMALLINT UNSIGNED,
-BigX   SMALLINT UNSIGNED,
-BigY   SMALLINT UNSIGNED,
-BigZ   SMALLINT UNSIGNED,
-Owner  VARCHAR(20))";
+        internal static ColumnParams[] createMessages = {
+            new ColumnParams("X", ColumnType.UInt16),
+            new ColumnParams("Y", ColumnType.UInt16),
+            new ColumnParams("Z", ColumnType.UInt16),
+            new ColumnParams("Message", ColumnType.Char, 255),
+        };
+
+        internal static ColumnParams[] createZones = {
+            new ColumnParams("SmallX", ColumnType.UInt16),
+            new ColumnParams("SmallY", ColumnType.UInt16),
+            new ColumnParams("SmallZ", ColumnType.UInt16),
+            new ColumnParams("BigX", ColumnType.UInt16),
+            new ColumnParams("BigY", ColumnType.UInt16),
+            new ColumnParams("BigZ", ColumnType.UInt16),
+            new ColumnParams("Owner", ColumnType.VarChar, 20),
+        };
     }
 }

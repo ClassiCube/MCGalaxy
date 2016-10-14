@@ -72,12 +72,14 @@ namespace MCGalaxy.SQL {
             Database.Execute(syntax);
         }
         
-        public override void CreateTable(string table, ColumnParams[] columns) {
-            StringBuilder sql = new StringBuilder();
-            sql.AppendLine("CREATE TABLE if not exists `" + table + "` (");            
+        protected override void CreateTableColumns(StringBuilder sql, ColumnParams[] columns) {         
             for (int i = 0; i < columns.Length; i++) {
                 ColumnParams col = columns[i];
-                sql.Append(col.Column).Append(' ').Append(col.FormatType());
+                if (col.Type == ColumnType.Bool) {
+                    sql.Append(col.Column).Append(' ').Append("TINYINT");
+                } else {
+                    sql.Append(col.Column).Append(' ').Append(col.FormatType());
+                }
                 
                 if (col.PrimaryKey) sql.Append(" PRIMARY KEY");
                 if (col.AutoIncrement) sql.Append(" AUTOINCREMENT");
@@ -89,8 +91,6 @@ namespace MCGalaxy.SQL {
                     sql.Append(',');
                 sql.AppendLine();
             }
-            sql.AppendLine(");");
-            Database.Execute(sql.ToString());
         }
     }
 }

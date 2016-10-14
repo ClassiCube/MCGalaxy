@@ -249,24 +249,22 @@ namespace MCGalaxy.Games {
         
         #region Database
         
-        const string createSyntax =
-            @"CREATE TABLE if not exists ZombieStats (
-ID INTEGER {0}{1} NOT NULL,
-Name CHAR(20),
-TotalRounds INT,
-MaxRounds INT,
-TotalInfected INT,
-MaxInfected INT,
-Additional1 INT,
-Additional2 INT,
-Additional3 INT,
-Additional4 INT{2});"; // reserve space for possible future additions
+        static ColumnParams[] createSyntax = {
+            new ColumnParams("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
+            new ColumnParams("Name", ColumnType.Char, 20),
+            new ColumnParams("TotalRounds", ColumnType.Int32),
+            new ColumnParams("MaxRounds", ColumnType.Int32),
+            new ColumnParams("TotalInfected", ColumnType.Int32),
+            new ColumnParams("MaxInfected", ColumnType.Int32),
+            // reserve space for possible future additions
+            new ColumnParams("Additional1", ColumnType.Int32),
+            new ColumnParams("Additional2", ColumnType.Int32),
+            new ColumnParams("Additional3", ColumnType.Int32),
+            new ColumnParams("Additional4", ColumnType.Int32),
+        };
         
         public void CheckTableExists() {
-            string primKey = Server.useMySQL ? "" : "PRIMARY KEY ";
-            string autoInc = Server.useMySQL ? "AUTO_INCREMENT" : "AUTOINCREMENT";
-            string primKey2 = Server.useMySQL ? ", PRIMARY KEY (ID)" : "";
-            Database.Execute(string.Format(createSyntax, primKey, autoInc, primKey2));
+            Database.Backend.CreateTable("ZombieStats", createSyntax);
         }
         
         public ZombieStats LoadZombieStats(string name) {

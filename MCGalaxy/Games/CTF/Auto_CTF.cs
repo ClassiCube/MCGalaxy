@@ -308,14 +308,14 @@ namespace MCGalaxy.Games
             }
 
         }
-        
-        const string createSyntax = 
-            @"CREATE TABLE if not exists CTF (
-ID       INTEGER {0}{2}INCREMENT NOT NULL, 
-Name     VARCHAR(20), 
-Points   MEDIUMINT UNSIGNED, 
-Captures MEDIUMINT UNSIGNED,
-tags     MEDIUMINT UNSIGNED{1});";
+
+        static ColumnParams[] createSyntax = {
+            new ColumnParams("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
+            new ColumnParams("Name", ColumnType.VarChar, 20),
+            new ColumnParams("Points", ColumnType.UInt24),
+            new ColumnParams("Captures", ColumnType.UInt24),
+            new ColumnParams("tags", ColumnType.UInt24),
+        };
         
         /// <summary> Start the CTF game </summary>
         public void Start()
@@ -352,10 +352,7 @@ tags     MEDIUMINT UNSIGNED{1});";
             Server.s.Log("[Auto_CTF] Running...");
             started = true;
             
-            string prim1 = Server.useMySQL ? "" : "PRIMARY KEY ";
-            string prim2 = Server.useMySQL ? ", PRIMARY KEY (ID)" : "";
-            string autoI = Server.useMySQL ? "AUTO_" : "AUTO";
-            Database.Execute(String.Format(createSyntax, prim1, prim2, autoI));
+            Database.Backend.CreateTable("CTF", createSyntax);
         }
         
         string Vote()

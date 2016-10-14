@@ -17,6 +17,7 @@
  */
 using System;
 using System.Data;
+using System.Text;
 
 namespace MCGalaxy.SQL {
     
@@ -62,7 +63,16 @@ namespace MCGalaxy.SQL {
                                        string colType, string colAfter);
         
         /// <summary> Creates a new table in the database (unless it already exists). </summary>
-        public abstract void CreateTable(string table, ColumnParams[] columns);
+        public virtual void CreateTable(string table, ColumnParams[] columns) {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("CREATE TABLE if not exists `" + table + "` (");
+            CreateTableColumns(sql, columns);
+            sql.AppendLine(");");
+            Database.Execute(sql.ToString());
+        }
+        
+        /// <summary> Creates a new table in the database (unless it already exists). </summary>
+        protected abstract void CreateTableColumns(StringBuilder sql, ColumnParams[] columns);
         
         /// <summary> Completely removes the given table from the database. </summary>
         public virtual void DeleteTable(string table) {

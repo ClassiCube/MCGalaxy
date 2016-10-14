@@ -114,7 +114,7 @@ namespace MCGalaxy.Commands.Building {
             object locker = ThreadSafeCache.DBCache.Get(lvlName);
             
             lock (locker) {
-                Database.Execute(String.Format(LevelDB.createMessages, lvlName));
+                Database.Backend.CreateTable("Messages" + lvlName, LevelDB.createMessages);
                 
                 int count = 0;
                 using (DataTable Messages = Database.Backend.GetRows("Messages" + lvlName, "*",

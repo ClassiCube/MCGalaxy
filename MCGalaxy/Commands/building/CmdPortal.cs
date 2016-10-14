@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands.Building {
                 object locker = ThreadSafeCache.DBCache.Get(lvlName);
                 
                 lock (locker) {
-                    Database.Execute(String.Format(LevelDB.createPortals, lvlName));
+                    Database.Backend.CreateTable("Portals" + lvlName, LevelDB.createPortals);
 
                     int count = 0;
                     using (DataTable portals = Database.Backend.GetRows("Portals" + lvlName, "*",

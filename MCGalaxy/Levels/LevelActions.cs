@@ -207,18 +207,18 @@ namespace MCGalaxy {
                 lock (dstLockder)
             {
                 if (Database.TableExists("Portals" + src)) {
-                    Database.Execute(String.Format(LevelDB.createPortals, dst));
+                    Database.Backend.CreateTable("Portals" + dst, LevelDB.createPortals);
                     Database.Backend.CopyAllRows("Portals" + src, "Portals" + dst);                    
                     Database.Backend.UpdateRows("Portals" + dst, "ExitMap = @1", 
                                                 "WHERE ExitMap = @0", src, dst);
                 }
                 
                 if (Database.TableExists("Messages" + src)) {
-                    Database.Execute(String.Format(LevelDB.createMessages, dst));
+                    Database.Backend.CreateTable("Messages" + dst, LevelDB.createMessages);
                     Database.Backend.CopyAllRows("Messages" + src, "Messages" + dst);
                 }                
                 if (Database.TableExists("Zone" + src)) {
-                    Database.Execute(String.Format(LevelDB.createZones, dst));
+                    Database.Backend.CreateTable("Zone" + dst, LevelDB.createZones);
                     Database.Backend.CopyAllRows("Zone" + src, "Zone" + dst);
                 }
             }
