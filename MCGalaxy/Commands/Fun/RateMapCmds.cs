@@ -29,23 +29,25 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) { RateMap(p, true); }
         
         protected bool RateMap(Player p, bool like) {
-            string action = like ? "like" : "dislike";
+            string prefix = like ? "" : "dis";
             if (p == null) { MessageInGameOnly(p); return false; }
             
-            if (p.Game.RatedMap) { 
-                Player.Message(p, "You have already {0}d this map.", action); return false; 
+            if (p.Game.RatedMap) {
+            	prefix = p.Game.LikedMap ? "" : "dis";
+                Player.Message(p, "You have already {0}liked this map.", prefix); return false; 
             }
             if (CheckIsAuthor(p)) {
-                Player.Message(p, "Cannot {0} this map as you are an author of it.", action); return false;
+                Player.Message(p, "Cannot {0}like this map as you are an author of it.", prefix); return false;
             }
             
             if (like) p.level.Likes++;
             else p.level.Dislikes++;
             p.Game.RatedMap = true;
+            p.Game.LikedMap = like;
             Level.SaveSettings(p.level);
             
-            action = like ? "&aliked" : "&cdisliked";
-            Player.Message(p, "You have {0} %Sthis map.", action);
+            prefix = like ? "&a" : "&cdis";
+            Player.Message(p, "You have {0}liked %Sthis map.", prefix);
             return true;
         }
         

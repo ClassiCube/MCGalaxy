@@ -29,7 +29,7 @@ namespace MCGalaxy.Games {
         public string TeamInvite; 
         
         /// <summary> Whether the player has liked or disliked the map in this round. </summary>
-        internal bool RatedMap = false; 
+        internal bool RatedMap = false, LikedMap = false;
         
         /// <summary> Whether the player has pledged that they will survive/win in this round. </summary>
         internal bool PledgeSurvive = false;
@@ -100,7 +100,6 @@ namespace MCGalaxy.Games {
             BlocksLeft = 50;
             CurrentInfected = 0;
             Infected = false;
-            RatedMap = false;
             PledgeSurvive = false;
             InvisibilityPotions = 0;
             RevivesUsed = 0;

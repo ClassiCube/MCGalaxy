@@ -33,7 +33,6 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             string end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             string start = "thismonth";
-            string spanName = null;
             string[] args = message.Split(' ');
             
             Player target = null;
@@ -50,21 +49,16 @@ namespace MCGalaxy.Commands {
             
             if (start == "today") {
                 start = DateTime.Now.ToString("yyyy-MM-dd 00:00:00");
-                spanName = "Today";
             } else if (start == "yesterday")  {
                 start = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd 00:00:00");
                 end = DateTime.Now.ToString("yyyy-MM-dd 00:00:00");
-                spanName = "Yesterday";
             } else if (start == "thismonth") {
                 start = DateTime.Now.ToString("yyyy-MM-01 00:00:00");
-                spanName = "This Month";
             } else if (start == "lastmonth") {
                 start = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-01 00:00:00");
                 end = DateTime.Now.ToString("yyyy-MM-01 00:00:00");
-                spanName = "Last Month";
             } else if (start == "all") {
                 start = "0000-00-00 00:00:00";
-                spanName = "ALL";
             } else {
                 Help(p); return;
             }

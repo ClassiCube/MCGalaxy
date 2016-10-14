@@ -113,6 +113,9 @@ namespace MCGalaxy.Games {
                 string target = PlayerInfo.GetColoredName(p, b.Target);
                 CurLevel.ChatLevel("Bounty on " + target + " %Sis no longer active.");
                 Bounties.Remove(b);
+                
+                Player setter = PlayerInfo.FindExact(b.Origin);
+                if (setter != null) setter.SetMoney(setter.money + b.Amount);
             }
         }
         
@@ -161,7 +164,7 @@ namespace MCGalaxy.Games {
             Alive.Remove(p);
             Infected.Remove(p);
             if (oldLvl != null && oldLvl.name.CaselessEq(CurLevelName))
-            	HUD.UpdateAllPrimary(this);
+                HUD.UpdateAllPrimary(this);
         }
         
         public override bool PlayerCanJoinLevel(Player p, Level lvl, Level oldLvl) {
