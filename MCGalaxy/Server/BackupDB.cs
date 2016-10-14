@@ -91,16 +91,16 @@ namespace MCGalaxy {
                         if (row.IsNull(col)) {
                             sql.Write("NULL");
                         } else if (type == typeof(DateTime)) { // special format
-                        	sql.Write("'{0:yyyy-MM-dd HH:mm:ss.ffff}'", (DateTime)row[col]);
+                            sql.Write("'{0:yyyy-MM-dd HH:mm:ss.ffff}'", (DateTime)row[col]);
                         } else if (type == typeof(bool)) {
-                        	sql.Write((bool)row[col] ? "1" : "0");
+                            sql.Write((bool)row[col] ? "1" : "0");
                         } else if (type == typeof(string)) {
-                        	string value = row[col].ToString();
-                        	if (value.IndexOf('\'') >= 0) // escape '
-                        	    value = value.Replace("'", "''");
-                        	sql.Write("'{0}'", value);
+                            string value = row[col].ToString();
+                            if (value.IndexOf('\'') >= 0) // escape '
+                                value = value.Replace("'", "''");
+                            sql.Write("'{0}'", value);
                         } else {
-                        	sql.Write(row[col]); // We assume all other data is left as-is
+                            sql.Write(row[col]); // We assume all other data is left as-is
                             //This includes numbers, blobs, etc.  (As well as objects, but we don't save them into the database)
                         }
                         sql.Write((col < row.ItemArray.Length - 1 ? ", " : ");"));
@@ -116,7 +116,7 @@ namespace MCGalaxy {
                 sql.WriteLine("CREATE TABLE IF NOT EXISTS `{0}` (", tableName);
                 
                 using (DataTable schema = Database.Fill("DESCRIBE `" + tableName + "`")) {
-                	string[] rowParams = new string[schema.Columns.Count];
+                    string[] rowParams = new string[schema.Columns.Count];
                     foreach (DataRow row in schema.Rows) {
                         //Save the info contained to file
                         List<string> tmp = new List<string>();
@@ -149,7 +149,7 @@ namespace MCGalaxy {
                 {
                     //just print out the data in the table.
                     foreach (DataRow row in tableSQL.Rows) {
-                    	string tableSQLString = row[0].ToString();
+                        string tableSQLString = row[0].ToString();
                         sql.WriteLine(tableSQLString.Replace(" " + tableName, " `" + tableName + "`").Replace("CREATE TABLE `" + tableName + "`", "CREATE TABLE IF NOT EXISTS `" + tableName + "`") + ";");
                         //We parse this ourselves to find the actual types.
                     }
@@ -163,7 +163,7 @@ namespace MCGalaxy {
             string syntax = Server.useMySQL ? "SHOW TABLES" : "SELECT * FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'";
             using (DataTable tables = Database.Fill(syntax)) {
                 foreach (DataRow row in tables.Rows) {
-            		string tableName = row[Server.useMySQL ? 0 : 1].ToString();
+                    string tableName = row[Server.useMySQL ? 0 : 1].ToString();
                     tableNames.Add(tableName);
                 }
             }
@@ -180,7 +180,7 @@ namespace MCGalaxy {
             foreach (string table in tables)
                 Database.Backend.DeleteTable(table);
 
-            // Import data
+            // Import data (we only have CREATE TABLE and INSERT INTO statements)
             using (StreamReader reader = new StreamReader(stream))
                 using (BulkTransaction helper = BulkTransaction.Create())
             {
@@ -193,15 +193,10 @@ namespace MCGalaxy {
                     if (index > -1) ParseCreate(ref cmd, index);
                     
                     //Run the command in the transaction.
-                    helper.Execute(cmd.Replace(" unsigned", "").Replace(" UNSIGNED", ""));
+                    helper.Execute(cmd);
                 }
                 helper.Commit();
             }
-            
-            //Not sure if order matters.
-            //AUTO_INCREMENT is changed to AUTOINCREMENT for MySQL -> SQLite
-            //AUTOINCREMENT is changed to AUTO_INCREMENT for SQLite -> MySQL
-            // All we should have in the script file is CREATE TABLE and INSERT INTO commands.
         }
         
         static string NextStatement(StreamReader reader, List<string> buffer) {
@@ -221,34 +216,27 @@ namespace MCGalaxy {
         
         static void ParseCreate(ref string cmd, int index) {
             cmd = cmd.Remove(0, index);
-            //Do we have a primary key?
-            try {
-                if (Server.useMySQL) {
-                    int priIndex = cmd.ToUpper().IndexOf(" PRIMARY KEY AUTOINCREMENT");
-                    int priCount = " PRIMARY KEY AUTOINCREMENT".Length;
-                    int attIdx = cmd.Substring(0, cmd.Substring(0, priIndex - 1).LastIndexOfAny("` \n".ToCharArray())).LastIndexOfAny("` \n".ToCharArray()) + 1;
-                    int attIdxEnd = cmd.IndexOfAny("` \n".ToCharArray(), attIdx) - 1;
-                    string attName = cmd.Substring(attIdx, attIdxEnd - attIdx + 1).Trim(' ', '\n', '`', '\r');
-                    
-                    //For speed, we just delete this, and add it to the attribute name, then delete the auto_increment clause.
-                    cmd = cmd.Remove(priIndex, priCount);
-                    cmd = cmd.Insert(cmd.LastIndexOf(")"), ", PRIMARY KEY (`" + attName + "`)");
-                    cmd = cmd.Insert(cmd.IndexOf(',', priIndex), " AUTO_INCREMENT");
-                } else {
-                    int priIndex = cmd.ToUpper().IndexOf(",\r\nPRIMARY KEY");
-                    int priIndexEnd = cmd.ToUpper().IndexOf(')', priIndex);
-                    int attIdx = cmd.IndexOf("(", priIndex) + 1;
-                    int attIdxEnd = priIndexEnd - 1;
-                    string attName = cmd.Substring(attIdx, attIdxEnd - attIdx + 1);
-                    cmd = cmd.Remove(priIndex, priIndexEnd - priIndex + 1);
-                    int start = cmd.IndexOf(attName) + attName.Length;
-                    int end = cmd.IndexOf(',');
-                    cmd = cmd.Remove(start, end - start);
-                    cmd = cmd.Insert(cmd.IndexOf(attName) + attName.Length, " INTEGER PRIMARY KEY AUTOINCREMENT");
-                    cmd = cmd.Replace(" auto_increment", "").Replace(" AUTO_INCREMENT", "").Replace("True", "1").Replace("False", "0");
-                }
-            }
-            catch (ArgumentOutOfRangeException) { } // If we don't, just ignore it.
+            cmd = cmd.Replace(" unsigned", " UNSIGNED");
+            if (!Server.useMySQL) return;
+            
+            // MySQL does not support the format used by the old SQLite backend for the primary key
+            const string priKey = " PRIMARY KEY AUTOINCREMENT";
+            int priIndex = cmd.ToUpper().IndexOf(priKey);
+            if (priIndex == -1) return;
+            
+            // Find the name of this column
+            char[] sepChars = { '\t', ' ' }; // chars that separate part of a column definition
+            char[] startChars = { '`', '(', ' ', ',', '\t' }; // chars that can start a column definition
+            string before = cmd.Substring(0, priIndex);
+            before = before.Substring(0, before.LastIndexOfAny(sepChars)); // get rid of column type           
+            int nameStart = before.LastIndexOfAny(startChars) + 1;
+            string name = before.Substring(nameStart);
+            
+            // Replace the 'PRIMARY KEY AUTOINCREMENT' with just 'AUTO_INCREMENT';
+            cmd = cmd.Remove(priIndex, priKey.Length);
+            cmd = cmd.Insert(priIndex, " AUTO_INCREMENT");
+            // Insert 'PRIMARY KEY' at end of columns definition
+            cmd = cmd.Insert(cmd.LastIndexOf(")"), ", PRIMARY KEY (`" + name + "`)");
         }
     }
 }

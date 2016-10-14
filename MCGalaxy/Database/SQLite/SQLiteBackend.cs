@@ -72,7 +72,8 @@ namespace MCGalaxy.SQL {
             Database.Execute(syntax);
         }
         
-        protected override void CreateTableColumns(StringBuilder sql, ColumnParams[] columns) {         
+        protected override void CreateTableColumns(StringBuilder sql, ColumnParams[] columns) {
+            string priKey = null;        	
             for (int i = 0; i < columns.Length; i++) {
                 ColumnParams col = columns[i];
                 if (col.Type == ColumnType.Bool) {
@@ -81,14 +82,17 @@ namespace MCGalaxy.SQL {
                     sql.Append(col.Column).Append(' ').Append(col.FormatType());
                 }
                 
-                if (col.PrimaryKey) sql.Append(" PRIMARY KEY");
-                if (col.AutoIncrement) sql.Append(" AUTOINCREMENT");
+                if (col.PrimaryKey) priKey = col.Column;
+                if (col.AutoIncrement) sql.Append(" AUTO_INCREMENT");
                 if (col.NotNull) sql.Append(" NOT NULL");
                 if (col.DefaultValue != null)
                     sql.Append(" DEFAULT ").Append(col.DefaultValue);
                 
-                if (i < columns.Length - 1)
+                if (i < columns.Length - 1) {
                     sql.Append(',');
+                } else if (priKey != null) {
+                    sql.Append(", PRIMARY KEY(").Append(priKey).Append(") ");
+                }
                 sql.AppendLine();
             }
         }
