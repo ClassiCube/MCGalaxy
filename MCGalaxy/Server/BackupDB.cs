@@ -124,8 +124,8 @@ namespace MCGalaxy {
                             tmp.Add(row[col].ToString());
                         
                         rowParams = tmp.ToArray();
-                        rowParams[2] = (rowParams[2].ToLower().Equals("no") ? "NOT " : "DEFAULT ") + "NULL";
-                        pri += (rowParams[3].ToLower().Equals("pri") ? rowParams[0] + ";" : "");
+                        rowParams[2] = (rowParams[2].CaselessEq("no") ? "NOT " : "DEFAULT ") + "NULL";
+                        pri += (rowParams[3].CaselessEq("pri") ? rowParams[0] + ";" : "");
                         sql.WriteLine("`{0}` {1} {2}" + (rowParams[5].Equals("") ? "" : " {5}") + (pri.Equals("") && row == schema.Rows[schema.Rows.Count - 1] ? "" : ","), rowParams);
                     }
                 }

@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands
         public CmdJail() { }
 
         public override void Use(Player p, string message) {
-            if (message.ToLower() == "set" && p != null) {
+        	if (message.CaselessEq("set") && p != null) {
                 p.level.jailx = p.pos[0]; p.level.jaily = p.pos[1]; p.level.jailz = p.pos[2];
                 p.level.jailrotx = p.rot[0]; p.level.jailroty = p.rot[1];
                 Player.Message(p, "Set Jail point.");

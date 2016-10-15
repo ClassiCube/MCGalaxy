@@ -34,7 +34,7 @@ namespace MCGalaxy
 
             public bool IncludeInBlockProperties()
             {
-                if (Block.Name(type).ToLower() == "unknown")
+            	if (Block.Name(type).CaselessEq("unknown"))
                     return false;
                 if(type == Block.flagbase)
                     return false;

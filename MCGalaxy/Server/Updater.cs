@@ -47,9 +47,9 @@ namespace MCGalaxy {
 		static void LineProcessor(string key, string value) {
 			switch (key.ToLower()) {
 				case "autoupdate":
-					Server.autoupdate = value.ToLower() == "true"; break;
+					Server.autoupdate = value.CaselessEq("true"); break;
 				case "notify":
-					Server.notifyPlayers = value.ToLower() == "true"; break;
+					Server.notifyPlayers = value..CaselessEq("true"); break;
 				case "restartcountdown":
 					Server.restartcountdown = int.Parse(value); break;
 			}

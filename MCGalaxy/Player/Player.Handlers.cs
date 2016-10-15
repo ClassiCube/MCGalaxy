@@ -597,11 +597,11 @@ namespace MCGalaxy {
         
         bool IsHandledMessage(string text) {
             if (Server.voteKickInProgress && text.Length == 1) {
-                if (text.ToLower() == "y") {
+        		if (text.CaselessEq("y")) {
                     voteKickChoice = VoteKickChoice.Yes;
                     SendMessage("Thanks for voting!");
                     return true;
-                } else if (text.ToLower() == "n") {
+        		} else if (text.CaselessEq("n")) {
                     voteKickChoice = VoteKickChoice.No;
                     SendMessage("Thanks for voting!");
                     return true;

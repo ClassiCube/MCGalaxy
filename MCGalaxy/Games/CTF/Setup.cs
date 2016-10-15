@@ -111,18 +111,18 @@ namespace MCGalaxy.Games {
         void OnChat(Player p, string message) {
             if (!cache.ContainsKey(p)) return;
             
-            if (message.ToLower() == "random") {
+            if (message.CaselessEq("random")) {
                 if (cache[p].s == Step.RandomorSet) {
                     Player.Message(p, "Ok random spawns it is!");
                     Finish(p, 0, 0, 0, 0, 0, 0);
                     cache.Remove(p);
                     Player.Message(p, "Setup Complete!");
                 }
-            } else if (message.ToLower() == "set") {
+            } else if (message.CaselessEq("set")) {
                 if (cache[p].s == Step.RandomorSet) {
                     Player.Message(p, "Ok, can you stand in the blue spawn and say \"continue\" (without the \" \")");
                 }
-            } else if (message.ToLower() == "continue") {
+            } else if (message.CaselessEq("continue")) {
                 switch (cache[p].s)
                 {
                     case Step.GetCenter:

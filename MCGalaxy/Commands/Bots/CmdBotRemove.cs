@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             if (p == null) { MessageInGameOnly(p); return; }
-            if (message.ToLower() == "all") {
+            if (message.CaselessEq("all")) {
                 PlayerBot.RemoveAllFromLevel(p.level); return;
             }
             

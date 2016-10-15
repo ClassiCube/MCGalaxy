@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.World {
             }
             
             string url = args[1];
-            if (url.ToLower() == "normal" || url.ToLower() == "reset") {
+            if (url.CaselessEq("normal") || url.CaselessEq("reset")) {
                 url = "";
             } else if (!(url.StartsWith("http://") || url.StartsWith("https://"))) {
                 Player.Message(p, "Please use http:// or https:// in front of your URL"); return;

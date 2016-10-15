@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
             
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (args.Length >= 2) {
-                if(args[1].ToLower() == "explode") {
+                if(args[1].CaselessEq("explode")) {
                     deathMessage = " was exploded by " + killer;
                     explode = true;
                 } else {

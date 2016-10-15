@@ -40,44 +40,44 @@ namespace MCGalaxy.Commands
                     Player.Message(p, "Tnt usage is not allowed at the moment!"); return;
                 }
                 p.modeType = 0; Player.Message(p, "TNT mode is now &cOFF%S.");
-            } else if (message.ToLower() == "small" || message == "") {
+            } else if (message.CaselessEq("small") || message == "") {
                 if (!p.allowTnt) {
                     Player.Message(p, "Tnt usage is not allowed at the moment!"); return;
                 }
                 
                 p.modeType = Block.smalltnt;
                 Player.Message(p, "TNT mode is now &aON%S.");
-            } else if (message.ToLower() == "big") {
+            } else if (message.CaselessEq("big")) {
                 if (!p.allowTnt) {
                     Player.Message(p, "Tnt usage is not allowed at the moment!"); return;
                 }
                 
-            	if (CheckExtraPerm(p, 1)) {
+                if (CheckExtraPerm(p, 1)) {
                     p.modeType = Block.bigtnt;
                     Player.Message(p, "TNT (Big) mode is now &aON%S.");
                 } else {
                     MessageNeedExtra(p, "use big TNT mode.", 1); return;
                 }
-            } else if (message.ToLower() == "nuke") {
+            } else if (message.CaselessEq("nuke")) {
                 if (!p.allowTnt) {
                     Player.Message(p, "Tnt usage is not allowed at the moment!"); return;
                 }
                 
-            	if (CheckExtraPerm(p, 3)) {
+                if (CheckExtraPerm(p, 3)) {
                     p.modeType = Block.nuketnt;
                     Player.Message(p, "TNT (Nuke) mode is now &aON%S.");
                 } else {
                     MessageNeedExtra(p, "use nuke TNT mode.", 3); return;
                 }
-            } else if (message.ToLower() == "allow") {
-            	if (CheckExtraPerm(p, 2)) {
+            } else if (message.CaselessEq("allow")) {
+                if (CheckExtraPerm(p, 2)) {
                     p.allowTnt = true; Player.Message(p, "&cTnt usage has now been enabled!");
                 } else {
                     MessageNeedExtra(p, "can allow TNT usage.", 2); return;
                 }                
                 return;
-            } else if (message.ToLower() == "disallow") {
-            	if (CheckExtraPerm(p, 2)) {
+            } else if (message.CaselessEq("disallow")) {
+                if (CheckExtraPerm(p, 2)) {
                     p.allowTnt = false; Player.Message(p, "&cTnt usage has now been disabled!");
                 } else {
                     MessageNeedExtra(p, "disallow TNT usage.", 2); return;

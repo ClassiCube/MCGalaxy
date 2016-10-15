@@ -620,19 +620,19 @@ namespace MCGalaxy.Games
         {
             if (voting)
             {
-                if (message == "1" || message.ToLower() == map1)
+            	if (message == "1" || message.CaselessEq(map1))
                 {
                     Player.Message(p, "Thanks for voting :D");
                     vote1++;
                     Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
                 }
-                else if (message == "2" || message.ToLower() == map2)
+            	else if (message == "2" || message.CaselessEq(map2))
                 {
                     Player.Message(p, "Thanks for voting :D");
                     vote2++;
                     Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
                 }
-                else if (message == "3" || message.ToLower() == map3)
+            	else if (message == "3" || message.CaselessEq(map3))
                 {
                     Player.Message(p, "Thanks for voting :D");
                     vote3++;

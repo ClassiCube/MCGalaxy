@@ -27,14 +27,13 @@ namespace MCGalaxy {
         /// <remarks> Note this field is highly volatile, you should cache references to the items array. </remarks>
         public static VolatileArray<Level> Loaded = new VolatileArray<Level>(true);
         
-        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         public static Level Find(string name) {
             Level match = null; int matches = 0;
             Level[] loaded = Loaded.Items;
             
             foreach (Level lvl in loaded) {
-                if (lvl.name.Equals(name, comp)) return lvl;
-                if (lvl.name.IndexOf(name, comp) >= 0) {
+                if (lvl.name.CaselessEq(name)) return lvl;
+                if (lvl.name.CaselessContains(name)) {
                     match = lvl; matches++;
                 }
             }
@@ -47,7 +46,7 @@ namespace MCGalaxy {
         
         public static Level FindMatches(Player pl, string name, out int matches) {
             return Utils.FindMatches<Level>(pl, name, out matches, LevelInfo.Loaded.Items,
-        	                                l => true, l => l.name, "loaded levels");
+                                            l => true, l => l.name, "loaded levels");
         }
         
         public static string FindMapMatches(Player pl, string name) {

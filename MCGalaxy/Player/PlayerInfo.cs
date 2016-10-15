@@ -38,15 +38,14 @@ namespace MCGalaxy {
         }
         
         
-        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         public static Player Find(string name) {
             Player[] players = PlayerInfo.Online.Items;
             Player match = null; int matches = 0;
             name = name.ToLower();
 
             foreach (Player p in players) {
-                if (p.name.Equals(name, comp)) return p;
-                if (p.name.IndexOf(name, comp) >= 0) {
+                if (p.name.CaselessEq(name)) return p;
+                if (p.name.CaselessContains(name)) {
                     match = p; matches++;
                 }
             }
@@ -102,8 +101,8 @@ namespace MCGalaxy {
                 if (!Entities.CanSee(p, pl)) continue;
                 string name = Colors.StripColors(pl.DisplayName);
                 
-                if (name.Equals(nick, comp)) return pl;
-                if (name.IndexOf(nick, comp) >= 0) {
+                if (name.CaselessEq(nick)) return pl;
+                if (name.CaselessContains(nick)) {
                     match = pl; matches++;
                 }
             }
