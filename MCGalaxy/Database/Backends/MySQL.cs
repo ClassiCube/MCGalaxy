@@ -17,6 +17,7 @@
  */
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
 using MySql.Data.MySqlClient;
 
@@ -98,4 +99,46 @@ namespace MCGalaxy.SQL {
             }
         }
     }
+	
+	
+    public sealed class MySQLBulkTransaction : BulkTransaction {
+
+        public MySQLBulkTransaction(string connString) {
+            connection = new MySqlConnection(connString);
+            connection.Open();
+            connection.ChangeDatabase(Server.MySQLDatabaseName);
+
+            transaction = connection.BeginTransaction();
+        }
+
+        public override IDbCommand CreateCommand(string query) {
+            return new MySqlCommand(query, (MySqlConnection)connection, (MySqlTransaction)transaction);
+        }
+        
+        public override IDataParameter CreateParam(string paramName, DbType type) {
+            MySqlParameter arg = new MySqlParameter(paramName, null);
+            arg.DbType = type;
+            return arg;
+        }
+    }
+
+    public sealed class MySQLParameterisedQuery : ParameterisedQuery {
+        protected override bool MultipleSchema { get { return true; } }
+        
+        protected override IDbConnection CreateConnection(string connString) {
+            return new MySqlConnection(connString);
+        }
+        
+        protected override IDbCommand CreateCommand(string query, IDbConnection conn) {
+            return new MySqlCommand(query, (MySqlConnection)conn);
+        }
+        
+        protected override DbDataAdapter CreateDataAdapter(string query, IDbConnection conn) {
+            return new MySqlDataAdapter(query, (MySqlConnection)conn);
+        }
+        
+        protected override IDbDataParameter CreateParameter() {
+        	return new MySqlParameter();
+        }
+    }	
 }

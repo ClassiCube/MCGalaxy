@@ -17,6 +17,7 @@
  */
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
 
@@ -73,7 +74,7 @@ namespace MCGalaxy.SQL {
         }
         
         protected override void CreateTableColumns(StringBuilder sql, ColumnParams[] columns) {
-            string priKey = null;        	
+            string priKey = null;            
             for (int i = 0; i < columns.Length; i++) {
                 ColumnParams col = columns[i];
                 if (col.Type == ColumnType.Bool) {
@@ -95,6 +96,44 @@ namespace MCGalaxy.SQL {
                 }
                 sql.AppendLine();
             }
+        }
+    }
+    
+    
+     public sealed class SQLiteBulkTransaction : BulkTransaction {
+
+        public SQLiteBulkTransaction(string connString) { 
+            connection = new SQLiteConnection(connString);
+            connection.Open();
+            transaction = connection.BeginTransaction();
+        }
+        
+        public override IDbCommand CreateCommand(string query) {
+            return new SQLiteCommand(query, (SQLiteConnection)connection, (SQLiteTransaction)transaction);
+        }
+        
+        public override IDataParameter CreateParam(string paramName, DbType type) {
+            return new SQLiteParameter(paramName, type);
+        }
+    }
+    
+    public sealed class SQLiteParameterisedQuery : ParameterisedQuery {        
+        protected override bool MultipleSchema { get { return false; } }
+        
+        protected override IDbConnection CreateConnection(string connString) {
+            return new SQLiteConnection(connString);
+        }
+        
+        protected override IDbCommand CreateCommand(string query, IDbConnection conn) {
+            return new SQLiteCommand(query, (SQLiteConnection)conn);
+        }
+        
+        protected override DbDataAdapter CreateDataAdapter(string query, IDbConnection conn) {
+            return new SQLiteDataAdapter(query, (SQLiteConnection)conn);
+        }
+        
+        protected override IDbDataParameter CreateParameter() {
+        	return new SQLiteParameter();
         }
     }
 }

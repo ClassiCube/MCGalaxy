@@ -18,23 +18,70 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 
 namespace MCGalaxy.SQL {
 
     public abstract class ParameterisedQuery {
         
-		protected Dictionary<string, object> parameters = new Dictionary<string, object>();
-		
-		public void AddParam(string name, object param) { parameters.Add(name, param); }
-		
-		public void ClearParams() { parameters.Clear(); }
+        protected Dictionary<string, object> parameters = new Dictionary<string, object>();
         
-        public abstract void Execute(string query, string connString, bool createDB = false);
+        public void AddParam(string name, object param) { parameters.Add(name, param); }
         
-        public abstract void Fill(string query, string connString, DataTable results);
+        public void ClearParams() { parameters.Clear(); }
+        
+        public void Execute(string query, string connString, bool createDB = false) {
+            using (IDbConnection conn = CreateConnection(connString)) {
+                conn.Open();
+                if (!createDB && MultipleSchema)
+                    conn.ChangeDatabase(Server.MySQLDatabaseName);
+                
+                using (IDbCommand cmd = CreateCommand(query, conn)) {
+                    FillParams(cmd);
+                    cmd.ExecuteNonQuery();
+                }
+                conn.Close();
+            }
+        }
+
+        public void Fill(string query, string connString, DataTable toReturn) {
+            using (IDbConnection conn = CreateConnection(connString)) {
+                conn.Open();
+                if (MultipleSchema)
+                    conn.ChangeDatabase(Server.MySQLDatabaseName);
+                
+                using (DbDataAdapter da = CreateDataAdapter(query, conn)) {
+                    FillParams(da.SelectCommand);
+                    da.Fill(toReturn);
+                    da.SelectCommand.Dispose();
+                }
+                conn.Close();
+            }
+        }
+        
         
         public static ParameterisedQuery Create() {
             return Database.Backend.CreateParameterised();
+        }        
+        
+        void FillParams(IDbCommand cmd) {
+            foreach (var param in parameters) {
+                IDbDataParameter dParam = CreateParameter();
+                dParam.ParameterName = param.Key;
+                dParam.Value = param.Value;
+                cmd.Parameters.Add(dParam);
+            }
         }
+        
+        
+        protected abstract bool MultipleSchema { get; }
+        
+        protected abstract IDbConnection CreateConnection(string connString);
+        
+        protected abstract IDbCommand CreateCommand(string query, IDbConnection conn);
+        
+        protected abstract DbDataAdapter CreateDataAdapter(string query, IDbConnection conn);
+        
+        protected abstract IDbDataParameter CreateParameter();
     }
 }
