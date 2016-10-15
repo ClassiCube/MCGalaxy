@@ -83,8 +83,13 @@ namespace MCGalaxy.SQL {
                     sql.Append(col.Column).Append(' ').Append(col.FormatType());
                 }
                 
-                if (col.PrimaryKey) priKey = col.Column;
-                if (col.AutoIncrement) sql.Append(" AUTO_INCREMENT");
+                // When the primary key isn't autoincrement, we use the same form as mysql
+                // Otherwise we have to use sqlite's 'PRIMARY KEY AUTO_INCREMENT' form
+                if (col.PrimaryKey) {
+                    if (!col.AutoIncrement) priKey = col.Column;
+                    else sql.Append(" PRIMARY KEY");
+                }
+                if (col.AutoIncrement) sql.Append(" AUTOINCREMENT");
                 if (col.NotNull) sql.Append(" NOT NULL");
                 if (col.DefaultValue != null)
                     sql.Append(" DEFAULT ").Append(col.DefaultValue);
@@ -133,7 +138,7 @@ namespace MCGalaxy.SQL {
         }
         
         protected override IDbDataParameter CreateParameter() {
-        	return new SQLiteParameter();
+            return new SQLiteParameter();
         }
     }
 }
