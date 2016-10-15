@@ -49,7 +49,7 @@ namespace MCGalaxy {
 				case "autoupdate":
 					Server.autoupdate = value.CaselessEq("true"); break;
 				case "notify":
-					Server.notifyPlayers = value..CaselessEq("true"); break;
+					Server.notifyPlayers = value.CaselessEq("true"); break;
 				case "restartcountdown":
 					Server.restartcountdown = int.Parse(value); break;
 			}

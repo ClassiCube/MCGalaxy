@@ -87,7 +87,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
 
             foreach (Player p in players) {
-                if (p.name.Equals(name, comp)) return p;
+            	if (p.name.CaselessEq(name)) return p;
             }
             return null;
         }

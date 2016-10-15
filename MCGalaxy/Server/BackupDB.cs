@@ -69,21 +69,15 @@ namespace MCGalaxy {
                 sql.WriteLine();
                 
                 List<DataColumn> allCols = new List<DataColumn>();
-                List<string> colNames = new List<string>();
                 foreach (DataColumn col in data.Columns) {
                     allCols.Add(col);
-                    colNames.Add(col.ColumnName);
                 }
+                string insertCols = FormatInsertColumns(allCols, tableName);
                 
                 foreach (DataRow row in data.Rows) { //We rely on the correct datatype being given here.
                     sql.WriteLine();
-                    sql.Write("INSERT INTO `{0}` (`", tableName);
-                    for (int col = 0; col < colNames.Count; col++) {
-                        string suffix = col < allCols.Count - 1 ? "`, `" : "`) VALUES";
-                        sql.Write(colNames[col] + suffix);
-                    }
-
-                    sql.WriteLine();
+                    sql.WriteLine(insertCols);
+                    
                     sql.Write("(");
                     for (int col = 0; col < data.Columns.Count; col++) {
                         //The values themselves can be integers or strings, or null
@@ -108,6 +102,16 @@ namespace MCGalaxy {
                 }
                 sql.WriteLine();
             }
+        }
+        
+        static string FormatInsertColumns(List<DataColumn> cols, string name) {
+            string sql = "INSERT INTO `" + name + "` (`";
+            for (int i = 0; i < cols.Count; i++) {
+                sql += cols[i].ColumnName + "`";
+                if (i < cols.Count - 1) sql += ", `";
+                else sql += ") VALUES";
+            }
+            return sql;
         }
         
         static void WriteTableSchema(string tableName, StreamWriter sql) {
