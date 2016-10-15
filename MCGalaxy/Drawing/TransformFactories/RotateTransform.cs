@@ -34,7 +34,7 @@ namespace MCGalaxy.Drawing.Transforms {
         public override Transform Construct(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length < 3 || args.Length > 4) { Player.MessageLines(p, Help); return null; }
-            double angleX, angleY, angleZ;
+            float angleX, angleY, angleZ;
             RotateTransform rotater = new RotateTransform();
             
             if (!ParseAngle(p, args[0], out angleX)) return null;
@@ -50,8 +50,8 @@ namespace MCGalaxy.Drawing.Transforms {
             return rotater;
         }
         
-        static bool ParseAngle(Player p, string input, out double angle) {
-            if (!Double.TryParse(input, out angle)) {
+        static bool ParseAngle(Player p, string input, out float angle) {
+            if (!Utils.TryParseDecimal(input, out angle)) {
                 Player.MessageLines(p, HelpString); return false;
             }            
             if (angle < -360 || angle > 360) { 

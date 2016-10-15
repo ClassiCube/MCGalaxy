@@ -18,6 +18,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
@@ -69,11 +70,11 @@ namespace MCGalaxy {
                 *srcByte = value; srcByte++;
         }
 
-		public static int Clamp(int value, int lo, int hi) {
+        public static int Clamp(int value, int lo, int hi) {
             return Math.Max(Math.Min(value, hi), lo);
         }
-		
-		public static decimal Clamp(decimal value, decimal lo, decimal hi) {
+        
+        public static decimal Clamp(decimal value, decimal lo, decimal hi) {
             return Math.Max(Math.Min(value, hi), lo);
         }
 
@@ -81,7 +82,21 @@ namespace MCGalaxy {
             return Math.Max(Math.Min(value, hi), lo);
         }
         
-		const StringComparison comp = StringComparison.OrdinalIgnoreCase;
+        // Not all languages use . as their decimal point separator
+        public static bool TryParseDecimal(string s, out float result) {
+            result = 0;
+            float temp;
+            const NumberStyles style = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite 
+                | NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint;
+            
+            if (!Single.TryParse(s, style, NumberFormatInfo.InvariantInfo, out temp)) return false;
+            if (Single.IsInfinity(temp) || Single.IsNaN(temp)) return false;
+            result = temp;
+            return true;
+        }
+                
+        
+        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
         public static T FindMatches<T>(Player pl, string name, out int matches, IEnumerable items,
                                              Predicate<T> filter, Func<T, string> nameGetter, string type, int limit = 5)  {
             T match = default(T); matches = 0;

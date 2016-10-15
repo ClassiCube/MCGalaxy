@@ -238,7 +238,7 @@ namespace MCGalaxy.Commands.CPE {
                     step++;
                 }
             } else if (step == 10) {
-                if (float.TryParse(value, out bd.Speed) && bd.Speed >= 0.25f && bd.Speed <= 3.96f)
+                if (Utils.TryParseDecimal(value, out bd.Speed) && bd.Speed >= 0.25f && bd.Speed <= 3.96f)
                     step++;
             } else if (step == 11) {
                 if (value == "0" || value == "1") {
@@ -314,7 +314,7 @@ namespace MCGalaxy.Commands.CPE {
                     }
                     def.CollideType = byte.Parse(value); break;
                 case "speed":
-                    if (!float.TryParse(value, out fTemp) || fTemp < 0.25f || fTemp > 3.96f) {
+                    if (!Utils.TryParseDecimal(value, out fTemp) || fTemp < 0.25f || fTemp > 3.96f) {
                         SendEditHelp(p, 10, 0); return;
                     }
                     def.Speed = fTemp; break;

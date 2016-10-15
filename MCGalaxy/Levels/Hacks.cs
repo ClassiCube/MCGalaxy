@@ -63,7 +63,7 @@ namespace MCGalaxy {
                 if (!part.CaselessStarts("jumpheight=")) continue;
                 string heightPart = part.Substring(part.IndexOf('=') + 1);
                 float value;
-                if (float.TryParse(heightPart, out value))
+                if (Utils.TryParseDecimal(heightPart, out value))
                     maxJump = (short)(value * 32);
             }            
             return Packet.MakeHackControl(fly, noclip, speed, respawn, _3rdPerson, maxJump);

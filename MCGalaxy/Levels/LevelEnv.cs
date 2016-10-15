@@ -129,7 +129,7 @@ namespace MCGalaxy {
             float value;
             min /= scale; max /= scale;
             
-            if (!float.TryParse(raw, out value)) {
+            if (!Utils.TryParseDecimal(raw, out value)) {
                 Player.Message(p, "Env: \"{0}\" is not a valid decimal.", value);
                 return false;
             } else if (value < min || value > max) {

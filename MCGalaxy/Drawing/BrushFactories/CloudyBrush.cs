@@ -77,7 +77,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         static bool ParseDecimal(Player p, string arg, ref float target, float baseValue) {
         	float temp;
-        	if (!float.TryParse(arg, out temp)) {
+        	if (!Utils.TryParseDecimal(arg, out temp)) {
         		Player.Message(p, "\"{0}\" was not a valid decimal.", arg); return false;
         	}
         	

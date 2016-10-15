@@ -30,8 +30,8 @@ namespace MCGalaxy.Commands.CPE {
             if (message == "") { Help(p); return; }
             
             float dist;
-            if (!float.TryParse(message, out dist)) {
-                Player.Message(p, "\"{0}\" is not a valid distance.", message); return;
+            if (!Utils.TryParseDecimal(message, out dist)) {
+                Player.Message(p, "\"{0}\" is not a valid decimal.", message); return;
             }
             int packedDist = (int)(dist * 32);
             if (packedDist < 0) packedDist = 160;
