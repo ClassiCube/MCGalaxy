@@ -137,7 +137,7 @@ namespace MCGalaxy {
                 	ExtractItem(item, ref errors);
                     if (item.Uri.ToString().ToLower().Contains("sql.sql")) {
                         // If it's in there, they backed it up, meaning they want it restored
-                        Backup.fillDatabase(item.GetStream());
+                        Backup.ReplaceDatabase(item.GetStream());
                     }
                 }
             }

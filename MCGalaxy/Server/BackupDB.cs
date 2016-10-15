@@ -174,18 +174,20 @@ namespace MCGalaxy {
             return tableNames;
         }
         
-        internal static void fillDatabase(Stream stream) {
-            //Backup
+        internal static void ReplaceDatabase(Stream sql) {
             using (FileStream backup = File.Create("backup.sql"))
-                BackupDatabase(new StreamWriter(backup), false);
-            
-            //Delete old
+                BackupDatabase(new StreamWriter(backup), false); // backup
+
             List<string> tables = GetTables();
             foreach (string table in tables)
-                Database.Backend.DeleteTable(table);
-
+                Database.Backend.DeleteTable(table); // drop all tables
+            
+            ImportSql(sql);
+        }
+        
+        internal static void ImportSql(Stream sql) {
             // Import data (we only have CREATE TABLE and INSERT INTO statements)
-            using (StreamReader reader = new StreamReader(stream))
+            using (StreamReader reader = new StreamReader(sql))
                 using (BulkTransaction helper = BulkTransaction.Create())
             {
                 List<string> buffer = new List<string>();
