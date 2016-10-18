@@ -106,7 +106,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "  &aBuild whitelist: " + JoinNames(bWhitelist, p));
             }
             if (bBlacklist.Count > 0) {
-                Player.Message(p, "  &Build blacklist: " + JoinNames(bBlacklist, p));
+                Player.Message(p, "  &cBuild blacklist: " + JoinNames(bBlacklist, p));
             }
             
             if (String.IsNullOrEmpty(data.RealmOwner))
