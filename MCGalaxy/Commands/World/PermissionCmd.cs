@@ -49,8 +49,6 @@ namespace MCGalaxy.Commands.World {
             string name = args.Length == 1 ? args[0] : args[1];
             bool include = name[0] == '+';
             string mode = include ? "whitelist" : "blacklist";
-            List<string> list = include ? access.Whitelisted : access.Blacklisted;
-            List<string> other = include ? access.Blacklisted : access.Whitelisted;
             name = name.Substring(1);
             
             if (name == "") {
@@ -60,29 +58,12 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "You cannot {0} yourself.", mode); return;
             }
             
-            if (p != null && !access.CheckDetailed(p, false)) {
-                Player.Message(p, "Hence you cannot modify the {0} {1}.", target, mode); return;
+            if (include) {
+                access.Whitelist(p, name);
+            } else {
+                access.Blacklist(p, name);
             }
-            if (p != null && PlayerInfo.GetGroup(name).Permission > p.Rank) {
-                Player.Message(p, "You cannot whitelist/blacklist players of a higher rank."); return;
-            }
-            
-            if (list.CaselessContains(name)) {
-                Player.Message(p, "\"{0}\" is already {1}ed.", name, mode); return;
-            }
-            if (!other.CaselessRemove(name))
-                list.Add(name);
-            
-            access.UpdateAllowBuild();
-            Level.SaveSettings(level);
-            
-            string msg = name + " was " + target + " " + mode + "ed";
-            Server.s.Log(msg + " on " + level.name);
-            Chat.MessageLevel(level, msg);
-            if (p == null || p.level != level)
-                Player.Message(p, msg + " on {0}.", level.name);
         }
-
         
         protected void MaxHelp(Player p, string action) {
             Player.Message(p, "%T/{0} [Level] [Rank]", name);

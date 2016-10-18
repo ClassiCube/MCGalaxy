@@ -107,13 +107,12 @@ namespace MCGalaxy {
         /// <returns> true if the minimum rank was changed, false if the given player
         /// had insufficient permission to change the minimum rank. </returns>
         public bool SetMin(Player p, Group grp) {
-            string target = IsVisit ? "pervisit" : "perbuild";
-            if (!CheckRank(p, Min, target, false)) return false;
-            if (!CheckRank(p, grp.Permission, target, true)) return false;
-            Min = grp.Permission;
+            string type = IsVisit ? "pervisit" : "perbuild";
+            if (!CheckRank(p, Min, type, false)) return false;
+            if (!CheckRank(p, grp.Permission, type, true)) return false;
             
-            UpdateAllowBuild();
-            OnPermissionChanged(p, grp, target);
+            Min = grp.Permission;        
+            OnPermissionChanged(p, grp, type);
             return true;
         }
         
@@ -121,44 +120,119 @@ namespace MCGalaxy {
         /// <returns> true if the minimum rank was changed, false if the given player
         /// had insufficient permission to change the minimum rank. </returns>
         public bool SetMax(Player p, Group grp) {
-            string target = IsVisit ? "pervisitmax" : "perbuildmax";
+            string type = IsVisit ? "pervisitmax" : "perbuildmax";
             const LevelPermission ignore = LevelPermission.Nobody;
-            if (Max != ignore && !CheckRank(p, Max, target, false)) return false;
-            if (grp.Permission != ignore && !CheckRank(p, grp.Permission, target, true)) return false;
-            Max = grp.Permission;
+            if (Max != ignore && !CheckRank(p, Max, type, false)) return false;
+            if (grp.Permission != ignore && !CheckRank(p, grp.Permission, type, true)) return false;
             
-            UpdateAllowBuild();
-            OnPermissionChanged(p, grp, target);
+            Max = grp.Permission;
+            OnPermissionChanged(p, grp, type);
+            return true;
+        }
+        
+        /// <summary> Allows a player to access these permissions. </summary>
+        /// <returns> true if the target is whitelisted, false if the given player
+        /// had insufficient permission to whitelist the target. </returns>
+        public bool Whitelist(Player p, string target) {
+            if (!CheckList(p, target, true)) return false;
+            if (Whitelisted.CaselessContains(target)) {
+                Player.Message(p, "\"{0}\" is already whitelisted.", target); return true;
+            }
+            
+            if (!Blacklisted.CaselessRemove(target)) 
+                Whitelisted.Add(target);
+            OnListChanged(p, target, true);
+            return true;
+        }
+        
+        /// <summary> Prevents a player from acessing these permissions. </summary>
+        /// <returns> true if the target is blacklisted, false if the given player
+        /// had insufficient permission to blacklist the target. </returns>
+        public bool Blacklist(Player p, string target) {
+            if (!CheckList(p, target, false)) return false;
+            if (Blacklisted.CaselessContains(target)) {
+                Player.Message(p, "\"{0}\" is already blacklisted.", target); return true;
+            }
+            
+            if (!Whitelisted.CaselessRemove(target)) 
+                Blacklisted.Add(target);
+            OnListChanged(p, target, false);
             return true;
         }
         
         
-        bool CheckRank(Player p, LevelPermission perm, string target, bool newPerm) {
+        bool CheckRank(Player p, LevelPermission perm, string type, bool newPerm) {
             if (p != null && perm > p.Rank) {
                 Player.Message(p, "You cannot change the {0} of a level {1} a {0} higher than your rank.", 
-                               target, newPerm ? "to" : "with");
+                               type, newPerm ? "to" : "with");
                 return false;
             }
             return true;
         }
         
-        void OnPermissionChanged(Player p, Group grp, string target) {
-            Level.SaveSettings(lvl);
-            Server.s.Log(target + " permission changed to " + grp.trueName + " on " + lvl.name + ".");
-            Chat.MessageLevel(lvl, target + " permission changed to " + grp.ColoredName + "%S.");
-            if (p != null && p.level != lvl)
-                Player.Message(p, "{0} permission changed to {1} %Son {2}.", target, grp.ColoredName, lvl.name);
+        bool CheckList(Player p, string name, bool whitelist) {
+            string type = IsVisit ? "pervisit" : "perbuild";
+            string mode = whitelist ? "whitelist" : "blacklist";
+            
+            if (p != null && !CheckDetailed(p)) {
+                Player.Message(p, "Hence you cannot modify the {0} {1}.", type, mode); return false;
+            }
+            if (p != null && PlayerInfo.GetGroup(name).Permission > p.Rank) {
+                Player.Message(p, "You cannot {0} players of a higher rank.", mode); return false;
+            }
+            return true;
         }
         
-        internal void UpdateAllowBuild() {
+        void OnPermissionChanged(Player p, Group grp, string type) {
+            Update();
+            Server.s.Log(type + " permission changed to " + grp.trueName + " on " + lvl.name + ".");
+            Chat.MessageLevel(lvl, type + " permission changed to " + grp.ColoredName + "%S.");
+            if (p != null && p.level != lvl)
+                Player.Message(p, "{0} permission changed to {1} %Son {2}.", type, grp.ColoredName, lvl.name);
+        }
+        
+        void OnListChanged(Player p, string name, bool whitelist) {
+            Update();
+            string type = IsVisit ? "pervisit" : "perbuild";
+            string msg = name + " was " + type + (whitelist ? " whitelisted" : " blacklisted");
+            Server.s.Log(msg + " on " + lvl.name);
+            Chat.MessageLevel(lvl, msg);
+            if (p != null && p.level != lvl)
+                Player.Message(p, "{0} on {1}", msg, lvl.name);
+        }
+        
+        
+        void Update() {
+            Level.SaveSettings(lvl);
+            UpdateAllowBuild();
+            UpdateAllowVisit();
+        }
+        
+        void UpdateAllowBuild() {
             if (IsVisit) return;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != lvl) continue;
                 
-                LevelAccessResult access = lvl.BuildAccess.Check(p, false);
+                LevelAccessResult access = Check(p, false);
                 p.AllowBuild = access == LevelAccessResult.Whitelisted 
                     || access == LevelAccessResult.Allowed;
+            }
+        }
+        
+        void UpdateAllowVisit() {
+            if (!IsVisit || lvl == Server.mainLevel) return;
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level != lvl) continue;
+                
+                LevelAccessResult access = Check(p, false);
+                bool allowVisit = access == LevelAccessResult.Whitelisted 
+                    || access == LevelAccessResult.Allowed;
+                if (allowVisit) continue;
+                
+                Player.Message(p, "&cNo longer allowed to visit %S{0}", lvl.name);
+                PlayerActions.ChangeMap(p, Server.mainLevel, false);
             }
         }
     }
