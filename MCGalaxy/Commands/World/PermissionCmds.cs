@@ -36,7 +36,10 @@ namespace MCGalaxy.Commands.World {
     
     public sealed class CmdPermissionBuild : PermissionCmd {        
         public override string name { get { return "perbuild"; } }
-
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("wbuild"), new CommandAlias("worldbuild") }; }
+        }
+        
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
@@ -71,6 +74,9 @@ namespace MCGalaxy.Commands.World {
     
     public sealed class CmdPermissionVisit : PermissionCmd {       
         public override string name { get { return "pervisit"; } }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("waccess"), new CommandAlias("worldaccess") }; }
+        }
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
