@@ -144,9 +144,9 @@ namespace MCGalaxy {
         
         void OnPermissionChanged(Player p, Group grp, string target) {
             Level.SaveSettings(lvl);
-            Server.s.Log(lvl.name + " " + target + " permission changed to " + grp.Permission + ".");
+            Server.s.Log(target + " permission changed to " + grp.trueName + " on " + lvl.name + ".");
             Chat.MessageLevel(lvl, target + " permission changed to " + grp.ColoredName + "%S.");
-            if (p == null || p.level != lvl)
+            if (p != null && p.level != lvl)
                 Player.Message(p, "{0} permission changed to {1} %Son {2}.", target, grp.ColoredName, lvl.name);
         }
         
