@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Commands {
@@ -63,51 +64,36 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "  Physics are {0}", physicsState);
             }
 
+            DateTime createTime = File.GetCreationTimeUtc(LevelInfo.LevelPath(data.Name));
+            TimeSpan createDelta = DateTime.UtcNow - createTime;
             if (Directory.Exists(Server.backupLocation + "/" + data.Name)) {
                 int latest = Directory.GetDirectories(Server.backupLocation + "/" + data.Name).Length;
-                DateTime time = File.GetCreationTimeUtc(LevelInfo.BackupPath(data.Name, latest.ToString()));
-                TimeSpan delta = DateTime.UtcNow - time;
-                Player.Message(p, "  Latest backup: &a{0} %S({1} ago)", latest, delta.Shorten());
+                DateTime backupTime = File.GetCreationTimeUtc(LevelInfo.BackupPath(data.Name, latest.ToString()));
+                TimeSpan backupDelta = DateTime.UtcNow - backupTime;
+                Player.Message(p, "  Created {2} ago, last backup ({1} ago): &a{0}", 
+                               latest, backupDelta.Shorten(), createDelta.Shorten());
             } else {
-                Player.Message(p, "  No backups for this map exist yet.");
+            	Player.Message(p, "  Created {0} ago, no backups yet", createDelta.Shorten());
             }
+            
             Player.Message(p, "  BlockDB (Used for /b) is {0}", data.blockDB ? "&aEnabled" : "&cDisabled");
             ShowPermissions(p, data);
-            Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.Name);            
-            if (!Server.zombie.IsZombieMap(data.Name)) return;
-            
-            string[] authors = data.Authors.Replace(" ", "").Split(',');
-            Player.Message(p, "Map authors: {0}",
-                           authors.Join(n => PlayerInfo.GetColoredName(p, n)));
-            int winChance = data.TotalRounds == 0 ? 100 : (data.HumanRounds * 100) / data.TotalRounds;
-            Player.Message(p, "&a{0} %Srounds played total, &a{1}% %Swin chance for humans.", 
-                           data.TotalRounds, winChance);
-            Player.Message(p, "This map has &a{0} likes %Sand &c{1} dislikes", 
-                           data.Likes, data.Dislikes);
+            Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.Name);
+            ShowZombieSurvival(p, data);
         }
         
         void ShowPermissions(Player p, MapInfoData data) {
-            Player.Message(p, "  Build rank = " + Group.GetColoredName(data.build) +
-        	               " %S: Visit rank = " + Group.GetColoredName(data.visit));
-            Player.Message(p, "  BuildMax Rank = " + Group.GetColoredName(data.buildmax) +
-                           " %S: VisitMax Rank = " + Group.GetColoredName(data.visitmax));
-            
             List<string> vWhitelist = data.VisitWhitelist, vBlacklist = data.VisitBlacklist;
             List<string> bWhitelist = data.BuildWhitelist, bBlacklist = data.BuildBlacklist;
             GetBlacklistedPlayers(data.Name, vBlacklist);
             
-            if (vWhitelist.Count > 0) {
-                Player.Message(p, "  &aVisit whitelist: " + JoinNames(vWhitelist, p));
-            }
-            if (vBlacklist.Count > 0) {
-                Player.Message(p, "  &cVisit blacklist: " + JoinNames(vBlacklist, p));
-            }
-            if (bWhitelist.Count > 0) {
-                Player.Message(p, "  &aBuild whitelist: " + JoinNames(bWhitelist, p));
-            }
-            if (bBlacklist.Count > 0) {
-                Player.Message(p, "  &cBuild blacklist: " + JoinNames(bBlacklist, p));
-            }
+            StringBuilder visitPerms = new StringBuilder("  Visitable by ");
+            PrintRanks(p, data.visit, data.visitmax, vWhitelist, vBlacklist, visitPerms);
+            Player.Message(p, visitPerms.ToString());
+            
+            StringBuilder buildPerms = new StringBuilder("  Modifiable by ");
+            PrintRanks(p, data.build, data.buildmax, bWhitelist, bBlacklist, buildPerms);
+            Player.Message(p, buildPerms.ToString());
             
             if (String.IsNullOrEmpty(data.RealmOwner))
                 data.RealmOwner = GetRealmMapOwner(data.Name);
@@ -118,10 +104,41 @@ namespace MCGalaxy.Commands {
                            owners.Join(n => PlayerInfo.GetColoredName(p, n)));
         }
         
+        // Can't pass a LevelAccess instance here
+        static void PrintRanks(Player p, LevelPermission min, LevelPermission max,
+                               List<string> whitelist, List<string> blacklist, StringBuilder builder) {
+            builder.Append(Group.GetColoredName(min) + "%S+");
+            if (max != LevelPermission.Nobody)
+                builder.Append(" up to " + Group.GetColoredName(max));
+            foreach (string name in whitelist)
+                builder.Append(", " + PlayerInfo.GetColoredName(p, name));
+
+            if (blacklist.Count == 0) return;
+            
+            builder.Append( " %S(but not ");
+            foreach (string name in blacklist)
+                builder.Append(PlayerInfo.GetColoredName(p, name) + ", ");
+            builder.Remove(builder.Length - 2, 2);
+            builder.Append("%S)");
+        }
+        
+        void ShowZombieSurvival(Player p, MapInfoData data) {
+            if (!Server.zombie.IsZombieMap(data.Name)) return;
+            
+            string[] authors = data.Authors.Replace(" ", "").Split(',');
+            Player.Message(p, "Map authors: {0}",
+                           authors.Join(n => PlayerInfo.GetColoredName(p, n)));
+            int winChance = data.TotalRounds == 0 ? 100 : (data.HumanRounds * 100) / data.TotalRounds;
+            Player.Message(p, "&a{0} %Srounds played total, &a{1}% %Swin chance for humans.",
+                           data.TotalRounds, winChance);
+            Player.Message(p, "This map has &a{0} likes %Sand &c{1} dislikes",
+                           data.Likes, data.Dislikes);
+        }
+        
         static string JoinNames(List<string> items, Player p) {
             return items.Join(name => PlayerInfo.GetColoredName(p, name));
         }
-   
+        
         static string GetRealmMapOwner(string lvlName) {
             bool plus = Server.ClassicubeAccountPlus;
             // Early out when accounts have + and map doesn't.
@@ -238,43 +255,43 @@ namespace MCGalaxy.Commands {
             
             void ParseProperty(string key, string value) {
                 switch (key.ToLower()) {
-                    case "physics": Physics = int.Parse(value); break;
-                    case "guns": Guns = bool.Parse(value); break;
-                    case "useblockdb": blockDB = bool.Parse(value); break;
-                    case "realmowner": RealmOwner = value; break;
-                    
-                    case "perbuild": build = GetPerm(value); break;
-                    case "pervisit": visit = GetPerm(value); break;
-                    case "perbuildmax": buildmax = GetPerm(value); break;
-                    case "pervisitmax": visitmax = GetPerm(value); break;
-                    case "visitwhitelist": VisitWhitelist = Parse(value); break;
-                    case "visitblacklist": VisitBlacklist = Parse(value); break;
-                    case "buildwhitelist": BuildWhitelist = Parse(value); break;
-                    case "buildblacklist": BuildBlacklist = Parse(value); break;
-                    
-                    case "authors": Authors = value; break;
-                    case "roundsplayed": TotalRounds = int.Parse(value); break;
-                    case "roundshumanwon": HumanRounds = int.Parse(value); break;
-                    case "likes": Likes = int.Parse(value); break;
-                    case "dislikes": Dislikes = int.Parse(value); break;
-                    
-                    case "cloudcolor": Clouds = value; break;
-                    case "fogcolor": Fog = value; break;
-                    case "skycolor": Sky = value; break;
-                    case "shadowcolor": Shadow = value; break;
-                    case "lightcolor": Light = value; break;
-                    
-                    case "edgeblock": EdgeBlock = byte.Parse(value); break;
-                    case "edgelevel": EdgeLevel = short.Parse(value); break;
-                    case "horizonblock": HorizonBlock = byte.Parse(value); break;
-                    case "cloudsheight": CloudsHeight = short.Parse(value); break;
-                    case "maxfog": MaxFog = short.Parse(value); break;
-                    
-                    case "texture": TerrainUrl = value; break;
-                    case "texturepack": TextureUrl = value; break;
-                    case "clouds-speed": CloudsSpeed = int.Parse(value); break;
-                    case "weather-speed": WeatherSpeed = int.Parse(value); break;
-                    case "weather-fade": WeatherFade = int.Parse(value); break;
+                        case "physics": Physics = int.Parse(value); break;
+                        case "guns": Guns = bool.Parse(value); break;
+                        case "useblockdb": blockDB = bool.Parse(value); break;
+                        case "realmowner": RealmOwner = value; break;
+                        
+                        case "perbuild": build = GetPerm(value); break;
+                        case "pervisit": visit = GetPerm(value); break;
+                        case "perbuildmax": buildmax = GetPerm(value); break;
+                        case "pervisitmax": visitmax = GetPerm(value); break;
+                        case "visitwhitelist": VisitWhitelist = Parse(value); break;
+                        case "visitblacklist": VisitBlacklist = Parse(value); break;
+                        case "buildwhitelist": BuildWhitelist = Parse(value); break;
+                        case "buildblacklist": BuildBlacklist = Parse(value); break;
+                        
+                        case "authors": Authors = value; break;
+                        case "roundsplayed": TotalRounds = int.Parse(value); break;
+                        case "roundshumanwon": HumanRounds = int.Parse(value); break;
+                        case "likes": Likes = int.Parse(value); break;
+                        case "dislikes": Dislikes = int.Parse(value); break;
+                        
+                        case "cloudcolor": Clouds = value; break;
+                        case "fogcolor": Fog = value; break;
+                        case "skycolor": Sky = value; break;
+                        case "shadowcolor": Shadow = value; break;
+                        case "lightcolor": Light = value; break;
+                        
+                        case "edgeblock": EdgeBlock = byte.Parse(value); break;
+                        case "edgelevel": EdgeLevel = short.Parse(value); break;
+                        case "horizonblock": HorizonBlock = byte.Parse(value); break;
+                        case "cloudsheight": CloudsHeight = short.Parse(value); break;
+                        case "maxfog": MaxFog = short.Parse(value); break;
+                        
+                        case "texture": TerrainUrl = value; break;
+                        case "texturepack": TextureUrl = value; break;
+                        case "clouds-speed": CloudsSpeed = int.Parse(value); break;
+                        case "weather-speed": WeatherSpeed = int.Parse(value); break;
+                        case "weather-fade": WeatherFade = int.Parse(value); break;
                 }
             }
             
