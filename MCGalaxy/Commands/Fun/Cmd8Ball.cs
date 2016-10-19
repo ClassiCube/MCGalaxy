@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
         DateTime nextUse;
         static TimeSpan delay = TimeSpan.FromSeconds(2);
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message) {        	
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (Server.chatmod || p.muted) { Player.Message(p, "Cannot use 8-ball while muted."); return; }    
             if (message == "") { Help(p); return; }

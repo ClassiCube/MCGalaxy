@@ -20,6 +20,13 @@ using System;
 namespace MCGalaxy.Games {
     internal static class MovementCheck {
         
+        public static bool InRange(Player a, Player b, int dist) {
+            int dx = Math.Abs(a.pos[0] - b.pos[0]);
+            int dy = Math.Abs(a.pos[1] - b.pos[1]);
+            int dz = Math.Abs(a.pos[2] - b.pos[2]);
+            return dx <= dist && dy <= dist && dz <= dist;
+        }
+        
         public static bool DetectNoclip(Player p, ushort x, ushort y, ushort z) {
             if (p.Game.Referee || Hacks.CanUseHacks(p, p.level)) return false;
             if (!p.CheckIfInsideBlock() || p.Game.NoclipLog.AddSpamEntry(5, 1))

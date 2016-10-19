@@ -195,10 +195,7 @@ namespace MCGalaxy.Games {
                 foreach (Player alive in aliveList) {
                     if (alive == killer) continue;
                     UpdatePlayerColor(alive, alive.color);
-                    int dx = Math.Abs(alive.pos[0] - killer.pos[0]);
-                    int dy = Math.Abs(alive.pos[1] - killer.pos[1]);
-                    int dz = Math.Abs(alive.pos[2] - killer.pos[2]);
-                    if (dx > dist || dy > dist || dz > dist) continue;
+                    if (!MovementCheck.InRange(alive, killer, dist)) continue;
                     
                     if (killer.Game.Infected && !alive.Game.Infected
                         && !alive.Game.Referee && !killer.Game.Referee
