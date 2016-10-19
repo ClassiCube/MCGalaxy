@@ -61,11 +61,11 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/cmdbind [num] [command] %H- Binds [num] to [command]");
+            Player.Message(p, "%T/cmdbind [num] [command]%H- Binds [num] to [command]");
+            Player.Message(p, "%H  Use with \"%T/[num]%H\" &b(example: %T/2&b)");
+            Player.Message(p, "%T/cmdbind [num] %H- Lists the command currently bound to [num]");
+            Player.Message(p, "%T/cmdbind %H- Lists all bound commands");
             Player.Message(p, "%H[num] must be between 0 and 9");
-            Player.Message(p, "%HUse with \"/[num]\" &b(example: /2)");
-            Player.Message(p, "%HUse /cmdbind [num] to see the currently bound command.");
-            Player.Message(p, "%HUse /cmdbind to see all bound commands.");
         }
     }
 }
