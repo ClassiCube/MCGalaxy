@@ -1,7 +1,7 @@
 /*
     Copyright 2011 MCForge
         
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using MCGalaxy.Blocks;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Building {
@@ -41,19 +42,32 @@ namespace MCGalaxy.Commands.Building {
                 Help(p); return;
             }
 
-            if (block == "blue" || block == "") { data.type = Block.blue_portal; }
-            else if (block == "orange") { data.type = Block.orange_portal; }
-            else if (block == "air") { data.type = Block.air_portal; }
-            else if (block == "water") { data.type = Block.water_portal; }
-            else if (block == "lava") { data.type = Block.lava_portal; }
-            else if (block == "show") { ShowPortals(p); return; }
-            else { Help(p); return; }
+            data.type = GetBlock(p, block);
+            if (data.type == Block.Zero) return;
 
             Player.Message(p, "Place an &aEntry block %Sfor the portal");
             p.ClearBlockchange();
             data.entries = new List<PortalPos>();
             p.blockchangeObject = data;
             p.Blockchange += EntryChange;
+        }
+        
+        byte GetBlock(Player p, string name) {
+            byte id = Block.Byte(name);
+            if (Block.Props[id].IsPortal) return id;
+            if (name == "show") { ShowPortals(p); return Block.Zero; }
+            
+            // Hardcoded aliases for backwards compatibility
+            id = Block.Zero;
+            if (name == "") id = Block.blue_portal;
+            if (name == "blue") id = Block.blue_portal;        
+            if (name == "orange") id = Block.orange_portal;
+            if (name == "air") id = Block.air_portal;
+            if (name == "water") id = Block.water_portal;
+            if (name == "lava") id = Block.lava_portal;
+            
+            if (!Block.Props[id].IsPortal) { Help(p); return Block.Zero; }
+            return id;
         }
 
         void EntryChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
@@ -121,6 +135,7 @@ namespace MCGalaxy.Commands.Building {
         struct PortalData { public List<PortalPos> entries; public byte type; public bool Multi; }
         struct PortalPos { public ushort x, y, z; public string mapName; }
 
+        
         void ShowPortals(Player p) {
             p.showPortals = !p.showPortals;
             using (DataTable table = Database.Backend.GetRows("Portals" + p.level.name, "*")) {
@@ -153,12 +168,32 @@ namespace MCGalaxy.Commands.Building {
         
         static ushort U16(object x) { return Convert.ToUInt16(x); }
         
+        
+        static string Format(BlockProps props) {
+            if (!props.IsPortal) return null;
+            
+            // We want to use the simple aliases if possible
+            if (Check(props, Block.orange_portal, "orange")) return "orange";
+            if (Check(props, Block.blue_portal, "blue")) return "blue";
+            if (Check(props, Block.air_portal, "air")) return "air";
+            if (Check(props, Block.lava_portal, "lava")) return "lava";
+            if (Check(props, Block.water_portal, "water")) return "water";
+            return props.Name;
+        }
+        
+        static bool Check(BlockProps props, byte id, string name) {
+            if (props.BlockId != id) return false;
+            id = Block.Byte(name);
+            return !Block.Props[id].IsPortal;
+        }
+                
         public override void Help(Player p) {
             Player.Message(p, "%T/portal [block]");
             Player.Message(p, "%HPlace a block for the entry, then another block for exit.");
             Player.Message(p, "%T/portal [block] multi");
             Player.Message(p, "%HPlace multiple blocks for entries, then a red block for exit.");
-            Player.Message(p, "%H  Supported blocks: %Sblue, orange, water, lava, air");            
+            Player.Message(p, "%H  Supported blocks: %S{0}", 
+                           Block.Props.Join(props => Format(props)));
             Player.Message(p, "%T/portal show %H- Shows portals (green = entry, red = exit)");
         }
     }

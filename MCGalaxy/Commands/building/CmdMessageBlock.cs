@@ -94,16 +94,14 @@ namespace MCGalaxy.Commands.Building {
             byte old = p.level.GetTile(x, y, z);
             if (p.level.CheckAffectPermissions(p, x, y, z, old, cpos.type, 0)) {
                 p.level.Blockchange(p, x, y, z, cpos.type, 0);
-                p.SendBlockchange(x, y, z, cpos.type, 0); // for when same block type but different message
                 UpdateDatabase(p, cpos, x, y, z);
                 Player.Message(p, "Message block created.");
-            } else {
-                p.RevertBlock(x, y, z);
+            } else {                
                 Player.Message(p, "Failed to create a message block.");
             }
+            p.RevertBlock(x, y, z);
 
-            if (p.staticCommands)
-                p.Blockchange += PlacedMark;
+            if (p.staticCommands) p.Blockchange += PlacedMark;
         }
         
         void UpdateDatabase(Player p, MBData data, ushort x, ushort y, ushort z) {
@@ -131,6 +129,7 @@ namespace MCGalaxy.Commands.Building {
 
         struct MBData { public string message; public byte type; }
 
+        
         void ShowMessageBlocks(Player p) {
             p.showMBs = !p.showMBs;
             using (DataTable table = Database.Backend.GetRows("Messages" + p.level.name, "*")) {
@@ -157,11 +156,31 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static ushort U16(object x) { return Convert.ToUInt16(x); }
+
+        
+        static string Format(BlockProps props) {
+            if (!props.IsPortal) return null;
+            
+            // We want to use the simple aliases if possible
+            if (Check(props, Block.MsgBlack, "black")) return "black";
+            if (Check(props, Block.MsgWhite, "white")) return "white";
+            if (Check(props, Block.MsgAir, "air")) return "air";
+            if (Check(props, Block.MsgLava, "lava")) return "lava";
+            if (Check(props, Block.MsgWater, "water")) return "water";
+            return props.Name;
+        }
+        
+        static bool Check(BlockProps props, byte id, string name) {
+            if (props.BlockId != id) return false;
+            id = Block.Byte(name);
+            return !Block.Props[id].IsMessageBlock;
+        }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/mb [block] [message]");
             Player.Message(p, "%HPlaces a message in your next block.");
-            Player.Message(p, "%H  Supported blocks: %Swhite, black, air, water, lava");
+            Player.Message(p, "%H  Supported blocks: %S{0}",
+                           Block.Props.Join(props => Format(props)));
             Player.Message(p, "%H  Use | to separate commands, e.g. /say 1 |/say 2");
             Player.Message(p, "%H  Note: \"@p\" is a placeholder for player who clicked.");
             Player.Message(p, "%T/mb show %H- Shows or hides MBs");

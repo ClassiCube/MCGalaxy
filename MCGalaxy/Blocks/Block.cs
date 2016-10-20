@@ -18,10 +18,9 @@
 using System;
 using MCGalaxy.Blocks;
 
-namespace MCGalaxy
-{
-    public sealed partial class Block
-    {
+namespace MCGalaxy {
+    public sealed partial class Block {
+
         public static bool Walkthrough(byte block) {
             return block == air || block == shrub || block == Block.snow
                 || block == fire || block == rope

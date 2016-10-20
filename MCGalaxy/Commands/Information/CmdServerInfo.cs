@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands {
         static int GetPlayerCount() {
             // Use fast path if possible  TODO: fast path for mysql
             int count = 0;
-            if (!Server.useMySQL) {                
+            if (!Server.useMySQL) {
                 DataTable maxTable = Database.Backend.GetRows("Players", "MAX(_ROWID_)", "LIMIT 1");
                 if (maxTable.Rows.Count > 0) {
                      string row = maxTable.Rows[0]["MAX(_ROWID_)"].ToString();
