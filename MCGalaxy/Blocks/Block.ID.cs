@@ -153,6 +153,7 @@ namespace MCGalaxy
         public const byte door_tnt = 120;
         public const byte door_stair = 121;
 
+        // tdoors
         public const byte tdoor = 122;
         public const byte tdoor2 = 123;
         public const byte tdoor3 = 124;
@@ -162,20 +163,21 @@ namespace MCGalaxy
         public const byte tdoor7 = 128;
         public const byte tdoor8 = 129;
 
-        //Messages
+        // Message blocks
         public const byte MsgWhite = 130;
         public const byte MsgBlack = 131;
         public const byte MsgAir = 132;
         public const byte MsgWater = 133;
         public const byte MsgLava = 134;
 
+        // More tdoors
         public const byte tdoor9 = 135;
         public const byte tdoor10 = 136;
         public const byte tdoor11 = 137;
         public const byte tdoor12 = 138;
         public const byte tdoor13 = 139;
 
-        //"finite"
+        // "finite" liquids
         public const byte WaterDown = 140;
         public const byte LavaDown = 141;
         public const byte WaterFaucet = 143;
@@ -198,13 +200,14 @@ namespace MCGalaxy
         public const byte odoor11 = 158;
         public const byte odoor12 = 159;
 
-        //movement
+        // Movement portals
         public const byte air_portal = 160;
         public const byte water_portal = 161;
         public const byte lava_portal = 162;
 
-        //BlockDefinitions
+        // BlockDefinitions
         public const byte custom_block = 163;
+        
         //Movement doors
         public const byte air_door = 164;
         public const byte air_switch = 165;
@@ -233,11 +236,8 @@ namespace MCGalaxy
         public const byte smalltnt = 182;
         public const byte bigtnt = 183;
         public const byte tntexplosion = 184;
-
-        public const byte lava_fire = 185;
-        
+        public const byte lava_fire = 185;        
         public const byte nuketnt = 186;
-
         public const byte rocketstart = 187;
         public const byte rockethead = 188;
         public const byte firework = 189;
@@ -246,7 +246,6 @@ namespace MCGalaxy
         public const byte deathlava = 190;
         public const byte deathwater = 191;
         public const byte deathair = 192;
-
         public const byte activedeathwater = 193;
         public const byte activedeathlava = 194;
 
@@ -254,6 +253,7 @@ namespace MCGalaxy
         public const byte geyser = 196;
         public const byte checkpoint = 197;
         
+        // Air type blocks
         public const byte air_flood = 200;
         public const byte door_tree_air = 201;
         public const byte air_flood_layer = 202;
@@ -290,6 +290,7 @@ namespace MCGalaxy
         public const byte zombiebody = 232;
         public const byte zombiehead = 233;
 
+        // Bird blocks
         public const byte birdwhite = 235;
         public const byte birdblack = 236;
         public const byte birdwater = 237;
@@ -298,6 +299,7 @@ namespace MCGalaxy
         public const byte birdblue = 240;
         public const byte birdkill = 242;
 
+        // Fish/Shark blocks
         public const byte fishgold = 245;
         public const byte fishsponge = 246;
         public const byte fishshark = 247;

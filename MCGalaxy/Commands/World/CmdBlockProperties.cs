@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.World {
             if (args.Length < 3) { Help(p); return; }
             
             string scope = args[0].ToLower();
-            if (scope != "core" && scope != "global" && scope != "level") { 
+            if (scope != "core" && scope != "global" && scope != "level") {
                 Player.Message(p, "&cScope must \"core\", \"global\", or \"level\""); return;
             }
             byte id;
@@ -43,36 +43,56 @@ namespace MCGalaxy.Commands.World {
             
             // TODO: global and level custom blocks
             // TODO: adding core blocks, changing core block names
-            if (scope != "core") { 
-                Player.Message(p, "Sorry! Custom blocks still a WIP."); return; 
-            }           
+            if (scope != "core") {
+                Player.Message(p, "Sorry! Custom blocks still a WIP."); return;
+            }
             if (Block.Name(id).CaselessEq("unknown")) {
                 Player.Message(p, "Sorry! Adding blocks still a WIP."); return;
             }
             
             if (prop == "portal") {
-            	ToggleBool(p, id, "a portal",
-            	           (ref BlockProps props) => props.IsPortal = !props.IsPortal,
-            	           (BlockProps props) => props.IsPortal);
+                ToggleBool(p, id, "a portal",
+                           (ref BlockProps props) => props.IsPortal = !props.IsPortal,
+                           (BlockProps props) => props.IsPortal);
             } else if (prop == "rails") {
-            	ToggleBool(p, id, "train rails",
-            	           (ref BlockProps props) => props.IsRails = !props.IsRails,
-            	           (BlockProps props) => props.IsRails);            	           
+                ToggleBool(p, id, "train rails",
+                           (ref BlockProps props) => props.IsRails = !props.IsRails,
+                           (BlockProps props) => props.IsRails);
             } else if (prop == "mb" || prop == "messageblock") {
-            	ToggleBool(p, id, "a message block",
-            	           (ref BlockProps props) => props.IsMessageBlock = !props.IsMessageBlock,
-            	           (BlockProps props) => props.IsMessageBlock);
+                ToggleBool(p, id, "a message block",
+                           (ref BlockProps props) => props.IsMessageBlock = !props.IsMessageBlock,
+                           (BlockProps props) => props.IsMessageBlock);
+            } else if (prop == "waterkills") {
+                ToggleBool(p, id, "killed by water",
+                           (ref BlockProps props) => props.WaterKills = !props.WaterKills,
+                           (BlockProps props) => props.WaterKills);
+            } else if (prop == "lavakills") {
+                ToggleBool(p, id, "killed by lava",
+                           (ref BlockProps props) => props.LavaKills = !props.LavaKills,
+                           (BlockProps props) => props.LavaKills);
+            } else if (prop == "killer" || prop == "death") {
+                ToggleBool(p, id, "a killer block",
+                           (ref BlockProps props) => props.KillerBlock = !props.KillerBlock,
+                           (BlockProps props) => props.KillerBlock);
+            } else if (prop == "deathmsg" || prop == "deathmessage") {
+                string msg = args.Length > 3 ? args[3] : null;
+                Block.Props[id].DeathMessage = msg;
+                if (msg == null) {
+                    Player.Message(p, "Death message for {0} removed.", Block.Name(id));
+                } else {
+                    Player.Message(p, "Death message for {0} set to: {1}", Block.Name(id), msg);
+                }
             }
         }
         
-        delegate void BoolSetter(ref BlockProps props);        
-        static void ToggleBool(Player p, byte id, string name, BoolSetter setter, 
+        delegate void BoolSetter(ref BlockProps props);
+        static void ToggleBool(Player p, byte id, string name, BoolSetter setter,
                                Func<BlockProps, bool> getter) {
             BlockProps props = Block.Props[id];
             setter(ref props);
             Block.Props[id] = props;
             
-            Player.Message(p, "Block {0} is {1}: {2}", Block.Name(id), 
+            Player.Message(p, "Block {0} is {1}: {2}", Block.Name(id),
                            name, getter(props) ? "&aYes" : "&cNo");
             BlockBehaviour.SetupCoreHandlers();
         }

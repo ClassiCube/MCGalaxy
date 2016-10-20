@@ -36,8 +36,8 @@ namespace MCGalaxy.Blocks {
         /// <summary> Message shown to the level when the player is killed by this block. Can be null. </summary>
         public string DeathMessage;
         
-        /// <summary> Whether colliding with this block kills the player. </summary>
-        public bool CollisionDeath;
+        /// <summary> Whether colliding/walking through this block kills the player. </summary>
+        public bool KillerBlock;
         
         /// <summary> Whether this block is considered a tdoor. </summary>
         public bool IsTDoor;
@@ -54,9 +54,6 @@ namespace MCGalaxy.Blocks {
         public bool WaterKills;
         /// <summary> Whether this block is overwritten/killed by lava blocks. </summary>
         public bool LavaKills;
-        
-        /// <summary> Whether walkinhg through this block causes the death of that player. </summary>
-        public bool CausesDeath;
         
         /// <summary> Whether this block is an OP block (cannot be replaced by physics changes). </summary>
         public bool OPBlock;

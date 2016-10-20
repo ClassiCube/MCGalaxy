@@ -221,7 +221,7 @@ namespace MCGalaxy {
         
         static void SetDeath(byte block, string message, bool collideKill = true) {
             Props[block].DeathMessage = message;
-            Props[block].CollisionDeath = collideKill;
+            Props[block].KillerBlock = collideKill;
         }
     }
 }

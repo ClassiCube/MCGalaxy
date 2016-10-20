@@ -97,7 +97,7 @@ namespace MCGalaxy
 
         public static bool OPBlocks(byte block) { return Props[block].OPBlock; }
 
-        public static bool Death(byte block) { return Props[block].CollisionDeath; }
+        public static bool Death(byte block) { return Props[block].KillerBlock; }
 
         public static bool BuildIn(byte block) {
             if (block == op_water || block == op_lava || portal(block) || mb(block)) return false;
