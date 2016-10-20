@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using MCGalaxy.Blocks;
 using MCGalaxy.BlockPhysics;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
@@ -33,6 +34,7 @@ namespace MCGalaxy {
         public byte rotx, roty;
         public ushort spawnx, spawny, spawnz;
         public BlockDefinition[] CustomBlockDefs;
+        public BlockProps[] CustomBlockProps;
         public ExtrasCollection Extras = new ExtrasCollection();
         
         public ushort Width, Height, Length;

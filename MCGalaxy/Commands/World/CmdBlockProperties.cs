@@ -31,10 +31,9 @@ namespace MCGalaxy.Commands.World {
             string[] args = message.SplitSpaces(4);
             if (args.Length < 3) { Help(p); return; }
             
-            string scope = args[0].ToLower();
-            if (scope != "core" && scope != "global" && scope != "level") {
-                Player.Message(p, "&cScope must \"core\", \"global\", or \"level\""); return;
-            }
+            BlockProps[] props = GetScopeBlocks(p, args[0]);
+            if (props == null) return;
+            
             byte id;
             if (!byte.TryParse(args[1], out id)) {
                 Player.Message(p, "&c\"{0}\" is not a valid block id.", id); return;
@@ -50,6 +49,19 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Sorry! Adding blocks still a WIP."); return;
             }
             
+            SetProperty(p, prop, args);
+        }
+        
+        BlockProps[] GetScopeBlocks(Player p, string scope) {
+        	if (scope.CaselessEq("core")) return Block.Props;
+        	if (scope.CaselessEq("global")) return BlockDefinition.GlobalProps;
+        	if (scope.CaselessEq("level")) return p.level.CustomBlockDefs;
+        	
+        	Player.Message(p, "&cScope must \"core\", \"global\", or \"level\""); 
+        	return null;
+        }
+        
+        void SetProperty(Player p, string prop, string[] args) {
             if (prop == "portal") {
                 ToggleBool(p, id, "a portal",
                            (ref BlockProps props) => props.IsPortal = !props.IsPortal,
@@ -77,11 +89,15 @@ namespace MCGalaxy.Commands.World {
             } else if (prop == "deathmsg" || prop == "deathmessage") {
                 string msg = args.Length > 3 ? args[3] : null;
                 Block.Props[id].DeathMessage = msg;
+                
                 if (msg == null) {
                     Player.Message(p, "Death message for {0} removed.", Block.Name(id));
                 } else {
                     Player.Message(p, "Death message for {0} set to: {1}", Block.Name(id), msg);
                 }
+                OnPropsChanged(Block.Props, id);
+            } else {
+                Help(p);
             }
         }
         
@@ -91,10 +107,23 @@ namespace MCGalaxy.Commands.World {
             BlockProps props = Block.Props[id];
             setter(ref props);
             Block.Props[id] = props;
+            OnPropsChanged(Block.Props, id);
             
             Player.Message(p, "Block {0} is {1}: {2}", Block.Name(id),
                            name, getter(props) ? "&aYes" : "&cNo");
-            BlockBehaviour.SetupCoreHandlers();
+        }
+
+        static void OnPropsChanged(BlockProps[] props, byte id) {
+            if (props == Block.Props) {
+                BlockBehaviour.SetupCoreHandlers();
+            } else if (props == BlockDefinition.GlobalProps) {
+                Level[] loaded = LevelInfo.Loaded.Items;
+                
+                foreach (Level lvl in loaded) {
+                    if (lvl.CustomBlockDefs[id] != BlockDefinition.GlobalDefs[id]) continue;
+                    lvl.CustomBlockProps[id] = BlockDefinition.GlobalDefs[id];
+                }
+            }
         }
         
         public override void Help(Player p) {

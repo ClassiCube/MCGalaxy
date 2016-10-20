@@ -18,10 +18,10 @@
 using System;
 using System.IO;
 using System.Text;
+using MCGalaxy.Blocks;
 using Newtonsoft.Json;
 
-namespace MCGalaxy {
-    
+namespace MCGalaxy { 
     public sealed class BlockDefinition {
         
         public byte BlockID;
@@ -45,7 +45,8 @@ namespace MCGalaxy {
         
         public const string GlobalPath = "blockdefs/global.json", GlobalBackupPath = "blockdefs/global.json.bak";
         
-        public static BlockDefinition[] GlobalDefs;
+        public static BlockDefinition[] GlobalDefs;       
+        public static Blocks.BlockProps[] GlobalProps;
         
         public BlockDefinition Copy() {
             BlockDefinition def = new BlockDefinition();
@@ -70,6 +71,10 @@ namespace MCGalaxy {
             GlobalDefs = Load(true, null);
             GlobalDefs[0] = new BlockDefinition();
             GlobalDefs[0].Name = "Air fallback";
+           
+            GlobalProps = new BlockProps[256];
+            for (int i = 0; i < GlobalProps.Length; i++)
+                GlobalProps[i] = new BlockProps((byte)i);
             
             try {
                 if (File.Exists(GlobalPath) && File.Exists(GlobalBackupPath)) {
@@ -201,7 +206,10 @@ namespace MCGalaxy {
         }
         
         public static byte GetBlock(string msg, Player p) {
-            BlockDefinition[] defs = p.level.CustomBlockDefs;
+            return GetBlock(msg, p.level.CustomBlockDefs);
+        }
+        
+        public static byte GetBlock(string msg, BlockDefinition[] defs) {
             for (int i = 1; i < 255; i++) {
                 BlockDefinition def = defs[i];
                 if (def == null) continue;             
@@ -209,11 +217,11 @@ namespace MCGalaxy {
                     return def.BlockID;
             }
             
-            byte extBlock;
-            if (!byte.TryParse(msg, out extBlock) || defs[extBlock] == null)
+            byte id;
+            if (!byte.TryParse(msg, out id) || defs[id] == null)
                 return Block.Zero;
-            return extBlock;
-        }
+            return id;
+        }        
         
         static void SendDefineBlock(Player p, BlockDefinition def) {
             byte[] buffer = new byte[80];

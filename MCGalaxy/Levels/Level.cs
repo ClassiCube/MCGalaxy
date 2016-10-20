@@ -72,6 +72,11 @@ namespace MCGalaxy {
             CustomBlockDefs = new BlockDefinition[256];
             for (int i = 0; i < CustomBlockDefs.Length; i++)
                 CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
+            CustomBlockProps = new BlockProps[256];
+            for (int i = 0; i < CustomBlockProps.Length; i++)
+                CustomBlockProps[i] = BlockDefinition.GlobalProps[i];
+            
+            
             name = n;
             EdgeLevel = (short)(y / 2);
             CloudsHeight = (short)(y + 2);

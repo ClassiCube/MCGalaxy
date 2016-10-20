@@ -96,6 +96,7 @@
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\Block.ID.cs" />
     <Compile Include="Blocks\Block.Permissions.cs" />
+    <Compile Include="Blocks\BlockDefinitions.cs" />
     <Compile Include="Blocks\BlockProperties.cs" />
     <Compile Include="Bots\BotsFile.cs" />
     <Compile Include="Bots\Instructions\FunInstructions.cs" />
@@ -583,7 +584,6 @@
     <Compile Include="Scripting\MCForgeScripter.cs" />
     <Compile Include="Scripting\Scripting.cs" />
     <Compile Include="Player\Ban.cs" />
-    <Compile Include="Levels\BlockDefinitions.cs" />
     <Compile Include="API\ChatMessage.cs" />
     <Compile Include="Games\CTF\Setup.cs" />
     <Compile Include="Database\BulkTransaction.cs" />
