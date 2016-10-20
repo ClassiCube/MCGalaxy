@@ -10,8 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCGalaxy_", "MCGalaxy\MCGal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "updater\Updater.csproj", "{1C317052-9B87-471C-A8AF-5AB2D779C174}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginNoAlts", "bin\PluginNoAlts\PluginNoAlts.csproj", "{6A4BDA59-FA3F-44DA-A4CD-08D40318FACF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -30,10 +28,6 @@ Global
 		{1C317052-9B87-471C-A8AF-5AB2D779C174}.Debug|x86.Build.0 = Release|x86
 		{1C317052-9B87-471C-A8AF-5AB2D779C174}.Release|x86.ActiveCfg = Release|x86
 		{1C317052-9B87-471C-A8AF-5AB2D779C174}.Release|x86.Build.0 = Release|x86
-		{6A4BDA59-FA3F-44DA-A4CD-08D40318FACF}.Debug|x86.Build.0 = Debug|Any CPU
-		{6A4BDA59-FA3F-44DA-A4CD-08D40318FACF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{6A4BDA59-FA3F-44DA-A4CD-08D40318FACF}.Release|x86.Build.0 = Release|Any CPU
-		{6A4BDA59-FA3F-44DA-A4CD-08D40318FACF}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

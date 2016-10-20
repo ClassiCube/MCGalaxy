@@ -36,22 +36,18 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
 
+            bool allMessage = false;
             MBData cpos;
-            cpos.message = null;
             string[] args = message.SplitSpaces(2);
-            switch (args[0].ToLower()) {
-                    case "air": cpos.type = Block.MsgAir; break;
-                    case "water": cpos.type = Block.MsgWater; break;
-                    case "lava": cpos.type = Block.MsgLava; break;
-                    case "black": cpos.type = Block.MsgBlack; break;
-                    case "white": cpos.type = Block.MsgWhite; break;
-                    case "show": ShowMessageBlocks(p); return;
-                    default: cpos.type = Block.MsgWhite; cpos.message = message; break;
-            }
-            if (args.Length == 1) {
+            cpos.type = GetBlock(p, args[0].ToLower(), ref allMessage);
+            
+            if (allMessage) {
+                cpos.message = message;
+            } else if (args.Length == 1) {
                 Player.Message(p, "You need to provide text to put in the messageblock."); return;
+            } else {
+                cpos.message = args[1];
             }
-            if (cpos.message == null) cpos.message = args[1];
             
             string text;
             List<string> cmds = WalkthroughBehaviour.ParseMB(cpos.message, out text);
@@ -62,6 +58,24 @@ namespace MCGalaxy.Commands.Building {
             p.blockchangeObject = cpos;
             Player.Message(p, "Place where you wish the message block to go."); p.ClearBlockchange();
             p.Blockchange += PlacedMark;
+        }
+        
+        byte GetBlock(Player p, string name, ref bool allMessage) {
+            byte id = Block.Byte(name);
+            if (Block.Props[id].IsMessageBlock) return id;
+            if (name == "show") { ShowMessageBlocks(p); return Block.Zero; }
+            
+            // Hardcoded aliases for backwards compatibility
+            id = Block.MsgWhite;
+            if (name == "white") id = Block.MsgWhite;      
+            if (name == "black") id = Block.MsgBlack;
+            if (name == "air") id = Block.MsgAir;
+            if (name == "water") id = Block.MsgWater;
+            if (name == "lava") id = Block.MsgLava;
+            
+            allMessage = id == Block.MsgWhite && name != "white";
+            if (!Block.Props[id].IsMessageBlock) { Help(p); return Block.Zero; }
+            return id;
         }
         
         bool CheckCommand(Player p, string message) {
@@ -159,7 +173,7 @@ namespace MCGalaxy.Commands.Building {
 
         
         static string Format(BlockProps props) {
-            if (!props.IsPortal) return null;
+            if (!props.IsMessageBlock) return null;
             
             // We want to use the simple aliases if possible
             if (Check(props, Block.MsgBlack, "black")) return "black";
