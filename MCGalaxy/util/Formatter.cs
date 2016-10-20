@@ -27,15 +27,15 @@ namespace MCGalaxy {
             builder.Append(Group.GetColoredName(minRank) + "%S+");
             if (allowed != null && allowed.Count > 0) {
                 foreach (LevelPermission perm in allowed)
-                    builder.Append(", " + Group.GetColoredName(perm) + "%S");
+                    builder.Append(", " + Group.GetColoredName(perm));
             }
             
             if (disallowed != null && disallowed.Count > 0) {
-                builder.Append( " (but not ");
+                builder.Append( " %S(but not ");
                 foreach (LevelPermission perm in disallowed)
-                    builder.Append(Group.GetColoredName(perm) + "%S, ");
+                    builder.Append(Group.GetColoredName(perm) + ", ");
                 builder.Remove(builder.Length - 2, 2);
-                builder.Append(")");
+                builder.Append("%S)");
             }
         }
         
