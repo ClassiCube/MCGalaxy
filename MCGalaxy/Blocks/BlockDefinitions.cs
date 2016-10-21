@@ -139,8 +139,10 @@ namespace MCGalaxy {
             if (global) {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level lvl in loaded) {
-                    if (lvl.CustomBlockDefs[id] == null)
+                    if (lvl.CustomBlockDefs[id] == null) {
                         lvl.CustomBlockDefs[id] = def;
+                        lvl.CustomBlockProps[id] = GlobalProps[id];
+                    }
                 }
             }
             defs[id] = def;
@@ -170,8 +172,10 @@ namespace MCGalaxy {
             if (global) {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level lvl in loaded) {
-                    if (lvl.CustomBlockDefs[id] == GlobalDefs[id])
+                    if (lvl.CustomBlockDefs[id] == GlobalDefs[id]) {
                         lvl.CustomBlockDefs[id] = null;
+                        lvl.CustomBlockProps[id] = new BlockProps(id);
+                    }
                 }
             }
             defs[id] = null;
@@ -221,7 +225,8 @@ namespace MCGalaxy {
             if (!byte.TryParse(msg, out id) || defs[id] == null)
                 return Block.Zero;
             return id;
-        }        
+        }
+        
         
         static void SendDefineBlock(Player p, BlockDefinition def) {
             byte[] buffer = new byte[80];

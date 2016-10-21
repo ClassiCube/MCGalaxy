@@ -70,6 +70,9 @@ namespace MCGalaxy.Commands.World {
                 id = BlockDefinition.GetBlock(block, p.level.CustomBlockDefs);
                 if (id == Block.Zero)
                     Player.Message(p, "&cThere is no level custom block with id or name \"{0}\"", block);
+                if (p.level.CustomBlockDefs[id] == BlockDefinition.GlobalDefs[id]) {
+                    Player.Message(p, "&cUse %T/blockprops global &cto modify this custom block."); return Block.Zero;
+                }
             }
             return id;
         }

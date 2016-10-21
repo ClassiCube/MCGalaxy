@@ -75,12 +75,12 @@ namespace MCGalaxy.Commands {
                 DateTime time = Server.StartTimeLocal.AddSeconds(entry.flags >> 2);
                 
                 bool deleted = (entry.flags & 1) != 0;
-                bool extBlock = (entry.flags & 2) != 0;               
+                bool extBlock = (entry.flags & 2) != 0;
                 Output(p, user, entry.rawBlock, extBlock, deleted, now - time);
             }
 
             if (!foundOne) Player.Message(p, "No block change records found for this block.");
-            OutputMessageBlock(p, b, x, y, z);
+            OutputMessageBlock(p, b, id, x, y, z);
             
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -93,22 +93,28 @@ namespace MCGalaxy.Commands {
             return byte.Parse(value);
         }
         
-        static void Output(Player p, string user, byte raw, bool isExt, bool deleted, TimeSpan delta) {
+        static void Output(Player p, string user, byte raw, bool isExt,
+                           bool deleted, TimeSpan delta) {
             byte block = isExt ? Block.custom_block : raw;
             byte extBlock = isExt ? raw : (byte)0;
             
             string blockName = p.level.BlockName(block, extBlock);
             if (raw == Block.custom_block && !isExt) // Before started tracking IsExt in BlockDB
                 blockName = Block.Name(raw);
-                                              
+            
             Player.Message(p, "{0} ago {1} {2}",
                            delta.Shorten(true, false), PlayerInfo.GetColoredName(p, user),
                            deleted ? "&4deleted %S(using " + blockName + ")" : "&3placed %S" + blockName);
         }
         
-        static void OutputMessageBlock(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (!Block.Props[block].IsMessageBlock) return;
-            
+        static void OutputMessageBlock(Player p, byte block, byte extBlock,
+                                       ushort x, ushort y, ushort z) {
+            if (block == Block.custom_block) {
+                if (!p.level.CustomBlockProps[extBlock].IsMessageBlock) return;
+            } else {
+                if (!Block.Props[block].IsMessageBlock) return;
+            }
+
             try {
                 DataTable Messages = Database.Backend.GetRows("Messages" + p.level.name, "*",
                                                               "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);

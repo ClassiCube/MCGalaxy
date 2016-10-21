@@ -72,7 +72,7 @@ namespace MCGalaxy {
                     DateTime start = DateTime.UtcNow;
                     if (physics > 0) {
                         try {
-                    		lock (physStepLock)
+                            lock (physStepLock)
                                 CalcPhysics();
                         } catch (Exception ex) {
                             Server.s.Log("Level physics error");
@@ -117,7 +117,7 @@ namespace MCGalaxy {
         public PhysicsArgs foundInfo(ushort x, ushort y, ushort z) {
             if (!listCheckExists.Get(x, y, z))
                 return default(PhysicsArgs);
-        	
+            
             int index = PosToInt(x, y, z);
             for (int i = 0; i < ListCheck.Count; i++) {
                 Check C = ListCheck.Items[i];
@@ -287,8 +287,6 @@ namespace MCGalaxy {
         }
         
         void RevertPhysics(Check C) {
-            ushort x, y, z;
-            IntToPos(C.b, out x, out y, out z);
             //attemps on shutdown to change blocks back into normal selves that are active, hopefully without needing to send into to clients.
             switch (blocks[C.b]) {
                 case Block.air_flood:
@@ -300,13 +298,24 @@ namespace MCGalaxy {
 
             try {
                 PhysicsArgs args = C.data;
-                if (args.Type1 == PhysicsArgs.Revert)
-                    Blockchange(x, y, z, args.Value1, true);
-                if (args.Type2 == PhysicsArgs.Revert)
-                    Blockchange(x, y, z, args.Value2, true);
+                if (args.Type1 == PhysicsArgs.Revert) {
+                    RevertBlock(C.b, args.Value1, args.ExtBlock);
+                } else if (args.Type2 == PhysicsArgs.Revert) {
+                    RevertBlock(C.b, args.Value2, args.ExtBlock);
+                }
             } catch (Exception e) {
                 Server.ErrorLog(e);
             }
+        }
+        
+        void RevertBlock(int index, byte raw, bool ext) {
+            ushort x, y, z;
+            IntToPos(index, out x, out y, out z);
+            
+            byte block = ext ? Block.custom_block : raw;
+            byte extBlock = ext ? raw : Block.air;
+            Blockchange(x, y, z, block, true,
+                        default(PhysicsArgs), extBlock);
         }
         
         internal bool CheckSpongeWater(ushort x, ushort y, ushort z) {

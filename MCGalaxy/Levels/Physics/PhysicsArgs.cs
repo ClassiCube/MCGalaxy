@@ -68,6 +68,13 @@ namespace MCGalaxy.BlockPhysics {
                 Raw |= (value ? 1u : 0u) << 30; }
         }
         
+        public bool ExtBlock {
+            get { return (Raw & (1u << 31)) != 0; }
+            set { Raw &= ~(1u << 31);
+                Raw |= (value ? 1u : 0u) << 31; }
+        }
+        
+        
         public bool HasWait {
             get { return (Raw & TypeBitsMask) == Wait 
                     || ((Raw >> 3) & TypeBitsMask) == Wait;
@@ -75,7 +82,6 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public void ResetTypes() { Raw &= ~TypeMask; }
-        // TODO: what to do with last bit
         
         /// <summary> No special action is performed. </summary>
         public const byte None = 0;
