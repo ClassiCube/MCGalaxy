@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
             if (args.Length < 2) { Help(p); return; }
 
             byte block = Block.Byte(args[0]);
-            if (block == Block.Zero) { Player.Message(p, "Could not find block entered"); return; }
+            if (block == Block.Invalid) { Player.Message(p, "Could not find block entered"); return; }
             Group grp = Group.FindMatches(p, args[1]);
             if (grp == null) return;
             

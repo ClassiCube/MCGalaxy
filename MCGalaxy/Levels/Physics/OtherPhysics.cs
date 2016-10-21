@@ -31,7 +31,7 @@ namespace MCGalaxy.BlockPhysics {
             
             do {
                 index = lvl.IntOffset(index, 0, -1, 0); //Get block below each loop
-                if (lvl.GetTile(index) == Block.Zero) break;
+                if (lvl.GetTile(index) == Block.Invalid) break;
                 bool hitBlock = false;
                 
                 switch (lvl.blocks[index]) {
@@ -155,7 +155,7 @@ namespace MCGalaxy.BlockPhysics {
             {
                 int index = lvl.IntOffset(C.b, x, y, z);
                 byte block = lvl.GetTile(index);
-                if (block == Block.Zero) continue;
+                if (block == Block.Invalid) continue;
                 
                 if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
                     lvl.AddUpdate(index, Block.air);
@@ -172,7 +172,7 @@ namespace MCGalaxy.BlockPhysics {
                 {
                     int index = lvl.IntOffset(b, x, y, z);
                     byte block = lvl.GetTile(index);
-                    if (block == Block.Zero) continue;
+                    if (block == Block.Invalid) continue;
                     
                     if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
                         lvl.AddCheck(index);

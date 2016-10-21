@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands {
                     lookedAt.Z = (ushort)Math.Round(start.Z + (double)(dir.Z * i));
 
                     byte tile = p.level.GetTile(lookedAt.X, lookedAt.Y, lookedAt.Z);
-                    if (tile == Block.Zero) break;
+                    if (tile == Block.Invalid) break;
 
                     if (tile != Block.air && !allBlocks.Contains(lookedAt) && HandlesHitBlock(p, tile, bp, pos, false))
                         break;

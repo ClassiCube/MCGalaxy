@@ -73,8 +73,8 @@ namespace MCGalaxy {
             byte head = level.GetTile(x, y, z);
             byte feet = level.GetTile(x, (ushort)(y - 1), z);
 
-            return !(Block.Walkthrough(Block.Convert(head)) || head == Block.Zero)
-                && !(Block.Walkthrough(Block.Convert(feet)) || feet == Block.Zero);
+            return !(Block.Walkthrough(Block.Convert(head)) || head == Block.Invalid)
+                && !(Block.Walkthrough(Block.Convert(feet)) || feet == Block.Invalid);
         }
         static int sessionCounter;
 

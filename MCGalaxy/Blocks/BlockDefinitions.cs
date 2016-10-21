@@ -214,7 +214,7 @@ namespace MCGalaxy {
         }
         
         public static byte GetBlock(string msg, BlockDefinition[] defs) {
-            for (int i = 1; i < 255; i++) {
+            for (int i = 1; i < Block.Invalid; i++) {
                 BlockDefinition def = defs[i];
                 if (def == null) continue;             
                 if (def.Name.Replace(" ", "").CaselessEq(msg))
@@ -223,7 +223,7 @@ namespace MCGalaxy {
             
             byte id;
             if (!byte.TryParse(msg, out id) || defs[id] == null)
-                return Block.Zero;
+                return Block.Invalid;
             return id;
         }
         

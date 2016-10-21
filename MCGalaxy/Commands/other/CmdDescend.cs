@@ -36,9 +36,9 @@ namespace MCGalaxy.Commands {
             while (y > 0) {
                 y--;
                 byte block = p.level.GetTile(x, y, z);
-                if (!(Block.Convert(block) == Block.air || block == Block.Zero)) continue;               
+                if (!(Block.Convert(block) == Block.air || block == Block.Invalid)) continue;               
                 byte above = p.level.GetTile(x, (ushort)(y + 1), z);             
-                if (!(Block.Convert(above) == Block.air || above == Block.Zero)) continue;
+                if (!(Block.Convert(above) == Block.air || above == Block.Invalid)) continue;
                 
                 byte below = p.level.GetTile(x, (ushort)(y - 1), z);
                 if (Solid(Block.Convert(below))) {
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
         }
         
         static bool Solid(byte b) {
-        	return b != Block.air && (b < Block.water || b > Block.lavastill) && b != Block.Zero
+        	return b != Block.air && (b < Block.water || b > Block.lavastill) && b != Block.Invalid
             	&& b != Block.shrub && (b < Block.yellowflower || b > Block.redmushroom);
         }
         

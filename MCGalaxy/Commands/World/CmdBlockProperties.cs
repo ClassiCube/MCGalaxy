@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.World {
             if (scope == null) return;
             
             byte id = GetBlock(p, scope, args[1]);
-            if (id == Block.Zero) return;
+            if (id == Block.Invalid) return;
             string prop = args[2].ToLower();
             
             // TODO: global and level custom blocks
@@ -60,18 +60,18 @@ namespace MCGalaxy.Commands.World {
                 
                 if (Block.Name(id).CaselessEq("unknown")) {
                     Player.Message(p, "&cThere is no block with id or name \"{0}\"", block);
-                    id = Block.Zero;
+                    id = Block.Invalid;
                 }
             } else if (scope == BlockDefinition.GlobalProps) {
                 id = BlockDefinition.GetBlock(block, BlockDefinition.GlobalDefs);
-                if (id == Block.Zero)
+                if (id == Block.Invalid)
                     Player.Message(p, "&cThere is no global custom block with id or name \"{0}\"", block);
             } else {
                 id = BlockDefinition.GetBlock(block, p.level.CustomBlockDefs);
-                if (id == Block.Zero)
+                if (id == Block.Invalid)
                     Player.Message(p, "&cThere is no level custom block with id or name \"{0}\"", block);
                 if (p.level.CustomBlockDefs[id] == BlockDefinition.GlobalDefs[id]) {
-                    Player.Message(p, "&cUse %T/blockprops global &cto modify this custom block."); return Block.Zero;
+                    Player.Message(p, "&cUse %T/blockprops global &cto modify this custom block."); return Block.Invalid;
                 }
             }
             return id;

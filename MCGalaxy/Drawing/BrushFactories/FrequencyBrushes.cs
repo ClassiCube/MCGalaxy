@@ -73,7 +73,7 @@ namespace MCGalaxy.Drawing.Brushes {
             count = new int[blocks.Length];
             for (int i = 0; i < count.Length; i++) {
                 count[i] = 1;
-                blocks[i] = new ExtBlock(Block.Zero, 0);
+                blocks[i] = new ExtBlock(Block.Invalid, 0);
             }
             
             // No blocks given, assume first is held block

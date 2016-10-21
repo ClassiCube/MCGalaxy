@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "Invalid parameters"); return; 
             }
 
-            if (block == -1 || block == Block.Zero) return;
+            if (block == -1 || block == Block.Invalid) return;
             if (!Block.canPlace(p, (byte)block)) { Formatter.MessageBlock(p, "place ", (byte)block); return; }
             Vec3U16 P = Vec3U16.ClampPos(x, y, z, p.level);
             

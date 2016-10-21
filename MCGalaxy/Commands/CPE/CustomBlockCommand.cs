@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands.CPE {
                 }
             } else {
                 targetId = GetFreeId(global, p == null ? null : p.level);
-                if (targetId == Block.Zero) {
+                if (targetId == Block.Invalid) {
                     Player.Message(p, "There are no custom block ids left, " +
                                    "you must " + cmd +" remove a custom block first.");
                     return;
@@ -272,7 +272,7 @@ namespace MCGalaxy.Commands.CPE {
                     step++;
             } else if (step == 19) {
                 byte fallback = GetFallback(p, value);
-                if (fallback == Block.Zero) { SendStepHelp(p, global); return; }
+                if (fallback == Block.Invalid) { SendStepHelp(p, global); return; }
                 bd.FallBack = fallback;
                 
                 if (!AddCustomBlock(p, bd, global, cmd)) return;
@@ -405,7 +405,7 @@ namespace MCGalaxy.Commands.CPE {
                 case "fallbackid":
                 case "fallbackblock":
                     byte fallback = GetFallback(p, value);
-                    if (fallback == Block.Zero) return;
+                    if (fallback == Block.Invalid) return;
                     def.FallBack = fallback; break;
                 default:
                     Player.Message(p, "Unrecognised property: " + parts[2]); return;
@@ -423,7 +423,7 @@ namespace MCGalaxy.Commands.CPE {
             // in case the list is modified before we finish the command.
             if (def != null) {
                 bd.BlockID = GetFreeId(global, p == null ? null : p.level);
-                if (bd.BlockID == Block.Zero) {
+                if (bd.BlockID == Block.Invalid) {
                     Player.Message(p, "There are no custom block ids left, " +
                                    "you must " + cmd + " remove a custom block first.");
                     if (!global) {
@@ -451,15 +451,15 @@ namespace MCGalaxy.Commands.CPE {
             
             if (block == Block.custom_block) {
                 Player.Message(p, "&cCustom blocks cannot be used as fallback blocks.");
-                return Block.Zero;
+                return Block.Invalid;
             }
             if (block >= Block.CpeCount) {
                 Player.Message(p, "&cPhysics block cannot be used as fallback blocks.");
-                return Block.Zero;
+                return Block.Invalid;
             }
-            if (block == Block.Zero) {
+            if (block == Block.Invalid) {
                 Player.Message(p, "&cCannot use 'skip block' as fallback block.");
-                return Block.Zero;
+                return Block.Invalid;
             }
             return (byte)block;
         }
@@ -480,16 +480,16 @@ namespace MCGalaxy.Commands.CPE {
             // Start from opposite ends to avoid overlap.
             if (global) {
                 BlockDefinition[] defs = BlockDefinition.GlobalDefs;
-                for (int i = Block.CpeCount; i < 255; i++) {
+                for (int i = Block.CpeCount; i < Block.Invalid; i++) {
                     if (defs[i] == null) return (byte)i;
                 }
             } else {
                 BlockDefinition[] defs = lvl.CustomBlockDefs;
-                for (int i = 254; i >= Block.CpeCount; i--) {
+                for (int i = Block.Invalid; i >= Block.CpeCount; i--) {
                     if (defs[i] == null) return (byte)i;
                 }
             }
-            return Block.Zero;
+            return Block.Invalid;
         }
         
         static void MessageNoBlock(Player p, int id, bool global, string cmd) {
@@ -537,7 +537,7 @@ namespace MCGalaxy.Commands.CPE {
             if (!int.TryParse(arg, out blockId)) {
                 Player.Message(p, "&cProvided block id is not a number."); return false;
             }
-            if (blockId <= 0 || blockId >= 255) {
+            if (blockId <= 0 || blockId >= Block.Invalid) {
                 Player.Message(p, "&cBlock id must be between 1-254"); return false;
             }
             return true;

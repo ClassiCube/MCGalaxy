@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands
             if (p == null) { MessageInGameOnly(p); return; }
             if (message == "") { Help(p); return; }
             
-            if (!message.CaselessEq("all") && Block.Byte(message) == Block.Zero) {
+            if (!message.CaselessEq("all") && Block.Byte(message) == Block.Invalid) {
                 Player.Message(p, "There is no block \"" + message + "\"."); return;
             }            
             int phys = p.level.physics;

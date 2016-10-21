@@ -29,10 +29,10 @@ namespace MCGalaxy.Commands.Building {
         public CmdHollow() { }
 
         public override void Use(Player p, string message) {
-            byte skip = Block.Zero;
+            byte skip = Block.Invalid;
             if (message != "") {
                 skip = Block.Byte(message);
-                if (skip == Block.Zero) { Player.Message(p, "Cannot find block entered."); return; }
+                if (skip == Block.Invalid) { Player.Message(p, "Cannot find block entered."); return; }
             }
 
             Player.Message(p, "Place two blocks to determine the edges.");

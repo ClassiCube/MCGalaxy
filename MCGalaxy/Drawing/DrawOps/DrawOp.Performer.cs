@@ -165,9 +165,9 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         static void SetTileOutput(DrawOpBlock b, Player p, Level lvl) {
-            if (b.Block == Block.Zero) return;
+            if (b.Block == Block.Invalid) return;
             byte old = lvl.GetTile(b.X, b.Y, b.Z);
-            if (old == Block.Zero) return;
+            if (old == Block.Invalid) return;
             
             bool same = old == b.Block;
             if (same && b.Block == Block.custom_block)
@@ -180,7 +180,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         static void BufferedOutput(DrawOpBlock b, Player p, Level lvl) {
-            if (b.Block == Block.Zero) return;
+            if (b.Block == Block.Invalid) return;
             if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) return;
             
             int index = lvl.PosToInt(b.X, b.Y, b.Z);
@@ -189,7 +189,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         static void SlowOutput(DrawOpBlock b, Player p, Level lvl) {
-            if (b.Block == Block.Zero) return;
+            if (b.Block == Block.Invalid) return;
             if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) return;
             
             int index = lvl.PosToInt(b.X, b.Y, b.Z);

@@ -68,7 +68,7 @@ namespace MCGalaxy.Blocks {
             ConvertId = block;
             SaveConvertId = block;
             Name = "unknown";
-            ODoorId = Block.Zero;
+            ODoorId = Block.Invalid;
         }
     }
 }

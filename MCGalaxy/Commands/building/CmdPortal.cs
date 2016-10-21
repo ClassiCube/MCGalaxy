@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Building {
             }
 
             data.Block = GetBlock(p, block, out data.ExtBlock);
-            if (data.Block == Block.Zero) return;
+            if (data.Block == Block.Invalid) return;
 
             Player.Message(p, "Place an &aEntry block %Sfor the portal");
             p.ClearBlockchange();
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Building {
             extBlock = 0;
             byte id = Block.Byte(name);
             if (Block.Props[id].IsPortal) return id;
-            if (name == "show") { ShowPortals(p); return Block.Zero; }
+            if (name == "show") { ShowPortals(p); return Block.Invalid; }
 
             id = BlockDefinition.GetBlock(name, p);
             if (p.level.CustomBlockProps[id].IsPortal) {
@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             // Hardcoded aliases for backwards compatibility
-            id = Block.Zero;
+            id = Block.Invalid;
             if (name == "") id = Block.blue_portal;
             if (name == "blue") id = Block.blue_portal;        
             if (name == "orange") id = Block.orange_portal;
@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands.Building {
             if (name == "water") id = Block.water_portal;
             if (name == "lava") id = Block.lava_portal;
             
-            if (!Block.Props[id].IsPortal) { Help(p); return Block.Zero; }
+            if (!Block.Props[id].IsPortal) { Help(p); return Block.Invalid; }
             return id;
         }
 

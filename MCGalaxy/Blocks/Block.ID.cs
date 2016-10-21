@@ -92,7 +92,6 @@ namespace MCGalaxy
         public const byte pillar = 63;
         public const byte crate = 64;
         public const byte stonebrick = 65;
-        public const byte Zero = 0xff;
 
         public const byte door_darkpink_air = 66;
         public const byte door_darkgrey_air = 67;
@@ -312,5 +311,7 @@ namespace MCGalaxy
         
         public const byte door_gold = 253;
         public const byte door_gold_air = 254;
+        public const byte Zero = 0xff; // backwards compatibility
+        public const byte Invalid = 0xff;
     }
 }

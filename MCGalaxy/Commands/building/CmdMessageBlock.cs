@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.Building {
             extBlock = 0;
             byte id = Block.Byte(name);
             if (Block.Props[id].IsMessageBlock) return id;
-            if (name == "show") { ShowMessageBlocks(p); return Block.Zero; }
+            if (name == "show") { ShowMessageBlocks(p); return Block.Invalid; }
             
             id = BlockDefinition.GetBlock(name, p);
             if (p.level.CustomBlockProps[id].IsMessageBlock) {
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Building {
             if (name == "lava") id = Block.MsgLava;
             
             allMessage = id == Block.MsgWhite && name != "white";
-            if (!Block.Props[id].IsMessageBlock) { Help(p); return Block.Zero; }
+            if (!Block.Props[id].IsMessageBlock) { Help(p); return Block.Invalid; }
             return id;
         }
         

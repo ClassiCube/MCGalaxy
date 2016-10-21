@@ -40,7 +40,7 @@ namespace MCGalaxy.Blocks {
             if (above == Block.custom_block) 
                 extAbove = lvl.GetExtTile(x, (ushort)(y + 1), z);
             
-            block = (above == Block.Zero || Block.LightPass(above, extAbove, lvl.CustomBlockDefs))
+            block = (above == Block.Invalid || Block.LightPass(above, extAbove, lvl.CustomBlockDefs))
                 ? Block.grass : Block.dirt;
             p.ChangeBlock(x, y, z, block, 0);
             return false;

@@ -48,7 +48,7 @@ namespace MCGalaxy {
         public void ManualChange(ushort x, ushort y, ushort z, byte action,
                                  byte block, byte extBlock, bool checkPlaceDist) {
             byte old = level.GetTile(x, y, z);
-            if (old == Block.Zero) return;
+            if (old == Block.Invalid) return;
             if (jailed || !agreed || !canBuild) { RevertBlock(x, y, z); return; }
             if (level.IsMuseum && Blockchange == null) return;
             if (action > 1) { Leave("Unknown block action!", true); return; }
@@ -703,7 +703,7 @@ namespace MCGalaxy {
             
             Command command = Command.all.Find(cmd);
             if (command == null) {
-                if (Block.Byte(cmd) != Block.Zero) {
+                if (Block.Byte(cmd) != Block.Invalid) {
                     cmdArgs = cmd.ToLower(); cmd = "mode";
                     command = Command.all.Find("mode");
                 } else {

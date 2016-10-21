@@ -29,7 +29,7 @@ namespace MCGalaxy
                 return block;
             if (Aliases.TryGetValue(type.ToLower(), out block))
                 return block;
-            return Block.Zero;
+            return Block.Invalid;
         }
         
         public static byte ConvertCPE(byte block) {

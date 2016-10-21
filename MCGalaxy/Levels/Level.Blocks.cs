@@ -40,7 +40,7 @@ namespace MCGalaxy {
         
         public byte GetTile(ushort x, ushort y, ushort z) {
             int index = PosToInt(x, y, z);
-            if (index < 0 || blocks == null) return Block.Zero;
+            if (index < 0 || blocks == null) return Block.Invalid;
             return blocks[index];
         }
 
@@ -52,7 +52,7 @@ namespace MCGalaxy {
         
         public byte GetExtTile(ushort x, ushort y, ushort z) {
             int index = PosToInt(x, y, z);
-            if (index < 0 || blocks == null) return Block.Zero;
+            if (index < 0 || blocks == null) return Block.Invalid;
             
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
@@ -455,7 +455,7 @@ namespace MCGalaxy {
                 return Block.Name(block);
             
             BlockDefinition[] defs = CustomBlockDefs;
-            for (int i = 1; i < 255; i++) {
+            for (int i = 1; i < Block.Invalid; i++) {
                 BlockDefinition def = defs[i];
                 if (def == null) continue;
                 if (def.BlockID == extBlock) return def.Name.Replace(" ", "");

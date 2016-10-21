@@ -33,7 +33,7 @@ namespace MCGalaxy {
                 // Fallback for unrecognised physics blocks
                 if (i >= CpeCount) Props[i].ConvertId = Block.orange;
                 
-                if ((i >= op_glass && i <= op_lava) || i == Zero || i == rocketstart || i == blackrock)
+                if ((i >= op_glass && i <= op_lava) || i == Invalid || i == rocketstart || i == blackrock)
                     Props[i].OPBlock = true;
                 
                 if ((i >= tdoor && i <= tdoor8) || (i >= tdoor9 && i <= tdoor13))
@@ -216,7 +216,7 @@ namespace MCGalaxy {
             
             SetDeath(Block.air, "{0} %Shit the floor &chard.", false);
             SetDeath(Block.water, "{0} %S&cdrowned.", false);
-            SetDeath(Block.Zero, "{0} %Swas &cterminated.", false);
+            SetDeath(Block.Invalid, "{0} %Swas &cterminated.", false);
         }
         
         static void SetDeath(byte block, string message, bool collideKill = true) {

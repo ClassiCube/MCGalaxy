@@ -51,7 +51,7 @@ namespace MCGalaxy.Drawing.Brushes {
         internal static ExtBlock[] GetBlocks(Player p, int start, int max, string[] parts) {
             ExtBlock[] blocks = new ExtBlock[max - start];
             for (int i = 0; i < blocks.Length; i++)
-                blocks[i].Block = Block.Zero;
+                blocks[i].Block = Block.Invalid;
             for (int i = 0; start < max; start++, i++ ) {
                 byte extBlock = 0;
                 int block = DrawCmd.GetBlock(p, parts[start], out extBlock);

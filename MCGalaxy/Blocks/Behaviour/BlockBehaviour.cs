@@ -82,7 +82,7 @@ namespace MCGalaxy.Blocks {
                 
                 if (Block.Props[i].IsTDoor) {
                     deleteHandlers[i] = DeleteBehaviour.RevertDoor;
-                } else if (Block.Props[i].ODoorId != Block.Zero) {
+                } else if (Block.Props[i].ODoorId != Block.Invalid) {
                     deleteHandlers[i] = DeleteBehaviour.ODoor;
                 } else if (Block.Props[i].IsDoor) {
                     deleteHandlers[i] = DeleteBehaviour.Door;
@@ -175,7 +175,7 @@ namespace MCGalaxy.Blocks {
                     continue;
                 }
                 
-                if (Block.odoor((byte)i) != Block.Zero) {
+                if (Block.odoor((byte)i) != Block.Invalid) {
                     physicsHandlers[i] = DoorPhysics.oDoor;
                     physicsDoorsHandlers[i] = DoorPhysics.oDoor;
                 }

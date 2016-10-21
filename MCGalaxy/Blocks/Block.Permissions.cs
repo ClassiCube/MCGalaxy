@@ -70,7 +70,7 @@ namespace MCGalaxy
                 b.type = (byte)i;
                 switch (i)
                 {
-                    case Zero:
+                    case Invalid:
                         b.lowestRank = LevelPermission.Admin;
                         break;
 
@@ -316,7 +316,7 @@ namespace MCGalaxy
                 string[] block = line.Split(colon, StringSplitOptions.None);
                 Blocks newBlock = new Blocks();
 
-                if (Block.Byte(block[0]) == Block.Zero) continue;
+                if (Block.Byte(block[0]) == Block.Invalid) continue;
                 newBlock.type = Block.Byte(block[0]);
 
                 string[] disallow = null;
