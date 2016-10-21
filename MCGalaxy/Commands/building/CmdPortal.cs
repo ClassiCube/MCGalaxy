@@ -183,6 +183,7 @@ namespace MCGalaxy.Commands.Building {
         
         static bool Check(BlockProps props, byte id, string name) {
             if (props.BlockId != id) return false;
+            if (props.Name == "unknown") return false; // custom blocks
             id = Block.Byte(name);
             return !Block.Props[id].IsPortal;
         }
@@ -192,8 +193,10 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%HPlace a block for the entry, then another block for exit.");
             Player.Message(p, "%T/portal [block] multi");
             Player.Message(p, "%HPlace multiple blocks for entries, then a red block for exit.");
-            Player.Message(p, "%H  Supported blocks: %S{0}", 
-                           Block.Props.Join(props => Format(props)));
+            
+            var allProps = BlockProps.AllBlockProps(p);
+            Player.Message(p, "%H  Supported blocks: %S{0}",
+                           allProps.Join(props => Format(props)));
             Player.Message(p, "%T/portal show %H- Shows portals (green = entry, red = exit)");
         }
     }

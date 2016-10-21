@@ -186,6 +186,7 @@ namespace MCGalaxy.Commands.Building {
         
         static bool Check(BlockProps props, byte id, string name) {
             if (props.BlockId != id) return false;
+            if (props.Name == "unknown") return false;
             id = Block.Byte(name);
             return !Block.Props[id].IsMessageBlock;
         }
@@ -193,8 +194,10 @@ namespace MCGalaxy.Commands.Building {
         public override void Help(Player p) {
             Player.Message(p, "%T/mb [block] [message]");
             Player.Message(p, "%HPlaces a message in your next block.");
+            
+            var allProps = BlockProps.AllBlockProps(p);
             Player.Message(p, "%H  Supported blocks: %S{0}",
-                           Block.Props.Join(props => Format(props)));
+                           allProps.Join(props => Format(props)));
             Player.Message(p, "%H  Use | to separate commands, e.g. /say 1 |/say 2");
             Player.Message(p, "%H  Note: \"@p\" is a placeholder for player who clicked.");
             Player.Message(p, "%T/mb show %H- Shows or hides MBs");
