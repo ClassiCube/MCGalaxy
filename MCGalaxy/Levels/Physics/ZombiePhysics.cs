@@ -108,7 +108,7 @@ namespace MCGalaxy.BlockPhysics {
         public static void DoHead(Level lvl, ref Check C) {
             if (lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.zombiebody
                 && lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.creeper) {
-			    C.data.Type1 = PhysicsArgs.Revert; C.data.Value1 = Block.air;
+                C.data.Type1 = PhysicsArgs.Revert; C.data.Value1 = Block.air;
             }
         }
         

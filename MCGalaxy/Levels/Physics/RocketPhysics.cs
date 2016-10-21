@@ -22,7 +22,7 @@ namespace MCGalaxy.BlockPhysics {
     public static class RocketPhysics {
         
         public static void Do(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;			
+            Random rand = lvl.physRandom;            
             int dirX = rand.Next(1, 10) <= 5 ? 1 : -1;
             int dirY = rand.Next(1, 10) <= 5 ? 1 : -1;
             int dirZ = rand.Next(1, 10) <= 5 ? 1 : -1;
@@ -39,7 +39,7 @@ namespace MCGalaxy.BlockPhysics {
                 int headIndex = lvl.PosToInt((ushort)(x - cx), (ushort)(y - cy), (ushort)(z - cz));
                 byte rocketHead = headIndex < 0 ? Block.Zero : lvl.blocks[headIndex];                
                 bool unblocked = !lvl.listUpdateExists.Get(x, y, z) && 
-                	(headIndex < 0 || !lvl.listUpdateExists.Get(x - cx, y - cy, z - cz));
+                    (headIndex < 0 || !lvl.listUpdateExists.Get(x - cx, y - cy, z - cz));
                 
                 if (unblocked && (rocketHead == Block.air || rocketHead == Block.rocketstart)) {
                     lvl.AddUpdate(headIndex, Block.rockethead);

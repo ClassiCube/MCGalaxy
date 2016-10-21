@@ -37,7 +37,7 @@ namespace MCGalaxy.BlockPhysics {
             if (rand.Next(1, 11) <= 7)
                 lvl.AddUpdate(C.b, Block.air);
         }
-		
+        
         public static void DoLargeTnt(Level lvl, ref Check C, int power) {
             Random rand = lvl.physRandom;
             ushort x, y, z;
@@ -154,10 +154,10 @@ namespace MCGalaxy.BlockPhysics {
                     } else if (mode <= 8) {
                         lvl.AddUpdate(index, Block.air);
                     } else {
-                    	PhysicsArgs args = default(PhysicsArgs);
-					    args.Type1 = PhysicsArgs.Drop; args.Value1 = 50;
-					    args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 8;
-					    lvl.AddCheck(index, false, args);
+                        PhysicsArgs args = default(PhysicsArgs);
+                        args.Type1 = PhysicsArgs.Drop; args.Value1 = 50;
+                        args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 8;
+                        lvl.AddCheck(index, false, args);
                     }
                 } else if (b == Block.tnt) {
                     lvl.AddUpdate(index, Block.smalltnt);

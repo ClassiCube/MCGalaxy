@@ -56,7 +56,7 @@ namespace MCGalaxy.BlockPhysics {
                     args.Type2 = PhysicsArgs.Revert; args.Value2 = tileBelow;
                     
                     if (tileBelow == Block.custom_block) {
-                    	args.Value2 = lvl.GetExtTile(x, (ushort)(y - 1), z);
+                        args.Value2 = lvl.GetExtTile(x, (ushort)(y - 1), z);
                         args.ExtBlock = true;
                     }
                     lvl.AddUpdate(lvl.IntOffset(C.b, 0, -1, 0), newBlock, true, args);

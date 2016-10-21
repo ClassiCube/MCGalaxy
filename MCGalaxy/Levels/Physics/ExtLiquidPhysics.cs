@@ -21,7 +21,7 @@ namespace MCGalaxy.BlockPhysics {
     
     public static class ExtLiquidPhysics {
         
-		public static void DoMagma(Level lvl, ref Check C) {
+        public static void DoMagma(Level lvl, ref Check C) {
             C.data.Data++;
             if (C.data.Data < 3) return;
             ushort x, y, z;
@@ -97,7 +97,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public static void DoWaterfall(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;			
+            Random rand = lvl.physRandom;            
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             byte below = lvl.GetTile(x, (ushort)(y - 1), z);
@@ -125,7 +125,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public static void DoLavafall(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;			
+            Random rand = lvl.physRandom;            
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             byte below = lvl.GetTile(x, (ushort)(y - 1), z);

@@ -113,7 +113,7 @@ namespace MCGalaxy.BlockPhysics {
         
         static bool MoveFish(Level lvl, int baseIndex, int index, byte target) {
             if (index >= 0 && lvl.blocks[index] == target 
-			    && lvl.AddUpdate(index, lvl.blocks[baseIndex])) {
+                && lvl.AddUpdate(index, lvl.blocks[baseIndex])) {
                 lvl.AddUpdate(baseIndex, target);
                 return true;
             }

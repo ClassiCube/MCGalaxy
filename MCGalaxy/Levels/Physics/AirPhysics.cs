@@ -43,7 +43,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         public static void DoFlood(Level lvl, ref Check C, AirFlood mode, byte block) {
-            Random rand = lvl.physRandom;    		
+            Random rand = lvl.physRandom;            
             if (C.data.Data >= 1) {
                 lvl.AddUpdate(C.b, Block.air);
                 C.data.Data = PhysicsArgs.RemoveFromChecks; return;
