@@ -44,6 +44,7 @@ namespace MCGalaxy {
         static ColumnParams[] createOpstats = {
             new ColumnParams("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
             new ColumnParams("Time", ColumnType.DateTime),
+            new ColumnParams("Name", ColumnType.Text),
             new ColumnParams("Cmd", ColumnType.VarChar, 40),
             new ColumnParams("Cmdmsg", ColumnType.VarChar, 40),
         };
