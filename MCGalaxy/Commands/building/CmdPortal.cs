@@ -200,7 +200,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%T/portal [block] multi");
             Player.Message(p, "%HPlace multiple blocks for entries, then a red block for exit.");
             
-            var allProps = BlockProps.AllBlockProps(p);
+            var allProps = Block.Props;
             Player.Message(p, "%H  Supported blocks: %S{0}",
                            allProps.Join(props => Format(props)));
             Player.Message(p, "%T/portal show %H- Shows portals (green = entry, red = exit)");

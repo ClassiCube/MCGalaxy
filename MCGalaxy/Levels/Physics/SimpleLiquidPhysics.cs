@@ -126,7 +126,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         static void DoWaterUniformFlow(Level lvl, ref Check C) {
-        	Random rand = lvl.physRandom;
+            Random rand = lvl.physRandom;
             lvl.liquids.Remove(C.b);
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -168,7 +168,14 @@ namespace MCGalaxy.BlockPhysics {
                     
                 default:
                     //Adv physics kills flowers, mushroom blocks in water
-                    if (!Block.Props[lvl.blocks[b]].WaterKills) return true;
+                    byte block = lvl.blocks[b];
+                    if (block != Block.custom_block) {
+                        if (!Block.Props[block].WaterKills) return true;
+                    } else {
+                        block = lvl.GetExtTile(b);
+                        if (!lvl.CustomBlockProps[block].WaterKills) return true;
+                    }
+                    
                     if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) return false;
                     break;
             }
@@ -275,7 +282,14 @@ namespace MCGalaxy.BlockPhysics {
 
                 default:
                     //Adv physics kills flowers, wool, mushrooms, and wood type blocks in lava
-                    if (!Block.Props[lvl.blocks[b]].LavaKills) return true;
+                    byte block = lvl.blocks[b];
+                    if (block != Block.custom_block) {
+                        if (!Block.Props[block].LavaKills) return true;
+                    } else {
+                        block = lvl.GetExtTile(b);
+                        if (!lvl.CustomBlockProps[block].LavaKills) return true;
+                    }
+
                     if (lvl.physics > 1 && !lvl.CheckSpongeLava(x, y, z)) return false;
                     break;
             }

@@ -70,16 +70,5 @@ namespace MCGalaxy.Blocks {
             Name = "unknown";
             ODoorId = Block.Zero;
         }
-        
-        public static IEnumerable<BlockProps> AllBlockProps(Player p) {
-            return Block.Props; // TODO: fix this
-        	
-            /*foreach (BlockProps props in Block.Props)
-                yield return props;
-            if (Player.IsSuper(p)) yield break;
-            
-            foreach (BlockProps props in p.level.CustomBlockProps)
-                yield return props;*/
-        }
     }
 }

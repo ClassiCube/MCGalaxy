@@ -204,7 +204,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%T/mb [block] [message]");
             Player.Message(p, "%HPlaces a message in your next block.");
             
-            var allProps = BlockProps.AllBlockProps(p);
+            var allProps = Block.Props;
             Player.Message(p, "%H  Supported blocks: %S{0}",
                            allProps.Join(props => Format(props)));
             Player.Message(p, "%H  Use | to separate commands, e.g. /say 1 |/say 2");

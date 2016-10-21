@@ -45,7 +45,14 @@ namespace MCGalaxy.BlockPhysics {
                     
                 default:
                     // //Adv physics kills flowers and mushrooms in water
-                    if (!Block.Props[lvl.blocks[b]].WaterKills) break;
+                    byte block = lvl.blocks[b];
+                    if (block != Block.custom_block) {
+                        if (!Block.Props[block].WaterKills) break;
+                    } else {
+                        block = lvl.GetExtTile(b);
+                        if (!lvl.CustomBlockProps[block].WaterKills) break;
+                    }
+                    
                     if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) 
                         lvl.AddUpdate(b, Block.air);
                     break;
@@ -80,7 +87,14 @@ namespace MCGalaxy.BlockPhysics {
 
                 default:
                     //Adv physics kills flowers, wool, mushrooms, and wood type blocks in lava
-                    if (!Block.Props[lvl.blocks[b]].LavaKills) break;
+                    byte block = lvl.blocks[b];
+                    if (block != Block.custom_block) {
+                        if (!Block.Props[block].LavaKills) break;
+                    } else {
+                        block = lvl.GetExtTile(b);
+                        if (!lvl.CustomBlockProps[block].LavaKills) break;
+                    }
+                    
                     if (lvl.physics > 1 && !lvl.CheckSpongeLava(x, y, z)) 
                         lvl.AddUpdate(b, Block.air);
                     break;
