@@ -47,14 +47,18 @@ namespace MCGalaxy.BlockPhysics {
                 if (isRails && (tile == Block.air || tile == Block.water)) {
                     lvl.AddUpdate(lvl.PosToInt((ushort)(x + cx), 
                                                (ushort)(y + cy), (ushort)(z + cz)), Block.train);
-                    lvl.AddUpdate(C.b, Block.air);
-                    
+                    lvl.AddUpdate(C.b, Block.air);                    
                     byte newBlock = tileBelow == Block.op_air ? Block.glass : Block.obsidian;
+                    
+                    tileBelow = lvl.GetTile(x, (ushort)(y - 1), z);
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
                     args.Type2 = PhysicsArgs.Revert; args.Value2 = tileBelow;
-                    args.ExtBlock = tileBelow == Block.custom_block;
                     
+                    if (tileBelow == Block.custom_block) {
+                    	args.Value2 = lvl.GetExtTile(x, (ushort)(y - 1), z);
+                        args.ExtBlock = true;
+                    }
                     lvl.AddUpdate(lvl.IntOffset(C.b, 0, -1, 0), newBlock, true, args);
                     return;
                 }

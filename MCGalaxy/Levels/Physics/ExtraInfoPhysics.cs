@@ -58,6 +58,7 @@ namespace MCGalaxy.BlockPhysics {
             ExtraInfoArgs args = default(ExtraInfoArgs);
             ParseType(C.data.Type1, ref args, C.data.Value1);
             ParseType(C.data.Type2, ref args, C.data.Value2);
+            args.ExtBlock = C.data.ExtBlock;
             
             if (args.Wait) {
                 if (C.data.Door && C.data.Data == 0) {
@@ -98,11 +99,16 @@ namespace MCGalaxy.BlockPhysics {
                 else DoRainbow(lvl, ref C, rand, args.RainbowNum);
                 return;
             }
+            
             if (args.Revert) {
-                lvl.AddUpdate(C.b, args.RevertType);
+                PhysicsArgs revertArgs = default(PhysicsArgs);
+                if (args.ExtBlock) revertArgs.ExtBlock = true;
+                lvl.AddUpdate(C.b, args.RevertType, false, revertArgs);
+                
                 C.data.ResetTypes();
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
             }
+            
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
@@ -157,7 +163,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         struct ExtraInfoArgs {
-            public bool Wait, Drop, Dissipate, Revert, Explode, Rainbow;
+            public bool Wait, Drop, Dissipate, Revert, Explode, Rainbow, ExtBlock;
             public int WaitTime, DropNum, DissipateNum, ExplodeNum, RainbowNum;
             public byte RevertType;
         }

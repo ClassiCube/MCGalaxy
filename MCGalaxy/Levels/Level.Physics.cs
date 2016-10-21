@@ -169,10 +169,16 @@ namespace MCGalaxy {
             for (int i = 0; i < ListUpdate.Count; i++) {
                 Update C = ListUpdate.Items[i];
                 try {
-                    byte block = C.data.Data;
+                    byte block = C.data.Data, extBlock = 0;
                     C.data.Data = 0;
-                    if (DoPhysicsBlockchange(C.b, block, false, C.data, 0, true))
-                        bulkSender.Add(C.b, block, 0);
+                    // Is the Ext flag just an indicator for the block update?
+                    if (C.data.ExtBlock && (C.data.Raw & PhysicsArgs.TypeMask) == 0) {
+                        extBlock = block; block = Block.custom_block;
+                        C.data.ExtBlock = false;
+                    }
+                    
+                    if (DoPhysicsBlockchange(C.b, block, false, C.data, extBlock, true))
+                        bulkSender.Add(C.b, block, extBlock);
                 } catch {
                     Server.s.Log("Phys update issue");
                 }
@@ -226,8 +232,14 @@ namespace MCGalaxy {
                 if (x >= Width || y >= Height || z >= Length) return false;
                 
                 if (overRide) {
+                    byte block = (byte)type, extBlock = 0;
+                    // Is the Ext flag just an indicator for the block update?
+                    if (data.ExtBlock && (data.Raw & PhysicsArgs.TypeMask) == 0) {
+                        extBlock = block; block = Block.custom_block;
+                        data.ExtBlock = false;
+                    }
                     AddCheck(b, true, data); //Dont need to check physics here....AddCheck will do that
-                    Blockchange((ushort)x, (ushort)y, (ushort)z, (byte)type, true, data);
+                    Blockchange((ushort)x, (ushort)y, (ushort)z, block, true, data, extBlock);
                     return true;
                 }
 
