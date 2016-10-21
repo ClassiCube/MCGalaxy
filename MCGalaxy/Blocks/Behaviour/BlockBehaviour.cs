@@ -25,15 +25,14 @@ namespace MCGalaxy.Blocks {
     public delegate bool HandleDelete(Player p, byte oldBlock, ushort x, ushort y, ushort z);
 
     /// <summary> Returns whether this block handles the player deleting a block at the given coordinates. </summary>
-    /// <remarks>If this returns true, the usual 'checking dirt/grass below' and 'adding to the BlockDB' is skipped. </remarks>
+    /// <remarks> If this returns true, the usual 'checking dirt/grass below' and 'adding to the BlockDB' is skipped. </remarks>
     public delegate bool HandlePlace(Player p, byte oldBlock, ushort x, ushort y, ushort z);
 
     /// <summary> Returns whether this block handles the player walking through this block at the given coordinates. </summary>
-    /// <remarks>If this returns true, the usual 'death check' behaviour is skipped. </remarks>
+    /// <remarks> If this returns true, the usual 'death check' behaviour is skipped. </remarks>
     public delegate bool HandleWalkthrough(Player p, byte block, ushort x, ushort y, ushort z);
 
     /// <summary> Called to handle the physics for this particular block. </summary>
-    /// <remarks>If this returns true, the usual 'death check' behaviour is skipped. </remarks>
     public delegate void HandlePhysics(Level lvl, ref Check C);
     
     public static class BlockBehaviour {
@@ -53,6 +52,7 @@ namespace MCGalaxy.Blocks {
             deleteHandlers[Block.rocketstart] = DeleteBehaviour.RocketStart;
             deleteHandlers[Block.firework] = DeleteBehaviour.Firework;
             deleteHandlers[Block.c4det] = DeleteBehaviour.C4Det;
+            deleteHandlers[Block.custom_block] = DeleteBehaviour.CustomBlock;
             
             placeHandlers[Block.dirt] = PlaceBehaviour.Dirt;
             placeHandlers[Block.grass] = PlaceBehaviour.Grass;
@@ -65,6 +65,7 @@ namespace MCGalaxy.Blocks {
             walkthroughHandlers[Block.water_door] = WalkthroughBehaviour.Door;
             walkthroughHandlers[Block.lava_door] = WalkthroughBehaviour.Door;
             walkthroughHandlers[Block.train] = WalkthroughBehaviour.Train;
+            walkthroughHandlers[Block.custom_block] = WalkthroughBehaviour.CustomBlock;
             
             for (int i = 0; i < 256; i++) {
                 if (Block.Props[i].IsMessageBlock) {

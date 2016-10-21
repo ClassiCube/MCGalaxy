@@ -93,5 +93,17 @@ namespace MCGalaxy.Blocks {
             }
             return true;
         }
+        
+        internal static bool CustomBlock(Player p, byte block, ushort x, ushort y, ushort z) {
+            byte extBlock = p.level.GetExtTile(x, y, z);
+            if (p.level.CustomBlockProps[extBlock].IsPortal) {
+                return WalkthroughBehaviour.Portal(p, block, x, y, z, false);
+            } else if (p.level.CustomBlockProps[extBlock].IsMessageBlock) {
+                return WalkthroughBehaviour.MessageBlock(p, block, x, y, z, false);
+            }
+            
+            p.ChangeBlock(x, y, z, Block.air, 0);
+            return false;
+        }
     }
 }

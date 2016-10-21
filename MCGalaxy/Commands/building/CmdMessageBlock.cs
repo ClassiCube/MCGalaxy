@@ -37,33 +37,42 @@ namespace MCGalaxy.Commands.Building {
             if (message == "") { Help(p); return; }
 
             bool allMessage = false;
-            MBData cpos;
+            MBData data;
             string[] args = message.SplitSpaces(2);
-            cpos.type = GetBlock(p, args[0].ToLower(), ref allMessage);
+            string block = args[0].ToLower();
+            data.Block = GetBlock(p, block, out data.ExtBlock, ref allMessage);
             
             if (allMessage) {
-                cpos.message = message;
+                data.Message = message;
             } else if (args.Length == 1) {
                 Player.Message(p, "You need to provide text to put in the messageblock."); return;
             } else {
-                cpos.message = args[1];
+                data.Message = args[1];
             }
             
             string text;
-            List<string> cmds = WalkthroughBehaviour.ParseMB(cpos.message, out text);
+            List<string> cmds = WalkthroughBehaviour.ParseMB(data.Message, out text);
             foreach (string cmd in cmds) {
                 if (!CheckCommand(p, cmd)) return;
             }
 
-            p.blockchangeObject = cpos;
-            Player.Message(p, "Place where you wish the message block to go."); p.ClearBlockchange();
+            p.blockchangeObject = data;
+            Player.Message(p, "Place where you wish the message block to go."); 
+            p.ClearBlockchange();
             p.Blockchange += PlacedMark;
         }
         
-        byte GetBlock(Player p, string name, ref bool allMessage) {
+        byte GetBlock(Player p, string name, out byte extBlock, 
+                      ref bool allMessage) {
+            extBlock = 0;
             byte id = Block.Byte(name);
             if (Block.Props[id].IsMessageBlock) return id;
             if (name == "show") { ShowMessageBlocks(p); return Block.Zero; }
+            
+            id = BlockDefinition.GetBlock(name, p);
+            if (p.level.CustomBlockProps[id].IsMessageBlock) {
+                extBlock = id; return Block.custom_block;
+            }
             
             // Hardcoded aliases for backwards compatibility
             id = Block.MsgWhite;
@@ -103,12 +112,12 @@ namespace MCGalaxy.Commands.Building {
 
         void PlacedMark(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             p.ClearBlockchange();
-            MBData cpos = (MBData)p.blockchangeObject;
+            MBData data = (MBData)p.blockchangeObject;
             
             byte old = p.level.GetTile(x, y, z);
-            if (p.level.CheckAffectPermissions(p, x, y, z, old, cpos.type, 0)) {
-                p.level.Blockchange(p, x, y, z, cpos.type, 0);
-                UpdateDatabase(p, cpos, x, y, z);
+            if (p.level.CheckAffectPermissions(p, x, y, z, old, data.Block, data.ExtBlock)) {
+                p.level.Blockchange(p, x, y, z, data.Block, data.ExtBlock);
+                UpdateDatabase(p, data, x, y, z);
                 Player.Message(p, "Message block created.");
             } else {                
                 Player.Message(p, "Failed to create a message block.");
@@ -119,8 +128,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         void UpdateDatabase(Player p, MBData data, ushort x, ushort y, ushort z) {
-            data.message = data.message.Replace("'", "\\'");
-            data.message = Colors.EscapeColors(data.message);
+            data.Message = data.Message.Replace("'", "\\'");
+            data.Message = Colors.EscapeColors(data.Message);
             //safe against SQL injections because no user input is given here
             string lvlName = p.level.name;
             object locker = ThreadSafeCache.DBCache.Get(lvlName);
@@ -137,11 +146,11 @@ namespace MCGalaxy.Commands.Building {
                 string syntax = count == 0 ?
                     "INSERT INTO `Messages" + lvlName + "` (X, Y, Z, Message) VALUES (@0, @1, @2, @3)"
                     : "UPDATE `Messages" + lvlName + "` SET Message=@3 WHERE X=@0 AND Y=@1 AND Z=@2";
-                Database.Execute(syntax, x, y, z, data.message);
+                Database.Execute(syntax, x, y, z, data.Message);
             }
         }
 
-        struct MBData { public string message; public byte type; }
+        struct MBData { public string Message; public byte Block, ExtBlock; }
 
         
         void ShowMessageBlocks(Player p) {

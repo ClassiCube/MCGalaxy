@@ -37,6 +37,17 @@ namespace MCGalaxy.Blocks {
             return true;
         }
         
+        internal static bool CustomBlock(Player p, byte block, ushort x, ushort y, ushort z) {
+            byte extBlock = p.level.GetExtTile(x, y, z);
+            if (p.level.CustomBlockProps[extBlock].IsPortal) {
+                return Portal(p, block, x, y, z, true);
+            } else if (p.level.CustomBlockProps[extBlock].IsMessageBlock) {
+                return MessageBlock(p, block, x, y, z, true);
+            }
+            return false;
+        }
+        
+        
         internal static bool Portal(Player p, byte block, ushort x, ushort y, ushort z, bool checkPos) {
             if (checkPos && p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
             p.RevertBlock(x, y, z);
