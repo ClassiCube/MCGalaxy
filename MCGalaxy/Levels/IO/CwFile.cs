@@ -138,7 +138,7 @@ namespace MCGalaxy.Levels.IO {
                 def.MinX = coords[0]; def.MinZ = coords[1]; def.MinY = coords[2];
                 def.MaxX = coords[3]; def.MaxZ = coords[4]; def.MaxY = coords[5];
                 
-                // Don't define localcustom block if same as global cusom block
+                // Don't define level custom block if same as global custom block
                 BlockDefinition globalDef = BlockDefinition.GlobalDefs[def.BlockID];
                 if (PropsEquals(def, globalDef)) continue;
                 
