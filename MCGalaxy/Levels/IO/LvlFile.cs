@@ -25,17 +25,22 @@ namespace MCGalaxy.Levels.IO {
     //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
     public static class LvlFile {
         
+        const int bufferSize = 64 * 1024;
         public static void Save(Level lvl, string file) {
             using (Stream fs = File.Create(file), gs = new GZipStream(fs, CompressionMode.Compress, true)) {
-                WriteHeader(lvl, gs);
-                WriteBlocksSection(lvl, gs);
-                WriteBlockDefsSection(lvl, gs);
-                WritePhysicsSection(lvl, gs);
+                // We need to copy blocks to a temp byte array due to the multithreaded nature of the server
+                // Otherwise, some blocks can change between writing data and calculating its crc32, which
+                // then causes the level to fail to load next time do to the crc32 not matching the data.
+                byte[] buffer = new byte[bufferSize];
+                
+                WriteHeader(lvl, gs, buffer);
+                WriteBlocksSection(lvl, gs, buffer);
+                WriteBlockDefsSection(lvl, gs, buffer);
+                WritePhysicsSection(lvl, gs, buffer);
             }
         }
         
-        static void WriteHeader(Level lvl, Stream gs) {
-            byte[] header = new byte[18];
+        static void WriteHeader(Level lvl, Stream gs, byte[] header) {
             BitConverter.GetBytes(1874).CopyTo(header, 0);
             BitConverter.GetBytes(lvl.Width).CopyTo(header, 2);
             BitConverter.GetBytes(lvl.Length).CopyTo(header, 4);
@@ -47,15 +52,19 @@ namespace MCGalaxy.Levels.IO {
             header[15] = lvl.roty;
             header[16] = (byte)lvl.permissionvisit;
             header[17] = (byte)lvl.permissionbuild;
-            gs.Write(header, 0, header.Length);
+            gs.Write(header, 0, 18);
         }
         
-        static void WriteBlocksSection(Level lvl, Stream gs) {
+        static void WriteBlocksSection(Level lvl, Stream gs, byte[] buffer) {
             byte[] blocks = lvl.blocks;
-            gs.Write(blocks, 0, blocks.Length);
+            for (int i = 0; i < blocks.Length; i += bufferSize) {
+                int len = Math.Min(bufferSize, blocks.Length - i);
+                Buffer.BlockCopy(blocks, i, buffer, 0, len);
+                gs.Write(buffer, 0, len);
+            }
         }
         
-        static void WriteBlockDefsSection(Level lvl, Stream gs) {
+        static void WriteBlockDefsSection(Level lvl, Stream gs, byte[] buffer) {
             gs.WriteByte(0xBD); // 'B'lock 'D'efinitions
             int index = 0;
             
@@ -68,14 +77,14 @@ namespace MCGalaxy.Levels.IO {
                     gs.WriteByte(0);
                 } else {
                     gs.WriteByte(1);
-                    gs.Write(chunk, 0, chunk.Length);
+                    Buffer.BlockCopy(chunk, 0, buffer, 0, chunk.Length);
+                    gs.Write(buffer, 0, chunk.Length);
                 }
                 index++;
             }
         }
         
-        const int fxBulkCount = 1024, fxEntrySize = 2 * sizeof(int);
-        unsafe static void WritePhysicsSection(Level lvl, Stream gs) {
+        unsafe static void WritePhysicsSection(Level lvl, Stream gs, byte[] buffer) {
             lock (lvl.physStepLock) {
                 // Count the number of physics checks with extra info
                 int used = 0, count = lvl.ListCheck.Count;
@@ -87,8 +96,6 @@ namespace MCGalaxy.Levels.IO {
                 if (used == 0) return;
                 
                 gs.WriteByte(0xFC); // 'Ph'ysics 'C'hecks
-                int bulkCount = Math.Min(used, fxBulkCount);
-                byte[] buffer = new byte[bulkCount * fxEntrySize];
                 NetUtils.WriteI32(used, buffer, 0);
                 gs.Write(buffer, 0, sizeof(int));
                 
@@ -103,6 +110,7 @@ namespace MCGalaxy.Levels.IO {
             Check[] checks = items.Items;
             int entries = 0, count = items.Count;
             int* ptrInt = (int*)ptr;
+            const int bulkCount = bufferSize / 8;
             
             for (int i = 0; i < count; i++) {
                 Check C = checks[i];
@@ -113,7 +121,7 @@ namespace MCGalaxy.Levels.IO {
                 entries++;
                 
                 // Have we filled the temp buffer?
-                if (entries != fxBulkCount) continue;
+                if (entries != bulkCount) continue;
                 ptrInt = (int*)ptr;
                 gs.Write(buffer, 0, entries * 8);
                 entries = 0;
@@ -122,6 +130,7 @@ namespace MCGalaxy.Levels.IO {
             if (entries == 0) return;
             gs.Write(buffer, 0, entries * 8);
         }
+        
         
         public static void LoadDimensions(string file, out ushort width, out ushort height, out ushort length) {
             using (Stream fs = File.OpenRead(file), gs = new GZipStream(fs, CompressionMode.Decompress, true)) {
@@ -199,23 +208,23 @@ namespace MCGalaxy.Levels.IO {
             int count = NetUtils.ReadI32(buffer, 0);
             lvl.ListCheck.Count = count;
             lvl.ListCheck.Items = new Check[count];
-            ReadPhysicsEntries(lvl, gs, count);           
+            ReadPhysicsEntries(lvl, gs, count);
         }
         
         unsafe static void ReadPhysicsEntries(Level lvl, Stream gs, int count) {
-            byte[] buffer = new byte[Math.Min(count, fxBulkCount) * fxEntrySize];
+            byte[] buffer = new byte[Math.Min(count, 1024) * 8];
             Check C;
             
             fixed (byte* ptr = buffer)
-                for (int i = 0; i < count; i += fxBulkCount)
+                for (int i = 0; i < count; i += 1024)
             {
-                int entries = Math.Min(count - i, fxBulkCount);
-                int read = gs.Read(buffer, 0, entries * fxEntrySize);
-                if (read < entries * fxEntrySize) return;
+                int entries = Math.Min(1024, count - i);
+                int read = gs.Read(buffer, 0, entries * 8);
+                if (read < entries * 8) return;
                 
                 int* ptrInt = (int*)ptr;
                 for (int j = 0; j < entries; j++) {
-                	C.b = *ptrInt; ptrInt++;
+                    C.b = *ptrInt; ptrInt++;
                     C.data.Raw = (uint)(*ptrInt); ptrInt++;
                     lvl.ListCheck.Items[i + j] = C;
                 }
