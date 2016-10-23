@@ -19,7 +19,7 @@ namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdWarn : ModActionCmd {        
         public override string name { get { return "warn"; } }
         public override string shortcut { get { return ""; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
