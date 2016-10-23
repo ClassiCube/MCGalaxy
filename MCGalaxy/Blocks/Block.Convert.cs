@@ -261,6 +261,6 @@ namespace MCGalaxy
             }
         }
         
-        public static byte SaveConvert(byte b) { return Props[b].SaveConvertId; }
+        public static byte SaveConvert(byte b) { return b; }
     }
 }

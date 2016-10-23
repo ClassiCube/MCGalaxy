@@ -28,9 +28,6 @@ namespace MCGalaxy.Blocks {
         /// <summary> Standard block id sent to clients in map and block update packets. </summary>
         public byte ConvertId;
         
-        /// <summary> Block id converted to when the map is saved to a .lvl file. </summary>
-        public byte SaveConvertId;
-        
         /// <summary> Block name used for in commands. </summary>
         public string Name;
         
@@ -66,7 +63,6 @@ namespace MCGalaxy.Blocks {
             this = default(BlockProps);
             BlockId = block;
             ConvertId = block;
-            SaveConvertId = block;
             Name = "unknown";
             ODoorId = Block.Invalid;
         }

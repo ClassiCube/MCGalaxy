@@ -52,20 +52,7 @@ namespace MCGalaxy.Levels.IO {
         
         static void WriteBlocksSection(Level lvl, Stream gs) {
             byte[] blocks = lvl.blocks;
-            int start = 0, len = 0;
-            
-            for (int i = 0; i < blocks.Length; ++i) {
-                byte block = blocks[i], convBlock = 0;
-                if (block < Block.CpeCount || (convBlock = Block.SaveConvert(block)) == block) {
-                    if (len == 0) start = i;
-                    len++;
-                } else {
-                    if (len > 0) gs.Write(blocks, start, len);
-                    len = 0;
-                    gs.WriteByte(convBlock);
-                }
-            }
-            if (len > 0) gs.Write(blocks, start, len);
+            gs.Write(blocks, 0, blocks.Length);
         }
         
         static void WriteBlockDefsSection(Level lvl, Stream gs) {

@@ -141,6 +141,11 @@ namespace MCGalaxy {
                 case snake:
                 case snaketail:
 
+                case air_flood:
+                case air_flood_down:
+                case air_flood_up:
+                case air_flood_layer:
+            		
                 case lava_fire:
                 case rockethead:
                 case firework:
@@ -162,7 +167,7 @@ namespace MCGalaxy {
                 case fishsalmon:
                 case fishshark:
                 case fishlavashark:
-                case fishsponge:
+            	case fishsponge:
 
                 case tntexplosion:
                     return true;

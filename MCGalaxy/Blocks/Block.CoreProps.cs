@@ -82,11 +82,6 @@ namespace MCGalaxy {
             Props[lava_door].IsDoor = true;
             
             // Block specific properties
-            Props[air_flood].SaveConvertId = air;
-            Props[air_flood_down].SaveConvertId = air;
-            Props[air_flood_layer].SaveConvertId = air;
-            Props[air_flood_up].SaveConvertId = air;
-            
             Props[wood].LavaKills = true; Props[trunk].LavaKills = true;
             Props[sponge].LavaKills = true; Props[bookcase].LavaKills = true;
             Props[leaf].LavaKills = true; Props[crate].LavaKills = true;
