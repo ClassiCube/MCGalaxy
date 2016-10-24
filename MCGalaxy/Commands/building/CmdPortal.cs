@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands.Building {
                     Database.Execute(syntax, P.x, P.y, P.z, x, y, z, p.level.name);
                 }
                 if (P.Map == p.level.name)
-                	p.SendBlockchange(P.x, P.y, P.z, bp.Block, bp.ExtBlock);
+                    p.SendBlockchange(P.x, P.y, P.z, bp.Block, bp.ExtBlock);
             }
 
             Player.Message(p, "&3Exit %Sblock placed");
@@ -193,6 +193,12 @@ namespace MCGalaxy.Commands.Building {
             id = Block.Byte(name);
             return !Block.Props[id].IsPortal;
         }
+        
+        static string FormatCustom(Level lvl, BlockProps props) {
+            if (!props.IsPortal) return null;
+            BlockDefinition def = lvl.CustomBlockDefs[props.BlockId];
+            return def == null ? null : def.Name;
+        }
                 
         public override void Help(Player p) {
             Player.Message(p, "%T/portal [block]");
@@ -200,9 +206,14 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%T/portal [block] multi");
             Player.Message(p, "%HPlace multiple blocks for entries, then a red block for exit.");
             
-            var allProps = Block.Props;
-            Player.Message(p, "%H  Supported blocks: %S{0}",
-                           allProps.Join(props => Format(props)));
+            string blocks = Block.Props.Join(props => Format(props));
+            if (!Player.IsSuper(p)) {
+                string custom = p.level.CustomBlockProps.Join(props => FormatCustom(p.level, props));
+                if (blocks != "" && custom != "") 
+                    blocks = blocks + ", " + custom;
+            }
+
+            Player.Message(p, "%H  Supported blocks: %S{0}", blocks);
             Player.Message(p, "%T/portal show %H- Shows portals (green = entry, red = exit)");
         }
     }

@@ -200,14 +200,25 @@ namespace MCGalaxy.Commands.Building {
             id = Block.Byte(name);
             return !Block.Props[id].IsMessageBlock;
         }
+
+        static string FormatCustom(Level lvl, BlockProps props) {
+            if (!props.IsMessageBlock) return null;
+            BlockDefinition def = lvl.CustomBlockDefs[props.BlockId];
+            return def == null ? null : def.Name.Replace(" ", "");
+        }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/mb [block] [message]");
             Player.Message(p, "%HPlaces a message in your next block.");
             
-            var allProps = Block.Props;
-            Player.Message(p, "%H  Supported blocks: %S{0}",
-                           allProps.Join(props => Format(props)));
+            string blocks = Block.Props.Join(props => Format(props));
+            if (!Player.IsSuper(p)) {
+                string custom = p.level.CustomBlockProps.Join(props => FormatCustom(p.level, props));
+                if (blocks != "" && custom != "") 
+                    blocks = blocks + ", " + custom;
+            }
+            
+            Player.Message(p, "%H  Supported blocks: %S{0}", blocks);
             Player.Message(p, "%H  Use | to separate commands, e.g. /say 1 |/say 2");
             Player.Message(p, "%H  Note: \"@p\" is a placeholder for player who clicked.");
             Player.Message(p, "%T/mb show %H- Shows or hides MBs");
