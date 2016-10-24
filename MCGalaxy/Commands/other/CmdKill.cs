@@ -44,16 +44,17 @@ namespace MCGalaxy.Commands {
             }           
 
             if (who == null) {
-                if (p != null)
-                    p.HandleDeath(Block.rock, " killed themselves in their confusion");
+            	if (p != null) {
+                    p.HandleDeath(Block.rock, 0, " killed themselves in their confusion");
+            	}
                 return;
             }
 
             if (p != null && who.Rank > p.Rank) {
-                p.HandleDeath(Block.rock, " was killed by " + who.ColoredName);
+                p.HandleDeath(Block.rock, 0, " was killed by " + who.ColoredName);
                 MessageTooHighRank(p, "kill", true); return;
             }
-            who.HandleDeath(Block.rock, deathMessage, explode);
+            who.HandleDeath(Block.rock, 0, deathMessage, explode);
         }
         
         public override void Help(Player p) {

@@ -329,7 +329,7 @@ namespace MCGalaxy {
                 } else if (!(conv == Block.water || conv == Block.waterstill ||
                              conv == Block.lava || conv == Block.lavastill)) {
                     if (fallCount > level.fall)
-                        HandleDeath(Block.air, null, false, true);
+                        HandleDeath(Block.air, 0, null, false, true);
                     fallCount = 0;
                     drownCount = 0;
                     return;
@@ -344,7 +344,7 @@ namespace MCGalaxy {
                     fallCount = 0;
                     drownCount++;
                     if (drownCount > level.drown * (100/3)) {
-                        HandleDeath(Block.water);
+                        HandleDeath(Block.water, 0);
                         drownCount = 0;
                     }
                     break;
@@ -378,15 +378,25 @@ namespace MCGalaxy {
             }
             
             lastWalkthrough = level.PosToInt(x, y, z);
-            if ( ( bHead == Block.tntexplosion || bFeet == Block.tntexplosion ) && PlayingTntWars ) { }
-            else if ( Block.Death(bHead) ) HandleDeath(bHead);
-            else if ( Block.Death(bFeet) ) HandleDeath(bFeet);
+            if ((bHead == Block.tntexplosion || bFeet == Block.tntexplosion) && PlayingTntWars) return;
+            
+            if (Block.Props[bHead].KillerBlock) {
+                HandleDeath(bHead, 0);
+            } else if (Block.Props[bFeet].KillerBlock) {
+                HandleDeath(bFeet, 0);
+            }
         }
 
+        [Obsolete("Use HandleDeath with ExtBlock attribute")]
         public void HandleDeath(byte b, string customMessage = "", bool explode = false, bool immediate = false) {
-            if (OnDeath != null) OnDeath(this, b);
-            if (PlayerDeath != null) PlayerDeath(this, b);
-            OnPlayerDeathEvent.Call(this, b);
+            HandleDeath(b, 0, customMessage, explode, immediate);
+        }
+        
+        public void HandleDeath(byte block, byte extBlock, string customMessage = "", 
+                                bool explode = false, bool immediate = false) {
+            if (OnDeath != null) OnDeath(this, block);
+            if (PlayerDeath != null) PlayerDeath(this, block);
+            OnPlayerDeathEvent.Call(this, block);
             
             if (Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this)) return;
             if (!immediate && lastDeath.AddSeconds(2) > DateTime.UtcNow) return;
@@ -394,14 +404,20 @@ namespace MCGalaxy {
 
             onTrain = false; trainInvincible = false; trainGrab = false;
             ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);
-            string deathMsg = Block.Props[b].DeathMessage;
+            
+            string deathMsg = null;
+            if (block != Block.custom_block) {
+                deathMsg = Block.Props[block].DeathMessage;
+            } else {
+                deathMsg = level.CustomBlockProps[extBlock].DeathMessage;
+            }
             if (deathMsg != null) Chat.GlobalChatLevel(this, String.Format(deathMsg, ColoredName), false);
             
-            if (b == Block.rockethead) level.MakeExplosion(x, y, z, 0);
-            if (b == Block.creeper) level.MakeExplosion(x, y, z, 1);
-            if (b == Block.rock || b == Block.stone) {
+            if (block == Block.rockethead) level.MakeExplosion(x, y, z, 0);
+            if (block == Block.creeper) level.MakeExplosion(x, y, z, 1);
+            if (block == Block.rock || block == Block.stone) {
                 if (explode) level.MakeExplosion(x, y, z, 1);
-                if (b == Block.rock) {
+                if (block == Block.rock) {
                     SendChatFrom(this, ColoredName + "%S" + customMessage, false);
                 } else {
                     Chat.GlobalChatLevel(this, ColoredName + "%S" + customMessage, false);
@@ -597,11 +613,11 @@ namespace MCGalaxy {
         
         bool IsHandledMessage(string text) {
             if (Server.voteKickInProgress && text.Length == 1) {
-        		if (text.CaselessEq("y")) {
+                if (text.CaselessEq("y")) {
                     voteKickChoice = VoteKickChoice.Yes;
                     SendMessage("Thanks for voting!");
                     return true;
-        		} else if (text.CaselessEq("n")) {
+                } else if (text.CaselessEq("n")) {
                     voteKickChoice = VoteKickChoice.No;
                     SendMessage("Thanks for voting!");
                     return true;

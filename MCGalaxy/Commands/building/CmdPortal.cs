@@ -197,7 +197,7 @@ namespace MCGalaxy.Commands.Building {
         static string FormatCustom(Level lvl, BlockProps props) {
             if (!props.IsPortal) return null;
             BlockDefinition def = lvl.CustomBlockDefs[props.BlockId];
-            return def == null ? null : def.Name;
+            return def == null ? null : def.Name.Replace(" ", "");
         }
                 
         public override void Help(Player p) {

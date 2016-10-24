@@ -96,10 +96,11 @@ namespace MCGalaxy.Commands {
             Player pl = GetPlayer(p, pos, true);
             if (pl == null) return false;
             
-            if (p.level.physics >= 3 && bp.ending >= EndType.Explode)
-                pl.HandleDeath(Block.stone, " was blown up by " + p.ColoredName, true);
-            else
-                pl.HandleDeath(Block.stone, " was shot by " + p.ColoredName);
+            if (p.level.physics >= 3 && bp.ending >= EndType.Explode) {
+                pl.HandleDeath(Block.stone, 0, " was blown up by " + p.ColoredName, true);
+            } else {
+                pl.HandleDeath(Block.stone, 0, " was shot by " + p.ColoredName);
+            }
             return true;
         }
         

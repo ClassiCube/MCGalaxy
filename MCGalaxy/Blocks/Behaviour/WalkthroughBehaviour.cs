@@ -40,12 +40,17 @@ namespace MCGalaxy.Blocks {
         }
         
         internal static bool Train(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (!p.trainInvincible) p.HandleDeath(Block.train);
+            if (!p.trainInvincible) p.HandleDeath(Block.train, 0);
             return true;
         }
         
         internal static bool CustomBlock(Player p, byte block, ushort x, ushort y, ushort z) {
             byte extBlock = p.level.GetExtTile(x, y, z);
+            if (p.level.CustomBlockProps[extBlock].KillerBlock) {
+                p.HandleDeath(block, extBlock);
+                return true;
+            }
+            
             if (p.level.CustomBlockDefs[extBlock].CollideType == 2) return false;
             
             if (p.level.CustomBlockProps[extBlock].IsPortal) {

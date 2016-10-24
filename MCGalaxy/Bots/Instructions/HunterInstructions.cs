@@ -108,7 +108,7 @@ namespace MCGalaxy.Bots {
                 int dz = Math.Abs(bot.pos[2] - p.pos[2]);
                 
                 if (dx <= 8 && dy <= 16 && dz <= 8) {
-                    p.HandleDeath(Block.Invalid);
+                    p.HandleDeath(Block.Invalid, 0);
                 }
             }
             bot.NextInstruction(); return true;
