@@ -104,18 +104,17 @@ namespace MCGalaxy.Commands.World {
                 Toggle(p, scope, id, "a killer block",
                        (ref BlockProps props) => props.KillerBlock = !props.KillerBlock,
                        (BlockProps props) => props.KillerBlock);
+            }  else if (prop == "door") {
+                Toggle(p, scope, id, "is a door",
+                       (ref BlockProps props) => props.IsDoor = !props.IsDoor,
+                       (BlockProps props) => props.IsDoor);
+            }  else if (prop == "tdoor") {
+                Toggle(p, scope, id, "is a tdoor",
+                       (ref BlockProps props) => props.IsTDoor = !props.IsTDoor,
+                       (BlockProps props) => props.IsTDoor);
             } else if (prop == "deathmsg" || prop == "deathmessage") {
                 string msg = args.Length > 3 ? args[3] : null;
-                scope[id].DeathMessage = msg;
-                
-                if (msg == null) {
-                    Player.Message(p, "Death message for {0} removed.",
-                                   BlockName(scope, p.level, id));
-                } else {
-                    Player.Message(p, "Death message for {0} set to: {1}",
-                                   BlockName(scope, p.level, id), msg);
-                }
-                OnPropsChanged(scope, id);
+                SetDeathMessage(p, scope, id, msg);
             } else {
                 Help(p);
             }
@@ -132,6 +131,18 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "Block {0} is {1}: {2}",
                            BlockName(scope, p.level, id),
                            type, getter(props) ? "&aYes" : "&cNo");
+        }
+        
+        static void SetDeathMessage(Player p, BlockProps[] scope, byte id, string msg) {
+            scope[id].DeathMessage = msg;
+            if (msg == null) {
+                Player.Message(p, "Death message for {0} removed.",
+                               BlockName(scope, p.level, id));
+            } else {
+                Player.Message(p, "Death message for {0} set to: {1}",
+                               BlockName(scope, p.level, id), msg);
+            }
+            OnPropsChanged(scope, id);
         }
 
         static void OnPropsChanged(BlockProps[] scope, byte id) {
