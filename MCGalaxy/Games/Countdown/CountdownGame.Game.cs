@@ -28,7 +28,7 @@ namespace MCGalaxy.Games {
                 Player.Message(p, "You've joined the Countdown game!!");
                 Chat.MessageAll("{0} has joined Countdown!!", p.name);
                 if (p.level != Server.Countdown.mapon)
-                	PlayerActions.ChangeMap(p, "countdown");
+                    PlayerActions.ChangeMap(p, "countdown");
                 p.playerofcountdown = true;
             } else {
                 Player.Message(p, "Sorry, you have already joined!!, to leave please type /countdown leave");

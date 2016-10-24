@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands {
         public CmdTpAccept() { }
 
         public override void Use(Player p, string message) {
-        	if (!p.Request) { Player.Message(p, "You do not have any pending teleport requests."); return; }
+            if (!p.Request) { Player.Message(p, "You do not have any pending teleport requests."); return; }
             
             Player sender = PlayerInfo.FindExact(p.senderName);
             p.Request = false;

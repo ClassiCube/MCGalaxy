@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands {
                 } else {
                     Player.SendChatFrom(who, who.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S.", false);
                 }
-            	Player.RaisePlayerAction(p, PlayerAction.Unjoker, null, stealth);
+                Player.RaisePlayerAction(p, PlayerAction.Unjoker, null, stealth);
             }
             who.joker = !who.joker;
         }

@@ -21,7 +21,7 @@ using System;
 using System.IO;
 
 namespace MCGalaxy.Commands {
-    public sealed class CmdReport : Command {	
+    public sealed class CmdReport : Command {
         public override string name { get { return "report"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands {
         }
 
         void HandleList(Player p, string[] args) {
-        	if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "see the list of reports."); return; }
+            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "see the list of reports."); return; }
 
             bool foundone = false;
             string[] files = Directory.GetFiles("extra/reported", "*.txt");

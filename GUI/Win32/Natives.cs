@@ -128,13 +128,13 @@ namespace MCGalaxy.Gui.Native {
 
                 return false;
             } else {
-            	return (bool)pi.GetValue(null, null);
+                return (bool)pi.GetValue(null, null);
             }
         }
 
         #endregion
     }
-	
+    
     /// <summary> Native Rectangle </summary>
     internal struct RECT {
         public int Left;

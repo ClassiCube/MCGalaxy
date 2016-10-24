@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
         }
         
         void DoSlap(Player p, Player who) {
-        	ushort curX = (ushort)(who.pos[0] / 32), curY = (ushort)(who.pos[1] / 32), curZ = (ushort)(who.pos[2] / 32);
+            ushort curX = (ushort)(who.pos[0] / 32), curY = (ushort)(who.pos[1] / 32), curZ = (ushort)(who.pos[2] / 32);
             ushort foundHeight = ushort.MaxValue;
 
             string src = p == null ? "(console)" : p.ColoredName;

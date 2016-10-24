@@ -17,13 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Threading;
-using MCGalaxy.Commands.World;
-using MCGalaxy.Games;
-using MCGalaxy.Generator;
-using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Tasks {   
     internal static class InitTasks {
@@ -37,7 +31,7 @@ namespace MCGalaxy.Tasks {
                         string type = line.Split(':')[0].ToLower();
                         List<string> list = (type == "devs") ? Server.Devs : (type == "mods") ? Server.Mods : null;
                         foreach (string name in line.Split(':')[1].Split())
-                        	list.Add(name.TrimEnd('+'));
+                            list.Add(name.TrimEnd('+'));
                     }
                 }
             } catch (Exception e) {

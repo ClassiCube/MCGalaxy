@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing.Ops {
                     hollow = false;
                 }
                 if (hollow)
-                	output(Place(x, y, z, Block.air, 0));
+                    output(Place(x, y, z, Block.air, 0));
             }
         }
         
@@ -74,7 +74,7 @@ namespace MCGalaxy.Drawing.Ops {
                 outline |= Check(lvl, x, (ushort)(y + 1), z);
 
                 if (outline && !Check(lvl, x, y, z))
-                	output(Place(x, y, z, NewBlock, NewExtBlock));
+                    output(Place(x, y, z, NewBlock, NewExtBlock));
             }
         }
         
@@ -112,7 +112,7 @@ namespace MCGalaxy.Drawing.Ops {
                     for (ushort x = p1.X; x <= p2.X; x++) {
                         i = (i + stepX) % 13;
                         if (lvl.GetTile(x, y, z) != Block.air)
-                        	output(Place(x, y, z, (byte)(Block.red + i), 0));
+                            output(Place(x, y, z, (byte)(Block.red + i), 0));
                     }
                     i = startX;
                 }

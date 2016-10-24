@@ -1,19 +1,19 @@
 /*
-	Copyright 2011 MCForge
-	
-	Dual-licensed under the	Educational Community License, Version 2.0 and
-	the GNU General Public License, Version 3 (the "Licenses"); you may
-	not use this file except in compliance with the Licenses. You may
-	obtain a copy of the Licenses at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	http://www.gnu.org/licenses/gpl-3.0.html
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the Licenses are distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the Licenses for the specific language governing
-	permissions and limitations under the Licenses.
+    Copyright 2011 MCForge
+    
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands {
     public sealed class CmdDescend : Command {
@@ -30,8 +30,8 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "You cannot use /descend on this map."); return;
             }
             if (p.pos[1] < 51 + 4) { Player.Message(p, "No free spaces found below you."); return; }
-        	// Move starting position down half a block since players are a little bit above the ground.
-        	ushort x = (ushort)(p.pos[0] / 32), y = (ushort)((p.pos[1] - 51 - 4) / 32), z = (ushort)(p.pos[2] / 32);
+            // Move starting position down half a block since players are a little bit above the ground.
+            ushort x = (ushort)(p.pos[0] / 32), y = (ushort)((p.pos[1] - 51 - 4) / 32), z = (ushort)(p.pos[2] / 32);
             
             while (y > 0) {
                 y--;
@@ -51,8 +51,8 @@ namespace MCGalaxy.Commands {
         }
         
         static bool Solid(byte b) {
-        	return b != Block.air && (b < Block.water || b > Block.lavastill) && b != Block.Invalid
-            	&& b != Block.shrub && (b < Block.yellowflower || b > Block.redmushroom);
+            return b != Block.air && (b < Block.water || b > Block.lavastill) && b != Block.Invalid
+                && b != Block.shrub && (b < Block.yellowflower || b > Block.redmushroom);
         }
         
         public override void Help(Player p) {

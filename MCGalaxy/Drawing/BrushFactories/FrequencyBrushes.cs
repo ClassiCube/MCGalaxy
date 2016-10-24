@@ -94,7 +94,7 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
-    public sealed class RandomBrushFactory : BrushFactory {  		
+    public sealed class RandomBrushFactory : BrushFactory {
         public override string Name { get { return "Random"; } }        
         public override string[] Help { get { return HelpString; } }
         

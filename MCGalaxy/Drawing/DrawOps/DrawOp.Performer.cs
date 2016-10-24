@@ -53,7 +53,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
             if (op.Level != null && op.Level.BuildAccess.Check(p) == LevelAccessResult.Blacklisted) {
                 Player.Message(p, "You are blacklisted from building in this map, " +
-            	               "hence you cannot draw in this map");
+                               "hence you cannot draw in this map");
                 return false;
             }
             

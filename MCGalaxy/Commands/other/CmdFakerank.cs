@@ -38,9 +38,9 @@ namespace MCGalaxy.Commands
                                 who.ColoredName, banner);
             } else {
                 Chat.MessageAll("{0}%S's rank was set to {1}%S. (Congratulations!)", 
-            	                who.ColoredName, grp.ColoredName);
+                                who.ColoredName, grp.ColoredName);
                 Player.Message(who, "You are now ranked {0}%S, type /help for your new set of commands.", 
-            	               grp.ColoredName);
+                               grp.ColoredName);
             }
         }
         

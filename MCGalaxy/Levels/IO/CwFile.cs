@@ -151,8 +151,8 @@ namespace MCGalaxy.Levels.IO {
             if (hasBlockDefs)
                 BlockDefinition.Save(false, lvl);
         }
-		
-		static bool PropsEquals(BlockDefinition a, BlockDefinition b) {
+        
+        static bool PropsEquals(BlockDefinition a, BlockDefinition b) {
             if (b == null || b.Name == null) return false;
             return a.Name == b.Name && a.CollideType == b.CollideType && a.Speed == b.Speed && a.TopTex == b.TopTex 
                 && a.BottomTex == b.BottomTex && a.BlocksLight == b.BlocksLight && a.WalkSound == b.WalkSound 

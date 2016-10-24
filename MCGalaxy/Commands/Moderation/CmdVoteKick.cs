@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands {
             string name = (string)task.State;
             Player who = PlayerInfo.FindExact(name);
             if (who == null) {
-            	Chat.MessageAll("{0} was not kicked, as they already left the server.", name); return;
+                Chat.MessageAll("{0} was not kicked, as they already left the server.", name); return;
             }
 
             int netVotesYes = votesYes - votesNo;

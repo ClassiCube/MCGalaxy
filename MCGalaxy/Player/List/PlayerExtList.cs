@@ -29,7 +29,7 @@ namespace MCGalaxy {
         readonly object locker = new object(), saveLocker = new object();
         
         public void Add(string p, string data) {
-        	p = p.ToLower();
+            p = p.ToLower();
             lock (locker) {
                 players.Add(p); lines.Add(p + " " + data);
             }
@@ -47,13 +47,13 @@ namespace MCGalaxy {
         }
         
         public void AddOrReplace(string p, string data) {
-        	p = p.ToLower();
+            p = p.ToLower();
             lock (locker) {
                 int idx = players.IndexOf(p);
                 if (idx == -1) {
-                	players.Add(p); lines.Add(p + " " + data);
+                    players.Add(p); lines.Add(p + " " + data);
                 } else {
-                	lines[idx] = p + " " + data;
+                    lines[idx] = p + " " + data;
                 }
             }
         }

@@ -41,7 +41,7 @@ namespace MCGalaxy.Drawing.Ops {
             {
                 double dx = xx - cx, dy = yy - cy, dz = zz - cz;
                 if ((dx * dx) * rx2 + (dy * dy) * ry2 + (dz * dz) * rz2 <= 1)
-                	output(Place(xx, yy, zz, brush));
+                    output(Place(xx, yy, zz, brush));
             }
         }
     }
@@ -74,7 +74,7 @@ namespace MCGalaxy.Drawing.Ops {
                 dx *= dx; dy *= dy; dz *= dz;
                 bool inRange = dx * rx2 + dy * ry2 + dz * rz2 <= 1;
                 if (inRange && (dx * smallrx2 + dy * smallry2 + dz * smallrz2 > 1))
-                	output(Place(xx, yy, zz, brush));
+                    output(Place(xx, yy, zz, brush));
             }
         }
     }
@@ -105,7 +105,7 @@ namespace MCGalaxy.Drawing.Ops {
                 dx *= dx; dz *= dz;
                 bool inRange = dx * rx2 + dz * rz2 <= 1;
                 if (inRange && (dx * smallrx2 + dz * smallrz2 > 1))
-                	output(Place(xx, yy, zz, brush));
+                    output(Place(xx, yy, zz, brush));
             }
         }
     }

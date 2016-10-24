@@ -200,7 +200,7 @@ namespace MCGalaxy {
                     string grpName = zn.Owner.Substring(3);
                     if (Group.Find(grpName).Permission <= p.Rank) return true;
                 } else {
-                	if (zn.Owner.CaselessEq(p.name)) return true;
+                    if (zn.Owner.CaselessEq(p.name)) return true;
                 }
                 zoneAllow = false;
             }

@@ -26,9 +26,9 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
-        	if (!Server.LogNotes) {
-        		Player.Message(p, "The server does not have notes logging enabled."); return;
-        	}
+            if (!Server.LogNotes) {
+                Player.Message(p, "The server does not have notes logging enabled."); return;
+            }
             if (CheckSuper(p, message, "player name")) return;
             if (message == "") message = p.name;
             
@@ -45,10 +45,10 @@ namespace MCGalaxy.Commands {
                 if (args.Length <= 3) continue;
                 
                 if (args.Length == 4)
-                	Player.Message(p, Action(args[1]) + " by " + args[2] + " on " + args[3]);
+                    Player.Message(p, Action(args[1]) + " by " + args[2] + " on " + args[3]);
                 else
                     Player.Message(p, Action(args[1]) + " by " + args[2] + " on " + args[3]
-                	                   + " - " + args[4].Replace("%20", " "));
+                                       + " - " + args[4].Replace("%20", " "));
             }
             if (!foundAny)
                 Player.Message(p, "No notes found.");

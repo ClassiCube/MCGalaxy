@@ -90,8 +90,8 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Color format: color name, or \"null\" to reset to default color."); return;
             }
             
-        	string col = args[2] == "null" ? "" : Colors.Parse(args[2]);
-        	if (col == "" && args[2] != "null") {
+            string col = args[2] == "null" ? "" : Colors.Parse(args[2]);
+            if (col == "" && args[2] != "null") {
                 Player.Message(p, "There is no color \"" + args[2] + "\"."); return;
             }
             

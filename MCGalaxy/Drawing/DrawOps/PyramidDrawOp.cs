@@ -54,7 +54,7 @@ namespace MCGalaxy.Drawing.Ops {
             baseOp.Level = Level;
             
             while (true) {
-            	baseOp.Perform(marks, p, lvl, brush, output);
+                baseOp.Perform(marks, p, lvl, brush, output);
                 if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
                     return;
                 

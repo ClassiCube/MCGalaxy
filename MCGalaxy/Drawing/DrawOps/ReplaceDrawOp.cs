@@ -37,7 +37,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
-        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
@@ -67,7 +67,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
-        	Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)

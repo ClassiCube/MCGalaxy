@@ -31,7 +31,7 @@ namespace MCGalaxy {
             Background = new Scheduler("MCG_BackgroundScheduler");
             Server.s = this;
         }
-		
+        
         //True = cancel event
         //Fale = dont cacnel event
         public static bool Check(string cmd, string message) {
@@ -57,7 +57,7 @@ namespace MCGalaxy {
         public void Start() {
             serverConfig = ConfigElement.GetAll(typeof(Server), typeof(ZombieGameProps));
             levelConfig = ConfigElement.GetAll(typeof(Level));
-        	
+            
             #pragma warning disable 0618
             Player.players = PlayerInfo.Online.list;
             PlayerInfo.players = PlayerInfo.Online.list;

@@ -56,7 +56,7 @@ namespace MCGalaxy {
         }
 
         public static void LoadDatabase() {
-        	Database.Backend.CreateTable("Economy", createEconomy);
+            Database.Backend.CreateTable("Economy", createEconomy);
             using (DataTable eco = Database.Backend.GetRows("Economy", "*"))
                 foreach (DataRow row in eco.Rows)
             {

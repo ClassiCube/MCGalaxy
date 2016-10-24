@@ -70,7 +70,7 @@ namespace MCGalaxy.Levels.IO {
                     level.setPhysics(int.Parse(value)); break;
                 default:
                     if (!ConfigElement.Parse(Server.levelConfig, key, value, level))
-				        Server.s.Log("\"" + key + "\" was not a recognised level property key.");
+                        Server.s.Log("\"" + key + "\" was not a recognised level property key.");
                     break;
             }
         }

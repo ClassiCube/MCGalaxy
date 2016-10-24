@@ -38,7 +38,7 @@ namespace MCGalaxy.Gui {
         }
 
         void PropertyWindow_Load(object sender, EventArgs e) {
-        	string[] colors = LineFormatter.GetColorsList().ToArray();
+            string[] colors = LineFormatter.GetColorsList().ToArray();
             chat_cmbDefault.Items.AddRange(colors);
             chat_cmbIRC.Items.AddRange(colors);
             chat_cmbSyntax.Items.AddRange(colors);
@@ -94,7 +94,7 @@ namespace MCGalaxy.Gui {
                 LoadBlocks();
                 LoadExtraCmdCmds();
             } catch (Exception ex) {
-            	Server.ErrorLog(ex);
+                Server.ErrorLog(ex);
                 Server.s.Log("Failed to load commands and blocks!");
             }
 
@@ -103,7 +103,7 @@ namespace MCGalaxy.Gui {
                 UpdateLavaMapList();
                 UpdateLavaControls();
             } catch (Exception ex) {
-            	Server.ErrorLog(ex);
+                Server.ErrorLog(ex);
                 Server.s.Log("Failed to load Lava Survival settings!");
             }
 
@@ -204,7 +204,7 @@ namespace MCGalaxy.Gui {
         }
 
         public void LoadProp(string givenPath) {
-        	PropertiesFile.Read(givenPath, LineProcessor);
+            PropertiesFile.Read(givenPath, LineProcessor);
         }
         
         void LineProcessor(string key, string value) {
@@ -629,7 +629,7 @@ namespace MCGalaxy.Gui {
 
             Server.useMySQL = chkUseSQL.Checked;
             Database.Backend = Server.useMySQL ? 
-				MySQLBackend.Instance : SQLiteBackend.Instance;
+                MySQLBackend.Instance : SQLiteBackend.Instance;
             Server.MySQLHost = txtSQLHost.Text;
             Server.MySQLPort = txtSQLPort.Text;
             Server.MySQLUsername = txtSQLUsername.Text;
@@ -699,12 +699,12 @@ namespace MCGalaxy.Gui {
         }        
         
         Color GetColor(string name) {
-        	string code = Colors.Parse(name);
-        	if (code == "") return SystemColors.Control;
-        	if (Colors.IsStandardColor(code[1])) return Color.FromName(name);
-        	
-        	CustomColor col = Colors.ExtColors[code[1]];
-        	return Color.FromArgb(col.R, col.G, col.B);
+            string code = Colors.Parse(name);
+            if (code == "") return SystemColors.Control;
+            if (Colors.IsStandardColor(code[1])) return Color.FromName(name);
+            
+            CustomColor col = Colors.ExtColors[code[1]];
+            return Color.FromArgb(col.R, col.G, col.B);
         }
 
         void removeDigit(TextBox foundTxt) {
@@ -967,13 +967,13 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             fillLowest(ref txtBlLowest, ref storedBlocks[Block.Byte(listBlocks.SelectedItem.ToString())].lowestRank);
         }
         private void txtBlDisallow_TextChanged(object sender, EventArgs e) {
-        	if (storedBlocks[listBlocks.SelectedIndex].disallow == null)
-        	    storedBlocks[listBlocks.SelectedIndex].disallow = new List<LevelPermission>();        	
+            if (storedBlocks[listBlocks.SelectedIndex].disallow == null)
+                storedBlocks[listBlocks.SelectedIndex].disallow = new List<LevelPermission>();            
             fillAllowance(ref txtBlDisallow, ref storedBlocks[listBlocks.SelectedIndex].disallow);
         }
         private void txtBlAllow_TextChanged(object sender, EventArgs e) {
-        	if (storedBlocks[listBlocks.SelectedIndex].allow == null)
-        	    storedBlocks[listBlocks.SelectedIndex].allow = new List<LevelPermission>();
+            if (storedBlocks[listBlocks.SelectedIndex].allow == null)
+                storedBlocks[listBlocks.SelectedIndex].allow = new List<LevelPermission>();
             fillAllowance(ref txtBlAllow, ref storedBlocks[listBlocks.SelectedIndex].allow);
         }
         #endregion

@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
         public override void Use(Player p, string message) {
-        	Level level = LevelInfo.FindMatches(p, message);
+            Level level = LevelInfo.FindMatches(p, message);
             if (level == null) return;
             
             Player[] players = PlayerInfo.Online.Items;           
@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) { 
-        	Player.Message(p, "%T/moveall [level]");
+            Player.Message(p, "%T/moveall [level]");
             Player.Message(p, "%HMoves all players to that level."); 
         }
     }

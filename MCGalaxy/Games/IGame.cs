@@ -20,9 +20,9 @@ using System;
 namespace MCGalaxy.Games {
 
     public abstract class IGame {
-		
-		/// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
-		public virtual bool TeleportAllowed { get { return true; } }
+        
+        /// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
+        public virtual bool TeleportAllowed { get { return true; } }
         
         /// <summary> Returns whether this game handed the player manually placing a block. </summary>
         public virtual bool HandlesManualChange(Player p, ushort x, ushort y, ushort z, 
@@ -57,7 +57,7 @@ namespace MCGalaxy.Games {
         public virtual void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) { }
         
         public virtual bool PlayerCanJoinLevel(Player p, Level lvl, Level oldLvl) {
-        	return true;
+            return true;
         }
         
         /// <summary> Raised when a player's money amount changes. </summary>

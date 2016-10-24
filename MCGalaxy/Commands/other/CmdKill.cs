@@ -44,9 +44,9 @@ namespace MCGalaxy.Commands {
             }           
 
             if (who == null) {
-            	if (p != null) {
+                if (p != null) {
                     p.HandleDeath(Block.rock, 0, " killed themselves in their confusion");
-            	}
+                }
                 return;
             }
 

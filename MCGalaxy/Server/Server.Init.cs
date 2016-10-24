@@ -67,7 +67,7 @@ namespace MCGalaxy {
                 ErrorLog(e);
             }
         }
-		
+        
         void LoadPlayerLists() {
             agreed = new PlayerList("ranks/agreed.txt");
             try {

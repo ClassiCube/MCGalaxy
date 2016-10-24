@@ -30,7 +30,7 @@ namespace MCGalaxy {
         public CP437Writer(string file, bool append) : base(file, append) {
         }
         
-		char[] newline = { '\r', '\n' };
+        char[] newline = { '\r', '\n' };
         public override void WriteLine() {
             base.Write(newline);
         }
@@ -39,7 +39,7 @@ namespace MCGalaxy {
             if (text != null && text.Length > 0) {
                 char[] c = text.ToCharArray();
                 for (int i = 0; i < text.Length; i++)
-                	c[i] = ConvertChar(text[i]);
+                    c[i] = ConvertChar(text[i]);
                 base.Write(c);
             }
         }
@@ -64,27 +64,27 @@ namespace MCGalaxy {
         }
         
         public static void AppendLine(string file, string text) {
-        	using (CP437Writer writer = new CP437Writer(file, true)) {
+            using (CP437Writer writer = new CP437Writer(file, true)) {
                 writer.Write(text);
                 writer.WriteLine();                
-        	}
+            }
         }
         
         public static string ConvertToUnicode(string text) {
-        	if (text == null) return null;
-        	if (text.Length == 0) return "";
-        	
-        	bool hasCP437 = false;
-        	for (int i = 0; i < text.Length; i++) {
-        		if (text[i] < 0x20 || text[i] >= 0x7F)
-        			hasCP437 = true;
-        	}
-        	if( !hasCP437 ) return text;
-        	
-        	char[] c = text.ToCharArray();
-        	for (int i = 0; i < text.Length; i++)
-        		c[i] = ConvertChar(text[i]);
-        	return new String( c );
+            if (text == null) return null;
+            if (text.Length == 0) return "";
+            
+            bool hasCP437 = false;
+            for (int i = 0; i < text.Length; i++) {
+                if (text[i] < 0x20 || text[i] >= 0x7F)
+                    hasCP437 = true;
+            }
+            if( !hasCP437 ) return text;
+            
+            char[] c = text.ToCharArray();
+            for (int i = 0; i < text.Length; i++)
+                c[i] = ConvertChar(text[i]);
+            return new String( c );
         }
         
         static char ConvertChar(char c) {

@@ -61,8 +61,8 @@ namespace MCGalaxy.Commands {
         }
         
         void HackRankCallback(SchedulerTask task) {
-        	HackRankArgs args = (HackRankArgs)task.State;
-        	Player who = PlayerInfo.FindExact(args.name);
+            HackRankArgs args = (HackRankArgs)task.State;
+            Player who = PlayerInfo.FindExact(args.name);
             if (who == null) return;            
             who.Leave("You have been kicked for hacking the rank " + args.newRank.ColoredName);
         }

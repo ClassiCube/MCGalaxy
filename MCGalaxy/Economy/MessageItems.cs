@@ -35,7 +35,7 @@ namespace MCGalaxy.Eco {
                 return;
             }
             
-        	string text = message.SplitSpaces(2)[1]; // keep spaces this way
+            string text = message.SplitSpaces(2)[1]; // keep spaces this way
             if (text == PlayerDB.GetLoginMessage(p)) {
                 Player.Message(p, "%cYou already have that login message."); return;
             }

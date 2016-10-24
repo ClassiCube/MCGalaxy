@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-        	string name = Group.findPerm(LevelPermission.Operator).ColoredName;
+            string name = Group.findPerm(LevelPermission.Operator).ColoredName;
             Player.Message(p, "%T/fly");
             Player.Message(p, "%HThe old method of flight before custom clients.");
             Player.Message(p, "%HMay not work at all depending on your connection.");

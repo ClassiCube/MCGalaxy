@@ -70,7 +70,7 @@ namespace MCGalaxy {
         public static Level FindExact(string name) {
             Level[] loaded = Loaded.Items;
             foreach (Level lvl in loaded) {
-            	if (lvl.name.CaselessEq(name)) return lvl;
+                if (lvl.name.CaselessEq(name)) return lvl;
             }
             return null;
         }

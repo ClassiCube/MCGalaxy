@@ -63,9 +63,9 @@ namespace MCGalaxy.Drawing.Ops {
                 float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
                 if (u >= 0 && v >= 0 && u + v <= 1) {
-                	output(Place(xx, yy, zz, brush));
+                    output(Place(xx, yy, zz, brush));
                 } else if (Axis(P, V1, V2) || Axis(P, V1, V3) || Axis(P, V2, V3)) {
-                	output(Place(xx, yy, zz, brush));
+                    output(Place(xx, yy, zz, brush));
                 }
             }
         }

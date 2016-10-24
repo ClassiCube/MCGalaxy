@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         internal static string FindName(Player p, string action, 
-		                                string cmd, string cmdSuffix,
+                                        string cmd, string cmdSuffix,
                                         string name, ref string reason) {
             if (!Formatter.ValidName(p, name, "player")) return null;
             string match = MatchName(p, ref name);

@@ -99,8 +99,8 @@ namespace MCGalaxy.SQL {
             }
         }
     }
-	
-	
+    
+    
     public sealed class MySQLBulkTransaction : BulkTransaction {
 
         public MySQLBulkTransaction(string connString) {
@@ -138,7 +138,7 @@ namespace MCGalaxy.SQL {
         }
         
         protected override IDbDataParameter CreateParameter() {
-        	return new MySqlParameter();
+            return new MySqlParameter();
         }
-    }	
+    }    
 }

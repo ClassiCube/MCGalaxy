@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (Server.zombie.RoundInProgress)
-            	Server.zombie.EndRound();
+                Server.zombie.EndRound();
         }
         
         public override void Help(Player p) {

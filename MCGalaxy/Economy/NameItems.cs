@@ -47,8 +47,8 @@ namespace MCGalaxy.Eco {
             Economy.MakePurchase(p, Price, "%3Title: %f" + title);
         }
     }
-	
-	public sealed class NickItem : SimpleItem {
+    
+    public sealed class NickItem : SimpleItem {
         
         public NickItem() {
             Aliases = new[] { "nickname", "nick", "nicks", "name", "names" };

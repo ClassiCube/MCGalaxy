@@ -100,8 +100,8 @@ namespace MCGalaxy.Blocks {
             }
             return true;
         }
-		
-		internal static bool DoPortal(Player p, byte block, ushort x, ushort y, ushort z) {
+        
+        internal static bool DoPortal(Player p, byte block, ushort x, ushort y, ushort z) {
             Portal.Handle(p, x, y, z);
             return true;
         }

@@ -31,9 +31,9 @@ namespace MCGalaxy.Games {
         public Team() { }
         
         public Team(string name, string owner) {
-        	Name = name;
-        	Owner = owner;
-        	Members.Add(owner);
+            Name = name;
+            Owner = owner;
+            Members.Add(owner);
         }
         
         public void Chat(Player source, string message) {
@@ -63,10 +63,10 @@ namespace MCGalaxy.Games {
         }
         
         public void UpdatePrefix() {
-        	foreach (string name in Members) {
-        		Player p = PlayerInfo.FindExact(name);
-        		if (p != null) p.SetPrefix();
-        	}
+            foreach (string name in Members) {
+                Player p = PlayerInfo.FindExact(name);
+                if (p != null) p.SetPrefix();
+            }
         }
     }
 }

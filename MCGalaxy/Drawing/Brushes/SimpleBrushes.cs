@@ -34,7 +34,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override byte NextExtBlock(DrawOp op) { return extBlock; }
     }
-	
+    
     public sealed class StripedBrush : Brush {
         readonly byte block1, extBlock1, block2, extBlock2;
         
@@ -53,7 +53,7 @@ namespace MCGalaxy.Drawing.Brushes {
             return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 3) <= 1 ? extBlock1 : extBlock2;
         }
     }
-	
+    
     public sealed class CheckeredBrush : Brush {
         readonly byte block1, extBlock1, block2, extBlock2;
         

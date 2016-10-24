@@ -51,12 +51,12 @@ namespace MCGalaxy.Commands {
         }
         
         static bool Solid(byte b) {
-        	return b != Block.air && (b < Block.water || b > Block.lavastill) && b != Block.Invalid
-            	&& b != Block.shrub && (b < Block.yellowflower || b > Block.redmushroom);
+            return b != Block.air && (b < Block.water || b > Block.lavastill) && b != Block.Invalid
+                && b != Block.shrub && (b < Block.yellowflower || b > Block.redmushroom);
         }
         
         public override void Help(Player p) {
-         	string name = Group.findPerm(LevelPermission.Operator).ColoredName;
+            string name = Group.findPerm(LevelPermission.Operator).ColoredName;
             Player.Message(p, "%T/ascend");
             Player.Message(p, "%HTeleports you to the first free space above you.");
             Player.Message(p, "%H  Does not work on maps which have -hax in their motd. " +
