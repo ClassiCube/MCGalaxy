@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.BlockPhysics {
+namespace MCGalaxy.Blocks.Physics {
     
     public enum AirFlood { Full, Layer, Down, Up, }
     public static class AirPhysics {

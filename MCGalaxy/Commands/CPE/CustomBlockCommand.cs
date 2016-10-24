@@ -165,7 +165,8 @@ namespace MCGalaxy.Commands.CPE {
                 if (!ExistsInScope(def, i, global)) continue;
                 defsInScope.Add(def);
             }
-            MultiPageOutput.Output(p, defsInScope, FormatBlock, cmd.Substring(1), "custom blocks", modifier, true);
+            MultiPageOutput.Output(p, defsInScope, FormatBlock, cmd.Substring(1) + " list", 
+                                   "custom blocks", modifier, true);
         }
         
         static string FormatBlock(BlockDefinition def, int i) {

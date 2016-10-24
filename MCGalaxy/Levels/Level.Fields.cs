@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Blocks;
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
 using Timer = System.Timers.Timer;

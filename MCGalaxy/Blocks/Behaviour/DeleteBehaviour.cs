@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 
 namespace MCGalaxy.Blocks {
     
@@ -75,9 +75,15 @@ namespace MCGalaxy.Blocks {
         }
         
         internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (p.level.physics != 0) {
+            if (p.level.physics != 0) {                
+                bool isExt = false;
+                if (block == Block.custom_block) {
+                    isExt = true;
+                    block = p.level.GetExtTile(x, y, z);
+                }
+                
                 byte physForm;
-                PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, out physForm);
+                PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, isExt, out physForm);
                 p.level.Blockchange(x, y, z, physForm, false, args);
             } else {
                 p.RevertBlock(x, y, z);
@@ -100,6 +106,10 @@ namespace MCGalaxy.Blocks {
                 return WalkthroughBehaviour.Portal(p, block, x, y, z, false);
             } else if (p.level.CustomBlockProps[extBlock].IsMessageBlock) {
                 return WalkthroughBehaviour.MessageBlock(p, block, x, y, z, false);
+            } else if (p.level.CustomBlockProps[extBlock].IsTDoor) {
+                return RevertDoor(p, block, x, y, z);
+            } else if (p.level.CustomBlockProps[extBlock].IsDoor) {
+                return Door(p, block, x, y, z);
             }
             
             p.ChangeBlock(x, y, z, Block.air, 0);

@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 using System;
 
 namespace MCGalaxy.Blocks {

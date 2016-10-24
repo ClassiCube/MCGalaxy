@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.BlockPhysics {    
+namespace MCGalaxy.Blocks.Physics {    
     public static class BirdPhysics {
         
         public static void Do(Level lvl, ref Check C) {

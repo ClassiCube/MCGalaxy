@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.BlockPhysics {
+namespace MCGalaxy.Blocks.Physics {
     
     public delegate bool ExtraInfoHandler(Level lvl, ref Check C);
     
@@ -47,7 +47,11 @@ namespace MCGalaxy.BlockPhysics {
             if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
             
             if (C.data.Door) {
-                lvl.AddUpdate(C.b, C.data.Value2); C.data.ResetTypes();
+                PhysicsArgs dArgs = default(PhysicsArgs);
+                dArgs.ExtBlock = C.data.ExtBlock;
+                lvl.AddUpdate(C.b, C.data.Value2, false, dArgs); 
+                
+                C.data.ResetTypes();
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
             }
             return false;

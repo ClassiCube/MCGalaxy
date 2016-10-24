@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.BlockPhysics {
+namespace MCGalaxy.Blocks.Physics {
     public static class ActivateablePhysics {
         
         /// <summary> Activates fireworks, rockets, and TNT in 1 block radius around (x, y, z) </summary>
@@ -61,18 +61,25 @@ namespace MCGalaxy.BlockPhysics {
         public static void DoDoors(Level lvl, ushort x, ushort y, ushort z, bool instant) {
             int index = lvl.PosToInt(x, y, z);
             if (index < 0) return;
-            byte b = lvl.blocks[index];
             
-            if (Block.Props[b].IsDoor) {
+            byte block = lvl.blocks[index];
+            bool ext = block == Block.custom_block;
+            BlockProps[] props = Block.Props;
+            if (ext) {
+                block = lvl.GetExtTile(x, y, z);
+                props = lvl.CustomBlockProps;
+            }
+            
+            if (props[block].IsDoor) {
                 byte physForm;
-                PhysicsArgs args = GetDoorArgs(b, out physForm);
+                PhysicsArgs args = GetDoorArgs(block, ext, out physForm);
                 if (!instant) lvl.AddUpdate(index, physForm, false, args);
                 else lvl.Blockchange(index, physForm, false, args);
-            } else if (Block.Props[b].IsTDoor) {
-                PhysicsArgs args = GetTDoorArgs(b);
+            } else if (props[block].IsTDoor) {
+                PhysicsArgs args = GetTDoorArgs(block, ext);
                 lvl.AddUpdate(index, Block.air, false, args);
             } else {
-            	byte oDoor = Block.Props[b].ODoorId;
+                byte oDoor = props[block].ODoorId;
                 if (oDoor != Block.Invalid)
                     lvl.AddUpdate(index, oDoor, true);
             }
@@ -86,7 +93,8 @@ namespace MCGalaxy.BlockPhysics {
             args.ExtBlock = isExt;
             
             physForm = Block.door_tree_air; // air
-            if (raw == Block.air_door || raw == Block.air_switch) {
+            if (isExt) {
+            } else if (raw == Block.air_door || raw == Block.air_switch) {
                 args.Value1 = 4 - 1;
             } else if (raw == Block.door_green) {
                 physForm = Block.door_green_air; // red wool

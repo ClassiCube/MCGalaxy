@@ -18,7 +18,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace MCGalaxy.BlockPhysics {
+namespace MCGalaxy.Blocks.Physics {
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct PhysicsArgs {

@@ -18,7 +18,7 @@
 using System;
 using System.Threading;
 using MCGalaxy.Blocks;
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Games;
 
 namespace MCGalaxy {

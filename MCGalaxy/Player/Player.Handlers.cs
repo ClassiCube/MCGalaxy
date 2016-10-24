@@ -19,7 +19,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using MCGalaxy.Blocks;
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Commands;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;

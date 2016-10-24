@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Blocks {
@@ -26,8 +26,14 @@ namespace MCGalaxy.Blocks {
 
         internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0) return true;
+            bool isExt = false;
+            if (block == Block.custom_block) {
+                isExt = true;
+                block = p.level.GetExtTile(x, y, z);
+            }
+            
             byte physForm;
-            PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, out physForm);
+            PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, isExt, out physForm);
             p.level.Blockchange(x, y, z, physForm, false, args);
             return true;
         }
@@ -43,6 +49,9 @@ namespace MCGalaxy.Blocks {
                 return Portal(p, block, x, y, z, true);
             } else if (p.level.CustomBlockProps[extBlock].IsMessageBlock) {
                 return MessageBlock(p, block, x, y, z, true);
+            } else if (p.level.CustomBlockProps[extBlock].IsDoor
+                       && p.level.CustomBlockDefs[extBlock].CollideType != 0) {
+                return Door(p, block, x, y, z);
             }
             return false;
         }

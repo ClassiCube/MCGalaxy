@@ -17,7 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdRestartPhysics : Command {

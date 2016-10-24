@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.BlockPhysics {
+namespace MCGalaxy.Blocks.Physics {
     public static class DoorPhysics {
 
         // Change anys door blocks nearby into air forms
@@ -25,7 +25,8 @@ namespace MCGalaxy.BlockPhysics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             byte block = C.data.Value2;
-            bool instant = block == Block.air_door || block == Block.air_switch;
+            bool instant = !C.data.ExtBlock &&
+                (block == Block.air_door || block == Block.air_switch);
             
             ActivateablePhysics.DoDoors(lvl, (ushort)(x + 1), y, z, instant);
             ActivateablePhysics.DoDoors(lvl, (ushort)(x - 1), y, z, instant);
@@ -54,7 +55,7 @@ namespace MCGalaxy.BlockPhysics {
         }
         
         static void ActivateODoor(Level lvl, ref Check C, int index) {
-        	byte block = Block.Props[lvl.blocks[index]].ODoorId;
+            byte block = Block.Props[lvl.blocks[index]].ODoorId;
             if (block == lvl.blocks[C.b]) {
                 lvl.AddUpdate(index, block, true);
             }
@@ -76,10 +77,18 @@ namespace MCGalaxy.BlockPhysics {
         
         static void ActivateTDoor(Level lvl, int index) {
             byte block = lvl.blocks[index];
-            if (!Block.Props[block].IsTDoor) return;
-            
-            PhysicsArgs args = ActivateablePhysics.GetTDoorArgs(block);
-            lvl.AddUpdate(index, Block.air, false, args);
+            if (block != Block.custom_block) {
+                if (!Block.Props[block].IsTDoor) return;
+                
+                PhysicsArgs args = ActivateablePhysics.GetTDoorArgs(block, false);
+                lvl.AddUpdate(index, Block.air, false, args);
+            } else {
+                block = lvl.GetExtTile(index);
+                if (!lvl.CustomBlockProps[block].IsTDoor) return;    
+                
+                PhysicsArgs args = ActivateablePhysics.GetTDoorArgs(block, true);
+                lvl.AddUpdate(index, Block.air, false, args);
+            }            
         }
     }
 }
