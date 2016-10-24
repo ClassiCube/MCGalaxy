@@ -169,7 +169,7 @@ namespace MCGalaxy.Commands.World {
         public override void Help(Player p) {
             Player.Message(p, "%T/blockprops [scope] [id] [property] <value>");
             Player.Message(p, "%HSets various properties for blocks.");
-            Player.Message(p, "%H[scope] can be \"core\", \"global\", or \"level");
+            Player.Message(p, "%H[scope] can be \"core\", \"global\", or \"level\"");
         }
     }
 }

@@ -57,6 +57,7 @@ namespace MCGalaxy.Blocks {
             placeHandlers[Block.dirt] = PlaceBehaviour.Dirt;
             placeHandlers[Block.grass] = PlaceBehaviour.Grass;
             placeHandlers[Block.staircasestep] = PlaceBehaviour.Stairs;
+            placeHandlers[Block.cobblestoneslab] = PlaceBehaviour.CobbleStairs;
             placeHandlers[Block.c4] = PlaceBehaviour.C4;
             placeHandlers[Block.c4det] = PlaceBehaviour.C4Det;
             
