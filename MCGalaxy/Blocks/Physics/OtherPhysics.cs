@@ -72,15 +72,17 @@ namespace MCGalaxy.Blocks.Physics {
         }
 
         public static void DoStairs(Level lvl, ref Check C) {
-            int bBelow = lvl.IntOffset(C.b, 0, -1, 0);
-            byte tile = lvl.GetTile(bBelow);
+            int indexBelow = lvl.IntOffset(C.b, 0, -1, 0);
+            byte block = lvl.blocks[C.b];
+            byte below = Block.Invalid;
+            if (indexBelow >= 0) below = lvl.blocks[indexBelow];
             
-            if (tile == Block.staircasestep) {
+            if (below == Block.staircasestep && block == Block.staircasestep) {
                 lvl.AddUpdate(C.b, Block.air);
-                lvl.AddUpdate(bBelow, Block.staircasefull);
-            } else if (tile == Block.cobblestoneslab) {
+                lvl.AddUpdate(indexBelow, Block.staircasefull);
+            } else if (below == Block.cobblestoneslab && block == Block.cobblestoneslab) {
                 lvl.AddUpdate(C.b, Block.air);
-                lvl.AddUpdate(bBelow, Block.stone);
+                lvl.AddUpdate(indexBelow, Block.stone);
             }
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
