@@ -37,7 +37,7 @@ namespace MCGalaxy.Blocks {
     
     public static class BlockBehaviour {
         internal static HandleDelete[] deleteHandlers = new HandleDelete[256];
-        internal static HandlePlace[] placeHandlers = new HandlePlace[256];        
+        internal static HandlePlace[] placeHandlers = new HandlePlace[256];
         internal static HandleWalkthrough[] walkthroughHandlers = new HandleWalkthrough[256];
         internal static HandlePhysics[] physicsHandlers = new HandlePhysics[256];
         internal static HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[256];
@@ -69,16 +69,15 @@ namespace MCGalaxy.Blocks {
             walkthroughHandlers[Block.custom_block] = WalkthroughBehaviour.CustomBlock;
             
             for (int i = 0; i < 256; i++) {
+                bool walkthrough = Block.Walkthrough(Block.Convert((byte)i));
                 if (Block.Props[i].IsMessageBlock) {
-                    walkthroughHandlers[i] = (p, block, x, y, z) =>
-                        WalkthroughBehaviour.MessageBlock(p, block, x, y, z, true);
-                    deleteHandlers[i] = (p, block, x, y, z) =>
-                        WalkthroughBehaviour.MessageBlock(p, block, x, y, z, false);
+                    if (walkthrough)
+                        walkthroughHandlers[i] = WalkthroughBehaviour.DoMessageBlock;
+                    deleteHandlers[i] = DeleteBehaviour.DoMessageBlock;
                 } else if (Block.Props[i].IsPortal) {
-                    walkthroughHandlers[i] = (p, block, x, y, z) =>
-                        WalkthroughBehaviour.Portal(p, block, x, y, z, true);
-                    deleteHandlers[i] = (p, block, x, y, z) =>
-                        WalkthroughBehaviour.Portal(p, block, x, y, z, false);
+                    if (walkthrough)
+                        walkthroughHandlers[i] = WalkthroughBehaviour.DoPortal;
+                    deleteHandlers[i] = DeleteBehaviour.DoPortal;
                 }
                 
                 if (Block.Props[i].IsTDoor) {

@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Blocks.Extended;
 using MCGalaxy.Blocks.Physics;
 
 namespace MCGalaxy.Blocks {
@@ -99,13 +100,23 @@ namespace MCGalaxy.Blocks {
             }
             return true;
         }
+		
+		internal static bool DoPortal(Player p, byte block, ushort x, ushort y, ushort z) {
+            Portal.Handle(p, x, y, z);
+            return true;
+        }
+        
+        internal static bool DoMessageBlock(Player p, byte block, ushort x, ushort y, ushort z) {
+            MessageBlock.Handle(p, x, y, z);
+            return true;
+        }
         
         internal static bool CustomBlock(Player p, byte block, ushort x, ushort y, ushort z) {
             byte extBlock = p.level.GetExtTile(x, y, z);
             if (p.level.CustomBlockProps[extBlock].IsPortal) {
-                return WalkthroughBehaviour.Portal(p, block, x, y, z, false);
+                return DoPortal(p, block, x, y, z);
             } else if (p.level.CustomBlockProps[extBlock].IsMessageBlock) {
-                return WalkthroughBehaviour.MessageBlock(p, block, x, y, z, false);
+                return DoMessageBlock(p, block, x, y, z);
             } else if (p.level.CustomBlockProps[extBlock].IsTDoor) {
                 return RevertDoor(p, block, x, y, z);
             } else if (p.level.CustomBlockProps[extBlock].IsDoor) {

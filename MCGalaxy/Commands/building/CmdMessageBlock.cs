@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.Blocks;
+using MCGalaxy.Blocks.Extended;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Building {
@@ -51,7 +52,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             string text;
-            List<string> cmds = WalkthroughBehaviour.ParseMB(data.Message, out text);
+            List<string> cmds = MessageBlock.GetParts(data.Message, out text);
             foreach (string cmd in cmds) {
                 if (!CheckCommand(p, cmd)) return;
             }

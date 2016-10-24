@@ -98,6 +98,8 @@
     <Compile Include="Blocks\Block.Permissions.cs" />
     <Compile Include="Blocks\BlockDefinitions.cs" />
     <Compile Include="Blocks\BlockProperties.cs" />
+    <Compile Include="Blocks\Extended\MessageBlock.cs" />
+    <Compile Include="Blocks\Extended\Portal.cs" />
     <Compile Include="Bots\BotsFile.cs" />
     <Compile Include="Bots\Instructions\FunInstructions.cs" />
     <Compile Include="Bots\Instructions\MoveInstructions.cs" />
@@ -690,6 +692,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blocks\Behaviour" />
+    <Folder Include="Blocks\Extended" />
     <Folder Include="Bots\Instructions" />
     <Folder Include="Commands" />
     <Folder Include="Commands\building" />
