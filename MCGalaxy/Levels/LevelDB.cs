@@ -125,7 +125,7 @@ namespace MCGalaxy {
                         if (Block.Props[block].IsPortal) continue;
                     }
                     
-                    Database.Execute("DELETE FROM `Portals" + name + "` WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+                    Database.Backend.DeleteRows("Portals" + name, "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
                 }
             }
         }
@@ -145,9 +145,8 @@ namespace MCGalaxy {
                     } else {
                         if (Block.Props[block].IsMessageBlock) continue;
                     }
-                    
-                    //givenName is safe against SQL injections, it gets checked in CmdLoad.cs
-                    Database.Execute("DELETE FROM `Messages" + name + "` WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
+
+                    Database.Backend.DeleteRows("Messages" + name, "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
                 }
             }
         }
@@ -156,9 +155,9 @@ namespace MCGalaxy {
             object locker = ThreadSafeCache.DBCache.Get(level);
             lock (locker) {
                 if (!Database.TableExists("Zone" + level)) return;
-                Database.Execute("DELETE FROM `Zone" + level + "` WHERE Owner=@0 AND SmallX=@1 AND " +
-                                 "SMALLY=@2 AND SMALLZ=@3 AND BIGX=@4 AND BIGY=@5 AND BIGZ=@6",
-                                 zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
+                Database.Backend.DeleteRows("Zone" + level, "WHERE Owner=@0 AND SmallX=@1 AND SMALLY=@2 " +
+                                            "AND SMALLZ=@3 AND BIGX=@4 AND BIGY=@5 AND BIGZ=@6",
+                                            zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
             }
         }
         

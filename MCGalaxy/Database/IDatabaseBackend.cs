@@ -106,5 +106,13 @@ namespace MCGalaxy.SQL {
             if (modifier != "") syntax += " " + modifier;
             Database.Execute(syntax, args);
         }
+        
+        /// <summary> Deletes rows for the given table from the database. </summary>
+        /// <remarks> modifier is optional SQL which can be used to delete only certain rows.</remarks>
+        public virtual void DeleteRows(string table, string modifier = "", params object[] args) {
+            string syntax = "DELETE FROM `" + table + "`";
+            if (modifier != "") syntax += " " + modifier;
+            Database.Execute(syntax, args);
+        }
     }
 }

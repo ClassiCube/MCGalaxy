@@ -38,10 +38,8 @@ namespace MCGalaxy.Commands {
             if (message == "") {
                 using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
                     if (Inbox.Rows.Count == 0) { Player.Message(p, "No messages found."); return; }
-                    int i = 0;
                     foreach (DataRow row in Inbox.Rows) {
                         OutputMessage(p, row);
-                        i++;
                     }
                 }
             } else if (parts[0] == "del" || parts[0] == "delete") {
@@ -66,9 +64,9 @@ namespace MCGalaxy.Commands {
                         Database.Backend.ClearTable("Inbox" + p.name);
                     } else {
                         DataRow row = Inbox.Rows[num];
-                        string syntax = "DELETE FROM `Inbox" + p.name + "` WHERE PlayerFrom=@0 AND TimeSent=@1";
                         string time = Convert.ToDateTime(row["TimeSent"]).ToString("yyyy-MM-dd HH:mm:ss");
-                        Database.Execute(syntax, row["PlayerFrom"], time);
+                        Database.Backend.DeleteRows("Inbox" + p.name, 
+                                                    "WHERE PlayerFrom=@0 AND TimeSent=@1", row["PlayerFrom"], time);
                     }
 
                     if (num == -1) Player.Message(p, "Deleted all messages.");
