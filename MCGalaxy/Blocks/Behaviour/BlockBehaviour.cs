@@ -175,7 +175,7 @@ namespace MCGalaxy.Blocks {
                     continue;
                 }
                 
-                if (Block.odoor((byte)i) != Block.Invalid) {
+                if (Block.Props[i].ODoorId != Block.Invalid) {
                     physicsHandlers[i] = DoorPhysics.oDoor;
                     physicsDoorsHandlers[i] = DoorPhysics.oDoor;
                 }

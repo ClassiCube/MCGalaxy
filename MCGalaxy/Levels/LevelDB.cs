@@ -113,13 +113,19 @@ namespace MCGalaxy {
             if (!Database.TableExists("Portals" + name)) return;
             using (DataTable table = Database.Backend.GetRows("Portals" + name, "*")) {
                 foreach (DataRow row in table.Rows) {
-                    byte tile = level.GetTile(ushort.Parse(row["EntryX"].ToString()),
-                                              ushort.Parse(row["EntryY"].ToString()),
-                                              ushort.Parse(row["EntryZ"].ToString()));
-                    if (Block.portal(tile)) continue;
+                    ushort x = ushort.Parse(row["EntryX"].ToString());
+                    ushort y = ushort.Parse(row["EntryY"].ToString());
+                    ushort z = ushort.Parse(row["EntryZ"].ToString());
                     
-                    Database.Execute("DELETE FROM `Portals" + name + "` WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2",
-                                     row["EntryX"], row["EntryY"], row["EntryZ"]);
+                    byte block = level.GetTile(x, y, z);
+                    if (block == Block.custom_block) {
+                        block = level.GetExtTile(x, y, z);
+                        if (level.CustomBlockProps[block].IsPortal) continue;
+                    } else {
+                        if (Block.Props[block].IsPortal) continue;
+                    }
+                    
+                    Database.Execute("DELETE FROM `Portals" + name + "` WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
                 }
             }
         }
@@ -128,14 +134,20 @@ namespace MCGalaxy {
             if (!Database.TableExists("Messages" + name)) return;
             using (DataTable table = Database.Backend.GetRows("Messages" + name, "*")) {
                 foreach (DataRow row in table.Rows) {
-                    byte tile = level.GetTile(ushort.Parse(row["X"].ToString()),
-                                              ushort.Parse(row["Y"].ToString()),
-                                              ushort.Parse(row["Z"].ToString()));
-                    if (Block.mb(tile)) continue;
+                    ushort x = ushort.Parse(row["EntryX"].ToString());
+                    ushort y = ushort.Parse(row["EntryY"].ToString());
+                    ushort z = ushort.Parse(row["EntryZ"].ToString());
+                    
+                    byte block = level.GetTile(x, y, z);
+                    if (block == Block.custom_block) {
+                        block = level.GetExtTile(x, y, z);
+                        if (level.CustomBlockProps[block].IsMessageBlock) continue;
+                    } else {
+                        if (Block.Props[block].IsMessageBlock) continue;
+                    }
                     
                     //givenName is safe against SQL injections, it gets checked in CmdLoad.cs
-                    Database.Execute("DELETE FROM `Messages" + name + "` WHERE X=@0 AND Y=@1 AND Z=@2",
-                                     row["X"], row["Y"], row["Z"]);
+                    Database.Execute("DELETE FROM `Messages" + name + "` WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
                 }
             }
         }

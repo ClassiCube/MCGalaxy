@@ -129,7 +129,7 @@ namespace MCGalaxy.Commands
 
             if (Block.AllowBreak(b)) Player.Message(p, "Anybody can activate the block");
             if (Block.Walkthrough(b)) Player.Message(p, "Block can be walked through");
-            if (Block.Death(b)) Player.Message(p, "Walking through block will kill you");
+            if (props.KillerBlock) Player.Message(p, "Walking through block will kill you");
 
             if (props.IsDoor) Player.Message(p, "Block is an ordinary door");
             if (props.IsTDoor) Player.Message(p, "Block is a tdoor, which allows other blocks through when open");

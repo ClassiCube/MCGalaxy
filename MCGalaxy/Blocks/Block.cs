@@ -94,12 +94,15 @@ namespace MCGalaxy {
             return block >= water && block <= lavastill;            
         }
 
+        [Obsolete]
         public static bool OPBlocks(byte block) { return Props[block].OPBlock; }
 
+        [Obsolete]
         public static bool Death(byte block) { return Props[block].KillerBlock; }
 
         public static bool BuildIn(byte block) {
-            if (block == op_water || block == op_lava || portal(block) || mb(block)) return false;
+            if (block == op_water || block == op_lava 
+                || Props[block].IsPortal || Props[block].IsMessageBlock) return false;
             block = Convert(block);
             return block >= water && block <= lavastill;
         }
@@ -145,7 +148,7 @@ namespace MCGalaxy {
                 case air_flood_down:
                 case air_flood_up:
                 case air_flood_layer:
-            		
+                    
                 case lava_fire:
                 case rockethead:
                 case firework:
@@ -167,7 +170,7 @@ namespace MCGalaxy {
                 case fishsalmon:
                 case fishshark:
                 case fishlavashark:
-            	case fishsponge:
+                case fishsponge:
 
                 case tntexplosion:
                     return true;
@@ -175,8 +178,10 @@ namespace MCGalaxy {
             return false;
         }
 
+        [Obsolete]
         public static bool portal(byte block) { return Props[block].IsPortal; }
         
+        [Obsolete]
         public static bool mb(byte block) { return Props[block].IsMessageBlock; }
 
         public static bool Physics(byte block)   //returns false if placing block cant actualy cause any physics to happen
@@ -284,8 +289,10 @@ namespace MCGalaxy {
             }
         }
 
+        [Obsolete]
         public static bool tDoor(byte block) { return Props[block].IsTDoor; }
 
+        [Obsolete]
         public static byte odoor(byte block) { return Props[block].ODoorId; }
     }
 }

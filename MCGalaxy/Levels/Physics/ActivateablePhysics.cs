@@ -72,7 +72,7 @@ namespace MCGalaxy.BlockPhysics {
                 PhysicsArgs args = GetTDoorArgs(b);
                 lvl.AddUpdate(index, Block.air, false, args);
             } else {
-                byte oDoor = Block.odoor(b);
+            	byte oDoor = Block.Props[b].ODoorId;
                 if (oDoor != Block.Invalid)
                     lvl.AddUpdate(index, oDoor, true);
             }
