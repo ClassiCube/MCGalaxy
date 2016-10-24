@@ -134,9 +134,9 @@ namespace MCGalaxy {
             if (!Database.TableExists("Messages" + name)) return;
             using (DataTable table = Database.Backend.GetRows("Messages" + name, "*")) {
                 foreach (DataRow row in table.Rows) {
-                    ushort x = ushort.Parse(row["EntryX"].ToString());
-                    ushort y = ushort.Parse(row["EntryY"].ToString());
-                    ushort z = ushort.Parse(row["EntryZ"].ToString());
+                    ushort x = ushort.Parse(row["X"].ToString());
+                    ushort y = ushort.Parse(row["Y"].ToString());
+                    ushort z = ushort.Parse(row["Z"].ToString());
                     
                     byte block = level.GetTile(x, y, z);
                     if (block == Block.custom_block) {

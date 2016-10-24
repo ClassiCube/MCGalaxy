@@ -291,6 +291,7 @@ namespace MCGalaxy {
             ListUpdate.Count = j;
         }
         
+        
         public void ClearPhysics() {
             for (int i = 0; i < ListCheck.Count; i++ )
                 RevertPhysics(ListCheck.Items[i]);
@@ -328,6 +329,18 @@ namespace MCGalaxy {
             byte extBlock = ext ? raw : Block.air;
             Blockchange(x, y, z, block, true,
                         default(PhysicsArgs), extBlock);
+        }
+        
+        
+        internal bool ActivatesPhysics(byte block, byte extBlock) {
+            if (block != Block.custom_block)
+                return Block.Physics(block);
+            
+            BlockProps[] props = CustomBlockProps;
+            if (props[extBlock].IsMessageBlock || props[extBlock].IsPortal) return false;
+            if (props[extBlock].IsDoor || props[extBlock].IsTDoor) return false;
+            if (props[extBlock].OPBlock) return false;
+            return true;
         }
         
         internal bool CheckSpongeWater(ushort x, ushort y, ushort z) {

@@ -294,7 +294,7 @@ namespace MCGalaxy {
 
                 errorLocation = "Adding physics";
                 if (p.PlayingTntWars && block == Block.smalltnt) AddTntCheck(PosToInt(x, y, z), p);
-                if (physics > 0 && Block.Physics(block)) AddCheck(PosToInt(x, y, z));
+                if (physics > 0 && ActivatesPhysics(block, extBlock)) AddCheck(PosToInt(x, y, z));
 
                 changed = true;
                 backedup = false;
@@ -386,7 +386,7 @@ namespace MCGalaxy {
                     IntToPos(b, out x, out y, out z);
                     RevertExtTileNoCheck(x, y, z);
                 }                
-                if (physics > 0 && (Block.Physics(block) || data.Raw != 0))
+                if (physics > 0 && (ActivatesPhysics(block, extBlock) || data.Raw != 0))
                     AddCheck(b, false, data);
                 
                 // Save bandwidth sending identical looking blocks, like air/op_air changes.

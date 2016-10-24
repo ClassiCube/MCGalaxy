@@ -184,10 +184,12 @@ namespace MCGalaxy {
         [Obsolete]
         public static bool mb(byte block) { return Props[block].IsMessageBlock; }
 
-        public static bool Physics(byte block)   //returns false if placing block cant actualy cause any physics to happen
-        {
-            switch (block)
-            {
+        public static bool Physics(byte block) { //returns false if placing block cant actualy cause any physics to happen
+            if (Props[block].IsMessageBlock || Props[block].IsPortal) return false;
+            if (Props[block].IsDoor || Props[block].IsTDoor) return false;
+            if (Props[block].OPBlock) return false;
+            
+            switch (block) {
                 case rock:
                 case stone:
                 case blackrock:
@@ -204,78 +206,6 @@ namespace MCGalaxy {
                 case tnt:
                 case stonevine:
                 case obsidian:
-
-                case op_glass:
-                case opsidian:
-                case op_brick:
-                case op_stone:
-                case op_cobblestone:
-                case op_air:
-                case op_water:
-
-                case door_tree:
-                case door_obsidian:
-                case door_glass:
-                case door_stone:
-                case door_leaves:
-                case door_sand:
-                case door_wood:
-                case door_green:
-                case door_tnt:
-                case door_stair:
-                case door_iron:
-                case door_gold:
-                case door_dirt:
-                case door_grass:
-                case door_blue:
-                case door_book:
-                case door_cobblestone:
-                case door_red:
-
-                case door_orange:
-                case door_yellow:
-                case door_lightgreen:
-                case door_aquagreen:
-                case door_cyan:
-                case door_lightblue:
-                case door_purple:
-                case door_lightpurple:
-                case door_pink:
-                case door_darkpink:
-                case door_darkgrey:
-                case door_lightgrey:
-                case door_white:
-
-                case tdoor:
-                case tdoor2:
-                case tdoor3:
-                case tdoor4:
-                case tdoor5:
-                case tdoor6:
-                case tdoor7:
-                case tdoor8:
-                case tdoor9:
-                case tdoor10:
-                case tdoor11:
-                case tdoor12:
-                case tdoor13:
-
-                case air_door:
-                case air_switch:
-                case water_door:
-                case lava_door:
-
-                case MsgAir:
-                case MsgWater:
-                case MsgLava:
-                case MsgBlack:
-                case MsgWhite:
-
-                case blue_portal:
-                case orange_portal:
-                case air_portal:
-                case water_portal:
-                case lava_portal:
 
                 case deathair:
                 case deathlava:
