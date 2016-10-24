@@ -78,28 +78,30 @@ namespace MCGalaxy.BlockPhysics {
             }
         }
         
-        internal static PhysicsArgs GetDoorArgs(byte b, out byte physForm) {
+        internal static PhysicsArgs GetDoorArgs(byte raw, bool isExt, out byte physForm) {
             PhysicsArgs args = default(PhysicsArgs);
             args.Type1 = PhysicsArgs.Wait; args.Value1 = 16 - 1;
-            args.Type2 = PhysicsArgs.Revert; args.Value2 = b;
+            args.Type2 = PhysicsArgs.Revert; args.Value2 = raw;
             args.Door = true;
+            args.ExtBlock = isExt;
             
             physForm = Block.door_tree_air; // air
-            if (b == Block.air_door || b == Block.air_switch) {
+            if (raw == Block.air_door || raw == Block.air_switch) {
                 args.Value1 = 4 - 1;
-            } else if (b == Block.door_green) {
+            } else if (raw == Block.door_green) {
                 physForm = Block.door_green_air; // red wool
-            } else if (b == Block.door_tnt) {
+            } else if (raw == Block.door_tnt) {
                 args.Value1 = 4 - 1; physForm = Block.door_tnt_air; // lava
             }
             return args;
         }
         
-        internal static PhysicsArgs GetTDoorArgs(byte b) {
+        internal static PhysicsArgs GetTDoorArgs(byte raw, bool isExt) {
             PhysicsArgs args = default(PhysicsArgs);
             args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
-            args.Type2 = PhysicsArgs.Revert; args.Value2 = b;
+            args.Type2 = PhysicsArgs.Revert; args.Value2 = raw;
             args.Door = true;
+            args.ExtBlock = isExt;
             return args;
         }
     }

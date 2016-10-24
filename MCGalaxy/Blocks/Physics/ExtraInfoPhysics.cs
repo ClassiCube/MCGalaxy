@@ -30,7 +30,10 @@ namespace MCGalaxy.BlockPhysics {
             if (!C.data.HasWait) return false;
             
             if (C.data.Door && C.data.Data == 0) {
-                bool tdoor = Block.Props[C.data.Value2].IsTDoor;
+                bool tdoor = false;
+                if (!C.data.ExtBlock) tdoor = Block.Props[C.data.Value2].IsTDoor;
+                else tdoor = lvl.CustomBlockProps[C.data.Value2].IsTDoor;
+                
                 if (tdoor) DoorPhysics.tDoor(lvl, ref C);
                 else DoorPhysics.Door(lvl, ref C);
             }
@@ -44,7 +47,7 @@ namespace MCGalaxy.BlockPhysics {
             if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
             
             if (C.data.Door) {
-                lvl.AddUpdate(C.b, C.data.Value2); C.data.ResetTypes(); 
+                lvl.AddUpdate(C.b, C.data.Value2); C.data.ResetTypes();
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
             }
             return false;
@@ -62,7 +65,10 @@ namespace MCGalaxy.BlockPhysics {
             
             if (args.Wait) {
                 if (C.data.Door && C.data.Data == 0) {
-                    bool tdoor = Block.Props[C.data.Value2].IsTDoor;
+                    bool tdoor = false;
+                    if (!C.data.ExtBlock) tdoor = Block.Props[C.data.Value2].IsTDoor;
+                    else tdoor = lvl.CustomBlockProps[C.data.Value2].IsTDoor;
+                    
                     if (tdoor) DoorPhysics.tDoor(lvl, ref C);
                     else DoorPhysics.Door(lvl, ref C);
                 }
