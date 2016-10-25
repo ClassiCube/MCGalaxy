@@ -379,7 +379,9 @@ namespace MCGalaxy {
                 for (int i = 0; i < defs.Length; i++) {
                     if (defs[i] == null) continue;
                     level.CustomBlockDefs[i] = defs[i];
+                    level.CustomBlockProps[i] = new BlockProps((byte)i);
                 }
+                BlockProps.Load("lvl_" + level.name, level.CustomBlockProps);
                 Bots.BotsFile.LoadBots(level);
                 
                 object locker = ThreadSafeCache.DBCache.Get(name);

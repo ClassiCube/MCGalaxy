@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using MCGalaxy.Blocks;
 using MCGalaxy.Games;
 using MCGalaxy.Tasks;
 using Newtonsoft.Json;
@@ -209,6 +210,7 @@ namespace MCGalaxy {
             Alias.Load();
             Bots.BotsFile.Load();
             BlockDefinition.LoadGlobal();
+            
             SrvProperties.Load("properties/server.properties");
             Updater.Load("properties/update.properties");
             Group.InitAll();

@@ -51,6 +51,7 @@ namespace MCGalaxy
             BlockBehaviour.SetupCoreHandlers(); 
             BlockBehaviour.SetupCorePhysicsHandlers();
             InitDefaults();
+            BlockProps.Load("core", Block.Props);
             
             // Custom permissions set by the user.
             if (File.Exists("properties/block.properties")) {

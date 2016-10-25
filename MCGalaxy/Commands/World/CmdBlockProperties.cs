@@ -37,16 +37,21 @@ namespace MCGalaxy.Commands.World {
             byte id = GetBlock(p, scope, args[1]);
             if (id == Block.Invalid) return;
             string prop = args[2].ToLower();
-            
-            // TODO: global and level custom blocks
-            // TODO: adding core blocks, changing core block names
             SetProperty(p, scope, id, prop, args);
         }
         
         BlockProps[] GetScope(Player p, string scope) {
             if (scope.CaselessEq("core")) return Block.Props;
             if (scope.CaselessEq("global")) return BlockDefinition.GlobalProps;
-            if (scope.CaselessEq("level")) return p.level.CustomBlockProps;
+            
+            if (scope.CaselessEq("level")) {
+                if (Player.IsSuper(p)) {
+                    string src = p == null ? "console" : "IRC";
+                    Player.Message(p, "Cannot use level scope from {0}.",  src);
+                    return null;
+                }
+                return p.level.CustomBlockProps;
+            }
             
             Player.Message(p, "&cScope must \"core\", \"global\", or \"level\"");
             return null;
@@ -126,44 +131,55 @@ namespace MCGalaxy.Commands.World {
             BlockProps props = scope[id];
             setter(ref props);
             scope[id] = props;
-            OnPropsChanged(scope, id);
+            Level lvl = Player.IsSuper(p) ? null : p.level;
             
             Player.Message(p, "Block {0} is {1}: {2}",
-                           BlockName(scope, p.level, id),
+                           BlockName(scope, lvl, id),
                            type, getter(props) ? "&aYes" : "&cNo");
+            OnPropsChanged(scope, lvl, id);
         }
         
         static void SetDeathMessage(Player p, BlockProps[] scope, byte id, string msg) {
             scope[id].DeathMessage = msg;
+            Level lvl = Player.IsSuper(p) ? null : p.level;
+            
             if (msg == null) {
                 Player.Message(p, "Death message for {0} removed.",
-                               BlockName(scope, p.level, id));
+                               BlockName(scope, lvl, id));
             } else {
                 Player.Message(p, "Death message for {0} set to: {1}",
-                               BlockName(scope, p.level, id), msg);
+                               BlockName(scope, lvl, id), msg);
             }
-            OnPropsChanged(scope, id);
+            OnPropsChanged(scope, lvl, id);
         }
 
-        static void OnPropsChanged(BlockProps[] scope, byte id) {
+        static void OnPropsChanged(BlockProps[] scope, Level level, byte id) {
+        	scope[id].Changed = true;
+        	
             if (scope == Block.Props) {
                 BlockBehaviour.SetupCoreHandlers();
+                BlockProps.Save("core", scope);
             } else if (scope == BlockDefinition.GlobalProps) {
                 Level[] loaded = LevelInfo.Loaded.Items;
-                
                 foreach (Level lvl in loaded) {
                     if (lvl.CustomBlockDefs[id] != BlockDefinition.GlobalDefs[id]) continue;
                     lvl.CustomBlockProps[id] = BlockDefinition.GlobalProps[id];
                 }
+                BlockProps.Save("global", scope);
+            } else {
+                BlockProps.Save("lvl_" + level.name, scope);
             }
         }
         
-        static string BlockName(BlockProps[] scope, Level lvl, byte id) {
-            byte block = id, extBlock = 0;
-            if (scope != Block.Props) {
-                block = Block.custom_block; extBlock = id;
-            }
-            return lvl.BlockName(block, extBlock);
+        static string BlockName(BlockProps[] scope, Level lvl, byte raw) {
+            if (scope == Block.Props) return Block.Name(raw);
+            BlockDefinition def = null;
+            
+            if (scope == BlockDefinition.GlobalProps)
+                def = BlockDefinition.GlobalDefs[raw];
+            else
+                def = lvl.CustomBlockDefs[raw];
+            return def == null ? raw.ToString() : def.Name.Replace(" ", "");
         }
         
         public override void Help(Player p) {
