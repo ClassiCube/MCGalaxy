@@ -48,10 +48,11 @@ namespace MCGalaxy
 
         public static void SetBlocks() {
             SetCoreProperties();
-            BlockBehaviour.SetupCoreHandlers(); 
             BlockBehaviour.SetupCorePhysicsHandlers();
             InitDefaults();
+            
             BlockProps.Load("core", Block.Props);
+            BlockBehaviour.SetupCoreHandlers();
             
             // Custom permissions set by the user.
             if (File.Exists("properties/block.properties")) {
