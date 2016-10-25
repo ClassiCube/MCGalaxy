@@ -147,7 +147,6 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Death message for {0} removed.",
                                BlockName(scope, lvl, id));
             } else {
-                msg = msg.Replace("@p", "{0}");
                 Player.Message(p, "Death message for {0} set to: {1}",
                                BlockName(scope, lvl, id), msg);
             }

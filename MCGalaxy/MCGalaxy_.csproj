@@ -499,12 +499,13 @@
     <Compile Include="Generator\RealisticMapGen.cs" />
     <Compile Include="Generator\SimpleGen.cs" />
     <Compile Include="Levels\Hacks.cs" />
-    <Compile Include="Levels\IO\CwFile.cs" />
+    <Compile Include="Levels\IO\CwImporter.cs" />
     <Compile Include="Levels\IO\DatFile.cs" />
     <Compile Include="Levels\IO\FcmFile.cs" />
     <Compile Include="Levels\IO\fNbt.cs" />
     <Compile Include="Levels\IO\LvlFile.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />
+    <Compile Include="Levels\IO\MapFormats.cs" />
     <Compile Include="Levels\IO\McfFile.cs" />
     <Compile Include="Levels\Level.Blocks.cs" />
     <Compile Include="Levels\Level.Fields.cs" />

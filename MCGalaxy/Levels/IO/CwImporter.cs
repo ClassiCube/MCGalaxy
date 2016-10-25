@@ -20,20 +20,24 @@ using System.IO;
 using fNbt;
 
 namespace MCGalaxy.Levels.IO {
-    public static class CwFile {
+	public sealed class CwImporter : IMapImporter {
 
-        public static Level Load(Stream stream, string name) {
+		public override string Extension { get { return "cw"; } }
+		
+        public override Level Read(Stream src, string name, bool metadata) {
             NbtFile file = new NbtFile();
-            file.LoadFromStream(stream);
+            file.LoadFromStream(src);
             
             Level lvl;
-            ImportData(file.RootTag, name, out lvl);
+            ReadData(file.RootTag, name, out lvl);
+            if (!metadata) return lvl;
+            
             if (file.RootTag.Contains("Metadata"))
-                ImportMetadata((NbtCompound)file.RootTag["Metadata"], lvl);
+                ReadMetadata((NbtCompound)file.RootTag["Metadata"], lvl);
             return lvl;
         }
         
-        static void ImportData(NbtCompound root, string name, out Level lvl) {
+        static void ReadData(NbtCompound root, string name, out Level lvl) {
             if (root["FormatVersion"].ByteValue > 1)
                 throw new NotSupportedException("Only version 1 of ClassicWorld format is supported.");
             
@@ -54,7 +58,7 @@ namespace MCGalaxy.Levels.IO {
             lvl.roty = spawn["P"].ByteValue;
         }
         
-        static void ImportMetadata(NbtCompound root, Level lvl) {
+        static void ReadMetadata(NbtCompound root, Level lvl) {
             if (!root.Contains("CPE")) return;
             NbtCompound cpe = (NbtCompound)root["CPE"];
             

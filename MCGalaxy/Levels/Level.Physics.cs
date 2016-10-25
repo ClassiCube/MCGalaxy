@@ -27,6 +27,9 @@ namespace MCGalaxy {
 
     public sealed partial class Level : IDisposable {
         
+        readonly object updateLock = new object();
+        readonly object checkLock = new object();
+        
         public void setPhysics(int newValue) {
             if (physics == 0 && newValue != 0 && blocks != null) {
                 for (int i = 0; i < blocks.Length; i++)
@@ -189,7 +192,7 @@ namespace MCGalaxy {
             ListUpdate.Clear(); listUpdateExists.Clear();
         }
         
-        public void AddCheck(int b, bool overRide = false) { 
+        public void AddCheck(int b, bool overRide = false) {
             AddCheck(b, overRide, default(PhysicsArgs));
         }
         
@@ -200,18 +203,21 @@ namespace MCGalaxy {
                 int z = (b / Width) % Length;
                 if (x >= Width || y >= Height || z >= Length) return;
                 
-                if (!listCheckExists.Get(x, y, z)) {
-                    ListCheck.Add(new Check(b, data)); //Adds block to list to be updated
-                    listCheckExists.Set(x, y, z, true);
-                } else if (overRide) {
-                    Check[] items = ListCheck.Items;
-                    int count = ListCheck.Count;
-                    for (int i = 0; i < count; i++) {
-                        if (items[i].b != b) continue;
-                        items[i].data = data; return;
+                lock (checkLock) {
+                    if (!listCheckExists.Get(x, y, z)) {
+                        ListCheck.Add(new Check(b, data)); //Adds block to list to be updated
+                        listCheckExists.Set(x, y, z, true);
+                    } else if (overRide) {
+                        Check[] items = ListCheck.Items;
+                        int count = ListCheck.Count;
+                        for (int i = 0; i < count; i++) {
+                            if (items[i].b != b) continue;
+                            items[i].data = data; return;
+                        }
+                        //Dont need to check physics here because if the list is active, then physics is active :)
                     }
-                    //Dont need to check physics here because if the list is active, then physics is active :)
                 }
+                
                 if (!physThreadStarted && physics > 0)
                     StartPhysics();
             } catch {
@@ -220,7 +226,7 @@ namespace MCGalaxy {
             }
         }
 
-        internal bool AddUpdate(int b, int type, bool overRide = false) { 
+        internal bool AddUpdate(int b, int type, bool overRide = false) {
             return AddUpdate(b, type, overRide, default(PhysicsArgs));
         }
         
@@ -231,27 +237,29 @@ namespace MCGalaxy {
                 int z = (b / Width) % Length;
                 if (x >= Width || y >= Height || z >= Length) return false;
                 
-                if (overRide) {
-                    byte block = (byte)type, extBlock = 0;
-                    // Is the Ext flag just an indicator for the block update?
-                    if (data.ExtBlock && (data.Raw & PhysicsArgs.TypeMask) == 0) {
-                        extBlock = block; block = Block.custom_block;
-                        data.ExtBlock = false;
+                lock (updateLock) {
+                    if (overRide) {
+                        byte block = (byte)type, extBlock = 0;
+                        // Is the Ext flag just an indicator for the block update?
+                        if (data.ExtBlock && (data.Raw & PhysicsArgs.TypeMask) == 0) {
+                            extBlock = block; block = Block.custom_block;
+                            data.ExtBlock = false;
+                        }
+                        AddCheck(b, true, data); //Dont need to check physics here....AddCheck will do that
+                        Blockchange((ushort)x, (ushort)y, (ushort)z, block, true, data, extBlock);
+                        return true;
                     }
-                    AddCheck(b, true, data); //Dont need to check physics here....AddCheck will do that
-                    Blockchange((ushort)x, (ushort)y, (ushort)z, block, true, data, extBlock);
-                    return true;
-                }
 
-                if (!listUpdateExists.Get(x, y, z)) {
-                    listUpdateExists.Set(x, y, z, true);
-                } else if (type == Block.sand || type == Block.gravel)  {
-                    RemoveUpdatesAtPos(b);
-                } else {
-                    return false;
+                    if (!listUpdateExists.Get(x, y, z)) {
+                        listUpdateExists.Set(x, y, z, true);
+                    } else if (type == Block.sand || type == Block.gravel)  {
+                        RemoveUpdatesAtPos(b);
+                    } else {
+                        return false;
+                    }
+                    ListUpdate.Add(new Update(b, (byte)type, data));
                 }
                 
-                ListUpdate.Add(new Update(b, (byte)type, data));
                 if (!physThreadStarted && physics > 0)
                     StartPhysics();
                 return true;
