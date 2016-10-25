@@ -74,7 +74,7 @@ namespace MCGalaxy {
             if (PlayerBlockChange != null)
                 PlayerBlockChange(this, x, y, z, block, extBlock);
             OnBlockChangeEvent.Call(this, x, y, z, block, extBlock);
-            if (cancelBlock) { cancelBlock = false; return; }            
+            if (cancelBlock) { cancelBlock = false; return; }
 
             if (old >= Block.air_flood && old <= Block.air_door_air) {
                 SendMessage("Block is active, you cannot disturb it.");
@@ -196,8 +196,8 @@ namespace MCGalaxy {
         
         int PacketSize(byte[] buffer) {
             switch (buffer[0]) {
-                case (byte)'G': return -2; //For wom
-                case Opcode.Handshake: return 131;
+                    case (byte)'G': return -2; //For wom
+                    case Opcode.Handshake: return 131;
                 case Opcode.SetBlockClient:
                     if (!loggedIn) goto default;
                     return 9;
@@ -207,9 +207,9 @@ namespace MCGalaxy {
                 case Opcode.Message:
                     if (!loggedIn) goto default;
                     return 66;
-                case Opcode.CpeExtInfo: return 67;
-                case Opcode.CpeExtEntry: return 69;
-                case Opcode.CpeCustomBlockSupportLevel: return 2;
+                    case Opcode.CpeExtInfo: return 67;
+                    case Opcode.CpeExtEntry: return 69;
+                    case Opcode.CpeCustomBlockSupportLevel: return 2;
                 default:
                     if (!dontmindme) {
                         Leave("Unhandled message id \"" + buffer[0] + "\"!", true);
@@ -307,7 +307,7 @@ namespace MCGalaxy {
             rot = new byte[2] { rotx, roty };
             if (!Moved() || Loading) return;
             if (DateTime.UtcNow < AFKCooldown) return;
-                       
+            
             LastAction = DateTime.UtcNow;
             if (IsAfk) CmdAfk.ToggleAfk(this, "");
             /*if (!CheckIfInsideBlock()) { clippos = pos; cliprot = rot; }*/
@@ -392,7 +392,7 @@ namespace MCGalaxy {
             HandleDeath(b, 0, customMessage, explode, immediate);
         }
         
-        public void HandleDeath(byte block, byte extBlock, string customMessage = "", 
+        public void HandleDeath(byte block, byte extBlock, string customMessage = "",
                                 bool explode = false, bool immediate = false) {
             if (OnDeath != null) OnDeath(this, block);
             if (PlayerDeath != null) PlayerDeath(this, block);
@@ -411,7 +411,9 @@ namespace MCGalaxy {
             } else {
                 deathMsg = level.CustomBlockProps[extBlock].DeathMessage;
             }
-            if (deathMsg != null) Chat.GlobalChatLevel(this, String.Format(deathMsg, ColoredName), false);
+            if (deathMsg != null) {
+                Chat.GlobalChatLevel(this, deathMsg.Replace("@p", ColoredName), false);
+            }
             
             if (block == Block.rockethead) level.MakeExplosion(x, y, z, 0);
             if (block == Block.creeper) level.MakeExplosion(x, y, z, 1);
@@ -697,7 +699,7 @@ namespace MCGalaxy {
                 int secs = (int)Math.Ceiling(delta.TotalSeconds);
                 SendMessage("Blocked from using commands for " +
                             "another " + secs + " seconds"); return false;
-            }            
+            }
             return true;
         }
         

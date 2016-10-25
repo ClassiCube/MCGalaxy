@@ -189,29 +189,29 @@ namespace MCGalaxy {
         }
         
         static void SetupDefaultDeaths() {
-            SetDeath(Block.tntexplosion, "{0} %S&cblew into pieces.");
-            SetDeath(Block.deathair, "{0} %Swalked into &cnerve gas and suffocated.");
-            SetDeath(Block.deathwater, "{0} %Sstepped in &dcold water and froze.");
+            SetDeath(Block.tntexplosion, "@p %S&cblew into pieces.");
+            SetDeath(Block.deathair, "@p %Swalked into &cnerve gas and suffocated.");
+            SetDeath(Block.deathwater, "@p %Sstepped in &dcold water and froze.");
             SetDeath(Block.activedeathwater, Props[Block.deathwater].DeathMessage);
-            SetDeath(Block.deathlava, "{0} %Sstood in &cmagma and melted.");
+            SetDeath(Block.deathlava, "@p %Sstood in &cmagma and melted.");
             SetDeath(Block.activedeathlava, Props[Block.deathlava].DeathMessage);
             SetDeath(Block.fastdeathlava, Props[Block.deathlava].DeathMessage);
             
-            SetDeath(Block.magma, "{0} %Swas hit by &cflowing magma and melted.");
-            SetDeath(Block.geyser, "{0} %Swas hit by &cboiling water and melted.");
-            SetDeath(Block.birdkill, "{0} %Swas hit by a &cphoenix and burnt.");
-            SetDeath(Block.train, "{0} %Swas hit by a &ctrain.");
-            SetDeath(Block.fishshark, "{0} %Swas eaten by a &cshark.");
-            SetDeath(Block.lava_fire, "{0} %Sburnt to a &ccrisp.");
-            SetDeath(Block.rockethead, "{0} %Swas &cin a fiery explosion.");
-            SetDeath(Block.zombiebody, "{0} %Sdied due to lack of &5brain.");
-            SetDeath(Block.creeper, "{0} %Swas killed &cb-SSSSSSSSSSSSSS");
-            SetDeath(Block.fishlavashark, "{0} %Swas eaten by a ... LAVA SHARK?!");
-            SetDeath(Block.snake, "{0} %Swas bit by a deadly snake.");
+            SetDeath(Block.magma, "@p %Swas hit by &cflowing magma and melted.");
+            SetDeath(Block.geyser, "@p %Swas hit by &cboiling water and melted.");
+            SetDeath(Block.birdkill, "@p %Swas hit by a &cphoenix and burnt.");
+            SetDeath(Block.train, "@p %Swas hit by a &ctrain.");
+            SetDeath(Block.fishshark, "@p %Swas eaten by a &cshark.");
+            SetDeath(Block.lava_fire, "@p %Sburnt to a &ccrisp.");
+            SetDeath(Block.rockethead, "@p %Swas &cin a fiery explosion.");
+            SetDeath(Block.zombiebody, "@p %Sdied due to lack of &5brain.");
+            SetDeath(Block.creeper, "@p %Swas killed &cb-SSSSSSSSSSSSSS");
+            SetDeath(Block.fishlavashark, "@p %Swas eaten by a ... LAVA SHARK?!");
+            SetDeath(Block.snake, "@p %Swas bit by a deadly snake.");
             
-            SetDeath(Block.air, "{0} %Shit the floor &chard.", false);
-            SetDeath(Block.water, "{0} %S&cdrowned.", false);
-            SetDeath(Block.Invalid, "{0} %Swas &cterminated.", false);
+            SetDeath(Block.air, "@p %Shit the floor &chard.", false);
+            SetDeath(Block.water, "@p %S&cdrowned.", false);
+            SetDeath(Block.Invalid, "@p %Swas &cterminated.", false);
         }
         
         static void SetDeath(byte block, string message, bool collideKill = true) {
