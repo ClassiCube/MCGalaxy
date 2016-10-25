@@ -748,8 +748,8 @@ namespace MCGalaxy {
 
             try { //opstats patch (since 5.5.11)
                 if (Server.opstats.Contains(cmd) || (cmd == "review" && message.ToLower() == "next" && Server.reviewlist.Count > 0)) {
-                    Database.Execute("INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) VALUES (@0, @1, @2, @3)",
-                                     DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), name, cmd, message);
+                    Database.Backend.AddRow("Opstats", "Time, Name, Cmd, Cmdmsg",
+                                            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), name, cmd, message);
                 }
             } catch { }
             

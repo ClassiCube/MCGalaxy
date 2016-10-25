@@ -406,7 +406,7 @@
     <Compile Include="CorePlugin\ConnectHandler.cs" />
     <Compile Include="Database\Backends\SQLite.cs" />
     <Compile Include="Database\BlockDB.cs" />
-    <Compile Include="Database\ColumnParams.cs" />
+    <Compile Include="Database\ColumnDesc.cs" />
     <Compile Include="Database\IDatabaseBackend.cs" />
     <Compile Include="Database\Backends\MySQL.cs" />
     <Compile Include="Database\ParameterisedQuery.cs" />

@@ -226,12 +226,12 @@ namespace MCGalaxy.Games {
             }
         }
 
-        static ColumnParams[] createSyntax = {
-            new ColumnParams("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
-            new ColumnParams("Name", ColumnType.VarChar, 20),
-            new ColumnParams("Points", ColumnType.UInt24),
-            new ColumnParams("Captures", ColumnType.UInt24),
-            new ColumnParams("tags", ColumnType.UInt24),
+        static ColumnDesc[] createSyntax = {
+            new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
+            new ColumnDesc("Name", ColumnType.VarChar, 20),
+            new ColumnDesc("Points", ColumnType.UInt24),
+            new ColumnDesc("Captures", ColumnType.UInt24),
+            new ColumnDesc("tags", ColumnType.UInt24),
         };
         
         /// <summary> Start the CTF game </summary>

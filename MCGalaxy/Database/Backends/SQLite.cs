@@ -73,10 +73,10 @@ namespace MCGalaxy.SQL {
             Database.Execute(syntax);
         }
         
-        protected override void CreateTableColumns(StringBuilder sql, ColumnParams[] columns) {
+        protected override void CreateTableColumns(StringBuilder sql, ColumnDesc[] columns) {
             string priKey = null;            
             for (int i = 0; i < columns.Length; i++) {
-                ColumnParams col = columns[i];
+                ColumnDesc col = columns[i];
                 if (col.Type == ColumnType.Bool) {
                     sql.Append(col.Column).Append(' ').Append("TINYINT");
                 } else {
@@ -101,6 +101,10 @@ namespace MCGalaxy.SQL {
                 }
                 sql.AppendLine();
             }
+        }
+        
+        public override void AddOrReplaceRow(string table, string columns, params object[] args) {
+            DoInsert("INSERT OR REPLACE INTO", table, columns, args);
         }
     }
     

@@ -23,36 +23,32 @@ using MCGalaxy.SQL;
 namespace MCGalaxy {
     public sealed partial class Server {
         
-        static ColumnParams[] createPlayers = {
-            new ColumnParams("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
-            new ColumnParams("Name", ColumnType.Text),
-            new ColumnParams("IP", ColumnType.Char, 15),
-            new ColumnParams("FirstLogin", ColumnType.DateTime),
-            new ColumnParams("LastLogin", ColumnType.DateTime),
-            new ColumnParams("totalLogin", ColumnType.Int24),
-            new ColumnParams("Title", ColumnType.Char, 20),
-            new ColumnParams("TotalDeaths", ColumnType.Int16),
-            new ColumnParams("Money", ColumnType.UInt24),
-            new ColumnParams("totalBlocks", ColumnType.Int64),
-            new ColumnParams("totalCuboided", ColumnType.Int64),
-            new ColumnParams("totalKicked", ColumnType.Int24),
-            new ColumnParams("TimeSpent", ColumnType.VarChar, 20),
-            new ColumnParams("color", ColumnType.VarChar, 6),
-            new ColumnParams("title_color", ColumnType.VarChar, 6),
+        static ColumnDesc[] createPlayers = {
+            new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
+            new ColumnDesc("Name", ColumnType.Text),
+            new ColumnDesc("IP", ColumnType.Char, 15),
+            new ColumnDesc("FirstLogin", ColumnType.DateTime),
+            new ColumnDesc("LastLogin", ColumnType.DateTime),
+            new ColumnDesc("totalLogin", ColumnType.Int24),
+            new ColumnDesc("Title", ColumnType.Char, 20),
+            new ColumnDesc("TotalDeaths", ColumnType.Int16),
+            new ColumnDesc("Money", ColumnType.UInt24),
+            new ColumnDesc("totalBlocks", ColumnType.Int64),
+            new ColumnDesc("totalCuboided", ColumnType.Int64),
+            new ColumnDesc("totalKicked", ColumnType.Int24),
+            new ColumnDesc("TimeSpent", ColumnType.VarChar, 20),
+            new ColumnDesc("color", ColumnType.VarChar, 6),
+            new ColumnDesc("title_color", ColumnType.VarChar, 6),
         };
         
-        static ColumnParams[] createOpstats = {
-            new ColumnParams("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
-            new ColumnParams("Time", ColumnType.DateTime),
-            new ColumnParams("Name", ColumnType.Text),
-            new ColumnParams("Cmd", ColumnType.VarChar, 40),
-            new ColumnParams("Cmdmsg", ColumnType.VarChar, 40),
+        static ColumnDesc[] createOpstats = {
+            new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
+            new ColumnDesc("Time", ColumnType.DateTime),
+            new ColumnDesc("Name", ColumnType.Text),
+            new ColumnDesc("Cmd", ColumnType.VarChar, 40),
+            new ColumnDesc("Cmdmsg", ColumnType.VarChar, 40),
         };
-        
-        const string insertSyntax = 
-            @"INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) 
-SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE {0};";
-        
+                
         void InitDatabase() {
             try {
                 Database.Backend.CreateDatabase();
@@ -73,9 +69,10 @@ SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE {0};";
             //since 5.5.11 we are cleaning up the table Playercmds
             //if Playercmds exists copy-filter to Opstats and remove Playercmds
             if (Database.TableExists("Playercmds")) {
+                const string sql = "INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) SELECT Time, Name, Cmd, Cmdmsg FROM Playercmds WHERE {0};";
                 foreach (string cmd in Server.Opstats)
-                    Database.Execute(string.Format(insertSyntax, "cmd = '" + cmd + "'"));
-                Database.Execute(string.Format(insertSyntax, "cmd = 'review' AND cmdmsg = 'next'"));
+                    Database.Execute(string.Format(sql, "cmd = '" + cmd + "'"));
+                Database.Execute(string.Format(sql, "cmd = 'review' AND cmdmsg = 'next'"));
                 Database.Backend.DeleteTable("Playercmds");
             }
 

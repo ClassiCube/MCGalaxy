@@ -42,19 +42,19 @@ namespace MCGalaxy {
         unsafe static bool DoSaveChanges(List<Level.BlockPos> tempCache, char* ptr,
                                          Level lvl, string date, BulkTransaction transaction) {
             string template = "INSERT INTO `Block" + lvl.name +
-                "` (Username, TimePerformed, X, Y, Z, type, deleted) VALUES (@Name, @Time, @X, @Y, @Z, @Tile, @Del)";
+                "` (Username, TimePerformed, X, Y, Z, type, deleted) VALUES (@0, @1, @2, @3, @4, @5, @6)";
             ushort x, y, z;
             
             IDbCommand cmd = BulkTransaction.CreateCommand(template, transaction);
             if (cmd == null) return false;
             
-            IDataParameter nameP = transaction.CreateParam("@Name", DbType.AnsiStringFixedLength); cmd.Parameters.Add(nameP);
-            IDataParameter timeP = transaction.CreateParam("@Time", DbType.AnsiStringFixedLength); cmd.Parameters.Add(timeP);
-            IDataParameter xP = transaction.CreateParam("@X", DbType.UInt16); cmd.Parameters.Add(xP);
-            IDataParameter yP = transaction.CreateParam("@Y", DbType.UInt16); cmd.Parameters.Add(yP);
-            IDataParameter zP = transaction.CreateParam("@Z", DbType.UInt16); cmd.Parameters.Add(zP);
-            IDataParameter tileP = transaction.CreateParam("@Tile", DbType.Byte); cmd.Parameters.Add(tileP);
-            IDataParameter delP = transaction.CreateParam("@Del", DbType.Byte); cmd.Parameters.Add(delP);
+            IDataParameter nameP = transaction.CreateParam("@0", DbType.AnsiStringFixedLength); cmd.Parameters.Add(nameP);
+            IDataParameter timeP = transaction.CreateParam("@1", DbType.AnsiStringFixedLength); cmd.Parameters.Add(timeP);
+            IDataParameter xP = transaction.CreateParam("@2", DbType.UInt16); cmd.Parameters.Add(xP);
+            IDataParameter yP = transaction.CreateParam("@3", DbType.UInt16); cmd.Parameters.Add(yP);
+            IDataParameter zP = transaction.CreateParam("@4", DbType.UInt16); cmd.Parameters.Add(zP);
+            IDataParameter tileP = transaction.CreateParam("@5", DbType.Byte); cmd.Parameters.Add(tileP);
+            IDataParameter delP = transaction.CreateParam("@6", DbType.Byte); cmd.Parameters.Add(delP);
             
             for (int i = 0; i < tempCache.Count; i++) {
                 Level.BlockPos bP = tempCache[i];
@@ -165,48 +165,47 @@ namespace MCGalaxy {
             object locker = ThreadSafeCache.DBCache.Get(level);
             lock (locker) {
                 Database.Backend.CreateTable("Zone" + level, LevelDB.createZones);
-                Database.Execute("INSERT INTO `Zone" + level +  "` (Owner, SmallX, SmallY, " +
-                                 "SmallZ, BigX, BigY, BigZ) VALUES (@0, @1, @2, @3, @4, @5, @6)",
-                                 zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
+                Database.Backend.AddRow("Zone" + level, "Owner, SmallX, SmallY, SmallZ, BigX, BigY, BigZ",
+                                        zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
             }
         }
 
         
-        internal static ColumnParams[] createBlock = {
-            new ColumnParams("Username", ColumnType.Char, 20),
-            new ColumnParams("TimePerformed", ColumnType.DateTime),
-            new ColumnParams("X", ColumnType.UInt16),
-            new ColumnParams("Y", ColumnType.UInt16),
-            new ColumnParams("Z", ColumnType.UInt16),
-            new ColumnParams("Type", ColumnType.UInt8),
-            new ColumnParams("Deleted", ColumnType.Bool),
+        internal static ColumnDesc[] createBlock = {
+            new ColumnDesc("Username", ColumnType.Char, 20),
+            new ColumnDesc("TimePerformed", ColumnType.DateTime),
+            new ColumnDesc("X", ColumnType.UInt16),
+            new ColumnDesc("Y", ColumnType.UInt16),
+            new ColumnDesc("Z", ColumnType.UInt16),
+            new ColumnDesc("Type", ColumnType.UInt8),
+            new ColumnDesc("Deleted", ColumnType.Bool),
         };
         
-        internal static ColumnParams[] createPortals = {
-            new ColumnParams("EntryX", ColumnType.UInt16),
-            new ColumnParams("EntryY", ColumnType.UInt16),
-            new ColumnParams("EntryZ", ColumnType.UInt16),
-            new ColumnParams("ExitMap", ColumnType.Char, 20),
-            new ColumnParams("ExitX", ColumnType.UInt16),
-            new ColumnParams("ExitY", ColumnType.UInt16),
-            new ColumnParams("ExitZ", ColumnType.UInt16),
+        internal static ColumnDesc[] createPortals = {
+            new ColumnDesc("EntryX", ColumnType.UInt16),
+            new ColumnDesc("EntryY", ColumnType.UInt16),
+            new ColumnDesc("EntryZ", ColumnType.UInt16),
+            new ColumnDesc("ExitMap", ColumnType.Char, 20),
+            new ColumnDesc("ExitX", ColumnType.UInt16),
+            new ColumnDesc("ExitY", ColumnType.UInt16),
+            new ColumnDesc("ExitZ", ColumnType.UInt16),
         };
         
-        internal static ColumnParams[] createMessages = {
-            new ColumnParams("X", ColumnType.UInt16),
-            new ColumnParams("Y", ColumnType.UInt16),
-            new ColumnParams("Z", ColumnType.UInt16),
-            new ColumnParams("Message", ColumnType.Char, 255),
+        internal static ColumnDesc[] createMessages = {
+            new ColumnDesc("X", ColumnType.UInt16),
+            new ColumnDesc("Y", ColumnType.UInt16),
+            new ColumnDesc("Z", ColumnType.UInt16),
+            new ColumnDesc("Message", ColumnType.Char, 255),
         };
 
-        internal static ColumnParams[] createZones = {
-            new ColumnParams("SmallX", ColumnType.UInt16),
-            new ColumnParams("SmallY", ColumnType.UInt16),
-            new ColumnParams("SmallZ", ColumnType.UInt16),
-            new ColumnParams("BigX", ColumnType.UInt16),
-            new ColumnParams("BigY", ColumnType.UInt16),
-            new ColumnParams("BigZ", ColumnType.UInt16),
-            new ColumnParams("Owner", ColumnType.VarChar, 20),
+        internal static ColumnDesc[] createZones = {
+            new ColumnDesc("SmallX", ColumnType.UInt16),
+            new ColumnDesc("SmallY", ColumnType.UInt16),
+            new ColumnDesc("SmallZ", ColumnType.UInt16),
+            new ColumnDesc("BigX", ColumnType.UInt16),
+            new ColumnDesc("BigY", ColumnType.UInt16),
+            new ColumnDesc("BigZ", ColumnType.UInt16),
+            new ColumnDesc("Owner", ColumnType.VarChar, 20),
         };
     }
 }

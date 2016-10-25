@@ -249,18 +249,18 @@ namespace MCGalaxy.Games {
         
         #region Database
         
-        static ColumnParams[] createSyntax = {
-            new ColumnParams("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
-            new ColumnParams("Name", ColumnType.Char, 20),
-            new ColumnParams("TotalRounds", ColumnType.Int32),
-            new ColumnParams("MaxRounds", ColumnType.Int32),
-            new ColumnParams("TotalInfected", ColumnType.Int32),
-            new ColumnParams("MaxInfected", ColumnType.Int32),
+        static ColumnDesc[] createSyntax = {
+            new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
+            new ColumnDesc("Name", ColumnType.Char, 20),
+            new ColumnDesc("TotalRounds", ColumnType.Int32),
+            new ColumnDesc("MaxRounds", ColumnType.Int32),
+            new ColumnDesc("TotalInfected", ColumnType.Int32),
+            new ColumnDesc("MaxInfected", ColumnType.Int32),
             // reserve space for possible future additions
-            new ColumnParams("Additional1", ColumnType.Int32),
-            new ColumnParams("Additional2", ColumnType.Int32),
-            new ColumnParams("Additional3", ColumnType.Int32),
-            new ColumnParams("Additional4", ColumnType.Int32),
+            new ColumnDesc("Additional1", ColumnType.Int32),
+            new ColumnDesc("Additional2", ColumnType.Int32),
+            new ColumnDesc("Additional3", ColumnType.Int32),
+            new ColumnDesc("Additional4", ColumnType.Int32),
         };
         
         public void CheckTableExists() {
@@ -284,14 +284,20 @@ namespace MCGalaxy.Games {
         
         public void SaveZombieStats(Player p) {
             if (p.Game.TotalRoundsSurvived == 0 && p.Game.TotalInfected == 0) return;
-            DataTable table = Database.Backend.GetRows("ZombieStats", "*", "WHERE Name=@0", p.name);
+            int count = 0;
+            using (DataTable table = Database.Backend.GetRows("ZombieStats", "*", "WHERE Name=@0", p.name)) {
+                count = table.Rows.Count;
+            }
 
-            string syntax = table.Rows.Count == 0 ?
-                "INSERT INTO ZombieStats (TotalRounds, MaxRounds, TotalInfected, MaxInfected, Name) VALUES (@0, @1, @2, @3, @4)"
-                : "UPDATE ZombieStats SET TotalRounds=@0, MaxRounds=@1, TotalInfected=@2, MaxInfected=@3 WHERE Name=@4";
-            Database.Execute(syntax, p.Game.TotalRoundsSurvived, p.Game.MaxRoundsSurvived,
-                             p.Game.TotalInfected, p.Game.MaxInfected, p.name);
-            table.Dispose();
+            if (count == 0) {
+                Database.Backend.AddRow("ZombieStats", "TotalRounds, MaxRounds, TotalInfected, MaxInfected, Name",
+                                        p.Game.TotalRoundsSurvived, p.Game.MaxRoundsSurvived,
+                                        p.Game.TotalInfected, p.Game.MaxInfected, p.name);
+            } else {
+                Database.Backend.UpdateRows("ZombieStats", "TotalRounds=@0, MaxRounds=@1, TotalInfected=@2, MaxInfected=@3",
+                                            "WHERE Name=@4", p.Game.TotalRoundsSurvived, p.Game.MaxRoundsSurvived,
+                                            p.Game.TotalInfected, p.Game.MaxInfected, p.name);
+            }
         }
         #endregion
     }

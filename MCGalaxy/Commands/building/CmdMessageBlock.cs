@@ -144,10 +144,12 @@ namespace MCGalaxy.Commands.Building {
                     count = Messages.Rows.Count;
                 }
                 
-                string syntax = count == 0 ?
-                    "INSERT INTO `Messages" + lvlName + "` (X, Y, Z, Message) VALUES (@0, @1, @2, @3)"
-                    : "UPDATE `Messages" + lvlName + "` SET Message=@3 WHERE X=@0 AND Y=@1 AND Z=@2";
-                Database.Execute(syntax, x, y, z, data.Message);
+                if (count == 0) {
+                    Database.Backend.AddRow("Messages" + lvlName, "X, Y, Z, Message", x, y, z, data.Message);
+                } else {
+                    Database.Backend.UpdateRows("Messages" + lvlName, "Message=@3", 
+                                                "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z, data.Message);
+                }
             }
         }
 

@@ -19,23 +19,23 @@ using System;
 
 namespace MCGalaxy.SQL {
 
-    /// <summary> Provides the description of a column for an SQL create statement. </summary>
-    public struct ColumnParams {
+    /// <summary> Describes a column for an SQL create statement. </summary>
+    public struct ColumnDesc {
         public readonly string Column;
         public readonly ColumnType Type;
-        public readonly ushort TextLength;
+        public readonly ushort MaxLength;
         
         public readonly bool AutoIncrement;
         public readonly bool PrimaryKey;
         public readonly bool NotNull;
         public readonly string DefaultValue;
         
-        public ColumnParams(string col, ColumnType type, ushort textLen = 0,
+        public ColumnDesc(string col, ColumnType type, ushort maxLen = 0,
                             bool autoInc = false, bool priKey = false, 
                             bool notNull = false, string def = null) {
             Column = col;
             Type = type;
-            TextLength = textLen;
+            MaxLength = maxLen;
             AutoIncrement = autoInc;
             PrimaryKey = priKey;
             NotNull = notNull;
@@ -43,15 +43,16 @@ namespace MCGalaxy.SQL {
         }
         
         public string FormatType() {
-            if (Type == ColumnType.Char) return "CHAR(" + TextLength + ")";
-            if (Type == ColumnType.VarChar) return "VARCHAR(" + TextLength + ")";
+            if (Type == ColumnType.Char) return "CHAR(" + MaxLength + ")";
+            if (Type == ColumnType.VarChar) return "VARCHAR(" + MaxLength + ")";
             return colTypes[(int)Type];
         }
         
         static string[] colTypes = {
             "TINYINT UNSIGNED", "SMALLINT UNSIGNED", "MEDIUMINT UNSIGNED", 
             "INT UNSIGNED", "BIGINT UNSIGNED", "TINYINT", "SMALLINT", 
-            "MEDIUMINT", "INT", "BIGINT", "INTEGER", "BOOL", "DATETIME", "TEXT" };
+            "MEDIUMINT", "INT", "BIGINT", "INTEGER", "BOOL", "DATETIME", "TEXT" 
+        };
     }
     
     public enum ColumnType {

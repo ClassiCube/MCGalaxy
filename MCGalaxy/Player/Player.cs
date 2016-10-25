@@ -106,18 +106,17 @@ namespace MCGalaxy {
         }
 
         public void save() {
-            const string query = "UPDATE Players SET IP=@0, LastLogin=@1, totalLogin=@2, totalDeaths=@3, " +
-                "Money=@4, totalBlocks=@5, totalCuboided=@6, totalKicked=@7, TimeSpent=@8 WHERE Name=@9";
-            
-            if (MySQLSave != null) MySQLSave(this, query);
-            OnMySQLSaveEvent.Call(this, query);
+            if (MySQLSave != null) MySQLSave(this, "");
+            OnMySQLSaveEvent.Call(this, "");
             if (cancelmysql) { cancelmysql = false; return; }
 
             long blocks = PlayerData.BlocksPacked(TotalPlaced, overallBlocks);
-            long cuboided = PlayerData.CuboidPacked(TotalDeleted, TotalDrawn);            
-            Database.Execute(query, ip, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 
-                             totalLogins, overallDeath, money, blocks, 
-                             cuboided, totalKicked, time.ToDBTime(), name);
+            long cuboided = PlayerData.CuboidPacked(TotalDeleted, TotalDrawn);
+            Database.Backend.UpdateRows("Players", "IP=@0, LastLogin=@1, totalLogin=@2, totalDeaths=@3, Money=@4, " +
+                                        "totalBlocks=@5, totalCuboided=@6, totalKicked=@7, TimeSpent=@8", "WHERE Name=@9", 
+                                        ip, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                                        totalLogins, overallDeath, money, blocks,
+                                        cuboided, totalKicked, time.ToDBTime(), name);
             
             Server.zombie.SaveZombieStats(this);
             SaveUndo(this);

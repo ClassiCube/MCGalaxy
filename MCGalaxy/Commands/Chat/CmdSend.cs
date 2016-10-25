@@ -46,19 +46,24 @@ namespace MCGalaxy.Commands {
             
             //safe against SQL injections because whoTo is checked for illegal characters
             Database.Backend.CreateTable("Inbox" + receiverName, createInbox);
-            Database.Execute("INSERT INTO `Inbox" + receiverName + "` (PlayerFrom, TimeSent, Contents) VALUES (@0, @1, @2)",
-                             senderName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), message);
+            Database.Backend.AddRow("Inbox" + receiverName, "PlayerFrom, TimeSent, Contents",
+                                    senderName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), message);
 
             Player receiver = PlayerInfo.FindExact(receiverName);
             Player.Message(p, "Message sent to &5" + receiverName + ".");
             if (receiver == null) return;
-            p.MessageTo(receiver, "Message recieved from &5" + senderName + "%S.");
+            
+            if (Player.IsSuper(p)) {
+                receiver.SendMessage("Message recieved from &5" + senderName + "%S.");
+            } else {
+                p.MessageTo(receiver, "Message recieved from &5" + senderName + "%S.");
+            }
         }
         
-        static ColumnParams[] createInbox = {
-            new ColumnParams("PlayerFrom", ColumnType.Char, 20),
-            new ColumnParams("TimeSent", ColumnType.DateTime),
-            new ColumnParams("Contents", ColumnType.VarChar, 255),
+        static ColumnDesc[] createInbox = {
+            new ColumnDesc("PlayerFrom", ColumnType.Char, 20),
+            new ColumnDesc("TimeSent", ColumnType.DateTime),
+            new ColumnDesc("Contents", ColumnType.VarChar, 255),
         };
         
         public override void Help(Player p) {

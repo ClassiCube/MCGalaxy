@@ -23,7 +23,7 @@ namespace MCGalaxy.SQL {
     
     public abstract class IDatabaseBackend {
         
-        /// <summary> Describes the arguments for a database connection 
+        /// <summary> Describes the arguments for a database connection
         /// (such as database name or file location) </summary>
         public abstract string ConnectionString { get; }
         
@@ -37,11 +37,11 @@ namespace MCGalaxy.SQL {
         /// many sql statements as one single transaction. </summary>
         public abstract BulkTransaction CreateBulk();
         
-        /// <summary> Returns a new ParameterisedQuery instance, which executes sql statements 
+        /// <summary> Returns a new ParameterisedQuery instance, which executes sql statements
         /// and manages binding of parameters for sql queries. </summary>
         public abstract ParameterisedQuery CreateParameterised();
         
-        /// <summary> Returns the shared static ParamterisedQuery instance, that is only used 
+        /// <summary> Returns the shared static ParamterisedQuery instance, that is only used
         /// for sql queries with no parameters. </summary>
         internal abstract ParameterisedQuery GetStaticParameterised();
         
@@ -59,11 +59,11 @@ namespace MCGalaxy.SQL {
         
         /// <summary> Adds a new coloumn to the given table. </summary>
         /// <remarks> Note colAfter is only a hint - some database backends ignore this. </remarks>
-        public abstract void AddColumn(string table, string column, 
+        public abstract void AddColumn(string table, string column,
                                        string colType, string colAfter);
         
         /// <summary> Creates a new table in the database (unless it already exists). </summary>
-        public virtual void CreateTable(string table, ColumnParams[] columns) {
+        public virtual void CreateTable(string table, ColumnDesc[] columns) {
             StringBuilder sql = new StringBuilder();
             sql.AppendLine("CREATE TABLE if not exists `" + table + "` (");
             CreateTableColumns(sql, columns);
@@ -71,15 +71,13 @@ namespace MCGalaxy.SQL {
             Database.Execute(sql.ToString());
         }
         
-        /// <summary> Creates a new table in the database (unless it already exists). </summary>
-        protected abstract void CreateTableColumns(StringBuilder sql, ColumnParams[] columns);
+        protected abstract void CreateTableColumns(StringBuilder sql, ColumnDesc[] columns);
         
-        /// <summary> Completely removes the given table from the database. </summary>
+        /// <summary> Completely removes the given table. </summary>
         public virtual void DeleteTable(string table) {
             string syntax = "DROP TABLE `" + table + "`";
             Database.Execute(syntax);
         }
-        
         
         /// <summary> Inserts/Copies all the rows from the source table into the destination table. </summary>
         /// <remarks> Note: This may work incorrectly if the tables have different schema. </remarks>
@@ -88,31 +86,56 @@ namespace MCGalaxy.SQL {
             Database.Execute(syntax);
         }
         
-        /// <summary> Retrieves rows for the given table from the database. </summary>
-        /// <remarks> modifier is optional SQL which can be used to retrieve only certain rows, 
+        
+        /// <summary> Retrieves rows for the given table. </summary>
+        /// <remarks> modifier is optional SQL which can be used to retrieve only certain rows,
         /// return rows in a certain order, etc.</remarks>
-        public virtual DataTable GetRows(string table, string columns, 
+        public virtual DataTable GetRows(string table, string columns,
                                          string modifier = "", params object[] args) {
             string syntax = "SELECT " + columns + " FROM `" + table + "`";
             if (modifier != "") syntax += " " + modifier;
             return Database.Fill(syntax, args);
         }
         
-        /// <summary> Updates rows for the given table from the database. </summary>
+        /// <summary> Updates rows for the given table. </summary>
         /// <remarks> modifier is optional SQL which can be used to update only certain rows.</remarks>
-        public virtual void UpdateRows(string table, string columns, 
+        public virtual void UpdateRows(string table, string columns,
                                        string modifier = "", params object[] args) {
             string syntax = "UPDATE `" + table + "` SET " + columns;
             if (modifier != "") syntax += " " + modifier;
             Database.Execute(syntax, args);
         }
         
-        /// <summary> Deletes rows for the given table from the database. </summary>
+        /// <summary> Deletes rows for the given table. </summary>
         /// <remarks> modifier is optional SQL which can be used to delete only certain rows.</remarks>
         public virtual void DeleteRows(string table, string modifier = "", params object[] args) {
             string syntax = "DELETE FROM `" + table + "`";
             if (modifier != "") syntax += " " + modifier;
             Database.Execute(syntax, args);
+        }
+
+        /// <summary> Adds a row to the given table. </summary>
+        public virtual void AddRow(string table, string columns, params object[] args) {
+            DoInsert("INSERT INTO", table, columns, args);
+        }
+        
+        /// <summary> Adds or replaces a row (same primary key) in the given table. </summary>
+        public abstract void AddOrReplaceRow(string table, string columns, params object[] args);
+        
+        protected void DoInsert(string command, string table,
+                                string columns, params object[] args) {
+            StringBuilder sql = new StringBuilder(command);
+            sql.Append(" `").Append(table).Append("` ");
+            sql.Append('(').Append(columns).Append(')');
+            
+            string[] names = Database.GetParamNames(args.Length);
+            sql.Append(" VALUES (");
+            for (int i = 0; i < args.Length; i++) {
+                sql.Append(names[i]);
+                if (i < args.Length - 1) sql.Append(", ");
+                else sql.Append(")");
+            }
+            Database.Execute(sql.ToString(), args);
         }
     }
 }
