@@ -22,7 +22,7 @@ using fNbt;
 namespace MCGalaxy.Levels.IO {
 	public sealed class CwImporter : IMapImporter {
 
-		public override string Extension { get { return "cw"; } }
+		public override string Extension { get { return ".cw"; } }
 		
         public override Level Read(Stream src, string name, bool metadata) {
             NbtFile file = new NbtFile();
@@ -37,7 +37,7 @@ namespace MCGalaxy.Levels.IO {
             return lvl;
         }
         
-        static void ReadData(NbtCompound root, string name, out Level lvl) {
+        void ReadData(NbtCompound root, string name, out Level lvl) {
             if (root["FormatVersion"].ByteValue > 1)
                 throw new NotSupportedException("Only version 1 of ClassicWorld format is supported.");
             
@@ -47,7 +47,7 @@ namespace MCGalaxy.Levels.IO {
             
             lvl = new Level(name, (ushort)x, (ushort)y, (ushort)z);
             lvl.blocks = root["BlockArray"].ByteArrayValue;
-            FcmFile.ConvertExtended(lvl);
+            ConvertCustom(lvl);
             
             if (!root.Contains("Spawn")) return;
             NbtTag spawn = root["Spawn"];
@@ -58,7 +58,7 @@ namespace MCGalaxy.Levels.IO {
             lvl.roty = spawn["P"].ByteValue;
         }
         
-        static void ReadMetadata(NbtCompound root, Level lvl) {
+        void ReadMetadata(NbtCompound root, Level lvl) {
             if (!root.Contains("CPE")) return;
             NbtCompound cpe = (NbtCompound)root["CPE"];
             
@@ -71,6 +71,7 @@ namespace MCGalaxy.Levels.IO {
             if (cpe.Contains("BlockDefinitions"))
                 ParseBlockDefinitions(cpe, lvl);
         }
+		
         
         static void ParseEnvMapAppearance(NbtCompound cpe, Level lvl) {
             NbtCompound comp = (NbtCompound)cpe["EnvMapAppearance"];

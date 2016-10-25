@@ -37,18 +37,20 @@ using System.IO.Compression;
 using System.Net;
 
 namespace MCGalaxy.Levels.IO {
-    public static class DatFile {
-        
-        public static Level Load(Stream stream, string name) {
+	public sealed class DatImporter : IMapImporter {
+
+		public override string Extension { get { return ".dat"; } }
+		
+        public override Level Read(Stream src, string name, bool metadata) {
             byte[] temp = new byte[8];
             Level lvl = new Level(name, 0, 0, 0);
-            stream.Seek(-4, SeekOrigin.End);
-            stream.Read(temp, 0, sizeof(int));
-            stream.Seek(0, SeekOrigin.Begin);
+            src.Seek(-4, SeekOrigin.End);
+            src.Read(temp, 0, sizeof(int));
+            src.Seek(0, SeekOrigin.Begin);
             
             int length = BitConverter.ToInt32(temp, 0);
             byte[] data = new byte[length];
-            using (GZipStream reader = new GZipStream(stream, CompressionMode.Decompress, true))
+            using (GZipStream reader = new GZipStream(src, CompressionMode.Decompress, true))
                 reader.Read(data, 0, length);
 
             for (int i = 0; i < length - 1; i++) {
@@ -85,6 +87,7 @@ namespace MCGalaxy.Levels.IO {
                             lvl.Width = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt32(temp, 0));
                         } else if (MemCmp(data, pointer, "depth")) {
                             lvl.Height = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt32(temp, 0));
+                            lvl.EdgeLevel = lvl.Height / 2;
                         } else if (MemCmp(data, pointer, "height")) {
                             lvl.Length = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt32(temp, 0));
                         }

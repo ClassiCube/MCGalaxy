@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void JoinMuseum(Player p, string name, string path) {
-            Level lvl = LvlFile.Load(name, path);
+            Level lvl = IMapImporter.Formats[0].Read(path, name, false);
             SetLevelProps(lvl);
 
             p.Loading = true;

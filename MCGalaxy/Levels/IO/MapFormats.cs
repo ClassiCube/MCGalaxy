@@ -24,7 +24,7 @@ namespace MCGalaxy.Levels.IO {
     /// <summary> Reads/Loads block data (and potentially metadata) encoded in a particular format. </summary>
     public abstract class IMapImporter {
         
-        /// <summary> The extension (without a dot) of this format. </summary>
+        /// <summary> The file extension of this format. </summary>
         public abstract string Extension { get; }
         
         /// <summary> Reads the data for a level from a file containing data encoded in this format. </summary>
@@ -38,12 +38,28 @@ namespace MCGalaxy.Levels.IO {
         /// <summary> Reads the data for a level from a file containing data encoded in this format. </summary>
         /// <param name="metadata"> Whether metadata should be loaded. </param>
         public abstract Level Read(Stream src, string name, bool metadata);
+        
+        public static List<IMapImporter> Formats = new List<IMapImporter>() {
+        	new LvlImporter(), new CwImporter(), new FcmImporter(), new McfImporter(), new DatImporter(),
+        };
+        
+        protected void ConvertCustom(Level lvl) {
+            ushort x, y, z;
+            for (int i = 0; i < lvl.blocks.Length; i++) {
+                byte block = lvl.blocks[i];
+                if (block <= Block.CpeMaxBlock) continue;
+                
+                lvl.blocks[i] = Block.custom_block;
+                lvl.IntToPos(i, out x, out y, out z);
+                lvl.SetExtTile(x, y, z, block);
+            }
+        }
     }
 
     /// <summary> Writes/Saves block data (and potentially metadata) encoded in a particular format. </summary>    
     public abstract class IMapExporter {
 
-        /// <summary> The extension (without a dot) of this format. </summary>
+        /// <summary> The file extension of this format. </summary>
         public abstract string Extension { get; }
         
         /// <summary> Saves the data encoded in this format for a level to a file. </summary>
@@ -54,6 +70,10 @@ namespace MCGalaxy.Levels.IO {
         }
         
         /// <summary> Saves the data encoded in this format for a level to a file. </summary>
-        public abstract void Write(Stream dst, Level lvl);  
+        public abstract void Write(Stream dst, Level lvl);
+        
+        public static List<IMapExporter> Formats = new List<IMapExporter>() {
+            new LvlExporter()
+        };
     }
 }

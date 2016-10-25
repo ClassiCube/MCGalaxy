@@ -40,8 +40,9 @@ namespace MCGalaxy.Commands {
         bool DoRestore(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             string path = LevelInfo.BackupPath(p.level.name, (string)state);           
             try {
-                using (Level other = LvlFile.Load("tempLevel", path))
+                using (Level other = IMapImporter.Formats[0].Read(path, "templevel", false)) {
                     return CopyBlocks(p, other, marks);
+                }
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 Server.s.Log("Restore selection failed");

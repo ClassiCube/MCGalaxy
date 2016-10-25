@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.World {
                 
                 lock (lvl.saveLock) {
                     lvl.Backup(true);
-                    LvlFile.Save(temp, LevelInfo.LevelPath(lvl.name));
+                    IMapExporter.Formats[0].Write(LevelInfo.LevelPath(lvl.name), temp);
                     lvl.saveLevel = false;
                 }
             }

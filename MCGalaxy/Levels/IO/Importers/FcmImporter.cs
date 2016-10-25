@@ -21,10 +21,12 @@ using System.IO.Compression;
 using System.Text;
 
 namespace MCGalaxy.Levels.IO {   
-    public static class FcmFile {
+    public sealed class FcmImporter : IMapImporter {
 
-        public static Level Load(Stream stream, string name) {
-            BinaryReader reader = new BinaryReader(stream);
+        public override string Extension { get { return ".fcm"; } }
+        
+        public override Level Read(Stream src, string name, bool metadata) {
+            BinaryReader reader = new BinaryReader(src);
             if (reader.ReadInt32() != 0x0FC2AF40 || reader.ReadByte() != 13) {
                 throw new InvalidDataException( "Unexpected constant in .fcm file" );
             }
@@ -46,7 +48,7 @@ namespace MCGalaxy.Levels.IO {
             reader.ReadBytes(26); // layer index
             int metaSize = reader.ReadInt32();            
 
-            using (DeflateStream ds = new DeflateStream(stream, CompressionMode.Decompress)) {
+            using (DeflateStream ds = new DeflateStream(src, CompressionMode.Decompress)) {
                 reader = new BinaryReader(ds);
                 for (int i = 0; i < metaSize; i++) {
                     string group = ReadString(reader);
@@ -55,20 +57,8 @@ namespace MCGalaxy.Levels.IO {
                 }
                 int read = ds.Read(lvl.blocks, 0, lvl.blocks.Length);
             }
-            ConvertExtended(lvl);
+            ConvertCustom(lvl);
             return lvl;
-        }
-        
-        internal static void ConvertExtended(Level lvl) {
-            ushort x, y, z;
-            for (int i = 0; i < lvl.blocks.Length; i++) {
-                byte block = lvl.blocks[i];
-                if (block <= Block.CpeMaxBlock) continue;
-                
-                lvl.blocks[i] = Block.custom_block;
-                lvl.IntToPos(i, out x, out y, out z);
-                lvl.SetExtTile(x, y, z, block);
-            }
         }
         
         static string ReadString(BinaryReader reader) {

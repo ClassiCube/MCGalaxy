@@ -23,11 +23,13 @@ namespace MCGalaxy.Levels.IO {
 
     //WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
     //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
-    public static class LvlFile {
+	public sealed class LvlExporter : IMapExporter {
+
+		public override string Extension { get { return ".lvl"; } }
         
         const int bufferSize = 64 * 1024;
-        public static void Save(Level lvl, string file) {
-            using (Stream fs = File.Create(file), gs = new GZipStream(fs, CompressionMode.Compress, true)) {
+        public override void Write(Stream dst, Level lvl) {
+            using (Stream gs = new GZipStream(dst, CompressionMode.Compress)) {
                 // We need to copy blocks to a temp byte array due to the multithreaded nature of the server
                 // Otherwise, some blocks can change between writing data and calculating its crc32, which
                 // then causes the level to fail to load next time do to the crc32 not matching the data.
@@ -129,106 +131,6 @@ namespace MCGalaxy.Levels.IO {
             
             if (entries == 0) return;
             gs.Write(buffer, 0, entries * 8);
-        }
-        
-        
-        public static void LoadDimensions(string file, out ushort width, out ushort height, out ushort length) {
-            using (Stream fs = File.OpenRead(file), gs = new GZipStream(fs, CompressionMode.Decompress, true)) {
-                byte[] header = new byte[16];
-                int offset = 0;
-                Vec3U16 dims = ReadHeader(gs, header, out offset);
-                width = dims.X; height = dims.Y; length = dims.Z;
-            }
-        }
-        
-        public static Level Load(string name, string file, bool loadPhysics = false) {
-            using (Stream fs = File.OpenRead(file), gs = new GZipStream(fs, CompressionMode.Decompress, true)) {
-                byte[] header = new byte[16];
-                int offset = 0;
-                Vec3U16 dims = ReadHeader(gs, header, out offset);
-
-                Level lvl = new Level(name, dims.X, dims.Y, dims.Z);
-                lvl.spawnx = BitConverter.ToUInt16(header, offset + 4);
-                lvl.spawnz = BitConverter.ToUInt16(header, offset + 6);
-                lvl.spawny = BitConverter.ToUInt16(header, offset + 8);
-                lvl.rotx = header[offset + 10];
-                lvl.roty = header[offset + 11];
-                
-                gs.Read(lvl.blocks, 0, lvl.blocks.Length);
-                ReadBlockDefsSection(lvl, gs);
-                if (!loadPhysics) return lvl;
-                
-                ReadPhysicsSection(lvl, gs);
-                return lvl;
-            }
-        }
-        
-        static Vec3U16 ReadHeader(Stream gs, byte[] header, out int offset) {
-            gs.Read(header, 0, 2);
-            Vec3U16 dims = default(Vec3U16);
-            dims.X = BitConverter.ToUInt16(header, 0);
-
-            if (dims.X == 1874) { // version field, width is next ushort
-                gs.Read(header, 0, 16);
-                dims.X = BitConverter.ToUInt16(header, 0);
-                offset = 2;
-            } else {
-                gs.Read(header, 0, 12);
-                offset = 0;
-            }
-            
-            dims.Z = BitConverter.ToUInt16(header, offset);
-            dims.Y = BitConverter.ToUInt16(header, offset + 2);
-            return dims;
-        }
-        
-        static void ReadBlockDefsSection(Level lvl, Stream gs) {
-            if (gs.ReadByte() != 0xBD) return;
-            
-            int index = 0;
-            for (int y = 0; y < lvl.ChunksY; y++)
-                for (int z = 0; z < lvl.ChunksZ; z++)
-                    for (int x = 0; x < lvl.ChunksX; x++)
-            {
-                if (gs.ReadByte() == 1) {
-                    byte[] chunk = new byte[16 * 16 * 16];
-                    gs.Read(chunk, 0, chunk.Length);
-                    lvl.CustomBlocks[index] = chunk;
-                }
-                index++;
-            }
-        }
-        
-        unsafe static void ReadPhysicsSection(Level lvl, Stream gs) {
-            if (gs.ReadByte() != 0xFC) return;
-            byte[] buffer = new byte[sizeof(int)];
-            int read = gs.Read(buffer, 0, sizeof(int));
-            if (read < sizeof(int)) return;
-            
-            int count = NetUtils.ReadI32(buffer, 0);
-            lvl.ListCheck.Count = count;
-            lvl.ListCheck.Items = new Check[count];
-            ReadPhysicsEntries(lvl, gs, count);
-        }
-        
-        unsafe static void ReadPhysicsEntries(Level lvl, Stream gs, int count) {
-            byte[] buffer = new byte[Math.Min(count, 1024) * 8];
-            Check C;
-            
-            fixed (byte* ptr = buffer)
-                for (int i = 0; i < count; i += 1024)
-            {
-                int entries = Math.Min(1024, count - i);
-                int read = gs.Read(buffer, 0, entries * 8);
-                if (read < entries * 8) return;
-                
-                int* ptrInt = (int*)ptr;
-                for (int j = 0; j < entries; j++) {
-                    C.b = *ptrInt; ptrInt++;
-                    C.data.Raw = (uint)(*ptrInt); ptrInt++;
-                    lvl.ListCheck.Items[i + j] = C;
-                }
-            }
         }
     }
 }

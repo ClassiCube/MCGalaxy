@@ -282,7 +282,7 @@ namespace MCGalaxy {
                 File.Delete(path);
             }
             
-            LvlFile.Save(this, path + ".backup");
+            IMapExporter.Formats[0].Write(path + ".backup", this);
             File.Copy(path + ".backup", path);
             SaveSettings(this);
 
@@ -352,7 +352,7 @@ namespace MCGalaxy {
             }
             
             try {
-                Level level = LvlFile.Load(name, path, true);
+                Level level = IMapImporter.Formats[0].Read(path, name, true);
                 level.setPhysics(phys);
                 level.backedup = true;
 
