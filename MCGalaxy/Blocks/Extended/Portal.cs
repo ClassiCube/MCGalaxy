@@ -24,6 +24,8 @@ namespace MCGalaxy.Blocks.Extended {
         
         public static bool Handle(Player p, ushort x, ushort y, ushort z) {
             p.RevertBlock(x, y, z);
+            if (!p.level.hasPortals) return false;
+            
             try {
                 DataTable Portals = Database.Backend.GetRows("Portals" + p.level.name, "*",
                                                              "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);

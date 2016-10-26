@@ -256,5 +256,7 @@ namespace MCGalaxy {
         public int WinChance {
             get { return RoundsPlayed == 0 ? 100 : (RoundsHumanWon * 100) / RoundsPlayed; }
         }
+        
+        internal bool hasPortals, hasMessageBlocks;
     }
 }

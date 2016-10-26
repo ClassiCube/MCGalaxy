@@ -115,6 +115,8 @@ namespace MCGalaxy.Commands.Building {
                 
                 lock (locker) {
                     Database.Backend.CreateTable("Portals" + lvlName, LevelDB.createPortals);
+                    Level map = LevelInfo.FindExact(P.Map);
+                    if (map != null) map.hasPortals = true;
 
                     int count = 0;
                     using (DataTable portals = Database.Backend.GetRows("Portals" + lvlName, "*",

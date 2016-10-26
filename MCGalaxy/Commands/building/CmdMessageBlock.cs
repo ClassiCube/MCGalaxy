@@ -138,6 +138,7 @@ namespace MCGalaxy.Commands.Building {
             
             lock (locker) {
                 Database.Backend.CreateTable("Messages" + lvlName, LevelDB.createMessages);
+                p.level.hasMessageBlocks = true;
                 
                 int count = 0;
                 using (DataTable Messages = Database.Backend.GetRows("Messages" + lvlName, "*",

@@ -110,7 +110,9 @@ namespace MCGalaxy {
         }
         
         internal static void LoadPortals(Level level, string name) {
-            if (!Database.TableExists("Portals" + name)) return;
+            level.hasPortals = Database.TableExists("Portals" + name);
+            if (!level.hasPortals) return;
+            
             using (DataTable table = Database.Backend.GetRows("Portals" + name, "*")) {
                 foreach (DataRow row in table.Rows) {
                     ushort x = ushort.Parse(row["EntryX"].ToString());
@@ -131,7 +133,9 @@ namespace MCGalaxy {
         }
         
         internal static void LoadMessages(Level level, string name) {
-            if (!Database.TableExists("Messages" + name)) return;
+            level.hasMessageBlocks = Database.TableExists("Messages" + name);
+            if (!level.hasMessageBlocks) return;
+            
             using (DataTable table = Database.Backend.GetRows("Messages" + name, "*")) {
                 foreach (DataRow row in table.Rows) {
                     ushort x = ushort.Parse(row["X"].ToString());

@@ -25,6 +25,8 @@ namespace MCGalaxy.Blocks.Extended {
         
         public static bool Handle(Player p, ushort x, ushort y, ushort z) {
             p.RevertBlock(x, y, z);
+            if (!p.level.hasMessageBlocks) return false;
+            
             try {
                 DataTable Messages = Database.Backend.GetRows("Messages" + p.level.name, "*",
                                                               "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
