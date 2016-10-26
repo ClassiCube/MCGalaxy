@@ -1,3 +1,49 @@
+v 1.8.8.4
+Added: /blockprops which allows changing of physics properties for all blocks
+Added: Can overwrite core blocks on per-level basis with /lb
+Added: /server import [name] which imports .sql files (from /server backup table)
+Fixed: Rare case where saving level corrupted it
+Improved: /os map can now change nearly all /map options
+Improved: /opstats is now much cleaner and tracks stats properly
+Improved: Cloudy brush now uses scale for its arguments
+Improved: Free up %h,%s,%t,%i for use by custom colour codes.
+Improved: layout of /mapinfo is now cleaner
+Improved: Kick messages now show who kicked
+Performance: pixel/space/rainbow maps now generate much faster
+Performance: Now do bulk copies in level saving
+Added: bamboo and palm trees from fCraft
+Fixed: Being able to noclip into solid portals/message blocks
+Fixed: slab/cobblestoneslab stacking issues
+Fixed: Trains reverting the block below to the wrong format
+Fixed: Going unafk revealing hidden
+Fixed: Being able to use like twice in a round
+Fixed: ZS vote message not being cleared after doing /zg force
+Fixed: Issue with /about for very old BlockDB table and custom blocks
+Fixed: 'time left' not being reset at end of ZS round
+Fixed: Fixed pillaring check in ZS
+Fixed: /mapset not updating HUD in top right
+Fixed: /map grass not actually disabling map growth
+Fixed: Being instantly un-afked after joining a map or moving mouse after /afk
+Fixed: /topten 3 (money)
+Fixed: /buy queuelevel, /queue zombie not working when isn't full player name
+Fixed: /cmdunload showing empty string when command doesn't exist
+Fixed: /copy delete not working
+Fixed: Not using . for decimal separator everywhere
+Improved: /rankinfo without args shows your own /rankinfo
+Improved: Better messages in /pervisit and /perbuild
+Improved: Lava now burns more blocks it logically should
+Improved: Also save offset in /copy save
+Improved: Bots now save current instruction on level unload
+Improved: Using /ref in ZS sends you back to spawn
+Improved: Simpler layout for /whois in ZS
+Improved: Randomize order players in ZS moved to next level
+Improved: /gb and /lb are more intuitive
+Improved: /store has a cleaner layout
+Improved: /map has a cleaner layout
+Removed: /rankreqs since no one used it
+Removed: /allowguns, it's part of /map now
+Removed: /pload/punload/pcreate, now one /scripting command
+
 v 1.8.8.3
 --- It is highly recommended you update to this ---
 Fixed: Doors not working
