@@ -245,12 +245,13 @@ namespace MCGalaxy {
 
         /// <summary> Kicks the player from the server,
         /// with the given message shown in both chat and in the disconnect packet. </summary>
-        public void Kick(string discMsg) {
+        public void Kick(string discMsg) { Kick(discMsg, false); }
+        public void Kick(string discMsg, bool sync = false) {
             string chatMsg = discMsg;
             if (chatMsg != "") chatMsg = "(" + chatMsg + ")"; // old format
-            LeaveServer(chatMsg, discMsg, true, false);
+            LeaveServer(chatMsg, discMsg, true, sync);
         }
-
+        
         /// <summary> Disconnects the players from the server,
         /// with the given message shown in both chat and in the disconnect packet. </summary>
         public void Leave(string chatMsg, string discMsg, bool sync = false) { 
@@ -259,8 +260,9 @@ namespace MCGalaxy {
 
         /// <summary> Disconnects the players from the server,
         /// with the given messages shown in chat and in the disconnect packet. </summary>        
-        public void Leave(string discMsg) {
-            LeaveServer(discMsg, discMsg, false, false);
+        public void Leave(string discMsg) { Leave(discMsg, false); }       
+        public void Leave(string discMsg, bool sync = false) {
+            LeaveServer(discMsg, discMsg, false, sync);
         }
         
         [Obsolete("Use Leave() or Kick() instead")]
