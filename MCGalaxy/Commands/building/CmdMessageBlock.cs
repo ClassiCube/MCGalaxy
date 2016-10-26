@@ -42,6 +42,7 @@ namespace MCGalaxy.Commands.Building {
             string[] args = message.SplitSpaces(2);
             string block = args[0].ToLower();
             data.Block = GetBlock(p, block, out data.ExtBlock, ref allMessage);
+            if (data.Block == Block.Invalid) return;
             
             if (allMessage) {
                 data.Message = message;
