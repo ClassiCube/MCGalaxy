@@ -22,23 +22,21 @@ using MCGalaxy.SQL;
 namespace MCGalaxy.Blocks.Extended {
     public static class Portal {
         
-        public static void Handle(Player p, ushort x, ushort y, ushort z) {
+        public static bool Handle(Player p, ushort x, ushort y, ushort z) {
             p.RevertBlock(x, y, z);
             try {
                 DataTable Portals = Database.Backend.GetRows("Portals" + p.level.name, "*",
                                                              "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
                 int last = Portals.Rows.Count - 1;
-                if (last == -1) { Portals.Dispose(); return; }
+                if (last == -1) { Portals.Dispose(); return false; }
                 byte rotX = p.rot[0], rotY = p.rot[1];
                 
                 DataRow row = Portals.Rows[last];
                 string map = row["ExitMap"].ToString();
                 if (p.level.name != map) {
-                    if (!p.level.VisitAccess.CheckDetailed(p, false)) return;
-                    
                     Level curLevel = p.level;
                     PlayerActions.ChangeMap(p, map, true);
-                    if (curLevel == p.level) { Player.Message(p, "The map the portal goes to isn't loaded."); return; }
+                    if (curLevel == p.level) { Player.Message(p, "The map the portal goes to isn't loaded."); return true; }
                     p.BlockUntilLoad(10);
                 }
                 
@@ -47,8 +45,9 @@ namespace MCGalaxy.Blocks.Extended {
                 z = ushort.Parse(row["ExitZ"].ToString());
                 PlayerActions.MoveCoords(p, x, y, z, rotX, rotY);
                 Portals.Dispose();
+                return true;
             } catch {
-                Player.Message(p, "Portal had no exit.");
+                return false;
             }
         }
     }

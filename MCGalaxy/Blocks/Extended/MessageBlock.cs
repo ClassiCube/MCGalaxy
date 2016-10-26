@@ -23,13 +23,13 @@ using MCGalaxy.SQL;
 namespace MCGalaxy.Blocks.Extended {
     public static class MessageBlock {
         
-        public static void Handle(Player p, ushort x, ushort y, ushort z) {
+        public static bool Handle(Player p, ushort x, ushort y, ushort z) {
             p.RevertBlock(x, y, z);
             try {
                 DataTable Messages = Database.Backend.GetRows("Messages" + p.level.name, "*",
                                                               "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
                 int last = Messages.Rows.Count - 1;
-                if (last == -1) { Messages.Dispose(); return; }
+                if (last == -1) { Messages.Dispose(); return false; }
                 string message = Messages.Rows[last]["Message"].ToString().Trim();
                 message = message.Replace("\\'", "\'");
                 message = message.Replace("@p", p.name);
@@ -47,8 +47,9 @@ namespace MCGalaxy.Blocks.Extended {
                     }
                     p.prevMsg = message;
                 }
+                return true;
             } catch {
-                Player.Message(p, "No message was stored.");
+                return false;
             }
         }
         

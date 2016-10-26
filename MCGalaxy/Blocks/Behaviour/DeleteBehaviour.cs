@@ -76,7 +76,7 @@ namespace MCGalaxy.Blocks {
         }
         
         internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (p.level.physics != 0) {                
+            if (p.level.physics != 0) {
                 bool isExt = false;
                 if (block == Block.custom_block) {
                     isExt = true;
@@ -102,13 +102,15 @@ namespace MCGalaxy.Blocks {
         }
         
         internal static bool DoPortal(Player p, byte block, ushort x, ushort y, ushort z) {
-            Portal.Handle(p, x, y, z);
-            return true;
+            if (Portal.Handle(p, x, y, z)) return true;
+            p.ChangeBlock(x, y, z, Block.air, 0);
+            return false;
         }
         
         internal static bool DoMessageBlock(Player p, byte block, ushort x, ushort y, ushort z) {
-            MessageBlock.Handle(p, x, y, z);
-            return true;
+            if (MessageBlock.Handle(p, x, y, z)) return true;
+            p.ChangeBlock(x, y, z, Block.air, 0);
+            return false;
         }
         
         internal static bool CustomBlock(Player p, byte block, ushort x, ushort y, ushort z) {
