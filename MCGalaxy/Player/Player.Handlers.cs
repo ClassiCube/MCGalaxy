@@ -51,7 +51,11 @@ namespace MCGalaxy {
             if (old == Block.Invalid) return;
             if (jailed || !agreed || !canBuild) { RevertBlock(x, y, z); return; }
             if (level.IsMuseum && Blockchange == null) return;
-            if (action > 1) { Leave("Unknown block action!", true); return; }
+            
+            if (action > 1) {
+                const string msg = "Unknown block action!";
+                Leave(msg, msg, true); return; 
+            }
             bool doDelete = !painting && action == 0;
 
             if (Server.verifyadmins && adminpen) {
@@ -196,8 +200,8 @@ namespace MCGalaxy {
         
         int PacketSize(byte[] buffer) {
             switch (buffer[0]) {
-                    case (byte)'G': return -2; //For wom
-                    case Opcode.Handshake: return 131;
+                case (byte)'G': return -2; //For wom
+                case Opcode.Handshake: return 131;
                 case Opcode.SetBlockClient:
                     if (!loggedIn) goto default;
                     return 9;
@@ -207,12 +211,14 @@ namespace MCGalaxy {
                 case Opcode.Message:
                     if (!loggedIn) goto default;
                     return 66;
-                    case Opcode.CpeExtInfo: return 67;
-                    case Opcode.CpeExtEntry: return 69;
-                    case Opcode.CpeCustomBlockSupportLevel: return 2;
+                case Opcode.CpeExtInfo: return 67;
+                case Opcode.CpeExtEntry: return 69;
+                case Opcode.CpeCustomBlockSupportLevel: return 2;
+                
                 default:
                     if (!dontmindme) {
-                        Leave("Unhandled message id \"" + buffer[0] + "\"!", true);
+                        string msg = "Unhandled message id \"" + buffer[0] + "\"!";
+                        Leave(msg, msg, true);
                     }
                     return -1;
             }
@@ -571,7 +577,8 @@ namespace MCGalaxy {
 
             text = Regex.Replace(text, "  +", " ");
             if (text.IndexOf('&') >= 0) {
-                Leave("Illegal character in chat message!", true); return true;
+                const string msg = "Illegal character in chat message!";
+                Leave(msg, msg, true); return true;
             }
             return text.Length == 0;
         }

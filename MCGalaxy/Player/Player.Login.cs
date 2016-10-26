@@ -27,7 +27,7 @@ namespace MCGalaxy {
             LastAction = DateTime.UtcNow;
             if (loggedIn) return;
             byte version = packet[1];
-            if (version != Server.version) { Leave("Wrong version!", true); return; }
+            if (version != Server.version) { Leave(null, "Wrong version!", true); return; }
             
             name = enc.GetString(packet, 2, 64).Trim();
             skinName = name; DisplayName = name; truename = name;

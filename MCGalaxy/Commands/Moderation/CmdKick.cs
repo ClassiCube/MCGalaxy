@@ -31,8 +31,8 @@ namespace MCGalaxy.Commands.Moderation {
             if (who == null) return;
             
             string kickMsg = null, reason = null;
-            if (p == null) kickMsg = "Kicked by (console)";
-            else kickMsg = "Kicked by " + p.DisplayName;
+            if (p == null) kickMsg = "by (console)";
+            else kickMsg = "by " + p.DisplayName;
             
             if (args.Length > 1) {
                 reason = GetReason(p, args[1]);
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Moderation {
                 return;
             }
             
-            who.Kick(kickMsg);
+            who.Kick(kickMsg, "Kicked " + kickMsg);
             if (reason == null) Player.AddNote(who.name, p, "K");
             else Player.AddNote(who.name, p, "K", reason);
         }

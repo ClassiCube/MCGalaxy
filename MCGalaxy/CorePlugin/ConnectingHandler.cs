@@ -27,7 +27,7 @@ namespace MCGalaxy {
         
         static bool HandleConnectingCore(Player p, string mppass) {
             if (p.truename.Length > 16) {
-                p.Leave("Usernames must be 16 characters or less", true); return false;
+                p.Leave(null, "Usernames must be 16 characters or less", true); return false;
             }            
             if (!CheckPendingAlts(p)) return false;            
             if (!VerifyName(p, mppass)) return false;
@@ -35,7 +35,7 @@ namespace MCGalaxy {
 
             bool whitelisted = CheckWhitelist(p.name, p.ip);
             if (!whitelisted) {
-                p.Leave("This is a private server!", true);
+                p.Leave(null, "This is a private server!", true);
                 return false;
             }
             
@@ -63,7 +63,7 @@ namespace MCGalaxy {
             }
             
             if (altsCount > 0) {
-                p.Leave("Already logged in!", true); return false;
+                p.Leave(null, "Already logged in!", true); return false;
             }
             return true;
         }
@@ -79,7 +79,7 @@ namespace MCGalaxy {
             string hashHex = BitConverter.ToString(hash);
             if (!mppass.CaselessEq(hashHex.Replace("-", ""))) {
                 if (!Player.IPInPrivateRange(p.ip)) {
-                    p.Leave("Login failed! Try signing in again.", true); return false;
+                    p.Leave(null, "Login failed! Try signing in again.", true); return false;
                 }
             } else {
                 p.verifiedName = true;
@@ -94,7 +94,7 @@ namespace MCGalaxy {
                     Server.tempBans.Remove(tBan);
                 } else {
                     string reason = String.IsNullOrEmpty(tBan.reason) ? "" :" (" + tBan.reason + ")";
-                    p.Kick("You're still temp banned!" + reason, true);
+                    p.Kick(null, "You're still temp banned!" + reason, true);
                     return false;
                 }
             } catch { }
@@ -114,7 +114,7 @@ namespace MCGalaxy {
             
             Player[] online = PlayerInfo.Online.Items;
             if (online.Length >= Server.players && !Player.IPInPrivateRange(p.ip)) {
-                p.Leave("Server full!", true); return false;
+                p.Leave(null, "Server full!", true); return false;
             }
             if (group.Permission > LevelPermission.Guest) return true;
             
@@ -127,7 +127,7 @@ namespace MCGalaxy {
             
             if (Server.guestLimitNotify) Chat.MessageOps("Guest " + p.truename + " couldn't log in - too many guests.");
             Server.s.Log("Guest " + p.truename + " couldn't log in - too many guests.");
-            p.Leave("Server has reached max number of guests", true);
+            p.Leave(null, "Server has reached max number of guests", true);
             return false;
         }
         
@@ -140,7 +140,7 @@ namespace MCGalaxy {
                     string reason = pl.ip == p.ip ? "(Reconnecting)" : "(Reconnecting from a different IP)";
                     pl.Leave(reason); break;
                 } else {
-                    p.Leave("Already logged in!", true);
+                    p.Leave(null, "Already logged in!", true);
                     return false;
                 }
             }
@@ -149,15 +149,15 @@ namespace MCGalaxy {
         
         static bool CheckBanned(Group group, Player p, bool whitelisted) {
             if (Server.bannedIP.Contains(p.ip) && (!Server.useWhitelist || !whitelisted)) {
-                p.Kick(Server.defaultBanMessage, true);
+                p.Kick(null, Server.defaultBanMessage, true);
                 return false;
             }
             if (group.Permission == LevelPermission.Banned) {
                 string[] data = Ban.GetBanData(p.name);
                 if (data != null) {
-                    p.Kick(Ban.FormatBan(data[0], data[1]), true);
+                    p.Kick(null, Ban.FormatBan(data[0], data[1]), true);
                 } else {
-                    p.Kick(Server.defaultBanMessage, true);
+                    p.Kick(null, Server.defaultBanMessage, true);
                 }
                 return false;
             }

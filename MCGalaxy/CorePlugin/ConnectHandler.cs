@@ -121,7 +121,7 @@ namespace MCGalaxy.Core {
                 PlayerActions.ChangeMap(p, level);
                 Command.all.Find("jail").Use(null, p.name);
             } catch (Exception ex) {
-                p.Leave("Error occured", true);
+                p.Leave("Error occured", "Error occured", true);
                 Server.ErrorLog(ex);
             }
         }
