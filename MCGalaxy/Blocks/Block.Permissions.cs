@@ -304,7 +304,7 @@ namespace MCGalaxy
                 int count = pl.hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
                 if (block < count) {
                     bool canAffect = Block.canPlace(pl, block);
-                    pl.SendSetBlockPermission(block, canAffect, canAffect);
+                    pl.Send(Packet.BlockPermission(block, canAffect, canAffect));
                 }
             }
         }

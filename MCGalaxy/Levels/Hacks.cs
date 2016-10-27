@@ -66,7 +66,7 @@ namespace MCGalaxy {
                 if (Utils.TryParseDecimal(heightPart, out value))
                     maxJump = (short)(value * 32);
             }            
-            return Packet.MakeHackControl(fly, noclip, speed, respawn, _3rdPerson, maxJump);
+            return Packet.HackControl(fly, noclip, speed, respawn, _3rdPerson, maxJump);
         }
     }
 }

@@ -165,26 +165,27 @@ namespace MCGalaxy {
             if (HasCpeExt(CpeExt.EnvMapAspect)) {
                 string url = GetTextureUrl();
                 // reset all other textures back to client default.
-                if (url != lastUrl) SendSetEnvMapUrl("");
-                SendSetEnvMapUrl(url);
+                if (url != lastUrl) Send(Packet.EnvMapUrl(""));
+                Send(Packet.EnvMapUrl(url));
                 
-                SendSetEnvMapProperty(EnvProp.SidesBlock, side);
-                SendSetEnvMapProperty(EnvProp.EdgeBlock, edge);
-                SendSetEnvMapProperty(EnvProp.EdgeLevel, level.EdgeLevel);
-                SendSetEnvMapProperty(EnvProp.CloudsLevel, level.CloudsHeight);
-                SendSetEnvMapProperty(EnvProp.MaxFog, level.MaxFogDistance);
-                SendSetEnvMapProperty(EnvProp.CloudsSpeed, level.CloudsSpeed);
-                SendSetEnvMapProperty(EnvProp.WeatherSpeed, level.WeatherSpeed);
+                Send(Packet.EnvMapProperty(EnvProp.SidesBlock, side));
+                Send(Packet.EnvMapProperty(EnvProp.EdgeBlock, edge));
+                Send(Packet.EnvMapProperty(EnvProp.EdgeLevel, level.EdgeLevel));
+                Send(Packet.EnvMapProperty(EnvProp.CloudsLevel, level.CloudsHeight));
+                Send(Packet.EnvMapProperty(EnvProp.MaxFog, level.MaxFogDistance));
+                Send(Packet.EnvMapProperty(EnvProp.CloudsSpeed, level.CloudsSpeed));
+                Send(Packet.EnvMapProperty(EnvProp.WeatherSpeed, level.WeatherSpeed));
             } else if (HasCpeExt(CpeExt.EnvMapAppearance, 2)) {
                 string url = GetTextureUrl();
                 // reset all other textures back to client default.
-                if (url != lastUrl)
-                    SendSetMapAppearanceV2("", side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance);
-                SendSetMapAppearanceV2(url, side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance);
+                if (url != lastUrl) {
+                	Send(Packet.MapAppearanceV2("", side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance));
+                }
+                Send(Packet.MapAppearanceV2(url, side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance));
                 lastUrl = url;
             } else if (HasCpeExt(CpeExt.EnvMapAppearance)) {
                 string url = level.terrainUrl == "" ? Server.defaultTerrainUrl : level.terrainUrl;
-                SendSetMapAppearance(url, side, edge, level.EdgeLevel);
+                Send(Packet.MapAppearance(url, side, edge, level.EdgeLevel));
             }
         }
         
@@ -205,14 +206,14 @@ namespace MCGalaxy {
         
         public void SendEnvColor(byte type, string hex) {
             if (String.IsNullOrEmpty(hex)) {
-        		Send(Packet.MakeEnvColor(type, -1, -1, -1)); return;
+        		Send(Packet.EnvColor(type, -1, -1, -1)); return;
             }
             
             try {
                 CustomColor c = Colors.ParseHex(hex);
-                Send(Packet.MakeEnvColor(type, c.R, c.G, c.B));
+                Send(Packet.EnvColor(type, c.R, c.G, c.B));
         	} catch (ArgumentException) {
-                Send(Packet.MakeEnvColor(type, -1, -1, -1));
+                Send(Packet.EnvColor(type, -1, -1, -1));
             }
         }
         
@@ -221,13 +222,13 @@ namespace MCGalaxy {
             for (byte i = 0; i < count; i++) {
                 bool canPlace = Block.canPlace(this, i) && level.CanPlace;
                 bool canDelete = Block.canPlace(this, i) && level.CanDelete;
-                SendSetBlockPermission(i, canPlace, canDelete);
+                Send(Packet.BlockPermission(i, canPlace, canDelete));
             }
             
             if (!hasBlockDefs) return;
             for (int i = count; i < 256; i++) {
                 if (level.CustomBlockDefs[i] == null) continue;
-                SendSetBlockPermission((byte)i, level.CanPlace, level.CanDelete);
+                Send(Packet.BlockPermission((byte)i, level.CanPlace, level.CanDelete));
             }
         }
     }

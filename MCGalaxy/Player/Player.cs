@@ -306,7 +306,7 @@ namespace MCGalaxy {
                 
                 bool cp437 = HasCpeExt(CpeExt.FullCP437);
                 string kickPacketMsg = ChatTokens.Apply(discMsg, this);
-                Send(Packet.MakeKick(discMsg, cp437), sync);
+                Send(Packet.Kick(discMsg, cp437), sync);
                 disconnected = true;
                 if (isKick) totalKicked++;
                 

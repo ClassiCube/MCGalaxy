@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Moderation {
                 || access == LevelAccessResult.Allowed;
             
             who.SetPrefix();
-            who.Send(Packet.MakeUserType(who));
+            who.Send(Packet.UserType(who));
             Entities.SpawnEntities(who, false);
         }
         

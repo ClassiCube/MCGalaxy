@@ -268,14 +268,14 @@ namespace MCGalaxy {
         public void SendUserMOTD() { SendMapMotd(); }
 
         void SendMapMotd() {
-            byte[] packet = Packet.MakeMotd(this);
+            byte[] packet = Packet.Motd(this, level.GetMotd(this));
             if (OnSendMOTD != null) OnSendMOTD(this, packet);
             Send(packet);
             
             if (!HasCpeExt(CpeExt.HackControl)) return;
             Send(Hacks.MakeHackControl(this));
             if (Game.Referee)
-                Send(Packet.MakeHackControl(true, true, true, true, true, -1));
+                Send(Packet.HackControl(true, true, true, true, true, -1));
         }
         
         public void SendMap(Level oldLevel) { SendRawMap(oldLevel, level); }
@@ -317,7 +317,7 @@ namespace MCGalaxy {
                 Loading = false;
                 
                 if (HasCpeExt(CpeExt.EnvWeatherType))
-                    SendSetMapWeather(level.Weather);
+                	Send(Packet.EnvWeatherType((byte)level.Weather));
                 if (HasCpeExt(CpeExt.EnvColors))
                     SendCurrentEnvColors();
                 SendCurrentMapAppearance();
@@ -498,15 +498,6 @@ namespace MCGalaxy {
             Send(buffer);
         }
         
-        public void SendSetBlockPermission( byte type, bool canplace, bool candelete ) {
-            byte[] buffer = new byte[4];
-            buffer[0] = Opcode.CpeSetBlockPermission;
-            buffer[1] = type;
-            buffer[2] = canplace ? (byte)1 : (byte)0;
-            buffer[3] = candelete ? (byte)1 : (byte)0;
-            Send(buffer);
-        }
-        
         public void SendChangeModel( byte id, string model ) {
             // Fallback block models for clients that don't support block definitions
             byte block;
@@ -519,48 +510,6 @@ namespace MCGalaxy {
             buffer[0] = Opcode.CpeChangeModel;
             buffer[1] = id;
             NetUtils.WriteAscii(model, buffer, 2);
-            Send(buffer);
-        }
-        
-        public void SendSetMapAppearance( string url, byte sideblock, byte edgeblock, int sidelevel ) {
-            byte[] buffer = new byte[69];
-            buffer[0] = Opcode.CpeEnvSetMapApperance;
-            NetUtils.WriteAscii(url, buffer, 1);
-            buffer[65] = sideblock;
-            buffer[66] = edgeblock;
-            NetUtils.WriteI16((short)sidelevel, buffer, 67);
-            Send(buffer);
-        }
-        
-        public void SendSetMapAppearanceV2( string url, byte sideblock, byte edgeblock, int sidelevel,
-                                           int cloudHeight, int maxFog ) {
-            byte[] buffer = new byte[73];
-            buffer[0] = Opcode.CpeEnvSetMapApperance;
-            NetUtils.WriteAscii(url, buffer, 1);
-            buffer[65] = sideblock;
-            buffer[66] = edgeblock;
-            NetUtils.WriteI16((short)sidelevel, buffer, 67);
-            NetUtils.WriteI16((short)cloudHeight, buffer, 69);
-            NetUtils.WriteI16((short)maxFog, buffer, 71);
-            Send(buffer);
-        }
-        
-        public void SendSetMapWeather(int weather) { // 0 - sunny; 1 - raining; 2 - snowing
-            SendRaw(Opcode.CpeEnvWeatherType, (byte)weather);
-        }
-        
-        public void SendSetEnvMapUrl(string url) {
-            byte[] buffer = new byte[65];
-            buffer[0] = Opcode.CpeSetMapEnvUrl;
-            NetUtils.WriteAscii(url, buffer, 1);
-            Send(buffer);
-        }
-        
-        public void SendSetEnvMapProperty(EnvProp prop, int value) {
-            byte[] buffer = new byte[6];
-            buffer[0] = Opcode.CpeSetMapEnvProperty;
-            buffer[1] = (byte)prop;
-            NetUtils.WriteI32(value, buffer, 2);
             Send(buffer);
         }
 
