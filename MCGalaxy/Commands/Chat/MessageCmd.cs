@@ -38,12 +38,7 @@ namespace MCGalaxy.Commands {
         protected bool TryMessage(Player p, string message) { return TryMessage(p, message, name); }
         
         protected static bool TryMessage(Player p, string message, string cmd) {
-            if (p != null && p.muted) { 
-                Player.Message(p, "Cannot use /{0} while muted.", cmd); return false; 
-            }
-            if (Server.chatmod && !p.voice) { 
-                Player.Message(p, "Cannot use /{0} when chat moderation is enabled.", cmd); return false; 
-            }
+            if (!CanSpeak(p, cmd)) return false;
             
             if (p.level.worldChat) {
                 Player.SendChatFrom(p, message, false);
@@ -51,6 +46,18 @@ namespace MCGalaxy.Commands {
                 Chat.GlobalChatLevel(p, "<Level>" + message, false);
             }
             p.CheckForMessageSpam();
+            return true;
+        }
+        
+        internal static bool CanSpeak(Player p, string cmd) {
+            if (p == null) return true;
+            
+            if (p.muted) { 
+                Player.Message(p, "Cannot use /{0} while muted.", cmd); return false; 
+            }
+            if (Server.chatmod && !p.voice) { 
+                Player.Message(p, "Cannot use /{0} when chat moderation is enabled.", cmd); return false; 
+            }
             return true;
         }
     }
