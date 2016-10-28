@@ -15,10 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdFakeRank : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdFakeRank : Command {
         public override string name { get { return "fakerank"; } }
         public override string shortcut { get { return "frk"; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -31,6 +29,10 @@ namespace MCGalaxy.Commands
             Player who = PlayerInfo.FindMatches(p, args[0]);
             Group grp = Group.FindMatches(p, args[1]);            
             if (who == null || grp == null) return;
+            
+            if (p != null && who.Rank > p.Rank) {
+                MessageTooHighRank(p, "fakerank", true); return;
+            }
             
             if (grp.Permission == LevelPermission.Banned) {
                 string banner = p == null ? "console" : p.ColoredName;

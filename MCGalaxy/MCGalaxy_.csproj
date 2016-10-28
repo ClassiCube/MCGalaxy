@@ -115,6 +115,7 @@
     <Compile Include="Chat\FullCP437Handler.cs" />
     <Compile Include="Chat\ChatTokens.cs" />
     <Compile Include="Chat\LineWrapper.cs" />
+    <Compile Include="Chat\ProfanityFilter.cs" />
     <Compile Include="Commands\Alias.cs" />
     <Compile Include="Commands\Bots\CmdBotAdd.cs" />
     <Compile Include="Commands\Bots\CmdBotAI.cs" />
@@ -599,7 +600,6 @@
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
-    <Compile Include="Server\Extra\ProfanityFilter.cs" />
     <Compile Include="Scripting\Backends.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\Server.DB.cs" />
