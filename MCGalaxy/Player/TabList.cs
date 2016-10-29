@@ -40,7 +40,7 @@ namespace MCGalaxy {
         /// <summary> Gets the name and the group name for the given player. </summary>
         public static void GetEntry(Player p, Player dst, out string name, out string group) {
             string col = Entities.GetSupportedCol(dst, p.color);          
-            group = Server.TablistGlobal ? "On " + p.level.name : "&fPlayers";        
+            group = Server.TablistGlobal ? "On " + p.level.name : "&fPlayers";
             name = col + p.truename;
             IGame game = p.level.CurrentGame();
             if (game != null) game.GetTabName(p, dst, ref name, ref group);

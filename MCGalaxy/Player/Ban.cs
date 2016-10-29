@@ -34,22 +34,22 @@ namespace MCGalaxy {
         }
         
         public static string FormatBan(string banner, string reason) {
-            return "Banned for \"" + reason + "\" by " + banner;
+            return "Banned by " + banner + ": " + reason;
         }
         
         
         /// <summary> Adds a ban entry for the given user, and who banned them and why they were banned. </summary>
-        public static void BanPlayer(Player p, string who, string reason, bool stealth, string oldrank) {
+        public static void BanPlayer(Player banner, string target, string reason, bool stealth, string oldrank) {
             reason = reason.Replace(" ", "%20");
-            string player = p == null ? "(console)" : p.name.ToLower();
-            AddBanEntry(player, who.ToLower(), reason, stealth.ToString(), FormatDate(), oldrank);
+            string player = banner == null ? "(console)" : banner.truename;
+            AddBanEntry(player, target.ToLower(), reason, stealth.ToString(), FormatDate(), oldrank);
         }
         
         /// <summary> Adds a ban entry for the given user, and who banned them and why they were banned. </summary>
-        public static void UnbanPlayer(Player p, string who, string reason) {
+        public static void UnbanPlayer(Player unbanner, string target, string reason) {
             reason = reason.Replace(" ", "%20");
-            string player = p == null ? "(console)" : p.name.ToLower();
-            AddUnbanEntry(player, who.ToLower(), reason, FormatDate());
+            string player = unbanner == null ? "(console)" : unbanner.truename;
+            AddUnbanEntry(player, target.ToLower(), reason, FormatDate());
         }
         
         static string FormatDate() {

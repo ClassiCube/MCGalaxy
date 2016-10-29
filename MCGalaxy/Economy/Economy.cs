@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
-using System.Text;
 using MCGalaxy.Eco;
 using MCGalaxy.SQL;
 
@@ -103,12 +102,13 @@ namespace MCGalaxy {
                 Item item = GetItem(args[0]);
                 if (item == null) return;
                 
-                if (args[1].CaselessEq("enabled"))
+                if (args[1].CaselessEq("enabled")) {
                     item.Enabled = args[2].CaselessEq("true");
-                else if (args[1].CaselessEq("purchaserank"))
+                } else if (args[1].CaselessEq("purchaserank")) {
                     item.PurchaseRank = (LevelPermission)int.Parse(args[2]);
-                else
+                } else {
                     item.Parse(line, args);
+                }
             }
         }
 
