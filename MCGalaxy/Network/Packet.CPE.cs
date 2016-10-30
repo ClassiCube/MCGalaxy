@@ -95,7 +95,7 @@ namespace MCGalaxy {
         
         public static byte[] DeleteSelection(byte id) {
             byte[] buffer = new byte[2];
-            buffer[0] = Opcode.CpeMakeSelection;
+            buffer[0] = Opcode.CpeRemoveSelection;
             buffer[1] = id;
             return buffer;
         }
