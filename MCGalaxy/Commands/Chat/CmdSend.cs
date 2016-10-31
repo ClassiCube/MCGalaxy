@@ -35,6 +35,7 @@ namespace MCGalaxy.Commands {
             string receiverName = PlayerInfo.FindMatchesPreferOnline(p, parts[0]);
             if (receiverName == null) return;
             string senderName = p == null ? "(console)" : p.name;
+            string senderNick = p == null ? "(console)" : p.ColoredName;
 
             message = parts[1];
             //DB
@@ -50,13 +51,14 @@ namespace MCGalaxy.Commands {
                                     senderName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), message);
 
             Player receiver = PlayerInfo.FindExact(receiverName);
-            Player.Message(p, "Message sent to &5" + receiverName + ".");
+            Player.Message(p, "Message sent to {0}%S.", 
+                           PlayerInfo.GetColoredName(p, receiverName));
             if (receiver == null) return;
             
             if (Player.IsSuper(p)) {
-                receiver.SendMessage("Message recieved from &5" + senderName + "%S.");
+                receiver.SendMessage("Message recieved from " + senderNick + "%S.");
             } else {
-                p.MessageTo(receiver, "Message recieved from &5" + senderName + "%S.");
+                p.MessageTo(receiver, "Message recieved from " + senderNick + "%S.");
             }
         }
         

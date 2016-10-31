@@ -89,7 +89,8 @@ namespace MCGalaxy.Commands {
         static void OutputMessage(Player p, DataRow row) {
             DateTime time = Convert.ToDateTime(row["TimeSent"]);
             TimeSpan delta = DateTime.Now - time;
-            Player.Message(p, "From &5{0} &a{1} ago:", row["PlayerFrom"], delta.Shorten());
+            Player.Message(p, "From {0} &a{1} ago:", 
+                           PlayerInfo.GetColoredName(p, row["PlayerFrom"].ToString()), delta.Shorten());
             Player.Message(p, row["Contents"].ToString());
         }
         
