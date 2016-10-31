@@ -29,42 +29,33 @@ namespace MCGalaxy {
             public bool Files, Database, Lite;
         }
         
-        public static void CreatePackage(object p) {
-            BackupArgs args = (BackupArgs)p;
-            try {
-                CreatePackageCore(args);
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                Server.s.Log("Error while trying to perform backup.");
-                Player.Message(args.p, "Error while trying to perform backup.");
-            }
-        }
-        
-        static void CreatePackageCore(BackupArgs args) {
-            if (args.Database)  {
-                Server.s.Log("Saving DB...");
+        public static void CreatePackage(Player p, bool files, bool db, bool lite) {
+            if (db)  {
+                Server.s.Log("Backing up the database...");
                 using (StreamWriter sql = new StreamWriter("SQL.sql"))
-                    BackupDatabase(sql, args.Lite);
-                Server.s.Log("Saved DB to SQL.sql");
+                    BackupDatabase(sql,lite);
+                Server.s.Log("Backed up the database to SQL.sql");
+            }
+            
+            List<Uri> filesList = null;
+            if (files) {
+                Server.s.Log("Determining which files to backup...");
+                string dir = Directory.GetCurrentDirectory() + "\\";
+                filesList = GetAllFiles(new DirectoryInfo("./"), new Uri(dir), lite);
+                Server.s.Log("Finished determining included files");
             }
 
-            Server.s.Log("Creating package...");
+            Server.s.Log("Creating compressed backup...");
             using (ZipPackage package = (ZipPackage)ZipPackage.Open(path, FileMode.Create)) {
-                if (args.Files) {
-                    Server.s.Log("Collecting Directory structure...");
-                    string dir = Directory.GetCurrentDirectory() + "\\";
-                    List<Uri> uris = GetAllFiles(new DirectoryInfo("./"), new Uri(dir), args.Lite);
-                    Server.s.Log("Structure complete");
-
-                    Server.s.Log("Saving data...");
-                    SaveFiles(package, uris);
+                if (files) {
+                    Server.s.Log("Compressing files...");
+                    SaveFiles(package, filesList);
                 }
                 
-                if (args.Database)
-                    SaveDatabase(package);
-                Server.s.Log("Data saved!");
+                if (db) SaveDatabase(package);
+                Server.s.Log("Compressed all data!");
             }
-            Player.Message(args.p, "Server backup (" + (args.Files ? "Everything" + (args.Database ? "" : " but Database") : "Database") + "): Complete!");
+            Player.Message(p, "Backup of (" + (files ? "everything" + (db ? "" : " but database") : "database") + ") complete!");
             Server.s.Log("Server backed up!");
         }
 
@@ -116,7 +107,7 @@ namespace MCGalaxy {
             
             PackagePart part = package.CreatePart(uri, "", CompressionOption.Normal);
             CopyStream(File.OpenRead("SQL.sql"), part.GetStream());
-            Server.s.Log("Database compressed.");
+            Server.s.Log("Database compressed");
         }
 
         static void CopyStream(Stream source, Stream target) {
@@ -127,7 +118,7 @@ namespace MCGalaxy {
                 target.Write(buf, 0, bytesRead);
         }
 
-        public static void ExtractPackage(object p) {
+        public static void ExtractPackage(Player p) {
             int errors = 0;
             using (FileStream src = File.OpenRead(path))
                 using (ZipPackage zip = (ZipPackage)ZipPackage.Open(src))
@@ -144,7 +135,7 @@ namespace MCGalaxy {
             
             // To make life easier, we reload settings now, to maker it less likely to need restart
             Command.all.Find("server").Use(null, "reload"); // Reload, as console
-            Player.Message((Player)p, "Server restored" + (errors > 0 ? " with errors.  May be a partial restore" : "") + ".  Restart is reccommended, though not required.");
+            Player.Message(p, "Server restored" + (errors > 0 ? " with errors.  May be a partial restore" : "") + ".  Restart is reccommended, though not required.");
         }
         
         static void ExtractItem(ZipPackagePart item, ref int errors) {

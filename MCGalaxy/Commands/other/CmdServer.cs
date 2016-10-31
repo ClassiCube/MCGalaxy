@@ -85,18 +85,18 @@ namespace MCGalaxy.Commands {
             string type = args.Length == 1 ? "" : args[1].ToLower();
             if (type == "" || type == "all") {
                 Player.Message(p, "Server backup (Everything) started. Please wait while backup finishes.");
-                Save(true, true, p);
+                Backup.CreatePackage(p, true, true, false);
             } else if (type == "database" || type == "sql" || type == "db") {
                 // Creates CREATE TABLE and INSERT statements for all tables and rows in the database
                 Player.Message(p, "Server backup (Database) started. Please wait while backup finishes.");
-                Save(false, true, p);
+                Backup.CreatePackage(p, false, true, false);
             } else if (type == "allbutdb" || type == "files" || type == "file") {
                 // Saves all files and folders to a .zip
                 Player.Message(p, "Server backup (Everything but Database) started. Please wait while backup finishes.");
-                Save(true, false, p);
+                Backup.CreatePackage(p, true, false, false);
             } else if (type == "lite") {
                 Player.Message(p, "Server backup (Everything but BlockDB tables and undo files) started. Please wait while backup finishes.");
-                Save(true, true, p, true);
+                Backup.CreatePackage(p, true, true, true);
             } else if (type == "table") {
                 if (args.Length == 2) { Player.Message(p, "You need to provide the table name to backup."); return; }
                 if (!Formatter.ValidName(p, args[2], "table")) return;
@@ -116,9 +116,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Only Console or the Server Owner can restore the server.");
                 return;
             }
-            Thread extract = new Thread(new ParameterizedThreadStart(Backup.ExtractPackage));
-            extract.Name = "MCG_RestoreServer";
-            extract.Start(p);
+            Backup.ExtractPackage(p);
         }
         
         void DoImport(Player p, string[] args) {
@@ -137,16 +135,6 @@ namespace MCGalaxy.Commands {
             if (p == null) return true;
             if (Server.server_owner.CaselessEq("Notch")) return false;
             return p.name.CaselessEq(Server.server_owner);
-        }
-
-        static void Save(bool withFiles, bool withDB, Player p, bool lite = false) {
-            Thread worker = new Thread(Backup.CreatePackage);
-            worker.Name = "MCG_SaveServer";
-            
-            Backup.BackupArgs args = new Backup.BackupArgs();
-            args.p = p; args.Lite = lite;
-            args.Files = withFiles; args.Database = withDB;
-            worker.Start(args);
         }
 
         void SetToDefault() {
