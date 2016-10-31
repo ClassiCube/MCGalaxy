@@ -54,7 +54,7 @@ namespace MCGalaxy.Drawing.Brushes {
                 blocks[i].Block = Block.Invalid;
             for (int i = 0; start < max; start++, i++ ) {
                 byte extBlock = 0;
-                int block = DrawCmd.GetBlock(p, parts[start], out extBlock);
+                int block = DrawCmd.GetBlockIfAllowed(p, parts[start], out extBlock);
                 if (block == -1) return null;
                 blocks[i].Block = (byte)block; blocks[i].Ext = extBlock;
             }
@@ -62,13 +62,14 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         static bool GetTargetBlock(BrushArgs args, string[] parts, out ExtBlock target) {
+            target = default(ExtBlock);
             if (parts.Length == 1) {
+                if (!DrawCmd.CheckBlock(args.Player, args.Block)) return false;
                 target = new ExtBlock(args.Block, args.ExtBlock);
                 return true;
             }
             
-            target = default(ExtBlock);
-            int block = DrawCmd.GetBlock(args.Player, parts[parts.Length - 1], out target.Ext);
+            int block = DrawCmd.GetBlockIfAllowed(args.Player, parts[parts.Length - 1], out target.Ext);
             if (block == -1) return false;
             target.Block = (byte)block;
             return true;

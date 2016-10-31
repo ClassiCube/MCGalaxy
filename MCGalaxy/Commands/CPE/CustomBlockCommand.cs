@@ -454,7 +454,7 @@ namespace MCGalaxy.Commands.CPE {
         
         static byte GetFallback(Player p, string value) {
             byte extBlock;
-            int block = DrawCmd.GetBlock(p, value, out extBlock, false);
+            int block = DrawCmd.GetBlock(p, value, out extBlock);
             
             if (block == Block.custom_block) {
                 Player.Message(p, "&cCustom blocks cannot be used as fallback blocks.");

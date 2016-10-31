@@ -35,14 +35,14 @@ namespace MCGalaxy.Commands.Building {
                 string[] parts = message.Split(' ');
                 switch (parts.Length) {
                     case 1: block = message == "" ? block :
-                        DrawCmd.GetBlock(p, parts[0], out extBlock); break;
+                        DrawCmd.GetBlockIfAllowed(p, parts[0], out extBlock); break;
                     case 3:
                         x = (ushort)(ushort.Parse(parts[0]) * 32);
                         y = (ushort)(ushort.Parse(parts[1]) * 32);
                         z = (ushort)(ushort.Parse(parts[2]) * 32);
                         break;
                     case 4:
-                        block = DrawCmd.GetBlock(p, parts[0], out extBlock);
+                        block = DrawCmd.GetBlockIfAllowed(p, parts[0], out extBlock);
                         x = (ushort)(ushort.Parse(parts[1]) * 32);
                         y = (ushort)(ushort.Parse(parts[2]) * 32);
                         z = (ushort)(ushort.Parse(parts[3]) * 32);

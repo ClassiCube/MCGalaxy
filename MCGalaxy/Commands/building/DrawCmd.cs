@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Building {
         protected virtual bool DoDraw(Player p, Vec3S32[] marks,
                                       object state, byte block, byte extBlock) {
             DrawArgs dArgs = (DrawArgs)state;
-            dArgs.Block = block; dArgs.ExtBlock = extBlock;            
+            dArgs.Block = block; dArgs.ExtBlock = extBlock;
             GetMarks(dArgs, ref marks);
             if (marks == null) return false;
             
@@ -78,9 +78,7 @@ namespace MCGalaxy.Commands.Building {
             return p.BrushName;
         }
 
-        
-        public static int GetBlock(Player p, string msg, out byte extBlock, 
-                                   bool checkPlacePerm = true) {
+        public static int GetBlock(Player p, string msg, out byte extBlock) {
             byte block = Block.Byte(msg);
             extBlock = 0;
             if (msg.CaselessEq("skip") || msg.CaselessEq("none")) return Block.Invalid;
@@ -95,12 +93,23 @@ namespace MCGalaxy.Commands.Building {
                 extBlock = block;
                 return Block.custom_block;
             }
-            
-            if (checkPlacePerm && !Block.canPlace(p, block)) {
-                Formatter.MessageBlock(p, "draw with ", block); return -1;
-            }
             return block;
         }
+        
+        public static int GetBlockIfAllowed(Player p, string msg, out byte extBlock) {
+            int block = GetBlock(p, msg, out extBlock);
+            if (block == -1 || block == Block.Invalid) return block;
+            if (!CheckBlock(p, (byte)block)) return -1;
+            return block;
+        }
+        
+        public static bool CheckBlock(Player p, byte block) {
+            if (!Block.canPlace(p, block)) {
+                Formatter.MessageBlock(p, "draw with ", (byte)block); return false;
+            }
+            return true;
+        }
+        
         
         protected static BrushArgs GetBrushArgs(DrawArgs dArgs, int usedFromEnd) {
             int end = dArgs.Message.Length;

@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Building {
             if (parts.Length < 2) { Help(p); return false; }
             
             byte extBlock = 0;
-            int block = DrawCmd.GetBlock(p, parts[0], out extBlock);
+            int block = DrawCmd.GetBlockIfAllowed(p, parts[0], out extBlock);
             if (block == -1) return false;
             
             BrushFactory factory = BrushFactory.Find(parts[1]);

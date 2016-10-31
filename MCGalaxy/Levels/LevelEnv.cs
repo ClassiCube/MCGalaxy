@@ -95,8 +95,8 @@ namespace MCGalaxy {
         
         static bool CheckBlock(Player p, string value, string variable, ref int modify) {
             byte extBlock = 0;
-            int block = DrawCmd.GetBlock(p, value, out extBlock, false);
-            if (block == -1 || block == Block.Invalid) return false;
+            byte block = (byte)DrawCmd.GetBlock(p, value, out extBlock);
+            if (block == Block.Invalid) return false;
             if (block >= Block.CpeCount && block != Block.custom_block) {
                 Player.Message(p, "Cannot use physics block ids for /env."); return false;
             }
@@ -105,7 +105,7 @@ namespace MCGalaxy {
                 block == Block.mushroom || block == Block.redmushroom || block == Block.rope || block == Block.fire) {
                 Player.Message(p, "Env: Cannot use {0} for {1}.", block, variable);
             } else {
-                modify = block == Block.custom_block ? extBlock : (byte)block;
+                modify = block == Block.custom_block ? extBlock : block;
                 Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.name, modify);
                 return true;
             }
