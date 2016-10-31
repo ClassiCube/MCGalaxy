@@ -29,6 +29,14 @@ namespace MCGalaxy.Commands.Building {
         protected virtual bool ReplaceNot { get { return false; } }
         
         public override void Use(Player p, string message) {
+            string brushMsg = message.ToLower();
+            byte block, extBlock;
+            block = p.GetActualHeldBlock(out extBlock);
+            
+            BrushArgs args = new BrushArgs(p, brushMsg, block, extBlock);
+            string name = ReplaceNot ? "replacenot" : "replace";
+            if (!BrushFactory.Find(name).Validate(args)) return;
+            
             Player.Message(p, "Place two blocks to determine the edges.");
             p.MakeSelection(2, message.ToLower(), DoReplace);
         }
