@@ -594,7 +594,6 @@
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Server\Backup.cs" />
     <Compile Include="Server\BackupDB.cs" />
-    <Compile Include="Server\Extra\Scheduler.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="Network\IBeat.cs" />
     <Compile Include="Levels\Level.cs" />
@@ -608,7 +607,6 @@
     <Compile Include="Server\Tasks\InitTasks.cs" />
     <Compile Include="Server\Tasks\ServerTasks.cs" />
     <Compile Include="Server\Tasks\UpgradeTasks.cs" />
-    <Compile Include="Server\ThreadSafeCache.cs" />
     <Compile Include="Server\Updater.cs" />
     <Compile Include="API\WebServer.cs" />
     <Compile Include="util\BufferedBlockSender.cs" />
@@ -619,10 +617,14 @@
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\App.cs" />
     <Compile Include="util\Formatter.cs" />
+    <Compile Include="util\IO\CP437Reader.cs" />
+    <Compile Include="util\IO\CP437Writer.cs" />
     <Compile Include="util\Math\DirUtils.cs" />
     <Compile Include="util\Math\Vectors.cs" />
     <Compile Include="util\MultiPageOutput.cs" />
+    <Compile Include="util\Scheduler.cs" />
     <Compile Include="util\SparseBitSet.cs" />
+    <Compile Include="util\ThreadSafeCache.cs" />
     <Compile Include="util\Utils.cs" />
     <Compile Include="util\VolatileArray.cs" />
     <Compile Include="sharkbite.thresher\ChannelModeInfo.cs" />
@@ -641,8 +643,6 @@
     <Compile Include="sharkbite.thresher\TextColor.cs" />
     <Compile Include="sharkbite.thresher\UserInfo.cs" />
     <Compile Include="sharkbite.thresher\WhoisInfo.cs" />
-    <Compile Include="util\CP437Reader.cs" />
-    <Compile Include="util\CP437Writer.cs" />
     <Compile Include="util\ExtrasCollection.cs" />
     <Compile Include="Network\ClassiCube.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
@@ -742,6 +742,7 @@
     <Folder Include="Plugins" />
     <Folder Include="Plugins\Events" />
     <Folder Include="util\Extensions" />
+    <Folder Include="util\IO" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
