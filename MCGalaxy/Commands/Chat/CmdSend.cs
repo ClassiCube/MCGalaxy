@@ -45,7 +45,6 @@ namespace MCGalaxy.Commands {
                 message = message.Substring(0, 255);
             }
             
-            //safe against SQL injections because whoTo is checked for illegal characters
             Database.Backend.CreateTable("Inbox" + receiverName, createInbox);
             Database.Backend.AddRow("Inbox" + receiverName, "PlayerFrom, TimeSent, Contents",
                                     senderName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), message);

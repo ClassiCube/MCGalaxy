@@ -59,7 +59,6 @@ namespace MCGalaxy.Commands {
                         Player.Message(p, "\"" + num + "\" does not exist."); return;
                     }
 
-                    //safe against SQL injections because no user input is given here
                     if (num == -1) {
                         Database.Backend.ClearTable("Inbox" + p.name);
                     } else {

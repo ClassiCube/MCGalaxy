@@ -106,6 +106,7 @@ namespace MCGalaxy.SQL {
             }
         }
 
+            
         static readonly object idsLock = new object();
         static string[] ids = null;
         static void BindParams(ParameterisedQuery query, object[] args) {

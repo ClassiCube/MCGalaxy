@@ -28,7 +28,11 @@ namespace MCGalaxy {
         static bool HandleConnectingCore(Player p, string mppass) {
             if (p.truename.Length > 16) {
                 p.Leave(null, "Usernames must be 16 characters or less", true); return false;
-            }            
+            }
+            if (!Player.ValidName(p.truename)) {
+                p.Leave(null, "Invalid player name", true); return false;
+            }
+            
             if (!CheckPendingAlts(p)) return false;            
             if (!VerifyName(p, mppass)) return false;
             if (!CheckTempban(p)) return false;

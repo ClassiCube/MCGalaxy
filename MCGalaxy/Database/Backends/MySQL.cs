@@ -54,6 +54,7 @@ namespace MCGalaxy.SQL {
         
         
         public override bool TableExists(string table) {
+            ValidateTable(table);
             const string syntax = "SELECT * FROM information_schema.tables WHERE table_name = @0 AND table_schema = @1";
             using (DataTable results = Database.Fill(syntax, table, Server.MySQLDatabaseName)) {
                 return results.Rows.Count > 0;
@@ -61,17 +62,21 @@ namespace MCGalaxy.SQL {
         }
         
         public override void RenameTable(string srcTable, string dstTable) {
+            ValidateTable(srcTable);
+            ValidateTable(dstTable);
             string syntax = "RENAME TABLE `" + srcTable + "` TO `" + dstTable + "`";
             Database.Execute(syntax);
         }
         
         public override void ClearTable(string table) {
+            ValidateTable(table);
             string syntax = "TRUNCATE TABLE `" + table + "`";
             Database.Execute(syntax);
         }        
         
         public override void AddColumn(string table, string column, 
                                        string colType, string colAfter) {
+            ValidateTable(table);
             string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " 
                 + column + " " + colType;
             if (colAfter != "") syntax += " AFTER " + colAfter;
@@ -100,6 +105,7 @@ namespace MCGalaxy.SQL {
         }
         
         public override void AddOrReplaceRow(string table, string columns, params object[] args) {
+            ValidateTable(table);
             DoInsert("REPLACE INTO", table, columns, args);
         }
     }

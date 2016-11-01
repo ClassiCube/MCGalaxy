@@ -50,6 +50,7 @@ namespace MCGalaxy.SQL {
         
         
         public override bool TableExists(string table) {
+            ValidateTable(table);
             using (DataTable results = GetRows("sqlite_master", "name",
                                                "WHERE type='table' AND name=@0", table)) {
                 return results.Rows.Count > 0;
@@ -57,17 +58,21 @@ namespace MCGalaxy.SQL {
         }
         
         public override void RenameTable(string srcTable, string dstTable) {
+            ValidateTable(srcTable);
+            ValidateTable(dstTable);
             string syntax = "ALTER TABLE `" + srcTable + "` RENAME TO `" + dstTable + "`";
             Database.Execute(syntax);
         }
         
         public override void ClearTable(string table) {
+            ValidateTable(table);
             string syntax = "DELETE FROM `" + table + "`";
             Database.Execute(syntax);
         }
         
         public override void AddColumn(string table, string column, 
                                        string colType, string colAfter) {
+            ValidateTable(table);
             string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " 
                 + column + " " + colType;
             Database.Execute(syntax);
@@ -104,6 +109,7 @@ namespace MCGalaxy.SQL {
         }
         
         public override void AddOrReplaceRow(string table, string columns, params object[] args) {
+            ValidateTable(table);
             DoInsert("INSERT OR REPLACE INTO", table, columns, args);
         }
     }

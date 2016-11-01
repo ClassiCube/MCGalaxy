@@ -338,7 +338,6 @@ namespace MCGalaxy {
 
         public static Level Load(string name) { return Load(name, 0); }
 
-        //givenName is safe against SQL injections, it gets checked in CmdLoad.cs
         public static Level Load(string name, byte phys) {
             if (LevelLoad != null) LevelLoad(name);
             OnLevelLoadEvent.Call(name);

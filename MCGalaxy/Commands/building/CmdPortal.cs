@@ -109,7 +109,6 @@ namespace MCGalaxy.Commands.Building {
             PortalData bp = (PortalData)p.blockchangeObject;
 
             foreach (PortalPos P in bp.Entries) {
-                //safe against SQL injections because no user input is given here
                 string lvlName = P.Map;
                 object locker = ThreadSafeCache.DBCache.Get(lvlName);
                 

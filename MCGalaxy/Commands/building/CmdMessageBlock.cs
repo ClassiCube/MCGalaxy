@@ -132,7 +132,6 @@ namespace MCGalaxy.Commands.Building {
         void UpdateDatabase(Player p, MBData data, ushort x, ushort y, ushort z) {
             data.Message = data.Message.Replace("'", "\\'");
             data.Message = Colors.EscapeColors(data.Message);
-            //safe against SQL injections because no user input is given here
             string lvlName = p.level.name;
             object locker = ThreadSafeCache.DBCache.Get(lvlName);
             

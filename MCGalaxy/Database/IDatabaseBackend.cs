@@ -64,6 +64,7 @@ namespace MCGalaxy.SQL {
         
         /// <summary> Creates a new table in the database (unless it already exists). </summary>
         public virtual void CreateTable(string table, ColumnDesc[] columns) {
+            ValidateTable(table);
             StringBuilder sql = new StringBuilder();
             sql.AppendLine("CREATE TABLE if not exists `" + table + "` (");
             CreateTableColumns(sql, columns);
@@ -75,6 +76,7 @@ namespace MCGalaxy.SQL {
         
         /// <summary> Completely removes the given table. </summary>
         public virtual void DeleteTable(string table) {
+            ValidateTable(table);
             string syntax = "DROP TABLE `" + table + "`";
             Database.Execute(syntax);
         }
@@ -82,6 +84,8 @@ namespace MCGalaxy.SQL {
         /// <summary> Inserts/Copies all the rows from the source table into the destination table. </summary>
         /// <remarks> Note: This may work incorrectly if the tables have different schema. </remarks>
         public virtual void CopyAllRows(string srcTable, string dstTable) {
+            ValidateTable(srcTable);
+            ValidateTable(dstTable);
             string syntax = "INSERT INTO `" + dstTable + "` SELECT * FROM `" + srcTable + "`";
             Database.Execute(syntax);
         }
@@ -92,6 +96,7 @@ namespace MCGalaxy.SQL {
         /// return rows in a certain order, etc.</remarks>
         public virtual DataTable GetRows(string table, string columns,
                                          string modifier = "", params object[] args) {
+            ValidateTable(table);
             string syntax = "SELECT " + columns + " FROM `" + table + "`";
             if (modifier != "") syntax += " " + modifier;
             return Database.Fill(syntax, args);
@@ -101,6 +106,7 @@ namespace MCGalaxy.SQL {
         /// <remarks> modifier is optional SQL which can be used to update only certain rows.</remarks>
         public virtual void UpdateRows(string table, string columns,
                                        string modifier = "", params object[] args) {
+            ValidateTable(table);
             string syntax = "UPDATE `" + table + "` SET " + columns;
             if (modifier != "") syntax += " " + modifier;
             Database.Execute(syntax, args);
@@ -109,6 +115,7 @@ namespace MCGalaxy.SQL {
         /// <summary> Deletes rows for the given table. </summary>
         /// <remarks> modifier is optional SQL which can be used to delete only certain rows.</remarks>
         public virtual void DeleteRows(string table, string modifier = "", params object[] args) {
+            ValidateTable(table);
             string syntax = "DELETE FROM `" + table + "`";
             if (modifier != "") syntax += " " + modifier;
             Database.Execute(syntax, args);
@@ -116,11 +123,13 @@ namespace MCGalaxy.SQL {
 
         /// <summary> Adds a row to the given table. </summary>
         public virtual void AddRow(string table, string columns, params object[] args) {
+            ValidateTable(table);
             DoInsert("INSERT INTO", table, columns, args);
         }
         
         /// <summary> Adds or replaces a row (same primary key) in the given table. </summary>
         public abstract void AddOrReplaceRow(string table, string columns, params object[] args);
+      
         
         protected void DoInsert(string command, string table,
                                 string columns, params object[] args) {
@@ -136,6 +145,17 @@ namespace MCGalaxy.SQL {
                 else sql.Append(")");
             }
             Database.Execute(sql.ToString(), args);
+        }
+        
+        protected static void ValidateTable(string name) {
+            foreach (char c in name) {
+                if (c >= '0' && c <= '9') continue;
+                if (c >= 'a' && c <= 'z') continue;
+                if (c >= 'A' && c <= 'Z') continue;
+                if (c == '+' || c == '_' || c == '@' || c == '-' || c == '.') continue;
+                
+                throw new ArgumentException("Invalid character in table name: " + c);
+            }
         }
     }
 }
