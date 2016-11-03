@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Util {
     public sealed class ThreadSafeCache {
         static readonly List<ThreadSafeCache> caches = new List<ThreadSafeCache>();
         static readonly object cachesLock = new object();

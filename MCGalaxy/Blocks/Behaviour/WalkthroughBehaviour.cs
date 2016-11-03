@@ -72,7 +72,7 @@ namespace MCGalaxy.Blocks {
         
         internal static bool DoMessageBlock(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
-            MessageBlock.Handle(p, x, y, z);
+            MessageBlock.Handle(p, x, y, z, false);
             return true;
         }
         

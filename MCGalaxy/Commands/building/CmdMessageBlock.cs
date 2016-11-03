@@ -21,6 +21,7 @@ using System.Data;
 using MCGalaxy.Blocks;
 using MCGalaxy.Blocks.Extended;
 using MCGalaxy.SQL;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMessageBlock : Command {

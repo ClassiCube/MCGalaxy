@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.SQL;
+using MCGalaxy.Util;
 
 namespace MCGalaxy {
     public static class LevelDB {

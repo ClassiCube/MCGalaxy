@@ -108,7 +108,7 @@ namespace MCGalaxy.Blocks {
         }
         
         internal static bool DoMessageBlock(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (MessageBlock.Handle(p, x, y, z)) return true;
+            if (MessageBlock.Handle(p, x, y, z, true)) return true;
             p.ChangeBlock(x, y, z, Block.air, 0);
             return false;
         }

@@ -23,7 +23,7 @@ using MCGalaxy.SQL;
 namespace MCGalaxy.Blocks.Extended {
     public static class MessageBlock {
         
-        public static bool Handle(Player p, ushort x, ushort y, ushort z) {
+        public static bool Handle(Player p, ushort x, ushort y, ushort z, bool alwaysRepeat) {
             p.RevertBlock(x, y, z);
             if (!p.level.hasMessageBlocks) return false;
             
@@ -36,7 +36,7 @@ namespace MCGalaxy.Blocks.Extended {
                 message = message.Replace("\\'", "\'");
                 message = message.Replace("@p", p.name);
                 
-                if (message != p.prevMsg || Server.repeatMessage) {
+                if (message != p.prevMsg || (alwaysRepeat || Server.repeatMessage)) {
                     string text;
                     List<string> cmds = GetParts(message, out text);
                     if (text != null) Player.Message(p, text);

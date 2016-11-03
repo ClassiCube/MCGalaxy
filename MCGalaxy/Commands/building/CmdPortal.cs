@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.Blocks;
 using MCGalaxy.SQL;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPortal : Command {
