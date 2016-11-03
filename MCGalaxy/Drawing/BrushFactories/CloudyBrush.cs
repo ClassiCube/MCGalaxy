@@ -27,7 +27,7 @@ namespace MCGalaxy.Drawing.Brushes {
             "%HDraws by selecting blocks from the given [blocks] using perlin noise.",
             "%Hfrequency is optional (defaults to 1), and specifies the number of times " +
                 "the block should appear (as a fraction of the total of all the frequencies).",
-            "%HOptional args format: %T<first letter of argument>_<value>",
+            "%HOptional args format: %T<first letter of argument>=<value>",
             "%HArguments: %Ta%Hmplitude, %Tf%Hrequency (scale), %Ts%Heed, " +
             "%To%Hctaves, %Tp%Hersistence (turbulence), %Tl%Hacunarity",
         };
@@ -51,11 +51,11 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         // Only want to handle non block options.
-        static bool Filter(string arg) { return arg.Length < 2 || arg[1] != '_'; }
+        static bool Filter(string arg) { return arg.Length < 2 || !(arg[1] == '_' || arg[1] == '='); }
         
         static bool Handler(string arg, Player p, ref NoiseArgs args) {
             char opt = arg[0];
-            arg = arg.Substring(arg.IndexOf('_') + 1);
+            arg = arg.Substring(2); // get part after _ or =
             
             if (opt == 'l') return ParseDecimal(p, arg, ref args.Lacunarity, 2.00f);
             if (opt == 'a') return ParseDecimal(p, arg, ref args.Amplitude, 1.00f);
