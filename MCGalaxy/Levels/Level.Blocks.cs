@@ -17,7 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
@@ -40,7 +40,7 @@ namespace MCGalaxy {
         
         public byte GetTile(ushort x, ushort y, ushort z) {
             int index = PosToInt(x, y, z);
-            if (index < 0 || blocks == null) return Block.Zero;
+            if (index < 0 || blocks == null) return Block.Invalid;
             return blocks[index];
         }
 
@@ -52,7 +52,7 @@ namespace MCGalaxy {
         
         public byte GetExtTile(ushort x, ushort y, ushort z) {
             int index = PosToInt(x, y, z);
-            if (index < 0 || blocks == null) return Block.Zero;
+            if (index < 0 || blocks == null) return Block.Invalid;
             
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
@@ -200,7 +200,7 @@ namespace MCGalaxy {
                     string grpName = zn.Owner.Substring(3);
                     if (Group.Find(grpName).Permission <= p.Rank) return true;
                 } else {
-                	if (zn.Owner.CaselessEq(p.name)) return true;
+                    if (zn.Owner.CaselessEq(p.name)) return true;
                 }
                 zoneAllow = false;
             }
@@ -294,7 +294,7 @@ namespace MCGalaxy {
 
                 errorLocation = "Adding physics";
                 if (p.PlayingTntWars && block == Block.smalltnt) AddTntCheck(PosToInt(x, y, z), p);
-                if (physics > 0 && Block.Physics(block)) AddCheck(PosToInt(x, y, z));
+                if (physics > 0 && ActivatesPhysics(block, extBlock)) AddCheck(PosToInt(x, y, z));
 
                 changed = true;
                 backedup = false;
@@ -386,7 +386,7 @@ namespace MCGalaxy {
                     IntToPos(b, out x, out y, out z);
                     RevertExtTileNoCheck(x, y, z);
                 }                
-                if (physics > 0 && (Block.Physics(block) || data.Raw != 0))
+                if (physics > 0 && (ActivatesPhysics(block, extBlock) || data.Raw != 0))
                     AddCheck(b, false, data);
                 
                 // Save bandwidth sending identical looking blocks, like air/op_air changes.
@@ -455,7 +455,7 @@ namespace MCGalaxy {
                 return Block.Name(block);
             
             BlockDefinition[] defs = CustomBlockDefs;
-            for (int i = 1; i < 255; i++) {
+            for (int i = 1; i < Block.Invalid; i++) {
                 BlockDefinition def = defs[i];
                 if (def == null) continue;
                 if (def.BlockID == extBlock) return def.Name.Replace(" ", "");

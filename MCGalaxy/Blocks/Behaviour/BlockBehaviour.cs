@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 
 namespace MCGalaxy.Blocks {
 
@@ -37,7 +37,7 @@ namespace MCGalaxy.Blocks {
     
     public static class BlockBehaviour {
         internal static HandleDelete[] deleteHandlers = new HandleDelete[256];
-        internal static HandlePlace[] placeHandlers = new HandlePlace[256];        
+        internal static HandlePlace[] placeHandlers = new HandlePlace[256];
         internal static HandleWalkthrough[] walkthroughHandlers = new HandleWalkthrough[256];
         internal static HandlePhysics[] physicsHandlers = new HandlePhysics[256];
         internal static HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[256];
@@ -57,6 +57,7 @@ namespace MCGalaxy.Blocks {
             placeHandlers[Block.dirt] = PlaceBehaviour.Dirt;
             placeHandlers[Block.grass] = PlaceBehaviour.Grass;
             placeHandlers[Block.staircasestep] = PlaceBehaviour.Stairs;
+            placeHandlers[Block.cobblestoneslab] = PlaceBehaviour.CobbleStairs;
             placeHandlers[Block.c4] = PlaceBehaviour.C4;
             placeHandlers[Block.c4det] = PlaceBehaviour.C4Det;
             
@@ -68,21 +69,20 @@ namespace MCGalaxy.Blocks {
             walkthroughHandlers[Block.custom_block] = WalkthroughBehaviour.CustomBlock;
             
             for (int i = 0; i < 256; i++) {
+                bool walkthrough = Block.Walkthrough(Block.Convert((byte)i));
                 if (Block.Props[i].IsMessageBlock) {
-                    walkthroughHandlers[i] = (p, block, x, y, z) =>
-                        WalkthroughBehaviour.MessageBlock(p, block, x, y, z, true);
-                    deleteHandlers[i] = (p, block, x, y, z) =>
-                        WalkthroughBehaviour.MessageBlock(p, block, x, y, z, false);
+                    if (walkthrough)
+                        walkthroughHandlers[i] = WalkthroughBehaviour.DoMessageBlock;
+                    deleteHandlers[i] = DeleteBehaviour.DoMessageBlock;
                 } else if (Block.Props[i].IsPortal) {
-                    walkthroughHandlers[i] = (p, block, x, y, z) =>
-                        WalkthroughBehaviour.Portal(p, block, x, y, z, true);
-                    deleteHandlers[i] = (p, block, x, y, z) =>
-                        WalkthroughBehaviour.Portal(p, block, x, y, z, false);
+                    if (walkthrough)
+                        walkthroughHandlers[i] = WalkthroughBehaviour.DoPortal;
+                    deleteHandlers[i] = DeleteBehaviour.DoPortal;
                 }
                 
                 if (Block.Props[i].IsTDoor) {
                     deleteHandlers[i] = DeleteBehaviour.RevertDoor;
-                } else if (Block.Props[i].ODoorId != Block.Zero) {
+                } else if (Block.Props[i].ODoorId != Block.Invalid) {
                     deleteHandlers[i] = DeleteBehaviour.ODoor;
                 } else if (Block.Props[i].IsDoor) {
                     deleteHandlers[i] = DeleteBehaviour.Door;
@@ -175,7 +175,7 @@ namespace MCGalaxy.Blocks {
                     continue;
                 }
                 
-                if (Block.odoor((byte)i) != Block.Zero) {
+                if (Block.Props[i].ODoorId != Block.Invalid) {
                     physicsHandlers[i] = DoorPhysics.oDoor;
                     physicsDoorsHandlers[i] = DoorPhysics.oDoor;
                 }

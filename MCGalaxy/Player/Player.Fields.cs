@@ -24,7 +24,7 @@ using MCGalaxy.Undo;
 namespace MCGalaxy {
     
     public enum VoteKickChoice { NotYetVoted, Yes, No }
-	
+    
     public sealed partial class Player : IDisposable {
         
         public Dictionary<string, object> ExtraData = new Dictionary<string, object>();

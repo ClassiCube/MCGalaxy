@@ -23,6 +23,7 @@ using MCGalaxy.Blocks;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
 using MCGalaxy.Levels.IO;
+using MCGalaxy.Util;
 
 //WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
 //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
@@ -282,7 +283,7 @@ namespace MCGalaxy {
                 File.Delete(path);
             }
             
-            LvlFile.Save(this, path + ".backup");
+            IMapExporter.Formats[0].Write(path + ".backup", this);
             File.Copy(path + ".backup", path);
             SaveSettings(this);
 
@@ -338,7 +339,6 @@ namespace MCGalaxy {
 
         public static Level Load(string name) { return Load(name, 0); }
 
-        //givenName is safe against SQL injections, it gets checked in CmdLoad.cs
         public static Level Load(string name, byte phys) {
             if (LevelLoad != null) LevelLoad(name);
             OnLevelLoadEvent.Call(name);
@@ -352,7 +352,7 @@ namespace MCGalaxy {
             }
             
             try {
-                Level level = LvlFile.Load(name, path, true);
+                Level level = IMapImporter.Formats[0].Read(path, name, true);
                 level.setPhysics(phys);
                 level.backedup = true;
 
@@ -379,7 +379,9 @@ namespace MCGalaxy {
                 for (int i = 0; i < defs.Length; i++) {
                     if (defs[i] == null) continue;
                     level.CustomBlockDefs[i] = defs[i];
+                    level.CustomBlockProps[i] = new BlockProps((byte)i);
                 }
+                BlockProps.Load("lvl_" + level.name, level.CustomBlockProps);
                 Bots.BotsFile.LoadBots(level);
                 
                 object locker = ThreadSafeCache.DBCache.Get(name);

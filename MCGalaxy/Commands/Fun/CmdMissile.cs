@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands {
                     lookedAt.Z = (ushort)Math.Round(start.Z + (double)(dir.Z * i));
 
                     byte tile = p.level.GetTile(lookedAt.X, lookedAt.Y, lookedAt.Z);
-                    if (tile == Block.Zero) break;
+                    if (tile == Block.Invalid) break;
 
                     if (tile != Block.air && !allBlocks.Contains(lookedAt) && HandlesHitBlock(p, tile, bp, pos, false))
                         break;
@@ -88,10 +88,11 @@ namespace MCGalaxy.Commands {
 
                     Player hitP = GetPlayer(p, pos, true);
                     if (hitP != null) {
-                        if (p.level.physics >= 3 && bp.ending >= EndType.Explode)
-                            hitP.HandleDeath(Block.stone, " was blown up by " + p.ColoredName, true);
-                        else
-                            hitP.HandleDeath(Block.stone, " was hit a missile from " + p.ColoredName);
+                        if (p.level.physics >= 3 && bp.ending >= EndType.Explode) {
+                            hitP.HandleDeath(Block.stone, 0, " was blown up by " + p.ColoredName, true);
+                        } else {
+                            hitP.HandleDeath(Block.stone, 0, " was hit a missile from " + p.ColoredName);
+                        }
                         break;
                     }
 

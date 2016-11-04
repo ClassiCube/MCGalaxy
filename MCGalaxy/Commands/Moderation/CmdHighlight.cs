@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
             
             if (found) {
                 Player.Message(p, "Now highlighting past &b{0} %Sfor {1}",
-            	               delta.Shorten(), PlayerInfo.GetColoredName(p, args[0]));
+                               delta.Shorten(), PlayerInfo.GetColoredName(p, args[0]));
                 Player.Message(p, "&cUse /reload to un-highlight");
             } else {
                 Player.Message(p, "Could not find player specified.");

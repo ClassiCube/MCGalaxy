@@ -34,7 +34,7 @@ namespace MCGalaxy.Drawing.Transforms {
         public abstract Transform Construct(Player p, string message);
         
         public static List<TransformFactory> Transforms = new List<TransformFactory>() {
-        	new NoTransformFactory(), new ScaleTransformFactory(),
+            new NoTransformFactory(), new ScaleTransformFactory(),
             new RotateTransformFactory(),
         };
         

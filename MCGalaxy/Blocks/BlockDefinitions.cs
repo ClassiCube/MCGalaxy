@@ -21,7 +21,7 @@ using System.Text;
 using MCGalaxy.Blocks;
 using Newtonsoft.Json;
 
-namespace MCGalaxy { 
+namespace MCGalaxy {
     public sealed class BlockDefinition {
         
         public byte BlockID;
@@ -45,7 +45,7 @@ namespace MCGalaxy {
         
         public const string GlobalPath = "blockdefs/global.json", GlobalBackupPath = "blockdefs/global.json.bak";
         
-        public static BlockDefinition[] GlobalDefs;       
+        public static BlockDefinition[] GlobalDefs;
         public static Blocks.BlockProps[] GlobalProps;
         
         public BlockDefinition Copy() {
@@ -71,7 +71,7 @@ namespace MCGalaxy {
             GlobalDefs = Load(true, null);
             GlobalDefs[0] = new BlockDefinition();
             GlobalDefs[0].Name = "Air fallback";
-           
+            
             GlobalProps = new BlockProps[256];
             for (int i = 0; i < GlobalProps.Length; i++)
                 GlobalProps[i] = new BlockProps((byte)i);
@@ -84,7 +84,9 @@ namespace MCGalaxy {
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
             }
+            
             Save(true, null);
+            BlockProps.Load("global", BlockDefinition.GlobalProps);
         }
         
         internal static BlockDefinition[] Load(bool global, Level lvl) {
@@ -100,7 +102,7 @@ namespace MCGalaxy {
                 defs = new BlockDefinition[256];
             }
             
-            for (int i = 0; i < 256; i++) {               
+            for (int i = 0; i < 256; i++) {
                 if (defs[i] != null && defs[i].Name == null)
                     defs[i] = null;
             }
@@ -127,7 +129,7 @@ namespace MCGalaxy {
                     realDefs[i] = defs[i] == GlobalDefs[i] ? null : defs[i];
                 defs = realDefs;
             }
-           
+            
             string json = JsonConvert.SerializeObject(defs);
             string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.name + ".json";
             File.WriteAllText(path, json);
@@ -135,13 +137,12 @@ namespace MCGalaxy {
         
         public static void Add(BlockDefinition def, BlockDefinition[] defs, Level level) {
             byte id = def.BlockID;
-            bool global = defs == GlobalDefs; 
+            bool global = defs == GlobalDefs;
             if (global) {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level lvl in loaded) {
                     if (lvl.CustomBlockDefs[id] == null) {
                         lvl.CustomBlockDefs[id] = def;
-                        lvl.CustomBlockProps[id] = GlobalProps[id];
                     }
                 }
             }
@@ -161,7 +162,7 @@ namespace MCGalaxy {
                     SendDefineBlock(pl, def);
                 
                 if (pl.HasCpeExt(CpeExt.BlockPermissions))
-                    pl.SendSetBlockPermission(def.BlockID, pl.level.CanPlace, pl.level.CanDelete);
+                	pl.Send(Packet.BlockPermission(def.BlockID, pl.level.CanPlace, pl.level.CanDelete));
             }
             Save(global, level);
         }
@@ -174,7 +175,6 @@ namespace MCGalaxy {
                 foreach (Level lvl in loaded) {
                     if (lvl.CustomBlockDefs[id] == GlobalDefs[id]) {
                         lvl.CustomBlockDefs[id] = null;
-                        lvl.CustomBlockProps[id] = new BlockProps(id);
                     }
                 }
             }
@@ -205,7 +205,7 @@ namespace MCGalaxy {
                 }
                 
                 if (pl.HasCpeExt(CpeExt.BlockPermissions))
-                    pl.SendSetBlockPermission(def.BlockID, pl.level.CanPlace, pl.level.CanDelete);
+                	pl.Send(Packet.BlockPermission(def.BlockID, pl.level.CanPlace, pl.level.CanDelete));
             }
         }
         
@@ -214,16 +214,16 @@ namespace MCGalaxy {
         }
         
         public static byte GetBlock(string msg, BlockDefinition[] defs) {
-            for (int i = 1; i < 255; i++) {
+            for (int i = 1; i < Block.Invalid; i++) {
                 BlockDefinition def = defs[i];
-                if (def == null) continue;             
+                if (def == null) continue;
                 if (def.Name.Replace(" ", "").CaselessEq(msg))
                     return def.BlockID;
             }
             
             byte id;
             if (!byte.TryParse(msg, out id) || defs[id] == null)
-                return Block.Zero;
+                return Block.Invalid;
             return id;
         }
         
@@ -259,7 +259,7 @@ namespace MCGalaxy {
             byte rawSpeed = (byte)(64 * Math.Log(def.Speed, 2) + 128);
             buffer[index++] = def.BlockID;
             NetUtils.WriteAscii(def.Name, buffer, index);
-            index += 64;      
+            index += 64;
             buffer[index++] = def.CollideType;
             buffer[index++] = rawSpeed;
             

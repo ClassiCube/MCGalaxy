@@ -33,7 +33,7 @@ namespace MCGalaxy {
                 if (total <= perPage) return;
                 Player.Message(p, "To see all {0}, use %T/{1} all", type, cmd);
             } else if (modifier.CaselessEq("all")) {
-            	OutputItems(p, items, 0, items.Count, lines, formatter);
+                OutputItems(p, items, 0, items.Count, lines, formatter);
                 Player.Message(p, "Showing {0} 1-{1} (out of {1})", type, items.Count);
             } else if (!int.TryParse(modifier, out page)) {
                 Player.Message(p, "Input must be either \"all\" or an integer.");

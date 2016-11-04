@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, who.ColoredName + " %Shas been exploded!");
             } else if (args.Length == 3) {
                 try {
-            		x = ushort.Parse(args[0]);
+                    x = ushort.Parse(args[0]);
                     y = ushort.Parse(args[1]);
                     z = ushort.Parse(args[2]);
                 } catch {

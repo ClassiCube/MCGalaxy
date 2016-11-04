@@ -15,7 +15,6 @@ permissions and limitations under the Licenses.
 using System;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using MCGalaxy.Games;

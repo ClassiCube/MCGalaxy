@@ -26,8 +26,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(Player p, string message) {
-        	if (handlers.Count == 0) return;
-        	CallImpl(pl => pl(p, message));
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p, message));
         }
     }
     
@@ -37,8 +37,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(Player p, ushort x, ushort y,  ushort z) {
-        	if (handlers.Count == 0) return;
-        	CallImpl(pl => pl(p, x, y, z));
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p, x, y, z));
         }
     }
     
@@ -48,8 +48,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(Player p, byte[] rot) {
-        	if (handlers.Count == 0) return;
-        	CallImpl(pl => pl(p, rot));
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p, rot));
         }
     }
     
@@ -59,8 +59,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(Player p) {
-        	if (handlers.Count == 0) return;
-        	CallImpl(pl => pl(p));
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p));
         }
     }
     
@@ -70,8 +70,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(Player p, string mysqlcommand) {
-        	if (handlers.Count == 0) return;
-        	CallImpl(pl => pl(p, mysqlcommand));
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p, mysqlcommand));
         }
     }
     
@@ -81,8 +81,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(string cmd, Player p, string message) {
-        	if (handlers.Count == 0) return;
-        	CallImpl(pl => pl(cmd, p, message));
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(cmd, p, message));
         }
     }
     
@@ -92,8 +92,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(Player p) {
-        	if (handlers.Count == 0) return;
-        	CallImpl(pl => pl(p));
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p));
         }
     }
 
@@ -103,8 +103,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(Player p, string mppass) {
-        	if (handlers.Count == 0) return;
-        	CallImpl(pl => pl(p, mppass));
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p, mppass));
         }
     }
     
@@ -114,8 +114,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(Player p, byte block) {
-        	if (handlers.Count == 0) return;
-        	CallImpl(pl => pl(p, block));
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p, block));
         }
     }
     
@@ -125,8 +125,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(Player p, string reason) {
-        	if (handlers.Count == 0) return;
-        	CallImpl(pl => pl(p, reason));
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p, reason));
         }
     }
     
@@ -136,8 +136,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock) {
-        	if (handlers.Count == 0) return;
-        	CallImpl(pl => pl(p, x, y, z, block, extBlock));
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p, x, y, z, block, extBlock));
         }
     }
     
@@ -147,8 +147,8 @@ namespace MCGalaxy {
             : base(method, priority, plugin) { }
         
         public static void Call(Player p, string message) {
-        	if (handlers.Count == 0) return;
-        	CallImpl(pl => pl(p, message));
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p, message));
         }
     }
 }

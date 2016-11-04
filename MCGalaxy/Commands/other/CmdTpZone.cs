@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
         }
         
         static string FormatZone(Level.Zone zone, int i) {
-        	return "&c" + (i + 1) + " &b(" +
+            return "&c" + (i + 1) + " &b(" +
                 zone.smallX + "-" + zone.bigX + ", " +
                 zone.smallY + "-" + zone.bigY + ", " +
                 zone.smallZ + "-" + zone.bigZ + ") &f" + zone.Owner;

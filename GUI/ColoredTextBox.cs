@@ -19,7 +19,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using MCGalaxy.Gui.Native;
@@ -129,7 +128,7 @@ namespace MCGalaxy.Gui.Components {
         /// <param name="foreColor">Color of the foreground.</param>
         internal void Append(string text, Color foreColor) {
             if (InvokeRequired) {
-        		Invoke((MethodInvoker)(() => Append(text, foreColor))); return;
+                Invoke((MethodInvoker)(() => Append(text, foreColor))); return;
             }
 
             SelectionStart = TextLength;

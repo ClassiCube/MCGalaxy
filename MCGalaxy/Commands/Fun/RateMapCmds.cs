@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
             if (p == null) { MessageInGameOnly(p); return false; }
             
             if (p.Game.RatedMap) {
-            	prefix = p.Game.LikedMap ? "" : "dis";
+                prefix = p.Game.LikedMap ? "" : "dis";
                 Player.Message(p, "You have already {0}liked this map.", prefix); return false; 
             }
             if (CheckIsAuthor(p)) {

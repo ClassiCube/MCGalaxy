@@ -106,24 +106,29 @@ namespace MCGalaxy.SQL {
             }
         }
 
+            
         static readonly object idsLock = new object();
         static string[] ids = null;
         static void BindParams(ParameterisedQuery query, object[] args) {
             if (args == null || args.Length == 0) return;
-            
+            string[] names = GetParamNames(args.Length);
+            for (int i = 0; i < args.Length; i++)
+                query.AddParam(names[i], args[i]);
+        }
+        
+        internal static string[] GetParamNames(int count) {
             // Avoid allocation overhead from string concat every query by caching
             string[] names = null;
             lock (idsLock) {
                 names = ids;
-                if (ids == null || args.Length > ids.Length) {
-                    ids = new string[args.Length];
-                    for (int i = 0; i < args.Length; i++)
+                if (ids == null || count > ids.Length) {
+                    ids = new string[count];
+                    for (int i = 0; i < count; i++)
                         ids[i] = "@" + i;
                     names = ids;
                 }
             }
-            for (int i = 0; i < args.Length; i++)
-                query.AddParam(names[i], args[i]);
+            return names;
         }
     }
 }

@@ -225,7 +225,7 @@ namespace MCGalaxy {
             cmd = cmd.Replace(" unsigned", " UNSIGNED");
             if (!Server.useMySQL) return;
             
-            // MySQL does not support the format used by the old SQLite backend for the primary key
+            // MySQL does not support the format used by the SQLite backend for the primary key
             const string priKey = " PRIMARY KEY AUTOINCREMENT";
             int priIndex = cmd.ToUpper().IndexOf(priKey);
             if (priIndex == -1) return;

@@ -28,47 +28,50 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
-            if (args.Length < 2) { Help(p); return; }
-            int limit;
-            if (!int.TryParse(args[1], out limit) || limit <= 0) {
+            if (message == "") { Help(p); return; }
+            int limit = 0;
+            bool hasLimit = args.Length > 1;
+            
+            if (hasLimit && (!int.TryParse(args[1], out limit) || limit <= 0)) {
                 Player.Message(p, "Limit amount must be a whole number and greater than 0."); return;
             }
             
             switch (args[0].ToLower()) {
                 case "rt":
                 case "reloadthreshold":
-                    SetLimit("Threshold before drawing reloads map set to {0}", ref Server.DrawReloadLimit, limit);
+                    SetLimit(p, "Threshold before drawing reloads map", ref Server.DrawReloadLimit, limit, hasLimit);
                     return;
                 case "rp":
                 case "restartphysics":
-                    SetLimit("Custom /rp's limit was changed to {0}", ref Server.rpLimit, limit);
+                    SetLimit(p, "Custom /rp limit", ref Server.rpLimit, limit, hasLimit);
                     return;
                 case "rpnormal":
-                    SetLimit("Normal /rp's limit set to {0}", ref Server.rpNormLimit, limit);
+                    SetLimit(p, "Normal /rp limit", ref Server.rpNormLimit, limit, hasLimit);
                     return;
                 case "pu":
                 case "physicsundo":
-                    SetLimit("Physics undo max entries set to {0}", ref Server.physUndo, limit);
+                    SetLimit(p, "Physics undo max entries", ref Server.physUndo, limit, hasLimit);
                     return;
                 case "gen":
                 case "genlimit":
-                    SetLimit("Maximum volume of maps players can generate set to {0}", ref Server.MapGenLimit, limit);
+                    SetLimit(p, "Maximum volume of maps players can generate", ref Server.MapGenLimit, limit, hasLimit);
                     return;
                 case "genadmin":
                 case "genadminlimit":
                 case "admingen":
                 case "admingenlimit":
-                    SetLimit("Maximum volume of maps admins can generate set to &b{0}", ref Server.MapGenLimitAdmin, limit);
+                    SetLimit(p, "Maximum volume of maps admins can generate", ref Server.MapGenLimitAdmin, limit, hasLimit);
                     return;
             }
 
+            if (args.Length < 2) { Help(p); return; }
             if (args.Length == 2) { Player.Message(p, "You need to provide a rank name for this type."); return; }
             Group grp = Group.FindMatches(p, args[2]);
             if (grp == null) return;
 
             switch (args[0].ToLower()) {
                 case "dl":
-                case "drawlimit":            
+                case "drawlimit":
                     Chat.MessageAll("{0}%S's draw limit set to &b{1}", grp.ColoredName, limit);
                     grp.maxBlocks = limit; break;
                 case "mu":
@@ -81,18 +84,22 @@ namespace MCGalaxy.Commands {
             Group.saveGroups(Group.GroupList);
         }
         
-        static void SetLimit(string format, ref int target, int limit) {
-            Chat.MessageAll(format, "&b" + limit);
-            target = limit;
-            SrvProperties.Save();
+        static void SetLimit(Player p, string format, ref int target, int value, bool hasValue) {
+            if (!hasValue) {
+                Player.Message(p, format + ": &b" + target);
+            } else {
+                target = value;
+                Chat.MessageAll(format + " set to &b" + target);                
+                SrvProperties.Save();
+            }
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/limit [type] [amount] <rank>");
             Player.Message(p, "%HSets the limit for [type]");
             Player.Message(p, "%HValid types: %Sreloadthreshold(rt), restartphysics(rp), " +
-                               "rpnormal, physicsundo(pu), drawlimit(dl), maxundo(mu), genlimit(gen), " +
-                               "admingenlimit(admingen)");
+                           "rpnormal, physicsundo(pu), drawlimit(dl), maxundo(mu), genlimit(gen), " +
+                           "admingenlimit(admingen)");
             Player.Message(p, "%H<rank> is required for drawlimit and maxundo types.");
         }
     }

@@ -197,6 +197,10 @@ namespace MCGalaxy {
             for (byte i = 127; i >= 64; i-- ) {
                 if (used[i] == 0) return i;
             }
+            // NOTE: For some clients these IDs mean self ID
+            for (byte i = 254; i > 127; i-- ) {
+                if (used[i] == 0) return i;
+            }
             return Entities.SelfID;
         }
         

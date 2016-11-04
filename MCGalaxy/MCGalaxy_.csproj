@@ -98,6 +98,8 @@
     <Compile Include="Blocks\Block.Permissions.cs" />
     <Compile Include="Blocks\BlockDefinitions.cs" />
     <Compile Include="Blocks\BlockProperties.cs" />
+    <Compile Include="Blocks\Extended\MessageBlock.cs" />
+    <Compile Include="Blocks\Extended\Portal.cs" />
     <Compile Include="Bots\BotsFile.cs" />
     <Compile Include="Bots\Instructions\FunInstructions.cs" />
     <Compile Include="Bots\Instructions\MoveInstructions.cs" />
@@ -113,6 +115,7 @@
     <Compile Include="Chat\FullCP437Handler.cs" />
     <Compile Include="Chat\ChatTokens.cs" />
     <Compile Include="Chat\LineWrapper.cs" />
+    <Compile Include="Chat\ProfanityFilter.cs" />
     <Compile Include="Commands\Alias.cs" />
     <Compile Include="Commands\Bots\CmdBotAdd.cs" />
     <Compile Include="Commands\Bots\CmdBotAI.cs" />
@@ -262,7 +265,6 @@
     <Compile Include="Commands\Information\CmdOpStats.cs" />
     <Compile Include="Commands\Information\CmdPClients.cs" />
     <Compile Include="Commands\Information\CmdPlayers.cs" />
-    <Compile Include="Commands\Information\CmdRankReqs.cs" />
     <Compile Include="Commands\Information\CmdRules.cs" />
     <Compile Include="Commands\Information\CmdSearch.cs" />
     <Compile Include="Commands\Information\CmdSeen.cs" />
@@ -366,9 +368,7 @@
     <Compile Include="Commands\Scripting\CmdCmdUnload.cs" />
     <Compile Include="Commands\Scripting\CmdCompile.cs" />
     <Compile Include="Commands\Scripting\CmdCompload.cs" />
-    <Compile Include="Commands\Scripting\CmdPCreate.cs" />
-    <Compile Include="Commands\Scripting\CmdPLoad.cs" />
-    <Compile Include="Commands\Scripting\CmdPUnload.cs" />
+    <Compile Include="Commands\Scripting\CmdScripting.cs" />
     <Compile Include="Commands\World\CmdBlockDB.cs" />
     <Compile Include="Commands\World\CmdBlockProperties.cs" />
     <Compile Include="Commands\World\CmdCopyLVL.cs" />
@@ -407,7 +407,7 @@
     <Compile Include="CorePlugin\ConnectHandler.cs" />
     <Compile Include="Database\Backends\SQLite.cs" />
     <Compile Include="Database\BlockDB.cs" />
-    <Compile Include="Database\ColumnParams.cs" />
+    <Compile Include="Database\ColumnDesc.cs" />
     <Compile Include="Database\IDatabaseBackend.cs" />
     <Compile Include="Database\Backends\MySQL.cs" />
     <Compile Include="Database\ParameterisedQuery.cs" />
@@ -500,13 +500,15 @@
     <Compile Include="Generator\RealisticMapGen.cs" />
     <Compile Include="Generator\SimpleGen.cs" />
     <Compile Include="Levels\Hacks.cs" />
-    <Compile Include="Levels\IO\CwFile.cs" />
-    <Compile Include="Levels\IO\DatFile.cs" />
-    <Compile Include="Levels\IO\FcmFile.cs" />
+    <Compile Include="Levels\IO\Exporters\LvlExporter.cs" />
     <Compile Include="Levels\IO\fNbt.cs" />
-    <Compile Include="Levels\IO\LvlFile.cs" />
+    <Compile Include="Levels\IO\Importers\CwImporter.cs" />
+    <Compile Include="Levels\IO\Importers\DatImporter.cs" />
+    <Compile Include="Levels\IO\Importers\FcmImporter.cs" />
+    <Compile Include="Levels\IO\Importers\LvlImporter.cs" />
+    <Compile Include="Levels\IO\Importers\McfImporter.cs" />
     <Compile Include="Levels\IO\LvlProperties.cs" />
-    <Compile Include="Levels\IO\McfFile.cs" />
+    <Compile Include="Levels\IO\MapFormats.cs" />
     <Compile Include="Levels\Level.Blocks.cs" />
     <Compile Include="Levels\Level.Fields.cs" />
     <Compile Include="Levels\LevelAccess.cs" />
@@ -516,28 +518,28 @@
     <Compile Include="Levels\LevelEnv.cs" />
     <Compile Include="Levels\LevelInfo.cs" />
     <Compile Include="Levels\LevelOptions.cs" />
-    <Compile Include="Levels\Physics\ActivateablePhysics.cs" />
-    <Compile Include="Levels\Physics\AIPhysics.cs" />
-    <Compile Include="Levels\Physics\AirPhysics.cs" />
-    <Compile Include="Levels\Physics\BirdPhysics.cs" />
-    <Compile Include="Levels\Physics\C4Physics.cs" />
-    <Compile Include="Levels\Physics\DoorPhysics.cs" />
-    <Compile Include="Levels\Physics\ExtLiquidPhysics.cs" />
-    <Compile Include="Levels\Physics\ExtraInfoPhysics.cs" />
-    <Compile Include="Levels\Physics\FinitePhysics.cs" />
-    <Compile Include="Levels\Physics\FirePhysics.cs" />
-    <Compile Include="Levels\Physics\FireworkPhysics.cs" />
-    <Compile Include="Levels\Physics\HunterPhysics.cs" />
-    <Compile Include="Levels\Physics\LeafPhysics.cs" />
-    <Compile Include="Levels\Physics\LiquidPhysics.cs" />
-    <Compile Include="Levels\Physics\PhysicsArgs.cs" />
-    <Compile Include="Levels\Physics\SimpleLiquidPhysics.cs" />
-    <Compile Include="Levels\Physics\RocketPhysics.cs" />
-    <Compile Include="Levels\Physics\OtherPhysics.cs" />
-    <Compile Include="Levels\Physics\SnakePhysics.cs" />
-    <Compile Include="Levels\Physics\TrainPhysics.cs" />
-    <Compile Include="Levels\Physics\TntPhysics.cs" />
-    <Compile Include="Levels\Physics\ZombiePhysics.cs" />
+    <Compile Include="Blocks\Physics\ActivateablePhysics.cs" />
+    <Compile Include="Blocks\Physics\AIPhysics.cs" />
+    <Compile Include="Blocks\Physics\AirPhysics.cs" />
+    <Compile Include="Blocks\Physics\BirdPhysics.cs" />
+    <Compile Include="Blocks\Physics\C4Physics.cs" />
+    <Compile Include="Blocks\Physics\DoorPhysics.cs" />
+    <Compile Include="Blocks\Physics\ExtLiquidPhysics.cs" />
+    <Compile Include="Blocks\Physics\ExtraInfoPhysics.cs" />
+    <Compile Include="Blocks\Physics\FinitePhysics.cs" />
+    <Compile Include="Blocks\Physics\FirePhysics.cs" />
+    <Compile Include="Blocks\Physics\FireworkPhysics.cs" />
+    <Compile Include="Blocks\Physics\HunterPhysics.cs" />
+    <Compile Include="Blocks\Physics\LeafPhysics.cs" />
+    <Compile Include="Blocks\Physics\LiquidPhysics.cs" />
+    <Compile Include="Blocks\Physics\PhysicsArgs.cs" />
+    <Compile Include="Blocks\Physics\SimpleLiquidPhysics.cs" />
+    <Compile Include="Blocks\Physics\RocketPhysics.cs" />
+    <Compile Include="Blocks\Physics\OtherPhysics.cs" />
+    <Compile Include="Blocks\Physics\SnakePhysics.cs" />
+    <Compile Include="Blocks\Physics\TrainPhysics.cs" />
+    <Compile Include="Blocks\Physics\TntPhysics.cs" />
+    <Compile Include="Blocks\Physics\ZombiePhysics.cs" />
     <Compile Include="Network\Heart.cs" />
     <Compile Include="Network\IRCBot.cs" />
     <Compile Include="Network\LevelChunkStream.cs" />
@@ -592,13 +594,11 @@
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Server\Backup.cs" />
     <Compile Include="Server\BackupDB.cs" />
-    <Compile Include="Server\Extra\Scheduler.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="Network\IBeat.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
-    <Compile Include="Server\Extra\ProfanityFilter.cs" />
     <Compile Include="Scripting\Backends.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\Server.DB.cs" />
@@ -607,7 +607,6 @@
     <Compile Include="Server\Tasks\InitTasks.cs" />
     <Compile Include="Server\Tasks\ServerTasks.cs" />
     <Compile Include="Server\Tasks\UpgradeTasks.cs" />
-    <Compile Include="Server\ThreadSafeCache.cs" />
     <Compile Include="Server\Updater.cs" />
     <Compile Include="API\WebServer.cs" />
     <Compile Include="util\BufferedBlockSender.cs" />
@@ -618,10 +617,14 @@
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\App.cs" />
     <Compile Include="util\Formatter.cs" />
+    <Compile Include="util\IO\CP437Reader.cs" />
+    <Compile Include="util\IO\CP437Writer.cs" />
     <Compile Include="util\Math\DirUtils.cs" />
     <Compile Include="util\Math\Vectors.cs" />
     <Compile Include="util\MultiPageOutput.cs" />
+    <Compile Include="util\Scheduler.cs" />
     <Compile Include="util\SparseBitSet.cs" />
+    <Compile Include="util\ThreadSafeCache.cs" />
     <Compile Include="util\Utils.cs" />
     <Compile Include="util\VolatileArray.cs" />
     <Compile Include="sharkbite.thresher\ChannelModeInfo.cs" />
@@ -640,8 +643,6 @@
     <Compile Include="sharkbite.thresher\TextColor.cs" />
     <Compile Include="sharkbite.thresher\UserInfo.cs" />
     <Compile Include="sharkbite.thresher\WhoisInfo.cs" />
-    <Compile Include="util\CP437Reader.cs" />
-    <Compile Include="util\CP437Writer.cs" />
     <Compile Include="util\ExtrasCollection.cs" />
     <Compile Include="Network\ClassiCube.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
@@ -693,6 +694,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blocks\Behaviour" />
+    <Folder Include="Blocks\Extended" />
     <Folder Include="Bots\Instructions" />
     <Folder Include="Commands" />
     <Folder Include="Commands\building" />
@@ -722,7 +724,7 @@
     <Folder Include="Generator\Foilage" />
     <Folder Include="Levels\IO" />
     <Folder Include="Generator" />
-    <Folder Include="Levels\Physics" />
+    <Folder Include="Blocks\Physics" />
     <Folder Include="Economy" />
     <Folder Include="Blocks" />
     <Folder Include="Config" />
@@ -730,6 +732,8 @@
     <Folder Include="Events" />
     <Folder Include="Chat" />
     <Folder Include="CorePlugin" />
+    <Folder Include="Levels\IO\Importers" />
+    <Folder Include="Levels\IO\Exporters" />
     <Folder Include="Server\Tasks" />
     <Folder Include="util\Math" />
     <Folder Include="Player\Group" />
@@ -738,6 +742,7 @@
     <Folder Include="Plugins" />
     <Folder Include="Plugins\Events" />
     <Folder Include="util\Extensions" />
+    <Folder Include="util\IO" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

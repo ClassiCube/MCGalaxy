@@ -31,8 +31,8 @@ namespace MCGalaxy.Core {
                 } else {
                     p.SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
                 }
-            	
-            	p.ponycount++;
+                
+                p.ponycount++;
                 Plugin.CancelPlayerEvent(PlayerEvents.PlayerCommand, p);
             } else if (cmd == "rainbowdashlikescoolthings") {
                 if (p.rdcount < 2) {
@@ -40,8 +40,8 @@ namespace MCGalaxy.Core {
                 } else {
                     p.SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
                 }
-            	
-            	p.rdcount++;
+                
+                p.rdcount++;
                 Plugin.CancelPlayerEvent(PlayerEvents.PlayerCommand, p);
             }
         }

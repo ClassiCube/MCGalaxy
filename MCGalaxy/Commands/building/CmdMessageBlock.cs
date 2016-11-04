@@ -19,7 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.Blocks;
+using MCGalaxy.Blocks.Extended;
 using MCGalaxy.SQL;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMessageBlock : Command {
@@ -41,6 +43,7 @@ namespace MCGalaxy.Commands.Building {
             string[] args = message.SplitSpaces(2);
             string block = args[0].ToLower();
             data.Block = GetBlock(p, block, out data.ExtBlock, ref allMessage);
+            if (data.Block == Block.Invalid) return;
             
             if (allMessage) {
                 data.Message = message;
@@ -51,7 +54,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             string text;
-            List<string> cmds = WalkthroughBehaviour.ParseMB(data.Message, out text);
+            List<string> cmds = MessageBlock.GetParts(data.Message, out text);
             foreach (string cmd in cmds) {
                 if (!CheckCommand(p, cmd)) return;
             }
@@ -67,7 +70,7 @@ namespace MCGalaxy.Commands.Building {
             extBlock = 0;
             byte id = Block.Byte(name);
             if (Block.Props[id].IsMessageBlock) return id;
-            if (name == "show") { ShowMessageBlocks(p); return Block.Zero; }
+            if (name == "show") { ShowMessageBlocks(p); return Block.Invalid; }
             
             id = BlockDefinition.GetBlock(name, p);
             if (p.level.CustomBlockProps[id].IsMessageBlock) {
@@ -83,7 +86,7 @@ namespace MCGalaxy.Commands.Building {
             if (name == "lava") id = Block.MsgLava;
             
             allMessage = id == Block.MsgWhite && name != "white";
-            if (!Block.Props[id].IsMessageBlock) { Help(p); return Block.Zero; }
+            if (!Block.Props[id].IsMessageBlock) { Help(p); return Block.Invalid; }
             return id;
         }
         
@@ -130,12 +133,12 @@ namespace MCGalaxy.Commands.Building {
         void UpdateDatabase(Player p, MBData data, ushort x, ushort y, ushort z) {
             data.Message = data.Message.Replace("'", "\\'");
             data.Message = Colors.EscapeColors(data.Message);
-            //safe against SQL injections because no user input is given here
             string lvlName = p.level.name;
             object locker = ThreadSafeCache.DBCache.Get(lvlName);
             
             lock (locker) {
                 Database.Backend.CreateTable("Messages" + lvlName, LevelDB.createMessages);
+                p.level.hasMessageBlocks = true;
                 
                 int count = 0;
                 using (DataTable Messages = Database.Backend.GetRows("Messages" + lvlName, "*",
@@ -143,10 +146,12 @@ namespace MCGalaxy.Commands.Building {
                     count = Messages.Rows.Count;
                 }
                 
-                string syntax = count == 0 ?
-                    "INSERT INTO `Messages" + lvlName + "` (X, Y, Z, Message) VALUES (@0, @1, @2, @3)"
-                    : "UPDATE `Messages" + lvlName + "` SET Message=@3 WHERE X=@0 AND Y=@1 AND Z=@2";
-                Database.Execute(syntax, x, y, z, data.Message);
+                if (count == 0) {
+                    Database.Backend.AddRow("Messages" + lvlName, "X, Y, Z, Message", x, y, z, data.Message);
+                } else {
+                    Database.Backend.UpdateRows("Messages" + lvlName, "Message=@3", 
+                                                "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z, data.Message);
+                }
             }
         }
 
@@ -199,14 +204,25 @@ namespace MCGalaxy.Commands.Building {
             id = Block.Byte(name);
             return !Block.Props[id].IsMessageBlock;
         }
+
+        static string FormatCustom(Level lvl, BlockProps props) {
+            if (!props.IsMessageBlock) return null;
+            BlockDefinition def = lvl.CustomBlockDefs[props.BlockId];
+            return def == null ? null : def.Name.Replace(" ", "");
+        }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/mb [block] [message]");
             Player.Message(p, "%HPlaces a message in your next block.");
             
-            var allProps = Block.Props;
-            Player.Message(p, "%H  Supported blocks: %S{0}",
-                           allProps.Join(props => Format(props)));
+            string blocks = Block.Props.Join(props => Format(props));
+            if (!Player.IsSuper(p)) {
+                string custom = p.level.CustomBlockProps.Join(props => FormatCustom(p.level, props));
+                if (blocks != "" && custom != "") 
+                    blocks = blocks + ", " + custom;
+            }
+            
+            Player.Message(p, "%H  Supported blocks: %S{0}", blocks);
             Player.Message(p, "%H  Use | to separate commands, e.g. /say 1 |/say 2");
             Player.Message(p, "%H  Note: \"@p\" is a placeholder for player who clicked.");
             Player.Message(p, "%T/mb show %H- Shows or hides MBs");

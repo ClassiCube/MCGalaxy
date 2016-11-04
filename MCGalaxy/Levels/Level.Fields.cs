@@ -19,9 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Blocks;
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
+using MCGalaxy.Util;
 using Timer = System.Timers.Timer;
 
 namespace MCGalaxy {
@@ -256,5 +257,7 @@ namespace MCGalaxy {
         public int WinChance {
             get { return RoundsPlayed == 0 ? 100 : (RoundsHumanWon * 100) / RoundsPlayed; }
         }
+        
+        internal bool hasPortals, hasMessageBlocks;
     }
 }

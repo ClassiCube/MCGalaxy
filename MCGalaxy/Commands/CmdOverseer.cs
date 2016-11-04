@@ -227,6 +227,7 @@ namespace MCGalaxy.Commands {
             
             lvl.RealmOwner = p.name;
             Command.all.Find("perbuild").Use(null, lvl.name + " +" + p.name);
+            CmdZone.ZoneAll(lvl, p.name);
             
             LevelPermission osPerm = Server.osPerbuildDefault;
             if (osPerm == LevelPermission.Nobody)

@@ -138,7 +138,7 @@ namespace MCGalaxy {
         
         
         static void ToggleGuns(Player p, Level lvl, string value) {
-        	Toggle(p, lvl, ref lvl.guns, "Guns allowed");
+            Toggle(p, lvl, ref lvl.guns, "Guns allowed");
             if (lvl.guns) return;
             
             Player[] players = PlayerInfo.Online.Items;

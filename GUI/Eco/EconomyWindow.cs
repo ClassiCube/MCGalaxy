@@ -186,7 +186,7 @@ namespace MCGalaxy.GUI.Eco {
         }
 
         private void buttonRemove_Click(object sender, EventArgs e) {
-			LevelItem item = Economy.Levels;
+            LevelItem item = Economy.Levels;
             item.Presets.Remove(item.FindPreset(dataGridView1.SelectedRows[0].Cells[0].Value.ToString()));
             dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
             buttonRemove.Enabled = checkBoxLevel.Checked && dataGridView1.SelectedRows.Count > 0;

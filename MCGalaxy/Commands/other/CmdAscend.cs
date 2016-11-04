@@ -36,9 +36,9 @@ namespace MCGalaxy.Commands {
             while (y < p.level.Height) {
                 y++;
                 byte block = p.level.GetTile(x, y, z);
-                if (!(Block.Convert(block) == Block.air || block == Block.Zero)) continue;               
+                if (!(Block.Convert(block) == Block.air || block == Block.Invalid)) continue;               
                 byte above = p.level.GetTile(x, (ushort)(y + 1), z);             
-                if (!(Block.Convert(above) == Block.air || above == Block.Zero)) continue;
+                if (!(Block.Convert(above) == Block.air || above == Block.Invalid)) continue;
 
                 byte below = p.level.GetTile(x, (ushort)(y - 1), z);
                 if (Solid(Block.Convert(below))) {
@@ -51,12 +51,12 @@ namespace MCGalaxy.Commands {
         }
         
         static bool Solid(byte b) {
-        	return b != Block.air && (b < Block.water || b > Block.lavastill) && b != Block.Zero
-            	&& b != Block.shrub && (b < Block.yellowflower || b > Block.redmushroom);
+            return b != Block.air && (b < Block.water || b > Block.lavastill) && b != Block.Invalid
+                && b != Block.shrub && (b < Block.yellowflower || b > Block.redmushroom);
         }
         
         public override void Help(Player p) {
-         	string name = Group.findPerm(LevelPermission.Operator).ColoredName;
+            string name = Group.findPerm(LevelPermission.Operator).ColoredName;
             Player.Message(p, "%T/ascend");
             Player.Message(p, "%HTeleports you to the first free space above you.");
             Player.Message(p, "%H  Does not work on maps which have -hax in their motd. " +

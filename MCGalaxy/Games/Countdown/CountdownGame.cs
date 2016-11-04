@@ -249,8 +249,8 @@ namespace MCGalaxy.Games {
         void MessagePlayersLeft() {
             switch (playersleftlist.Count) {
                 case 1:
-        			mapon.ChatLevel(playersleftlist[0].ColoredName + " %Sis the winner!!");
-        			End(playersleftlist[0]);
+                    mapon.ChatLevel(playersleftlist[0].ColoredName + " %Sis the winner!!");
+                    End(playersleftlist[0]);
                     break;
                 case 2:
                     mapon.ChatLevel("Only 2 Players left:");
@@ -356,7 +356,7 @@ namespace MCGalaxy.Games {
         }
 
         public void MessageAll(string message) {
-        	Player[] online = PlayerInfo.Online.Items; 
+            Player[] online = PlayerInfo.Online.Items; 
             foreach (Player pl in online) {
                 if (pl.playerofcountdown)
                     Player.Message(pl, message);

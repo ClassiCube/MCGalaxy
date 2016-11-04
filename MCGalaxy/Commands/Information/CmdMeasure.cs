@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             byte toIgnore = Block.air;
             if (message != "") {
                 toIgnore = Block.Byte(message);
-                if (toIgnore == Block.Zero) {
+                if (toIgnore == Block.Invalid) {
                     Player.Message(p, "Could not find block specified"); return;
                 }
             }

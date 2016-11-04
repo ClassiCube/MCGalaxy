@@ -19,7 +19,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
- 
+
 namespace MCGalaxy.Commands {
     
     public sealed class CmdHackRank : Command {
@@ -61,10 +61,12 @@ namespace MCGalaxy.Commands {
         }
         
         void HackRankCallback(SchedulerTask task) {
-        	HackRankArgs args = (HackRankArgs)task.State;
-        	Player who = PlayerInfo.FindExact(args.name);
-            if (who == null) return;            
-            who.Leave("You have been kicked for hacking the rank " + args.newRank.ColoredName);
+            HackRankArgs args = (HackRankArgs)task.State;
+            Player who = PlayerInfo.FindExact(args.name);
+            if (who == null) return;
+
+            string msg = "for hacking the rank " + args.newRank.ColoredName;
+            who.Leave("kicked (" + msg + "%S)", "Kicked " + msg);
         }
         
         struct HackRankArgs { public string name; public Group newRank; }

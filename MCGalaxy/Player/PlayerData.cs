@@ -42,10 +42,9 @@ namespace MCGalaxy {
             p.TotalDrawn = 0;
             string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             
-            const string query = "INSERT INTO Players (Name, IP, FirstLogin, LastLogin, totalLogin, Title, totalDeaths" +
-                ", Money, totalBlocks, totalKicked, TimeSpent) VALUES (@0, @1, @2, @2, @3, @4, @5, @5, @5, @5, @6)";
-            Database.Execute(query, 
-                             p.name, p.ip, now, 1, "", 0, p.time.ToDBTime());
+            Database.Backend.AddRow("Players", "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
+                                    "totalDeaths, Money, totalBlocks, totalKicked, TimeSpent",
+                                    p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, p.time.ToDBTime());
         }
         
         internal static void Load(DataTable playerDb, Player p) {

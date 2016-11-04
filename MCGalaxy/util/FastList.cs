@@ -17,8 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy {
-
+namespace MCGalaxy.Util {
     public class FastList<T> {
         
         public T[] Items;

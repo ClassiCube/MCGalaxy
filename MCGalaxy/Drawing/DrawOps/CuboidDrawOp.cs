@@ -57,14 +57,14 @@ namespace MCGalaxy.Drawing.Ops {
             QuadY(p2.Y, p1.X, p1.Z, p2.X, p2.Z, brush, output);
             
             if (lenY > 2) {
-            	QuadX(p1.X, (ushort)(p1.Y + 1), p1.Z, (ushort)(p2.Y - 1), p2.Z, brush, output);
-            	QuadX(p2.X, (ushort)(p1.Y + 1), p1.Z, (ushort)(p2.Y - 1), p2.Z, brush, output);
+                QuadX(p1.X, (ushort)(p1.Y + 1), p1.Z, (ushort)(p2.Y - 1), p2.Z, brush, output);
+                QuadX(p2.X, (ushort)(p1.Y + 1), p1.Z, (ushort)(p2.Y - 1), p2.Z, brush, output);
             }
             if (lenX > 2 && lenY > 2) {
-            	QuadZ(p1.Z, (ushort)(p1.Y + 1), (ushort)(p1.X + 1), 
-            	      (ushort)(p2.Y - 1), (ushort)(p2.X - 1), brush, output);
+                QuadZ(p1.Z, (ushort)(p1.Y + 1), (ushort)(p1.X + 1), 
+                      (ushort)(p2.Y - 1), (ushort)(p2.X - 1), brush, output);
                 QuadZ(p2.Z, (ushort)(p1.Y + 1), (ushort)(p1.X + 1),
-            	      (ushort)(p2.Y - 1), (ushort)(p2.X - 1), brush, output);
+                      (ushort)(p2.Y - 1), (ushort)(p2.X - 1), brush, output);
             }
         }
         
@@ -96,7 +96,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-	public class CuboidWallsDrawOp : CuboidHollowsDrawOp {
+    public class CuboidWallsDrawOp : CuboidHollowsDrawOp {
         public override string Name { get { return "Cuboid Walls"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
@@ -131,24 +131,24 @@ namespace MCGalaxy.Drawing.Ops {
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++ ) {
-            	output(Place(p1.X, y, p1.Z, brush));
-            	output(Place(p2.X, y, p1.Z, brush));
-            	output(Place(p1.X, y, p2.Z, brush));
+                output(Place(p1.X, y, p1.Z, brush));
+                output(Place(p2.X, y, p1.Z, brush));
+                output(Place(p1.X, y, p2.Z, brush));
                 output(Place(p2.X, y, p2.Z, brush));
             }
 
             for (ushort z = p1.Z; z <= p2.Z; z++) {
-            	output(Place(p1.X, p1.Y, z, brush));
-            	output(Place(p2.X, p1.Y, z, brush));
-            	output(Place(p1.X, p2.Y, z, brush));
-            	output(Place(p2.X, p2.Y, z, brush));
+                output(Place(p1.X, p1.Y, z, brush));
+                output(Place(p2.X, p1.Y, z, brush));
+                output(Place(p1.X, p2.Y, z, brush));
+                output(Place(p2.X, p2.Y, z, brush));
             }
             
             for (ushort x = p1.X; x <= p2.X; x++) {
-            	output(Place(x, p1.Y, p1.Z, brush));
-            	output(Place(x, p1.Y, p2.Z, brush));
-            	output(Place(x, p2.Y, p1.Z, brush));
-            	output(Place(x, p2.Y, p2.Z, brush));
+                output(Place(x, p1.Y, p1.Z, brush));
+                output(Place(x, p1.Y, p2.Z, brush));
+                output(Place(x, p2.Y, p1.Z, brush));
+                output(Place(x, p2.Y, p2.Z, brush));
             }
         }
     }

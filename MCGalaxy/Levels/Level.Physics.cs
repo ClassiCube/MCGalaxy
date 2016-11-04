@@ -18,7 +18,7 @@
 using System;
 using System.Threading;
 using MCGalaxy.Blocks;
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Games;
 
 namespace MCGalaxy {
@@ -26,6 +26,9 @@ namespace MCGalaxy {
     public enum PhysicsState { Stopped, Warning, Other }
 
     public sealed partial class Level : IDisposable {
+        
+        readonly object updateLock = new object();
+        readonly object checkLock = new object();
         
         public void setPhysics(int newValue) {
             if (physics == 0 && newValue != 0 && blocks != null) {
@@ -169,10 +172,16 @@ namespace MCGalaxy {
             for (int i = 0; i < ListUpdate.Count; i++) {
                 Update C = ListUpdate.Items[i];
                 try {
-                    byte block = C.data.Data;
+                    byte block = C.data.Data, extBlock = 0;
                     C.data.Data = 0;
-                    if (DoPhysicsBlockchange(C.b, block, false, C.data, 0, true))
-                        bulkSender.Add(C.b, block, 0);
+                    // Is the Ext flag just an indicator for the block update?
+                    if (C.data.ExtBlock && (C.data.Raw & PhysicsArgs.TypeMask) == 0) {
+                        extBlock = block; block = Block.custom_block;
+                        C.data.ExtBlock = false;
+                    }
+                    
+                    if (DoPhysicsBlockchange(C.b, block, false, C.data, extBlock, true))
+                        bulkSender.Add(C.b, block, extBlock);
                 } catch {
                     Server.s.Log("Phys update issue");
                 }
@@ -183,7 +192,7 @@ namespace MCGalaxy {
             ListUpdate.Clear(); listUpdateExists.Clear();
         }
         
-        public void AddCheck(int b, bool overRide = false) { 
+        public void AddCheck(int b, bool overRide = false) {
             AddCheck(b, overRide, default(PhysicsArgs));
         }
         
@@ -206,6 +215,7 @@ namespace MCGalaxy {
                     }
                     //Dont need to check physics here because if the list is active, then physics is active :)
                 }
+                
                 if (!physThreadStarted && physics > 0)
                     StartPhysics();
             } catch {
@@ -214,7 +224,7 @@ namespace MCGalaxy {
             }
         }
 
-        internal bool AddUpdate(int b, int type, bool overRide = false) { 
+        internal bool AddUpdate(int b, int type, bool overRide = false) {
             return AddUpdate(b, type, overRide, default(PhysicsArgs));
         }
         
@@ -226,8 +236,14 @@ namespace MCGalaxy {
                 if (x >= Width || y >= Height || z >= Length) return false;
                 
                 if (overRide) {
+                    byte block = (byte)type, extBlock = 0;
+                    // Is the Ext flag just an indicator for the block update?
+                    if (data.ExtBlock && (data.Raw & PhysicsArgs.TypeMask) == 0) {
+                        extBlock = block; block = Block.custom_block;
+                        data.ExtBlock = false;
+                    }
                     AddCheck(b, true, data); //Dont need to check physics here....AddCheck will do that
-                    Blockchange((ushort)x, (ushort)y, (ushort)z, (byte)type, true, data);
+                    Blockchange((ushort)x, (ushort)y, (ushort)z, block, true, data, extBlock);
                     return true;
                 }
 
@@ -238,8 +254,8 @@ namespace MCGalaxy {
                 } else {
                     return false;
                 }
-                
                 ListUpdate.Add(new Update(b, (byte)type, data));
+                
                 if (!physThreadStarted && physics > 0)
                     StartPhysics();
                 return true;
@@ -279,6 +295,7 @@ namespace MCGalaxy {
             ListUpdate.Count = j;
         }
         
+        
         public void ClearPhysics() {
             for (int i = 0; i < ListCheck.Count; i++ )
                 RevertPhysics(ListCheck.Items[i]);
@@ -316,6 +333,18 @@ namespace MCGalaxy {
             byte extBlock = ext ? raw : Block.air;
             Blockchange(x, y, z, block, true,
                         default(PhysicsArgs), extBlock);
+        }
+        
+        
+        internal bool ActivatesPhysics(byte block, byte extBlock) {
+            if (block != Block.custom_block)
+                return Block.Physics(block);
+            
+            BlockProps[] props = CustomBlockProps;
+            if (props[extBlock].IsMessageBlock || props[extBlock].IsPortal) return false;
+            if (props[extBlock].IsDoor || props[extBlock].IsTDoor) return false;
+            if (props[extBlock].OPBlock) return false;
+            return true;
         }
         
         internal bool CheckSpongeWater(ushort x, ushort y, ushort z) {

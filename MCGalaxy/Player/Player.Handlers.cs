@@ -19,7 +19,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using MCGalaxy.Blocks;
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Commands;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
@@ -48,10 +48,14 @@ namespace MCGalaxy {
         public void ManualChange(ushort x, ushort y, ushort z, byte action,
                                  byte block, byte extBlock, bool checkPlaceDist) {
             byte old = level.GetTile(x, y, z);
-            if (old == Block.Zero) return;
+            if (old == Block.Invalid) return;
             if (jailed || !agreed || !canBuild) { RevertBlock(x, y, z); return; }
             if (level.IsMuseum && Blockchange == null) return;
-            if (action > 1) { Leave("Unknown block action!", true); return; }
+            
+            if (action > 1) {
+                const string msg = "Unknown block action!";
+                Leave(msg, msg, true); return; 
+            }
             bool doDelete = !painting && action == 0;
 
             if (Server.verifyadmins && adminpen) {
@@ -74,7 +78,7 @@ namespace MCGalaxy {
             if (PlayerBlockChange != null)
                 PlayerBlockChange(this, x, y, z, block, extBlock);
             OnBlockChangeEvent.Call(this, x, y, z, block, extBlock);
-            if (cancelBlock) { cancelBlock = false; return; }            
+            if (cancelBlock) { cancelBlock = false; return; }
 
             if (old >= Block.air_flood && old <= Block.air_door_air) {
                 SendMessage("Block is active, you cannot disturb it.");
@@ -210,9 +214,11 @@ namespace MCGalaxy {
                 case Opcode.CpeExtInfo: return 67;
                 case Opcode.CpeExtEntry: return 69;
                 case Opcode.CpeCustomBlockSupportLevel: return 2;
+                
                 default:
                     if (!dontmindme) {
-                        Leave("Unhandled message id \"" + buffer[0] + "\"!", true);
+                        string msg = "Unhandled message id \"" + buffer[0] + "\"!";
+                        Leave(msg, msg, true);
                     }
                     return -1;
             }
@@ -307,7 +313,7 @@ namespace MCGalaxy {
             rot = new byte[2] { rotx, roty };
             if (!Moved() || Loading) return;
             if (DateTime.UtcNow < AFKCooldown) return;
-                       
+            
             LastAction = DateTime.UtcNow;
             if (IsAfk) CmdAfk.ToggleAfk(this, "");
             /*if (!CheckIfInsideBlock()) { clippos = pos; cliprot = rot; }*/
@@ -329,7 +335,7 @@ namespace MCGalaxy {
                 } else if (!(conv == Block.water || conv == Block.waterstill ||
                              conv == Block.lava || conv == Block.lavastill)) {
                     if (fallCount > level.fall)
-                        HandleDeath(Block.air, null, false, true);
+                        HandleDeath(Block.air, 0, null, false, true);
                     fallCount = 0;
                     drownCount = 0;
                     return;
@@ -344,7 +350,7 @@ namespace MCGalaxy {
                     fallCount = 0;
                     drownCount++;
                     if (drownCount > level.drown * (100/3)) {
-                        HandleDeath(Block.water);
+                        HandleDeath(Block.water, 0);
                         drownCount = 0;
                     }
                     break;
@@ -378,15 +384,25 @@ namespace MCGalaxy {
             }
             
             lastWalkthrough = level.PosToInt(x, y, z);
-            if ( ( bHead == Block.tntexplosion || bFeet == Block.tntexplosion ) && PlayingTntWars ) { }
-            else if ( Block.Death(bHead) ) HandleDeath(bHead);
-            else if ( Block.Death(bFeet) ) HandleDeath(bFeet);
+            if ((bHead == Block.tntexplosion || bFeet == Block.tntexplosion) && PlayingTntWars) return;
+            
+            if (Block.Props[bHead].KillerBlock) {
+                HandleDeath(bHead, 0);
+            } else if (Block.Props[bFeet].KillerBlock) {
+                HandleDeath(bFeet, 0);
+            }
         }
 
+        [Obsolete("Use HandleDeath with ExtBlock attribute")]
         public void HandleDeath(byte b, string customMessage = "", bool explode = false, bool immediate = false) {
-            if (OnDeath != null) OnDeath(this, b);
-            if (PlayerDeath != null) PlayerDeath(this, b);
-            OnPlayerDeathEvent.Call(this, b);
+            HandleDeath(b, 0, customMessage, explode, immediate);
+        }
+        
+        public void HandleDeath(byte block, byte extBlock, string customMessage = "",
+                                bool explode = false, bool immediate = false) {
+            if (OnDeath != null) OnDeath(this, block);
+            if (PlayerDeath != null) PlayerDeath(this, block);
+            OnPlayerDeathEvent.Call(this, block);
             
             if (Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this)) return;
             if (!immediate && lastDeath.AddSeconds(2) > DateTime.UtcNow) return;
@@ -394,14 +410,22 @@ namespace MCGalaxy {
 
             onTrain = false; trainInvincible = false; trainGrab = false;
             ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);
-            string deathMsg = Block.Props[b].DeathMessage;
-            if (deathMsg != null) Chat.GlobalChatLevel(this, String.Format(deathMsg, ColoredName), false);
             
-            if (b == Block.rockethead) level.MakeExplosion(x, y, z, 0);
-            if (b == Block.creeper) level.MakeExplosion(x, y, z, 1);
-            if (b == Block.rock || b == Block.stone) {
+            string deathMsg = null;
+            if (block != Block.custom_block) {
+                deathMsg = Block.Props[block].DeathMessage;
+            } else {
+                deathMsg = level.CustomBlockProps[extBlock].DeathMessage;
+            }
+            if (deathMsg != null) {
+                Chat.GlobalChatLevel(this, deathMsg.Replace("@p", ColoredName), false);
+            }
+            
+            if (block == Block.rockethead) level.MakeExplosion(x, y, z, 0);
+            if (block == Block.creeper) level.MakeExplosion(x, y, z, 1);
+            if (block == Block.rock || block == Block.stone) {
                 if (explode) level.MakeExplosion(x, y, z, 1);
-                if (b == Block.rock) {
+                if (block == Block.rock) {
                     SendChatFrom(this, ColoredName + "%S" + customMessage, false);
                 } else {
                     Chat.GlobalChatLevel(this, ColoredName + "%S" + customMessage, false);
@@ -553,7 +577,8 @@ namespace MCGalaxy {
 
             text = Regex.Replace(text, "  +", " ");
             if (text.IndexOf('&') >= 0) {
-                Leave("Illegal character in chat message!", true); return true;
+                const string msg = "Illegal character in chat message!";
+                Leave(msg, msg, true); return true;
             }
             return text.Length == 0;
         }
@@ -597,11 +622,11 @@ namespace MCGalaxy {
         
         bool IsHandledMessage(string text) {
             if (Server.voteKickInProgress && text.Length == 1) {
-        		if (text.CaselessEq("y")) {
+                if (text.CaselessEq("y")) {
                     voteKickChoice = VoteKickChoice.Yes;
                     SendMessage("Thanks for voting!");
                     return true;
-        		} else if (text.CaselessEq("n")) {
+                } else if (text.CaselessEq("n")) {
                     voteKickChoice = VoteKickChoice.No;
                     SendMessage("Thanks for voting!");
                     return true;
@@ -681,7 +706,7 @@ namespace MCGalaxy {
                 int secs = (int)Math.Ceiling(delta.TotalSeconds);
                 SendMessage("Blocked from using commands for " +
                             "another " + secs + " seconds"); return false;
-            }            
+            }
             return true;
         }
         
@@ -703,7 +728,7 @@ namespace MCGalaxy {
             
             Command command = Command.all.Find(cmd);
             if (command == null) {
-                if (Block.Byte(cmd) != Block.Zero) {
+                if (Block.Byte(cmd) != Block.Invalid) {
                     cmdArgs = cmd.ToLower(); cmd = "mode";
                     command = Command.all.Find("mode");
                 } else {
@@ -732,8 +757,8 @@ namespace MCGalaxy {
 
             try { //opstats patch (since 5.5.11)
                 if (Server.opstats.Contains(cmd) || (cmd == "review" && message.ToLower() == "next" && Server.reviewlist.Count > 0)) {
-                    Database.Execute("INSERT INTO Opstats (Time, Name, Cmd, Cmdmsg) VALUES (@0, @1, @2, @3)",
-                                     DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), name, cmd, message);
+                    Database.Backend.AddRow("Opstats", "Time, Name, Cmd, Cmdmsg",
+                                            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), name, cmd, message);
                 }
             } catch { }
             

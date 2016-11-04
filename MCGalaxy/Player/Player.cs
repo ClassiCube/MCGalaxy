@@ -73,8 +73,8 @@ namespace MCGalaxy {
             byte head = level.GetTile(x, y, z);
             byte feet = level.GetTile(x, (ushort)(y - 1), z);
 
-            return !(Block.Walkthrough(Block.Convert(head)) || head == Block.Zero)
-                && !(Block.Walkthrough(Block.Convert(feet)) || feet == Block.Zero);
+            return !(Block.Walkthrough(Block.Convert(head)) || head == Block.Invalid)
+                && !(Block.Walkthrough(Block.Convert(feet)) || feet == Block.Invalid);
         }
         static int sessionCounter;
 
@@ -106,18 +106,17 @@ namespace MCGalaxy {
         }
 
         public void save() {
-            const string query = "UPDATE Players SET IP=@0, LastLogin=@1, totalLogin=@2, totalDeaths=@3, " +
-                "Money=@4, totalBlocks=@5, totalCuboided=@6, totalKicked=@7, TimeSpent=@8 WHERE Name=@9";
-            
-            if (MySQLSave != null) MySQLSave(this, query);
-            OnMySQLSaveEvent.Call(this, query);
+            if (MySQLSave != null) MySQLSave(this, "");
+            OnMySQLSaveEvent.Call(this, "");
             if (cancelmysql) { cancelmysql = false; return; }
 
             long blocks = PlayerData.BlocksPacked(TotalPlaced, overallBlocks);
-            long cuboided = PlayerData.CuboidPacked(TotalDeleted, TotalDrawn);            
-            Database.Execute(query, ip, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), 
-                             totalLogins, overallDeath, money, blocks, 
-                             cuboided, totalKicked, time.ToDBTime(), name);
+            long cuboided = PlayerData.CuboidPacked(TotalDeleted, TotalDrawn);
+            Database.Backend.UpdateRows("Players", "IP=@0, LastLogin=@1, totalLogin=@2, totalDeaths=@3, Money=@4, " +
+                                        "totalBlocks=@5, totalCuboided=@6, totalKicked=@7, TimeSpent=@8", "WHERE Name=@9", 
+                                        ip, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                                        totalLogins, overallDeath, money, blocks,
+                                        cuboided, totalKicked, time.ToDBTime(), name);
             
             Server.zombie.SaveZombieStats(this);
             SaveUndo(this);
@@ -234,22 +233,54 @@ namespace MCGalaxy {
         #endregion
         #region == DISCONNECTING ==
         
-        public void Disconnect() { LeaveServer("disconnected", PlayerDB.GetLogoutMessage(this)); }
-        public void Kick(string kickString) { LeaveServer(kickString, null); }
-        public void Kick(string kickString, bool sync = false) { LeaveServer(kickString, null, sync); }
-        public void Leave(string discMsg, bool sync = false) { LeaveServer(discMsg, discMsg, sync); }
+        /// <summary> Disconnects the players from the server, 
+        /// with their default logout message shown in chat. </summary>
+        public void Disconnect() { LeaveServer(PlayerDB.GetLogoutMessage(this), "disconnected", false); }
+        
+        /// <summary> Kicks the player from the server,
+        /// with the given messages shown in chat and in the disconnect packet. </summary>
+        public void Kick(string chatMsg, string discMsg, bool sync = false) {
+            LeaveServer(chatMsg, discMsg, true, sync); 
+        }
+
+        /// <summary> Kicks the player from the server,
+        /// with the given message shown in both chat and in the disconnect packet. </summary>
+        public void Kick(string discMsg) { Kick(discMsg, false); }
+        public void Kick(string discMsg, bool sync = false) {
+            string chatMsg = discMsg;
+            if (chatMsg != "") chatMsg = "(" + chatMsg + ")"; // old format
+            LeaveServer(chatMsg, discMsg, true, sync);
+        }
+        
+        /// <summary> Disconnects the players from the server,
+        /// with the given message shown in both chat and in the disconnect packet. </summary>
+        public void Leave(string chatMsg, string discMsg, bool sync = false) { 
+            LeaveServer(chatMsg, discMsg, false, sync); 
+        }
+
+        /// <summary> Disconnects the players from the server,
+        /// with the given messages shown in chat and in the disconnect packet. </summary>        
+        public void Leave(string discMsg) { Leave(discMsg, false); }       
+        public void Leave(string discMsg, bool sync = false) {
+            LeaveServer(discMsg, discMsg, false, sync);
+        }
         
         [Obsolete("Use Leave() or Kick() instead")]
-        public void leftGame(string kickMsg = "") { LeaveServer(kickMsg, null); }
+        public void leftGame(string discMsg = "") {
+            string chatMsg = discMsg;
+            if (chatMsg != "") chatMsg = "(" + chatMsg + ")"; // old format
+            LeaveServer(chatMsg, discMsg, true); 
+        }
+        
 
         bool leftServer = false;
-        void LeaveServer(string kickMsg, string discMsg, bool sync = false) {
-            if (discMsg != null) discMsg = Colors.EscapeColors(discMsg);
-            if (kickMsg != null) kickMsg = Colors.EscapeColors(kickMsg);
+        void LeaveServer(string chatMsg, string discMsg, bool isKick, bool sync = false) {
             if (leftServer) return;
             leftServer = true;
+            if (chatMsg != null) chatMsg = Colors.EscapeColors(chatMsg);
+            discMsg = Colors.EscapeColors(discMsg);
             
-            OnPlayerDisconnectEvent.Call(this, discMsg ?? kickMsg);
+            OnPlayerDisconnectEvent.Call(this, discMsg);
             //Umm...fixed?
             if (name == "") {
                 if (socket != null) CloseSocket();
@@ -274,19 +305,17 @@ namespace MCGalaxy {
                 aiming = false;
                 
                 bool cp437 = HasCpeExt(CpeExt.FullCP437);
-                string kickPacketMsg = ChatTokens.Apply(kickMsg, this);
-                Send(Packet.MakeKick(kickPacketMsg, cp437), sync);
+                string kickPacketMsg = ChatTokens.Apply(discMsg, this);
+                Send(Packet.Kick(discMsg, cp437), sync);
                 disconnected = true;
+                if (isKick) totalKicked++;
+                
                 if (!loggedIn) {
                     connections.Remove(this);
                     RemoveFromPending();
                     
                     string user = String.IsNullOrEmpty(name) ? ip : name + " (" + ip + ")";
-                    string msg = discMsg ?? kickMsg;
-                    if (String.IsNullOrEmpty(msg))
-                        Server.s.Log(user + " disconnected.");
-                    else
-                        Server.s.Log(user + " disconnected. (" + msg + ")");
+                    Server.s.Log(user + " disconnected. (" + discMsg + ")");
                     return;
                 }
 
@@ -300,7 +329,7 @@ namespace MCGalaxy {
                 }
 
                 Entities.DespawnEntities(this, false);
-                SendDisconnectMessage(discMsg, kickMsg);
+                ShowDisconnectInChat(chatMsg, isKick);
 
                 try { save(); }
                 catch ( Exception e ) { Server.ErrorLog(e); }
@@ -308,7 +337,7 @@ namespace MCGalaxy {
                 PlayerInfo.Online.Remove(this);
                 Server.s.PlayerListUpdate();
                 if (PlayerDisconnect != null)
-                    PlayerDisconnect(this, discMsg ?? kickMsg);
+                    PlayerDisconnect(this, discMsg);
                 if (Server.AutoLoad && level.unload && !level.IsMuseum && IsAloneOnCurrentLevel())
                     level.Unload(true);
                 Dispose();
@@ -319,9 +348,11 @@ namespace MCGalaxy {
             }
         }
         
-        void SendDisconnectMessage(string discMsg, string kickMsg) {
-            if (discMsg != null) {
-                string leavem = "&c- " + FullName + " %S" + discMsg;
+        void ShowDisconnectInChat(string chatMsg, bool isKick) {
+            if (chatMsg == null) return;
+            
+            if (!isKick) {
+                string leavem = "&c- " + FullName + " %S" + chatMsg;
                 const LevelPermission perm = LevelPermission.Guest;
                 if (group.Permission > perm || (Server.guestLeaveNotify && group.Permission <= perm)) {
                     Player[] players = PlayerInfo.Online.Items;
@@ -329,11 +360,10 @@ namespace MCGalaxy {
                         if (Entities.CanSee(pl, this)) Player.Message(pl, leavem);
                     }
                 }
-                Server.s.Log(name + " disconnected (" + discMsg + "%S).");
+                Server.s.Log(name + " disconnected (" + chatMsg + "%S).");
             } else {
-                totalKicked++;
-                SendChatFrom(this, "&c- " + FullName + " %Skicked (" + kickMsg + "%S).", false);
-                Server.s.Log(name + " kicked (" + kickMsg + "%S).");
+                SendChatFrom(this, "&c- " + FullName + " %Skicked %S" + chatMsg, false);
+                Server.s.Log(name + " kicked (" + chatMsg + "%S).");
             }
         }
         

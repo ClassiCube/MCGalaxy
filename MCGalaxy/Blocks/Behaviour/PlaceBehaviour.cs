@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 using System;
 
 namespace MCGalaxy.Blocks {
@@ -40,7 +40,7 @@ namespace MCGalaxy.Blocks {
             if (above == Block.custom_block) 
                 extAbove = lvl.GetExtTile(x, (ushort)(y + 1), z);
             
-            block = (above == Block.Zero || Block.LightPass(above, extAbove, lvl.CustomBlockDefs))
+            block = (above == Block.Invalid || Block.LightPass(above, extAbove, lvl.CustomBlockDefs))
                 ? Block.grass : Block.dirt;
             p.ChangeBlock(x, y, z, block, 0);
             return false;
@@ -55,6 +55,17 @@ namespace MCGalaxy.Blocks {
             
             p.SendBlockchange(x, y, z, Block.air); //send the air block back only to the user.
             p.ChangeBlock(x, (ushort)(y - 1), z, Block.staircasefull, 0);
+            return false;
+        }
+        
+        internal static bool CobbleStairs(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (!(p.level.physics == 0 || p.level.physics == 5)
+                || p.level.GetTile(x, (ushort)(y - 1), z) != Block.cobblestoneslab) {
+                p.ChangeBlock(x, y, z, Block.cobblestoneslab, 0); return false;
+            }
+            
+            p.SendBlockchange(x, y, z, Block.air); //send the air block back only to the user.
+            p.ChangeBlock(x, (ushort)(y - 1), z, Block.stone, 0);
             return false;
         }
         

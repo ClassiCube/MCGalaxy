@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
             
             if (source == null || target == null) return;
             if (p.Rank < source.group.Permission) {
-                MessageTooHighRank(p, "teleport", true); return;            	
+                MessageTooHighRank(p, "teleport", true); return;
             }
             Player.Message(p, "Attempting to teleport " + source.name + " to " + target.name + ".");
             Command.all.Find("tp").Use(source, target.name);

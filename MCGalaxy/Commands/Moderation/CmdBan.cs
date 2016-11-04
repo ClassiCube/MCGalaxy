@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             bool stealth = message[0] == '#';
             if (stealth) {
-            	message = message.Remove(0, 1);
+                message = message.Remove(0, 1);
                 Server.s.Log("Stealth ban Attempted by " + (p == null ? "Console" : p.ColoredName));
             }
             string[] args = message.SplitSpaces(2);

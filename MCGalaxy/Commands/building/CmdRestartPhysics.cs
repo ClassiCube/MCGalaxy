@@ -17,7 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdRestartPhysics : Command {
@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Building {
         bool Parse(Player p, string name, string arg, ref byte type, ref byte value) {
             if (name == "revert") {
                 byte block = Block.Byte(arg);
-                if (block == Block.Zero) { Player.Message(p, "Invalid block type."); return false; }
+                if (block == Block.Invalid) { Player.Message(p, "Invalid block type."); return false; }
                 type = PhysicsArgs.Revert; value = block;
                 return true;
             }

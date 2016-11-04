@@ -93,9 +93,9 @@ namespace MCGalaxy.Commands.Building {
         struct DrawArgs { public ushort distance, interval; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/splace [distance] [interval]");
+            Player.Message(p, "%T/splace [distance] <interval>");
             Player.Message(p, "%HMeasures a set [distance] and places your held block at each end.");
-            Player.Message(p, "%HOptionally place a block at set [interval] between them.");
+            Player.Message(p, "%HOptionally place a block at set <interval> between them.");
         }
     }
 }

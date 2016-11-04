@@ -35,18 +35,23 @@ namespace MCGalaxy.Commands.World {
             if (scope == null) return;
             
             byte id = GetBlock(p, scope, args[1]);
-            if (id == Block.Zero) return;
+            if (id == Block.Invalid) return;
             string prop = args[2].ToLower();
-            
-            // TODO: global and level custom blocks
-            // TODO: adding core blocks, changing core block names
             SetProperty(p, scope, id, prop, args);
         }
         
         BlockProps[] GetScope(Player p, string scope) {
             if (scope.CaselessEq("core")) return Block.Props;
             if (scope.CaselessEq("global")) return BlockDefinition.GlobalProps;
-            if (scope.CaselessEq("level")) return p.level.CustomBlockProps;
+            
+            if (scope.CaselessEq("level")) {
+                if (Player.IsSuper(p)) {
+                    string src = p == null ? "console" : "IRC";
+                    Player.Message(p, "Cannot use level scope from {0}.",  src);
+                    return null;
+                }
+                return p.level.CustomBlockProps;
+            }
             
             Player.Message(p, "&cScope must \"core\", \"global\", or \"level\"");
             return null;
@@ -60,18 +65,18 @@ namespace MCGalaxy.Commands.World {
                 
                 if (Block.Name(id).CaselessEq("unknown")) {
                     Player.Message(p, "&cThere is no block with id or name \"{0}\"", block);
-                    id = Block.Zero;
+                    id = Block.Invalid;
                 }
             } else if (scope == BlockDefinition.GlobalProps) {
                 id = BlockDefinition.GetBlock(block, BlockDefinition.GlobalDefs);
-                if (id == Block.Zero)
+                if (id == Block.Invalid)
                     Player.Message(p, "&cThere is no global custom block with id or name \"{0}\"", block);
             } else {
                 id = BlockDefinition.GetBlock(block, p.level.CustomBlockDefs);
-                if (id == Block.Zero)
+                if (id == Block.Invalid)
                     Player.Message(p, "&cThere is no level custom block with id or name \"{0}\"", block);
                 if (p.level.CustomBlockDefs[id] == BlockDefinition.GlobalDefs[id]) {
-                    Player.Message(p, "&cUse %T/blockprops global &cto modify this custom block."); return Block.Zero;
+                    Player.Message(p, "&cUse %T/blockprops global &cto modify this custom block."); return Block.Invalid;
                 }
             }
             return id;
@@ -84,14 +89,14 @@ namespace MCGalaxy.Commands.World {
                 Toggle(p, scope, id, "a portal",
                        (ref BlockProps props) => props.IsPortal = !props.IsPortal,
                        (BlockProps props) => props.IsPortal);
-            } else if (prop == "rails") {
-                Toggle(p, scope, id, "train rails",
-                       (ref BlockProps props) => props.IsRails = !props.IsRails,
-                       (BlockProps props) => props.IsRails);
             } else if (prop == "mb" || prop == "messageblock") {
                 Toggle(p, scope, id, "a message block",
                        (ref BlockProps props) => props.IsMessageBlock = !props.IsMessageBlock,
                        (BlockProps props) => props.IsMessageBlock);
+            } else if (prop == "rails") {
+                Toggle(p, scope, id, "train rails",
+                       (ref BlockProps props) => props.IsRails = !props.IsRails,
+                       (BlockProps props) => props.IsRails);
             } else if (prop == "waterkills") {
                 Toggle(p, scope, id, "killed by water",
                        (ref BlockProps props) => props.WaterKills = !props.WaterKills,
@@ -100,22 +105,21 @@ namespace MCGalaxy.Commands.World {
                 Toggle(p, scope, id, "killed by lava",
                        (ref BlockProps props) => props.LavaKills = !props.LavaKills,
                        (BlockProps props) => props.LavaKills);
+            } else if (prop == "door") {
+                Toggle(p, scope, id, "is a door",
+                       (ref BlockProps props) => props.IsDoor = !props.IsDoor,
+                       (BlockProps props) => props.IsDoor);
+            } else if (prop == "tdoor") {
+                Toggle(p, scope, id, "is a tdoor",
+                       (ref BlockProps props) => props.IsTDoor = !props.IsTDoor,
+                       (BlockProps props) => props.IsTDoor);
             } else if (prop == "killer" || prop == "death") {
                 Toggle(p, scope, id, "a killer block",
                        (ref BlockProps props) => props.KillerBlock = !props.KillerBlock,
                        (BlockProps props) => props.KillerBlock);
             } else if (prop == "deathmsg" || prop == "deathmessage") {
                 string msg = args.Length > 3 ? args[3] : null;
-                scope[id].DeathMessage = msg;
-                
-                if (msg == null) {
-                    Player.Message(p, "Death message for {0} removed.",
-                                   BlockName(scope, p.level, id));
-                } else {
-                    Player.Message(p, "Death message for {0} set to: {1}",
-                                   BlockName(scope, p.level, id), msg);
-                }
-                OnPropsChanged(scope, id);
+                SetDeathMessage(p, scope, id, msg);
             } else {
                 Help(p);
             }
@@ -127,38 +131,92 @@ namespace MCGalaxy.Commands.World {
             BlockProps props = scope[id];
             setter(ref props);
             scope[id] = props;
-            OnPropsChanged(scope, id);
+            Level lvl = Player.IsSuper(p) ? null : p.level;
             
             Player.Message(p, "Block {0} is {1}: {2}",
-                           BlockName(scope, p.level, id),
+                           BlockName(scope, lvl, id),
                            type, getter(props) ? "&aYes" : "&cNo");
+            OnPropsChanged(scope, lvl, id);
+        }
+        
+        static void SetDeathMessage(Player p, BlockProps[] scope, byte id, string msg) {
+            scope[id].DeathMessage = msg;
+            Level lvl = Player.IsSuper(p) ? null : p.level;
+            
+            if (msg == null) {
+                Player.Message(p, "Death message for {0} removed.",
+                               BlockName(scope, lvl, id));
+            } else {
+                Player.Message(p, "Death message for {0} set to: {1}",
+                               BlockName(scope, lvl, id), msg);
+            }
+            OnPropsChanged(scope, lvl, id);
         }
 
-        static void OnPropsChanged(BlockProps[] scope, byte id) {
+        static void OnPropsChanged(BlockProps[] scope, Level level, byte id) {
+            scope[id].Changed = true;
+            
             if (scope == Block.Props) {
                 BlockBehaviour.SetupCoreHandlers();
+                BlockProps.Save("core", scope);
             } else if (scope == BlockDefinition.GlobalProps) {
                 Level[] loaded = LevelInfo.Loaded.Items;
-                
                 foreach (Level lvl in loaded) {
                     if (lvl.CustomBlockDefs[id] != BlockDefinition.GlobalDefs[id]) continue;
                     lvl.CustomBlockProps[id] = BlockDefinition.GlobalProps[id];
                 }
+                BlockProps.Save("global", scope);
+            } else {
+                BlockProps.Save("lvl_" + level.name, scope);
             }
         }
         
-        static string BlockName(BlockProps[] scope, Level lvl, byte id) {
-            byte block = id, extBlock = 0;
-            if (scope != Block.Props) {
-                block = Block.custom_block; extBlock = id;
+        static string BlockName(BlockProps[] scope, Level lvl, byte raw) {
+            if (scope == Block.Props) return Block.Name(raw);
+            BlockDefinition def = null;
+            
+            if (scope == BlockDefinition.GlobalProps) {
+                def = BlockDefinition.GlobalDefs[raw];
+            } else {
+                def = lvl.CustomBlockDefs[raw];
             }
-            return lvl.BlockName(block, extBlock);
+            return def == null ? raw.ToString() : def.Name.Replace(" ", "");
         }
+        
         
         public override void Help(Player p) {
             Player.Message(p, "%T/blockprops [scope] [id] [property] <value>");
             Player.Message(p, "%HSets various properties for blocks.");
-            Player.Message(p, "%H[scope] can be \"core\", \"global\", or \"level");
+            Player.Message(p, "%H[scope] can be: %Score, global, level");
+            
+            Player.Message(p, "%Hproperties: %Sportal, messageblock, rails, waterkills, " +
+                           "lavakills, door, tdoor, killer, deathmessage");
+            Player.Message(p, "%HType %T/help blockprops [property] %Hfor more details");
+        }
+        
+        public override void Help(Player p, string message) {
+            if (message.CaselessEq("portal")) {
+                Player.Message(p, "%HToggles whether the block is a %T/portal");
+            } else if (message.CaselessEq("messageblock")) {
+                Player.Message(p, "%HToggles whether the block is a %T/messageblock");
+            } else if (message.CaselessEq("rails")) {
+                Player.Message(p, "%HToggles whether %Strain %Hblocks can run over this block");
+            } else if (message.CaselessEq("waterkills")) {
+                Player.Message(p, "%HToggles whether flooding water kills this block");
+            } else if (message.CaselessEq("lavakills")) {
+                Player.Message(p, "%HToggles whether flooding lava kills this block");
+            } else if (message.CaselessEq("door")) {
+                Player.Message(p, "%HToggles whether this block is a Door block");
+            } else if (message.CaselessEq("tdoor")) {
+                Player.Message(p, "%HToggles whether this block is a TDoor block");
+            } else if (message.CaselessEq("killer")) {
+                Player.Message(p, "%HToggles whether this block kills players who collide with it");
+            } else if (message.CaselessEq("deathmessage")) {
+                Player.Message(p, "%HSets or removes the death message for this block");
+                Player.Message(p, "%H  Note: %S@p %His a placeholder for the player's name");
+            } else {
+                Player.Message(p, "&cUnrecognised property \"{0}\"", message);
+            }
         }
     }
 }

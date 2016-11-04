@@ -18,7 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Extended;
+using MCGalaxy.Blocks.Physics;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Blocks {
@@ -26,90 +27,52 @@ namespace MCGalaxy.Blocks {
 
         internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0) return true;
+            bool isExt = false;
+            if (block == Block.custom_block) {
+                isExt = true;
+                block = p.level.GetExtTile(x, y, z);
+            }
+            
             byte physForm;
-            PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, out physForm);
+            PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, isExt, out physForm);
             p.level.Blockchange(x, y, z, physForm, false, args);
             return true;
         }
         
         internal static bool Train(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (!p.trainInvincible) p.HandleDeath(Block.train);
+            if (!p.trainInvincible) p.HandleDeath(Block.train, 0);
             return true;
         }
         
         internal static bool CustomBlock(Player p, byte block, ushort x, ushort y, ushort z) {
             byte extBlock = p.level.GetExtTile(x, y, z);
+            if (p.level.CustomBlockProps[extBlock].KillerBlock) {
+                p.HandleDeath(block, extBlock);
+                return true;
+            }
+            
+            if (p.level.CustomBlockDefs[extBlock].CollideType == 2) return false;
+            
             if (p.level.CustomBlockProps[extBlock].IsPortal) {
-                return Portal(p, block, x, y, z, true);
+                return DoPortal(p, block, x, y, z);
             } else if (p.level.CustomBlockProps[extBlock].IsMessageBlock) {
-                return MessageBlock(p, block, x, y, z, true);
+                return DoMessageBlock(p, block, x, y, z);
+            } else if (p.level.CustomBlockProps[extBlock].IsDoor) {
+                return Door(p, block, x, y, z);
             }
             return false;
         }
         
         
-        internal static bool Portal(Player p, byte block, ushort x, ushort y, ushort z, bool checkPos) {
-            if (checkPos && p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
-            p.RevertBlock(x, y, z);
-            try {
-                DataTable Portals = Database.Backend.GetRows("Portals" + p.level.name, "*",
-                                                             "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
-                int last = Portals.Rows.Count - 1;
-                if (last == -1) { Portals.Dispose(); return true; }
-                byte rotX = p.rot[0], rotY = p.rot[1];
-                
-                DataRow row = Portals.Rows[last];
-                string map = row["ExitMap"].ToString();
-                if (p.level.name != map) {
-                    if (p.level.permissionvisit > p.Rank) {
-                        Player.Message(p, "You do not have the adequate rank to visit this map!"); return true;
-                    }
-                    
-                    Level curLevel = p.level;
-                    PlayerActions.ChangeMap(p, map, true);
-                    if (curLevel == p.level) { Player.Message(p, "The map the portal goes to isn't loaded."); return true; }
-                    p.BlockUntilLoad(10);
-                }
-                
-                x = ushort.Parse(row["ExitX"].ToString());
-                y = ushort.Parse(row["ExitY"].ToString());
-                z = ushort.Parse(row["ExitZ"].ToString());
-                PlayerActions.MoveCoords(p, x, y, z, rotX, rotY);
-                Portals.Dispose();
-            } catch {
-                Player.Message(p, "Portal had no exit.");
-            }
+        internal static bool DoPortal(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
+            Portal.Handle(p, x, y, z);
             return true;
         }
         
-        internal static bool MessageBlock(Player p, byte block, ushort x, ushort y, ushort z, bool checkPos) {
-            if (checkPos && p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
-            p.RevertBlock(x, y, z);
-            try {
-                DataTable Messages = Database.Backend.GetRows("Messages" + p.level.name, "*",
-                                                              "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
-                int last = Messages.Rows.Count - 1;
-                if (last == -1) { Messages.Dispose(); return true; }
-                string message = Messages.Rows[last]["Message"].ToString().Trim();
-                message = message.Replace("\\'", "\'");
-                message = message.Replace("@p", p.name);
-                
-                if (message != p.prevMsg || Server.repeatMessage) {
-                    string text;
-                    List<string> cmds = ParseMB(message, out text);
-                    if (text != null) Player.Message(p, text);
-                    
-                    if (cmds.Count == 1) {
-                        string[] parts = cmds[0].SplitSpaces(2);
-                        p.HandleCommand(parts[0], parts.Length > 1 ? parts[1] : "");
-                    } else if (cmds.Count > 0) {
-                        p.HandleCommands(cmds);
-                    }
-                    p.prevMsg = message;
-                }
-            } catch {
-                Player.Message(p, "No message was stored.");
-            }
+        internal static bool DoMessageBlock(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
+            MessageBlock.Handle(p, x, y, z, false);
             return true;
         }
         
@@ -125,30 +88,6 @@ namespace MCGalaxy.Blocks {
                 p.lastCheckpointIndex = index;
             }
             return true;
-        }
-        
-        static string[] sep = { " |/" };
-        const StringSplitOptions opts = StringSplitOptions.RemoveEmptyEntries;
-        static List<string> empty = new List<string>();
-        internal static List<string> ParseMB(string message, out string text) {
-            if (message.IndexOf('|') == -1) return ParseSingle(message, out text);
-            
-            string[] parts = message.Split(sep, opts);
-            List<string> cmds = ParseSingle(parts[0], out text);
-            if (parts.Length == 1) return cmds;
-            
-            if (text != null) cmds = new List<string>();
-            for (int i = 1; i < parts.Length; i++)
-                cmds.Add(parts[i]);
-            return cmds;
-        }
-        
-        static List<string> ParseSingle(string message, out string text) {
-            if (message[0] == '/') {
-                text = null; return new List<string>(){ message.Substring(1) };
-            } else {
-                text = message; return empty;
-            }
         }
     }
 }

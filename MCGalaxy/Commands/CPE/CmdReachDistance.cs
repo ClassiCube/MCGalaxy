@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.CPE {
             } else if (!p.HasCpeExt(CpeExt.ClickDistance)) {
                 Player.Message(p, "Your client doesn't support changing your reach distance.");
             } else {        
-                p.Send(Packet.MakeClickDistance((short)packedDist));
+                p.Send(Packet.ClickDistance((short)packedDist));
                 p.ReachDistance = packedDist / 32f;
                 Player.Message(p, "Set your reach distance to {0} blocks.", dist);
                 Server.reach.AddOrReplace(p.name, packedDist.ToString());

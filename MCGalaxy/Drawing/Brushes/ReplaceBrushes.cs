@@ -41,7 +41,7 @@ namespace MCGalaxy.Drawing.Brushes {
                 if (tile == block.Block && (tile != Block.custom_block || extTile == block.Ext))
                     return target.Block;
             }
-            return Block.Zero;
+            return Block.Invalid;
         }
         
         public override byte NextExtBlock(DrawOp op) { return target.Ext; }
@@ -65,7 +65,7 @@ namespace MCGalaxy.Drawing.Brushes {
             for (int i = 0; i < exclude.Length; i++) {
                 ExtBlock block = exclude[i];
                 if (tile == block.Block && (tile != Block.custom_block || extTile == block.Ext))
-                    return Block.Zero;
+                    return Block.Invalid;
             }
             return target.Block;
         }

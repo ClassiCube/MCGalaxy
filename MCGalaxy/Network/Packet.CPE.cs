@@ -19,9 +19,9 @@ using System;
 
 namespace MCGalaxy {
 
-    public static partial class Packet {     
+    public static partial class Packet {
         
-        public static byte[] MakeExtInfo(byte count) {
+        public static byte[] ExtInfo(byte count) {
             byte[] buffer = new byte[67];
             buffer[0] = Opcode.CpeExtInfo;
             NetUtils.WriteAscii("MCGalaxy " + Server.Version, buffer, 1);
@@ -29,7 +29,7 @@ namespace MCGalaxy {
             return buffer;
         }
         
-        public static byte[] MakeExtEntry(string name, int version) {
+        public static byte[] ExtEntry(string name, int version) {
             byte[] buffer = new byte[69];
             buffer[0] = Opcode.CpeExtEntry;
             NetUtils.WriteAscii(name, buffer, 1);
@@ -37,14 +37,14 @@ namespace MCGalaxy {
             return buffer;
         }
         
-        public static byte[] MakeClickDistance(short distance) {
+        public static byte[] ClickDistance(short distance) {
             byte[] buffer = new byte[3];
             buffer[0] = Opcode.CpeSetClickDistance;
             NetUtils.WriteI16(distance, buffer, 1);
             return buffer;
         }
         
-        public static byte[] MakeHoldThis(byte block, bool locked) {
+        public static byte[] HoldThis(byte block, bool locked) {
             byte[] buffer = new byte[3];
             buffer[0] = Opcode.CpeHoldThis;
             buffer[1] = block;
@@ -52,7 +52,7 @@ namespace MCGalaxy {
             return buffer;
         }
         
-        public static byte[] MakeTextHotKey(string label, string input, int keycode, byte mods) {
+        public static byte[] TextHotKey(string label, string input, int keycode, byte mods) {
             byte[] buffer = new byte[134];
             buffer[0] = Opcode.CpeSetTextHotkey;
             NetUtils.WriteAscii(label, buffer, 1);
@@ -62,7 +62,7 @@ namespace MCGalaxy {
             return buffer;
         }
         
-        public static byte[] MakeEnvColor(byte type, short r, short g, short b) {
+        public static byte[] EnvColor(byte type, short r, short g, short b) {
             byte[] buffer = new byte[8];
             buffer[0] = Opcode.CpeEnvColors;
             buffer[1] = type;
@@ -72,8 +72,8 @@ namespace MCGalaxy {
             return buffer;
         }
         
-        public static byte[] MakeMakeSelection(byte id, string label, Vec3U16 p1, Vec3U16 p2,
-                                               short r, short g, short b, short opacity ) {
+        public static byte[] MakeSelection(byte id, string label, Vec3U16 p1, Vec3U16 p2,
+                                           short r, short g, short b, short opacity ) {
             byte[] buffer = new byte[86];
             buffer[0] = Opcode.CpeMakeSelection;
             buffer[1] = id;
@@ -93,16 +93,55 @@ namespace MCGalaxy {
             return buffer;
         }
         
-        public static byte[] MakeDeleteSelection(byte id) {
+        public static byte[] DeleteSelection(byte id) {
             byte[] buffer = new byte[2];
-            buffer[0] = Opcode.CpeMakeSelection;
+            buffer[0] = Opcode.CpeRemoveSelection;
             buffer[1] = id;
             return buffer;
         }
         
-        public static byte[] MakeHackControl(bool canFly, bool canNoclip, 
-                                             bool canSpeed, bool canRespawn,
-                                             bool can3rdPerson, short maxJumpHeight) {
+        public static byte[] BlockPermission(byte type, bool place, bool delete) {
+            byte[] buffer = new byte[4];
+            buffer[0] = Opcode.CpeSetBlockPermission;
+            buffer[1] = type;
+            buffer[2] = place ? (byte)1 : (byte)0;
+            buffer[3] = delete ? (byte)1 : (byte)0;
+            return buffer;
+        }
+        
+        public static byte[] MapAppearance(string url, byte side, byte edge, int sideLevel) {
+            byte[] buffer = new byte[69];
+            WriteMapAppearance(buffer, url, side, edge, sideLevel);
+            return buffer;
+        }
+        
+        public static byte[] MapAppearanceV2(string url, byte side, byte edge, int sideLevel,
+                                             int cloudHeight, int maxFog) {
+            byte[] buffer = new byte[73];
+            WriteMapAppearance(buffer, url, side, edge, sideLevel);
+            NetUtils.WriteI16((short)cloudHeight, buffer, 69);
+            NetUtils.WriteI16((short)maxFog, buffer, 71);
+            return buffer;
+        }
+        
+        static void WriteMapAppearance(byte[] buffer, string url, byte side, byte edge, int sideLevel) {
+            buffer[0] = Opcode.CpeEnvSetMapApperance;
+            NetUtils.WriteAscii(url, buffer, 1);
+            buffer[65] = side;
+            buffer[66] = edge;
+            NetUtils.WriteI16((short)sideLevel, buffer, 67);
+        }
+
+        public static byte[] EnvWeatherType(byte type) { // 0 - sunny; 1 - raining; 2 - snowing
+            byte[] buffer = new byte[2];
+            buffer[0] = Opcode.CpeEnvWeatherType;
+            buffer[1] = type;
+            return buffer;
+        }
+        
+        public static byte[] HackControl(bool canFly, bool canNoclip,
+                                         bool canSpeed, bool canRespawn,
+                                         bool can3rdPerson, short maxJumpHeight) {
             byte[] buffer = new byte[8];
             buffer[0] = Opcode.CpeHackControl;
             buffer[1] = (byte)(canFly ? 1 : 0);
@@ -111,6 +150,22 @@ namespace MCGalaxy {
             buffer[4] = (byte)(canRespawn ? 1 : 0);
             buffer[5] = (byte)(can3rdPerson ? 1 : 0);
             NetUtils.WriteI16(maxJumpHeight, buffer, 6);
+            return buffer;
+        }
+
+        
+        public static byte[] EnvMapUrl(string url) {
+            byte[] buffer = new byte[65];
+            buffer[0] = Opcode.CpeSetMapEnvUrl;
+            NetUtils.WriteAscii(url, buffer, 1);
+            return buffer;
+        }
+        
+        public static byte[] EnvMapProperty(EnvProp prop, int value) {
+            byte[] buffer = new byte[6];
+            buffer[0] = Opcode.CpeSetMapEnvProperty;
+            buffer[1] = (byte)prop;
+            NetUtils.WriteI32(value, buffer, 2);
             return buffer;
         }
     }

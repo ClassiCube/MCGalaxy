@@ -56,7 +56,6 @@ namespace MCGalaxy {
 
             try {
                 if (group.commands.Contains("inbox") && Database.TableExists("Inbox" + name) ) {
-                    //safe against SQL injections because no user input is given here
                     using (DataTable table = Database.Backend.GetRows("Inbox" + name, "*")) {
                         if (table.Rows.Count > 0)
                             SendMessage("You have &a" + table.Rows.Count + " %Smessages in /inbox");

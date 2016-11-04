@@ -19,7 +19,7 @@ namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdWarn : ModActionCmd {        
         public override string name { get { return "warn"; } }
         public override string shortcut { get { return ""; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
@@ -47,7 +47,9 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(who, "Do it one more time and you will get kicked!");
             } else if (who.warn == 2) {
                 Chat.MessageAll("{0} %Swas warn-kicked by {1}", who.ColoredName, warnedby);
-                who.Kick("KICKED BECAUSE " + reason + "");
+                string chatMsg = "by " + warnedby + "%S: " + reason;
+                string kickMsg = "Kicked by " + warnedby + "&f: " + reason;
+                who.Kick(chatMsg, kickMsg);
             }
             
             who.warn++;

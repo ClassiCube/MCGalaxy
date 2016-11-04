@@ -15,10 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdFakeRank : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdFakeRank : Command {
         public override string name { get { return "fakerank"; } }
         public override string shortcut { get { return "frk"; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -29,8 +27,12 @@ namespace MCGalaxy.Commands
             string[] args = message.Split(' ');
             if (message == "" || args.Length < 2) { Help(p); return; }
             Player who = PlayerInfo.FindMatches(p, args[0]);
-            Group grp = Group.FindMatches(p, args[1]);            
+            Group grp = Group.FindMatches(p, args[1]);
             if (who == null || grp == null) return;
+            
+            if (p != null && who.Rank > p.Rank) {
+                MessageTooHighRank(p, "fakerank", true); return;
+            }
             
             if (grp.Permission == LevelPermission.Banned) {
                 string banner = p == null ? "console" : p.ColoredName;
@@ -38,9 +40,9 @@ namespace MCGalaxy.Commands
                                 who.ColoredName, banner);
             } else {
                 Chat.MessageAll("{0}%S's rank was set to {1}%S. (Congratulations!)", 
-            	                who.ColoredName, grp.ColoredName);
+                                who.ColoredName, grp.ColoredName);
                 Player.Message(who, "You are now ranked {0}%S, type /help for your new set of commands.", 
-            	               grp.ColoredName);
+                               grp.ColoredName);
             }
         }
         

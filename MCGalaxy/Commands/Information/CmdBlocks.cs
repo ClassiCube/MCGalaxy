@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands
                 Player.Message(p, "Complex blocks: ");
                 MultiPageOutput.Output(p, ComplexBlocks(), (name, i) => name,
                                        "blocks complex", "blocks", modifier, false);
-            } else if (Block.Byte(args[0]) != Block.Zero) {
+            } else if (Block.Byte(args[0]) != Block.Invalid) {
                 OutputBlockData(p, args[0]);
             } else if (Group.Find(args[0]) != null) {
                 Group grp = Group.Find(args[0]);
@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands
         
         static List<string> ComplexBlocks() {
             List<string> items = new List<string>(256);
-            for (int i = Block.CpeCount; i < Block.Zero; i++) {
+            for (int i = Block.CpeCount; i < Block.Invalid; i++) {
                 if (Block.Props[i].Name.CaselessEq("unknown")) continue;
                 items.Add(Block.Props[i].Name);
             }
@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands
             }
             
             string msg = "";
-            for (byte i = Block.CpeCount; i < Block.Zero; i++) {
+            for (byte i = Block.CpeCount; i < Block.Invalid; i++) {
                 if (Block.Convert(i) == b)
                     msg += Block.Name(i) + ", ";
             }
@@ -129,11 +129,11 @@ namespace MCGalaxy.Commands
 
             if (Block.AllowBreak(b)) Player.Message(p, "Anybody can activate the block");
             if (Block.Walkthrough(b)) Player.Message(p, "Block can be walked through");
-            if (Block.Death(b)) Player.Message(p, "Walking through block will kill you");
+            if (props.KillerBlock) Player.Message(p, "Walking through block will kill you");
 
             if (props.IsDoor) Player.Message(p, "Block is an ordinary door");
             if (props.IsTDoor) Player.Message(p, "Block is a tdoor, which allows other blocks through when open");
-            if (props.ODoorId != Block.Zero) Player.Message(p, "Block is an odoor, which toggles (GLITCHY)");
+            if (props.ODoorId != Block.Invalid) Player.Message(p, "Block is an odoor, which toggles (GLITCHY)");
 
             if (Block.Mover(b)) Player.Message(p, "Block can be activated by walking through it");
         }

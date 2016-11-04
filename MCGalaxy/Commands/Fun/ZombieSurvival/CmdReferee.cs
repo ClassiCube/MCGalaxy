@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands {
                 p.Game.Referee = !p.Game.Referee;
                 
                 if (p.HasCpeExt(CpeExt.HackControl))
-                    p.Send(Packet.MakeHackControl(true, true, true, true, true, -1));
+                    p.Send(Packet.HackControl(true, true, true, true, true, -1));
             }
             
             Entities.GlobalSpawn(p, false, "");

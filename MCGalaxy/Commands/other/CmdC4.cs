@@ -15,12 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using MCGalaxy.BlockPhysics;
+using MCGalaxy.Blocks.Physics;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdC4 : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdC4 : Command {
         public override string name { get { return "c4"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }

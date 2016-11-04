@@ -31,6 +31,10 @@ namespace MCGalaxy.Drawing.Brushes {
             ExtBlock[] blocks;
             GetRaw(parts, filter, args, out blocks, out count);
             
+            // check if we're allowed to place the held block
+            if (blocks[0].Block != Block.Invalid 
+                && !DrawCmd.CheckBlock(p, blocks[0].Block)) return null;
+            
             for (int i = 0, j = 0; i < parts.Length; i++ ) {
                 if (parts[i] == "") continue;
                 
@@ -40,13 +44,13 @@ namespace MCGalaxy.Drawing.Brushes {
                     continue;
                 }
                 
-                byte extType = 0;
+                byte extBlock = 0;
                 int sepIndex = parts[i].IndexOf('/');
-                string block = sepIndex >= 0 ? parts[i].Substring(0, sepIndex) : parts[i];
-                int type = DrawCmd.GetBlock(p, block, out extType);
-                if (type == -1) return null;
+                string blockName = sepIndex >= 0 ? parts[i].Substring(0, sepIndex) : parts[i];
+                int block = DrawCmd.GetBlockIfAllowed(p, blockName, out extBlock);
+                if (block == -1) return null;
                 
-                blocks[j].Block = (byte)type; blocks[j].Ext = extType;
+                blocks[j].Block = (byte)block; blocks[j].Ext = extBlock;
                 if (sepIndex < 0) { j++; continue; }
                 
                 int chance;
@@ -61,7 +65,7 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         static void GetRaw(string[] parts, Predicate<string> filter, BrushArgs args,
-                           out ExtBlock[] blocks, out int[] count) {;
+                           out ExtBlock[] blocks, out int[] count) {
             int bCount = 0;
             for (int i = 0; i < parts.Length; i++) {
                 if (parts[i] == "" || !filter(parts[i])) continue;
@@ -73,7 +77,7 @@ namespace MCGalaxy.Drawing.Brushes {
             count = new int[blocks.Length];
             for (int i = 0; i < count.Length; i++) {
                 count[i] = 1;
-                blocks[i] = new ExtBlock(Block.Zero, 0);
+                blocks[i] = new ExtBlock(Block.Invalid, 0);
             }
             
             // No blocks given, assume first is held block
@@ -94,7 +98,7 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
-    public sealed class RandomBrushFactory : BrushFactory {  		
+    public sealed class RandomBrushFactory : BrushFactory {
         public override string Name { get { return "Random"; } }        
         public override string[] Help { get { return HelpString; } }
         

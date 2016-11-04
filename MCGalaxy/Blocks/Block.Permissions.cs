@@ -34,7 +34,7 @@ namespace MCGalaxy
 
             public bool IncludeInBlockProperties()
             {
-            	if (Block.Name(type).CaselessEq("unknown"))
+                if (Block.Name(type).CaselessEq("unknown"))
                     return false;
                 if(type == Block.flagbase)
                     return false;
@@ -48,9 +48,11 @@ namespace MCGalaxy
 
         public static void SetBlocks() {
             SetCoreProperties();
-            BlockBehaviour.SetupCoreHandlers(); 
             BlockBehaviour.SetupCorePhysicsHandlers();
             InitDefaults();
+            
+            BlockProps.Load("core", Block.Props);
+            BlockBehaviour.SetupCoreHandlers();
             
             // Custom permissions set by the user.
             if (File.Exists("properties/block.properties")) {
@@ -70,7 +72,7 @@ namespace MCGalaxy
                 b.type = (byte)i;
                 switch (i)
                 {
-                    case Zero:
+                    case Invalid:
                         b.lowestRank = LevelPermission.Admin;
                         break;
 
@@ -302,7 +304,7 @@ namespace MCGalaxy
                 int count = pl.hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
                 if (block < count) {
                     bool canAffect = Block.canPlace(pl, block);
-                    pl.SendSetBlockPermission(block, canAffect, canAffect);
+                    pl.Send(Packet.BlockPermission(block, canAffect, canAffect));
                 }
             }
         }
@@ -316,7 +318,7 @@ namespace MCGalaxy
                 string[] block = line.Split(colon, StringSplitOptions.None);
                 Blocks newBlock = new Blocks();
 
-                if (Block.Byte(block[0]) == Block.Zero) continue;
+                if (Block.Byte(block[0]) == Block.Invalid) continue;
                 newBlock.type = Block.Byte(block[0]);
 
                 string[] disallow = null;

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.Blocks;
 using MCGalaxy.SQL;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPortal : Command {
@@ -43,7 +44,7 @@ namespace MCGalaxy.Commands.Building {
             }
 
             data.Block = GetBlock(p, block, out data.ExtBlock);
-            if (data.Block == Block.Zero) return;
+            if (data.Block == Block.Invalid) return;
 
             Player.Message(p, "Place an &aEntry block %Sfor the portal");
             p.ClearBlockchange();
@@ -56,7 +57,7 @@ namespace MCGalaxy.Commands.Building {
             extBlock = 0;
             byte id = Block.Byte(name);
             if (Block.Props[id].IsPortal) return id;
-            if (name == "show") { ShowPortals(p); return Block.Zero; }
+            if (name == "show") { ShowPortals(p); return Block.Invalid; }
 
             id = BlockDefinition.GetBlock(name, p);
             if (p.level.CustomBlockProps[id].IsPortal) {
@@ -64,15 +65,15 @@ namespace MCGalaxy.Commands.Building {
             }
             
             // Hardcoded aliases for backwards compatibility
-            id = Block.Zero;
+            id = Block.Invalid;
             if (name == "") id = Block.blue_portal;
-            if (name == "blue") id = Block.blue_portal;        
+            if (name == "blue") id = Block.blue_portal;
             if (name == "orange") id = Block.orange_portal;
             if (name == "air") id = Block.air_portal;
             if (name == "water") id = Block.water_portal;
             if (name == "lava") id = Block.lava_portal;
             
-            if (!Block.Props[id].IsPortal) { Help(p); return Block.Zero; }
+            if (!Block.Props[id].IsPortal) { Help(p); return Block.Invalid; }
             return id;
         }
 
@@ -109,12 +110,13 @@ namespace MCGalaxy.Commands.Building {
             PortalData bp = (PortalData)p.blockchangeObject;
 
             foreach (PortalPos P in bp.Entries) {
-                //safe against SQL injections because no user input is given here
                 string lvlName = P.Map;
                 object locker = ThreadSafeCache.DBCache.Get(lvlName);
                 
                 lock (locker) {
                     Database.Backend.CreateTable("Portals" + lvlName, LevelDB.createPortals);
+                    Level map = LevelInfo.FindExact(P.Map);
+                    if (map != null) map.hasPortals = true;
 
                     int count = 0;
                     using (DataTable portals = Database.Backend.GetRows("Portals" + lvlName, "*",
@@ -122,13 +124,16 @@ namespace MCGalaxy.Commands.Building {
                         count = portals.Rows.Count;
                     }
                     
-                    string syntax = count == 0 ?
-                        "INSERT INTO `Portals" + lvlName + "` (EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap) VALUES (@0, @1, @2, @3, @4, @5, @6)"
-                        : "UPDATE `Portals" + lvlName + "` SET ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5 WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2";
-                    Database.Execute(syntax, P.x, P.y, P.z, x, y, z, p.level.name);
+                    if (count == 0) {
+                        Database.Backend.AddRow("Portals" + lvlName, "EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap",
+                                                P.x, P.y, P.z, x, y, z, p.level.name);
+                    } else {
+                        Database.Backend.UpdateRows("Portals" + lvlName, "ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5",
+                                                    "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", P.x, P.y, P.z, x, y, z, p.level.name);
+                    }
                 }
                 if (P.Map == p.level.name)
-                	p.SendBlockchange(P.x, P.y, P.z, bp.Block, bp.ExtBlock);
+                    p.SendBlockchange(P.x, P.y, P.z, bp.Block, bp.ExtBlock);
             }
 
             Player.Message(p, "&3Exit %Sblock placed");
@@ -193,16 +198,27 @@ namespace MCGalaxy.Commands.Building {
             id = Block.Byte(name);
             return !Block.Props[id].IsPortal;
         }
-                
+        
+        static string FormatCustom(Level lvl, BlockProps props) {
+            if (!props.IsPortal) return null;
+            BlockDefinition def = lvl.CustomBlockDefs[props.BlockId];
+            return def == null ? null : def.Name.Replace(" ", "");
+        }
+        
         public override void Help(Player p) {
             Player.Message(p, "%T/portal [block]");
             Player.Message(p, "%HPlace a block for the entry, then another block for exit.");
             Player.Message(p, "%T/portal [block] multi");
             Player.Message(p, "%HPlace multiple blocks for entries, then a red block for exit.");
             
-            var allProps = Block.Props;
-            Player.Message(p, "%H  Supported blocks: %S{0}",
-                           allProps.Join(props => Format(props)));
+            string blocks = Block.Props.Join(props => Format(props));
+            if (!Player.IsSuper(p)) {
+                string custom = p.level.CustomBlockProps.Join(props => FormatCustom(p.level, props));
+                if (blocks != "" && custom != "")
+                    blocks = blocks + ", " + custom;
+            }
+
+            Player.Message(p, "%H  Supported blocks: %S{0}", blocks);
             Player.Message(p, "%T/portal show %H- Shows portals (green = entry, red = exit)");
         }
     }

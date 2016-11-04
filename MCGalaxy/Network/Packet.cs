@@ -21,13 +21,12 @@ namespace MCGalaxy {
 
     public static partial class Packet {
         
-        public static byte[] MakeMotd(Player p) {
+        public static byte[] Motd(Player p, string motd) {
             byte[] buffer = new byte[131];
             buffer[0] = Opcode.Handshake;
             buffer[1] = Server.version;
             
             bool cp437 = p.HasCpeExt(CpeExt.FullCP437);
-            string motd = p.level.GetMotd(p);
             if (motd.Length > 64) {
                 NetUtils.Write(motd, buffer, 2, cp437);
                 NetUtils.Write(motd.Substring(64), buffer, 66, cp437);
@@ -40,14 +39,14 @@ namespace MCGalaxy {
             return buffer;
         }
         
-        public static byte[] MakeUserType(Player p) {
+        public static byte[] UserType(Player p) {
             byte[] buffer = new byte[2];
             buffer[0] = Opcode.SetPermission;
             buffer[1] = Block.canPlace(p, Block.blackrock) ? (byte)100 : (byte)0;
             return buffer;
         }
         
-        public static byte[] MakeKick(string message, bool cp437) {
+        public static byte[] Kick(string message, bool cp437) {
             byte[] buffer = new byte[65];
             buffer[0] = Opcode.Kick;
             NetUtils.Write(message, buffer, 1, cp437);

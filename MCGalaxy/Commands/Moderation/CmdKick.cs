@@ -17,8 +17,8 @@
  */
 using System;
 
-namespace MCGalaxy.Commands.Moderation {    
-    public sealed class CmdKick : ModActionCmd {       
+namespace MCGalaxy.Commands.Moderation {
+    public sealed class CmdKick : ModActionCmd {
         public override string name { get { return "kick"; } }
         public override string shortcut { get { return "k"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
@@ -29,23 +29,27 @@ namespace MCGalaxy.Commands.Moderation {
             
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
-            if (args.Length > 1) message = args[1];
-            else if (p == null) message = "You were kicked by the console.";
-            else message = "You were kicked by " + p.DisplayName + ".";
             
-            message = GetReason(p, message);
-            if (message == null) return;
+            string kickMsg = null, reason = null;
+            if (p == null) kickMsg = "by (console)";
+            else kickMsg = "by " + p.DisplayName;
+            
+            if (args.Length > 1) {
+                reason = GetReason(p, args[1]);
+                if (message == null) return;
+                kickMsg += "&f: " + reason; 
+            }
 
             if (p != null && p == who) { Player.Message(p, "You cannot kick yourself."); return; }
             if (p != null && who.Rank >= p.Rank) {
-                Player.SendChatFrom(p, p.ColoredName + " %Stried to kick " 
+                Player.SendChatFrom(p, p.ColoredName + " %Stried to kick "
                                     + who.ColoredName + " %Sbut failed.", false);
                 return;
             }
             
-            who.Kick(message);
-            if (args.Length == 1) Player.AddNote(who.name, p, "K");
-            else Player.AddNote(who.name, p, "K", message);
+            who.Kick(kickMsg, "Kicked " + kickMsg);
+            if (reason == null) Player.AddNote(who.name, p, "K");
+            else Player.AddNote(who.name, p, "K", reason);
         }
         
         public override void Help(Player p) {

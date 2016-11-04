@@ -29,14 +29,17 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
+            if (!MessageCmd.CanSpeak(p, name)) return;
+            
             string[] args = message.SplitSpaces(2);
             string rank = args.Length == 1 ? p.group.name : args[0];
             string text = args[args.Length - 1];            
             Group grp = Group.FindMatches(p, rank);
             if (grp == null) return;
             
-            Chat.MessageWhere("{0}: %S{1}", pl => pl.group == grp,
-                              p.DisplayName, text.Trim());
+            Chat.MessageWhere("{3}<{2}>{0}: &f{1}", pl => pl.group == grp || pl == p,
+                              p.ColoredName, text.Trim(), grp.trueName, grp.color);
+            p.CheckForMessageSpam();
         }
         
         public override void Help(Player p) {

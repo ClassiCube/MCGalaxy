@@ -17,8 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy {
-    
+namespace MCGalaxy.Util {
     public sealed class SparseBitSet {
         
         int chunksX, chunksY, chunksZ;

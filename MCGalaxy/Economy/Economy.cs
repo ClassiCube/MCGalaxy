@@ -14,37 +14,36 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
-using System.Text;
 using MCGalaxy.Eco;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {
     public static class Economy {
 
-        public static bool Enabled;        
+        public static bool Enabled;
         const string propertiesFile = "properties/economy.properties";
         
-        static ColumnParams[] createEconomy = {
-            new ColumnParams("player", ColumnType.VarChar, 20, priKey: true),
-            new ColumnParams("money", ColumnType.Int32),
-            new ColumnParams("total", ColumnType.Integer, notNull: true, def: "0"),
-            new ColumnParams("purchase", ColumnType.VarChar, 255, notNull: true, def: "'%cNone'"),
-            new ColumnParams("payment", ColumnType.VarChar, 255, notNull: true, def: "'%cNone'"),
-            new ColumnParams("salary", ColumnType.VarChar, 255, notNull: true, def: "'%cNone'"),
-            new ColumnParams("fine", ColumnType.VarChar, 255, notNull: true, def: "'%cNone'"),
+        static ColumnDesc[] createEconomy = {
+            new ColumnDesc("player", ColumnType.VarChar, 20, priKey: true),
+            new ColumnDesc("money", ColumnType.Int32),
+            new ColumnDesc("total", ColumnType.Integer, notNull: true, def: "0"),
+            new ColumnDesc("purchase", ColumnType.VarChar, 255, notNull: true, def: "'%cNone'"),
+            new ColumnDesc("payment", ColumnType.VarChar, 255, notNull: true, def: "'%cNone'"),
+            new ColumnDesc("salary", ColumnType.VarChar, 255, notNull: true, def: "'%cNone'"),
+            new ColumnDesc("fine", ColumnType.VarChar, 255, notNull: true, def: "'%cNone'"),
         };
 
         public struct EcoStats {
             public string Player, Purchase, Payment, Salary, Fine;
             public int TotalSpent;
             
-            public EcoStats(int tot, string player, string pur, 
+            public EcoStats(int tot, string player, string pur,
                             string pay, string sal, string fin) {
                 TotalSpent = tot;
                 Player = player;
@@ -56,7 +55,7 @@ namespace MCGalaxy {
         }
 
         public static void LoadDatabase() {
-        	Database.Backend.CreateTable("Economy", createEconomy);
+            Database.Backend.CreateTable("Economy", createEconomy);
             using (DataTable eco = Database.Backend.GetRows("Economy", "*"))
                 foreach (DataRow row in eco.Rows)
             {
@@ -77,9 +76,9 @@ namespace MCGalaxy {
         }
 
         public static void Load() {
-            if (!File.Exists(propertiesFile)) { 
-                Server.s.Log("Economy properties don't exist, creating"); 
-                Save(); 
+            if (!File.Exists(propertiesFile)) {
+                Server.s.Log("Economy properties don't exist, creating");
+                Save();
             }
             
             using (StreamReader r = new StreamReader(propertiesFile)) {
@@ -103,12 +102,13 @@ namespace MCGalaxy {
                 Item item = GetItem(args[0]);
                 if (item == null) return;
                 
-                if (args[1].CaselessEq("enabled"))
+                if (args[1].CaselessEq("enabled")) {
                     item.Enabled = args[2].CaselessEq("true");
-                else if (args[1].CaselessEq("purchaserank"))
+                } else if (args[1].CaselessEq("purchaserank")) {
                     item.PurchaseRank = (LevelPermission)int.Parse(args[2]);
-                else
+                } else {
                     item.Parse(line, args);
+                }
             }
         }
 
@@ -123,10 +123,9 @@ namespace MCGalaxy {
         }
         
         public static void UpdateStats(EcoStats stats) {
-            string type = Server.useMySQL ? "REPLACE INTO" : "INSERT OR REPLACE INTO";
-            Database.Execute(type + " Economy (player, money, total, purchase, payment, salary, fine) " +
-                             "VALUES (@0, @1, @2, @3, @4, @5, @6)", stats.Player, 0, stats.TotalSpent,
-                             stats.Purchase, stats.Payment, stats.Salary, stats.Fine);
+            Database.Backend.AddOrReplaceRow("Economy", "player, money, total, purchase, payment, salary, fine",
+                                             stats.Player, 0, stats.TotalSpent, stats.Purchase,
+                                             stats.Payment, stats.Salary, stats.Fine);
         }
 
         public static EcoStats RetrieveStats(string name) {
@@ -157,13 +156,13 @@ namespace MCGalaxy {
         }
         
         public static void UpdateMoney(string name, int money) {
-            Database.Backend.UpdateRows("Players", "Money = @1", 
+            Database.Backend.UpdateRows("Players", "Money = @1",
                                         "WHERE Name = @0", name, money);
         }
         
         public static List<Item> Items = new List<Item>() { new ColorItem(), new TitleColorItem(),
-            new TitleItem(), new RankItem(), new LevelItem(), new LoginMessageItem(), 
-            new LogoutMessageItem(), new BlocksItem(), new QueueLevelItem(), 
+            new TitleItem(), new RankItem(), new LevelItem(), new LoginMessageItem(),
+            new LogoutMessageItem(), new BlocksItem(), new QueueLevelItem(),
             new InfectMessageItem(), new NickItem(), new ReviveItem(),
             new HumanInvisibilityItem(), new ZombieInvisibilityItem() };
         
@@ -177,7 +176,7 @@ namespace MCGalaxy {
             }
             return null;
         }
-            
+        
         public static string GetItemNames() {
             string items = Items.Join(x => x.Enabled ? x.ShopName : null);
             return items.Length == 0 ? "(no enabled items)" : items;
@@ -189,7 +188,7 @@ namespace MCGalaxy {
         public static RankItem Ranks { get { return (RankItem)Items[3]; } }
         public static LevelItem Levels { get { return (LevelItem)Items[4]; } }
         
-        public static void MakePurchase(Player p, int cost, string item) {            
+        public static void MakePurchase(Player p, int cost, string item) {
             p.SetMoney(p.money - cost);
             Player.Message(p, "Your balance is now &f{0} &3{1}", p.money, Server.moneys);
 
@@ -197,7 +196,7 @@ namespace MCGalaxy {
             stats.TotalSpent += cost;
             stats.Purchase = item + "%3 for %f" + cost + " %3" + Server.moneys +
                 " on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-            Economy.UpdateStats(stats);            
+            Economy.UpdateStats(stats);
         }
     }
 }

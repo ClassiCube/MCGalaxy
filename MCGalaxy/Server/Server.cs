@@ -19,8 +19,10 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using MCGalaxy.Blocks;
 using MCGalaxy.Games;
 using MCGalaxy.Tasks;
+using MCGalaxy.Util;
 using Newtonsoft.Json;
 
 namespace MCGalaxy {
@@ -31,7 +33,7 @@ namespace MCGalaxy {
             Background = new Scheduler("MCG_BackgroundScheduler");
             Server.s = this;
         }
-		
+        
         //True = cancel event
         //Fale = dont cacnel event
         public static bool Check(string cmd, string message) {
@@ -57,7 +59,7 @@ namespace MCGalaxy {
         public void Start() {
             serverConfig = ConfigElement.GetAll(typeof(Server), typeof(ZombieGameProps));
             levelConfig = ConfigElement.GetAll(typeof(Level));
-        	
+            
             #pragma warning disable 0618
             Player.players = PlayerInfo.Online.list;
             PlayerInfo.players = PlayerInfo.Online.list;
@@ -209,6 +211,7 @@ namespace MCGalaxy {
             Alias.Load();
             Bots.BotsFile.Load();
             BlockDefinition.LoadGlobal();
+            
             SrvProperties.Load("properties/server.properties");
             Updater.Load("properties/update.properties");
             Group.InitAll();

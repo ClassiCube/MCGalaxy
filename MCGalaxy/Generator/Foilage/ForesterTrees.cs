@@ -62,7 +62,7 @@ namespace MCGalaxy.Generator.Foilage {
             for (int dz = -2; dz <= 2; dz++)
                 for (int dx = -2; dx <= 2; dx++)
             {
-            	if (Math.Abs(dx) != Math.Abs(dz)) continue;
+                if (Math.Abs(dx) != Math.Abs(dz)) continue;
                 output((ushort)(x + dx), (ushort)(y + height), (ushort)(z + dz), Block.leaf);
             }
         }

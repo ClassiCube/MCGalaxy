@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands {
         
         bool ParseBlock(Player p, string message) {
             byte b = Block.Byte(message);
-            if (b == Block.Zero) return false;
+            if (b == Block.Invalid) return false;
             
             //give more useful help messages for doors and other physics blocks and killer blocks
             switch (message.ToLower())

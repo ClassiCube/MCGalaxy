@@ -32,7 +32,7 @@ namespace MCGalaxy.Drawing {
         public void Init() {
             bool fastPath = bmp.PixelFormat == PixelFormat.Format32bppRgb
                 || bmp.PixelFormat == PixelFormat.Format32bppArgb
-            	|| bmp.PixelFormat == PixelFormat.Format24bppRgb;
+                || bmp.PixelFormat == PixelFormat.Format24bppRgb;
             if (!fastPath) return;
             // We can only use the fast path for 24bpp or 32bpp bitmaps
             

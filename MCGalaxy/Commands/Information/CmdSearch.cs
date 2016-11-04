@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands {
         
         static void SearchBlocks(Player p, string keyword, string modifier) {
             List<string> blocks = new List<string>();
-            for (byte id = 0; id < 255; id++) {
+            for (byte id = 0; id < Block.Invalid; id++) {
                 string name = Block.Name(id);
                 if (name.CaselessContains(keyword) && !name.CaselessEq("unknown"))
                     blocks.Add(name);

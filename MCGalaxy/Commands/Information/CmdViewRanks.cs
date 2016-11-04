@@ -33,14 +33,14 @@ namespace MCGalaxy.Commands {
         public CmdViewRanks() { }
 
         public override void Use(Player p, string message) {
-        	string[] args = message.SplitSpaces(2);
+            string[] args = message.SplitSpaces(2);
             if (message == "") { 
-        		Player.Message(p, "Available ranks: " + Group.concatList()); return; 
-        	}
-        	string modifer = args.Length > 1 ? args[1] : "";
-        	
+                Player.Message(p, "Available ranks: " + Group.concatList()); return; 
+            }
+            string modifer = args.Length > 1 ? args[1] : "";
+            
             Group grp = message.CaselessEq("banned") ? 
-            	Group.findPerm(LevelPermission.Banned) : Group.FindMatches(p, args[0]);
+                Group.findPerm(LevelPermission.Banned) : Group.FindMatches(p, args[0]);
             if (grp == null) return;
 
             List<string> list = grp.playerList.All();

@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Moderation {
             IPAddress ip;
             // TryParse returns "0.0.0.123" for "123", we do not want that behaviour
             if (IPAddress.TryParse(message, out ip) && message.Split('.').Length == 4) {
-            	string account = Server.ClassicubeAccountPlus ? message + "+" : message;
+                string account = Server.ClassicubeAccountPlus ? message + "+" : message;
                 if (PlayerInfo.FindName(account) == null) return message;
 
                 // Some classicube.net accounts can be parsed as valid IPs, so warn in this case.

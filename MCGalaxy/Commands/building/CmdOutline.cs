@@ -32,11 +32,11 @@ namespace MCGalaxy.Commands.Building {
             if (args.Length != 2) { Help(p); return; }
             DrawArgs dArgs = default(DrawArgs);           
             
-            int block = DrawCmd.GetBlock(p, args[0], out dArgs.extBlock);
+            int block = DrawCmd.GetBlockIfAllowed(p, args[0], out dArgs.extBlock);
             if (block == -1) return;
             dArgs.block = (byte)block;
             
-            int newBlock = DrawCmd.GetBlock(p, args[1], out dArgs.newExtBlock);
+            int newBlock = DrawCmd.GetBlockIfAllowed(p, args[1], out dArgs.newExtBlock);
             if (newBlock == -1) return;
             dArgs.newBlock = (byte)newBlock;
 

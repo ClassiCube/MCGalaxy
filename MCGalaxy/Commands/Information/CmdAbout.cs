@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
         void PlacedBlock(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             if (!p.staticCommands) p.ClearBlockchange();
             byte b = p.level.GetTile(x, y, z);
-            if (b == Block.Zero) { Player.Message(p, "Invalid Block ({0}, {1}, {2}).", x, y, z); return; }
+            if (b == Block.Invalid) { Player.Message(p, "Invalid Block ({0}, {1}, {2}).", x, y, z); return; }
             p.RevertBlock(x, y, z);
             
             byte id = b;

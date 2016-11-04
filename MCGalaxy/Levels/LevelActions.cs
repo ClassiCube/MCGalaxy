@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using MCGalaxy.Bots;
 using MCGalaxy.SQL;
+using MCGalaxy.Util;
 
 namespace MCGalaxy {
     
@@ -135,7 +136,6 @@ namespace MCGalaxy {
             } catch {}
             BotsFile.DeleteBots(name);
 
-            //safe against SQL injections because the levelname (message) is first being checked if it exists
             Database.Backend.DeleteTable("Block" + name);
             object locker = ThreadSafeCache.DBCache.Get(name);
             lock (locker) {

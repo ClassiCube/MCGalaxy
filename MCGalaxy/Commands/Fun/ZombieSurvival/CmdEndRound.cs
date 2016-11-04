@@ -21,13 +21,16 @@ namespace MCGalaxy.Commands {
         public override string shortcut { get { return "er"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         public CmdEndRound() { }
         
         public override void Use(Player p, string message) {
-            if (Server.zombie.RoundInProgress)
-            	Server.zombie.EndRound();
+            if (Server.zombie.RoundInProgress) {
+                Server.zombie.EndRound();
+            } else {
+                Player.Message(p, "No round is currently in progress.");
+            }
         }
         
         public override void Help(Player p) {

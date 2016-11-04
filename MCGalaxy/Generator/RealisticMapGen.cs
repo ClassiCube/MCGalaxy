@@ -234,13 +234,13 @@ namespace MCGalaxy.Generator {
                 int index = 0;
                 for (ushort z = 0; z < Lvl.Length; z++) {
                     float value = (z - halfZ) * cosPhi + (0 - halfX) * sinPhi + c;
-                	for (ushort x = 0; x < Lvl.Width; x++) {
-                		float sum = array[index] + (value > 0 ? disp : -disp);
-                		sum = sum > 1 ? 1 : sum;
-                		sum = sum < 0 ? 0 : sum;
-                		array[index] = sum; index++;
-                		value += sinPhi;
-                	}
+                    for (ushort x = 0; x < Lvl.Width; x++) {
+                        float sum = array[index] + (value > 0 ? disp : -disp);
+                        sum = sum > 1 ? 1 : sum;
+                        sum = sum < 0 ? 0 : sum;
+                        array[index] = sum; index++;
+                        value += sinPhi;
+                    }
                 }
                 
                 disp += dispStep;

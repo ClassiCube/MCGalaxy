@@ -80,7 +80,7 @@ namespace MCGalaxy {
             if (time == "") 
                 time = "" + amount + suffix;
             else 
-            	time = time + (spaces ? " " : "") + amount + suffix;
+                time = time + (spaces ? " " : "") + amount + suffix;
         }
         
         static long GetTicks(int num, char unit) {

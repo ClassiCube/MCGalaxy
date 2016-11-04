@@ -42,7 +42,7 @@ namespace MCGalaxy.Drawing.Ops {
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-            	int height = Max.Y - Min.Y;
+                int height = Max.Y - Min.Y;
                 int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
                 int curHeight = Invert ? yy : height - yy;
                 if (curHeight == 0) continue;              

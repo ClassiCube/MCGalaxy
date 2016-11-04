@@ -50,7 +50,7 @@ namespace MCGalaxy.Undo {
                         }
                         
                         ushort width, height, length;
-                        LvlFile.LoadDimensions(LevelInfo.LevelPath(uP.mapName), out width, out height, out length);
+                        LvlImporter.LoadDimensions(LevelInfo.LevelPath(uP.mapName), out width, out height, out length);
                         node.Width = width; node.Height = height; node.Length = length;
                         WriteChunkEntries(w, last.Entries, entriesPos);
                         node.MapName = uP.mapName;

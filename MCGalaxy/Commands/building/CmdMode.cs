@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             byte block = Block.Byte(message);
-            if (block == Block.Zero) { Player.Message(p, "Could not find block given."); return; }
+            if (block == Block.Invalid) { Player.Message(p, "Could not find block given."); return; }
             if (block == Block.air) { Player.Message(p, "Cannot use Air Mode."); return; }
 
             if (!p.allowTnt && (block == Block.tnt || block == Block.bigtnt || block == Block.smalltnt

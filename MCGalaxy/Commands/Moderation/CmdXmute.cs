@@ -1,27 +1,27 @@
 /*
-	Copyright 2011 MCForge
-	
-	Written by GamezGalaxy (hypereddie10)
-		
-	Licensed under the
-	Educational Community License, Version 2.0 (the "License"); you may
-	not use this file except in compliance with the License. You may
-	obtain a copy of the License at
-	
-	http://www.opensource.org/licenses/ecl2.php
-	
-	Unless required by applicable law or agreed to in writing,
-	software distributed under the License is distributed on an "AS IS"
-	BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-	or implied. See the License for the specific language governing
-	permissions and limitations under the License.
+    Copyright 2011 MCForge
+    
+    Written by GamezGalaxy (hypereddie10)
+        
+    Licensed under the
+    Educational Community License, Version 2.0 (the "License"); you may
+    not use this file except in compliance with the License. You may
+    obtain a copy of the License at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the License for the specific language governing
+    permissions and limitations under the License.
 */
 using System;
 using System.Threading;
 namespace MCGalaxy.Commands {
-	
+    
     public sealed class CmdXmute : Command {
-		
+        
         public override string name { get { return "xmute"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -48,10 +48,10 @@ namespace MCGalaxy.Commands {
 
             int time = 120;
             if (args.Length > 1 && !int.TryParse(args[1], out time)) { 
-            	Player.Message(p, "Invalid time given."); Help(p); return; 
+                Player.Message(p, "Invalid time given."); Help(p); return; 
             }
             if (time <= 0) {
-            	Player.Message(p, "Time must be positive and greater than zero."); return;
+                Player.Message(p, "Time must be positive and greater than zero."); return;
             }
             
             Chat.MessageAll("{0} %Shas been muted for {1} seconds", muter.ColoredName, time);

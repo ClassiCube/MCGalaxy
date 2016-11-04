@@ -35,44 +35,43 @@ namespace MCGalaxy.Commands.World {
             if (!Directory.Exists("extra/import"))
                 Directory.CreateDirectory("extra/import");
             
-            if (File.Exists(file + ".dat")) { Import(p, file + ".dat", message, FileType.Dat); return; }
-            if (File.Exists(file + ".mcf")) { Import(p, file + ".mcf", message, FileType.Mcf); return; }
-            if (File.Exists(file + ".fcm")) { Import(p, file + ".fcm", message, FileType.Fcm); return; }
-            if (File.Exists(file + ".cw")) { Import(p, file + ".cw", message, FileType.Cw); return; }
-            Player.Message(p, "No .dat, .mcf, .fcm or .cw file with that name was found in /extra/import folder.");
+            foreach (IMapImporter importer in IMapImporter.Formats) {
+                if (!File.Exists(file + importer.Extension)) continue;
+                Import(p, file, message, importer);
+                return;
+            }
+
+            string formats = IMapImporter.Formats.Join(imp => imp.Extension);
+            Player.Message(p, "&cNo {0} file with that name was found in /extra/import folder.", formats);
         }
         
-        void Import(Player p, string fileName, string message, FileType type) {
-            using (FileStream fs = File.OpenRead(fileName)) {
+        void Import(Player p, string path, string name, IMapImporter importer) {
+            try {
+                Level lvl = importer.Read(path + importer.Extension, name, true);
                 try {
-                    Level lvl = null;
-                    if (type == FileType.Mcf) lvl = McfFile.Load(fs, message);
-                    else if (type == FileType.Fcm) lvl = FcmFile.Load(fs, message);
-                    else if (type == FileType.Cw) lvl = CwFile.Load(fs, message);
-                    else lvl = DatFile.Load(fs, message);
-                    
-                    try {
-                        lvl.Save(true);
-                    } finally {
-                        lvl.Dispose();
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
-                    }
-                } catch (Exception ex) {
-                    Server.ErrorLog(ex);
-                    Player.Message(p, "The map conversion failed."); return;
+                    lvl.Save(true);
+                } finally {
+                    lvl.Dispose();
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
                 }
-                Player.Message(p, "Converted map!");
-                CmdLoad.LoadLevel(p, message);
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                Player.Message(p, "The map conversion failed."); 
+                return;
             }
+            Player.Message(p, "Converted map!");
+            CmdLoad.LoadLevel(p, name);
         }
         
         enum FileType { Mcf, Fcm, Dat, Cw };
         
         public override void Help(Player p) {
             Player.Message(p, "%T/import [name]");
-            Player.Message(p, "%HImports the .dat, .mcf, .fcm or .cw file with that name.");
-            Player.Message(p, "%HNote this command only loads files from the /extra/import/ folder");
+            Player.Message(p, "%HImports a map file with that name.");
+            Player.Message(p, "%HSupported formats: %S{0}",
+                           IMapImporter.Formats.Join(imp => imp.Extension));
+            Player.Message(p, "  %HNote: Only loads maps from the /extra/import/ folder");
         }
     }
 }

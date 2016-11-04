@@ -38,8 +38,8 @@ namespace MCGalaxy.Games {
         }
         
         public static Team FindTeam(string name) {
-        	foreach (var team in TeamsList) {
-        		if (name.CaselessEq(team.Key))
+            foreach (var team in TeamsList) {
+                if (name.CaselessEq(team.Key))
                     return team.Value;
             }
             return null;

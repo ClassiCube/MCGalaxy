@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.World {
             }
             
             if (args[0] == "clear") {
-            	Player.Message(p, "Clearing &cALL %Sblock changes for &d{0}...", lvl.name);
+                Player.Message(p, "Clearing &cALL %Sblock changes for &d{0}...", lvl.name);
                 Database.Backend.ClearTable("Block" + lvl.name);
                 Player.Message(p, "Cleared &cALL %Sblock changes for &d" + lvl.name);
             } else if (args[0] == "disable") {
