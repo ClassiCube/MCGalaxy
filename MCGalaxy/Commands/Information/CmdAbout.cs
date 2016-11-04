@@ -81,6 +81,7 @@ namespace MCGalaxy.Commands {
 
             if (!foundOne) Player.Message(p, "No block change records found for this block.");
             OutputMessageBlock(p, b, id, x, y, z);
+            OutputPortal(p, b, id, x, y, z);
             
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -116,17 +117,45 @@ namespace MCGalaxy.Commands {
             }
 
             try {
-                DataTable Messages = Database.Backend.GetRows("Messages" + p.level.name, "*",
+                if (!Database.Backend.TableExists("Messages" + p.level.name)) return;
+                DataTable messages = Database.Backend.GetRows("Messages" + p.level.name, "*",
                                                               "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
-                int last = Messages.Rows.Count - 1;
-                if (last == -1) { Messages.Dispose(); return; }
+                int last = messages.Rows.Count - 1;
+                if (last == -1) { messages.Dispose(); return; }
                 
-                string message = Messages.Rows[last]["Message"].ToString().Trim();
+                string message = messages.Rows[last]["Message"].ToString().Trim();
                 message = message.Replace("\\'", "\'");
-                Player.Message(p, "Message Block contents: " + message);
+                Player.Message(p, "Message Block contents: {0}", message);
             } catch {
             }
         }
+        
+        static void OutputPortal(Player p, byte block, byte extBlock,
+                                       ushort x, ushort y, ushort z) {
+            if (block == Block.custom_block) {
+                if (!p.level.CustomBlockProps[extBlock].IsPortal) return;
+            } else {
+                if (!Block.Props[block].IsPortal) return;
+            }
+
+            try {
+                if (!Database.Backend.TableExists("Portals" + p.level.name)) return;
+                DataTable portals = Database.Backend.GetRows("Portals" + p.level.name, "*",
+                                                              "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+                int last = portals.Rows.Count - 1;
+                if (last == -1) { portals.Dispose(); return; }
+                
+                string exitMap = portals.Rows[last]["ExitMap"].ToString().Trim();
+                ushort exitX = U16(portals.Rows[last]["ExitX"]);
+                ushort exitY = U16(portals.Rows[last]["ExitY"]);
+                ushort exitZ = U16(portals.Rows[last]["ExitZ"]);
+                Player.Message(p, "Portal destination: ({0}, {1}, {2}) in {3}",
+                               exitX, exitY, exitZ, exitMap);
+            } catch {
+            }
+        }
+        
+        static ushort U16(object x) { return ushort.Parse(x.ToString()); }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/about");
