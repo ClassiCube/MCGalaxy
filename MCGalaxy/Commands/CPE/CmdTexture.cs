@@ -58,7 +58,9 @@ namespace MCGalaxy.Commands.World {
             if ((scope == "globalzip" || scope == "levelzip") && !(url == "" || url.EndsWith(".zip"))) {
                 Player.Message(p, "The texture pack URL must end in a .zip"); return;
             }
-            if (url.Length > 64) { p.SendMessage("The URL must be 64 characters or less."); return; }
+            if (url.Length > NetUtils.StringSize) { 
+                p.SendMessage("The URL must be " + NetUtils.StringSize + " characters or less."); return; 
+            }
             
             if (scope == "global") {
                 Server.defaultTerrainUrl = url;

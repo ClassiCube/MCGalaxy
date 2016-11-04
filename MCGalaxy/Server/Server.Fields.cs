@@ -375,9 +375,9 @@ namespace MCGalaxy {
         public static bool guestJoinNotify = true;
         [ConfigBool("guest-leave-notify", "Other", null, true)]        
         public static bool guestLeaveNotify = true;
-        [ConfigString("default-texture-url", "General", null, "", true, null, 64)]
+        [ConfigString("default-texture-url", "General", null, "", true, null, NetUtils.StringSize)]
         public static string defaultTerrainUrl = "";
-        [ConfigString("default-texture-pack-url", "General", null, "", true, null, 64)]        
+        [ConfigString("default-texture-pack-url", "General", null, "", true, null, NetUtils.StringSize)]        
         public static string defaultTextureUrl = "";
 
         //hackrank stuff

@@ -21,6 +21,8 @@ namespace MCGalaxy {
     /// <summary>Utility methods for reading/writing big endian integers, and fixed length strings. </summary>
     public static class NetUtils {
         
+        public const int StringSize = 64;
+        
         public static short ReadI16(byte[] array, int offset) {
             return (short)(array[offset] << 8 | array[offset + 1]);
         }
@@ -58,20 +60,20 @@ namespace MCGalaxy {
         }
         
         public static void WriteAscii(string str, byte[] array, int offset) {
-            int count = Math.Min(str.Length, 64);
+            int count = Math.Min(str.Length, StringSize);
             for (int i = 0; i < count; i++) {
                 char raw = str[i];
                 array[offset + i] = raw >= '\u0080' ? (byte)'?' : (byte)raw;
             }
-            for (int i = count; i < 64; i++)
+            for (int i = count; i < StringSize; i++)
                 array[offset + i] = (byte)' ';
         }
 
         public static void WriteCP437(string str, byte[] array, int offset) {
-            int count = Math.Min(str.Length, 64);
+            int count = Math.Min(str.Length, StringSize);
             for (int i = 0; i < count; i++)
                 array[offset + i] = (byte)str[i];
-            for (int i = count; i < 64; i++)
+            for (int i = count; i < StringSize; i++)
                 array[offset + i] = (byte)' ';
         }
     }
