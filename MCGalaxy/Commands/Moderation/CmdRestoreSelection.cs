@@ -21,7 +21,7 @@ using MCGalaxy.Levels.IO;
 namespace MCGalaxy.Commands {    
     public sealed class CmdRestoreSelection : Command {        
         public override string name { get { return "rs"; } }
-        public override string shortcut { get { return ""; } }
+        public override string shortcut { get { return "restoreselection"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }

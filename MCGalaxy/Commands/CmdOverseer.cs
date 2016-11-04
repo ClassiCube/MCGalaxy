@@ -42,7 +42,6 @@ namespace MCGalaxy.Commands {
             string cmd = parts[0].ToUpper();
             string arg = parts.Length > 1 ? parts[1].ToUpper() : "";
             string arg2 = parts.Length > 2 ? parts[2] : "";
-            byte mapNum = 0;
             
             bool mapOnly = cmd == "SPAWN" || cmd == "PRESET" || cmd == "WEATHER" || cmd == "ENV" ||
                 cmd == "KICK" || cmd == "KICKALL" || cmd == "ZONE" || cmd == "LB" || cmd == "LEVELBLOCK";
@@ -51,21 +50,7 @@ namespace MCGalaxy.Commands {
             }
 
             if (cmd == "GO" || cmd == "GOTO" || cmd == "JOIN") {
-                string map = null;
-                if (arg == "" || arg == "1") {
-                    map = FirstMapName(p);
-                } else {
-                    if (!byte.TryParse(arg, out mapNum)) {
-                        Help(p); return;
-                    }
-                    map = p.name.ToLower() + arg;
-                }
-                
-                Level[] loaded = LevelInfo.Loaded.Items;
-                if (LevelInfo.FindExact(map) == null)
-                    CmdLoad.LoadLevel(p, map, "0", Server.AutoLoad);
-                if (LevelInfo.FindExact(map) != null)
-                    PlayerActions.ChangeMap(p, map);
+                HandleGoto(p, arg, arg2);
             } else if (cmd == "LB" || cmd == "LEVELBLOCK") {
                 string[] lbArgs = message.SplitSpaces(2);
                 string lbArg = lbArgs.Length > 1 ? lbArgs[1] : "";
@@ -75,55 +60,110 @@ namespace MCGalaxy.Commands {
             } else if (cmd == "PRESET") {
                 Command.all.Find("env").Use(p, "preset " + arg);
             } else if (cmd == "ENV") {
-                HandleEnvCommand(p, arg, arg2);
+                HandleEnv(p, arg, arg2);
             } else if (cmd == "MAP") {
-                HandleMapCommand(p, message, arg, arg2);
+                HandleMap(p, arg, arg2);
             } else if (cmd == "ZONE") {
-                HandleZoneCommand(p, arg, arg2);
+                HandleZone(p, arg, arg2);
             } else if (cmd == "KICKALL") {
-                Player[] players = PlayerInfo.Online.Items;
-                foreach (Player pl in players) {
-                    if (pl.level == p.level && pl.name != p.name)
-                        PlayerActions.ChangeMap(pl, Server.mainLevel);
-                }
+                HandleKickAll(p, arg, arg2);
             } else if (cmd == "KICK") {
-                if (arg == "") { p.SendMessage("You must specify a player to kick."); return; }
-                
-                Player pl = PlayerInfo.FindMatches(p, arg);
-                if (pl != null) {
-                    if (pl.level.name == p.level.name)
-                        PlayerActions.ChangeMap(pl, Server.mainLevel);
-                    else
-                        p.SendMessage("Player is not on your level!");
-                }
+                HandleKick(p, arg, arg2);
             } else {
                 Help(p);
             }
         }
         
-        void HandleEnvCommand(Player p, string type, string value) {
+        public override void Help(Player p) {
+            Player.Message(p, "%T/os [command] [args]");
+            Player.Message(p, "%HAllows you to modify and manage your personal realms.");
+            Player.Message(p, "%HCommands: %Sgo, map, spawn, zone, kick, " +
+                           "kickall, env, preset, levelblock(lb)");
+            Player.Message(p, "%T/os zone add [name] %H- allows [name] to build in the world.");
+        }
+        
+        
+        delegate void SubCommandHandler(Player p, string cmd, string value);
+        class SubCommand {
+            public SubCommandHandler Handler;
+            public string[] Help;
+            
+            public SubCommand(SubCommandHandler handler, string[] help) {
+                Handler = handler;
+                Help = help;
+            }
+        }
+        
+        Dictionary<string, SubCommand> subCommands = new Dictionary<string, SubCommand>() {
+            { "env", new SubCommand(HandleEnv, envHelp) },
+            { "map", new SubCommand(HandleMap, mapHelp) },
+            { "zone", new SubCommand(HandleZone, zoneHelp) },
+        };
+        
+        
+        #region Sub commands
+        
+        static void HandleEnv(Player p, string type, string value) {
             string arg = value == "" ? "normal" : value;
             if (CmdEnvironment.Handle(p, type.ToLower(), arg)) return;
             Player.MessageLines(p, envHelp);
         }
+
+        static void HandleGoto(Player p, string map, string ignored) {
+            byte mapNum = 0;
+            if (map == "" || map == "1") {
+                map = FirstMapName(p);
+            } else {
+                if (!byte.TryParse(map, out mapNum)) {
+                    Help(p); return;
+                }
+                map = p.name.ToLower() + map;
+            }
+            
+            Level[] loaded = LevelInfo.Loaded.Items;
+            if (LevelInfo.FindExact(map) == null)
+                CmdLoad.LoadLevel(p, map, "0", Server.AutoLoad);
+            if (LevelInfo.FindExact(map) != null)
+                PlayerActions.ChangeMap(p, map);
+        }
         
-        void HandleMapCommand(Player p, string message, string cmd, string value) {
-            bool mapOnly = !(cmd == "ADD" || cmd == "DELETE" || cmd == "SAVE");
+        static void HandleKick(Player p, string name, string ignored) {
+            if (name == "") { p.SendMessage("You must specify a player to kick."); return; }            
+            Player pl = PlayerInfo.FindMatches(p, name);
+            if (pl == null) return;
+            
+            if (pl.level.name == p.level.name) {
+                PlayerActions.ChangeMap(pl, Server.mainLevel);
+            } else {
+                p.SendMessage("Player is not on your level!");
+            }
+        }
+        
+        static void HandleKickAll(Player p, string ignored1, string ignored2) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level == p.level && pl.name != p.name)
+                    PlayerActions.ChangeMap(pl, Server.mainLevel);
+            }
+        }
+        
+        static void HandleMap(Player p, string opt, string value) {
+            bool mapOnly = !(opt == "ADD" || opt == "DELETE" || opt == "SAVE");
             if (mapOnly && !OwnsMap(p, p.level)) {
                 Player.Message(p, "You may only perform that action on your own map."); return;
             }
             
-            if (cmd == "ADD") {
+            if (opt == "ADD") {
                 AddMap(p, value);
-            } else if (cmd == "PHYSICS") {
+            } else if (opt == "PHYSICS") {
                 if (value == "0" || value == "1" || value == "2" || value == "3" || value == "4" || value == "5") {
                     CmdPhysics.SetPhysics(p.level, int.Parse(value));
                 } else {
                     Player.Message(p, "Accepted numbers are: 0, 1, 2, 3, 4 or 5");
                 }
-            } else if (cmd == "DELETE") {
+            } else if (opt == "DELETE") {
                 DeleteMap(p, value);
-            } else if (cmd == "SAVE") {
+            } else if (opt == "SAVE") {
                 byte mapNum = 0;
                 if (value == "") {
                     Player.Message(p, "To save one of your maps type %T/os map save [map number]");
@@ -136,28 +176,28 @@ namespace MCGalaxy.Commands {
                 } else {
                     Help(p);
                 }
-            } else if (cmd == "RESTORE") {
+            } else if (opt == "RESTORE") {
                 Command.all.Find("restore").Use(p, value);
-            } else if (cmd == "PERVISIT") {
+            } else if (opt == "PERVISIT") {
                 string rank = value == "" ? Server.defaultRank : value;
                 Command.all.Find("pervisit").Use(p, rank);
-            } else if (cmd == "PERBUILD") {
+            } else if (opt == "PERBUILD") {
                 string rank = value == "" ? Server.defaultRank : value;
                 Command.all.Find("perbuild").Use(p, rank);
-            } else if (cmd == "TEXTURE") {
+            } else if (opt == "TEXTURE") {
                 if (value == "") {
                     Command.all.Find("texture").Use(p, "level normal");
                 } else {
                     Command.all.Find("texture").Use(p, "level " + value);
                 }
-            } else if (cmd == "TEXTUREZIP") {
+            } else if (opt == "TEXTUREZIP") {
                 if (value == "") {
                     Command.all.Find("texture").Use(p, "levelzip normal");
                 } else {
                     Command.all.Find("texture").Use(p, "levelzip " + value);
                 }
             } else {
-                string opt = LevelOptions.Map(cmd.ToLower());
+                opt = LevelOptions.Map(opt.ToLower());
                 if (opt == "physicspeed" || opt == "overload" || opt == "realmowner") {
                     Player.Message(p, "&cYou cannot change that map option via /os map."); return;
                 }
@@ -167,7 +207,7 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        void AddMap(Player p, string value) {
+        static void AddMap(Player p, string value) {
             string level = NextLevel(p);
             if (level == null) return;
 
@@ -199,7 +239,7 @@ namespace MCGalaxy.Commands {
                            "players ranked below " + grp.ColoredName + " %Sto build in the map.");
         }
         
-        void DeleteMap(Player p, string value) {
+        static void DeleteMap(Player p, string value) {
             byte mapNum = 0;
             if (value == "") {
                 Player.Message(p, "To delete one of your maps, type %T/os map delete [map number]");
@@ -225,7 +265,8 @@ namespace MCGalaxy.Commands {
                 Help(p);
             }
         }
-        void HandleZoneCommand(Player p, string cmd, string name) {
+        
+        static void HandleZone(Player p, string cmd, string name) {
             if (cmd == "LIST") {
                 Command.all.Find("zone").Use(p, "");
             } else if (cmd == "ADD") {
@@ -290,6 +331,8 @@ namespace MCGalaxy.Commands {
             }
         }
         
+        #endregion
+        
         
         static string NextLevel(Player p) {
             string level = p.name.ToLower();
@@ -330,17 +373,10 @@ namespace MCGalaxy.Commands {
             return false;
         }
         
-        public override void Help(Player p) {
-            Player.Message(p, "%T/os [command] [args]");
-            Player.Message(p, "%HAllows you to modify and manage your personal realms.");
-            Player.Message(p, "%HCommands: %Sgo, map, spawn, zone, kick, " +
-                           "kickall, env, preset, levelblock(lb)");
-            Player.Message(p, "%T/os zone add [name] %H- allows [name] to build in the world.");
-        }
         
         #region Help messages
         
-        static string[] envHelp = {
+        static string[] envHelp = new string[] {
             "%T/os env [fog/cloud/sky/shadow/sun] [hex color] %H- Changes env colors of your map.",
             "%T/os env level [height] %H- Sets the water height of your map.",
             "%T/os env cloudheight [height] %H-Sets cloud height of your map.",
@@ -352,7 +388,7 @@ namespace MCGalaxy.Commands {
             " Note: If no hex or block is given, the default will be used.",
         };
         
-        static string[] mapHelp = {
+        static string[] mapHelp = new string[] {
             "%T/os map add [type - default is flat] %H- Creates your map (128x64x128)",
             "%T/os map add [width] [height] [length] [type]",
             "%H  See %T/help newlvl types %Hfor a list of map types.",
@@ -368,7 +404,7 @@ namespace MCGalaxy.Commands {
             "%H  See %T/help map %Hfor a list of map options",
         };
         
-        static string[] zoneHelp = {
+        static string[] zoneHelp = new string[] {
             "%T/os zone add [player/rank] %H- Adds a zone for a player or a rank, " +
                 "allowing them to always build in your map.",
             "%T/os zone del all %H- Deletes all zones in your map.",
