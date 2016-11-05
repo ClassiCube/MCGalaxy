@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
@@ -57,6 +58,25 @@ namespace MCGalaxy.SQL {
             }
         }
         
+        public override List<string> AllTables() {
+            using (DataTable results = GetRows("sqlite_master", "name", "WHERE type='table'")) {
+                List<string> tables = new List<string>(results.Rows.Count);
+                foreach (DataRow row in results.Rows) {
+                    if (row["name"].ToString().StartsWith("sqlite_")) continue;
+                    tables.Add(row["name"].ToString());
+                }
+                return tables;
+            }
+        }
+        
+        public override void AddColumn(string table, string column, 
+                                       string colType, string colAfter) {
+            ValidateTable(table);
+            string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " 
+                + column + " " + colType;
+            Database.Execute(syntax);
+        }
+        
         public override void RenameTable(string srcTable, string dstTable) {
             ValidateTable(srcTable);
             ValidateTable(dstTable);
@@ -67,14 +87,6 @@ namespace MCGalaxy.SQL {
         public override void ClearTable(string table) {
             ValidateTable(table);
             string syntax = "DELETE FROM `" + table + "`";
-            Database.Execute(syntax);
-        }
-        
-        public override void AddColumn(string table, string column, 
-                                       string colType, string colAfter) {
-            ValidateTable(table);
-            string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " 
-                + column + " " + colType;
             Database.Execute(syntax);
         }
         

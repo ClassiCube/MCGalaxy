@@ -41,7 +41,7 @@ namespace MCGalaxy {
             sql.WriteLine();
             sql.WriteLine();
 
-            List<string> sqlTables = GetTables();
+            List<string> sqlTables = Database.Backend.AllTables();
             foreach (string name in sqlTables) {
                 if (lite && name.CaselessStarts("Block")) continue;
                 BackupTable(name, sql);
@@ -144,12 +144,10 @@ namespace MCGalaxy {
                 }
                 sql.WriteLine(");");
             } else {
-                using (DataTable tableSQL = Database.Fill("SELECT sql FROM" +
-                                                          "   (SELECT * FROM sqlite_master UNION ALL" +
-                                                          "    SELECT * FROM sqlite_temp_master)" +
-                                                          "WHERE tbl_name LIKE '" + tableName + "'" +
-                                                          "  AND type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%'" +
-                                                          "ORDER BY substr(type,2,1), name"))
+                using (DataTable tableSQL = Database.Fill("SELECT sql FROM sqlite_master" +
+                                                          " WHERE tbl_name LIKE '" + tableName + "'" +
+                                                          " AND type = 'table' AND name NOT LIKE 'sqlite_%'" +
+                                                          " ORDER BY substr(type,2,1), name"))
                 {
                     //just print out the data in the table.
                     foreach (DataRow row in tableSQL.Rows) {
@@ -161,24 +159,12 @@ namespace MCGalaxy {
             }
             sql.WriteLine();
         }
-
-        static List<string> GetTables() {
-            List<string> tableNames = new List<string>();
-            string syntax = Server.useMySQL ? "SHOW TABLES" : "SELECT * FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'";
-            using (DataTable tables = Database.Fill(syntax)) {
-                foreach (DataRow row in tables.Rows) {
-                    string tableName = row[Server.useMySQL ? 0 : 1].ToString();
-                    tableNames.Add(tableName);
-                }
-            }
-            return tableNames;
-        }
         
         internal static void ReplaceDatabase(Stream sql) {
             using (FileStream backup = File.Create("backup.sql"))
                 BackupDatabase(new StreamWriter(backup), false); // backup
 
-            List<string> tables = GetTables();
+            List<string> tables = Database.Backend.AllTables();
             foreach (string table in tables)
                 Database.Backend.DeleteTable(table); // drop all tables
             
