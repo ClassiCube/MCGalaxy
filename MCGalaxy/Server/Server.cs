@@ -126,7 +126,7 @@ namespace MCGalaxy {
                                    1, TimeSpan.FromSeconds(Server.backupInterval));
             Background.QueueRepeat(ServerTasks.BlockUpdates, 
                                    null, TimeSpan.FromSeconds(Server.blockInterval));
-            Background.QueueRepeat(ThreadSafeCache.CleanupTask, 
+            Background.QueueRepeat(ThreadSafeCache.DBCache.CleanupTask, 
                                    null, TimeSpan.FromMinutes(5));
         }
         

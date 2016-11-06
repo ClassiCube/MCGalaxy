@@ -27,7 +27,7 @@ namespace MCGalaxy {
         public unsafe static void SaveBlockDB(Level lvl) {
             if (lvl.blockCache.Count == 0) return;
             if (!lvl.UseBlockDB) { lvl.blockCache.Clear(); return; }
-            List<Level.BlockPos> tempCache = lvl.blockCache;
+            FastList<BlockDBEntry> tempCache = lvl.blockCache;
             string date = new String('-', 19); //yyyy-mm-dd hh:mm:ss
             
             fixed (char* ptr = date) {
@@ -36,11 +36,11 @@ namespace MCGalaxy {
                     DoSaveChanges(tempCache, ptr, lvl, date, bulk);
             }
             tempCache.Clear();
-            lvl.blockCache = new List<Level.BlockPos>();
+            lvl.blockCache = new FastList<BlockDBEntry>();
             Server.s.Log("Saved BlockDB changes for:" + lvl.name, true);
         }
         
-        unsafe static bool DoSaveChanges(List<Level.BlockPos> tempCache, char* ptr,
+        unsafe static bool DoSaveChanges(List<BlockDBEntry> tempCache, char* ptr,
                                          Level lvl, string date, BulkTransaction transaction) {
             string template = "INSERT INTO `Block" + lvl.name +
                 "` (Username, TimePerformed, X, Y, Z, type, deleted) VALUES (@0, @1, @2, @3, @4, @5, @6)";

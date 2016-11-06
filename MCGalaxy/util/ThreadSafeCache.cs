@@ -20,27 +20,22 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Util {
     public sealed class ThreadSafeCache {
-        static readonly List<ThreadSafeCache> caches = new List<ThreadSafeCache>();
-        static readonly object cachesLock = new object();
-        
-        public static ThreadSafeCache DBCache = new ThreadSafeCache(() => new object());
-        
+        public static ThreadSafeCache DBCache = new ThreadSafeCache(key => new object());
+        	
         readonly object locker = new object();
         readonly Dictionary<string, object> items = new Dictionary<string, object>();
         readonly Dictionary<string, DateTime> access = new Dictionary<string, DateTime>();
-        readonly Func<object> constructor;
+        readonly Func<string, object> constructor;
         
-        public ThreadSafeCache(Func<object> constructor) {
+        public ThreadSafeCache(Func<string, object> constructor) {
             this.constructor = constructor;
-            lock (cachesLock)
-                caches.Add(this);
         }
         
         public object Get(string key) {
             lock (locker) {
                 object value;
                 if (!items.TryGetValue(key, out value)) {
-                    value = constructor();
+                    value = constructor(key);
                     items[key] = value;
                 }
                 
@@ -50,14 +45,7 @@ namespace MCGalaxy.Util {
         }
         
         
-        internal static void CleanupTask(SchedulerTask task) {
-            lock (cachesLock) {
-                foreach (ThreadSafeCache cache in caches)
-                    cache.CleanupOld();
-            }
-        }
-        
-        void CleanupOld() {
+        public void CleanupTask(SchedulerTask task) {
             List<string> free = null;
             DateTime now = DateTime.UtcNow;
             

@@ -61,6 +61,7 @@ namespace MCGalaxy {
             if (Width < 16) Width = 16;
             if (Height < 16) Height = 16;
             if (Length < 16) Length = 16;
+            BlockDB = new BlockDB(this);
             
             VisitAccess = new LevelAccess(this, true);
             BuildAccess = new LevelAccess(this, false);

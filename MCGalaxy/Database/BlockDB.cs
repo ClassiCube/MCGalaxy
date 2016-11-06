@@ -19,35 +19,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
+using MCGalaxy.Util;
 
 namespace MCGalaxy {
     
-    public unsafe class BlockDB {
+    public unsafe partial class BlockDB {
         
-        const byte version = 1;
-        const int entrySize = 16;
-        const int bulkEntries = 256;
-        
-        public void WriteHeader(Stream stream, Level lvl) {
-            byte[] header = new byte[4 * entrySize];
-            NetUtils.WriteAscii("CBDB", header, 0);
-            header[4] = version;
-            header[5] = 0; // ref year
-            WriteU16(lvl.Width, header, 6);
-            WriteU16(lvl.Height, header, 8);
-            WriteU16(lvl.Length, header, 10);
-            
-            NetUtils.WriteAscii("MCGalaxy", header, entrySize);
-            stream.Write(header, 0, header.Length);
-        }
-        
-        public void WriteEntries(Stream stream, List<BlockDBEntry> entries) {
+        public void WriteEntries(Stream stream, FastList<BlockDBEntry> entries) {
             byte[] bulk = new byte[bulkEntries * entrySize];
             
             for (int i = 0; i < entries.Count; i += bulkEntries) {
                 int count = Math.Min(bulkEntries, entries.Count - i);
                 for (int j = 0; j < count; j++) {
-                    BlockDBEntry entry = entries[i + j];
+                    BlockDBEntry entry = entries.Items[i + j];
                     WriteI32(entry.PlayerID, bulk, j * entrySize);
                     WriteI32(entry.TimeDelta, bulk, j * entrySize + 4);
                     WriteI32(entry.Index, bulk, j * entrySize + 8);
@@ -59,66 +44,131 @@ namespace MCGalaxy {
             }
         }
         
-        public List<BlockDBEntry> ReadEntries(int x, int y, int z, Stream stream) {
+        /// <summary> Finds all block changes which affect the given coordinates. </summary>
+        public void FindChangesAt(ushort x, ushort y, ushort z, Action<BlockDBEntry> output) {
+            using (IDisposable readLock = locker.AccquireReadLock()) {
+                if (!File.Exists(FilePath)) return;
+                
+                using (Stream s = File.OpenRead(FilePath)) {
+                    Vec3U16 dims;
+                    ReadHeader(s, out dims);
+                    if (x >= dims.X || y >= dims.Y || z >= dims.Z) return;
+                    
+                    int index = (y * dims.Z + z) * dims.X + x;
+                    FindChangesAt(s, index, output);
+                }
+            }
+        }
+        
+        
+        /// <summary> Finds all block changes by the given player. </summary>
+        public void FindChangesBy(int id, Action<BlockDBEntry> output, out Vec3U16 dims) {
+            using (IDisposable readLock = locker.AccquireReadLock()) {
+                if (!File.Exists(FilePath)) return;
+                
+                using (Stream s = File.OpenRead(FilePath)) {
+                    ReadHeader(s, out dims);
+                    FindChangesBy(s, index, output);
+                }
+            }
+        }
+        
+        /// <summary> Finds all block changes by the given players. </summary>
+        public void FindChangesBy(int[] ids, Action<BlockDBEntry> output, out Vec3U16 dims) {
+            using (IDisposable readLock = locker.AccquireReadLock()) {
+                if (!File.Exists(FilePath)) return;
+                
+                using (Stream s = File.OpenRead(FilePath)) {
+                    ReadHeader(s, out dims);
+                    FindChangesBy(s, index, output);
+                }
+            }
+        }
+        
+        
+        // NOTE: These are duplicated since it is important to be as performant as possible,
+        // since the BlockDB can have millions and millions of entries
+        static void FindChangesAt(Stream s, int index, Action<BlockDBEntry> output) {
             byte[] bulk = new byte[bulkEntries * entrySize];
-            ReadFully(stream, bulk, 4 * entrySize);
-            List<BlockDBEntry> matches = new List<BlockDBEntry>();
-            
-            ushort width = ReadU16(bulk, 6);
-            ushort height = ReadU16(bulk, 8);
-            ushort length = ReadU16(bulk, 10);
-            int index = x + width * (z + y * length);
-            
             fixed (byte* ptr = bulk) {
-                int entries = (int)(stream.Length / entrySize);
+                int entries = (int)(s.Length / entrySize) - 1;
                 while (entries > 0) {
                     int read = Math.Min(entries, bulkEntries);
-                    ReadFully(stream, bulk, read * entrySize);
+                    ReadFully(s, bulk, read * entrySize);
                     BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
                     
                     for (int i = 0; i < read; i++) {
-                        if (entryPtr->Index != index) continue;
-                        matches.Add(*entryPtr);
+                        if (entryPtr->Index == index) {
+                            output(*entryPtr);
+                        }
                         entryPtr++;
                     }
                     entries -= read;
                 }
             }
-            return matches;
         }
         
-        static ushort ReadU16(byte[] array, int offset) {
-            return (ushort)(array[offset] | array[offset + 1] << 8);
+        static void FindChangesBy(Stream s, int id, Action<BlockDBEntry> output) {
+            byte[] bulk = new byte[bulkEntries * entrySize];
+            fixed (byte* ptr = bulk) {
+                int entries = (int)(s.Length / entrySize) - 1;
+                while (entries > 0) {
+                    int read = Math.Min(entries, bulkEntries);
+                    ReadFully(s, bulk, read * entrySize);
+                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
+                    
+                    for (int i = 0; i < read; i++) {
+                        if (entryPtr->PlayerID == id) {
+                            output(*entryPtr);
+                        }
+                        entryPtr++;
+                    }
+                    entries -= read;
+                }
+            }
         }
         
-        static void WriteU16(ushort value, byte[] array, int index) {
-            array[index++] = (byte)(value);
-            array[index++] = (byte)(value >> 8);
-        }
-        
-        static void WriteI32(int value, byte[] array, int index) {
-            array[index++] = (byte)(value);
-            array[index++] = (byte)(value >> 8);
-            array[index++] = (byte)(value >> 16);
-            array[index++] = (byte)(value >> 24);
-        }
-        
-        static void ReadFully(Stream stream, byte[] dst, int count) {
-            int total = 0;
-            do {
-                int read = stream.Read(dst, total, count - total);
-                if (read == 0) throw new EndOfStreamException();
-                total += read;
-            } while (total < count);
+        static void FindChangesBy(Stream s, int[] ids, Action<BlockDBEntry> output) {
+            byte[] bulk = new byte[bulkEntries * entrySize];
+            fixed (byte* ptr = bulk) {
+                int entries = (int)(s.Length / entrySize) - 1;
+                while (entries > 0) {
+                    int read = Math.Min(entries, bulkEntries);
+                    ReadFully(s, bulk, read * entrySize);
+                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
+                    
+                    for (int i = 0; i < read; i++) {
+                        for (int j = 0; j < ids.Length; j++) {
+                            if (entryPtr->PlayerID == ids[j]) {
+                                output(*entryPtr); break;
+                            }
+                        }
+                        entryPtr++;
+                    }
+                    entries -= read;
+                }
+            }
         }
     }
-    
+
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct BlockDBEntry {
+        /// <summary> ID within Players table of player who made the change. </summary>
         public int PlayerID;
+        
+        /// <summary> Seconds since BlockDB.Epoch that this change occured at. </summary>
         public int TimeDelta;
+        
+        /// <summary> Packed coordinates of where the change occured at. </summary>
         public int Index;
-        public byte Old, New;
+        
+        /// <summary> Raw block that was previously there before the change. </summary>
+        public byte OldRaw;
+        
+        /// <summary> Raw block that is now there due to the change. </summary>
+        public byte NewRaw;
+        
+        /// <summary> Flags for the block change. </summary>
         public ushort Flags;
     }
 }

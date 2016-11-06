@@ -77,9 +77,10 @@ namespace MCGalaxy {
         public List<Zone> ZoneList;
         public bool backedup;
         internal readonly object blockCacheLock = new object();
-        public List<BlockPos> blockCache = new List<BlockPos>();
+        public FastList<BlockDBEntry> blockCache = new FastList<BlockDBEntry>();
         [ConfigBool("UseBlockDB", "Other", null, true)]
         public bool UseBlockDB = true;
+        public BlockDB BlockDB;
 
         public byte jailrotx, jailroty;
         [ConfigInt("JailX", "Jail", null, 0, 0, 65535)]

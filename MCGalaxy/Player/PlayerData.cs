@@ -54,7 +54,6 @@ namespace MCGalaxy {
                 } else {
                     int index = Server.invalidIds.AddOrReplace(p.name);
                     p.UserID = int.MaxValue - index;
-                    Server.s.Log("INVALID!! " + p.UserID + " - " + p.name);
                 }
             }
         }
