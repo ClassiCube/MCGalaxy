@@ -344,7 +344,6 @@ namespace MCGalaxy {
             if (LevelLoad != null) LevelLoad(name);
             OnLevelLoadEvent.Call(name);
             if (cancelload) { cancelload = false; return null; }
-            LevelDB.CreateTables(name);
 
             string path = LevelInfo.LevelPath(name);
             if (!File.Exists(path)) {

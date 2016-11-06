@@ -68,7 +68,6 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Generating map \"{0}\"..", name);
                 using (Level lvl = new Level(name, x, y, z)) {
                     if (!MapGen.Generate(lvl, args[4], seed, p)) return false;
-                    LevelDB.CreateTables(name);
                     lvl.Save(true);
                     lvl.Dispose();
                 }

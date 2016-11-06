@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.SQL;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands {
     public sealed class CmdAbout : Command {
@@ -48,13 +49,27 @@ namespace MCGalaxy.Commands {
             
             string blockName = p.level.BlockName(b, id);
             Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.", x, y, z, id, blockName);
-            DateTime now = DateTime.Now;
-            bool foundOne = false;
+            bool foundAny = false;
             
+            ListFromDatabase(p, ref foundAny, x, y, z);
+            // TODO: List from BlockDB file
+            ListInMemory(p, ref foundAny, x, y, z);
+            
+            if (!foundAny) Player.Message(p, "No block change records found for this block.");
+            OutputMessageBlock(p, b, id, x, y, z);
+            OutputPortal(p, b, id, x, y, z);
+            
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+        
+        static void ListFromDatabase(Player p, ref bool foundAny, ushort x, ushort y, ushort z) {
             DataTable Blocks = Database.Backend.GetRows("Block" + p.level.name, "*",
                                                         "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
+            DateTime now = DateTime.Now;
+            
             for (int i = 0; i < Blocks.Rows.Count; i++) {
-                foundOne = true;
+                foundAny = true;
                 DataRow row = Blocks.Rows[i];
                 string user = row["Username"].ToString().Trim();
                 DateTime time = DateTime.Parse(row["TimePerformed"].ToString());
@@ -65,26 +80,6 @@ namespace MCGalaxy.Commands {
                 Output(p, user, block, isExt, deleted, now - time);
             }
             Blocks.Dispose();
-
-            int bpIndex = p.level.PosToInt(x, y, z);
-            List<Level.BlockPos> inCache = p.level.blockCache.FindAll(bP => bP.index == bpIndex);
-            for (int i = 0; i < inCache.Count; i++) {
-                foundOne = true;
-                Level.BlockPos entry = inCache[i];
-                string user = entry.name.Trim();
-                DateTime time = Server.StartTimeLocal.AddSeconds(entry.flags >> 2);
-                
-                bool deleted = (entry.flags & 1) != 0;
-                bool extBlock = (entry.flags & 2) != 0;
-                Output(p, user, entry.rawBlock, extBlock, deleted, now - time);
-            }
-
-            if (!foundOne) Player.Message(p, "No block change records found for this block.");
-            OutputMessageBlock(p, b, id, x, y, z);
-            OutputPortal(p, b, id, x, y, z);
-            
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
         }
         
         static byte ParseFlags(string value) {
@@ -93,6 +88,26 @@ namespace MCGalaxy.Commands {
             if (value.CaselessEq("false")) return 0;
             return byte.Parse(value);
         }
+        
+        static void ListInMemory(Player p, ref bool foundAny, ushort x, ushort y, ushort z) {
+            int index = p.level.PosToInt(x, y, z);
+            DateTime now = DateTime.Now;
+            FastList<BlockDBEntry> entries = p.level.blockCache;
+            
+            for (int i = 0; i < entries.Count; i++) {
+            	if (entries.Items[i].Index != index) continue;
+            	
+                foundAny = true;
+                BlockDBEntry entry = entries.Items[i];
+                string user = entry.name.Trim();
+                DateTime time = BlockDB.Epoch.AddSeconds(entry.TimeDelta);
+                
+                bool deleted = entry.NewRaw != 0;
+                bool extBlock = (entry.Flags & 0x8000) != 0;
+                Output(p, user, entry.NewRaw, extBlock, deleted, now - time);
+            }
+        }
+        
         
         static void Output(Player p, string user, byte raw, bool isExt,
                            bool deleted, TimeSpan delta) {
@@ -131,7 +146,7 @@ namespace MCGalaxy.Commands {
         }
         
         static void OutputPortal(Player p, byte block, byte extBlock,
-                                       ushort x, ushort y, ushort z) {
+                                 ushort x, ushort y, ushort z) {
             if (block == Block.custom_block) {
                 if (!p.level.CustomBlockProps[extBlock].IsPortal) return;
             } else {
@@ -141,7 +156,7 @@ namespace MCGalaxy.Commands {
             try {
                 if (!Database.Backend.TableExists("Portals" + p.level.name)) return;
                 DataTable portals = Database.Backend.GetRows("Portals" + p.level.name, "*",
-                                                              "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+                                                             "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
                 int last = portals.Rows.Count - 1;
                 if (last == -1) { portals.Dispose(); return; }
                 

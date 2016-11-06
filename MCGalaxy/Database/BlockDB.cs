@@ -16,17 +16,30 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading;
 using MCGalaxy.Util;
 
 namespace MCGalaxy {
     
     public unsafe partial class BlockDB {
         
-        public void WriteEntries(Stream stream, FastList<BlockDBEntry> entries) {
+        public void AppendEntries(ref FastList<BlockDBEntry> entries, object lockObj) {
+            using (IDisposable writeLock = locker.AccquireWriteLock()) {
+                if (entries.Count == 0) return;
+                
+                ValidateBackingFile();
+                using (Stream s = File.OpenWrite(FilePath)) {
+                    s.Position = s.Length;
+                    WriteEntries(s, entries);
+                    
+                    lock (lockObj)
+                        entries = new FastList<BlockDBEntry>();
+                }
+            }
+        }
+        
+        void WriteEntries(Stream s, FastList<BlockDBEntry> entries) {
             byte[] bulk = new byte[bulkEntries * entrySize];
             
             for (int i = 0; i < entries.Count; i += bulkEntries) {
@@ -36,11 +49,11 @@ namespace MCGalaxy {
                     WriteI32(entry.PlayerID, bulk, j * entrySize);
                     WriteI32(entry.TimeDelta, bulk, j * entrySize + 4);
                     WriteI32(entry.Index, bulk, j * entrySize + 8);
-                    bulk[j * entrySize + 12] = entry.Old;
-                    bulk[j * entrySize + 13] = entry.New;
+                    bulk[j * entrySize + 12] = entry.OldRaw;
+                    bulk[j * entrySize + 13] = entry.NewRaw;
                     WriteU16(entry.Flags, bulk, j * entrySize + 14);
                 }
-                stream.Write(bulk, 0, count * entrySize);
+                s.Write(bulk, 0, count * entrySize);
             }
         }
         
@@ -63,24 +76,26 @@ namespace MCGalaxy {
         
         /// <summary> Finds all block changes by the given player. </summary>
         public void FindChangesBy(int id, Action<BlockDBEntry> output, out Vec3U16 dims) {
+            dims = default(Vec3U16);
             using (IDisposable readLock = locker.AccquireReadLock()) {
                 if (!File.Exists(FilePath)) return;
                 
                 using (Stream s = File.OpenRead(FilePath)) {
                     ReadHeader(s, out dims);
-                    FindChangesBy(s, index, output);
+                    FindChangesBy(s, id, output);
                 }
             }
         }
         
         /// <summary> Finds all block changes by the given players. </summary>
         public void FindChangesBy(int[] ids, Action<BlockDBEntry> output, out Vec3U16 dims) {
+            dims = default(Vec3U16);
             using (IDisposable readLock = locker.AccquireReadLock()) {
                 if (!File.Exists(FilePath)) return;
                 
                 using (Stream s = File.OpenRead(FilePath)) {
                     ReadHeader(s, out dims);
-                    FindChangesBy(s, index, output);
+                    FindChangesBy(s, ids, output);
                 }
             }
         }

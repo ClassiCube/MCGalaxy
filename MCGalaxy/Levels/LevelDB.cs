@@ -27,72 +27,11 @@ namespace MCGalaxy {
         public unsafe static void SaveBlockDB(Level lvl) {
             if (lvl.blockCache.Count == 0) return;
             if (!lvl.UseBlockDB) { lvl.blockCache.Clear(); return; }
-            FastList<BlockDBEntry> tempCache = lvl.blockCache;
-            string date = new String('-', 19); //yyyy-mm-dd hh:mm:ss
-            
-            fixed (char* ptr = date) {
-                ptr[4] = '-'; ptr[7] = '-'; ptr[10] = ' '; ptr[13] = ':'; ptr[16] = ':';
-                using (BulkTransaction bulk = BulkTransaction.Create())
-                    DoSaveChanges(tempCache, ptr, lvl, date, bulk);
-            }
-            tempCache.Clear();
-            lvl.blockCache = new FastList<BlockDBEntry>();
+
+            lvl.BlockDB.AppendEntries(ref lvl.blockCache, lvl.blockCacheLock);
             Server.s.Log("Saved BlockDB changes for:" + lvl.name, true);
         }
-        
-        unsafe static bool DoSaveChanges(List<BlockDBEntry> tempCache, char* ptr,
-                                         Level lvl, string date, BulkTransaction transaction) {
-            string template = "INSERT INTO `Block" + lvl.name +
-                "` (Username, TimePerformed, X, Y, Z, type, deleted) VALUES (@0, @1, @2, @3, @4, @5, @6)";
-            ushort x, y, z;
-            
-            IDbCommand cmd = BulkTransaction.CreateCommand(template, transaction);
-            if (cmd == null) return false;
-            
-            IDataParameter nameP = transaction.CreateParam("@0", DbType.AnsiStringFixedLength); cmd.Parameters.Add(nameP);
-            IDataParameter timeP = transaction.CreateParam("@1", DbType.AnsiStringFixedLength); cmd.Parameters.Add(timeP);
-            IDataParameter xP = transaction.CreateParam("@2", DbType.UInt16); cmd.Parameters.Add(xP);
-            IDataParameter yP = transaction.CreateParam("@3", DbType.UInt16); cmd.Parameters.Add(yP);
-            IDataParameter zP = transaction.CreateParam("@4", DbType.UInt16); cmd.Parameters.Add(zP);
-            IDataParameter tileP = transaction.CreateParam("@5", DbType.Byte); cmd.Parameters.Add(tileP);
-            IDataParameter delP = transaction.CreateParam("@6", DbType.Byte); cmd.Parameters.Add(delP);
-            
-            for (int i = 0; i < tempCache.Count; i++) {
-                Level.BlockPos bP = tempCache[i];
-                lvl.IntToPos(bP.index, out x, out y, out z);
-                DateTime time = Server.StartTimeLocal.AddTicks((bP.flags >> 2) * TimeSpan.TicksPerSecond);
-                MakeInt(time.Year, 4, 0, ptr); MakeInt(time.Month, 2, 5, ptr); MakeInt(time.Day, 2, 8, ptr);
-                MakeInt(time.Hour, 2, 11, ptr); MakeInt(time.Minute, 2, 14, ptr); MakeInt(time.Second, 2, 17, ptr);
-                
-                nameP.Value = bP.name;
-                timeP.Value = date;
-                xP.Value = x; yP.Value = y; zP.Value = z;
-                tileP.Value = bP.rawBlock;
-                delP.Value = (byte)(bP.flags & 3);
 
-                if (!BulkTransaction.Execute(template, cmd)) {
-                    cmd.Dispose();
-                    cmd.Parameters.Clear();
-                    transaction.Rollback(); return false;
-                }
-            }
-            cmd.Dispose();
-            cmd.Parameters.Clear();
-            transaction.Commit();
-            return true;
-        }
-        
-        unsafe static void MakeInt(int value, int chars, int offset, char* ptr) {
-            for (int i = 0; i < chars; i++, value /= 10) {
-                char c = (char)('0' + (value % 10));
-                ptr[offset + (chars - 1 - i)] = c;
-            }
-        }
-        
-        public static void CreateTables(string givenName) {
-            Database.Backend.CreateTable("Block" + givenName, LevelDB.createBlock);
-        }
-        
         internal static void LoadZones(Level level, string name) {
             if (!Database.TableExists("Zone" + name)) return;
             using (DataTable table = Database.Backend.GetRows("Zone" + name, "*")) {

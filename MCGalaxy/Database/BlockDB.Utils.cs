@@ -16,11 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
-using MCGalaxy.Util;
 
 namespace MCGalaxy {
     
@@ -51,15 +48,18 @@ namespace MCGalaxy {
         
         /// <summary> Checks if the backing file exists on disc, and if not, creates it.
         /// Also recreates the backing file if dimensions on disc are less than those in memory. </summary>
-        public void ValidateBackingFile(Level lvl) {
+        void ValidateBackingFile() {
+            Vec3U16 dims;
             using (IDisposable writeLock = locker.AccquireWriteLock()) {
                 if (!File.Exists(FilePath)) {
-                    WriteHeader(this);
-                } else {
-                    Vec3U16 dims;
-                    using (Stream s = File.OpenRead(FilePath))
+                    using (Stream s = File.OpenWrite(FilePath)) {
+                        dims = new Vec3U16(Width, Height, Length);
+                        WriteHeader(s, dims);
+                    }
+                } else {                
+                    using (Stream s = File.OpenRead(FilePath)) {
                         ReadHeader(s, out dims);
-                    
+                    }
                     if (dims.X < Width || dims.Y < Height || dims.Z < Length) {
                         ResizeBackingFile();
                     }
@@ -67,7 +67,7 @@ namespace MCGalaxy {
             }
         }
         
-        public void ResizeBackingFile() {
+        void ResizeBackingFile() {
             Server.s.Log("Resizing BlockDB for " + MapName, true);
             throw new NotImplementedException(); // TODO: resize backing file
         }

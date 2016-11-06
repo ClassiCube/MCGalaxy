@@ -48,7 +48,6 @@ namespace MCGalaxy {
                             mainLevel = new Level(level, 128, 64, 128);
                             MapGen.Generate(mainLevel, "flat", "", null);
                             mainLevel.Save();
-                            LevelDB.CreateTables(level);
                         }
                     }
                 } else {
@@ -56,7 +55,6 @@ namespace MCGalaxy {
                     mainLevel = new Level(level, 128, 64, 128);
                     MapGen.Generate(mainLevel, "flat", "", null);
                     mainLevel.Save();
-                    LevelDB.CreateTables(level);
                 }
                 LevelInfo.Loaded.Add(mainLevel);
 
