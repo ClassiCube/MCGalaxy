@@ -154,7 +154,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "%H" + help.Value);
                 return;
             }
-            Player.Message(p, "Could not find option entered.");
+            Player.Message(p, "Unrecognised option \"{0}\".", opt);
         }
         
         static string Suffix(string opt) {

@@ -190,6 +190,7 @@
     <Compile Include="Commands\Chat\CmdWhisper.cs" />
     <Compile Include="Commands\Chat\MessageCmd.cs" />
     <Compile Include="Commands\CmdOverseer.cs" />
+    <Compile Include="Commands\CmdOverseer.SubCommands.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\Command.Helpers.cs" />
     <Compile Include="Commands\CommandList.cs" />

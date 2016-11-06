@@ -16,11 +16,13 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
 namespace MCGalaxy.SQL {
     
+	/// <summary> Simple abstraction for a database management system. </summary>
     public abstract class IDatabaseBackend {
         
         /// <summary> Describes the arguments for a database connection
@@ -46,21 +48,24 @@ namespace MCGalaxy.SQL {
         internal abstract ParameterisedQuery GetStaticParameterised();
         
         
-        // == Higher level functions ==
+        // == Higher level table management functions ==
         
         /// <summary> Returns whether a table (case sensitive) exists by that name. </summary>
         public abstract bool TableExists(string table);
+
+        /// <summary> Returns a list of all tables in this database. </summary>
+        public abstract List<string> AllTables();
+
+        /// <summary> Adds a new coloumn to the given table. </summary>
+        /// <remarks> Note colAfter is only a hint - some database backends ignore this. </remarks>
+        public abstract void AddColumn(string table, string column,
+                                       string colType, string colAfter);
         
         /// <summary> Renames the source table to the given name. </summary>
         public abstract void RenameTable(string srcTable, string dstTable);
         
         /// <summary> Removes all entries from the given table. </summary>
         public abstract void ClearTable(string table);
-        
-        /// <summary> Adds a new coloumn to the given table. </summary>
-        /// <remarks> Note colAfter is only a hint - some database backends ignore this. </remarks>
-        public abstract void AddColumn(string table, string column,
-                                       string colType, string colAfter);
         
         /// <summary> Creates a new table in the database (unless it already exists). </summary>
         public virtual void CreateTable(string table, ColumnDesc[] columns) {
@@ -80,7 +85,10 @@ namespace MCGalaxy.SQL {
             string syntax = "DROP TABLE `" + table + "`";
             Database.Execute(syntax);
         }
+
         
+        // == Higher level functions ==
+
         /// <summary> Inserts/Copies all the rows from the source table into the destination table. </summary>
         /// <remarks> Note: This may work incorrectly if the tables have different schema. </remarks>
         public virtual void CopyAllRows(string srcTable, string dstTable) {
@@ -89,7 +97,6 @@ namespace MCGalaxy.SQL {
             string syntax = "INSERT INTO `" + dstTable + "` SELECT * FROM `" + srcTable + "`";
             Database.Execute(syntax);
         }
-        
         
         /// <summary> Retrieves rows for the given table. </summary>
         /// <remarks> modifier is optional SQL which can be used to retrieve only certain rows,

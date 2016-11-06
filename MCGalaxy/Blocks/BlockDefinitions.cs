@@ -259,7 +259,7 @@ namespace MCGalaxy {
             byte rawSpeed = (byte)(64 * Math.Log(def.Speed, 2) + 128);
             buffer[index++] = def.BlockID;
             NetUtils.WriteAscii(def.Name, buffer, index);
-            index += 64;
+            index += NetUtils.StringSize;
             buffer[index++] = def.CollideType;
             buffer[index++] = rawSpeed;
             

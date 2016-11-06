@@ -94,9 +94,9 @@ namespace MCGalaxy {
         // Environment settings
         [ConfigInt("Weather", "Env", null, 0, 0, 2)]
         public int Weather;
-        [ConfigString("Texture", "Env", null, "", true, null, 64)]
+        [ConfigString("Texture", "Env", null, "", true, null, NetUtils.StringSize)]
         public string terrainUrl = "";
-        [ConfigString("TexturePack", "Env", null, "", true)]
+        [ConfigString("TexturePack", "Env", null, "", true, null, NetUtils.StringSize)]
         public string texturePackUrl = "";
         /// <summary> Color of the clouds (RGB packed into an int). Set to -1 to use client defaults. </summary>
         [ConfigString("CloudColor", "Env", null, "", true)]
