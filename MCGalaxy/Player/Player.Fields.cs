@@ -86,7 +86,6 @@ namespace MCGalaxy {
         public string realName;
         public int warn = 0;
         public byte id;
-        public int DatabaseID = -1;
         public string ip;
         public string color;
         public Group group;
@@ -173,7 +172,11 @@ namespace MCGalaxy {
         public bool voted = false;
         public bool flipHead = false;
         public GameProps Game = new GameProps();
+        
+        /// <summary> Persistent ID of this user in the Players table. </summary>
+        public int UserID;
         public const int SessionIDMask = (1 << 23) - 1;
+        /// <summary> Temp unique ID for this session only. </summary>
         public int SessionID;
 
         //Countdown

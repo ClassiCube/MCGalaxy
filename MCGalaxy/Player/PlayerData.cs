@@ -45,13 +45,25 @@ namespace MCGalaxy {
             Database.Backend.AddRow("Players", "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
                                     "totalDeaths, Money, totalBlocks, totalKicked, TimeSpent",
                                     p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, p.time.ToDBTime());
+            
+            using (DataTable ids = Database.Backend.GetRows("Players", 
+                                                                "ID", "WHERE Name = @0", p.name)) {
+                if (ids.Rows.Count > 0) {
+                    string id = ids.Rows[0]["ID"].ToString();
+                    p.UserID = PlayerData.ParseInt(id);
+                } else {
+                    int index = Server.invalidIds.AddOrReplace(p.name);
+                    p.UserID = int.MaxValue - index;
+                    Server.s.Log("INVALID!! " + p.UserID + " - " + p.name);
+                }
+            }
         }
         
         internal static void Load(DataTable playerDb, Player p) {
             PlayerData data = PlayerData.Fill(playerDb.Rows[0]);
             p.totalLogins = data.Logins + 1;
             p.time = data.TotalTime.ParseDBTime();
-            p.DatabaseID = data.UserID;
+            p.UserID = data.UserID;
             p.firstLogin = data.FirstLogin;
             p.lastLogin = data.LastLogin;
             
@@ -76,7 +88,7 @@ namespace MCGalaxy {
             PlayerData data = new PlayerData();
             data.Name = row["Name"].ToString().Trim();
             data.IP = row["IP"].ToString().Trim();
-            data.UserID = int.Parse(row["ID"].ToString().Trim());
+            data.UserID = ParseInt(row["ID"].ToString());
             
             data.TotalTime = row["TimeSpent"].ToString();
             data.FirstLogin = DateTime.Parse(row["FirstLogin"].ToString());

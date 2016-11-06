@@ -104,10 +104,11 @@ namespace MCGalaxy {
             time = new TimeSpan(0, 0, 0, 1);
             DataTable playerDb = Database.Backend.GetRows("Players", "*", "WHERE Name=@0", name);
             
-            if (playerDb.Rows.Count == 0)
+            if (playerDb.Rows.Count == 0) {
                 InitPlayerStats(playerDb);
-            else
+            } else {
                 LoadPlayerStats(playerDb);
+            }
             
             Server.MainScheduler.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
             CheckState();
@@ -197,8 +198,8 @@ namespace MCGalaxy {
         
         void LoadPlayerStats(DataTable playerDb) {
             PlayerData.Load(playerDb, this);
-            SendMessage("Welcome back " + color + prefix + DisplayName + "%S! " +
-                        "You've been here " + totalLogins + " times!");
+            SendMessage("Welcome back " + FullName + "%S! You've been here " 
+                        + totalLogins + " times!");
         }
         
         void CheckState() {
