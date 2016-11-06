@@ -294,7 +294,7 @@ namespace MCGalaxy.Commands.CPE {
         static void EditHandler(Player p, string[] parts, bool global, string cmd) {
             if (parts.Length <= 3) {
                 if (parts.Length == 1) {
-                    Player.Message(p, "Valid properties: name, collide, speed, toptex, sidetex, " +
+                    Player.Message(p, "Valid properties: name, collide, speed, toptex, alltex, sidetex, " +
                                    "bottomtex, blockslight, sound, fullbright, shape, blockdraw, min, max, " +
                                    "fogdensity, fogred, foggreen, fogblue, fallback, lefttex, righttex, fronttex, backtex");
                 } else {
@@ -327,6 +327,13 @@ namespace MCGalaxy.Commands.CPE {
                 case "top":
                 case "toptex":
                     if (!EditByte(p, value, "Top texture", ref def.TopTex)) return;
+                    break;
+                case "all":
+                case "alltex":
+                    if (!EditByte(p, value, "All textures", ref def.SideTex)) return;
+                    def.LeftTex = def.SideTex; def.RightTex = def.SideTex;
+                    def.FrontTex = def.SideTex; def.BackTex = def.SideTex;
+                    def.TopTex = def.SideTex; def.BottomTex = def.SideTex;
                     break;
                 case "side":
                 case "sidetex":
