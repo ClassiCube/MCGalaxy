@@ -20,7 +20,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using MCGalaxy.Util;
 
-namespace MCGalaxy {
+namespace MCGalaxy.DB {
     
     public unsafe partial class BlockDB {
         

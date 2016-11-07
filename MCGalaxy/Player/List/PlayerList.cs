@@ -53,14 +53,13 @@ namespace MCGalaxy {
         
         /// <summary> Adds or replaces the given name, 
         /// returning the index of the item within the list. </summary>
-        public int AddOrReplace(string p) {
+        public void AddOrReplace(string p) {
             p = p.ToLower();
             lock (locker) {
                 int idx = players.IndexOf(p);
-                if (idx >= 0) return idx;
+                if (idx >= 0) return;
                 
                 players.Add(p);
-                return players.Count - 1;
             }
         }
         

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using MCGalaxy.Blocks;
+using MCGalaxy.DB;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
 using MCGalaxy.Levels.IO;
@@ -474,25 +475,6 @@ namespace MCGalaxy {
                 if (p.level == this) onLevel.Add(p);
             }
             return onLevel;
-        }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct BlockPos {
-            public string name;
-            public int flags, index; // bit 0 = is deleted, bit 1 = is ext, rest bits = time delta
-            public byte rawBlock;
-            
-            public void SetData(byte block, byte extBlock, bool delete) {
-                TimeSpan delta = DateTime.UtcNow.Subtract(Server.StartTime);
-                flags = (int)delta.TotalSeconds << 2;
-                flags |= (byte)(delete ? 1 : 0);
-                
-                if (block == Block.custom_block) {
-                    rawBlock = extBlock; flags |= 2;
-                } else {
-                    rawBlock = block;
-                }
-            }
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]

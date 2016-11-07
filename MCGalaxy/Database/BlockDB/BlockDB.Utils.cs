@@ -19,7 +19,7 @@ using System;
 using System.IO;
 using System.Threading;
 
-namespace MCGalaxy {
+namespace MCGalaxy.DB {
     
     public unsafe partial class BlockDB {
         
@@ -33,13 +33,12 @@ namespace MCGalaxy {
         public string MapName;
         
         /// <summary> The path of this BlockDB's backing file on disc. </summary>
-        public string FilePath { get { return "blockdefs/" + MapName + ".cbdb"; } }
+        public string FilePath { get { return "blockdb/" + MapName + ".cbdb"; } }
 
         /// <summary> Base point in time that all time deltas are offset from.</summary>
         public static DateTime Epoch = new DateTime(2000, 1, 1, 1, 1, 1, DateTimeKind.Utc);
         
         readonly ReaderWriterLockSlim locker;
-        bool resizeRequired;
         public BlockDB(Level lvl) {
             MapName = lvl.name;
             Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
@@ -50,19 +49,18 @@ namespace MCGalaxy {
         /// Also recreates the backing file if dimensions on disc are less than those in memory. </summary>
         void ValidateBackingFile() {
             Vec3U16 dims;
-            using (IDisposable writeLock = locker.AccquireWriteLock()) {
-                if (!File.Exists(FilePath)) {
-                    using (Stream s = File.OpenWrite(FilePath)) {
-                        dims = new Vec3U16(Width, Height, Length);
-                        WriteHeader(s, dims);
-                    }
-                } else {                
-                    using (Stream s = File.OpenRead(FilePath)) {
-                        ReadHeader(s, out dims);
-                    }
-                    if (dims.X < Width || dims.Y < Height || dims.Z < Length) {
-                        ResizeBackingFile();
-                    }
+
+            if (!File.Exists(FilePath)) {
+                using (Stream s = File.OpenWrite(FilePath)) {
+                    dims = new Vec3U16(Width, Height, Length);
+                    WriteHeader(s, dims);
+                }
+            } else {
+                using (Stream s = File.OpenRead(FilePath)) {
+                    ReadHeader(s, out dims);
+                }
+                if (dims.X < Width || dims.Y < Height || dims.Z < Length) {
+                    ResizeBackingFile();
                 }
             }
         }
@@ -74,13 +72,13 @@ namespace MCGalaxy {
         
         
         static void WriteHeader(Stream s, Vec3U16 dims) {
-            byte[] header = new byte[entrySize];
+            byte[] header = new byte[entrySize * 4];
             NetUtils.WriteAscii("CBDB_MCG", header, 0);
             WriteU16(version, header, 8);
             WriteU16(dims.X, header, 10);
             WriteU16(dims.Y, header, 12);
             WriteU16(dims.Z, header, 14);
-            s.Write(header, 0, header.Length);
+            s.Write(header, 0, entrySize);
         }
         
         static void ReadHeader(Stream s, out Vec3U16 dims) {

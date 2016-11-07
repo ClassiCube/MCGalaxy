@@ -50,6 +50,8 @@ namespace MCGalaxy {
         };
                 
         void InitDatabase() {
+            if (!Directory.Exists("blockdb")) Directory.CreateDirectory("blockdb");
+            
             try {
                 Database.Backend.CreateDatabase();
             } catch (Exception e) {

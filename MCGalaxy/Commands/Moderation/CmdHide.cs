@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System.IO;
+
 namespace MCGalaxy.Commands {
     public sealed class CmdHide : Command {
         public override string name { get { return "hide"; } }

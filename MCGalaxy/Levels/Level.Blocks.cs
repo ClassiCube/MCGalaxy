@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Blocks.Physics;
+using MCGalaxy.DB;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
@@ -428,14 +429,22 @@ namespace MCGalaxy {
         }
         
         public void AddToBlockDB(Player p, int index, byte block, byte extBlock, bool delete) {
-            if (!UseBlockDB) return;
-            BlockPos bP = default(BlockPos);
-            bP.name = p.name;
-            bP.index = index;
+            if (!UseBlockDB) return;            
+            BlockDBEntry entry;
+            entry.PlayerID = p.UserID;
+            entry.TimeDelta = (int)DateTime.UtcNow.Subtract(BlockDB.Epoch).TotalSeconds;
+            entry.Index = index;
             
-            bP.SetData(block, extBlock, delete);
+            entry.OldRaw = Block.Invalid; // TODO: need to fill out old block properly
+            entry.NewRaw = delete ? Block.air : block;
+            entry.Flags = 0x1;
+            
+            if (block == Block.custom_block) {
+                entry.Flags |= 0x8000;
+                entry.NewRaw = extBlock;
+            }
             lock (blockCacheLock)
-                blockCache.Add(bP);
+                blockCache.Add(entry);
         }
         
         public void UpdateBlock(Player p, ushort x, ushort y, ushort z, 

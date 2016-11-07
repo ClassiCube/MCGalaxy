@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using MCGalaxy.DB;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
 
@@ -46,14 +47,16 @@ namespace MCGalaxy.Commands {
             byte id = b;
             if (b == Block.custom_block)
                 id = p.level.GetExtTile(x, y, z);
+            Dictionary<int, string> names = new Dictionary<int, string>();
             
             string blockName = p.level.BlockName(b, id);
             Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.", x, y, z, id, blockName);
             bool foundAny = false;
             
-            ListFromDatabase(p, ref foundAny, x, y, z);
-            // TODO: List from BlockDB file
-            ListInMemory(p, ref foundAny, x, y, z);
+            ListFromDatabase(p, ref foundAny, names, x, y, z);
+            p.level.BlockDB.FindChangesAt(x, y, z, 
+                                          entry => OutputEntry(p, ref foundAny, names, entry));
+            ListInMemory(p, ref foundAny, names, x, y, z);
             
             if (!foundAny) Player.Message(p, "No block change records found for this block.");
             OutputMessageBlock(p, b, id, x, y, z);
@@ -63,7 +66,8 @@ namespace MCGalaxy.Commands {
             GC.WaitForPendingFinalizers();
         }
         
-        static void ListFromDatabase(Player p, ref bool foundAny, ushort x, ushort y, ushort z) {
+        static void ListFromDatabase(Player p, ref bool foundAny, Dictionary<int, string> names,
+                                     ushort x, ushort y, ushort z) {
             DataTable Blocks = Database.Backend.GetRows("Block" + p.level.name, "*",
                                                         "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
             DateTime now = DateTime.Now;
@@ -71,13 +75,13 @@ namespace MCGalaxy.Commands {
             for (int i = 0; i < Blocks.Rows.Count; i++) {
                 foundAny = true;
                 DataRow row = Blocks.Rows[i];
-                string user = row["Username"].ToString().Trim();
+                string name = row["Username"].ToString().Trim();
                 DateTime time = DateTime.Parse(row["TimePerformed"].ToString());
                 byte block = byte.Parse(row["Type"].ToString());
                 
                 byte flags = ParseFlags(row["Deleted"].ToString());
                 bool deleted = (flags & 1) != 0, isExt = (flags & 2) != 0;
-                Output(p, user, block, isExt, deleted, now - time);
+                Output(p, name, block, isExt, deleted, now - time);
             }
             Blocks.Dispose();
         }
@@ -89,22 +93,29 @@ namespace MCGalaxy.Commands {
             return byte.Parse(value);
         }
         
-        static void ListInMemory(Player p, ref bool foundAny, ushort x, ushort y, ushort z) {
+        static void OutputEntry(Player p, ref bool foundAny, Dictionary<int, string> names, BlockDBEntry entry) {
+            DateTime now = DateTime.UtcNow;
+            string name = null;
+            if (!names.TryGetValue(entry.PlayerID, out name)) {
+                name = NameConverter.FindName(entry.PlayerID);
+                names[entry.PlayerID] = name;
+            }
+            foundAny = true;
+            
+            DateTime time = BlockDB.Epoch.AddSeconds(entry.TimeDelta);
+            bool deleted = entry.NewRaw == 0;
+            bool extBlock = (entry.Flags & 0x8000) != 0;
+            Output(p, name, entry.NewRaw, extBlock, deleted, now - time);
+        }
+        
+        static void ListInMemory(Player p, ref bool foundAny, Dictionary<int, string> names,
+                                 ushort x, ushort y, ushort z) {
             int index = p.level.PosToInt(x, y, z);
-            DateTime now = DateTime.Now;
             FastList<BlockDBEntry> entries = p.level.blockCache;
             
             for (int i = 0; i < entries.Count; i++) {
-            	if (entries.Items[i].Index != index) continue;
-            	
-                foundAny = true;
-                BlockDBEntry entry = entries.Items[i];
-                string user = entry.name.Trim();
-                DateTime time = BlockDB.Epoch.AddSeconds(entry.TimeDelta);
-                
-                bool deleted = entry.NewRaw != 0;
-                bool extBlock = (entry.Flags & 0x8000) != 0;
-                Output(p, user, entry.NewRaw, extBlock, deleted, now - time);
+                if (entries.Items[i].Index != index) continue;
+                OutputEntry(p, ref foundAny, names, entries.Items[i]);
             }
         }
         

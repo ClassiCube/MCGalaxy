@@ -19,7 +19,7 @@ using System;
 using System.Data;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy {   
+namespace MCGalaxy {
     public class PlayerData {
         public string Name, Color, Title, TitleColor, TotalTime, IP;
         public DateTime FirstLogin, LastLogin;
@@ -46,13 +46,14 @@ namespace MCGalaxy {
                                     "totalDeaths, Money, totalBlocks, totalKicked, TimeSpent",
                                     p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, p.time.ToDBTime());
             
-            using (DataTable ids = Database.Backend.GetRows("Players", 
-                                                                "ID", "WHERE Name = @0", p.name)) {
+            using (DataTable ids = Database.Backend.GetRows("Players",
+                                                            "ID", "WHERE Name = @0", p.name)) {
                 if (ids.Rows.Count > 0) {
                     string id = ids.Rows[0]["ID"].ToString();
                     p.UserID = PlayerData.ParseInt(id);
                 } else {
-                    int index = Server.invalidIds.AddOrReplace(p.name);
+                    Server.invalidIds.AddOrReplace(p.name);
+                    int index = Server.invalidIds.All().IndexOf(p.name.ToLower());
                     p.UserID = int.MaxValue - index;
                 }
             }
@@ -126,7 +127,7 @@ namespace MCGalaxy {
             
             // Try parse color name, then color code
             string parsed = Colors.Parse(col);
-            if (parsed != "") return parsed;        
+            if (parsed != "") return parsed;
             return Colors.Name(col) == "" ? "" : col;
         }
         
