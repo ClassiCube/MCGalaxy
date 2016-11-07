@@ -63,6 +63,7 @@ namespace MCGalaxy {
         const string prev1 = "extra/undoPrevious/", prev2 = @"extra\undoPrevious\";
         const string levelBackup1 = "levels/backups/", levelBackup2 = @"levels\backups\";
         const string levelPrev1 = "levels/prev/", levelPrev2 = @"levels\prev\";
+        const string blockDB1 = "blockdb/", blockDB2 = @"blockdb\";
         
         static List<Uri> GetAllFiles(DirectoryInfo dir, Uri baseUri, bool lite) {
             List<Uri> list = new List<Uri>();
@@ -73,6 +74,7 @@ namespace MCGalaxy {
                     if (lite && (path.Contains(prev1) || path.Contains(prev2))) continue;
                     if (lite && (path.Contains(levelBackup1) || path.Contains(levelBackup2))) continue;
                     if (lite && (path.Contains(levelPrev1) || path.Contains(levelPrev2))) continue;
+                    if (lite && (path.Contains(blockDB1) || path.Contains(blockDB2))) continue;
                     
                     // Make a relative URI
                     Uri uri = baseUri.MakeRelativeUri(new Uri(path));

@@ -22,6 +22,8 @@ using System.Data.Common;
 
 namespace MCGalaxy.SQL {
 
+    public delegate void ReaderCallback(DataTable schema, IDataReader reader);
+    
     public abstract class ParameterisedQuery {
         
         protected Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -29,6 +31,22 @@ namespace MCGalaxy.SQL {
         public void AddParam(string name, object param) { parameters.Add(name, param); }
         
         public void ClearParams() { parameters.Clear(); }
+        
+        public static ParameterisedQuery Create() {
+            return Database.Backend.CreateParameterised();
+        }
+
+        
+        protected abstract bool MultipleSchema { get; }
+        
+        protected abstract IDbConnection CreateConnection(string connString);
+        
+        protected abstract IDbCommand CreateCommand(string query, IDbConnection conn);
+        
+        protected abstract DbDataAdapter CreateDataAdapter(string query, IDbConnection conn);
+        
+        protected abstract IDbDataParameter CreateParameter();
+        
         
         public void Execute(string query, string connString, bool createDB = false) {
             using (IDbConnection conn = CreateConnection(connString)) {
@@ -59,10 +77,23 @@ namespace MCGalaxy.SQL {
             }
         }
         
-        
-        public static ParameterisedQuery Create() {
-            return Database.Backend.CreateParameterised();
-        }        
+        public void ExecuteReader(string query, string connString) {
+            using (IDbConnection conn = CreateConnection(connString)) {
+                conn.Open();
+                if (MultipleSchema)
+                    conn.ChangeDatabase(Server.MySQLDatabaseName);
+                
+                using (IDbCommand cmd = CreateCommand(query, conn)) {
+                    FillParams(cmd);
+                    using (IDataReader reader = cmd.ExecuteReader()) {
+                        while (reader.Read()) {
+                            // TODO: do callback here
+                        }
+                    }
+                }
+                conn.Close();
+            }
+        }
         
         void FillParams(IDbCommand cmd) {
             foreach (var param in parameters) {
@@ -73,15 +104,5 @@ namespace MCGalaxy.SQL {
             }
         }
         
-        
-        protected abstract bool MultipleSchema { get; }
-        
-        protected abstract IDbConnection CreateConnection(string connString);
-        
-        protected abstract IDbCommand CreateCommand(string query, IDbConnection conn);
-        
-        protected abstract DbDataAdapter CreateDataAdapter(string query, IDbConnection conn);
-        
-        protected abstract IDbDataParameter CreateParameter();
     }
 }

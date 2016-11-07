@@ -61,15 +61,30 @@ namespace MCGalaxy.SQL {
         }
 
 
-        internal static void Execute(ParameterisedQuery query, string queryString,
-                                     bool createDB, params object[] args) {
+        internal static void Execute(ParameterisedQuery query, string sql, bool createDB, params object[] args) {
+            DoDatabaseCall(query, sql, createDB, null, args);
+        }
+        
+        internal static DataTable Fill(ParameterisedQuery query, string sql, params object[] args) {
+            using (DataTable results = new DataTable("toReturn")) {
+            	DoDatabaseCall(query, sql, false, results, args);
+                return results;
+            }
+        }
+        
+        static void DoDatabaseCall(ParameterisedQuery query, string sql, bool createDB, 
+                                   DataTable results, params object[] args) {
             BindParams(query, args);
             string connString = Backend.ConnectionString;
             Exception e = null;
             
             for (int i = 0; i < 10; i++) {
                 try {
-                    query.Execute(queryString, connString, createDB);
+                    if (results == null) {
+                        query.Execute(sql, connString, createDB);
+                    } else {
+                        query.Fill(sql, connString, results);
+                    }
                     query.ClearParams();
                     return;
                 } catch (Exception ex) {
@@ -77,36 +92,11 @@ namespace MCGalaxy.SQL {
                 }
             }
             
-            File.AppendAllText("MySQL_error.log", DateTime.Now + " " + queryString + "\r\n");
+            File.AppendAllText("MySQL_error.log", DateTime.Now + " " + sql + "\r\n");
             Server.ErrorLog(e);
-            query.ClearParams();
-        }
-        
-        internal static DataTable Fill(ParameterisedQuery query, string queryString,
-                                       params object[] args) {
-            BindParams(query, args);
-            string connString = Backend.ConnectionString;
-            Exception e = null;
-            
-            using (DataTable results = new DataTable("toReturn")) {
-                for (int i = 0; i < 10; i++) {
-                    try {
-                        query.Fill(queryString, connString, results);
-                        query.ClearParams();
-                        return results;
-                    } catch (Exception ex) {
-                        e = ex; // try yet again
-                    }
-                }
-                
-                File.AppendAllText("MySQL_error.log", DateTime.Now + " " + queryString + "\r\n");
-                Server.ErrorLog(e);
-                query.ClearParams();
-                return results;
-            }
         }
 
-            
+        
         static readonly object idsLock = new object();
         static string[] ids = null;
         static void BindParams(ParameterisedQuery query, object[] args) {
