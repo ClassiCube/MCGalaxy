@@ -35,6 +35,9 @@ namespace MCGalaxy.DB {
         /// <summary> The path of this BlockDB's backing file on disc. </summary>
         public string FilePath { get { return "blockdb/" + MapName + ".cbdb"; } }
 
+        /// <summary> The path of this BlockDB's temp backing file on disc for resizing. </summary>
+        public string TempPath { get { return "blockdb/" + MapName + ".temp"; } }
+        
         /// <summary> Base point in time that all time deltas are offset from.</summary>
         public static DateTime Epoch = new DateTime(2000, 1, 1, 1, 1, 1, DateTimeKind.Utc);
         
@@ -65,9 +68,38 @@ namespace MCGalaxy.DB {
             }
         }
         
-        void ResizeBackingFile() {
-            Server.s.Log("Resizing BlockDB for " + MapName, true);
-            throw new NotImplementedException(); // TODO: resize backing file
+        unsafe void ResizeBackingFile() {
+            Server.s.Log("Resizing BlockDB for " + MapName, true);            
+            using (Stream src = File.OpenRead(FilePath), dst = File.Create(TempPath)) {
+                Vec3U16 dims;
+                ReadHeader(src, out dims);
+                WriteHeader(dst, new Vec3U16(Width, Height, Length));
+                
+                byte[] bulk = new byte[bulkEntries * entrySize];
+                fixed (byte* ptr = bulk) {
+                    int entries = (int)(src.Length / entrySize) - 1;
+                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
+                    
+                    while (entries > 0) {
+                        int read = Math.Min(entries, bulkEntries);
+                        ReadFully(src, bulk, read * entrySize);                        
+                        
+                        for (int i = 0; i < read; i++) {
+                            int index = entryPtr[i].Index;
+                            int x = index % dims.X;
+                            int y = (index / dims.X) / dims.Z;
+                            int z = (index / dims.X) % dims.Z;
+                            entryPtr[i].Index = (y * Length + z) * Width + x;
+                        }
+                        
+                        dst.Write(bulk, 0, read * entrySize);
+                        entries -= read;
+                    }
+                }
+            }
+            
+            File.Delete(FilePath);
+            File.Move(TempPath, FilePath);
         }
         
         

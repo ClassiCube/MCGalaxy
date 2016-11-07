@@ -62,10 +62,6 @@ namespace MCGalaxy {
             if (Width < 16) Width = 16;
             if (Height < 16) Height = 16;
             if (Length < 16) Length = 16;
-            BlockDB = new BlockDB(this);
-            
-            VisitAccess = new LevelAccess(this, true);
-            BuildAccess = new LevelAccess(this, false);
             
             #pragma warning disable 0612
             width = Width;
@@ -78,24 +74,27 @@ namespace MCGalaxy {
                 CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
             CustomBlockProps = new BlockProps[256];
             for (int i = 0; i < CustomBlockProps.Length; i++)
-                CustomBlockProps[i] = BlockDefinition.GlobalProps[i];
-            
+                CustomBlockProps[i] = BlockDefinition.GlobalProps[i];            
             
             name = n;
+            BlockDB = new BlockDB(this);
             EdgeLevel = (short)(y / 2);
             CloudsHeight = (short)(y + 2);
+            
             blocks = new byte[Width * Height * Length];
             ChunksX = (Width + 15) >> 4;
             ChunksY = (Height + 15) >> 4;
             ChunksZ = (Length + 15) >> 4;
-            CustomBlocks = new byte[ChunksX * ChunksY * ChunksZ][];
-            ZoneList = new List<Zone>();
+            CustomBlocks = new byte[ChunksX * ChunksY * ChunksZ][];           
 
             spawnx = (ushort)(Width / 2);
             spawny = (ushort)(Height * 0.75f);
             spawnz = (ushort)(Length / 2);
-            rotx = 0;
-            roty = 0;
+            rotx = 0; roty = 0;
+            
+            ZoneList = new List<Zone>();
+            VisitAccess = new LevelAccess(this, true);
+            BuildAccess = new LevelAccess(this, false);
             listCheckExists = new SparseBitSet(Width, Height, Length);
             listUpdateExists = new SparseBitSet(Width, Height, Length);
         }
