@@ -22,7 +22,7 @@ using System.Data.Common;
 
 namespace MCGalaxy.SQL {
 
-    public delegate void ReaderCallback(DataTable schema, IDataReader reader);
+    public delegate void ReaderCallback(IDataReader reader);
     
     public abstract class ParameterisedQuery {
         
@@ -77,7 +77,7 @@ namespace MCGalaxy.SQL {
             }
         }
         
-        public void ExecuteReader(string query, string connString) {
+        public void ExecuteReader(string query, string connString, ReaderCallback callback) {
             using (IDbConnection conn = CreateConnection(connString)) {
                 conn.Open();
                 if (MultipleSchema)
@@ -86,9 +86,7 @@ namespace MCGalaxy.SQL {
                 using (IDbCommand cmd = CreateCommand(query, conn)) {
                     FillParams(cmd);
                     using (IDataReader reader = cmd.ExecuteReader()) {
-                        while (reader.Read()) {
-                            // TODO: do callback here
-                        }
+                        while (reader.Read()) { callback(reader); }
                     }
                 }
                 conn.Close();
@@ -102,7 +100,6 @@ namespace MCGalaxy.SQL {
                 dParam.Value = param.Value;
                 cmd.Parameters.Add(dParam);
             }
-        }
-        
+        }     
     }
 }

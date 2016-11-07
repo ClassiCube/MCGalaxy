@@ -29,62 +29,70 @@ namespace MCGalaxy.SQL {
         }
         
         [Obsolete("Use Execute() method instead.")]
-        public static void executeQuery(string queryString, bool createDB = false) {
+        public static void executeQuery(string sql, bool createDB = false) {
             ParameterisedQuery query = Backend.GetStaticParameterised();
-            Execute(query, queryString, createDB, null);
+            Execute(query, sql, createDB, null);
         }
         
-        public static void Execute(string queryString) {
+        public static void Execute(string sql) {
             ParameterisedQuery query = Backend.GetStaticParameterised();
-            Execute(query, queryString, false, null);
+            Execute(query, sql, false, null);
         }
         
-        public static void Execute(string queryString, params object[] args) {
+        public static void Execute(string sql, params object[] args) {
             ParameterisedQuery query = Backend.CreateParameterised();
-            Execute(query, queryString, false, args);
+            Execute(query, sql, false, args);
+        }
+        
+        public static void ExecuteReader(string sql, ReaderCallback callback, params object[] args) {
+            ParameterisedQuery query = Backend.CreateParameterised();
+            DoDatabaseCall(query, sql, false, null, callback, args);
         }
         
         [Obsolete("Use Fill() method instead.")]
-        public static DataTable fillData(string queryString, bool skipError = false) {
+        public static DataTable fillData(string sql, bool skipError = false) {
             ParameterisedQuery query = Backend.GetStaticParameterised();
-            return Fill(query, queryString, null);
+            return Fill(query, sql, null);
         }
         
-        public static DataTable Fill(string queryString) {
+        public static DataTable Fill(string sql) {
             ParameterisedQuery query = Backend.GetStaticParameterised();
-            return Fill(query, queryString, null);
+            return Fill(query, sql, null);
         }
         
-        public static DataTable Fill(string queryString, params object[] args) {
+        public static DataTable Fill(string sql, params object[] args) {
             ParameterisedQuery query = Backend.CreateParameterised();
-            return Fill(query, queryString, args);
+            return Fill(query, sql, args);
         }
 
 
         internal static void Execute(ParameterisedQuery query, string sql, bool createDB, params object[] args) {
-            DoDatabaseCall(query, sql, createDB, null, args);
+            DoDatabaseCall(query, sql, createDB, null, null, args);
         }
         
         internal static DataTable Fill(ParameterisedQuery query, string sql, params object[] args) {
             using (DataTable results = new DataTable("toReturn")) {
-            	DoDatabaseCall(query, sql, false, results, args);
+                DoDatabaseCall(query, sql, false, results, null, args);
                 return results;
             }
         }
         
         static void DoDatabaseCall(ParameterisedQuery query, string sql, bool createDB, 
-                                   DataTable results, params object[] args) {
+                                   DataTable results, ReaderCallback callback, params object[] args) {
             BindParams(query, args);
             string connString = Backend.ConnectionString;
             Exception e = null;
             
             for (int i = 0; i < 10; i++) {
                 try {
-                    if (results == null) {
+                    if (callback != null) {
+                        query.ExecuteReader(sql, connString, callback);
+                    } else if (results == null) {
                         query.Execute(sql, connString, createDB);
                     } else {
                         query.Fill(sql, connString, results);
                     }
+                    
                     query.ClearParams();
                     return;
                 } catch (Exception ex) {

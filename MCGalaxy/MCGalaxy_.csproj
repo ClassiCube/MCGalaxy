@@ -595,8 +595,9 @@
     <Compile Include="Database\Database.cs" />
     <Compile Include="Games\CTF\CtfGame.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
-    <Compile Include="Server\Backup.cs" />
-    <Compile Include="Server\BackupDB.cs" />
+    <Compile Include="Server\Backup\Backup.cs" />
+    <Compile Include="Server\Backup\BackupDB.cs" />
+    <Compile Include="Server\Backup\TableDumper.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="Network\IBeat.cs" />
     <Compile Include="Levels\Level.cs" />
@@ -738,6 +739,7 @@
     <Folder Include="CorePlugin" />
     <Folder Include="Levels\IO\Importers" />
     <Folder Include="Levels\IO\Exporters" />
+    <Folder Include="Server\Backup" />
     <Folder Include="Server\Tasks" />
     <Folder Include="util\Math" />
     <Folder Include="Player\Group" />
