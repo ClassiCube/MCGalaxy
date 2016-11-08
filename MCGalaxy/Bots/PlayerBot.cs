@@ -131,12 +131,11 @@ namespace MCGalaxy {
         
         public static PlayerBot Find(string name) {
             PlayerBot match = null; int matches = 0;
-            name = name.ToLower();
             PlayerBot[] bots = Bots.Items;
 
             foreach (PlayerBot bot in bots) {
-                if (bot.name.ToLower() == name) return bot;
-                if (bot.name.ToLower().Contains(name)) {
+            	if (bot.name.CaselessEq(name)) return bot;
+                if (bot.name.CaselessContains(name)) {
                     match = bot; matches++;
                 }
             }

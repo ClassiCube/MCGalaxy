@@ -17,12 +17,34 @@
  */
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
+using System.Threading;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.DB {
     
-    public unsafe partial class BlockDB {
+    public unsafe sealed class BlockDB {
+        
+        public ushort Width, Height, Length;
+        
+        /// <summary> The map/level name associated with this BlockDB. </summary>
+        public string MapName;
+        
+        /// <summary> Base point in time that all time deltas are offset from.</summary>
+        public static DateTime Epoch = new DateTime(2000, 1, 1, 1, 1, 1, DateTimeKind.Utc);
+
+        /// <summary> The path of this BlockDB's backing file on disc. </summary>
+        public string FilePath { get { return "blockdb/" + MapName + ".cbdb"; } }
+
+        /// <summary> The path of this BlockDB's temp backing file on disc for resizing. </summary>
+        public string TempPath { get { return "blockdb/" + MapName + ".temp"; } }
+        
+        readonly ReaderWriterLockSlim locker;
+        public BlockDB(Level lvl) {
+            MapName = lvl.name;
+            Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
+            locker = new ReaderWriterLockSlim();
+        }
+
         
         public void AppendEntries(ref FastList<BlockDBEntry> entries, object lockObj) {
             using (IDisposable writeLock = locker.AccquireWriteLock()) {
@@ -31,31 +53,14 @@ namespace MCGalaxy.DB {
                 ValidateBackingFile();
                 using (Stream s = File.OpenWrite(FilePath)) {
                     s.Position = s.Length;
-                    WriteEntries(s, entries);
+                    BlockDBFile.WriteEntries(s, entries);
                     
                     lock (lockObj)
                         entries = new FastList<BlockDBEntry>();
                 }
             }
         }
-        
-        void WriteEntries(Stream s, FastList<BlockDBEntry> entries) {
-            byte[] bulk = new byte[bulkEntries * entrySize];
-            
-            for (int i = 0; i < entries.Count; i += bulkEntries) {
-                int count = Math.Min(bulkEntries, entries.Count - i);
-                for (int j = 0; j < count; j++) {
-                    BlockDBEntry entry = entries.Items[i + j];
-                    WriteI32(entry.PlayerID, bulk, j * entrySize);
-                    WriteI32(entry.TimeDelta, bulk, j * entrySize + 4);
-                    WriteI32(entry.Index, bulk, j * entrySize + 8);
-                    bulk[j * entrySize + 12] = entry.OldRaw;
-                    bulk[j * entrySize + 13] = entry.NewRaw;
-                    WriteU16(entry.Flags, bulk, j * entrySize + 14);
-                }
-                s.Write(bulk, 0, count * entrySize);
-            }
-        }
+
         
         /// <summary> Finds all block changes which affect the given coordinates. </summary>
         public void FindChangesAt(ushort x, ushort y, ushort z, Action<BlockDBEntry> output) {
@@ -64,16 +69,15 @@ namespace MCGalaxy.DB {
                 
                 using (Stream s = File.OpenRead(FilePath)) {
                     Vec3U16 dims;
-                    ReadHeader(s, out dims);
+                    BlockDBFile.ReadHeader(s, out dims);
                     if (x >= dims.X || y >= dims.Y || z >= dims.Z) return;
                     
                     int index = (y * dims.Z + z) * dims.X + x;
-                    FindChangesAt(s, index, output);
+                    BlockDBFile.FindChangesAt(s, index, output);
                 }
             }
         }
-        
-        
+                
         /// <summary> Finds all block changes by the given player. </summary>
         public void FindChangesBy(int id, Action<BlockDBEntry> output, out Vec3U16 dims) {
             dims = default(Vec3U16);
@@ -81,8 +85,8 @@ namespace MCGalaxy.DB {
                 if (!File.Exists(FilePath)) return;
                 
                 using (Stream s = File.OpenRead(FilePath)) {
-                    ReadHeader(s, out dims);
-                    FindChangesBy(s, id, output);
+                    BlockDBFile.ReadHeader(s, out dims);
+                    BlockDBFile.FindChangesBy(s, id, output);
                 }
             }
         }
@@ -94,96 +98,38 @@ namespace MCGalaxy.DB {
                 if (!File.Exists(FilePath)) return;
                 
                 using (Stream s = File.OpenRead(FilePath)) {
-                    ReadHeader(s, out dims);
-                    FindChangesBy(s, ids, output);
+                    BlockDBFile.ReadHeader(s, out dims);
+                    BlockDBFile.FindChangesBy(s, ids, output);
                 }
             }
         }
         
-        
-        // NOTE: These are duplicated since it is important to be as performant as possible,
-        // since the BlockDB can have millions and millions of entries
-        static void FindChangesAt(Stream s, int index, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[bulkEntries * entrySize];
-            fixed (byte* ptr = bulk) {
-                int entries = (int)(s.Length / entrySize) - 1;
-                while (entries > 0) {
-                    int read = Math.Min(entries, bulkEntries);
-                    ReadFully(s, bulk, read * entrySize);
-                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
-                    
-                    for (int i = 0; i < read; i++) {
-                        if (entryPtr->Index == index) {
-                            output(*entryPtr);
-                        }
-                        entryPtr++;
-                    }
-                    entries -= read;
-                }
+        /// <summary> Deletes the backing file on disc if it exists. </summary>
+        public void DeleteBackingFile() {
+            using (IDisposable writeLock = locker.AccquireWriteLock()) {
+                if (!File.Exists(FilePath)) return;
+                File.Delete(FilePath);
             }
         }
-        
-        static void FindChangesBy(Stream s, int id, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[bulkEntries * entrySize];
-            fixed (byte* ptr = bulk) {
-                int entries = (int)(s.Length / entrySize) - 1;
-                while (entries > 0) {
-                    int read = Math.Min(entries, bulkEntries);
-                    ReadFully(s, bulk, read * entrySize);
-                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
-                    
-                    for (int i = 0; i < read; i++) {
-                        if (entryPtr->PlayerID == id) {
-                            output(*entryPtr);
-                        }
-                        entryPtr++;
-                    }
-                    entries -= read;
-                }
-            }
-        }
-        
-        static void FindChangesBy(Stream s, int[] ids, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[bulkEntries * entrySize];
-            fixed (byte* ptr = bulk) {
-                int entries = (int)(s.Length / entrySize) - 1;
-                while (entries > 0) {
-                    int read = Math.Min(entries, bulkEntries);
-                    ReadFully(s, bulk, read * entrySize);
-                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
-                    
-                    for (int i = 0; i < read; i++) {
-                        for (int j = 0; j < ids.Length; j++) {
-                            if (entryPtr->PlayerID == ids[j]) {
-                                output(*entryPtr); break;
-                            }
-                        }
-                        entryPtr++;
-                    }
-                    entries -= read;
-                }
-            }
-        }
-    }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct BlockDBEntry {
-        /// <summary> ID within Players table of player who made the change. </summary>
-        public int PlayerID;
-        
-        /// <summary> Seconds since BlockDB.Epoch that this change occured at. </summary>
-        public int TimeDelta;
-        
-        /// <summary> Packed coordinates of where the change occured at. </summary>
-        public int Index;
-        
-        /// <summary> Raw block that was previously there before the change. </summary>
-        public byte OldRaw;
-        
-        /// <summary> Raw block that is now there due to the change. </summary>
-        public byte NewRaw;
-        
-        /// <summary> Flags for the block change. </summary>
-        public ushort Flags;
+        /// <summary> Checks if the backing file exists on disc, and if not, creates it.
+        /// Also recreates the backing file if dimensions on disc are less than those in memory. </summary>
+        void ValidateBackingFile() {
+            Vec3U16 dims;
+
+            if (!File.Exists(FilePath)) {
+                using (Stream s = File.OpenWrite(FilePath)) {
+                    dims = new Vec3U16(Width, Height, Length);
+                    BlockDBFile.WriteHeader(s, dims);
+                }
+            } else {
+                using (Stream s = File.OpenRead(FilePath)) {
+                    BlockDBFile.ReadHeader(s, out dims);
+                }
+                if (dims.X < Width || dims.Y < Height || dims.Z < Length) {
+                    BlockDBFile.ResizeBackingFile(this);
+                }
+            }
+        }
     }
 }

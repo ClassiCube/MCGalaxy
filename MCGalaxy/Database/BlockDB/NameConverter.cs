@@ -31,7 +31,7 @@ namespace MCGalaxy.DB {
                 return invalid[int.MaxValue - id];
             
             using (DataTable ids = Database.Backend.GetRows("Players", "Name", "WHERE ID=@0", id)) {
-                if (ids.Rows.Count == 0) return null;
+                if (ids.Rows.Count == 0) return "ID#" + id;
                 return ids.Rows[0]["Name"].ToString();
             }
         }

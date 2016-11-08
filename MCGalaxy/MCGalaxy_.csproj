@@ -408,7 +408,8 @@
     <Compile Include="CorePlugin\ConnectHandler.cs" />
     <Compile Include="Database\Backends\SQLite.cs" />
     <Compile Include="Database\BlockDB\BlockDB.cs" />
-    <Compile Include="Database\BlockDB\BlockDB.Utils.cs" />
+    <Compile Include="Database\BlockDB\BlockDB.File.cs" />
+    <Compile Include="Database\BlockDB\BlockDBEntry.cs" />
     <Compile Include="Database\BlockDB\NameConverter.cs" />
     <Compile Include="Database\ColumnDesc.cs" />
     <Compile Include="Database\IDatabaseBackend.cs" />

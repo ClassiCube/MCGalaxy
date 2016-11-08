@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands {
             bool foundAny = false;
             
             ListFromDatabase(p, ref foundAny, names, x, y, z);
-            p.level.BlockDB.FindChangesAt(x, y, z, 
+            p.level.BlockDB.FindChangesAt(x, y, z,
                                           entry => OutputEntry(p, ref foundAny, names, entry));
             ListInMemory(p, ref foundAny, names, x, y, z);
             
@@ -68,22 +68,22 @@ namespace MCGalaxy.Commands {
         
         static void ListFromDatabase(Player p, ref bool foundAny, Dictionary<int, string> names,
                                      ushort x, ushort y, ushort z) {
-            DataTable Blocks = Database.Backend.GetRows("Block" + p.level.name, "*",
-                                                        "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
-            DateTime now = DateTime.Now;
-            
-            for (int i = 0; i < Blocks.Rows.Count; i++) {
-                foundAny = true;
-                DataRow row = Blocks.Rows[i];
-                string name = row["Username"].ToString().Trim();
-                DateTime time = DateTime.Parse(row["TimePerformed"].ToString());
-                byte block = byte.Parse(row["Type"].ToString());
-                
-                byte flags = ParseFlags(row["Deleted"].ToString());
-                bool deleted = (flags & 1) != 0, isExt = (flags & 2) != 0;
-                Output(p, name, block, isExt, deleted, now - time);
+            if (!Database.TableExists("Block" + p.level.name)) return;
+            using (DataTable Blocks = Database.Backend.GetRows("Block" + p.level.name, "*",
+                                                               "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z)) {
+                DateTime now = DateTime.Now;                
+                for (int i = 0; i < Blocks.Rows.Count; i++) {
+                    foundAny = true;
+                    DataRow row = Blocks.Rows[i];
+                    string name = row["Username"].ToString().Trim();
+                    DateTime time = DateTime.Parse(row["TimePerformed"].ToString());
+                    byte block = byte.Parse(row["Type"].ToString());
+                    
+                    byte flags = ParseFlags(row["Deleted"].ToString());
+                    bool deleted = (flags & 1) != 0, isExt = (flags & 2) != 0;
+                    Output(p, name, block, isExt, deleted, now - time);
+                }
             }
-            Blocks.Dispose();
         }
         
         static byte ParseFlags(string value) {
@@ -104,7 +104,7 @@ namespace MCGalaxy.Commands {
             
             DateTime time = BlockDB.Epoch.AddSeconds(entry.TimeDelta);
             bool deleted = entry.NewRaw == 0;
-            bool extBlock = (entry.Flags & 0x8000) != 0;
+            bool extBlock = (entry.Flags & BlockDBFlags.NewCustom) != 0;
             Output(p, name, entry.NewRaw, extBlock, deleted, now - time);
         }
         

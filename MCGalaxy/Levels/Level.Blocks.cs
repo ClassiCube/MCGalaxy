@@ -437,10 +437,10 @@ namespace MCGalaxy {
             
             entry.OldRaw = Block.Invalid; // TODO: need to fill out old block properly
             entry.NewRaw = delete ? Block.air : block;
-            entry.Flags = 0x1;
+            entry.Flags = BlockDBFlags.ManualPlace;
             
             if (block == Block.custom_block) {
-                entry.Flags |= 0x8000;
+                entry.Flags |= BlockDBFlags.NewCustom;
                 entry.NewRaw = extBlock;
             }
             lock (blockCacheLock)

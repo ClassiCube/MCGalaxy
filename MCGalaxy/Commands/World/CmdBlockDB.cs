@@ -17,22 +17,21 @@
  */
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands.World {    
-    public sealed class CmdBlockDB : Command {        
+namespace MCGalaxy.Commands.World {
+    public sealed class CmdBlockDB : Command {
         public override string name { get { return "blockdb"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("clearblockchanges", "clear"), 
+            get { return new [] { new CommandAlias("clearblockchanges", "clear"),
                     new CommandAlias("cbc", "clear") }; }
         }
 
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length == 1 && Player.IsSuper(p)) { SuperRequiresArgs(p, "map name"); return; }
-            args[0] = args[0].ToLower();
             
             Level lvl = p == null ? null : p.level;
             if (args.Length > 1) {
@@ -40,15 +39,17 @@ namespace MCGalaxy.Commands.World {
                 if (lvl == null) return;
             }
             
-            if (args[0] == "clear") {
+            if (args[0].CaselessEq("clear")) {
                 Player.Message(p, "Clearing &cALL %Sblock changes for &d{0}...", lvl.name);
-                Database.Backend.ClearTable("Block" + lvl.name);
+                if (Database.TableExists("Block" + lvl.name))
+                    Database.Backend.ClearTable("Block" + lvl.name);
+                lvl.BlockDB.DeleteBackingFile();
                 Player.Message(p, "Cleared &cALL %Sblock changes for &d" + lvl.name);
-            } else if (args[0] == "disable") {
+            } else if (args[0].CaselessEq("disable")) {
                 lvl.UseBlockDB = false;
                 Player.Message(p, "&cDisabled %Srecording further block changes for &d" + lvl.name);
                 Level.SaveSettings(lvl);
-            } else if (args[0] == "enable") {
+            } else if (args[0].CaselessEq("enable")) {
                 lvl.UseBlockDB = true;
                 Player.Message(p, "&aEnabled %Srecording further block changes for &d" + lvl.name);
                 Level.SaveSettings(lvl);
