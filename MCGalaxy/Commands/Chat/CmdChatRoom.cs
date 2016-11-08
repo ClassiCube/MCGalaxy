@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] parts = message.ToLower().Split(' ');
             
-            if (parts.Length == 0) {
+            if (message == "") {
                 if (Server.Chatrooms.Count == 0) {
                     Player.Message(p, "There are currently no rooms");
                 } else {

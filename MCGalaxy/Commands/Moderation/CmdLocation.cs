@@ -34,21 +34,21 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             string ip = "";
-            Player who = PlayerInfo.Find(message);
-            string targetName = message;
+            Player match = PlayerInfo.FindMatches(p, message);
+            string target = message;
             
-            if (who == null) {
-                Player.Message(p, "&eNo online player \"{0}\", searching database..", message);
-                targetName = PlayerInfo.FindOfflineIPMatches(p, message, out ip);
-                if (targetName == null) return;
+            if (match == null) {
+                Player.Message(p, "Searching PlayerDB for \"{0}\"..", message);
+                target = PlayerInfo.FindOfflineIPMatches(p, message, out ip);
+                if (target == null) return;
             } else {
-                targetName = who.name; ip = who.ip;
+                target = match.name; ip = match.ip;
             }
             
             if (Player.IPInPrivateRange(ip)) {
                 Player.Message(p, Colors.red + "Player has an internal IP, cannot trace"); return;
             }        
-            Player.Message(p, "The IP of &a" + targetName + " %Shas been traced to: &b" + GetIPLocation(ip));
+            Player.Message(p, "The IP of &a" + target + " %Shas been traced to: &b" + GetIPLocation(ip));
         }
         
         static string GetIPLocation(string IP) {

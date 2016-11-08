@@ -77,7 +77,7 @@ namespace MCGalaxy {
             
             if (matches > 1) return null;
             if (target != null) return target.name;        
-            Player.Message(p, "Searching PlayerDB..");
+            Player.Message(p, "Searching PlayerDB for \"{0}\"..", name);
             return FindOfflineNameMatches(p, name);
         }
         

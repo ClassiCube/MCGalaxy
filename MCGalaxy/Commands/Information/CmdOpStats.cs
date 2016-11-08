@@ -32,20 +32,20 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             string end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            string start = "thismonth";
+            string start = "thismonth", name = null;
             string[] args = message.Split(' ');
             
-            Player target = null;
             if (message == "" || ValidTimespan(message.ToLower())) {
                 if (p == null) { Help(p); return; }
-                target = p;
-                if (message != "")
-                    start = message.ToLower();
+                
+                name = p.name;
+                if (message != "") start = message.ToLower();
             } else {
-                target = PlayerInfo.Find(args[0]);
+                name = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
                 if (args.Length > 1 && ValidTimespan(args[1].ToLower()))
                     start = args[1].ToLower();
             }
+            if (name == null) return;
             
             if (start == "today") {
                 start = DateTime.Now.ToString("yyyy-MM-dd 00:00:00");
@@ -61,14 +61,6 @@ namespace MCGalaxy.Commands {
                 start = "0000-00-00 00:00:00";
             } else {
                 Help(p); return;
-            }
-            
-            string name = null;
-            if (target != null) {
-                name = target.name;
-            } else {
-                name = PlayerInfo.FindOfflineNameMatches(p, args[0]);
-                if (name == null) return;
             }
 
             Player.Message(p, "OpStats for {0} %Ssince {1}",
