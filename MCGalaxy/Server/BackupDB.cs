@@ -91,16 +91,16 @@ namespace MCGalaxy {
                 }
                 sql.WriteLine(");");
             } else {
-                using (DataTable tableSQL = Database.Fill("SELECT sql FROM sqlite_master" +
-                                                          " WHERE tbl_name LIKE '" + tableName + "'" +
+                using (DataTable tableSQL = Database.Fill("SELECT sql FROM sqlite_master WHERE tbl_name LIKE @0" +
                                                           " AND type = 'table' AND name NOT LIKE 'sqlite_%'" +
-                                                          " ORDER BY substr(type,2,1), name"))
+                                                          " ORDER BY substr(type,2,1), name", tableName))
                 {
                     //just print out the data in the table.
                     foreach (DataRow row in tableSQL.Rows) {
-                        string tableSQLString = row[0].ToString();
-                        sql.WriteLine(tableSQLString.Replace(" " + tableName, " `" + tableName + "`").Replace("CREATE TABLE `" + tableName + "`", "CREATE TABLE IF NOT EXISTS `" + tableName + "`") + ";");
-                        //We parse this ourselves to find the actual types.
+                        string sqlSyntax = row[0].ToString();
+                        sqlSyntax = sqlSyntax.Replace(" " + tableName, " `" + tableName + "`");
+                        sqlSyntax = sqlSyntax.Replace("CREATE TABLE `" + tableName + "`", "CREATE TABLE IF NOT EXISTS `" + tableName + "`");
+                        sql.WriteLine(sqlSyntax + ";");
                     }
                 }
             }
