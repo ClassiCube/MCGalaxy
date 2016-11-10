@@ -27,7 +27,7 @@ namespace MCGalaxy {
         bool gottenRows;
         string table, insertCols;
         internal StreamWriter sql;
-        bool[] rowTypes;
+        Type[] rowTypes;
         
         public void DumpTable(StreamWriter sql, string table) {
             gottenRows = false;
@@ -48,11 +48,10 @@ namespace MCGalaxy {
             sql.WriteLine();
 
             string[] colNames = new string[reader.FieldCount];
-            rowTypes = new bool[reader.FieldCount];
+            rowTypes = new Type[reader.FieldCount];
             for (int i = 0; i < reader.FieldCount; i++) {
                 colNames[i] = reader.GetName(i);
-                Type type = reader.GetFieldType(i);
-                rowTypes[i] = type == typeof(string) || type == typeof(DateTime);
+                rowTypes[i] = reader.GetFieldType(i);
             }
             insertCols = FormatInsertColumns(colNames, table);
             gottenRows = true;
@@ -60,22 +59,26 @@ namespace MCGalaxy {
         
         void DumpRow(IDataReader reader) {
             if (!gottenRows) MakeInsertFormat(reader);
-            sql.WriteLine();
             sql.WriteLine(insertCols);
-            // TODO: MySQL and SQLite have different date formats :/
-            // TODO: Try to use GetInt32 when possible
 
-            for (int col = 0; col < rowTypes.Length; col++) {
-                //The values themselves can be integers or strings, or null
+            //The values themselves can be integers or strings, or null
+            for (int col = 0; col < rowTypes.Length; col++) {                
                 if (reader.IsDBNull(col)) {
                     sql.Write("NULL");
-                } else if (rowTypes[col]) {
+                } else if (rowTypes[col] == typeof(string)) {
                     string value = reader.GetString(col);
                     if (value.IndexOf('\'') >= 0) // escape '
                         value = value.Replace("'", "''");
                     sql.Write("'" + value + "'");
+                } else if (rowTypes[col] == typeof(DateTime)) {
+                    if (Server.useMySQL) {
+                        DateTime date = reader.GetDateTime(col);
+                        sql.Write("'" + date.ToString("yyyy-MM-dd HH:mm:ss") + "'");
+                    } else {
+                        sql.Write("'" + reader.GetString(col) + "'"); // GetDateTime is extremely slow so avoid it
+                    }
                 } else {
-                    long value = reader.GetInt64(col);
+                    long value = reader.GetInt64(col); // TODO: try to use GetInt32 where possible
                     sql.Write(value);
                 }
                 sql.Write((col < rowTypes.Length - 1 ? ", " : ");"));
