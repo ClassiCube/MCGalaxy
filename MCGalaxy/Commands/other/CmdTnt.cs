@@ -90,12 +90,8 @@ namespace MCGalaxy.Commands
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/tnt [small/big/nuke] - Creates exploding TNT (with Physics 3).");
-            Player.Message(p, "Big and Nuke TNT is reserved for " + Group.findPermInt(CommandOtherPerms.GetPerm(this, 3)).name + "+");
-            if (CheckExtraPerm(p, 2)) {
-                Player.Message(p, "/tnt allow - Allows the use of tnt server-wide.");
-                Player.Message(p, "/tnt disallow - Disallows the use of tnt server-wide.");
-            }
+            Player.Message(p, "%T/tnt small/big/nuke %H- Creates exploding TNT (if physics on).");
+            Player.Message(p, "%T/tnt allow/disallow %H- Allows/disallows TNT use server-wide.");
         }
     }
 }
