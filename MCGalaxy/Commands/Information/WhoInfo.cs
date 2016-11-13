@@ -67,10 +67,12 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "  Logged in &a{0} %Stimes, &c{1} %Sof which ended in a kick", who.Logins, who.Kicks);        
             if (who.Group.Permission == LevelPermission.Banned) {
                 string[] data = Ban.GetBanData(who.Name);
-                if (data != null)
-                    Player.Message(p, "  is banned for " + data[1] + " by " + data[0]);
-                else
-                    Player.Message(p, "  is banned");
+                if (data != null) {
+                    Player.Message(p, "  Banned for {0} by {1}", 
+                                   data[1], PlayerInfo.GetColoredName(p, data[0]));
+                } else {
+                    Player.Message(p, "  Is banned");
+                }
             }                
 
             if (Server.Devs.CaselessContains(who.Name.TrimEnd('+')))
