@@ -410,6 +410,7 @@
     <Compile Include="Database\BlockDB\BlockDB.cs" />
     <Compile Include="Database\BlockDB\BlockDB.File.cs" />
     <Compile Include="Database\BlockDB\BlockDBEntry.cs" />
+    <Compile Include="Database\BlockDB\DBExporter.cs" />
     <Compile Include="Database\BlockDB\NameConverter.cs" />
     <Compile Include="Database\ColumnDesc.cs" />
     <Compile Include="Database\IDatabaseBackend.cs" />

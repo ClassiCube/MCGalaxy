@@ -62,7 +62,7 @@ namespace MCGalaxy {
             sql.WriteLine(insertCols);
 
             //The values themselves can be integers or strings, or null
-            for (int col = 0; col < rowTypes.Length; col++) {                
+            for (int col = 0; col < rowTypes.Length; col++) {
                 if (reader.IsDBNull(col)) {
                     sql.Write("NULL");
                 } else if (rowTypes[col] == typeof(string)) {
@@ -71,12 +71,8 @@ namespace MCGalaxy {
                         value = value.Replace("'", "''");
                     sql.Write("'" + value + "'");
                 } else if (rowTypes[col] == typeof(DateTime)) {
-                    if (Server.useMySQL) {
-                        DateTime date = reader.GetDateTime(col);
-                        sql.Write("'" + date.ToString("yyyy-MM-dd HH:mm:ss") + "'");
-                    } else {
-                        sql.Write("'" + reader.GetString(col) + "'"); // GetDateTime is extremely slow so avoid it
-                    }
+                    string date = GetDate(reader, col);
+                    sql.Write("'" + date + "'");
                 } else {
                     long value = reader.GetInt64(col); // TODO: try to use GetInt32 where possible
                     sql.Write(value);
@@ -84,6 +80,16 @@ namespace MCGalaxy {
                 sql.Write((col < rowTypes.Length - 1 ? ", " : ");"));
             }
             sql.WriteLine();
+        }
+        
+        
+        public static string GetDate(IDataReader reader, int col) {
+            if (Server.useMySQL) {
+                DateTime date = reader.GetDateTime(col);
+                return date.ToString("yyyy-MM-dd HH:mm:ss");
+            } else {
+                return reader.GetString(col); // GetDateTime is extremely slow so avoid it
+            }
         }
         
         static string FormatInsertColumns(string[] cols, string name) {
