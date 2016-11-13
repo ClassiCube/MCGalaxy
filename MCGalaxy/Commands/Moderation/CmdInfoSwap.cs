@@ -61,6 +61,10 @@ namespace MCGalaxy.Commands {
             
             SetData(src, dst.Name); SetData(dst, src.Name);
             SwapGroups(src, dst, srcGroup, dstGroup);
+            
+            Player.Message(p, "Successfully infoswapped {0} %Sand {1}",
+                           PlayerInfo.GetColoredName(p, src.Name),
+                           PlayerInfo.GetColoredName(p, dst.Name));
         }
         
         const string format = "yyyy-MM-dd HH:mm:ss";
