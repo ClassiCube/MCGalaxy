@@ -110,7 +110,7 @@ namespace MCGalaxy {
                 LoadPlayerStats(playerDb);
             }
             
-            Server.MainScheduler.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
+            Server.Background.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
             CheckState();
             ZombieStats stats = Server.zombie.LoadZombieStats(name);
             Game.MaxInfected = stats.MaxInfected; Game.TotalInfected = stats.TotalInfected;

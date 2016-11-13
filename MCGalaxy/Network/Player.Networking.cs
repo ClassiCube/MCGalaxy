@@ -378,10 +378,13 @@ namespace MCGalaxy {
             if ( x > 32767 ) x = 32730;
             if ( y > 32767 ) y = 32730;
             if ( z > 32767 ) z = 32730;
+            
+            pos = new ushort[3] { x, y, z };
+            rot = new byte[2] { rotx, roty };
 
-            pos[0] = x; pos[1] = y; pos[2] = z;
-            rot[0] = rotx; rot[1] = roty;
-
+            // NOTE: Fix for standard clients
+            if (id == Entities.SelfID) y -= 22;
+            
             byte[] buffer = new byte[10];
             buffer[0] = Opcode.EntityTeleport;
             buffer[1] = id;
@@ -396,13 +399,7 @@ namespace MCGalaxy {
          /// <summary> Sends a packet indicating an absolute position + orientation change for the player. </summary>
         /// <remarks>This method treats Y as head Y, and adjusts for client increasing Y by 22/32 blocks. </remarks>
         public void SendOwnFeetPos(ushort x, ushort y, ushort z, byte rotx, byte roty) {
-            SendPos(Entities.SelfID, x, (ushort)(y + 51 - 22), z, rotx, roty);
-        }
-        
-        /// <summary> Sends a packet indicating an absolute position + orientation change for the player. </summary>
-        /// <remarks>This method treats Y as feet Y, and adjusts for client increasing Y by 22/32 blocks. </remarks>
-        public void SendOwnHeadPos(ushort x, ushort y, ushort z, byte rotx, byte roty) {
-            SendPos(Entities.SelfID, x, (ushort)(y - 22), z, rotx, roty);
+            SendPos(Entities.SelfID, x, (ushort)(y + 51), z, rotx, roty);
         }
 
         /// <summary> Sends a packet indicating an entity was removed from the current map. </summary>

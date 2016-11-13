@@ -249,7 +249,7 @@ namespace MCGalaxy.Commands {
             const ushort x = 8 * 32 + 16;
             const ushort y = 23 * 32 + 32;
             const ushort z = 17 * 32 + 16;
-            p.SendOwnHeadPos(x, y, z, p.rot[0], p.rot[1]);
+            p.SendPos(Entities.SelfID, x, y, z, p.rot[0], p.rot[1]);
         }
         
         void HandleEnable(Player p) {

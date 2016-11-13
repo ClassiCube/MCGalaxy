@@ -33,9 +33,7 @@ namespace MCGalaxy.Tasks {
                     try {
                         Player p = players[i];
 
-                        if (p.frozen) {
-                            p.SendPos(Entities.SelfID, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]); continue;
-                        } else if (p.following != "") {
+                        if (p.following != "") {
                             Player who = PlayerInfo.FindExact(p.following);
                             if (who == null || who.level != p.level) {
                                 p.following = "";

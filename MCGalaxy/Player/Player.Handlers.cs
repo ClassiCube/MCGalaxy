@@ -252,6 +252,8 @@ namespace MCGalaxy {
                 ushort x = NetUtils.ReadU16(packet, 1);
                 ushort y = NetUtils.ReadU16(packet, 3);
                 ushort z = NetUtils.ReadU16(packet, 5);
+                if (frozen) { RevertBlock(x, y, z); return; }
+                
                 byte action = packet[7], block = packet[8];
                 byte extBlock = block;
                 RawHeldBlock = block;
@@ -282,7 +284,7 @@ namespace MCGalaxy {
         }
         
         void HandleMovement(byte[] packet) {
-            if (!loggedIn || trainGrab || following != "" || frozen) return;
+            if (!loggedIn || trainGrab || following != "") return;
             byte heldBlock = packet[1];
             if (HasCpeExt(CpeExt.HeldBlock))
                 RawHeldBlock = heldBlock;
@@ -291,6 +293,16 @@ namespace MCGalaxy {
             ushort y = NetUtils.ReadU16(packet, 4);
             ushort z = NetUtils.ReadU16(packet, 6);
             byte rotx = packet[8], roty = packet[9];
+            
+            if (frozen) {
+            	bool movedX = Math.Abs((short)x - (short)pos[0]) > 4; // moved more than 0.125 blocks horizontally
+                bool movedY = Math.Abs((short)y - (short)pos[1]) > 40; // moved more than 1.25 blocks vertically
+                bool movedZ = Math.Abs((short)z - (short)pos[2]) > 4; // moved more than 0.125 blocks horizontally
+                if (movedX || movedY || movedZ) {
+                    SendPos(Entities.SelfID, pos[0], pos[1], pos[2], rotx, roty);                   
+                }
+                return;
+            }            
 
             if (Server.Countdown.HandlesMovement(this, x, y, z, rotx, roty))
                 return;
