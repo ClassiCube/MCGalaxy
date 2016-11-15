@@ -14,8 +14,8 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
-using System.Text;
+ */
+using System.Collections.Generic;
 
 namespace MCGalaxy.Commands {
     public sealed class CmdBots : Command {
@@ -27,35 +27,38 @@ namespace MCGalaxy.Commands {
         public CmdBots() { }
 
         public override void Use(Player p, string message) {
-            StringBuilder text = new StringBuilder();
-            PlayerBot[] bots = PlayerBot.Bots.Items;
-            
+            PlayerBot[] bots = PlayerBot.Bots.Items;         
             Level lvl = null;
-            if (message != "") {
-                lvl = LevelInfo.FindMatches(p, message);
+            string[] args = message.SplitSpaces(2);
+            
+            if (!(message == "" || args[0].CaselessEq("all"))) {
+            	lvl = LevelInfo.FindMatches(p, args[0]);
                 if (lvl == null) return;
             }
             
+            List<PlayerBot> inScope = new List<PlayerBot>();
             foreach (PlayerBot bot in bots) {
                 if (lvl != null && bot.level != lvl) continue;
-                
-                text.Append(", ").Append(bot.name)
-                    .Append("(").Append(bot.level.name).Append(")");
-                                                              
-                if (bot.AIName != "") text.Append("[").Append(bot.AIName).Append("]");
-                else if (bot.hunt) text.Append("[Hunt]");
-                if (bot.kill) text.Append("-kill");
+                inScope.Add(bot);
             }
-
-            if (text.Length > 0) 
-                Player.Message(p, "&1Bots: %S" + text.ToString(2, text.Length - 2));
-            else 
-                Player.Message(p, "There are no bots.");
+            
+            string cmd = lvl == null ? "bots all" : "bots " + lvl.name;
+            string modifier = args.Length > 1 ? args[1] : "";
+            MultiPageOutput.Output(p, inScope, FormatBot, cmd, "bots", modifier, false);
+        }
+        
+        static string FormatBot(PlayerBot bot, int index) {
+            string desc = bot.name + "(" + bot.level.name + ")";
+            
+            if (bot.AIName != "") desc += "[" + bot.AIName + "]";
+            else if (bot.hunt) desc += "[Hunt]";
+            if (bot.kill) desc += "-kill";
+            return desc;
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/bots %H- Shows a list of bots, their AIs and levels");
-            Player.Message(p, "%T/bots [level] %H- Only shows bots on the given level");        
+            Player.Message(p, "%T/bots [level] %H- Only shows bots on the given level");
         }
     }
 }
