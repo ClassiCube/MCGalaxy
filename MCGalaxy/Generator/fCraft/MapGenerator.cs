@@ -1,42 +1,25 @@
 ﻿// Part of fCraft | Copyright 2009-2015 Matvei Stefarov <me@matvei.org> | BSD-3 | See LICENSE.txt
 using System;
-using System.ComponentModel;
 using System.Linq;
-using MCGalaxy;
 
-namespace fCraf2t {
+namespace MCGalaxy.Generator {
 
     /// <summary> Map generator themes. A theme defines what type of blocks are used to fill the map. </summary>
     public enum MapGenTheme {
-        Forest,
-        Arctic,
-        Desert,
-        Hell,
-        Swamp
+        Forest, Arctic, Desert, Hell, Swamp
     }
 
 
     /// <summary> Map generator template. Templates define landscape shapes and features. </summary>
     public enum MapGenTemplate {
-        Archipelago,
-        Atoll,
-        Bay,
-        Dunes,
-        Hills,
-        Ice,
-        Island,
-        Lake,
-        Mountains,
-        Peninsula,
-        Random,
-        River,
-        Streams
+        Archipelago, Atoll, Bay, Dunes, Hills, Ice, Island,
+        Lake, Mountains, Peninsula, Random, River, Streams
     }
 
 
     /// <summary> Provides functionality for generating map files. </summary>
-    public sealed class MapGenerator {
-        readonly MapGeneratorArgs args;
+    public sealed class fCraftMapGenerator {
+        readonly fCraftMapGeneratorArgs args;
         readonly Random rand;
         readonly Noise noise;
         float[,] heightmap, slopemap;
@@ -47,7 +30,7 @@ namespace fCraf2t {
         internal int groundThickness = 5;
         const int SeaFloorThickness = 3;
 
-        public MapGenerator( MapGeneratorArgs generatorArgs ) {
+        public fCraftMapGenerator( fCraftMapGeneratorArgs generatorArgs ) {
             if( generatorArgs == null ) throw new ArgumentNullException( "generatorArgs" );
             args = generatorArgs;
             rand = new Random( args.Seed );
@@ -140,23 +123,6 @@ namespace fCraf2t {
                 aboveWaterMultiplier = (args.MaxHeight / (1 - desiredWaterLevel));
             }
 
-
-            // Apply power functions to above/below water parts of the heightmap
-            if( args.BelowFuncExponent != 1 || args.AboveFuncExponent != 1 ) {
-                ReportProgress( 5, "Heightmap Processing: Adjusting slope" );
-                for( int x = heightmap.GetLength( 0 ) - 1; x >= 0; x-- ) {
-                    for( int y = heightmap.GetLength( 1 ) - 1; y >= 0; y-- ) {
-                        if( heightmap[x, y] < desiredWaterLevel ) {
-                            float normalizedDepth = 1 - heightmap[x, y] / desiredWaterLevel;
-                            heightmap[x, y] = desiredWaterLevel - (float)Math.Pow( normalizedDepth, args.BelowFuncExponent ) * desiredWaterLevel;
-                        } else {
-                            float normalizedHeight = (heightmap[x, y] - desiredWaterLevel) / (1 - desiredWaterLevel);
-                            heightmap[x, y] = desiredWaterLevel + (float)Math.Pow( normalizedHeight, args.AboveFuncExponent ) * (1 - desiredWaterLevel);
-                        }
-                    }
-                }
-            }
-
             // Calculate the slope
             if( args.CliffSmoothing ) {
                 ReportProgress( 2, "Heightmap Processing: Smoothing" );
@@ -191,7 +157,7 @@ namespace fCraf2t {
             ReportProgress( 0, "Generation complete" );
         }
         
-        void Fill(Level map, float desiredWaterLevel, float aboveWaterMultiplier, float[,] altmap) {
+        void Fill( Level map, float desiredWaterLevel, float aboveWaterMultiplier, float[,] altmap ) {
             int width = map.Width, length = map.Length, mapHeight = map.Height;
             int snowStartThreshold = args.SnowAltitude - args.SnowTransition;
             int snowThreshold = args.SnowAltitude;
@@ -238,11 +204,11 @@ namespace fCraf2t {
                     } else {
                         int index = (level * length + z) * width + x;
                         if( level >= 0 && level < mapHeight ) {
-                                if( slope < args.CliffThreshold ) {
-                                    map.blocks[index] = bGroundSurface;
-                                } else {
-                                    map.blocks[index] = bCliff;
-                                }
+                            if( slope < args.CliffThreshold ) {
+                                map.blocks[index] = bGroundSurface;
+                            } else {
+                                map.blocks[index] = bCliff;
+                            }
                         }
 
                         for( int yy = level - 1; yy >= 0; yy-- ) {
@@ -250,11 +216,11 @@ namespace fCraf2t {
                             if( yy >= mapHeight ) continue;
                             
                             if( level - yy < groundThickness ) {
-                                    if( slope < args.CliffThreshold ) {
-                                        map.blocks[index] = bGround;
-                                    } else {
-                                        map.blocks[index] = bCliff;
-                                    }
+                                if( slope < args.CliffThreshold ) {
+                                    map.blocks[index] = bGround;
+                                } else {
+                                    map.blocks[index] = bCliff;
+                                }
                             } else {
                                 map.blocks[index] = bBedrock;
                             }
@@ -281,11 +247,11 @@ namespace fCraf2t {
 
                     int index = (level * length + z) * width + x;
                     if( level >= 0 && level < mapHeight ) {
-                            if( slope < args.CliffThreshold ) {
-                                map.blocks[index] = (snow ? Block.white : bGroundSurface);
-                            } else {
-                                map.blocks[index] = bCliff;
-                            }
+                        if( slope < args.CliffThreshold ) {
+                            map.blocks[index] = (snow ? Block.white : bGroundSurface);
+                        } else {
+                            map.blocks[index] = bCliff;
+                        }
                     }
 
                     for( int yy = level - 1; yy >= 0; yy-- ) {
@@ -293,15 +259,15 @@ namespace fCraf2t {
                         if( yy >= mapHeight ) continue;
                         
                         if( level - yy < groundThickness ) {
-                                if( slope < args.CliffThreshold ) {
-                                    if( snow ) {
-                                        map.blocks[index] = Block.white;
-                                    } else {
-                                        map.blocks[index] = bGround;
-                                    }
+                            if( slope < args.CliffThreshold ) {
+                                if( snow ) {
+                                    map.blocks[index] = Block.white;
                                 } else {
-                                    map.blocks[index] = bCliff;
+                                    map.blocks[index] = bGround;
                                 }
+                            } else {
+                                map.blocks[index] = bCliff;
+                            }
                         } else {
                             map.blocks[index] = bBedrock;
                         }
@@ -429,15 +395,20 @@ namespace fCraf2t {
         
         public static void RegisterGenerators() {
             foreach (MapGenTemplate templ in Enum.GetValues(typeof(MapGenTemplate))) {
-                MCGalaxy.Generator.MapGen.RegisterSimpleGen("fc_" + templ, GenerateFCRAFT);
+                MapGen.RegisterSimpleGen("fc_" + templ, GenerateMap);
             }
         }
         
-        static bool GenerateFCRAFT(MCGalaxy.Generator.MapGenArgs genArgs) {
+        static bool GenerateMap(MapGenArgs genArgs) {
             MapGenTheme theme = MapGenTheme.Forest;
-            Enum.TryParse(genArgs.Args, true, out theme);
+            if (genArgs.Args != "" && !Enum.TryParse(genArgs.Args, true, out theme)) {
+                string[] themes = Enum.GetNames(typeof(MapGenTheme));
+                Player.Message(genArgs.Player, "Seed must be one of the following themes: " + themes.Join());
+                return false;
+            }
+
             MapGenTemplate templ = (MapGenTemplate)Enum.Parse(typeof(MapGenTemplate), genArgs.Theme.Substring(3), true);
-            MapGeneratorArgs args = MapGeneratorArgs.MakeTemplate(templ);
+            fCraftMapGeneratorArgs args = fCraftMapGeneratorArgs.MakeTemplate(templ);
             Level map = genArgs.Level;
             
             float ratio = map.Height / 96.0f;
@@ -450,7 +421,7 @@ namespace fCraf2t {
             args.AddWater = theme != MapGenTheme.Desert;
             args.WaterLevel = (map.Height - 1) / 2;
 
-            MapGenerator generator = new MapGenerator(args);
+            fCraftMapGenerator generator = new fCraftMapGenerator(args);
             generator.Generate(map);
             return true;
         }

@@ -1,7 +1,7 @@
 ﻿// Part of fCraft | Copyright 2009-2015 Matvei Stefarov <me@matvei.org> | BSD-3 | See LICENSE.txt //Copyright (c) 2011-2013 Jon Baker, Glenn Marien and Lao Tszy <Jonty800@gmail.com> //Copyright (c) <2012-2014> <LeChosenOne, DingusBungus> | ProCraft Copyright 2014-2016 Joseph Beauvais <123DMWM@gmail.com>
 using System;
 
-namespace fCraf2t {
+namespace MCGalaxy.Generator {
 
     /// <summary> Interpolation mode for perlin noise. </summary>
     public enum NoiseInterpolationMode {
@@ -52,13 +52,6 @@ namespace fCraf2t {
 
         public float StaticNoise( int x, int y ) {
             int n = Seed + x + y * short.MaxValue;
-            n = (n << 13) ^ n;
-            return (float)(1.0 - ((n * (n * n * 15731 + 789221) + 1376312589) & 0x7FFFFFFF) / 1073741824d);
-        }
-
-
-        public float StaticNoise( int x, int y, int z ) {
-            int n = Seed + x + y * 1625 + z * 2642245;
             n = (n << 13) ^ n;
             return (float)(1.0 - ((n * (n * n * 15731 + 789221) + 1376312589) & 0x7FFFFFFF) / 1073741824d);
         }

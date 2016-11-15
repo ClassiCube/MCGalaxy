@@ -79,6 +79,8 @@ namespace MCGalaxy.Generator {
             simpleGens = new Dictionary<string, Func<MapGenArgs, bool>>();
             advGens = new Dictionary<string, Func<MapGenArgs, bool>>();
             SimpleGen.RegisterGenerators();
+            fCraftMapGenerator.RegisterGenerators();
+            
             AdvNoiseGen.RegisterGenerators();
             RegisterAdvancedGen("heightmap", HeightmapGen.Generate);
         }

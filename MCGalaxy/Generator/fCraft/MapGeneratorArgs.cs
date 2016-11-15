@@ -2,9 +2,9 @@
 using System;
 using MCGalaxy;
 
-namespace fCraf2t {
+namespace MCGalaxy.Generator {
     /// <summary> Contains parameters for advanced map generation. </summary>
-    public sealed class MapGeneratorArgs {
+    public sealed class fCraftMapGeneratorArgs {
         public string MapName;
 
         public MapGenTheme Theme = MapGenTheme.Forest;
@@ -53,11 +53,11 @@ namespace fCraf2t {
         public int   BeachExtent = 6,
         BeachHeight = 2;
 
-        public MapGeneratorArgs() {
+        public fCraftMapGeneratorArgs() {
             Seed = (new Random()).Next();
         }
         
-        public void ApplyTheme( MapGenerator gen ) {
+        public void ApplyTheme( fCraftMapGenerator gen ) {
             switch( Theme ) {
                 case MapGenTheme.Arctic:
                     gen.bWaterSurface = Block.glass;
@@ -118,10 +118,10 @@ namespace fCraf2t {
         }
 
 
-        public static MapGeneratorArgs MakeTemplate( MapGenTemplate template ) {
+        public static fCraftMapGeneratorArgs MakeTemplate( MapGenTemplate template ) {
             switch( template ) {
                 case MapGenTemplate.Archipelago:
-                    return new MapGeneratorArgs {
+                    return new fCraftMapGeneratorArgs {
                         MaxHeight = 8,
                         MaxDepth = 20,
                         FeatureScale = 3,
@@ -131,7 +131,7 @@ namespace fCraf2t {
                     };
 
                 case MapGenTemplate.Atoll:
-                    return new MapGeneratorArgs {
+                    return new fCraftMapGeneratorArgs {
                         Theme = MapGenTheme.Desert,
                         MaxHeight = 2,
                         MaxDepth = 39,
@@ -148,7 +148,7 @@ namespace fCraf2t {
                     };
 
                 case MapGenTemplate.Bay:
-                    return new MapGeneratorArgs {
+                    return new fCraftMapGeneratorArgs {
                         MaxHeight = 22,
                         MaxDepth = 12,
                         UseBias = true,
@@ -163,7 +163,7 @@ namespace fCraf2t {
                     };
 
                 case MapGenTemplate.Dunes:
-                    return new MapGeneratorArgs {
+                    return new fCraftMapGeneratorArgs {
                         AddTrees = false,
                         AddWater = false,
                         Theme = MapGenTheme.Desert,
@@ -177,7 +177,7 @@ namespace fCraf2t {
                     };
 
                 case MapGenTemplate.Hills:
-                    return new MapGeneratorArgs {
+                    return new fCraftMapGeneratorArgs {
                         AddWater = false,
                         MaxHeight = 8,
                         MaxDepth = 8,
@@ -187,7 +187,7 @@ namespace fCraf2t {
                     };
 
                 case MapGenTemplate.Ice:
-                    return new MapGeneratorArgs {
+                    return new fCraftMapGeneratorArgs {
                         AddTrees = false,
                         Theme = MapGenTheme.Arctic,
                         MaxHeight = 2,
@@ -202,7 +202,7 @@ namespace fCraf2t {
                     };
 
                 case MapGenTemplate.Island:
-                    return new MapGeneratorArgs {
+                    return new fCraftMapGeneratorArgs {
                         MaxHeight = 16,
                         MaxDepth = 39,
                         UseBias = true,
@@ -218,7 +218,7 @@ namespace fCraf2t {
                     };
 
                 case MapGenTemplate.Lake:
-                    return new MapGeneratorArgs {
+                    return new fCraftMapGeneratorArgs {
                         MaxHeight = 14,
                         MaxDepth = 20,
                         UseBias = true,
@@ -232,7 +232,7 @@ namespace fCraf2t {
                     };
 
                 case MapGenTemplate.Mountains:
-                    return new MapGeneratorArgs {
+                    return new fCraftMapGeneratorArgs {
                         AddWater = false,
                         MaxHeight = 40,
                         MaxDepth = 10,
@@ -247,10 +247,10 @@ namespace fCraf2t {
                     };
 
                 case MapGenTemplate.Random:
-                    return new MapGeneratorArgs();
+                    return new fCraftMapGeneratorArgs();
 
                 case MapGenTemplate.River:
-                    return new MapGeneratorArgs {
+                    return new fCraftMapGeneratorArgs {
                         MaxHeight = 22,
                         MaxDepth = 8,
                         FeatureScale = 0,
@@ -261,7 +261,7 @@ namespace fCraf2t {
                     };
 
                 case MapGenTemplate.Streams:
-                    return new MapGeneratorArgs {
+                    return new fCraftMapGeneratorArgs {
                         MaxHeight = 5,
                         MaxDepth = 4,
                         FeatureScale = 2,
@@ -275,7 +275,7 @@ namespace fCraf2t {
                     };
 
                 case MapGenTemplate.Peninsula:
-                    return new MapGeneratorArgs {
+                    return new fCraftMapGeneratorArgs {
                         MaxHeight = 22,
                         MaxDepth = 12,
                         UseBias = true,
