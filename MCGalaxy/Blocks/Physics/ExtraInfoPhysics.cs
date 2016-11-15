@@ -24,9 +24,9 @@ namespace MCGalaxy.Blocks.Physics {
     public static class ExtraInfoPhysics {
         
         public static bool DoDoorsOnly(Level lvl, ref Check C) {
+            if (C.data.Type1 == PhysicsArgs.Custom) return true;
             if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
                 C.data.ResetTypes();
-            if (C.data.Type1 == PhysicsArgs.TntWars) return true;
             if (!C.data.HasWait) return false;
             
             if (C.data.Door && C.data.Data == 0) {
@@ -58,9 +58,9 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static bool DoNormal(Level lvl, ref Check C) {
+            if (C.data.Type1 == PhysicsArgs.Custom) return true;
             if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
                 C.data.ResetTypes();
-            if (C.data.Type1 == PhysicsArgs.TntWars) return true;
             
             ExtraInfoArgs args = default(ExtraInfoArgs);
             ParseType(C.data.Type1, ref args, C.data.Value1);

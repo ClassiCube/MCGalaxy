@@ -494,6 +494,9 @@
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Props.cs" />
     <Compile Include="Generator\AdvNoiseGen.cs" />
+    <Compile Include="Generator\fCraft\MapGenerator.cs" />
+    <Compile Include="Generator\fCraft\MapGeneratorArgs.cs" />
+    <Compile Include="Generator\fCraft\Noise.cs" />
     <Compile Include="Generator\Foilage\ForesterTrees.cs" />
     <Compile Include="Generator\Foilage\StandardTrees.cs" />
     <Compile Include="Generator\Foilage\Tree.cs" />
@@ -729,6 +732,7 @@
     <Folder Include="Games\TntWars" />
     <Folder Include="Games\ZombieSurvival" />
     <Folder Include="Generator\Foilage" />
+    <Folder Include="Generator\fCraft" />
     <Folder Include="Levels\IO" />
     <Folder Include="Generator" />
     <Folder Include="Blocks\Physics" />

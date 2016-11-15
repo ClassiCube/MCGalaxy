@@ -108,7 +108,7 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static Player GetPlayer(ref PhysicsArgs args) {
-            if (args.Type1 != PhysicsArgs.TntWars) return null;
+            if (args.Type1 != PhysicsArgs.Custom) return null;
             
             int id = args.Value1 | args.Value2 << 8 | args.Data << 16;
             Player[] players = PlayerInfo.Online.Items;

@@ -85,20 +85,19 @@ namespace MCGalaxy.Blocks.Physics {
         
         /// <summary> No special action is performed. </summary>
         public const byte None = 0;
-        /// <summary> A specified action will be delayed for a certain time. </summary>
+        /// <summary> Another action will be executed after the given delay. </summary>
         public const byte Wait = 1;
-        /// <summary> Reverts the block in the map back into the specified block id. </summary>
+        /// <summary> Reverts the block in the map back into the specified block. </summary>
         public const byte Revert = 2;
-        /// <summary> Randomly converts this physics item back into air. </summary>
+        /// <summary> Randomly converts back into air. </summary>
         public const byte Dissipate = 3;
-        /// <summary> Randomly causes this physics item to move down one block. </summary>
+        /// <summary> Randomly moves down one block. </summary>
         public const byte Drop = 4;
-        /// <summary> Randomly causes this physics item to create an explosion. </summary>
+        /// <summary> Randomly creates an explosion. </summary>
         public const byte Explode = 5;
-        /// <summary> Causes this physics item to iterate through the 'rainbow' wool 
-        /// block ids in either sequential or random order. </summary>
+        /// <summary> Iterates through the 'rainbow' wool block in either sequential or random order. </summary>
         public const byte Rainbow = 6;
-        /// <summary> TNT block placed in tnt wars. </summary>
-        public const byte TntWars = 7;
+        /// <summary> Action is handled by the block's PhysicsHandler. </summary>
+        public const byte Custom = 7;
     }
 }

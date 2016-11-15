@@ -319,7 +319,7 @@ namespace MCGalaxy {
         
         void AddTntCheck(int b, Player p) {
             PhysicsArgs args = default(PhysicsArgs);
-            args.Type1 = PhysicsArgs.TntWars;
+            args.Type1 = PhysicsArgs.Custom;
             args.Value1 = (byte)p.SessionID;
             args.Value2 = (byte)(p.SessionID >> 8);
             args.Data = (byte)(p.SessionID >> 16);

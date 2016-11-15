@@ -40,7 +40,8 @@ namespace MCGalaxy.Drawing.Ops {
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
                                     ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             Vec3S32[] marks = new [] { new Vec3S32(x1, y1, z1), new Vec3S32(x2, y2, z2) };
-            return DoDrawOp(op, brush, p, marks);
+            return DoDrawOp(op, brush, p, marks); 
+            DrawOp.DoDrawOp(new EllipsoidDrawOp(), new SolidBrush(Block.leaf, 0), p, x1, y1, z1, x2, y2, z2);
         }
         
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
