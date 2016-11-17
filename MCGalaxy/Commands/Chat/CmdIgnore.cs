@@ -39,11 +39,11 @@ namespace MCGalaxy.Commands {
             
             if (action == "all") {
                 p.ignoreAll = !p.ignoreAll;
-                Player.Message(p, "{0} ignoring all chat", p.ignoreAll ? "&cNow " : "&aNo longer ");
+                Player.Message(p, "{0} ignoring all chat", p.ignoreAll ? "&cNow" : "&aNo longer");
                 SaveIgnores(p); return;
             } else if (action == "irc") {
                 p.ignoreIRC = !p.ignoreIRC;
-                Player.Message(p, "{0} ignoring IRC chat", p.ignoreIRC ? "&cNow " : "&aNo longer ");
+                Player.Message(p, "{0} ignoring IRC chat", p.ignoreIRC ? "&cNow" : "&aNo longer");
                 SaveIgnores(p); return;
             } else if (action == "titles") {
                 p.ignoreTitles = !p.ignoreTitles;
