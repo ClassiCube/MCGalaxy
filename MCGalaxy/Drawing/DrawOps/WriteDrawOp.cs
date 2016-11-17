@@ -92,8 +92,8 @@ namespace MCGalaxy.Drawing.Ops {
         static byte[][] letters;
         static WriteDrawOp() {
             letters = new byte[256][];
-            // each set bit indicates to place a block with a y offset equal to the bit index.
-            // e.g. for 0x3, indicates to place a block at 'y = 0' and 'y = 1'
+            // each set bit means place a block at y offset equal to that bit index.
+            // e.g. 0x0A means place a block at 'y = 0' and at 'y = 3'
             letters['A'] = new byte[] { 0x0F, 0x14, 0x0F };
             letters['B'] = new byte[] { 0x1F, 0x15, 0x0A };
             letters['C'] = new byte[] { 0x0E, 0x11, 0x11 };
@@ -134,9 +134,9 @@ namespace MCGalaxy.Drawing.Ops {
             letters[' '] = new byte[] { 0x00 };
             letters['!'] = new byte[] { 0x1D };
             letters['"'] = new byte[] { 0x18, 0x00, 0x18 };
-            // # is missing
+            letters['#'] = new byte[] { 0x0A, 0x1F, 0x0A, 0x1F, 0x0A };
             // $ is missing
-            // % is missing
+            letters['%'] = new byte[] { 0x11, 0x02, 0x04, 0x08, 0x11 };
             // & is missing
             letters['\''] = new byte[] { 0x18 };
             letters['('] = new byte[] { 0x0E, 0x11 };
@@ -153,8 +153,8 @@ namespace MCGalaxy.Drawing.Ops {
             letters['<'] = new byte[] { 0x04, 0x0A, 0x11 };
             letters['='] = new byte[] { 0x0A, 0x0A, 0x0A };
             letters['>'] = new byte[] { 0x11, 0x0A, 0x04 };
-            // '?' is missing
-            // '@' is missing
+            letters['?'] = new byte[] { 0x10, 0x15, 0x08 };
+            letters['@'] = new byte[] { 0x0E, 0x11, 0x15, 0x0D };
             letters['['] = new byte[] { 0x1F, 0x11 };
             letters['\''] = new byte[] { 0x18 };
             letters[']'] = new byte[] { 0x11, 0x1F };
