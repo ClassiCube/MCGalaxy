@@ -30,7 +30,7 @@ namespace MCGalaxy.DB {
         public string MapName;
         
         /// <summary> Base point in time that all time deltas are offset from.</summary>
-        public static DateTime Epoch = new DateTime(2000, 1, 1, 1, 1, 1, DateTimeKind.Utc);
+        public static DateTime Epoch = new DateTime(2010, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         /// <summary> The path of this BlockDB's backing file on disc. </summary>
         public string FilePath { get { return "blockdb/" + MapName + ".cbdb"; } }
