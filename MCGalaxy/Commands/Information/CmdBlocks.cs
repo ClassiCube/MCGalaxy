@@ -39,25 +39,19 @@ namespace MCGalaxy.Commands
             
             if (args[0] == "" || args[0].CaselessEq("basic")) {
                 Player.Message(p, "Basic blocks: ");
-                MultiPageOutput.Output(p, BasicBlocks(), (name, i) => name,
+                MultiPageOutput.Output(p, BasicBlocks(), FormatBlockName,
                                        "blocks basic", "blocks", modifier, false);
             } else if (args[0].CaselessEq("all") || args[0].CaselessEq("complex")) {
                 Player.Message(p, "Complex blocks: ");
-                MultiPageOutput.Output(p, ComplexBlocks(), (name, i) => name,
+                MultiPageOutput.Output(p, ComplexBlocks(), FormatBlockName,
                                        "blocks complex", "blocks", modifier, false);
             } else if (Block.Byte(args[0]) != Block.Invalid) {
                 OutputBlockData(p, args[0]);
             } else if (Group.Find(args[0]) != null) {
                 Group grp = Group.Find(args[0]);
-                List<string> blocks = RankBlocks(grp.Permission);
-                
-                if (blocks.Count == 0) {
-                    Player.Message(p, "{0} %Scannot modify any blocks.", grp.ColoredName);
-                } else {
-                    Player.Message(p, "Blocks which {0} %Scan place: ", grp.ColoredName);
-                    MultiPageOutput.Output(p, blocks, (name, i) => name,
-                                           "blocks " + args[0], "blocks", modifier, false);
-                }
+                Player.Message(p, "Blocks which {0} %Scan place: ", grp.ColoredName);
+                MultiPageOutput.Output(p, RankBlocks(grp.Permission), FormatBlockName,
+                                       "blocks " + args[0], "blocks", modifier, false);
             } else if (args.Length > 1) {
                 Help(p);
             } else {
@@ -91,6 +85,13 @@ namespace MCGalaxy.Commands
             return items;
         }
         
+        
+        internal static string FormatBlockName(string block, int i) {
+            Block.Blocks perms = Block.BlockList[Block.Byte(block)];
+            Group grp = Group.findPerm(perms.lowestRank);
+            string col = grp == null ? "&f" : grp.color;
+            return col + block;
+        }
         
         static void OutputBlockData(Player p, string block) {
             byte b = Block.Byte(block);

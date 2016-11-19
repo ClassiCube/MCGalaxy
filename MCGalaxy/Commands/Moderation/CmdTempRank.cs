@@ -164,7 +164,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "%H e.g. to temprank for 90 minutes, [timespan] would be %S1h30m");
             Player.Message(p, "%T/temprank [player] info");
             Player.Message(p, "%HLists information about the temp rank for the given player.");
-            Player.Message(p, "%T/temprank <player> delete %H- Removes player's temp rank.");
+            Player.Message(p, "%T/temprank [player] delete %H- Removes player's temp rank.");
             Player.Message(p, "%T/temprank list %H- Lists all current temp ranks.");
         }
     }

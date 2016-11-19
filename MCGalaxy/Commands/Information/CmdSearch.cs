@@ -61,12 +61,7 @@ namespace MCGalaxy.Commands {
             }
             
             OutputList(p, keyword, "search blocks", "blocks", 
-                       modifier, blocks, FormatBlockName);
-        }
-        
-        static string FormatBlockName(string block, int i) {
-            string prefix = (i & 1) == 0 ? "&2" : "&9";
-            return prefix + block;
+                       modifier, blocks, CmdBlocks.FormatBlockName);
         }
         
         static void SearchCommands(Player p, string keyword, string modifier) {
