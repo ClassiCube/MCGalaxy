@@ -101,13 +101,7 @@ namespace MCGalaxy {
                 }
             }
 
-            if (!Block.canPlace(this, old) && !Block.BuildIn(old) && !Block.AllowBreak(old)) {
-                Formatter.MessageBlock(this, doDelete ? "delete " : "replace ", old);
-                RevertBlock(x, y, z); return;
-            }
-
-            if (!Block.canPlace(this, block)) {
-                Formatter.MessageBlock(this, "place ", block);
+            if (!CheckManualChange(old, block, doDelete)) {
                 RevertBlock(x, y, z); return;
             }
 
@@ -132,6 +126,19 @@ namespace MCGalaxy {
                 if (PlaceBlock(old, x, y, z, block, extBlock))
                     level.AddToBlockDB(this, index, heldBlock, heldExt, false);
             }
+        }
+        
+        internal bool CheckManualChange(byte old, byte block, bool replaceMode) {
+            if (!Block.canPlace(this, old) && !Block.BuildIn(old) && !Block.AllowBreak(old)) {
+                Formatter.MessageBlock(this, replaceMode ? "replace " : "delete ", old);
+                return false;
+            }
+
+            if (!Block.canPlace(this, block)) {
+                Formatter.MessageBlock(this, "place ", block);
+                return false;
+            }
+            return true;
         }
         
         bool DeleteBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
@@ -295,7 +302,7 @@ namespace MCGalaxy {
             byte rotx = packet[8], roty = packet[9];
             
             if (frozen) {
-            	bool movedX = Math.Abs((short)x - (short)pos[0]) > 4; // moved more than 0.125 blocks horizontally
+                bool movedX = Math.Abs((short)x - (short)pos[0]) > 4; // moved more than 0.125 blocks horizontally
                 bool movedY = Math.Abs((short)y - (short)pos[1]) > 40; // moved more than 1.25 blocks vertically
                 bool movedZ = Math.Abs((short)z - (short)pos[2]) > 4; // moved more than 0.125 blocks horizontally
                 if (movedX || movedY || movedZ) {

@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using MCGalaxy.Blocks;
+ 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMark : Command {
         public override string name { get { return "mark"; } }
@@ -23,28 +25,44 @@ namespace MCGalaxy.Commands.Building {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("m"), new CommandAlias("x"), 
+            get { return new[] { new CommandAlias("m"), new CommandAlias("x"),
                     new CommandAlias("markall", "all"), new CommandAlias("ma", "all") }; }
         }
 
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            if (!p.HasBlockchange) {
-                Player.Message(p, "Cannot mark, no selection or cuboid in progress."); return;
-            }
             
             if (message.CaselessEq("all")) {
+                if (!p.HasBlockchange) {
+                    Player.Message(p, "Cannot mark, no selection or cuboid in progress."); return;
+                }
+                
                 Level lvl = p.level;
                 PlaceMark(p, 0, 0, 0);
                 PlaceMark(p, lvl.Width - 1, lvl.Height - 1, lvl.Length - 1);
-            } else {
-                // convert player pos to block coords
-                Vec3U16 P = Vec3U16.ClampPos(p.pos[0], (ushort)(p.pos[1] - 32), p.pos[2], p.level);
-                P.X /= 32; P.Y /= 32; P.Z /= 32;
-                if (message != "" && !ParseCoords(message, p, ref P)) return;
-                
-                P = Vec3U16.Clamp(P.X, P.Y, P.Z, p.level);
+                return;
+            }
+            
+            // convert player pos to block coords
+            Vec3U16 P = Vec3U16.ClampPos(p.pos[0], (ushort)(p.pos[1] - 32), p.pos[2], p.level);
+            P.X /= 32; P.Y /= 32; P.Z /= 32;
+            if (message != "" && !ParseCoords(message, p, ref P)) return;            
+            P = Vec3U16.Clamp(P.X, P.Y, P.Z, p.level);
+            
+            if (!p.HasBlockchange) {
                 PlaceMark(p, P.X, P.Y, P.Z);
+            } else {
+                // We only want to activate blocks in the world
+                byte old = p.level.GetTile(P.X, P.Y, P.Z);
+                if (!p.CheckManualChange(old, Block.air, false)) return;
+                
+                HandleDelete handler = BlockBehaviour.deleteHandlers[old];
+                if (handler != null) {
+                    handler(p, old, P.X, P.Y, P.Z);
+                } else {
+                    Player.Message(p, "Cannot mark, no selection or cuboid in progress, " +
+                	               "nor could the existing block at the coordinates be activated."); return;
+                }
             }
         }
         
@@ -78,7 +96,8 @@ namespace MCGalaxy.Commands.Building {
         public override void Help(Player p) {
             Player.Message(p, "%T/mark [x y z] %H- Places a marker for selections or cuboids");
             Player.Message(p, "  %HIf no xyz is given, marks at where you are standing");
-            Player.Message(p, "  %He.g. /mark 30 y 20 will mark at (30, last y, 20)");
+            Player.Message(p, "    %He.g. /mark 30 y 20 will mark at (30, last y, 20)");
+            Player.Message(p, "  %HNote: If no selection is in progress, activates (e.g. doors) the existing block at those coordinates.");
             Player.Message(p, "%T/mark all %H- Places markers at min and max corners of the map");
         }
     }

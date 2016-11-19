@@ -115,6 +115,7 @@ namespace MCGalaxy.Commands
                 Player.Message(p, "No Complex Blocks look like \"{0}\"", block);
             }
         }
+        
         static void OutputBlockProps(Player p, byte b) {
             BlockProps props = Block.Props[b];
 
