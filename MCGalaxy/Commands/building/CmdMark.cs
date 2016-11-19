@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Building {
             if (message != "" && !ParseCoords(message, p, ref P)) return;            
             P = Vec3U16.Clamp(P.X, P.Y, P.Z, p.level);
             
-            if (!p.HasBlockchange) {
+            if (p.HasBlockchange) {
                 PlaceMark(p, P.X, P.Y, P.Z);
             } else {
                 // We only want to activate blocks in the world
