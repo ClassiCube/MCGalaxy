@@ -353,7 +353,10 @@ namespace MCGalaxy {
         
         /// <summary> Sends a packet indicating an entity was spawned in the current map
         /// at the given absolute position + coordinates </summary>
-        public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty) {
+        public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty) {       	
+            // NOTE: Fix for standard clients
+            if (id == Entities.SelfID) y -= 22;
+            
             byte[] buffer = new byte[74];
             buffer[0] = Opcode.AddEntity;
             buffer[1] = id;
@@ -453,6 +456,9 @@ namespace MCGalaxy {
         }
         
         public void SendExtAddEntity2(byte id, string skinName, string displayName, ushort x, ushort y, ushort z, byte rotx, byte roty) {
+            // NOTE: Fix for standard clients
+            if (id == Entities.SelfID) y -= 22;
+            
             byte[] buffer = new byte[138];
             buffer[0] = Opcode.CpeExtAddEntity2;
             buffer[1] = id;

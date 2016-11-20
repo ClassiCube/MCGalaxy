@@ -166,9 +166,9 @@ namespace MCGalaxy {
             Game.InfectMessages = PlayerDB.GetInfectMessages(this);
             Server.zombie.PlayerJoinedServer(this);
             
-            ushort x = (ushort)((0.5 + level.spawnx) * 32);
-            ushort y = (ushort)((1 + level.spawny) * 32);
-            ushort z = (ushort)((0.5 + level.spawnz) * 32);
+            ushort x = (ushort)(level.spawnx * 32 + 16);
+            ushort y = (ushort)(level.spawny * 32 + 32);
+            ushort z = (ushort)(level.spawnz * 32 + 16);
             pos = new ushort[3] { x, y, z };
             rot = new byte[2] { level.rotx, level.roty };
             
