@@ -370,15 +370,6 @@ namespace MCGalaxy {
         
         /// <summary> Sends a packet indicating an absolute position + orientation change for an enity. </summary>
         public void SendPos(byte id, ushort x, ushort y, ushort z, byte rotx, byte roty) {
-            if ( x < 0 ) x = 32;
-            if ( y < 0 ) y = 32;
-            if ( z < 0 ) z = 32;
-            if ( x > level.Width * 32 ) x = (ushort)( level.Width * 32 - 32 );
-            if ( z > level.Length * 32 ) z = (ushort)( level.Length * 32 - 32 );
-            if ( x > 32767 ) x = 32730;
-            if ( y > 32767 ) y = 32730;
-            if ( z > 32767 ) z = 32730;
-            
             pos = new ushort[3] { x, y, z };
             rot = new byte[2] { rotx, roty };
 

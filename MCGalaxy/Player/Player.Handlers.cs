@@ -306,7 +306,7 @@ namespace MCGalaxy {
                 bool movedY = Math.Abs((short)y - (short)pos[1]) > 40; // moved more than 1.25 blocks vertically
                 bool movedZ = Math.Abs((short)z - (short)pos[2]) > 4; // moved more than 0.125 blocks horizontally
                 if (movedX || movedY || movedZ) {
-                    SendPos(Entities.SelfID, pos[0], pos[1], pos[2], rotx, roty);                   
+                    SendPos(Entities.SelfID, pos[0], pos[1], pos[2], rotx, roty);
                 }
                 return;
             }            
