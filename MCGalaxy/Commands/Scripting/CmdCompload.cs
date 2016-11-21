@@ -22,7 +22,7 @@ namespace MCGalaxy.Commands
         public override string name { get { return "compload"; } }
         public override string shortcut { get { return "cml"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
         public override bool museumUsable { get { return true; } }
         
         public override void Use(Player p, string message) {

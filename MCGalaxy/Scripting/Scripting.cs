@@ -137,11 +137,11 @@ namespace MCGalaxy {
             if (!File.Exists(AutoloadFile)) { File.Create(AutoloadFile); return; }        
             string[] list = File.ReadAllLines(AutoloadFile);
             
-            foreach (string cmd in list) {
-                if (cmd == "") continue;
-                string error = Scripting.Load("Cmd" + cmd.ToLower());
+            foreach (string cmdName in list) {
+                if (cmdName == "") continue;
+                string error = Scripting.Load("Cmd" + cmdName);
                 if (error != null) { Server.s.Log(error); continue; }
-                Server.s.Log("AUTOLOAD: Loaded " + cmd.ToLower() + ".dll");
+                Server.s.Log("AUTOLOAD: Loaded Cmd" + cmdName + ".dll");
             }
         }
         
@@ -149,8 +149,7 @@ namespace MCGalaxy {
         /// <param name="command">Name of the command to be loaded (make sure it's prefixed by Cmd before bringing it in here or you'll have problems).</param>
         /// <returns>Error string on failure, null on success.</returns>
         public static string Load(string command) {
-            if (command.Length < 3 || command.Substring(0, 3).ToLower() != "cmd")
-                return "Invalid command name specified.";
+            if (!command.CaselessStarts("cmd")) return "Invalid command name specified.";
             try {
                 byte[] data = File.ReadAllBytes(DllDir + command + ".dll");
                 Assembly lib = Assembly.Load(data); // TODO: Assembly.LoadFile instead?
