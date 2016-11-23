@@ -245,9 +245,11 @@ namespace MCGalaxy.Commands {
             
             public void FromOfflineLevel(string name) {
                 this.Name = name;
-                LvlImporter.LoadDimensions(LevelInfo.LevelPath(name),
-                                           out Width, out Height, out Length);
-                string path = LevelInfo.FindPropertiesFile(name);
+                string path = LevelInfo.LevelPath(name);
+                Vec3U16 dims = IMapImporter.Formats[0].ReadDimensions(path);
+                Width = dims.X; Height = dims.Y; Length = dims.Z;
+
+                path = LevelInfo.FindPropertiesFile(name);
                 if (path != null)
                     PropertiesFile.Read(path, ParseProperty, '=');
                 if (Authors == null) Authors = "";

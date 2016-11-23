@@ -40,6 +40,10 @@ namespace MCGalaxy.Levels.IO {
 	public sealed class DatImporter : IMapImporter {
 
 		public override string Extension { get { return ".dat"; } }
+
+        public override Vec3U16 ReadDimensions(Stream src) {
+			throw new NotSupportedException();
+        }
 		
         public override Level Read(Stream src, string name, bool metadata) {
             byte[] temp = new byte[8];

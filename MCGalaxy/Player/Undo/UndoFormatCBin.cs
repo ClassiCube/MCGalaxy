@@ -49,9 +49,8 @@ namespace MCGalaxy.Undo {
                             continue;
                         }
                         
-                        ushort width, height, length;
-                        LvlImporter.LoadDimensions(LevelInfo.LevelPath(uP.mapName), out width, out height, out length);
-                        node.Width = width; node.Height = height; node.Length = length;
+                        Vec3U16 dims = IMapImporter.Formats[0].ReadDimensions(LevelInfo.LevelPath(uP.mapName));
+                        node.Width = dims.X; node.Height = dims.Y; node.Length = dims.Z;
                         WriteChunkEntries(w, last.Entries, entriesPos);
                         node.MapName = uP.mapName;
                         last = WriteEmptyChunk(w, node, time, ref entriesPos);

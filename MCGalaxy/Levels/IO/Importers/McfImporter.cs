@@ -31,7 +31,7 @@ namespace MCGalaxy.Levels.IO {
         public override Vec3U16 ReadDimensions(Stream src) {
             using (Stream gs = new GZipStream(src, CompressionMode.Decompress, true)) {
                 byte[] header = new byte[16];
-                return ReadHeader(gs, header);
+                return ReadHeader(header, gs);
             }
         }
         

@@ -23,6 +23,10 @@ namespace MCGalaxy.Levels.IO {
 	public sealed class CwImporter : IMapImporter {
 
 		public override string Extension { get { return ".cw"; } }
+
+        public override Vec3U16 ReadDimensions(Stream src) {
+			throw new NotSupportedException();
+        }
 		
         public override Level Read(Stream src, string name, bool metadata) {
             NbtFile file = new NbtFile();

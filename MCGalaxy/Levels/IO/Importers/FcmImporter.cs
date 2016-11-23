@@ -61,7 +61,6 @@ namespace MCGalaxy.Levels.IO {
         }
         
         static Vec3U16 ReadDimensions(BinaryReader reader) {
-            BinaryReader reader = new BinaryReader(src);
             if (reader.ReadInt32() != 0x0FC2AF40 || reader.ReadByte() != 13) {
                 throw new InvalidDataException( "Unexpected constant in .fcm file" );
             }

@@ -30,15 +30,20 @@ namespace MCGalaxy.Levels.IO {
         /// <summary> Reads the data for a level from a file containing data encoded in this format. </summary>
         /// <param name="metadata"> Whether metadata should be loaded. </param>
         public Level Read(string path, string name, bool metadata) {
-            using (FileStream fs = File.OpenRead(path)) {
+            using (FileStream fs = File.OpenRead(path))
                 return Read(fs, name, metadata);
-            }
         }
         
         /// <summary> Reads the data for a level from a file containing data encoded in this format. </summary>
         /// <param name="metadata"> Whether metadata should be loaded. </param>
         public abstract Level Read(Stream src, string name, bool metadata);
 
+        /// <summary> Reads the dimensions for a level from a file containing data encoded in this format. </summary>
+        public Vec3U16 ReadDimensions(string path) {
+            using (FileStream fs = File.OpenRead(path))
+                return ReadDimensions(fs);
+        }
+        
         /// <summary> Reads the dimensions for a level from a file containing data encoded in this format. </summary>
         public abstract Vec3U16 ReadDimensions(Stream src);
         
@@ -59,7 +64,7 @@ namespace MCGalaxy.Levels.IO {
         }
     }
 
-    /// <summary> Writes/Saves block data (and potentially metadata) encoded in a particular format. </summary>    
+    /// <summary> Writes/Saves block data (and potentially metadata) encoded in a particular format. </summary>
     public abstract class IMapExporter {
 
         /// <summary> The file extension of this format. </summary>
