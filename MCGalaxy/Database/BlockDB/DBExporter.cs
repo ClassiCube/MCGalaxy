@@ -44,6 +44,7 @@ namespace MCGalaxy.DB {
         void DumpRow(IDataReader reader) {
             if (stream == null) {
                 stream = File.Create("blockdefs/" + mapName + ".dump");
+                Vec3U16 dims = L
             }
             
             string user = reader.GetString(0);

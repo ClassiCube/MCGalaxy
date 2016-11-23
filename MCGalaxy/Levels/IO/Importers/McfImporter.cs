@@ -27,25 +27,24 @@ namespace MCGalaxy.Levels.IO {
     public sealed class McfImporter : IMapImporter {
 
         public override string Extension { get { return ".mcf"; } }
+
+        public override Vec3U16 ReadDimensions(Stream src) {
+            using (Stream gs = new GZipStream(src, CompressionMode.Decompress, true)) {
+                byte[] header = new byte[16];
+                return ReadHeader(gs, header);
+            }
+        }
         
         public override Level Read(Stream src, string name, bool metadata) {
             using (Stream gs = new GZipStream(src, CompressionMode.Decompress)) {
                 byte[] header = new byte[16];
-                gs.Read(header, 0, 2);
-                if (BitConverter.ToUInt16(header, 0) != 1874)
-                    throw new InvalidDataException(".mcf files must have a version of 1874");
-                               
-                gs.Read(header, 0, 16);
-                ushort width = BitConverter.ToUInt16(header, 0);
-                ushort length = BitConverter.ToUInt16(header, 2);
-                ushort height = BitConverter.ToUInt16(header, 4);
+                Vec3U16 dims = ReadHeader(header, gs);
 
-                Level lvl = new Level(name, width, height, length);
+                Level lvl = new Level(name, dims.X, dims.Y, dims.Z);
                 lvl.spawnx = BitConverter.ToUInt16(header, 6);
                 lvl.spawnz = BitConverter.ToUInt16(header, 8);
                 lvl.spawny = BitConverter.ToUInt16(header, 10);
-                lvl.rotx = header[12];
-                lvl.roty = header[13];
+                lvl.rotx = header[12]; lvl.roty = header[13];
                 // 2 bytes for perbuild and pervisit
 
                 byte[] blocks = new byte[2 * lvl.blocks.Length];
@@ -53,7 +52,20 @@ namespace MCGalaxy.Levels.IO {
                 for (int i = 0; i < blocks.Length / 2; ++i)
                     lvl.blocks[i] = blocks[i * 2];
                 return lvl;
-            }        
+            }
+        }
+        
+        static Vec3U16 ReadHeader(byte[] header, Stream gs) {
+            gs.Read(header, 0, 2);
+            if (BitConverter.ToUInt16(header, 0) != 1874)
+                throw new InvalidDataException(".mcf files must have a version of 1874");
+            
+            gs.Read(header, 0, 16);
+            Vec3U16 dims;
+            dims.X = BitConverter.ToUInt16(header, 0);
+            dims.Z = BitConverter.ToUInt16(header, 2);
+            dims.Y = BitConverter.ToUInt16(header, 4);
+            return dims;
         }
     }
 }

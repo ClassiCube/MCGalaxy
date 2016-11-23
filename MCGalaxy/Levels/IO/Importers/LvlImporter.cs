@@ -27,12 +27,11 @@ namespace MCGalaxy.Levels.IO {
 
 		public override string Extension { get { return ".lvl"; } }
         
-        public static void LoadDimensions(string file, out ushort width, out ushort height, out ushort length) {
-            using (Stream fs = File.OpenRead(file), gs = new GZipStream(fs, CompressionMode.Decompress, true)) {
+        public override Vec3U16 ReadDimensions(Stream src) {
+            using (Stream gs = new GZipStream(src, CompressionMode.Decompress, true)) {
                 byte[] header = new byte[16];
                 int offset = 0;
-                Vec3U16 dims = ReadHeader(gs, header, out offset);
-                width = dims.X; height = dims.Y; length = dims.Z;
+                return ReadHeader(gs, header, out offset);
             }
         }
         
@@ -52,7 +51,7 @@ namespace MCGalaxy.Levels.IO {
                 gs.Read(lvl.blocks, 0, lvl.blocks.Length);
                 ReadBlockDefsSection(lvl, gs);
                 
-                if (!metadata) return lvl;                
+                if (!metadata) return lvl;
                 ReadPhysicsSection(lvl, gs);
                 return lvl;
             }

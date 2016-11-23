@@ -38,9 +38,12 @@ namespace MCGalaxy.Levels.IO {
         /// <summary> Reads the data for a level from a file containing data encoded in this format. </summary>
         /// <param name="metadata"> Whether metadata should be loaded. </param>
         public abstract Level Read(Stream src, string name, bool metadata);
+
+        /// <summary> Reads the dimensions for a level from a file containing data encoded in this format. </summary>
+        public abstract Vec3U16 ReadDimensions(Stream src);
         
         public static List<IMapImporter> Formats = new List<IMapImporter>() {
-        	new LvlImporter(), new CwImporter(), new FcmImporter(), new McfImporter(), new DatImporter(),
+            new LvlImporter(), new CwImporter(), new FcmImporter(), new McfImporter(), new DatImporter(),
         };
         
         protected void ConvertCustom(Level lvl) {

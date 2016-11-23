@@ -25,16 +25,15 @@ namespace MCGalaxy.Levels.IO {
 
         public override string Extension { get { return ".fcm"; } }
         
+        public override Vec3U16 ReadDimensions(Stream src) {
+            BinaryReader reader = new BinaryReader(src);
+            return ReadDimensions(reader);
+        }
+        
         public override Level Read(Stream src, string name, bool metadata) {
             BinaryReader reader = new BinaryReader(src);
-            if (reader.ReadInt32() != 0x0FC2AF40 || reader.ReadByte() != 13) {
-                throw new InvalidDataException( "Unexpected constant in .fcm file" );
-            }
-            
-            ushort width = reader.ReadUInt16();
-            ushort height = reader.ReadUInt16();
-            ushort length = reader.ReadUInt16();
-            Level lvl = new Level(name, width, height, length);
+            Vec3U16 dims = ReadDimensions(reader);
+            Level lvl = new Level(name, dims.X, dims.Y, dims.Z);
 
             lvl.spawnx = (ushort)(reader.ReadInt32() / 32);
             lvl.spawny = (ushort)(reader.ReadInt32() / 32);
@@ -59,6 +58,19 @@ namespace MCGalaxy.Levels.IO {
             }
             ConvertCustom(lvl);
             return lvl;
+        }
+        
+        static Vec3U16 ReadDimensions(BinaryReader reader) {
+            BinaryReader reader = new BinaryReader(src);
+            if (reader.ReadInt32() != 0x0FC2AF40 || reader.ReadByte() != 13) {
+                throw new InvalidDataException( "Unexpected constant in .fcm file" );
+            }
+            
+            Vec3U16 dims;
+            dims.X = reader.ReadUInt16();
+            dims.Y = reader.ReadUInt16();
+            dims.Z = reader.ReadUInt16();
+            return dims;
         }
         
         static string ReadString(BinaryReader reader) {
