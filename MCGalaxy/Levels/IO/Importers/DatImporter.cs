@@ -37,14 +37,17 @@ using System.IO.Compression;
 using System.Net;
 
 namespace MCGalaxy.Levels.IO {
-	public sealed class DatImporter : IMapImporter {
+    public sealed class DatImporter : IMapImporter {
 
-		public override string Extension { get { return ".dat"; } }
+        public override string Extension { get { return ".dat"; } }
 
         public override Vec3U16 ReadDimensions(Stream src) {
-			throw new NotSupportedException();
+            throw new NotSupportedException();
         }
-		
+        
+        const byte MAGIC1 = 0xAC, MAGIC2 = 0xED;
+        const byte TYPE_END_BLOCK = 0x78, TYPE_NULL = 0x70;
+        
         public override Level Read(Stream src, string name, bool metadata) {
             byte[] temp = new byte[8];
             Level lvl = new Level(name, 0, 0, 0);
@@ -58,71 +61,67 @@ namespace MCGalaxy.Levels.IO {
                 reader.Read(data, 0, length);
 
             for (int i = 0; i < length - 1; i++) {
-                if (data[i] == 0xAC && data[i + 1] == 0xED) {
-                    // bypassing the header crap
-                    int pointer = i + 6;
-                    Array.Copy(data, pointer, temp, 0, sizeof(short));
-                    pointer += IPAddress.HostToNetworkOrder(BitConverter.ToInt16(temp, 0));
-                    pointer += 13;
+                if (data[i] != MAGIC1 || data[i + 1] != MAGIC2) continue;
+                int pointer = 0, headerEnd = 0;
+                ReadHeader(data, ref pointer, ref headerEnd, i);
+                ReadFields(data, ref pointer, ref headerEnd, lvl);
+                
+                lvl.spawnx = (ushort)(lvl.Width / 1.3);
+                lvl.spawny = (ushort)(lvl.Height / 1.3);
+                lvl.spawnz = (ushort)(lvl.Length / 1.3);
 
-                    int headerEnd = 0;
-                    // find the end of serialization listing
-                    for (headerEnd = pointer; headerEnd < data.Length - 1; headerEnd++) {
-                        if (data[headerEnd] == 0x78 && data[headerEnd + 1] == 0x70) {
-                            headerEnd += 2; break;
-                        }
-                    }
-
-                    // start parsing serialization listing
-                    int offset = 0;
-                    while (pointer < headerEnd) {
-                        if (data[pointer] == 'Z') offset++;
-                        else if (data[pointer] == 'I' || data[pointer] == 'F') offset += 4;
-                        else if (data[pointer] == 'J') offset += 8;
-
-                        pointer += 1;
-                        Array.Copy(data, pointer, temp, 0, sizeof(short));
-                        short skip = IPAddress.HostToNetworkOrder(BitConverter.ToInt16(temp, 0));
-                        pointer += 2;
-
-                        // look for relevant variables
-                        Array.Copy(data, headerEnd + offset - 4, temp, 0, sizeof(int));
-                        if (MemCmp(data, pointer, "width")) {
-                            lvl.Width = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt32(temp, 0));
-                        } else if (MemCmp(data, pointer, "depth")) {
-                            lvl.Height = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt32(temp, 0));
-                            lvl.EdgeLevel = lvl.Height / 2;
-                        } else if (MemCmp(data, pointer, "height")) {
-                            lvl.Length = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt32(temp, 0));
-                        }
-                        pointer += skip;
-                    }
-                    
-                    lvl.spawnx = (ushort)(lvl.Width / 1.3);
-                    lvl.spawny = (ushort)(lvl.Height / 1.3);
-                    lvl.spawnz = (ushort)(lvl.Length / 1.3);
-
-                    // find the start of the block array
-                    bool foundBlockArray = false;
-                    offset = Array.IndexOf<byte>(data, 0x00, headerEnd);
-                    while (offset != -1 && offset < data.Length - 2) {
-                        if (data[offset] == 0x00 && data[offset + 1] == 0x78 && data[offset + 2] == 0x70) {
-                            foundBlockArray = true;
-                            pointer = offset + 7;
-                        }
-                        offset = Array.IndexOf<byte>(data, 0x00, offset + 1);
-                    }
-
-                    // copy the block array... or fail
-                    if (foundBlockArray) {
+                // find the start of the block array
+                int offset = Array.IndexOf<byte>(data, 0x00, headerEnd);
+                while (offset != -1 && offset < data.Length - 2) {
+                    if (data[offset] == 0x00 && data[offset + 1] == TYPE_END_BLOCK && data[offset + 2] == TYPE_NULL) {
+                        pointer = offset + 7;
                         CopyBlocks(lvl, data, pointer);
-                    } else {
-                        throw new InvalidDataException("Could not locate block array.");
+                        return lvl;
                     }
-                    break;
+                    offset = Array.IndexOf<byte>(data, 0x00, offset + 1);
+                }
+                throw new InvalidDataException("Could not locate block array.");
+            }
+            return null;
+        }
+        
+        static void ReadHeader(byte[] data, ref int pointer, ref int headerEnd, int i) {
+            pointer = i + 6; // skip magic, version, and typecodes
+            ushort classNameLen = NetUtils.ReadU16(data, pointer);
+            pointer += classNameLen; // skip class name
+            pointer += 13; // skip class description
+
+            headerEnd = pointer;
+            // find the end of serialization listing
+            for (; headerEnd < data.Length - 1; headerEnd++) {
+                if (data[headerEnd] == TYPE_END_BLOCK && data[headerEnd + 1] == TYPE_NULL) {
+                    headerEnd += 2; break;
                 }
             }
-            return lvl;
+        }
+        
+        static void ReadFields(byte[] data, ref int pointer, ref int headerEnd, Level lvl) {
+            // start parsing serialization listing
+            int offset = 0;
+            while (pointer < headerEnd) {
+                byte type = data[pointer]; pointer += 1;
+                if (type == 'Z') offset++;
+                else if (type == 'I' || type == 'F') offset += 4;
+                else if (type == 'J') offset += 8;
+                ushort nameLen = NetUtils.ReadU16(data, pointer); pointer += 2;
+                
+                // look for relevant variables
+                int valueOffset = headerEnd + offset - 4;
+                if (MemCmp(data, pointer, "width")) {
+                    lvl.Width = (ushort)NetUtils.ReadI32(data, valueOffset);
+                } else if (MemCmp(data, pointer, "depth")) {
+                    lvl.Height = (ushort)NetUtils.ReadI32(data, valueOffset);
+                    lvl.EdgeLevel = lvl.Height / 2;
+                } else if (MemCmp(data, pointer, "height")) {
+                    lvl.Length = (ushort)NetUtils.ReadI32(data, valueOffset);
+                }
+                pointer += nameLen;
+            }
         }
 
         static bool MemCmp( byte[] data, int offset, string value ) {
