@@ -66,10 +66,6 @@ namespace MCGalaxy.Levels.IO {
                 ReadHeader(data, ref pointer, ref headerEnd, i);
                 ReadFields(data, ref pointer, ref headerEnd, lvl);
                 
-                lvl.spawnx = (ushort)(lvl.Width / 1.3);
-                lvl.spawny = (ushort)(lvl.Height / 1.3);
-                lvl.spawnz = (ushort)(lvl.Length / 1.3);
-
                 // find the start of the block array
                 int offset = Array.IndexOf<byte>(data, 0x00, headerEnd);
                 while (offset != -1 && offset < data.Length - 2) {
@@ -117,8 +113,15 @@ namespace MCGalaxy.Levels.IO {
                 } else if (MemCmp(data, pointer, "depth")) {
                     lvl.Height = (ushort)NetUtils.ReadI32(data, valueOffset);
                     lvl.EdgeLevel = lvl.Height / 2;
+                    lvl.CloudsHeight = lvl.Height + 2;
                 } else if (MemCmp(data, pointer, "height")) {
                     lvl.Length = (ushort)NetUtils.ReadI32(data, valueOffset);
+                } else if (MemCmp(data, pointer, "xSpawn")) {
+                    lvl.spawnx = (ushort)NetUtils.ReadI32(data, valueOffset);
+                } else if (MemCmp(data, pointer, "ySpawn")) {
+                    lvl.spawny = (ushort)NetUtils.ReadI32(data, valueOffset);
+                } else if (MemCmp(data, pointer, "zSpawn")) {
+                    lvl.spawnz = (ushort)NetUtils.ReadI32(data, valueOffset);
                 }
                 pointer += nameLen;
             }
