@@ -41,8 +41,6 @@ namespace MCGalaxy {
         public static event OnLevelUnload LevelUnload;
         
         public static event OnLevelSave LevelSave;
-
-        public event OnLevelUnload onLevelUnload;
         
         public static event OnLevelLoad LevelLoad;
         

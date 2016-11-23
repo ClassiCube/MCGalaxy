@@ -35,7 +35,7 @@ namespace MCGalaxy {
             return array[offset] << 24 | array[offset + 1] << 16 
                 | array[offset + 2] << 8 | array[offset + 3];
         }
-        
+
         public static void WriteI16(short value, byte[] array, int index) {
             array[index++] = (byte)(value >> 8);
             array[index++] = (byte)(value);
