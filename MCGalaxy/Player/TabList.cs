@@ -22,7 +22,6 @@ namespace MCGalaxy {
 
     /// <summary> Contains methods related to the management of tab list of player names. </summary>
     public static class TabList {
-        
          // Want nobody to be at top of list, banned to be bottom of list.
         const LevelPermission offset = LevelPermission.Nobody;
         

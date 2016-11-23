@@ -140,7 +140,21 @@ namespace MCGalaxy {
             CallImpl(pl => pl(p, x, y, z, block, extBlock));
         }
     }
-    
+
+    /// <summary> This event is called whenever a player clicks their mouse </summary>
+    public sealed class OnPlayerClickEvent : IPluginEvent<Player.PlayerClickHandler>
+    {
+        internal OnPlayerClickEvent(Player.PlayerClickHandler method, Priority priority, Plugin plugin)
+            : base(method, priority, plugin) { }
+
+        public static void Call(Player p, MouseButton button, MouseAction action, ushort yaw, ushort pitch, byte entity, ushort x, ushort y, ushort z, TargetBlockFace face)
+        {
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p, button, action, yaw,
+                pitch, entity, x, y, z, face));
+        }
+    }
+
     /// <summary> This event is called whenever a player recieves a message from the server or from another player </summary>
     public sealed class OnMessageRecieveEvent : IPluginEvent<Player.OnPlayerMessageReceived> {
         internal OnMessageRecieveEvent(Player.OnPlayerMessageReceived method, Priority priority, Plugin plugin)

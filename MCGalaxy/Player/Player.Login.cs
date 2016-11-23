@@ -82,6 +82,7 @@ namespace MCGalaxy {
             Send(Packet.ExtEntry(CpeExt.ExtPlayerList, 2), true);
             
             Send(Packet.ExtEntry(CpeExt.EnvMapAspect, 1), true);
+            Send(Packet.ExtEntry(CpeExt.PlayerClick, 1), true);
         }
         
         void CompleteLoginProcess() {

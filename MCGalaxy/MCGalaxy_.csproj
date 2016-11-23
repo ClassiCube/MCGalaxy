@@ -471,6 +471,7 @@
     <Compile Include="Economy\RankItem.cs" />
     <Compile Include="Events\Level.Events.cs" />
     <Compile Include="Events\Player.Events.cs" />
+    <Compile Include="Events\PlayerClick.cs" />
     <Compile Include="Games\Countdown\CountdownGame.cs" />
     <Compile Include="Games\Countdown\CountdownGame.Game.cs" />
     <Compile Include="Games\Countdown\CountdownMapGen.cs" />
@@ -701,60 +702,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Blocks\Behaviour" />
-    <Folder Include="Blocks\Extended" />
-    <Folder Include="Bots\Instructions" />
-    <Folder Include="Commands" />
-    <Folder Include="Commands\building" />
-    <Folder Include="Commands\Fun" />
-    <Folder Include="Commands\Fun\CTF" />
-    <Folder Include="Commands\Fun\ZombieSurvival" />
-    <Folder Include="Commands\Information" />
-    <Folder Include="Commands\Moderation" />
-    <Folder Include="Commands\Economy" />
-    <Folder Include="Commands\Chat" />
-    <Folder Include="Commands\CPE" />
-    <Folder Include="Commands\Bots" />
-    <Folder Include="Commands\Scripting" />
-    <Folder Include="Commands\World" />
-    <Folder Include="Commands\other" />
-    <Folder Include="Database\Backends" />
-    <Folder Include="Database\BlockDB" />
-    <Folder Include="Drawing\DrawOps" />
-    <Folder Include="Drawing\Brushes" />
-    <Folder Include="Drawing\Image" />
-    <Folder Include="Drawing\BrushFactories" />
-    <Folder Include="Drawing\TransformFactories" />
-    <Folder Include="Drawing\Transform" />
-    <Folder Include="Games\Countdown" />
-    <Folder Include="Games\LavaSurvival" />
-    <Folder Include="Games\TntWars" />
-    <Folder Include="Games\ZombieSurvival" />
-    <Folder Include="Generator\Foilage" />
-    <Folder Include="Generator\fCraft" />
-    <Folder Include="Levels\IO" />
-    <Folder Include="Generator" />
-    <Folder Include="Blocks\Physics" />
-    <Folder Include="Economy" />
-    <Folder Include="Blocks" />
-    <Folder Include="Config" />
-    <Folder Include="Bots" />
-    <Folder Include="Events" />
-    <Folder Include="Chat" />
-    <Folder Include="CorePlugin" />
-    <Folder Include="Levels\IO\Importers" />
-    <Folder Include="Levels\IO\Exporters" />
-    <Folder Include="Server\Tasks" />
-    <Folder Include="util\Math" />
-    <Folder Include="Player\Group" />
-    <Folder Include="Player\List" />
-    <Folder Include="Player\Undo" />
-    <Folder Include="Plugins" />
-    <Folder Include="Plugins\Events" />
-    <Folder Include="util\Extensions" />
-    <Folder Include="util\IO" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

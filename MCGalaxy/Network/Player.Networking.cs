@@ -78,7 +78,27 @@ namespace MCGalaxy {
             extensionCount--;
             CheckReadAllExtensions();
         }
-        
+
+        void HandlePlayerClicked(byte[] packet) {
+            if (OnPlayerClick == null) return;
+
+            var Button = (MouseButton)packet[1];
+            var Action = (MouseAction)packet[2];
+            ushort Yaw = NetUtils.ReadU16(packet, 3);
+            ushort Pitch = NetUtils.ReadU16(packet, 5);
+            byte EntityID = packet[7];
+            ushort X = NetUtils.ReadU16(packet, 8);
+            ushort Y = NetUtils.ReadU16(packet, 10);
+            ushort Z = NetUtils.ReadU16(packet, 12);
+            byte Face = packet[14];
+
+            var face = TargetBlockFace.None;
+            if (Face < (byte)face)
+                face = (TargetBlockFace)Face;
+            OnPlayerClick(this, Button, Action, Yaw, Pitch, EntityID, X, Y, Z, face);
+            OnPlayerClickEvent.Call(this, Button, Action, Yaw, Pitch, EntityID, X, Y, Z, face);
+        }
+
         void CheckReadAllExtensions() {
             if (extensionCount <= 0 && !finishedCpeLogin) {
                 CompleteLoginProcess();

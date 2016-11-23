@@ -221,7 +221,8 @@ namespace MCGalaxy {
                 case Opcode.CpeExtInfo: return 67;
                 case Opcode.CpeExtEntry: return 69;
                 case Opcode.CpeCustomBlockSupportLevel: return 2;
-                
+                case Opcode.CpePlayerClick: return 15;
+
                 default:
                     if (!dontmindme) {
                         string msg = "Unhandled message id \"" + buffer[0] + "\"!";
@@ -250,6 +251,8 @@ namespace MCGalaxy {
                     HandleExtEntry(buffer); break;
                 case Opcode.CpeCustomBlockSupportLevel:
                     customBlockSupportLevel = buffer[1]; break;
+                case Opcode.CpePlayerClick:
+                    HandlePlayerClicked(buffer); break;
             }
         }
 

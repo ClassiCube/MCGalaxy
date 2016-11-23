@@ -41,7 +41,8 @@ namespace MCGalaxy {
         public int TextColors = 0;
         public int BulkBlockUpdate = 0;
         public int EnvMapAspect = 0;
-        
+        public int PlayerClick = 0;
+
         public bool hasCustomBlocks, hasBlockDefs, 
         hasTextColors, hasChangeModel, hasExtList;
 
@@ -102,6 +103,8 @@ namespace MCGalaxy {
                     BulkBlockUpdate = version; break;
                 case CpeExt.EnvMapAspect:
                     EnvMapAspect = version; break;
+                case CpeExt.PlayerClick:
+                    PlayerClick = version; break;
             }
         }
 
@@ -129,6 +132,7 @@ namespace MCGalaxy {
                 case CpeExt.TextColors: return TextColors == version;
                 case CpeExt.BulkBlockUpdate: return BulkBlockUpdate == version;
                 case CpeExt.EnvMapAspect: return EnvMapAspect == version;
+                case CpeExt.PlayerClick: return PlayerClick == version;
                 default: return false;
             }
         }
@@ -255,6 +259,7 @@ namespace MCGalaxy {
         public const string TextColors = "TextColors";
         public const string BulkBlockUpdate = "BulkBlockUpdate";
         public const string EnvMapAspect = "EnvMapAspect";
+        public const string PlayerClick = "PlayerClick";
     }
     
     public enum CpeMessageType : byte {

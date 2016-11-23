@@ -73,7 +73,12 @@ namespace MCGalaxy {
         public static event BlockchangeEventHandler2 PlayerBlockChange;
         public void ClearBlockchange() { Blockchange = null; }
         public object blockchangeObject;
-        
+
+        /// <summary> Called when a player clicks their mouse. </summary>
+        public delegate void PlayerClickHandler(Player p, MouseButton button, MouseAction action, ushort yaw, ushort pitch, byte entity, ushort x, ushort y, ushort z, TargetBlockFace face);
+        /// <summary> Called when a player clicks their mouse </summary>
+        public static event PlayerClickHandler OnPlayerClick;
+
         /// <summary> Called when a player connects to the server. </summary>
         public delegate void OnPlayerConnect(Player p);
         /// <summary> Called when a player connects to the server. </summary>

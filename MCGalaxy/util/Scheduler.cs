@@ -33,12 +33,13 @@ namespace MCGalaxy {
             thread.IsBackground = true;
             thread.Start();
         }
-        
+
         /// <summary> Queues an action that is asynchronously executed one time, as soon as possible. </summary>
-        public SchedulerTask QueueOnce(Action callback) {
+        public SchedulerTask QueueOnce(Action callback)
+        {
             return EnqueueTask(new SchedulerTask(obj => callback(), null, TimeSpan.Zero, false));
         }
-        
+
         /// <summary> Queues an action that is asynchronously executed one time, after a certain delay. </summary>
         public SchedulerTask QueueOnce(Action<SchedulerTask> callback, object state, TimeSpan delay) {
             return EnqueueTask(new SchedulerTask(callback, state, delay, false));

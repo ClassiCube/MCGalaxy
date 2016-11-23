@@ -25,7 +25,7 @@ namespace MCGalaxy {
         
         string path;
         List<string> players = new List<string>();
-        List<string> lines = new List<string>();
+        public List<string> lines = new List<string>();
         readonly object locker = new object(), saveLocker = new object();
         
         public void Add(string p, string data) {
