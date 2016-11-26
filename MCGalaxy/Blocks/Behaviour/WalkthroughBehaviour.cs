@@ -78,13 +78,12 @@ namespace MCGalaxy.Blocks {
         
         internal static bool Checkpoint(Player p, byte block, ushort x, ushort y, ushort z) {
             p.useCheckpointSpawn = true;
-            p.checkpointX = x; p.checkpointY = y; p.checkpointZ = z;
+            p.checkpointX = x; p.checkpointY = (ushort)(y + 1); p.checkpointZ = z;
             p.checkpointRotX = p.rot[0]; p.checkpointRotY = p.rot[1];
             
             int index = p.level.PosToInt(x, y, z);
             if (index != p.lastCheckpointIndex) {
-                int sendY = (p.pos[1] / 32) * 32 + 10;
-                p.SpawnEntity(p, Entities.SelfID, p.pos[0], (ushort)sendY, p.pos[2], p.rot[0], p.rot[1]);
+                p.SpawnEntity(p, Entities.SelfID, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
                 p.lastCheckpointIndex = index;
             }
             return true;
