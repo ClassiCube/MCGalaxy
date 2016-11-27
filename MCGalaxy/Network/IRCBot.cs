@@ -256,7 +256,7 @@ namespace MCGalaxy {
         void Listener_OnPublic(UserInfo user, string channel, string message) {
             message = message.TrimEnd();
             if (message.Length == 0) return;
-            bool opchat = channel == opchannel;
+            bool opchat = channel.CaselessEq(opchannel);
             
             message = Colors.IrcToMinecraftColors(message);
             message = CP437Reader.ConvertToRaw(message);
