@@ -30,7 +30,9 @@ namespace MCGalaxy.Commands {
 
             string giver = (p == null) ? "(console)" : p.ColoredName;
             if (!TryMessage(p, string.Format(message, giver, who.ColoredName))) return false;
-            if (messageWho && !who.listignored.Contains(giver))
+            
+            string giverRaw = (p == null) ? "(console)" : p.name;
+            if (messageWho && !who.listignored.Contains(giverRaw))
                 Player.Message(who, string.Format(message, giver, "you"));
             return true;
         }

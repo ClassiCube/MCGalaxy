@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
             Level[] loaded = LevelInfo.Loaded.Items;
             
             foreach (string file in files) {
-                string map = Path.GetFileNameWithoutExtension(file);                
+                string map = Path.GetFileNameWithoutExtension(file);
                 if (IsLoaded(loaded, map)) continue;
                 maps.Add(map);
             }
