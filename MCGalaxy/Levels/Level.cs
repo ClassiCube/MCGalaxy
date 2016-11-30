@@ -207,7 +207,7 @@ namespace MCGalaxy {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
-                if (!silent) Chat.MessageOps("&3" + name + " %Swas unloaded.");
+                if (!silent) Chat.MessageOps(ColoredName + " %Swas unloaded.");
                 Server.s.Log(name + " was unloaded.");
             }
             return true;
@@ -217,7 +217,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 if (p.level == this) {
-                    Player.Message(p, "You were moved to the main level as " + name + " was unloaded.");
+                    Player.Message(p, "You were moved to the main level as " + ColoredName + " %Swas unloaded.");
                     PlayerActions.ChangeMap(p, Server.mainLevel);
                 }
             }
@@ -268,7 +268,7 @@ namespace MCGalaxy {
                 }
             } catch (Exception e) {
                 Server.s.Log("FAILED TO SAVE :" + name);
-                Chat.MessageAll("FAILED TO SAVE :{0}", name);
+                Chat.MessageAll("FAILED TO SAVE {0}", ColoredName);
                 Server.ErrorLog(e);
             }
             GC.Collect();

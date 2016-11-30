@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
                 if (lvl.physics == 0) continue;
-                Player.Message(p, "&5" + lvl.name + " %Shas physics at &b" + lvl.physics +
+                Player.Message(p, lvl.ColoredName + " %Shas physics at &b" + lvl.physics +
                                "%S. &cChecks: " + lvl.lastCheck + "; Updates: " + lvl.lastUpdate);
             }
         }
@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands {
             lvl.setPhysics(state);
             if (state == 0) lvl.ClearPhysics();
             string stateDesc = states[state];
-            lvl.ChatLevel("Physics are now " + stateDesc + " %Son &b" + lvl.name + "%S.");
+            lvl.ChatLevel("Physics are now " + stateDesc + " %Son " + lvl.ColoredName + "%S.");
             
             stateDesc = stateDesc.Substring( 2 );
             string logInfo = "Physics are now " + stateDesc + " on " + lvl.name + ".";

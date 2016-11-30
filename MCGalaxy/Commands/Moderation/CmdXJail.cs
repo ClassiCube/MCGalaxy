@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/xjail [player]");
             Player.Message(p, "%HMutes, freezes, and sends <player> to the XJail map");
-            Player.Message(p, "%HIf [player] is already jailed, <player> will be spawned, unfrozen and unmuted");
+            Player.Message(p, "%HIf [player] is already jailed, [player] will be spawned, unfrozen and unmuted");
             Player.Message(p, "%T/xjail set");
             Player.Message(p, "%HSets the xjail map to your current map and sets jail to current location");
         }

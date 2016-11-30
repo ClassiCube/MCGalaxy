@@ -24,7 +24,6 @@ using MCGalaxy.DB;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
 using MCGalaxy.Util;
-using Timer = System.Timers.Timer;
 
 namespace MCGalaxy {
     public sealed partial class Level : IDisposable {
@@ -32,6 +31,17 @@ namespace MCGalaxy {
         public string name;
         [ConfigString("MOTD", "General", null, "ignore", true, null, 128)]
         public string motd = "ignore";
+        
+        public string ColoredName {
+            get {
+                LevelPermission perm = permissionvisit;
+                if (perm < permissionbuild) perm = permissionbuild;
+                
+                Group grp = Group.findPerm(perm);
+                string col = grp == null ? "&f" : grp.color;
+                return col + name;
+            }
+        }
         
         public byte rotx, roty;
         public ushort spawnx, spawny, spawnz;

@@ -194,12 +194,12 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "Countdown rules sent to everyone");
                     return;
                 } else if (target == "map") {
-                    Chat.MessageLevel(p.level, "Countdown Rules being sent to " + p.level.name + " by " + p.ColoredName + ":");
+                    Chat.MessageLevel(p.level, "Countdown Rules being sent to " + p.level.ColoredName + " %Sby " + p.ColoredName + ":");
                     Chat.MessageLevel(p.level, "The aim of the game is to stay alive the longest.");
                     Chat.MessageLevel(p.level, "Don't fall in the lava!!");
                     Chat.MessageLevel(p.level, "Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disappering.");
                     Chat.MessageLevel(p.level, "The last person alive will win!!");
-                    Player.Message(p, "Countdown rules sent to: " + p.level.name);
+                    Player.Message(p, "Countdown rules sent to: " + p.level.ColoredName);
                     return;
                 }
 

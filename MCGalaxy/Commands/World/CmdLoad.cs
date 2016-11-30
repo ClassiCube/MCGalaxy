@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.World {
                                    string phys, bool autoLoaded) {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level l in loaded) {
-                if (l.name == name) { Player.Message(p, "{0} is already loaded.", name); return null; }
+                if (l.name == name) { Player.Message(p, "Level {0} %Sis already loaded.", l.ColoredName); return null; }
             }
             if (!LevelInfo.ExistsOffline(name)) {
                 Player.Message(p, "Level \"{0}\" does not exist", name); return null;
@@ -65,12 +65,12 @@ namespace MCGalaxy.Commands.World {
 
             loaded = LevelInfo.Loaded.Items;
             foreach (Level l in loaded) {
-                if (l.name == name) { Player.Message(p, "{0} is already loaded.", name); return null; }
+                if (l.name == name) { Player.Message(p, "Level {0} %Sis already loaded.", l.ColoredName); return null; }
             }
 
             LevelInfo.Loaded.Add(lvl);
             if (!autoLoaded)
-                Chat.MessageWhere("Level \"{0}\" loaded.", pl => Entities.CanSee(pl, p), lvl.name);
+                Chat.MessageWhere("Level {0} %Sloaded.", pl => Entities.CanSee(pl, p), lvl.ColoredName);
             
             int physLevel;
             if (!int.TryParse(phys, out physLevel)) {

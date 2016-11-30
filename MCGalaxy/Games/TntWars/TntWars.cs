@@ -199,7 +199,7 @@ namespace MCGalaxy.Games
             }
             string teamkillling = "Disabled";
             if (TeamKills) teamkillling = "Enabled";
-            Chat.MessageAll("&cTNT Wars %Son '" + lvl.name + "' has started &3" + Gamemode + " %Swith a difficulty of &3" +
+            Chat.MessageAll("&cTNT Wars %Son " + lvl.ColoredName + " %Shas started &3" + Gamemode + " %Swith a difficulty of &3" +
                             Difficulty + " %S(&3" + HitsToDie + " %Shits to die, a &3" + explosiontime + 
                             " %Sexplosion delay and with a &3" + explosionsize + " %Sexplosion size)" + 
                             ", team killing is &3" + teamkillling + " %Sand you can place &3" + TntPerPlayerAtATime 

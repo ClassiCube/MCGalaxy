@@ -126,7 +126,7 @@ namespace MCGalaxy.Commands
                 lvl.overload = 1500;
                 lvl.unload = true;
                 lvl.loadOnGoto = true;
-                Player.Message(p, "Map \"" + lvl.name + "\" has been removed.");
+                Player.Message(p, "Map {0} %Shas been removed.", lvl.ColoredName);
             } else {
                 Server.lava.AddMap(lvl.name);
 
@@ -140,7 +140,7 @@ namespace MCGalaxy.Commands
                 lvl.overload = 1000000;
                 lvl.unload = false;
                 lvl.loadOnGoto = false;
-                Player.Message(p, "Map \"" + lvl.name + "\" has been added.");
+                Player.Message(p, "Map {0} %Shas been added.", lvl.ColoredName);
             }
             Level.SaveSettings(lvl);
         }

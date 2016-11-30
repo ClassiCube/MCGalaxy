@@ -150,7 +150,7 @@ namespace MCGalaxy.Games
                 announceTimer.Start();
                 startTime = DateTime.Now;
                 roundActive = true;
-                Server.s.Log("[Lava Survival] Round started. Map: " + map.name);
+                Server.s.Log("[Lava Survival] Round started. Map: " + map.ColoredName);
             }
             catch (Exception e) { Server.ErrorLog(e); }
         }

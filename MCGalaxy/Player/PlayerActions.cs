@@ -109,7 +109,7 @@ namespace MCGalaxy {
         }
         
         static bool GotoLevel(Player p, Level lvl, bool ignorePerms) {
-            if (p.level == lvl) { Player.Message(p, "You are already in \"{0}\".", lvl.name); return false; }
+            if (p.level == lvl) { Player.Message(p, "You are already in {0}%S.", lvl.ColoredName); return false; }
             if (!lvl.CanJoin(p, ignorePerms)) return false;
             if (!Server.zombie.PlayerCanJoinLevel(p, lvl, p.level)) return false;
 
@@ -127,7 +127,7 @@ namespace MCGalaxy {
             p.prevMsg = "";
             
             if (!p.hidden && p.level.ShouldShowJoinMessage(oldLevel)) {
-                Player.SendChatFrom(p, p.ColoredName + " %Swent to &b" + lvl.name, false);
+                Player.SendChatFrom(p, p.ColoredName + " %Swent to " + lvl.ColoredName, false);
                 Player.RaisePlayerAction(p, PlayerAction.JoinWorld, lvl.name);
             }
             return true;

@@ -40,18 +40,18 @@ namespace MCGalaxy.Commands.World {
             }
             
             if (args[0].CaselessEq("clear")) {
-                Player.Message(p, "Clearing &cALL %Sblock changes for &d{0}...", lvl.name);
+                Player.Message(p, "Clearing &cALL %Sblock changes for {0}%S...", lvl.ColoredName);
                 if (Database.TableExists("Block" + lvl.name))
                     Database.Backend.ClearTable("Block" + lvl.name);
                 lvl.BlockDB.DeleteBackingFile();
-                Player.Message(p, "Cleared &cALL %Sblock changes for &d" + lvl.name);
+                Player.Message(p, "Cleared &cALL %Sblock changes for " + lvl.ColoredName);
             } else if (args[0].CaselessEq("disable")) {
                 lvl.UseBlockDB = false;
-                Player.Message(p, "&cDisabled %Srecording further block changes for &d" + lvl.name);
+                Player.Message(p, "&cDisabled %Srecording further block changes for " + lvl.ColoredName);
                 Level.SaveSettings(lvl);
             } else if (args[0].CaselessEq("enable")) {
                 lvl.UseBlockDB = true;
-                Player.Message(p, "&aEnabled %Srecording further block changes for &d" + lvl.name);
+                Player.Message(p, "&aEnabled %Srecording further block changes for " + lvl.ColoredName);
                 Level.SaveSettings(lvl);
             } else {
                 Help(p);

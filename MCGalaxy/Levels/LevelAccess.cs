@@ -89,15 +89,15 @@ namespace MCGalaxy {
             
             if (result == LevelAccess.Blacklisted) {
                 string action = IsVisit ? "going to" : "building in";
-                Player.Message(p, "You are blacklisted from {1} {0}.", lvl.name, action);
+                Player.Message(p, "You are blacklisted from {1} {0}%S.", lvl.ColoredName, action);
             } else if (result == LevelAccess.BelowMinRank) {
                 string action = IsVisit? "go to" : "build in";
-                Player.Message(p, "Only {2}%S+ may {1} {0}.", 
-                               lvl.name, action, Group.GetColoredName(Min));
+                Player.Message(p, "Only {2}%S+ may {1} {0}%S.", 
+                               lvl.ColoredName, action, Group.GetColoredName(Min));
             } else if (result == LevelAccess.AboveMaxRank) {
                 string action = IsVisit? "go to" : "build in";
-                Player.Message(p, "Only {2} %Sand below may {1} {0}.", 
-                               lvl.name, action, Group.GetColoredName(Max));
+                Player.Message(p, "Only {2} %Sand below may {1} {0}%S.", 
+                               lvl.ColoredName, action, Group.GetColoredName(Max));
             }
             return false;
         }
@@ -195,7 +195,7 @@ namespace MCGalaxy {
             Server.s.Log(type + " rank changed to " + grp.trueName + " on " + lvl.name + ".");
             Chat.MessageLevel(lvl, type + " rank changed to " + grp.ColoredName + "%S.");
             if (p != null && p.level != lvl)
-                Player.Message(p, "{0} rank changed to {1} %Son {2}.", type, grp.ColoredName, lvl.name);
+                Player.Message(p, "{0} rank changed to {1} %Son {2}%S.", type, grp.ColoredName, lvl.ColoredName);
         }
         
         void OnListChanged(Player p, string name, bool whitelist, bool removed) {          
@@ -211,7 +211,7 @@ namespace MCGalaxy {
             Server.s.Log(msg + " on " + lvl.name);
             Chat.MessageLevel(lvl, msg);
             if (p != null && p.level != lvl)
-                Player.Message(p, "{0} on {1}", msg, lvl.name);
+                Player.Message(p, "{0} on %S{1}", msg, lvl.ColoredName);
         }
         
         
@@ -242,7 +242,7 @@ namespace MCGalaxy {
                 bool allowVisit = access == LevelAccess.Whitelisted || access == LevelAccess.Allowed;
                 if (allowVisit) continue;
                 
-                Player.Message(p, "&cNo longer allowed to visit %S{0}", lvl.name);
+                Player.Message(p, "&cNo longer allowed to visit %S{0}", lvl.ColoredName);
                 PlayerActions.ChangeMap(p, Server.mainLevel, false);
             }
         }

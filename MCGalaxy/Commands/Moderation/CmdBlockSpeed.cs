@@ -54,9 +54,9 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Block interval is now {0}.", BlockQueue.time);
             } else if (cmd == "buf")  {
                 if (p.level.bufferblocks)
-                    Player.Message(p, "Block buffering on {0} disabled.", p.level.name);
+                    Player.Message(p, "Block buffering on {0} %Sdisabled.", p.level.ColoredName);
                 else
-                    Player.Message(p, "Block buffering on {0} enabled.", p.level.name);
+                    Player.Message(p, "Block buffering on {0} %Senabled.", p.level.ColoredName);
                 p.level.bufferblocks = !p.level.bufferblocks;
             } else if (cmd == "net") {
                 if (!int.TryParse(args[1], out value)) { 
