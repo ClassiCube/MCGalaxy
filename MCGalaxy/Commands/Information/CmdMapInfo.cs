@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands {
 
             if (blacklist.Count == 0) return;
             
-            builder.Append( " %S(but not ");
+            builder.Append( " %S(except ");
             foreach (string name in blacklist)
                 builder.Append(PlayerInfo.GetColoredName(p, name) + ", ");
             builder.Remove(builder.Length - 2, 2);

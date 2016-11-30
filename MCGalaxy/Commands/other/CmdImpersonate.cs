@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands {
         public override string name { get { return "impersonate"; } }
         public override string shortcut { get { return "imp"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
         
         public override void Use(Player p, string message) {
             if (!message.Contains(" ")) { Help(p); return; }

@@ -32,7 +32,7 @@ namespace MCGalaxy {
             }
             
             if (disallowed != null && disallowed.Count > 0) {
-                builder.Append( " (but not ");
+                builder.Append( " (except ");
                 foreach (LevelPermission perm in disallowed)
                     builder.Append(Group.GetColoredName(perm) + ", ");
                 builder.Remove(builder.Length - 2, 2);
