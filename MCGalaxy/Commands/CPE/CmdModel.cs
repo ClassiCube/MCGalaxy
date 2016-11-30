@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.CPE {
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the model of others") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the model of others"),
+                    new CommandPerm(LevelPermission.Operator, "+ can change the model of bots") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("xmodel", "-own") }; }
@@ -40,11 +41,6 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
-            if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {
-                Player.Message(p, "Hence, you cannot the model of that bot.");
-                return;
-            }
-            
             string model = GetModel(p, args, 2);
             bot.model = model;
             Entities.UpdateModel(bot.id, model, bot.level, null);

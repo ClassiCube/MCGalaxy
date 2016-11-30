@@ -16,28 +16,42 @@
     permissions and limitations under the Licenses.
  */
 
-namespace MCGalaxy.Commands {    
-    public abstract class EntityPropertyCmd : Command {        
+namespace MCGalaxy.Commands {
+    public abstract class EntityPropertyCmd : Command {
         public override bool museumUsable { get { return true; } }
         
         protected void UseBotOrPlayer(Player p, string message, string type) {
             if (message == "") { Help(p); return; }
-            bool isBot = message.CaselessStarts("bot ");            
+            bool isBot = message.CaselessStarts("bot ");
             string[] args = message.SplitSpaces(isBot ? 3 : 2);
             if (!CheckOwn(p, args, "player or bot name")) return;
             
             Player who = null;
-            PlayerBot bot = null;            
+            PlayerBot bot = null;
             if (isBot) bot = PlayerBot.FindMatchesPreferLevel(p, args[1]);
             else who = PlayerInfo.FindMatches(p, args[0]);
             if (bot == null && who == null) return;
-            
-            if (p != null && who != null && who.Rank > p.Rank) {
-                MessageTooHighRank(p, "change the " + type + " of", true); return;
+
+            if (isBot) {
+                if (!CheckExtraPerm(p, 2)) {
+                    MessageNeedExtra(p, "change the " + type + " of bots.", 2); return;
+                }
+                
+                if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {
+                    Player.Message(p, "Hence, you cannot change the " + type + " of that bot.");
+                    return;
+                }
+                SetBotData(p, bot, args);
+            } else {
+                if (p != who && !CheckExtraPerm(p, 1)) {
+                    MessageNeedExtra(p, "change the " + type + " of others.", 1); return;
+                }
+                
+                if (p != null && who.Rank > p.Rank) {
+                    MessageTooHighRank(p, "change the " + type + " of", true); return;
+                }
+                SetPlayerData(p, who, args);
             }
-            if ((isBot || p != who) && !CheckExtraPerm(p)) { MessageNeedExtra(p, "change the " + type + " of others."); return; }
-            if (isBot) SetBotData(p, bot, args);
-            else SetPlayerData(p, who, args);
         }
         
         protected void UsePlayer(Player p, string message, string type) {

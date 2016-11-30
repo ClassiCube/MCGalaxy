@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.CPE {
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the skin of others") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the skin of others"),
+                    new CommandPerm(LevelPermission.Operator, "+ can change the skin of bots") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -34,14 +35,9 @@ namespace MCGalaxy.Commands.CPE {
                 message = message.TrimEnd();
             }
             UseBotOrPlayer(p, message, "skin");
-        }        
+        }
 
         protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
-            if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {
-                Player.Message(p, "Hence, you cannot the skin of that bot.");
-                return;
-            }
-        	
             string skin = GetSkin(p, args, 2, bot.name);
             if (skin == null) return;
             bot.SkinName = skin;

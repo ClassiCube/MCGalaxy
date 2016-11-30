@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the color of others") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the color of others"),
+                    new CommandPerm(LevelPermission.Operator, "+ can change the color of bots") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("colour"), new CommandAlias("xcolor", "-own") }; }
@@ -33,6 +34,11 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) { UseBotOrPlayer(p, message, "color"); }
 
         protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
+            if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {
+                Player.Message(p, "Hence, you cannot change the color of that bot.");
+                return;
+            }
+        	
             string color = args.Length > 2 ? Colors.Parse(args[2]) : "&1";
             if (color == "") { Player.Message(p, "There is no color \"" + args[2] + "\"."); return; }
             Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Scolor was set to " 
