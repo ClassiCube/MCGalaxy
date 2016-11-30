@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.Bots;
 
-namespace MCGalaxy.Commands.CPE {   
+namespace MCGalaxy.Commands.CPE {
     public class CmdModel : EntityPropertyCmd {
         public override string name { get { return "model"; } }
         public override string shortcut { get { return "setmodel"; } }
@@ -40,6 +40,11 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
+            if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {
+                Player.Message(p, "Hence, you cannot the model of that bot.");
+                return;
+            }
+            
             string model = GetModel(p, args, 2);
             bot.model = model;
             Entities.UpdateModel(bot.id, model, bot.level, null);

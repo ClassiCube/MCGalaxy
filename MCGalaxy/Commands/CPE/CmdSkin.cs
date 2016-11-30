@@ -37,6 +37,11 @@ namespace MCGalaxy.Commands.CPE {
         }        
 
         protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
+            if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {
+                Player.Message(p, "Hence, you cannot the skin of that bot.");
+                return;
+            }
+        	
             string skin = GetSkin(p, args, 2, bot.name);
             if (skin == null) return;
             bot.SkinName = skin;
