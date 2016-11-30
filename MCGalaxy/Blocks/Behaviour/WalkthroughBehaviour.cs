@@ -46,12 +46,14 @@ namespace MCGalaxy.Blocks {
         
         internal static bool CustomBlock(Player p, byte block, ushort x, ushort y, ushort z) {
             byte extBlock = p.level.GetExtTile(x, y, z);
+            BlockDefinition def = p.level.CustomBlockDefs[extBlock];
+            if (def == null) return false; // custom block was removed
+            
             if (p.level.CustomBlockProps[extBlock].KillerBlock) {
                 p.HandleDeath(block, extBlock);
                 return true;
-            }
-            
-            if (p.level.CustomBlockDefs[extBlock].CollideType == 2) return false;
+            }           
+            if (def.CollideType == 2) return false;
             
             if (p.level.CustomBlockProps[extBlock].IsPortal) {
                 return DoPortal(p, block, x, y, z);
