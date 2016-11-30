@@ -312,9 +312,8 @@ namespace MCGalaxy {
             useCheckpointSpawn = false;
             lastCheckpointIndex = -1;
             
-            LevelAccessResult access = level.BuildAccess.Check(this, false);
-            AllowBuild = access == LevelAccessResult.Whitelisted
-                || access == LevelAccessResult.Allowed;
+            LevelAccess access = level.BuildAccess.Check(this);
+            AllowBuild = access == LevelAccess.Whitelisted || access == LevelAccess.Allowed;
             
             try {               
                 if (hasBlockDefs) {

@@ -38,9 +38,8 @@ namespace MCGalaxy.Commands.Moderation {
                 who.color = newRank.color;
             
             who.group = newRank;
-            LevelAccessResult access = who.level.BuildAccess.Check(who, false);
-            who.AllowBuild = access == LevelAccessResult.Whitelisted
-                || access == LevelAccessResult.Allowed;
+            LevelAccess access = who.level.BuildAccess.Check(who);
+            who.AllowBuild = access == LevelAccess.Whitelisted || access == LevelAccess.Allowed;
             
             who.SetPrefix();
             who.Send(Packet.UserType(who));

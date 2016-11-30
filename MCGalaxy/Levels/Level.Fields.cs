@@ -147,7 +147,7 @@ namespace MCGalaxy {
         public bool Buildable = true;
         [ConfigBool("Deletable", "Permissions", null, true)]
         public bool Deletable = true;
-        public LevelAccess VisitAccess, BuildAccess;
+        public LevelAccessController VisitAccess, BuildAccess;
         
         [ConfigPerm("PerBuildMax", "Permissions", null, LevelPermission.Nobody, true)]
         public LevelPermission perbuildmax = LevelPermission.Nobody;

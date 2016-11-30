@@ -78,18 +78,20 @@ namespace MCGalaxy.Commands {
         }
         
         static bool CheckVisitPerm(Player p, Player who, bool confirmed) {
-            LevelAccessResult result = p.level.VisitAccess.Check(who, confirmed);
-            if (result == LevelAccessResult.Allowed) return true;
-            if (result == LevelAccessResult.Whitelisted) return true;
+            LevelAccess result = p.level.VisitAccess.Check(who);
+            if (result == LevelAccess.Allowed) return true;
+            if (result == LevelAccess.Whitelisted) return true;
+            if (result == LevelAccess.AboveMaxRank && confirmed) return true;
+            if (result == LevelAccess.BelowMinRank && confirmed) return true;
             
-            if (result == LevelAccessResult.Blacklisted) {
+            if (result == LevelAccess.Blacklisted) {
                 Player.Message(p, "{0} %Sis blacklisted from visiting this map.", who.ColoredName);
                 return false;
-            } else if (result == LevelAccessResult.BelowMinRank) {
+            } else if (result == LevelAccess.BelowMinRank) {
                 Player.Message(p, "Only {0}%S+ may normally visit this map. {1}%S is ranked {2}",
                                Group.GetColoredName(p.level.permissionvisit),
                                who.ColoredName, who.group.ColoredName);
-            } else if (result == LevelAccessResult.AboveMaxRank) {
+            } else if (result == LevelAccess.AboveMaxRank) {
                 Player.Message(p, "Only {0}%S and below may normally visit this map. {1}%S is ranked {2}",
                                Group.GetColoredName(p.level.pervisitmax),
                                who.ColoredName, who.group.ColoredName);

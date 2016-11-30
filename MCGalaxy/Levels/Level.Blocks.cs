@@ -228,14 +228,14 @@ namespace MCGalaxy {
         
         bool CheckRank(Player p) {
             if (p.ZoneSpam <= DateTime.UtcNow) {
-                BuildAccess.CheckDetailed(p, false);
+                BuildAccess.CheckDetailed(p);
                 p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
             }
             if (p.level == this) return p.AllowBuild;
             
-            LevelAccessResult access = BuildAccess.Check(p, false);
-            return access == LevelAccessResult.Whitelisted 
-                || access == LevelAccessResult.Allowed;
+            LevelAccess access = BuildAccess.Check(p);
+            return access == LevelAccess.Whitelisted 
+                || access == LevelAccess.Allowed;
         }
         
         public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, 

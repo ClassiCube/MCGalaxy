@@ -21,14 +21,14 @@ using System.Collections.Generic;
 namespace MCGalaxy {
 
     /// <summary> Encapuslates access permissions (visit or build) for a level. </summary>
-    public sealed class LevelAccess {
+    public sealed class LevelAccessController {
         
         /// <summary> Whether these access permissions apply to
         /// visit (true) or build (false) permission for the level. </summary>
         public readonly bool IsVisit;
         readonly Level lvl;
 
-        public LevelAccess(Level lvl, bool isVisit) {
+        public LevelAccessController(Level lvl, bool isVisit) {
             this.lvl = lvl;
             IsVisit = isVisit;
         }
@@ -63,38 +63,38 @@ namespace MCGalaxy {
         
         
         /// <summary> Returns the allowed state for the given player. </summary>
-        public LevelAccessResult Check(Player p, bool ignoreRankPerm = false) {
+        public LevelAccess Check(Player p) {
             if (Blacklisted.CaselessContains(p.name)) 
-                return LevelAccessResult.Blacklisted;
+                return LevelAccess.Blacklisted;
             if (Whitelisted.CaselessContains(p.name))
-                return LevelAccessResult.Whitelisted;
-            if (ignoreRankPerm) 
-                return LevelAccessResult.Allowed;
+                return LevelAccess.Whitelisted;
             
             if (p.Rank < Min) 
-                return LevelAccessResult.BelowMinRank;
+                return LevelAccess.BelowMinRank;
             string maxCmd = IsVisit ? "pervisitmax" : "perbuildmax";
             if (p.Rank > Max && !p.group.CanExecute(maxCmd)) 
-                return LevelAccessResult.AboveMaxRank;
-            return LevelAccessResult.Allowed;
+                return LevelAccess.AboveMaxRank;
+            return LevelAccess.Allowed;
         }
         
         /// <summary> Returns whether the given player is allowed for these access permissions. </summary>
         /// <remarks> If the player is not allowed by these access permissions,
         /// sends a message to the player describing why they are not. </remarks>
         public bool CheckDetailed(Player p, bool ignoreRankPerm = false) {
-            LevelAccessResult result = Check(p, ignoreRankPerm);           
-            if (result == LevelAccessResult.Allowed) return true;
-            if (result == LevelAccessResult.Whitelisted) return true;
+            LevelAccess result = Check(p);
+            if (result == LevelAccess.Allowed) return true;
+            if (result == LevelAccess.Whitelisted) return true;
+            if (result == LevelAccess.AboveMaxRank && ignoreRankPerm) return true;
+            if (result == LevelAccess.BelowMinRank && ignoreRankPerm) return true;
             
-            if (result == LevelAccessResult.Blacklisted) {
+            if (result == LevelAccess.Blacklisted) {
                 string action = IsVisit ? "going to" : "building in";
                 Player.Message(p, "You are blacklisted from {1} {0}.", lvl.name, action);
-            } else if (result == LevelAccessResult.BelowMinRank) {
+            } else if (result == LevelAccess.BelowMinRank) {
                 string action = IsVisit? "go to" : "build in";
                 Player.Message(p, "Only {2}%S+ may {1} {0}.", 
                                lvl.name, action, Group.GetColoredName(Min));
-            } else if (result == LevelAccessResult.AboveMaxRank) {
+            } else if (result == LevelAccess.AboveMaxRank) {
                 string action = IsVisit? "go to" : "build in";
                 Player.Message(p, "Only {2} %Sand below may {1} {0}.", 
                                lvl.name, action, Group.GetColoredName(Max));
@@ -227,9 +227,8 @@ namespace MCGalaxy {
             foreach (Player p in players) {
                 if (p.level != lvl) continue;
                 
-                LevelAccessResult access = Check(p, false);
-                p.AllowBuild = access == LevelAccessResult.Whitelisted 
-                    || access == LevelAccessResult.Allowed;
+                LevelAccess access = Check(p);
+                p.AllowBuild = access == LevelAccess.Whitelisted || access == LevelAccess.Allowed;
             }
         }
         
@@ -239,9 +238,8 @@ namespace MCGalaxy {
             foreach (Player p in players) {
                 if (p.level != lvl) continue;
                 
-                LevelAccessResult access = Check(p, false);
-                bool allowVisit = access == LevelAccessResult.Whitelisted 
-                    || access == LevelAccessResult.Allowed;
+                LevelAccess access = Check(p);
+                bool allowVisit = access == LevelAccess.Whitelisted || access == LevelAccess.Allowed;
                 if (allowVisit) continue;
                 
                 Player.Message(p, "&cNo longer allowed to visit %S{0}", lvl.name);
@@ -250,7 +248,7 @@ namespace MCGalaxy {
         }
     }
     
-    public enum LevelAccessResult {
+    public enum LevelAccess {
         
         /// <summary> The player is whitelisted and always allowed. </summary>
         Whitelisted,

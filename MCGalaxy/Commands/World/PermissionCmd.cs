@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.World {
             }
             Level level = args.Length == 1 ? p.level : LevelInfo.FindMatches(p, args[0]);
             if (level == null) return;
-            LevelAccess access = isVisit ? level.VisitAccess : level.BuildAccess;
+            LevelAccessController access = isVisit ? level.VisitAccess : level.BuildAccess;
             
             string name = args.Length == 1 ? args[0] : args[1];
             bool include = name[0] == '+';
