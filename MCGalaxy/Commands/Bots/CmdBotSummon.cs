@@ -29,14 +29,19 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             if (p == null) { MessageInGameOnly(p); return; }
-            
-            PlayerBot who = PlayerBot.FindMatchesPreferLevel(p, message);
-            if (who == null) return;
-            if (!p.level.name.CaselessEq(who.level.name)) {
-                Player.Message(p, who.name + " is in a different level."); return; 
+                                    
+            if (!p.level.BuildAccess.CheckDetailed(p)) {
+                Player.Message(p, "Hence, you cannot summon bots on this map.");
+                return;
             }
-            who.SetPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
-            BotsFile.UpdateBot(who);
+            
+            PlayerBot bot = PlayerBot.FindMatchesPreferLevel(p, message);
+            if (bot == null) return;
+            if (!p.level.name.CaselessEq(bot.level.name)) {
+                Player.Message(p, bot.name + " is in a different level."); return; 
+            }
+            bot.SetPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
+            BotsFile.UpdateBot(bot);
         }
         
         public override void Help(Player p) {

@@ -35,6 +35,11 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(' ');
             PlayerBot bot = PlayerBot.FindMatchesPreferLevel(p, args[0]);
             if (bot == null) return;
+            
+            if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {
+                Player.Message(p, "Hence, you cannot change the AI of bots on this map.");
+                return;
+            }
                 
             if (args.Length == 1) {
                 bot.Instructions.Clear();

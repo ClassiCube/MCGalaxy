@@ -26,7 +26,12 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (p == null) { MessageInGameOnly(p); return; }            
+                        
+            if (!p.level.BuildAccess.CheckDetailed(p)) {
+                Player.Message(p, "Hence, you cannot add bots to this map.");
+                return;
+            }
             
             if (!Formatter.ValidName(p, message, "bot")) return;
             PlayerBot bot = new PlayerBot(message, p.level, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);

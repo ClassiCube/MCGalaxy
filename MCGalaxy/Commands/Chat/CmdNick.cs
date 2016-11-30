@@ -34,6 +34,11 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) { UseBotOrPlayer(p, message, "nick"); }       
 
         protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
+            if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {
+                Player.Message(p, "Hence, you cannot change that bot's nickname.");
+                return;
+            }
+            
             string newName = args.Length > 2 ? args[2] : "";
             if (newName == "") {
                 bot.DisplayName = bot.name;

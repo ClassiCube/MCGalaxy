@@ -27,17 +27,23 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            if (p == null) { MessageInGameOnly(p); return; }
+            if (p == null) { MessageInGameOnly(p); return; }           
+                        
+            if (!p.level.BuildAccess.CheckDetailed(p)) {
+                Player.Message(p, "Hence, you cannot change remove bots from this map.");
+                return;
+            }
+            
             if (message.CaselessEq("all")) {
                 PlayerBot.RemoveAllFromLevel(p.level); return;
             }
             
-            PlayerBot who = PlayerBot.FindMatchesPreferLevel(p, message);
-            if (who == null) return;
-            if (!p.level.name.CaselessEq(who.level.name)) {
-                Player.Message(p, who.ColoredName + " %Sis in a different level."); return;
+            PlayerBot bot = PlayerBot.FindMatchesPreferLevel(p, message);
+            if (bot == null) return;
+            if (!p.level.name.CaselessEq(bot.level.name)) {
+                Player.Message(p, bot.ColoredName + " %Sis in a different level."); return;
             }
-            PlayerBot.Remove(who);
+            PlayerBot.Remove(bot);
             Player.Message(p, "Removed bot.");
         }
         
