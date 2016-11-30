@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             string[] files = Directory.GetFiles("levels", "*.lvl");
-            Player.Message(p, "Unloaded maps (&c[no] %Sif not accessible): ");
+            Player.Message(p, "Unloaded maps (&c[no] %Sif not visitable): ");
             MultiPageOutput.Output(p, GetMaps(files), (map, i) => FormatMap(p, map),
                                    "unloaded", "maps", message, false);
         }
@@ -54,9 +54,12 @@ namespace MCGalaxy.Commands {
             bool loadOnGoto;
             RetrieveProps(map, out visitP, out buildP, out loadOnGoto);
             
-            Group grp = Group.findPerm(buildP);
+            LevelPermission perm = visitP;
+            if (perm < buildP) perm = buildP;
+            Group grp = Group.findPerm(perm);
+            
             string color = grp == null ? "&f" : grp.color;
-            string visit = loadOnGoto && (p == null || p.Rank >= visitP) ? "" : " &c[no]" + color;
+            string visit = loadOnGoto && (p == null || p.Rank >= visitP) ? "" : " &c[no]";
             return color + map + visit;
         }
         

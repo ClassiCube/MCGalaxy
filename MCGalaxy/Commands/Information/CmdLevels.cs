@@ -31,30 +31,23 @@ namespace MCGalaxy.Commands {
         public CmdLevels() { }
 
         public override void Use(Player p, string message) {
-            if (message != "") { Help(p); return; }
-
-            string canVisit = "", canBuild = "";
             Level[] loaded = LevelInfo.Loaded.Items;
-            foreach (Level lvl in loaded) {
-                if (p == null || lvl.permissionvisit <= p.Rank) {
-                    if (Group.findPerm(lvl.permissionbuild) != null)
-                        canVisit += ", " + Group.findPerm(lvl.permissionbuild).color + lvl.name + " &b[&f" + lvl.physics + "&b]";
-                    else
-                        canVisit += ", " + lvl.name + " &b[" + lvl.physics + "]";
-                } else {
-                    if (Group.findPerm(lvl.permissionvisit) != null)
-                        canBuild += ", " + Group.findPerm(lvl.permissionvisit).color + lvl.name + " &b[&f" + lvl.physics + "&b]";
-                    else
-                        canBuild += ", " + lvl.name + " &b[&f" + lvl.physics + "&b]";
-                }
-            }
-
-            if (canVisit != "")
-                canVisit = canVisit.Remove(0, 2);
-            Player.Message(p, "Loaded levels [physics_level]: " + canVisit);
-            if (canBuild != "")
-                Player.Message(p, "Loaded levels you cannot visit: " + canBuild.Remove(0, 2));
+            Player.Message(p, "Loaded maps [physics level] (&c[no] %Sif not visitable): ");
+            MultiPageOutput.Output(p, loaded, (lvl, i) => FormatMap(p, lvl),
+                                   "levels", "maps", message, false);
             Player.Message(p, "Use %T/unloaded %Sfor unloaded levels.");
+        }
+        
+        static string FormatMap(Player p, Level lvl) {            
+            bool canVisit = Player.IsSuper(p);
+            if (!canVisit) {
+                LevelAccess access = lvl.VisitAccess.Check(p);
+                canVisit = access == LevelAccess.Allowed || access == LevelAccess.Whitelisted;
+            }
+            
+            string physics = " [" +  lvl.physics + "]";
+            string visit = canVisit ? "" : " &c[no]";
+            return lvl.ColoredName + physics + visit;
         }
         
         public override void Help(Player p) {
