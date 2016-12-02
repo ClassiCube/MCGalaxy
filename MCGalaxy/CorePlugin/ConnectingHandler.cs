@@ -83,7 +83,7 @@ namespace MCGalaxy {
             string hashHex = BitConverter.ToString(hash);
             if (!mppass.CaselessEq(hashHex.Replace("-", ""))) {
                 if (!Player.IPInPrivateRange(p.ip)) {
-                    p.Leave(null, "Login failed! Try signing in again.", true); return false;
+                    p.Leave(null, "Login failed! Close the game and sign in again.", true); return false;
                 }
             } else {
                 p.verifiedName = true;
