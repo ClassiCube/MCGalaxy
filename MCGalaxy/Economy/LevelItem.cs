@@ -215,7 +215,7 @@ namespace MCGalaxy.Eco {
             }
             
             foreach (LevelPreset preset in Presets) {
-                Player.Message(p, "&6{0} %S({1}, {2}, {3}) {4}: &a{6} %S{7}",
+                Player.Message(p, "&6{0} %S({1}, {2}, {3}) {4}: &a{5} %S{6}",
                                preset.name, preset.x, preset.y, preset.z,
                                preset.type, preset.price, Server.moneys);
             }
