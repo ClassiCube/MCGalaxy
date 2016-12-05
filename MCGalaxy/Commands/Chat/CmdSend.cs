@@ -31,6 +31,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             string[] parts = message.SplitSpaces(2);
             if (message == "" || parts.Length == 1) { Help(p); return; }
+            if (!MessageCmd.CanSpeak(p, name)) return;
 
             string receiverName = PlayerInfo.FindMatchesPreferOnline(p, parts[0]);
             if (receiverName == null) return;
