@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.World {
             if (args[0].CaselessEq("clear")) {
                 Player.Message(p, "Clearing &cALL %Sblock changes for {0}%S...", lvl.ColoredName);
                 if (Database.TableExists("Block" + lvl.name))
-                    Database.Backend.ClearTable("Block" + lvl.name);
+                    Database.Backend.DeleteTable("Block" + lvl.name);
                 lvl.BlockDB.DeleteBackingFile();
                 Player.Message(p, "Cleared &cALL %Sblock changes for " + lvl.ColoredName);
             } else if (args[0].CaselessEq("disable")) {
