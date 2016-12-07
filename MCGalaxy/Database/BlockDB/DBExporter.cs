@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using MCGalaxy.Levels.IO;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.DB {
@@ -29,30 +30,76 @@ namespace MCGalaxy.DB {
         string mapName;
         Dictionary<string, int> nameCache = new Dictionary<string, int>();
         Stream stream;
+        bool errorOccurred;
+        Vec3U16 dims;
+        BlockDBEntry entry;
         
         public void ExportTable(string table) {
             mapName = table.Substring("Block".Length);
+            errorOccurred = false;
             
-            try {
-                Database.ExecuteReader("SELECT * FROM `" + table + "`", DumpRow);
-            } finally {
-                if (stream != null) stream.Close();
-                stream = null;
-            }
+            Database.ExecuteReader("SELECT * FROM `" + table + "`", DumpRow);
+            if (stream != null) stream.Close();
+            stream = null;
+            
+            if (errorOccurred) return;
+            //Database.Backend.DeleteTable(table); TODO: delete once tested
         }
         
         void DumpRow(IDataReader reader) {
-            if (stream == null) {
-                stream = File.Create("blockdefs/" + mapName + ".dump");
+            if (errorOccurred) return;
+            try {
+                if (stream == null) {
+                    stream = File.Create("blockdefs/" + mapName + ".dump");
+                    string lvlPath = LevelInfo.LevelPath(mapName);
+                    dims = IMapImporter.Formats[0].ReadDimensions(lvlPath);
+                    BlockDBFile.WriteHeader(stream, dims);
+                }
+                
+                UpdateBlock(reader);
+                UpdateCoords(reader);
+                UpdatePlayerID(reader);
+                UpdateTimestamp(reader);
+                // TODO: write
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                errorOccurred = true;
             }
-            
-            string user = reader.GetString(0);
-            string date = TableDumper.GetDate(reader, 1);
+        }
+        
+        void UpdateBlock(IDataReader reader) {
+            entry.OldRaw = Block.Invalid;
+            entry.NewRaw = reader.GetByte(5);
+            byte blockFlags = reader.GetByte(6);
+            entry.Flags = BlockDBFlags.ManualPlace;
+            if ((blockFlags & 1) == 0) { // deleted block
+                entry.NewRaw = Block.air;
+            } else if ((blockFlags & 2) != 0) { // new block is custom
+                entry.Flags |= BlockDBFlags.NewCustom;
+            }
+        }
+        
+        void UpdateCoords(IDataReader reader) {
             int x = reader.GetInt32(2);
             int y = reader.GetInt32(3);
             int z = reader.GetInt32(4);
-            byte type = reader.GetByte(5);
-            byte deleted = reader.GetByte(6);
+            entry.Index = x + dims.X * (z + dims.Z * y);
+        }
+        
+        void UpdatePlayerID(IDataReader reader) {
+            int id;
+            string user = reader.GetString(0);
+            if (!nameCache.TryGetValue(user, out id)) {
+                id = NameConverter.FindIds(user)[0];
+                nameCache[user] = id;
+            }
+            entry.PlayerID = id;
+        }
+        
+        void UpdateTimestamp(IDataReader reader) {
+            string date = TableDumper.GetDate(reader, 1);
+            // TODO: get time delta
+            throw new NotImplementedException();
         }
     }
 }
