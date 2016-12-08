@@ -52,11 +52,30 @@ namespace MCGalaxy.Config {
         public int MaxLength = 0;
         
         public ConfigStringAttribute(string name, string section, string desc, string defValue,
-                                     bool allowEmpty = false, string allowedChars = null, int maxLength = 0)
+                                     bool allowEmpty, string allowedChars, int maxLength)
             : base(name, section, desc, defValue) {
             AllowEmpty = allowEmpty;
             AllowedChars = allowedChars;
             MaxLength = maxLength;
+        }
+ 
+        // NOTE: required to define these, some compilers error when we try using optional parameters with:
+        // "An attribute argument must be a constant expression, typeof expression.."
+        public ConfigStringAttribute(string name, string section, string desc, string defValue,
+                                     bool allowEmpty, string allowedChars)
+            : base(name, section, desc, defValue) {
+            AllowEmpty = allowEmpty;
+            AllowedChars = allowedChars;
+        }
+
+        public ConfigStringAttribute(string name, string section, string desc, string defValue,
+                                     bool allowEmpty)
+            : base(name, section, desc, defValue) {
+            AllowEmpty = allowEmpty;
+        }
+
+        public ConfigStringAttribute(string name, string section, string desc, string defValue)
+            : base(name, section, desc, defValue) {
         }
         
         public override object Parse(string value) {
