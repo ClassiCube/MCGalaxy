@@ -189,9 +189,9 @@ namespace MCGalaxy.Commands {
         };
         
         static string[] zoneHelp = new string[] {
-            "%T/os zone add [player/rank] %H- Adds a zone for a player or a rank, " +
-                "allowing them to always build in your map.",
+            "%T/os zone add [name] %H- Allows them to build in your map.",
             "%T/os zone del all %H- Deletes all zones in your map.",
+            "%T/os zone del [name] %H- Prevents them from building in your map.",
             "%T/os zone list %H- Shows zones affecting a particular block.",
             "%T/os zone block [name] %H- Prevents them from joining your map.",
             "%T/os zone unblock [name] %H- Allows them to join your map.",
