@@ -210,19 +210,8 @@ namespace MCGalaxy.Commands {
             if (cmd == "LIST") {
                 Command.all.Find("zone").Use(p, "");
             } else if (cmd == "ADD") {
-                if (name == "") {
-                    Player.Message(p, "You did not specify a name to allow building on your map."); return;
-                }
-                
-                string[] zoneArgs = name.Split(' ');
-                name = zoneArgs[0];
-                string reason = zoneArgs.Length > 1 ? zoneArgs[1] : "";
-                name = CmdZone.FindZoneOwner(p, "os zone add", name, ref reason);
-                if (name == null) return;
-                
-                CmdZone.ZoneAll(p.level, name);
-                Player.Message(p, "Added zone for &b" + name);
-                Player.Message(p, name + " has been allowed building on your map.");
+                if (name == "") { Player.Message(p, "You need to provide a player name."); return; }
+                AddPlayer(p, name);
             } else if (cmd == "DEL") {
                 // TODO: Delete zone by name
                 if (name.CaselessEq("ALL") || name == "")
@@ -270,5 +259,33 @@ namespace MCGalaxy.Commands {
                 Player.MessageLines(p, zoneHelp);
             }
         }
+        
+        static void AddPlayer(Player p, string name) {
+            string[] zoneArgs = name.Split(' ');
+            name = zoneArgs[0];
+            string reason = zoneArgs.Length > 1 ? zoneArgs[1] : "";
+            name = CmdZone.FindZoneOwner(p, "os zone add", name, ref reason);
+            if (name == null) return;
+            
+            CmdZone.ZoneAll(p.level, name);
+            Player.Message(p, "Added zone for &b" + name);
+
+            LevelAccessController access = p.level.BuildAccess;
+            if (access.Blacklisted.CaselessRemove(name)) {
+                access.OnListChanged(p, name, true, true);
+            }
+            if (!access.Whitelisted.CaselessContains(name)) {
+                access.Whitelisted.Add(name);
+                access.OnListChanged(p, name, true, false);
+            }
+        }
+		
+		static void DeletePlayer(Player p, string name) {
+			if (name.CaselessEquals("all")) {
+				CmdZone.DeleteAll(p);
+			} else {
+				
+			}
+		}
     }
 }

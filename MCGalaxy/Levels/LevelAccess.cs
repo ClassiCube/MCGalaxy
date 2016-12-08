@@ -64,15 +64,15 @@ namespace MCGalaxy {
         
         /// <summary> Returns the allowed state for the given player. </summary>
         public LevelAccess Check(Player p) {
-            if (Blacklisted.CaselessContains(p.name)) 
+            if (Blacklisted.CaselessContains(p.name))
                 return LevelAccess.Blacklisted;
             if (Whitelisted.CaselessContains(p.name))
                 return LevelAccess.Whitelisted;
             
-            if (p.Rank < Min) 
+            if (p.Rank < Min)
                 return LevelAccess.BelowMinRank;
             string maxCmd = IsVisit ? "pervisitmax" : "perbuildmax";
-            if (p.Rank > Max && !p.group.CanExecute(maxCmd)) 
+            if (p.Rank > Max && !p.group.CanExecute(maxCmd))
                 return LevelAccess.AboveMaxRank;
             return LevelAccess.Allowed;
         }
@@ -92,11 +92,11 @@ namespace MCGalaxy {
                 Player.Message(p, "You are blacklisted from {1} {0}%S.", lvl.ColoredName, action);
             } else if (result == LevelAccess.BelowMinRank) {
                 string action = IsVisit? "go to" : "build in";
-                Player.Message(p, "Only {2}%S+ may {1} {0}%S.", 
+                Player.Message(p, "Only {2}%S+ may {1} {0}%S.",
                                lvl.ColoredName, action, Group.GetColoredName(Min));
             } else if (result == LevelAccess.AboveMaxRank) {
                 string action = IsVisit? "go to" : "build in";
-                Player.Message(p, "Only {2} %Sand below may {1} {0}%S.", 
+                Player.Message(p, "Only {2} %Sand below may {1} {0}%S.",
                                lvl.ColoredName, action, Group.GetColoredName(Max));
             }
             return false;
@@ -111,7 +111,7 @@ namespace MCGalaxy {
             if (!CheckRank(p, Min, type, false)) return false;
             if (!CheckRank(p, grp.Permission, type, true)) return false;
             
-            Min = grp.Permission;        
+            Min = grp.Permission;
             OnPermissionChanged(p, grp, type);
             return true;
         }
@@ -169,28 +169,18 @@ namespace MCGalaxy {
         
         bool CheckRank(Player p, LevelPermission perm, string type, bool newPerm) {
             if (p != null && perm > p.Rank) {
-                Player.Message(p, "You cannot change the {0} rank of this level{1} higher than yours.", 
-                               type.ToLower(), 
+                Player.Message(p, "You cannot change the {0} rank of this level{1} higher than yours.",
+                               type.ToLower(),
                                newPerm ? " to a rank" : ", as its current " + type.ToLower() + " rank is");
                 return false;
             }
             return true;
         }
-        
-        bool CheckList(Player p, string name, bool whitelist) {
-            string type = IsVisit ? "visit" : "build";
-            string mode = whitelist ? "whitelist" : "blacklist";
-            
-            if (p != null && !CheckDetailed(p)) {
-                Player.Message(p, "Hence you cannot modify the {0} {1}.", type, mode); return false;
-            }
-            if (p != null && PlayerInfo.GetGroup(name).Permission > p.Rank) {
-                Player.Message(p, "You cannot {0} players of a higher rank.", mode); return false;
-            }
-            return true;
-        }
-        
-        void OnPermissionChanged(Player p, Group grp, string type) {
+
+        /// <summary> Messages all player on the level (and source player) notifying them that the 
+        /// min or max rank changed, rechecks access permissions for all players on the level,
+        /// and finally saves the level properties file. </summary>        
+        public void OnPermissionChanged(Player p, Group grp, string type) {
             Update();
             Server.s.Log(type + " rank changed to " + grp.trueName + " on " + lvl.name + ".");
             Chat.MessageLevel(lvl, type + " rank changed to " + grp.ColoredName + "%S.");
@@ -198,10 +188,13 @@ namespace MCGalaxy {
                 Player.Message(p, "{0} rank changed to {1} %Son {2}%S.", type, grp.ColoredName, lvl.ColoredName);
         }
         
-        void OnListChanged(Player p, string name, bool whitelist, bool removed) {          
+        /// <summary> Messages all player on the level (and source player) notifying them that the 
+        /// target player was whitelisted or blacklisted, rechecks access permissions 
+        /// for all players on the level, and finally saves the level properties file. </summary>
+        public void OnListChanged(Player p, string name, bool whitelist, bool removedFromOpposite) {
             string type = IsVisit ? "visit" : "build";
             string msg = PlayerInfo.GetColoredName(p, name);
-            if (removed) {
+            if (removedFromOpposite) {
                 msg += " %Swas removed from the " + type + (whitelist ? " blacklist" : " whitelist");
             } else {
                 msg += " %Swas " + type + (whitelist ? " whitelisted" : " blacklisted");
@@ -214,6 +207,21 @@ namespace MCGalaxy {
                 Player.Message(p, "{0} on %S{1}", msg, lvl.ColoredName);
         }
         
+        
+        /// <summary> Returns true if the player is allowed to modify these access permissions,
+        /// and is also allowed to change the access permissions for the target player. </summary>
+        bool CheckList(Player p, string name, bool whitelist) {
+            string type = IsVisit ? "visit" : "build";
+            string mode = whitelist ? "whitelist" : "blacklist";
+            
+            if (p != null && !CheckDetailed(p)) {
+                Player.Message(p, "Hence you cannot modify the {0} {1}.", type, mode); return false;
+            }
+            if (p != null && PlayerInfo.GetGroup(name).Permission > p.Rank) {
+                Player.Message(p, "You cannot {0} players of a higher rank.", mode); return false;
+            }
+            return true;
+        }
         
         void Update() {
             Level.SaveSettings(lvl);

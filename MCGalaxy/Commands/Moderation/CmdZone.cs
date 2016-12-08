@@ -83,14 +83,28 @@ namespace MCGalaxy.Commands {
         }
         
         internal static void DeleteAll(Player p) {
-            for (int i = 0; i < p.level.ZoneList.Count; i++) {
-                Level.Zone Zn = p.level.ZoneList[i];
-                LevelDB.DeleteZone(p.level.name, Zn);
-                Player.Message(p, "Zone deleted for &b" + Zn.Owner);
+            int count = p.level.ZoneList.Count;
+            for (int i = count - 1; i >= 0; i--) {
+                Level.Zone zone = p.level.ZoneList[i];
+                LevelDB.DeleteZone(p.level.name, zone);
+                
+                Player.Message(p, "Zone deleted for &b" + zone.Owner);
                 p.level.ZoneList.Remove(p.level.ZoneList[i]);
-                if (i == p.level.ZoneList.Count) { Player.Message(p, "Finished removing all zones"); return; }
-                i--;
             }
+            Player.Message(p, "Finished removing all zones");
+        }
+
+        internal static void DeleteWhere(Player p, Predicate<Level.Zone> filter) {
+            int count = p.level.ZoneList.Count;
+            for (int i = count - 1; i >= 0; i--) {
+                Level.Zone zone = p.level.ZoneList[i];
+                if (!filter(zone)) continue;
+                LevelDB.DeleteZone(p.level.name, zone);
+                
+                Player.Message(p, "Zone deleted for &b" + zone.Owner);
+                p.level.ZoneList.Remove(p.level.ZoneList[i]);
+            }
+            Player.Message(p, "Finished removing zones");
         }
         
         bool CheckAdd(Player p, string[] args, string cmd) {
