@@ -269,10 +269,6 @@ namespace MCGalaxy.Commands {
                 if (access.Whitelisted.CaselessRemove(name)) {
                     access.OnListChanged(p, name, false, true);
                 }
-                if (!access.Blacklisted.CaselessContains(name)) {
-                    access.Blacklisted.Add(name);
-                    access.OnListChanged(p, name, false, false);
-                }
             }
         }
         
