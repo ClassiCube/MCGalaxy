@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/sphere [brush args] <mode>");
+            Player.Message(p, "%T/sphere <brush args> <mode>");
             Player.Message(p, "%HCreates a sphere, with the first point as the centre, " +
                            "and second being the radius.");
             Player.Message(p, "   %HModes: &fsolid/hollow/circle");

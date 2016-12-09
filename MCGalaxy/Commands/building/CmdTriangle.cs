@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/triangle [brush args]");
+            Player.Message(p, "%T/triangle <brush args>");
             Player.Message(p, "%HDraws a triangle between three points.");
             Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
         }

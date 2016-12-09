@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/pyramid [brush args] <mode>");
+            Player.Message(p, "%T/pyramid <brush args> <mode>");
             Player.Message(p, "%HDraws a square pyramid, using two points for the base.");
             Player.Message(p, "   %HModes: &fsolid/hollow/reverse");
             Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
