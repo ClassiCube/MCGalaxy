@@ -583,7 +583,9 @@ namespace MCGalaxy.Gui {
             try { Server.restarttime = DateTime.Parse(txtRestartTime.Text); }
             catch { } // ignore bad values
             Server.restartOnError = chkRestart.Checked;
-            Server.level = ( Player.ValidName(txtMain.Text) ? txtMain.Text : "main" );
+            
+            string main = Player.ValidName(txtMain.Text) ? txtMain.Text : "main";
+            Server.SetMainLevel(main);
             Server.irc = chkIRC.Checked;
             Server.ircNick = txtNick.Text;
             Server.ircServer = txtIRCServer.Text;

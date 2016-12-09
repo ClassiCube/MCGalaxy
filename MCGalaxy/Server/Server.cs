@@ -20,6 +20,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using MCGalaxy.Blocks;
+using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
@@ -393,6 +394,25 @@ namespace MCGalaxy {
 
         public static string FindColor(string name) {
             return Group.findPlayerGroup(name).color;
+        }
+        
+        /// <summary> Sets the main level of the server that new players spawn in. </summary>
+        /// <returns> true if main level was changed, false if not 
+        /// (same map as current main, or given map doesn't exist).</returns>
+        public static bool SetMainLevel(string mapName) {
+        	if (mapName.CaselessEq(level)) return false;
+            Level oldMain = mainLevel;
+            
+            Level lvl = LevelInfo.FindExact(mapName);
+            if (lvl == null) 
+                lvl = CmdLoad.LoadLevel(null, mapName);
+            if (lvl == null) return false;
+            
+            oldMain.unload = true;
+            mainLevel = lvl;
+            mainLevel.unload = false;
+            level = mapName;
+            return true;
         }
     }
 }
