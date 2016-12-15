@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/cuboid [brush args] <mode>");
+            Player.Message(p, "%T/cuboid <brush args> <mode>");
             Player.Message(p, "%HDraws a cuboid between two points.");
             Player.Message(p, "   %HModes: &fsolid/hollow/walls/holes/wire/random");
             Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");

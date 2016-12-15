@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/torus [brush args]");
+            Player.Message(p, "%T/torus <brush args>");
             Player.Message(p, "%HDraws a torus(circular tube), with the first point as the centre, " +
                            "and second being the radius.");
             Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");

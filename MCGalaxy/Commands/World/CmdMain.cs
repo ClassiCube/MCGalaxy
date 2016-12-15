@@ -30,32 +30,22 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             if (message == "") {
-                if (p.level.name == Server.mainLevel.name) {
-                    Player.Message(p, "You are already on the server's main level."); return;
+                if (Player.IsSuper(p)) {
+                    Player.Message(p, "Main level is {0}", Server.mainLevel.ColoredName);
+                } else if (p.level.name == Server.mainLevel.name) {
+                    Player.Message(p, "You are already on the server's main level.");
+                } else {
+                    PlayerActions.ChangeMap(p, Server.mainLevel);
                 }
-                PlayerActions.ChangeMap(p, Server.mainLevel);
             } else {
                 if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "change the main level"); return; }
                 if (!Formatter.ValidName(p, message, "level")) return;
                 
                 string map = LevelInfo.FindMapMatches(p, message);
                 if (map == null) return;
-                Level oldMain = Server.mainLevel;
-                
-                Level match = LevelInfo.FindExact(map);
-                if (match != null) {
-                    Server.mainLevel = match;
-                } else {
-                    Server.mainLevel = Level.Load(map);
-                    LevelInfo.Loaded.Add(Server.mainLevel);
-                }
-                
-                oldMain.unload = true;
-                Server.mainLevel.unload = false;
-                Server.level = map;
-                
+                Server.SetMainLevel(map);
                 SrvProperties.Save();
-                Player.Message(p, "Set main level to \"{0}\"", map);
+                Player.Message(p, "Set main level to {0}", Server.mainLevel.ColoredName);
             }
         }
         

@@ -14,11 +14,11 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdDrill : Command {        
+    public sealed class CmdDrill : Command {
         public override string name { get { return "drill"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -35,56 +35,55 @@ namespace MCGalaxy.Commands.Building {
         bool DoDrill(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             type = p.level.GetTile(x, y, z); extType = 0;
-            if (type == Block.custom_block) 
+            if (type == Block.custom_block)
                 extType = p.level.GetExtTile(x, y, z);
-            int dist = (int)state;
-
-            int dx = 0, dz = 0;
-            DirUtils.FourYaw(p.rot[0], out dx, out dz);
-
-            List<int> buffer = new List<int>();
-            int depth = 0;
-            Level lvl = p.level;
-
-            if (dx != 0) {
-                for (ushort xx = x; depth < dist; xx += (ushort)dx)
-                {
-                    for (ushort yy = (ushort)(y - 1); yy <= (ushort)(y + 1); yy++)
-                        for (ushort zz = (ushort)(z - 1); zz <= (ushort)(z + 1); zz++)
-                        {
-                            buffer.Add(lvl.PosToInt(xx, yy, zz));
-                        }
-                    depth++;
-                }
-            } else {
-                for (ushort zz = z; depth < dist; zz += (ushort)dz)
-                {
-                    for (ushort yy = (ushort)(y - 1); yy <= (ushort)(y + 1); yy++)
-                        for (ushort xx = (ushort)(x - 1); xx <= (ushort)(x + 1); xx++)
-                        {
-                            buffer.Add(lvl.PosToInt(xx, yy, zz));
-                        }
-                    depth++;
-                }
-            }
-
-            if (buffer.Count > p.group.maxBlocks) {
-                Player.Message(p, "You tried to drill " + buffer.Count + " blocks.");
+            int dist = (int)state, numBlocks = (3 * 3) * dist;
+            
+            if (numBlocks > p.group.maxBlocks) {
+                Player.Message(p, "You tried to drill " + numBlocks + " blocks.");
                 Player.Message(p, "You cannot drill more than " + p.group.maxBlocks + ".");
                 return false;
             }
 
-            foreach (int index in buffer) {
-                if (index < 0) continue;
-                lvl.IntToPos(index, out x, out y, out z);
-                byte tile = lvl.blocks[index], extTile = 0;
-                if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
-                
-                bool sameBlock = type == Block.custom_block ? extType == extTile : type == tile;
-                if (sameBlock) p.level.UpdateBlock(p, x, y, z, Block.air, 0, true);
+            int dx = 0, dz = 0;
+            DirUtils.FourYaw(p.rot[0], out dx, out dz);
+            Level lvl = p.level;
+
+            if (dx != 0) {
+                for (int depth = 0; depth < dist; x += (ushort)dx, depth++) {
+                    if (x >= lvl.Width) continue;
+                    
+                    for (ushort yy = (ushort)(y - 1); yy <= (ushort)(y + 1); yy++)
+                        for (ushort zz = (ushort)(z - 1); zz <= (ushort)(z + 1); zz++)
+                    {
+                        DoBlock(p, lvl, type, extType, x, yy, zz);
+                    }
+                }
+            } else {
+                for (int depth = 0; depth < dist; z += (ushort)dz, depth++) {
+                    if (z >= lvl.Length) break;
+                    
+                    for (ushort yy = (ushort)(y - 1); yy <= (ushort)(y + 1); yy++)
+                        for (ushort xx = (ushort)(x - 1); xx <= (ushort)(x + 1); xx++)
+                    {
+                        DoBlock(p, lvl, type, extType, xx, yy, z);
+                    }
+                }
             }
-            Player.Message(p, "Drilled " + buffer.Count + " blocks.");
+
+            Player.Message(p, "Drilled " + numBlocks + " blocks.");
             return true;
+        }
+        
+        void DoBlock(Player p, Level lvl, byte block, byte extBlock,
+                     ushort x, ushort y, ushort z) {
+            int index = lvl.PosToInt(x, y, z);
+            if (index == -1) return;
+            byte cur = lvl.blocks[index], extCur = 0;
+            if (cur == Block.custom_block) extCur = lvl.GetExtTile(x, y, z);
+            
+            bool same = block == Block.custom_block ? extBlock == extCur : block == cur;
+            if (same) p.level.UpdateBlock(p, x, y, z, Block.air, 0, true);
         }
         
         public override void Help(Player p) {

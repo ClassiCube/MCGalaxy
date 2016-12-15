@@ -35,20 +35,20 @@ namespace MCGalaxy {
             }
             
             try {
-                File.Move("levels/level properties/" + src + ".properties", 
+                File.Move("levels/level properties/" + src + ".properties",
                           "levels/level properties/" + dst + ".properties");
             } catch {
             }
             
             try {
-                File.Move("levels/level properties/" + src, 
+                File.Move("levels/level properties/" + src,
                           "levels/level properties/" + dst + ".properties");
             } catch {
             }
             
             try {
                 if (File.Exists("blockdefs/lvl_" + src + ".json")) {
-                    File.Move("blockdefs/lvl_" + src + ".json", 
+                    File.Move("blockdefs/lvl_" + src + ".json",
                               "blockdefs/lvl_" + dst + ".json");
                 }
             } catch {
@@ -63,7 +63,8 @@ namespace MCGalaxy {
         }
         
         static void RenameDatabaseTables(string src, string dst) {
-            Database.Backend.RenameTable("Block" + src, "Block" + dst);
+            if (Database.Backend.TableExists("Block" + src))
+                Database.Backend.RenameTable("Block" + src, "Block" + dst);
             object srcLocker = ThreadSafeCache.DBCache.Get(src);
             object dstLockder = ThreadSafeCache.DBCache.Get(dst);
             
@@ -72,7 +73,7 @@ namespace MCGalaxy {
             {
                 if (Database.TableExists("Portals" + src)) {
                     Database.Backend.RenameTable("Portals" + src, "Portals" + dst);
-                    Database.Backend.UpdateRows("Portals" + dst, "ExitMap = @1", 
+                    Database.Backend.UpdateRows("Portals" + dst, "ExitMap = @1",
                                                 "WHERE ExitMap = @0", src, dst);
                 }
                 
@@ -134,9 +135,15 @@ namespace MCGalaxy {
                 if (File.Exists("blockdefs/lvl_" + name + ".json"))
                     File.Delete("blockdefs/lvl_" + name + ".json");
             } catch {}
+            
             BotsFile.DeleteBots(name);
-
-            Database.Backend.DeleteTable("Block" + name);
+            DeleteDatabaseTables(name);
+        }
+        
+        static void DeleteDatabaseTables(string name) {
+            if (Database.Backend.TableExists("Block" + name))
+                Database.Backend.DeleteTable("Block" + name);
+            
             object locker = ThreadSafeCache.DBCache.Get(name);
             lock (locker) {
                 if (Database.TableExists("Portals" + name)) {
@@ -208,15 +215,15 @@ namespace MCGalaxy {
             {
                 if (Database.TableExists("Portals" + src)) {
                     Database.Backend.CreateTable("Portals" + dst, LevelDB.createPortals);
-                    Database.Backend.CopyAllRows("Portals" + src, "Portals" + dst);                    
-                    Database.Backend.UpdateRows("Portals" + dst, "ExitMap = @1", 
+                    Database.Backend.CopyAllRows("Portals" + src, "Portals" + dst);
+                    Database.Backend.UpdateRows("Portals" + dst, "ExitMap = @1",
                                                 "WHERE ExitMap = @0", src, dst);
                 }
                 
                 if (Database.TableExists("Messages" + src)) {
                     Database.Backend.CreateTable("Messages" + dst, LevelDB.createMessages);
                     Database.Backend.CopyAllRows("Messages" + src, "Messages" + dst);
-                }                
+                }
                 if (Database.TableExists("Zone" + src)) {
                     Database.Backend.CreateTable("Zone" + dst, LevelDB.createZones);
                     Database.Backend.CopyAllRows("Zone" + src, "Zone" + dst);
