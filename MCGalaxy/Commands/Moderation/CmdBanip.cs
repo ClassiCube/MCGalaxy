@@ -26,6 +26,9 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("ipban") }; }
+        }
         public CmdBanip() { }
 
         public override void Use(Player p, string message) {

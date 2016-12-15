@@ -38,21 +38,22 @@ namespace MCGalaxy.Commands.Building {
             if (args.Length == 2) {
                 byte src = Block.Byte(args[0]);
                 byte dst = Block.Byte(args[1]);
-                if (src == Block.Invalid) { Player.Message(p, "There is no block \"{0}\".", src); return; }
-                if (dst == Block.Invalid) { Player.Message(p, "There is no block \"{0}\".", dst); return; }
+                if (src == Block.Invalid) { Player.Message(p, "There is no block \"{0}\".", args[0]); return; }
+                if (dst == Block.Invalid) { Player.Message(p, "There is no block \"{0}\".", args[1]); return; }
 
-                if (!Block.Placable(src)) { Player.Message(p, Block.Name(src) + " isn't a special block."); return; }
+                if (!Block.Placable(src)) { Player.Message(p, "{0} isn't a special block.", Block.Name(src)); return; }
                 if (!Block.canPlace(p, dst)) { Formatter.MessageBlock(p, "bind ", dst); return; }
                 if (src >= Block.CpeCount) { Player.Message(p, "Cannot bind anything to this block."); return; }
                 
                 p.bindings[src] = dst;
-                Player.Message(p, Block.Name(src) + " bound to " + Block.Name(dst) + ".");
+                Player.Message(p, "{0} bound to {1}", Block.Name(src), Block.Name(dst));
             } else {
                 byte src = Block.Byte(args[0]);
                 if (src >= Block.CpeCount) { Player.Message(p, "This block cannot be bound"); return; }
 
-                if (p.bindings[src] == src) { Player.Message(p, Block.Name(src) + " isn't bound."); return; }
-                p.bindings[src] = src; Player.Message(p, "Unbound " + Block.Name(src) + ".");
+                if (p.bindings[src] == src) { Player.Message(p, "{0} is not bound.", Block.Name(src)); return; }
+                p.bindings[src] = src; 
+                Player.Message(p, "Unbound {0}.", Block.Name(src));
             }
         }
         
