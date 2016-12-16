@@ -39,6 +39,15 @@ namespace MCGalaxy {
             return buffer;
         }
         
+        public static byte[] BlankMessage() {
+            byte[] buffer = new byte[66];
+            buffer[0] = Opcode.Message;
+            
+            for (int i = 2; i < buffer.Length; i++)
+                buffer[i] = (byte)' ';
+            return buffer;
+        }
+        
         public static byte[] UserType(Player p) {
             byte[] buffer = new byte[2];
             buffer[0] = Opcode.SetPermission;

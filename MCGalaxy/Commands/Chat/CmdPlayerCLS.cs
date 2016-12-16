@@ -24,8 +24,9 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
-            for (int i = 0; i < 20; i++)
-                p.SendBlankMessage();
+            for (int i = 0; i < 20; i++) {
+                p.Send(Packet.BlankMessage());
+            }
             Player.Message(p, "%4Chat cleared.");
         }
 

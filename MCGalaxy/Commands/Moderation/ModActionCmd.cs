@@ -46,12 +46,12 @@ namespace MCGalaxy.Commands.Moderation {
             
             List<string> rules = CP437Reader.ReadAllLines("text/rules.txt");
             foreach (string rule in rules)
-                AddRule(rule, sections);
+                ParseRule(rule, sections);
             return sections;
         }
         
-        static void AddRule(string rule, Dictionary<int, string> sections) {
-            int num = -1;
+        static void ParseRule(string rule, Dictionary<int, string> sections) {
+            int ruleNum = -1;
             rule = Colors.StripColors(rule);
             
             for (int i = 0; i < rule.Length; i++) {
@@ -60,13 +60,14 @@ namespace MCGalaxy.Commands.Moderation {
                 bool isLetter = (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
                 if (!isNumber && !isLetter) continue;
                 // Found start of a word, but didn't find a number - assume this is a non-numbered rule
-                if (isLetter && num == -1) return;
+                if (isLetter && ruleNum == -1) return;
                 
-                if (isNumber) { // 1) Do not do X
-                    if (num == -1) num = 0;
-                    num *= 10; num += (c - '0');
+                if (isNumber) { // e.g. line is: 1) Do not do X
+                    if (ruleNum == -1) ruleNum = 0;
+                    ruleNum *= 10; 
+                    ruleNum += (c - '0');
                 } else {
-                    sections[num] = rule.Substring(i);
+                    sections[ruleNum] = rule.Substring(i);
                     return;
                 }
             }

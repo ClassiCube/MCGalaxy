@@ -26,7 +26,9 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             Player[] players = PlayerInfo.Online.Items;
             for (int i = 0; i < 20; i++) {
-                foreach (Player pl in players) pl.SendBlankMessage();
+                foreach (Player pl in players) {
+                    pl.Send(Packet.BlankMessage());
+                }
             }
             Chat.MessageAll("%4Global Chat Cleared.");
         }

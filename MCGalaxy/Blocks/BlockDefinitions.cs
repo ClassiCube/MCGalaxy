@@ -124,8 +124,10 @@ namespace MCGalaxy {
                 GlobalProps[i] = new BlockProps((byte)i);
             
             try {
-                if (File.Exists(GlobalPath) && File.Exists(GlobalBackupPath)) {
-                    File.Delete(GlobalBackupPath);
+                if (File.Exists(GlobalPath)) {
+                    if (File.Exists(GlobalBackupPath)) {
+                        File.Delete(GlobalBackupPath);
+                    }
                     File.Copy(GlobalPath, GlobalBackupPath);
                 }
             } catch (Exception ex) {
