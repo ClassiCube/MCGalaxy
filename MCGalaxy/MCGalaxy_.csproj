@@ -207,7 +207,6 @@
     <Compile Include="Commands\Economy\CmdAwards.cs" />
     <Compile Include="Commands\Economy\CmdBuy.cs" />
     <Compile Include="Commands\Economy\CmdEconomy.cs" />
-    <Compile Include="Commands\Economy\CmdFakePay.cs" />
     <Compile Include="Commands\Economy\CmdGive.cs" />
     <Compile Include="Commands\Economy\CmdBalance.cs" />
     <Compile Include="Commands\Economy\CmdPay.cs" />
