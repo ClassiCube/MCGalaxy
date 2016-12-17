@@ -726,26 +726,22 @@ namespace MCGalaxy.Gui {
             pl_txtMessage.Text = "";
         }
 
-        void pl_BtnImpersonate_Click(object sender, EventArgs e) {
+        void pl_BtnSendCommand_Click(object sender, EventArgs e) {
             if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
             
             try {
-                if (pl_txtImpersonate.Text.StartsWith("/")) {
-                    string[] args = pl_txtImpersonate.Text.Trim().SplitSpaces(2);
-                    Command cmd = Command.all.Find(args[0].Replace("/", ""));
-                    if (cmd == null) { 
-                        AppendPlayerStatus("There is no command '" + args[0] + "'"); return; 
-                    }
-                    
-                    cmd.Use(curPlayer, args.Length > 1 ? args[1] : "");
-                    if (args.Length > 1) {
-                        AppendPlayerStatus("Used command '" + args[0] + "' with parameters '" + args[1] + "' as player");
-                    } else {
-                        AppendPlayerStatus("Used command '" + args[0] + "' with no parameters as player");
-                    }
+                string[] args = pl_txtImpersonate.Text.Trim().SplitSpaces(2);
+                args[0] = args[0].Replace("/", "");
+                Command cmd = Command.all.Find(args[0]);
+                if (cmd == null) {
+                    AppendPlayerStatus("There is no command '" + args[0] + "'"); return;
+                }
+                
+                cmd.Use(curPlayer, args.Length > 1 ? args[1] : "");
+                if (args.Length > 1) {
+                    AppendPlayerStatus("Used command '" + args[0] + "' with parameters '" + args[1] + "' as player");
                 } else {
-                    Command.all.Find("impersonate").Use(null, curPlayer.name + " " + pl_txtImpersonate.Text);
-                    AppendPlayerStatus("Sent Message '" + pl_txtImpersonate.Text + "' as player");
+                    AppendPlayerStatus("Used command '" + args[0] + "' with no parameters as player");
                 }
                 pl_txtImpersonate.Text = "";
             } catch {
@@ -783,7 +779,7 @@ namespace MCGalaxy.Gui {
         }
 
         void pl_txtImpersonate_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Enter) pl_BtnImpersonate_Click(sender, e);
+            if (e.KeyCode == Keys.Enter) pl_BtnSendCommand_Click(sender, e);
         }
         void pl_txtUndo_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Enter) pl_BtnUndo_Click(sender, e);

@@ -346,7 +346,6 @@
     <Compile Include="Commands\other\CmdFly.cs" />
     <Compile Include="Commands\other\CmdGarbage.cs" />
     <Compile Include="Commands\other\CmdHackRank.cs" />
-    <Compile Include="Commands\other\CmdImpersonate.cs" />
     <Compile Include="Commands\other\CmdInvincible.cs" />
     <Compile Include="Commands\other\CmdKill.cs" />
     <Compile Include="Commands\other\CmdMove.cs" />

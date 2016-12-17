@@ -139,7 +139,7 @@ namespace MCGalaxy.Gui
             this.pl_pgProps = new System.Windows.Forms.PropertyGrid();
             this.pl_gbOther = new System.Windows.Forms.GroupBox();
             this.pl_txtImpersonate = new System.Windows.Forms.TextBox();
-            this.pl_btnImpersonate = new System.Windows.Forms.Button();
+            this.pl_btnSendCommand = new System.Windows.Forms.Button();
             this.pl_txtMessage = new System.Windows.Forms.TextBox();
             this.pl_btnMessage = new System.Windows.Forms.Button();
             this.pl_gbActions = new System.Windows.Forms.GroupBox();
@@ -1060,7 +1060,7 @@ namespace MCGalaxy.Gui
             // pl_gbOther
             // 
             this.pl_gbOther.Controls.Add(this.pl_txtImpersonate);
-            this.pl_gbOther.Controls.Add(this.pl_btnImpersonate);
+            this.pl_gbOther.Controls.Add(this.pl_btnSendCommand);
             this.pl_gbOther.Controls.Add(this.pl_txtMessage);
             this.pl_gbOther.Controls.Add(this.pl_btnMessage);
             this.pl_gbOther.Location = new System.Drawing.Point(147, 395);
@@ -1080,13 +1080,13 @@ namespace MCGalaxy.Gui
             // 
             // pl_btnImpersonate
             // 
-            this.pl_btnImpersonate.Location = new System.Drawing.Point(6, 48);
-            this.pl_btnImpersonate.Name = "pl_btnImpersonate";
-            this.pl_btnImpersonate.Size = new System.Drawing.Size(98, 23);
-            this.pl_btnImpersonate.TabIndex = 37;
-            this.pl_btnImpersonate.Text = "Impersonate:";
-            this.pl_btnImpersonate.UseVisualStyleBackColor = true;
-            this.pl_btnImpersonate.Click += new System.EventHandler(this.pl_BtnImpersonate_Click);
+            this.pl_btnSendCommand.Location = new System.Drawing.Point(6, 48);
+            this.pl_btnSendCommand.Name = "pl_btnImpersonate";
+            this.pl_btnSendCommand.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnSendCommand.TabIndex = 37;
+            this.pl_btnSendCommand.Text = "Do command:";
+            this.pl_btnSendCommand.UseVisualStyleBackColor = true;
+            this.pl_btnSendCommand.Click += new System.EventHandler(this.pl_BtnSendCommand_Click);
             // 
             // pl_txtMessage
             // 
@@ -1375,7 +1375,7 @@ namespace MCGalaxy.Gui
         private Button pl_btnWarn;
         private Button pl_btnKill;
         private TextBox pl_txtImpersonate;
-        private Button pl_btnImpersonate;
+        private Button pl_btnSendCommand;
         private Button pl_btnSpawn;
         private TextBox pl_txtUndo;
         private Button pl_btnUndo;
