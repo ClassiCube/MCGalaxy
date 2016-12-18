@@ -199,6 +199,8 @@ namespace MCGalaxy {
             
             Aliases["steps"] = staircasestep; Aliases["double_steps"] = staircasefull;
             Aliases["step"] = staircasestep; Aliases["double_step"] = staircasefull;
+            Aliases["grey"] = lightgrey; Aliases["door_darkgray"] = door_darkgrey;
+            Aliases["door_lightgray"] = door_lightgrey;
         }
         
         static void SetDefaultDeaths() {
