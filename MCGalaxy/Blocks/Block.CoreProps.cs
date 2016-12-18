@@ -85,12 +85,13 @@ namespace MCGalaxy {
             Props[wood].LavaKills = true; Props[trunk].LavaKills = true;
             Props[sponge].LavaKills = true; Props[bookcase].LavaKills = true;
             Props[leaf].LavaKills = true; Props[crate].LavaKills = true;
-            Props[red].IsRails = true; Props[op_air].IsRails = true;
-            SetupDefaultNames();
-            SetupDefaultDeaths();
+            Props[red].IsRails = true; Props[op_air].IsRails = true;        
+            
+            SetDefaultNames();
+            SetDefaultDeaths();
         }
         
-        static void SetupDefaultNames() {
+        internal static void SetDefaultNames() {
             string[] names = { "air", "stone", "grass", "dirt", "cobblestone", "wood", "sapling",
                 "bedrock", "active_water", "water", "active_lava", "lava", "sand", "gravel",
                 "gold_ore", "iron_ore", "coal", "log", "leaves", "sponge", "glass", "red",
@@ -100,13 +101,13 @@ namespace MCGalaxy {
                 "doubleslab", "slab", "brick", "tnt", "bookshelf", "mossyrocks",
                 "obsidian", "cobblestoneslab", "rope", "sandstone", "snow", "fire", "lightpink",
                 "forestgreen", "brown", "deepblue", "turquoise", "ice", "ceramictile", "magmablock",
-                "pillar", "crate", "stonebrick", "unknown", "unknown",
-                "unknown", "unknown", "flagbase", "unknown", "unknown",
-                "fast_hot_lava", "c4", "c4_det", "unknown", "unknown", "unknown", "unknown",
-                "door_cobblestone", "unknown", "unknown", "door_red", "unknown",
-                "door_orange", "door_yellow", "door_lightgreen", "unknown", "door_aquagreen",
+                "pillar", "crate", "stonebrick", null, null,
+                null, null, "flagbase", null, null,
+                "fast_hot_lava", "c4", "c4_det", null, null, null, null,
+                "door_cobblestone", null, null, "door_red", null,
+                "door_orange", "door_yellow", "door_lightgreen", null, "door_aquagreen",
                 "door_cyan", "door_lightblue", "door_purple", "door_lightpurple", "door_pink",
-                "door_darkpink", "door_darkgrey", "door_lightgrey", "door_white", "unknown",
+                "door_darkpink", "door_darkgrey", "door_lightgrey", "door_white", null,
                 "op_glass", "opsidian", "op_brick", "op_stone", "op_cobblestone", "op_air",
                 "op_water", "op_lava", "griefer_stone", "lava_sponge", "wood_float", "door",
                 "lava_fast", "door_obsidian", "door_glass", "door_stone", "door_leaves", "door_sand",
@@ -114,7 +115,7 @@ namespace MCGalaxy {
                 "tdoor_glass", "tdoor_stone", "tdoor_leaves", "tdoor_sand", "tdoor_wood",
                 "tdoor_green", "white_message", "black_message", "air_message", "water_message",
                 "lava_message", "tdoor_tnt", "tdoor_stair", "tdoor_air", "tdoor_water", "tdoor_lava",
-                "waterfall", "lavafall", "unknown", "water_faucet", "lava_faucet", "finite_water",
+                "waterfall", "lavafall", null, "water_faucet", "lava_faucet", "finite_water",
                 "finite_lava", "finite_faucet", "odoor", "odoor_obsidian", "odoor_glass",
                 "odoor_stone", "odoor_leaves", "odoor_sand", "odoor_wood", "odoor_green",
                 "odoor_tnt", "odoor_stair", "odoor_lava", "odoor_water", "air_portal", "water_portal",
@@ -124,24 +125,36 @@ namespace MCGalaxy {
                 "odoor_red", "odoor_tnt_air", "odoor_stair_air", "odoor_lava_air", "odoor_water_air",
                 "small_tnt", "big_tnt", "tnt_explosion", "lava_fire", "nuke_tnt", "rocketstart",
                 "rockethead", "firework", "hot_lava", "cold_water", "nerve_gas", "active_cold_water",
-                "active_hot_lava", "magma", "geyser", "checkpoint", "unknown", "unknown", "air_flood",
-                "door_air", "air_flood_layer", "air_flood_down", "air_flood_up", "unknown",
-                "unknown", "unknown", "unknown", "unknown", "unknown", "door8_air",
-                "door9_air", "unknown", "unknown", "unknown", "unknown", "unknown",
-                "unknown", "unknown", "door_iron", "door_dirt", "door_grass", "door_blue", "door_book",
-                "unknown", "unknown", "unknown", "unknown", "unknown",
-                "train", "creeper", "zombie", "zombie_head", "unknown", "dove", "pidgeon", "duck",
-                "phoenix", "red_robin", "blue_bird", "unknown", "killer_phoenix", "unknown", "unknown",
+                "active_hot_lava", "magma", "geyser", "checkpoint", null, null, "air_flood",
+                "door_air", "air_flood_layer", "air_flood_down", "air_flood_up", null,
+                null, null, null, null, null, "door8_air",
+                "door9_air", null, null, null, null, null,
+                null, null, "door_iron", "door_dirt", "door_grass", "door_blue", "door_book",
+                null, null, null, null, null,
+                "train", "creeper", "zombie", "zombie_head", null, "dove", "pidgeon", "duck",
+                "phoenix", "red_robin", "blue_bird", null, "killer_phoenix", null, null,
                 "goldfish", "sea_sponge", "shark", "salmon", "betta_fish", "lava_shark", "snake",
-                "snake_tail", "door_gold", "unknown", "unknown" };
-            for (int i = 0; i < names.Length; i++) {
-                Props[i].Name = names[i];
-                if (names[i] != "unknown")
-                    Aliases[names[i]] = (byte)i;
-                if (names[i].IndexOf('_') >= 0)
-                    Aliases[names[i].Replace("_", "")] = (byte)i;
-            }
+                "snake_tail", "door_gold", null, null };
             
+            Aliases.Clear();
+            for (int i = 0; i < names.Length; i++) {
+                string name = names[i];
+                if (name == null) name = "unknown";                
+                if (i < Block.CpeCount) {
+                    BlockDefinition def = BlockDefinition.GlobalDefs[i];
+                    if (def != null) name = def.Name;
+                }
+                
+                Props[i].Name = name;
+                if (name != "unknown")
+                    Aliases[name] = (byte)i;
+                if (name.IndexOf('_') >= 0)
+                    Aliases[name.Replace("_", "")] = (byte)i;
+            }
+            SetDefaultAliases();
+        }
+        
+        static void SetDefaultAliases() {
             // Add old MCGalaxy names
             Aliases["purple"] = purple; Aliases["blueviolet"] = blue;
             Aliases["adminium"] = blackrock; Aliases["bookcase"] = bookcase;
@@ -188,7 +201,7 @@ namespace MCGalaxy {
             Aliases["step"] = staircasestep; Aliases["double_step"] = staircasefull;
         }
         
-        static void SetupDefaultDeaths() {
+        static void SetDefaultDeaths() {
             SetDeath(Block.tntexplosion, "@p %S&cblew into pieces.");
             SetDeath(Block.deathair, "@p %Swalked into &cnerve gas and suffocated.");
             SetDeath(Block.deathwater, "@p %Sstepped in &dcold water and froze.");

@@ -166,6 +166,7 @@ namespace MCGalaxy {
                 }
             }
             defs[id] = def;
+            if (global) Block.SetDefaultNames();
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
@@ -198,6 +199,7 @@ namespace MCGalaxy {
                 }
             }
             defs[id] = null;
+            if (global) Block.SetDefaultNames();
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
