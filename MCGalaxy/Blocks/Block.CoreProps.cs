@@ -100,10 +100,10 @@ namespace MCGalaxy {
                 "doubleslab", "slab", "brick", "tnt", "bookshelf", "mossyrocks",
                 "obsidian", "cobblestoneslab", "rope", "sandstone", "snow", "fire", "lightpink",
                 "forestgreen", "brown", "deepblue", "turquoise", "ice", "ceramictile", "magmablock",
-                "pillar", "crate", "stonebrick", "door_darkpink_air", "door_darkgrey_air",
-                "door_lightgrey_air", "door_white_air", "flagbase", "unknown", "unknown",
+                "pillar", "crate", "stonebrick", "unknown", "unknown",
+                "unknown", "unknown", "flagbase", "unknown", "unknown",
                 "fast_hot_lava", "c4", "c4_det", "unknown", "unknown", "unknown", "unknown",
-                "door_cobblestone", "door_cobblestone_air", "unknown", "door_red", "door_red_air",
+                "door_cobblestone", "unknown", "unknown", "door_red", "unknown",
                 "door_orange", "door_yellow", "door_lightgreen", "unknown", "door_aquagreen",
                 "door_cyan", "door_lightblue", "door_purple", "door_lightpurple", "door_pink",
                 "door_darkpink", "door_darkgrey", "door_lightgrey", "door_white", "unknown",
@@ -125,15 +125,15 @@ namespace MCGalaxy {
                 "small_tnt", "big_tnt", "tnt_explosion", "lava_fire", "nuke_tnt", "rocketstart",
                 "rockethead", "firework", "hot_lava", "cold_water", "nerve_gas", "active_cold_water",
                 "active_hot_lava", "magma", "geyser", "checkpoint", "unknown", "unknown", "air_flood",
-                "door_air", "air_flood_layer", "air_flood_down", "air_flood_up", "door2_air",
-                "door3_air", "door4_air", "door5_air", "door6_air", "door7_air", "door8_air",
-                "door9_air", "door10_air", "door11_air", "door12_air", "door13_air", "door14_air",
+                "door_air", "air_flood_layer", "air_flood_down", "air_flood_up", "unknown",
+                "unknown", "unknown", "unknown", "unknown", "unknown", "door8_air",
+                "door9_air", "unknown", "unknown", "unknown", "unknown", "unknown",
                 "unknown", "unknown", "door_iron", "door_dirt", "door_grass", "door_blue", "door_book",
-                "door_iron_air", "door_dirt_air", "door_grass_air", "door_blue_air", "door_book_air",
+                "unknown", "unknown", "unknown", "unknown", "unknown",
                 "train", "creeper", "zombie", "zombie_head", "unknown", "dove", "pidgeon", "duck",
                 "phoenix", "red_robin", "blue_bird", "unknown", "killer_phoenix", "unknown", "unknown",
                 "goldfish", "sea_sponge", "shark", "salmon", "betta_fish", "lava_shark", "snake",
-                "snake_tail", "door_gold", "door_gold_air", "unknown" };
+                "snake_tail", "door_gold", "unknown", "unknown" };
             for (int i = 0; i < names.Length; i++) {
                 Props[i].Name = names[i];
                 if (names[i] != "unknown")
