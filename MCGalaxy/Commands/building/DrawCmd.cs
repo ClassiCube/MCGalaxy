@@ -90,6 +90,10 @@ namespace MCGalaxy.Commands.Building {
                     Player.Message(p, "&cThere is no block \"{0}\".", msg);
                     return -1;
                 }
+                
+                // custom block overriding a core block
+                if (block < Block.CpeCount) return block;
+                
                 extBlock = block;
                 return Block.custom_block;
             }
