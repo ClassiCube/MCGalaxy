@@ -137,6 +137,7 @@ namespace MCGalaxy {
                 "snake_tail", "door_gold", null, null };
             
             Aliases.Clear();
+            SetDefaultAliases();
             for (int i = 0; i < names.Length; i++) {
                 string name = names[i];
                 if (name == null) name = "unknown";                
@@ -151,7 +152,6 @@ namespace MCGalaxy {
                 if (name.IndexOf('_') >= 0)
                     Aliases[name.Replace("_", "")] = (byte)i;
             }
-            SetDefaultAliases();
         }
         
         static void SetDefaultAliases() {
