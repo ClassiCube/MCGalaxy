@@ -141,7 +141,7 @@ namespace MCGalaxy {
             for (int i = 0; i < names.Length; i++) {
                 string name = names[i];
                 if (name == null) name = "unknown";                
-                if (i < Block.CpeCount) {
+                if (i > 0 && i < Block.CpeCount) {
                     BlockDefinition def = BlockDefinition.GlobalDefs[i];
                     if (def != null) name = def.Name;
                 }
