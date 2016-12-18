@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands {
         public override string shortcut { get { return "like"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
         
         public override void Use(Player p, string message) { RateMap(p, true); }

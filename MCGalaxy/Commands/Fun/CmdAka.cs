@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands {
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
         public override void Use(Player p, string message) {
             p.Game.Aka = !p.Game.Aka;

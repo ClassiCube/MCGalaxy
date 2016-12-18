@@ -104,7 +104,7 @@ namespace MCGalaxy.Commands {
 
         public override void Help(Player p) {
             Player.Message(p, "%T/unloaded all %H- Lists all maps.");
-            Player.Message(p, "%T/unloaded [1/2/3/..] %H- Shows only a few maps.");
+            Player.Message(p, "%T/unloaded 1/2/3/.. %H- Shows only a few maps.");
             Player.Message(p, "%H Lists unloaded maps/levels, and their accessible state.");
         }
     }
