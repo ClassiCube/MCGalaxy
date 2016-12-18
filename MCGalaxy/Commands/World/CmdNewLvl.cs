@@ -68,12 +68,15 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Generating map \"{0}\"..", name);
                 using (Level lvl = new Level(name, x, y, z)) {
                     if (!MapGen.Generate(lvl, args[4], seed, p)) return false;
+                    
                     lvl.Save(true);
                     lvl.Dispose();
+                    name = lvl.ColoredName;
                 }
                 
-                string format = seed != "" ? "Level \"{0}\" created with seed \"{1}\"" : "Level \"{0}\" created";
-                Chat.MessageAll(format, name, seed);
+                string format = seed != "" ? "{0}%S created level {1}%S with seed \"{2}\"" : "{0}%S created level {1}";
+                string pName = p == null ? "(console)" : p.ColoredName;
+                Chat.MessageAll(format, pName, name, seed);
             } finally {
                 if (p != null) Interlocked.Exchange(ref p.GeneratingMap, 0);
                 GC.Collect();
