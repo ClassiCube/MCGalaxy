@@ -206,13 +206,11 @@ namespace MCGalaxy {
         void CheckState() {
             if (Server.muted.Contains(name)) {
                 muted = true;
-                Chat.MessageAll("{0} is still muted from the last time they went offline.", DisplayName);
-                Player.Message(this, "!%cYou are still %8muted%c since your last login.");
+                Chat.MessageAll("{0} &cis still muted from previously.", DisplayName);
             }
             if (Server.frozen.Contains(name)) {
                 frozen = true;
-                Chat.MessageAll("{0} is still frozen from the last time they went offline.", DisplayName);
-                Player.Message(this, "!%cYou are still %8frozen%c since your last login.");
+                Chat.MessageAll("{0} &cis still frozen from previously.", DisplayName);
             }
         }
         
