@@ -358,7 +358,6 @@
     <Compile Include="Commands\other\CmdTnt.cs" />
     <Compile Include="Commands\other\CmdTp.cs" />
     <Compile Include="Commands\other\CmdTpA.cs" />
-    <Compile Include="Commands\other\CmdTpZone.cs" />
     <Compile Include="Commands\other\CmdWarp.cs" />
     <Compile Include="Commands\other\CmdWaypoint.cs" />
     <Compile Include="Commands\other\QuitCmds.cs" />
