@@ -24,8 +24,8 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.DB {
     
-    /// <summary> Exports BlockDB tables to the new binary format. </summary>
-    public sealed class DBExporter {
+    /// <summary> Exports a BlockDB table to the new binary format. </summary>
+    public sealed class BlockDBTableDumper {
         
         string mapName;
         Dictionary<string, int> nameCache = new Dictionary<string, int>();
@@ -34,7 +34,7 @@ namespace MCGalaxy.DB {
         Vec3U16 dims;
         BlockDBEntry entry;
         
-        public void ExportTable(string table) {
+        public void DumpTable(string table) {
             mapName = table.Substring("Block".Length);
             errorOccurred = false;
             
