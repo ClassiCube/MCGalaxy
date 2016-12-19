@@ -82,22 +82,20 @@ namespace MCGalaxy.Commands.Building {
             byte block = Block.Byte(msg);
             extBlock = 0;
             if (msg.CaselessEq("skip") || msg.CaselessEq("none")) return Block.Invalid;
+            if (block != Block.Invalid) return block;
             
+            // try treat as a block definition id.
+            block = BlockDefinition.GetBlock(msg, p);
             if (block == Block.Invalid) {
-                // try treat as a block definition id.
-                block = BlockDefinition.GetBlock(msg, p);
-                if (block == Block.Invalid) {
-                    Player.Message(p, "&cThere is no block \"{0}\".", msg);
-                    return -1;
-                }
-                
-                // custom block overriding a core block
-                if (block < Block.CpeCount) return block;
-                
-                extBlock = block;
-                return Block.custom_block;
+                Player.Message(p, "&cThere is no block \"{0}\".", msg);
+                return -1;
             }
-            return block;
+            
+            // custom block overriding a core block
+            if (block < Block.CpeCount) return block;
+            
+            extBlock = block;
+            return Block.custom_block;
         }
         
         public static int GetBlockIfAllowed(Player p, string msg, out byte extBlock) {
