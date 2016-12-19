@@ -51,8 +51,20 @@ namespace MCGalaxy {
             array[index++] = (byte)(value >> 16);
             array[index++] = (byte)(value >> 8);
             array[index++] = (byte)(value);
-        }
+        }        
+
         
+        public unsafe static string ReadString(byte[] data, int offset) {
+            int length = 0;
+            char* characters = stackalloc char[64];
+            for (int i = 63; i >= 0; i--) {
+                byte code = data[i + offset];
+                if( length == 0 && !(code == 0x00 || code == 0x20))
+                    length = i + 1;
+                characters[i] = (char)code;
+            }
+            return new String(characters, 0, length);
+        }
         
         public static void Write(string str, byte[] array, int offset, bool hasCP437) {
             if (hasCP437) WriteCP437(str, array, offset);

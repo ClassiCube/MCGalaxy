@@ -68,13 +68,13 @@ namespace MCGalaxy {
         public int customBlockSupportLevel;
         
         void HandleExtInfo(byte[] packet) {
-            appName = GetString(packet, 1);
+            appName = NetUtils.ReadString(packet, 1);
             extensionCount = packet[66];          
             CheckReadAllExtensions(); // in case client supports 0 CPE packets
         }
 
         void HandleExtEntry(byte[] packet) {
-            AddExtension(GetString(packet, 1), NetUtils.ReadI32(packet, 65));
+            AddExtension(NetUtils.ReadString(packet, 1), NetUtils.ReadI32(packet, 65));
             extensionCount--;
             CheckReadAllExtensions();
         }
@@ -105,18 +105,7 @@ namespace MCGalaxy {
                 finishedCpeLogin = true;
             }
         }
-        
-        char[] characters = new char[64];
-        string GetString( byte[] data, int offset ) {
-            int length = 0;
-            for( int i = 63; i >= 0; i-- ) {
-                byte code = data[i + offset];
-                if( length == 0 && !( code == 0 || code == 0x20 ) )
-                    length = i + 1;
-                characters[i] = (char)code;
-            }
-            return new String( characters, 0, length );
-        }
+
 
         public void SendRaw(int id) {
             byte[] buffer = new [] { (byte)id };

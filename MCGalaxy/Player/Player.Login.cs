@@ -29,11 +29,11 @@ namespace MCGalaxy {
             byte version = packet[1];
             if (version != Server.version) { Leave(null, "Wrong version!", true); return; }
             
-            name = enc.GetString(packet, 2, 64).Trim();
+            name = NetUtils.ReadString(packet, 2);
             skinName = name; DisplayName = name; truename = name;
             if (Server.ClassicubeAccountPlus) name += "+";
             
-            string mppass = enc.GetString(packet, 66, 32).Trim();            
+            string mppass = NetUtils.ReadString(packet, 66);
             if (PlayerConnecting != null) PlayerConnecting(this, mppass);
             OnPlayerConnectingEvent.Call(this, mppass);
             if (cancelconnecting) { cancelconnecting = false; return; }

@@ -485,7 +485,7 @@ namespace MCGalaxy {
         void HandleChat(byte[] packet) {
             if (!loggedIn) return;
             byte continued = packet[1];
-            string text = GetString(packet, 2);
+            string text = NetUtils.ReadString(packet, 2);
             LastAction = DateTime.UtcNow;
             if (FilterChat(ref text, continued)) return;
 

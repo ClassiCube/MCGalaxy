@@ -84,19 +84,22 @@ namespace MCGalaxy.Commands {
         void DoBackup(Player p, string[] args) {
             string type = args.Length == 1 ? "" : args[1].ToLower();
             if (type == "" || type == "all") {
-                Player.Message(p, "Server backup (Everything) started. Please wait while backup finishes.");
+                Player.Message(p, "Server backup started. Please wait while backup finishes.");
                 Backup.CreatePackage(p, true, true, false);
             } else if (type == "database" || type == "sql" || type == "db") {
                 // Creates CREATE TABLE and INSERT statements for all tables and rows in the database
-                Player.Message(p, "Server backup (Database) started. Please wait while backup finishes.");
+                Player.Message(p, "Database backup started. Please wait while backup finishes.");
                 Backup.CreatePackage(p, false, true, false);
             } else if (type == "allbutdb" || type == "files" || type == "file") {
                 // Saves all files and folders to a .zip
-                Player.Message(p, "Server backup (Everything but Database) started. Please wait while backup finishes.");
+                Player.Message(p, "All files backup started. Please wait while backup finishes.");
                 Backup.CreatePackage(p, true, false, false);
             } else if (type == "lite") {
-                Player.Message(p, "Server backup (Everything but BlockDB tables and undo files) started. Please wait while backup finishes.");
+                Player.Message(p, "Server backup (except BlockDB and undo data) started. Please wait while backup finishes.");
                 Backup.CreatePackage(p, true, true, true);
+            } else if (type == "litedb") {
+                Player.Message(p, "Database backup (except BlockDB tables) started. Please wait while backup finishes.");
+                Backup.CreatePackage(p, false, true, true);
             } else if (type == "table") {
                 if (args.Length == 2) { Player.Message(p, "You need to provide the table name to backup."); return; }
                 if (!Formatter.ValidName(p, args[2], "table")) return;
@@ -170,11 +173,12 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%T/server reload %H- Reload the server files. (May require restart) (Owner only)");
             Player.Message(p, "%T/server public/private %H- Make the server public or private.");
             Player.Message(p, "%T/server restore %H- Restore the server from a backup.");
-            Player.Message(p, "%T/server backup all/db/files/lite %H- Make a backup.");
+            Player.Message(p, "%T/server backup all/db/files/lite/litedb %H- Make a backup.");
             Player.Message(p, "  %Hall - Backups everything (default)");
             Player.Message(p, "  %Hdb - Only backups the database.");
             Player.Message(p, "  %Hfiles - Backups everything, except the database.");
             Player.Message(p, "  %Hlite - Backups everything, except BlockDB and undo files.");
+            Player.Message(p, "  %Hlitedb - Backups database, except BlockDB tables.");
             Player.Message(p, "%T/server backup table [name] %H- Backups that database table");
             Player.Message(p, "%T/server import [name] %H- Imports a backed up database table");
         }
