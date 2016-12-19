@@ -499,7 +499,7 @@ namespace MCGalaxy.Commands.CPE {
                 }
             } else {
                 BlockDefinition[] defs = lvl.CustomBlockDefs;
-                for (int i = Block.Invalid; i >= Block.CpeCount; i--) {
+                for (int i = Block.Invalid - 1; i >= Block.CpeCount; i--) {
                     if (defs[i] == null) return (byte)i;
                 }
             }
