@@ -182,19 +182,23 @@ namespace MCGalaxy.Drawing.Ops {
         
         static void BufferedOutput(DrawOpBlock b, Player p, Level lvl) {
             if (b.Block == Block.Invalid) return;
+            byte old = lvl.GetTile(b.X, b.Y, b.Z), oldExt = 0;
+            if (old == Block.custom_block) oldExt = lvl.GetExtTile(b.X, b.Y, b.Z);
             if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) return;
             
             int index = lvl.PosToInt(b.X, b.Y, b.Z);
-            lvl.AddToBlockDB(p, index, b.Block, b.ExtBlock, b.Block == 0);
+            lvl.AddToBlockDB(p, index, old, oldExt, b.Block, b.ExtBlock);
             BlockQueue.Addblock(p, index, b.Block, b.ExtBlock);
         }
         
         static void SlowOutput(DrawOpBlock b, Player p, Level lvl) {
             if (b.Block == Block.Invalid) return;
+            byte old = lvl.GetTile(b.X, b.Y, b.Z), oldExt = 0;
+            if (old == Block.custom_block) oldExt = lvl.GetExtTile(b.X, b.Y, b.Z);
             if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) return;
             
             int index = lvl.PosToInt(b.X, b.Y, b.Z);
-            lvl.AddToBlockDB(p, index, b.Block, b.ExtBlock, b.Block == 0);
+            lvl.AddToBlockDB(p, index, old, oldExt, b.Block, b.ExtBlock);
             Player.GlobalBlockchange(lvl, b.X, b.Y, b.Z, b.Block, b.ExtBlock);
         }
         

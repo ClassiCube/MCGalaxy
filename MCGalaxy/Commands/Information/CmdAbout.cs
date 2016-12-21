@@ -59,8 +59,8 @@ namespace MCGalaxy.Commands {
             ListInMemory(p, ref foundAny, names, x, y, z);
             
             if (!foundAny) Player.Message(p, "No block change records found for this block.");
-            OutputMessageBlock(p, b, id, x, y, z);
-            OutputPortal(p, b, id, x, y, z);
+            BlockDBChange.OutputMessageBlock(p, b, id, x, y, z);
+            BlockDBChange.OutputPortal(p, b, id, x, y, z);
             
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -71,17 +71,25 @@ namespace MCGalaxy.Commands {
             if (!Database.TableExists("Block" + p.level.name)) return;
             using (DataTable Blocks = Database.Backend.GetRows("Block" + p.level.name, "*",
                                                                "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z)) {
-                DateTime now = DateTime.Now;                
+                BlockDBEntry entry = default(BlockDBEntry);
+                entry.OldRaw = Block.Invalid;
+                
                 for (int i = 0; i < Blocks.Rows.Count; i++) {
                     foundAny = true;
                     DataRow row = Blocks.Rows[i];
                     string name = row["Username"].ToString().Trim();
-                    DateTime time = DateTime.Parse(row["TimePerformed"].ToString());
-                    byte block = byte.Parse(row["Type"].ToString());
                     
+                    DateTime time = DateTime.Parse(row["TimePerformed"].ToString());
+                    TimeSpan delta = time - BlockDB.Epoch;
+                    entry.TimeDelta = (int)delta.TotalSeconds;
+                    entry.Flags = BlockDBFlags.ManualPlace;
+                     
                     byte flags = ParseFlags(row["Deleted"].ToString());
-                    bool deleted = (flags & 1) != 0, isExt = (flags & 2) != 0;
-                    Output(p, name, block, isExt, deleted, now - time);
+                    if ((flags & 1) == 0) { // block was placed
+                    	entry.NewRaw = byte.Parse(row["Type"].ToString());
+                    	entry.Flags |= (flags & 2) != 0 ? BlockDBFlags.NewCustom : BlockDBFlags.None;
+                    }
+                    BlockDBChange.Output(p, name, entry);
                 }
             }
         }
@@ -101,11 +109,7 @@ namespace MCGalaxy.Commands {
                 names[entry.PlayerID] = name;
             }
             foundAny = true;
-            
-            DateTime time = BlockDB.Epoch.AddSeconds(entry.TimeDelta);
-            bool deleted = entry.NewRaw == 0;
-            bool extBlock = (entry.Flags & BlockDBFlags.NewCustom) != 0;
-            Output(p, name, entry.NewRaw, extBlock, deleted, now - time);
+            BlockDBChange.Output(p, name, entry);
         }
         
         static void ListInMemory(Player p, ref bool foundAny, Dictionary<int, string> names,
@@ -117,69 +121,7 @@ namespace MCGalaxy.Commands {
                 if (entries.Items[i].Index != index) continue;
                 OutputEntry(p, ref foundAny, names, entries.Items[i]);
             }
-        }
-        
-        
-        static void Output(Player p, string user, byte raw, bool isExt,
-                           bool deleted, TimeSpan delta) {
-            byte block = isExt ? Block.custom_block : raw;
-            byte extBlock = isExt ? raw : (byte)0;
-            
-            string blockName = p.level.BlockName(block, extBlock);
-            if (raw == Block.custom_block && !isExt) // Before started tracking IsExt in BlockDB
-                blockName = Block.Name(raw);
-            
-            Player.Message(p, "{0} ago {1} {2}",
-                           delta.Shorten(true, false), PlayerInfo.GetColoredName(p, user),
-                           deleted ? "&4deleted %S(using " + blockName + ")" : "&3placed %S" + blockName);
-        }
-        
-        static void OutputMessageBlock(Player p, byte block, byte extBlock,
-                                       ushort x, ushort y, ushort z) {
-            if (block == Block.custom_block) {
-                if (!p.level.CustomBlockProps[extBlock].IsMessageBlock) return;
-            } else {
-                if (!Block.Props[block].IsMessageBlock) return;
-            }
-
-            try {
-                if (!Database.Backend.TableExists("Messages" + p.level.name)) return;
-                DataTable messages = Database.Backend.GetRows("Messages" + p.level.name, "*",
-                                                              "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
-                int last = messages.Rows.Count - 1;
-                if (last == -1) { messages.Dispose(); return; }
-                
-                string message = messages.Rows[last]["Message"].ToString().Trim();
-                message = message.Replace("\\'", "\'");
-                Player.Message(p, "Message Block contents: {0}", message);
-            } catch {
-            }
-        }
-        
-        static void OutputPortal(Player p, byte block, byte extBlock,
-                                 ushort x, ushort y, ushort z) {
-            if (block == Block.custom_block) {
-                if (!p.level.CustomBlockProps[extBlock].IsPortal) return;
-            } else {
-                if (!Block.Props[block].IsPortal) return;
-            }
-
-            try {
-                if (!Database.Backend.TableExists("Portals" + p.level.name)) return;
-                DataTable portals = Database.Backend.GetRows("Portals" + p.level.name, "*",
-                                                             "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
-                int last = portals.Rows.Count - 1;
-                if (last == -1) { portals.Dispose(); return; }
-                
-                string exitMap = portals.Rows[last]["ExitMap"].ToString().Trim();
-                ushort exitX = U16(portals.Rows[last]["ExitX"]);
-                ushort exitY = U16(portals.Rows[last]["ExitY"]);
-                ushort exitZ = U16(portals.Rows[last]["ExitZ"]);
-                Player.Message(p, "Portal destination: ({0}, {1}, {2}) in {3}",
-                               exitX, exitY, exitZ, exitMap);
-            } catch {
-            }
-        }
+        }      
         
         static ushort U16(object x) { return ushort.Parse(x.ToString()); }
         

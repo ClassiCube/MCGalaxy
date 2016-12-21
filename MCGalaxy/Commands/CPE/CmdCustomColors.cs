@@ -182,7 +182,6 @@ namespace MCGalaxy.Commands.CPE {
             Player.Message(p, "%T/customcolors remove [code] %H- Removes that custom color.");
             Player.Message(p, "%T/customcolors list [offset] %H- lists all custom colors.");
             Player.Message(p, "%T/customcolors edit [code] [name/fallback/hex]");
-        }
-        
+        }        
     }
 }

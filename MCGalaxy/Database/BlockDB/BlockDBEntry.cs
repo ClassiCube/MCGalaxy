@@ -39,9 +39,13 @@ namespace MCGalaxy.DB {
         
         /// <summary> Flags for the block change. </summary>
         public ushort Flags;
+        
+        /// <summary> The point in time this change occured at. </summary>
+        public DateTime Time { get { return BlockDB.Epoch.AddSeconds(TimeDelta); } }
     }
 
     public static class BlockDBFlags {
+    	public const ushort None        = 0x0000;
     	public const ushort ManualPlace = 0x0001;
     	public const ushort Painted     = 0x0002;
     	public const ushort Drawn       = 0x0004;

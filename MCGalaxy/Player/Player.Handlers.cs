@@ -47,8 +47,10 @@ namespace MCGalaxy {
         
         public void ManualChange(ushort x, ushort y, ushort z, byte action,
                                  byte block, byte extBlock, bool checkPlaceDist) {
-            byte old = level.GetTile(x, y, z);
+            byte old = level.GetTile(x, y, z), oldExt = 0;
             if (old == Block.Invalid) return;
+            if (old == Block.custom_block) oldExt = level.GetExtTile(x, y, z);
+            	
             if (jailed || !agreed || !canBuild) { RevertBlock(x, y, z); return; }
             if (level.IsMuseum && Blockchange == null) return;
             
@@ -121,10 +123,10 @@ namespace MCGalaxy {
             int index = level.PosToInt(x, y, z);
             if (doDelete) {
                 if (DeleteBlock(old, x, y, z, block, extBlock))
-                    level.AddToBlockDB(this, index, heldBlock, heldExt, true);
+                    level.AddToBlockDB(this, index, old, oldExt, 0, 0);
             } else {
                 if (PlaceBlock(old, x, y, z, block, extBlock))
-                    level.AddToBlockDB(this, index, heldBlock, heldExt, false);
+                    level.AddToBlockDB(this, index, old, oldExt, heldBlock, heldExt);
             }
         }
         
