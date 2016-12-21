@@ -101,14 +101,15 @@ namespace MCGalaxy {
             Level lvl = p.level;
             bool hasBlockDefs = p.hasBlockDefs;
             using (GZipStream gs = new GZipStream(dst, CompressionMode.Compress, true)) {
-                NetUtils.WriteI32(lvl.blocks.Length, buffer, 0);
+                byte[] blocks = lvl.blocks;
+                NetUtils.WriteI32(blocks.Length, buffer, 0);
                 gs.Write(buffer, 0, sizeof(int));
-                dst.length = lvl.blocks.Length;
+                dst.length = blocks.Length;
                 
                 // compress the map data in 64 kb chunks
                 if (p.hasCustomBlocks) {
-                    for (int i = 0; i < lvl.blocks.Length; ++i) {
-                        byte block = lvl.blocks[i];
+                    for (int i = 0; i < blocks.Length; ++i) {
+                        byte block = blocks[i];
                         if (block == Block.custom_block) {
                             buffer[bIndex] = hasBlockDefs ? lvl.GetExtTile(i) : lvl.GetFallbackExtTile(i);
                         } else {
@@ -122,8 +123,8 @@ namespace MCGalaxy {
                         }
                     }
                 } else {
-                    for (int i = 0; i < lvl.blocks.Length; ++i) {
-                        byte block = lvl.blocks[i];
+                    for (int i = 0; i < blocks.Length; ++i) {
+                        byte block = blocks[i];
                         if (block == Block.custom_block) {
                             block = hasBlockDefs ? lvl.GetExtTile(i) : lvl.GetFallbackExtTile(i);
                             buffer[bIndex] = convCPE[block];
