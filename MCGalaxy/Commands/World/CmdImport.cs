@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.World {
                 return;
             }
             Player.Message(p, "Converted map!");
-            CmdLoad.LoadLevel(p, name);
+            //CmdLoad.LoadLevel(p, name); pls
         }
         
         enum FileType { Mcf, Fcm, Dat, Cw };
