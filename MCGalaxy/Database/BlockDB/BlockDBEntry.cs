@@ -45,22 +45,22 @@ namespace MCGalaxy.DB {
     }
 
     public static class BlockDBFlags {
-    	public const ushort None        = 0x0000;
-    	public const ushort ManualPlace = 0x0001;
-    	public const ushort Painted     = 0x0002;
-    	public const ushort Drawn       = 0x0004;
-    	public const ushort Replaced    = 0x0008;
-    	public const ushort Pasted      = 0x0010;
-    	public const ushort Cut         = 0x0020;
-    	public const ushort Filled      = 0x0040;
-    	public const ushort Restored    = 0x0080;
-    	public const ushort UndoOther   = 0x0100;
-    	public const ushort UndoSelf    = 0x0200;
-    	public const ushort RedoSelf    = 0x0400;
-    	public const ushort Unused1     = 0x0800;
-    	public const ushort Unused2     = 0x1000;
-    	public const ushort Unused3     = 0x2000;
-    	public const ushort OldCustom   = 0x4000;
-    	public const ushort NewCustom   = 0x8000;
+        public const ushort None        = 0x0000;
+        public const ushort ManualPlace = 0x0001;
+        public const ushort Painted     = 0x0002;
+        public const ushort Drawn       = 0x0004;
+        public const ushort Replaced    = 0x0008;
+        public const ushort Pasted      = 0x0010;
+        public const ushort Cut         = 0x0020;
+        public const ushort Filled      = 0x0040;
+        public const ushort Restored    = 0x0080;
+        public const ushort UndoOther   = 0x0100;
+        public const ushort UndoSelf    = 0x0200;
+        public const ushort RedoSelf    = 0x0400;
+        public const ushort Unused1     = 0x0800;
+        public const ushort Unused2     = 0x1000;
+        public const ushort Unused3     = 0x2000;
+        public const ushort OldCustom   = 0x4000;
+        public const ushort NewCustom   = 0x8000;
     }
 }

@@ -435,7 +435,7 @@ namespace MCGalaxy {
             BlockDBEntry entry;
             entry.PlayerID = p.UserID;
             entry.TimeDelta = (int)DateTime.UtcNow.Subtract(BlockDB.Epoch).TotalSeconds;
-            entry.Index = index;
+            entry.Index = index; // TODO: WRONG WRONG WRONG, use blockdb file's dimensions
             
             entry.OldRaw = oldBlock; entry.NewRaw = block;
             entry.Flags = flags;

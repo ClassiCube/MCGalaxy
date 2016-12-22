@@ -37,11 +37,15 @@ namespace MCGalaxy.DB {
             name = PlayerInfo.GetColoredName(p, name);
             
             if (newBlock == Block.air) {
-                Player.Message(p, "{0} ago {1} &4deleted %S{2}",
-                               delta.Shorten(true, false), name, p.level.BlockName(oldBlock, oldExt));
+                Player.Message(p, "{0} ago {1} &4deleted %S{2}{3}",
+                               delta.Shorten(true, false), name,
+                               p.level.BlockName(oldBlock, oldExt),
+                               FormatReason(entry.Flags));
             } else {
-                Player.Message(p, "{0} ago {1} &3placed %S{2}",
-                               delta.Shorten(true, false), name, p.level.BlockName(newBlock, newExt));
+                Player.Message(p, "{0} ago {1} &3placed %S{2}{3}",
+                               delta.Shorten(true, false), name,
+                               p.level.BlockName(newBlock, newExt),
+                               FormatReason(entry.Flags));
             }
         }
         
@@ -93,5 +97,19 @@ namespace MCGalaxy.DB {
         }
         
         static ushort U16(object x) { return ushort.Parse(x.ToString()); }
+        
+        static string FormatReason(ushort flags) {
+            if ((flags & BlockDBFlags.Painted) != 0)   return " (Painted)";
+            if ((flags & BlockDBFlags.Drawn) != 0)     return " (Drawn)";
+            if ((flags & BlockDBFlags.Replaced) != 0)  return " (Replaced)";
+            if ((flags & BlockDBFlags.Pasted) != 0)    return " (Pasted)";
+            if ((flags & BlockDBFlags.Cut) != 0)       return " (Cut)";
+            if ((flags & BlockDBFlags.Filled) != 0)    return " (Filled)";
+            if ((flags & BlockDBFlags.Restored) != 0)  return " (Restored)";
+            if ((flags & BlockDBFlags.UndoOther) != 0) return " (UndoneOther)";
+            if ((flags & BlockDBFlags.UndoSelf) != 0)  return " (UndoneSelf)";
+            if ((flags & BlockDBFlags.RedoSelf) != 0)  return " (RedoneSelf)";
+            return "";
+        }
     }
 }
