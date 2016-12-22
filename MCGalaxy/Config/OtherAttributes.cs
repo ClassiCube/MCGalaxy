@@ -72,20 +72,15 @@ namespace MCGalaxy.Config {
     
     public sealed class ConfigPermAttribute : ConfigAttribute {
         
-        /// <summary> Whether the group name should be serialised instead of its permission value. </summary>
-        public bool SerialiseName = false;
-        
-        public ConfigPermAttribute(string name, string section, string desc, 
-                                   LevelPermission defValue, bool serialiseName = false)
+        public ConfigPermAttribute(string name, string section, string desc, LevelPermission defValue)
             : base(name, section, desc, defValue) {
-            SerialiseName = serialiseName;
         }
         
         public override object Parse(string value) {
             sbyte permNum;
             LevelPermission perm;
             if (!sbyte.TryParse(value, out permNum)) {
-                // Try parse the permission as name.
+                // Try parse the permission as name for backwards compatibility
                 Group grp = Group.Find(value);
                 if (grp == null) {
                     Server.s.Log("Config key \"" + Name + "\" is not a valid permission, " +
@@ -110,10 +105,7 @@ namespace MCGalaxy.Config {
         
         public override string Serialise(object value) {
             LevelPermission perm = (LevelPermission)value;
-            if (!SerialiseName) return ((sbyte)perm).ToString();
-            
-            Group grp = Group.findPerm(perm);
-            return grp != null ? grp.name : ((sbyte)perm).ToString();
+            return ((sbyte)perm).ToString();
         }
     }
     

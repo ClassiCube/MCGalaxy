@@ -159,14 +159,14 @@ namespace MCGalaxy {
         public bool Deletable = true;
         public LevelAccessController VisitAccess, BuildAccess;
         
-        [ConfigPerm("PerBuildMax", "Permissions", null, LevelPermission.Nobody, true)]
+        [ConfigPerm("PerBuildMax", "Permissions", null, LevelPermission.Nobody)]
         public LevelPermission perbuildmax = LevelPermission.Nobody;
-        [ConfigPerm("PerBuild", "Permissions", null, LevelPermission.Guest, true)]
+        [ConfigPerm("PerBuild", "Permissions", null, LevelPermission.Guest)]
         public LevelPermission permissionbuild = LevelPermission.Guest;
         // What ranks can go to this map (excludes banned)
-        [ConfigPerm("PerVisit", "Permissions", null, LevelPermission.Guest, true)]
+        [ConfigPerm("PerVisit", "Permissions", null, LevelPermission.Guest)]
         public LevelPermission permissionvisit = LevelPermission.Guest;
-        [ConfigPerm("PerVisitMax", "Permissions", null, LevelPermission.Nobody, true)]
+        [ConfigPerm("PerVisitMax", "Permissions", null, LevelPermission.Nobody)]
         public LevelPermission pervisitmax = LevelPermission.Nobody;       
         // Other blacklists/whitelists
         [ConfigStringList("VisitWhitelist", "Permissions", null)]
