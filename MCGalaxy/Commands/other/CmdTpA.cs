@@ -9,9 +9,23 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("tpaccept", "accept"), new CommandAlias("tpdeny", "deny") }; }
+        }
+        
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
+            
+            if (message.CaselessEq("accept")) {
+                DoAccept(p);
+            } else if (message.CaselessEq("deny")) {
+                DoDeny(p);
+            } else {
+                DoTpa(p, message);
+            }
+        }
+        
+        void DoTpa(Player p, string message) {
             Player target = PlayerInfo.FindMatches(p, message);
             if (target == null) return;
             if (target == p) { Player.Message(p, "You cannot /tpa to yourself."); return; }
@@ -54,23 +68,8 @@ namespace MCGalaxy.Commands {
             p.MessageTo(target, "Type &2/tpaccept %Sor &4/tpdeny%S.");
             p.MessageTo(target, "This request will timeout after &b90 %Sseconds.");
         }
-
-        public override void Help(Player p) {
-            Player.Message(p, "%T/tpa [player] %H- Sends a teleport request to that player");
-            Player.Message(p, "%T/tpaccept %H- Accepts a teleport request");
-            Player.Message(p, "%T/tpdeny %H- Denies a teleport request");
-        }
-    }
-
-    public sealed class CmdTpAccept : Command {
-        public override string name { get { return "tpaccept"; } }
-        public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdTpAccept() { }
-
-        public override void Use(Player p, string message) {
+        
+        void DoAccept(Player p) {
             if (!p.Request) { Player.Message(p, "You do not have any pending teleport requests."); return; }
             
             Player sender = PlayerInfo.FindExact(p.senderName);
@@ -92,21 +91,7 @@ namespace MCGalaxy.Commands {
             sender.SendPos(Entities.SelfID, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
         }
         
-        public override void Help(Player p) {
-            Player.Message(p, "%T/tpaccept %H- Accepts a teleport request");
-            Player.Message(p, "%HFor use with /tpa");
-        }
-    }
-
-    public sealed class CmdTpDeny : Command {        
-        public override string name { get { return "tpdeny"; } }
-        public override string shortcut { get { return ""; } }
-        public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdTpDeny() { }
-
-        public override void Use(Player p, string message) {
+        void DoDeny(Player p) {
             if (!p.Request) { Player.Message(p, "You do not have any pending teleport requests."); return; }
             
             Player sender = PlayerInfo.FindExact(p.senderName);
@@ -118,12 +103,13 @@ namespace MCGalaxy.Commands {
             
             Player.Message(p, "You have denied {0}%S's teleportation request.", sender.ColoredName);
             Player.Message(sender, "{0} %Shas denied your request.", p.ColoredName);
-            sender.currentTpa = "";
-        }
-        
+            sender.currentTpa = "";            
+        } 
+
         public override void Help(Player p) {
-            Player.Message(p, "%T/tpdeny %H- Denies a teleport request");
-            Player.Message(p, "%HFor use with /tpa");
+            Player.Message(p, "%T/tpa [player] %H- Sends a teleport request to that player");
+            Player.Message(p, "%T/tpa accept %H- Accepts a teleport request");
+            Player.Message(p, "%T/tpa deny %H- Denies a teleport request");
         }
     }
 }
