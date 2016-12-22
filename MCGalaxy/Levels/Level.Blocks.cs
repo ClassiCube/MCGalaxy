@@ -128,7 +128,8 @@ namespace MCGalaxy {
             chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = 0;
         }
         
-        public void SetTile(ushort x, ushort y, ushort z, byte block, Player p, byte extBlock = 0) {
+        public void SetTile(ushort x, ushort y, ushort z, byte block, Player p, 
+                            byte ext = 0, ushort flags = BlockDBFlags.ManualPlace) {
             int index = PosToInt(x, y, z);
             if (blocks == null || index < 0) return;
             
@@ -142,15 +143,15 @@ namespace MCGalaxy {
                     RevertExtTileNoCheck(x, y, z);
             }
             if (block == Block.custom_block)
-                SetExtTileNoCheck(x, y, z, extBlock);
+                SetExtTileNoCheck(x, y, z, ext);
             if (p == null) return;    
             
-            AddToBlockDB(p, index, oldBlock, oldExtBlock, block, extBlock);
+            AddToBlockDB(p, index, oldBlock, oldExtBlock, block, ext, flags);
             Player.UndoPos Pos;
             Pos.x = x; Pos.y = y; Pos.z = z;
             Pos.mapName = this.name;
             Pos.type = oldBlock; Pos.extType = oldExtBlock;
-            Pos.newtype = block; Pos.newExtType = extBlock;
+            Pos.newtype = block; Pos.newExtType = ext;
             Pos.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
             p.UndoBuffer.Add(this, Pos);
         }
@@ -428,8 +429,8 @@ namespace MCGalaxy {
             return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
         }
         
-        public void AddToBlockDB(Player p, int index, byte oldBlock, 
-                                 byte oldExtBlock, byte block, byte extBlock) {
+        public void AddToBlockDB(Player p, int index, byte oldBlock, byte oldExt, 
+                                 byte block, byte ext, ushort flags) {
             if (!UseBlockDB) return;            
             BlockDBEntry entry;
             entry.PlayerID = p.UserID;
@@ -437,15 +438,15 @@ namespace MCGalaxy {
             entry.Index = index;
             
             entry.OldRaw = oldBlock; entry.NewRaw = block;
-            entry.Flags = BlockDBFlags.ManualPlace;
+            entry.Flags = flags;
             
             if (block == Block.custom_block) {
                 entry.Flags |= BlockDBFlags.NewCustom;
-                entry.NewRaw = extBlock;
+                entry.NewRaw = ext;
             }
             if (oldBlock == Block.custom_block) {
             	entry.Flags |= BlockDBFlags.OldCustom;
-            	entry.OldRaw = oldExtBlock;
+            	entry.OldRaw = oldExt;
             }           
             
             lock (blockCacheLock)
@@ -453,13 +454,14 @@ namespace MCGalaxy {
         }
         
         public void UpdateBlock(Player p, ushort x, ushort y, ushort z, 
-                                byte block, byte extBlock, bool drawn = false) {
+                                byte block, byte extBlock, ushort flags) {
             byte old = GetTile(x, y, z), oldExt = 0;
             if (old == Block.custom_block) oldExt = GetExtTile(x, y, z);
             
+            bool drawn = (flags & BlockDBFlags.ManualPlace) != 0;
             if (!DoBlockchange(p, x, y, z, block, extBlock, drawn)) return;
             int index = PosToInt(x, y, z);
-            AddToBlockDB(p, index, old, oldExt, block, extBlock);
+            AddToBlockDB(p, index, old, oldExt, block, extBlock, flags);
             
             if (bufferblocks) 
                 BlockQueue.Addblock(p, index, block, extBlock);

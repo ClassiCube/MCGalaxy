@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
@@ -24,6 +25,10 @@ namespace MCGalaxy.Drawing.Ops {
     public class FillDrawOp : DrawOp {
         
         public List<int> Positions;
+        
+        public FillDrawOp() {
+            Flags = BlockDBFlags.Filled;
+        }
         
         public override string Name { get { return "Fill"; } }
         public override bool AffectedByTransform { get { return false; } }

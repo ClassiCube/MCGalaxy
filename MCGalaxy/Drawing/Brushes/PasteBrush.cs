@@ -18,34 +18,37 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands;
+using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {    
     public sealed class PasteBrush : Brush {
         readonly CopyState state;
+        int index;
         
         public PasteBrush(CopyState state) { this.state = state; }
         
         public override string Name { get { return "Paste"; } }
 
+        public override void Configure(DrawOp op, Player p) {
+            op.Flags = BlockDBFlags.Pasted;
+        }
+        
         public override byte NextBlock(DrawOp op) {
-            Vec3U16 p = LocalCoords(op);
-            return state.Blocks[state.GetIndex(p.X, p.Y, p.Z)];
-        }
-        
-        public override byte NextExtBlock(DrawOp op) {
-            Vec3U16 p = LocalCoords(op);
-            return state.ExtBlocks[state.GetIndex(p.X, p.Y, p.Z)];
-        }
-        
-        Vec3U16 LocalCoords(DrawOp op) {
+            // Figure out local coords for this block
             int x = (op.Coords.X - op.Min.X) % state.Width;
             if (x < 0) x += state.Width;
             int y = (op.Coords.Y - op.Min.Y) % state.Height;
             if (y < 0) y += state.Height;
             int z = (op.Coords.Z - op.Min.Z) % state.Length;
             if (z < 0) z += state.Length;
-            return new Vec3U16((ushort)x, (ushort)y, (ushort)z);
+            
+            index = state.GetIndex(x, y, z);
+            return state.Blocks[index];
+        }
+        
+        public override byte NextExtBlock(DrawOp op) {
+            return state.ExtBlocks[index];
         }
     }
 }

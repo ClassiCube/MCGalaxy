@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {
@@ -27,6 +28,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public ReplaceDrawOp(byte type, byte extType) {
             Include = new ExtBlock(type, extType);
+            Flags = BlockDBFlags.Replaced;
         }
         
         public override string Name { get { return "Replace"; } }
@@ -57,6 +59,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public ReplaceNotDrawOp(byte type, byte extType) {
             Exclude = new ExtBlock(type, extType);
+            Flags = BlockDBFlags.Replaced;
         }
         
         public override string Name { get { return "ReplaceNot"; } }

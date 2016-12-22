@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands.Building;
+using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {    
@@ -30,6 +31,10 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         public override string Name { get { return "Replace"; } }
+        
+        public override void Configure(DrawOp op, Player p) {
+            op.Flags = BlockDBFlags.Replaced;
+        }
         
         public override byte NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;
@@ -56,6 +61,10 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         public override string Name { get { return "ReplaceNot"; } }
+
+        public override void Configure(DrawOp op, Player p) {
+            op.Flags = BlockDBFlags.Replaced;
+        }
         
         public override byte NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;

@@ -20,6 +20,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using MCGalaxy.Blocks;
 using MCGalaxy.Blocks.Physics;
+using MCGalaxy.DB;
 using MCGalaxy.Commands;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
@@ -109,6 +110,8 @@ namespace MCGalaxy {
 
             byte blockRaw = block;
             if (block < Block.CpeCount) block = bindings[block];
+            ushort flags = BlockDBFlags.ManualPlace;
+            if (painting && !doDelete) flags = BlockDBFlags.Painted;
             
             //Ignores updating blocks that are the same and send block only to the player
             byte newBlock = (painting || action == 1) ? block : (byte)0;
@@ -123,10 +126,10 @@ namespace MCGalaxy {
             int index = level.PosToInt(x, y, z);
             if (doDelete) {
                 if (DeleteBlock(old, x, y, z, block, extBlock))
-                    level.AddToBlockDB(this, index, old, oldExt, 0, 0);
+                	level.AddToBlockDB(this, index, old, oldExt, 0, 0, flags);
             } else {
                 if (PlaceBlock(old, x, y, z, block, extBlock))
-                    level.AddToBlockDB(this, index, old, oldExt, heldBlock, heldExt);
+                	level.AddToBlockDB(this, index, old, oldExt, heldBlock, heldExt, flags);
             }
         }
         

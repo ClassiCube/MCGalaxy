@@ -52,6 +52,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
             Vec3S32 p1 = Min, p2 = Max;
             baseOp.Level = Level;
+            baseOp.Player = Player;
             
             while (true) {
                 baseOp.Perform(marks, p, lvl, brush, output);
@@ -96,6 +97,7 @@ namespace MCGalaxy.Drawing.Ops {
             wallOp.Min = Min; wallOp.Max = Max;
             baseOp.Min = Min; baseOp.Max = Max;
             wallOp.Level = Level; baseOp.Level = Level;
+            wallOp.Player = p; baseOp.Player = p;
             
             while (true) {
                 wallOp.Perform(marks, p, lvl, brush, output);

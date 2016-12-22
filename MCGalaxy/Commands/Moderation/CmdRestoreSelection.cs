@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.DB;
 using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Commands {    
@@ -62,10 +63,10 @@ namespace MCGalaxy.Commands {
                 for (int z = Math.Min(m[0].Z, m[1].Z); z <= Math.Max(m[0].Z, m[1].Z); z++)
                     for (int x = Math.Min(m[0].X, m[1].X); x <= Math.Max(m[0].X, m[1].X); x++)
             {
-                byte block = blocks[x + width * (z + y * length)], extBlock = 0;
+                byte block = blocks[x + width * (z + y * length)], ext = 0;
                 if (block == Block.custom_block) 
-                    extBlock = other.GetExtTile((ushort)x, (ushort)y, (ushort)z);
-                p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, block, extBlock, true);
+                    ext = other.GetExtTile((ushort)x, (ushort)y, (ushort)z);
+                p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, block, ext, BlockDBFlags.Restored);
             }
             return true;
         }

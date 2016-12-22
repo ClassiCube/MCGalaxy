@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System;
+using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPlace : Command {        
@@ -27,22 +28,22 @@ namespace MCGalaxy.Commands.Building {
         public CmdPlace() { }
 
         public override void Use(Player p, string message) {
-            byte extBlock = 0;
-            int block = p.GetActualHeldBlock(out extBlock);
+            byte ext = 0;
+            int block = p.GetActualHeldBlock(out ext);
             ushort x = p.pos[0], y = (ushort)(p.pos[1] - 32), z = p.pos[2];
 
             try {
                 string[] parts = message.Split(' ');
                 switch (parts.Length) {
                     case 1: block = message == "" ? block :
-                        DrawCmd.GetBlockIfAllowed(p, parts[0], out extBlock); break;
+                        DrawCmd.GetBlockIfAllowed(p, parts[0], out ext); break;
                     case 3:
                         x = (ushort)(ushort.Parse(parts[0]) * 32);
                         y = (ushort)(ushort.Parse(parts[1]) * 32);
                         z = (ushort)(ushort.Parse(parts[2]) * 32);
                         break;
                     case 4:
-                        block = DrawCmd.GetBlockIfAllowed(p, parts[0], out extBlock);
+                        block = DrawCmd.GetBlockIfAllowed(p, parts[0], out ext);
                         x = (ushort)(ushort.Parse(parts[1]) * 32);
                         y = (ushort)(ushort.Parse(parts[2]) * 32);
                         z = (ushort)(ushort.Parse(parts[3]) * 32);
@@ -58,8 +59,8 @@ namespace MCGalaxy.Commands.Building {
             Vec3U16 P = Vec3U16.ClampPos(x, y, z, p.level);
             
             P.X /= 32; P.Y /= 32; P.Z /= 32;
-            p.level.UpdateBlock(p, P.X, P.Y, P.Z, (byte)block, extBlock);
-            string blockName = p.level.BlockName((byte)block, extBlock);
+            p.level.UpdateBlock(p, P.X, P.Y, P.Z, (byte)block, ext, BlockDBFlags.ManualPlace);
+            string blockName = p.level.BlockName((byte)block, ext);
             Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", P.X, P.Y, P.Z, blockName);
         }
         

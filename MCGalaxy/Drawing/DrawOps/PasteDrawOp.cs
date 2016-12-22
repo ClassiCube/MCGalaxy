@@ -17,12 +17,17 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {    
     public class SimplePasteDrawOp : DrawOp {
         public override string Name { get { return "Paste"; } }        
         public CopyState CopyState;
+        
+        public SimplePasteDrawOp() {
+            Flags = BlockDBFlags.Pasted;
+        }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             return CopyState.UsedBlocks;
@@ -60,6 +65,10 @@ namespace MCGalaxy.Drawing.Ops {
     public class PasteDrawOp : SimplePasteDrawOp {
         
         public ExtBlock[] Include, Exclude;
+
+        public PasteDrawOp() {
+            Flags = BlockDBFlags.Pasted;
+        }
         
         public override string Name { get { return "Paste"; } }
         

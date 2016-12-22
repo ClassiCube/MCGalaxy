@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy {
@@ -59,6 +60,12 @@ namespace MCGalaxy.Drawing.Ops {
         
         /// <summary> Level the draw operation is being performed upon. </summary>
         public Level Level;
+        
+        /// <summary> Player that is executing the draw operation. </summary>
+        public Player Player;
+        
+        /// <summary> BlockDB change flags for blocks affected by this draw operation. </summary>
+        public ushort Flags = BlockDBFlags.Drawn;
         
         /// <summary> Human friendly name of the draw operation. </summary>
         public abstract string Name { get; }

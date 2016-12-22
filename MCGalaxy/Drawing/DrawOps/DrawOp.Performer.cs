@@ -29,7 +29,6 @@ namespace MCGalaxy.Drawing {
         public Brush Brush;
         public Vec3S32[] Marks;
         public long Affected;
-        public Level Level;
     }
 }
 
@@ -40,14 +39,15 @@ namespace MCGalaxy.Drawing.Ops {
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
                                     ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
             Vec3S32[] marks = new [] { new Vec3S32(x1, y1, z1), new Vec3S32(x2, y2, z2) };
-            return DoDrawOp(op, brush, p, marks); 
-            DrawOp.DoDrawOp(new EllipsoidDrawOp(), new SolidBrush(Block.leaf, 0), p, x1, y1, z1, x2, y2, z2);
+            return DoDrawOp(op, brush, p, marks);
         }
         
         public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
                                     Vec3S32[] marks, bool checkLimit = true) {
             op.SetMarks(marks);
             op.Level = p == null ? null : p.level;
+            op.Player = p;
+            
             if (op.Level != null && !op.Level.DrawingAllowed) {
                 Player.Message(p, "Drawing commands are turned off on this map.");
                 return false;
@@ -90,7 +90,6 @@ namespace MCGalaxy.Drawing.Ops {
             item.Brush = brush;
             item.Marks = marks;
             item.Affected = affected;
-            item.Level = op.Level;
             
             lock (p.pendingDrawOpsLock) {
                 p.PendingDrawOps.Add(item);
@@ -125,7 +124,7 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 UndoDrawOpEntry entry = new UndoDrawOpEntry();
                 entry.DrawOpName = item.Op.Name;
-                entry.LevelName = item.Level.name;
+                entry.LevelName = item.Op.Level.name;
                 entry.Start = DateTime.UtcNow;
                 // Use same time method as DoBlockchange writing to undo buffer
                 int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
@@ -140,17 +139,17 @@ namespace MCGalaxy.Drawing.Ops {
                 if (p.DrawOps.Count > 200)
                     p.DrawOps.RemoveFirst();
                 if (item.Affected > Server.DrawReloadLimit)
-                    DoReload(p, item.Level);
+                    DoReload(p, item.Op.Level);
             }
         }
         
         static void DoDrawOp(PendingDrawOp item, Player p) {
-            Level lvl = item.Level;
-            Action<DrawOpBlock, Player, Level> output = null;
+            Level lvl = item.Op.Level;
+            Action<DrawOpBlock, DrawOp> output = null;
             
             if (item.Affected > Server.DrawReloadLimit) {
                 output = SetTileOutput;
-            } else if (item.Level.bufferblocks) {
+            } else if (lvl.bufferblocks) {
                 output = BufferedOutput;
             } else {
                 output = SlowOutput;
@@ -158,15 +157,17 @@ namespace MCGalaxy.Drawing.Ops {
             
             if (item.Op.AffectedByTransform) {
                 p.Transform.Perform(item.Marks, p, lvl, item.Op, item.Brush,
-                                    b => output(b, p, lvl));
+                                    b => output(b, item.Op));
             } else {
                 item.Op.Perform(item.Marks, p, lvl, item.Brush,
-                                b => output(b, p, lvl));
+                                b => output(b, item.Op));
             }
         }
         
-        static void SetTileOutput(DrawOpBlock b, Player p, Level lvl) {
+        static void SetTileOutput(DrawOpBlock b, DrawOp op) {
             if (b.Block == Block.Invalid) return;
+            Level lvl = op.Level;
+            Player p = op.Player;
             byte old = lvl.GetTile(b.X, b.Y, b.Z);
             if (old == Block.Invalid) return;
             
@@ -176,29 +177,34 @@ namespace MCGalaxy.Drawing.Ops {
             if (same || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block, b.ExtBlock))
                 return;
             
-            lvl.SetTile(b.X, b.Y, b.Z, b.Block, p, b.ExtBlock);
+            lvl.SetTile(b.X, b.Y, b.Z, b.Block, p, b.ExtBlock, op.Flags);
             p.IncrementBlockStats(b.Block, true);
         }
         
-        static void BufferedOutput(DrawOpBlock b, Player p, Level lvl) {
+        static void BufferedOutput(DrawOpBlock b, DrawOp op) {
             if (b.Block == Block.Invalid) return;
+            Level lvl = op.Level;
+            Player p = op.Player;
+            
             byte old = lvl.GetTile(b.X, b.Y, b.Z), oldExt = 0;
             if (old == Block.custom_block) oldExt = lvl.GetExtTile(b.X, b.Y, b.Z);
             if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) return;
             
             int index = lvl.PosToInt(b.X, b.Y, b.Z);
-            lvl.AddToBlockDB(p, index, old, oldExt, b.Block, b.ExtBlock);
+            lvl.AddToBlockDB(p, index, old, oldExt, b.Block, b.ExtBlock, op.Flags);
             BlockQueue.Addblock(p, index, b.Block, b.ExtBlock);
         }
         
-        static void SlowOutput(DrawOpBlock b, Player p, Level lvl) {
+        static void SlowOutput(DrawOpBlock b, DrawOp op) {
             if (b.Block == Block.Invalid) return;
+            Level lvl = op.Level;
+            Player p = op.Player;
             byte old = lvl.GetTile(b.X, b.Y, b.Z), oldExt = 0;
             if (old == Block.custom_block) oldExt = lvl.GetExtTile(b.X, b.Y, b.Z);
             if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) return;
             
             int index = lvl.PosToInt(b.X, b.Y, b.Z);
-            lvl.AddToBlockDB(p, index, old, oldExt, b.Block, b.ExtBlock);
+            lvl.AddToBlockDB(p, index, old, oldExt, b.Block, b.ExtBlock, op.Flags);
             Player.GlobalBlockchange(lvl, b.X, b.Y, b.Z, b.Block, b.ExtBlock);
         }
         

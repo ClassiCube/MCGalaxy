@@ -123,6 +123,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             op.Level = p.level;
+            op.Player = p;
             op.Source = bmp;
             op.Layer = dArgs.layer;
             op.Mode = dArgs.popType;

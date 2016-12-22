@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using MCGalaxy.DB;
 using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
@@ -129,6 +130,7 @@ namespace MCGalaxy.Commands.Building {
             p.CopyBuffer = cState;
             if (cArgs.type == 1) {
                 DrawOp op = new CuboidDrawOp();
+                op.Flags = BlockDBFlags.Cut;
                 Brush brush = new SolidBrush(Block.air, 0);
                 Vec3S32[] marks = { new Vec3S32(minX, minY, minZ), new Vec3S32(maxX, maxY, maxZ) };
                 DrawOp.DoDrawOp(op, brush, p, marks, false);

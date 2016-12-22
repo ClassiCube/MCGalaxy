@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System.Collections.Generic;
+using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdDrill : Command {
@@ -75,15 +76,15 @@ namespace MCGalaxy.Commands.Building {
             return true;
         }
         
-        void DoBlock(Player p, Level lvl, byte block, byte extBlock,
+        void DoBlock(Player p, Level lvl, byte block, byte ext,
                      ushort x, ushort y, ushort z) {
             int index = lvl.PosToInt(x, y, z);
             if (index == -1) return;
             byte cur = lvl.blocks[index], extCur = 0;
             if (cur == Block.custom_block) extCur = lvl.GetExtTile(x, y, z);
             
-            bool same = block == Block.custom_block ? extBlock == extCur : block == cur;
-            if (same) p.level.UpdateBlock(p, x, y, z, Block.air, 0, true);
+            bool same = block == Block.custom_block ? ext == extCur : block == cur;
+            if (same) p.level.UpdateBlock(p, x, y, z, Block.air, 0, BlockDBFlags.Drawn);
         }
         
         public override void Help(Player p) {
