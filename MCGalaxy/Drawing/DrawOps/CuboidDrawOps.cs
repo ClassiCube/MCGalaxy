@@ -25,21 +25,22 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Hollow"; } }
         public byte Skip;
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
                 bool hollow = true;
-                byte tile = lvl.GetTile(x, y, z);
+                byte tile = Level.GetTile(x, y, z);
                 if (!Block.RightClick(Block.Convert(tile), true) && tile != Skip) {
-                    CheckTile(lvl, x - 1, y, z, ref hollow);
-                    CheckTile(lvl, x + 1, y, z, ref hollow);
-                    CheckTile(lvl, x, y - 1, z, ref hollow);
-                    CheckTile(lvl, x, y + 1, z, ref hollow);
-                    CheckTile(lvl, x, y, z - 1, ref hollow);
-                    CheckTile(lvl, x, y, z + 1, ref hollow);
+                    CheckTile(x - 1, y, z, ref hollow);
+                    CheckTile(x + 1, y, z, ref hollow);
+                    CheckTile(x, y - 1, z, ref hollow);
+                    CheckTile(x, y + 1, z, ref hollow);
+                    CheckTile(x, y, z - 1, ref hollow);
+                    CheckTile(x, y, z + 1, ref hollow);
                 } else {
                     hollow = false;
                 }
@@ -48,8 +49,8 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
         
-        void CheckTile(Level lvl, int x, int y, int z, ref bool hollow) {
-            byte tile = lvl.GetTile((ushort)x, (ushort)y, (ushort)z);
+        void CheckTile(int x, int y, int z, ref bool hollow) {
+            byte tile = Level.GetTile((ushort)x, (ushort)y, (ushort)z);
             if (Block.RightClick(Block.Convert(tile)) || tile == Skip)
                 hollow = false;
         }
@@ -59,29 +60,29 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Outline"; } }
         public byte Block, ExtBlock, NewBlock, NewExtBlock;
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
                 bool outline = false;
-                outline |= Check(lvl, (ushort)(x - 1), y, z);
-                outline |= Check(lvl, (ushort)(x + 1), y, z);
-                outline |= Check(lvl, x, y, (ushort)(z - 1));
-                outline |= Check(lvl, x, y, (ushort)(z + 1));
-                outline |= Check(lvl, x, (ushort)(y - 1), z);
-                outline |= Check(lvl, x, (ushort)(y + 1), z);
+                outline |= Check((ushort)(x - 1), y, z);
+                outline |= Check((ushort)(x + 1), y, z);
+                outline |= Check(x, y, (ushort)(z - 1));
+                outline |= Check(x, y, (ushort)(z + 1));
+                outline |= Check(x, (ushort)(y - 1), z);
+                outline |= Check(x, (ushort)(y + 1), z);
 
-                if (outline && !Check(lvl, x, y, z))
+                if (outline && !Check(x, y, z))
                     output(Place(x, y, z, NewBlock, NewExtBlock));
             }
         }
         
-        bool Check(Level lvl, ushort x, ushort y, ushort z) {
-            byte tile = lvl.GetTile(x, y, z);
-            if (tile != Block) return false;
-            return tile != MCGalaxy.Block.custom_block || lvl.GetExtTile(x, y, z) == ExtBlock;
+        bool Check(ushort x, ushort y, ushort z) {
+            byte block = Level.GetTile(x, y, z);
+            if (block != Block) return false;
+            return block != MCGalaxy.Block.custom_block || Level.GetExtTile(x, y, z) == ExtBlock;
         }
     }
     
@@ -89,7 +90,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Rainbow"; } }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             int dx = Math.Abs(p1.X - p2.X), dy = Math.Abs(p1.Y - p2.Y), dz = Math.Abs(p1.Z - p2.Z);
             byte stepX = 0, stepY = 0, stepZ = 0;
@@ -111,7 +112,7 @@ namespace MCGalaxy.Drawing.Ops {
                     int startX = i;
                     for (ushort x = p1.X; x <= p2.X; x++) {
                         i = (i + stepX) % 13;
-                        if (lvl.GetTile(x, y, z) != Block.air)
+                        if (Level.GetTile(x, y, z) != Block.air)
                             output(Place(x, y, z, (byte)(Block.red + i), 0));
                     }
                     i = startX;

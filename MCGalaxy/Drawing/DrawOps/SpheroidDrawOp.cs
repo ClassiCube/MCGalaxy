@@ -28,7 +28,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (int)(Math.PI * 4.0/3.0 * rx * ry * rz);
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             /* Courtesy of fCraft's awesome Open-Source'ness :D */
             double cx = (Min.X + Max.X) / 2.0, cy = (Min.Y + Max.Y) / 2.0, cz = (Min.Z + Max.Z) / 2.0;
             double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
@@ -55,7 +55,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (int)(Math.PI * 4.0/3.0 * rx * ry * rz);
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             /* Courtesy of fCraft's awesome Open-Source'ness :D */
             double cx = (Min.X + Max.X) / 2.0, cy = (Min.Y + Max.Y) / 2.0, cz = (Min.Z + Max.Z) / 2.0;
             double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
@@ -88,7 +88,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (int)(Math.PI * rx * rz * height);
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {            
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {            
             /* Courtesy of fCraft's awesome Open-Source'ness :D */
             double cx = (Min.X + Max.X) / 2.0, cz = (Min.Z + Max.Z) / 2.0;
             double rx = (Max.X - Min.X) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;

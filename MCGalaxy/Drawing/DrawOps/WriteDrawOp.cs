@@ -41,7 +41,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         int dirX, dirZ;
         Vec3U16 pos;
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(marks[0]), p2 = Clamp(marks[1]);
             if (Math.Abs(p2.X - p1.X) > Math.Abs(p2.Z - p1.Z))
                 dirX = p2.X > p1.X? 1 : -1;
@@ -50,7 +50,7 @@ namespace MCGalaxy.Drawing.Ops {
             pos = p1;
             
             foreach (char c in Text) {
-                DrawLetter(p, lvl, c, brush, output);
+                DrawLetter(Player, Level, c, brush, output);
             }
         }
         

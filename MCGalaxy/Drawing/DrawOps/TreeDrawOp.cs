@@ -39,9 +39,10 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             if (brush == null) brush = defBrush;
             Vec3U16 P = Clamp(marks[0]);
+            Level lvl = Level;
             
             Tree.Output(P.X, P.Y, P.Z, (xT, yT, zT, bT) =>
                         {

@@ -41,18 +41,18 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             UndoCache cache = who.UndoBuffer;
             using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
-                if (UndoBlocks(p, who)) return;
+                if (UndoBlocks(Player, who)) return;
             }      
             bool found = false;
             string target = who.name.ToLower();
             
             if (Min.X != ushort.MaxValue) {
-                UndoFormat.DoUndoArea(p, target, Start, Min, Max, ref found);
+                UndoFormat.DoUndoArea(Player, target, Start, Min, Max, ref found);
             } else {
-                UndoFormat.DoUndo(p, target, Start, End, ref found);
+                UndoFormat.DoUndo(Player, target, Start, End, ref found);
             }
         }
         
@@ -81,12 +81,12 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             string target = whoName.ToLower();
             if (Min.X != ushort.MaxValue)
-                UndoFormat.DoUndoArea(p, target, Start, Min, Max, ref found);
+                UndoFormat.DoUndoArea(Player, target, Start, Min, Max, ref found);
             else
-                UndoFormat.DoUndo(p, target, Start, DateTime.MaxValue, ref found);
+                UndoFormat.DoUndo(Player, target, Start, DateTime.MaxValue, ref found);
         }
     }
 
@@ -98,24 +98,24 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
-            if (lvl.UndoBuffer.Count != Server.physUndo) {
-                int count = lvl.currentUndo;
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+            if (Level.UndoBuffer.Count != Server.physUndo) {
+                int count = Level.currentUndo;
                 for (int i = count; i >= 0; i--) {
                     try {
-                        if (!CheckBlockPhysics(p, lvl, i)) break;
+                        if (!CheckBlockPhysics(Player, Level, i)) break;
                     } catch { }
                 }
             } else {
-                int count = lvl.currentUndo;
+                int count = Level.currentUndo;
                 for (int i = count; i >= 0; i--) {
                     try {
-                        if (!CheckBlockPhysics(p, lvl, i)) break;
+                        if (!CheckBlockPhysics(Player, Level, i)) break;
                     } catch { }
                 }
-                for (int i = lvl.UndoBuffer.Count - 1; i > count; i--) {
+                for (int i = Level.UndoBuffer.Count - 1; i > count; i--) {
                     try {
-                        if (!CheckBlockPhysics(p, lvl, i)) break;
+                        if (!CheckBlockPhysics(Player, Level, i)) break;
                     } catch { }
                 }
             }

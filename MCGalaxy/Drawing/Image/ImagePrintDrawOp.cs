@@ -39,7 +39,7 @@ namespace MCGalaxy.Drawing.Ops {
         IPalette selector;
         int threshold;
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p0 = Clamp(marks[0]);            
             selector = null;
             CalcThreshold();
@@ -57,9 +57,9 @@ namespace MCGalaxy.Drawing.Ops {
             
             Source.Dispose();
             Source = null;
-            if (Filename == "tempImage_" + p.name)
-                File.Delete("extra/images/tempImage_" + p.name + ".bmp");
-            Player.Message(p, "Finished printing image using " + ImagePalette.Names[Mode]);
+            if (Filename == "tempImage_" + Player.name)
+                File.Delete("extra/images/tempImage_" + Player.name + ".bmp");
+            Player.Message(Player, "Finished printing image using " + ImagePalette.Names[Mode]);
         }
         
         void OutputPixel(Pixel P, Action<DrawOpBlock> output) {

@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing.Transforms {
             P = (op.Min + op.Max) / 2;
             width = lvl.Width; height = lvl.Height; length = lvl.Length;           
             if (!CentreOrigin) P = op.Origin;
-            op.Perform(marks, p, lvl, brush, b => OutputBlock(b, output));
+            op.Perform(marks, brush, b => OutputBlock(b, output));
         }
         
         void OutputBlock(DrawOpBlock b, Action<DrawOpBlock> output) {

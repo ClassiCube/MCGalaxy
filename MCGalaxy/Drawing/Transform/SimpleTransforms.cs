@@ -28,7 +28,7 @@ namespace MCGalaxy.Drawing.Transforms {
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, 
                                      DrawOp op, Brush brush, Action<DrawOpBlock> output) {
-            op.Perform(marks, p, lvl, brush, output);
+            op.Perform(marks, brush, output);
         }
     }
     
@@ -62,7 +62,7 @@ namespace MCGalaxy.Drawing.Transforms {
                 dirY = op.Min.Y == op.Max.Y ? 1 : (P.Y == op.Max.Y ? -1 : 1);
                 dirZ = op.Min.Z == op.Max.Z ? 1 : (P.Z == op.Max.Z ? -1 : 1);
             }           
-            op.Perform(marks, p, lvl, brush, b => OutputBlock(b, output));
+            op.Perform(marks, brush, b => OutputBlock(b, output));
         }
         
         void OutputBlock(DrawOpBlock b, Action<DrawOpBlock> output) {

@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing.Ops {
             Max.X += cState.Width; Max.Y += cState.Height; Max.Z += cState.Length;
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;
             // Adjust for the fact that paste origin may be outside the map.
@@ -56,7 +56,7 @@ namespace MCGalaxy.Drawing.Ops {
                 state.GetCoords(i, out locX, out locY, out locZ);
                 
                 ushort x = (ushort)(locX + x1), y = (ushort)(locY + y1), z = (ushort)(locZ + z1);
-                if ((b != Block.air || pasteAir) && lvl.InBound(x, y, z))
+                if ((b != Block.air || pasteAir) && Level.InBound(x, y, z))
                     output(Place(x, y, z, b, extB));
             }
         }
@@ -72,7 +72,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Paste"; } }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;
             ExtBlock[] include = Include, exclude = Exclude;
@@ -85,7 +85,7 @@ namespace MCGalaxy.Drawing.Ops {
                 state.GetCoords(i, out locX, out locY, out locZ);
                 
                 ushort x = (ushort)(locX + x1), y = (ushort)(locY + y1), z = (ushort)(locZ + z1);
-                if ((b == Block.air && !pasteAir) || !lvl.InBound(x, y, z)) continue;
+                if ((b == Block.air && !pasteAir) || !Level.InBound(x, y, z)) continue;
                 
                 if (exclude != null) {
                     bool place = true;

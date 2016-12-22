@@ -37,7 +37,7 @@ namespace MCGalaxy.Drawing.Ops {
             return lenX * lenZ * 3;
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             width = Max.X - Min.X;
             if (width % 2 != 0) { width++; Min.X--; }
             width -= 2;
@@ -46,11 +46,11 @@ namespace MCGalaxy.Drawing.Ops {
             length -= 2;
             
             if (width <= 0 || length <= 0) {
-                Player.Message(p, "The corners of the maze need to be further apart."); return;
+                Player.Message(Player, "The corners of the maze need to be further apart."); return;
             }            
-            Player.Message(p, "Generating maze... this could take a while");
+            Player.Message(Player, "Generating maze... this could take a while");
             GenerateMaze();
-            Player.Message(p, "Generated maze, now drawing.");
+            Player.Message(Player, "Generated maze, now drawing.");
             
             Vec3U16 min = Clamp(Min), max = Clamp(Max);
             ushort y = min.Y;
@@ -75,7 +75,7 @@ namespace MCGalaxy.Drawing.Ops {
             QuadZ(min.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, brush, output);
             QuadZ(max.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, brush, output);
             
-            Player.Message(p, "Maze painted. Build the entrance and exit yourself");
+            Player.Message(Player, "Maze painted. Build the entrance and exit yourself");
             randomizer = 0;
         }
         

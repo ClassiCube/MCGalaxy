@@ -79,8 +79,7 @@ namespace MCGalaxy.Drawing.Ops {
         static void AppendDrawOp(Player p, DrawOp op, Brush brush, Vec3S32[] marks, long affected) {
             if (p == null) {
                 BufferedBlockSender buffer = new BufferedBlockSender(op.Level);
-                op.Perform(marks, p, op.Level, brush,
-                           b => ConsoleOutputBlock(b, op.Level, buffer));
+                op.Perform(marks, brush, b => ConsoleOutputBlock(b, op.Level, buffer));
                 buffer.Send(true);
                 return;
             }
@@ -159,8 +158,7 @@ namespace MCGalaxy.Drawing.Ops {
                 p.Transform.Perform(item.Marks, p, lvl, item.Op, item.Brush,
                                     b => output(b, item.Op));
             } else {
-                item.Op.Perform(item.Marks, p, lvl, item.Brush,
-                                b => output(b, item.Op));
+                item.Op.Perform(item.Marks, item.Brush, b => output(b, item.Op));
             }
         }
         

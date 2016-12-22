@@ -34,7 +34,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (long)(Math.PI / 3 * (R * R * H));
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
@@ -51,7 +51,7 @@ namespace MCGalaxy.Drawing.Ops {
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius) continue;
                 
-                byte ctile = lvl.GetTile(x, y, z);
+                byte ctile = Level.GetTile(x, y, z);
                 if (ctile != 0) continue;
                 output(Place(x, y, z, brush));
             }
@@ -69,7 +69,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (long)(outer - inner);
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
@@ -87,7 +87,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (dist > curRadius * curRadius || dist < (curRadius - 1) * (curRadius - 1))
                     continue;
                 
-                byte ctile = lvl.GetTile(x, y, z);
+                byte ctile = Level.GetTile(x, y, z);
                 if (ctile != 0) continue;
                 output(Place(x, y, z, brush));
             }
@@ -102,7 +102,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (long)(Math.PI / 3 * (R * R * H));
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
@@ -119,7 +119,7 @@ namespace MCGalaxy.Drawing.Ops {
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius) continue;
                 
-                byte ctile = lvl.GetTile(x, y, z);
+                byte ctile = Level.GetTile(x, y, z);
                 if (ctile != 0) continue;
                 
                 bool layer = dist >= (curRadius - 1) * (curRadius - 1);

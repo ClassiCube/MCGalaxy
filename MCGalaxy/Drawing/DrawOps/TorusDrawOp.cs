@@ -29,7 +29,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (int)(2 * Math.PI * Math.PI * rTube * rTube * rCentre);
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {          
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {          
             double cx = (Min.X + Max.X) / 2.0, cy = (Min.Y + Max.Y) / 2.0, cz = (Min.Z + Max.Z) / 2.0;
             double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
             double rTube = ry, rCentre = Math.Min(rx, rz) - rTube;

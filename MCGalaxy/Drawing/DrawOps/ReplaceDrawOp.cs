@@ -38,16 +38,16 @@ namespace MCGalaxy.Drawing.Ops {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                byte tile = lvl.GetTile(x, y, z), extTile = 0;
-                if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
+                byte block = Level.GetTile(x, y, z), ext = 0;
+                if (block == Block.custom_block) ext = Level.GetExtTile(x, y, z);
                 
-                if (tile == Include.Block && (tile != Block.custom_block || extTile == Include.Ext))
+                if (block == Include.Block && (block != Block.custom_block || ext == Include.Ext))
                     output(Place(x, y, z, brush));
             }
         }
@@ -69,16 +69,16 @@ namespace MCGalaxy.Drawing.Ops {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                byte tile = lvl.GetTile(x, y, z), extTile = 0;
-                if (tile == Block.custom_block) extTile = lvl.GetExtTile(x, y, z);
+                byte block = Level.GetTile(x, y, z), ext = 0;
+                if (block == Block.custom_block) ext = Level.GetExtTile(x, y, z);
                 
-                if (tile != Exclude.Block || (tile == Block.custom_block && extTile != Exclude.Ext))
+                if (block != Exclude.Block || (block == Block.custom_block && ext != Exclude.Ext))
                     output(Place(x, y, z, brush));
             }
         }
