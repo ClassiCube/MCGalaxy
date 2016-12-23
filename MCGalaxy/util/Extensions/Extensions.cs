@@ -79,8 +79,18 @@ namespace MCGalaxy {
             return new string(a);
         }
         
+        // Duplicated to avoid the memory allocation overhead from formatter delegate
         public static string Join(this IEnumerable<string> items, string separator = ", ") {
-            return String.Join(separator, items);
+            StringBuilder builder = new StringBuilder();
+            bool first = true;
+            foreach (string value in items) {
+                if (value == null) continue;
+                 
+                if (!first) builder.Append(separator);
+                builder.Append(value);
+                first = false;
+            }
+            return builder.ToString();
         }
         
         public static string Join<T>(this IEnumerable<T> items, 

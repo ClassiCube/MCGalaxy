@@ -59,7 +59,7 @@ namespace MCGalaxy {
                 Player.Message(pl, "\"{0}\" is not a valid level name.", name); return null;
             }
             
-            var files = Directory.EnumerateFiles("levels", "*.lvl");
+            string[] files = Directory.GetFiles("levels", "*.lvl");
             string map = Utils.FindMatches<string>(pl, name, out matches, files,
                                                    l => true, l => Path.GetFileNameWithoutExtension(l), "levels");
             if (map != null) 

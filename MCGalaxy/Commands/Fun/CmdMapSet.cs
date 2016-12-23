@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands {
                 HUD.UpdateAllSecondary(Server.zombie);
             } else if (args[0].CaselessEq("build") || args[0].CaselessEq("buildtype")) {
                 BuildType value;
-                if (!Enum.TryParse(args[1], true, out value)) {
+                if (!Utils.TryParseEnum(args[1], out value)) {
                     Player.Message(p, "Value must be 'normal', 'modifyonly', or 'nomodify'"); return;
                 }
                 
