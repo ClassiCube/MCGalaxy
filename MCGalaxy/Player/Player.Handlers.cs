@@ -227,6 +227,7 @@ namespace MCGalaxy {
                 case Opcode.CpeExtEntry: return 69;
                 case Opcode.CpeCustomBlockSupportLevel: return 2;
                 case Opcode.CpePlayerClick: return 15;
+                case Opcode.Ping: return 1;
 
                 default:
                     if (!dontmindme) {
@@ -239,6 +240,7 @@ namespace MCGalaxy {
         
         void HandlePacket(byte[] buffer) {
             switch (buffer[0]) {
+                case Opcode.Ping: break;
                 case Opcode.Handshake:
                     HandleLogin(buffer); break;
                 case Opcode.SetBlockClient:
