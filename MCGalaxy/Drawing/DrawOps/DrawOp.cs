@@ -40,8 +40,8 @@ namespace MCGalaxy.Drawing.Ops {
     
     public abstract partial class DrawOp {
         
-        //public int TotalAffected; // blocks affected by the draw operation
-        public int TotalModified; // blocks actually modified (e.g. some may not be due to permissions)
+        //public long TotalAffected; // blocks affected by the draw operation
+        public long TotalModified; // blocks actually modified (e.g. some may not be due to permissions)
         
         protected internal int method;
         
@@ -94,11 +94,6 @@ namespace MCGalaxy.Drawing.Ops {
                 Min = Vec3S32.Min(Min, marks[i]);
                 Max = Vec3S32.Max(Max, marks[i]);
             }
-        }
-        
-        public virtual void Reset() {
-            //TotalAffected = 0;
-            TotalModified = 0;
         }
         
         protected DrawOpBlock Place(ushort x, ushort y, ushort z, Brush brush) {
