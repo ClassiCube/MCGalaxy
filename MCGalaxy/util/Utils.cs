@@ -63,8 +63,9 @@ namespace MCGalaxy {
                 srcByte = (byte*)srcInt;
             }
             
-            for (int i = 0; i < bytes; i++)
+            for (int i = 0; i < bytes; i++) {
                 *srcByte = value; srcByte++;
+            }
         }
 
         public static int Clamp(int value, int lo, int hi) {
