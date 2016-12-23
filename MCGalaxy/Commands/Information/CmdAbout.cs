@@ -86,8 +86,8 @@ namespace MCGalaxy.Commands {
                      
                     byte flags = ParseFlags(row["Deleted"].ToString());
                     if ((flags & 1) == 0) { // block was placed
-                    	entry.NewRaw = byte.Parse(row["Type"].ToString());
-                    	entry.Flags |= (flags & 2) != 0 ? BlockDBFlags.NewCustom : BlockDBFlags.None;
+                        entry.NewRaw = byte.Parse(row["Type"].ToString());
+                        entry.Flags |= (flags & 2) != 0 ? BlockDBFlags.NewCustom : BlockDBFlags.None;
                     }
                     BlockDBChange.Output(p, name, entry);
                 }
@@ -114,8 +114,9 @@ namespace MCGalaxy.Commands {
         
         static void ListInMemory(Player p, ref bool foundAny, Dictionary<int, string> names,
                                  ushort x, ushort y, ushort z) {
-            int index = p.level.PosToInt(x, y, z);
-            FastList<BlockDBEntry> entries = p.level.blockCache;
+            BlockDB blockDB = p.level.BlockDB;
+            int index = x + blockDB.Dims.X * (z + blockDB.Dims.Z * y);
+            FastList<BlockDBEntry> entries = blockDB.Cache;
             
             for (int i = 0; i < entries.Count; i++) {
                 if (entries.Items[i].Index != index) continue;

@@ -24,7 +24,9 @@ namespace MCGalaxy.DB {
     
     public unsafe sealed class BlockDB {
         
-        public ushort Width, Height, Length;
+        /// <summary> Dimensions used to pack coordinates into an index. </summary>
+        /// <remarks> May be different from actual level's dimensions, such as when the level has been resized. </remarks>
+        public Vec3U16 Dims;
         
         /// <summary> The map/level name associated with this BlockDB. </summary>
         public string MapName;
@@ -38,25 +40,69 @@ namespace MCGalaxy.DB {
         /// <summary> The path of this BlockDB's temp backing file on disc for resizing. </summary>
         public string TempPath { get { return "blockdb/" + MapName + ".temp"; } }
         
+        /// <summary> Used to synchronise adding to Cache by multiple threads. </summary>
+        internal readonly object CacheLock = new object();
+        
+        /// <summary> In-memory list of recent BlockDB changes. </summary>
+        public FastList<BlockDBEntry> Cache = new FastList<BlockDBEntry>();
+        
+        /// <summary> Whether changes are actually added to the BlockDB. </summary>
+        public bool Used;
+        
         readonly ReaderWriterLockSlim locker;
         public BlockDB(Level lvl) {
             MapName = lvl.name;
-            Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
+            ReadDimensions();
             locker = new ReaderWriterLockSlim();
+            
+            if (Dims.X < lvl.Width) Dims.X = lvl.Width;
+            if (Dims.Y < lvl.Height) Dims.Y = lvl.Height;
+            if (Dims.Z < lvl.Length) Dims.Z = lvl.Length;
+        }
+        
+        void ReadDimensions() {
+            if (!File.Exists(FilePath)) return;
+            using (Stream s = File.OpenRead(FilePath))
+                BlockDBFile.ReadHeader(s, out Dims);
         }
 
         
-        public void AppendEntries(ref FastList<BlockDBEntry> entries, object lockObj) {
+        
+        public void Add(Player p, ushort x, ushort y, ushort z, ushort flags,
+                        byte oldBlock, byte oldExt, byte block, byte ext) {
+            if (!Used) return;
+            BlockDBEntry entry;
+            entry.PlayerID = p.UserID;
+            entry.TimeDelta = (int)DateTime.UtcNow.Subtract(BlockDB.Epoch).TotalSeconds;
+            entry.Index = x + Dims.X * (z + Dims.Z * y);
+            
+            entry.OldRaw = oldBlock; entry.NewRaw = block;
+            entry.Flags = flags;
+            
+            if (block == Block.custom_block) {
+                entry.Flags |= BlockDBFlags.NewCustom;
+                entry.NewRaw = ext;
+            }
+            if (oldBlock == Block.custom_block) {
+                entry.Flags |= BlockDBFlags.OldCustom;
+                entry.OldRaw = oldExt;
+            }
+            
+            lock (CacheLock)
+                Cache.Add(entry);
+        }
+        
+        public void WriteEntries() {
             using (IDisposable writeLock = locker.AccquireWriteLock()) {
-                if (entries.Count == 0) return;
+                if (Cache.Count == 0) return;
                 
                 ValidateBackingFile();
                 using (Stream s = File.OpenWrite(FilePath)) {
                     s.Position = s.Length;
-                    BlockDBFile.WriteEntries(s, entries);
+                    BlockDBFile.WriteEntries(s, Cache);
                     
-                    lock (lockObj)
-                        entries = new FastList<BlockDBEntry>();
+                    lock (CacheLock)
+                        Cache = new FastList<BlockDBEntry>();
                 }
             }
         }
@@ -77,7 +123,7 @@ namespace MCGalaxy.DB {
                 }
             }
         }
-                
+        
         /// <summary> Finds all block changes by the given player. </summary>
         public void FindChangesBy(int id, Action<BlockDBEntry> output, out Vec3U16 dims) {
             dims = default(Vec3U16);
@@ -115,18 +161,18 @@ namespace MCGalaxy.DB {
         /// <summary> Checks if the backing file exists on disc, and if not, creates it.
         /// Also recreates the backing file if dimensions on disc are less than those in memory. </summary>
         void ValidateBackingFile() {
-            Vec3U16 dims;
+            Vec3U16 fileDims;
 
             if (!File.Exists(FilePath)) {
                 using (Stream s = File.OpenWrite(FilePath)) {
-                    dims = new Vec3U16(Width, Height, Length);
-                    BlockDBFile.WriteHeader(s, dims);
+                    fileDims = Dims;
+                    BlockDBFile.WriteHeader(s, fileDims);
                 }
             } else {
                 using (Stream s = File.OpenRead(FilePath)) {
-                    BlockDBFile.ReadHeader(s, out dims);
+                    BlockDBFile.ReadHeader(s, out fileDims);
                 }
-                if (dims.X < Width || dims.Y < Height || dims.Z < Length) {
+                if (fileDims.X < Dims.X || fileDims.Y < Dims.Y || fileDims.Z < Dims.Z) {
                     BlockDBFile.ResizeBackingFile(this);
                 }
             }

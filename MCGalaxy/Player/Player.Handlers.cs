@@ -125,11 +125,15 @@ namespace MCGalaxy {
             byte heldBlock = GetActualHeldBlock(out heldExt);
             int index = level.PosToInt(x, y, z);
             if (doDelete) {
-                if (DeleteBlock(old, x, y, z, block, extBlock))
-                	level.AddToBlockDB(this, index, old, oldExt, 0, 0, flags);
+                if (DeleteBlock(old, x, y, z, block, extBlock)) {
+                    level.BlockDB.Add(this, x, y, z, flags,
+                                      old, oldExt, 0, 0);
+                }
             } else {
-                if (PlaceBlock(old, x, y, z, block, extBlock))
-                	level.AddToBlockDB(this, index, old, oldExt, heldBlock, heldExt, flags);
+                if (PlaceBlock(old, x, y, z, block, extBlock)) {
+                    level.BlockDB.Add(this, x, y, z, flags, 
+                                      old, oldExt, heldBlock, heldExt);
+                }
             }
         }
         

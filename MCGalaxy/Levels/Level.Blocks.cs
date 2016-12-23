@@ -146,7 +146,8 @@ namespace MCGalaxy {
                 SetExtTileNoCheck(x, y, z, ext);
             if (p == null) return;    
             
-            AddToBlockDB(p, index, oldBlock, oldExtBlock, block, ext, flags);
+            BlockDB.Add(p, x, y, z, flags,
+                        oldBlock, oldExtBlock, block, ext);
             Player.UndoPos Pos;
             Pos.x = x; Pos.y = y; Pos.z = z;
             Pos.mapName = this.name;
@@ -429,40 +430,17 @@ namespace MCGalaxy {
             return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
         }
         
-        public void AddToBlockDB(Player p, int index, byte oldBlock, byte oldExt, 
-                                 byte block, byte ext, ushort flags) {
-            if (!UseBlockDB) return;            
-            BlockDBEntry entry;
-            entry.PlayerID = p.UserID;
-            entry.TimeDelta = (int)DateTime.UtcNow.Subtract(BlockDB.Epoch).TotalSeconds;
-            entry.Index = index; // TODO: WRONG WRONG WRONG, use blockdb file's dimensions
-            
-            entry.OldRaw = oldBlock; entry.NewRaw = block;
-            entry.Flags = flags;
-            
-            if (block == Block.custom_block) {
-                entry.Flags |= BlockDBFlags.NewCustom;
-                entry.NewRaw = ext;
-            }
-            if (oldBlock == Block.custom_block) {
-            	entry.Flags |= BlockDBFlags.OldCustom;
-            	entry.OldRaw = oldExt;
-            }           
-            
-            lock (blockCacheLock)
-                blockCache.Add(entry);
-        }
-        
         public void UpdateBlock(Player p, ushort x, ushort y, ushort z, 
                                 byte block, byte extBlock, ushort flags) {
             byte old = GetTile(x, y, z), oldExt = 0;
             if (old == Block.custom_block) oldExt = GetExtTile(x, y, z);
             
             bool drawn = (flags & BlockDBFlags.ManualPlace) != 0;
-            if (!DoBlockchange(p, x, y, z, block, extBlock, drawn)) return;
-            int index = PosToInt(x, y, z);
-            AddToBlockDB(p, index, old, oldExt, block, extBlock, flags);
+            if (!DoBlockchange(p, x, y, z, block, extBlock, drawn)) return;            
+            BlockDB.Add(p, x, y, z, flags, 
+                        old, oldExt, block, extBlock);
             
+            int index = PosToInt(x, y, z);
             if (bufferblocks) 
                 BlockQueue.Addblock(p, index, block, extBlock);
             else 

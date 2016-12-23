@@ -175,9 +175,10 @@ namespace MCGalaxy.Drawing.Ops {
                     lvl.blockqueue.Clear();
             } else {                
                 if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) return;
-                
+                               
+                lvl.BlockDB.Add(p, b.X, b.Y, b.Z, op.Flags, 
+                                old, oldExt, b.Block, b.ExtBlock);
                 int index = lvl.PosToInt(b.X, b.Y, b.Z);
-                lvl.AddToBlockDB(p, index, old, oldExt, b.Block, b.ExtBlock, op.Flags);
                 BlockQueue.Addblock(p, index, b.Block, b.ExtBlock);
             }
             op.TotalModified++;

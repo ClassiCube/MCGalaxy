@@ -142,8 +142,8 @@ namespace MCGalaxy.DB {
             using (Stream src = File.OpenRead(db.FilePath), dst = File.Create(db.TempPath)) {
                 Vec3U16 dims;
                 ReadHeader(src, out dims);
-                WriteHeader(dst, new Vec3U16(db.Width, db.Height, db.Length));
-                int width = db.Width, length = db.Length;
+                WriteHeader(dst, db.Dims);
+                int width = db.Dims.X, length = db.Dims.Z;
                 
                 byte[] bulk = new byte[bulkEntries * entrySize];
                 fixed (byte* ptr = bulk) {

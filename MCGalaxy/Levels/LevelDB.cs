@@ -25,10 +25,10 @@ namespace MCGalaxy {
     public static class LevelDB {
         
         public unsafe static void SaveBlockDB(Level lvl) {
-            if (lvl.blockCache.Count == 0) return;
-            if (!lvl.UseBlockDB) { lvl.blockCache.Clear(); return; }
+            if (lvl.BlockDB.Cache.Count == 0) return;
+            if (!lvl.UseBlockDB) { lvl.BlockDB.Cache.Clear(); return; }
 
-            lvl.BlockDB.AppendEntries(ref lvl.blockCache, lvl.blockCacheLock);
+            lvl.BlockDB.WriteEntries();
             Server.s.Log("Saved BlockDB changes for:" + lvl.name, true);
         }
 
