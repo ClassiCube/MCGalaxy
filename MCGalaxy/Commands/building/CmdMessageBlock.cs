@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands.Building {
             Command.Search(ref alias, ref cmdArgs);
             
             foreach (Command cmd in Command.all.commands) {
-                if (cmd.defaultRank <= p.Rank && (allCmds || !cmd.type.Contains("mod"))) continue;
+                if (p.group.CanExecute(cmd) && (allCmds || !cmd.type.Contains("mod"))) continue;
                 
                 if (IsCommand(message, cmd.name) || IsCommand(alias, cmd.name)) {
                     p.SendMessage("You cannot use that command in a messageblock."); return false;

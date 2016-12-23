@@ -16,8 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Blocks.Physics;
+using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Undo;
 
@@ -32,6 +31,10 @@ namespace MCGalaxy.Drawing.Ops {
         
         /// <summary> Point in time that the /undo should start updating blocks. </summary>
         public DateTime End = DateTime.MaxValue;
+        
+        public RedoSelfDrawOp() {
+            Flags = BlockDBFlags.RedoSelf;
+        }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         

@@ -16,14 +16,19 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Blocks.Physics;
+using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Undo;
 
 namespace MCGalaxy.Drawing.Ops {
 
     public class UndoSelfDrawOp : UndoOnlineDrawOp {
+        
+        public UndoSelfDrawOp() {
+            Flags = BlockDBFlags.UndoSelf;
+        }
+        
         public override string Name { get { return "UndoSelf"; } }
     }
     
@@ -39,13 +44,17 @@ namespace MCGalaxy.Drawing.Ops {
         
         internal Player who;
         
+        public UndoOnlineDrawOp() {
+            Flags = BlockDBFlags.UndoOther;
+        }
+        
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             UndoCache cache = who.UndoBuffer;
             using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
                 if (UndoBlocks(Player, who)) return;
-            }      
+            }
             bool found = false;
             string target = who.name.ToLower();
             
@@ -69,7 +78,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
 
-    public class UndoOfflineDrawOp : DrawOp {        
+    public class UndoOfflineDrawOp : DrawOp {
         public override string Name { get { return "UndoOffline"; } }
         public override bool AffectedByTransform { get { return false; } }
         
@@ -78,6 +87,10 @@ namespace MCGalaxy.Drawing.Ops {
         
         internal string whoName;
         internal bool found = false;
+        
+        public UndoOfflineDrawOp() {
+            Flags = BlockDBFlags.UndoOther;
+        }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
@@ -90,7 +103,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
 
-    public class UndoPhysicsDrawOp : DrawOp {        
+    public class UndoPhysicsDrawOp : DrawOp {
         public override string Name { get { return "UndoPhysics"; } }
         public override bool AffectedByTransform { get { return false; } }
         
