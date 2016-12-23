@@ -35,7 +35,7 @@ namespace MCGalaxy.DB {
         public static DateTime Epoch = new DateTime(2010, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         /// <summary> The path of this BlockDB's backing file on disc. </summary>
-        public string FilePath { get { return "blockdb/" + MapName + ".cbdb"; } }
+        public string FilePath { get { return BlockDBFile.FilePath(MapName); } }
 
         /// <summary> The path of this BlockDB's temp backing file on disc for resizing. </summary>
         public string TempPath { get { return "blockdb/" + MapName + ".temp"; } }

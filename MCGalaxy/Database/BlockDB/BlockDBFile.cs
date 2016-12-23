@@ -27,6 +27,8 @@ namespace MCGalaxy.DB {
         const int entrySize = 16;
         const int bulkEntries = 256;
         
+        public static string FilePath(string map) { return "blockdb/" + map + ".cbdb"; }
+        
         public static void WriteHeader(Stream s, Vec3U16 dims) {
             byte[] header = new byte[entrySize * 4];
             NetUtils.WriteAscii("CBDB_MCG", header, 0);
@@ -136,6 +138,21 @@ namespace MCGalaxy.DB {
             }
         }
 
+
+        /// <summary> Deletes the backing file on disc if it exists. </summary>
+        public static void DeleteBackingFile(string map) {
+            string path = FilePath(map);
+             if (!File.Exists(path)) return;
+             File.Delete(path);
+        }
+ 
+        /// <summary> Moves the backing file on disc if it exists. </summary>
+        public static void MoveBackingFile(string srcMap, string dstMap) {
+            string srcPath = FilePath(srcMap), dstPath = FilePath(dstMap);
+             if (!File.Exists(srcPath)) return;
+             if (File.Exists(dstPath)) File.Delete(dstPath);
+             File.Move(srcPath, dstPath);
+        }
         
         public static void ResizeBackingFile(BlockDB db) {
             Server.s.Log("Resizing BlockDB for " + db.MapName, true);

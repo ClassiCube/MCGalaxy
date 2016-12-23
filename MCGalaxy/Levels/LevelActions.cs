@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using MCGalaxy.Bots;
+using MCGalaxy.DB;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
 
@@ -60,6 +61,7 @@ namespace MCGalaxy {
             }
             BotsFile.MoveBots(src, dst);
             RenameDatabaseTables(src, dst);
+            BlockDBFile.MoveBackingFile(src, dst);
         }
         
         static void RenameDatabaseTables(string src, string dst) {
@@ -135,9 +137,10 @@ namespace MCGalaxy {
                 if (File.Exists("blockdefs/lvl_" + name + ".json"))
                     File.Delete("blockdefs/lvl_" + name + ".json");
             } catch {}
-            
+                        
             BotsFile.DeleteBots(name);
             DeleteDatabaseTables(name);
+            BlockDBFile.DeleteBackingFile(name);
         }
         
         static void DeleteDatabaseTables(string name) {
@@ -159,6 +162,7 @@ namespace MCGalaxy {
         }
         
         public static void Replace(Level old, Level lvl) {
+            LevelDB.SaveBlockDB(old);
             LevelInfo.Loaded.Remove(old);
             LevelInfo.Loaded.Add(lvl);
             
