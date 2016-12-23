@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
                 byte below = p.level.GetTile(x, (ushort)(y - 1), z);
                 if (Solid(Block.Convert(below))) {
                     Player.Message(p, "Teleported you up.");
-                    p.SendPos(Entities.SelfID, p.pos[0], (ushort)((y + 1) * 32), p.pos[2], p.rot[0], p.rot[1]);
+                    p.SendOwnFeetPos(p.pos[0], (ushort)(y * 32), p.pos[2], p.rot[0], p.rot[1]);
                     return;
                 }
             }
