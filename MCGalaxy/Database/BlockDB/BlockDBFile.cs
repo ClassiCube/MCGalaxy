@@ -74,70 +74,47 @@ namespace MCGalaxy.DB {
             }
         }
         
-        // NOTE: These are duplicated since it is important to be as performant as possible,
-        // since the BlockDB can have millions and millions of entries
-        public static void FindChangesAt(Stream s, int index, Action<BlockDBEntry> output) {
+        /// <summary> Iterates from the very oldest to newest entry in the BlockDB. </summary>
+        public static void IterateForwards(Stream s, Action<BlockDBEntry> output) {
             byte[] bulk = new byte[bulkEntries * entrySize];
             fixed (byte* ptr = bulk) {
                 int entries = (int)(s.Length / entrySize) - 1;
                 while (entries > 0) {
-                    int read = Math.Min(entries, bulkEntries);
-                    ReadFully(s, bulk, read * entrySize);
+                    int count = Math.Min(entries, bulkEntries);
+                    ReadFully(s, bulk, count * entrySize);
                     BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
                     
-                    for (int i = 0; i < read; i++) {
-                        if (entryPtr->Index == index) {
-                            output(*entryPtr);
-                        }
+                    for (int i = 0; i < count; i++) {
+                        output(*entryPtr);
                         entryPtr++;
                     }
-                    entries -= read;
+                    entries -= count;
                 }
             }
         }
         
-        public static void FindChangesBy(Stream s, int id, Action<BlockDBEntry> output) {
+        /// <summary> Iterates from the very newest to oldest entry in the BlockDB. </summary>
+        public static void IterateBackwards(Stream s, Action<BlockDBEntry> output) {
             byte[] bulk = new byte[bulkEntries * entrySize];
             fixed (byte* ptr = bulk) {
                 int entries = (int)(s.Length / entrySize) - 1;
+                s.Position = s.Length;
+                
                 while (entries > 0) {
-                    int read = Math.Min(entries, bulkEntries);
-                    ReadFully(s, bulk, read * entrySize);
+                    int count = Math.Min(entries, bulkEntries);
+                    s.Position -= count * entrySize;
+                    ReadFully(s, bulk, count * entrySize);
                     BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
                     
-                    for (int i = 0; i < read; i++) {
-                        if (entryPtr->PlayerID == id) {
-                            output(*entryPtr);
-                        }
+                    for (int i = 0; i < count; i++) {
+                        output(*entryPtr);
                         entryPtr++;
                     }
-                    entries -= read;
+                    entries -= count;
                 }
             }
-        }
-        
-        public static void FindChangesBy(Stream s, int[] ids, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[bulkEntries * entrySize];
-            fixed (byte* ptr = bulk) {
-                int entries = (int)(s.Length / entrySize) - 1;
-                while (entries > 0) {
-                    int read = Math.Min(entries, bulkEntries);
-                    ReadFully(s, bulk, read * entrySize);
-                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
-                    
-                    for (int i = 0; i < read; i++) {
-                        for (int j = 0; j < ids.Length; j++) {
-                            if (entryPtr->PlayerID == ids[j]) {
-                                output(*entryPtr); break;
-                            }
-                        }
-                        entryPtr++;
-                    }
-                    entries -= read;
-                }
-            }
-        }
-
+        }        
+       
 
         /// <summary> Deletes the backing file on disc if it exists. </summary>
         public static void DeleteBackingFile(string map) {

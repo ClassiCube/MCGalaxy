@@ -98,7 +98,9 @@ namespace MCGalaxy.DB {
                 
                 ValidateBackingFile();
                 using (Stream s = File.OpenWrite(FilePath)) {
-                    s.Position = s.Length;
+                    // This truncates the lower 4 bits off - so e.g. if a power off occurred
+                    // and 21 bytes were in the file, this sets the position to byte 16
+                    s.Position = s.Length & ~0x0F;
                     BlockDBFile.WriteEntries(s, Cache);
                     
                     lock (CacheLock)
@@ -119,7 +121,9 @@ namespace MCGalaxy.DB {
                     if (x >= dims.X || y >= dims.Y || z >= dims.Z) return;
                     
                     int index = (y * dims.Z + z) * dims.X + x;
-                    BlockDBFile.FindChangesAt(s, index, output);
+                    BlockDBFile.IterateForwards(s, e => { 
+                                                    if (e.Index == index) { output(e); } 
+                                                });
                 }
             }
         }
@@ -132,7 +136,9 @@ namespace MCGalaxy.DB {
                 
                 using (Stream s = File.OpenRead(FilePath)) {
                     BlockDBFile.ReadHeader(s, out dims);
-                    BlockDBFile.FindChangesBy(s, id, output);
+                    BlockDBFile.IterateBackwards(s, e => { 
+                                                     if (e.PlayerID == id) { output(e); } 
+                                                 });
                 }
             }
         }
@@ -145,7 +151,11 @@ namespace MCGalaxy.DB {
                 
                 using (Stream s = File.OpenRead(FilePath)) {
                     BlockDBFile.ReadHeader(s, out dims);
-                    BlockDBFile.FindChangesBy(s, ids, output);
+                    BlockDBFile.IterateBackwards(s, e => {
+                                                     for (int i = 0; i < ids.Length; i++) {
+                                                         if (e.PlayerID == ids[i]) { output(e); }
+                                                     }
+                                                     });
                 }
             }
         }
