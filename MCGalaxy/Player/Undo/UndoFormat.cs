@@ -149,11 +149,15 @@ namespace MCGalaxy.Undo {
 
         /// <summary> Last instance in time that undo data should be retrieved up to. </summary>
         internal readonly DateTime End;
+        
+        /// <summary> Action invoked for each block processed. </summary>
+        internal Action<DrawOpBlock> Output;
 
-        public UndoFormatArgs(Player p, DateTime start, DateTime end) {
+        public UndoFormatArgs(Player p, DateTime start, DateTime end, Action<DrawOpBlock> output) {
             Player = p;
             Start = start;
             End = end;
+            Output = output;
         }
     }
 

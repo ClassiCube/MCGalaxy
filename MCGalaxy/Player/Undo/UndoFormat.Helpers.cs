@@ -40,25 +40,19 @@ namespace MCGalaxy.Undo {
         
         public static void DoUndo(Stream s, UndoFormat format, UndoFormatArgs args) {
             Level lvl = args.Player == null ? null : args.Player.level;
-            BufferedBlockSender buffer = new BufferedBlockSender(lvl);
             string lastMap = null;
             
             foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
-                if (P.LevelName != lastMap) {
-                    lvl = LevelInfo.FindExact(P.LevelName);
-                    buffer.Send(true);
-                    buffer.level = lvl;
-                }
-                
+                if (P.LevelName != lastMap) lvl = LevelInfo.FindExact(P.LevelName);
                 if (lvl == null || P.Time > args.End) continue;
-                UndoBlock(args.Player, lvl, P, buffer);
+                
+                UndoBlock(args, lvl, P);
             }
-            buffer.Send(true);
         }
         
         
-        public static void DoUndoArea(string target, Vec3S32 min, Vec3S32 max, 
-    	                              ref bool found, UndoFormatArgs args) {
+        public static void DoUndoArea(string target, Vec3S32 min, Vec3S32 max,
+                                      ref bool found, UndoFormatArgs args) {
             List<string> files = GetUndoFiles(target);
             if (files.Count == 0) return;
             found = true;
@@ -74,22 +68,16 @@ namespace MCGalaxy.Undo {
         public static void DoUndoArea(Stream s, Vec3S32 min, Vec3S32 max,
                                       UndoFormat format, UndoFormatArgs args) {
             Level lvl = args.Player == null ? null : args.Player.level;
-            BufferedBlockSender buffer = new BufferedBlockSender(lvl);
             string lastMap = null;
             
             foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
-                if (P.LevelName != lastMap) {
-                    lvl = LevelInfo.FindExact(P.LevelName);
-                    buffer.Send(true);
-                    buffer.level = lvl;
-                }
+                if (P.LevelName != lastMap) lvl = LevelInfo.FindExact(P.LevelName);
+                if (lvl == null || P.Time > args.End) continue;
                 
-                if (lvl == null) continue;
                 if (P.X < min.X || P.Y < min.Y || P.Z < min.Z) continue;
                 if (P.X > max.X || P.Y > max.Y || P.Z > max.Z) continue;
-                UndoBlock(args.Player, lvl, P, buffer);
+                UndoBlock(args, lvl, P);
             }
-            buffer.Send(true);
         }
         
         
@@ -123,29 +111,27 @@ namespace MCGalaxy.Undo {
         }
         
         
-        public static void DoRedo(string target, Action<DrawOpBlock> output,
-                                  ref bool found, UndoFormatArgs args) {
+        public static void DoRedo(string target, ref bool found, UndoFormatArgs args) {
             List<string> files = GetUndoFiles(target);
             if (files.Count == 0) return;
             found = true;
             
             foreach (string file in files) {
                 using (Stream s = File.OpenRead(file)) {
-                    DoRedo(s, output, GetFormat(file), args);
+                    DoRedo(s, GetFormat(file), args);
                     if (args.Stop) break;
                 }
             }
         }
         
-        public static void DoRedo(Stream s, Action<DrawOpBlock> output,
-                                  UndoFormat format, UndoFormatArgs args) {
-            DrawOpBlock block;           
+        public static void DoRedo(Stream s, UndoFormat format, UndoFormatArgs args) {
+            DrawOpBlock block;
             foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
                 if (P.Time > args.End) continue;
                 
                 block.X = P.X; block.Y = P.Y; block.Z = P.Z;
                 block.Block = P.Block; block.ExtBlock = P.ExtBlock;
-                output(block);
+                args.Output(block);
             }
         }
         
@@ -160,7 +146,7 @@ namespace MCGalaxy.Undo {
             if (!Directory.Exists(path)) return;
             string[] files = Directory.GetFiles(path);
             List<Player.UndoPos> buffer = new List<Player.UndoPos>();
-            UndoFormatArgs args = new UndoFormatArgs(null, DateTime.MinValue, DateTime.MaxValue);
+            UndoFormatArgs args = new UndoFormatArgs(null, DateTime.MinValue, DateTime.MaxValue, null);
             
             for (int i = 0; i < files.Length; i++) {
                 path = files[i];
@@ -190,26 +176,21 @@ namespace MCGalaxy.Undo {
             }
         }
         
-        static void UndoBlock(Player pl, Level lvl, UndoFormatEntry P,
-                              BufferedBlockSender buffer) {
+        static void UndoBlock(UndoFormatArgs args, Level lvl, UndoFormatEntry P) {
             byte lvlBlock = lvl.GetTile(P.X, P.Y, P.Z);
             if (lvlBlock == P.NewBlock || Block.Convert(lvlBlock) == Block.water
                 || Block.Convert(lvlBlock) == Block.lava || lvlBlock == Block.grass) {
-                lvl.changed = true;
                 
-                if (pl != null) {
-                    if (lvl.DoBlockchange(pl, P.X, P.Y, P.Z, P.Block, P.ExtBlock, true))
-                        buffer.Add(lvl.PosToInt(P.X, P.Y, P.Z), P.Block, P.ExtBlock);
+                if (args.Player != null) {
+                    DrawOpBlock block;
+                    block.X = P.X; block.Y = P.Y; block.Z = P.Z;
+                    block.Block = P.Block; block.ExtBlock = P.ExtBlock;
+                    args.Output(block);
                 } else {
-                    bool diff = Block.Convert(lvlBlock) != Block.Convert(P.Block);
-                    if (!diff && lvlBlock == Block.custom_block)
-                        diff = lvl.GetExtTile(P.X, P.Y, P.Z) != P.ExtBlock;
-                    if (diff)
-                        buffer.Add(lvl.PosToInt(P.X, P.Y, P.Z), P.Block, P.ExtBlock);
-                    
+                    Player.GlobalBlockchange(lvl, P.X, P.Y, P.Z, P.Block, P.ExtBlock); // TODO: rewrite this :/
                     lvl.SetTile(P.X, P.Y, P.Z, P.Block);
-                    if (P.ExtBlock == Block.custom_block)
-                        lvl.SetExtTile(P.X, P.Y, P.Z, P.ExtBlock);
+                    if (P.Block != Block.custom_block) return;
+                    lvl.SetExtTile(P.X, P.Y, P.Z, P.ExtBlock);
                 }
             }
         }

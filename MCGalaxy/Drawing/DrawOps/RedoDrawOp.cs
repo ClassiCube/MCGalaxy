@@ -45,14 +45,14 @@ namespace MCGalaxy.Drawing.Ops {
             }
             
             bool found = false;
-            UndoFormatArgs args = new UndoFormatArgs(Player, Start, End);
-            UndoFormat.DoRedo(Player.name.ToLower(), output, ref found, args);
+            UndoFormatArgs args = new UndoFormatArgs(Player, Start, End, output);
+            UndoFormat.DoRedo(Player.name.ToLower(), ref found, args);
         }
         
         bool RedoBlocks(Player p, Action<DrawOpBlock> output) {
-            UndoFormatArgs args = new UndoFormatArgs(p, Start, End);
+            UndoFormatArgs args = new UndoFormatArgs(p, Start, End, output);
             UndoFormat format = new UndoFormatOnline(p.UndoBuffer);
-            UndoFormat.DoRedo(null, output, format, args);
+            UndoFormat.DoRedo(null, format, args);
             return args.Stop;
         }
     }

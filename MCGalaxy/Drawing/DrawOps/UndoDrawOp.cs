@@ -53,12 +53,12 @@ namespace MCGalaxy.Drawing.Ops {
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             UndoCache cache = who.UndoBuffer;
             using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
-                if (UndoBlocks(Player, who)) return;
+                if (UndoBlocks(Player, who, output)) return;
             }
             bool found = false;
             string target = who.name.ToLower();
             
-            UndoFormatArgs args = new UndoFormatArgs(Player, Start, End);
+            UndoFormatArgs args = new UndoFormatArgs(Player, Start, End, output);
             if (Min.X != ushort.MaxValue) {
                 UndoFormat.DoUndoArea(target, Min, Max, ref found, args);
             } else {
@@ -66,8 +66,8 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
         
-        bool UndoBlocks(Player p, Player who) {
-            UndoFormatArgs args = new UndoFormatArgs(p, Start, End);
+        bool UndoBlocks(Player p, Player who, Action<DrawOpBlock> output) {
+            UndoFormatArgs args = new UndoFormatArgs(p, Start, End, output);
             UndoFormat format = new UndoFormatOnline(who.UndoBuffer);
             
             if (Min.X != ushort.MaxValue) {
@@ -97,7 +97,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             string target = whoName.ToLower();
-            UndoFormatArgs args = new UndoFormatArgs(Player, Start, DateTime.MaxValue);
+            UndoFormatArgs args = new UndoFormatArgs(Player, Start, DateTime.MaxValue, output);
             
             if (Min.X != ushort.MaxValue)
                 UndoFormat.DoUndoArea(target, Min, Max, ref found, args);

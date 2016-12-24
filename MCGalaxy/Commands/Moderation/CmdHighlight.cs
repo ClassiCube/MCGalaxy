@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands {
             }
             
             if (!done) {
-                UndoFormatArgs undoArgs = new UndoFormatArgs(p, start, DateTime.MaxValue);
+                UndoFormatArgs undoArgs = new UndoFormatArgs(p, start, DateTime.MaxValue, null);
                 UndoFormat.DoHighlight(args[0].ToLower(), ref found, undoArgs);
             }
             
@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands {
         }
         
         static bool HighlightBlocks(Player p, DateTime start, UndoCache cache) {
-            UndoFormatArgs args = new UndoFormatArgs(p, start, DateTime.MaxValue);
+            UndoFormatArgs args = new UndoFormatArgs(p, start, DateTime.MaxValue, null);
             UndoFormat format = new UndoFormatOnline(cache);
             UndoFormat.DoHighlight(null, format, args);
             return args.Stop;
