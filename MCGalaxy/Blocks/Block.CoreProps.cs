@@ -109,7 +109,7 @@ namespace MCGalaxy {
                 "door_cyan", "door_lightblue", "door_purple", "door_lightpurple", "door_pink",
                 "door_darkpink", "door_darkgrey", "door_lightgrey", "door_white", null,
                 "op_glass", "opsidian", "op_brick", "op_stone", "op_cobblestone", "op_air",
-                "op_water", "op_lava", "griefer_stone", "lava_sponge", "wood_float", "door",
+                "op_water", "op_lava", null, "lava_sponge", "wood_float", "door",
                 "lava_fast", "door_obsidian", "door_glass", "door_stone", "door_leaves", "door_sand",
                 "door_wood", "door_green", "door_tnt", "door_stair", "tdoor", "tdoor_obsidian",
                 "tdoor_glass", "tdoor_stone", "tdoor_leaves", "tdoor_sand", "tdoor_wood",

@@ -55,8 +55,12 @@ namespace MCGalaxy.Commands {
                 using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
                     done = HighlightBlocks(p, start, cache);
                 }
-            }          
-            if (!done) UndoFormat.DoHighlight(p, args[0].ToLower(), start, ref found);
+            }
+            
+            if (!done) {
+                UndoFormatArgs undoArgs = new UndoFormatArgs(p, start, DateTime.MaxValue);
+                UndoFormat.DoHighlight(args[0].ToLower(), ref found, undoArgs);
+            }
             
             if (found) {
                 Player.Message(p, "Now highlighting past &b{0} %Sfor {1}",
@@ -76,7 +80,7 @@ namespace MCGalaxy.Commands {
         }
         
         static bool HighlightBlocks(Player p, DateTime start, UndoCache cache) {
-            UndoFormatArgs args = new UndoFormatArgs(p, start);
+            UndoFormatArgs args = new UndoFormatArgs(p, start, DateTime.MaxValue);
             UndoFormat format = new UndoFormatOnline(cache);
             UndoFormat.DoHighlight(null, format, args);
             return args.Stop;

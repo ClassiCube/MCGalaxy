@@ -26,6 +26,7 @@ namespace MCGalaxy
         public const byte CpeMaxBlock = stonebrick;
         public const byte CpeCount = CpeMaxBlock + 1;
         
+        // Original blocks
         public const byte air = 0;
         public const byte rock = 1;
         public const byte grass = 2;
@@ -76,6 +77,8 @@ namespace MCGalaxy
         public const byte bookcase = 47;
         public const byte stonevine = 48;
         public const byte obsidian = 49;
+        
+        // CPE blocks
         public const byte cobblestoneslab = 50;
         public const byte rope = 51;
         public const byte sandstone = 52;
@@ -100,13 +103,14 @@ namespace MCGalaxy
         public const byte flagbase = 70;
 
         //Seasons
-        //public const byte fallsnow = 71;
-        //public const byte snow = 72;
+        //public const byte fallsnow = 71; // unused in core
+        //public const byte snow = 72; // unused in core
 
         public const byte fastdeathlava = 73;
 
         public const byte c4 = 74;
         public const byte c4det = 75;
+        // 76, 77, 78, 79 free
 
         public const byte door_cobblestone = 80;
         public const byte door_cobblestone_air = 81; // unused in core
@@ -186,6 +190,7 @@ namespace MCGalaxy
         public const byte finiteLava = 146;
         public const byte finiteFaucet = 147;
 
+        // ODoor blocks
         public const byte odoor1 = 148;
         public const byte odoor2 = 149;
         public const byte odoor3 = 150;
@@ -207,12 +212,13 @@ namespace MCGalaxy
         // BlockDefinitions
         public const byte custom_block = 163;
         
-        //Movement doors
+        // Movement doors
         public const byte air_door = 164;
         public const byte air_switch = 165;
         public const byte water_door = 166;
         public const byte lava_door = 167;
 
+        // Odoor air forms
         public const byte odoor1_air = 168;
         public const byte odoor2_air = 169;
         public const byte odoor3_air = 170;
@@ -221,17 +227,18 @@ namespace MCGalaxy
         public const byte odoor6_air = 173;
         public const byte odoor7_air = 174;
 
-        //portals
+        // Solid portals
         public const byte blue_portal = 175;
         public const byte orange_portal = 176;
 
+        // More odoor air forms
         public const byte odoor8_air = 177;
         public const byte odoor9_air = 178;
         public const byte odoor10_air = 179;
         public const byte odoor11_air = 180;
         public const byte odoor12_air = 181;
 
-        //Explosions
+        // Explosions
         public const byte smalltnt = 182;
         public const byte bigtnt = 183;
         public const byte tntexplosion = 184;
@@ -241,16 +248,19 @@ namespace MCGalaxy
         public const byte rockethead = 188;
         public const byte firework = 189;
 
-        //Death
+        // Killer blocks
         public const byte deathlava = 190;
         public const byte deathwater = 191;
         public const byte deathair = 192;
         public const byte activedeathwater = 193;
         public const byte activedeathlava = 194;
 
+        // Special liquid blocks
         public const byte magma = 195;
         public const byte geyser = 196;
+        
         public const byte checkpoint = 197;
+        // 198, 199 free
         
         // Air type blocks
         public const byte air_flood = 200;
@@ -271,6 +281,7 @@ namespace MCGalaxy
         public const byte water_door_air = 215; // unused in core
         public const byte lava_door_air = 216; // unused in core
         public const byte air_door_air = 217; // unused in core
+        // 218, 219 free
 
         public const byte door_iron = 220;
         public const byte door_dirt = 221;
@@ -287,7 +298,8 @@ namespace MCGalaxy
 
         public const byte creeper = 231;
         public const byte zombiebody = 232;
-        public const byte zombiehead = 233;
+        public const byte zombiehead = 233;        
+        // 234 free
 
         // Bird blocks
         public const byte birdwhite = 235;
@@ -297,7 +309,8 @@ namespace MCGalaxy
         public const byte birdred = 239;
         public const byte birdblue = 240;
         public const byte birdkill = 242;
-
+        // 243, 244 free
+        
         // Fish/Shark blocks
         public const byte fishgold = 245;
         public const byte fishsponge = 246;
@@ -311,6 +324,7 @@ namespace MCGalaxy
         
         public const byte door_gold = 253;
         public const byte door_gold_air = 254; // unused in core
+        
         public const byte Zero = 0xff; // backwards compatibility
         public const byte Invalid = 0xff;
     }

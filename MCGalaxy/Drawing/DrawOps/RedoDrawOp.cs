@@ -41,17 +41,18 @@ namespace MCGalaxy.Drawing.Ops {
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             UndoCache cache = Player.UndoBuffer;
             using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
-                if (RedoBlocks(Player)) return;
+                if (RedoBlocks(Player, output)) return;
             }
             
             bool found = false;
-            UndoFormat.DoRedo(Player, Player.name.ToLower(), Start, End, ref found);
+            UndoFormatArgs args = new UndoFormatArgs(Player, Start, End);
+            UndoFormat.DoRedo(Player.name.ToLower(), output, ref found, args);
         }
         
-        bool RedoBlocks(Player p) {
-            UndoFormatArgs args = new UndoFormatArgs(p, Start);
+        bool RedoBlocks(Player p, Action<DrawOpBlock> output) {
+            UndoFormatArgs args = new UndoFormatArgs(p, Start, End);
             UndoFormat format = new UndoFormatOnline(p.UndoBuffer);
-            UndoFormat.DoRedo(null, End, format, args);
+            UndoFormat.DoRedo(null, output, format, args);
             return args.Stop;
         }
     }

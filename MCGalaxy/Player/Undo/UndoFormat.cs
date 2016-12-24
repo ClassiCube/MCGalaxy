@@ -145,11 +145,15 @@ namespace MCGalaxy.Undo {
         public bool Stop;
 
         /// <summary> First instance in time that undo data should be retrieved back to. </summary>
-        internal readonly DateTime Start;
+        internal readonly DateTime Start;       
 
-        public UndoFormatArgs(Player p, DateTime start) {
+        /// <summary> Last instance in time that undo data should be retrieved up to. </summary>
+        internal readonly DateTime End;
+
+        public UndoFormatArgs(Player p, DateTime start, DateTime end) {
             Player = p;
             Start = start;
+            End = end;
         }
     }
 

@@ -58,21 +58,22 @@ namespace MCGalaxy.Drawing.Ops {
             bool found = false;
             string target = who.name.ToLower();
             
+            UndoFormatArgs args = new UndoFormatArgs(Player, Start, End);
             if (Min.X != ushort.MaxValue) {
-                UndoFormat.DoUndoArea(Player, target, Start, Min, Max, ref found);
+                UndoFormat.DoUndoArea(target, Min, Max, ref found, args);
             } else {
-                UndoFormat.DoUndo(Player, target, Start, End, ref found);
+                UndoFormat.DoUndo(target, ref found, args);
             }
         }
         
         bool UndoBlocks(Player p, Player who) {
-            UndoFormatArgs args = new UndoFormatArgs(p, Start);
+            UndoFormatArgs args = new UndoFormatArgs(p, Start, End);
             UndoFormat format = new UndoFormatOnline(who.UndoBuffer);
             
             if (Min.X != ushort.MaxValue) {
                 UndoFormat.DoUndoArea(null, Min, Max, format, args);
             } else {
-                UndoFormat.DoUndo(null, End, format, args);
+                UndoFormat.DoUndo(null, format, args);
             }
             return args.Stop;
         }
@@ -96,10 +97,12 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             string target = whoName.ToLower();
+            UndoFormatArgs args = new UndoFormatArgs(Player, Start, DateTime.MaxValue);
+            
             if (Min.X != ushort.MaxValue)
-                UndoFormat.DoUndoArea(Player, target, Start, Min, Max, ref found);
+                UndoFormat.DoUndoArea(target, Min, Max, ref found, args);
             else
-                UndoFormat.DoUndo(Player, target, Start, DateTime.MaxValue, ref found);
+                UndoFormat.DoUndo(target, ref found, args);
         }
     }
 

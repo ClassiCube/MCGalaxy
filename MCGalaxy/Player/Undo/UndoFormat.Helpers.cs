@@ -25,22 +25,20 @@ namespace MCGalaxy.Undo {
     /// <remarks> Note most formats only support retrieving undo data. </remarks>
     public abstract partial class UndoFormat {
         
-        public static void DoUndo(Player p, string target,
-                                  DateTime start, DateTime end, ref bool found) {
+        public static void DoUndo(string target, ref bool found, UndoFormatArgs args) {
             List<string> files = GetUndoFiles(target);
-            UndoFormatArgs args = new UndoFormatArgs(p, start);
+            if (files.Count == 0) return;
+            found = true;
             
             foreach (string file in files) {
-                found = true;
                 using (Stream s = File.OpenRead(file)) {
-                    DoUndo(s, end, GetFormat(file), args);
+                    DoUndo(s, GetFormat(file), args);
                     if (args.Stop) break;
                 }
             }
         }
         
-        public static void DoUndo(Stream s, DateTime end,
-                                  UndoFormat format, UndoFormatArgs args) {
+        public static void DoUndo(Stream s, UndoFormat format, UndoFormatArgs args) {
             Level lvl = args.Player == null ? null : args.Player.level;
             BufferedBlockSender buffer = new BufferedBlockSender(lvl);
             string lastMap = null;
@@ -52,20 +50,20 @@ namespace MCGalaxy.Undo {
                     buffer.level = lvl;
                 }
                 
-                if (lvl == null || P.Time > end) continue;
+                if (lvl == null || P.Time > args.End) continue;
                 UndoBlock(args.Player, lvl, P, buffer);
             }
             buffer.Send(true);
         }
         
         
-        public static void DoUndoArea(Player p, string target,
-                                      DateTime start, Vec3S32 min, Vec3S32 max, ref bool found) {
+        public static void DoUndoArea(string target, Vec3S32 min, Vec3S32 max, 
+    	                              ref bool found, UndoFormatArgs args) {
             List<string> files = GetUndoFiles(target);
-            UndoFormatArgs args = new UndoFormatArgs(p, start);
+            if (files.Count == 0) return;
+            found = true;
             
             foreach (string file in files) {
-                found = true;
                 using (Stream s = File.OpenRead(file)) {
                     DoUndoArea(s, min, max, GetFormat(file), args);
                     if (args.Stop) break;
@@ -95,13 +93,12 @@ namespace MCGalaxy.Undo {
         }
         
         
-        public static void DoHighlight(Player p, string target,
-                                       DateTime start, ref bool found) {
+        public static void DoHighlight(string target, ref bool found, UndoFormatArgs args) {
             List<string> files = GetUndoFiles(target);
-            UndoFormatArgs args = new UndoFormatArgs(p, start);
+            if (files.Count == 0) return;
+            found = true;
             
             foreach (string file in files) {
-                found = true;
                 using (Stream s = File.OpenRead(file)) {
                     DoHighlight(s, GetFormat(file), args);
                     if (args.Stop) break;
@@ -126,32 +123,30 @@ namespace MCGalaxy.Undo {
         }
         
         
-        public static void DoRedo(Player p, string target,
-                                  DateTime start, DateTime end, ref bool found) {
+        public static void DoRedo(string target, Action<DrawOpBlock> output,
+                                  ref bool found, UndoFormatArgs args) {
             List<string> files = GetUndoFiles(target);
-            UndoFormatArgs args = new UndoFormatArgs(p, start);
+            if (files.Count == 0) return;
+            found = true;
             
             foreach (string file in files) {
-                found = true;
                 using (Stream s = File.OpenRead(file)) {
-                    DoRedo(s, end, GetFormat(file), args);
+                    DoRedo(s, output, GetFormat(file), args);
                     if (args.Stop) break;
                 }
             }
         }
         
-        public static void DoRedo(Stream s, DateTime end,
+        public static void DoRedo(Stream s, Action<DrawOpBlock> output,
                                   UndoFormat format, UndoFormatArgs args) {
-            Level lvl = args.Player.level;
-            BufferedBlockSender buffer = new BufferedBlockSender(lvl);
-            Player p = args.Player;
-            
+            DrawOpBlock block;           
             foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
-                if (P.Time > end) continue;
-                if (!lvl.DoBlockchange(p, P.X, P.Y, P.Z, P.Block, P.ExtBlock, true)) continue;              
-                buffer.Add(lvl.PosToInt(P.X, P.Y, P.Z), P.Block, P.ExtBlock);
+                if (P.Time > args.End) continue;
+                
+                block.X = P.X; block.Y = P.Y; block.Z = P.Z;
+                block.Block = P.Block; block.ExtBlock = P.ExtBlock;
+                output(block);
             }
-            buffer.Send(true);
         }
         
         
@@ -165,7 +160,7 @@ namespace MCGalaxy.Undo {
             if (!Directory.Exists(path)) return;
             string[] files = Directory.GetFiles(path);
             List<Player.UndoPos> buffer = new List<Player.UndoPos>();
-            UndoFormatArgs args = new UndoFormatArgs(null, DateTime.MinValue);
+            UndoFormatArgs args = new UndoFormatArgs(null, DateTime.MinValue, DateTime.MaxValue);
             
             for (int i = 0; i < files.Length; i++) {
                 path = files[i];
