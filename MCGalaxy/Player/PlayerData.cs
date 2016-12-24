@@ -17,6 +17,7 @@
  */
 using System;
 using System.Data;
+using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {
@@ -52,9 +53,7 @@ namespace MCGalaxy {
                     string id = ids.Rows[0]["ID"].ToString();
                     p.UserID = PlayerData.ParseInt(id);
                 } else {
-                    Server.invalidIds.AddOrReplace(p.name);
-                    int index = Server.invalidIds.All().IndexOf(p.name.ToLower());
-                    p.UserID = int.MaxValue - index;
+                    p.UserID = NameConverter.InvalidNameID(p.name);
                 }
             }
         }

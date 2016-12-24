@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands {
                 Player.SendChatFrom(p, "&c- " + p.FullName + " %S" + discMsg, false);
                 Server.IRC.Say(p.DisplayName + " %Sleft the game (" + discMsg + "%S)");
                 if (messageOps && !p.opchat) opchat.Use(p, message);
-                Server.hidden.AddOrReplace(p.name);
+                Server.hidden.AddIfNotExists(p.name);
             } else {
                 Entities.GlobalSpawn(p, false);
                 p.otherRankHidden = false;

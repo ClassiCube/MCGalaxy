@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
             
             bool addToList = p.parseEmotes != Server.parseSmiley;
             if (!addToList) Server.noEmotes.Remove(p.name);
-            else Server.noEmotes.AddOrReplace(p.name);
+            else Server.noEmotes.AddIfNotExists(p.name);
             Server.noEmotes.Save();           
             Player.Message(p, "Emote parsing is {0}.", p.parseEmotes ? "enabled" : "disabled");
         }

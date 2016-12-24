@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Moderation {
                 }
                 who.muted = true;
                 Player.SendChatFrom(who, who.ColoredName + " %Swas &8muted", false);
-                Server.muted.AddOrReplace(who.name);
+                Server.muted.AddIfNotExists(who.name);
                 Player.AddNote(who.name, p, "M");
             }
             Server.muted.Save();

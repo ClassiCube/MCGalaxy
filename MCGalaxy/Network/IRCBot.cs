@@ -14,12 +14,13 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using MCGalaxy.Commands;
+using MCGalaxy.DB;
 using Sharkbite.Irc;
 
 namespace MCGalaxy {
@@ -83,8 +84,8 @@ namespace MCGalaxy {
             UpdateState();
             connection.connectionArgs = args;
             
-            try { 
-                connection.Connect(); 
+            try {
+                connection.Connect();
             } catch (Exception e) {
                 Server.s.Log("Failed to connect to IRC!");
                 Server.ErrorLog(e);
@@ -95,7 +96,7 @@ namespace MCGalaxy {
             if (!IsConnected()) return;
             if (hookedEvents) UnhookEvents();
             
-            connection.Disconnect(reason); 
+            connection.Disconnect(reason);
             Server.s.Log("Disconnected from IRC!");
             users.Clear();
         }
@@ -151,8 +152,8 @@ namespace MCGalaxy {
         
         #region In-game event handlers
         
-        void Player_PlayerAction(Player p, PlayerAction action, 
-                                      string message, bool stealth) {
+        void Player_PlayerAction(Player p, PlayerAction action,
+                                 string message, bool stealth) {
             if (!Server.irc ||!IsConnected()) return;
             string msg = null;
             
@@ -192,7 +193,7 @@ namespace MCGalaxy {
             
             string name = Server.ircPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;
             Say(name + "%S: " + message, p.opchat);
-        }        
+        }
         #endregion
         
         
@@ -249,7 +250,7 @@ namespace MCGalaxy {
             if (!CheckIRCCommand(user, cmdName, chan, out error)) {
                 if (error != null) Pm(user.Nick, error);
                 return;
-            }            
+            }
             HandleIRCCommand(user.Nick, user.Nick, cmdName, cmdArgs);
         }
 
@@ -270,15 +271,15 @@ namespace MCGalaxy {
 
             if (channel.CaselessEq(opchannel)) {
                 Server.s.Log(String.Format("(OPs): [IRC] {0}: {1}", user.Nick, message));
-                Chat.MessageOps(String.Format("To Ops &f-%I[IRC] {0}&f- {1}", user.Nick, 
-                                                    Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
+                Chat.MessageOps(String.Format("To Ops &f-%I[IRC] {0}&f- {1}", user.Nick,
+                                              Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
             } else {
                 Server.s.Log(String.Format("[IRC] {0}: {1}", user.Nick, message));
-                Player.GlobalIRCMessage(String.Format("%I[IRC] {0}: &f{1}", user.Nick, 
+                Player.GlobalIRCMessage(String.Format("%I[IRC] {0}: &f{1}", user.Nick,
                                                       Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
             }
         }
-    
+        
         bool HandlePublicCommand(UserInfo user, string channel, string message,
                                  string[] parts, bool opchat) {
             string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
@@ -301,7 +302,7 @@ namespace MCGalaxy {
             if (!whoCmd || (DateTime.UtcNow - last).TotalSeconds <= 1) return false;
             
             try {
-                Player p = MakeIRCPlayer(nick);
+                Player p = MakeIRCPlayer(nick, null);
                 CmdPlayers.DisplayPlayers(p, "", false, false);
             } catch (Exception e) {
                 Server.ErrorLog(e);
@@ -312,13 +313,13 @@ namespace MCGalaxy {
             return true;
         }
         
-        bool HandleIRCCommand(string nick, string logNick, string cmdName, string cmdArgs) {
+        bool HandleIRCCommand(string nick, string userNick, string cmdName, string cmdArgs) {
             Command cmd = Command.all.Find(cmdName);
-            Player p = MakeIRCPlayer(nick);
-            if (cmd == null) { Player.Message(p, "Unknown command!"); return false; }    
+            Player p = MakeIRCPlayer(nick, userNick);
+            if (cmd == null) { Player.Message(p, "Unknown command!"); return false; }
 
             string logCmd = cmdArgs == "" ? cmdName : cmdName + " " + cmdArgs;
-            Server.s.Log("IRC Command: /" + logCmd + " (by " + logNick + ")");
+            Server.s.Log("IRC Command: /" + logCmd + " (by " + userNick + ")");
             
             try {
                 if (!p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return false; }
@@ -349,13 +350,17 @@ namespace MCGalaxy {
             return true;
         }
         
-        static Player MakeIRCPlayer(string ircNick) {
+        static Player MakeIRCPlayer(string ircNick, string userNick) {
             Player p = new Player("IRC");
             p.group = Group.findPerm(Server.ircControllerRank);
             if (p.group == null)
                 p.group = Group.findPerm(LevelPermission.Nobody);
+            
             p.ircNick = ircNick;
-            p.color = "&a"; return p;
+            p.color = "&a";
+            if (userNick != null)
+                p.UserID = NameConverter.InvalidNameID("(IRC " + userNick + ")");
+            return p;
         }
         
         void Listener_OnRegistered() {
@@ -428,7 +433,7 @@ namespace MCGalaxy {
             }
         }
         
-         void Listener_OnNames(string channel, string[] nicks, bool last) {
+        void Listener_OnNames(string channel, string[] nicks, bool last) {
             List<string> chanNicks = GetNicks(channel);
             foreach (string n in nicks)
                 UpdateNick(n, chanNicks);
@@ -442,7 +447,7 @@ namespace MCGalaxy {
             List<string> chanNicks = GetNicks(channel);
             RemoveNick(user.Nick, chanNicks);
             Server.s.Log(user.Nick + " kicked " + kickee + " from IRC");
-            Player.GlobalIRCMessage("%I[IRC] " + user.Nick + " kicked " + kickee);           
+            Player.GlobalIRCMessage("%I[IRC] " + user.Nick + " kicked " + kickee);
         }
         
         void Listener_OnKill(UserInfo user, string nick, string reason) {
@@ -507,9 +512,9 @@ namespace MCGalaxy {
         int GetPrefixLength(string nick) {
             int prefixChars = 0;
             for (int i = 0; i < nick.Length; i++) {
-                if (!IsNickChar(nick[i])) 
+                if (!IsNickChar(nick[i]))
                     prefixChars++;
-                else 
+                else
                     return prefixChars;
             }
             return prefixChars;
@@ -575,7 +580,7 @@ namespace MCGalaxy {
         
         void UnhookEvents() {
             hookedEvents = false;
-             // Register events for outgoing
+            // Register events for outgoing
             Player.PlayerChat -= Player_PlayerChat;
             Player.PlayerConnect -= Player_PlayerConnect;
             Player.PlayerDisconnect -= Player_PlayerDisconnect;

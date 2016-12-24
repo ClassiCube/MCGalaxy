@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
                     Server.lockdown.Remove(args[1]);
                     Chat.MessageOps("Unlocked by: " + srcName);
                 } else {
-                    Server.lockdown.AddOrReplace(args[1]);
+                    Server.lockdown.AddIfNotExists(args[1]);
                     Chat.MessageOps("Locked by: " + srcName);
                 }
                 Server.lockdown.Save();

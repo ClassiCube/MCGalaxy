@@ -137,7 +137,7 @@ namespace MCGalaxy.Tasks {
             for (int i = 0; i < files.Length; i++) {
                 File.Delete(files[i]);
                 string level = Path.GetFileName(files[i]);
-                Server.lockdown.AddOrReplace(level);
+                Server.lockdown.AddIfNotExists(level);
             }
             
             Server.lockdown.Save();

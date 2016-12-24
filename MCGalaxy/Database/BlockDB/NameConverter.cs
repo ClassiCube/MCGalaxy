@@ -51,5 +51,13 @@ namespace MCGalaxy.DB {
             }
             return ids;
         }
+        
+        public static int InvalidNameID(string name) {
+            bool added = Server.invalidIds.AddIfNotExists(name);
+            if (added) Server.invalidIds.Save();
+            
+            int index = Server.invalidIds.All().IndexOf(name.ToLower());
+            return int.MaxValue - index;
+        }
     }
 }

@@ -51,16 +51,17 @@ namespace MCGalaxy {
         
         public int Count { get { lock (locker) return players.Count; } }
         
-        /// <summary> Adds or replaces the given name, 
-        /// returning the index of the item within the list. </summary>
-        public void AddOrReplace(string p) {
+        /// <summary> Adds or replaces the given name. </summary>
+        /// <returns> Whether the given player name was added to the list. </returns>
+        public bool AddIfNotExists(string p) {
             p = p.ToLower();
             lock (locker) {
                 int idx = players.IndexOf(p);
-                if (idx >= 0) return;
+                if (idx >= 0) return false;
                 
                 players.Add(p);
             }
+            return true;
         }
         
         public string FindMatches(Player p, string name, string type, out int matches) {
