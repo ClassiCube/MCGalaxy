@@ -23,7 +23,7 @@ namespace MCGalaxy.DB {
     
     public static class DBUpgrader {
         
-		public static bool Upgrading = false;
+        public static bool Upgrading = false;
         public static string[] CompactMessages = new string[] {
             " If you are using SQLite, It is recommended that you compact the database by either:",
             "   a) doing VACUUM on the database (note that this will create a temp file as big as MCGalaxy.db)",
@@ -32,7 +32,7 @@ namespace MCGalaxy.DB {
         };
         
         public static void Lock() {
-			Upgrading = true;
+            Upgrading = true;
             Server.s.Log("Kicking players and unloading levels..");
             Player.PlayerConnecting += ConnectingHandler;
             
@@ -77,7 +77,10 @@ namespace MCGalaxy.DB {
             count = blockDBTables.Count;
             Server.s.Log("Upgrading " + count + " tables. this may take several hours..");
             
-            // TODO: do the upgrading here
+            BlockDBTableDumper dumper = new BlockDBTableDumper();
+            foreach (string table in blockDBTables) {
+                dumper.DumpTable(table);
+            }
         }
     }
 }
