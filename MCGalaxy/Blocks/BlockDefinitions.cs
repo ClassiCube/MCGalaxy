@@ -125,10 +125,7 @@ namespace MCGalaxy {
             
             try {
                 if (File.Exists(GlobalPath)) {
-                    if (File.Exists(GlobalBackupPath)) {
-                        File.Delete(GlobalBackupPath);
-                    }
-                    File.Copy(GlobalPath, GlobalBackupPath);
+                    File.Copy(GlobalPath, GlobalBackupPath, true);
                 }
             } catch (Exception ex) {
                 Server.ErrorLog(ex);

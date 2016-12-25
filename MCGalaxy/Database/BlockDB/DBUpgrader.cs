@@ -23,7 +23,16 @@ namespace MCGalaxy.DB {
     
     public static class DBUpgrader {
         
-        public static void SetupState() {
+		public static bool Upgrading = false;
+        public static string[] CompactMessages = new string[] {
+            " If you are using SQLite, It is recommended that you compact the database by either:",
+            "   a) doing VACUUM on the database (note that this will create a temp file as big as MCGalaxy.db)",
+            "   b) doing /server backup litedb, shutting down the server and " +
+            "then deleting MCGalaxy.db, and finally running /server import SQL",
+        };
+        
+        public static void Lock() {
+			Upgrading = true;
             Server.s.Log("Kicking players and unloading levels..");
             Player.PlayerConnecting += ConnectingHandler;
             
@@ -39,8 +48,11 @@ namespace MCGalaxy.DB {
             Server.s.Log("Kicked all players and unloaded levels.");
         }
         
-        public static void ResetState() {
+        public static void Unlock() {
             Player.PlayerConnecting -= ConnectingHandler;
+            Player.MessageLines(null, CompactMessages);
+            Server.s.Log("&aUpgrade finished!");
+            Upgrading = false;
         }
         
         static void ConnectingHandler(Player p, string mppass) {
@@ -49,7 +61,7 @@ namespace MCGalaxy.DB {
             Plugin.CancelPlayerEvent(PlayerEvents.PlayerConnecting, p);
         }
         
-		
+        
         static int current, count;
         public static void Upgrade() {
             List<string> tables = Database.Backend.AllTables();

@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands {
@@ -40,6 +41,7 @@ namespace MCGalaxy.Commands {
                 case "backup": DoBackup(p, args); break;
                 case "restore": DoRestore(p, args); break;
                 case "import": DoImport(p, args); break;
+                case "upgradeblockdb": DoBlockDBUpgrade(p, args); break;
                 default: Help(p); break;
             }
         }
@@ -133,6 +135,24 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "Finished importing table {0}.", args[1]);
         }
         
+        void DoBlockDBUpgrade(Player p, string[] args) {
+            if (args.Length == 1 || !args[1].CaselessEq("confirm")) {
+                Player.Message(p, "This will export all the BlockDB tables in the database to more efficient .cdbd files.");
+                Player.Message(p, "Note: This is only useful if you have updated from older MCGalaxy versions");
+                Player.MessageLines(p, DBUpgrader.CompactMessages);
+                Player.Message(p, "Type %T/server upgradeblockdb confirm %Sto begin");
+            } else if (DBUpgrader.Upgrading) {
+                Player.Message(p, "BlockDB upgrade is already in progress.");
+            } else {
+                try {
+                    DBUpgrader.Lock();
+                    DBUpgrader.Upgrade();
+                } finally {
+                    DBUpgrader.Unlock();
+                }
+            }
+        }
+        
 
         static bool CheckPerms(Player p) {
             if (p == null) return true;
@@ -181,6 +201,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "  %Hlitedb - Backups database, except BlockDB tables.");
             Player.Message(p, "%T/server backup table [name] %H- Backups that database table");
             Player.Message(p, "%T/server import [name] %H- Imports a backed up database table");
+            Player.Message(p, "%T/server upgradeblockdb %H- Dumps BlockDB tables from database");
         }
     }
 }
