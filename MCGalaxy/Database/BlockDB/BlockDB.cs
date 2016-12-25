@@ -121,9 +121,7 @@ namespace MCGalaxy.DB {
                     if (x >= dims.X || y >= dims.Y || z >= dims.Z) return;
                     
                     int index = (y * dims.Z + z) * dims.X + x;
-                    BlockDBFile.IterateForwards(s, e => { 
-                                                    if (e.Index == index) { output(e); } 
-                                                });
+                    BlockDBFile.FindChangesAt(s, index, output);
                 }
             }
         }

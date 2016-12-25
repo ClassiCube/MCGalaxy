@@ -28,7 +28,7 @@ namespace MCGalaxy.DB {
             " If you are using SQLite, It is recommended that you compact the database by either:",
             "   a) doing VACUUM on the database (note that this will create a temp file as big as MCGalaxy.db)",
             "   b) doing /server backup litedb, shutting down the server and " +
-            "then deleting MCGalaxy.db, and finally running /server import SQL",
+                "then deleting MCGalaxy.db, and finally running /server import SQL",
         };
         
         public static void Lock() {
@@ -79,7 +79,12 @@ namespace MCGalaxy.DB {
             
             BlockDBTableDumper dumper = new BlockDBTableDumper();
             foreach (string table in blockDBTables) {
-                dumper.DumpTable(table);
+                current++;
+                try {
+                    dumper.DumpTable(table);
+                } catch (Exception ex) {
+                    Server.ErrorLog(ex);
+                }
             }
         }
     }

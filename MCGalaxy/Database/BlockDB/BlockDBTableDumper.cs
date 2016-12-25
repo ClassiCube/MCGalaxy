@@ -21,6 +21,7 @@ using System.Data;
 using System.IO;
 using MCGalaxy.Levels.IO;
 using MCGalaxy.SQL;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.DB {
     
@@ -33,12 +34,15 @@ namespace MCGalaxy.DB {
         bool errorOccurred;
         Vec3U16 dims;
         BlockDBEntry entry;
+        FastList<BlockDBEntry> buffer = new FastList<BlockDBEntry>(4096);
         
         public void DumpTable(string table) {
-            mapName = table.Substring("Block".Length);
+            buffer.Count = 0;
             errorOccurred = false;
+            mapName = table.Substring("Block".Length);            
             
             Database.ExecuteReader("SELECT * FROM `" + table + "`", DumpRow);
+            WriteBuffer(false);
             if (stream != null) stream.Close();
             stream = null;
             
@@ -51,7 +55,7 @@ namespace MCGalaxy.DB {
             
             try {
                 if (stream == null) {
-                    stream = File.Create("blockdefs/" + mapName + ".dump");
+                    stream = File.Create("blockdb/" + mapName + ".dump");
                     string lvlPath = LevelInfo.LevelPath(mapName);
                     dims = IMapImporter.Formats[0].ReadDimensions(lvlPath);
                     BlockDBFile.WriteHeader(stream, dims);
@@ -61,11 +65,21 @@ namespace MCGalaxy.DB {
                 UpdateCoords(reader);
                 UpdatePlayerID(reader);
                 UpdateTimestamp(reader);
-                // TODO: write
+                
+                buffer.Add(entry);
+                WriteBuffer(false);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 errorOccurred = true;
             }
+        }
+        
+        void WriteBuffer(bool force) {
+            if (buffer.Count == 0) return;
+            if (!force && buffer.Count < 4096) return;
+            
+            BlockDBFile.WriteEntries(stream, buffer);
+            buffer.Count = 0;
         }
         
         
@@ -74,9 +88,11 @@ namespace MCGalaxy.DB {
             entry.NewRaw = reader.GetByte(5);
             byte blockFlags = reader.GetByte(6);
             entry.Flags = BlockDBFlags.ManualPlace;
-            if ((blockFlags & 1) == 0) { // deleted block
+            
+            if ((blockFlags & 1) != 0) { // deleted block
                 entry.NewRaw = Block.air;
-            } else if ((blockFlags & 2) != 0) { // new block is custom
+            }
+            if ((blockFlags & 2) != 0) { // new block is custom
                 entry.Flags |= BlockDBFlags.NewCustom;
             }
         }

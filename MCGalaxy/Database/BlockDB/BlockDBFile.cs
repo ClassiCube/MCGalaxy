@@ -113,22 +113,45 @@ namespace MCGalaxy.DB {
                     entries -= count;
                 }
             }
-        }        
-       
+        }
+
+        // Higher level helpers
+        
+        /// <summary> Iterates from the very oldest to newest entry in the BlockDB,
+        /// only outputting entries that are at the given packed coordinates. </summary>
+        public static void FindChangesAt(Stream s, int index, Action<BlockDBEntry> output) {
+            byte[] bulk = new byte[bulkEntries * entrySize];
+            fixed (byte* ptr = bulk) {
+                int entries = (int)(s.Length / entrySize) - 1;
+                while (entries > 0) {
+                    int count = Math.Min(entries, bulkEntries);
+                    ReadFully(s, bulk, count * entrySize);
+                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
+                    
+                    for (int i = 0; i < count; i++) {
+                        if (entryPtr->Index == index) {
+                            output(*entryPtr);
+                        }
+                        entryPtr++;
+                    }
+                    entries -= count;
+                }
+            }
+        }
 
         /// <summary> Deletes the backing file on disc if it exists. </summary>
         public static void DeleteBackingFile(string map) {
             string path = FilePath(map);
-             if (!File.Exists(path)) return;
-             File.Delete(path);
+            if (!File.Exists(path)) return;
+            File.Delete(path);
         }
- 
+        
         /// <summary> Moves the backing file on disc if it exists. </summary>
         public static void MoveBackingFile(string srcMap, string dstMap) {
             string srcPath = FilePath(srcMap), dstPath = FilePath(dstMap);
-             if (!File.Exists(srcPath)) return;
-             if (File.Exists(dstPath)) File.Delete(dstPath);
-             File.Move(srcPath, dstPath);
+            if (!File.Exists(srcPath)) return;
+            if (File.Exists(dstPath)) File.Delete(dstPath);
+            File.Move(srcPath, dstPath);
         }
         
         public static void ResizeBackingFile(BlockDB db) {

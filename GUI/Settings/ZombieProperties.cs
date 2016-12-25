@@ -160,8 +160,8 @@ namespace MCGalaxy.Gui {
         
         public void LoadFromServer() {
             ChangeLevels = ZombieGameProps.ChangeLevels;
-            IgnoredLevelsList = String.Join(",", ZombieGameProps.IgnoredLevelList);
-            LevelsList = String.Join(",", ZombieGameProps.LevelList);
+            IgnoredLevelsList = ZombieGameProps.IgnoredLevelList.Join(",");
+            LevelsList = ZombieGameProps.LevelList.Join(",");
             SaveLevelChanges = ZombieGameProps.SaveLevelBlockchanges;
             IgnorePersonalWorlds = ZombieGameProps.IgnorePersonalWorlds;
             
