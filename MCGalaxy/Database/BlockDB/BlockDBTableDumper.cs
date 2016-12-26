@@ -98,7 +98,7 @@ namespace MCGalaxy.DB {
         
         void AppendCbdbFile() {
             string path = BlockDBFile.FilePath(mapName);
-            if (!File.Exists(path)) return;
+            if (!File.Exists(path) || stream == null) return;
             
             byte[] bulk = new byte[4096];
             using (Stream cbdb = File.OpenRead(path)) {
