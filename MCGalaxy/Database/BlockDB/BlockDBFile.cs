@@ -29,9 +29,11 @@ namespace MCGalaxy.DB {
         public const int BulkEntries = 256;
         
         public static string FilePath(string map) { return "blockdb/" + map + ".cbdb"; }
+        public static string DumpPath(string map) { return "blockdb/" + map + ".dump"; }
+        public static string TempPath(string map) { return "blockdb/" + map + ".temp"; }
         
         public static void WriteHeader(Stream s, Vec3U16 dims) {
-            byte[] header = new byte[EntrySize * HeaderEntries];
+            byte[] header = new byte[EntrySize * HeaderEntries * 4];
             NetUtils.WriteAscii("CBDB_MCG", header, 0);
             WriteU16(Version, header, 8);
             WriteU16(dims.X, header, 10);
@@ -157,7 +159,10 @@ namespace MCGalaxy.DB {
         
         public static void ResizeBackingFile(BlockDB db) {
             Server.s.Log("Resizing BlockDB for " + db.MapName, true);
-            using (Stream src = File.OpenRead(db.FilePath), dst = File.Create(db.TempPath)) {
+            string filePath = FilePath(db.FilePath);
+            string tempPath = TempPath(db.MapName);            
+            
+            using (Stream src = File.OpenRead(filePath), dst = File.Create(tempPath)) {
                 Vec3U16 dims;
                 ReadHeader(src, out dims);
                 WriteHeader(dst, db.Dims);
@@ -186,8 +191,8 @@ namespace MCGalaxy.DB {
                 }
             }
             
-            File.Delete(db.FilePath);
-            File.Move(db.TempPath, db.FilePath);
+            File.Delete(filePath);
+            File.Move(tempPath, filePath);
         }
         
         static ushort ReadU16(byte[] array, int offset) {

@@ -47,13 +47,14 @@ namespace MCGalaxy.DB {
                 Database.ExecuteReader("SELECT * FROM `" + table + "`", DumpRow);
                 WriteBuffer(false);
                 AppendCbdbFile();
+                SaveCbdbFile();
             } finally {
                 if (stream != null) stream.Close();
                 stream = null;
             }
             
             if (errorOccurred) return;
-            //Database.Backend.DeleteTable(table); TODO: delete once tested
+            Database.Backend.DeleteTable(table);
         }
         
         void DumpRow(IDataReader reader) {
@@ -61,7 +62,7 @@ namespace MCGalaxy.DB {
             
             try {
                 if (stream == null) {
-                    stream = File.Create("blockdb/" + mapName + ".dump");
+                    stream = File.Create(BlockDBFile.DumpPath(mapName));
                     string lvlPath = LevelInfo.LevelPath(mapName);
                     dims = IMapImporter.Formats[0].ReadDimensions(lvlPath);
                     BlockDBFile.WriteHeader(stream, dims);
@@ -104,10 +105,22 @@ namespace MCGalaxy.DB {
                 cbdb.Read(bulk, 0, BlockDBFile.EntrySize); // header
                 int read = 0;
                 while ((read = cbdb.Read(bulk, 0, 4096)) > 0) {
-                    stream.Write(cbdb, 0, read);
+                    stream.Write(bulk, 0, read);
                 }
             }
         }
+        
+        void SaveCbdbFile() {
+            if (stream == null) return;
+            stream.Close();
+            stream = null;
+            
+            string dumpPath = BlockDBFile.DumpPath(mapName);
+            string filePath = BlockDBFile.FilePath(mapName);
+            if (File.Exists(filePath)) File.Delete(filePath);
+            File.Move(dumpPath, filePath);
+        }
+        
         
         void UpdateBlock(IDataReader reader) {
             entry.OldRaw = Block.Invalid;

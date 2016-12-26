@@ -37,9 +37,6 @@ namespace MCGalaxy.DB {
         /// <summary> The path of this BlockDB's backing file on disc. </summary>
         public string FilePath { get { return BlockDBFile.FilePath(MapName); } }
 
-        /// <summary> The path of this BlockDB's temp backing file on disc for resizing. </summary>
-        public string TempPath { get { return "blockdb/" + MapName + ".temp"; } }
-        
         /// <summary> Used to synchronise adding to Cache by multiple threads. </summary>
         internal readonly object CacheLock = new object();
         
