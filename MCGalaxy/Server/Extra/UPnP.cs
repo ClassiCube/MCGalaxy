@@ -1,5 +1,5 @@
 /*
-Copyright 2012 MCGalaxy
+Copyright 2012 MCForge
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -20,7 +20,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Xml;
-//This upnp class comes from http://www.codeproject.com/Articles/27992/NAT-Traversal-with-UPnP-in-C, Modified for use with MCGalaxy
+//This upnp class comes from http://www.codeproject.com/Articles/27992/NAT-Traversal-with-UPnP-in-C, Modified for use with MCForge
 
 namespace MCGalaxy.Core {
 

@@ -35,16 +35,22 @@ namespace MCGalaxy.DB {
         Vec3U16 dims;
         BlockDBEntry entry;
         FastList<BlockDBEntry> buffer = new FastList<BlockDBEntry>(4096);
+        uint entriesWritten;
         
         public void DumpTable(string table) {
             buffer.Count = 0;
+            entriesWritten = 0;
             errorOccurred = false;
-            mapName = table.Substring("Block".Length);            
+            mapName = table.Substring("Block".Length);
             
-            Database.ExecuteReader("SELECT * FROM `" + table + "`", DumpRow);
-            WriteBuffer(false);
-            if (stream != null) stream.Close();
-            stream = null;
+            try {
+                Database.ExecuteReader("SELECT * FROM `" + table + "`", DumpRow);
+                WriteBuffer(false);
+                AppendCbdbFile();
+            } finally {
+                if (stream != null) stream.Close();
+                stream = null;
+            }
             
             if (errorOccurred) return;
             //Database.Backend.DeleteTable(table); TODO: delete once tested
@@ -59,6 +65,13 @@ namespace MCGalaxy.DB {
                     string lvlPath = LevelInfo.LevelPath(mapName);
                     dims = IMapImporter.Formats[0].ReadDimensions(lvlPath);
                     BlockDBFile.WriteHeader(stream, dims);
+                }
+                
+                // Only log maps which have a used BlockDB to avoid spam
+                entriesWritten++;
+                if (entriesWritten == 10) {
+                    string progress = " (" + DBUpgrader.Progress + ")";
+                    Server.s.Log("Dumping BlockDB for " + mapName + progress);
                 }
                 
                 UpdateBlock(reader);
@@ -82,6 +95,19 @@ namespace MCGalaxy.DB {
             buffer.Count = 0;
         }
         
+        void AppendCbdbFile() {
+            string path = BlockDBFile.FilePath(mapName);
+            if (!File.Exists(path)) return;
+            
+            byte[] bulk = new byte[4096];
+            using (Stream cbdb = File.OpenRead(path)) {
+                cbdb.Read(bulk, 0, BlockDBFile.EntrySize); // header
+                int read = 0;
+                while ((read = cbdb.Read(bulk, 0, 4096)) > 0) {
+                    stream.Write(cbdb, 0, read);
+                }
+            }
+        }
         
         void UpdateBlock(IDataReader reader) {
             entry.OldRaw = Block.Invalid;

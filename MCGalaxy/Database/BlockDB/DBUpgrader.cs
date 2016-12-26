@@ -56,13 +56,14 @@ namespace MCGalaxy.DB {
         }
         
         static void ConnectingHandler(Player p, string mppass) {
-            string progress = current + " / " + count;
-            p.Leave("Upgrading BlockDB (" + progress + "). Check back later!");
+            p.Leave("Upgrading BlockDB (" + Progress + "). Check back later!");
             Plugin.CancelPlayerEvent(PlayerEvents.PlayerConnecting, p);
         }
         
         
-        static int current, count;
+        internal static int current, count;
+        internal static string Progress { get { return current + " / " + count; } }
+        
         public static void Upgrade() {
             List<string> tables = Database.Backend.AllTables();
             List<string> blockDBTables = new List<string>(tables.Count);

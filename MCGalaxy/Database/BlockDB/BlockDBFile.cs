@@ -21,33 +21,34 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.DB {
     
-    unsafe static class BlockDBFile {
+    public unsafe static class BlockDBFile {
         
-        const byte version = 1;
-        const int entrySize = 16;
-        const int bulkEntries = 256;
+        public const byte Version = 1;
+        public const int EntrySize = 16;
+        public const int HeaderEntries = 1;
+        public const int BulkEntries = 256;
         
         public static string FilePath(string map) { return "blockdb/" + map + ".cbdb"; }
         
         public static void WriteHeader(Stream s, Vec3U16 dims) {
-            byte[] header = new byte[entrySize * 4];
+            byte[] header = new byte[EntrySize * HeaderEntries];
             NetUtils.WriteAscii("CBDB_MCG", header, 0);
-            WriteU16(version, header, 8);
+            WriteU16(Version, header, 8);
             WriteU16(dims.X, header, 10);
             WriteU16(dims.Y, header, 12);
             WriteU16(dims.Z, header, 14);
-            s.Write(header, 0, entrySize);
+            s.Write(header, 0, EntrySize);
         }
         
         public static void ReadHeader(Stream s, out Vec3U16 dims) {
             dims = default(Vec3U16);
-            byte[] header = new byte[entrySize];
+            byte[] header = new byte[EntrySize * HeaderEntries];
             ReadFully(s, header, header.Length);
             
             // Check constants are expected
             // TODO: check 8 byte string identifier
             ushort fileVersion = ReadU16(header, 8);
-            if (fileVersion != version)
+            if (fileVersion != Version)
                 throw new NotSupportedException("only version 1 is supported");
             
             dims.X = ReadU16(header, 10);
@@ -57,31 +58,31 @@ namespace MCGalaxy.DB {
         
         
         public static void WriteEntries(Stream s, FastList<BlockDBEntry> entries) {
-            byte[] bulk = new byte[bulkEntries * entrySize];
+            byte[] bulk = new byte[BulkEntries * EntrySize];
             
-            for (int i = 0; i < entries.Count; i += bulkEntries) {
-                int count = Math.Min(bulkEntries, entries.Count - i);
+            for (int i = 0; i < entries.Count; i += BulkEntries) {
+                int count = Math.Min(BulkEntries, entries.Count - i);
                 for (int j = 0; j < count; j++) {
                     BlockDBEntry entry = entries.Items[i + j];
-                    WriteI32(entry.PlayerID, bulk, j * entrySize);
-                    WriteI32(entry.TimeDelta, bulk, j * entrySize + 4);
-                    WriteI32(entry.Index, bulk, j * entrySize + 8);
-                    bulk[j * entrySize + 12] = entry.OldRaw;
-                    bulk[j * entrySize + 13] = entry.NewRaw;
-                    WriteU16(entry.Flags, bulk, j * entrySize + 14);
+                    WriteI32(entry.PlayerID, bulk, j * EntrySize);
+                    WriteI32(entry.TimeDelta, bulk, j * EntrySize + 4);
+                    WriteI32(entry.Index, bulk, j * EntrySize + 8);
+                    bulk[j * EntrySize + 12] = entry.OldRaw;
+                    bulk[j * EntrySize + 13] = entry.NewRaw;
+                    WriteU16(entry.Flags, bulk, j * EntrySize + 14);
                 }
-                s.Write(bulk, 0, count * entrySize);
+                s.Write(bulk, 0, count * EntrySize);
             }
         }
         
         /// <summary> Iterates from the very oldest to newest entry in the BlockDB. </summary>
         public static void IterateForwards(Stream s, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[bulkEntries * entrySize];
+            byte[] bulk = new byte[BulkEntries * EntrySize];
             fixed (byte* ptr = bulk) {
-                int entries = (int)(s.Length / entrySize) - 1;
+                int entries = (int)(s.Length / EntrySize) - HeaderEntries;
                 while (entries > 0) {
-                    int count = Math.Min(entries, bulkEntries);
-                    ReadFully(s, bulk, count * entrySize);
+                    int count = Math.Min(entries, BulkEntries);
+                    ReadFully(s, bulk, count * EntrySize);
                     BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
                     
                     for (int i = 0; i < count; i++) {
@@ -95,15 +96,15 @@ namespace MCGalaxy.DB {
         
         /// <summary> Iterates from the very newest to oldest entry in the BlockDB. </summary>
         public static void IterateBackwards(Stream s, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[bulkEntries * entrySize];
+            byte[] bulk = new byte[BulkEntries * EntrySize];
             fixed (byte* ptr = bulk) {
-                int entries = (int)(s.Length / entrySize) - 1;
+                int entries = (int)(s.Length / EntrySize) - HeaderEntries;
                 s.Position = s.Length;
                 
                 while (entries > 0) {
-                    int count = Math.Min(entries, bulkEntries);
-                    s.Position -= count * entrySize;
-                    ReadFully(s, bulk, count * entrySize);
+                    int count = Math.Min(entries, BulkEntries);
+                    s.Position -= count * EntrySize;
+                    ReadFully(s, bulk, count * EntrySize);
                     BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
                     
                     for (int i = 0; i < count; i++) {
@@ -120,12 +121,12 @@ namespace MCGalaxy.DB {
         /// <summary> Iterates from the very oldest to newest entry in the BlockDB,
         /// only outputting entries that are at the given packed coordinates. </summary>
         public static void FindChangesAt(Stream s, int index, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[bulkEntries * entrySize];
+            byte[] bulk = new byte[BulkEntries * EntrySize];
             fixed (byte* ptr = bulk) {
-                int entries = (int)(s.Length / entrySize) - 1;
+                int entries = (int)(s.Length / EntrySize) - HeaderEntries;
                 while (entries > 0) {
-                    int count = Math.Min(entries, bulkEntries);
-                    ReadFully(s, bulk, count * entrySize);
+                    int count = Math.Min(entries, BulkEntries);
+                    ReadFully(s, bulk, count * EntrySize);
                     BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
                     
                     for (int i = 0; i < count; i++) {
@@ -162,14 +163,14 @@ namespace MCGalaxy.DB {
                 WriteHeader(dst, db.Dims);
                 int width = db.Dims.X, length = db.Dims.Z;
                 
-                byte[] bulk = new byte[bulkEntries * entrySize];
+                byte[] bulk = new byte[BulkEntries * EntrySize];
                 fixed (byte* ptr = bulk) {
-                    int entries = (int)(src.Length / entrySize) - 1;
+                    int entries = (int)(src.Length / EntrySize) - 1;
                     BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
                     
                     while (entries > 0) {
-                        int read = Math.Min(entries, bulkEntries);
-                        ReadFully(src, bulk, read * entrySize);
+                        int read = Math.Min(entries, BulkEntries);
+                        ReadFully(src, bulk, read * EntrySize);
                         
                         for (int i = 0; i < read; i++) {
                             int index = entryPtr[i].Index;
@@ -179,7 +180,7 @@ namespace MCGalaxy.DB {
                             entryPtr[i].Index = (y * length + z) * width + x;
                         }
                         
-                        dst.Write(bulk, 0, read * entrySize);
+                        dst.Write(bulk, 0, read * EntrySize);
                         entries -= read;
                     }
                 }

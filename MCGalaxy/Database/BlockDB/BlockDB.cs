@@ -65,7 +65,6 @@ namespace MCGalaxy.DB {
             using (Stream s = File.OpenRead(FilePath))
                 BlockDBFile.ReadHeader(s, out Dims);
         }
-
         
         
         public void Add(Player p, ushort x, ushort y, ushort z, ushort flags,
