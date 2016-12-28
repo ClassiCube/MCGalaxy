@@ -33,10 +33,15 @@ namespace MCGalaxy {
         List<string> banCmd;
         string channel, opchannel;
         string nick, server;
+        public string chan {get {return channel;}}
+        public string opchan {get {return opchannel;}}
+        public string name {get {return nick;}}
+        public string serv {get {return server;}}
         bool reset = false;
         byte retries = 0;
         
         Dictionary<string, List<string>> users = new Dictionary<string, List<string>>();
+        public Dictionary<string, List<string>> userlist { get { return users; } }
         static char[] trimChars = { ' ' };
         ConnectionArgs args;
         DateTime lastWho, lastOpWho;
