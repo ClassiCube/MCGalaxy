@@ -67,8 +67,6 @@ namespace MCGalaxy {
             p.lastLogin = data.LastLogin;
             
             p.title = data.Title;
-            if (p.title != "") p.title = p.title.Replace("[", "").Replace("]", "");
-            
             p.titlecolor = data.TitleColor;
             p.color = data.Color;
             if (p.color == "") p.color = p.group.color;

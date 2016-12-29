@@ -33,7 +33,6 @@ namespace MCGalaxy.Commands {
         
         protected override void SetPlayerData(Player p, Player who, string[] args) {
             string title = args.Length > 1 ? args[1] : "";
-            title = title.Replace("[", "").Replace("]", "");
             if (title.Length >= 20) { Player.Message(p, "Title must be under 20 letters."); return; }
 
             if (title == "") {
