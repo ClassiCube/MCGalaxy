@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -230,9 +229,13 @@ namespace MCGalaxy.Gui {
                 main_Maps.DataSource = lc;
 
             // Try to keep the same selection on update
-            string selected = null;
+            List<string> selected = null;
             if (lc.Count > 0 && main_Maps.SelectedRows.Count > 0) {
-                selected = (from DataGridViewRow row in main_Maps.Rows where row.Selected select lc[row.Index]).First().name;
+                selected = new List<string>();
+                foreach (DataGridViewRow row in main_Maps.SelectedRows) {
+                    string lvlName = (string)row.Cells[0].Value;
+                    selected.Add(lvlName);
+                }
             }
 
             // Update the data source and control
@@ -261,10 +264,13 @@ namespace MCGalaxy.Gui {
             //dgvPlayers.Invalidate();
             main_Maps.DataSource = null;
             main_Maps.DataSource = lc;
+            
             // Reselect map
             if (selected != null) {
-                foreach (DataGridViewRow row in Server.levels.SelectMany(l => main_Maps.Rows.Cast<DataGridViewRow>().Where(row => (string)row.Cells[0].Value == selected)))
-                    row.Selected = true;
+                foreach (DataGridViewRow row in main_Maps.Rows) {
+                    string lvlName = (string)row.Cells[0].Value;
+                    if (selected.Contains(lvlName)) row.Selected = true;
+                }
             }
 
             main_Maps.Refresh();
