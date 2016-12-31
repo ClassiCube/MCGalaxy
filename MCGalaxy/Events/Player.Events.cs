@@ -37,6 +37,11 @@ namespace MCGalaxy {
         public delegate void MapSent(Player p, byte[] buffer);
         /// <summary> This event is called whenever the server sends a map to a player </summary>
         public static event MapSent OnSendMap;
+
+        /// <summary> Called when the player has joined the given level. </summary>
+        public delegate void JoinedLevel(Player p, Level prevLevel, Level level);
+        /// <summary> This event is called when a player has joined a level. </summary>
+        public static event JoinedLevel OnJoinedLevel;
         
         /// <summary> This is called when a player goes AFK </summary>
         /// <param name="p">The player that went AFK</param>

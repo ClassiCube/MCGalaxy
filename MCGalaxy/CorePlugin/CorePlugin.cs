@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2015 MCGalaxy team
+    Copyright 2015 MCGalaxy
         
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -27,17 +27,20 @@ namespace MCGalaxy.Core {
 
         public override void Load(bool startup) {
             OnPlayerConnectEvent.Register(ConnectHandler.HandleConnect,
-                                          Priority.System_Level, this, false);
+                                          Priority.Critical, this, false);
             OnPlayerCommandEvent.Register(ChatHandler.HandleCommand,
-                                          Priority.System_Level, this, false);
+                                          Priority.Critical, this, false);
             OnPlayerConnectingEvent.Register(ConnectingHandler.HandleConnecting,
-                                          Priority.System_Level, this, false);
+                                          Priority.Critical, this, false);
+            OnJoinedLevelEvent.Register(LevelHandler.HandleOnJoinedLevel,
+                                        Priority.Critical, this, false);
         }
         
         public override void Unload(bool shutdown) {
             OnPlayerConnectEvent.UnRegister(this);
             OnPlayerCommandEvent.UnRegister(this);
             OnPlayerConnectingEvent.UnRegister(this);
+            OnJoinedLevelEvent.UnRegister(this);
         }
     }
 }

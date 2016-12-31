@@ -116,15 +116,14 @@ namespace MCGalaxy {
             p.Loading = true;
             Entities.DespawnEntities(p);
             Level oldLevel = p.level;
-            p.level = lvl; p.SendUserMOTD(); p.SendMap(oldLevel);
+            p.level = lvl; 
+            p.SendUserMOTD(); p.SendMap(oldLevel);
 
             ushort x = (ushort)(lvl.spawnx * 32 + 16);
             ushort y = (ushort)(lvl.spawny * 32 + 32);
             ushort z = (ushort)(lvl.spawnz * 32 + 16);
             Entities.SpawnEntities(p, x, y, z, lvl.rotx, lvl.roty);
-            p.Loading = false;
             CheckGamesJoin(p, oldLevel);
-            p.prevMsg = "";
             
             if (!p.hidden && p.level.ShouldShowJoinMessage(oldLevel)) {
                 Player.SendChatFrom(p, p.ColoredName + " %Swent to " + lvl.ColoredName, false);

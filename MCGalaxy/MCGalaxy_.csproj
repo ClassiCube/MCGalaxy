@@ -400,6 +400,7 @@
     <Compile Include="CorePlugin\ConnectingHandler.cs" />
     <Compile Include="CorePlugin\CorePlugin.cs" />
     <Compile Include="CorePlugin\ConnectHandler.cs" />
+    <Compile Include="CorePlugin\LevelHandler.cs" />
     <Compile Include="Database\Backends\SQLite.cs" />
     <Compile Include="Database\BlockDB\BlockDB.cs" />
     <Compile Include="Database\BlockDB\BlockDBFile.cs" />
@@ -679,7 +680,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\app.config" />
     <Content Include="..\mcf.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

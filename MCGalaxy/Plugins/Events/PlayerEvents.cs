@@ -165,4 +165,16 @@ namespace MCGalaxy {
             CallImpl(pl => pl(p, message));
         }
     }
+    
+
+    /// <summary> This event is called when a player has joined a level. </summary>
+    public sealed class OnJoinedLevelEvent : IPluginEvent<Player.JoinedLevel> {
+        internal OnJoinedLevelEvent(Player.JoinedLevel method, Priority priority, Plugin plugin)
+            : base(method, priority, plugin) { }
+        
+        public static void Call(Player p, Level prevLevl, Level level) {
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(p, prevLevl, level));
+        }
+    }
 }

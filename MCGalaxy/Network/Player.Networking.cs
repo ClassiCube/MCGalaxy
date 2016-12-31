@@ -321,23 +321,11 @@ namespace MCGalaxy {
                 NetUtils.WriteI16((short)level.Height, buffer, 3);
                 NetUtils.WriteI16((short)level.Length, buffer, 5);
                 Send(buffer);
-                AFKCooldown = DateTime.UtcNow.AddSeconds(2);
                 Loading = false;
                 
-                if (HasCpeExt(CpeExt.EnvWeatherType))
-                	Send(Packet.EnvWeatherType((byte)level.Weather));
-                if (HasCpeExt(CpeExt.EnvColors))
-                    SendCurrentEnvColors();
-                SendCurrentMapAppearance();
-                if (HasCpeExt(CpeExt.BlockPermissions))
-                    SendCurrentBlockPermissions();
-                
-                if (OnSendMap != null)
-                    OnSendMap(this, buffer);
-                if (!level.guns && aiming) {
-                    aiming = false;
-                    ClearBlockchange();
-                }
+                if (OnJoinedLevel != null) OnJoinedLevel(this, oldLevel, level);
+                OnJoinedLevelEvent.Call(this, oldLevel, level);                
+                if (OnSendMap != null) OnSendMap(this, buffer);
             } catch (Exception ex) {
                 success = false;
                 PlayerActions.ChangeMap(this, Server.mainLevel);
@@ -361,7 +349,7 @@ namespace MCGalaxy {
         
         /// <summary> Sends a packet indicating an entity was spawned in the current map
         /// at the given absolute position + coordinates </summary>
-        public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty) {       	
+        public void SendSpawn(byte id, string name, ushort x, ushort y, ushort z, byte rotx, byte roty) {           
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) y -= 22;
             

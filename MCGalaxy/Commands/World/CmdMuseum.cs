@@ -67,17 +67,15 @@ namespace MCGalaxy.Commands.World {
             Entities.DespawnEntities(p);
             Level oldLevel = p.level;
             p.level = lvl;
-            p.SendMotd();
+            p.SendUserMOTD();
             if (!p.SendRawMap(oldLevel, lvl)) return;
 
             ushort x = (ushort)(lvl.spawnx * 32 + 16);
             ushort y = (ushort)(lvl.spawny * 32 + 32);
             ushort z = (ushort)(lvl.spawnz * 32 + 16);
 
-            p.aiming = false;
             Entities.GlobalSpawn(p, x, y, z, lvl.rotx, lvl.roty, true);
             p.ClearBlockchange();
-            p.Loading = false;
 
             Chat.MessageWhere("{0} %Swent to the {1}",
                               pl => Entities.CanSee(pl, p), p.ColoredName, lvl.name);
