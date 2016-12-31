@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands {
                     else if (y - yy == 0) pitch = 0;
                     else pitch = 8;
                     ushort xT = (ushort)(xx * 32 + 16);
-                    ushort yT = (ushort)((yy + 1) * 32 - 2);
+                    ushort yT = (ushort)(yy * 32);
                     ushort zT = (ushort)(zz * 32 + 16);
 
                     if (x - xx == -1) {
@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands {
                         else if (z - zz == 0) yaw = 192;
                         else yaw = 224;
                     }
-                    p.SendPos(Entities.SelfID, xT, yT, zT, yaw, pitch);
+                    p.SendOwnFeetPos(xT, yT, zT, yaw, pitch);
                     goto skip;
                 }
 
