@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MCGalaxy.DB;
 using MCGalaxy.Undo;
 
 namespace MCGalaxy.Commands {
@@ -33,7 +34,6 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             TimeSpan delta;
-            bool found = false;
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") message = p.name + " 1800";
             string[] args = message.Split(' ');
@@ -46,28 +46,31 @@ namespace MCGalaxy.Commands {
                 delta = TimeSpan.FromMinutes(30);
             }
             
+            string name = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
+            if (name == null) return;
+            
+            
             DateTime start = DateTime.UtcNow.Subtract(delta);
-            Player who = PlayerInfo.Find(args[0]);
-            bool done = false;
-            if (who != null) {
-                found = true;
-                UndoCache cache = who.UndoBuffer;
-                using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
-                    done = HighlightBlocks(p, start, cache);
-                }
+            int[] ids = NameConverter.FindIds(name);
+            bool found = false, done = false;
+            if (ids.Length > 0) {
+                HighlightHelper helper = new HighlightHelper();
+                done = helper.DoHighlight(ids, start, p);
+                found = helper.found;
             }
             
             if (!done) {
                 UndoFormatArgs undoArgs = new UndoFormatArgs(p, start, DateTime.MaxValue, null);
-                UndoFormat.DoHighlight(args[0].ToLower(), ref found, undoArgs);
+                UndoFormat.DoHighlight(name.ToLower(), ref found, undoArgs);
             }
             
             if (found) {
                 Player.Message(p, "Now highlighting past &b{0} %Sfor {1}",
-                               delta.Shorten(), PlayerInfo.GetColoredName(p, args[0]));
+                               delta.Shorten(), PlayerInfo.GetColoredName(p, name));
                 Player.Message(p, "&cUse /reload to un-highlight");
             } else {
-                Player.Message(p, "Could not find player specified.");
+                Player.Message(p, "No changes found by {1} %Sin the past &b{0}",
+                               delta.Shorten(), PlayerInfo.GetColoredName(p, name));
             }
         }
         
@@ -79,11 +82,43 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        static bool HighlightBlocks(Player p, DateTime start, UndoCache cache) {
-            UndoFormatArgs args = new UndoFormatArgs(p, start, DateTime.MaxValue, null);
-            UndoFormat format = new UndoFormatOnline(cache);
-            UndoFormat.DoHighlight(null, format, args);
-            return args.Stop;
+        class HighlightHelper {
+            Player p;
+            BufferedBlockSender buffer;
+            Vec3U16 dims;
+            public bool found;
+            
+            public bool DoHighlight(int[] ids, DateTime start, Player p) {
+                buffer = new BufferedBlockSender(p);
+                this.p = p;             
+                bool reachedStart = p.level.BlockDB.FindChangesBy(ids, start, DateTime.MaxValue,
+                                                                  out dims, HighlightBlock);
+                buffer.Send(true);
+                
+                buffer.player = null;
+                buffer.level = null;
+                buffer = null;
+                this.p = null;
+                return reachedStart;
+            }
+            
+            void HighlightBlock(BlockDBEntry entry) {
+                byte oldBlock = entry.OldRaw, newBlock = entry.NewRaw;
+                if ((entry.Flags & BlockDBFlags.OldCustom) != 0) oldBlock = Block.custom_block;
+                if ((entry.Flags & BlockDBFlags.NewCustom) != 0) newBlock = Block.custom_block;
+                found = true;
+                
+                byte highlight = (newBlock == Block.air
+                                  || Block.Convert(oldBlock) == Block.water || oldBlock == Block.waterstill
+                                  || Block.Convert(oldBlock) == Block.lava || oldBlock == Block.lavastill)
+                    ? Block.red : Block.green;
+                
+                int x = entry.Index % dims.X;
+                int y = (entry.Index / dims.X) / dims.Z;
+                int z = (entry.Index / dims.X) % dims.Z;
+                int index = p.level.PosToInt((ushort)x, (ushort)y, (ushort)z);
+                buffer.Add(index, highlight, 0);
+            }
         }
 
         public override void Help(Player p) {

@@ -100,7 +100,9 @@ namespace MCGalaxy.DB {
         }
         
         /// <summary> Iterates from the very newest to oldest entry in the BlockDB. </summary>
-        public static void FindChangesBy(Stream s, int id, int start, int end, Action<BlockDBEntry> output) {
+        /// <returns> whether an entry before start time was reached. </returns>
+        public static bool FindChangesBy(Stream s, int[] ids, long start, long end, 
+                                         Action<BlockDBEntry> output) {
             byte[] bulk = new byte[BulkEntries * EntrySize];
             fixed (byte* ptr = bulk) {
                 int entries = (int)(s.Length / EntrySize) - HeaderEntries;
@@ -109,50 +111,26 @@ namespace MCGalaxy.DB {
                 while (entries > 0) {
                     int count = Math.Min(entries, BulkEntries);
                     s.Position -= count * EntrySize;
+                    
                     ReadFully(s, bulk, count * EntrySize);
                     BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
+                    entryPtr += (count - 1);
                     
-                    for (int i = 0; i < count; i++) {
-                        if (entryPtr->TimeDelta < start) return;
-                        
-                        if (entryPtr->TimeDelta <= end && entryPtr->PlayerID == id) {
-                            output(*entryPtr);
-                        }
-                        entryPtr++;
-                    }
-                    entries -= count;
-                }
-            }
-        }
-        
-        /// <summary> Iterates from the very newest to oldest entry in the BlockDB. </summary>
-        public static void FindChangesBy(Stream s, int[] ids, int start, int end, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[BulkEntries * EntrySize];
-            fixed (byte* ptr = bulk) {
-                int entries = (int)(s.Length / EntrySize) - HeaderEntries;
-                s.Position = s.Length;
-                
-                while (entries > 0) {
-                    int count = Math.Min(entries, BulkEntries);
-                    s.Position -= count * EntrySize;
-                    ReadFully(s, bulk, count * EntrySize);
-                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
-                    
-                    for (int i = 0; i < count; i++) {
-                        if (entryPtr->TimeDelta < start) return;
+                    for (int i = count - 1; i >= 0; i--) {
+                        if (entryPtr->TimeDelta < start) return true;
                         
                         if (entryPtr->TimeDelta <= end) {
                             for (int j = 0; j < ids.Length; j++) {
-                                if (entryPtr->PlayerID == ids[j]) {
-                                    output(*entryPtr); break;
-                                }
+                                if (entryPtr->PlayerID != ids[j]) continue;
+                                output(*entryPtr); break;
                             }
                         }
-                        entryPtr++;
+                        entryPtr--;
                     }
                     entries -= count;
                 }
             }
+            return false;
         }
         
 

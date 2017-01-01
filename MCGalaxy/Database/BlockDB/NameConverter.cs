@@ -36,7 +36,7 @@ namespace MCGalaxy.DB {
             }
         }
         
-        public static List<int> FindIds(string name) {
+    	public static int[] FindIds(string name) {
             List<string> invalid = Server.invalidIds.All();
             List<int> ids = new List<int>();
             
@@ -49,7 +49,7 @@ namespace MCGalaxy.DB {
                     ids.Add(PlayerData.ParseInt(raw));
                 }
             }
-            return ids;
+            return ids.ToArray();
         }
         
         public static int InvalidNameID(string name) {

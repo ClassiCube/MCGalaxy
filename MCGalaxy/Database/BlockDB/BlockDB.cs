@@ -112,11 +112,9 @@ namespace MCGalaxy.DB {
                 Vec3U16 dims = Dims;
                 // Read entries from memory cache
                 int index = (y * dims.Z + z) * dims.X + x;
-                FastList<BlockDBEntry> entries = Cache;
-                
-                for (int i = 0; i < entries.Count; i++) {
-                    if (entries.Items[i].Index != index) continue;
-                    output(entries.Items[i]);
+                for (int i = 0; i < Cache.Count; i++) {
+                    if (Cache.Items[i].Index != index) continue;
+                    output(Cache.Items[i]);
                 }
                 
                 // Read entries from disc cache
@@ -132,22 +130,31 @@ namespace MCGalaxy.DB {
         }
         
         /// <summary> Outputs all block changes by the given players. </summary>
-        public void FindChangesBy(int[] ids, DateTime start, DateTime end,
+        /// <returns> whether an entry before start time was reached. </returns>
+        public bool FindChangesBy(int[] ids, DateTime start, DateTime end,
                                   out Vec3U16 dims, Action<BlockDBEntry> output) {
+            long startDelta = (long)start.Subtract(Epoch).TotalSeconds;
+            long endDelta = (long)end.Subtract(Epoch).TotalSeconds;
+            
             using (IDisposable readLock = locker.AccquireReadLock()) {
                 dims = Dims;
+                // Read entries from memory cache
+                for (int i = Cache.Count - 1; i >= 0; i--) {
+                    BlockDBEntry entry = Cache.Items[i];
+                    if (entry.TimeDelta < startDelta) return true;
+                    if (entry.TimeDelta > endDelta) continue;
+                    
+                    for (int j = 0; j < ids.Length; j++) {
+                        if (entry.PlayerID != ids[j]) continue;
+                        output(entry); break;
+                    }
+                }
                 
-                if (!File.Exists(FilePath)) return;
-                int startDelta = (int)start.Subtract(Epoch).TotalSeconds;
-                int endDelta = (int)end.Subtract(Epoch).TotalSeconds;
+                // Read entries from disc cache
+                if (!File.Exists(FilePath)) return false;
                 using (Stream s = File.OpenRead(FilePath)) {
                     BlockDBFile.ReadHeader(s, out dims);
-                    
-                    if (ids.Length == 1) {
-                        BlockDBFile.FindChangesBy(s, ids[0], startDelta, endDelta, output);
-                    } else {
-                        BlockDBFile.FindChangesBy(s, ids, startDelta, endDelta, output);
-                    }
+                    return BlockDBFile.FindChangesBy(s, ids, startDelta, endDelta, output);
                 }
             }
         }
