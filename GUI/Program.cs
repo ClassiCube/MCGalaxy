@@ -55,6 +55,7 @@ namespace MCGalaxy.Gui {
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;
             Application.ThreadException += ThreadExHandler;
             useConsole = false; useHighQualityGui = false;
+            
 
             try {
                 ReadViewmode();

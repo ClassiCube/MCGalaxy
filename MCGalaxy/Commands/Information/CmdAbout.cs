@@ -56,7 +56,6 @@ namespace MCGalaxy.Commands {
             ListFromDatabase(p, ref foundAny, names, x, y, z);
             p.level.BlockDB.FindChangesAt(x, y, z,
                                           entry => OutputEntry(p, ref foundAny, names, entry));
-            ListInMemory(p, ref foundAny, names, x, y, z);
             
             if (!foundAny) Player.Message(p, "No block change records found for this block.");
             BlockDBChange.OutputMessageBlock(p, b, id, x, y, z);
@@ -110,19 +109,7 @@ namespace MCGalaxy.Commands {
             }
             foundAny = true;
             BlockDBChange.Output(p, name, entry);
-        }
-        
-        static void ListInMemory(Player p, ref bool foundAny, Dictionary<int, string> names,
-                                 ushort x, ushort y, ushort z) {
-            BlockDB blockDB = p.level.BlockDB;
-            int index = x + blockDB.Dims.X * (z + blockDB.Dims.Z * y);
-            FastList<BlockDBEntry> entries = blockDB.Cache;
-            
-            for (int i = 0; i < entries.Count; i++) {
-                if (entries.Items[i].Index != index) continue;
-                OutputEntry(p, ref foundAny, names, entries.Items[i]);
-            }
-        }      
+        }  
         
         static ushort U16(object x) { return ushort.Parse(x.ToString()); }
         

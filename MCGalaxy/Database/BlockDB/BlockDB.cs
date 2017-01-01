@@ -106,53 +106,52 @@ namespace MCGalaxy.DB {
         }
 
         
-        /// <summary> Finds all block changes which affect the given coordinates. </summary>
+        /// <summary> Outputs all block changes which affect the given coordinates. </summary>
         public void FindChangesAt(ushort x, ushort y, ushort z, Action<BlockDBEntry> output) {
             using (IDisposable readLock = locker.AccquireReadLock()) {
-                if (!File.Exists(FilePath)) return;
+                Vec3U16 dims = Dims;
+                // Read entries from memory cache
+                int index = (y * dims.Z + z) * dims.X + x;
+                FastList<BlockDBEntry> entries = Cache;
                 
+                for (int i = 0; i < entries.Count; i++) {
+                    if (entries.Items[i].Index != index) continue;
+                    output(entries.Items[i]);
+                }
+                
+                // Read entries from disc cache
+                if (!File.Exists(FilePath)) return;
                 using (Stream s = File.OpenRead(FilePath)) {
-                    Vec3U16 dims;
                     BlockDBFile.ReadHeader(s, out dims);
                     if (x >= dims.X || y >= dims.Y || z >= dims.Z) return;
                     
-                    int index = (y * dims.Z + z) * dims.X + x;
+                    index = (y * dims.Z + z) * dims.X + x;
                     BlockDBFile.FindChangesAt(s, index, output);
                 }
             }
         }
         
-        /// <summary> Finds all block changes by the given player. </summary>
-        public void FindChangesBy(int id, Action<BlockDBEntry> output, out Vec3U16 dims) {
-            dims = default(Vec3U16);
+        /// <summary> Outputs all block changes by the given players. </summary>
+        public void FindChangesBy(int[] ids, DateTime start, DateTime end,
+                                  out Vec3U16 dims, Action<BlockDBEntry> output) {
             using (IDisposable readLock = locker.AccquireReadLock()) {
-                if (!File.Exists(FilePath)) return;
+                dims = Dims;
                 
+                if (!File.Exists(FilePath)) return;
+                int startDelta = (int)start.Subtract(Epoch).TotalSeconds;
+                int endDelta = (int)end.Subtract(Epoch).TotalSeconds;
                 using (Stream s = File.OpenRead(FilePath)) {
                     BlockDBFile.ReadHeader(s, out dims);
-                    BlockDBFile.IterateBackwards(s, e => { 
-                                                     if (e.PlayerID == id) { output(e); } 
-                                                 });
+                    
+                    if (ids.Length == 1) {
+                        BlockDBFile.FindChangesBy(s, ids[0], startDelta, endDelta, output);
+                    } else {
+                        BlockDBFile.FindChangesBy(s, ids, startDelta, endDelta, output);
+                    }
                 }
             }
         }
         
-        /// <summary> Finds all block changes by the given players. </summary>
-        public void FindChangesBy(int[] ids, Action<BlockDBEntry> output, out Vec3U16 dims) {
-            dims = default(Vec3U16);
-            using (IDisposable readLock = locker.AccquireReadLock()) {
-                if (!File.Exists(FilePath)) return;
-                
-                using (Stream s = File.OpenRead(FilePath)) {
-                    BlockDBFile.ReadHeader(s, out dims);
-                    BlockDBFile.IterateBackwards(s, e => {
-                                                     for (int i = 0; i < ids.Length; i++) {
-                                                         if (e.PlayerID == ids[i]) { output(e); }
-                                                     }
-                                                     });
-                }
-            }
-        }
         
         /// <summary> Deletes the backing file on disc if it exists. </summary>
         public void DeleteBackingFile() {

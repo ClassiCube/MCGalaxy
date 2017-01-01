@@ -77,51 +77,8 @@ namespace MCGalaxy.DB {
             }
         }
         
+        
         /// <summary> Iterates from the very oldest to newest entry in the BlockDB. </summary>
-        public static void IterateForwards(Stream s, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[BulkEntries * EntrySize];
-            fixed (byte* ptr = bulk) {
-                int entries = (int)(s.Length / EntrySize) - HeaderEntries;
-                while (entries > 0) {
-                    int count = Math.Min(entries, BulkEntries);
-                    ReadFully(s, bulk, count * EntrySize);
-                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
-                    
-                    for (int i = 0; i < count; i++) {
-                        output(*entryPtr);
-                        entryPtr++;
-                    }
-                    entries -= count;
-                }
-            }
-        }
-        
-        /// <summary> Iterates from the very newest to oldest entry in the BlockDB. </summary>
-        public static void IterateBackwards(Stream s, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[BulkEntries * EntrySize];
-            fixed (byte* ptr = bulk) {
-                int entries = (int)(s.Length / EntrySize) - HeaderEntries;
-                s.Position = s.Length;
-                
-                while (entries > 0) {
-                    int count = Math.Min(entries, BulkEntries);
-                    s.Position -= count * EntrySize;
-                    ReadFully(s, bulk, count * EntrySize);
-                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
-                    
-                    for (int i = 0; i < count; i++) {
-                        output(*entryPtr);
-                        entryPtr++;
-                    }
-                    entries -= count;
-                }
-            }
-        }
-
-        // Higher level helpers
-        
-        /// <summary> Iterates from the very oldest to newest entry in the BlockDB,
-        /// only outputting entries that are at the given packed coordinates. </summary>
         public static void FindChangesAt(Stream s, int index, Action<BlockDBEntry> output) {
             byte[] bulk = new byte[BulkEntries * EntrySize];
             fixed (byte* ptr = bulk) {
@@ -141,6 +98,63 @@ namespace MCGalaxy.DB {
                 }
             }
         }
+        
+        /// <summary> Iterates from the very newest to oldest entry in the BlockDB. </summary>
+        public static void FindChangesBy(Stream s, int id, int start, int end, Action<BlockDBEntry> output) {
+            byte[] bulk = new byte[BulkEntries * EntrySize];
+            fixed (byte* ptr = bulk) {
+                int entries = (int)(s.Length / EntrySize) - HeaderEntries;
+                s.Position = s.Length;
+                
+                while (entries > 0) {
+                    int count = Math.Min(entries, BulkEntries);
+                    s.Position -= count * EntrySize;
+                    ReadFully(s, bulk, count * EntrySize);
+                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
+                    
+                    for (int i = 0; i < count; i++) {
+                        if (entryPtr->TimeDelta < start) return;
+                        
+                        if (entryPtr->TimeDelta <= end && entryPtr->PlayerID == id) {
+                            output(*entryPtr);
+                        }
+                        entryPtr++;
+                    }
+                    entries -= count;
+                }
+            }
+        }
+        
+        /// <summary> Iterates from the very newest to oldest entry in the BlockDB. </summary>
+        public static void FindChangesBy(Stream s, int[] ids, int start, int end, Action<BlockDBEntry> output) {
+            byte[] bulk = new byte[BulkEntries * EntrySize];
+            fixed (byte* ptr = bulk) {
+                int entries = (int)(s.Length / EntrySize) - HeaderEntries;
+                s.Position = s.Length;
+                
+                while (entries > 0) {
+                    int count = Math.Min(entries, BulkEntries);
+                    s.Position -= count * EntrySize;
+                    ReadFully(s, bulk, count * EntrySize);
+                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
+                    
+                    for (int i = 0; i < count; i++) {
+                        if (entryPtr->TimeDelta < start) return;
+                        
+                        if (entryPtr->TimeDelta <= end) {
+                            for (int j = 0; j < ids.Length; j++) {
+                                if (entryPtr->PlayerID == ids[j]) {
+                                    output(*entryPtr); break;
+                                }
+                            }
+                        }
+                        entryPtr++;
+                    }
+                    entries -= count;
+                }
+            }
+        }
+        
 
         /// <summary> Deletes the backing file on disc if it exists. </summary>
         public static void DeleteBackingFile(string map) {
@@ -160,7 +174,7 @@ namespace MCGalaxy.DB {
         public static void ResizeBackingFile(BlockDB db) {
             Server.s.Log("Resizing BlockDB for " + db.MapName, true);
             string filePath = FilePath(db.MapName);
-            string tempPath = TempPath(db.MapName);            
+            string tempPath = TempPath(db.MapName);
             
             using (Stream src = File.OpenRead(filePath), dst = File.Create(tempPath)) {
                 Vec3U16 dims;
