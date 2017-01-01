@@ -105,7 +105,8 @@ namespace MCGalaxy.Commands {
             void HighlightBlock(BlockDBEntry entry) {
                 byte oldBlock = entry.OldRaw, newBlock = entry.NewRaw;
                 if ((entry.Flags & BlockDBFlags.OldCustom) != 0) oldBlock = Block.custom_block;
-                if ((entry.Flags & BlockDBFlags.NewCustom) != 0) newBlock = Block.custom_block;
+                if ((entry.Flags & BlockDBFlags.NewCustom) != 0) newBlock = Block.custom_block;               
+                if (oldBlock == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
                 found = true;
                 
                 byte highlight = (newBlock == Block.air

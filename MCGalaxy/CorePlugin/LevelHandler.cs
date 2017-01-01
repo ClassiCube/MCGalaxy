@@ -16,8 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 
 namespace MCGalaxy {
     internal static class LevelHandler {
@@ -39,6 +37,9 @@ namespace MCGalaxy {
             if (!level.guns && p.aiming) {
                 p.aiming = false;
                 p.ClearBlockchange();
+            }
+            if (!p.level.UseBlockDB) {
+                Player.Message(p, "BlockDB is disabled here, &cyou will not be able to /undo or /redo");
             }
         }
     }
