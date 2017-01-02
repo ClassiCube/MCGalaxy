@@ -111,31 +111,6 @@ namespace MCGalaxy.Undo {
         }
         
         
-        public static void DoRedo(string target, ref bool found, UndoFormatArgs args) {
-            List<string> files = GetUndoFiles(target);
-            if (files.Count == 0) return;
-            found = true;
-            
-            foreach (string file in files) {
-                using (Stream s = File.OpenRead(file)) {
-                    DoRedo(s, GetFormat(file), args);
-                    if (args.Stop) break;
-                }
-            }
-        }
-        
-        public static void DoRedo(Stream s, UndoFormat format, UndoFormatArgs args) {
-            DrawOpBlock block;
-            foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
-                if (P.Time > args.End) continue;
-                
-                block.X = P.X; block.Y = P.Y; block.Z = P.Z;
-                block.Block = P.Block; block.ExtBlock = P.ExtBlock;
-                args.Output(block);
-            }
-        }
-        
-        
         public static void UpgradePlayerUndoFiles(string name) {
             UpgradeFiles(undoDir, name);
             UpgradeFiles(prevUndoDir, name);

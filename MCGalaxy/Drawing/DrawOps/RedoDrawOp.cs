@@ -40,31 +40,27 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             int[] ids = NameConverter.FindIds(Player.name);
-            Server.s.Log("FFFOUND: " + ids.Length);
-            if (ids.Length > 0) {
-                if (Level.BlockDB.FindChangesBy(ids, Start, End, out dims, RedoBlock)) return;
-            }
+            if (ids.Length == 0) return;
             
-            bool found = false;
-            UndoFormatArgs args = new UndoFormatArgs(Player, Start, End, output);
-            UndoFormat.DoRedo(Player.name.ToLower(), ref found, args);
+            this.output = output;
+            Level.BlockDB.FindChangesBy(ids, Start, End, out dims, RedoBlock);
+            this.output = null;
         }
         
+        Action<DrawOpBlock> output;
         Vec3U16 dims;        
         void RedoBlock(BlockDBEntry entry) {
             byte block = entry.OldRaw, ext = 0;
             if ((entry.Flags & BlockDBFlags.OldCustom) != 0) {
                 ext = block; block = Block.custom_block;
-                
             }
-            Server.s.Log("FFFFFFF " + block);
             if (block == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
             if ((entry.Flags & BlockDBFlags.UndoSelf) == 0) return; // not an undo
             
             int x = entry.Index % dims.X;
             int y = (entry.Index / dims.X) / dims.Z;
             int z = (entry.Index / dims.X) % dims.Z;
-            Place((ushort)x, (ushort)y, (ushort)z, block, ext);
+            output(Place((ushort)x, (ushort)y, (ushort)z, block, ext));
         }
     }
 }

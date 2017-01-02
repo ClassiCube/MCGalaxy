@@ -129,7 +129,7 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 if (item.Brush != null) item.Brush.Configure(item.Op, p);
                 DoDrawOp(item, p);
-                timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
+                timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds + 1;
                 entry.End = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
                 
                 p.DrawOps.Add(entry);

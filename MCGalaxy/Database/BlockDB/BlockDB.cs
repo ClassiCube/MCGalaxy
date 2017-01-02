@@ -128,7 +128,7 @@ namespace MCGalaxy.DB {
             int count = Cache.Count, index = (y * dims.Z + z) * dims.X + x;
             BlockDBEntry[] items = Cache.Items;
             
-            for (int i = count - 1; i >= 0; i--) {
+            for (int i = 0; i < count; i++) {
                 if (items[i].Index != index) continue;
                 output(items[i]);
             }
