@@ -16,8 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
 using MCGalaxy.DB;
 using MCGalaxy.Undo;
 

@@ -109,23 +109,28 @@ namespace MCGalaxy.DB {
         /// <summary> Outputs all block changes which affect the given coordinates. </summary>
         public void FindChangesAt(ushort x, ushort y, ushort z, Action<BlockDBEntry> output) {
             using (IDisposable readLock = locker.AccquireReadLock()) {
-                Vec3U16 dims = Dims;
-                // Read entries from memory cache
-                int index = (y * dims.Z + z) * dims.X + x;
-                for (int i = 0; i < Cache.Count; i++) {
-                    if (Cache.Items[i].Index != index) continue;
-                    output(Cache.Items[i]);
-                }
+                if (!File.Exists(FilePath)) { FindInMemoryAt(x, y, z, output); return; }
+                Vec3U16 dims;
                 
-                // Read entries from disc cache
-                if (!File.Exists(FilePath)) return;
                 using (Stream s = File.OpenRead(FilePath)) {
                     BlockDBFile.ReadHeader(s, out dims);
                     if (x >= dims.X || y >= dims.Y || z >= dims.Z) return;
                     
-                    index = (y * dims.Z + z) * dims.X + x;
+                    int index = (y * dims.Z + z) * dims.X + x;
                     BlockDBFile.FindChangesAt(s, index, output);
                 }
+                FindInMemoryAt(x, y, z, output);
+            }
+        }
+        
+        void FindInMemoryAt(ushort x, ushort y, ushort z, Action<BlockDBEntry> output) {
+            Vec3U16 dims = Dims;
+            int count = Cache.Count, index = (y * dims.Z + z) * dims.X + x;
+            BlockDBEntry[] items = Cache.Items;
+            
+            for (int i = count - 1; i >= 0; i--) {
+                if (items[i].Index != index) continue;
+                output(items[i]);
             }
         }
         
@@ -139,8 +144,10 @@ namespace MCGalaxy.DB {
             using (IDisposable readLock = locker.AccquireReadLock()) {
                 dims = Dims;
                 // Read entries from memory cache
-                for (int i = Cache.Count - 1; i >= 0; i--) {
-                    BlockDBEntry entry = Cache.Items[i];
+                int count = Cache.Count;
+                BlockDBEntry[] items = Cache.Items;
+                for (int i = count - 1; i >= 0; i--) {
+                    BlockDBEntry entry = items[i];
                     if (entry.TimeDelta < startDelta) return true;
                     if (entry.TimeDelta > endDelta) continue;
                     

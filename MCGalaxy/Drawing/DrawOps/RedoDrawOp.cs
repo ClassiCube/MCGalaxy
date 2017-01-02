@@ -39,9 +39,10 @@ namespace MCGalaxy.Drawing.Ops {
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
-            UndoCache cache = Player.UndoBuffer;
-            using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
-                if (RedoBlocks(Player, output)) return;
+            int[] ids = NameConverter.FindIds(Player.name);
+            Server.s.Log("FFFOUND: " + ids.Length);
+            if (ids.Length > 0) {
+                if (Level.BlockDB.FindChangesBy(ids, Start, End, out dims, RedoBlock)) return;
             }
             
             bool found = false;
@@ -49,11 +50,21 @@ namespace MCGalaxy.Drawing.Ops {
             UndoFormat.DoRedo(Player.name.ToLower(), ref found, args);
         }
         
-        bool RedoBlocks(Player p, Action<DrawOpBlock> output) {
-            UndoFormatArgs args = new UndoFormatArgs(p, Start, End, output);
-            UndoFormat format = new UndoFormatOnline(p.UndoBuffer);
-            UndoFormat.DoRedo(null, format, args);
-            return args.Stop;
+        Vec3U16 dims;        
+        void RedoBlock(BlockDBEntry entry) {
+            byte block = entry.OldRaw, ext = 0;
+            if ((entry.Flags & BlockDBFlags.OldCustom) != 0) {
+                ext = block; block = Block.custom_block;
+                
+            }
+            Server.s.Log("FFFFFFF " + block);
+            if (block == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
+            if ((entry.Flags & BlockDBFlags.UndoSelf) == 0) return; // not an undo
+            
+            int x = entry.Index % dims.X;
+            int y = (entry.Index / dims.X) / dims.Z;
+            int z = (entry.Index / dims.X) % dims.Z;
+            Place((ushort)x, (ushort)y, (ushort)z, block, ext);
         }
     }
 }
