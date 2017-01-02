@@ -23,7 +23,7 @@ using MCGalaxy.Undo;
 
 namespace MCGalaxy.Drawing.Ops {
 
-    public class UndoSelfDrawOp : UndoOnlineDrawOp {
+    public class UndoSelfDrawOp : UndoDrawOp {
         
         public UndoSelfDrawOp() {
             Flags = BlockDBFlags.UndoSelf;
@@ -32,8 +32,8 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "UndoSelf"; } }
     }
     
-    public class UndoOnlineDrawOp : DrawOp {
-        public override string Name { get { return "UndoOnline"; } }
+    public class UndoDrawOp : DrawOp {
+        public override string Name { get { return "Undo"; } }
         public override bool AffectedByTransform { get { return false; } }
         
         /// <summary> Point in time that the /undo should go backwards up to. </summary>
@@ -42,67 +42,55 @@ namespace MCGalaxy.Drawing.Ops {
         /// <summary> Point in time that the /undo should start updating blocks. </summary>
         public DateTime End = DateTime.MaxValue;
         
-        internal Player who;
-        
-        public UndoOnlineDrawOp() {
-            Flags = BlockDBFlags.UndoOther;
-        }
-        
-        public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
-        
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
-            UndoCache cache = who.UndoBuffer;
-            using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
-                if (UndoBlocks(Player, who, output)) return;
-            }
-            bool found = false;
-            string target = who.name.ToLower();
-            
-            UndoFormatArgs args = new UndoFormatArgs(Player, Start, End, output);
-            if (Min.X != ushort.MaxValue) {
-                UndoFormat.DoUndoArea(target, Min, Max, ref found, args);
-            } else {
-                UndoFormat.DoUndo(target, ref found, args);
-            }
-        }
-        
-        bool UndoBlocks(Player p, Player who, Action<DrawOpBlock> output) {
-            UndoFormatArgs args = new UndoFormatArgs(p, Start, End, output);
-            UndoFormat format = new UndoFormatOnline(who.UndoBuffer);
-            
-            if (Min.X != ushort.MaxValue) {
-                UndoFormat.DoUndoArea(null, Min, Max, format, args);
-            } else {
-                UndoFormat.DoUndo(null, format, args);
-            }
-            return args.Stop;
-        }
-    }
-
-    public class UndoOfflineDrawOp : DrawOp {
-        public override string Name { get { return "UndoOffline"; } }
-        public override bool AffectedByTransform { get { return false; } }
-        
-        /// <summary> Point in time that the /undo should go backwards up to. </summary>
-        public DateTime Start = DateTime.MinValue;
-        
-        internal string whoName;
+        internal string who;
         internal bool found = false;
         
-        public UndoOfflineDrawOp() {
+        public UndoDrawOp() {
             Flags = BlockDBFlags.UndoOther;
         }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
-            string target = whoName.ToLower();
-            UndoFormatArgs args = new UndoFormatArgs(Player, Start, DateTime.MaxValue, output);
+            this.output = output;
+            PerformUndo();
+            this.output = null;
+        }
+        
+        void PerformUndo() {
+            int[] ids = NameConverter.FindIds(Player.name);
+            if (ids.Length > 0) {
+                if (Level.BlockDB.FindChangesBy(ids, Start, End, out dims, UndoBlock)) return;
+            }
+            UndoFormatArgs args = new UndoFormatArgs(Player, Start, End, output);
             
-            if (Min.X != ushort.MaxValue)
-                UndoFormat.DoUndoArea(target, Min, Max, ref found, args);
-            else
-                UndoFormat.DoUndo(target, ref found, args);
+            if (Min.X != ushort.MaxValue) {
+                UndoFormat.DoUndoArea(who.ToLower(), Min, Max, ref found, args);
+            } else {
+                UndoFormat.DoUndo(who.ToLower(), ref found, args);
+            }
+        }
+        
+        Action<DrawOpBlock> output;
+        Vec3U16 dims;
+        void UndoBlock(BlockDBEntry entry) {
+            byte block = entry.OldRaw, ext = 0;
+            if ((entry.Flags & BlockDBFlags.OldCustom) != 0) {
+                ext = block; block = Block.custom_block;
+            }
+            if (block == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
+            
+            int x = entry.Index % dims.X;
+            int y = (entry.Index / dims.X) / dims.Z;
+            int z = (entry.Index / dims.X) % dims.Z;
+            
+            // Undo area
+            if (Min.X != ushort.MaxValue) {
+                if (x < Min.X || y < Min.Y || z < Min.Z) return;
+                if (x > Max.X || y > Max.Y || z > Max.Z) return;
+            }
+            output(Place((ushort)x, (ushort)y, (ushort)z, block, ext));
+            found = true;
         }
     }
 

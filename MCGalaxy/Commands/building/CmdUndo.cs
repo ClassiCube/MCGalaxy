@@ -47,8 +47,12 @@ namespace MCGalaxy.Commands.Building {
             
             string[] parts = message.Split(' ');
             bool undoPhysics = parts[0].CaselessEq("physics");
-            Player who = undoPhysics ? null : PlayerInfo.Find(parts[0]);
-            TimeSpan delta = GetDelta(p, who, parts.Length > 1 ? parts[1] : "30m");
+            if (!undoPhysics) {
+            	parts[0] = PlayerInfo.FindOfflineNameMatches(p, parts[0]);
+            	if (parts[0] == null) return;
+            }
+            
+            TimeSpan delta = GetDelta(p, parts[0], parts.Length > 1 ? parts[1] : "30m");
             if (delta == TimeSpan.MinValue) return;
             
             if (parts.Length > 1 && parts[1].CaselessEq("update")) {
@@ -58,12 +62,10 @@ namespace MCGalaxy.Commands.Building {
             }
 
             Vec3S32[] marks = new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal };
-            if (who != null)
-                UndoOnlinePlayer(p, delta, who, marks);
-            else if (undoPhysics)
+            if (undoPhysics)
                 UndoLevelPhysics(p, delta);
             else
-                UndoOfflinePlayer(p, delta, parts[0], marks);
+                UndoPlayer(p, delta, parts[0], marks);
         }
         
         void UndoSelf(Player p) {
@@ -80,7 +82,7 @@ namespace MCGalaxy.Commands.Building {
                 p.DrawOps.Remove(entry);
                 
                 UndoSelfDrawOp op = new UndoSelfDrawOp();
-                op.who = p;
+                op.who = p.name;
                 op.Start = entry.Start; op.End = entry.End;
                 DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
                 Player.Message(p, "Undo performed.");
@@ -109,9 +111,9 @@ namespace MCGalaxy.Commands.Building {
         
         
         const int undoMax = -1; // allows everything to be undone.
-        protected TimeSpan GetDelta(Player p, Player who, string param) {
+        protected TimeSpan GetDelta(Player p, string name, string param) {
             TimeSpan delta;
-            bool canAll = p == null || p == who || p.group.maxUndo == undoMax;
+            bool canAll = p == null || p.name.CaselessEq(name) || p.group.maxUndo == undoMax;
             
             if (param.CaselessEq("all")) {
                 return TimeSpan.FromSeconds(canAll ? int.MaxValue : p.group.maxUndo);
@@ -129,40 +131,25 @@ namespace MCGalaxy.Commands.Building {
             }
             return delta;
         }
-                
-        protected void UndoOnlinePlayer(Player p, TimeSpan delta, Player who, Vec3S32[] marks) {
-            if (p != null && p != who && !CheckUndoPerms(p, who.group)) return;
-            
-            UndoOnlineDrawOp op;
-            if (p == who) op = new UndoSelfDrawOp();
-            else op = new UndoOnlineDrawOp();
-            op.Start = DateTime.UtcNow.Subtract(delta);
-            op.who = who;
-            DrawOp.DoDrawOp(op, null, p, marks);
-            
-            if (p == who) {
-                Player.Message(p, "Undid your actions for the past &b" + delta.Shorten(true) + "%S.");
-            } else {
-                Player.SendChatFrom(who, who.ColoredName + "%S's actions for the past &b" + delta.Shorten(true) + " %Swere undone.", false);
-            }
-            Server.s.Log(who.name + "'s actions for the past " + delta.Shorten(true) + " were undone.");
-        }
         
-        protected void UndoOfflinePlayer(Player p, TimeSpan delta, string whoName, Vec3S32[] marks) {
-            if (p != null && !CheckUndoPerms(p, Group.findPlayerGroup(whoName))) return;
+        protected void UndoPlayer(Player p, TimeSpan delta, string name, Vec3S32[] marks) {
+            if (p != null && !CheckUndoPerms(p, Group.findPlayerGroup(name))) return;
             
-            UndoOfflineDrawOp op = new UndoOfflineDrawOp();
+            UndoDrawOp op = new UndoDrawOp();
+            if (p != null && p.name.CaselessEq(name))
+            	op = new UndoSelfDrawOp();
+            
             op.Start = DateTime.UtcNow.Subtract(delta);
-            op.whoName = whoName;
+            op.who = name;
             DrawOp.DoDrawOp(op, null, p, marks);
 
             if (op.found) {
-                Chat.MessageAll("{0}%S's actions for the past &b{1} %Swere undone.", 
-                                PlayerInfo.GetColoredName(p, whoName), delta.Shorten(true));
-                Server.s.Log(whoName + "'s actions for the past " + delta.Shorten(true) + " were undone.");
-                if (p != null) p.level.Save(true);
+                Chat.MessageAll("Undid {0}%S's changes for the past &b{1}",
+                               delta.Shorten(true), PlayerInfo.GetColoredName(p, name));
+                Server.s.Log(name + "'s actions for the past " + delta.Shorten(true) + " were undone.");
             } else {
-                Player.Message(p, "Could not find player specified.");
+                Player.Message(p, "No changes found by {1} %Sin the past &b{0}",
+                               delta.Shorten(true), PlayerInfo.GetColoredName(p, name));
             }
         }
         

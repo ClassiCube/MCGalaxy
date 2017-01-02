@@ -35,8 +35,11 @@ namespace MCGalaxy.Commands {
             if (message == "") { Player.Message(p, "You need to provide a player name."); return; }
             
             string[] parts = message.Split(' ');
+            parts[0] = PlayerInfo.FindOfflineNameMatches(p, parts[0]);
+            if (parts[0] == null) return;
+            
             args.message = parts[0];
-            args.delta = GetDelta(p, null, parts.Length > 1 ? parts[1] : "30m");
+            args.delta = GetDelta(p, parts[0], parts.Length > 1 ? parts[1] : "30m");
             if (args.delta == TimeSpan.MinValue) return;
             
             Player.Message(p, "Place two blocks to determine the edges.");
@@ -45,10 +48,7 @@ namespace MCGalaxy.Commands {
         
         bool DoUndo(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             UndoAreaArgs args = (UndoAreaArgs)state;       
-            Player who = PlayerInfo.Find(args.message);
-
-            if (who != null) UndoOnlinePlayer(p, args.delta, who, marks);
-            else UndoOfflinePlayer(p, args.delta, args.message, marks);
+            UndoPlayer(p, args.delta, args.message, marks);
             return false;
         }
         

@@ -48,7 +48,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         Action<DrawOpBlock> output;
-        Vec3U16 dims;        
+        Vec3U16 dims;
         void RedoBlock(BlockDBEntry entry) {
             byte block = entry.OldRaw, ext = 0;
             if ((entry.Flags & BlockDBFlags.OldCustom) != 0) {

@@ -43,13 +43,12 @@ namespace MCGalaxy.Commands {
             } else {
                 delta = TimeSpan.FromMinutes(30);
             }
-            
-            string name = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
-            if (name == null) return;
+            args[0] = PlayerInfo.FindOfflineNameMatches(p, args[0]);
+            if (args[0] == null) return;
             
             
             DateTime start = DateTime.UtcNow.Subtract(delta);
-            int[] ids = NameConverter.FindIds(name);
+            int[] ids = NameConverter.FindIds(args[0]);
             bool found = false, done = false;
             if (ids.Length > 0) {
                 HighlightHelper helper = new HighlightHelper();
@@ -59,16 +58,16 @@ namespace MCGalaxy.Commands {
             
             if (!done) {
                 UndoFormatArgs undoArgs = new UndoFormatArgs(p, start, DateTime.MaxValue, null);
-                UndoFormat.DoHighlight(name.ToLower(), ref found, undoArgs);
+                UndoFormat.DoHighlight(args[0].ToLower(), ref found, undoArgs);
             }
             
             if (found) {
                 Player.Message(p, "Now highlighting past &b{0} %Sfor {1}",
-                               delta.Shorten(), PlayerInfo.GetColoredName(p, name));
+                               delta.Shorten(true), PlayerInfo.GetColoredName(p, args[0]));
                 Player.Message(p, "&cUse /reload to un-highlight");
             } else {
                 Player.Message(p, "No changes found by {1} %Sin the past &b{0}",
-                               delta.Shorten(), PlayerInfo.GetColoredName(p, name));
+                               delta.Shorten(true), PlayerInfo.GetColoredName(p, args[0]));
             }
         }
         
@@ -88,7 +87,7 @@ namespace MCGalaxy.Commands {
             
             public bool DoHighlight(int[] ids, DateTime start, Player p) {
                 buffer = new BufferedBlockSender(p);
-                this.p = p;             
+                this.p = p;
                 bool reachedStart = p.level.BlockDB.FindChangesBy(ids, start, DateTime.MaxValue,
                                                                   out dims, HighlightBlock);
                 buffer.Send(true);
