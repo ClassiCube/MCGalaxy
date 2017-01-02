@@ -26,14 +26,6 @@ namespace MCGalaxy.Undo {
         
         protected override string Ext { get { return ".undo"; } }
         
-        protected override void Save(List<Player.UndoPos> buffer, string path) {
-            throw new NotSupportedException("Text undo files have been deprecated");
-        }
-        
-        protected override void Save(UndoCache buffer, string path) {
-            throw new NotSupportedException("Text undo files have been deprecated");
-        }
-        
         protected override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
             UndoFormatEntry pos;
             pos.NewExtBlock = 0; pos.ExtBlock = 0;

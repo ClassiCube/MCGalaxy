@@ -211,8 +211,6 @@ namespace MCGalaxy {
         public bool Mojangaccount { get { return truename.IndexOf('@') >= 0; } }
 
         //Undo
-        public struct UndoPos { public ushort x, y, z; public byte type, extType, newtype, newExtType; public string mapName; public int timeDelta; }
-        public UndoCache UndoBuffer = new UndoCache();
         internal VolatileArray<UndoDrawOpEntry> DrawOps = new VolatileArray<UndoDrawOpEntry>(false);
         internal readonly object pendingDrawOpsLock = new object();
         internal List<PendingDrawOp> PendingDrawOps = new List<PendingDrawOp>();

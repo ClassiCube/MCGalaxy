@@ -28,81 +28,12 @@ namespace MCGalaxy.Undo {
         protected override string Ext { get { return ".uncbin"; } }
         const int entrySize = 8;
 
-        protected override void Save(List<Player.UndoPos> buffer, string path) {
-            UndoCacheNode node = new UndoCacheNode();
-            string lastLoggedName = "";
-            
-            using (FileStream fs = File.Create(path)) {
-                BinaryWriter w = new BinaryWriter(fs);
-                long entriesPos = 0;
-                ChunkHeader last = default(ChunkHeader);
-                
-                foreach (Player.UndoPos uP in buffer) {
-                    DateTime time = Server.StartTime.AddSeconds(uP.timeDelta);
-                    int timeDiff = (int)(time - last.BaseTime).TotalSeconds;
-                    if (last.LevelName != uP.mapName || timeDiff > (65535 >> 2) || last.Entries == ushort.MaxValue) {
-                        if (!LevelInfo.ExistsOffline(uP.mapName)) {
-                            if (uP.mapName != lastLoggedName) {
-                                lastLoggedName = uP.mapName;
-                                Server.s.Log("Missing map file \"" + lastLoggedName+ "\", skipping undo entries");
-                            }
-                            continue;
-                        }
-                        
-                        Vec3U16 dims = IMapImporter.Formats[0].ReadDimensions(LevelInfo.LevelPath(uP.mapName));
-                        node.Width = dims.X; node.Height = dims.Y; node.Length = dims.Z;
-                        WriteChunkEntries(w, last.Entries, entriesPos);
-                        node.MapName = uP.mapName;
-                        last = WriteEmptyChunk(w, node, time, ref entriesPos);
-                    }
-                    
-                    UndoCacheItem item = UndoCacheItem.Make(node, 0, uP);
-                    int flags = (item.Flags & 0xC000) | timeDiff;
-                    w.Write((ushort)flags); w.Write(item.Index);
-                    w.Write(item.Type); w.Write(item.NewType);
-                    last.Entries++;
-                }
-                if (last.Entries > 0)
-                    WriteChunkEntries(w, last.Entries, entriesPos);
-            }
-        }
-        
-        protected override void Save(UndoCache buffer, string path) {
-            using (FileStream fs = File.Create(path)) {
-                BinaryWriter w = new BinaryWriter(fs);
-                long entriesPos = 0;
-                ChunkHeader last = default(ChunkHeader);
-                UndoCacheNode node = buffer.Head;
-                
-                while (node != null) {
-                    List<UndoCacheItem> items = node.Items;
-                    for (int i = 0; i < items.Count; i++) {
-                        UndoCacheItem uP = items[i];
-                        DateTime time = node.BaseTime.AddSeconds(uP.TimeDelta);
-                        int timeDiff = (int)(time - last.BaseTime).TotalSeconds;
-                        if (last.LevelName != node.MapName || timeDiff > (65535 >> 2) || last.Entries == ushort.MaxValue) {
-                            WriteChunkEntries(w, last.Entries, entriesPos);
-                            last = WriteEmptyChunk(w, node, time, ref entriesPos);
-                        }
-                        
-                        int flags = (uP.Flags & 0xC000) | timeDiff;
-                        w.Write((ushort)flags); w.Write(uP.Index);
-                        w.Write(uP.Type); w.Write(uP.NewType);
-                        last.Entries++;
-                    }
-                    if (last.Entries > 0)
-                        WriteChunkEntries(w, last.Entries, entriesPos);
-                    node = node.Next;
-                }
-            }
-        }
-
         protected override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
             List<ChunkHeader> list = new List<ChunkHeader>();
             UndoFormatEntry pos;
             UndoCacheItem item = default(UndoCacheItem);
             bool super = Player.IsSuper(args.Player);
-            DateTime start = args.Start;            
+            DateTime start = args.Start;
 
             ReadHeaders(list, s);
             for (int i = list.Count - 1; i >= 0; i--) {
@@ -158,7 +89,7 @@ namespace MCGalaxy.Undo {
         
         static void ReadHeaders(List<ChunkHeader> list, Stream s) {
             BinaryReader r = new BinaryReader(s);
-            long len = s.Length;            
+            long len = s.Length;
             while (s.Position < len) {
                 ChunkHeader header = ReadHeader(s, r);
                 s.Seek(header.Entries * entrySize, SeekOrigin.Current);
@@ -180,28 +111,33 @@ namespace MCGalaxy.Undo {
             return header;
         }
         
-        static void WriteChunkEntries(BinaryWriter w, ushort entries, long entriesPos) {
-            long curPos = w.BaseStream.Position;
-            w.BaseStream.Seek(entriesPos, SeekOrigin.Begin);
+        public struct UndoCacheItem {
+            public int Index;
+            public byte Type, NewType;
+            public ushort Flags; // upper 2 bits for 'ext' or 'physics' type, lower 14 bits for time delta.
             
-            w.Write(entries);
-            w.BaseStream.Seek(curPos, SeekOrigin.Begin);
-        }
-        
-        static ChunkHeader WriteEmptyChunk(BinaryWriter w, UndoCacheNode node, DateTime time, ref long entriesPos) {
-            ChunkHeader header = default(ChunkHeader);
-            time = time.ToUniversalTime();
-            byte[] mapBytes = Encoding.UTF8.GetBytes(node.MapName);
-            w.Write((ushort)mapBytes.Length);
-            w.Write(mapBytes); header.LevelName = node.MapName;
-            w.Write(time.Ticks); header.BaseTime = time;
+            public short TimeDelta {
+                get {
+                    int delta = Flags & 0x3FFF;
+                    return delta >= 0x2000 ? (short)(delta - 16384) : (short)delta;
+                }
+            }
             
-            entriesPos = w.BaseStream.Position;
-            w.Write((ushort)0);
-            w.Write((ushort)node.Width); header.Width = (ushort)node.Width;
-            w.Write((ushort)node.Height); header.Height = (ushort)node.Height;
-            w.Write((ushort)node.Length); header.Length = (ushort)node.Length;
-            return header;
+            public void GetBlock(out byte type, out byte extType) {
+                if ((Flags & (1 << 14)) != 0) {
+                    type = Block.custom_block; extType = Type;
+                } else {
+                    type = Type; extType = 0;
+                }
+            }
+            
+            public void GetNewBlock(out byte type, out byte extType) {
+                if ((Flags & (1 << 15)) != 0) {
+                    type = Block.custom_block; extType = NewType;
+                } else {
+                    type = NewType; extType = 0;
+                }
+            }
         }
     }
 }

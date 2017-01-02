@@ -26,14 +26,6 @@ namespace MCGalaxy.Undo {
         
         protected override string Ext { get { return ".unbin"; } }
         const int entrySize = 12;
-
-        protected override void Save(List<Player.UndoPos> buffer, string path) {
-            throw new NotSupportedException("Non-optimised binary undo files have been deprecated");
-        }
-        
-        protected override void Save(UndoCache buffer, string path) {
-            throw new NotSupportedException("Non-optimised binary undo files have been deprecated");
-        }
         
         protected override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
             List<ChunkHeader> list = new List<ChunkHeader>();

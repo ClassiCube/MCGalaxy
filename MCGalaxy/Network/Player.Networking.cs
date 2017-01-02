@@ -51,7 +51,6 @@ namespace MCGalaxy {
             }  catch ( ObjectDisposedException ) {
                 // Player is no longer connected, socket was closed
                 // Mark this as disconnected and remove them from active connection list
-                Player.SaveUndo(p);
                 connections.Remove(p);
                 p.RemoveFromPending();
                 p.disconnected = true;

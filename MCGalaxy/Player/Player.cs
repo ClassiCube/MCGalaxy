@@ -120,7 +120,6 @@ namespace MCGalaxy {
                                         cuboided, totalKicked, time.ToDBTime(), name);
             
             Server.zombie.SaveZombieStats(this);
-            SaveUndo(this);
         }
 
         #region == GLOBAL MESSAGES ==
@@ -286,7 +285,6 @@ namespace MCGalaxy {
             if (name == "") {
                 if (socket != null) CloseSocket();
                 connections.Remove(this);
-                SaveUndo(this);
                 disconnected = true;
                 return;
             }
@@ -368,13 +366,8 @@ namespace MCGalaxy {
             }
         }
         
-        public static void SaveUndo(Player p) {
-            try {
-                UndoFormat.SaveUndo(p);
-            } catch (Exception e) { 
-                Server.s.Log("Error saving undo data for " + p.name + "!"); Server.ErrorLog(e); 
-            }
-        }
+        [Obsolete]
+        public static void SaveUndo(Player p) { }
 
         public void Dispose() {
             connections.Remove(this);
@@ -383,7 +376,6 @@ namespace MCGalaxy {
             if (CopyBuffer != null)
                 CopyBuffer.Clear();
             DrawOps.Clear();
-            UndoBuffer.Clear();
             spamChecker.Clear();
             spyChatRooms.Clear();
         }
@@ -522,14 +514,6 @@ namespace MCGalaxy {
                 return true;
             }
             return false;
-        }
-
-        internal void RemoveInvalidUndos() {
-            UndoDrawOpEntry[] items = DrawOps.Items;
-            for (int i = 0; i < items.Length; i++) {
-                if (items[i].End < UndoBuffer.LastClear)
-                    DrawOps.Remove(items[i]);
-            }
         }
         
         internal static void AddNote(string target, Player who, string type) {

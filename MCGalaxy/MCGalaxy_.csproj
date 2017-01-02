@@ -566,10 +566,8 @@
     <Compile Include="Player\PlayerInfo.cs" />
     <Compile Include="Player\SpamChecker.cs" />
     <Compile Include="Player\TabList.cs" />
-    <Compile Include="Player\Undo\UndoCache.cs" />
     <Compile Include="Player\Undo\UndoFormat.Helpers.cs" />
     <Compile Include="Player\Undo\UndoFormatCBin.cs" />
-    <Compile Include="Player\Undo\UndoFormatOnline.cs" />
     <Compile Include="Player\Warp.cs" />
     <Compile Include="Player\Player.Timers.cs" />
     <Compile Include="Player\Undo\UndoFormat.cs" />

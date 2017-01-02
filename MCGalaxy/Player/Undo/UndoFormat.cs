@@ -20,6 +20,12 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace MCGalaxy.Undo {
+	
+	public sealed class UndoDrawOpEntry {
+        public string DrawOpName;
+        public string LevelName;
+        public DateTime Start, End;
+    }
 
     /// <summary> Retrieves and saves undo data in a particular format. </summary>
     /// <remarks> Note most formats only support retrieving undo data. </remarks>
@@ -30,43 +36,8 @@ namespace MCGalaxy.Undo {
         public static UndoFormat BinFormat = new UndoFormatBin();
         public static UndoFormat NewFormat = new UndoFormatCBin();
         
-        protected abstract void Save(List<Player.UndoPos> buffer, string path);
-        
-        protected abstract void Save(UndoCache buffer, string path);
-        
-        protected abstract IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args);
-        
-        protected abstract string Ext { get; }
-        
-        /// <summary> Saves the undo data for the given player to disc. </summary>
-        /// <remarks> Clears the player's in-memory undo buffer on success. </remarks>
-        public static void SaveUndo(Player p) {
-            if (p == null || p.UndoBuffer.Count < 1) return;
-            
-            CreateDefaultDirectories();
-            if (Directory.GetDirectories(undoDir).Length >= Server.totalUndo) {
-                Directory.Delete(prevUndoDir, true);
-                Directory.Move(undoDir, prevUndoDir);
-                Directory.CreateDirectory(undoDir);
-            }
-
-            string playerDir = Path.Combine(undoDir, p.name.ToLower());
-            if (!Directory.Exists(playerDir))
-                Directory.CreateDirectory(playerDir);
-            
-            int numFiles = Directory.GetFiles(playerDir).Length;
-            string path = Path.Combine(playerDir, numFiles + NewFormat.Ext);
-            
-            UndoCache cache = p.UndoBuffer;
-            using (IDisposable locker = cache.ClearLock.AccquireReadLock()) {
-                NewFormat.Save(cache, path);
-            }
-
-            using (IDisposable locker = cache.ClearLock.AccquireWriteLock()) {
-                lock (cache.AddLock)
-                    cache.Clear();
-            }
-        }
+        protected abstract IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args);       
+        protected abstract string Ext { get; }    
         
         /// <summary> Gets a list of all undo file names for the given player. </summary>
         /// <remarks> This list is sorted, such that the first element is the
@@ -120,14 +91,6 @@ namespace MCGalaxy.Undo {
             if (!int.TryParse(a, out aNum) || !int.TryParse(b, out bNum))
                 return a.CompareTo(b);
             return aNum.CompareTo(bNum);
-        }
-        
-        /// <summary> Creates the default base directories used to store undo data on disc. </summary>
-        public static void CreateDefaultDirectories() {
-            if (!Directory.Exists(undoDir))
-                Directory.CreateDirectory(undoDir);
-            if (!Directory.Exists(prevUndoDir))
-                Directory.CreateDirectory(prevUndoDir);
         }
     }
     

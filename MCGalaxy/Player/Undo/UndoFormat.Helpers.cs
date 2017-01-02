@@ -110,47 +110,6 @@ namespace MCGalaxy.Undo {
             buffer.Send(true);
         }
         
-        
-        public static void UpgradePlayerUndoFiles(string name) {
-            UpgradeFiles(undoDir, name);
-            UpgradeFiles(prevUndoDir, name);
-        }
-        
-        static void UpgradeFiles(string dir, string name) {
-            string path = Path.Combine(dir, name);
-            if (!Directory.Exists(path)) return;
-            string[] files = Directory.GetFiles(path);
-            List<Player.UndoPos> buffer = new List<Player.UndoPos>();
-            UndoFormatArgs args = new UndoFormatArgs(null, DateTime.MinValue, DateTime.MaxValue, null);
-            
-            for (int i = 0; i < files.Length; i++) {
-                path = files[i];
-                if (!path.EndsWith(BinFormat.Ext) && !path.EndsWith(TxtFormat.Ext)) continue;
-                IEnumerable<UndoFormatEntry> data = null;
-                Player.UndoPos pos;
-                
-                using (FileStream s = File.OpenRead(path)) {
-                    data = path.EndsWith(BinFormat.Ext)
-                        ? BinFormat.GetEntries(s, args) : TxtFormat.GetEntries(s, args);
-
-                    foreach (UndoFormatEntry P in data) {
-                        pos.x = P.X; pos.y = P.Y; pos.z = P.Z;
-                        pos.type = P.Block; pos.extType = P.ExtBlock;
-                        pos.newtype = P.NewBlock; pos.newExtType = P.NewExtBlock;
-                        
-                        pos.timeDelta = (int)P.Time.Subtract(Server.StartTimeLocal).TotalSeconds;
-                        pos.mapName = P.LevelName;
-                        buffer.Add(pos);
-                    }
-
-                    buffer.Reverse();
-                    string newPath = Path.ChangeExtension(path, NewFormat.Ext);
-                    NewFormat.Save(buffer, newPath);
-                }
-                File.Delete(path);
-            }
-        }
-        
         static void UndoBlock(UndoFormatArgs args, Level lvl, UndoFormatEntry P) {
             byte lvlBlock = lvl.GetTile(P.X, P.Y, P.Z);
             if (lvlBlock == P.NewBlock || Block.Convert(lvlBlock) == Block.water

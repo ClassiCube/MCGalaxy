@@ -54,12 +54,6 @@ namespace MCGalaxy.Commands.Building {
             
             TimeSpan delta = GetDelta(p, parts[0], parts.Length > 1 ? parts[1] : "30m");
             if (delta == TimeSpan.MinValue) return;
-            
-            if (parts.Length > 1 && parts[1].CaselessEq("update")) {
-                UndoFormat.UpgradePlayerUndoFiles(parts[0]);
-                Player.Message(p, "Updated undo files for " + parts[0] + " to the new binary format.");
-                return;
-            }
 
             Vec3S32[] marks = new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal };
             if (undoPhysics)

@@ -148,13 +148,6 @@ namespace MCGalaxy {
             
             BlockDB.Add(p, x, y, z, flags,
                         oldBlock, oldExtBlock, block, ext);
-            Player.UndoPos Pos;
-            Pos.x = x; Pos.y = y; Pos.z = z;
-            Pos.mapName = this.name;
-            Pos.type = oldBlock; Pos.extType = oldExtBlock;
-            Pos.newtype = block; Pos.newExtType = ext;
-            Pos.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
-            p.UndoBuffer.Add(this, Pos);
         }
 
         bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref byte block) {
@@ -277,15 +270,6 @@ namespace MCGalaxy {
                 if (old == Block.lava_sponge && physics > 0 && block != Block.lava_sponge)
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), true);
 
-                errorLocation = "Undo buffer filling";
-                Player.UndoPos Pos;
-                Pos.x = x; Pos.y = y; Pos.z = z;
-                Pos.mapName = name;
-                Pos.type = old; Pos.extType = extOld;
-                Pos.newtype = block; Pos.newExtType = extBlock;
-                Pos.timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
-                p.UndoBuffer.Add(this, Pos);
-
                 errorLocation = "Setting tile";
                 p.IncrementBlockStats(block, drawn);
                 
@@ -304,17 +288,10 @@ namespace MCGalaxy {
                 bool diffBlock = old == Block.custom_block ? extOld != extBlock :
                     Block.Convert(old) != Block.Convert(block);
                 return diffBlock;
-            } catch (OutOfMemoryException) {
-                Player.Message(p, "Undo buffer too big! Cleared!");
-                p.UndoBuffer.Clear();
-                p.RemoveInvalidUndos();
-                goto retry;
             } catch (Exception e) {
                 Server.ErrorLog(e);
-                Chat.MessageOps(p.name + " triggered a non-fatal error on " + ColoredName);
-                Chat.MessageOps("Error location: " + errorLocation);
-                Server.s.Log(p.name + " triggered a non-fatal error on " + ColoredName);
-                Server.s.Log("Error location: " + errorLocation);
+                Chat.MessageOps(p.name + " triggered a non-fatal error on " + ColoredName + ", %Sat location: " + errorLocation);
+                Server.s.Log(p.name + " triggered a non-fatal error on " + ColoredName + ", %Sat location: " + errorLocation);
                 return false;
             }
         }
