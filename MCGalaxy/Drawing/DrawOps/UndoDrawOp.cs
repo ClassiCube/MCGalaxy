@@ -58,7 +58,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         void PerformUndo() {
-            int[] ids = NameConverter.FindIds(Player.name);
+            int[] ids = NameConverter.FindIds(who);
             if (ids.Length > 0) {
                 if (Level.BlockDB.FindChangesBy(ids, Start, End, out dims, UndoBlock)) return;
             }

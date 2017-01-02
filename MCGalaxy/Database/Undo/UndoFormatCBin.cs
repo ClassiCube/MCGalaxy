@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Undo {
 

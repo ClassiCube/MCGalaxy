@@ -48,8 +48,8 @@ namespace MCGalaxy.Commands.Building {
             string[] parts = message.Split(' ');
             bool undoPhysics = parts[0].CaselessEq("physics");
             if (!undoPhysics) {
-            	parts[0] = PlayerInfo.FindOfflineNameMatches(p, parts[0]);
-            	if (parts[0] == null) return;
+                parts[0] = PlayerInfo.FindOfflineNameMatches(p, parts[0]);
+                if (parts[0] == null) return;
             }
             
             TimeSpan delta = GetDelta(p, parts[0], parts.Length > 1 ? parts[1] : "30m");
@@ -127,18 +127,18 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected void UndoPlayer(Player p, TimeSpan delta, string name, Vec3S32[] marks) {
-            if (p != null && !CheckUndoPerms(p, Group.findPlayerGroup(name))) return;
+        	if (p != null && !CheckUndoPerms(p, name)) return;
             
             UndoDrawOp op = new UndoDrawOp();
             if (p != null && p.name.CaselessEq(name))
-            	op = new UndoSelfDrawOp();
+                op = new UndoSelfDrawOp();
             
             op.Start = DateTime.UtcNow.Subtract(delta);
             op.who = name;
             DrawOp.DoDrawOp(op, null, p, marks);
 
             if (op.found) {
-                Chat.MessageAll("Undid {0}%S's changes for the past &b{1}",
+                Chat.MessageAll("Undid {1}%S's changes for the past &b{0}",
                                delta.Shorten(true), PlayerInfo.GetColoredName(p, name));
                 Server.s.Log(name + "'s actions for the past " + delta.Shorten(true) + " were undone.");
             } else {
@@ -147,7 +147,10 @@ namespace MCGalaxy.Commands.Building {
             }
         }
         
-        protected virtual bool CheckUndoPerms(Player p, Group grp) {
+        protected virtual bool CheckUndoPerms(Player p, string name) {       	
+             if (p != null && p.name.CaselessEq(name)) return true;             
+             Group grp = Group.findPlayerGroup(name);
+             
              if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "undo other players."); return false; }
              if (grp.Permission >= p.Rank) { MessageTooHighRank(p, "undo", false); return false; }
              return true;

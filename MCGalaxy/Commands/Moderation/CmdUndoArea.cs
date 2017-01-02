@@ -52,7 +52,10 @@ namespace MCGalaxy.Commands {
             return false;
         }
         
-        protected override bool CheckUndoPerms(Player p, Group grp) {
+        protected override bool CheckUndoPerms(Player p, string name) {
+             if (p != null && p.name.CaselessEq(name)) return true;
+             Group grp = Group.findPlayerGroup(name);
+             
              if (grp.Permission >= p.Rank) { MessageTooHighRank(p, "undo", false); return false; }
              return true;
         }
