@@ -57,7 +57,7 @@ namespace MCGalaxy {
             
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
-            return chunk == null ? (byte)0 :
+            return chunk == null ? Block.air :
                 chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
         }
         
@@ -67,7 +67,14 @@ namespace MCGalaxy {
             
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
-            return chunk == null ? (byte)0 :
+            return chunk == null ? Block.air :
+                chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
+        }
+        
+        public byte GetExtTileNoCheck(ushort x, ushort y, ushort z) {
+            int cx = x >> 4, cy = y >> 4, cz = z >> 4;
+            byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
+            return chunk == null ? Block.air :
                 chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
         }
         
@@ -252,7 +259,6 @@ namespace MCGalaxy {
         public bool DoBlockchange(Player p, ushort x, ushort y, ushort z, 
                                   byte block, byte extBlock = 0, bool drawn = false) {
             string errorLocation = "start";
-        retry:
             try
             {
                 //if (x < 0 || y < 0 || z < 0) return;

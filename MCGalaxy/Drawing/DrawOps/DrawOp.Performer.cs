@@ -142,48 +142,15 @@ namespace MCGalaxy.Drawing.Ops {
         
         static void DoDrawOp(PendingDrawOp item, Player p) {
             Level lvl = item.Op.Level;
-            Action<DrawOpBlock, DrawOp> output = OutputBlock;
+            DrawOpPerformer performer = new DrawOpPerformer(item.Op);
             
             if (item.Op.AffectedByTransform) {
-                p.Transform.Perform(item.Marks, p, lvl, item.Op, item.Brush,
-                                    b => output(b, item.Op));
+                p.Transform.Perform(item.Marks, p, lvl, item.Op, item.Brush, performer.Output);
             } else {
-                item.Op.Perform(item.Marks, item.Brush, b => output(b, item.Op));
+                item.Op.Perform(item.Marks, item.Brush, performer.Output);
             }
         }
-        
-        static void OutputBlock(DrawOpBlock b, DrawOp op) {
-            if (b.Block == Block.Invalid) return;
-            Level lvl = op.Level;
-            Player p = op.Player;         
-            byte old = lvl.GetTile(b.X, b.Y, b.Z), oldExt = 0;
-            if (old == Block.custom_block) oldExt = lvl.GetExtTile(b.X, b.Y, b.Z);            
-            
-            if (op.TotalModified > Server.DrawReloadLimit) {
-                if (old == Block.Invalid) return;
-                bool same = old == b.Block;
-                if (same && b.Block == Block.custom_block)
-                    same = lvl.GetExtTile(b.X, b.Y, b.Z) == b.ExtBlock;
-                if (same || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block, b.ExtBlock))
-                    return;
-                
-                lvl.SetTile(b.X, b.Y, b.Z, b.Block, p, b.ExtBlock, op.Flags);
-                p.IncrementBlockStats(b.Block, true);
-            } else if (op.TotalModified == Server.DrawReloadLimit) {
-                Player.Message(p, "Affected over {0} blocks, prepared to reload map..", Server.DrawReloadLimit);
-                lock (lvl.queueLock)
-                    lvl.blockqueue.Clear();
-            } else {                
-                if (!lvl.DoBlockchange(p, b.X, b.Y, b.Z, b.Block, b.ExtBlock, true)) return;
-                               
-                lvl.BlockDB.Add(p, b.X, b.Y, b.Z, op.Flags, 
-                                old, oldExt, b.Block, b.ExtBlock);
-                int index = lvl.PosToInt(b.X, b.Y, b.Z);
-                BlockQueue.Addblock(p, index, b.Block, b.ExtBlock);
-            }
-            op.TotalModified++;
-        }
-        
+
         static void DoReload(Player p, Level lvl) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
@@ -192,6 +159,53 @@ namespace MCGalaxy.Drawing.Ops {
             }
             GC.Collect();
             GC.WaitForPendingFinalizers();
+        }
+
+        
+        class DrawOpPerformer {
+            readonly DrawOp op;
+            readonly DateTime start;
+            
+            public DrawOpPerformer(DrawOp op) {
+                this.op = op;
+                start = DateTime.UtcNow;
+            }
+            
+            public void Output(DrawOpBlock b) {
+                if (b.Block == Block.Invalid) return;
+                Level lvl = op.Level;
+                Player p = op.Player;
+                if (b.X >= lvl.Width || b.Y >= lvl.Height || b.Z >= lvl.Length) return;
+                
+                int index = b.X + lvl.Width * (b.Z + b.Y * lvl.Length);
+                byte old = lvl.blocks[index], oldExt = 0;
+                if (old == Block.custom_block) oldExt = lvl.GetExtTileNoCheck(b.X, b.Y, b.Z);
+                if (old == Block.Invalid) return;
+                
+                // Check to make sure the block is actually different and that we can change it
+                bool same = old == b.Block;
+                if (same && b.Block == Block.custom_block) {
+                    same = oldExt == b.ExtBlock;
+                }
+                if (same || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block, b.ExtBlock)) {
+                    return;
+                }
+                
+                lvl.SetTile(b.X, b.Y, b.Z, b.Block, p, b.ExtBlock, op.Flags);
+                p.IncrementBlockStats(b.Block, true);
+                
+                
+                if (op.TotalModified == Server.DrawReloadLimit) {
+                    Player.Message(p, "Affected over {0} blocks, preparing to reload map..", Server.DrawReloadLimit);
+                    lock (lvl.queueLock)
+                        lvl.blockqueue.Clear();
+                } else if (op.TotalModified < Server.DrawReloadLimit) {
+                    same = old == Block.custom_block 
+                        ? oldExt == b.ExtBlock : Block.Convert(old) == Block.Convert(b.Block);
+                    if (!same) BlockQueue.Addblock(p, index, b.Block, b.ExtBlock);
+                }
+                op.TotalModified++;
+            }
         }
     }
 }
