@@ -52,8 +52,8 @@ namespace MCGalaxy {
         }
         
         public byte GetExtTile(ushort x, ushort y, ushort z) {
-            int index = PosToInt(x, y, z);
-            if (index < 0 || blocks == null) return Block.Invalid;
+            if (x >= Width || y >= Height || z >= Length || blocks == null) 
+                return Block.Invalid;
             
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
@@ -241,8 +241,8 @@ namespace MCGalaxy {
         }
         
         public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, 
-                                           byte b, byte block, byte extBlock = 0) {
-            if (!Block.AllowBreak(b) && !Block.canPlace(p, b) && !Block.BuildIn(b)) return false;
+                                           byte old, byte block, byte extBlock = 0) {
+            if (!p.group.CanModify[old] && !Block.AllowBreak(old) && !Block.BuildIn(old)) return false;
             if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref block)) return false;
             
             bool inZone = false;

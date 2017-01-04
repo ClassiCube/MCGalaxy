@@ -37,8 +37,9 @@ namespace MCGalaxy.Commands {
             if (p != null && !Block.canPlace(p, block)) { Formatter.MessageBlock(p, "change permissions of ", block); return; }
 
             Block.BlockList[block].lowestRank = grp.Permission;
+            Block.UpdateRankPerms();
             Block.SaveBlocks(Block.BlockList);
-            Block.ResendBlockPermissions(block);
+            Block.ResendBlockPermissions(block);           
             // TODO: custom blocks permissions
 
             Chat.MessageAll("&d{0}%S's permission was changed to {1}", Block.Name(block), grp.ColoredName);

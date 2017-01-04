@@ -30,28 +30,41 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static void ExpandDiagonal(Level lvl, ushort x, ushort y, ushort z,
-                                   int xOffset, int yOffset, int zOffset) {
-            if (!Block.FireKill(lvl.GetTile((ushort)(x + xOffset),
-                                            (ushort)(y + yOffset), (ushort)(z + zOffset))))
-                return;
+                                   int dx, int dy, int dz) {
+            byte block = lvl.GetTile((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
+            if (block == Block.air) return;
             
-            if (xOffset != 0)
-                lvl.AddUpdate(lvl.PosToInt((ushort)(x + xOffset), y, z), Block.fire);
-            if (yOffset != 0)
-                lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y + yOffset), z), Block.fire);
-            if (zOffset != 0)
-                lvl.AddUpdate(lvl.PosToInt(x, y, (ushort)(z + zOffset)), Block.fire);
+            if (block == Block.custom_block) {
+                block = lvl.GetExtTile((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
+                if (!lvl.CustomBlockProps[block].LavaKills) return;
+            } else {
+                if (!Block.Props[block].LavaKills) return;
+            }
+            
+            if (dx != 0)
+                lvl.AddUpdate(lvl.PosToInt((ushort)(x + dx), y, z), Block.fire);
+            if (dy != 0)
+                lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y + dy), z), Block.fire);
+            if (dz != 0)
+                lvl.AddUpdate(lvl.PosToInt(x, y, (ushort)(z + dz)), Block.fire);
         }
         
         static void ExpandAvanced(Level lvl, int x, int y, int z) {
             int index = lvl.PosToInt((ushort)x, (ushort)y, (ushort)z);
             if (index < 0) return;
-            byte block = lvl.blocks[index];
             
-            if (Block.FireKill(block))
-                lvl.AddUpdate(index, Block.fire);
-            else if (block == Block.tnt)
+            byte block = lvl.blocks[index];
+            if (block == Block.air) return;
+            
+            if (block == Block.tnt) {
                 lvl.MakeExplosion((ushort)x, (ushort)y, (ushort)z, -1);
+            } else if (block == Block.custom_block) {
+                block = lvl.GetExtTileNoCheck((ushort)x, (ushort)y, (ushort)z);
+                if (lvl.CustomBlockProps[block].LavaKills) 
+                    lvl.AddUpdate(index, Block.fire);
+            } else if (Block.Props[block].LavaKills) {
+                lvl.AddUpdate(index, Block.fire);
+            }
         }
         
         public static void Do(Level lvl, ref Check C) {

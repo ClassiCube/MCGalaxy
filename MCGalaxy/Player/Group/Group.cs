@@ -51,6 +51,7 @@ namespace MCGalaxy {
         public string fileName;
         public PlayerList playerList;
         public string MOTD = "";
+        public bool[] CanModify = new bool[256];
 
         /// <summary> Create a new group object </summary>
         public Group() {
@@ -88,6 +89,12 @@ namespace MCGalaxy {
             CommandList _commands = new CommandList();
             GrpCommands.AddCommands(out _commands, Permission);
             commands = _commands;
+        }
+        
+        /// <summary> Fill the blocks that this group can use </summary>
+        public void FillBlocks() {
+            for (int i = 0; i < CanModify.Length; i++)
+            	CanModify[i] = Block.canPlace(Permission, (byte)i);
         }
         
         public bool CanExecute(string cmdName) { 

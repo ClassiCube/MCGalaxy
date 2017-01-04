@@ -69,8 +69,9 @@ namespace MCGalaxy {
                 Save(allowedCommands);
             }
 
-            foreach (Group grp in Group.GroupList)
+            foreach (Group grp in Group.GroupList) {
                 grp.fillCommands();
+            }
         }
         
         static void ReadVersion2(string[] lines, List<string> cmdNames) {
