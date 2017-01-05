@@ -82,9 +82,9 @@ namespace MCGalaxy.DB {
         public static void FindChangesAt(Stream s, int index, Action<BlockDBEntry> output) {
             byte[] bulk = new byte[BulkEntries * EntrySize];
             fixed (byte* ptr = bulk) {
-                int entries = (int)(s.Length / EntrySize) - HeaderEntries;
-                while (entries > 0) {
-                    int count = Math.Min(entries, BulkEntries);
+                int dbEntries = (int)(s.Length / EntrySize) - HeaderEntries;
+                while (dbEntries > 0) {
+                    int count = Math.Min(dbEntries, BulkEntries);
                     ReadFully(s, bulk, count * EntrySize);
                     BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
                     
@@ -94,7 +94,7 @@ namespace MCGalaxy.DB {
                         }
                         entryPtr++;
                     }
-                    entries -= count;
+                    dbEntries -= count;
                 }
             }
         }
@@ -105,12 +105,12 @@ namespace MCGalaxy.DB {
                                          Action<BlockDBEntry> output) {
             byte[] bulk = new byte[BulkEntries * EntrySize];
             fixed (byte* ptr = bulk) {
-                int entries = (int)(s.Length / EntrySize) - HeaderEntries;
-                s.Position = s.Length;
+                int dbEntries = (int)(s.Length / EntrySize) - HeaderEntries;
                 
-                while (entries > 0) {
-                    int count = Math.Min(entries, BulkEntries);
-                    s.Position -= count * EntrySize;
+                while (dbEntries > 0) {
+                    int count = Math.Min(dbEntries, BulkEntries);
+                    // find the correct position for the start of this bulk read
+                    s.Position = (dbEntries - count + HeaderEntries) * (long)EntrySize;
                     
                     ReadFully(s, bulk, count * EntrySize);
                     BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
@@ -127,7 +127,7 @@ namespace MCGalaxy.DB {
                         }
                         entryPtr--;
                     }
-                    entries -= count;
+                    dbEntries -= count;
                 }
             }
             return false;
