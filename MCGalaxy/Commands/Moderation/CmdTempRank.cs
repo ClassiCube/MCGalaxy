@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands.Moderation {
         static void AssignTempRank(Player p, Player who, TimeSpan delta,
                                    Group pGroup, Group group, string target) {
             DateTime now = DateTime.Now;
-            string assigner = p == null ? "Console" : p.name;
+            string assigner = p == null ? "(console)" : p.name;
             int hours = delta.Days * 24 + delta.Hours;
             
             string data = target + " " + group.name + " " + pGroup.name + " " + hours + " " + now.Minute + " " +
@@ -136,16 +136,14 @@ namespace MCGalaxy.Commands.Moderation {
         
         static void PrintTempRankInfo(Player p, string line) {
             string[] args = line.Split(' ');
-            string temprank = args[1], oldrank = args[2], tempranker = args[9];
+            string tempRanker = args[9];
+            string tempRank = Group.GetColoredName(args[1]);
+            string oldRank = Group.GetColoredName(args[2]);
             
             int min = int.Parse(args[4]), hour = int.Parse(args[5]);
             int day = int.Parse(args[6]), month = int.Parse(args[7]), year = int.Parse(args[8]);
             int periodH = int.Parse(args[3]), periodM = 0;
             if (args.Length > 10) periodM = int.Parse(args[10]);
-                
-            Group oldGrp = Group.Find(oldrank), tempGrp = Group.Find(temprank);
-            string oldCol = oldGrp == null ? "" : oldGrp.color;
-            string tempCol = tempGrp == null ? "" : tempGrp.color;
             
             DateTime assigned = new DateTime(year, month, day, hour, min, 0);
             DateTime expiry = assigned.AddHours(periodH).AddMinutes(periodM);
@@ -154,7 +152,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             Player.Message(p, "Temp rank information for {0}:", args[0]);
             Player.Message(p, "  From {0} %Sto {1}%S, by {2} &a{3} %Sago, expires in &a{4}",
-                           oldCol + oldrank, tempCol + temprank, tempranker,
+                           oldRank, tempRank, tempRanker,
                            delta.Shorten(), expireDelta.Shorten());
         }
         

@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         bool ChangeRank(string name, Group curRank, Group newRank, 
                         Player who, Player p, ref string reason) {
-            Group banned = Group.findPerm(LevelPermission.Banned);
+            Group banned = Group.BannedRank;
             if (reason == null) {
                 reason = newRank.Permission >= curRank.Permission ? 
                     Server.defaultPromoteMessage : Server.defaultDemoteMessage;

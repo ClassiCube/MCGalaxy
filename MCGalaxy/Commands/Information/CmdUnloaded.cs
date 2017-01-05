@@ -73,19 +73,21 @@ namespace MCGalaxy.Commands {
             visit = LevelPermission.Guest;
             build = LevelPermission.Guest;
             loadOnGoto = true;
-            Group grp;
             
             string file = LevelInfo.FindPropertiesFile(level);
             if (file == null) return;
             SearchArgs args = new SearchArgs();
             PropertiesFile.Read(file, ref args, ProcessLine);
             
-            grp = args.Visit == null ? null : Group.Find(args.Visit);
-            if (grp != null) visit = grp.Permission;
-            grp = args.Build == null ? null : Group.Find(args.Build);
-            if (grp != null) build = grp.Permission;
+            visit = ParseRank(args.Visit);
+            build = ParseRank(args.Build);
             if (!bool.TryParse(args.LoadOnGoto, out loadOnGoto))
                 loadOnGoto = true;
+        }
+        
+        static LevelPermission ParseRank(string input) {
+            LevelPermission perm = Group.ParsePermOrName(input);
+            return perm != LevelPermission.Null ? perm : LevelPermission.Guest;
         }
         
         static void ProcessLine(string key, string value, ref SearchArgs args) {

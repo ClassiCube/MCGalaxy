@@ -434,7 +434,7 @@ namespace MCGalaxy {
         }
 
         public static int GetBannedCount() {
-            Group group = Group.findPerm(LevelPermission.Banned);
+            Group group = Group.BannedRank;
             return group == null ? 0 : group.playerList.Count;
         }
         #endregion

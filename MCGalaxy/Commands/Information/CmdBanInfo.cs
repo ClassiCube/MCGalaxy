@@ -41,8 +41,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             string[] data = Ban.GetBanData(message);
             if (data != null && banned) {
-                Group grp = Group.Find(data[3]);
-                string grpName = grp == null ? data[3] : grp.ColoredName;
+                string grpName = Group.GetColoredName(data[3]);
                 msg += " %S(Former rank: " + grpName + "%S)";
             }
             Player.Message(p, msg);

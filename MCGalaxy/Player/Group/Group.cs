@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -103,10 +103,10 @@ namespace MCGalaxy {
                 CanModify[i] = Block.canPlace(Permission, (byte)i);
         }
         
-        public bool CanExecute(string cmdName) { 
+        public bool CanExecute(string cmdName) {
             return commands.Contains(Command.all.Find(cmdName));
         }
-            
+        
         /// <summary> Check to see if this group can excute cmd </summary>
         /// <param name="cmd">The command object to check</param>
         /// <returns>True if this group can use it, false if they cant</returns>
@@ -121,19 +121,20 @@ namespace MCGalaxy {
             if (File.Exists("properties/ranks.properties"))
                 GroupProperties.InitAll();
 
-            if (findPerm(LevelPermission.Banned) == null) 
+            if (BannedRank == null)
                 GroupList.Add(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', String.Empty, "banned.txt"));
-            if (findPerm(LevelPermission.Guest) == null) 
+            if (GuestRank == null)
                 GroupList.Add(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', String.Empty, "guest.txt"));
-            if (findPerm(LevelPermission.Builder) == null) 
+            
+            if (findPerm(LevelPermission.Builder) == null)
                 GroupList.Add(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', String.Empty, "builders.txt"));
-            if (findPerm(LevelPermission.AdvBuilder) == null) 
+            if (findPerm(LevelPermission.AdvBuilder) == null)
                 GroupList.Add(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', String.Empty, "advbuilders.txt"));
-            if (findPerm(LevelPermission.Operator) == null) 
+            if (findPerm(LevelPermission.Operator) == null)
                 GroupList.Add(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', String.Empty, "operators.txt"));
-            if (findPerm(LevelPermission.Admin) == null) 
+            if (findPerm(LevelPermission.Admin) == null)
                 GroupList.Add(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', String.Empty, "uberOps.txt"));
-            GroupList.Add(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', String.Empty, "nobody.txt"));            
+            GroupList.Add(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', String.Empty, "nobody.txt"));
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
 
             if (Find(Server.defaultRank) != null) {
@@ -188,7 +189,7 @@ namespace MCGalaxy {
         public static Group FindMatches(Player p, string name, out int matches) {
             name = name.ToLower();
             MapName(ref name);
-            return Utils.FindMatches<Group>(p, name, out matches, 
+            return Utils.FindMatches<Group>(p, name, out matches,
                                             GroupList, g => true, g => g.name, "ranks");
         }
         
@@ -247,7 +248,7 @@ namespace MCGalaxy {
         
         /// <summary> Returns whether the given player is in the banned rank. </summary>
         public static bool IsBanned(string name) {
-            Group grp = findPerm(LevelPermission.Banned);
+            Group grp = BannedRank;
             return grp != null && grp.playerList.Contains(name);
         }
         
@@ -263,13 +264,21 @@ namespace MCGalaxy {
             return Colors.white + ((int)perm);
         }
         
+        public static string GetColoredName(string rankName) {
+            Group grp = Find(rankName);
+            if (grp != null) return grp.ColoredName;
+            return Colors.white + rankName;
+        }
+        
         public static string GetColor(LevelPermission perm) {
             Group grp = findPerm(perm);
             if (grp != null) return grp.color;
-            return Colors.white;        
+            return Colors.white;
         }
         
         public static LevelPermission ParsePermOrName(string value) {
+            if (value == null) return LevelPermission.Null;
+        	
             sbyte perm;
             if (sbyte.TryParse(value, out perm))
                 return (LevelPermission)perm;

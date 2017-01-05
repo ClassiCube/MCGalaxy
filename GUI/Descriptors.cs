@@ -60,16 +60,10 @@ namespace MCGalaxy {
                 new MethodDescriptor<Level>("Name", l => l.name, typeof(string)),
                 new MethodDescriptor<Level>("Players", l => l.players.Count, typeof(int)),
                 new MethodDescriptor<Level>("Physics", l => l.physics, typeof(int)),
-                new MethodDescriptor<Level>(
-                    "PerVisit", l => {
-                        Group grp = Group.findPerm(l.permissionvisit);
-                        return grp == null ? l.permissionvisit.ToString() : grp.name;
-                    }, typeof(string)),
-                new MethodDescriptor<Level>(
-                    "PerBuild", l => {
-                        Group grp = Group.findPerm(l.permissionbuild);
-                        return grp == null ? l.permissionbuild.ToString() : grp.name;
-                    }, typeof(string)),
+                new MethodDescriptor<Level>("PerVisit", 
+                                            l => Group.GetName(l.permissionvisit), typeof(string)),
+                new MethodDescriptor<Level>("PerBuild", 
+                                            l => Group.GetName(l.permissionbuild), typeof(string)),
             };
         }
     }

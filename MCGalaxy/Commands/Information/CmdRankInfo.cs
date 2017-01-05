@@ -42,9 +42,8 @@ namespace MCGalaxy.Commands {
             
             foreach (string line in Server.RankInfo.Find(target)) {
                 string[] parts = line.Split(' ');                
-                Group newRank = Group.Find(parts[7]), oldRank = Group.Find(parts[8]);
-                string newRankName = newRank == null ? parts[7] : newRank.ColoredName;
-                string oldRankName = oldRank == null ? parts[8] : oldRank.ColoredName;
+                string newRank = Group.GetColoredName(parts[7]);
+                string oldRank = Group.GetColoredName(parts[8]);
                 
                 int min = int.Parse(parts[2]), hour = int.Parse(parts[3]);
                 int day = int.Parse(parts[4]), month = int.Parse(parts[5]), year = int.Parse(parts[6]);
@@ -55,7 +54,7 @@ namespace MCGalaxy.Commands {
                 TimeSpan delta = now - timeRanked;
                
                 Player.Message(p, "&aFrom {0} &ato {1} &a{2} ago", 
-                               oldRankName, newRankName, delta.Shorten(true, false));
+                               oldRank, newRank, delta.Shorten(true, false));
                 Player.Message(p, "&aBy %S{0}&a, reason: %S{1}", parts[1], reason);
                 found = true;
             }

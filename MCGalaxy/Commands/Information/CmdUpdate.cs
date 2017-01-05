@@ -15,24 +15,20 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdUpdate : Command
-    {
+namespace MCGalaxy.Commands {
+    public sealed class CmdUpdate : Command {
         public override string name { get { return "update"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
         public CmdUpdate() { }
 
         public override void Use(Player p, string message) {
-            if (message.ToLower() != "force") {
-                if (p == null || p.Rank > defaultRank) Updater.UpdateCheck(false, p);
-                else Player.Message(p, "Ask an " + Group.findPerm(defaultRank).name + "+ to do it!");
+        	if (!message.CaselessEq("force")) {
+                Updater.UpdateCheck(false, p);
             } else {
-                if (p == null || p.Rank > defaultRank) Updater.PerformUpdate();
-                else Player.Message(p, "Ask an " + Group.findPerm(defaultRank).name + "+ to do it!");
+                Updater.PerformUpdate();
             }
         }
         

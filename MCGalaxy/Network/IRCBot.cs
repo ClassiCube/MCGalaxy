@@ -353,8 +353,7 @@ namespace MCGalaxy {
         static Player MakeIRCPlayer(string ircNick, string userNick) {
             Player p = new Player("IRC");
             p.group = Group.findPerm(Server.ircControllerRank);
-            if (p.group == null)
-                p.group = Group.findPerm(LevelPermission.Nobody);
+            if (p.group == null) p.group = Group.NobodyRank;
             
             p.ircNick = ircNick;
             p.color = "&a";
