@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            string name = Group.findPerm(LevelPermission.Operator).ColoredName;
+            string name = Group.GetColoredName(LevelPermission.Operator);
             Player.Message(p, "%T/ascend");
             Player.Message(p, "%HTeleports you to the first free space above you.");
             Player.Message(p, "%H  Does not work on maps which have -hax in their motd. " +

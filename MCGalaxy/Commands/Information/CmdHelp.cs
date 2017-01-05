@@ -182,8 +182,7 @@ namespace MCGalaxy.Commands {
 
         internal static string GetColor(Command cmd) {
             LevelPermission perm = GrpCommands.MinPerm(cmd);
-            Group grp = Group.findPerm(perm);
-            return grp == null ? "&f" : grp.color;
+            return Group.GetColor(perm);
         }
 
         public override void Help(Player p) {

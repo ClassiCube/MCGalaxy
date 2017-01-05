@@ -34,12 +34,9 @@ namespace MCGalaxy {
         
         public string ColoredName {
             get {
-                LevelPermission perm = permissionvisit;
-                if (perm < permissionbuild) perm = permissionbuild;
-                
-                Group grp = Group.findPerm(perm);
-                string col = grp == null ? "&f" : grp.color;
-                return col + name;
+                LevelPermission maxPerm = permissionvisit;
+                if (maxPerm < permissionbuild) maxPerm = permissionbuild;
+                return Group.GetColoredName(maxPerm) + name;
             }
         }
         

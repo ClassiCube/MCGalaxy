@@ -54,13 +54,11 @@ namespace MCGalaxy.Commands {
             bool loadOnGoto;
             RetrieveProps(map, out visitP, out buildP, out loadOnGoto);
             
-            LevelPermission perm = visitP;
-            if (perm < buildP) perm = buildP;
-            Group grp = Group.findPerm(perm);
+            LevelPermission maxPerm = visitP;
+            if (maxPerm < buildP) maxPerm = buildP;
             
-            string color = grp == null ? "&f" : grp.color;
             string visit = loadOnGoto && (p == null || p.Rank >= visitP) ? "" : " &c[no]";
-            return color + map + visit;
+            return Group.GetColor(maxPerm) + map + visit;
         }
         
         static bool IsLoaded(Level[] loaded, string level) {

@@ -247,7 +247,13 @@ namespace MCGalaxy {
         public static string GetColoredName(LevelPermission perm) {
             Group grp = findPerm(perm);
             if (grp != null) return grp.ColoredName;
-            return "&f" + ((int)perm);
+            return Colors.white + ((int)perm);
+        }
+        
+        public static string GetColor(LevelPermission perm) {
+            Group grp = findPerm(perm);
+            if (grp != null) return grp.color;
+            return Colors.white;        
         }
     }
 }

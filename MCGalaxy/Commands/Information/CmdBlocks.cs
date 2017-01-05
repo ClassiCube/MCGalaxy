@@ -88,9 +88,7 @@ namespace MCGalaxy.Commands
         
         internal static string FormatBlockName(string block, int i) {
             Block.Blocks perms = Block.BlockList[Block.Byte(block)];
-            Group grp = Group.findPerm(perms.lowestRank);
-            string col = grp == null ? "&f" : grp.color;
-            return col + block;
+            return Group.GetColor(perms.lowestRank) + block;
         }
         
         static void OutputBlockData(Player p, string block) {

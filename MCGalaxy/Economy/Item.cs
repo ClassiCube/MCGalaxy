@@ -147,8 +147,7 @@ namespace MCGalaxy.Eco {
             if (p == null || p.Rank >= PurchaseRank) {
                 Player.Message(p, "&6{0} %S- &a{1} %S{2}", Name, Price, Server.moneys);
             } else {
-                Group grp = Group.findPerm(PurchaseRank);
-                string grpName = grp == null ? ((int)PurchaseRank).ToString() : grp.ColoredName;
+                string grpName = Group.GetColoredName(PurchaseRank);
                 Player.Message(p, "&6{0} %S({3}%S+) - &a{1} %S{2}", Name, Price, Server.moneys, grpName);
             }
         }
