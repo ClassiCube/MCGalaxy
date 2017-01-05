@@ -257,43 +257,43 @@ namespace MCGalaxy.Commands {
             
             void ParseProperty(string key, string value) {
                 switch (key.ToLower()) {
-                        case "physics": Physics = int.Parse(value); break;
-                        case "guns": Guns = bool.Parse(value); break;
-                        case "useblockdb": blockDB = bool.Parse(value); break;
-                        case "realmowner": RealmOwner = value; break;
-                        
-                        case "perbuild": build = GetPerm(value); break;
-                        case "pervisit": visit = GetPerm(value); break;
-                        case "perbuildmax": buildmax = GetPerm(value); break;
-                        case "pervisitmax": visitmax = GetPerm(value); break;
-                        case "visitwhitelist": VisitWhitelist = Parse(value); break;
-                        case "visitblacklist": VisitBlacklist = Parse(value); break;
-                        case "buildwhitelist": BuildWhitelist = Parse(value); break;
-                        case "buildblacklist": BuildBlacklist = Parse(value); break;
-                        
-                        case "authors": Authors = value; break;
-                        case "roundsplayed": TotalRounds = int.Parse(value); break;
-                        case "roundshumanwon": HumanRounds = int.Parse(value); break;
-                        case "likes": Likes = int.Parse(value); break;
-                        case "dislikes": Dislikes = int.Parse(value); break;
-                        
-                        case "cloudcolor": Clouds = value; break;
-                        case "fogcolor": Fog = value; break;
-                        case "skycolor": Sky = value; break;
-                        case "shadowcolor": Shadow = value; break;
-                        case "lightcolor": Light = value; break;
-                        
-                        case "edgeblock": EdgeBlock = byte.Parse(value); break;
-                        case "edgelevel": EdgeLevel = short.Parse(value); break;
-                        case "horizonblock": HorizonBlock = byte.Parse(value); break;
-                        case "cloudsheight": CloudsHeight = short.Parse(value); break;
-                        case "maxfog": MaxFog = short.Parse(value); break;
-                        
-                        case "texture": TerrainUrl = value; break;
-                        case "texturepack": TextureUrl = value; break;
-                        case "clouds-speed": CloudsSpeed = int.Parse(value); break;
-                        case "weather-speed": WeatherSpeed = int.Parse(value); break;
-                        case "weather-fade": WeatherFade = int.Parse(value); break;
+                    case "physics": Physics = int.Parse(value); break;
+                    case "guns": Guns = bool.Parse(value); break;
+                    case "useblockdb": blockDB = bool.Parse(value); break;
+                    case "realmowner": RealmOwner = value; break;
+                    
+                    case "perbuild": build = GetPerm(value); break;
+                    case "pervisit": visit = GetPerm(value); break;
+                    case "perbuildmax": buildmax = GetPerm(value); break;
+                    case "pervisitmax": visitmax = GetPerm(value); break;
+                    case "visitwhitelist": VisitWhitelist = Parse(value); break;
+                    case "visitblacklist": VisitBlacklist = Parse(value); break;
+                    case "buildwhitelist": BuildWhitelist = Parse(value); break;
+                    case "buildblacklist": BuildBlacklist = Parse(value); break;
+                    
+                    case "authors": Authors = value; break;
+                    case "roundsplayed": TotalRounds = int.Parse(value); break;
+                    case "roundshumanwon": HumanRounds = int.Parse(value); break;
+                    case "likes": Likes = int.Parse(value); break;
+                    case "dislikes": Dislikes = int.Parse(value); break;
+                    
+                    case "cloudcolor": Clouds = value; break;
+                    case "fogcolor": Fog = value; break;
+                    case "skycolor": Sky = value; break;
+                    case "shadowcolor": Shadow = value; break;
+                    case "lightcolor": Light = value; break;
+                    
+                    case "edgeblock": EdgeBlock = byte.Parse(value); break;
+                    case "edgelevel": EdgeLevel = short.Parse(value); break;
+                    case "horizonblock": HorizonBlock = byte.Parse(value); break;
+                    case "cloudsheight": CloudsHeight = short.Parse(value); break;
+                    case "maxfog": MaxFog = short.Parse(value); break;
+                    
+                    case "texture": TerrainUrl = value; break;
+                    case "texturepack": TextureUrl = value; break;
+                    case "clouds-speed": CloudsSpeed = int.Parse(value); break;
+                    case "weather-speed": WeatherSpeed = int.Parse(value); break;
+                    case "weather-fade": WeatherFade = int.Parse(value); break;
                 }
             }
             
@@ -303,7 +303,7 @@ namespace MCGalaxy.Commands {
             }
             
             static LevelPermission GetPerm(string value) {
-                LevelPermission perm = Level.PermissionFromName(value);
+                LevelPermission perm = Group.ParsePermOrName(value);
                 return perm != LevelPermission.Null ? perm : LevelPermission.Guest;
             }
         }

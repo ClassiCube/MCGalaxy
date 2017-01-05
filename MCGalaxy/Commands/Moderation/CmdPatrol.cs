@@ -16,7 +16,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 
@@ -52,14 +52,15 @@ namespace MCGalaxy.Commands {
             Player[] online = PlayerInfo.Online.Items;
             
             foreach (Player p in online) {
-                 if ((int)p.Rank <= perm) players.Add(p.name);
+                if ((int)p.Rank <= perm) players.Add(p.name);
             }
             return players;
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/patrol");
-            Player.Message(p, "%HTeleports you to a random " + Group.findPermInt(CommandOtherPerms.GetPerm(this)).name + " or lower");
+            LevelPermission perm = (LevelPermission)CommandOtherPerms.GetPerm(this);
+            Player.Message(p, "%HTeleports you to a random {0} %Sor lower", Group.GetColoredName(perm));
         }
     }
 }

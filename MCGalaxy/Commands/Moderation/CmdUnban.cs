@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Moderation {
         void Unban(Player p, string name, string reason) {
             string srcFull = p == null ? "(console)" : p.ColoredName + "%S";
             string src = p == null ? "(console)" : p.name;
-            Group banned = Group.findPerm(LevelPermission.Banned);
+            Group banned = Group.BannedRank;
 
             // Check tempbans first
             foreach (Server.TempBan tban in Server.tempBans) {
@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Moderation {
             Server.IRC.Say(name + " was unbanned by " + src + ".");
             
             Ban.UnbanPlayer(p, name, reason);
-            Group banned = Group.findPerm(LevelPermission.Banned);
+            Group banned = Group.BannedRank;
             Player who = PlayerInfo.Find(name);
             RankCmd.ChangeRank(name, banned, Group.standard, who, false);
             

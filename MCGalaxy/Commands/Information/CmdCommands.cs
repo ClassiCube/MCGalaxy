@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands {
                 case "oldmenu":
                 case "command":
                 case "":
-                    Group pGroup = p != null ? p.group : Group.findPerm(LevelPermission.Nobody);
+                    Group pGroup = p != null ? p.group : Group.NobodyRank;
                     PrintRankCommands(p, sort, modifier, pGroup, true); break;
                 case "commandsall":
                 case "commandall":

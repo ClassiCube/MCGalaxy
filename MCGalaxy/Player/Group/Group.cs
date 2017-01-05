@@ -38,6 +38,7 @@ namespace MCGalaxy {
         public static bool cancelrank = false;
         //Move along...nothing to see here...
         internal static void because(Player p, Group newrank) { if (OnPlayerRankSet != null) { OnPlayerRankSet(p, newrank); } OnPlayerRankSetEvent.Call(p, newrank); }
+        
         public string name;
         public string trueName;
         public string color;
@@ -52,7 +53,12 @@ namespace MCGalaxy {
         public PlayerList playerList;
         public string MOTD = "";
         public bool[] CanModify = new bool[256];
-
+        
+        public static Group BannedRank { get { return findPerm(LevelPermission.Banned); } }
+        public static Group GuestRank { get { return findPerm(LevelPermission.Guest); } }
+        public static Group NobodyRank { get { return findPerm(LevelPermission.Nobody); } }
+        public static Group standard;
+        
         /// <summary> Create a new group object </summary>
         public Group() {
             Permission = LevelPermission.Null;
@@ -94,7 +100,7 @@ namespace MCGalaxy {
         /// <summary> Fill the blocks that this group can use </summary>
         public void FillBlocks() {
             for (int i = 0; i < CanModify.Length; i++)
-            	CanModify[i] = Block.canPlace(Permission, (byte)i);
+                CanModify[i] = Block.canPlace(Permission, (byte)i);
         }
         
         public bool CanExecute(string cmdName) { 
@@ -107,7 +113,6 @@ namespace MCGalaxy {
         public bool CanExecute(Command cmd) { return commands.Contains(cmd); }
 
         public static List<Group> GroupList = new List<Group>();
-        public static Group standard;
         static readonly object saveLock = new object();
         
         /// <summary> Load up all server groups </summary>
@@ -131,7 +136,7 @@ namespace MCGalaxy {
             GroupList.Add(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', String.Empty, "nobody.txt"));            
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
 
-            if (Group.Find(Server.defaultRank) != null) {
+            if (Find(Server.defaultRank) != null) {
                 standard = Group.Find(Server.defaultRank);
             } else {
                 standard = Group.findPerm(LevelPermission.Guest);
@@ -157,6 +162,7 @@ namespace MCGalaxy {
             if (OnGroupSave != null) OnGroupSave();
             OnGroupSaveEvent.Call();
         }
+        
         
         /// <summary> Check whether a group with that name exists. </summary>
         public static bool Exists(string name) {
@@ -198,7 +204,7 @@ namespace MCGalaxy {
             if (name == "noone") name = "nobody";
         }
         
-        /// <summary> Finds the group with has the given permission level. </summary>
+        /// <summary> Finds the group which has the given permission level. </summary>
         public static Group findPerm(LevelPermission Perm) {
             return GroupList.Find(grp => grp.Permission == Perm);
         }
@@ -207,6 +213,7 @@ namespace MCGalaxy {
         public static Group findPermInt(int Perm) {
             return GroupList.Find(grp => (int)grp.Permission == Perm);
         }
+        
 
         /// <summary> Get the group name that player /playerName/ is in </summary>
         /// <param name="name">The player Name</param>
@@ -244,6 +251,12 @@ namespace MCGalaxy {
             return grp != null && grp.playerList.Contains(name);
         }
         
+        public static string GetName(LevelPermission perm) {
+            Group grp = findPerm(perm);
+            if (grp != null) return grp.trueName;
+            return ((int)perm).ToString();
+        }
+        
         public static string GetColoredName(LevelPermission perm) {
             Group grp = findPerm(perm);
             if (grp != null) return grp.ColoredName;
@@ -254,6 +267,15 @@ namespace MCGalaxy {
             Group grp = findPerm(perm);
             if (grp != null) return grp.color;
             return Colors.white;        
+        }
+        
+        public static LevelPermission ParsePermOrName(string value) {
+            sbyte perm;
+            if (sbyte.TryParse(value, out perm))
+                return (LevelPermission)perm;
+            
+            Group grp = Find(value);
+            return grp != null ? grp.Permission : LevelPermission.Null;
         }
     }
 }

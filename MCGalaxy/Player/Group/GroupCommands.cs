@@ -117,11 +117,11 @@ namespace MCGalaxy {
 
                 if (!cmdNames.Contains(key)) {
                     Server.s.Log("Incorrect command name: " + key);
-                } else if (Level.PermissionFromName(value) == LevelPermission.Null) {
+                } else if (Group.Find(value) == null) {
                     Server.s.Log("Incorrect value given for " + key + ", using default value.");
-                } else{
+                } else {
                     perms.commandName = key;
-                    perms.lowestRank = Level.PermissionFromName(value);
+                    perms.lowestRank = Group.Find(value).Permission;
 
                     for (int i = 0; i < allowedCommands.Count; i++) {
                         if (allowedCommands[i].commandName == key) {

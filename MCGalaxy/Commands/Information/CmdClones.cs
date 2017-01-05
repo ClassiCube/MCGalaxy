@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
             if (alts.Count == 0) { Player.Message(p, "Could not find any record of the player entered."); return; }
             if (alts.Count == 1) { Player.Message(p, name + " has no clones."); return; }
             
-            Group banned = Group.findPerm(LevelPermission.Banned);
+            Group banned = Group.BannedRank;
             Player.Message(p, "These players have the same IP address:");
             Player.Message(p, alts.Join(alt => FormatAlt(alt, banned)));
         }

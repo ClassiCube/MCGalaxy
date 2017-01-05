@@ -444,15 +444,14 @@ namespace MCGalaxy {
             }
         }
 
+        [Obsolete("Use Group.Find()")]
         public static LevelPermission PermissionFromName(string name) {
-            Group foundGroup = Group.Find(name);
-            return foundGroup != null ? foundGroup.Permission : LevelPermission.Null;
+            Group grp = Group.Find(name);
+            return grp != null ? grp.Permission : LevelPermission.Null;
         }
 
-        public static string PermissionToName(LevelPermission perm) {
-            Group foundGroup = Group.findPerm(perm);
-            return foundGroup != null ? foundGroup.name : ((int)perm).ToString();
-        }
+        [Obsolete("Use Group.GetName()")]
+        public static string PermissionToName(LevelPermission perm) { return Group.GetName(perm); }
         
         public bool HasPlayers() {
             Player[] players = PlayerInfo.Online.Items; 

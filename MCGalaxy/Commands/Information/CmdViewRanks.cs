@@ -39,8 +39,7 @@ namespace MCGalaxy.Commands {
             }
             string modifer = args.Length > 1 ? args[1] : "";
             
-            Group grp = message.CaselessEq("banned") ? 
-                Group.findPerm(LevelPermission.Banned) : Group.FindMatches(p, args[0]);
+            Group grp = message.CaselessEq("banned") ? Group.BannedRank : Group.FindMatches(p, args[0]);
             if (grp == null) return;
 
             List<string> list = grp.playerList.All();

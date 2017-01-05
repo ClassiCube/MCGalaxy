@@ -127,9 +127,9 @@ namespace MCGalaxy
                 
                 try {
                     byte block = Block.Byte(line.Split(' ')[0]);
-                    LevelPermission lowestRank = Level.PermissionFromName(line.Split(' ')[2]);
-                    if (lowestRank != LevelPermission.Null)
-                        BlockList[block].lowestRank = lowestRank;
+                    Group group = Group.Find(line.Split(' ')[2]);
+                    if (group != null)
+                        BlockList[block].lowestRank = group.Permission;
                     else
                         throw new InvalidDataException("Line " + line + " is invalid.");
                 }

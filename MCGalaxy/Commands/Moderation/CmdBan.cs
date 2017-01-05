@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             Ban.DeleteBan(target);
             Ban.BanPlayer(p, target, reason, stealth, group.name);
-            RankCmd.ChangeRank(target, group, Group.findPerm(LevelPermission.Banned), who);
+            RankCmd.ChangeRank(target, group, Group.BannedRank, who);
             
             if (args.Length == 1) Player.AddNote(target, p, "B");
             else Player.AddNote(target, p, "B", reason);

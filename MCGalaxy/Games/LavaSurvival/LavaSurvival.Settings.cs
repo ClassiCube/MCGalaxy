@@ -79,8 +79,8 @@ namespace MCGalaxy.Games {
                 w.WriteLine("vote-count = " + voteCount);
                 w.WriteLine("vote-time = " + voteTime);
                 w.WriteLine("lives = " + lifeNum);
-                w.WriteLine("setup-rank = " + Level.PermissionToName(setupRank));
-                w.WriteLine("control-rank = " + Level.PermissionToName(controlRank));
+                w.WriteLine("setup-rank = " + Group.GetName(setupRank));
+                w.WriteLine("control-rank = " + Group.GetName(controlRank));
                 w.WriteLine("maps = " + maps.Join());
             }
         }
