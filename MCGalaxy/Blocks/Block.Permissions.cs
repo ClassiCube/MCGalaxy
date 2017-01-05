@@ -25,25 +25,11 @@ namespace MCGalaxy
     public sealed partial class Block
     {
         public static Blocks[] BlockList = new Blocks[256];
-        public class Blocks
-        {
+        public class Blocks {
             public LevelPermission lowestRank;
             public List<LevelPermission> disallow = null;
             public List<LevelPermission> allow = null;
             public byte type;
-
-            public bool IncludeInBlockProperties()
-            {
-                if (Block.Name(type).CaselessEq("unknown"))
-                    return false;
-                if(type == Block.flagbase)
-                    return false;
-                if (type >= Block.odoor1_air && type <= Block.odoor7_air)
-                    return false;
-                if (type >= Block.odoor8_air && type <= Block.odoor12_air)
-                    return false;
-                return true;
-            }
         }
 
         public static void SetBlocks() {
@@ -174,7 +160,8 @@ namespace MCGalaxy
                 w.WriteLine("");
 
                 foreach (Blocks bs in givenList) {
-                    if (!bs.IncludeInBlockProperties()) continue;
+                    if (Block.Name(bs.type).CaselessEq("unknown")) continue;
+                    
                     string line = Block.Name(bs.type) + " : " + (int)bs.lowestRank + " : " 
                         + GrpCommands.getInts(bs.disallow) + " : " + GrpCommands.getInts(bs.allow);
                     w.WriteLine(line);

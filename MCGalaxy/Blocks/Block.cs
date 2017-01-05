@@ -109,10 +109,13 @@ namespace MCGalaxy {
 
         public static bool Mover(byte block) { return BlockBehaviour.walkthroughHandlers[block] != null; }
 
+        [Obsolete]
         public static bool FireKill(byte block) { return block != air && Props[block].LavaKills; }
-        
+
+        [Obsolete]        
         public static bool LavaKill(byte block) { return Props[block].LavaKills; }
-        
+
+        [Obsolete]        
         public static bool WaterKill(byte block) { return Props[block].WaterKills; }
 
         public static bool LightPass(byte block, byte extBlock, BlockDefinition[] defs) {
