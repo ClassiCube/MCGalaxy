@@ -29,24 +29,25 @@ namespace MCGalaxy.Blocks.Physics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
 
-            for (int cx = -dirX; cx != 2 * dirX; cx += dirX)
-                for (int cy = -dirY; cy != 2 * dirY; cy += dirY)
-                    for (int cz = -dirZ; cz != 2 * dirZ; cz += dirZ)
+            for (int dx = -dirX; dx != 2 * dirX; dx += dirX)
+                for (int dy = -dirY; dy != 2 * dirY; dy += dirY)
+                    for (int dz = -dirZ; dz != 2 * dirZ; dz += dirZ)
             {
-                byte tileBelow = lvl.GetTile((ushort)(x + cx),(ushort)(y + cy - 1), (ushort)(z + cz));
-                byte tile = lvl.GetTile((ushort)(x + cx), (ushort)(y + cy), (ushort)(z + cz));
+                byte tileBelow = lvl.GetTile((ushort)(x + dx),(ushort)(y + dy - 1), (ushort)(z + dz));
+                byte tile = lvl.GetTile((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
                 
                 bool isRails = false;
                 if (tileBelow != Block.custom_block) {
                     isRails = Block.Props[tileBelow].IsRails;
                 } else {
-                    byte extBelow = lvl.GetExtTile((ushort)(x + cx), (ushort)(y + cy - 1), (ushort)(z + cz));
+                    byte extBelow = lvl.GetExtTile((ushort)(x + dx), (ushort)(y + dy - 1), (ushort)(z + dz));
                     isRails = lvl.CustomBlockProps[extBelow].IsRails;
                 }
                 
-                if (isRails && (tile == Block.air || tile == Block.water)) {
-                    lvl.AddUpdate(lvl.PosToInt((ushort)(x + cx), 
-                                               (ushort)(y + cy), (ushort)(z + cz)), Block.train);
+                if (isRails && (tile == Block.air || tile == Block.water) 
+                    && !lvl.listUpdateExists.Get(x + dx, y + dy, z + dz)) {
+                    lvl.AddUpdate(lvl.PosToInt((ushort)(x + dx), 
+                                               (ushort)(y + dy), (ushort)(z + dz)), Block.train);
                     lvl.AddUpdate(C.b, Block.air);                    
                     byte newBlock = tileBelow == Block.op_air ? Block.glass : Block.obsidian;
                     

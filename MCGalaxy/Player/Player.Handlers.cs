@@ -353,7 +353,7 @@ namespace MCGalaxy {
         }
 
         internal void CheckSurvival(ushort x, ushort y, ushort z) {
-            byte bFeet = GetSurvivalBlock(x, (ushort)(y - 2), z);
+            byte bFeet = GetSurvivalBlock(x, (ushort)(y - 1), z);
             byte bHead = GetSurvivalBlock(x, y, z);
             if (level.PosToInt(x, y, z) != oldIndex || y != oldFallY) {
                 byte conv = Block.Convert(bFeet);
@@ -382,7 +382,9 @@ namespace MCGalaxy {
                 case Block.lavastill:
                     fallCount = 0;
                     drownCount++;
-                    if (drownCount > level.drown * (100/3)) {
+                    
+                    // level drown is in 10ths of a second, and there are 100 ticks/second
+                    if (drownCount > level.drown * 10) {
                         HandleDeath(Block.water, 0);
                         drownCount = 0;
                     }
