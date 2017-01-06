@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,7 +31,7 @@ namespace MCGalaxy.Eco {
         
         public override string ShopName { get { return "Rankup"; } }
         
-        public string MaxRank = Group.findPerm(LevelPermission.AdvBuilder).name;
+        public LevelPermission MaxRank = LevelPermission.AdvBuilder;
         
         public List<Rank> RanksList = new List<Rank>();
         public class Rank {
@@ -45,11 +45,15 @@ namespace MCGalaxy.Eco {
                 if (rnk == null) {
                     rnk = new Rank();
                     rnk.group = Group.Find(args[2]);
+                    if (rnk.group == null) return;
+                    
                     RanksList.Add(rnk);
                 }
                 rnk.price = int.Parse(args[3]);
             } else if (args[1] == "maxrank") {
-                if (Group.Exists(args[2])) MaxRank = args[2];
+                MaxRank = LevelPermission.AdvBuilder;
+                Group grp = Group.Find(args[2]);
+                if (grp != null) MaxRank = grp.Permission;
             }
         }
         
@@ -60,7 +64,7 @@ namespace MCGalaxy.Eco {
             writer.WriteLine("rank:maxrank:" + MaxRank);
             foreach (Rank rnk in RanksList) {
                 writer.WriteLine("rank:price:" + rnk.group.name + ":" + rnk.price);
-                if (rnk.group.name == MaxRank) break;
+                if (rnk.group.Permission >= MaxRank) break;
             }
         }
         
@@ -68,9 +72,9 @@ namespace MCGalaxy.Eco {
             if (args.Length >= 2) {
                 Player.Message(p, "%cYou cannot provide a rank name, use %a/buy rank %cto buy the NEXT rank."); return;
             }
-            Group maxrank = Group.Find(MaxRank);
-            if (p.Rank >= maxrank.Permission) {
-                Player.Message(p, "%cYou cannot buy anymore ranks, because you passed the max buyable rank: " + maxrank.color + maxrank.name);
+            if (p.Rank >= MaxRank) {
+                Player.Message(p, "%cYou cannot buy anymore ranks, as you are at or past the max buyable rank of {0}",
+                               Group.GetColoredName(MaxRank));
                 return;
             }
             if (p.money < NextRank(p).price) {
@@ -87,7 +91,9 @@ namespace MCGalaxy.Eco {
                 case "price":
                     Rank rnk = FindRank(args[2]);
                     if (rnk == null) {
-                        Player.Message(p, "%cThat wasn't a rank or it's past the max rank (maxrank is: {0}%c)", Group.Find(MaxRank).ColoredName); return; 
+                        Player.Message(p, "%cThat wasn't a rank or it's past the max rank (max rank is: {0}%c)",
+                                       Group.GetColoredName(MaxRank));
+                        return;
                     }
                     
                     int cost;
@@ -104,7 +110,8 @@ namespace MCGalaxy.Eco {
                     Group grp = Group.FindMatches(p, args[2]);
                     if (grp == null) return;
                     if (p != null && p.Rank < grp.Permission) { Player.Message(p, "%cCannot set maxrank to a rank higher than yours."); return; }
-                    MaxRank = grp.name.ToLower();
+                    
+                    MaxRank = grp.Permission;
                     Player.Message(p, "%aSuccessfully set max rank to: " + grp.ColoredName);
                     UpdatePrices();
                     break;
@@ -122,23 +129,26 @@ namespace MCGalaxy.Eco {
         }
 
         protected internal override void OnStoreOverview(Player p) {
-            Group maxrank = Group.Find(MaxRank);
-            if (p == null || p.Rank >= maxrank.Permission) {
+            if (p == null || p.Rank >= MaxRank) {
                 Player.Message(p, "&6Rankup %S- &calready at max rank."); return;
             }
+            
             Rank rnk = NextRank(p);
-            Player.Message(p, "&6Rankup to {0} %S- &a{1} %S{2}", rnk.group.ColoredName, rnk.price, Server.moneys);
+            if (rnk == null) {
+                Player.Message(p, "&6Rankup %S- &cno further ranks to buy.");
+            } else {
+                Player.Message(p, "&6Rankup to {0} %S- &a{1} %S{2}", rnk.group.ColoredName, rnk.price, Server.moneys);
+            }
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Group maxrank = Group.Find(MaxRank);
-            Player.Message(p, "%T/buy rankup");            
-            Player.Message(p, "%fThe highest buyable rank is: " + maxrank.ColoredName);
+            Player.Message(p, "%T/buy rankup");
+            Player.Message(p, "%fThe highest buyable rank is: {0}", Group.GetColoredName(MaxRank));
             Player.Message(p, "%cYou can only buy ranks one at a time, in sequential order.");
             
             foreach (Rank rnk in RanksList) {
                 Player.Message(p, "&6{0} %S- &a{1} %S{2}", rnk.group.ColoredName, rnk.price, Server.moneys);
-                if (rnk.group.name.CaselessEq(maxrank.name)) break;
+                if (rnk.group.Permission >= MaxRank) break;
             }
         }
         
@@ -160,20 +170,21 @@ namespace MCGalaxy.Eco {
         }
         
         public void UpdatePrices() {
-            int lasttrueprice = 0;
+            int lastPrice = 0;
             foreach (Group group in Group.GroupList) {
-                if (group.Permission > Group.Find(MaxRank).Permission) break;
+                if (group.Permission > MaxRank) break;
                 if (group.Permission <= Group.standard.Permission) continue;
                 
                 Rank rank = FindRank(group.name);
                 if (rank == null) {
                     rank = new Rank();
                     rank.group = group;
-                    if (lasttrueprice == 0) { rank.price = 1000; }
-                    else { rank.price = lasttrueprice + 250; }
+                    
+                    if (lastPrice == 0) { rank.price = 1000; }
+                    else { rank.price = lastPrice + 250; }
                     RanksList.Add(rank);
                 } else {
-                    lasttrueprice = rank.price;
+                    lastPrice = rank.price;
                 }
             }
         }

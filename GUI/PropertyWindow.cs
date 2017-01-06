@@ -607,12 +607,12 @@ namespace MCGalaxy.Gui {
             //Server.useWhitelist = ; //We don't have a setting for this?
             Server.moneys = txtMoneys.Text;
             
-            Server.osPerbuildDefault = Group.Find(cmbOsMap.SelectedItem.ToString()).Permission;
-            Server.afkkickperm = Group.Find(cmbAFKKickPerm.SelectedItem.ToString()).Permission;
+            Server.osPerbuildDefault = Program.GetPermission(cmbOsMap, LevelPermission.Nobody);
+            Server.afkkickperm = Program.GetPermission(cmbAFKKickPerm, LevelPermission.AdvBuilder);
             var perms = CommandOtherPerms.Find("opchat");
-            perms.Permission = (int)Group.Find(cmbOpChat.SelectedItem.ToString()).Permission;
+            perms.Permission = (int)Program.GetPermission(cmbOpChat, LevelPermission.Operator);
             perms = CommandOtherPerms.Find("adminchat");
-            perms.Permission = (int)Group.Find(cmbAdminChat.SelectedItem.ToString()).Permission;            
+            perms.Permission = (int)Program.GetPermission(cmbAdminChat, LevelPermission.Admin);
             
             Server.logbeat = chkLogBeat.Checked;
             Server.profanityFilter = chkProfanityFilter.Checked;
@@ -661,6 +661,8 @@ namespace MCGalaxy.Gui {
 
             Server.hackrank_kick = hackrank_kick.Checked;
             Server.hackrank_kick_time = int.Parse(hackrank_kick_time.Text);
+            
+            // Security tab
             Server.verifyadmins = sec_cbVerifyAdmins.Checked;
             Server.verifyadminsrank = Group.GroupList.Find(grp => grp.name == sec_cmbVerifyRank.SelectedItem.ToString()).Permission;
             Server.useWhitelist = sec_cbWhitelist.Checked;
@@ -683,6 +685,8 @@ namespace MCGalaxy.Gui {
             Server.showEmptyRanks = chkShowEmptyRanks.Checked;
             Server.reviewcooldown = (int)nudCooldownTime.Value;
         }
+        
+
 
         private void chat_cmbDefault_SelectedIndexChanged(object sender, EventArgs e) {
             chat_colDefault.BackColor = GetColor(chat_cmbDefault.Items[chat_cmbDefault.SelectedIndex].ToString());
@@ -1280,7 +1284,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         }
 
         private void buttonEco_Click(object sender, EventArgs e) {
-            new GUI.Eco.EconomyWindow().ShowDialog();
+            new Gui.Eco.EconomyWindow().ShowDialog();
         }
 
         

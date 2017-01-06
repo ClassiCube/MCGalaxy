@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using MCGalaxy.Eco;
 using Microsoft.Win32;
 
-namespace MCGalaxy.GUI.Eco {
+namespace MCGalaxy.Gui.Eco {
     public partial class EconomyWindow : Form {
         public EconomyWindow() {
             InitializeComponent();
@@ -76,7 +76,7 @@ namespace MCGalaxy.GUI.Eco {
             List<string> ranklist = new List<string>();
             foreach (RankItem.Rank rank in rankItem.RanksList) {
                 ranklist.Add(rank.group.name);
-                if (rank.group.name == rankItem.MaxRank) break;
+                if (rank.group.Permission >= rankItem.MaxRank) break;
             }
             listBoxRank.DataSource = ranklist;
             listBoxRank.SelectedItem = comboBoxRank.SelectedItem;
@@ -147,7 +147,7 @@ namespace MCGalaxy.GUI.Eco {
         }
 
         private void comboBoxRank_SelectionChangeCommitted(object sender, EventArgs e) {
-            Economy.Ranks.MaxRank = comboBoxRank.SelectedItem.ToString();
+            Economy.Ranks.MaxRank = Program.GetPermission(comboBoxRank, LevelPermission.AdvBuilder);
             UpdateRanks();
         }
 

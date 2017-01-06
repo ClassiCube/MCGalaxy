@@ -104,7 +104,6 @@ namespace MCGalaxy {
         }
 
         public static void Load() {
-            if (list.Count == 0) { AddDefaultPerms(); }
             if (!File.Exists(file)) Save();
             
             using (StreamReader r = new StreamReader(file)) {

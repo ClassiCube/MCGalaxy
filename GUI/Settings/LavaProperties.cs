@@ -49,12 +49,12 @@ namespace MCGalaxy.Gui {
             Group grp = Group.findPerm(Server.lava.controlRank);
             if (grp == null) 
                 grp = Group.findPerm(LevelPermission.Operator);
-            ControlRank = grp.trueName;
+            ControlRank = grp == null ? "Operator" : grp.trueName;
             
             grp = Group.findPerm(Server.lava.setupRank);
             if (grp == null) 
                 grp = Group.findPerm(LevelPermission.Admin);
-            SetupRank = grp.trueName;
+            SetupRank = grp == null ? "SuperOP" : grp.trueName;
             
             Lives = Server.lava.lifeNum;
             VoteTime = Server.lava.voteTime;
@@ -62,8 +62,12 @@ namespace MCGalaxy.Gui {
         }
         
         public void ApplyToServer() {
-            Server.lava.controlRank = Group.Find(ControlRank).Permission;
-            Server.lava.setupRank = Group.Find(SetupRank).Permission;
+            Group grp = Group.Find(ControlRank);
+            if (grp != null) Server.lava.controlRank = grp.Permission;
+            
+            grp = Group.Find(SetupRank);
+            if (grp != null) Server.lava.setupRank = grp.Permission;
+            
             Server.lava.lifeNum = Lives;
             Server.lava.voteTime = VoteTime;
             Server.lava.voteCount = VoteCount;

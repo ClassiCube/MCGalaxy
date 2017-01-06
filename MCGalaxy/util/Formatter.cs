@@ -101,11 +101,7 @@ namespace MCGalaxy {
         }
         
         public static void MessageNeedMinPerm(Player p, string action, LevelPermission perm) {
-            Group grp = Group.findPerm(perm);
-            if (grp == null)
-                Player.Message(p, "Only {0}%S+ can {1}", (int)perm, action);
-            else
-                Player.Message(p, "Only {0}%S+ can {1}", grp.ColoredName, action);
+            Player.Message(p, "Only {0}%S+ can {1}", Group.GetColoredName(perm), action);
         }
         
         public static bool ValidName(Player p, string name, string type) {

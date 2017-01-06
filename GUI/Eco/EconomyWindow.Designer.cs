@@ -1,4 +1,4 @@
-namespace MCGalaxy.GUI.Eco {
+namespace MCGalaxy.Gui.Eco {
     partial class EconomyWindow {
         /// <summary>
         /// Required designer variable.

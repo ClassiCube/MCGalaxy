@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using MCGalaxy.Eco;
 using Microsoft.Win32;
 
-namespace MCGalaxy.GUI.Eco {
+namespace MCGalaxy.Gui.Eco {
     public partial class EcoLevelWindow : Form {
 
         private bool edit = false;

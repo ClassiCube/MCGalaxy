@@ -125,22 +125,14 @@ namespace MCGalaxy {
                 GroupList.Add(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', String.Empty, "banned.txt"));
             if (GuestRank == null)
                 GroupList.Add(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', String.Empty, "guest.txt"));
-            
-            if (findPerm(LevelPermission.Builder) == null)
-                GroupList.Add(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', String.Empty, "builders.txt"));
-            if (findPerm(LevelPermission.AdvBuilder) == null)
-                GroupList.Add(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', String.Empty, "advbuilders.txt"));
-            if (findPerm(LevelPermission.Operator) == null)
-                GroupList.Add(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', String.Empty, "operators.txt"));
-            if (findPerm(LevelPermission.Admin) == null)
-                GroupList.Add(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', String.Empty, "uberOps.txt"));
+
             GroupList.Add(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', String.Empty, "nobody.txt"));
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
 
             if (Find(Server.defaultRank) != null) {
                 standard = Group.Find(Server.defaultRank);
             } else {
-                standard = Group.findPerm(LevelPermission.Guest);
+                standard = GuestRank;
             }
 
             Player[] players = PlayerInfo.Online.Items;
