@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands {
             string lbArgs = (arg1 + " " + arg2).Trim();
             CustomBlockCommand.Execute(p, lbArgs, false, "/os lb");
         }
-		
+        
         
         static void HandleMap(Player p, string opt, string value) {
             bool mapOnly = !(opt == "ADD" || opt == "DELETE" || opt == "SAVE");
@@ -106,6 +106,14 @@ namespace MCGalaxy.Commands {
                 }
             } else if (opt == "RESTORE") {
                 Command.all.Find("restore").Use(p, value);
+            } else if (opt == "RESIZE") {
+                value = p.level.name + " " + value;
+                string[] args = value.Split(' ');
+                if (args.Length < 4) { Command.all.Find("resizelvl").Help(p); return; }
+
+                if (CmdResizeLvl.DoResize(p, args)) return;
+                Player.Message(p, "Type %T/os map resize {0} {1} {2} confirm %Sif you're sure.",
+                               args[1], args[2], args[3]);
             } else if (opt == "PERVISIT") {
                 string rank = value == "" ? Server.defaultRank : value;
                 Command.all.Find("pervisit").Use(p, rank);
@@ -206,7 +214,7 @@ namespace MCGalaxy.Commands {
         static void HandleSpawn(Player p, string ignored1, string ignored2) {
             Command.all.Find("setspawn").Use(p, "");
         }
-		
+        
         
         static void HandleZone(Player p, string cmd, string name) {
             if (cmd == "LIST") {
