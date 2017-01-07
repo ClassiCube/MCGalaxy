@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands {
                 Thread.Sleep(3000);
             }
         	
-        	const string msg = "Your IP has been backtraced + reported to FBI Cyber Crimes Unit.";
+        	const string msg = "Your IP has been backtraced + reported to FBI Cybercrimes Unit.";
             p.Leave("kicked (" + msg + ")", msg, false);
         }
         
