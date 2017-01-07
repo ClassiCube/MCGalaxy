@@ -63,7 +63,8 @@ namespace MCGalaxy.Commands.Moderation {
             Chat.MessageAll("{0} was &8(unbanned) %Sby {1}.", name, srcFull);
             Server.s.Log("UNBANNED: " + name + " by " + src);
             Server.IRC.Say(name + " was unbanned by " + src + ".");
-            
+
+            Ban.DeleteUnban(name);
             Ban.UnbanPlayer(p, name, reason);
             Group banned = Group.BannedRank;
             Player who = PlayerInfo.Find(name);
