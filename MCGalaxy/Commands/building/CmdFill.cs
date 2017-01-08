@@ -16,10 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
-using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdFill : DrawCmd {
@@ -68,7 +65,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             FillDrawOp op = (FillDrawOp)dArgs.Op;
-            op.Positions = FloodFill(p, p.level.PosToInt(x, y, z), oldBlock, oldExtBlock, dArgs.Mode);
+            op.Positions = FillDrawOp.FloodFill(p, p.level.PosToInt(x, y, z), oldBlock, oldExtBlock, dArgs.Mode);
             int count = op.Positions.Count;
             
             bool confirmed = IsConfirmed(dArgs.Message), success = true;
@@ -81,80 +78,6 @@ namespace MCGalaxy.Commands.Building {
   
             op.Positions = null;
             return success;
-        }
-        
-        
-        unsafe List<int> FloodFill(Player p, int index, byte block, byte extBlock, DrawMode mode) {
-            Level lvl = p.level;
-            SparseBitSet bits = new SparseBitSet(lvl.Width, lvl.Height, lvl.Length);
-            List<int> buffer = new List<int>();
-            Queue<int> temp = new Queue<int>();
-            
-            const int max = 65536;
-            int count = 0, oneY = lvl.Width * lvl.Length;
-            int* pos = stackalloc int[max];
-            pos[0] = index; count++;
-            
-            while (count > 0 && buffer.Count <= p.group.maxBlocks) {
-                index = pos[count - 1]; count--;
-                ushort x = (ushort)(index % lvl.Width);
-                ushort y = (ushort)((index / lvl.Width) / lvl.Length);
-                ushort z = (ushort)((index / lvl.Width) % lvl.Length);
-                
-                if (temp.Count > 0) { pos[count] = temp.Dequeue(); count++; }
-                if (bits.Get(x, y, z)) continue;
-                
-                bits.Set(x, y, z, true);
-                buffer.Add(index);
-                
-                if (mode != DrawMode.verticalX) { // x
-                    if (Check(p, (ushort)(x + 1), y, z, block, extBlock)) {
-                        if (count == max) { temp.Enqueue(index + 1); }
-                        else { pos[count] = index + 1; count++; }
-                    }
-                    if (Check(p, (ushort)(x - 1), y, z, block, extBlock)) {
-                        if (count == max) { temp.Enqueue(index - 1); }
-                        else { pos[count] = index - 1; count++; }
-                    }
-                }
-
-                if (mode != DrawMode.verticalZ) { // z
-                    if (Check(p, x, y, (ushort)(z + 1), block, extBlock)) {
-                        if (count == max) { temp.Enqueue(index + lvl.Width); }
-                        else { pos[count] = index + lvl.Width; count++; }
-                    }
-                    if (Check(p, x, y, (ushort)(z - 1), block, extBlock)) {
-                        if (count == max) { temp.Enqueue(index - lvl.Width); }
-                        else { pos[count] = index - lvl.Width; count++; }
-                    }
-                }
-
-                if (!(mode == DrawMode.down || mode == DrawMode.layer)) { // y up
-                    if (Check(p, x, (ushort)(y + 1), z, block, extBlock)) {
-                        if (count == max) { temp.Enqueue(index + oneY); }
-                        else { pos[count] = index + oneY; count++; }
-                    }
-                }
-
-                if (!(mode == DrawMode.up || mode == DrawMode.layer)) { // y down
-                    if (Check(p, x, (ushort)(y - 1), z, block, extBlock)) {
-                        if (count == max) { temp.Enqueue(index - oneY); }
-                        else { pos[count] = index - oneY; count++; }
-                    }
-                }
-            }
-            bits.Clear();
-            return buffer;
-        }
-        
-        static bool Check(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock) {
-            byte curBlock = p.level.GetTile(x, y, z);
-
-            if (curBlock == block && curBlock == Block.custom_block) {
-                byte curExtBlock = p.level.GetExtTile(x, y, z);
-                return curExtBlock == extBlock;
-            }
-            return curBlock == block;
         }
         
         static bool IsConfirmed(string message) {

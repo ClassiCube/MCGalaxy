@@ -134,15 +134,15 @@ namespace MCGalaxy.Commands.Building {
             public DrawOp Op;
             public Player Player;
         }
-
-        protected enum DrawMode {
-            normal, solid, hollow, walls,
-            holes, wire, random,
-            vertical, reverse, straight,           // line
-            up, down, layer, verticalX, verticalZ, // fill
-            cone, hcone, icone, hicone, volcano,   // draw
-            pyramid, hpyramid, ipyramid, hipyramid,// draw
-            sphere, hsphere, circle,               // draw
-        }
+    }
+    
+    public enum DrawMode {
+        normal, solid, hollow, walls,
+        holes, wire, random,
+        vertical, reverse, straight,           // line
+        up, down, layer, verticalX, verticalZ, // fill
+        cone, hcone, icone, hicone, volcano,   // draw
+        pyramid, hpyramid, ipyramid, hipyramid,// draw
+        sphere, hsphere, circle,               // draw
     }
 }

@@ -26,6 +26,7 @@ namespace MCGalaxy {
             buffer[0] = Opcode.Handshake;
             buffer[1] = Server.version;
             
+            motd = ChatTokens.Apply(motd, p);
             bool cp437 = p.HasCpeExt(CpeExt.FullCP437);
             if (motd.Length > 64) {
                 NetUtils.Write(motd, buffer, 2, cp437);

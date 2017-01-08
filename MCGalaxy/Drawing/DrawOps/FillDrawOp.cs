@@ -17,8 +17,10 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Commands.Building;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Drawing.Ops {
     
@@ -53,6 +55,80 @@ namespace MCGalaxy.Drawing.Ops {
                 Level.IntToPos(pos, out x, out y, out z);
                 output(Place(x, y, z, brush));
             }
+        }
+        
+        
+        public unsafe static List<int> FloodFill(Player p, int index, byte block, byte extBlock, DrawMode mode) {
+            Level lvl = p.level;
+            SparseBitSet bits = new SparseBitSet(lvl.Width, lvl.Height, lvl.Length);
+            List<int> buffer = new List<int>();
+            Queue<int> temp = new Queue<int>();
+            
+            const int max = 65536;
+            int count = 0, oneY = lvl.Width * lvl.Length;
+            int* pos = stackalloc int[max];
+            pos[0] = index; count++;
+            
+            while (count > 0 && buffer.Count <= p.group.maxBlocks) {
+                index = pos[count - 1]; count--;
+                ushort x = (ushort)(index % lvl.Width);
+                ushort y = (ushort)((index / lvl.Width) / lvl.Length);
+                ushort z = (ushort)((index / lvl.Width) % lvl.Length);
+                
+                if (temp.Count > 0) { pos[count] = temp.Dequeue(); count++; }
+                if (bits.Get(x, y, z)) continue;
+                
+                bits.Set(x, y, z, true);
+                buffer.Add(index);
+                
+                if (mode != DrawMode.verticalX) { // x
+                    if (Check(p, (ushort)(x + 1), y, z, block, extBlock)) {
+                        if (count == max) { temp.Enqueue(index + 1); }
+                        else { pos[count] = index + 1; count++; }
+                    }
+                    if (Check(p, (ushort)(x - 1), y, z, block, extBlock)) {
+                        if (count == max) { temp.Enqueue(index - 1); }
+                        else { pos[count] = index - 1; count++; }
+                    }
+                }
+
+                if (mode != DrawMode.verticalZ) { // z
+                    if (Check(p, x, y, (ushort)(z + 1), block, extBlock)) {
+                        if (count == max) { temp.Enqueue(index + lvl.Width); }
+                        else { pos[count] = index + lvl.Width; count++; }
+                    }
+                    if (Check(p, x, y, (ushort)(z - 1), block, extBlock)) {
+                        if (count == max) { temp.Enqueue(index - lvl.Width); }
+                        else { pos[count] = index - lvl.Width; count++; }
+                    }
+                }
+
+                if (!(mode == DrawMode.down || mode == DrawMode.layer)) { // y up
+                    if (Check(p, x, (ushort)(y + 1), z, block, extBlock)) {
+                        if (count == max) { temp.Enqueue(index + oneY); }
+                        else { pos[count] = index + oneY; count++; }
+                    }
+                }
+
+                if (!(mode == DrawMode.up || mode == DrawMode.layer)) { // y down
+                    if (Check(p, x, (ushort)(y - 1), z, block, extBlock)) {
+                        if (count == max) { temp.Enqueue(index - oneY); }
+                        else { pos[count] = index - oneY; count++; }
+                    }
+                }
+            }
+            bits.Clear();
+            return buffer;
+        }
+        
+        static bool Check(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock) {
+            byte curBlock = p.level.GetTile(x, y, z);
+
+            if (curBlock == block && curBlock == Block.custom_block) {
+                byte curExtBlock = p.level.GetExtTile(x, y, z);
+                return curExtBlock == extBlock;
+            }
+            return curBlock == block;
         }
     }
 }
