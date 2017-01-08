@@ -403,6 +403,7 @@
     <Compile Include="CorePlugin\LevelHandler.cs" />
     <Compile Include="Database\Backends\SQLite.cs" />
     <Compile Include="Database\BlockDB\BlockDB.cs" />
+    <Compile Include="Database\BlockDB\BlockDBCache.cs" />
     <Compile Include="Database\BlockDB\BlockDBFile.cs" />
     <Compile Include="Database\BlockDB\BlockDBEntry.cs" />
     <Compile Include="Database\BlockDB\BlockDBChange.cs" />

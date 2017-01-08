@@ -36,12 +36,9 @@ namespace MCGalaxy.DB {
 
         /// <summary> The path of this BlockDB's backing file on disc. </summary>
         public string FilePath { get { return BlockDBFile.FilePath(MapName); } }
-
-        /// <summary> Used to synchronise adding to Cache by multiple threads. </summary>
-        internal readonly object CacheLock = new object();
         
         /// <summary> In-memory list of recent BlockDB changes. </summary>
-        public FastList<BlockDBEntry> Cache = new FastList<BlockDBEntry>();
+        public BlockDBCache Cache = new BlockDBCache();
         
         /// <summary> Whether changes are actually added to the BlockDB. </summary>
         public bool Used;
@@ -83,14 +80,12 @@ namespace MCGalaxy.DB {
                 entry.Flags |= BlockDBFlags.OldCustom;
                 entry.OldRaw = oldExt;
             }
-            
-            lock (CacheLock)
-                Cache.Add(entry);
+            Cache.Add(ref entry);
         }
         
         public void WriteEntries() {
             using (IDisposable writeLock = locker.AccquireWriteLock()) {
-                if (Cache.Count == 0) return;
+                if (Cache.Head == null) return;
                 
                 ValidateBackingFile();
                 using (Stream s = File.OpenWrite(FilePath)) {
@@ -98,9 +93,7 @@ namespace MCGalaxy.DB {
                     // and 21 bytes were in the file, this sets the position to byte 16
                     s.Position = s.Length & ~0x0F;
                     BlockDBFile.WriteEntries(s, Cache);
-                    
-                    lock (CacheLock)
-                        Cache = new FastList<BlockDBEntry>();
+                    Cache.Clear();
                 }
             }
         }
@@ -124,13 +117,17 @@ namespace MCGalaxy.DB {
         }
         
         void FindInMemoryAt(ushort x, ushort y, ushort z, Action<BlockDBEntry> output) {
-            Vec3U16 dims = Dims;
-            int count = Cache.Count, index = (y * dims.Z + z) * dims.X + x;
-            BlockDBEntry[] items = Cache.Items;
-            
-            for (int i = 0; i < count; i++) {
-                if (items[i].Index != index) continue;
-                output(items[i]);
+            int index = (y * Dims.Z + z) * Dims.X + x;
+            BlockDBCacheNode node = Cache.Tail;            
+            while (node != null) {
+                BlockDBEntry[] entries = node.Entries;
+                int count = node.Count;
+                
+                for (int i = 0; i < count; i++) {
+                    if (entries[i].Index != index) continue;
+                    output(entries[i]);
+                }
+                lock (Cache.Locker) node = node.Next;
             }
         }
         
@@ -138,16 +135,29 @@ namespace MCGalaxy.DB {
         /// <returns> whether an entry before start time was reached. </returns>
         public bool FindChangesBy(int[] ids, DateTime start, DateTime end,
                                   out Vec3U16 dims, Action<BlockDBEntry> output) {
-            long startDelta = (long)start.Subtract(Epoch).TotalSeconds;
-            long endDelta = (long)end.Subtract(Epoch).TotalSeconds;
+            int startDelta = ClampDelta(start.Subtract(Epoch));
+            int endDelta = ClampDelta(end.Subtract(Epoch));
             
             using (IDisposable readLock = locker.AccquireReadLock()) {
                 dims = Dims;
-                // Read entries from memory cache
-                int count = Cache.Count;
-                BlockDBEntry[] items = Cache.Items;
+                if (FindInMemoryBy(ids, startDelta, endDelta, output)) return true;
+                
+                if (!File.Exists(FilePath)) return false;
+                using (Stream s = File.OpenRead(FilePath)) {
+                    BlockDBFile.ReadHeader(s, out dims);
+                    return BlockDBFile.FindChangesBy(s, ids, startDelta, endDelta, output);
+                }
+            }
+        }
+        
+        bool FindInMemoryBy(int[] ids, int startDelta, int endDelta, Action<BlockDBEntry> output) {
+            BlockDBCacheNode node = Cache.Head;            
+            while (node != null) {
+                int count = node.Count;
+                BlockDBEntry[] entries = node.Entries;
+                
                 for (int i = count - 1; i >= 0; i--) {
-                    BlockDBEntry entry = items[i];
+                    BlockDBEntry entry = entries[i];
                     if (entry.TimeDelta < startDelta) return true;
                     if (entry.TimeDelta > endDelta) continue;
                     
@@ -156,14 +166,16 @@ namespace MCGalaxy.DB {
                         output(entry); break;
                     }
                 }
-                
-                // Read entries from disc cache
-                if (!File.Exists(FilePath)) return false;
-                using (Stream s = File.OpenRead(FilePath)) {
-                    BlockDBFile.ReadHeader(s, out dims);
-                    return BlockDBFile.FindChangesBy(s, ids, startDelta, endDelta, output);
-                }
+                lock (Cache.Locker) node = node.Prev;
             }
+            return false;
+        }
+        
+        static int ClampDelta(TimeSpan delta) {
+            long secs = (long)delta.TotalSeconds;
+            if (secs < int.MinValue) return int.MinValue;
+            if (secs > int.MaxValue) return int.MaxValue;
+            return (int)secs;
         }
         
         

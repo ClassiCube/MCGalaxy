@@ -61,11 +61,27 @@ namespace MCGalaxy.DB {
         
         public static void WriteEntries(Stream s, FastList<BlockDBEntry> entries) {
             byte[] bulk = new byte[BulkEntries * EntrySize];
+            WriteEntries(s, bulk, entries.Items, entries.Count);
+        }
+
+        public static void WriteEntries(Stream s, BlockDBCache cache) {
+            byte[] bulk = new byte[BulkEntries * EntrySize];
+            BlockDBCacheNode node = cache.Tail;
             
-            for (int i = 0; i < entries.Count; i += BulkEntries) {
-                int count = Math.Min(BulkEntries, entries.Count - i);
-                for (int j = 0; j < count; j++) {
-                    BlockDBEntry entry = entries.Items[i + j];
+            while (node != null) {
+                WriteEntries(s, bulk, node.Entries, node.Count);
+                lock (cache.Locker)
+                    node = node.Next;
+            }
+        }
+        
+        static void WriteEntries(Stream s, byte[] bulk, BlockDBEntry[] entries, int count) {
+            if (count == 0) return;
+            
+            for (int i = 0; i < count; i += BulkEntries) {
+                int bulkCount = Math.Min(BulkEntries, count - i);
+                for (int j = 0; j < bulkCount; j++) {
+                    BlockDBEntry entry = entries[i + j];
                     WriteI32(entry.PlayerID, bulk, j * EntrySize);
                     WriteI32(entry.TimeDelta, bulk, j * EntrySize + 4);
                     WriteI32(entry.Index, bulk, j * EntrySize + 8);
@@ -73,7 +89,7 @@ namespace MCGalaxy.DB {
                     bulk[j * EntrySize + 13] = entry.NewRaw;
                     WriteU16(entry.Flags, bulk, j * EntrySize + 14);
                 }
-                s.Write(bulk, 0, count * EntrySize);
+                s.Write(bulk, 0, bulkCount * EntrySize);
             }
         }
         
@@ -101,7 +117,7 @@ namespace MCGalaxy.DB {
         
         /// <summary> Iterates from the very newest to oldest entry in the BlockDB. </summary>
         /// <returns> whether an entry before start time was reached. </returns>
-        public static bool FindChangesBy(Stream s, int[] ids, long start, long end, 
+        public static bool FindChangesBy(Stream s, int[] ids, int start, int end,
                                          Action<BlockDBEntry> output) {
             byte[] bulk = new byte[BulkEntries * EntrySize];
             fixed (byte* ptr = bulk) {

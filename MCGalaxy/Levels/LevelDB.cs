@@ -25,7 +25,7 @@ namespace MCGalaxy {
     public static class LevelDB {
         
         public unsafe static void SaveBlockDB(Level lvl) {
-            if (lvl.BlockDB.Cache.Count == 0) return;
+            if (lvl.BlockDB.Cache.Head == null) return;
             if (!lvl.UseBlockDB) { lvl.BlockDB.Cache.Clear(); return; }
 
             lvl.BlockDB.WriteEntries();
