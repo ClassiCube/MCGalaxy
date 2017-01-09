@@ -412,7 +412,7 @@ namespace fNbt {
 
         static int Swap(int v) {
             unchecked {
-                var v2 = (uint)v;
+                uint v2 = (uint)v;
                 return
                     (int)
                     ((v2 >> 24) & 0x000000FF | (v2 >> 8) & 0x0000FF00 | (v2 << 8) & 0x00FF0000 |
@@ -446,8 +446,8 @@ namespace fNbt {
                 if (header != (int)NbtTagType.Compound)
                     throw new NbtFormatException("Given NBT stream does not start with a TAG_Compound");
                 
-                var reader = new NbtBinaryReader(buffered, true);
-                var rootCompound = new NbtCompound(reader.ReadString());
+                NbtBinaryReader reader = new NbtBinaryReader(buffered, true);
+                NbtCompound rootCompound = new NbtCompound(reader.ReadString());
                 rootCompound.ReadTag(reader);
                 RootTag = rootCompound;
             }

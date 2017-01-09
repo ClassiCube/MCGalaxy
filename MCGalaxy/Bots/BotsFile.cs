@@ -33,7 +33,7 @@ namespace MCGalaxy.Bots {
             if (!File.Exists("extra/bots.json")) return;
             lock (locker) {
                 string json = File.ReadAllText("extra/bots.json");
-                var bots = JsonConvert.DeserializeObject<BotProperties[]>(json);
+                BotProperties[] bots = JsonConvert.DeserializeObject<BotProperties[]>(json);
                 SavedBots = new List<BotProperties>(bots);
                 
                 foreach (BotProperties bot in SavedBots) {

@@ -36,7 +36,7 @@ namespace MCGalaxy {
         }
         
         public List<string> commandNames() {
-            var tempList = new List<string>(commands.Count);
+            List<string> tempList = new List<string>(commands.Count);
             commands.ForEach(cmd => tempList.Add(cmd.name));
             return tempList;
         }

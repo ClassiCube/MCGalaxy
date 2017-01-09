@@ -76,7 +76,7 @@ namespace MCGalaxy {
 
             for (int i = 0; i < MAX_RETRIES; i++) {
                 try {
-                    var req = WebRequest.Create(beat.URL) as HttpWebRequest;
+                    HttpWebRequest req = WebRequest.Create(beat.URL) as HttpWebRequest;
                     req.Method = "POST";
                     req.ContentType = "application/x-www-form-urlencoded";
                     req.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
@@ -84,12 +84,12 @@ namespace MCGalaxy {
                     req.ContentLength = data.Length;
                     beat.OnRequest(req);
 
-                    using (var w = req.GetRequestStream()) {
+                    using (Stream w = req.GetRequestStream()) {
                         w.Write(data, 0, data.Length);
                         if (Server.logbeat) Server.s.Log("Beat " + beat + " was sent");
                     }
 
-                    using (var r = new StreamReader(req.GetResponse().GetResponseStream())) {
+                    using (StreamReader r = new StreamReader(req.GetResponse().GetResponseStream())) {
                         string read = r.ReadToEnd().Trim();
                         beat.OnResponse(read);
 

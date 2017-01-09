@@ -150,7 +150,7 @@ namespace MCGalaxy {
         public static void SendChatFrom(Player from, string message, bool showname) {
             if (from == null) return;            
             if (Last50Chat.Count == 50) Last50Chat.RemoveAt(0);
-            var chatmessage = new ChatMessage();
+            ChatMessage chatmessage = new ChatMessage();
             chatmessage.text = message;
             chatmessage.username = from.color + from.name;
             chatmessage.time = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");

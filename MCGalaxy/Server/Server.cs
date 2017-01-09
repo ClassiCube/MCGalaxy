@@ -189,7 +189,7 @@ namespace MCGalaxy {
         }
         
         static void FixupOldPerms() {
-            var perms = SrvProperties.oldPerms;
+            SrvProperties.OldPerms perms = SrvProperties.oldPerms;
             Server.opchatperm = CommandOtherPerms.FindPerm("opchat", LevelPermission.Operator);
             Server.adminchatperm = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
             if (perms.clearPerm == -1 && perms.nextPerm == -1 && perms.viewPerm == -1

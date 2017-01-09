@@ -68,7 +68,7 @@ namespace MCGalaxy {
             syntax = String.Format(syntax, cmdName.Capitalize(), cmdName);
             
             string path = SourceDir + "Cmd" + cmdName + Ext;
-            using (var sw = new StreamWriter(path))
+            using (StreamWriter sw = new StreamWriter(path))
                 sw.WriteLine(syntax);
         }
         

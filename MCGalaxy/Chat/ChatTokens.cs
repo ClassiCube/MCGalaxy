@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using TokenParser = System.Func<MCGalaxy.Player, string>;
 
 namespace MCGalaxy {   
     public static class ChatTokens {
@@ -54,7 +53,8 @@ namespace MCGalaxy {
         }
         
         
-        internal static Dictionary<string, TokenParser> standardTokens = new Dictionary<string, TokenParser> {
+        internal static Dictionary<string, Func<Player, string>> standardTokens 
+            = new Dictionary<string, Func<Player, string>> {
             { "$name", p => p.DisplayName == null ? null :
                     (Server.dollarNames ? "$" : "") + Colors.StripColors(p.DisplayName) },
             { "$truename", p => p.truename == null ? null :

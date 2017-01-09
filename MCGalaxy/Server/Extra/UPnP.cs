@@ -91,7 +91,7 @@ namespace MCGalaxy.Core {
             try {
 #endif
                 XmlDocument desc = new XmlDocument();
-                var request = WebRequest.CreateDefault(new Uri(resp));
+                WebRequest request = WebRequest.CreateDefault(new Uri(resp));
                 desc.Load(request.GetResponse().GetResponseStream());
                 XmlNamespaceManager nsMgr = new XmlNamespaceManager(desc.NameTable);
                 nsMgr.AddNamespace("tns", "urn:schemas-upnp-org:device-1-0");
