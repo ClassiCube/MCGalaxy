@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
 
                 PlayerActions.ChangeMap(who, where.name);
                 if (who.level == where)
-                    Player.Message(p, "Sent " + who.ColoredName + " %Sto " + where.name);
+                    Player.Message(p, "Sent " + who.ColoredName + " %Sto " + where.ColoredName);
                 else
                     Player.Message(p, where.name + " is not loaded");
             } else {

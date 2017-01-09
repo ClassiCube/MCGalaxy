@@ -23,6 +23,11 @@ using MCGalaxy.Commands.World;
 
 namespace MCGalaxy.Commands {
     public sealed partial class CmdOverseer : Command {
+
+        static void HandleBlockProps(Player p, string arg1, string arg2) {
+            string args = ("level " + arg1 + " " + arg2).Trim();
+            Command.all.Find("blockproperties").Use(p, args);
+        }
         
         static void HandleEnv(Player p, string type, string value) {
             string arg = value == "" ? "normal" : value;
@@ -76,7 +81,7 @@ namespace MCGalaxy.Commands {
         
         
         static void HandleMap(Player p, string opt, string value) {
-            bool mapOnly = !(opt == "ADD" || opt == "DELETE" || opt == "SAVE");
+            bool mapOnly = !(opt == "ADD" || opt == "DELETE");
             if (mapOnly && !OwnsMap(p, p.level)) {
                 Player.Message(p, "You may only perform that action on your own map."); return;
             }
@@ -92,18 +97,8 @@ namespace MCGalaxy.Commands {
             } else if (opt == "DELETE") {
                 DeleteMap(p, value);
             } else if (opt == "SAVE") {
-                byte mapNum = 0;
-                if (value == "") {
-                    Player.Message(p, "To save one of your maps type %T/os map save [map number]");
-                } else if (value == "1") {
-                    Command.all.Find("save").Use(p, FirstMapName(p));
-                    Player.Message(p, "Map 1 has been saved.");
-                } else if (byte.TryParse(value, out mapNum)) {
-                    Command.all.Find("save").Use(p, p.name.ToLower() + value);
-                    Player.Message(p, "Map " + value + " has been saved.");
-                } else {
-                    Player.MessageLines(p, mapHelp);
-                }
+                Command.all.Find("save").Use(p, "");
+                Player.Message(p, "Map has been saved.");
             } else if (opt == "RESTORE") {
                 Command.all.Find("restore").Use(p, value);
             } else if (opt == "RESIZE") {

@@ -32,36 +32,41 @@ namespace MCGalaxy.Commands {
         public CmdSave() { }
 
         public override void Use(Player p, string message) {
-            if (message.ToLower() == "all") {
-                Level[] loaded = LevelInfo.Loaded.Items;
-                foreach (Level l in loaded) {
-                    try {
-                        if (l.ShouldSaveChanges()) l.Save();
-                        else { Server.s.Log("Level \"" + l.name + "\" is running a game, skipping save."); }
-                    } catch (Exception ex) {
-                        Server.ErrorLog(ex);
-                    }
-                }
-                Chat.MessageAll("All levels have been saved.");
+            if (message.CaselessEq("all")) { SaveAll(); return; }
+            if (message == "") {
+                if (Player.IsSuper(p)) { SaveAll(); } 
+                else { Save(p, p.level, ""); }
+                return;
+            }
+            
+            string[] args = message.Split(' ');
+            if (args.Length <= 2) {
+                Level lvl = LevelInfo.FindMatches(p, args[0]);
+                if (lvl == null) return;
+                
+                string restore = args.Length > 1 ? args[1].ToLower() : "";
+                Save(p, lvl, restore);
             } else {
-                string[] args = message.Split(' ');
-                if (message == "") {
-                    if (p == null) Use(p, "all");
-                    else Save(p, p.level, "");
-                } else if (args.Length <= 2) {
-                    Level lvl = LevelInfo.FindMatches(p, args[0]);
-                    if (lvl == null) return;
-                    string restore = args.Length > 1 ? args[1].ToLower() : "";
-                    Save(p, lvl, restore);
-                } else {
-                    Help(p);
+                Help(p);
+            }
+        }
+        
+        static void SaveAll() {
+            Level[] loaded = LevelInfo.Loaded.Items;
+            foreach (Level l in loaded) {
+                try {
+                    if (l.ShouldSaveChanges()) l.Save();
+                    else { Server.s.Log("Level \"" + l.name + "\" is running a game, skipping save."); }
+                } catch (Exception ex) {
+                    Server.ErrorLog(ex);
                 }
             }
+            Chat.MessageAll("All levels have been saved.");
         }
         
         static void Save(Player p, Level lvl, string restoreName) {
             lvl.Save(true);
-            Player.Message(p, "Level \"" + lvl.name + "\" saved.");
+            Player.Message(p, "Level {0} %Ssaved.", lvl.ColoredName);
             int num = lvl.Backup(true, restoreName);
             if (num == -1) return;
             

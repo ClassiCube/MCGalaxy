@@ -79,6 +79,8 @@ namespace MCGalaxy.Commands {
         }
         
         Dictionary<string, SubCommand> subCommands = new Dictionary<string, SubCommand>() {
+            { "blockprops", new SubCommand(HandleBlockProps, blockPropskHelp) },
+            { "blockproperties", new SubCommand(HandleBlockProps, blockPropskHelp) },        	
             { "env", new SubCommand(HandleEnv, envHelp) },
             { "go", new SubCommand(HandleGoto, gotoHelp) },
             { "kick", new SubCommand(HandleKick, kickHelp) },
@@ -133,6 +135,11 @@ namespace MCGalaxy.Commands {
         
         
         #region Help messages
+
+        static string[] blockPropskHelp = new string[] {
+            "%T/os blockprops [id] [action] <args> %H- Manages properties for custom blocks on your map.",
+            "%H  See %T/help blockprops %Hfor a list of actions",
+        };
         
         static string[] envHelp = new string[] {
             "%T/os env [fog/cloud/sky/shadow/sun] [hex color] %H- Changes env colors of your map.",

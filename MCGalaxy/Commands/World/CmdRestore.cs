@@ -72,11 +72,11 @@ namespace MCGalaxy.Commands {
         
         static void OutputBackups(Player p) {
             if (!Directory.Exists(Server.backupLocation + "/" + p.level.name)) {
-                Player.Message(p, p.level.name + " has no backups yet."); return;
+                Player.Message(p, p.level.ColoredName + " %Shas no backups yet."); return;
             }
             
             string[] dirs = Directory.GetDirectories(Server.backupLocation + "/" + p.level.name);
-            Player.Message(p, p.level.name + " has &b" + dirs.Length + " %Sbackups.");
+            Player.Message(p, p.level.ColoredName + " %Shas &b" + dirs.Length + " %Sbackups.");
             int count = 0;
             StringBuilder custom = new StringBuilder();
             
