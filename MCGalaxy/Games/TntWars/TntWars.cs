@@ -22,7 +22,6 @@
 ///------|        them in the sidebar!!     |------\\\
 //-------|__________________________________|-------\\
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace MCGalaxy.Games
@@ -155,8 +154,9 @@ namespace MCGalaxy.Games
             }
             //Spawn them (And if needed, move them to the correct level!)
             {
-                foreach (player p in Players.Where(p => p.p.level != lvl))
+                foreach (player p in Players)
                 {
+                    if (p.p.level == lvl) continue;
                     PlayerActions.ChangeMap(p.p, lvl);
                     p.p.inTNTwarsMap = true;
                 }
@@ -348,31 +348,26 @@ namespace MCGalaxy.Games
             }
             if (GameMode == TntWarsGameMode.FFA)
             {
-                var pls = from pla in Players orderby pla.Score descending select pla; //LINQ FTW
-                int count = 1;
-                foreach (var pl in pls)
-                {
-                    if (count == 1)
+                int count = PlayingPlayers();
+                List<player> pls = SortedByScore();
+                for (int i = 0; i < count; i++) {
+                    player pl = pls[i];
+                    if (i == 0) 
                     {
                         Chat.MessageAll("&cTNT Wars %S1st Place: " + pl.p.ColoredName + " %Swith a score of " + pl.p.color + pl.Score);
                     }
-                    else if (count == 2)
+                    else if (i == 1)
                     {
                         SendAllPlayersMessage("&cTNT Wars %S2nd Place: " + pl.p.ColoredName + " %Swith a score of " + pl.p.color + pl.Score);
                     }
-                    else if (count == 3)
+                    else if (i == 2)
                     {
                         SendAllPlayersMessage("&cTNT Wars %S3rd Place: " + pl.p.ColoredName + " %Swith a score of " + pl.p.color + pl.Score);
                     }
-                    else if (count >= 4)
+                    else
                     {
                         SendAllPlayersMessage("&cTNT Wars %S" + count + "th Place: " + pl.p.ColoredName+ " %Swith a score of " + pl.p.color + pl.Score);
                     }
-                    if (count >= PlayingPlayers())
-                    {
-                        break;
-                    }
-                    count++;
                     Thread.Sleep(750); //Maybe, not sure (was 500)
                 }
             }
@@ -404,12 +399,14 @@ namespace MCGalaxy.Games
             int HealthDamage = 1;
             int kills = 0;
             int minusfromscore = 0;
-            if (GameDifficulty == TntWarsDifficulty.Hard || GameDifficulty == TntWarsDifficulty.Extreme)
-            {
+            if (GameDifficulty == TntWarsDifficulty.Hard || GameDifficulty == TntWarsDifficulty.Extreme) {
                 HealthDamage = 2;
             }
-            foreach (Player Kld in Killed.Where(Kld => !FindPlayer(Kld).spec).Where(Kld => !TeamKill(Killer, Kld) || TeamKills != false))
-            {
+            
+            foreach (Player Kld in Killed) {
+                if (FindPlayer(Kld).spec) continue;
+                if (!TeamKills && TeamKill(Killer, Kld)) continue;
+                
                 if (Kld.TntWarsHealth - HealthDamage <= 0)
                 {
                     Kld.TntWarsHealth = 0;
@@ -427,8 +424,8 @@ namespace MCGalaxy.Games
                     Player.Message(Kld, "TNT Wars: You were harmed by " + Killer.ColoredName);
                 }
             }
-            foreach (Player Died in Dead)
-            {
+            
+            foreach (Player Died in Dead) {
                 Died.TntWarsKillStreak = 0;
                 Died.TntWarsScoreMultiplier = 1f;
                 Died.TNTWarsLastKillStreakAnnounced = 0;
@@ -552,10 +549,17 @@ namespace MCGalaxy.Games
             }
         }
 
-        public bool InZone(ushort x, ushort y, ushort z, bool CheckForPlacingTnt)
-        {
-            return CheckForPlacingTnt ? NoTNTplacableZones.Any(Zn => Zn.smallX <= x && x <= Zn.bigX && Zn.smallY <= y && y <= Zn.bigY && Zn.smallZ <= z && z <= Zn.bigZ) :
-                NoBlockDeathZones.Any(Zn => Zn.smallX <= x && x <= Zn.bigX && Zn.smallY <= y && y <= Zn.bigY && Zn.smallZ <= z && z <= Zn.bigZ);
+        public bool InZone(ushort x, ushort y, ushort z, bool CheckForPlacingTnt) {
+            List<Zone> zones = CheckForPlacingTnt ? NoTNTplacableZones : NoBlockDeathZones; 
+            return InZone(x, y, z, zones);
+        }
+        
+        bool InZone(ushort x, ushort y, ushort z, List<Zone> zones) {
+            foreach (Zone Zn in zones) {
+                if (x >= Zn.smallX && y >= Zn.smallY && z >= Zn.smallZ 
+                    && x <= Zn.bigX && y <= Zn.bigY && z <= Zn.bigZ) return true;
+            }
+            return false;
         }
 
         public void DeleteZone(ushort x, ushort y, ushort z, bool NoTntZone, Player p = null)
@@ -617,6 +621,12 @@ namespace MCGalaxy.Games
             }
             return false;
         }
+        
+        public List<player> SortedByScore() {
+            List<TntWarsGame.player> sorted = new List<TntWarsGame.player>(Players);
+            sorted.Sort((a, b) => b.Score.CompareTo(a.Score));
+            return sorted;
+        }
 
         public void SendAllPlayersScore(bool TotalTeamScores = false, bool TheirTotalScore = false, bool TopScores = false)
         {
@@ -631,34 +641,22 @@ namespace MCGalaxy.Games
                 }
                 if (TopScores)
                 {
-                    int max = 5;
-                    if (PlayingPlayers() < 5)
-                    {
-                        max = PlayingPlayers();
-                    }
-
-                    var pls = from pla in Players orderby pla.Score descending select pla; //LINQ FTW
-
-                    foreach (player p in Players)
-                    {
-                        int count = 1;
-                        foreach (var pl in pls)
-                        {
-                            Player.Message(p.p, count.ToString() + ": " + pl.p.name + " - " + pl.Score.ToString());
-                            if (count >= max)
-                            {
-                                break;
-                            }
-                            count++;
-                            Thread.Sleep(500); //Maybe, not sure (250??)
+                    int count = System.Math.Min(PlayingPlayers(), 5);
+                    List<player> pls = SortedByScore();
+                   
+                    for (int i = 0; i < count; i++) {
+                        foreach (player p in Players) {
+                            Player.Message(p.p, "{0}: {1} - {2}", (i + 1), pls[i].p.name, pls[i].Score);
                         }
+                        Thread.Sleep(500); //Maybe, not sure (250??)
                     }
                     Thread.Sleep(1000);
                 }
                 if (TheirTotalScore)
                 {
-                    foreach (player p in Players.Where(p => !p.spec))
+                    foreach (player p in Players)
                     {
+                        if (p.spec) continue;
                         Player.Message(p.p, "TNT Wars: Your Score: " + Colors.white + p.Score.ToString());
                     }
                     Thread.Sleep(1000);
@@ -674,9 +672,8 @@ namespace MCGalaxy.Games
             if (GameMode == TntWarsGameMode.FFA) {
                 try
                 {
-                    if (Players.Any(p => p.Score >= ScoreLimit))
-                    {
-                        return true;
+                    foreach (player p in Players) {
+                        if (p.Score >= ScoreLimit) return true;
                     }
                 }
                 catch { }
@@ -758,7 +755,8 @@ namespace MCGalaxy.Games
         {
             if (lvl != null && GameStatus == 0)
             {
-                if (GameList.Any(g => g.lvl == this.lvl && g != this))
+                TntWarsGame existing = Find(lvl);
+                if (existing != null && existing != this)
                 {
                     if (ReturnErrors) Player.Message(p, "There is already a TNT Wars game on that map");
                     AllSetUp = false;
@@ -786,19 +784,25 @@ namespace MCGalaxy.Games
             }
         }
 
-        public static TntWarsGame Find(Level level)
-        {
-            return GameList.FirstOrDefault(g => g.lvl == level);
+        public static TntWarsGame Find(Level level) {
+            foreach (TntWarsGame g in GameList) {
+                if (g.lvl == level) return g;
+            }
+            return null;
         }
 
-        public static TntWarsGame FindFromGameNumber(int Number)
-        {
-            return GameList.FirstOrDefault(g => g.GameNumber == Number);
+        public static TntWarsGame FindFromGameNumber(int num) {
+            foreach (TntWarsGame g in GameList) {
+                if (g.GameNumber == num) return g;
+            }
+            return null;
         }
 
-        public player FindPlayer(Player pla)
-        {
-            return Players.FirstOrDefault(p => p.p == pla);
+        public player FindPlayer(Player pla) {
+            foreach (player p in Players) {
+                if (p.p == pla) return p;
+            }
+            return null;
         }
 
         public static TntWarsGame GetTntWarsGame(Player p)

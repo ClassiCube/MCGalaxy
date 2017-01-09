@@ -254,9 +254,8 @@ namespace MCGalaxy.Commands {
                 case "top":
                 case "leaders":
                     if (tntwrs.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress) {
+                        List<TntWarsGame.player> sorted = tntwrs.SortedByScore();
                         int count = Math.Min(tntwrs.PlayingPlayers(), 5);
-                        List<TntWarsGame.player> sorted = new List<TntWarsGame.player>(tntwrs.Players);
-                        sorted.Sort((a, b) => b.Score.CompareTo(a.Score));
                         
                         for (int i = 0; i < count; i++) {
                             Player.Message(p, "{0}: {1} - {2}", (i + 1), sorted[i].p.name, sorted[i].Score);

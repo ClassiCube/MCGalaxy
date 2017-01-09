@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCGalaxy_", "MCGalaxy\MCGal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "updater\Updater.csproj", "{1C317052-9B87-471C-A8AF-5AB2D779C174}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cmdexportzsmap", "bin\Cmdexportzsmap\Cmdexportzsmap.csproj", "{E8EFA7D9-84FB-454E-B736-FC7ACB0B27BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -28,6 +30,10 @@ Global
 		{1C317052-9B87-471C-A8AF-5AB2D779C174}.Debug|x86.Build.0 = Release|x86
 		{1C317052-9B87-471C-A8AF-5AB2D779C174}.Release|x86.ActiveCfg = Release|x86
 		{1C317052-9B87-471C-A8AF-5AB2D779C174}.Release|x86.Build.0 = Release|x86
+		{E8EFA7D9-84FB-454E-B736-FC7ACB0B27BC}.Debug|x86.Build.0 = Debug|Any CPU
+		{E8EFA7D9-84FB-454E-B736-FC7ACB0B27BC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E8EFA7D9-84FB-454E-B736-FC7ACB0B27BC}.Release|x86.Build.0 = Release|Any CPU
+		{E8EFA7D9-84FB-454E-B736-FC7ACB0B27BC}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
