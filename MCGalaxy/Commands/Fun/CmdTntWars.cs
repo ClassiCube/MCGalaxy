@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Games;
 
@@ -254,17 +254,12 @@ namespace MCGalaxy.Commands {
                 case "top":
                 case "leaders":
                     if (tntwrs.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress) {
-                        int max = 5;
-                        if (tntwrs.PlayingPlayers() < 5) {
-                            max = tntwrs.PlayingPlayers();
-                        }
-
-                        var pls = from pla in tntwrs.Players orderby pla.Score descending select pla; //LINQ FTW
-                        int count = 1;
-                        foreach (var pl in pls) {
-                            Player.Message(p, count.ToString() + ": " + pl.p.name + " - " + pl.Score.ToString());
-                            if (count >= max) break;
-                            count++;
+                        int count = Math.Min(tntwrs.PlayingPlayers(), 5);
+                        List<TntWarsGame.player> sorted = new List<TntWarsGame.player>(tntwrs.Players);
+                        sorted.Sort((a, b) => b.Score.CompareTo(a.Score));
+                        
+                        for (int i = 0; i < count; i++) {
+                            Player.Message(p, "{0}: {1} - {2}", (i + 1), sorted[i].p.name, sorted[i].Score);
                             Thread.Sleep(500); //Maybe, not sure (250??)
                         }
                     } else {

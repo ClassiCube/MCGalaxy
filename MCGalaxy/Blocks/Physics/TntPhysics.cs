@@ -73,8 +73,8 @@ namespace MCGalaxy.Blocks.Physics {
                         power = 3; break;
                 }
                 
-                if (C.data.Data < threshold) {
-                    C.data.Data++;
+                if ((C.data.Data >> 4) < threshold) {
+                    C.data.Data += (1 << 4);
                     lvl.Blockchange(x, (ushort)(y + 1), z, lvl.GetTile(x, (ushort)(y + 1), z) == Block.lavastill
                                     ? Block.air : Block.lavastill);
                     return;
@@ -92,25 +92,23 @@ namespace MCGalaxy.Blocks.Physics {
                     }
                 }
                 game.HandleKill(p, Killed);
+            } else if (lvl.physics < 3) {
+                lvl.Blockchange(x, y, z, Block.air);
             } else {
-                if (lvl.physics < 3) {
-                    lvl.Blockchange(x, y, z, Block.air);
-                } else {
-                    if (C.data.Data < 5 && lvl.physics == 3) {
-                        C.data.Data++;
-                        lvl.Blockchange(x, (ushort)(y + 1), z, lvl.GetTile(x, (ushort)(y + 1), z) == Block.lavastill
-                                        ? Block.air : Block.lavastill);
-                        return;
-                    }
-                    MakeExplosion(lvl, x, y, z, 0);
+                if (C.data.Data < 5 && lvl.physics == 3) {
+                    C.data.Data++;
+                    lvl.Blockchange(x, (ushort)(y + 1), z, lvl.GetTile(x, (ushort)(y + 1), z) == Block.lavastill
+                                    ? Block.air : Block.lavastill);
+                    return;
                 }
+                MakeExplosion(lvl, x, y, z, 0);
             }
         }
         
         static Player GetPlayer(ref PhysicsArgs args) {
             if (args.Type1 != PhysicsArgs.Custom) return null;
             
-            int id = args.Value1 | args.Value2 << 8 | args.Data << 16;
+            int id = args.Value1 | args.Value2 << 8 | (args.Data & 0xF) << 16;
             Player[] players = PlayerInfo.Online.Items;
             for (int i = 0; i < players.Length; i++) {
                 if (players[i].SessionID == id) return players[i];
@@ -131,8 +129,8 @@ namespace MCGalaxy.Blocks.Physics {
             Explode(lvl, x, y, z, size + 3, rand, 3, game);
         }
         
-        static void Explode(Level lvl, ushort x, ushort y, ushort z, 
-                     int size, Random rand, int prob, TntWarsGame game) {
+        static void Explode(Level lvl, ushort x, ushort y, ushort z,
+                            int size, Random rand, int prob, TntWarsGame game) {
             for (int xx = (x - size); xx <= (x + size ); ++xx)
                 for (int yy = (y - size ); yy <= (y + size); ++yy)
                     for (int zz = (z - size); zz <= (z + size); ++zz)

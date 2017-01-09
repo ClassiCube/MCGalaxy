@@ -175,7 +175,7 @@ namespace MCGalaxy {
         
         /// <summary> Persistent ID of this user in the Players table. </summary>
         public int UserID;
-        public const int SessionIDMask = (1 << 23) - 1;
+        public const int SessionIDMask = (1 << 20) - 1;
         /// <summary> Temp unique ID for this session only. </summary>
         public int SessionID;
 

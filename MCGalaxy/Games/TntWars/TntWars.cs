@@ -707,19 +707,28 @@ namespace MCGalaxy.Games
         }
 
         //Other stuff
-        public int RedTeam()
-        {
-            return Players.Count(p => p.Red);
+        public int RedTeam() {
+            int count = 0;
+            foreach (player p in Players) {
+                if (p.Red) count++;
+            }
+            return count;
         }
 
-        public int BlueTeam()
-        {
-            return Players.Count(p => p.Blue);
+        public int BlueTeam() {
+            int count = 0;
+            foreach (player p in Players) {
+                if (p.Blue) count++;
+            }
+            return count;
         }
 
-        public int PlayingPlayers()
-        {
-            return Players.Count(p => !p.spec);
+        public int PlayingPlayers() {
+            int count = 0;
+            foreach (player p in Players) {
+                if (!p.spec) count++;
+            }
+            return count;
         }
 
         public static void SetTitlesAndColor(player p, bool reset = false)
