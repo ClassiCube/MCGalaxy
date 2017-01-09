@@ -169,7 +169,7 @@ namespace MCGalaxy.Commands.CPE {
                 if (!ExistsInScope(def, i, global)) continue;
                 defsInScope.Add(def);
             }
-            MultiPageOutput.Output(p, defsInScope, FormatBlock, cmd.Substring(1) + " list", 
+            MultiPageOutput.Output(p, defsInScope, FormatBlock, cmd.Substring(1) + " list",
                                    "custom blocks", modifier, true);
         }
         
@@ -200,7 +200,7 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition bd = GetBD(p, global);
             
             if (opt == "revert" && step > 2) {
-                if (step == 19 && bd.FogDensity == 0) step -= 4;
+                if (step == 17 && bd.FogDensity == 0) step -= 2;
                 else if (step == 9 && bd.Shape == 0) step -= 5;
                 else step--;
 
@@ -266,17 +266,14 @@ namespace MCGalaxy.Commands.CPE {
                     step++;
             } else if (step == 15) {
                 if (byte.TryParse(value, out bd.FogDensity))
-                    step += (bd.FogDensity == 0 ? 4 : 1);
+                    step += (bd.FogDensity == 0 ? 2 : 1);
             } else if (step == 16) {
-                if (byte.TryParse(value, out bd.FogR))
+                if (Utils.CheckHex(p, ref value)) {
+                    CustomColor rgb = Colors.ParseHex(value);
+                    bd.FogR = rgb.R; bd.FogG = rgb.G; bd.FogB = rgb.B;
                     step++;
+                }
             } else if (step == 17) {
-                if (byte.TryParse(value, out bd.FogG))
-                    step++;
-            } else if (step == 18) {
-                if (byte.TryParse(value, out bd.FogB))
-                    step++;
-            } else if (step == 19) {
                 byte fallback = GetFallback(p, value);
                 if (fallback == Block.Invalid) { SendStepHelp(p, global); return; }
                 bd.FallBack = fallback;
@@ -296,7 +293,7 @@ namespace MCGalaxy.Commands.CPE {
                 if (parts.Length == 1) {
                     Player.Message(p, "Valid properties: name, collide, speed, toptex, alltex, sidetex, " +
                                    "bottomtex, blockslight, sound, fullbright, shape, blockdraw, min, max, " +
-                                   "fogdensity, fogred, foggreen, fogblue, fallback, lefttex, righttex, fronttex, backtex");
+                                   "fogdensity, fogcolor, fallback, lefttex, righttex, fronttex, backtex");
                 } else {
                     Help(p, cmd);
                 }
@@ -314,20 +311,24 @@ namespace MCGalaxy.Commands.CPE {
             switch (parts[2].ToLower()) {
                 case "name":
                     def.Name = value; break;
+                    
                 case "collide":
                     if( !(value == "0" || value == "1" || value == "2")) {
                         SendEditHelp(p, 9, 0); return;
                     }
                     def.CollideType = byte.Parse(value); break;
+                    
                 case "speed":
                     if (!Utils.TryParseDecimal(value, out fTemp) || fTemp < 0.25f || fTemp > 3.96f) {
                         SendEditHelp(p, 10, 0); return;
                     }
                     def.Speed = fTemp; break;
+                    
                 case "top":
                 case "toptex":
                     if (!EditByte(p, value, "Top texture", ref def.TopTex)) return;
                     break;
+                    
                 case "all":
                 case "alltex":
                     if (!EditByte(p, value, "All textures", ref def.SideTex)) return;
@@ -335,62 +336,78 @@ namespace MCGalaxy.Commands.CPE {
                     def.FrontTex = def.SideTex; def.BackTex = def.SideTex;
                     def.TopTex = def.SideTex; def.BottomTex = def.SideTex;
                     break;
+                    
                 case "side":
                 case "sidetex":
                     if (!EditByte(p, value, "Side texture", ref def.SideTex)) return;
                     def.LeftTex = def.SideTex; def.RightTex = def.SideTex;
                     def.FrontTex = def.SideTex; def.BackTex = def.SideTex;
                     break;
+                    
                 case "left":
                 case "lefttex":
                     if (!EditByte(p, value, "Left texture", ref def.LeftTex)) return;
                     break;
+                    
                 case "right":
                 case "righttex":
                     if (!EditByte(p, value, "Right texture", ref def.RightTex)) return;
                     break;
+                    
                 case "front":
                 case "fronttex":
                     if (!EditByte(p, value, "Front texture", ref def.FrontTex)) return;
                     break;
+                    
                 case "back":
                 case "backtex":
                     if (!EditByte(p, value, "Back texture", ref def.BackTex)) return;
                     break;
+                    
                 case "bottom":
                 case "bottomtex":
                     if (!EditByte(p, value, "Bottom texture", ref def.BottomTex)) return;
                     break;
+                    
                 case "light":
                 case "blockslight":
                     if( !(value == "0" || value == "1")) {
                         SendEditHelp(p, 11, 0); return;
                     }
-                    def.BlocksLight = value != "0"; break;
+                    def.BlocksLight = value != "0";
+                    break;
+                    
                 case "sound":
                 case "walksound":
                     if (!EditByte(p, value, "Walk sound", ref def.WalkSound, 12, 1, 0, 11)) return;
                     break;
+                    
                 case "bright":
                 case "fullbright":
                     if( !(value == "0" || value == "1")) {
                         SendEditHelp(p, 13, 0); return;
                     }
-                    def.FullBright = value != "0"; break;
+                    def.FullBright = value != "0";
+                    break;
+                    
                 case "shape":
                     if( !(value == "0" || value == "1")) {
                         SendEditHelp(p, 3, 0); return;
                     }
-                    def.Shape = value == "1" ? (byte)0 : def.MaxZ; break;
+                    def.Shape = value == "1" ? (byte)0 : def.MaxZ;
+                    break;
+                    
                 case "draw":
                 case "blockdraw":
                     if (!EditByte(p, value, "Block draw", ref def.BlockDraw, 14, 1, 0, 4)) return;
                     break;
+                    
                 case "min":
                 case "mincoords":
                     if (!ParseCoords(value, ref def.MinX, ref def.MinY, ref def.MinZ)) {
                         SendEditHelp(p, 7, 0); return;
                     }
+                    
                     break;
                 case "max":
                 case "maxcoords":
@@ -398,22 +415,20 @@ namespace MCGalaxy.Commands.CPE {
                         SendEditHelp(p, 8, 0); return;
                     }
                     break;
+                    
                 case "density":
                 case "fogdensity":
                     if (!EditByte(p, value, "Fog density", ref def.FogDensity)) return;
                     break;
-                case "red":
-                case "fogred":
-                    if (!EditByte(p, value, "Fog red", ref def.FogR)) return;
+                    
+                case "col":
+                case "fogcol":
+                case "fogcolor":
+                    if (!Utils.CheckHex(p, ref value)) return;
+                    CustomColor rgb = Colors.ParseHex(value);
+                    def.FogR = rgb.R; def.FogG = rgb.G; def.FogB = rgb.B;
                     break;
-                case "green":
-                case "foggreen":
-                    if (!EditByte(p, value, "Fog green", ref def.FogG)) return;
-                    break;
-                case "blue":
-                case "fogblue":
-                    if (!EditByte(p, value, "Fog blue", ref def.FogB)) return;
-                    break;
+                    
                 case "fallback":
                 case "fallbackid":
                 case "fallbackblock":
@@ -423,6 +438,8 @@ namespace MCGalaxy.Commands.CPE {
                 default:
                     Player.Message(p, "Unrecognised property: " + parts[2]); return;
             }
+            
+            Player.Message(p, "Set {0} for {1} to {2}", parts[2], def.Name, value);
             BlockDefinition.Add(def, defs, p == null ? null : p.level);
             ReloadMap(p, global);
         }
@@ -534,7 +551,7 @@ namespace MCGalaxy.Commands.CPE {
             return true;
         }
         
-        static bool ParseCoords(string parts, ref byte x, ref byte y, ref byte z) {            
+        static bool ParseCoords(string parts, ref byte x, ref byte y, ref byte z) {
             string[] coords = parts.Split(' ');
             if (coords.Length != 3) return false;
             
@@ -681,9 +698,7 @@ namespace MCGalaxy.Commands.CPE {
             new[] { "Enter the fog density for the block. 0 = No fog at all",
                 "1 - 255 = Increasing density (e.g. water has 12, lava 255)",
             },
-            new[] { "Enter the red part of the fog's colour (0 - 255)", },
-            new[] { "Enter the green part of the fog's colour (0 - 255)", },
-            new[] { "Enter the blue part of the fog's colour (0 - 255)", },
+            new[] { "Enter the fog color (hex color)", },
             new[] { "Enter the fallback block (Block shown to players who can't see custom blocks).",
                 "You can use any block name or block ID from the normal blocks.",
             },
