@@ -50,7 +50,6 @@ namespace MCGalaxy {
         
         public static IRCBot IRC;
         public static Thread locationChecker;
-        public static WebServer APIServer, InfoServer;
         public static DateTime StartTime, StartTimeLocal;
         
         public static PlayerMetaList AutoloadMaps = new PlayerMetaList("text/autoload.txt");
@@ -133,8 +132,6 @@ namespace MCGalaxy {
         
         #region Settings
         
-        [ConfigBool("enable-http-api", "Server", null, false)]
-        public static bool EnableHttpApi = false;
         [ConfigInt("position-interval", "Server", null, 100, 20, 2000)]
         public static int PositionInterval = 100;
         [ConfigBool("classicube-account-plus", "Server", null, true)]

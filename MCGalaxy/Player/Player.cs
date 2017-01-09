@@ -14,16 +14,19 @@ permissions and limitations under the Licenses.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using MCGalaxy.DB;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
-using MCGalaxy.Undo;
 
 namespace MCGalaxy {
+	public class ChatMessage {
+        public string text { get; set; }
+        public string time { get; set; }
+        public string username { get; set; }
+    }
+	
     public sealed partial class Player : IDisposable {
 
         public void IncrementBlockStats(byte block, bool drawn) {

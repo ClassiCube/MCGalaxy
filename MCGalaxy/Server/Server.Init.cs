@@ -152,17 +152,6 @@ namespace MCGalaxy {
         }
         
         void InitRest() {
-            try {
-                if (EnableHttpApi) {
-                    APIServer = new WebServer(SendResponse, "http://localhost:8080/api/");
-                    APIServer.Run();
-                    InfoServer = new WebServer(WhoIsResponse, "http://localhost:8080/whois/");
-                    InfoServer.Run();
-                }
-            } catch {
-                Server.s.Log("Failed to start local API server");
-            }
-
             IRC = new IRCBot();
             if (Server.irc) IRC.Connect();
 

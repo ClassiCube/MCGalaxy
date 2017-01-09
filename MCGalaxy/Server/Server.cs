@@ -165,47 +165,6 @@ namespace MCGalaxy {
             catch { }
         }
         
-        public static string SendResponse(HttpListenerRequest request) {
-            try {
-                API data = new API();
-                data.max_players = (int)Server.players;
-                
-                Player[] players = PlayerInfo.Online.Items;
-                string[] names = new string[players.Length];
-                for (int i = 0; i < players.Length; i++)
-                    names[i] = players[i].name;
-                data.players = names;
-                
-                data.chat = Player.Last50Chat.ToArray();
-                return JsonConvert.SerializeObject(data, Formatting.Indented);
-            } catch(Exception e) {
-                Logger.WriteError(e);
-            }
-            return "Error";
-        }
-        
-        public static string WhoIsResponse(HttpListenerRequest request) {
-            try {
-                string p = request.QueryString.Get("name");
-                if (p == null || p == "") return "Error";
-                
-                WhoWas data = new WhoWas(p);
-                Group grp = Group.Find(data.rank);
-                data.banned = grp != null && grp.Permission == LevelPermission.Banned;
-                
-                if (data.banned) {
-                    string[] bandata = Ban.GetBanData(p);
-                    data.banned_by = bandata[0];
-                    data.ban_reason = bandata[1];
-                    data.banned_time = bandata[2];
-                }
-                return JsonConvert.SerializeObject(data, Formatting.Indented);
-            } catch(Exception e) {
-                Logger.WriteError(e);
-            }
-            return "Error";
-        }
-        
         public static void LoadAllSettings() {
             zombie.LoadInfectMessages();
             Colors.LoadExtColors();
@@ -287,9 +246,6 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) { p.save(); }
             foreach (Player p in players) { p.Leave(msg); }
-  
-            if (APIServer != null) APIServer.Stop();
-            if (InfoServer != null) InfoServer.Stop();
 
             Player.connections.ForEach(p => p.Leave(msg));
             Plugin.Unload();
