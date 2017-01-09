@@ -19,6 +19,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands.Moderation;
 
 namespace MCGalaxy.Commands {
     
@@ -43,11 +44,13 @@ namespace MCGalaxy.Commands {
             DoFakeRank(p, grp);
         }
 
-        void DoFakeRank(Player p, Group newRank) {
-            p.color = newRank.color;
-            p.hackrank = true;
-            Chat.MessageAll("{0}%S's rank was set to {1}%S. (Congratulations!)", p.ColoredName, newRank.ColoredName);
+        void DoFakeRank(Player p, Group newRank) {   
+            p.hackrank = true;            
+            string rankMsg = RankCmd.FormatRankChange(p.group, newRank, p.name, "Congratulations!");
+            Chat.MessageAll(rankMsg);
+            
             p.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
+            p.color = newRank.color;
             DoKick(p, newRank);
         }
 

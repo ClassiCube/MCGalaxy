@@ -21,6 +21,18 @@ using System.IO;
 namespace MCGalaxy.Commands.Moderation {
     internal static class RankCmd {
         
+        internal static string FormatRankChange(Group curRank, Group newRank, string name, string reason) {
+            string direction = newRank.Permission >= curRank.Permission ? " %Swas promoted to " : " %Swas demoted to ";
+            Player who = PlayerInfo.FindExact(name);
+            
+            if (who == null) {
+                name += " &f(offline)";
+            } else {
+                name = who.ColoredName;
+            }
+            return name + direction + newRank.ColoredName + "%S. (" + reason + "%S)";
+        }
+        
         internal static void ChangeRank(string name, Group oldRank, Group newRank,
                                         Player who, bool saveToNewRank = true) {
             Server.reviewlist.Remove(name);

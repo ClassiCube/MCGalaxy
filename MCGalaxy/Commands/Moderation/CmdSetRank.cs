@@ -47,21 +47,23 @@ namespace MCGalaxy.Commands.Moderation {
             if (name == null) return;
             
             Player who = PlayerInfo.FindExact(name);
-            if (who == p && who != null) { Player.Message(p, "Cannot change your own rank."); return; }
+            if (p == who && who != null) { Player.Message(p, "Cannot change your own rank."); return; }
             
             Group curRank = who != null ? who.group : PlayerInfo.GetGroup(name);
             Group newRank = TargetRank(p, rank.ToLower(), curRank);
             if (newRank == null) return;
+            
+            if (curRank == newRank) {
+                Player.Message(p, "{0} %Sis already ranked {1}", 
+                               PlayerInfo.GetColoredName(p, name), curRank.ColoredName);
+                return;
+            }
             if (!ChangeRank(name, curRank, newRank, who, p, ref reason)) return;
             
-            if (who == null) {
-                rankMsg = name + " &f(offline)%S's rank was set to " + newRank.ColoredName + "%S. (" + reason + "%S)";
-                Chat.MessageAll(rankMsg);
-            } else {
-                rankMsg = who.ColoredName + "%S's rank was set to " + newRank.ColoredName + "%S. (" + reason + "%S)";
-                Chat.MessageAll(rankMsg);
+            rankMsg = RankCmd.FormatRankChange(curRank, newRank, name, reason);
+            Chat.MessageAll(rankMsg);
+            if (who != null)
                 who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
-            }
             
             if (p == null) Player.Message(p, rankMsg);            
             RankCmd.ChangeRank(name, curRank, newRank, who);
