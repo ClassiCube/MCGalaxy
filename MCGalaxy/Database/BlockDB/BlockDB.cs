@@ -17,7 +17,6 @@
  */
 using System;
 using System.IO;
-using System.Threading;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.DB {
@@ -43,11 +42,11 @@ namespace MCGalaxy.DB {
         /// <summary> Whether changes are actually added to the BlockDB. </summary>
         public bool Used;
         
-        readonly ReaderWriterLockSlim locker;
+        readonly IReaderWriterLock locker;
         public BlockDB(Level lvl) {
             MapName = lvl.name;
             ReadDimensions();
-            locker = new ReaderWriterLockSlim();
+            locker = new IReaderWriterLock();
             
             if (Dims.X < lvl.Width) Dims.X = lvl.Width;
             if (Dims.Y < lvl.Height) Dims.Y = lvl.Height;
@@ -84,7 +83,7 @@ namespace MCGalaxy.DB {
         }
         
         public void WriteEntries() {
-            using (IDisposable writeLock = locker.AccquireWriteLock()) {
+            using (IDisposable writeLock = locker.AccquireWrite()) {
                 if (Cache.Head == null) return;
                 
                 ValidateBackingFile();
@@ -101,7 +100,7 @@ namespace MCGalaxy.DB {
         
         /// <summary> Outputs all block changes which affect the given coordinates. </summary>
         public void FindChangesAt(ushort x, ushort y, ushort z, Action<BlockDBEntry> output) {
-            using (IDisposable readLock = locker.AccquireReadLock()) {
+            using (IDisposable readLock = locker.AccquireRead()) {
                 if (!File.Exists(FilePath)) { FindInMemoryAt(x, y, z, output); return; }
                 Vec3U16 dims;
                 
@@ -138,7 +137,7 @@ namespace MCGalaxy.DB {
             int startDelta = ClampDelta(start.Subtract(Epoch));
             int endDelta = ClampDelta(end.Subtract(Epoch));
             
-            using (IDisposable readLock = locker.AccquireReadLock()) {
+            using (IDisposable readLock = locker.AccquireRead()) {
                 dims = Dims;
                 if (FindInMemoryBy(ids, startDelta, endDelta, output)) return true;
                 
@@ -181,7 +180,7 @@ namespace MCGalaxy.DB {
         
         /// <summary> Deletes the backing file on disc if it exists. </summary>
         public void DeleteBackingFile() {
-            using (IDisposable writeLock = locker.AccquireWriteLock()) {
+            using (IDisposable writeLock = locker.AccquireWrite()) {
                 if (!File.Exists(FilePath)) return;
                 File.Delete(FilePath);
             }

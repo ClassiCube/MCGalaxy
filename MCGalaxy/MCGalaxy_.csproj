@@ -614,7 +614,6 @@
     <Compile Include="util\BufferedBlockSender.cs" />
     <Compile Include="util\Extensions\DateExts.cs" />
     <Compile Include="util\Extensions\Extensions.cs" />
-    <Compile Include="util\Extensions\RWLockExts.cs" />
     <Compile Include="util\Extensions\TimeExts.cs" />
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\App.cs" />
@@ -624,11 +623,13 @@
     <Compile Include="util\Math\DirUtils.cs" />
     <Compile Include="util\Math\Vectors.cs" />
     <Compile Include="util\MultiPageOutput.cs" />
-    <Compile Include="util\Scheduler.cs" />
+    <Compile Include="util\NET_20.cs" />
     <Compile Include="util\SparseBitSet.cs" />
-    <Compile Include="util\ThreadSafeCache.cs" />
+    <Compile Include="util\Threading\IReaderWriterLock.cs" />
+    <Compile Include="util\Threading\Scheduler.cs" />
+    <Compile Include="util\Threading\ThreadSafeCache.cs" />
+    <Compile Include="util\Threading\VolatileArray.cs" />
     <Compile Include="util\Utils.cs" />
-    <Compile Include="util\VolatileArray.cs" />
     <Compile Include="sharkbite.thresher\ChannelModeInfo.cs" />
     <Compile Include="sharkbite.thresher\CommandBuilder.cs" />
     <Compile Include="sharkbite.thresher\Connection.cs" />
@@ -693,7 +694,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="util\Threading" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
