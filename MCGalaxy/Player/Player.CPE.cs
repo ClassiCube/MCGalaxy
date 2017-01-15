@@ -33,7 +33,7 @@ namespace MCGalaxy {
         public int EnvWeatherType = 0;
         public int HackControl = 0;
         public int EmoteFix = 0;
-        public int MessageTypes = 0;        
+        public int MessageTypes = 0;
         public int LongerMessages = 0;
         public int FullCP437 = 0;
         public int BlockDefinitions = 0;
@@ -43,7 +43,7 @@ namespace MCGalaxy {
         public int EnvMapAspect = 0;
         public int PlayerClick = 0;
 
-        public bool hasCustomBlocks, hasBlockDefs, 
+        public bool hasCustomBlocks, hasBlockDefs,
         hasTextColors, hasChangeModel, hasExtList;
 
         public void AddExtension(string ext, int version) {
@@ -52,15 +52,15 @@ namespace MCGalaxy {
                     ClickDistance = version; break;
                 case CpeExt.CustomBlocks:
                     CustomBlocks = version;
-                    if (version == 1) 
-                    	SendRaw(Opcode.CpeCustomBlockSupportLevel, 1);
+                    if (version == 1)
+                        SendRaw(Opcode.CpeCustomBlockSupportLevel, 1);
                     hasCustomBlocks = true; break;
                 case CpeExt.HeldBlock:
                     HeldBlock = version; break;
                 case CpeExt.TextHotkey:
                     TextHotKey = version; break;
                 case CpeExt.ExtPlayerList:
-                    ExtPlayerList = version; 
+                    ExtPlayerList = version;
                     hasExtList = version == 2; break;
                 case CpeExt.EnvColors:
                     EnvColors = version; break;
@@ -70,7 +70,7 @@ namespace MCGalaxy {
                     BlockPermissions = version; break;
                 case CpeExt.ChangeModel:
                     UpdateModels();
-                    ChangeModel = version; 
+                    ChangeModel = version;
                     hasChangeModel = true; break;
                 case CpeExt.EnvMapAppearance:
                     EnvMapAppearance = version; break;
@@ -111,29 +111,29 @@ namespace MCGalaxy {
         public bool HasCpeExt(string Extension, int version = 1) {
             if (!hasCpe) return false;
             switch (Extension) {
-                case CpeExt.ClickDistance: return ClickDistance == version;
-                case CpeExt.CustomBlocks: return CustomBlocks == version;
-                case CpeExt.HeldBlock: return HeldBlock == version;
-                case CpeExt.TextHotkey: return TextHotKey == version;
-                case CpeExt.ExtPlayerList: return ExtPlayerList == version;
-                case CpeExt.EnvColors: return EnvColors == version;
-                case CpeExt.SelectionCuboid: return SelectionCuboid == version;
-                case CpeExt.BlockPermissions: return BlockPermissions == version;
-                case CpeExt.ChangeModel: return ChangeModel == version;
-                case CpeExt.EnvMapAppearance: return EnvMapAppearance == version;
-                case CpeExt.EnvWeatherType: return EnvWeatherType == version;
-                case CpeExt.HackControl: return HackControl == version;
-                case CpeExt.EmoteFix: return EmoteFix == version;
-                case CpeExt.MessageTypes: return MessageTypes == version;                    
-                case CpeExt.LongerMessages: return LongerMessages == version;
-                case CpeExt.FullCP437: return FullCP437 == version;
-                case CpeExt.BlockDefinitions: return BlockDefinitions == version;
-                case CpeExt.BlockDefinitionsExt: return BlockDefinitionsExt == version;
-                case CpeExt.TextColors: return TextColors == version;
-                case CpeExt.BulkBlockUpdate: return BulkBlockUpdate == version;
-                case CpeExt.EnvMapAspect: return EnvMapAspect == version;
-                case CpeExt.PlayerClick: return PlayerClick == version;
-                default: return false;
+                    case CpeExt.ClickDistance: return ClickDistance == version;
+                    case CpeExt.CustomBlocks: return CustomBlocks == version;
+                    case CpeExt.HeldBlock: return HeldBlock == version;
+                    case CpeExt.TextHotkey: return TextHotKey == version;
+                    case CpeExt.ExtPlayerList: return ExtPlayerList == version;
+                    case CpeExt.EnvColors: return EnvColors == version;
+                    case CpeExt.SelectionCuboid: return SelectionCuboid == version;
+                    case CpeExt.BlockPermissions: return BlockPermissions == version;
+                    case CpeExt.ChangeModel: return ChangeModel == version;
+                    case CpeExt.EnvMapAppearance: return EnvMapAppearance == version;
+                    case CpeExt.EnvWeatherType: return EnvWeatherType == version;
+                    case CpeExt.HackControl: return HackControl == version;
+                    case CpeExt.EmoteFix: return EmoteFix == version;
+                    case CpeExt.MessageTypes: return MessageTypes == version;
+                    case CpeExt.LongerMessages: return LongerMessages == version;
+                    case CpeExt.FullCP437: return FullCP437 == version;
+                    case CpeExt.BlockDefinitions: return BlockDefinitions == version;
+                    case CpeExt.BlockDefinitionsExt: return BlockDefinitionsExt == version;
+                    case CpeExt.TextColors: return TextColors == version;
+                    case CpeExt.BulkBlockUpdate: return BulkBlockUpdate == version;
+                    case CpeExt.EnvMapAspect: return EnvMapAspect == version;
+                    case CpeExt.PlayerClick: return PlayerClick == version;
+                    default: return false;
             }
         }
         
@@ -160,12 +160,12 @@ namespace MCGalaxy {
         
         string lastUrl = "";
         public void SendCurrentMapAppearance() {
-        	byte side = (byte)level.EdgeBlock, edge = (byte)level.HorizonBlock;
+            byte side = (byte)level.EdgeBlock, edge = (byte)level.HorizonBlock;
             if (side >= Block.CpeCount && !hasBlockDefs)
                 side = level.GetFallback(side);
             if (edge >= Block.CpeCount && !hasBlockDefs)
-                edge = level.GetFallback(edge);  
-                
+                edge = level.GetFallback(edge);
+            
             if (HasCpeExt(CpeExt.EnvMapAspect)) {
                 string url = GetTextureUrl();
                 // reset all other textures back to client default.
@@ -183,7 +183,7 @@ namespace MCGalaxy {
                 string url = GetTextureUrl();
                 // reset all other textures back to client default.
                 if (url != lastUrl) {
-                	Send(Packet.MapAppearanceV2("", side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance));
+                    Send(Packet.MapAppearanceV2("", side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance));
                 }
                 Send(Packet.MapAppearanceV2(url, side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance));
                 lastUrl = url;
@@ -210,29 +210,51 @@ namespace MCGalaxy {
         
         public void SendEnvColor(byte type, string hex) {
             if (String.IsNullOrEmpty(hex)) {
-        		Send(Packet.EnvColor(type, -1, -1, -1)); return;
+                Send(Packet.EnvColor(type, -1, -1, -1)); return;
             }
             
             try {
                 CustomColor c = Colors.ParseHex(hex);
                 Send(Packet.EnvColor(type, c.R, c.G, c.B));
-        	} catch (ArgumentException) {
+            } catch (ArgumentException) {
                 Send(Packet.EnvColor(type, -1, -1, -1));
             }
         }
         
         public void SendCurrentBlockPermissions() {
-            byte count = hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
-            for (byte i = 0; i < count; i++) {
-                bool canPlace = Block.canPlace(this, i) && level.CanPlace;
-                bool canDelete = Block.canPlace(this, i) && level.CanDelete;
-                Send(Packet.BlockPermission(i, canPlace, canDelete));
+            // Write the block permissions as one bulk TCP packet
+            int count = NumBlockPermissions();
+            byte[] bulk = new byte[4 * count];
+            WriteBlockPermissions(bulk);
+            Send(bulk);
+        }
+        
+        int NumBlockPermissions() {
+            int count = hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
+            if (!hasBlockDefs) return count;
+
+            for (int i = Block.CpeCount; i < 256; i++) {
+                if (level.CustomBlockDefs[i] == null) continue;
+                count++;
+            }
+            return count;
+        }
+        
+        void WriteBlockPermissions(byte[] bulk) {
+            int coreCount = hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
+            for (byte i = 0; i < coreCount; i++) {
+                bool place = Block.canPlace(this, i) && level.CanPlace;
+                bool delete = Block.canPlace(this, i) && level.CanDelete;
+                Packet.WriteBlockPermission(i, place, delete, bulk, i * 4);
             }
             
             if (!hasBlockDefs) return;
-            for (int i = count; i < 256; i++) {
-                if (level.CustomBlockDefs[i] == null) continue;
-                Send(Packet.BlockPermission((byte)i, level.CanPlace, level.CanDelete));
+            int j = coreCount * 4;
+            
+            for (int i = Block.CpeCount; i < 256; i++) {
+                if (level.CustomBlockDefs[i] == null) continue;               
+                Packet.WriteBlockPermission((byte)i, level.CanPlace, level.CanDelete, bulk, j);
+                j += 4;
             }
         }
     }

@@ -233,6 +233,7 @@ namespace MCGalaxy {
             for (int i = 1; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
                 if (def == null) continue;
+                
                 if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
                     SendDefineBlockExt(pl, def, true);
                 } else if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0) {
@@ -240,9 +241,6 @@ namespace MCGalaxy {
                 } else {
                     SendDefineBlock(pl, def);
                 }
-                
-                if (pl.HasCpeExt(CpeExt.BlockPermissions))
-                    pl.Send(Packet.BlockPermission(def.BlockID, pl.level.CanPlace, pl.level.CanDelete));
             }
         }
         

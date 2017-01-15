@@ -102,11 +102,15 @@ namespace MCGalaxy {
         
         public static byte[] BlockPermission(byte type, bool place, bool delete) {
             byte[] buffer = new byte[4];
-            buffer[0] = Opcode.CpeSetBlockPermission;
-            buffer[1] = type;
-            buffer[2] = place ? (byte)1 : (byte)0;
-            buffer[3] = delete ? (byte)1 : (byte)0;
+            WriteBlockPermission(type, place, delete, buffer, 0);
             return buffer;
+        }
+        
+        public static void WriteBlockPermission(byte type, bool place, bool delete, byte[] buffer, int index) {
+            buffer[index + 0] = Opcode.CpeSetBlockPermission;
+            buffer[index + 1] = type;
+            buffer[index + 2] = place ? (byte)1 : (byte)0;
+            buffer[index + 3] = delete ? (byte)1 : (byte)0;            
         }
         
         public static byte[] MapAppearance(string url, byte side, byte edge, int sideLevel) {
