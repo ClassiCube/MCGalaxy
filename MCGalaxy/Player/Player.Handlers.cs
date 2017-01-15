@@ -126,13 +126,13 @@ namespace MCGalaxy {
             int index = level.PosToInt(x, y, z);
             if (doDelete) {
                 if (DeleteBlock(old, x, y, z, block, extBlock)) {
-                    level.BlockDB.Add(this, x, y, z, flags,
-                                      old, oldExt, 0, 0);
+                    level.BlockDB.Cache.Add(this, x, y, z, flags,
+            		                        old, oldExt, 0, 0);
                 }
             } else {
                 if (PlaceBlock(old, x, y, z, block, extBlock)) {
-                    level.BlockDB.Add(this, x, y, z, flags, 
-                                      old, oldExt, heldBlock, heldExt);
+                    level.BlockDB.Cache.Add(this, x, y, z, flags, 
+            		                        old, oldExt, heldBlock, heldExt);
                 }
             }
         }

@@ -25,10 +25,13 @@ namespace MCGalaxy.DB {
     /// <summary> Converts names to integer ids and back </summary>
     public static class NameConverter {
         
+        // NOTE: this restriction is due to BlockDBCacheEntry
+        public const int MaxPlayerID = 0x00FFFFFF;
+        
         public static string FindName(int id) {
             List<string> invalid = Server.invalidIds.All();
-            if (id > int.MaxValue - invalid.Count)
-                return invalid[int.MaxValue - id];
+            if (id > MaxPlayerID - invalid.Count)
+                return invalid[MaxPlayerID - id];
             
             using (DataTable ids = Database.Backend.GetRows("Players", "Name", "WHERE ID=@0", id)) {
                 if (ids.Rows.Count == 0) return "ID#" + id;
@@ -36,12 +39,12 @@ namespace MCGalaxy.DB {
             }
         }
         
-    	public static int[] FindIds(string name) {
+        public static int[] FindIds(string name) {
             List<string> invalid = Server.invalidIds.All();
             List<int> ids = new List<int>();
             
             int index = invalid.IndexOf(name.ToLower());
-            if (index >= 0) ids.Add(int.MaxValue - index);
+            if (index >= 0) ids.Add(MaxPlayerID - index);
             
             using (DataTable names = Database.Backend.GetRows("Players", "ID", "WHERE Name=@0", name)) {
                 foreach (DataRow row in names.Rows) {
@@ -57,7 +60,7 @@ namespace MCGalaxy.DB {
             if (added) Server.invalidIds.Save();
             
             int index = Server.invalidIds.All().IndexOf(name.ToLower());
-            return int.MaxValue - index;
+            return MaxPlayerID - index;
         }
     }
 }

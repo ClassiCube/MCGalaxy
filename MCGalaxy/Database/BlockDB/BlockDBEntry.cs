@@ -39,9 +39,27 @@ namespace MCGalaxy.DB {
         
         /// <summary> Flags for the block change. </summary>
         public ushort Flags;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]    
+    public struct BlockDBCacheEntry {
+
+        /// <summary> ID within Players table of player who made the change, and part of time offset </summary>
+        /// <remarks> lowest 24 bits for player id, 8 bits for lower part of time offset. </remarks>
+        public uint Packed1;
         
-        /// <summary> The point in time this change occured at. </summary>
-        public DateTime Time { get { return BlockDB.Epoch.AddSeconds(TimeDelta); } }
+        /// <summary> Packed coordinates of where the change occured at. </summary>
+        public int Index;
+        
+        /// <summary> Raw block that was previously there before the change. </summary>
+        public byte OldRaw;
+        
+        /// <summary> Raw block that is now there due to the change. </summary>
+        public byte NewRaw;
+        
+        /// <summary> Flags for the block change. </summary>
+        /// <remarks> 13 bits for block flags, 3 bits for higher part of time offset. </remarks>
+        public ushort Flags;
     }
 
     public static class BlockDBFlags {
@@ -57,9 +75,13 @@ namespace MCGalaxy.DB {
         public const ushort UndoOther   = 0x0100;
         public const ushort UndoSelf    = 0x0200;
         public const ushort RedoSelf    = 0x0400;
+        
+        // NOTE !! If you define these, you must reduce the bits used
+        // by TimeOffset in the Flags field in a BlockDBCacheEntry
         public const ushort Unused1     = 0x0800;
         public const ushort Unused2     = 0x1000;
         public const ushort Unused3     = 0x2000;
+        
         public const ushort OldCustom   = 0x4000;
         public const ushort NewCustom   = 0x8000;
     }

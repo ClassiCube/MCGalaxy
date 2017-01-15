@@ -374,7 +374,7 @@ namespace MCGalaxy {
                 } catch (Exception e) {
                     Server.ErrorLog(e);
                 }
-                level.BlockDB.Used = level.UseBlockDB;
+                level.BlockDB.Cache.Enabled = level.UseBlockDB;
                 
                 BlockDefinition[] defs = BlockDefinition.Load(false, level);
                 for (int i = 0; i < defs.Length; i++) {

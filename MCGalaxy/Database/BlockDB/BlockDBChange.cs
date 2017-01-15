@@ -33,7 +33,8 @@ namespace MCGalaxy.DB {
                 newExt = newBlock; newBlock = Block.custom_block;
             }
             
-            TimeSpan delta = DateTime.UtcNow.Subtract(entry.Time);
+            DateTime time = BlockDB.Epoch.AddSeconds(entry.TimeDelta);
+            TimeSpan delta = DateTime.UtcNow.Subtract(time);
             name = PlayerInfo.GetColoredName(p, name);
             
             if (newBlock == Block.air) {

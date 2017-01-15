@@ -39,9 +39,6 @@ namespace MCGalaxy.DB {
         /// <summary> In-memory list of recent BlockDB changes. </summary>
         public BlockDBCache Cache = new BlockDBCache();
         
-        /// <summary> Whether changes are actually added to the BlockDB. </summary>
-        public bool Used;
-        
         readonly IReaderWriterLock locker;
         public BlockDB(Level lvl) {
             MapName = lvl.name;
@@ -51,35 +48,13 @@ namespace MCGalaxy.DB {
             if (Dims.X < lvl.Width) Dims.X = lvl.Width;
             if (Dims.Y < lvl.Height) Dims.Y = lvl.Height;
             if (Dims.Z < lvl.Length) Dims.Z = lvl.Length;
+            Cache.Dims = Dims;
         }
         
         void ReadDimensions() {
             if (!File.Exists(FilePath)) return;
             using (Stream s = File.OpenRead(FilePath))
                 BlockDBFile.ReadHeader(s, out Dims);
-        }
-        
-        
-        public void Add(Player p, ushort x, ushort y, ushort z, ushort flags,
-                        byte oldBlock, byte oldExt, byte block, byte ext) {
-            if (!Used) return;
-            BlockDBEntry entry;
-            entry.PlayerID = p.UserID;
-            entry.TimeDelta = (int)DateTime.UtcNow.Subtract(BlockDB.Epoch).TotalSeconds;
-            entry.Index = x + Dims.X * (z + Dims.Z * y);
-            
-            entry.OldRaw = oldBlock; entry.NewRaw = block;
-            entry.Flags = flags;
-            
-            if (block == Block.custom_block) {
-                entry.Flags |= BlockDBFlags.NewCustom;
-                entry.NewRaw = ext;
-            }
-            if (oldBlock == Block.custom_block) {
-                entry.Flags |= BlockDBFlags.OldCustom;
-                entry.OldRaw = oldExt;
-            }
-            Cache.Add(ref entry);
         }
         
         public void WriteEntries() {

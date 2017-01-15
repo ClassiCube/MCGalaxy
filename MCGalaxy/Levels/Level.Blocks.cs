@@ -153,8 +153,8 @@ namespace MCGalaxy {
                 SetExtTileNoCheck(x, y, z, ext);
             if (p == null) return;    
             
-            BlockDB.Add(p, x, y, z, flags,
-                        oldBlock, oldExtBlock, block, ext);
+            BlockDB.Cache.Add(p, x, y, z, flags,
+                              oldBlock, oldExtBlock, block, ext);
         }
 
         bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref byte block) {
@@ -420,8 +420,8 @@ namespace MCGalaxy {
             
             bool drawn = (flags & BlockDBFlags.ManualPlace) != 0;
             if (!DoBlockchange(p, x, y, z, block, extBlock, drawn)) return;            
-            BlockDB.Add(p, x, y, z, flags, 
-                        old, oldExt, block, extBlock);
+            BlockDB.Cache.Add(p, x, y, z, flags, 
+                              old, oldExt, block, extBlock);
             
             int index = PosToInt(x, y, z);
             if (bufferblocks) 
