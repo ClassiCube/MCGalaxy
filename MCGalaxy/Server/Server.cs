@@ -129,21 +129,6 @@ namespace MCGalaxy {
                                    null, TimeSpan.FromSeconds(Server.blockInterval));
             Background.QueueRepeat(ThreadSafeCache.DBCache.CleanupTask, 
                                    null, TimeSpan.FromMinutes(5));
-            
-            MainScheduler.QueueRepeat(ColourIt, 
-                                      null, TimeSpan.FromSeconds(1.0/60));
-        }
-        
-        static int colI = 0;
-        static void ColourIt(SchedulerTask task) {        	
-            CustomColor col = Colors.ExtColors['r'];
-        	colI++;
-        	int hex = (colI & 0xF), lo = 191, hi = 64;
-        	
-        	col.R = (byte)(lo * ((hex >> 2) & 1) + hi * (hex >> 3));
-        	col.G = (byte)(lo * ((hex >> 1) & 1) + hi * (hex >> 3));
-			col.B = (byte)(lo * ((hex >> 0) & 1) + hi * (hex >> 3));
-            Colors.AddExtColor(col);
         }
         
         void EnsureFilesExist() {
