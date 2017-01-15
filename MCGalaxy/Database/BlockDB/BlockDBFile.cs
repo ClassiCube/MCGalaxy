@@ -69,28 +69,43 @@ namespace MCGalaxy.DB {
             BlockDBCacheNode node = cache.Tail;
             
             while (node != null) {
-                WriteEntries(s, bulk, node.Entries, node.Count);
+                WriteEntries(s, bulk, node);
                 lock (cache.Locker)
                     node = node.Next;
             }
         }
         
         static void WriteEntries(Stream s, byte[] bulk, BlockDBEntry[] entries, int count) {
-            if (count == 0) return;
-            
             for (int i = 0; i < count; i += BulkEntries) {
                 int bulkCount = Math.Min(BulkEntries, count - i);
                 for (int j = 0; j < bulkCount; j++) {
-                    BlockDBEntry entry = entries[i + j];
-                    WriteI32(entry.PlayerID, bulk, j * EntrySize);
-                    WriteI32(entry.TimeDelta, bulk, j * EntrySize + 4);
-                    WriteI32(entry.Index, bulk, j * EntrySize + 8);
-                    bulk[j * EntrySize + 12] = entry.OldRaw;
-                    bulk[j * EntrySize + 13] = entry.NewRaw;
-                    WriteU16(entry.Flags, bulk, j * EntrySize + 14);
+                    WriteEntry(entries[i + j], bulk, j * EntrySize);
                 }
                 s.Write(bulk, 0, bulkCount * EntrySize);
             }
+        }
+        
+        static void WriteEntries(Stream s, byte[] bulk, BlockDBCacheNode node) {
+            int count = node.Count;
+            for (int i = 0; i < count; i += BulkEntries) {
+                int bulkCount = Math.Min(BulkEntries, count - i);
+                for (int j = 0; j < bulkCount; j++) {
+                    BlockDBEntry entry = node.Unpack(node.Entries[i + j]);
+                    WriteEntry(entry, bulk, j * EntrySize);
+                }
+                s.Write(bulk, 0, bulkCount * EntrySize);
+            }
+        }
+        
+        static void WriteEntry(BlockDBEntry entry, byte[] bulk, int index) {
+            WriteI32(entry.PlayerID, bulk, index);
+            WriteI32(entry.TimeDelta, bulk, index + 4);
+            WriteI32(entry.Index, bulk, index + 8);
+            
+            bulk[index + 12] = entry.OldRaw;
+            bulk[index + 13] = entry.NewRaw;
+            bulk[index + 14] = (byte)(entry.Flags);
+            bulk[index + 15] = (byte)(entry.Flags >> 8);
         }
         
         

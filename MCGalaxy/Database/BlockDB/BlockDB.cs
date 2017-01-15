@@ -94,12 +94,13 @@ namespace MCGalaxy.DB {
             int index = (y * Dims.Z + z) * Dims.X + x;
             BlockDBCacheNode node = Cache.Tail;            
             while (node != null) {
-                BlockDBEntry[] entries = node.Entries;
+                BlockDBCacheEntry[] entries = node.Entries;
                 int count = node.Count;
                 
                 for (int i = 0; i < count; i++) {
                     if (entries[i].Index != index) continue;
-                    output(entries[i]);
+                    BlockDBEntry entry = node.Unpack(entries[i]);
+                    output(entry);
                 }
                 lock (Cache.Locker) node = node.Next;
             }
@@ -128,10 +129,10 @@ namespace MCGalaxy.DB {
             BlockDBCacheNode node = Cache.Head;            
             while (node != null) {
                 int count = node.Count;
-                BlockDBEntry[] entries = node.Entries;
+                BlockDBCacheEntry[] entries = node.Entries;
                 
                 for (int i = count - 1; i >= 0; i--) {
-                    BlockDBEntry entry = entries[i];
+                    BlockDBEntry entry = node.Unpack(entries[i]);
                     if (entry.TimeDelta < startDelta) return true;
                     if (entry.TimeDelta > endDelta) continue;
                     
