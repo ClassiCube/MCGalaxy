@@ -11,7 +11,7 @@ software distributed under the Licenses are distributed on an "AS IS"
 BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -54,7 +54,7 @@ namespace MCGalaxy.Gui {
 
             string opchatperm = "", adminchatperm = "";
             string verifyadminsperm = "", afkkickrank = "", osmaprank = "";
-            LevelPermission adminChatRank = 
+            LevelPermission adminChatRank =
                 CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
             LevelPermission opChatRank =
                 CommandOtherPerms.FindPerm("opchat", LevelPermission.Operator);
@@ -118,8 +118,6 @@ namespace MCGalaxy.Gui {
             catch {
                 Server.s.Log("Failed to start lava control update timer!");
             }
-            try { nudCooldownTime.Value = Server.reviewcooldown; }
-            catch { }
 
             //Sigh. I wish there were SOME event to help me.
             foreach(var command in Command.all.commands) {
@@ -129,8 +127,6 @@ namespace MCGalaxy.Gui {
                 lstCommands.Items.Add ( command.name );
             }
         }
-
-        public static bool EditTextOpen = false;
 
         private void PropertyWindow_Unload(object sender, EventArgs e) {
             lavaUpdateTimer.Dispose();
@@ -192,10 +188,6 @@ namespace MCGalaxy.Gui {
             if ( listBlocks.SelectedIndex == -1 )
                 listBlocks.SelectedIndex = 0;
         }
-        public static bool prevLoaded = false;
-        Form PropertyForm;
-        //Form UpdateForm; // doesnt seem to be used, uncomment as needed.
-        //Form EditTxtForm;
 
         public void SaveBlocks() {
             Block.SaveBlocks(storedBlocks);
@@ -204,348 +196,136 @@ namespace MCGalaxy.Gui {
         }
 
         public void LoadProp(string givenPath) {
-            PropertiesFile.Read(givenPath, LineProcessor);
+            SrvProperties.Load(givenPath);
+            LoadGeneralProps();
+            LoadChatProps();
+            LoadIrcSqlProps();
+            LoadMiscProps();
+            LoadRankProps();
+            zsSettings.LoadFromServer();
+            LoadSecurityProps();
         }
         
-        void LineProcessor(string key, string value) {
-            switch (key.ToLower()) {
-                case "server-name":
-                    if ( ValidString(value, "![]&:.,{}~-+()?_/\\' ") ) txtName.Text = value;
-                    else txtName.Text = "[MCGalaxy] Minecraft server";
-                    break;
-                case "motd":
-                    if ( ValidString(value, "=![]&:.,{}~-+()?_/\\' ") ) txtMOTD.Text = value; // allow = in the motd
-                    else txtMOTD.Text = "Welcome to my server!";
-                    break;
-                case "port":
-                    try { txtPort.Text = Convert.ToInt32(value).ToString(); }
-                    catch { txtPort.Text = "25565"; }
-                    break;
-                case "verify-names":
-                    chkVerify.Checked = ( value.ToLower() == "true" );
-                    break;
-                case "public":
-                    chkPublic.Checked = ( value.ToLower() == "true" );
-                    break;
-                case "world-chat":
-                    chkWorld.Checked = ( value.ToLower() == "true" );
-                    break;
-                case "max-players":
-                    try {
-                        if ( Convert.ToByte(value) > 128 ) {
-                            value = "128";
-                        }
-                        else if ( Convert.ToByte(value) < 1 ) {
-                            value = "1";
-                        }
-                        numPlayers.Value = Convert.ToInt16(value);
-                    } catch {
-                        Server.s.Log("max-players invalid! setting to default.");
-                        numPlayers.Value = 12;
-                    }
-                    numGuests.Maximum = numPlayers.Value;
-                    break;
-                case "max-guests":
-                    try {
-                        if ( Convert.ToByte(value) > numPlayers.Value ) {
-                            value = numPlayers.Value.ToString();
-                        }
-                        else if ( Convert.ToByte(value) < 0 ) {
-                            value = "0";
-                        }
-                        numGuests.Minimum = 0;
-                        numGuests.Maximum = numPlayers.Value;
-                        numGuests.Value = Convert.ToInt16(value);
-                    }
-                    catch {
-                        Server.s.Log("max-guests invalid! setting to default.");
-                        numGuests.Value = 10;
-                    }
-                    break;
-                case "irc":
-                    chkIRC.Checked = value.ToLower() == "true"; break;
-                case "irc-server":
-                    txtIRCServer.Text = value; break;
-                case "irc-port":
-                    txtIRCPort.Text = value; break;
-                case "irc-nick":
-                    txtNick.Text = value; break;
-                case "irc-channel":
-                    txtChannel.Text = value; break;
-                case "irc-opchannel":
-                    txtOpChannel.Text = value; break;
-                case "irc-identify":
-                    chkIrcId.Checked = value.ToLower() == "true"; break;
-                case "irc-password":
-                    txtIrcId.Text = value; break;
-                case "irc-player-titles":
-                    irc_cbTitles.Checked = value.ToLower() == "true"; break;
-                    
-                case "rplimit":
-                    try { txtRP.Text = value; }
-                    catch { txtRP.Text = "500"; }
-                    break;
-                case "rplimit-norm":
-                    try { txtNormRp.Text = value; }
-                    catch { txtNormRp.Text = "10000"; }
-                    break;
-
-                case "log-heartbeat":
-                    chkLogBeat.Checked = value.ToLower() == "true"; break;
-
-                case "profanity-filter":
-                    chkProfanityFilter.Checked = value.ToLower() == "true"; break;
-
-                case "backup-time":
-                    txtBackup.Text = Convert.ToInt32(value) > 1 ? value : "300"; break;
-
-                case "backup-location":
-                    if ( !value.Contains("System.Windows.Forms.TextBox, Text:") )
-                        txtBackupLocation.Text = value;
-                    break;
-
-                case "physicsrestart":
-                    chkPhysicsRest.Checked = value.ToLower() == "true"; break;
-                case "deathcount":
-                    chkDeath.Checked = value.ToLower() == "true"; break;
-
-                case "defaultcolor":
-                    ParseColor(value, chat_cmbDefault); break;
-                case "irc-color":
-                    ParseColor(value, chat_cmbIRC); break;
-                case "help-syntax-color":
-                    ParseColor(value, chat_cmbSyntax); break;
-                case "help-desc-color":
-                    ParseColor(value, chat_cmbDesc); break;                       
-                case "default-rank":
-                    try {
-                        if ( cmbDefaultRank.Items.IndexOf(value.ToLower()) != -1 )
-                            cmbDefaultRank.SelectedIndex = cmbDefaultRank.Items.IndexOf(value.ToLower());
-                    }
-                    catch { cmbDefaultRank.SelectedIndex = 1; }
-                    break;
-
-                case "cheapmessage":
-                    chat_chkCheap.Checked = value.ToLower() == "true"; break;
-                case "cheap-message-given":
-                    chat_txtCheap.Text = value; break;
-                case "custom-ban-message":
-                    chat_txtBan.Text = value; break;
-                case "custom-shutdown-message":
-                    chat_txtShutdown.Text = value; break;
-                case "custom-promote-message":
-                    chat_txtPromote.Text = value; break;
-                case "custom-demote-message":
-                    chat_txtDemote.Text = value; break;
-                    
-                case "auto-restart":
-                    chkRestartTime.Checked = value.ToLower() == "true"; break;
-                case "restarttime":
-                    txtRestartTime.Text = value; break;
-                case "afk-minutes":
-                    try { txtafk.Text = Convert.ToInt16(value).ToString(); }
-                    catch { txtafk.Text = "10"; }
-                    break;
-                case "afk-kick":
-                    try { txtAFKKick.Text = Convert.ToInt16(value).ToString(); }
-                    catch { txtAFKKick.Text = "45"; }
-                    break;
-                case "check-updates":
-                    chkUpdates.Checked = value.ToLower() == "true"; break;
-                case "auto-update":
-                    autoUpdate.Checked = value.ToLower() == "true"; break;
-                case "in-game-update-notify":
-                    notifyInGameUpdate.Checked = value.ToLower() == "true"; break;
-                case "update-countdown":
-                    try { updateTimeNumeric.Value = Convert.ToDecimal(value); }
-                    catch { updateTimeNumeric.Value = 10; }
-                    break;
-                case "tablist-rank-sorted":
-                    chat_cbTabRank.Checked = value.ToLower() == "true"; break;
-                case "tablist-global":
-                    chat_cbTabLevel.Checked = value.ToLower() != "true"; break;
-                case "tablist-bots":
-                    chat_cbTabBots.Checked = value.ToLower() == "true"; break;
-                case "autoload":
-                    chkAutoload.Checked = value.ToLower() == "true"; break;
-                case "parse-emotes":
-                    chkSmile.Checked = value.ToLower() == "true"; break;
-                case "allow-tp-to-higher-ranks":
-                    chkTpToHigherRanks.Checked = value.ToLower() == "true"; break;
-                case "agree-to-rules-on-entry":
-                    chkAgreeToRules.Checked = value.ToLower() == "true"; break;
-                case "admins-join-silent":
-                    chkAdminsJoinSilent.Checked = value.ToLower() == "true"; break;
-                case "main-name":
-                    txtMain.Text = value; break;
-                case "dollar-before-dollar":
-                    chk17Dollar.Checked = value.ToLower() == "true"; break;
-                case "money-name":
-                    txtMoneys.Text = value; break;
-                case "restart-on-error":
-                    chkRestart.Checked = value.ToLower() == "true"; break;
-                case "repeat-messages":
-                    chkRepeatMessages.Checked = value.ToLower() == "true"; break;
-                case "host-state":
-                    if ( value != "" ) chat_txtConsole.Text = value;
-                    break;
-                case "kick-on-hackrank":
-                    hackrank_kick.Checked = value.ToLower() == "true"; break;
-                case "hackrank-kick-time":
-                    hackrank_kick_time.Text = value; break;
-                case "server-owner":
-                    txtServerOwner.Text = value; break;
-                case "guest-limit-notify":
-                    chkGuestLimitNotify.Checked = value.ToLower() == "true"; break;
-                    
-                case "zombie-on-server-start":
-                    zsSettings.StartImmediately = value.ToLower() == "true"; break;
-                case "no-respawning-during-zombie":
-                    zsSettings.Respawning = value.ToLower() != "true"; break;
-                case "no-level-saving-during-zombie":
-                    zsSettings.SaveLevelChanges = value.ToLower() != "true"; break;
-                case "no-pillaring-during-zombie":
-                    zsSettings.Pillaring = value.ToLower() != "true"; break;
-                case "zombie-name-while-infected":
-                    zsSettings.Name = value; break;
-                case "zombie-model-while-infected":
-                    zsSettings.Model = value; break;                    
-                case "enable-changing-levels":
-                    zsSettings.ChangeLevels = value.ToLower() == "true"; break;
-                case "zombie-survival-only-server":
-                    zsSettings.SetMainLevel = value.ToLower() == "true"; break;
-                case "zombie-levels-list":
-                    zsSettings.LevelsList = value.Replace(" ", ""); break;
-                case "zombie-save-blockchanges":
-                    zsSettings.SaveLevelChanges = value.ToLower() == "true"; break;
-                case "zombie-hitbox-precision":
-                    zsSettings.HitboxPrecision = int.Parse(value); break;
-                case "zombie-maxmove-distance":
-                    zsSettings.MaxMoveDistance = int.Parse(value); break;
-                case "zombie-ignore-personalworlds":
-                    zsSettings.IgnorePersonalWorlds = value.ToLower() == "true"; break;
-                case "zombie-map-inheartbeat":
-                    zsSettings.IncludeMapInHeartbeat = value.ToLower() == "true"; break;
-
-                case "usemysql":
-                    chkUseSQL.Checked = value.ToLower() == "true"; break;
-                case "username":
-                    if ( value != "" ) txtSQLUsername.Text = value;
-                    break;
-                case "password":
-                    if ( value != "" ) txtSQLPassword.Text = value;
-                    break;
-                case "databasename":
-                    if ( value != "" ) txtSQLDatabase.Text = value;
-                    break;
-                case "host":
-                    try {
-                        IPAddress.Parse(value);
-                        txtSQLHost.Text = value;
-                    } catch {
-                        txtSQLHost.Text = "127.0.0.1";
-                    }
-                    break;
-                case "sqlport":
-                    try {
-                        int.Parse(value);
-                        txtSQLPort.Text = value;
-                    } catch {
-                        txtSQLPort.Text = "3306";
-                    }
-                    break;
-
-                case "log-notes":
-                    sec_cbLogNotes.Checked = value.ToLower() == "true"; break;
-                case "use-whitelist":
-                    sec_cbWhitelist.Checked = value.ToLower() == "true"; break;                    
-                case "admin-verification":
-                    sec_cbVerifyAdmins.Checked = value.ToLower() == "true"; break;
-                case "mute-on-spam":
-                    sec_cbChatAuto.Checked = value.ToLower() == "true"; break;
-                case "spam-messages":
-                    try {
-                        sec_numChatMsgs.Value = Convert.ToInt16(value);
-                    } catch {
-                        sec_numChatMsgs.Value = 8;
-                    }
-                    break;
-                case "spam-counter-reset-time":
-                    try {
-                        sec_numChatSecs.Value = Convert.ToInt16(value);
-                    } catch {
-                        sec_numChatSecs.Value = 60;
-                    }
-                    break;
-                case "spam-mute-time":
-                    try {
-                        sec_numChatMute.Value = Convert.ToInt16(value);
-                    } catch {
-                        sec_numChatMute.Value = 60;
-                    }
-                    break;                    
-                case "cmd-spam-check":
-                    sec_cbCmdAuto.Checked = value.ToLower() == "true"; break; 
-                case "cmd-spam-count":
-                    try {
-                        sec_numCmdMsgs.Value = Convert.ToInt16(value);
-                    } catch {
-                        sec_numCmdMsgs.Value = 25;
-                    }
-                    break;
-                case "cmd-spam-interval":
-                    try {
-                        sec_numCmdSecs.Value = Convert.ToInt16(value);
-                    } catch {
-                        sec_numCmdSecs.Value = 1;
-                    }
-                    break;
-                case "cmd-spam-block-time":
-                    try {
-                        sec_numCmdMute.Value = Convert.ToInt16(value);
-                    } catch {
-                        sec_numCmdMute.Value = 30;
-                    }
-                    break;                    
-                case "block-spam-check":
-                    sec_cbBlocksAuto.Checked = value.ToLower() == "true"; break;        
-                case "block-spam-count":
-                    try {
-                        sec_numBlocksMsgs.Value = Convert.ToInt16(value);
-                    } catch {
-                        sec_numBlocksMsgs.Value = 200;
-                    }
-                    break;
-                case "block-spam-interval":
-                    try {
-                        sec_numBlocksSecs.Value = Convert.ToInt16(value);
-                    } catch {
-                        sec_numBlocksSecs.Value = 5;
-                    }
-                    break;
-                    
-                case "show-empty-ranks":
-                    chkShowEmptyRanks.Checked = value.ToLower() == "true";
-                    break;
-                case "cooldown":
-                    try {
-                        Server.reviewcooldown = Convert.ToInt32(value.ToLower()) < 600 ? Convert.ToInt32(value.ToLower()) : 600;
-                    } catch {
-                        Server.reviewcooldown = 600;
-                        Server.s.Log("An error occurred reading the review cooldown value");
-                    }
-                    break;
-            }
+        void LoadGeneralProps() {
+            txtName.Text = Server.name;
+            txtMOTD.Text = Server.motd;
+            txtPort.Text = Server.port.ToString();
+            txtServerOwner.Text = Server.server_owner;
+            chkPublic.Checked = Server.pub;
+            
+            numPlayers.Value = Server.players;
+            numGuests.Value = Server.maxGuests;
+            numGuests.Maximum = numPlayers.Value;
+            chkAgreeToRules.Checked = Server.agreetorulesonentry;
+            
+            txtMain.Text = Server.level;
+            chkAutoload.Checked = Server.AutoLoad;
+            chkWorld.Checked = Server.worldChat;
+            
+            chkVerify.Checked = Server.verify;
+            chkRestart.Checked = Server.restartOnError;
+            chkLogBeat.Checked = Server.logbeat;
+            
+            chkUpdates.Checked = Server.checkUpdates;
+            autoUpdate.Checked = Server.autoupdate;
+            notifyInGameUpdate.Checked = Server.notifyPlayers;
+            updateTimeNumeric.Value = Server.restartcountdown;
+        }
+        
+        void LoadChatProps() {
+            ParseColor(Server.DefaultColor, chat_cmbDefault);
+            ParseColor(Server.IRCColour, chat_cmbIRC);
+            ParseColor(Server.HelpSyntaxColor, chat_cmbSyntax);
+            ParseColor(Server.HelpDescriptionColor, chat_cmbDesc);
+            
+            chat_txtConsole.Text = Server.ZallState;
+            chat_cbTabRank.Checked = Server.TablistRankSorted;
+            chat_cbTabLevel.Checked = !Server.TablistGlobal;
+            chat_cbTabBots.Checked = Server.TablistBots;
+            
+            chat_txtShutdown.Text = Server.shutdownMessage;
+            chat_chkCheap.Checked = Server.cheapMessage;
+            chat_txtCheap.Text = Server.cheapMessageGiven;
+            chat_txtBan.Text = Server.defaultBanMessage;
+            chat_txtPromote.Text = Server.defaultPromoteMessage;
+            chat_txtDemote.Text = Server.defaultDemoteMessage;
+        }
+        
+        void LoadIrcSqlProps() {
+            chkIRC.Checked = Server.irc;
+            txtIRCServer.Text = Server.ircServer;
+            txtIRCPort.Text = Server.ircPort.ToString();
+            txtNick.Text = Server.ircNick;
+            txtChannel.Text = Server.ircChannel;
+            txtOpChannel.Text = Server.ircOpChannel;
+            chkIrcId.Checked = Server.ircIdentify;
+            txtIrcId.Text = Server.ircPassword;
+            irc_cbTitles.Checked = Server.ircPlayerTitles;
+            
+            chkUseSQL.Checked = Server.useMySQL;
+            txtSQLUsername.Text = Server.MySQLUsername;
+            txtSQLPassword.Text = Server.MySQLPassword;
+            txtSQLDatabase.Text = Server.MySQLDatabaseName;
+            txtSQLHost.Text = Server.MySQLHost;
+            txtSQLPort.Text = Server.MySQLPort;
+        }
+        
+        void LoadMiscProps() {
+            txtBackup.Text = Server.backupInterval.ToString();
+            txtBackupLocation.Text = Server.backupLocation;
+            hackrank_kick.Checked = Server.hackrank_kick;
+            hackrank_kick_time.Text = Server.hackrank_kick_time.ToString();
+            
+            txtafk.Text = Server.afkminutes.ToString();
+            txtAFKKick.Text = Server.afkkick.ToString();
+            
+            chkPhysicsRest.Checked = Server.physicsRestart;
+            txtRP.Text = Server.rpLimit.ToString();
+            txtNormRp.Text = Server.rpNormLimit.ToString();
+            
+            chkDeath.Checked = Server.deathcount;
+            chkSmile.Checked = Server.parseSmiley;
+            chkShowEmptyRanks.Checked = Server.showEmptyRanks;
+            chk17Dollar.Checked = Server.dollarNames;
+            chkRepeatMessages.Checked = Server.repeatMessage;
+            chkRestartTime.Checked = Server.autorestart;
+            txtRestartTime.Text = Server.restarttime.ToString();
+            chkGuestLimitNotify.Checked = Server.guestLimitNotify;
+            txtMoneys.Text = Server.moneys;
+            nudCooldownTime.Value = Server.reviewcooldown;
+            chkProfanityFilter.Checked = Server.profanityFilter; // TODO: not visible?
+        }
+        
+        void LoadRankProps() {
+            string defRank = Server.defaultRank.ToLower();
+            if (cmbDefaultRank.Items.IndexOf(defRank) != -1 )
+                cmbDefaultRank.SelectedIndex = cmbDefaultRank.Items.IndexOf(defRank);
+            chkTpToHigherRanks.Checked = Server.higherranktp;
+            chkAdminsJoinSilent.Checked = Server.adminsjoinsilent;
+        }
+        
+        void LoadSecurityProps() {
+            sec_cbLogNotes.Checked = Server.LogNotes;
+            sec_cbWhitelist.Checked = Server.useWhitelist;
+            sec_cbVerifyAdmins.Checked = Server.verifyadmins;
+            
+            sec_cbChatAuto.Checked = Server.checkspam;
+            sec_numChatMsgs.Value = Server.spamcounter;
+            sec_numChatSecs.Value = Server.spamcountreset;
+            sec_numChatMute.Value = Server.mutespamtime;
+            
+            sec_cbCmdAuto.Checked = Server.CmdSpamCheck;
+            sec_numCmdMsgs.Value = Server.CmdSpamCount;
+            sec_numCmdSecs.Value = Server.CmdSpamInterval;
+            sec_numCmdMute.Value = Server.CmdSpamBlockTime;
+            
+            sec_cbBlocksAuto.Checked = Server.BlockSpamCheck;
+            sec_numBlocksMsgs.Value = Server.BlockSpamCount;
+            sec_numBlocksSecs.Value = Server.BlockSpamInterval;
         }
         
         void ParseColor(string value, ComboBox target) {
-            string color = Colors.Parse(value);
-            if (color == "") {
-                color = Colors.Name(value);
-                if (color != "") color = value;
-                else { Server.s.Log("Could not find " + value); return; }
-            }
-            target.SelectedIndex = target.Items.IndexOf(Colors.Name(color));
+            target.SelectedIndex = target.Items.IndexOf(Colors.Name(value));
         }
         
         public bool ValidString(string str, string allowed) {
@@ -578,6 +358,7 @@ namespace MCGalaxy.Gui {
             Server.maxGuests = (byte)numGuests.Value;
             Server.worldChat = chkWorld.Checked;
             Server.notifyPlayers = notifyInGameUpdate.Checked;
+            Server.restartcountdown = (int)updateTimeNumeric.Value;
             Server.AutoLoad = chkAutoload.Checked;
             Server.autorestart = chkRestartTime.Checked;
             try { Server.restarttime = DateTime.Parse(txtRestartTime.Text); }
@@ -630,7 +411,7 @@ namespace MCGalaxy.Gui {
             //Server.reportBack = ;  //No setting for this?
 
             Server.useMySQL = chkUseSQL.Checked;
-            Database.Backend = Server.useMySQL ? 
+            Database.Backend = Server.useMySQL ?
                 MySQLBackend.Instance : SQLiteBackend.Instance;
             Server.MySQLHost = txtSQLHost.Text;
             Server.MySQLPort = txtSQLPort.Text;
@@ -646,7 +427,7 @@ namespace MCGalaxy.Gui {
             Server.TablistRankSorted = chat_cbTabRank.Checked;
             Server.TablistGlobal = !chat_cbTabLevel.Checked;
             Server.TablistBots = chat_cbTabBots.Checked;
-           
+            
             Server.higherranktp = chkTpToHigherRanks.Checked;
             Server.checkUpdates = chkUpdates.Checked;
 
@@ -679,7 +460,7 @@ namespace MCGalaxy.Gui {
             Server.CmdSpamBlockTime = (int)sec_numCmdMute.Value;
             Server.BlockSpamCheck = sec_cbBlocksAuto.Checked;
             Server.BlockSpamCount = (int)sec_numBlocksMsgs.Value;
-            Server.BlockSpamInterval = (int)sec_numBlocksSecs.Value;      
+            Server.BlockSpamInterval = (int)sec_numBlocksSecs.Value;
             
             Server.LogNotes = sec_cbLogNotes.Checked;
             Server.showEmptyRanks = chkShowEmptyRanks.Checked;
@@ -702,7 +483,7 @@ namespace MCGalaxy.Gui {
 
         private void chat_cmbDesc_SelectedIndexChanged(object sender, EventArgs e) {
             chat_colDesc.BackColor = GetColor(chat_cmbDesc.Items[chat_cmbDesc.SelectedIndex].ToString());
-        }        
+        }
         
         Color GetColor(string name) {
             string code = Colors.Parse(name);
@@ -734,9 +515,9 @@ namespace MCGalaxy.Gui {
                     foreach ( Control ctrl in tP.Controls )
                         if ( ctrl is TextBox && ctrl.Name.ToLower() != "txtgrpmotd" )
                             if ( ctrl.Text == "" ) {
-                                MessageBox.Show("A textbox has been left empty. It must be filled.\n" + ctrl.Name);
-                                return;
-                            }
+                MessageBox.Show("A textbox has been left empty. It must be filled.\n" + ctrl.Name);
+                return;
+            }
 
             SaveProperties();
             SaveRanks();
@@ -877,7 +658,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                 }
                 storedRanks[listRanks.SelectedIndex].OverseerMaps = maxMaps;
             }
-        }        
+        }
 
         private void txtFileName_TextChanged(object sender, EventArgs e) {
             if ( txtFileName.Text != "" ) {
@@ -974,7 +755,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         }
         private void txtBlDisallow_TextChanged(object sender, EventArgs e) {
             if (storedBlocks[listBlocks.SelectedIndex].disallow == null)
-                storedBlocks[listBlocks.SelectedIndex].disallow = new List<LevelPermission>();            
+                storedBlocks[listBlocks.SelectedIndex].disallow = new List<LevelPermission>();
             fillAllowance(ref txtBlDisallow, ref storedBlocks[listBlocks.SelectedIndex].disallow);
         }
         private void txtBlAllow_TextChanged(object sender, EventArgs e) {
@@ -1095,11 +876,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         }
 
         private void editTxtsBt_Click_1(object sender, EventArgs e) {
-            if ( EditTextOpen ) {
-                return;
-            }
-            PropertyForm = new EditText();
-            PropertyForm.Show();
+            new EditText().Show();
         }
 
         private void btnCreate_Click(object sender, EventArgs e) {
@@ -1175,7 +952,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                 lstCommands.Items.Add(cmd.name);
                 Command.all.Add(cmd);
                 Server.s.Log("Added " + cmd.name + " to commands");
-            }           
+            }
             GrpCommands.fillRanks();
         }
 
@@ -1228,7 +1005,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
         private void forceUpdateBtn_Click(object sender, EventArgs e) {
             forceUpdateBtn.Enabled = false;
-            DialogResult result = MessageBox.Show("Would you like to force update MCGalaxy now?", "Force Update", 
+            DialogResult result = MessageBox.Show("Would you like to force update MCGalaxy now?", "Force Update",
                                                   MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (result == DialogResult.OK) {
                 saveStuff();

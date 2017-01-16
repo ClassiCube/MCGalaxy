@@ -303,7 +303,7 @@ namespace MCGalaxy {
         public static bool useMySQL = false;
         [ConfigString("host", "Database", null, "127.0.0.1")]
         public static string MySQLHost = "127.0.0.1";
-        [ConfigString("SQLPort", "Database", null, "3306")]
+        [ConfigString("SQLPort", "Database", null, "3306", false, "0123456789")]
         public static string MySQLPort = "3306";
         [ConfigString("Username", "Database", null, "root", true)]
         public static string MySQLUsername = "root";
@@ -385,7 +385,7 @@ namespace MCGalaxy {
         [ConfigBool("show-empty-ranks", "Other", null, false)]  
         public static bool showEmptyRanks = false;
 
-        [ConfigInt("review-cooldown", "Review", null, 600)]
+        [ConfigInt("review-cooldown", "Review", null, 600, 0, 600)]
         public static int reviewcooldown = 600;
 
         [ConfigInt("draw-reload-limit", "Other", null, 10000)]
