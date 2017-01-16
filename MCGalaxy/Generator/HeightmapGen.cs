@@ -26,13 +26,18 @@ namespace MCGalaxy.Generator {
         public static bool DownloadImage(string url, string dir, Player p) {
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
-            if (!url.StartsWith("http://") && !url.StartsWith("https://"))
+            if (!url.CaselessStarts("http://") && !url.CaselessStarts("https://"))
                 url = "http://" + url;
+            
+            Uri uri;
+            if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) {
+                Player.Message(p, "{0} is not a valid URL.", url); return false;
+            }
             
             try {
                 using (WebClient client = new WebClient()) {
                     Player.Message(p, "Downloading file from: &f" + url);
-                    client.DownloadFile(url, dir + "tempImage_" + p.name + ".bmp");
+                    client.DownloadFile(uri, dir + "tempImage_" + p.name + ".bmp");
                 }
                 Player.Message(p, "Finished downloading image.");
                 return true;

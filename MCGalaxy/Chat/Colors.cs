@@ -242,7 +242,7 @@ namespace MCGalaxy {
         }
         
         internal static void SaveExtColors() {
-            using (StreamWriter w = new StreamWriter("text/customcolors.txt")) {
+            using (StreamWriter w = new StreamWriter(Paths.CustomColorsFile)) {
                 foreach (CustomColor col in ExtColors) {
                     if (col.Undefined) continue;
                     w.WriteLine(col.Code + " " + col.Fallback + " " + col.Name + " " +
@@ -252,8 +252,8 @@ namespace MCGalaxy {
         }
         
         internal static void LoadExtColors() {
-            if (!File.Exists("text/customcolors.txt")) return;
-            string[] lines = File.ReadAllLines("text/customcolors.txt");
+            if (!File.Exists(Paths.CustomColorsFile)) return;
+            string[] lines = File.ReadAllLines(Paths.CustomColorsFile);
             CustomColor col = default(CustomColor);
             
             for (int i = 0; i < lines.Length; i++) {

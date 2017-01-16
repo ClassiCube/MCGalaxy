@@ -126,7 +126,7 @@ namespace MCGalaxy.Tasks {
         internal static void TemprankExpiry(SchedulerTask task) {
             Player[] players = PlayerInfo.Online.Items;         
             
-            foreach (string line in File.ReadAllLines("text/tempranks.txt"))
+            foreach (string line in File.ReadAllLines(Paths.TempRanksFile))
                 foreach (Player p in players)
             {
                 if (!line.CaselessStarts(p.name)) continue;

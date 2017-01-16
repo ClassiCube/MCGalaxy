@@ -41,8 +41,8 @@ namespace MCGalaxy
             BlockBehaviour.SetupCoreHandlers();
             
             // Custom permissions set by the user.
-            if (File.Exists("properties/block.properties")) {
-                string[] lines = File.ReadAllLines("properties/block.properties");
+            if (File.Exists(Paths.BlockPermsFile)) {
+                string[] lines = File.ReadAllLines(Paths.BlockPermsFile);
                 if (lines.Length > 0 && lines[0] == "#Version 2") {
                     LoadVersion2(lines);
                 } else {
@@ -148,7 +148,7 @@ namespace MCGalaxy
         }
         
         static void SaveBlocksCore(IEnumerable<Blocks> givenList) {
-            using (StreamWriter w = new StreamWriter("properties/block.properties")) {
+            using (StreamWriter w = new StreamWriter(Paths.BlockPermsFile)) {
                 w.WriteLine("#Version 2");
                 w.WriteLine("#   This file dictates which ranks may use what blocks");
                 w.WriteLine("#   If someone has royally screwed up the ranks, just delete this file and let the server restart");

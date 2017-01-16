@@ -621,6 +621,7 @@
     <Compile Include="util\Formatter.cs" />
     <Compile Include="util\IO\CP437Reader.cs" />
     <Compile Include="util\IO\CP437Writer.cs" />
+    <Compile Include="util\IO\Paths.cs" />
     <Compile Include="util\Math\DirUtils.cs" />
     <Compile Include="util\Math\Vectors.cs" />
     <Compile Include="util\MultiPageOutput.cs" />

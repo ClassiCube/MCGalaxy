@@ -221,7 +221,7 @@ namespace MCGalaxy {
         [ConfigInt("ip-spam-count", "Spam control", null, 25, 0, 1000)]
         public static int IPSpamCount = 10;
         [ConfigInt("ip-spam-block-time", "Spam control", null, 30, 0, 1000)]
-        public static int IPSpamBlockTime = 300;
+        public static int IPSpamBlockTime = 180;
         [ConfigInt("ip-spam-interval", "Spam control", null, 1, 0, 1000)]
         public static int IPSpamInterval = 60;
         

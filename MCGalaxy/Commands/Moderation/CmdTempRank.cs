@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands.Moderation {
             StringBuilder all = new StringBuilder();
             Player who = PlayerInfo.Find(name);
             
-            foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
+            foreach (string line in File.ReadAllLines(Paths.TempRanksFile)) {
                 if (!line.CaselessStarts(name)) { all.AppendLine(line); continue; }
                 
                 string[] parts = line.Split(' ');
@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void Info(Player p, string name) {
-            foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
+            foreach (string line in File.ReadAllLines(Paths.TempRanksFile)) {
                 if (!line.CaselessStarts(name)) continue;
                 PrintTempRankInfo(p, line); return;
             }
@@ -124,7 +124,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         static void List(Player p) {
             int count = 0;
-            foreach (string line in File.ReadAllLines("text/tempranks.txt")) {
+            foreach (string line in File.ReadAllLines(Paths.TempRanksFile)) {
                 if (count == 0)
                     Player.Message(p, "&ePlayers with a temporary rank assigned:");
                 PrintTempRankInfo(p, line);
