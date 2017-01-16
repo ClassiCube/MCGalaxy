@@ -39,11 +39,13 @@ namespace MCGalaxy.DB {
         /// <summary> In-memory list of recent BlockDB changes. </summary>
         public BlockDBCache Cache = new BlockDBCache();
         
-        readonly IReaderWriterLock locker;
+        /// <summary> Used to synchronise access to the in-memory and on-disc BlockDB entries. </summary>
+        public readonly IReaderWriterLock Locker;
+        
         public BlockDB(Level lvl) {
             MapName = lvl.name;
             ReadDimensions();
-            locker = new IReaderWriterLock();
+            Locker = new IReaderWriterLock();
             
             if (Dims.X < lvl.Width) Dims.X = lvl.Width;
             if (Dims.Y < lvl.Height) Dims.Y = lvl.Height;
@@ -56,43 +58,42 @@ namespace MCGalaxy.DB {
             using (Stream s = File.OpenRead(FilePath))
                 BlockDBFile.ReadHeader(s, out Dims);
         }
-        
+
+        /// <summary> Writes the entries from the in-memory cache to disc. </summary>
+        /// <remarks> You must lock using Locker.AccquireWrite() **before** entering this method. </remarks>
         public void WriteEntries() {
-            using (IDisposable writeLock = locker.AccquireWrite()) {
-                if (Cache.Head == null) return;
-                
-                ValidateBackingFile();
-                using (Stream s = File.OpenWrite(FilePath)) {
-                    // This truncates the lower 4 bits off - so e.g. if a power off occurred
-                    // and 21 bytes were in the file, this sets the position to byte 16
-                    s.Position = s.Length & ~0x0F;
-                    BlockDBFile.WriteEntries(s, Cache);
-                    Cache.Clear();
-                }
+            if (Cache.Head == null) return;
+            
+            ValidateBackingFile();
+            using (Stream s = File.OpenWrite(FilePath)) {
+                // This truncates the lower 4 bits off - so e.g. if a power off occurred
+                // and 21 bytes were in the file, this sets the position to byte 16
+                s.Position = s.Length & ~0x0F;
+                BlockDBFile.WriteEntries(s, Cache);
+                Cache.Clear();
             }
         }
 
         
         /// <summary> Outputs all block changes which affect the given coordinates. </summary>
+        /// <remarks> You must lock using Locker.AccquireRead() **before** entering this method. </remarks>
         public void FindChangesAt(ushort x, ushort y, ushort z, Action<BlockDBEntry> output) {
-            using (IDisposable readLock = locker.AccquireRead()) {
-                if (!File.Exists(FilePath)) { FindInMemoryAt(x, y, z, output); return; }
-                Vec3U16 dims;
+            if (!File.Exists(FilePath)) { FindInMemoryAt(x, y, z, output); return; }
+            Vec3U16 dims;
+            
+            using (Stream s = File.OpenRead(FilePath)) {
+                BlockDBFile.ReadHeader(s, out dims);
+                if (x >= dims.X || y >= dims.Y || z >= dims.Z) return;
                 
-                using (Stream s = File.OpenRead(FilePath)) {
-                    BlockDBFile.ReadHeader(s, out dims);
-                    if (x >= dims.X || y >= dims.Y || z >= dims.Z) return;
-                    
-                    int index = (y * dims.Z + z) * dims.X + x;
-                    BlockDBFile.FindChangesAt(s, index, output);
-                }
-                FindInMemoryAt(x, y, z, output);
+                int index = (y * dims.Z + z) * dims.X + x;
+                BlockDBFile.FindChangesAt(s, index, output);
             }
+            FindInMemoryAt(x, y, z, output);
         }
         
         void FindInMemoryAt(ushort x, ushort y, ushort z, Action<BlockDBEntry> output) {
             int index = (y * Dims.Z + z) * Dims.X + x;
-            BlockDBCacheNode node = Cache.Tail;            
+            BlockDBCacheNode node = Cache.Tail;
             while (node != null) {
                 BlockDBCacheEntry[] entries = node.Entries;
                 int count = node.Count;
@@ -107,26 +108,25 @@ namespace MCGalaxy.DB {
         }
         
         /// <summary> Outputs all block changes by the given players. </summary>
+        /// <remarks> You must lock using Locker.AccquireRead() **before** entering this method. </remarks>
         /// <returns> whether an entry before start time was reached. </returns>
         public bool FindChangesBy(int[] ids, DateTime start, DateTime end,
                                   out Vec3U16 dims, Action<BlockDBEntry> output) {
             int startDelta = ClampDelta(start.Subtract(Epoch));
             int endDelta = ClampDelta(end.Subtract(Epoch));
             
-            using (IDisposable readLock = locker.AccquireRead()) {
-                dims = Dims;
-                if (FindInMemoryBy(ids, startDelta, endDelta, output)) return true;
-                
-                if (!File.Exists(FilePath)) return false;
-                using (Stream s = File.OpenRead(FilePath)) {
-                    BlockDBFile.ReadHeader(s, out dims);
-                    return BlockDBFile.FindChangesBy(s, ids, startDelta, endDelta, output);
-                }
+            dims = Dims;
+            if (FindInMemoryBy(ids, startDelta, endDelta, output)) return true;
+            
+            if (!File.Exists(FilePath)) return false;
+            using (Stream s = File.OpenRead(FilePath)) {
+                BlockDBFile.ReadHeader(s, out dims);
+                return BlockDBFile.FindChangesBy(s, ids, startDelta, endDelta, output);
             }
         }
         
         bool FindInMemoryBy(int[] ids, int startDelta, int endDelta, Action<BlockDBEntry> output) {
-            BlockDBCacheNode node = Cache.Head;            
+            BlockDBCacheNode node = Cache.Head;
             while (node != null) {
                 int count = node.Count;
                 BlockDBCacheEntry[] entries = node.Entries;
@@ -156,7 +156,7 @@ namespace MCGalaxy.DB {
         
         /// <summary> Deletes the backing file on disc if it exists. </summary>
         public void DeleteBackingFile() {
-            using (IDisposable writeLock = locker.AccquireWrite()) {
+            using (IDisposable writeLock = Locker.AccquireWrite()) {
                 if (!File.Exists(FilePath)) return;
                 File.Delete(FilePath);
             }

@@ -195,6 +195,7 @@ namespace MCGalaxy.Drawing.Ops {
                 p.IncrementBlockStats(b.Block, true);
                 
                 
+                // Potentially buffer the block change
                 if (op.TotalModified == Server.DrawReloadLimit) {
                     Player.Message(p, "Affected over {0} blocks, preparing to reload map..", Server.DrawReloadLimit);
                     lock (lvl.queueLock)
@@ -205,6 +206,27 @@ namespace MCGalaxy.Drawing.Ops {
                     if (!same) BlockQueue.Addblock(p, index, b.Block, b.ExtBlock);
                 }
                 op.TotalModified++;
+                
+                
+                // Attempt to prevent the BlockDB from growing too large (> 1,000,000 entries)
+                int count = lvl.BlockDB.Cache.Count;
+                if (count == 0 || (count % 1000000) != 0) return;
+                Server.s.Log("okay.. we should probably save here"); // TODO: remove this debugging stuff
+                
+                // if drawop has a read lock on BlockDB (e.g. undo/redo), we must release it here
+                bool hasReadLock = false;
+                if (op.BlockDBReadLock != null) {
+                	op.BlockDBReadLock.Dispose();
+                	hasReadLock = true;
+                }
+                
+                using (IDisposable wLock = lvl.BlockDB.Locker.AccquireWrite(100)) {
+                	Server.s.Log("GOT IT? " + (wLock == null ? "NO" : "YES"));
+                	if (wLock != null) lvl.BlockDB.WriteEntries();
+                }
+                
+                if (!hasReadLock) return;
+                op.BlockDBReadLock = lvl.BlockDB.Locker.AccquireRead();
             }
         }
     }

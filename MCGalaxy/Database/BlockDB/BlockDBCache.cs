@@ -29,6 +29,9 @@ namespace MCGalaxy.DB {
         
         /// <summary> Whether changes are actually added to the BlockDB. </summary>
         public bool Enabled;
+        
+        /// <summary> Total number of entries in the in-memory BlockDB cache. </summary>
+        public int Count;
 
         /// <summary> Dimensions used to pack coordinates into an index. </summary>
         /// <remarks> May be different from actual level's dimensions, such as when the level has been resized. </remarks>        
@@ -65,13 +68,16 @@ namespace MCGalaxy.DB {
                 int delta = Math.Abs(timeDelta - Head.BaseTimeDelta);
                 entry.Packed1 |= (uint)(delta & 0xFF) << 24;
                 entry.Flags |= (ushort)((delta & 0x700) << 3);
-                Head.Entries[Head.Count] = entry; Head.Count++;
+                
+                Head.Entries[Head.Count] = entry; 
+                Head.Count++; Count++;
             }
         }
         
         public void Clear() {
             lock (Locker) {
                 if (Tail == null) return;
+                Count = 0;
                 
                 BlockDBCacheNode cur = Tail;
                 while (cur != null) {

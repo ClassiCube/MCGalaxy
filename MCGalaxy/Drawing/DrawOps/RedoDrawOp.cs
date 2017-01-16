@@ -43,7 +43,9 @@ namespace MCGalaxy.Drawing.Ops {
             if (ids.Length == 0) return;
             
             this.output = output;
-            Level.BlockDB.FindChangesBy(ids, Start, End, out dims, RedoBlock);
+            using (BlockDBReadLock = Level.BlockDB.Locker.AccquireRead()) {
+                Level.BlockDB.FindChangesBy(ids, Start, End, out dims, RedoBlock);
+            }
             this.output = null;
         }
         

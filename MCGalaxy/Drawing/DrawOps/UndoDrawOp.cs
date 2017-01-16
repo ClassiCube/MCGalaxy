@@ -60,7 +60,9 @@ namespace MCGalaxy.Drawing.Ops {
         void PerformUndo() {
             int[] ids = NameConverter.FindIds(who);
             if (ids.Length > 0) {
-                if (Level.BlockDB.FindChangesBy(ids, Start, End, out dims, UndoBlock)) return;
+                using (BlockDBReadLock = Level.BlockDB.Locker.AccquireRead()) {
+                    if (Level.BlockDB.FindChangesBy(ids, Start, End, out dims, UndoBlock)) return;
+                }
             }
             UndoFormatArgs args = new UndoFormatArgs(Player, Start, End, output);
             

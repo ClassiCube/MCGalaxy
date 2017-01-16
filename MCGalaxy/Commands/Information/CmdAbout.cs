@@ -54,8 +54,10 @@ namespace MCGalaxy.Commands {
             bool foundAny = false;
             
             ListFromDatabase(p, ref foundAny, names, x, y, z);
-            p.level.BlockDB.FindChangesAt(x, y, z,
-                                          entry => OutputEntry(p, ref foundAny, names, entry));
+            using (IDisposable rLock = p.level.BlockDB.Locker.AccquireRead()) {
+                p.level.BlockDB.FindChangesAt(x, y, z,
+                                              entry => OutputEntry(p, ref foundAny, names, entry));
+            }
             
             if (!foundAny) Player.Message(p, "No block change records found for this block.");
             BlockDBChange.OutputMessageBlock(p, b, id, x, y, z);
@@ -82,7 +84,7 @@ namespace MCGalaxy.Commands {
                     TimeSpan delta = time - BlockDB.Epoch;
                     entry.TimeDelta = (int)delta.TotalSeconds;
                     entry.Flags = BlockDBFlags.ManualPlace;
-                     
+                    
                     byte flags = ParseFlags(row["Deleted"].ToString());
                     if ((flags & 1) == 0) { // block was placed
                         entry.NewRaw = byte.Parse(row["Type"].ToString());
@@ -109,7 +111,7 @@ namespace MCGalaxy.Commands {
             }
             foundAny = true;
             BlockDBChange.Output(p, name, entry);
-        }  
+        }
         
         static ushort U16(object x) { return ushort.Parse(x.ToString()); }
         

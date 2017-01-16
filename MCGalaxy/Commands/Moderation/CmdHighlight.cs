@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands {
         static bool ParseTimespan(string input, out TimeSpan delta) {
             delta = TimeSpan.Zero;
             try { delta = input.ParseShort('s'); return true;
-            } catch (ArgumentException) { return false; 
+            } catch (ArgumentException) { return false;
             } catch (FormatException) { return false;
             }
         }
@@ -88,8 +88,12 @@ namespace MCGalaxy.Commands {
             public bool DoHighlight(int[] ids, DateTime start, Player p) {
                 buffer = new BufferedBlockSender(p);
                 this.p = p;
-                bool reachedStart = p.level.BlockDB.FindChangesBy(ids, start, DateTime.MaxValue,
-                                                                  out dims, HighlightBlock);
+                bool reachedStart = false;
+                
+                using (IDisposable rLock = p.level.BlockDB.Locker.AccquireRead()) {
+                    reachedStart = p.level.BlockDB.FindChangesBy(ids, start, DateTime.MaxValue,
+                                                                 out dims, HighlightBlock);
+                }
                 buffer.Send(true);
                 
                 buffer.player = null;
@@ -102,7 +106,7 @@ namespace MCGalaxy.Commands {
             void HighlightBlock(BlockDBEntry entry) {
                 byte oldBlock = entry.OldRaw, newBlock = entry.NewRaw;
                 if ((entry.Flags & BlockDBFlags.OldCustom) != 0) oldBlock = Block.custom_block;
-                if ((entry.Flags & BlockDBFlags.NewCustom) != 0) newBlock = Block.custom_block;               
+                if ((entry.Flags & BlockDBFlags.NewCustom) != 0) newBlock = Block.custom_block;
                 if (oldBlock == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
                 found = true;
                 
