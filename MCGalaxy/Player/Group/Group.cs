@@ -84,7 +84,7 @@ namespace MCGalaxy {
             fileName = file;
             OverseerMaps = maps;
             this.prefix = prefix;
-            playerList = name != "nobody" ? PlayerList.Load(fileName) : new PlayerList();
+            playerList = PlayerList.Load(fileName);
             if (OnGroupLoaded != null)
                 OnGroupLoaded(this);
             OnGroupLoadedEvent.Call(this);
@@ -125,7 +125,6 @@ namespace MCGalaxy {
                 GroupList.Add(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', String.Empty, "banned.txt"));
             if (GuestRank == null)
                 GroupList.Add(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', String.Empty, "guest.txt"));
-
             GroupList.Add(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', String.Empty, "nobody.txt"));
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
 
