@@ -322,6 +322,11 @@ namespace MCGalaxy.Gui {
             sec_cbBlocksAuto.Checked = Server.BlockSpamCheck;
             sec_numBlocksMsgs.Value = Server.BlockSpamCount;
             sec_numBlocksSecs.Value = Server.BlockSpamInterval;
+            
+            sec_cbIPAuto.Checked = Server.IPSpamCheck;
+            sec_numIPMsgs.Value = Server.IPSpamCount;
+            sec_numIPSecs.Value = Server.IPSpamInterval;
+            sec_numIPMute.Value = Server.IPSpamBlockTime;
         }
         
         void ParseColor(string value, ComboBox target) {
@@ -367,16 +372,6 @@ namespace MCGalaxy.Gui {
             
             string main = Player.ValidName(txtMain.Text) ? txtMain.Text : "main";
             Server.SetMainLevel(main);
-            Server.irc = chkIRC.Checked;
-            Server.ircNick = txtNick.Text;
-            Server.ircServer = txtIRCServer.Text;
-            Server.ircChannel = txtChannel.Text;
-            Server.ircOpChannel = txtOpChannel.Text;
-            Server.ircPort = int.Parse(txtIRCPort.Text);
-            Server.ircIdentify = chkIrcId.Checked;
-            Server.ircPassword = txtIrcId.Text;
-            Server.ircPlayerTitles = irc_cbTitles.Checked;
-
             Server.rpLimit = int.Parse(txtRP.Text);
             Server.rpNormLimit = int.Parse(txtRP.Text);
             Server.physicsRestart = chkPhysicsRest.Checked;
@@ -405,47 +400,64 @@ namespace MCGalaxy.Gui {
             zsSettings.ApplyToServer();
             lsSettings.ApplyToServer();
             Server.guestLimitNotify = chkGuestLimitNotify.Checked;
-
             Server.backupInterval = int.Parse(txtBackup.Text);
             Server.backupLocation = txtBackupLocation.Text;
             //Server.reportBack = ;  //No setting for this?
-
+            Server.higherranktp = chkTpToHigherRanks.Checked;
+            Server.checkUpdates = chkUpdates.Checked;
+            Server.defaultRank = cmbDefaultRank.SelectedItem.ToString();
+            Server.hackrank_kick = hackrank_kick.Checked;
+            Server.hackrank_kick_time = int.Parse(hackrank_kick_time.Text);
+            Server.showEmptyRanks = chkShowEmptyRanks.Checked;
+            Server.reviewcooldown = (int)nudCooldownTime.Value;
+            ApplyIrcSqlProps();
+            ApplyChatProps();
+            ApplySecurityProps();
+        }
+        
+        void ApplyIrcSqlProps() {
+            Server.irc = chkIRC.Checked;
+            Server.ircNick = txtNick.Text;
+            Server.ircServer = txtIRCServer.Text;
+            Server.ircChannel = txtChannel.Text;
+            Server.ircOpChannel = txtOpChannel.Text;
+            Server.ircPort = int.Parse(txtIRCPort.Text);
+            Server.ircIdentify = chkIrcId.Checked;
+            Server.ircPassword = txtIrcId.Text;
+            Server.ircPlayerTitles = irc_cbTitles.Checked;
+            
             Server.useMySQL = chkUseSQL.Checked;
-            Database.Backend = Server.useMySQL ?
-                MySQLBackend.Instance : SQLiteBackend.Instance;
+            Database.Backend = Server.useMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
             Server.MySQLHost = txtSQLHost.Text;
             Server.MySQLPort = txtSQLPort.Text;
             Server.MySQLUsername = txtSQLUsername.Text;
             Server.MySQLPassword = txtSQLPassword.Text;
             Server.MySQLDatabaseName = txtSQLDatabase.Text;
-            //Server.MySQLPooling = ; // No setting for this?
-
+            //Server.MySQLPooling = ; // No setting for this?        	
+        }
+        
+        void ApplyChatProps() {
             Server.DefaultColor = Colors.Parse(chat_cmbDefault.SelectedItem.ToString());
             Server.IRCColour = Colors.Parse(chat_cmbIRC.SelectedItem.ToString());
             Server.HelpSyntaxColor = Colors.Parse(chat_cmbSyntax.SelectedItem.ToString());
             Server.HelpDescriptionColor = Colors.Parse(chat_cmbDesc.SelectedItem.ToString());
+            
             Server.TablistRankSorted = chat_cbTabRank.Checked;
             Server.TablistGlobal = !chat_cbTabLevel.Checked;
             Server.TablistBots = chat_cbTabBots.Checked;
             
-            Server.higherranktp = chkTpToHigherRanks.Checked;
-            Server.checkUpdates = chkUpdates.Checked;
-
             Server.cheapMessage = chat_chkCheap.Checked;
             Server.cheapMessageGiven = chat_txtCheap.Text;
             Server.defaultBanMessage = chat_txtBan.Text;
             Server.shutdownMessage = chat_txtShutdown.Text;
             Server.defaultDemoteMessage = chat_txtDemote.Text;
-            Server.defaultPromoteMessage = chat_txtPromote.Text;
-            
-            Server.defaultRank = cmbDefaultRank.SelectedItem.ToString();
-
-            Server.hackrank_kick = hackrank_kick.Checked;
-            Server.hackrank_kick_time = int.Parse(hackrank_kick_time.Text);
-            
-            // Security tab
+            Server.defaultPromoteMessage = chat_txtPromote.Text;            
+        }
+        
+        void ApplySecurityProps() {
+            Server.LogNotes = sec_cbLogNotes.Checked;
             Server.verifyadmins = sec_cbVerifyAdmins.Checked;
-            Server.verifyadminsrank = Group.GroupList.Find(grp => grp.name == sec_cmbVerifyRank.SelectedItem.ToString()).Permission;
+            Server.verifyadminsrank = Program.GetPermission(sec_cmbVerifyRank, LevelPermission.Operator);
             Server.useWhitelist = sec_cbWhitelist.Checked;
             if (Server.useWhitelist && Server.whiteList == null)
                 Server.whiteList = PlayerList.Load("whitelist.txt");
@@ -454,17 +466,20 @@ namespace MCGalaxy.Gui {
             Server.spamcounter = (int)sec_numChatMsgs.Value;
             Server.spamcountreset = (int)sec_numChatSecs.Value;
             Server.mutespamtime = (int)sec_numChatMute.Value;
+            
             Server.CmdSpamCheck = sec_cbCmdAuto.Checked;
             Server.CmdSpamCount = (int)sec_numCmdMsgs.Value;
             Server.CmdSpamInterval = (int)sec_numCmdSecs.Value;
             Server.CmdSpamBlockTime = (int)sec_numCmdMute.Value;
+            
             Server.BlockSpamCheck = sec_cbBlocksAuto.Checked;
             Server.BlockSpamCount = (int)sec_numBlocksMsgs.Value;
             Server.BlockSpamInterval = (int)sec_numBlocksSecs.Value;
             
-            Server.LogNotes = sec_cbLogNotes.Checked;
-            Server.showEmptyRanks = chkShowEmptyRanks.Checked;
-            Server.reviewcooldown = (int)nudCooldownTime.Value;
+            Server.IPSpamCheck = sec_cbCmdAuto.Checked;
+            Server.IPSpamCount = (int)sec_numCmdMsgs.Value;
+            Server.IPSpamInterval = (int)sec_numCmdSecs.Value;
+            Server.IPSpamBlockTime = (int)sec_numCmdMute.Value;
         }
         
 
@@ -1080,7 +1095,10 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         void sec_cbBlocksAuto_Checked(object sender, EventArgs e) {
             ToggleBlocksSpamSettings(sec_cbBlocksAuto.Checked);
         }
-        
+
+        void sec_cbIPAuto_Checked(object sender, EventArgs e) {
+            ToggleIPSpamSettings(sec_cbIPAuto.Checked);
+        }        
         
         void ToggleIrcSettings(bool enabled) {
             txtIRCServer.Enabled = enabled;
@@ -1116,6 +1134,12 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         void ToggleBlocksSpamSettings(bool enabled) {
             sec_numBlocksMsgs.Enabled = enabled;
             sec_numBlocksSecs.Enabled = enabled;
+        }
+
+        void ToggleIPSpamSettings(bool enabled) {
+            sec_numIPMsgs.Enabled = enabled;
+            sec_numIPMute.Enabled = enabled;
+            sec_numIPSecs.Enabled = enabled;
         }
         
         void VerifyAdminsChecked(object sender, System.EventArgs e) {

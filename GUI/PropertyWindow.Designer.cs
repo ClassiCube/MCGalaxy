@@ -333,6 +333,16 @@ namespace MCGalaxy.Gui
             this.tabPage11 = new System.Windows.Forms.TabPage();
             this.propsZG = new System.Windows.Forms.PropertyGrid();
             this.pageSecurity = new System.Windows.Forms.TabPage();
+            this.sec_gbIP = new System.Windows.Forms.GroupBox();
+            this.sec_cbIPAuto = new System.Windows.Forms.CheckBox();
+            this.sec_lblIPOnMute = new System.Windows.Forms.Label();
+            this.sec_numIPMsgs = new System.Windows.Forms.NumericUpDown();
+            this.sec_lblIPOnMsgs = new System.Windows.Forms.Label();
+            this.sec_numIPSecs = new System.Windows.Forms.NumericUpDown();
+            this.sec_lblIPOnSecs = new System.Windows.Forms.Label();
+            this.sec_lblIPForMute = new System.Windows.Forms.Label();
+            this.sec_numIPMute = new System.Windows.Forms.NumericUpDown();
+            this.sec_lblIPForSecs = new System.Windows.Forms.Label();
             this.sec_gbBlocks = new System.Windows.Forms.GroupBox();
             this.sec_cbBlocksAuto = new System.Windows.Forms.CheckBox();
             this.sec_lblBlocksOnMute = new System.Windows.Forms.Label();
@@ -423,6 +433,10 @@ namespace MCGalaxy.Gui
             this.groupBox30.SuspendLayout();
             this.tabPage11.SuspendLayout();
             this.pageSecurity.SuspendLayout();
+            this.sec_gbIP.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numIPMsgs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numIPSecs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numIPMute)).BeginInit();
             this.sec_gbBlocks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).BeginInit();
@@ -3553,6 +3567,7 @@ namespace MCGalaxy.Gui
             // pageSecurity
             // 
             this.pageSecurity.BackColor = System.Drawing.SystemColors.Control;
+            this.pageSecurity.Controls.Add(this.sec_gbIP);
             this.pageSecurity.Controls.Add(this.sec_gbBlocks);
             this.pageSecurity.Controls.Add(this.sec_gbCmd);
             this.pageSecurity.Controls.Add(this.sec_gbOther);
@@ -3563,6 +3578,131 @@ namespace MCGalaxy.Gui
             this.pageSecurity.Size = new System.Drawing.Size(498, 521);
             this.pageSecurity.TabIndex = 7;
             this.pageSecurity.Text = "Security";
+            // 
+            // sec_gbIP
+            // 
+            this.sec_gbIP.Controls.Add(this.sec_cbIPAuto);
+            this.sec_gbIP.Controls.Add(this.sec_lblIPOnMute);
+            this.sec_gbIP.Controls.Add(this.sec_numIPMsgs);
+            this.sec_gbIP.Controls.Add(this.sec_lblIPOnMsgs);
+            this.sec_gbIP.Controls.Add(this.sec_numIPSecs);
+            this.sec_gbIP.Controls.Add(this.sec_lblIPOnSecs);
+            this.sec_gbIP.Controls.Add(this.sec_lblIPForMute);
+            this.sec_gbIP.Controls.Add(this.sec_numIPMute);
+            this.sec_gbIP.Controls.Add(this.sec_lblIPForSecs);
+            this.sec_gbIP.Location = new System.Drawing.Point(14, 240);
+            this.sec_gbIP.Name = "sec_gbIP";
+            this.sec_gbIP.Size = new System.Drawing.Size(238, 110);
+            this.sec_gbIP.TabIndex = 37;
+            this.sec_gbIP.TabStop = false;
+            this.sec_gbIP.Text = "Connection spam control";
+            // 
+            // sec_cbIPAuto
+            // 
+            this.sec_cbIPAuto.AutoSize = true;
+            this.sec_cbIPAuto.Location = new System.Drawing.Point(10, 20);
+            this.sec_cbIPAuto.Name = "sec_cbIPAuto";
+            this.sec_cbIPAuto.Size = new System.Drawing.Size(149, 17);
+            this.sec_cbIPAuto.TabIndex = 24;
+            this.sec_cbIPAuto.Text = "Enable automatic blocking";
+            this.sec_cbIPAuto.UseVisualStyleBackColor = true;
+            this.sec_cbIPAuto.CheckedChanged += new System.EventHandler(this.sec_cbIPAuto_Checked);
+            // 
+            // sec_lblIPOnMute
+            // 
+            this.sec_lblIPOnMute.AutoSize = true;
+            this.sec_lblIPOnMute.Location = new System.Drawing.Point(6, 48);
+            this.sec_lblIPOnMute.Name = "sec_lblIPOnMute";
+            this.sec_lblIPOnMute.Size = new System.Drawing.Size(46, 13);
+            this.sec_lblIPOnMute.TabIndex = 25;
+            this.sec_lblIPOnMute.Text = "Block on";
+            // 
+            // sec_numIPMsgs
+            // 
+            this.sec_numIPMsgs.Location = new System.Drawing.Point(53, 45);
+            this.sec_numIPMsgs.Maximum = new decimal(new int[] {
+                                    1000,
+                                    0,
+                                    0,
+                                    0});
+            this.sec_numIPMsgs.Name = "sec_numIPMsgs";
+            this.sec_numIPMsgs.Size = new System.Drawing.Size(37, 21);
+            this.sec_numIPMsgs.TabIndex = 30;
+            this.sec_numIPMsgs.Value = new decimal(new int[] {
+                                    25,
+                                    0,
+                                    0,
+                                    0});
+            // 
+            // sec_lblIPOnMsgs
+            // 
+            this.sec_lblIPOnMsgs.AutoSize = true;
+            this.sec_lblIPOnMsgs.Location = new System.Drawing.Point(91, 48);
+            this.sec_lblIPOnMsgs.Name = "sec_lblIPOnMsgs";
+            this.sec_lblIPOnMsgs.Size = new System.Drawing.Size(75, 13);
+            this.sec_lblIPOnMsgs.TabIndex = 31;
+            this.sec_lblIPOnMsgs.Text = "connections in";
+            // 
+            // sec_numIPSecs
+            // 
+            this.sec_numIPSecs.Location = new System.Drawing.Point(166, 45);
+            this.sec_numIPSecs.Maximum = new decimal(new int[] {
+                                    1000,
+                                    0,
+                                    0,
+                                    0});
+            this.sec_numIPSecs.Name = "sec_numIPSecs";
+            this.sec_numIPSecs.Size = new System.Drawing.Size(42, 21);
+            this.sec_numIPSecs.TabIndex = 34;
+            this.sec_numIPSecs.Value = new decimal(new int[] {
+                                    1,
+                                    0,
+                                    0,
+                                    0});
+            // 
+            // sec_lblIPOnSecs
+            // 
+            this.sec_lblIPOnSecs.AutoSize = true;
+            this.sec_lblIPOnSecs.Location = new System.Drawing.Point(209, 48);
+            this.sec_lblIPOnSecs.Name = "sec_lblIPOnSecs";
+            this.sec_lblIPOnSecs.Size = new System.Drawing.Size(28, 13);
+            this.sec_lblIPOnSecs.TabIndex = 33;
+            this.sec_lblIPOnSecs.Text = "secs";
+            // 
+            // sec_lblIPForMute
+            // 
+            this.sec_lblIPForMute.AutoSize = true;
+            this.sec_lblIPForMute.Location = new System.Drawing.Point(6, 83);
+            this.sec_lblIPForMute.Name = "sec_lblIPForMute";
+            this.sec_lblIPForMute.Size = new System.Drawing.Size(47, 13);
+            this.sec_lblIPForMute.TabIndex = 25;
+            this.sec_lblIPForMute.Text = "Block for";
+            // 
+            // sec_numIPMute
+            // 
+            this.sec_numIPMute.Location = new System.Drawing.Point(53, 79);
+            this.sec_numIPMute.Maximum = new decimal(new int[] {
+                                    1000,
+                                    0,
+                                    0,
+                                    0});
+            this.sec_numIPMute.Name = "sec_numIPMute";
+            this.sec_numIPMute.Size = new System.Drawing.Size(42, 21);
+            this.sec_numIPMute.TabIndex = 32;
+            this.sec_numIPMute.Value = new decimal(new int[] {
+                                    300,
+                                    0,
+                                    0,
+                                    0});
+            // 
+            // sec_lblIPForSecs
+            // 
+            this.sec_lblIPForSecs.AutoSize = true;
+            this.sec_lblIPForSecs.Location = new System.Drawing.Point(96, 83);
+            this.sec_lblIPForSecs.Name = "sec_lblIPForSecs";
+            this.sec_lblIPForSecs.Size = new System.Drawing.Size(46, 13);
+            this.sec_lblIPForSecs.TabIndex = 33;
+            this.sec_lblIPForSecs.Text = "seconds";
             // 
             // sec_gbBlocks
             // 
@@ -3603,7 +3743,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numBlocksMsgs.Location = new System.Drawing.Point(46, 45);
             this.sec_numBlocksMsgs.Maximum = new decimal(new int[] {
-                                    500,
+                                    1000,
                                     0,
                                     0,
                                     0});
@@ -3629,7 +3769,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numBlocksSecs.Location = new System.Drawing.Point(142, 45);
             this.sec_numBlocksSecs.Maximum = new decimal(new int[] {
-                                    128,
+                                    1000,
                                     0,
                                     0,
                                     0});
@@ -3693,7 +3833,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numCmdMsgs.Location = new System.Drawing.Point(53, 45);
             this.sec_numCmdMsgs.Maximum = new decimal(new int[] {
-                                    128,
+                                    1000,
                                     0,
                                     0,
                                     0});
@@ -3719,7 +3859,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numCmdSecs.Location = new System.Drawing.Point(161, 45);
             this.sec_numCmdSecs.Maximum = new decimal(new int[] {
-                                    128,
+                                    1000,
                                     0,
                                     0,
                                     0});
@@ -3754,7 +3894,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numCmdMute.Location = new System.Drawing.Point(53, 79);
             this.sec_numCmdMute.Maximum = new decimal(new int[] {
-                                    128,
+                                    1000,
                                     0,
                                     0,
                                     0});
@@ -3830,7 +3970,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numChatMsgs.Location = new System.Drawing.Point(53, 45);
             this.sec_numChatMsgs.Maximum = new decimal(new int[] {
-                                    128,
+                                    1000,
                                     0,
                                     0,
                                     0});
@@ -3856,7 +3996,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numChatSecs.Location = new System.Drawing.Point(156, 45);
             this.sec_numChatSecs.Maximum = new decimal(new int[] {
-                                    128,
+                                    1000,
                                     0,
                                     0,
                                     0});
@@ -3891,7 +4031,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numChatMute.Location = new System.Drawing.Point(53, 79);
             this.sec_numChatMute.Maximum = new decimal(new int[] {
-                                    128,
+                                    1000,
                                     0,
                                     0,
                                     0});
@@ -4024,6 +4164,11 @@ namespace MCGalaxy.Gui
             this.groupBox30.ResumeLayout(false);
             this.tabPage11.ResumeLayout(false);
             this.pageSecurity.ResumeLayout(false);
+            this.sec_gbIP.ResumeLayout(false);
+            this.sec_gbIP.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numIPMsgs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numIPSecs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sec_numIPMute)).EndInit();
             this.sec_gbBlocks.ResumeLayout(false);
             this.sec_gbBlocks.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).EndInit();
@@ -4042,6 +4187,16 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.sec_numChatMute)).EndInit();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.Label sec_lblIPForSecs;
+        private System.Windows.Forms.NumericUpDown sec_numIPMute;
+        private System.Windows.Forms.Label sec_lblIPForMute;
+        private System.Windows.Forms.Label sec_lblIPOnSecs;
+        private System.Windows.Forms.NumericUpDown sec_numIPSecs;
+        private System.Windows.Forms.Label sec_lblIPOnMsgs;
+        private System.Windows.Forms.NumericUpDown sec_numIPMsgs;
+        private System.Windows.Forms.Label sec_lblIPOnMute;
+        private System.Windows.Forms.CheckBox sec_cbIPAuto;
+        private System.Windows.Forms.GroupBox sec_gbIP;
         private System.Windows.Forms.Label sec_lblCmdForSecs;
         private System.Windows.Forms.NumericUpDown sec_numCmdMute;
         private System.Windows.Forms.Label sec_lblCmdForMute;
