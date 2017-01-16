@@ -399,6 +399,7 @@
     <Compile Include="CorePlugin\ConnectingHandler.cs" />
     <Compile Include="CorePlugin\CorePlugin.cs" />
     <Compile Include="CorePlugin\ConnectHandler.cs" />
+    <Compile Include="CorePlugin\IPThrottler.cs" />
     <Compile Include="CorePlugin\LevelHandler.cs" />
     <Compile Include="Database\Backends\SQLite.cs" />
     <Compile Include="Database\BlockDB\BlockDB.cs" />

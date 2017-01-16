@@ -13,10 +13,9 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Core {
     internal static class ConnectingHandler {
         
         internal static void HandleConnecting(Player p, string mppass) {
@@ -32,9 +31,10 @@ namespace MCGalaxy {
             if (!Player.ValidName(p.truename)) {
                 p.Leave(null, "Invalid player name", true); return false;
             }
-            
-            if (!CheckPendingAlts(p)) return false;            
+      
             if (!VerifyName(p, mppass)) return false;
+            if (!IPThrottler.CheckIP(p)) return false;
+            if (!CheckPendingAlts(p)) return false;
             if (!CheckTempban(p)) return false;
 
             bool whitelisted = CheckWhitelist(p.name, p.ip);

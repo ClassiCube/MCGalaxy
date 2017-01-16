@@ -15,6 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -24,6 +25,7 @@ namespace MCGalaxy.Core {
         public override string creator { get { return "MCGalaxy team"; } }
         public override string MCGalaxy_Version { get { return Server.VersionString; } }
         public override string name { get { return "CorePlugin"; } }
+        SchedulerTask clearTask;
 
         public override void Load(bool startup) {
             OnPlayerConnectEvent.Register(ConnectHandler.HandleConnect,
@@ -34,6 +36,9 @@ namespace MCGalaxy.Core {
                                           Priority.Critical, this, false);
             OnJoinedLevelEvent.Register(LevelHandler.HandleOnJoinedLevel,
                                         Priority.Critical, this, false);
+            
+            clearTask = Server.Background.QueueRepeat(IPThrottler.CleanupTask, null, 
+                                                      TimeSpan.FromMinutes(10));
         }
         
         public override void Unload(bool shutdown) {
@@ -41,6 +46,7 @@ namespace MCGalaxy.Core {
             OnPlayerCommandEvent.UnRegister(this);
             OnPlayerConnectingEvent.UnRegister(this);
             OnJoinedLevelEvent.UnRegister(this);
+            Server.Background.Cancel(clearTask);
         }
     }
 }

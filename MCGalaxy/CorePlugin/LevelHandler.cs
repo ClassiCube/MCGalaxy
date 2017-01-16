@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Core {
     internal static class LevelHandler {
         
         internal static void HandleOnJoinedLevel(Player p, Level prevLevel, Level level) {

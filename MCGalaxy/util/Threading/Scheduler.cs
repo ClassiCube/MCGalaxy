@@ -50,7 +50,7 @@ namespace MCGalaxy {
             return EnqueueTask(new SchedulerTask(callback, state, delay, true));
         }
         
-        /// <summary> Cancels a task if it is in the tasks list.
+        /// <summary> Cancels a task if it is in the tasks list. </summary>
         /// <remarks> Does not cancel the task if it is currently executing. </remarks>
         public bool Cancel(SchedulerTask task) {
             lock (taskLock) {

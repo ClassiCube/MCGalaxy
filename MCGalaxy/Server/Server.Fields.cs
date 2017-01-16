@@ -159,7 +159,7 @@ namespace MCGalaxy {
         [ConfigBool("agree-to-rules-on-entry", "Other", null, false)]
         public static bool agreetorulesonentry = false;
         
-        [ConfigPerm("os-perbuild-default", "other", null, LevelPermission.Nobody)]
+        [ConfigPerm("os-perbuild-default", "Other", null, LevelPermission.Nobody)]
         public static LevelPermission osPerbuildDefault = LevelPermission.Nobody;
         [ConfigBool("tablist-rank-sorted", "Tablist", null, true)]
         public static bool TablistRankSorted = true;

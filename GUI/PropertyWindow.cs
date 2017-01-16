@@ -476,10 +476,10 @@ namespace MCGalaxy.Gui {
             Server.BlockSpamCount = (int)sec_numBlocksMsgs.Value;
             Server.BlockSpamInterval = (int)sec_numBlocksSecs.Value;
             
-            Server.IPSpamCheck = sec_cbCmdAuto.Checked;
-            Server.IPSpamCount = (int)sec_numCmdMsgs.Value;
-            Server.IPSpamInterval = (int)sec_numCmdSecs.Value;
-            Server.IPSpamBlockTime = (int)sec_numCmdMute.Value;
+            Server.IPSpamCheck = sec_cbIPAuto.Checked;
+            Server.IPSpamCount = (int)sec_numIPMsgs.Value;
+            Server.IPSpamInterval = (int)sec_numIPSecs.Value;
+            Server.IPSpamBlockTime = (int)sec_numIPMute.Value;
         }
         
 
