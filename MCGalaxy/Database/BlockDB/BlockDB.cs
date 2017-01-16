@@ -55,7 +55,7 @@ namespace MCGalaxy.DB {
         
         void ReadDimensions() {
             if (!File.Exists(FilePath)) return;
-            using (Stream s = File.OpenRead(FilePath))
+            using (Stream s = OpenRead())
                 BlockDBFile.ReadHeader(s, out Dims);
         }
 
@@ -65,7 +65,7 @@ namespace MCGalaxy.DB {
             if (Cache.Head == null) return;
             
             ValidateBackingFile();
-            using (Stream s = File.OpenWrite(FilePath)) {
+            using (Stream s = OpenWrite()) {
                 // This truncates the lower 4 bits off - so e.g. if a power off occurred
                 // and 21 bytes were in the file, this sets the position to byte 16
                 s.Position = s.Length & ~0x0F;
@@ -81,7 +81,7 @@ namespace MCGalaxy.DB {
             if (!File.Exists(FilePath)) { FindInMemoryAt(x, y, z, output); return; }
             Vec3U16 dims;
             
-            using (Stream s = File.OpenRead(FilePath)) {
+            using (Stream s = OpenRead()) {
                 BlockDBFile.ReadHeader(s, out dims);
                 if (x >= dims.X || y >= dims.Y || z >= dims.Z) return;
                 
@@ -119,7 +119,7 @@ namespace MCGalaxy.DB {
             if (FindInMemoryBy(ids, startDelta, endDelta, output)) return true;
             
             if (!File.Exists(FilePath)) return false;
-            using (Stream s = File.OpenRead(FilePath)) {
+            using (Stream s = OpenRead()) {
                 BlockDBFile.ReadHeader(s, out dims);
                 return BlockDBFile.FindChangesBy(s, ids, startDelta, endDelta, output);
             }
@@ -168,18 +168,27 @@ namespace MCGalaxy.DB {
             Vec3U16 fileDims;
 
             if (!File.Exists(FilePath)) {
-                using (Stream s = File.OpenWrite(FilePath)) {
+            	using (Stream s = OpenWrite()) {
                     fileDims = Dims;
                     BlockDBFile.WriteHeader(s, fileDims);
                 }
             } else {
-                using (Stream s = File.OpenRead(FilePath)) {
+            	using (Stream s = OpenRead()) {
                     BlockDBFile.ReadHeader(s, out fileDims);
                 }
                 if (fileDims.X < Dims.X || fileDims.Y < Dims.Y || fileDims.Z < Dims.Z) {
                     BlockDBFile.ResizeBackingFile(this);
                 }
             }
+        }
+        
+                
+        FileStream OpenWrite() { 
+            return new FileStream(FilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite); 
+        }
+        
+        FileStream OpenRead() {
+            return new FileStream(FilePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite); 
         }
     }
 }
