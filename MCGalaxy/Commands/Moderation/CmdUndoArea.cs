@@ -20,7 +20,7 @@ using MCGalaxy.Commands.Building;
 
 namespace MCGalaxy.Commands {
     
-    public sealed class CmdUndoArea : CmdUndo {
+    public sealed class CmdUndoArea : CmdUndoPlayer {
         public override string name { get { return "undoarea"; } }
         public override string shortcut { get { return "ua"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
             if (parts[0] == null) return;
             
             args.message = parts[0];
-            args.delta = GetDelta(p, parts[0], parts.Length > 1 ? parts[1] : "30m");
+            args.delta = CmdUndo.GetDelta(p, parts[0], parts, 1);
             if (args.delta == TimeSpan.MinValue) return;
             
             Player.Message(p, "Place two blocks to determine the edges.");
@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands {
 
         public override void Help(Player p) {
             Player.Message(p, "%T/undoarea [player] <timespan>");
-            Player.Message(p, "%HUndoes the blockchanges made by [player] in the previous <timespan> in a specific area.");
+            Player.Message(p, "%HUndoes the blockchanges made by [player] in the past <timespan> in a specific area.");
             Player.Message(p, "%H If <timespan> is not given, undoes 30 minutes.");
             Player.Message(p, "%H e.g. to undo the past 90 minutes, <timespan> would be %S1h30m");
             if (p == null || p.group.maxUndo == -1 || p.group.maxUndo == int.MaxValue)

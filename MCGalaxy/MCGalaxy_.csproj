@@ -324,6 +324,7 @@
     <Compile Include="Commands\Moderation\CmdUnban.cs" />
     <Compile Include="Commands\Moderation\CmdUnbanip.cs" />
     <Compile Include="Commands\Moderation\CmdUndoArea.cs" />
+    <Compile Include="Commands\Moderation\CmdUndoPlayer.cs" />
     <Compile Include="Commands\Moderation\CmdVIP.cs" />
     <Compile Include="Commands\Moderation\CmdVoice.cs" />
     <Compile Include="Commands\Moderation\CmdVoteKick.cs" />
