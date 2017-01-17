@@ -278,6 +278,15 @@
     <Compile Include="Commands\Information\CmdWhois.cs" />
     <Compile Include="Commands\Information\CmdWhoNick.cs" />
     <Compile Include="Commands\Information\WhoInfo.cs" />
+    <Compile Include="Commands\Maintenance\CmdBlockDB.cs" />
+    <Compile Include="Commands\Maintenance\CmdGarbage.cs" />
+    <Compile Include="Commands\Maintenance\CmdInfoSwap.cs" />
+    <Compile Include="Commands\Maintenance\CmdIRCBot.cs" />
+    <Compile Include="Commands\Maintenance\CmdLimit.cs" />
+    <Compile Include="Commands\Maintenance\CmdPlayerEditDB.cs" />
+    <Compile Include="Commands\Maintenance\CmdRestart.cs" />
+    <Compile Include="Commands\Maintenance\CmdServer.cs" />
+    <Compile Include="Commands\Maintenance\CmdShutdown.cs" />
     <Compile Include="Commands\Moderation\CmdBan.cs" />
     <Compile Include="Commands\Moderation\CmdBanEdit.cs" />
     <Compile Include="Commands\Moderation\CmdBanip.cs" />
@@ -289,13 +298,11 @@
     <Compile Include="Commands\Moderation\CmdFreeze.cs" />
     <Compile Include="Commands\Moderation\CmdHide.cs" />
     <Compile Include="Commands\Moderation\CmdHighlight.cs" />
-    <Compile Include="Commands\Moderation\CmdInfoSwap.cs" />
     <Compile Include="Commands\Moderation\CmdIrcControllers.cs" />
     <Compile Include="Commands\Moderation\CmdJail.cs" />
     <Compile Include="Commands\Moderation\CmdJoker.cs" />
     <Compile Include="Commands\Moderation\CmdKick.cs" />
     <Compile Include="Commands\Moderation\CmdKickban.cs" />
-    <Compile Include="Commands\Moderation\CmdLimit.cs" />
     <Compile Include="Commands\Moderation\CmdLocation.cs" />
     <Compile Include="Commands\Moderation\CmdLowlag.cs" />
     <Compile Include="Commands\Moderation\CmdModerate.cs" />
@@ -306,14 +313,11 @@
     <Compile Include="Commands\Moderation\CmdP2P.cs" />
     <Compile Include="Commands\Moderation\CmdPass.cs" />
     <Compile Include="Commands\Moderation\CmdPatrol.cs" />
-    <Compile Include="Commands\Moderation\CmdPlayerEditDB.cs" />
     <Compile Include="Commands\Moderation\CmdPossess.cs" />
-    <Compile Include="Commands\Moderation\CmdIRCBot.cs" />
-    <Compile Include="Commands\Moderation\CmdRestart.cs" />
+    <Compile Include="Commands\Moderation\CmdReport.cs" />
     <Compile Include="Commands\Moderation\CmdRestoreSelection.cs" />
     <Compile Include="Commands\Moderation\CmdReview.cs" />
     <Compile Include="Commands\Moderation\CmdSetRank.cs" />
-    <Compile Include="Commands\Moderation\CmdShutdown.cs" />
     <Compile Include="Commands\Moderation\CmdTempBan.cs" />
     <Compile Include="Commands\Moderation\CmdTempRank.cs" />
     <Compile Include="Commands\Moderation\CmdTrust.cs" />
@@ -339,16 +343,13 @@
     <Compile Include="Commands\other\CmdDescend.cs" />
     <Compile Include="Commands\other\CmdFakerank.cs" />
     <Compile Include="Commands\other\CmdFly.cs" />
-    <Compile Include="Commands\other\CmdGarbage.cs" />
     <Compile Include="Commands\other\CmdHackRank.cs" />
     <Compile Include="Commands\other\CmdInvincible.cs" />
     <Compile Include="Commands\other\CmdKill.cs" />
     <Compile Include="Commands\other\CmdMove.cs" />
     <Compile Include="Commands\other\CmdRepeat.cs" />
-    <Compile Include="Commands\other\CmdReport.cs" />
     <Compile Include="Commands\other\CmdRide.cs" />
     <Compile Include="Commands\other\CmdSendCmd.cs" />
-    <Compile Include="Commands\other\CmdServer.cs" />
     <Compile Include="Commands\other\CmdSummon.cs" />
     <Compile Include="Commands\other\CmdTimer.cs" />
     <Compile Include="Commands\other\CmdTnt.cs" />
@@ -363,7 +364,6 @@
     <Compile Include="Commands\Scripting\CmdCompile.cs" />
     <Compile Include="Commands\Scripting\CmdCompload.cs" />
     <Compile Include="Commands\Scripting\CmdScripting.cs" />
-    <Compile Include="Commands\World\CmdBlockDB.cs" />
     <Compile Include="Commands\World\CmdBlockProperties.cs" />
     <Compile Include="Commands\World\CmdCopyLVL.cs" />
     <Compile Include="Commands\World\CmdDeleteLvl.cs" />
@@ -697,6 +697,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Commands\Maintenance" />
     <Folder Include="util\Threading" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
