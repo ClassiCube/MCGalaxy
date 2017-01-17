@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Building {
             if (message == "") {
                 SimplePasteDrawOp simpleOp = new SimplePasteDrawOp();
                 simpleOp.CopyState = p.CopyBuffer;
-                return DrawOp.DoDrawOp(simpleOp, null, p, m);
+                return DrawOpPerformer.Do(simpleOp, null, p, m);
             }
             
             PasteDrawOp op = new PasteDrawOp();
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Building {
                 op.Include = ReplaceBrushFactory.GetBlocks(p, 0, args.Length, args);
                 if (op.Include == null) return false;
             }
-            return DrawOp.DoDrawOp(op, null, p, m);
+            return DrawOpPerformer.Do(op, null, p, m);
         }
         
         public override void Help(Player p) {

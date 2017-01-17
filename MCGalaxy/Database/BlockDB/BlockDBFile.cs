@@ -97,10 +97,22 @@ namespace MCGalaxy.DB {
             }
         }
         
+        // Inlined WriteI32/WriteU16 for better performance
         static void WriteEntry(BlockDBEntry entry, byte[] bulk, int index) {
-            WriteI32(entry.PlayerID, bulk, index);
-            WriteI32(entry.TimeDelta, bulk, index + 4);
-            WriteI32(entry.Index, bulk, index + 8);
+            bulk[index + 0 ] = (byte)(entry.PlayerID);
+            bulk[index + 1 ] = (byte)(entry.PlayerID >> 8);
+            bulk[index + 2 ] = (byte)(entry.PlayerID >> 16);
+            bulk[index + 3 ] = (byte)(entry.PlayerID >> 24);
+            
+            bulk[index + 4 ] = (byte)(entry.TimeDelta);
+            bulk[index + 5 ] = (byte)(entry.TimeDelta >> 8);
+            bulk[index + 6 ] = (byte)(entry.TimeDelta >> 16);
+            bulk[index + 7 ] = (byte)(entry.TimeDelta >> 24);
+            
+            bulk[index + 8 ] = (byte)(entry.Index);
+            bulk[index + 9 ] = (byte)(entry.Index >> 8);
+            bulk[index + 10] = (byte)(entry.Index >> 16);
+            bulk[index + 11] = (byte)(entry.Index >> 24);
             
             bulk[index + 12] = entry.OldRaw;
             bulk[index + 13] = entry.NewRaw;

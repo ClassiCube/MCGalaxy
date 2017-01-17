@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Building {
             OutlineDrawOp op = new OutlineDrawOp();
             op.Block = dArgs.block; op.ExtBlock = dArgs.extBlock;
             op.NewBlock = dArgs.newBlock; op.NewExtBlock = dArgs.newExtBlock;
-            return DrawOp.DoDrawOp(op, null, p, marks);
+            return DrawOpPerformer.Do(op, null, p, marks);
         }
         struct DrawArgs { public byte block, extBlock, newBlock, newExtBlock; }
 

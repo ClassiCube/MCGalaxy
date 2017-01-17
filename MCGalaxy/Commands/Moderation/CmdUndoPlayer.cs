@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Building {
             
             op.Start = DateTime.UtcNow.Subtract(delta);
             op.who = name;
-            DrawOp.DoDrawOp(op, null, p, marks);
+            DrawOpPerformer.Do(op, null, p, marks);
 
             if (op.found) {
                 Chat.MessageAll("Undid {1}%S's changes for the past &b{0}",

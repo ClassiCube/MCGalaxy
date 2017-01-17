@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.Building {
                 UndoSelfDrawOp op = new UndoSelfDrawOp();
                 op.who = p.name;
                 op.Start = entry.Start; op.End = entry.End;
-                DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
+                DrawOpPerformer.Do(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
                 Player.Message(p, "Undo performed.");
                 return;
             }
@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands.Building {
             CmdPhysics.SetPhysics(p.level, 0);
             UndoPhysicsDrawOp op = new UndoPhysicsDrawOp();
             op.Start = DateTime.UtcNow.Subtract(delta);
-            DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
+            DrawOpPerformer.Do(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
             
             Chat.MessageAll("Physics were undone &b{0}", delta.Shorten());
             Server.s.Log("Physics were undone &b" + delta.Shorten());
@@ -91,7 +91,7 @@ namespace MCGalaxy.Commands.Building {
             UndoDrawOp op = new UndoSelfDrawOp();
             op.Start = DateTime.UtcNow.Subtract(delta);
             op.who = p.name;
-            DrawOp.DoDrawOp(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal });
+            DrawOpPerformer.Do(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal });
 
             if (op.found) {
                 Player.Message(p, "Undid your changes for the past &b{0}", delta.Shorten(true));

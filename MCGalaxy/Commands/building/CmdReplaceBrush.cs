@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.Building {
             DrawOp op = null;
             if (ReplaceNot) op = new ReplaceNotDrawOp((byte)block, extBlock);
             else op = new ReplaceDrawOp((byte)block, extBlock);
-            return DrawOp.DoDrawOp(op, brush, p, marks);
+            return DrawOpPerformer.Do(op, brush, p, marks);
         }
         
         protected virtual bool ReplaceNot { get { return false; } }

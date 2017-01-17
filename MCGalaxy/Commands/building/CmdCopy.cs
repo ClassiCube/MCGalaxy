@@ -133,7 +133,7 @@ namespace MCGalaxy.Commands.Building {
                 op.Flags = BlockDBFlags.Cut;
                 Brush brush = new SolidBrush(Block.air, 0);
                 Vec3S32[] marks = { new Vec3S32(minX, minY, minZ), new Vec3S32(maxX, maxY, maxZ) };
-                DrawOp.DoDrawOp(op, brush, p, marks, false);
+                DrawOpPerformer.Do(op, brush, p, marks, false);
             }
 
             string format = "Copied &a{0} %Sblocks." +

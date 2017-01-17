@@ -60,8 +60,12 @@ namespace MCGalaxy.Drawing.Ops {
         void PerformUndo() {
             int[] ids = NameConverter.FindIds(who);
             if (ids.Length > 0) {
-                using (BlockDBReadLock = Level.BlockDB.Locker.AccquireRead()) {
+                // can't use "using" as it creates a local var, and read lock reference may be changed by DrawOpPerformer class
+                try {
+                    BlockDBReadLock = Level.BlockDB.Locker.AccquireRead();
                     if (Level.BlockDB.FindChangesBy(ids, Start, End, out dims, UndoBlock)) return;
+                } finally {
+                    if (BlockDBReadLock != null) BlockDBReadLock.Dispose();
                 }
             }
             UndoFormatArgs args = new UndoFormatArgs(Player, Start, End, output);

@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Building {
         bool DoHollow(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             HollowDrawOp op = new HollowDrawOp();
             op.Skip = (byte)state;
-            return DrawOp.DoDrawOp(op, null, p, marks);
+            return DrawOpPerformer.Do(op, null, p, marks);
         }
         
         public override void Help(Player p) {

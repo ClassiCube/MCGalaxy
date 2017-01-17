@@ -33,16 +33,16 @@ namespace MCGalaxy.Drawing {
 
 namespace MCGalaxy.Drawing.Ops {
     
-    public abstract partial class DrawOp {
+    public static class DrawOpPerformer {
         
-        public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
-                                    ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            Vec3S32[] marks = new [] { new Vec3S32(x1, y1, z1), new Vec3S32(x2, y2, z2) };
-            return DoDrawOp(op, brush, p, marks);
+        public static bool Do(DrawOp op, Brush brush, Player p,
+                              ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
+            Vec3S32[] marks = new Vec3S32[] { new Vec3S32(x1, y1, z1), new Vec3S32(x2, y2, z2) };
+            return Do(op, brush, p, marks);
         }
         
-        public static bool DoDrawOp(DrawOp op, Brush brush, Player p,
-                                    Vec3S32[] marks, bool checkLimit = true) {
+        public static bool Do(DrawOp op, Brush brush, Player p,
+                              Vec3S32[] marks, bool checkLimit = true) {
             op.SetMarks(marks);
             op.Level = p == null ? null : p.level;
             op.Player = p;
@@ -142,12 +142,12 @@ namespace MCGalaxy.Drawing.Ops {
         
         static void DoDrawOp(PendingDrawOp item, Player p) {
             Level lvl = item.Op.Level;
-            DrawOpPerformer performer = new DrawOpPerformer(item.Op);
+            DrawOpOutputter outputter = new DrawOpOutputter(item.Op);
             
             if (item.Op.AffectedByTransform) {
-                p.Transform.Perform(item.Marks, p, lvl, item.Op, item.Brush, performer.Output);
+                p.Transform.Perform(item.Marks, p, lvl, item.Op, item.Brush, outputter.Output);
             } else {
-                item.Op.Perform(item.Marks, item.Brush, performer.Output);
+                item.Op.Perform(item.Marks, item.Brush, outputter.Output);
             }
         }
 
@@ -162,11 +162,11 @@ namespace MCGalaxy.Drawing.Ops {
         }
 
         
-        class DrawOpPerformer {
+        class DrawOpOutputter {
             readonly DrawOp op;
             readonly DateTime start;
             
-            public DrawOpPerformer(DrawOp op) {
+            public DrawOpOutputter(DrawOp op) {
                 this.op = op;
                 start = DateTime.UtcNow;
             }

@@ -433,7 +433,7 @@
     <Compile Include="Drawing\DrawOps\AdvPyramidDrawOps.cs" />
     <Compile Include="Drawing\DrawOps\CuboidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\CuboidDrawOps.cs" />
-    <Compile Include="Drawing\DrawOps\DrawOp.Performer.cs" />
+    <Compile Include="Drawing\DrawOps\DrawOpPerformer.cs" />
     <Compile Include="Drawing\DrawOps\DrawOp.cs" />
     <Compile Include="Drawing\DrawOps\FillDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\LineDrawOp.cs" />

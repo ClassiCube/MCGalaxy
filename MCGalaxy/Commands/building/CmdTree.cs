@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Building {
                 brush = ParseBrush(dArgs.brushMsg, p, type, extType);
                 if (brush == null) return false;
             }
-            return DrawOp.DoDrawOp(op, brush, p, marks);
+            return DrawOpPerformer.Do(op, brush, p, marks);
         }
         
         static Brush ParseBrush(string raw, Player p, byte block, byte extBlock) {

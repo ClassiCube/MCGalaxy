@@ -28,7 +28,11 @@ namespace MCGalaxy {
             if (lvl.BlockDB.Cache.Head == null) return;
             if (!lvl.UseBlockDB) { lvl.BlockDB.Cache.Clear(); return; }
 
-            using (IDisposable wLock = lvl.BlockDB.Locker.AccquireWrite()) {
+            using (IDisposable wLock = lvl.BlockDB.Locker.AccquireWrite(60 * 1000)) {
+                if (wLock == null) {
+                    Server.s.ErrorCase("!!! couldn't accquire BlockDB write lock on " + lvl.name + ", skipping save !!!");
+                    return;
+                }
                 lvl.BlockDB.WriteEntries();
             }
             Server.s.Log("Saved BlockDB changes for:" + lvl.name, true);

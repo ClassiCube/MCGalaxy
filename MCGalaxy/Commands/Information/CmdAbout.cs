@@ -54,9 +54,14 @@ namespace MCGalaxy.Commands {
             bool foundAny = false;
             
             ListFromDatabase(p, ref foundAny, names, x, y, z);
-            using (IDisposable rLock = p.level.BlockDB.Locker.AccquireRead()) {
-                p.level.BlockDB.FindChangesAt(x, y, z,
-                                              entry => OutputEntry(p, ref foundAny, names, entry));
+            using (IDisposable rLock = p.level.BlockDB.Locker.AccquireRead(30 * 1000)) {
+                if (rLock != null) {
+                    p.level.BlockDB.FindChangesAt(x, y, z,
+                                                  entry => OutputEntry(p, ref foundAny, names, entry));
+                } else {
+                    Player.Message(p, "&cUnable to accquire read lock on BlockDB after 30 seconds, aborting.");
+                    return;
+                }
             }
             
             if (!foundAny) Player.Message(p, "No block change records found for this block.");

@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Building {
             op.Text = wArgs.message;
             op.Scale = wArgs.scale; op.Spacing = wArgs.spacing;
             Brush brush = new SolidBrush(type, extType);
-            return DrawOp.DoDrawOp(op, brush, p, marks);
+            return DrawOpPerformer.Do(op, brush, p, marks);
         }
         
         struct WriteArgs { public byte scale, spacing; public string message; }

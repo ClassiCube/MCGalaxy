@@ -47,8 +47,8 @@ namespace MCGalaxy.Commands.Building {
             Brush brush = BrushFactory.Find(name).Construct(args);
             if (brush == null) return false;
             
-            DrawOp drawOp = new CuboidDrawOp();
-            return DrawOp.DoDrawOp(drawOp, brush, p, marks);
+            DrawOp op = new CuboidDrawOp();
+            return DrawOpPerformer.Do(op, brush, p, marks);
         }
         
         public override void Help(Player p) {
@@ -88,8 +88,8 @@ namespace MCGalaxy.Commands.Building {
             Brush brush = BrushFactory.Find("replace").Construct(args);
             if (brush == null) return;
             
-            DrawOp drawOp = new CuboidDrawOp();
-            if (!DrawOp.DoDrawOp(drawOp, brush, p, 0, 0, 0, x2, y2, z2))
+            DrawOp op = new CuboidDrawOp();
+            if (!DrawOpPerformer.Do(op, brush, p, 0, 0, 0, x2, y2, z2))
                 return;
             Player.Message(p, "&4/replaceall finished!");
         }

@@ -43,8 +43,12 @@ namespace MCGalaxy.Drawing.Ops {
             if (ids.Length == 0) return;
             
             this.output = output;
-            using (BlockDBReadLock = Level.BlockDB.Locker.AccquireRead()) {
-                Level.BlockDB.FindChangesBy(ids, Start, End, out dims, RedoBlock);
+            // can't use "using" as it creates a local var, and read lock reference may be changed by DrawOpPerformer class
+            try {
+                BlockDBReadLock = Level.BlockDB.Locker.AccquireRead();
+                if (Level.BlockDB.FindChangesBy(ids, Start, End, out dims, RedoBlock)) return;
+            } finally {
+                if (BlockDBReadLock != null) BlockDBReadLock.Dispose();
             }
             this.output = null;
         }

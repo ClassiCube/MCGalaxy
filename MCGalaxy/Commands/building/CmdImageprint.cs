@@ -133,7 +133,7 @@ namespace MCGalaxy.Commands.Building {
                 if (op.Mode == 1) op.Mode = 2;
                 if (op.Mode == 3) op.Mode = 4;
             }
-            DrawOp.DoDrawOp(op, null, p, m, false);
+            DrawOpPerformer.Do(op, null, p, m, false);
         }
         
         public override void Help(Player p) {

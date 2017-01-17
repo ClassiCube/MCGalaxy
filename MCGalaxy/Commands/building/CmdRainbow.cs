@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool DoRainbow(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-            return DrawOp.DoDrawOp(new RainbowDrawOp(), null, p, marks);
+            return DrawOpPerformer.Do(new RainbowDrawOp(), null, p, marks);
         }
         
         public override void Help(Player p) {
