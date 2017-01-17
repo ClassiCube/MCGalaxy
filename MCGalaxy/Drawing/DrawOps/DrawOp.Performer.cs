@@ -191,8 +191,20 @@ namespace MCGalaxy.Drawing.Ops {
                     return;
                 }
                 
-                lvl.SetTile(b.X, b.Y, b.Z, b.Block, p, b.ExtBlock, op.Flags);
-                p.IncrementBlockStats(b.Block, true);
+                
+                // Set the block (inlined)
+                lvl.blocks[index] = b.Block;
+                lvl.changed = true;
+                if (old == Block.custom_block && b.Block != Block.custom_block) {
+                    lvl.RevertExtTileNoCheck(b.X, b.Y, b.Z);
+                }
+                if (b.Block == Block.custom_block) {
+                    lvl.SetExtTileNoCheck(b.X, b.Y, b.Z, b.ExtBlock);
+                }
+                if (p != null) {
+                    lvl.BlockDB.Cache.Add(p, b.X, b.Y, b.Z, op.Flags, old, oldExt, b.Block, b.ExtBlock);
+                }
+                p.loginBlocks++; p.overallBlocks++; p.TotalDrawn++; // increment block stats inline
                 
                 
                 // Potentially buffer the block change
@@ -201,9 +213,18 @@ namespace MCGalaxy.Drawing.Ops {
                     lock (lvl.queueLock)
                         lvl.blockqueue.Clear();
                 } else if (op.TotalModified < Server.DrawReloadLimit) {
-                    same = old == Block.custom_block 
+                    same = old == Block.custom_block
                         ? oldExt == b.ExtBlock : Block.Convert(old) == Block.Convert(b.Block);
                     if (!same) BlockQueue.Addblock(p, index, b.Block, b.ExtBlock);
+                    
+                    if (lvl.physics > 0) {
+                        if (old == Block.sponge && b.Block != Block.sponge)
+                            OtherPhysics.DoSpongeRemoved(lvl, index, false);
+                        if (old == Block.lava_sponge && b.Block != Block.lava_sponge)
+                            OtherPhysics.DoSpongeRemoved(lvl, index, true);
+
+                        if (lvl.ActivatesPhysics(b.Block, b.ExtBlock)) lvl.AddCheck(index);
+                    }
                 }
                 op.TotalModified++;
                 
@@ -211,18 +232,18 @@ namespace MCGalaxy.Drawing.Ops {
                 // Attempt to prevent the BlockDB from growing too large (> 1,000,000 entries)
                 int count = lvl.BlockDB.Cache.Count;
                 if (count == 0 || (count % 1000000) != 0) return;
-                Server.s.Log("okay.. we should probably save here"); // TODO: remove this debugging stuff
+                Server.s.Log("rightio saving BlockDB!"); // TODO: remove this debugging stuff
                 
                 // if drawop has a read lock on BlockDB (e.g. undo/redo), we must release it here
                 bool hasReadLock = false;
                 if (op.BlockDBReadLock != null) {
-                	op.BlockDBReadLock.Dispose();
-                	hasReadLock = true;
+                    op.BlockDBReadLock.Dispose();
+                    hasReadLock = true;
                 }
                 
                 using (IDisposable wLock = lvl.BlockDB.Locker.AccquireWrite(100)) {
-                	Server.s.Log("GOT IT? " + (wLock == null ? "NO" : "YES"));
-                	if (wLock != null) lvl.BlockDB.WriteEntries();
+                    Server.s.Log("GOT WRITE LOCK? " + (wLock == null ? "NO" : "YES"));
+                    if (wLock != null) lvl.BlockDB.WriteEntries();
                 }
                 
                 if (!hasReadLock) return;

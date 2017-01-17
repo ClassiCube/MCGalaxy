@@ -276,9 +276,14 @@ namespace MCGalaxy {
                 if (old == Block.lava_sponge && physics > 0 && block != Block.lava_sponge)
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), true);
 
+                p.loginBlocks++;
+                p.overallBlocks++;
+            
+                if (drawn) p.TotalDrawn++;
+                else if (block == 0) p.TotalDeleted++;
+                else p.TotalPlaced++;
+            
                 errorLocation = "Setting tile";
-                p.IncrementBlockStats(block, drawn);
-                
                 SetTile(x, y, z, block);
                 if (old == Block.custom_block && block != Block.custom_block)
                     RevertExtTileNoCheck(x, y, z);

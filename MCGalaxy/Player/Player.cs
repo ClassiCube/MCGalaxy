@@ -29,15 +29,6 @@ namespace MCGalaxy {
 	
     public sealed partial class Player : IDisposable {
 
-        public void IncrementBlockStats(byte block, bool drawn) {
-            loginBlocks++;
-            overallBlocks++;
-            
-            if (drawn) TotalDrawn++;
-            else if (block == 0) TotalDeleted++;
-            else TotalPlaced++;
-        }
-        
         public byte GetActualHeldBlock(out byte extBlock) {
             byte block = RawHeldBlock;
             extBlock = 0;
