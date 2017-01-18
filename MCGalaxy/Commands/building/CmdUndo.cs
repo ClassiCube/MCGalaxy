@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Undo;
 
@@ -36,7 +37,7 @@ namespace MCGalaxy.Commands.Building {
             bool undoPhysics = parts[0].CaselessEq("physics");
             
             TimeSpan delta = GetDelta(p, p.name, parts, undoPhysics ? 1 : 0);
-            if (delta == TimeSpan.MinValue) {
+            if (delta == TimeSpan.MinValue || (!undoPhysics && parts.Length > 1)) {
                 Player.Message(p, "If you are trying to undo another player, use %T/undoplayer");
                 return;
             }
@@ -59,7 +60,8 @@ namespace MCGalaxy.Commands.Building {
                 p.DrawOps.Remove(entry);
                 
                 UndoSelfDrawOp op = new UndoSelfDrawOp();
-                op.who = p.name;
+                op.who = p.name; op.ids = NameConverter.FindIds(p.name);
+                
                 op.Start = entry.Start; op.End = entry.End;
                 DrawOpPerformer.Do(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
                 Player.Message(p, "Undo performed.");
@@ -90,9 +92,9 @@ namespace MCGalaxy.Commands.Building {
         void UndoSelf(Player p, TimeSpan delta) {
             UndoDrawOp op = new UndoSelfDrawOp();
             op.Start = DateTime.UtcNow.Subtract(delta);
-            op.who = p.name;
+            op.who = p.name; op.ids = NameConverter.FindIds(p.name);
+            
             DrawOpPerformer.Do(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal });
-
             if (op.found) {
                 Player.Message(p, "Undid your changes for the past &b{0}", delta.Shorten(true));
                 Server.s.Log(p.name + "'s actions for the past " + delta.Shorten(true) + " were undone.");
@@ -125,12 +127,12 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/undo %H- Undoes your last draw operation.");
+            Player.Message(p, "%T/undo %H- Undoes your last draw operation");
             Player.Message(p, "%T/undo [timespan]");
-            Player.Message(p, "%HUndoes your blockchanges in the past [timespan].");
-            Player.Message(p, "%H  e.g. to undo the past 90 minutes, <timespan> would be %S1h30m");
+            Player.Message(p, "%HUndoes your blockchanges in the past [timespan]");
+            Player.Message(p, "%H  e.g. to undo 90 minutes, <timespan> would be %S1h30m");
             if (p == null || p.group.maxUndo == -1 || p.group.maxUndo == int.MaxValue)
-                Player.Message(p, "%T/undo all &c- Undoes yourself 68 years");
+                Player.Message(p, "%H  if <timespan> is all, &cundoes for 68 years");
             Player.Message(p, "%T/undo physics [seconds] %H- Undoes physics on current map");
         }
     }

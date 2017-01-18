@@ -43,6 +43,7 @@ namespace MCGalaxy.Drawing.Ops {
         public DateTime End = DateTime.MaxValue;
         
         internal string who;
+        internal int[] ids;
         internal bool found = false;
         
         public UndoDrawOp() {
@@ -58,7 +59,6 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         void PerformUndo() {
-            int[] ids = NameConverter.FindIds(who);
             if (ids.Length > 0) {
                 // can't use "using" as it creates a local var, and read lock reference may be changed by DrawOpPerformer class
                 try {

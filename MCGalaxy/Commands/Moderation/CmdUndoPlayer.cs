@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
+using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Undo;
 
@@ -35,54 +37,58 @@ namespace MCGalaxy.Commands.Building {
             if (CheckSuper(p, message, "player name")) return;
             if (message == "") { Player.Message(p, "You need to provide a player name."); return; }
             
-            string[] parts = message.Split(' ');
-            parts[0] = PlayerInfo.FindOfflineNameMatches(p, parts[0]);
-            if (parts[0] == null) return;
+            string[] parts = message.Split(' '), names = null;
+            int[] ids = GetIds(p, parts, out names);
+            if (ids == null) return;
             
             TimeSpan delta = CmdUndo.GetDelta(p, parts[0], parts, 1);
             if (delta == TimeSpan.MinValue) return;
 
             Vec3S32[] marks = new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal };
-            UndoPlayer(p, delta, parts[0], marks);
+            UndoPlayer(p, delta, names, ids, marks);
         }
 
-        protected void UndoPlayer(Player p, TimeSpan delta, string name, Vec3S32[] marks) {
-            if (p != null && !CheckUndoPerms(p, name)) return;
-            
+        protected void UndoPlayer(Player p, TimeSpan delta, string[] names, int[] ids, Vec3S32[] marks) {
             UndoDrawOp op = new UndoDrawOp();
-            if (p != null && p.name.CaselessEq(name))
-                op = new UndoSelfDrawOp();
-            
             op.Start = DateTime.UtcNow.Subtract(delta);
-            op.who = name;
+            op.who = names[0]; op.ids = ids;
             DrawOpPerformer.Do(op, null, p, marks);
 
+            string namesStr = names.Join(name => PlayerInfo.GetColoredName(p, name));
             if (op.found) {
-                Chat.MessageAll("Undid {1}%S's changes for the past &b{0}",
-                                delta.Shorten(true), PlayerInfo.GetColoredName(p, name));
-                Server.s.Log(name + "'s actions for the past " + delta.Shorten(true) + " were undone.");
+                Chat.MessageAll("Undid {1}%S's changes for the past &b{0}", delta.Shorten(true), namesStr);
+                Server.s.Log(names.Join() + "'s actions for the past " + delta.Shorten(true) + " were undone.");
             } else {
-                Player.Message(p, "No changes found by {1} %Sin the past &b{0}",
-                               delta.Shorten(true), PlayerInfo.GetColoredName(p, name));
+                Player.Message(p, "No changes found by {1} %Sin the past &b{0}", delta.Shorten(true), namesStr);
             }
         }
         
-        protected virtual bool CheckUndoPerms(Player p, string name) {
-            if (p != null && p.name.CaselessEq(name)) return true;
-            Group grp = Group.findPlayerGroup(name);
+        protected int[] GetIds(Player p, string[] parts, out string[] names) {
+            int count = Math.Max(1, parts.Length - 1);
+            List<int> ids = new List<int>();
+            names = new string[count];
             
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "undo other players."); return false; }
-            if (grp.Permission >= p.Rank) { MessageTooHighRank(p, "undo", false); return false; }
-            return true;
+            for (int i = 0; i < names.Length; i++) {
+                names[i] = PlayerInfo.FindOfflineNameMatches(p, parts[i]);
+                if (names[i] == null) return null;
+                
+                Group grp = Group.findPlayerGroup(names[i]);
+                if (p != null && grp.Permission >= p.Rank) { 
+                    MessageTooHighRank(p, "undo", false); return null;
+                }
+
+                ids.AddRange(NameConverter.FindIds(names[i]));
+            }
+            return ids.ToArray();
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/undoplayer [player] <timespan>");
-            Player.Message(p, "%HUndoes the blockchanges made by [player] in the past <timespan>.");
+            Player.Message(p, "%T/undoplayer [player1] <player2..> <timespan>");
+            Player.Message(p, "%HUndoes the blockchanges made by [players] in the past <timespan>");
             Player.Message(p, "%H  If <timespan> is not given, undoes 30 minutes.");
-            Player.Message(p, "%H  e.g. to undo the past 90 minutes, <timespan> would be %S1h30m");
             if (p == null || p.group.maxUndo == -1 || p.group.maxUndo == int.MaxValue)
-                Player.Message(p, "%T/undoplayer [player] all &c- Undoes 68 years for [player]");
+                Player.Message(p, "%H  if <timespan> is all, &cundoes for 68 years");
+            Player.Message(p, "%H  e.g. to undo 90 minutes, <timespan> would be %S1h30m");
         }
     }
 }

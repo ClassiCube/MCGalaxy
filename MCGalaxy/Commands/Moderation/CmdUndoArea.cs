@@ -34,11 +34,11 @@ namespace MCGalaxy.Commands {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") { Player.Message(p, "You need to provide a player name."); return; }
             
-            string[] parts = message.Split(' ');
-            parts[0] = PlayerInfo.FindOfflineNameMatches(p, parts[0]);
-            if (parts[0] == null) return;
+            string[] parts = message.Split(' '), names = null;
+            int[] ids = GetIds(p, parts, out names);
+            if (ids == null) return;
             
-            args.message = parts[0];
+            args.names = names; args.ids = ids;
             args.delta = CmdUndo.GetDelta(p, parts[0], parts, 1);
             if (args.delta == TimeSpan.MinValue) return;
             
@@ -48,27 +48,19 @@ namespace MCGalaxy.Commands {
         
         bool DoUndo(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             UndoAreaArgs args = (UndoAreaArgs)state;       
-            UndoPlayer(p, args.delta, args.message, marks);
+            UndoPlayer(p, args.delta, args.names, args.ids, marks);
             return false;
         }
-        
-        protected override bool CheckUndoPerms(Player p, string name) {
-             if (p != null && p.name.CaselessEq(name)) return true;
-             Group grp = Group.findPlayerGroup(name);
-             
-             if (grp.Permission >= p.Rank) { MessageTooHighRank(p, "undo", false); return false; }
-             return true;
-        }
 
-        struct UndoAreaArgs { public string message; public TimeSpan delta; }
+        struct UndoAreaArgs { public string[] names; public int[] ids; public TimeSpan delta; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/undoarea [player] <timespan>");
-            Player.Message(p, "%HUndoes the blockchanges made by [player] in the past <timespan> in a specific area.");
-            Player.Message(p, "%H If <timespan> is not given, undoes 30 minutes.");
-            Player.Message(p, "%H e.g. to undo the past 90 minutes, <timespan> would be %S1h30m");
+            Player.Message(p, "%T/undoarea [player1] <player2..> <timespan>");
+            Player.Message(p, "%HUndoes the blockchanges made by [players] in the past <timespan> in a specific area");
+            Player.Message(p, "%H  If <timespan> is not given, undoes 30 minutes.");
             if (p == null || p.group.maxUndo == -1 || p.group.maxUndo == int.MaxValue)
-                Player.Message(p, "%T/undoarea [player] all &c- Undoes 68 years for [player]");
+                Player.Message(p, "%H  if <timespan> is all, &cundoes for 68 years");
+            Player.Message(p, "%H  e.g. to undo 90 minutes, <timespan> would be %S1h30m");
         }
     }
 }
