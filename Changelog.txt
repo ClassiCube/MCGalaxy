@@ -1,3 +1,69 @@
+v 1.8.8.6
+Added: IP connection throttling
+Added: ported across fCraft map generator
+Added: new BlockDB format
+	- now /undo and /redo show in /b, doesn't use SQL, so faster and much less disk usage
+Added: /undo is separate into /undo and /undoplayer, can undo multiple people at once
+Fixed: /lb add with automatic ID
+Improved: less memory allocations in physics updates and map sending
+Improved: map is only reloaded when actual number of blocks changed > reload threshold
+Fixed: errors when activating portals/message blocks and database table is missing
+Fixed: /endround should be op+ by default, not outputting anything when round isn't in progress
+Fixed: wrong opcode in DeleteSelection
+Fixed: being able to place blocks you normally can't in draw commands
+Fixed: /tp not working when target is outside map
+Fixed: /reload no longer slightly moves you up
+Fixed: autoload commands for unix, where commands are case sensitive
+Fixed: spawn and cloudheight for .dat format
+Fixed: very rare case of .x outputting to wrong channel
+Fixed: prevent modifying bots on worlds you don't have perbuild access
+Fixed: /send checks for mutes
+Fixed: /store maps erroring
+Fixed: all /gb becoming /lb after /server reload
+Fixed: /topten and offset
+Fixed: /os zone del [name] actually works
+Fixed: Changing main from server gui not working
+Fixed: global.json.back never being saved
+Fixed: if you use /gb to replace a core block, it also changes core block name
+Fixed: /ascend and /descend, trains
+Fixed: fire now properly kills custom blocks which are also killed by lava
+Fixed: odoor_air blocks should still be saved to block.properties
+Fixed: trains colliding into each other causing one to disappear
+Fixed: /baninfo only showing first /unban
+Fixed: tnt wars
+Fixed: being able to change rank to same rank
+Added: /mark all
+Added: added all/alltext to list of editable lb/gb properties
+Added: /os map resize, /os blockprops
+Added: add # % ? @ to /write font
+Added: PlayerClick event
+Added: aliases for grey/gray
+Added: /server backup litedb
+Added: client can send ping packet to server
+Improved: IRC is disctinct from /title
+Improved: allow $tokens in motd
+Improved: Server can now operater without builder/advbuilder/op/superop ranks
+Improved: show player who created map in /newlvl
+Improved: /bots output is paged
+Improved: /freeze isn't silly anymore
+Improved: Backing up database tables is now much faster
+Improved: allow = as well as _ in cloudy brush args
+Improved: better layout in /send and /inbox
+Improved: /backup no longer runs on a separate thread, which can potentially crash the server
+Improved: /rankmsg is laid out better, can't be used when muted
+Improved: Better format in /baninfo
+Improved: non-walkthrough /mbs always repeat message when clicked on
+Improved: better help for /os
+Improved: /blocks and /search blocks now use coloured output
+Improved: level/map names now use colours
+Improved: extra perm required in skin/
+Improved: more commands have default rank guest
+Improved: add ipban/unipban as aliases
+Improved: show player who created a /newlvl
+Improved: combine agree/disagree/rules, combine tpaccept/tpdeny/tpa
+Removed: most door_X_air block names in /blocks and /search blocks as they aren't used anymore
+Removed: /impersonate, /killpay, /tpzone
+
 v 1.8.8.4
 Added: /blockprops which allows changing of physics properties for all blocks
 Added: Can overwrite core blocks on per-level basis with /lb
