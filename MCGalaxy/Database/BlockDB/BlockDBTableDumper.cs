@@ -45,7 +45,7 @@ namespace MCGalaxy.DB {
             
             try {
                 Database.ExecuteReader("SELECT * FROM `" + table + "`", DumpRow);
-                WriteBuffer(false);
+                WriteBuffer(true);
                 AppendCbdbFile();
                 SaveCbdbFile();
             } finally {
