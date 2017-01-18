@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Moderation {
             Command.all.Find("banip").Use(p, "@" + name);
             if (who != null)
                 Command.all.Find("kick").Use(p, message);
-            Command.all.Find("undo").Use(p, name + " all");
+            Command.all.Find("undoplayer").Use(p, name + " all");
         }
 
         public override void Help(Player p) {
