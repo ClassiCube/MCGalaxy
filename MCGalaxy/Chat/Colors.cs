@@ -306,10 +306,7 @@ namespace MCGalaxy {
         public byte R, G, B, A;
         public string Name;
         
-        public bool Undefined { get { return Fallback == '\0'; } }
-        
-        public string Hex() {
-             return "#" + R.ToString("X2") + G.ToString("X2") + B.ToString("X2");
-        }
+        public bool Undefined { get { return Fallback == '\0'; } }        
+        public string Hex() { return Utils.Hex(R, G, B); }
     }
 }

@@ -39,6 +39,10 @@ namespace MCGalaxy {
             return true;
         }
         
+        public static string Hex(byte r, byte g, byte b) {
+             return "#" + r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
+        }
+        
         public static unsafe void memset(IntPtr srcPtr, byte value, int startIndex, int bytes) {
             byte* srcByte = (byte*)srcPtr + startIndex;
             // Make sure we do an aligned write/read for the bulk copy

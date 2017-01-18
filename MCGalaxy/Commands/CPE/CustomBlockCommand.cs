@@ -137,25 +137,24 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition def = defs[id];
             if (!ExistsInScope(def, id, global)) { MessageNoBlock(p, id, global, cmd); return; }
             
-            Player.Message(p, "About " + def.Name + " (" + def.BlockID + ")");
-            Player.Message(p, "  DrawType: " + def.BlockDraw + ", BlocksLight: " +
-                           def.BlocksLight + ", Solidity: " + def.CollideType);
-            Player.Message(p, "  Fallback ID: " + def.FallBack + ", Sound: " +
-                           def.WalkSound + ", Speed: " + def.Speed.ToString("F2"));
+            Player.Message(p, "About {0} ({1})", def.Name, def.BlockID);
+            Player.Message(p, "  DrawType: {0}, BlocksLight: {1}, Solidity: {2}", 
+                           def.BlockDraw, def.BlocksLight, def.CollideType);
+            Player.Message(p, "  Fallback ID: {0}, Sound: {1}, Speed: {2}", 
+                           def.FallBack, def.WalkSound, def.Speed.ToString("F2"));
             
             if (def.FogDensity == 0) {
                 Player.Message(p, "  Block does not use fog");
             } else {
-                Player.Message(p, "  Fog density: " + def.FogDensity + ", R: " +
-                               def.FogR + ", G: " + def.FogG + ", B: " + def.FogB);
+                Player.Message(p, "  Fog density: {0}, color: {1}",
+            	               def.FogDensity, Utils.Hex(def.FogR, def.FogG, def.FogB));
             }
             
             if (def.Shape == 0) {
                 Player.Message(p, "  Block is a sprite");
             } else {
-                Player.Message(p, "  Block is a cube from (" +
-                               def.MinX + "," + def.MinY + "," + def.MinZ + ") to ("
-                               + def.MaxX + "," + def.MaxY + "," + def.MaxZ + ")");
+                Player.Message(p, "  Block is a cube from ({0}, {1}, {2}) to ({3}, {4}, {5})",
+                               def.MinX, def.MinZ, def.MinY, def.MaxX, def.MaxZ, def.MaxY);
             }
         }
         
