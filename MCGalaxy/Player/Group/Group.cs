@@ -118,8 +118,15 @@ namespace MCGalaxy {
         /// <summary> Load up all server groups </summary>
         public static void InitAll() {
             GroupList = new List<Group>();
-            if (File.Exists("properties/ranks.properties"))
+            if (File.Exists("properties/ranks.properties")) {
                 GroupProperties.InitAll();
+            } else {
+                // Add some default ranks
+                GroupList.Add(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', String.Empty, "builders.txt"));
+                GroupList.Add(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', String.Empty, "advbuilders.txt"));
+                GroupList.Add(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', String.Empty, "operators.txt"));
+                GroupList.Add(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', String.Empty, "uberOps.txt"));
+            }
 
             if (BannedRank == null)
                 GroupList.Add(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', String.Empty, "banned.txt"));
@@ -269,7 +276,7 @@ namespace MCGalaxy {
         
         public static LevelPermission ParsePermOrName(string value) {
             if (value == null) return LevelPermission.Null;
-        	
+            
             sbyte perm;
             if (sbyte.TryParse(value, out perm))
                 return (LevelPermission)perm;
