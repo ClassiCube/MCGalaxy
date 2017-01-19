@@ -164,12 +164,8 @@ namespace MCGalaxy.Drawing.Ops {
         
         class DrawOpOutputter {
             readonly DrawOp op;
-            readonly DateTime start;
             
-            public DrawOpOutputter(DrawOp op) {
-                this.op = op;
-                start = DateTime.UtcNow;
-            }
+            public DrawOpOutputter(DrawOp op) { this.op = op; }
             
             public void Output(DrawOpBlock b) {
                 if (b.Block == Block.Invalid) return;

@@ -123,7 +123,6 @@ namespace MCGalaxy {
             
             byte heldExt = 0;
             byte heldBlock = GetActualHeldBlock(out heldExt);
-            int index = level.PosToInt(x, y, z);
             if (doDelete) {
                 if (DeleteBlock(old, x, y, z, block, extBlock)) {
                     level.BlockDB.Cache.Add(this, x, y, z, flags,

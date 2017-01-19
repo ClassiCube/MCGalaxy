@@ -75,7 +75,6 @@ namespace MCGalaxy {
             Bots.Add(bot);
             bot.GlobalSpawn();
             
-            Player[] players = PlayerInfo.Online.Items;
             Chat.MessageLevel(bot.level, bot.ColoredName + "%S, the bot, has been added.");
             if (save)
                 BotsFile.UpdateBot(bot);

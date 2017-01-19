@@ -371,7 +371,6 @@ namespace MCGalaxy.Gui
             this.sec_lblChatForMute = new System.Windows.Forms.Label();
             this.sec_numChatMute = new System.Windows.Forms.NumericUpDown();
             this.sec_lblChatForSecs = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabChat.SuspendLayout();
             this.chat_gbTab.SuspendLayout();
             this.chat_gbMessages.SuspendLayout();
@@ -4369,7 +4368,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox grpPhysics;
         private System.Windows.Forms.GroupBox grpAFK;
         private System.Windows.Forms.GroupBox grpBackups;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;

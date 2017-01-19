@@ -149,7 +149,7 @@ namespace MCGalaxy.Generator {
         
         static void Cuboid(MapGenArgs args, int minX, int minY, int minZ,
                            int maxX, int maxY, int maxZ, Func<byte> block) {
-            int width = args.Level.Width, height = args.Level.Height, length = args.Level.Length;
+            int width = args.Level.Width, length = args.Level.Length;
             byte[] blocks = args.Level.blocks;
             
             for (int y = minY; y <= maxY; y++)

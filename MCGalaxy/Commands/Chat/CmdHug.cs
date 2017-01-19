@@ -30,15 +30,15 @@ namespace MCGalaxy.Commands {
             }
             if (p != null && p.muted) { Player.Message(p, "Cannot use /hug while muted."); return; }
             
-            string giver = (p == null) ? "(console)" : p.ColoredName, type = null;
+            string hugType = null;
             if (args.Length > 1) {
                 args[1] = args[1].ToLower();
                 if (args[1] == "loving" || args[1] == "creepy" || args[1] == "friendly" || args[1] == "deadly")
-                    type = args[1];
+                    hugType = args[1];
             }
-            if (type == null) { TryMessageAction(p, args[0], "{0} %Shugged {1}.", false); return; }
+            if (hugType == null) { TryMessageAction(p, args[0], "{0} %Shugged {1}.", false); return; }
             
-            if (type == "deadly") {
+            if (hugType == "deadly") {
                 if (p != null && p.Rank < LevelPermission.Operator) {
                     Player.Message(p, "You cannot %cdeath-hug %Sat your current rank."); return;
                 }
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
                 }
                 who.HandleDeath(Block.rock, 0, " died from a %cdeadly hug.");
             }
-            TryMessageAction(p, args[0], "{0} %Sgave {1} %Sa " + type + " hug.", false); return;
+            TryMessageAction(p, args[0], "{0} %Sgave {1} %Sa " + hugType + " hug.", false); return;
         }
         
         public override void Help(Player p) {

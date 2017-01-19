@@ -24,7 +24,6 @@ namespace MCGalaxy {
         
         const string filename = "properties/ranks.properties";
         public static void InitAll() {
-            List<string> lines = CP437Reader.ReadAllLines(filename);
             Group grp = null;
             PropertiesFile.Read(filename, ref grp, ParseProperty, '=', false);
             if (grp != null) AddGroup(ref grp);

@@ -97,7 +97,6 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoWaterfall(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;            
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             byte below = lvl.GetTile(x, (ushort)(y - 1), z);
@@ -125,7 +124,6 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoLavafall(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;            
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             byte below = lvl.GetTile(x, (ushort)(y - 1), z);

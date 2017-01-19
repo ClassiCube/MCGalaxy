@@ -52,8 +52,7 @@ namespace MCGalaxy.Games {
         }
         
         static void MakeViewAreaRoof(Level lvl) {
-            int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
-            int midY = lvl.Height / 2;
+            int maxX = lvl.Width - 1, midY = lvl.Height / 2, maxZ = lvl.Length - 1;
             Cuboid(1, midY, 1, maxX - 1, midY, maxZ - 1, Block.glass, lvl);
             Cuboid(1, midY, 0, 3, midY, maxZ, Block.rock, lvl);
             Cuboid(maxX - 3, midY, 1, maxX - 1, midY, maxZ, Block.rock, lvl);
@@ -62,7 +61,7 @@ namespace MCGalaxy.Games {
         }
         
         static void MakeViewAreaWalls(Level lvl) {
-            int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
+            int maxX = lvl.Width - 1, maxZ = lvl.Length - 1;
             Cuboid(3, 4, 3, 3, 10, maxZ - 3, Block.rock, lvl);
             Cuboid(maxX - 3, 4, 3, maxX - 3, 10, maxZ - 3, Block.rock, lvl);
             Cuboid(3, 4, 3, maxX - 3, 10, 3, Block.rock, lvl);
@@ -75,7 +74,7 @@ namespace MCGalaxy.Games {
         }
         
         static void MakeViewAreaFloor(Level lvl) {
-            int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
+            int maxX = lvl.Width - 1, maxZ = lvl.Length - 1;
             Cuboid(1, 4, 0, 3, 4, maxZ, Block.rock, lvl);
             Cuboid(maxX - 3, 4, 1, maxX - 1, 4, maxZ, Block.rock, lvl);
             Cuboid(0, 4, 1, maxX, 4, 3, Block.rock, lvl);
@@ -103,7 +102,7 @@ namespace MCGalaxy.Games {
         }
         
         static void MakeSquares(Level lvl) {
-            int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
+            int maxX = lvl.Width - 1, maxZ = lvl.Length - 1;
             Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.glass, lvl);        
             for(int zz = 6; zz < lvl.Length - 6; zz += 3)
                 for (int xx = 6; xx < lvl.Width - 6; xx += 3)

@@ -52,7 +52,7 @@ namespace MCGalaxy {
                 if (p.Chatroom == chatroom)
                     SendMessage(p, from, message);
                 if (p.spyChatRooms.Contains(chatroom) && p.Chatroom != chatroom)
-                    SendMessage(p, from, message);
+                    SendMessage(p, from, messageforspy);
             }
             Server.s.Log("<ChatRoom " + chatroom + ">" + from.name + ": " + rawMessage);
         }

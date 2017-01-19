@@ -39,7 +39,6 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoLargeTnt(Level lvl, ref Check C, int power) {
-            Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
@@ -56,7 +55,6 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoSmallTnt(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             Player p = GetPlayer(ref C.data);

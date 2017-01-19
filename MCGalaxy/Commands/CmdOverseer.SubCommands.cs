@@ -47,7 +47,6 @@ namespace MCGalaxy.Commands {
                 map = p.name.ToLower() + map;
             }
             
-            Level[] loaded = LevelInfo.Loaded.Items;
             if (LevelInfo.FindExact(map) == null)
                 CmdLoad.LoadLevel(p, map, "0", Server.AutoLoad);
             if (LevelInfo.FindExact(map) != null)

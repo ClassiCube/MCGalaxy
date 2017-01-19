@@ -26,7 +26,6 @@ namespace MCGalaxy.Drawing.Transforms {
         public override string Name { get { return "Rotate"; } }
         public bool CentreOrigin;
         double cosX, cosY, cosZ, sinX, sinY, sinZ;
-        int width, height, length;
         Vec3S32 P;
         
         public void SetAngles(double xDeg, double yDeg, double zDeg) {
@@ -42,7 +41,6 @@ namespace MCGalaxy.Drawing.Transforms {
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, 
                                      DrawOp op, Brush brush, Action<DrawOpBlock> output) {
             P = (op.Min + op.Max) / 2;
-            width = lvl.Width; height = lvl.Height; length = lvl.Length;           
             if (!CentreOrigin) P = op.Origin;
             op.Perform(marks, brush, b => OutputBlock(b, output));
         }

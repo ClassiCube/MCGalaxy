@@ -23,7 +23,6 @@ namespace MCGalaxy.Blocks.Physics {
         
         const StringComparison comp = StringComparison.Ordinal;
         public static void DoWater(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;            
             if (lvl.finite) {
                 lvl.liquids.Remove(C.b);
                 FinitePhysics.DoWaterOrLava(lvl, ref C);
@@ -126,7 +125,6 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static void DoWaterUniformFlow(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;
             lvl.liquids.Remove(C.b);
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
@@ -243,7 +241,6 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static void DoLavaUniformFlow(Level lvl, ref Check C, bool checkWait) {
-            Random rand = lvl.physRandom;
             lvl.liquids.Remove(C.b);
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);

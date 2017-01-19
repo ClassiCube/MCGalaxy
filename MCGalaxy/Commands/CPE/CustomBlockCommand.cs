@@ -93,7 +93,6 @@ namespace MCGalaxy.Commands.CPE {
             SetBD(p, global, new BlockDefinition());
             GetBD(p, global).Version2 = true;
             GetBD(p, global).BlockID = (byte)targetId;
-            SetTargetId(p, global, targetId);
             Player.Message(p, "Use %T{0} abort %Sat anytime to abort the creation process.", cmd);
             Player.Message(p, "  Use %T{0} revert %Sto go back a step", cmd);
             Player.Message(p, "  Use %T{0} [input] %Sto provide input", cmd);
@@ -589,8 +588,6 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void RemoveBlockProperties(bool global, byte id, Player p) {
-            BlockDefinition globalDef = BlockDefinition.GlobalDefs[id];
-            
             // Level block reverts to using global block
             if (!global && BlockDefinition.GlobalDefs[id] != null) {
                 p.level.CustomBlockProps[id] = BlockDefinition.GlobalProps[id];
@@ -609,7 +606,7 @@ namespace MCGalaxy.Commands.CPE {
         
         
         static BlockDefinition consoleBD;
-        static int consoleStep, consoleTargetId;
+        static int consoleStep;
         
         static BlockDefinition GetBD(Player p, bool global) {
             return p == null ? consoleBD : (global ? p.gbBlock : p.lbBlock);
@@ -623,12 +620,6 @@ namespace MCGalaxy.Commands.CPE {
             if (p == null) consoleBD = bd;
             else if (global) p.gbBlock = bd;
             else p.lbBlock = bd;
-        }
-        
-        static void SetTargetId(Player p, bool global, int targetId) {
-            if (p == null) consoleTargetId = targetId;
-            else if (global) p.gbTargetId = targetId;
-            else p.lbTargetId = targetId;
         }
         
         static void SetStep(Player p, bool global, int step) {

@@ -41,11 +41,8 @@ namespace MCGalaxy {
             }
         }
         internal static List<PendingItem> pendingNames = new List<PendingItem>();
-        internal static object pendingLock = new object();
-        static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-        
+        internal static object pendingLock = new object();        
         public static List<Player> connections = new List<Player>(Server.players);
-        System.Timers.Timer muteTimer = new System.Timers.Timer(1000);
         public List<string> listignored = new List<string>();
         public static byte number { get { return (byte)PlayerInfo.Online.Count; } }
         public static string lastMSG = "";
@@ -199,11 +196,9 @@ namespace MCGalaxy {
 
         public CopyState CopyBuffer;
         
-        // GlobalBlock
-        internal int gbStep = 0, gbTargetId = 0;
-        internal BlockDefinition gbBlock;
-        internal int lbStep = 0, lbTargetId = 0;
-        internal BlockDefinition lbBlock;
+        // BlockDefinitions
+        internal int gbStep = 0, lbStep = 0;
+        internal BlockDefinition gbBlock, lbBlock;
         
         public string model = "humanoid";
         public bool spawned = false;
