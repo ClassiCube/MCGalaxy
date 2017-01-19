@@ -228,7 +228,7 @@ namespace MCGalaxy {
             RemoveNick(user.Nick);
             if (user.Nick == nick) return;
             Server.s.Log(user.Nick + " left IRC");
-            Player.GlobalIRCMessage("%I{{IRC}} " + user.Nick + " left");
+            Player.GlobalIRCMessage("%I{IRC} " + user.Nick + " left");
         }
 
         void Listener_OnError(ReplyCode code, string message) {
@@ -413,23 +413,7 @@ namespace MCGalaxy {
                 }
             }
 
-            string key;
-            if (newNick.Split('|').Length == 2) {
-                key = newNick.Split('|')[1];
-                if (key != null && key != "") {
-                    switch (key) {
-                        case "AFK":
-                            Player.GlobalIRCMessage("%I{{IRC}} " + user.Nick + " %Sis AFK"); Server.ircafkset.Add(user.Nick); break;
-                        case "Away":
-                            Player.GlobalIRCMessage("%I{{IRC}} " + user.Nick + " %Sis Away"); Server.ircafkset.Add(user.Nick); break;
-                    }
-                }
-            } else if (Server.ircafkset.Contains(newNick)) {
-                Player.GlobalIRCMessage("%I{{IRC}} " + newNick + " %Sis back");
-                Server.ircafkset.Remove(newNick);
-            } else {
-                Player.GlobalIRCMessage("%I{{IRC}} " + user.Nick + " %Sis now known as %I" + newNick);
-            }
+            Player.GlobalIRCMessage("%I{IRC} " + user.Nick + " %Sis now known as %I" + newNick);
         }
         
         void Listener_OnNames(string channel, string[] nicks, bool last) {
@@ -446,7 +430,7 @@ namespace MCGalaxy {
             List<string> chanNicks = GetNicks(channel);
             RemoveNick(user.Nick, chanNicks);
             Server.s.Log(user.Nick + " kicked " + kickee + " from IRC");
-            Player.GlobalIRCMessage("%I{{IRC}} " + user.Nick + " kicked " + kickee);
+            Player.GlobalIRCMessage("%I{IRC} " + user.Nick + " kicked " + kickee);
         }
         
         void Listener_OnKill(UserInfo user, string nick, string reason) {
