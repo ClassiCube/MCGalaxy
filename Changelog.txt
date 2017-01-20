@@ -1,4 +1,10 @@
 v 1.8.8.6
+Fixed: /os lb add/edit always creating blocks with uppercase names
+Fixed: double {{ in IRC messages
+Fixed: new servers not auto generating builder/advbuilder/op/superop ranks
+Removed: /changelog as it was mostly useless anyways
+
+v 1.8.8.5
 Added: IP connection throttling
 Added: ported across fCraft map generator
 Added: new BlockDB format
