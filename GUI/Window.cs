@@ -57,7 +57,6 @@ namespace MCGalaxy.Gui {
             notifyIcon1.Icon = this.Icon;
             notifyIcon1.Visible = true;
             notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(notifyIcon1_MouseClick);
-            LoadChangelog();
             
             // Bind player list
             main_Players.DataSource = pc;
@@ -497,14 +496,6 @@ namespace MCGalaxy.Gui {
         
 
         #region Logs tab
-        
-        void LoadChangelog() {
-            if (!File.Exists("Changelog.txt")) return;
-            logs_txtChangelog.Text = "Changelog for " + Server.Version + ":";
-            foreach (string line in File.ReadAllLines("Changelog.txt")) {
-                logs_txtChangelog.AppendText("\r\n           " + line);
-            }
-        }
         
         void logs_dateGeneral_Changed(object sender, EventArgs e) {
             string day = logs_dateGeneral.Value.Day.ToString().PadLeft(2, '0');

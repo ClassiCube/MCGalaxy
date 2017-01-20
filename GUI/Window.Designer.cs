@@ -90,8 +90,6 @@ namespace MCGalaxy.Gui
             this.logs_txtGeneral = new System.Windows.Forms.RichTextBox();
             this.tabLog_Sys = new System.Windows.Forms.TabPage();
             this.logs_txtSystem = new System.Windows.Forms.TextBox();
-            this.tabLog_Chg = new System.Windows.Forms.TabPage();
-            this.logs_txtChangelog = new System.Windows.Forms.TextBox();
             this.tp_Main = new System.Windows.Forms.TabPage();
             this.main_btnUnloadEmpty = new System.Windows.Forms.Button();
             this.main_btnKillPhysics = new System.Windows.Forms.Button();
@@ -164,7 +162,6 @@ namespace MCGalaxy.Gui
             this.logs_tabErr.SuspendLayout();
             this.logs_tabGen.SuspendLayout();
             this.tabLog_Sys.SuspendLayout();
-            this.tabLog_Chg.SuspendLayout();
             this.tp_Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.main_Maps)).BeginInit();
             this.tsLog_Menu.SuspendLayout();
@@ -441,7 +438,6 @@ namespace MCGalaxy.Gui
             this.logs_tab.Controls.Add(this.logs_tabErr);
             this.logs_tab.Controls.Add(this.logs_tabGen);
             this.logs_tab.Controls.Add(this.tabLog_Sys);
-            this.logs_tab.Controls.Add(this.tabLog_Chg);
             this.logs_tab.Location = new System.Drawing.Point(-1, 1);
             this.logs_tab.Name = "logs_tab";
             this.logs_tab.SelectedIndex = 0;
@@ -533,28 +529,6 @@ namespace MCGalaxy.Gui
             this.logs_txtSystem.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.logs_txtSystem.Size = new System.Drawing.Size(765, 465);
             this.logs_txtSystem.TabIndex = 2;
-            // 
-            // tabLog_Chg
-            // 
-            this.tabLog_Chg.Controls.Add(this.logs_txtChangelog);
-            this.tabLog_Chg.Location = new System.Drawing.Point(4, 22);
-            this.tabLog_Chg.Name = "tabLog_Chg";
-            this.tabLog_Chg.Size = new System.Drawing.Size(767, 465);
-            this.tabLog_Chg.TabIndex = 3;
-            this.tabLog_Chg.Text = "Changelog";
-            this.tabLog_Chg.UseVisualStyleBackColor = true;
-            // 
-            // logs_txtChangelog
-            // 
-            this.logs_txtChangelog.BackColor = System.Drawing.Color.White;
-            this.logs_txtChangelog.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.logs_txtChangelog.Location = new System.Drawing.Point(-2, 0);
-            this.logs_txtChangelog.Multiline = true;
-            this.logs_txtChangelog.Name = "logs_txtChangelog";
-            this.logs_txtChangelog.ReadOnly = true;
-            this.logs_txtChangelog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logs_txtChangelog.Size = new System.Drawing.Size(765, 465);
-            this.logs_txtChangelog.TabIndex = 1;
             // 
             // tp_Main
             // 
@@ -1281,8 +1255,6 @@ namespace MCGalaxy.Gui
             this.logs_tabGen.PerformLayout();
             this.tabLog_Sys.ResumeLayout(false);
             this.tabLog_Sys.PerformLayout();
-            this.tabLog_Chg.ResumeLayout(false);
-            this.tabLog_Chg.PerformLayout();
             this.tp_Main.ResumeLayout(false);
             this.tp_Main.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.main_Maps)).EndInit();
@@ -1330,7 +1302,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.PropertyGrid map_pgProps;
         private System.Windows.Forms.GroupBox map_gbProps;
         private System.Windows.Forms.TabPage tp_Main;
-        private System.Windows.Forms.TabPage tabLog_Chg;
         private System.Windows.Forms.TabPage tabLog_Sys;
         private System.Windows.Forms.TabPage logs_tabErr;
         private System.Windows.Forms.TabPage logs_tabGen;
@@ -1354,7 +1325,6 @@ namespace MCGalaxy.Gui
         private TabPage logs_tp;
         private Label logs_lblGeneral;
         private TextBox logs_txtError;
-        private TextBox logs_txtChangelog;
         private TextBox logs_txtSystem;
         private TabPage tp_Maps;
         private DataGridView main_Maps;
