@@ -147,8 +147,12 @@ namespace MCGalaxy.DB {
             int id;
             string user = reader.GetString(0);
             if (!nameCache.TryGetValue(user, out id)) {
-                id = NameConverter.FindIds(user)[0];
-                nameCache[user] = id;
+                int[] ids = NameConverter.FindIds(user);
+                if (ids.Length > 0) {
+                    nameCache[user] = ids[0];
+                } else {
+                    nameCache[user] = NameConverter.InvalidNameID(user);
+                }
             }
             entry.PlayerID = id;
         }
