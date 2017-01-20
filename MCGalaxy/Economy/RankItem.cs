@@ -24,7 +24,7 @@ namespace MCGalaxy.Eco {
     public sealed class RankItem : Item {
         
         public RankItem() {
-            Aliases = new [] { "rank", "ranks", "rankup" };
+            Aliases = new string[] { "rank", "ranks", "rankup" };
         }
         
         public override string Name { get { return "Rank"; } }

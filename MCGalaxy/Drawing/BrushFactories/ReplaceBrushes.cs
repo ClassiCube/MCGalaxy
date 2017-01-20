@@ -23,7 +23,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "Replace"; } }       
         public override string[] Help { get { return HelpString; } }
         
-        public static string[] HelpString = new [] {
+        static string[] HelpString = new string[] {
             "%TArguments: [block1] [block2].. [new]",
             "%HDraws by replacing existing blocks that are in the given [blocks] with [new]",
             "%H  If only [block] is given, replaces with your held block.",
@@ -80,7 +80,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "ReplaceNot"; } }        
         public override string[] Help { get { return HelpString; } }
         
-        public static string[] HelpString = new [] {
+        static string[] HelpString = new string[] {
             "%TArguments: [block1] [block2].. [new]",
             "%HDraws by replacing existing blocks that not are in the given [blocks] with [new]",
             "%H  If only [block] is given, replaces with your held block.",

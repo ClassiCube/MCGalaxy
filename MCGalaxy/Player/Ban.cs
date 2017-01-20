@@ -81,7 +81,7 @@ namespace MCGalaxy {
                 
                 parts[2] = CP437Reader.ConvertToRaw(parts[2]).Replace("%20", " ");
                 parts[4] = parts[4].Replace("%20", " ");
-                return new[] { parts[0], parts[2], parts[4], parts[5], parts[3] };
+                return new string[] { parts[0], parts[2], parts[4], parts[5], parts[3] };
             }
             return null;
         }
@@ -96,7 +96,7 @@ namespace MCGalaxy {
                 
                 parts[2] = CP437Reader.ConvertToRaw(parts[2]).Replace("%20", " ");
                 parts[3] = parts[3].Replace("%20", " ");
-                return new[] { parts[0], parts[2], parts[3] };
+                return new string[] { parts[0], parts[2], parts[3] };
             }
             return null;
         }

@@ -30,8 +30,6 @@ namespace Sharkbite.Irc
 	/// <remarks>This is a port of the orginal Javascript written by John Ahlschwede, ahlschwede@hotmail.com</remarks>
 	public sealed class NameGenerator
 	{
-		private int[] numNames = new int[]{1,2,3,4};
-		private int[] numNamesChance = new int[]{200,180,1,1};
 		private int[] numSyllables = new int[]{1,2,3,4,5};
 		private int[] numSyllablesChance = new int[]{150,500,80,10,1};
 		private int[] numConsonants = new int[]{0,1,2,3,4};

@@ -24,7 +24,7 @@ namespace MCGalaxy.Drawing.Transforms {
         public override string Name { get { return "Rotate"; } }
         public override string[] Help { get { return HelpString; } }
         
-        static string[] HelpString = new [] {
+        static string[] HelpString = new string[] {
             "%TArguments: [angleX] [angleY] [angleZ] <centre>",
             "%H[angle] values are values in degrees.",
             "%H[centre] if given, indicates to scale from the centre of a draw operation, " +

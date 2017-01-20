@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             Vec3S32 P = m[0];
-            m = new [] {
+            m = new Vec3S32[] {
                 new Vec3S32(P.X - radius, P.Y, P.Z - radius),
                 new Vec3S32(P.X + radius, P.Y, P.Z + radius),
             };

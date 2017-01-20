@@ -26,7 +26,7 @@ namespace MCGalaxy.Tasks {
         internal static void UpdateStaffList() {
             try {
                 using (WebClient web = new WebClient()) {
-                    string[] result = web.DownloadString(staffUrl).Split(new [] { "\r\n", "\n" }, StringSplitOptions.None);
+                    string[] result = web.DownloadString(staffUrl).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
                     foreach (string line in result) {
                         string type = line.Split(':')[0].ToLower();
                         List<string> list = (type == "devs") ? Server.Devs : (type == "mods") ? Server.Mods : null;

@@ -23,7 +23,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "Normal"; } }
         public override string[] Help { get { return HelpString; } }
         
-        public static string[] HelpString = new [] {
+        static string[] HelpString = new string[] {
             "%TArguments: [block]",
             "%HDraws using the specified block.",
             "%H  If [block] is not given, your currently held block is used.",
@@ -52,7 +52,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "Checkered"; } }
         public override string[] Help { get { return HelpString; } }
         
-        public static string[] HelpString = new [] {
+        static string[] HelpString = new string[] {
             "%TArguments: [block1] [block2]",
             "%HDraws an alternating pattern of block1 and block2.",
             "%H  If [block1] is not given, your currently held block is used.",
@@ -83,7 +83,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "Paste"; } }       
         public override string[] Help { get { return HelpString; } }
         
-        public static string[] HelpString = new [] {
+        static string[] HelpString = new string[] {
             "%TArguments: none",
             "%HDraws using blocks from the current copy state.",
         };
@@ -101,7 +101,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "Striped"; } }        
         public override string[] Help { get { return HelpString; } }
         
-        public static string[] HelpString = new [] {
+        static string[] HelpString = new string[] {
             "%TArguments: [block1] [block2]",
             "%HDraws a diagonally-alternating pattern of block1 and block2.",
             "%H   If block2 is not given, air is used.",
@@ -133,7 +133,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "Rainbow"; } }
         public override string[] Help { get { return HelpString; } }
         
-        public static string[] HelpString = new [] {
+        static string[] HelpString = new string[] {
             "%TArguments: <random>",
             "%HIf no arguments are given, draws a diagonally repeating rainbow",
             "%HIf \'random\' is given, draws by randomly selecting blocks from the rainbow pattern.",
@@ -150,7 +150,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "BWRainbow"; } }
         public override string[] Help { get { return HelpString; } }
         
-        public static string[] HelpString = new [] {
+        static string[] HelpString = new string[] {
             "%TArguments: none",
             "%HDraws a diagonally repeating black-white rainbow",
         };

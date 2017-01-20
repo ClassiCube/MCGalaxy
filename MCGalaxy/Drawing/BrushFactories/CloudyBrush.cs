@@ -22,7 +22,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "Cloudy"; } }        
         public override string[] Help { get { return HelpString; } }
         
-        public static string[] HelpString = new [] {
+        static string[] HelpString = new string[] {
             "%TArguments: [block1/frequency] [block2] <args>..",
             "%HDraws by selecting blocks from the given [blocks] using perlin noise.",
             "%Hfrequency is optional (defaults to 1), and specifies the number of times " +

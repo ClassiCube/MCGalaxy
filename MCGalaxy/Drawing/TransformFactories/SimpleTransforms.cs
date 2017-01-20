@@ -23,7 +23,7 @@ namespace MCGalaxy.Drawing.Transforms {
         public override string Name { get { return "None"; } }
         public override string[] Help { get { return HelpString; } }
         
-        static string[] HelpString = new [] {
+        static string[] HelpString = new string[] {
             "%TArguments: none",
             "%HDoes not affect the output of draw operations.",
         };
@@ -37,7 +37,7 @@ namespace MCGalaxy.Drawing.Transforms {
         public override string Name { get { return "Scale"; } }
         public override string[] Help { get { return HelpString; } }
         
-        static string[] HelpString = new [] {
+        static string[] HelpString = new string[] {
             "%TArguments: [scaleX] [scaleY] [scaleZ] <centre>",
             "%TAlternatively: [scale] <centre>",
             "%H[scale] values can be an integer or a fraction (e.g. 2 or 1/2).",

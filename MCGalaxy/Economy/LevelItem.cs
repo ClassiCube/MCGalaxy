@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Generator;
 
@@ -27,7 +26,7 @@ namespace MCGalaxy.Eco {
     public sealed class LevelItem : Item {
         
         public LevelItem() {
-            Aliases = new [] { "level", "levels", "map", "maps" };
+            Aliases = new string[] { "level", "levels", "map", "maps" };
         }
         
         public override string Name { get { return "Level"; } }

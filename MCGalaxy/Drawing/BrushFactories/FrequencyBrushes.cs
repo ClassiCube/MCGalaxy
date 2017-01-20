@@ -102,7 +102,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "Random"; } }        
         public override string[] Help { get { return HelpString; } }
         
-        public static string[] HelpString = new [] {
+        static string[] HelpString = new string[] {
             "%TArguments: [block1/frequency] [block2]..",
             "%HDraws by randomly selecting blocks from the given [blocks].",
             "%Hfrequency is optional (defaults to 1), and specifies the number of times " +

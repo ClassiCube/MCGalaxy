@@ -40,7 +40,6 @@ namespace MCGalaxy.Drawing.Ops {
         int threshold;
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
-            Vec3U16 p0 = Clamp(marks[0]);            
             selector = null;
             CalcThreshold();
             CalcDirectionVectors(Direction);

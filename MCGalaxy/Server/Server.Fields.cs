@@ -84,7 +84,7 @@ namespace MCGalaxy {
         public static readonly List<string> Devs = new List<string>(), Mods = new List<string>();
 
         internal static readonly List<string> opstats = new List<string>(
-            new [] { "ban", "tempban", "xban", "banip", "kickban", "kick", 
+            new string[] { "ban", "tempban", "xban", "banip", "kickban", "kick", 
                 "warn", "mute", "freeze", "demote", "promote", "setrank" }
         );
         public static List<string> Opstats { get { return opstats; } }

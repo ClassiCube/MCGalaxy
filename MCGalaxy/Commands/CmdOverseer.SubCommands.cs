@@ -79,28 +79,29 @@ namespace MCGalaxy.Commands {
         }
         
         
-        static void HandleMap(Player p, string opt, string value) {
-            bool mapOnly = !(opt == "ADD" || opt == "DELETE");
+        static void HandleMap(Player p, string cmd, string value) {
+            cmd = cmd.ToUpper();
+            bool mapOnly = !(cmd == "ADD" || cmd == "DELETE");
             if (mapOnly && !OwnsMap(p, p.level)) {
                 Player.Message(p, "You may only perform that action on your own map."); return;
             }
             
-            if (opt == "ADD") {
+            if (cmd == "ADD") {
                 AddMap(p, value);
-            } else if (opt == "PHYSICS") {
+            } else if (cmd == "PHYSICS") {
                 if (value == "0" || value == "1" || value == "2" || value == "3" || value == "4" || value == "5") {
                     CmdPhysics.SetPhysics(p.level, int.Parse(value));
                 } else {
                     Player.Message(p, "Accepted numbers are: 0, 1, 2, 3, 4 or 5");
                 }
-            } else if (opt == "DELETE") {
+            } else if (cmd == "DELETE") {
                 DeleteMap(p, value);
-            } else if (opt == "SAVE") {
+            } else if (cmd == "SAVE") {
                 Command.all.Find("save").Use(p, "");
                 Player.Message(p, "Map has been saved.");
-            } else if (opt == "RESTORE") {
+            } else if (cmd == "RESTORE") {
                 Command.all.Find("restore").Use(p, value);
-            } else if (opt == "RESIZE") {
+            } else if (cmd == "RESIZE") {
                 value = p.level.name + " " + value;
                 string[] args = value.Split(' ');
                 if (args.Length < 4) { Command.all.Find("resizelvl").Help(p); return; }
@@ -108,30 +109,30 @@ namespace MCGalaxy.Commands {
                 if (CmdResizeLvl.DoResize(p, args)) return;
                 Player.Message(p, "Type %T/os map resize {0} {1} {2} confirm %Sif you're sure.",
                                args[1], args[2], args[3]);
-            } else if (opt == "PERVISIT") {
+            } else if (cmd == "PERVISIT") {
                 string rank = value == "" ? Server.defaultRank : value;
                 Command.all.Find("pervisit").Use(p, rank);
-            } else if (opt == "PERBUILD") {
+            } else if (cmd == "PERBUILD") {
                 string rank = value == "" ? Server.defaultRank : value;
                 Command.all.Find("perbuild").Use(p, rank);
-            } else if (opt == "TEXTURE") {
+            } else if (cmd == "TEXTURE") {
                 if (value == "") {
                     Command.all.Find("texture").Use(p, "level normal");
                 } else {
                     Command.all.Find("texture").Use(p, "level " + value);
                 }
-            } else if (opt == "TEXTUREZIP") {
+            } else if (cmd == "TEXTUREZIP") {
                 if (value == "") {
                     Command.all.Find("texture").Use(p, "levelzip normal");
                 } else {
                     Command.all.Find("texture").Use(p, "levelzip " + value);
                 }
             } else {
-                opt = LevelOptions.Map(opt.ToLower());
-                if (opt == "physicspeed" || opt == "overload" || opt == "realmowner") {
+                cmd = LevelOptions.Map(cmd.ToLower());
+                if (cmd == "physicspeed" || cmd == "overload" || cmd == "realmowner") {
                     Player.Message(p, "&cYou cannot change that map option via /os map."); return;
                 }
-                if (CmdMap.SetMapOption(p, p.level, opt, value)) return;
+                if (CmdMap.SetMapOption(p, p.level, cmd, value)) return;
                 
                 Player.MessageLines(p, mapHelp);
             }
@@ -211,6 +212,7 @@ namespace MCGalaxy.Commands {
         
         
         static void HandleZone(Player p, string cmd, string name) {
+            cmd = cmd.ToUpper();
             if (cmd == "LIST") {
                 Command.all.Find("zone").Use(p, "");
             } else if (cmd == "ADD") {

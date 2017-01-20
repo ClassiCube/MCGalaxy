@@ -107,12 +107,12 @@ namespace MCGalaxy {
 
 
         public void SendRaw(int id) {
-            byte[] buffer = new [] { (byte)id };
+            byte[] buffer = new byte[] { (byte)id };
             Send(buffer);
         }
         
         public void SendRaw(int id, byte data) {
-            byte[] buffer = new [] { (byte)id, data };
+            byte[] buffer = new byte[] { (byte)id, data };
             Send(buffer);
         }
         

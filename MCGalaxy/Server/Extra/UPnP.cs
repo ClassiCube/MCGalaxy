@@ -35,11 +35,9 @@ namespace MCGalaxy.Core {
                                                             "MX:3\r\n\r\n";
 
         static TimeSpan _timeout = new TimeSpan(0, 0, 0, 3);
-        public static TimeSpan TimeOut {
-            get { return _timeout; }
-            set { _timeout = value; }
-        }
-        static string _descUrl, _serviceUrl, _eventUrl;
+        public static TimeSpan TimeOut { get { return _timeout; } set { _timeout = value; } }
+        
+        static string _serviceUrl;
         private static bool Discover() {
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
@@ -73,7 +71,6 @@ namespace MCGalaxy.Core {
                             resp = resp.Substring(resp.ToLower().IndexOf("location:") + 9);
                             resp = resp.Substring(0, resp.IndexOf("\r")).Trim();
                             if (!string.IsNullOrEmpty(_serviceUrl = GetServiceUrl(resp))) {
-                                _descUrl = resp;
                                 return true;
                             }
                         }
@@ -102,7 +99,6 @@ namespace MCGalaxy.Core {
                 if ( node == null )
                     return null;
                 XmlNode eventnode = desc.SelectSingleNode("//tns:service[tns:serviceType=\"urn:schemas-upnp-org:service:WANIPConnection:1\"]/tns:eventSubURL/text()", nsMgr);
-                _eventUrl = CombineUrls(resp, eventnode.Value);
                 return CombineUrls(resp, node.Value);
 #if !DEBUG
             }

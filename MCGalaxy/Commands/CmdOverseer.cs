@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             string[] parts = message.SplitSpaces(3);
             string cmd = parts[0].ToUpper();
-            string arg = parts.Length > 1 ? parts[1].ToUpper() : "";
+            string arg = parts.Length > 1 ? parts[1] : "";
             string arg2 = parts.Length > 2 ? parts[2] : "";
             
             bool mapOnly = !(cmd == "GO" || cmd == "MAP");
