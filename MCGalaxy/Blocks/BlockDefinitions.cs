@@ -108,7 +108,7 @@ namespace MCGalaxy {
                 defs = realDefs;
             }
             
-            string json = JsonConvert.SerializeObject(defs);
+            string json = JsonConvert.SerializeObject(defs, Formatting.Indented);
             string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.name + ".json";
             File.WriteAllText(path, json);
         }
