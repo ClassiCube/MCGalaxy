@@ -766,6 +766,7 @@ namespace MCGalaxy {
                     cmdArgs = cmd.ToLower(); cmd = "mode";
                     command = Command.all.Find("mode");
                 } else {
+            		Server.s.CommandUsed(name + " tried to use unknown command: /" + cmd + " " + cmdArgs);
                     SendMessage("Unknown command \"" + cmd + "\"."); return null;
                 }
             }
