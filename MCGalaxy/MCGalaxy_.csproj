@@ -96,6 +96,7 @@
     <Compile Include="Blocks\Block.Permissions.cs" />
     <Compile Include="Blocks\BlockDefinitions.cs" />
     <Compile Include="Blocks\BlockProperties.cs" />
+    <Compile Include="Blocks\DefaultSet.cs" />
     <Compile Include="Blocks\Extended\MessageBlock.cs" />
     <Compile Include="Blocks\Extended\Portal.cs" />
     <Compile Include="Bots\BotsFile.cs" />
@@ -550,8 +551,9 @@
     <Compile Include="Network\Heart.cs" />
     <Compile Include="Network\IRCBot.cs" />
     <Compile Include="Network\LevelChunkStream.cs" />
-    <Compile Include="Network\Packet.CPE.cs" />
-    <Compile Include="Network\Packet.cs" />
+    <Compile Include="Network\Packets\Packet.BlockDefs.cs" />
+    <Compile Include="Network\Packets\Packet.CPE.cs" />
+    <Compile Include="Network\Packets\Packet.cs" />
     <Compile Include="Player\Entities.cs" />
     <Compile Include="Player\Group\Group.cs" />
     <Compile Include="Player\Group\GroupCommands.cs" />
@@ -697,6 +699,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands\Maintenance" />
+    <Folder Include="Network\Packets" />
     <Folder Include="util\Threading" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

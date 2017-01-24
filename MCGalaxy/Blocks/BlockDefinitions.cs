@@ -67,6 +67,7 @@ namespace MCGalaxy {
             return def;
         }
         
+        
         internal static BlockDefinition[] Load(bool global, Level lvl) {
             BlockDefinition[] defs = new BlockDefinition[256];
             string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.name + ".json";
@@ -91,8 +92,7 @@ namespace MCGalaxy {
                 
                 if (!def.Version2) {
                     def.Version2 = true;
-                    def.LeftTex = def.SideTex; def.RightTex = def.SideTex;
-                    def.FrontTex = def.SideTex; def.BackTex = def.SideTex;
+                    def.SetSideTex(def.SideTex);
                 }
             }
             return defs;
@@ -171,12 +171,13 @@ namespace MCGalaxy {
                 if (!pl.hasBlockDefs) continue;
                 if (global && pl.level.CustomBlockDefs[id] != GlobalDefs[id]) continue;
                 
-                if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0)
-                    SendDefineBlockExt(pl, def, true);
-                else if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0)
-                    SendDefineBlockExt(pl, def, false);
-                else
-                    SendDefineBlock(pl, def);
+                if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
+                    pl.Send(Packet.DefineBlockExt(def, true));
+                } else if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0) {
+                    pl.Send(Packet.DefineBlockExt(def, false));
+                } else {
+                    pl.Send(Packet.DefineBlock(def));
+                }
                 
                 if (pl.HasCpeExt(CpeExt.BlockPermissions))
                     pl.Send(Packet.BlockPermission(def.BlockID, pl.level.CanPlace, pl.level.CanDelete));
@@ -209,6 +210,7 @@ namespace MCGalaxy {
             Save(global, level);
         }
         
+        
         public static byte GetBlock(string msg, Player p) {
             return GetBlock(msg, p.level.CustomBlockDefs);
         }
@@ -227,7 +229,17 @@ namespace MCGalaxy {
             return id;
         }
         
+        public void SetAllTex(byte id) {
+            SideTex = id; TopTex = id; BottomTex = id;
+            LeftTex = id; RightTex = id; FrontTex = id; BackTex = id;
+        }
         
+        public void SetSideTex(byte id) {
+            SideTex = id;
+            LeftTex = id; RightTex = id; FrontTex = id; BackTex = id;
+        }
+        
+                
         internal static void SendLevelCustomBlocks(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;
             for (int i = 1; i < defs.Length; i++) {
@@ -235,72 +247,13 @@ namespace MCGalaxy {
                 if (def == null) continue;
                 
                 if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
-                    SendDefineBlockExt(pl, def, true);
+                    pl.Send(Packet.DefineBlockExt(def, true));
                 } else if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0) {
-                    SendDefineBlockExt(pl, def, false);
+                    pl.Send(Packet.DefineBlockExt(def, false));
                 } else {
-                    SendDefineBlock(pl, def);
+                    pl.Send(Packet.DefineBlock(def));
                 }
             }
-        }
-        
-        static void SendDefineBlock(Player p, BlockDefinition def) {
-            byte[] buffer = new byte[80];
-            int index = 0;
-            buffer[index++] = Opcode.CpeDefineBlock;
-            MakeDefineBlockStart(def, buffer, ref index, false);
-            buffer[index++] = def.Shape;
-            MakeDefineBlockEnd(def, ref index, buffer);
-            p.Send(buffer);
-        }
-        
-        static void SendDefineBlockExt(Player p, BlockDefinition def, bool uniqueSideTexs) {
-            byte[] buffer = new byte[uniqueSideTexs ? 88 : 85];
-            int index = 0;
-            buffer[index++] = Opcode.CpeDefineBlockExt;
-            MakeDefineBlockStart(def, buffer, ref index, uniqueSideTexs);
-            buffer[index++] = def.MinX;
-            buffer[index++] = def.MinZ;
-            buffer[index++] = def.MinY;
-            buffer[index++] = def.MaxX;
-            buffer[index++] = def.MaxZ;
-            buffer[index++] = def.MaxY;
-            MakeDefineBlockEnd(def, ref index, buffer);
-            p.Send(buffer);
-        }
-        
-        static void MakeDefineBlockStart(BlockDefinition def, byte[] buffer, ref int index, bool uniqueSideTexs) {
-            // speed = 2^((raw - 128) / 64);
-            // therefore raw = 64log2(speed) + 128
-            byte rawSpeed = (byte)(64 * Math.Log(def.Speed, 2) + 128);
-            buffer[index++] = def.BlockID;
-            NetUtils.WriteAscii(def.Name, buffer, index);
-            index += NetUtils.StringSize;
-            buffer[index++] = def.CollideType;
-            buffer[index++] = rawSpeed;
-            
-            buffer[index++] = def.TopTex;
-            if (uniqueSideTexs) {
-                buffer[index++] = def.LeftTex;
-                buffer[index++] = def.RightTex;
-                buffer[index++] = def.FrontTex;
-                buffer[index++] = def.BackTex;
-            } else {
-                buffer[index++] = def.SideTex;
-            }
-            
-            buffer[index++] = def.BottomTex;
-            buffer[index++] = (byte)(def.BlocksLight ? 0 : 1);
-            buffer[index++] = def.WalkSound;
-            buffer[index++] = (byte)(def.FullBright ? 1 : 0);
-        }
-        
-        static void MakeDefineBlockEnd(BlockDefinition def, ref int index, byte[] buffer) {
-            buffer[index++] = def.BlockDraw;
-            buffer[index++] = def.FogDensity;
-            buffer[index++] = def.FogR;
-            buffer[index++] = def.FogG;
-            buffer[index++] = def.FogB;
         }
     }
 }

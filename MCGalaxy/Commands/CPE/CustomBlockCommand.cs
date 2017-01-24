@@ -110,21 +110,16 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             
             BlockDefinition src = defs[srcId], dst = defs[dstId];
-            if (defs[srcId] == null) { MessageNoBlock(p, srcId, global, cmd); return; }
+            if (src == null && srcId < Block.CpeCount)
+                src = DefaultSet.MakeCustomBlock((byte)srcId);
+            if (src == null) { MessageNoBlock(p, srcId, global, cmd); return; }
             if (ExistsInScope(dst, dstId, global)) { MessageAlreadyBlock(p, dstId, global, cmd); return; }
             
             dst = src.Copy();
             dst.BlockID = (byte)dstId;
-            AddBlockProperties(global, (byte)dstId, p);
-            BlockDefinition.Add(dst, defs, p == null ? null : p.level);
-            
-            bool globalBlock = defs[srcId] == BlockDefinition.GlobalDefs[srcId];
-            string scope = globalBlock ? "global" : "level";
+            AddCustomBlock(p, dst, global, cmd);
+            string scope = global ? "global" : "level";
             Player.Message(p, "Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", scope, srcId, dstId);
-        }
-        
-        static bool ExistsInScope(BlockDefinition def, int i, bool global) {
-            return def != null && (global ? true : def != BlockDefinition.GlobalDefs[i]);
         }
         
         static void InfoHandler(Player p, string[] parts, bool global, string cmd) {
@@ -146,7 +141,7 @@ namespace MCGalaxy.Commands.CPE {
                 Player.Message(p, "  Block does not use fog");
             } else {
                 Player.Message(p, "  Fog density: {0}, color: {1}",
-            	               def.FogDensity, Utils.Hex(def.FogR, def.FogG, def.FogB));
+                               def.FogDensity, Utils.Hex(def.FogR, def.FogG, def.FogB));
             }
             
             if (def.Shape == 0) {
@@ -218,12 +213,11 @@ namespace MCGalaxy.Commands.CPE {
             } else if (step == 4) {
                 if (byte.TryParse(value, out bd.TopTex)) {
                     step += (bd.Shape == 0 ? 5 : 1); // skip other texture steps for sprites
-                    if (bd.Shape == 0) SetAllTextures(bd);
+                    if (bd.Shape == 0) bd.SetAllTex(bd.TopTex);
                 }
             } else if (step == 5) {
                 if (byte.TryParse(value, out bd.SideTex)) {
-                    bd.LeftTex = bd.SideTex; bd.RightTex = bd.SideTex;
-                    bd.FrontTex = bd.SideTex; bd.BackTex = bd.SideTex;
+                    bd.SetSideTex(bd.SideTex);
                     step++;
                 }
             } else if (step == 6) {
@@ -299,8 +293,13 @@ namespace MCGalaxy.Commands.CPE {
             }
             int blockId;
             if (!CheckBlockId(p, parts[1], global, out blockId)) return;
+            
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition def = defs[blockId];
+            if (def == null && blockId < Block.CpeCount) {
+                def = DefaultSet.MakeCustomBlock((byte)blockId);
+                AddCustomBlock(p, def, global, cmd);
+            }
             if (!ExistsInScope(def, blockId, global)) { MessageNoBlock(p, blockId, global, cmd); return; }
             
             string value = parts[3];
@@ -330,16 +329,13 @@ namespace MCGalaxy.Commands.CPE {
                 case "all":
                 case "alltex":
                     if (!EditByte(p, value, "All textures", ref def.SideTex)) return;
-                    def.LeftTex = def.SideTex; def.RightTex = def.SideTex;
-                    def.FrontTex = def.SideTex; def.BackTex = def.SideTex;
-                    def.TopTex = def.SideTex; def.BottomTex = def.SideTex;
+                    def.SetAllTex(def.SideTex);
                     break;
                     
                 case "side":
                 case "sidetex":
                     if (!EditByte(p, value, "Side texture", ref def.SideTex)) return;
-                    def.LeftTex = def.SideTex; def.RightTex = def.SideTex;
-                    def.FrontTex = def.SideTex; def.BackTex = def.SideTex;
+                    def.SetSideTex(def.SideTex);
                     break;
                     
                 case "left":
@@ -466,12 +462,6 @@ namespace MCGalaxy.Commands.CPE {
             AddBlockProperties(global, bd.BlockID, p);
             BlockDefinition.Add(bd, defs, p == null ? null : p.level);
             return true;
-        }
-        
-        static void SetAllTextures(BlockDefinition def) {
-            def.SideTex = def.TopTex; def.BottomTex = def.TopTex;
-            def.LeftTex = def.TopTex; def.RightTex = def.TopTex;
-            def.BackTex = def.TopTex; def.FrontTex = def.TopTex;
         }
         
         static byte GetFallback(Player p, string value) {
@@ -626,6 +616,10 @@ namespace MCGalaxy.Commands.CPE {
             if (p == null) consoleStep = step;
             else if (global) p.gbStep = step;
             else p.lbStep = step;
+        }
+                        
+        static bool ExistsInScope(BlockDefinition def, int i, bool global) {
+            return def != null && (global ? true : def != BlockDefinition.GlobalDefs[i]);
         }
         
         
