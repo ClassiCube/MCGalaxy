@@ -30,7 +30,7 @@ namespace MCGalaxy.Eco {
         
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
-                Command.all.Find("loginmessage").Use(null, p.name + " joined the game.");
+                Command.all.Find("loginmessage").Use(null, p.name);
                 Player.Message(p, "%aYour login message was removed for free.");
                 return;
             }
@@ -59,7 +59,7 @@ namespace MCGalaxy.Eco {
 
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
-                Command.all.Find("logoutmessage").Use(null, p.name + " disconnected");
+                Command.all.Find("logoutmessage").Use(null, p.name);
                 Player.Message(p, "%aYour logout message was removed for free.");
                 return;
             }

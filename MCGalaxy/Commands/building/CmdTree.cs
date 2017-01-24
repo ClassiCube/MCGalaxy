@@ -50,7 +50,6 @@ namespace MCGalaxy.Commands.Building {
             DrawArgs dArgs = (DrawArgs)state;
             TreeDrawOp op = new TreeDrawOp();
             op.Tree = dArgs.tree;
-            op.random = new System.Random();
             Brush brush = null;
             
             if (dArgs.brushMsg != "") {

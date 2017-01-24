@@ -33,7 +33,7 @@ namespace MCGalaxy.Drawing.Ops {
     public class TreeDrawOp : DrawOp {
         public override string Name { get { return "Tree"; } }
         
-        public Random random;
+        public Random random = new Random();
         public Tree Tree;
         static Brush defBrush = new SolidBrush(Block.leaf, 0);
         

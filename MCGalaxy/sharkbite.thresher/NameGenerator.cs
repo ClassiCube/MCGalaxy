@@ -109,7 +109,6 @@ namespace Sharkbite.Irc
 			}
 			return char.ToUpper(newName[0] ) + newName.Substring(1);
 		}
-
 	}
 }
 
