@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Moderation {
             Dictionary<int, string> sections = new Dictionary<int, string>();
             if (!File.Exists("text/rules.txt")) return sections;
             
-            List<string> rules = CP437Reader.ReadAllLines("text/rules.txt");
+            string[] rules = File.ReadAllLines("text/rules.txt");
             foreach (string rule in rules)
                 ParseRule(rule, sections);
             return sections;

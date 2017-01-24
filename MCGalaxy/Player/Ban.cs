@@ -79,7 +79,7 @@ namespace MCGalaxy {
                 string[] parts = line.Split(' ');
                 if (parts.Length <= 5 || parts[1] != who) continue;
                 
-                parts[2] = CP437Reader.ConvertToRaw(parts[2]).Replace("%20", " ");
+                parts[2] = parts[2].Replace("%20", " ");
                 parts[4] = parts[4].Replace("%20", " ");
                 return new string[] { parts[0], parts[2], parts[4], parts[5], parts[3] };
             }
@@ -94,7 +94,7 @@ namespace MCGalaxy {
                 string[] parts = line.Split(' ');
                 if (parts.Length <= 3 || parts[1] != who) continue;
                 
-                parts[2] = CP437Reader.ConvertToRaw(parts[2]).Replace("%20", " ");
+                parts[2] = parts[2].Replace("%20", " ");
                 parts[3] = parts[3].Replace("%20", " ");
                 return new string[] { parts[0], parts[2], parts[3] };
             }
@@ -144,7 +144,6 @@ namespace MCGalaxy {
             foreach (string line in File.ReadAllLines(list.file)) {
                 string[] parts = line.Split(' ');
                 if (parts.Length > 2 && parts[1] == who) {
-                    parts[2] = CP437Writer.ConvertToUnicode(reason);
                     success = true;
                     sb.AppendLine(String.Join(" ", parts));
                 } else {

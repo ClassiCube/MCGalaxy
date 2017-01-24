@@ -51,9 +51,9 @@ namespace MCGalaxy.Commands {
                     SetInteger(p, args, "totalLogin", 1000000000, who, v => who.totalLogins = v); break;
                 case "title":
                     if (args.Length < 3) {
-                        Player.Message(p, "Title can be up to 17 characters. Use \"null\" to remove the title"); return;
+                        Player.Message(p, "Title can be up to 20 characters. Use \"null\" to remove the title"); return;
                     }
-                    if (args[2].Length > 17) { Player.Message(p, "Title must be under 17 characters"); return; }
+                    if (args[2].Length >= 20) { Player.Message(p, "Title must be under 20 characters"); return; }
                     if (args[2] == "null") args[2] = "";
                     
                     if (who != null) {
@@ -174,7 +174,7 @@ namespace MCGalaxy.Commands {
         }
         
         static void UpdateDB(string name, string value, string column) {
-            Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, value);
+        	Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, value.UnicodeToCp437());
         }
         
         static void MessageDataChanged(Player p, string name, string type, string value) {

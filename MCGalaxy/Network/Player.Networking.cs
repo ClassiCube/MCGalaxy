@@ -226,6 +226,8 @@ namespace MCGalaxy {
         
         public void SendMessage(byte id, string message, bool colorParse = true) {
             message = Chat.Format(message, this, colorParse);
+            message.UnicodeToCp437InPlace();
+            
             int totalTries = 0;
             if (MessageRecieve != null)
                 MessageRecieve(this, message);

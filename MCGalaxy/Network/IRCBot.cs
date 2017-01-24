@@ -110,7 +110,6 @@ namespace MCGalaxy {
             message = EmotesHandler.Replace(message);
             message = FullCP437Handler.Replace(message);
             message = ChatTokens.ApplyCustom(message);
-            message = CP437Writer.ConvertToUnicode(message);
             
             if (color)
                 message = Colors.MinecraftToIrcColors(message.Replace("%S", ResetSignal));
@@ -237,7 +236,6 @@ namespace MCGalaxy {
 
         void Listener_OnPrivate(UserInfo user, string message) {
             message = Colors.IrcToMinecraftColors(message);
-            message = CP437Reader.ConvertToRaw(message);
             string[] parts = message.SplitSpaces(2);
             string cmdName = parts[0].ToLower();
             string cmdArgs = parts.Length > 1 ? parts[1] : "";
@@ -260,7 +258,6 @@ namespace MCGalaxy {
             bool opchat = channel.CaselessEq(opchannel);
             
             message = Colors.IrcToMinecraftColors(message);
-            message = CP437Reader.ConvertToRaw(message);
             string[] parts = message.SplitSpaces(3);
             string ircCmd = parts[0].ToLower();
             

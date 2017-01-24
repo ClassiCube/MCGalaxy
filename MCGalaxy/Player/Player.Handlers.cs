@@ -498,6 +498,7 @@ namespace MCGalaxy {
             if (!loggedIn) return;
             byte continued = packet[1];
             string text = NetUtils.ReadString(packet, 2);
+            text.Cp437ToUnicodeInPlace();
             LastAction = DateTime.UtcNow;
             if (FilterChat(ref text, continued)) return;
 

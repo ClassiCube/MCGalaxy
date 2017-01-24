@@ -142,7 +142,8 @@ namespace MCGalaxy {
             updateTimer.Start();
 
             if (File.Exists("text/messages.txt")) {
-                messages = CP437Reader.ReadAllLines("text/messages.txt");
+                string[] lines = File.ReadAllLines("text/messages.txt");
+            	messages = new List<string>(lines);
             } else {
                 using (File.Create("text/messages.txt")) {}
             }

@@ -70,14 +70,6 @@ namespace MCGalaxy {
                 }
             }
         }
-
-        public static string Capitalize(this string str) {
-            if (String.IsNullOrEmpty(str))
-                return String.Empty;
-            char[] a = str.ToCharArray();
-            a[0] = char.ToUpper(a[0]);
-            return new string(a);
-        }
         
         // Duplicated to avoid the memory allocation overhead from formatter delegate
         public static string Join(this IEnumerable<string> items, string separator = ", ") {

@@ -228,7 +228,9 @@ namespace MCGalaxy.Games {
             try {
                 if (!File.Exists("text/infectmessages.txt"))
                     File.WriteAllLines("text/infectmessages.txt", defMessages);
-                infectMessages = CP437Reader.ReadAllLines("text/infectmessages.txt");
+                
+                string[] lines = File.ReadAllLines("text/infectmessages.txt");
+                infectMessages = new List<string>(lines);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
             }

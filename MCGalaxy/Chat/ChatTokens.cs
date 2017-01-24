@@ -85,7 +85,7 @@ namespace MCGalaxy {
         internal static void LoadCustom() {
             CustomTokens.Clear();
             if (File.Exists("text/custom$s.txt")) {
-                using (CP437Reader r = new CP437Reader("text/custom$s.txt")) {
+                using (StreamReader r = new StreamReader("text/custom$s.txt")) {
                     string line;
                     while ((line = r.ReadLine()) != null)  {
                         if (line.StartsWith("//")) continue;
@@ -96,7 +96,7 @@ namespace MCGalaxy {
                 }
             } else {
                 Server.s.Log("custom$s.txt does not exist, creating");
-                using (CP437Writer w = new CP437Writer("text/custom$s.txt")) {
+                using (StreamWriter w = new StreamWriter("text/custom$s.txt")) {
                     w.WriteLine("// This is used to create custom $s");
                     w.WriteLine("// If you start the line with a // it wont be used");
                     w.WriteLine("// It should be formatted like this:");

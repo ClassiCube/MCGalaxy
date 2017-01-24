@@ -118,8 +118,8 @@ namespace MCGalaxy.Gui
         {
             if (loaded)
             {
-               CP437Writer.WriteAllText("text/" + loadedfile + ".txt", oldtxt);
-                EditTextTxtBox.Text = CP437Reader.ReadAllText("text/" + loadedfile + ".txt");
+                File.WriteAllText("text/" + loadedfile + ".txt", oldtxt);
+                EditTextTxtBox.Text = File.ReadAllText("text/" + loadedfile + ".txt");
                 MessageBox.Show("Discarded Text");
             }
             else

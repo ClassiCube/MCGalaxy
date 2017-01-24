@@ -87,7 +87,7 @@ namespace MCGalaxy {
         public static void Save(string givenPath) {
             try {
                 lock (saveLock) {
-                    using (CP437Writer w = new CP437Writer(givenPath))
+                    using (StreamWriter w = new StreamWriter(givenPath))
                         SaveProps(w);
                 }
             } catch (Exception ex) {
@@ -96,7 +96,7 @@ namespace MCGalaxy {
             }
         }
         
-        static void SaveProps(CP437Writer w) {
+        static void SaveProps(StreamWriter w) {
             w.WriteLine("#   Edit the settings below to modify how your server operates. This is an explanation of what each setting does.");
             w.WriteLine("#   server-name                   = The name which displays on classicube.net");
             w.WriteLine("#   motd                          = The message which displays when a player connects");

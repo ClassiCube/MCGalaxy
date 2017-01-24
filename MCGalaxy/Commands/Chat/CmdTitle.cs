@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
             
             who.title = title;
             who.SetPrefix();
-            Database.Backend.UpdateRows("Players", "Title = @1", "WHERE Name = @0", who.name, title);
+            Database.Backend.UpdateRows("Players", "Title = @1", "WHERE Name = @0", who.name, title.UnicodeToCp437());
         }
         
         public override void Help(Player p) {

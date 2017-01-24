@@ -274,7 +274,6 @@ namespace MCGalaxy {
         }
 
         public void Log(string message, bool systemMsg = false) {
-            message = CP437Writer.ConvertToUnicode(message);
             if (ServerLog != null)  {
                 ServerLog(message);
                 if (cancellog) { cancellog = false; return; }
@@ -288,7 +287,6 @@ namespace MCGalaxy {
         }
         
         public void OpLog(string message, bool systemMsg = false) {
-            message = CP437Writer.ConvertToUnicode(message);
             if (ServerOpLog != null) {
                 ServerOpLog(message);
                 if (canceloplog) { canceloplog = false; return; }
@@ -303,7 +301,6 @@ namespace MCGalaxy {
         }
 
         public void AdminLog(string message, bool systemMsg = false) {
-            message = CP437Writer.ConvertToUnicode(message);
             if (ServerAdminLog != null) {
                 ServerAdminLog(message);
                 if (canceladmin) { canceladmin = false; return; }
@@ -322,7 +319,6 @@ namespace MCGalaxy {
         }
 
         public void CommandUsed(string message) {
-            message = CP437Writer.ConvertToUnicode(message);
             string now = DateTime.Now.ToString("(HH:mm:ss) ");
             if (OnCommand != null) OnCommand(now + message);
             Logger.Write(now + message + Environment.NewLine);

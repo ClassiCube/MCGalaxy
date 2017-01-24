@@ -46,10 +46,10 @@ namespace MCGalaxy {
                 Directory.CreateDirectory("text/login");
             
             string path = LoginPath(p.name);
-            if (File.Exists(path)) return CP437Reader.ReadAllText(path); 
+            if (File.Exists(path)) return File.ReadAllText(path); 
             // Unix is case sensitive (older files used correct casing of name)
             path = "text/login/" + p.name + ".txt";
-            return File.Exists(path) ? CP437Reader.ReadAllText(path) : "joined";
+            return File.Exists(path) ? File.ReadAllText(path) : "joined";
         }
         
         public static string GetLogoutMessage(Player p) {
@@ -58,30 +58,36 @@ namespace MCGalaxy {
                 Directory.CreateDirectory("text/logout");
             
             string path = LogoutPath(p.name);
-            if (File.Exists(path)) return CP437Reader.ReadAllText(path); 
+            if (File.Exists(path)) return File.ReadAllText(path); 
             
             path = "text/logout/" + p.name + ".txt";
-            return File.Exists(path) ? CP437Reader.ReadAllText(path) : "disconnected";
+            return File.Exists(path) ? File.ReadAllText(path) : "disconnected";
         }
         
         public static void SetLoginMessage(string name, string value) {
-            CP437Writer.WriteAllText(LoginPath(name), value);
+            File.WriteAllText(LoginPath(name), value);
         }
         
         public static void SetLogoutMessage(string name, string value) {
-            CP437Writer.WriteAllText(LogoutPath(name), value);
+            File.WriteAllText(LogoutPath(name), value);
         }
         
         public static List<string> GetInfectMessages(Player p) {
             if (p.name == null || !Directory.Exists("text/infect")) return null;
             string path = InfectPath(p.name);
-            return File.Exists(path) ? CP437Reader.ReadAllLines(path) : null;
+            
+            if (!File.Exists(path)) return null;
+            string[] lines = File.ReadAllLines(path);
+            return new List<string>(lines);
         }
         
         public static void AppendInfectMessage(string name, string value) {
             if (!Directory.Exists("text/infect"))
                 Directory.CreateDirectory("text/infect");
-            CP437Writer.AppendLine(InfectPath(name), value);
+            
+            string path = InfectPath(name);
+            using (StreamWriter w = new StreamWriter(path, true))
+                w.WriteLine(value);
         }
     }
 }

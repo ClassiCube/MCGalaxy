@@ -40,10 +40,10 @@ namespace MCGalaxy.Commands {
                 File.WriteAllLines("text/eatmessages.txt", defMessages);
             }
             
-            List<string> actions = CP437Reader.ReadAllLines("text/eatmessages.txt");
+            string[] actions = File.ReadAllLines("text/eatmessages.txt");
             string action = "ate some food";
-            if (actions.Count > 0)
-                action = actions[new Random().Next(actions.Count)];
+            if (actions.Length > 0)
+                action = actions[new Random().Next(actions.Length)];
             
             if (!TryMessage(p, p.ColoredName + " %S" + action)) return;
             p.NextEat = DateTime.UtcNow.AddSeconds(10);

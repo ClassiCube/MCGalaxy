@@ -49,8 +49,7 @@ namespace MCGalaxy.Commands {
                 int day = int.Parse(parts[4]), month = int.Parse(parts[5]), year = int.Parse(parts[6]);
                 DateTime timeRanked = new DateTime(year, month, day, hour, min, 0);
                 
-                string reason = parts.Length <= 9 ? "(no reason given)" :
-                    CP437Reader.ConvertToRaw(parts[9].Replace("%20", " "));
+                string reason = parts.Length <= 9 ? "(no reason given)" : parts[9].Replace("%20", " ");
                 TimeSpan delta = now - timeRanked;
                
                 Player.Message(p, "&aFrom {0} &ato {1} &a{2} ago", 

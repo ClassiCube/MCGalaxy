@@ -76,10 +76,9 @@ namespace MCGalaxy {
         
         /// <summary> Adds the given line to the end of the file. </summary>
         public void Append(string data) {
-            string line = CP437Writer.ConvertToUnicode(data);
             lock (locker) {
                 using (StreamWriter w = new StreamWriter(file, true))
-                    w.WriteLine(line);
+                    w.WriteLine(data);
             }
         }
     }

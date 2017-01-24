@@ -612,15 +612,14 @@
     <Compile Include="Server\Tasks\ServerTasks.cs" />
     <Compile Include="Server\Tasks\UpgradeTasks.cs" />
     <Compile Include="Server\Updater.cs" />
-    <Compile Include="util\BufferedBlockSender.cs" />
     <Compile Include="util\Extensions\DateExts.cs" />
     <Compile Include="util\Extensions\Extensions.cs" />
+    <Compile Include="util\Extensions\StringExts.cs" />
     <Compile Include="util\Extensions\TimeExts.cs" />
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\App.cs" />
     <Compile Include="util\Formatter.cs" />
-    <Compile Include="util\IO\CP437Reader.cs" />
-    <Compile Include="util\IO\CP437Writer.cs" />
+    <Compile Include="util\IO\BufferedBlockSender.cs" />
     <Compile Include="util\IO\Paths.cs" />
     <Compile Include="util\Math\DirUtils.cs" />
     <Compile Include="util\Math\Vectors.cs" />

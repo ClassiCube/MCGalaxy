@@ -29,9 +29,10 @@ namespace MCGalaxy.Commands {
         const string newsFile = "text/news.txt";
         public override void Use(Player p, string message) {
             if (!File.Exists(newsFile)) {
-                CP437Writer.WriteAllText(newsFile, "News have not been created. Put News in '" + newsFile + "'."); return;
-            }           
-            List<string> lines = CP437Reader.ReadAllLines(newsFile);
+                File.WriteAllText(newsFile, "News have not been created. Put News in '" + newsFile + "'."); return;
+            }
+        	
+        	string[] lines = File.ReadAllLines(newsFile);
             Player.MessageLines(p, lines);
         }
         

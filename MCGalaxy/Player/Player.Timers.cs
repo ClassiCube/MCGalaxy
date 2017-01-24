@@ -36,14 +36,13 @@ namespace MCGalaxy {
                 DisposeTimer(loginTimer, LoginTimerElapsed);
                 if ( File.Exists("text/welcome.txt") ) {
                     try {
-                        List<string> welcome = CP437Reader.ReadAllLines("text/welcome.txt");
-                        foreach (string w in welcome)
-                            SendMessage(w);
+                        string[] welcome = File.ReadAllLines("text/welcome.txt");
+                        MessageLines(this, welcome);
                     } catch {
                     }
                 } else {
                     Server.s.Log("Could not find Welcome.txt. Using default.");
-                    CP437Writer.WriteAllText("text/welcome.txt", "Welcome to my server!");
+                    File.WriteAllText("text/welcome.txt", "Welcome to my server!");
                     SendMessage("Welcome to my server!");
                 }
                 extraTimer.Start();

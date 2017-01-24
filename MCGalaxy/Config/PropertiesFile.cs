@@ -37,7 +37,7 @@ namespace MCGalaxy {
                                    char separator = '=', bool trimValue = true) {
             if (!File.Exists(path)) return false;
             
-            using (CP437Reader reader = new CP437Reader(path)) {
+            using (StreamReader reader = new StreamReader(path)) {
                 string line;
                 while ((line = reader.ReadLine()) != null) {
                     int index = ParseLine(line, path, separator);

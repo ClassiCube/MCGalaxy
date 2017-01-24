@@ -92,6 +92,7 @@ namespace MCGalaxy {
             data.LastLogin = DateTime.Parse(row["LastLogin"].ToString());
             
             data.Title = row["Title"].ToString().Trim();
+            data.Title.Cp437ToUnicodeInPlace();
             data.TitleColor = ParseColor(row["title_color"]);
             data.Color = ParseColor(row["color"]);
             

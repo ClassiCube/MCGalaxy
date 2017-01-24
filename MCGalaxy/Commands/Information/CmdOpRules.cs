@@ -17,10 +17,9 @@
  */
 using System.Collections.Generic;
 using System.IO;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdOpRules : Command
-    {
+
+namespace MCGalaxy.Commands {
+    public sealed class CmdOpRules : Command {
         public override string name { get { return "oprules"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -28,12 +27,11 @@ namespace MCGalaxy.Commands
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdOpRules() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (!File.Exists("text/oprules.txt")) {
-                CP437Writer.WriteAllText("text/oprules.txt", "No oprules entered yet!");
+                File.WriteAllText("text/oprules.txt", "No oprules entered yet!");
             }
-            List<string> oprules = CP437Reader.ReadAllLines("text/oprules.txt");
+        	string[] oprules = File.ReadAllLines("text/oprules.txt");
 
             Player who = p;
             if (message != "") {
@@ -45,8 +43,7 @@ namespace MCGalaxy.Commands
             }
 
             Player.Message(who, "Server OPRules:");
-            foreach (string s in oprules)
-                Player.Message(who, s);
+            Player.MessageLines(who, oprules);
         }
 
         public override void Help(Player p) {

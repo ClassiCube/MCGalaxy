@@ -35,13 +35,12 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (!File.Exists("text/rules.txt")) {
-                CP437Writer.WriteAllText("text/rules.txt", "No rules entered yet!");
+                File.WriteAllText("text/rules.txt", "No rules entered yet!");
             }
             if (message.CaselessEq("agree")) { Agree(p); return; }
             if (message.CaselessEq("disagree")) { Disagree(p); return; }
             
-            List<string> rules = CP437Reader.ReadAllLines("text/rules.txt");
-
+            string[] rules = File.ReadAllLines("text/rules.txt");
             Player who = p;
             if (message != "") {
                 if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "send the rules to a player."); return; }

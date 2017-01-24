@@ -116,8 +116,10 @@ namespace MCGalaxy.Tasks {
             string name = Path.GetFileNameWithoutExtension(envFile);
             string propFile = LevelInfo.FindPropertiesFile(name);
             List<string> lines = new List<string>();
-            if (propFile != null)
-                lines = CP437Reader.ReadAllLines(propFile);
+            if (propFile != null) {
+                string[] rawLines = File.ReadAllLines(propFile);
+            	lines = new List<string>(rawLines);
+            }
             
             using (StreamReader r = new StreamReader(envFile)) {
                 string line = null;
@@ -126,7 +128,7 @@ namespace MCGalaxy.Tasks {
             }
             
             propFile = LevelInfo.PropertiesPath(name);
-            CP437Writer.WriteAllLines(propFile, lines.ToArray());
+            File.WriteAllLines(propFile, lines.ToArray());
             File.Delete(envFile);
         }
         
