@@ -86,7 +86,7 @@ namespace MCGalaxy.Eco {
         public override string Name { get { return "TitleColor"; } }
         
         protected override void DoPurchase(Player p, string message, string[] args) {            
-            if (!args[1].StartsWith("&") || !args[1].StartsWith("%")) {
+            if (!(args[1].StartsWith("&") || args[1].StartsWith("%"))) {
                 args[1] = Colors.Parse(args[1]);
                 if (args[1] == "") { Player.Message(p, "%cThat wasn't a color"); return; }
             }
@@ -109,7 +109,7 @@ namespace MCGalaxy.Eco {
         public override string Name { get { return "Color"; } }
 
         protected override void DoPurchase(Player p, string message, string[] args) {
-            if (!args[1].StartsWith("&") || !args[1].StartsWith("%")) {
+            if (!(args[1].StartsWith("&") || args[1].StartsWith("%"))) {
                 args[1] = Colors.Parse(args[1]);
                 if (args[1] == "") { Player.Message(p, "%cThat wasn't a color"); return; }
             }
