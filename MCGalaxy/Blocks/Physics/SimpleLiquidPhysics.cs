@@ -56,7 +56,7 @@ namespace MCGalaxy.Blocks.Physics {
         public static void DoFastLava(Level lvl, ref Check C) {
             if (lvl.randomFlow) {               
                 DoLavaRandowFlow(lvl, ref C, false);
-                if (C.data.Data != 255)
+                if (C.data.Data != PhysicsArgs.RemoveFromChecks)
                     C.data.Data = 0; // no lava delay
             } else {
                 DoLavaUniformFlow(lvl, ref C, false);

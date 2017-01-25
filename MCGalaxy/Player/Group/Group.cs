@@ -187,8 +187,8 @@ namespace MCGalaxy {
         public static Group FindMatches(Player p, string name, out int matches) {
             name = name.ToLower();
             MapName(ref name);
-            return Utils.FindMatches<Group>(p, name, out matches,
-                                            GroupList, g => true, g => g.name, "ranks");
+            return Matcher.Find<Group>(p, name, out matches,
+                                       GroupList, g => true, g => g.name, "ranks");
         }
         
         /// <summary> Find the group(s) which contain the given name. </summary>

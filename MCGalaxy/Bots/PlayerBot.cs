@@ -143,8 +143,8 @@ namespace MCGalaxy {
         
         public static PlayerBot FindMatches(Player pl, string name) {
             int matches = 0;
-            return Utils.FindMatches<PlayerBot>(pl, name, out matches, Bots.Items,
-                                                b => true, b => b.name, "bots");
+            return Matcher.Find<PlayerBot>(pl, name, out matches, Bots.Items,
+                                           b => true, b => b.name, "bots");
         }
         
         public static PlayerBot FindMatchesPreferLevel(Player pl, string name) {

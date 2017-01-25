@@ -63,9 +63,9 @@ namespace MCGalaxy {
                 Player.Message(pl, "\"{0}\" is not a valid player name.", name); return null;
             }
             
-            return Utils.FindMatches<Player>(pl, name, out matches, Online.Items,
-                                             p => Entities.CanSee(pl, p) || !onlyCanSee,
-                                             p => p.name, "online players");
+            return Matcher.Find<Player>(pl, name, out matches, Online.Items,
+                                        p => Entities.CanSee(pl, p) || !onlyCanSee,
+                                        p => p.name, "online players");
         }
         
         public static string FindMatchesPreferOnline(Player p, string name) {
@@ -191,8 +191,8 @@ namespace MCGalaxy {
                                                                 "WHERE Name LIKE @0 LIMIT 21" + suffix,
                                                                 "%" + name + "%")) {
                 int matches = 0;
-                return Utils.FindMatches<DataRow>(p, name, out matches, results.Rows,
-                                                  r => true, r => r["Name"].ToString(), "players", 20);
+                return Matcher.Find<DataRow>(p, name, out matches, results.Rows,
+                                             r => true, r => r["Name"].ToString(), "players", 20);
             }
         }
     }

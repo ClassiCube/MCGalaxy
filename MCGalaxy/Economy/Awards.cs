@@ -196,8 +196,8 @@ namespace MCGalaxy {
         }
         
         public static string FindMatches(Player p, string name, out int matches) {
-            Award award = Utils.FindMatches<Award>(p, name, out matches, AwardsList,
-                                                   a => true, a => a.Name, "awards");
+            Award award = Matcher.Find<Award>(p, name, out matches, AwardsList,
+                                              a => true, a => a.Name, "awards");
             return award == null ? null : award.Name;
         }
         

@@ -115,6 +115,7 @@
     <Compile Include="Chat\ChatTokens.cs" />
     <Compile Include="Chat\LineWrapper.cs" />
     <Compile Include="Chat\ProfanityFilter.cs" />
+    <Compile Include="CmdMapsBy.cs" />
     <Compile Include="Commands\Alias.cs" />
     <Compile Include="Commands\Bots\CmdBotAdd.cs" />
     <Compile Include="Commands\Bots\CmdBotAI.cs" />
@@ -620,12 +621,13 @@
     <Compile Include="util\Extensions\TimeExts.cs" />
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\App.cs" />
-    <Compile Include="util\Formatter.cs" />
+    <Compile Include="util\Formatting\Formatter.cs" />
+    <Compile Include="util\Formatting\Matcher.cs" />
+    <Compile Include="util\Formatting\MultiPageOutput.cs" />
     <Compile Include="util\IO\BufferedBlockSender.cs" />
     <Compile Include="util\IO\Paths.cs" />
     <Compile Include="util\Math\DirUtils.cs" />
     <Compile Include="util\Math\Vectors.cs" />
-    <Compile Include="util\MultiPageOutput.cs" />
     <Compile Include="util\NET_20.cs" />
     <Compile Include="util\SparseBitSet.cs" />
     <Compile Include="util\Threading\IReaderWriterLock.cs" />
@@ -700,6 +702,7 @@
   <ItemGroup>
     <Folder Include="Commands\Maintenance" />
     <Folder Include="Network\Packets" />
+    <Folder Include="util\Formatting" />
     <Folder Include="util\Threading" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

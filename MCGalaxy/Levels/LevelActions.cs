@@ -30,31 +30,18 @@ namespace MCGalaxy {
         /// Does not perform any unloading. </summary>
         public static void Rename(string src, string dst) {
             File.Move(LevelInfo.LevelPath(src), LevelInfo.LevelPath(dst));
-            try {
-                File.Move(LevelInfo.LevelPath(src) + ".backup", LevelInfo.LevelPath(dst) + ".backup");
-            } catch {
-            }
             
-            try {
-                File.Move("levels/level properties/" + src + ".properties",
-                          "levels/level properties/" + dst + ".properties");
-            } catch {
-            }
+            SafeMove(LevelInfo.LevelPath(src) + ".backup",
+                     LevelInfo.LevelPath(dst) + ".backup");
+            SafeMove("levels/level properties/" + src,
+                     "levels/level properties/" + dst + ".properties");
+            SafeMove("levels/level properties/" + src + ".properties",
+                     "levels/level properties/" + dst + ".properties");
+            SafeMove("blockdefs/lvl_" + src + ".json",
+                     "blockdefs/lvl_" + dst + ".json");
+            SafeMove("blockprops/lvl_" + src + ".txt",
+                     "blockprops/lvl_" + dst + ".txt");
             
-            try {
-                File.Move("levels/level properties/" + src,
-                          "levels/level properties/" + dst + ".properties");
-            } catch {
-            }
-            
-            try {
-                if (File.Exists("blockdefs/lvl_" + src + ".json")) {
-                    File.Move("blockdefs/lvl_" + src + ".json",
-                              "blockdefs/lvl_" + dst + ".json");
-                }
-            } catch {
-            }
-
             try {
                 MoveBackups(src, dst);
             } catch {
@@ -85,6 +72,15 @@ namespace MCGalaxy {
                 if (Database.TableExists("Zone" + src)) {
                     Database.Backend.RenameTable("Zone" + src, "Zone" + dst);
                 }
+            }
+        }
+        
+        static void SafeMove(string src, string dst) {
+            if (!File.Exists(src)) return;
+            try {
+                File.Move(src, dst);
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
             }
         }
         
@@ -131,13 +127,11 @@ namespace MCGalaxy {
                 File.Move(LevelInfo.LevelPath(name), "levels/deleted/" + name + ".lvl");
             }
 
-            try { File.Delete("levels/level properties/" + name + ".properties"); } catch { }
-            try { File.Delete("levels/level properties/" + name); } catch { }
-            try {
-                if (File.Exists("blockdefs/lvl_" + name + ".json"))
-                    File.Delete("blockdefs/lvl_" + name + ".json");
-            } catch {}
-                        
+            SafeDelete("levels/level properties/" + name);
+            SafeDelete("levels/level properties/" + name + ".properties");
+            SafeDelete("blockdefs/lvl_" + name + ".json");
+            SafeDelete("blockprops/lvl_" + name + ".txt");
+            
             BotsFile.DeleteBots(name);
             DeleteDatabaseTables(name);
             BlockDBFile.DeleteBackingFile(name);
@@ -160,6 +154,16 @@ namespace MCGalaxy {
                 }
             }
         }
+
+        static void SafeDelete(string src) {
+            if (!File.Exists(src)) return;
+            try {
+                File.Delete(src);
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+            }
+        }
+        
         
         public static void Replace(Level old, Level lvl) {
             LevelDB.SaveBlockDB(old);
@@ -198,15 +202,15 @@ namespace MCGalaxy {
         
         public static void CopyLevel(string src, string dst) {
             File.Copy(LevelInfo.LevelPath(src), LevelInfo.LevelPath(dst));
-            if (File.Exists(LevelInfo.PropertiesPath(src))) {
-                File.Copy(LevelInfo.PropertiesPath(src),
-                          LevelInfo.PropertiesPath(dst));
-            }
             
-            if (File.Exists("blockdefs/lvl_" + src + ".json")) {
-                File.Copy("blockdefs/lvl_" + src + ".json",
-                          "blockdefs/lvl_" + dst + ".json");
-            }
+            SafeCopy("levels/level properties/" + src,
+                     "levels/level properties/" + dst + ".properties");
+            SafeCopy("levels/level properties/" + src + ".properties",
+                     "levels/level properties/" + dst + ".properties");
+            SafeCopy("blockdefs/lvl_" + src + ".json",
+                     "blockdefs/lvl_" + dst + ".json");
+            SafeCopy("blockprops/lvl_" + src + ".txt",
+                     "blockprops/lvl_" + dst + ".txt");
             CopyDatabaseTables(src, dst);
         }
         
@@ -232,6 +236,15 @@ namespace MCGalaxy {
                     Database.Backend.CreateTable("Zone" + dst, LevelDB.createZones);
                     Database.Backend.CopyAllRows("Zone" + src, "Zone" + dst);
                 }
+            }
+        }
+        
+        static void SafeCopy(string src, string dst) {
+            if (!File.Exists(src)) return;
+            try {
+                File.Copy(src, dst, true);
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
             }
         }
     }

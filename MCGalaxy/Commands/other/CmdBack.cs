@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
                 p.SendMessage("You have not teleported anywhere yet");
                 return;
             }
-            if (p.level.name.ToLower() != p.beforeTeleportMap.ToLower())
+            if (!p.level.name.CaselessEq(p.beforeTeleportMap))
                 PlayerActions.ChangeMap(p, p.beforeTeleportMap);
             p.SendPos(Entities.SelfID, p.beforeTeleportPos[0], p.beforeTeleportPos[1], p.beforeTeleportPos[2], 0, 0);
         }
