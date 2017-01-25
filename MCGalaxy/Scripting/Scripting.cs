@@ -97,7 +97,7 @@ namespace MCGalaxy {
             args.MainClass = cmdName;
             args.OutputAssembly = DllDir + "Cmd" + cmdName + ".dll";
             
-            string source = File.ReadAllText(path);
+            string source = ReadSourceCode(path, args);
             results = CompileSource(source, args);
             if (!results.Errors.HasErrors) return true;
 
@@ -114,6 +114,20 @@ namespace MCGalaxy {
             using (StreamWriter w = new StreamWriter(ErrorPath, exists))
                 w.Write(sb.ToString());
             return false;
+        }
+        
+        string ReadSourceCode(string path, CompilerParameters args) {
+            List<string> lines = Utils.ReadAllLinesList(path);
+            // Allow referencing other assemblies using 'Reference [assembly name]' at top of the file
+            for (int i = 0; i < lines.Count; i++) {
+                if (!lines[i].CaselessStarts("reference ")) break;
+                
+                int index = lines[i].IndexOf(' ') + 1;
+                string assem = lines[i].Substring(index);
+                args.ReferencedAssemblies.Add(assem);
+                lines.RemoveAt(i); i--;
+            }
+            return lines.Join(Environment.NewLine);
         }
         
         void AppendDivider(StringBuilder sb, bool exists) {

@@ -17,7 +17,9 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 
 namespace MCGalaxy { 
@@ -106,38 +108,17 @@ namespace MCGalaxy {
             result = temp;
             return true;
         }
-                
-        
-        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
-        public static T FindMatches<T>(Player pl, string name, out int matches, IEnumerable items,
-                                             Predicate<T> filter, Func<T, string> nameGetter, string type, int limit = 5)  {
-            T match = default(T); matches = 0;
-            name = name.ToLower();
-            StringBuilder matchNames = new StringBuilder();
 
-            foreach (T item in items) {
-                if (!filter(item)) continue;
-                string itemName = nameGetter(item);
-                if (itemName.Equals(name, comp)) { matches = 1; return item; }
-                if (itemName.IndexOf(name, comp) < 0) continue;
                 
-                match = item; matches++;
-                if (matches <= limit)
-                    matchNames.Append(itemName).Append(", ");
-                else if (matches == limit + 1)
-                    matchNames.Append("(and more)").Append(", ");
+        public static List<string> ReadAllLinesList(String path) {
+            List<string> lines = new List<string>();
+            using (StreamReader r = new StreamReader(path)) {
+                string item;
+                while ((item = r.ReadLine()) != null) {
+                    lines.Add(item);
+                }
             }
-            
-            if (matches == 0) {
-                Player.Message(pl, "No " + type + " match \"" + name + "\"."); return default(T);
-            } else if (matches == 1) {
-                return match;
-            } else {
-                string count = matches > limit ? limit + "+ " : matches + " ";
-                string names = matchNames.ToString(0, matchNames.Length - 2);
-                Player.Message(pl, count + type + " match \"" + name + "\":");
-                Player.Message(pl, names); return default(T);
-            }
+            return lines;
         }
     }
 }

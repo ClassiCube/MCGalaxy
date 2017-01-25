@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Bots;
 
@@ -78,13 +79,10 @@ namespace MCGalaxy.Commands
         }
         
         static void DeleteLast(Player p, string ai) {
-            string[] Lines = File.ReadAllLines("bots/" + ai);
-            string[] outLines = new string[Lines.Length - 1];
-            for (int i = 0; i < Lines.Length - 1; i++) {
-                outLines[i] = Lines[i];
-            }
+            List<string> lines = Utils.ReadAllLinesList("bots/" + ai);
+            if (lines.Count > 0) lines.RemoveAt(lines.Count - 1);
 
-            File.WriteAllLines("bots/" + ai, outLines);
+            File.WriteAllLines("bots/" + ai, lines.ToArray());
             Player.Message(p, "Deleted the last instruction from " + ai);
         }
 

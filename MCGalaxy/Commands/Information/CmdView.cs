@@ -51,8 +51,7 @@ namespace MCGalaxy.Commands {
                 
                 if (File.Exists("extra/text/" + args[0] + ".txt")) {
                     string[] lines = File.ReadAllLines("extra/text/" + args[0] + ".txt");
-                    for (int i = 0; i < lines.Length; i++)
-                        Player.Message(who, lines[i]);
+                    Player.MessageLines(who, lines);
                 } else {
                     Player.Message(p, "File specified doesn't exist");
                 }

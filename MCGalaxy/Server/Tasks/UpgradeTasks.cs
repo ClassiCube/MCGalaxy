@@ -117,8 +117,7 @@ namespace MCGalaxy.Tasks {
             string propFile = LevelInfo.FindPropertiesFile(name);
             List<string> lines = new List<string>();
             if (propFile != null) {
-                string[] rawLines = File.ReadAllLines(propFile);
-            	lines = new List<string>(rawLines);
+                lines = Utils.ReadAllLinesList(propFile);
             }
             
             using (StreamReader r = new StreamReader(envFile)) {

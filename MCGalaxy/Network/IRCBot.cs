@@ -143,8 +143,9 @@ namespace MCGalaxy {
                     File.WriteAllLines("text/irccmdblacklist.txt", new string[] {
                                            "#Here you can put commands that cannot be used from the IRC bot.",
                                            "#Lines starting with \"#\" are ignored." });
-                foreach (string line in File.ReadAllLines("text/irccmdblacklist.txt"))
+                foreach (string line in File.ReadAllLines("text/irccmdblacklist.txt")) {
                     if (line[0] != '#') banCmd.Add(line);
+                }
             }
         }
         

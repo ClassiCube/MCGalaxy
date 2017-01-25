@@ -27,15 +27,15 @@ namespace MCGalaxy {
         
         public override string CommandSkeleton {
             get {
-                return @"/*
-\tAuto-generated command skeleton class.
+                return @"//\tAuto-generated command skeleton class.
+//\tUse this as a basis for custom MCGalaxy commands.
+//\tFile and class should be named a specific way. For example, /update is named 'CmdUpdate.cs' for the file, and 'CmdUpdate' for the class.
+// As a note, MCGalaxy is designed for .NET 4.0
 
-\tUse this as a basis for custom commands implemented via the MCGalaxy scripting framework.
-\tFile and class should be named a specific way.  For example, /update is named 'CmdUpdate.cs' for the file, and 'CmdUpdate' for the class.
-*/
+// To reference other assemblies, put a ""Reference [assembly filename]"" at the top of the file
+//   e.g. to reference the System.Data assembly, put ""Reference System.Data.dll""
 
-// Add any other using statements you need up here, of course.
-// As a note, MCGalaxy is designed for .NET 3.5.
+// Add any other using statements you need after this
 using System;
 
 namespace MCGalaxy 
@@ -84,13 +84,16 @@ namespace MCGalaxy
         
         public override string CommandSkeleton {
             get {
-                return @"Imports MCGalaxy
-'Auto-generated command skeleton class.
-'Use this as a basis for custom commands implemented via the MCGalaxy scripting framework.
-'File and class should be named a specific way.  For example, /update is named 'CmdUpdate.vb' for the file, and 'CmdUpdate' for the class.
-'
-' Add any other using statements you need up here, of course.
-' As a note, MCGalaxy is designed for .NET 3.5.
+                return @"'\tAuto-generated command skeleton class.
+'\tUse this as a basis for custom MCGalaxy commands.
+'\tFile and class should be named a specific way.  For example, /update is named 'CmdUpdate.vb' for the file, and 'CmdUpdate' for the class.
+' As a note, MCGalaxy is designed for .NET 4.0.
+
+' To reference other assemblies, put a ""Reference [assembly filename]"" at the top of the file
+'   e.g. to reference the System.Data assembly, put ""Reference System.Data.dll""
+
+' Add any other Imports statements you need after this
+Imports System
 
 Namespace MCGalaxy
 \tPublic Class Cmd{0}
