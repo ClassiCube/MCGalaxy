@@ -33,9 +33,9 @@ namespace MCGalaxy {
             
             SafeMove(LevelInfo.LevelPath(src) + ".backup",
                      LevelInfo.LevelPath(dst) + ".backup");
-            SafeMove("levels/level properties/" + src,
-                     "levels/level properties/" + dst + ".properties");
             SafeMove("levels/level properties/" + src + ".properties",
+                     "levels/level properties/" + dst + ".properties");
+            SafeMove("levels/level properties/" + src,
                      "levels/level properties/" + dst + ".properties");
             SafeMove("blockdefs/lvl_" + src + ".json",
                      "blockdefs/lvl_" + dst + ".json");
