@@ -34,7 +34,7 @@ namespace MCGalaxy.Core {
                 Plugin.CancelPlayerEvent(PlayerEvents.PlayerCommand, p);
             } else if (cmd == "rainbowdashlikescoolthings") {
                 if (p.rdcount < 2) {
-                    Chat.MessageAll("&1T&2H&3I&4S &5S&6E&7R&8V&9E&aR &bJ&cU&dS&eT &fG&0O&1T &22&30 &4P&CE&7R&DC&EE&9N&1T &5C&6O&7O&8L&9E&aR&b!");                   
+                    Chat.MessageAll("&4T&6H&eI&aS&3 S&9E&1R&4V&6E&eR &aJ&3U&9S&1T &4G&6O&eT &a2&30 &9P&1E&4R&6C&eE&aN&3T &9C&1O&4O&6L&eE&aR&3!");                   
                 } else {
                     p.SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
                 }
