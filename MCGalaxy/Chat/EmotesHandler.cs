@@ -7,106 +7,37 @@ namespace MCGalaxy {
     public static class EmotesHandler {
         
         public static readonly Dictionary<string, char> EmoteKeywords = new Dictionary<string, char> {
-            { "darksmile", '\u0001' },
-
-            { "smile", '\u0002' }, // ☻
-
-            { "heart", '\u0003' }, // ♥
-            { "hearts", '\u0003' },
-
-            { "diamond", '\u0004' }, // ♦
-            { "diamonds", '\u0004' },
-            { "rhombus", '\u0004' },
-
-            { "club", '\u0005' }, // ♣
-            { "clubs", '\u0005' },
-            { "clover", '\u0005' },
-            { "shamrock", '\u0005' },
-
-            { "spade", '\u0006' }, // ♠
-            { "spades", '\u0006' },
-
-            { "*", '\u0007' }, // •
-            { "bullet", '\u0007' },
-            { "dot", '\u0007' },
-            { "point", '\u0007' },
-
-            { "hole", '\u0008' }, // ◘
-
-            { "circle", '\u0009' }, // ○
-            { "o", '\u0009' },
-
-            { "male", '\u000B' }, // ♂
-            { "mars", '\u000B' },
-
-            { "female", '\u000C' }, // ♀
-            { "venus", '\u000C' },
-
-            { "8", '\u000D' }, // ♪
-            { "note", '\u000D' },
-            { "quaver", '\u000D' },
-
-            { "notes", '\u000E' }, // ♫
-            { "music", '\u000E' },
-
-            { "sun", '\u000F' }, // ☼
-            { "celestia", '\u000F' },
-
-            { ">>", '\u0010' }, // ►
-            { "right", '\u0010' },
-
-            { "<<", '\u0011' }, // ◄
-            { "left", '\u0011' },
-
-            { "updown", '\u0012' }, // ↕
-            { "^v", '\u0012' },
-
-            { "!!", '\u0013' }, // ‼
-
-            { "p", '\u0014' }, // ¶
-            { "para", '\u0014' },
-            { "pilcrow", '\u0014' },
-            { "paragraph", '\u0014' },
-
-            { "s", '\u0015' }, // §
-            { "sect", '\u0015' },
-            { "section", '\u0015' },
-
-            { "-", '\u0016' }, // ▬
-            { "_", '\u0016' },
-            { "bar", '\u0016' },
-            { "half", '\u0016' },
-
-            { "updown2", '\u0017' }, // ↨
-            { "^v_", '\u0017' },
-
-            { "^", '\u0018' }, // ↑
-            { "uparrow", '\u0018' },
-
-            { "v", '\u0019' }, // ↓
-            { "downarrow", '\u0019' },
-
-            { "->", '\u001A' }, // →
-            { "rightarrow", '\u001A' },
-
-            { "<-", '\u001B' }, // ←
-            { "leftarrow", '\u001B' },
-
-            { "l", '\u001C' }, // ∟
-            { "angle", '\u001C' },
-            { "corner", '\u001C' },
-
-            { "<>", '\u001D' }, // ↔
-            { "<->", '\u001D' },
-            { "leftright", '\u001D' },
-
-            { "^^", '\u001E' }, // ▲
-            { "up", '\u001E' },
-
-            { "vv", '\u001F' }, // ▼
-            { "down", '\u001F' },
-
-            { "house", '\u007F' } // ⌂
+            { "darksmile", '☺' },
+            { "smile", '☻' },
+            { "heart", '♥' }, { "hearts", '♥' },
+            { "diamond", '♦' }, { "diamonds", '♦' }, { "rhombus", '♦' },
+            { "club", '♣' }, { "clubs", '♣' }, { "clover", '♣' }, { "shamrock", '♣' },
+            { "spade", '♠' }, { "spades", '♠' },
+            { "*", '•' }, { "bullet", '•' }, { "dot", '•' }, { "point", '•' },
+            { "hole", '◘' },
+            { "circle", '○' }, { "o", '○' },
+            { "male", '♂' }, { "mars", '♂' },
+            { "female", '♀' }, { "venus", '♀' },
+            { "8", '♪' }, { "note", '♪' }, { "quaver", '♪' },
+            { "notes", '♫' }, { "music", '♫' },
+            { "sun", '☼' }, { "celestia", '☼' },
+            { ">>", '►' }, { "right", '►' },
+            { "<<", '◄' }, { "left", '◄' },
+            { "updown", '↕' }, { "^v", '↕' },
+            { "!!", '‼' },
+            { "p", '¶' }, { "para", '¶' }, { "pilcrow", '¶' }, { "paragraph", '¶' },
+            { "s", '§' }, { "sect", '§' }, { "section", '§' },
+            { "-", '▬' }, { "_", '▬' }, { "bar", '▬' }, { "half", '▬' },
+            { "updown2", '↨' }, { "^v_", '↨' },
+            { "^", '↑' }, { "uparrow", '↑' },
+            { "v", '↓' }, { "downarrow", '↓' },
+            { "->", '→' }, { "rightarrow", '→' },
+            { "<-", '←' }, { "leftarrow", '←' },
+            { "l", '∟' }, { "angle", '∟' }, { "corner", '∟' },
+            { "<>", '↔' }, { "<->", '↔' }, { "leftright", '↔' },
+            { "^^", '▲' }, { "up", '▲' },
+            { "vv", '▼' }, { "down", '▼' },
+            { "house", '⌂' }
         };
 
         public static string Replace(string message) {
