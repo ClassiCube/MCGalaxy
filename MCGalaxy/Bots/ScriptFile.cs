@@ -61,7 +61,7 @@ namespace MCGalaxy.Bots {
                 CommandOtherPerms.OtherPerms perms = CommandOtherPerms.Find("botset");
                 LevelPermission killPerm = (LevelPermission)perms.Permission;
                 if (ins.Name.CaselessEq("kill") && p.Rank < killPerm) {
-                    Formatter.MessageNeedMinPerm(p, "toggle a bot's killer instinct.", killPerm);
+                    Formatter.MessageNeedMinPerm(p, "+ can toggle a bot's killer instinct.", killPerm);
                     return;
                 }
                 ins.Output(p, args, w);

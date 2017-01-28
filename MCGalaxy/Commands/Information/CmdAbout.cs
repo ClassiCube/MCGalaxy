@@ -30,7 +30,10 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdAbout() { }
-
+        public override CommandAlias[] Aliases {
+        	get { return new [] { new CommandAlias("binfo"), new CommandAlias("bi"), new CommandAlias("whodid") }; }
+        }
+        	
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             Player.Message(p, "Break/build a block to display information.");

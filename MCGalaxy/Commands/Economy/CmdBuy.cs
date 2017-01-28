@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "%cThe {0} item is not currently buyable.", item.Name); return;
             }
             if (p.Rank < item.PurchaseRank) {
-                Formatter.MessageNeedMinPerm(p, "purchase a " + item.Name, item.PurchaseRank); return;
+                Formatter.MessageNeedMinPerm(p, "+ can purchase a " + item.Name, item.PurchaseRank); return;
             }
             item.OnBuyCommand(p, message, parts);
         }

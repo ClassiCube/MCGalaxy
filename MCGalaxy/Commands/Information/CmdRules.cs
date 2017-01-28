@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
             string[] rules = File.ReadAllLines("text/rules.txt");
             Player who = p;
             if (message != "") {
-                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "send the rules to a player."); return; }
+                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
                 who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
             }

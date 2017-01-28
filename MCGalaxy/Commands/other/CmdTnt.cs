@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands
                     p.modeType = Block.bigtnt;
                     Player.Message(p, "TNT (Big) mode is now &aON%S.");
                 } else {
-                    MessageNeedExtra(p, "use big TNT mode.", 1); return;
+                    MessageNeedExtra(p, 1); return;
                 }
             } else if (message.CaselessEq("nuke")) {
                 if (!p.allowTnt) {
@@ -67,20 +67,20 @@ namespace MCGalaxy.Commands
                     p.modeType = Block.nuketnt;
                     Player.Message(p, "TNT (Nuke) mode is now &aON%S.");
                 } else {
-                    MessageNeedExtra(p, "use nuke TNT mode.", 3); return;
+                    MessageNeedExtra(p, 3); return;
                 }
             } else if (message.CaselessEq("allow")) {
                 if (CheckExtraPerm(p, 2)) {
                     p.allowTnt = true; Player.Message(p, "&cTnt usage has now been enabled!");
                 } else {
-                    MessageNeedExtra(p, "can allow TNT usage.", 2); return;
+                    MessageNeedExtra(p, 2); return;
                 }                
                 return;
             } else if (message.CaselessEq("disallow")) {
                 if (CheckExtraPerm(p, 2)) {
                     p.allowTnt = false; Player.Message(p, "&cTnt usage has now been disabled!");
                 } else {
-                    MessageNeedExtra(p, "disallow TNT usage.", 2); return;
+                    MessageNeedExtra(p, 2); return;
                 }               
                 return;
             } else {

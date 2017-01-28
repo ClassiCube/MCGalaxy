@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands {
         }
 
         void HandleList(Player p, string[] args) {
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "see the list of reports."); return; }
+            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
 
             bool foundone = false;
             string[] files = Directory.GetFiles("extra/reported", "*.txt");
@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands {
             if (args.Length != 2) {
                 Player.Message(p, "You need to provide a player's name."); return;
             }
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "view the details of a report."); return; }
+            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
             if (!Formatter.ValidName(p, args[1], "player")) return;
             
             if (!File.Exists("extra/reported/" + args[1] + ".txt")) {
@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands {
             if (args.Length != 2) {
                 Player.Message(p, "You need to provide a player's name."); return;
             }
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "delete reports."); return; }
+            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
             if (!Formatter.ValidName(p, args[1], "player")) return;
             
             if (!File.Exists("extra/reported/" + args[1] + ".txt")) {
@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands {
         }
         
         void HandleClear(Player p, string[] args) {
-           if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "clear the list of reports."); return; }
+           if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
            if (!Directory.Exists("extra/reportedbackups"))
                 Directory.CreateDirectory("extra/reportedbackups");            
             string[] files = Directory.GetFiles("extra/reported", "*.txt");

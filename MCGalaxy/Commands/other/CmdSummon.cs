@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("fetch"), new CommandAlias("bring") }; }
+            get { return new[] { new CommandAlias("fetch"), new CommandAlias("bring"), new CommandAlias("bringall", "all") }; }
         }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can summon all players") }; }

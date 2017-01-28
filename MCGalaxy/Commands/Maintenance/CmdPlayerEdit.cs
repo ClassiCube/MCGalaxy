@@ -16,18 +16,19 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Data;
-using System.Text.RegularExpressions;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands {    
-    public sealed class CmdPlayerEditDB : Command {        
+    public sealed class CmdPlayerEdit : Command {        
         public override string name { get { return "playeredit"; } }
         public override string shortcut { get { return "pe"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public CmdPlayerEditDB() { }
+        public override CommandAlias[] Aliases {
+            get { return new [] { new CommandAlias("setinfo") }; }
+        }
+        public CmdPlayerEdit() { }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
@@ -104,22 +105,16 @@ namespace MCGalaxy.Commands {
             MessageDataChanged(p, args[0], args[1], args[2]);
         }
         
+        const string dateFormat = "yyyy-MM-dd HH:mm:ss";
         static void SetDate(Player p, string[] args, string column, Player who, Action<DateTime> setter) {
             if (args.Length < 3) {
-                Player.Message(p, "Dates must be in the format: yyyy-mm-dd_hh:mm:ss");
-                Player.Message(p, "Do not include spaces or other special characters other than what you see above.");
+                Player.Message(p, "Dates must be in the format: yyyy-mm-dd hh:mm:ss");
                 return;
             }
-            args[2] = args[2].Replace('_', ' ');
-            if (!Regex.IsMatch(args[2], @"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}")) {
-                Player.Message(p, "Dates must be in the format: yyyy-mm-dd_hh:mm:ss"); return;
-            }
-            
+        	
             DateTime date;
-            if (!DateTime.TryParse(args[2], out date)) {
-                Player.Message(p, "Invalid format.");
-                Player.Message(p, "Your date must be possible via the Western Calender");
-                Player.Message(p, "Time cannot exceede increments of 23h, 59m, 59s");
+            if (!DateTime.TryParseExact(args[2], dateFormat, null, 0, out date)) {
+                Player.Message(p, "Invalid date. (must be in format: yyyy-mm-dd hh:mm:ss");
                 return;
             }
             
@@ -178,6 +173,7 @@ namespace MCGalaxy.Commands {
         }
         
         static void MessageDataChanged(Player p, string name, string type, string value) {
+            name = PlayerInfo.GetColoredName(p, name);
             string msg = value == "" ? String.Format("The {1} data for &b{0} %Shas been reset.", name, type)
                 : String.Format("The {1} data for &b{0} %Shas been updated to &a{2}%S.", name, type, value);
             Player.Message(p, msg);

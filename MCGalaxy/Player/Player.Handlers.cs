@@ -352,11 +352,14 @@ namespace MCGalaxy {
         }
 
         internal void CheckSurvival(ushort x, ushort y, ushort z) {
-            byte bFeet = GetSurvivalBlock(x, (ushort)(y - 1), z);
+            byte bFeet = GetSurvivalBlock(x, (ushort)(y - 2), z);
+            byte bBody = GetSurvivalBlock(x, (ushort)(y - 1), z);
             byte bHead = GetSurvivalBlock(x, y, z);
+            
             if (level.PosToInt(x, y, z) != oldIndex || y != oldFallY) {
-                byte conv = Block.Convert(bFeet);
-                if (conv == Block.air) {
+                bBody = Block.Convert(bBody);
+                
+                if (bBody == Block.air) {
                     if (y < oldFallY)
                         fallCount++;
                     else if (y > oldFallY) // flying up, for example
@@ -364,8 +367,8 @@ namespace MCGalaxy {
                     oldFallY = y;
                     drownCount = 0;
                     return;
-                } else if (!(conv == Block.water || conv == Block.waterstill ||
-                             conv == Block.lava || conv == Block.lavastill)) {
+                } else if (!(bBody == Block.water || bBody == Block.waterstill ||
+                             bBody == Block.lava || bBody == Block.lavastill)) {
                     if (fallCount > level.fall)
                         HandleDeath(Block.air, 0, null, false, true);
                     fallCount = 0;

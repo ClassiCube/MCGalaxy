@@ -168,7 +168,6 @@
     <Compile Include="Commands\Chat\CmdColor.cs" />
     <Compile Include="Commands\Chat\CmdEat.cs" />
     <Compile Include="Commands\Chat\CmdEmote.cs" />
-    <Compile Include="Commands\Chat\CmdGlobalCLS.cs" />
     <Compile Include="Commands\Chat\CmdHug.cs" />
     <Compile Include="Commands\Chat\CmdIgnore.cs" />
     <Compile Include="Commands\Chat\CmdInbox.cs" />
@@ -177,7 +176,7 @@
     <Compile Include="Commands\Chat\CmdMe.cs" />
     <Compile Include="Commands\Chat\CmdNick.cs" />
     <Compile Include="Commands\Chat\CmdOpChat.cs" />
-    <Compile Include="Commands\Chat\CmdPlayerCLS.cs" />
+    <Compile Include="Commands\Chat\CmdClear.cs" />
     <Compile Include="Commands\Chat\CmdRankMsg.cs" />
     <Compile Include="Commands\Chat\CmdRoll.cs" />
     <Compile Include="Commands\Chat\CmdSay.cs" />
@@ -283,7 +282,7 @@
     <Compile Include="Commands\Maintenance\CmdInfoSwap.cs" />
     <Compile Include="Commands\Maintenance\CmdIRCBot.cs" />
     <Compile Include="Commands\Maintenance\CmdLimit.cs" />
-    <Compile Include="Commands\Maintenance\CmdPlayerEditDB.cs" />
+    <Compile Include="Commands\Maintenance\CmdPlayerEdit.cs" />
     <Compile Include="Commands\Maintenance\CmdRestart.cs" />
     <Compile Include="Commands\Maintenance\CmdServer.cs" />
     <Compile Include="Commands\Maintenance\CmdShutdown.cs" />

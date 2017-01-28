@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
                 UpdateBot(bot, "'s hunt instinct: " + bot.hunt);
                 return;
             } else if (ai == "kill") {
-                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "toggle a bot's killer instinct."); return; }
+                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
                 bot.kill = !bot.kill;
                 UpdateBot(bot, "'s kill instinct: " + bot.kill);
                 return;

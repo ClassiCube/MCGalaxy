@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Level \"{0}\" already exists", name); return false;
             }
             if (!MapGen.IsSimpleTheme(args[4]) && !CheckExtraPerm(p)) { 
-                MessageNeedExtra(p, "generate maps with advanced themes."); return false;
+                MessageNeedExtra(p, 1); return false;
             }
 
             if (p != null && Interlocked.CompareExchange(ref p.GeneratingMap, 1, 0) == 1) {

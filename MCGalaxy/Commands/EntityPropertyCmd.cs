@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
 
             if (isBot) {
                 if (!CheckExtraPerm(p, 2)) {
-                    MessageNeedExtra(p, "change the " + type + " of bots.", 2); return;
+                    MessageNeedExtra(p, 2); return;
                 }
                 
                 if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {
@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
                 SetBotData(p, bot, args);
             } else {
                 if (p != who && !CheckExtraPerm(p, 1)) {
-                    MessageNeedExtra(p, "change the " + type + " of others.", 1); return;
+                    MessageNeedExtra(p, 1); return;
                 }
                 
                 if (p != null && who.Rank > p.Rank) {
@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands {
             if (p != null && who.Rank > p.Rank) {
                 MessageTooHighRank(p, "change the " + type + " of", true); return;
             }
-            if (p != who && !CheckExtraPerm(p)) { MessageNeedExtra(p, "change the " + type + " of others."); return; }
+            if (p != who && !CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
             SetPlayerData(p, who, args);
         }
         

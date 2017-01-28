@@ -58,8 +58,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/bind [block] [block2]");
-            Player.Message(p, "%HCauses [block2] to be placed, whenever you place [block].");
+            Player.Message(p, "%T/bind [block] [replacement block]");
+            Player.Message(p, "%HCauses [replacement] to be placed, whenever you place [block].");
+            Player.Message(p, "%T/bind [block] %H- Removes binding for [block].");
             Player.Message(p, "%T/bind clear %H- Clears all binds.");
         }
     }

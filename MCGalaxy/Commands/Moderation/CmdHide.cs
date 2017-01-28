@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
             }
             bool messageOps = true;
             if (message.CaselessEq("silent")) {
-                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "hide silently"); return; }
+                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
                 messageOps = false;
             }
             

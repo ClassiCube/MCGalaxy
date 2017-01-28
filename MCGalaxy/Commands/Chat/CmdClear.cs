@@ -1,5 +1,5 @@
 /*
-    Copyright 2011 MCForge
+    Copyright 2015 MCGalaxy
         
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -15,24 +15,44 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands {    
-    public sealed class CmdPlayerCLS : Command {
-        public override string name { get { return "playercls"; } }
+namespace MCGalaxy.Commands {
+    public sealed class CmdClear : Command {
+        public override string name { get { return "clear"; } }
         public override string shortcut { get { return "cls"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("playercls"), new CommandAlias("globalcls", "global"), new CommandAlias("gcls", "global") }; }
+        }
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can clear chat for everyone") }; }
+        }
+        
         public override void Use(Player p, string message) {
+            if (!message.CaselessEq("global")) {
+                ClearChat(p);
+                Player.Message(p, "%4Chat cleared.");
+            } else {
+                if (!CheckExtraPerm(p)) { MessageNeedExtra(p); return; }
+                
+                Player[] players = PlayerInfo.Online.Items;
+                foreach (Player pl in players) {
+                    ClearChat(p);
+                }
+                Chat.MessageAll("%4Global Chat Cleared.");
+            }
+        }
+        
+        static void ClearChat(Player p) {
             for (int i = 0; i < 20; i++) {
                 p.Send(Packet.BlankMessage());
             }
-            Player.Message(p, "%4Chat cleared.");
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/playercls");
-            Player.Message(p, "%HClears your chat.");
+            Player.Message(p, "%T/clear %H- Clears your chat.");
+            Player.Message(p, "%T/clear global %H- Clears chat of all users.");
         }
     }
 }

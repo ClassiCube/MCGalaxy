@@ -65,8 +65,9 @@ namespace MCGalaxy {
             return p == null || (int)p.Rank >= CommandOtherPerms.GetPerm(this, num);
         }
         
-        protected void MessageNeedExtra(Player p, string action, int num = 1) {
+        protected void MessageNeedExtra(Player p, int num = 1) {
             int perm = CommandOtherPerms.GetPerm(this, num);
+            string action = ExtraPerms[num - 1].Description;
             Formatter.MessageNeedMinPerm(p, action, (LevelPermission)perm);
         }
         

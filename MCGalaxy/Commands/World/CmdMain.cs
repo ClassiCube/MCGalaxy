@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.World {
                     PlayerActions.ChangeMap(p, Server.mainLevel);
                 }
             } else {
-                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "change the main level"); return; }
+                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
                 if (!Formatter.ValidName(p, message, "level")) return;
                 
                 string map = LevelInfo.FindMapMatches(p, message);

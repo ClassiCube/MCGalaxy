@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
             get { return new [] { new CommandAlias("rejoin"), new CommandAlias("rd") }; }
         }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can reload for other players") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can reload for all players") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands {
                 SuperRequiresArgs(name + " all", p, "level name"); return false;
             }
             
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "reload all players in a map."); return false; }
+            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return false; }
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player who in players) {
                 if (who.level == lvl)

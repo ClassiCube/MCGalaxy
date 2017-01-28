@@ -55,9 +55,9 @@ namespace MCGalaxy.Commands.World {
                 value = args.Length > 2 ? args[2] : "";
             }
             
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, "set map options."); return; }
+            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
             if (opt.CaselessEq("realmowner") && !CheckExtraPerm(p, 2)) {
-                MessageNeedExtra(p, "set personal realm owners.", 2); return;
+                MessageNeedExtra(p, 2); return;
             }
             
             if (SetMapOption(p, lvl, opt, value)) return;

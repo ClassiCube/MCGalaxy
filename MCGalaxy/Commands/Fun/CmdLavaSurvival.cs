@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands
         
         void HandleStart(Player p, string[] args) {
             if (p != null && p.Rank < Server.lava.controlRank) {
-                Formatter.MessageNeedMinPerm(p, "start lava survival", Server.lava.controlRank); return;
+                Formatter.MessageNeedMinPerm(p, "+ can start lava survival", Server.lava.controlRank); return;
             }
             
             string map = args.Length > 1 ? args[1] : "";
@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands
         
         void HandleStop(Player p, string[] args) {
             if (p != null && p.Rank < Server.lava.controlRank) {
-                Formatter.MessageNeedMinPerm(p, "stop lava survival", Server.lava.controlRank); return;
+                Formatter.MessageNeedMinPerm(p, "+ can stop lava survival", Server.lava.controlRank); return;
             }
             
             switch (Server.lava.Stop()) {
@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands
         
         void HandleEnd(Player p, string[] args) {
             if (p != null && p.Rank < Server.lava.controlRank) {
-                Formatter.MessageNeedMinPerm(p, "end a round", Server.lava.controlRank); return;
+                Formatter.MessageNeedMinPerm(p, "+ can end a round", Server.lava.controlRank); return;
             }
             
             if (!Server.lava.active) { Player.Message(p, "There isn't an active Lava Survival game."); return; }
@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands
 
         void HandleSetup(Player p, string[] args) {
             if (p != null && p.Rank < Server.lava.setupRank) {
-                Formatter.MessageNeedMinPerm(p, "setup lava survival", Server.lava.setupRank); return;
+                Formatter.MessageNeedMinPerm(p, "+ can setup lava survival", Server.lava.setupRank); return;
             }
             if (p == null) { Player.Message(p, "/{0} setup can only be used in-game.", name); return; }            
             if (args.Length < 2) { SetupHelp(p); return; }
