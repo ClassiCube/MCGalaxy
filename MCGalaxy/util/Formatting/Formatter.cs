@@ -64,14 +64,14 @@ namespace MCGalaxy {
         }
         
         static void PrintAliases(Player p, Command cmd) {
-            StringBuilder dst = new StringBuilder("Shortcuts: ");
+            StringBuilder dst = new StringBuilder("Shortcuts: %T");
             if (!String.IsNullOrEmpty(cmd.shortcut)) {
                 dst.Append('/').Append(cmd.shortcut).Append(", ");
             }
             FindAliases(Alias.coreAliases, cmd, dst);
             FindAliases(Alias.aliases, cmd, dst);
             
-            if (dst.Length == "Shortcuts: ".Length) return;
+            if (dst.Length == "Shortcuts: %T".Length) return;
             Player.Message(p, dst.ToString(0, dst.Length - 2));
         }
         

@@ -73,7 +73,7 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Sends a message to all players who are on the given level. </summary>
+        /// <summary> Sends a message to all players who are on the given level, and are not in a chatroom. </summary>
         public static void MessageLevel(Level lvl, string message) {
             MessageWhere(message, pl => pl.level == lvl && pl.Chatroom == null);
         }
@@ -91,7 +91,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Sends a message to all players, who do not have 
-        /// isolated level/level only chat and are not in a chatroom. </summary>
+        /// isolated level/level only chat, and are not in a chatroom. </summary>
         public static void MessageAll(string message) {
             message = Colors.EscapeColors(message);
             Player[] players = PlayerInfo.Online.Items;
@@ -138,6 +138,7 @@ namespace MCGalaxy {
                 }
             }
         }
+        
         
         #region Format helpers
         

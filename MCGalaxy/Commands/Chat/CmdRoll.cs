@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
             int min, max;
             
             if (!int.TryParse(args[0], out min)) min = 1;
-            if (args.Length == 1 || !int.TryParse(args[1], out max)) max = 7;
+            if (args.Length == 1 || !int.TryParse(args[1], out max)) max = 6;
             if (min > max) { int a = min; min = max; max = a; }
             
             // rand.Next(min, max) is exclusive of max, so we need to use (max + 1)

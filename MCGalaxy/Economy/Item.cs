@@ -175,7 +175,7 @@ namespace MCGalaxy.Eco {
             }
             
             if (shortcuts.Count == 0) return;
-            Player.Message(p, "Shortcuts: {0}", shortcuts.Join());
+            Player.Message(p, "Shortcuts: %T{0}", shortcuts.Join());
         }
     }
 }
