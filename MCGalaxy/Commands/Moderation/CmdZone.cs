@@ -128,8 +128,8 @@ namespace MCGalaxy.Commands {
                     continue;
                 
                 if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
-                    string grpName = zn.Owner.Substring(3);
-                    if (p.Rank < Group.Find(grpName).Permission) continue;
+                    Group grp = Group.Find(zn.Owner.Substring(3));
+                    if (grp != null && p.Rank < grp.Permission) continue;
                 } else if (zn.Owner != "" && !zn.Owner.CaselessEq(p.name)) {
                     Group group = Group.findPlayerGroup(zn.Owner);
                     if (p.Rank < group.Permission) continue;

@@ -200,8 +200,8 @@ namespace MCGalaxy {
                 
                 inZone = true;
                 if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
-                    string grpName = zn.Owner.Substring(3);
-                    if (Group.Find(grpName).Permission <= p.Rank) return true;
+                    Group grp = Group.Find(zn.Owner.Substring(3));
+                    if (grp != null && grp.Permission <= p.Rank) return true;
                 } else {
                     if (zn.Owner.CaselessEq(p.name)) return true;
                 }
