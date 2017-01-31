@@ -25,8 +25,6 @@ Ideas, concepts, and code were used from the following two sources:
 
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Generator.Foilage {
     public sealed class CactusTree : Tree {
@@ -46,10 +44,10 @@ namespace MCGalaxy.Generator.Foilage {
             int inX = value == 1 ? -1 : 0;
             int inZ = value == 2 ? -1 : 0;
 
-            for (ushort dy = height; dy <= rnd.Next(height + 2, height + 5); dy++) {
+            for (int dy = height; dy <= rnd.Next(height + 2, height + 5); dy++) {
                 output((ushort)(x + inX), (ushort)(y + dy), (ushort)(z + inZ), Block.green);
             }
-            for (ushort dy = height; dy <= rnd.Next(height + 2, height + 5); dy++) {
+            for (int dy = height; dy <= rnd.Next(height + 2, height + 5); dy++) {
                 output((ushort)(x - inX), (ushort)(y + dy), (ushort)(z - inZ), Block.green);
             }
         }
@@ -68,11 +66,11 @@ namespace MCGalaxy.Generator.Foilage {
             for (ushort dy = 0; dy < top + height - 1; dy++)
                 output(x, (ushort)(y + dy), z, Block.trunk);
             
-            for (short dy = (short)-top; dy <= top; ++dy)
-                for (short dz = (short)-top; dz <= top; ++dz)
-                    for (short dx = (short)-top; dx <= top; ++dx)
+            for (int dy = -top; dy <= top; ++dy)
+                for (int dz = -top; dz <= top; ++dz)
+                    for (int dx = -top; dx <= top; ++dx)
             {
-                short dist = (short)(Math.Sqrt(dx * dx + dy * dy + dz * dz));
+            	int dist = (int)(Math.Sqrt(dx * dx + dy * dy + dz * dz));
                 if ((dist < top + 1) && rnd.Next(dist) < 2) {
                     ushort xx = (ushort)(x + dx), yy = (ushort)(y + dy + height), zz = (ushort)(z + dz);
 
@@ -93,7 +91,7 @@ namespace MCGalaxy.Generator.Foilage {
         }
         
         public override void Output(ushort x, ushort y, ushort z, TreeOutput output) {
-            for (ushort dy = 0; dy <= height; dy++)
+            for (int dy = 0; dy <= height; dy++)
                 output(x, (ushort)(y + dy), z, Block.trunk);
 
             for (int dy = top; dy <= height + 1; dy++) {
@@ -125,7 +123,7 @@ namespace MCGalaxy.Generator.Foilage {
         }
         
         public override void Output(ushort x, ushort y, ushort z, TreeOutput output) {
-            for (ushort dy = 0; dy <= height; dy++)
+            for (int dy = 0; dy <= height; dy++)
                 output(x, (ushort)(y + dy), z, Block.trunk);
 
             for (int dy = top; dy <= height + 1; dy++) {

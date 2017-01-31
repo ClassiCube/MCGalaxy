@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands {
         
         bool CheckZone(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             Vec3S32 P = marks[0];
-            string zoneMsg = p.level.FindZoneOwners((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
+            string zoneMsg = p.level.FindZoneOwners(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z);
             Player.Message(p, zoneMsg);
             return true;
         }

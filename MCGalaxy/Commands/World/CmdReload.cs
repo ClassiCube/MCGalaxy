@@ -24,7 +24,8 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("rejoin"), new CommandAlias("rd") }; }
+            get { return new [] { new CommandAlias("rejoin"), new CommandAlias("rd"), 
+                    new CommandAlias("wflush"), new CommandAlias("worldflush") }; }
         }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can reload for all players") }; }

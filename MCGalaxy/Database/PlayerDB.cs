@@ -49,7 +49,7 @@ namespace MCGalaxy {
             if (File.Exists(path)) return File.ReadAllText(path); 
             // Unix is case sensitive (older files used correct casing of name)
             path = "text/login/" + p.name + ".txt";
-            return File.Exists(path) ? File.ReadAllText(path) : "joined";
+            return File.Exists(path) ? File.ReadAllText(path) : "connected";
         }
         
         public static string GetLogoutMessage(Player p) {

@@ -182,7 +182,7 @@ namespace MCGalaxy {
                 if (zoneAllow) return true;
                 if (p.ZoneSpam > DateTime.UtcNow) return false;
                 
-                Player.Message(p, FindZoneOwners(x, y, z));
+                Player.Message(p, FindZoneOwners(p, x, y, z));
                 p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
                 return false;
             }
@@ -210,7 +210,7 @@ namespace MCGalaxy {
             return zoneAllow;
         }
         
-        internal string FindZoneOwners(ushort x, ushort y, ushort z) {
+        internal string FindZoneOwners(Player p, ushort x, ushort y, ushort z) {
             string owners = "";
             for (int i = 0; i < ZoneList.Count; i++) {
                 Zone zn = ZoneList[i];
@@ -218,14 +218,14 @@ namespace MCGalaxy {
                     continue;
                 
                 if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
-                    owners += ", " + zn.Owner.Substring(3);
+                    owners += ", " + Group.GetColoredName(zn.Owner.Substring(3));
                 } else {
-                    owners += ", " + zn.Owner;
+                    owners += ", " + PlayerInfo.GetColoredName(p, zn.Owner);
                 }
             }
             
             if (owners == "") return "No zones affect this block";
-            return "This zone belongs to &b" + owners.Remove(0, 2) + ".";
+            return "This zone belongs to " + owners.Remove(0, 2) + ".";
         }
         
         bool CheckRank(Player p) {

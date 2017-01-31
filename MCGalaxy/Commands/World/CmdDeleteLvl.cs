@@ -26,7 +26,10 @@ namespace MCGalaxy.Commands.World {
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("wdelete"), new CommandAlias("worlddelete"), new CommandAlias("wremove") }; }
+        }
+        
         public override void Use(Player p, string message) {
             if (message == "" || message.Split(' ').Length > 1) { Help(p); return; }
             if (!Formatter.ValidName(p, message, "level")) return;

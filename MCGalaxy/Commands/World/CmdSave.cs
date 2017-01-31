@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("mapsave"), new CommandAlias("wsave") }; }
+            get { return new[] { new CommandAlias("mapsave"), new CommandAlias("wsave"), new CommandAlias("worldsave") }; }
         }
         public CmdSave() { }
 

@@ -27,7 +27,10 @@ namespace MCGalaxy.Commands.World {
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("wcopy"), new CommandAlias("worldcopy") }; }
+        }
+        
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.ToLower().Split(' ');

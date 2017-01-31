@@ -20,8 +20,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Generator.Foilage {
 
@@ -34,7 +32,7 @@ namespace MCGalaxy.Generator.Foilage {
         }
         
         public override void Output(ushort x, ushort y, ushort z, TreeOutput output) {
-            for (ushort dy = 0; dy <= height; dy++) {
+            for (int dy = 0; dy <= height; dy++) {
                 ushort yy = (ushort)(y + dy);
                 if (dy < height) output(x, yy, z, Block.trunk);
                 
@@ -56,7 +54,7 @@ namespace MCGalaxy.Generator.Foilage {
         }
         
         public override void Output(ushort x, ushort y, ushort z, TreeOutput output) {
-            for (ushort dy = 0; dy <= height; dy++)
+            for (int dy = 0; dy <= height; dy++)
                 if (dy < height) output(x, (ushort)(y + dy), z, Block.trunk);
             
             for (int dz = -2; dz <= 2; dz++)
