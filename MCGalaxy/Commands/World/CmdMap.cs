@@ -95,7 +95,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         static bool HasArgument(string opt) {
-            return opt == "physicspeed" || opt == "overload"
+            return opt == "physicspeed" || opt == "overload" || opt == "treetype"
                 || opt == "fall" || opt == "drown" || opt == "realmowner";
         }
         
@@ -105,8 +105,8 @@ namespace MCGalaxy.Commands.World {
                            GetBool(lvl.finite), GetBool(lvl.randomFlow));
             Player.Message(p, "  Animal AI: {0}%S, Edge water: {1}",
                            GetBool(lvl.ai), GetBool(lvl.edgeWater));
-            Player.Message(p, "  Grass growing: {0}%S, Tree growing: {1}",
-                           GetBool(lvl.GrassGrow), GetBool(lvl.growTrees));
+            Player.Message(p, "  Grass growing: {0}%S, {1} tree growing: {2}",
+                           GetBool(lvl.GrassGrow), lvl.TreeType.Capitalize(), GetBool(lvl.growTrees));
             Player.Message(p, "  Leaf decay: {0}%S, Physics overload: {1}",
                            GetBool(lvl.leafDecay), lvl.overload);
             Player.Message(p, "  Physics speed: &b{0} %Smilliseconds between ticks",

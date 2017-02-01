@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Generator.Foilage;
 
 namespace MCGalaxy {
     
@@ -27,6 +28,7 @@ namespace MCGalaxy {
         public static Dictionary<string, OptionSetter> Options = new Dictionary<string, OptionSetter>() {
             { "motd", SetMotd },
             { "RealmOwner", SetRealmOwner },
+            { "TreeType", SetTreeType },
             { "PhysicSpeed", (p, l, value) => SetPhysicsSpeed(p, l, value, "Physics speed") },
             { "Overload", (p, l, value) => SetPhysicsOverload(p, l, value, "Physics overload") },
             { "Fall", (p, l, value) => SetInt(p, l, ref l.fall, value, "Fall distance") },
@@ -51,6 +53,7 @@ namespace MCGalaxy {
         public static Dictionary<string, string> Help = new Dictionary<string, string>() {
             { "motd", "%HSets the custom motd for this map. (leave blank to use server default)" },
             { "RealmOwner", "%HSets the players allowed to use /realm on this map." },
+            { "TreeType", "%HSets the type of trees saplings grow into." },
             { "PhysicSpeed", "%HSets the delay (in milliseconds) between physics ticks." },
             { "Overload", "%HSets how hard (high values) or easy (low values) it is to kill physics." },
             { "Fall", "%HSets how many blocks you can fall before dying." },
@@ -99,6 +102,24 @@ namespace MCGalaxy {
             lvl.RealmOwner = value;
             if (value == "") Player.Message(p, "Removed realm owner for this level.");
             else Player.Message(p, "Set realm owner/owners of this level to {0}.", value);
+        }
+        
+        static void SetTreeType(Player p, Level lvl, string value) {
+            if (value == "") {
+                Player.Message(p, "Reset tree type to default.");
+                lvl.TreeType = "fern";
+                return;
+            }
+            
+            Tree tree = Tree.Find(value);
+            if (tree == null) {
+                Player.Message(p, "Tree type {0} not found.", value);
+                Player.Message(p, "Tree types: {0}", Tree.TreeTypes.Join(t => t.Key));
+                return;
+            }
+            
+            lvl.TreeType = value.ToLower();
+            Player.Message(p, "Set tree type that saplings grow into to {0}.", value);
         }
         
         

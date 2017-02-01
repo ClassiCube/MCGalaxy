@@ -202,6 +202,8 @@ namespace MCGalaxy {
         public bool ai = true;
         [ConfigBool("GrassGrowth", "Physics", null, true)]
         public bool GrassGrow = true;
+        [ConfigString("TreeType", "Physics", null, "fern", false)]
+        public string TreeType = "fern";
         
         public int lastCheck, lastUpdate;
         internal FastList<Check> ListCheck = new FastList<Check>(); //A list of blocks that need to be updated
