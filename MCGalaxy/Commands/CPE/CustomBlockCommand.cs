@@ -305,7 +305,7 @@ namespace MCGalaxy.Commands.CPE {
             }
             if (!ExistsInScope(def, blockId, global)) { MessageNoBlock(p, blockId, global, cmd); return; }
             
-            string value = parts[3];
+            string value = parts[3], blockName = def.Name;
             float fTemp;
             
             switch (parts[2].ToLower()) {
@@ -436,7 +436,7 @@ namespace MCGalaxy.Commands.CPE {
                     Player.Message(p, "Unrecognised property: " + parts[2]); return;
             }
             
-            Player.Message(p, "Set {0} for {1} to {2}", parts[2], def.Name, value);
+            Player.Message(p, "Set {0} for {1} to {2}", parts[2], blockName, value);
             BlockDefinition.Add(def, defs, p == null ? null : p.level);
             ReloadMap(p, global);
         }
