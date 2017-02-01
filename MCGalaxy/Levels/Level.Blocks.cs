@@ -235,9 +235,9 @@ namespace MCGalaxy {
             }
             if (p.level == this) return p.AllowBuild;
             
-            LevelAccess access = BuildAccess.Check(p);
-            return access == LevelAccess.Whitelisted 
-                || access == LevelAccess.Allowed;
+            AccessResult access = BuildAccess.Check(p);
+            return access == AccessResult.Whitelisted 
+                || access == AccessResult.Allowed;
         }
         
         public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, 

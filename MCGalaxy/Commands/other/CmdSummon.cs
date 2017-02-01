@@ -78,20 +78,20 @@ namespace MCGalaxy.Commands {
         }
         
         static bool CheckVisitPerm(Player p, Player who, bool confirmed) {
-            LevelAccess result = p.level.VisitAccess.Check(who);
-            if (result == LevelAccess.Allowed) return true;
-            if (result == LevelAccess.Whitelisted) return true;
-            if (result == LevelAccess.AboveMaxRank && confirmed) return true;
-            if (result == LevelAccess.BelowMinRank && confirmed) return true;
+            AccessResult result = p.level.VisitAccess.Check(who);
+            if (result == AccessResult.Allowed) return true;
+            if (result == AccessResult.Whitelisted) return true;
+            if (result == AccessResult.AboveMaxRank && confirmed) return true;
+            if (result == AccessResult.BelowMinRank && confirmed) return true;
             
-            if (result == LevelAccess.Blacklisted) {
+            if (result == AccessResult.Blacklisted) {
                 Player.Message(p, "{0} %Sis blacklisted from visiting this map.", who.ColoredName);
                 return false;
-            } else if (result == LevelAccess.BelowMinRank) {
+            } else if (result == AccessResult.BelowMinRank) {
                 Player.Message(p, "Only {0}%S+ may normally visit this map. {1}%S is ranked {2}",
                                Group.GetColoredName(p.level.permissionvisit),
                                who.ColoredName, who.group.ColoredName);
-            } else if (result == LevelAccess.AboveMaxRank) {
+            } else if (result == AccessResult.AboveMaxRank) {
                 Player.Message(p, "Only {0}%S and below may normally visit this map. {1}%S is ranked {2}",
                                Group.GetColoredName(p.level.pervisitmax),
                                who.ColoredName, who.group.ColoredName);

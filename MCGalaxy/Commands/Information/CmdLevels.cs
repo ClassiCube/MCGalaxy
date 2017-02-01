@@ -41,8 +41,8 @@ namespace MCGalaxy.Commands {
         static string FormatMap(Player p, Level lvl) {            
             bool canVisit = Player.IsSuper(p);
             if (!canVisit) {
-                LevelAccess access = lvl.VisitAccess.Check(p);
-                canVisit = access == LevelAccess.Allowed || access == LevelAccess.Whitelisted;
+                AccessResult access = lvl.VisitAccess.Check(p);
+                canVisit = access == AccessResult.Allowed || access == AccessResult.Whitelisted;
             }
             
             string physics = " [" +  lvl.physics + "]";
