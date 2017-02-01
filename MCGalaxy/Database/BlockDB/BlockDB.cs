@@ -168,12 +168,12 @@ namespace MCGalaxy.DB {
             Vec3U16 fileDims;
 
             if (!File.Exists(FilePath)) {
-            	using (Stream s = OpenWrite()) {
+                using (Stream s = OpenWrite()) {
                     fileDims = Dims;
                     BlockDBFile.WriteHeader(s, fileDims);
                 }
             } else {
-            	using (Stream s = OpenRead()) {
+                using (Stream s = OpenRead()) {
                     BlockDBFile.ReadHeader(s, out fileDims);
                 }
                 if (fileDims.X < Dims.X || fileDims.Y < Dims.Y || fileDims.Z < Dims.Z) {

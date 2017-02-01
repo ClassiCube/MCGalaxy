@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
             if (!File.Exists("text/oprules.txt")) {
                 File.WriteAllText("text/oprules.txt", "No oprules entered yet!");
             }
-        	string[] oprules = File.ReadAllLines("text/oprules.txt");
+            string[] oprules = File.ReadAllLines("text/oprules.txt");
 
             Player who = p;
             if (message != "") {

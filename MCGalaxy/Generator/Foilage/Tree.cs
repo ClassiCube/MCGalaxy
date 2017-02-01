@@ -33,9 +33,9 @@ namespace MCGalaxy.Generator.Foilage {
 
         /// <summary> Returns true if any green or trunk blocks are in the cube centred at (x, y, z) of extent 'size'. </summary>
         public static bool TreeCheck(Level lvl, ushort x, ushort y, ushort z, short size) { //return true if tree is near
-            for (short dy = (short)-size; dy <= +size; ++dy)
-                for (short dz = (short)-size; dz <= +size; ++dz)
-                    for (short dx = (short)-size; dx <= +size; ++dx)
+            for (int dy = -size; dy <= size; ++dy)
+                for (int dz = -size; dz <= size; ++dz)
+                    for (int dx = -size; dx <= size; ++dx)
             {
                 byte tile = lvl.GetTile((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
                 if (tile == Block.trunk || tile == Block.green) return true;

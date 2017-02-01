@@ -74,7 +74,7 @@ namespace MCGalaxy {
                 File.WriteAllText("text/badwords.txt", sb.ToString());
             }
             
-        	string[] lines = File.ReadAllLines("text/badwords.txt");
+            string[] lines = File.ReadAllLines("text/badwords.txt");
             // Run the badwords through the reducer to ensure things like Ls become Is and everything is lowercase
             filters = new List<string>();
             foreach (string line in lines) {

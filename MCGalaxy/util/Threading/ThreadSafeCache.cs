@@ -21,7 +21,7 @@ using System.Collections.Generic;
 namespace MCGalaxy.Util {
     public sealed class ThreadSafeCache {
         public static ThreadSafeCache DBCache = new ThreadSafeCache(key => new object());
-        	
+            
         readonly object locker = new object();
         readonly Dictionary<string, object> items = new Dictionary<string, object>();
         readonly Dictionary<string, DateTime> access = new Dictionary<string, DateTime>();

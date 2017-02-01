@@ -143,7 +143,7 @@ namespace MCGalaxy {
 
             if (File.Exists("text/messages.txt")) {
                 string[] lines = File.ReadAllLines("text/messages.txt");
-            	messages = new List<string>(lines);
+                messages = new List<string>(lines);
             } else {
                 using (File.Create("text/messages.txt")) {}
             }

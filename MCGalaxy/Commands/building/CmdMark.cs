@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.Building {
                     handler(p, old, P.X, P.Y, P.Z);
                 } else {
                     Player.Message(p, "Cannot mark, no selection or cuboid in progress, " +
-                	               "nor could the existing block at the coordinates be activated."); return;
+                                   "nor could the existing block at the coordinates be activated."); return;
                 }
             }
         }

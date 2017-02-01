@@ -79,8 +79,8 @@ namespace MCGalaxy.Commands {
         }
         
         Dictionary<string, SubCommand> subCommands = new Dictionary<string, SubCommand>() {
-            { "blockprops", new SubCommand(HandleBlockProps, blockPropskHelp) },
-            { "blockproperties", new SubCommand(HandleBlockProps, blockPropskHelp) },        	
+            { "blockprops", new SubCommand(HandleBlockProps, blockPropsHelp) },
+            { "blockproperties", new SubCommand(HandleBlockProps, blockPropsHelp) },
             { "env", new SubCommand(HandleEnv, envHelp) },
             { "go", new SubCommand(HandleGoto, gotoHelp) },
             { "kick", new SubCommand(HandleKick, kickHelp) },
@@ -136,7 +136,7 @@ namespace MCGalaxy.Commands {
         
         #region Help messages
 
-        static string[] blockPropskHelp = new string[] {
+        static string[] blockPropsHelp = new string[] {
             "%T/os blockprops [id] [action] <args> %H- Manages properties for custom blocks on your map.",
             "%H  See %T/help blockprops %Hfor a list of actions",
         };

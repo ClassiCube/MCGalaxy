@@ -20,9 +20,9 @@ using System.Collections;
 using System.Text;
 
 namespace MCGalaxy {
-	
-	/// <summary> Finds partial matches of a 'name' against the names of the items an enumerable. </summary>
-	/// <remarks> returns number of matches found, and the matching item if only 1 match is found. </remarks>
+    
+    /// <summary> Finds partial matches of a 'name' against the names of the items an enumerable. </summary>
+    /// <remarks> returns number of matches found, and the matching item if only 1 match is found. </remarks>
     public static class Matcher {
         
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;

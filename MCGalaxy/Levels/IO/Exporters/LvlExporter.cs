@@ -24,9 +24,9 @@ namespace MCGalaxy.Levels.IO {
 
     //WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
     //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
-	public sealed class LvlExporter : IMapExporter {
+    public sealed class LvlExporter : IMapExporter {
 
-		public override string Extension { get { return ".lvl"; } }
+        public override string Extension { get { return ".lvl"; } }
         
         const int bufferSize = 64 * 1024;
         public override void Write(Stream dst, Level lvl) {

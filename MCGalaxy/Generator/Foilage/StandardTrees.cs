@@ -70,7 +70,7 @@ namespace MCGalaxy.Generator.Foilage {
                 for (int dz = -top; dz <= top; ++dz)
                     for (int dx = -top; dx <= top; ++dx)
             {
-            	int dist = (int)(Math.Sqrt(dx * dx + dy * dy + dz * dz));
+                int dist = (int)(Math.Sqrt(dx * dx + dy * dy + dz * dz));
                 if ((dist < top + 1) && rnd.Next(dist) < 2) {
                     ushort xx = (ushort)(x + dx), yy = (ushort)(y + dy + height), zz = (ushort)(z + dz);
 

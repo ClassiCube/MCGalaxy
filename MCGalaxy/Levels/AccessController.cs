@@ -142,7 +142,13 @@ namespace MCGalaxy {
             OnListChanged(p, target, false, removed);
             return true;
         }
+
+
+        /// <summary> Called when min or max rank is changed. </summary>
+        public abstract void OnPermissionChanged(Player p, Group grp, string type);
         
+        /// <summary> Called when a whitelist or blacklist is changed. </summary>
+        public abstract void OnListChanged(Player p, string name, bool whitelist, bool removedFromOpposite);
         
         bool CheckRank(Player p, LevelPermission perm, string type, bool newPerm) {
             if (p != null && perm > p.Rank) {
@@ -153,17 +159,6 @@ namespace MCGalaxy {
             }
             return true;
         }
-
-        /// <summary> Messages all player on the level (and source player) notifying them that the 
-        /// min or max rank changed, rechecks access permissions for all players on the level,
-        /// and finally saves the level properties file. </summary>        
-        public abstract void OnPermissionChanged(Player p, Group grp, string type);
-        
-        /// <summary> Messages all player on the level (and source player) notifying them that the 
-        /// target player was whitelisted or blacklisted, rechecks access permissions 
-        /// for all players on the level, and finally saves the level properties file. </summary>
-        public abstract void OnListChanged(Player p, string name, bool whitelist, bool removedFromOpposite);
-        
         
         /// <summary> Returns true if the player is allowed to modify these access permissions,
         /// and is also allowed to change the access permissions for the target player. </summary>
@@ -182,11 +177,10 @@ namespace MCGalaxy {
     
     /// <summary> Encapuslates access permissions (visit or build) for a level. </summary>
     public sealed class LevelAccessController : AccessController {
-
-    	        
+        
         /// <summary> Whether these access permissions apply to
         /// visit (true) or build (false) permission for the level. </summary>
-        public readonly bool IsVisit;       
+        public readonly bool IsVisit;
         readonly Level lvl;
         
         public LevelAccessController(Level lvl, bool isVisit) {
@@ -229,9 +223,9 @@ namespace MCGalaxy {
         protected override string MaxCmd { get { return IsVisit ? "pervisitmax" : "perbuildmax"; } }
         
         
-        /// <summary> Messages all player on the level (and source player) notifying them that the 
+        /// <summary> Messages all player on the level (and source player) notifying them that the
         /// min or max rank changed, rechecks access permissions for all players on the level,
-        /// and finally saves the level properties file. </summary>        
+        /// and finally saves the level properties file. </summary>
         public override void OnPermissionChanged(Player p, Group grp, string type) {
             Update();
             Server.s.Log(type + " rank changed to " + grp.trueName + " on " + lvl.name + ".");
@@ -240,8 +234,8 @@ namespace MCGalaxy {
                 Player.Message(p, "{0} rank changed to {1} %Son {2}%S.", type, grp.ColoredName, lvl.ColoredName);
         }
         
-        /// <summary> Messages all player on the level (and source player) notifying them that the 
-        /// target player was whitelisted or blacklisted, rechecks access permissions 
+        /// <summary> Messages all player on the level (and source player) notifying them that the
+        /// target player was whitelisted or blacklisted, rechecks access permissions
         /// for all players on the level, and finally saves the level properties file. </summary>
         public override void OnListChanged(Player p, string name, bool whitelist, bool removedFromOpposite) {
             string type = IsVisit ? "visit" : "build";

@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Dates must be in the format: yyyy-mm-dd hh:mm:ss");
                 return;
             }
-        	
+            
             DateTime date;
             if (!DateTime.TryParseExact(args[2], dateFormat, null, 0, out date)) {
                 Player.Message(p, "Invalid date. (must be in format: yyyy-mm-dd hh:mm:ss");
@@ -169,7 +169,7 @@ namespace MCGalaxy.Commands {
         }
         
         static void UpdateDB(string name, string value, string column) {
-        	Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, value.UnicodeToCp437());
+            Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, value.UnicodeToCp437());
         }
         
         static void MessageDataChanged(Player p, string name, string type, string value) {

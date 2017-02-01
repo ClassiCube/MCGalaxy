@@ -26,13 +26,13 @@ namespace System.Runtime.CompilerServices {
 }
 
 namespace System {
-	public delegate TReturn Func<TReturn>();
-	public delegate TReturn Func<T1, TReturn>(T1 arg1);
-	public delegate TReturn Func<T1, T2, TReturn>(T1 arg1, T2 arg2);
-	public delegate TReturn Func<T1, T2, T3, TReturn>(T1 arg1, T2 arg2, T3 arg3);
-	
-	public delegate void Action();
-	public delegate void Action<T1, T2>(T1 arg1, T2 arg2);
+    public delegate TReturn Func<TReturn>();
+    public delegate TReturn Func<T1, TReturn>(T1 arg1);
+    public delegate TReturn Func<T1, T2, TReturn>(T1 arg1, T2 arg2);
+    public delegate TReturn Func<T1, T2, T3, TReturn>(T1 arg1, T2 arg2, T3 arg3);
+    
+    public delegate void Action();
+    public delegate void Action<T1, T2>(T1 arg1, T2 arg2);
 }
 
 namespace MCGalaxy.Util {
@@ -74,9 +74,9 @@ namespace MCGalaxy.Util {
             
             public void Dispose() {
                 if (writeMode) {
-            		locker.ReleaseWriterLock();
+                    locker.ReleaseWriterLock();
                 } else {
-            		locker.ReleaseReaderLock();
+                    locker.ReleaseReaderLock();
                 }
                 locker = null;
             }

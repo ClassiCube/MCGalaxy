@@ -352,7 +352,7 @@ namespace MCGalaxy {
         /// <returns> true if main level was changed, false if not 
         /// (same map as current main, or given map doesn't exist).</returns>
         public static bool SetMainLevel(string mapName) {
-        	if (mapName.CaselessEq(level)) return false;
+            if (mapName.CaselessEq(level)) return false;
             Level oldMain = mainLevel;
             
             Level lvl = LevelInfo.FindExact(mapName);

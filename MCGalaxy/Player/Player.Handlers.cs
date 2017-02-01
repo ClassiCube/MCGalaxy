@@ -51,7 +51,7 @@ namespace MCGalaxy {
             byte old = level.GetTile(x, y, z), oldExt = 0;
             if (old == Block.Invalid) return;
             if (old == Block.custom_block) oldExt = level.GetExtTile(x, y, z);
-            	
+                
             if (jailed || !agreed || !canBuild) { RevertBlock(x, y, z); return; }
             if (level.IsMuseum && Blockchange == null) return;
             
@@ -126,12 +126,12 @@ namespace MCGalaxy {
             if (doDelete) {
                 if (DeleteBlock(old, x, y, z, block, extBlock)) {
                     level.BlockDB.Cache.Add(this, x, y, z, flags,
-            		                        old, oldExt, 0, 0);
+                                            old, oldExt, 0, 0);
                 }
             } else {
                 if (PlaceBlock(old, x, y, z, block, extBlock)) {
                     level.BlockDB.Cache.Add(this, x, y, z, flags, 
-            		                        old, oldExt, heldBlock, heldExt);
+                                            old, oldExt, heldBlock, heldExt);
                 }
             }
         }
@@ -770,7 +770,7 @@ namespace MCGalaxy {
                     cmdArgs = cmd.ToLower(); cmd = "mode";
                     command = Command.all.Find("mode");
                 } else {
-            		Server.s.CommandUsed(name + " tried to use unknown command: /" + cmd + " " + cmdArgs);
+                    Server.s.CommandUsed(name + " tried to use unknown command: /" + cmd + " " + cmdArgs);
                     SendMessage("Unknown command \"" + cmd + "\"."); return null;
                 }
             }

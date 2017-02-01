@@ -5,7 +5,7 @@ namespace MCGalaxy.Generator {
 
     /// <summary> Interpolation mode for perlin noise. </summary>
     public enum NoiseInterpolationMode {
-    	
+        
         /// <summary> Cosine interpolation (fast). </summary>
         Cosine,
 

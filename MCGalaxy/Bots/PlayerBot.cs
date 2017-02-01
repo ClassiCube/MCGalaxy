@@ -133,7 +133,7 @@ namespace MCGalaxy {
             PlayerBot[] bots = Bots.Items;
 
             foreach (PlayerBot bot in bots) {
-            	if (bot.name.CaselessEq(name)) return bot;
+                if (bot.name.CaselessEq(name)) return bot;
                 if (bot.name.CaselessContains(name)) {
                     match = bot; matches++;
                 }

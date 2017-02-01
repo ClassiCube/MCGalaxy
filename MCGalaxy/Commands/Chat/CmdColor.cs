@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Hence, you cannot change the color of that bot.");
                 return;
             }
-        	
+            
             string color = args.Length > 2 ? Colors.Parse(args[2]) : "&1";
             if (color == "") { Player.Message(p, "There is no color \"" + args[2] + "\"."); return; }
             Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Scolor was set to " 

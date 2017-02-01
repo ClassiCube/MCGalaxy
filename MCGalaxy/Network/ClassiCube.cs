@@ -25,7 +25,7 @@ namespace MCGalaxy {
     
     public sealed class ClassiCubeBeat : IBeat {
         
-		string url = "http://www.classicube.net/heartbeat.jsp";
+        string url = "http://www.classicube.net/heartbeat.jsp";
         public string URL { get { return url; } }
 
         public bool Persistance { get { return true; } }

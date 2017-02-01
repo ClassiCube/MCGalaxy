@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace MCGalaxy.Undo {
-	
-	public sealed class UndoDrawOpEntry {
+    
+    public sealed class UndoDrawOpEntry {
         public string DrawOpName;
         public string LevelName;
         public DateTime Start, End;

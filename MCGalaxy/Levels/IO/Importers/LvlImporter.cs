@@ -23,9 +23,9 @@ namespace MCGalaxy.Levels.IO {
 
     //WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
     //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
-	public sealed class LvlImporter : IMapImporter {
+    public sealed class LvlImporter : IMapImporter {
 
-		public override string Extension { get { return ".lvl"; } }
+        public override string Extension { get { return ".lvl"; } }
         
         public override Vec3U16 ReadDimensions(Stream src) {
             using (Stream gs = new GZipStream(src, CompressionMode.Decompress, true)) {

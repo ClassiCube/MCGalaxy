@@ -20,14 +20,14 @@ using System.IO;
 using fNbt;
 
 namespace MCGalaxy.Levels.IO {
-	public sealed class CwImporter : IMapImporter {
+    public sealed class CwImporter : IMapImporter {
 
-		public override string Extension { get { return ".cw"; } }
+        public override string Extension { get { return ".cw"; } }
 
         public override Vec3U16 ReadDimensions(Stream src) {
-			throw new NotSupportedException();
+            throw new NotSupportedException();
         }
-		
+        
         public override Level Read(Stream src, string name, bool metadata) {
             NbtFile file = new NbtFile();
             file.LoadFromStream(src);
@@ -75,7 +75,7 @@ namespace MCGalaxy.Levels.IO {
             if (cpe.Contains("BlockDefinitions"))
                 ParseBlockDefinitions(cpe, lvl);
         }
-		
+        
         
         static void ParseEnvMapAppearance(NbtCompound cpe, Level lvl) {
             NbtCompound comp = (NbtCompound)cpe["EnvMapAppearance"];

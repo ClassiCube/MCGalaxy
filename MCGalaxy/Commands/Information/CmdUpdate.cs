@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands {
         public CmdUpdate() { }
 
         public override void Use(Player p, string message) {
-        	if (!message.CaselessEq("force")) {
+            if (!message.CaselessEq("force")) {
                 Updater.UpdateCheck(false, p);
             } else {
                 Updater.PerformUpdate();

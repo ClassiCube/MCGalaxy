@@ -30,8 +30,8 @@ namespace MCGalaxy.Commands {
             if (!File.Exists("text/faq.txt")) {
                 File.WriteAllText("text/faq.txt", "Example: What does this server run on? This server runs on &bMCGalaxy");
             }
-        	
-        	string[] faq = File.ReadAllLines("text/faq.txt");
+            
+            string[] faq = File.ReadAllLines("text/faq.txt");
             Player.Message(p, "&cFAQ&f:");
             foreach (string line in faq)
                 Player.Message(p, "&f" + line);

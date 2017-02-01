@@ -31,8 +31,8 @@ namespace MCGalaxy.Commands {
             if (!File.Exists(newsFile)) {
                 File.WriteAllText(newsFile, "News have not been created. Put News in '" + newsFile + "'."); return;
             }
-        	
-        	string[] lines = File.ReadAllLines(newsFile);
+            
+            string[] lines = File.ReadAllLines(newsFile);
             Player.MessageLines(p, lines);
         }
         

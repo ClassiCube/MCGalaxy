@@ -22,7 +22,7 @@ using System.Text;
 
 namespace MCGalaxy.SQL {
     
-	/// <summary> Simple abstraction for a database management system. </summary>
+    /// <summary> Simple abstraction for a database management system. </summary>
     public abstract class IDatabaseBackend {
         
         /// <summary> Describes the arguments for a database connection
