@@ -101,12 +101,13 @@ namespace MCGalaxy {
                 Player.Message(p, "Cannot use physics block ids for /env."); return false;
             }
             
+            string name = p.level.BlockName(block, extBlock);
             if (block == Block.shrub || block == Block.yellowflower || block == Block.redflower ||
                 block == Block.mushroom || block == Block.redmushroom || block == Block.rope || block == Block.fire) {
-                Player.Message(p, "Env: Cannot use {0} for {1}.", block, variable);
+                Player.Message(p, "Env: Cannot use {0} for {1}.", name, variable);
             } else {
                 modify = block == Block.custom_block ? extBlock : block;
-                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.ColoredName, modify);
+                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.ColoredName, name);
                 return true;
             }
             return false;
