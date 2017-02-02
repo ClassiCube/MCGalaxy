@@ -23,16 +23,18 @@ using MCGalaxy.Drawing.Ops;
 namespace MCGalaxy.Generator.Foilage {
     public sealed class AshTree : Tree {
         
-		int halfHeight, branchAmount;
-		const int widthMax = 5, branchHeightMax = 10, clusterSizeMax = 3;
+		int branchBaseHeight, branchAmount;
+		const int maxExtent = 5, maxBranchHeight = 10, maxCluster = 3;
         List<Vec3S32> branch = new List<Vec3S32>();
         
-        public override int DefaultValue(Random rnd) { return rnd.Next(0, 11); }
+        public override int DefaultValue(Random rnd) { return rnd.Next(5, 10); }
         
         public override void SetData(Random rnd, int value) {
             this.rnd = rnd;           
-            height = (byte)rnd.Next(5, 10);
-			halfHeight = height/4;
+            height = (byte)value;
+            size = (byte)(maxExtent + maxCluster);
+            
+			branchBaseHeight = height / 4;
 			branchAmount = rnd.Next(10, 25);
         }
         
@@ -49,11 +51,11 @@ namespace MCGalaxy.Generator.Foilage {
         
 		
 		void DoBranch(int x, int y, int z, TreeOutput output) {
-			int dx = rnd.Next(-widthMax, widthMax);
-			int dz = rnd.Next(-widthMax, widthMax);
-			int clusterSize = rnd.Next(1, clusterSizeMax);
-			int branchStart = rnd.Next(halfHeight, height);
-			int branchMax = branchStart + rnd.Next(3, branchHeightMax);
+			int dx = rnd.Next(-maxExtent, maxExtent);
+			int dz = rnd.Next(-maxExtent, maxExtent);
+			int clusterSize = rnd.Next(1, maxCluster);
+			int branchStart = rnd.Next(branchBaseHeight, height);
+			int branchMax = branchStart + rnd.Next(3, maxBranchHeight);
 			
 			int R = clusterSize;
 			Vec3S32[] marks = new [] { 

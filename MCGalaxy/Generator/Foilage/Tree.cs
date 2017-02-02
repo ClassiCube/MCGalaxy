@@ -24,7 +24,7 @@ namespace MCGalaxy.Generator.Foilage {
     public delegate void TreeOutput(ushort x, ushort y, ushort z, byte block);
     
     public abstract class Tree {
-        protected internal byte height, top, size;
+        protected internal byte height, size;
         protected Random rnd;
         
         /// <summary> Calculates a random default value (usually used for height) for this tree. </summary>
