@@ -42,6 +42,7 @@ namespace MCGalaxy.Commands.Building {
             DrawArgs dArgs = default(DrawArgs);
             dArgs.tree = tree;
             dArgs.brushMsg = brushMsg;
+            dArgs.value = -1;
             
             if (brushMsg != "") {
                 if (!p.group.CanExecute("brush")) {
