@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Generator.Foilage {
+namespace MCGalaxy.Generator.Foliage {
     public sealed class OakTree : Tree {
         
         int numBranches, maxExtent, maxBranchHeight, trunkHeight;

@@ -27,7 +27,7 @@ Ideas, concepts, and code were used from the following two sources:
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
-using MCGalaxy.Generator.Foilage;
+using MCGalaxy.Generator.Foliage;
 
 namespace MCGalaxy.Drawing.Ops {
     public class TreeDrawOp : DrawOp {

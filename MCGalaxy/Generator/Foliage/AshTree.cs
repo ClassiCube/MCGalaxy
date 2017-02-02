@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Generator.Foilage {
+namespace MCGalaxy.Generator.Foliage {
     public sealed class AshTree : Tree {
         
 		int branchBaseHeight, branchAmount;

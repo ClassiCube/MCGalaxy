@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
-using MCGalaxy.Generator.Foilage;
+using MCGalaxy.Generator.Foliage;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdTree : Command {

@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 
-namespace MCGalaxy.Generator.Foilage {
+namespace MCGalaxy.Generator.Foliage {
 
     public delegate void TreeOutput(ushort x, ushort y, ushort z, byte block);
     

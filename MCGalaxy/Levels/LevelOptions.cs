@@ -17,7 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
-using MCGalaxy.Generator.Foilage;
+using MCGalaxy.Generator.Foliage;
 
 namespace MCGalaxy {
     

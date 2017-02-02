@@ -20,9 +20,10 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 
-namespace MCGalaxy.Generator.Foilage {
-
+namespace MCGalaxy.Generator.Foliage {
+       	
     public sealed class BambooTree : Tree {
         
         public override int DefaultValue(Random rnd) { return rnd.Next(4, 8); }

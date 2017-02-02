@@ -27,7 +27,7 @@ Ideas, concepts, and code were used from the following two sources:
 using System;
 using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
-using MCGalaxy.Generator.Foilage;
+using MCGalaxy.Generator.Foliage;
 
 namespace MCGalaxy.Generator {    
     public sealed class RealisticMapGen {        

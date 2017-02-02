@@ -26,7 +26,7 @@ Ideas, concepts, and code were used from the following two sources:
  */
 using System;
 
-namespace MCGalaxy.Generator.Foilage {
+namespace MCGalaxy.Generator.Foliage {
     public sealed class CactusTree : Tree {
         
         public override int DefaultValue(Random rnd) { return rnd.Next(3, 6); }

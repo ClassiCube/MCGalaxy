@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Generator.Foilage;
+using MCGalaxy.Generator.Foliage;
 
 namespace MCGalaxy.Blocks.Physics {
 
