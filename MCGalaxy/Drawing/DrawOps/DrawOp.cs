@@ -58,11 +58,11 @@ namespace MCGalaxy.Drawing.Ops {
         /// <remarks> Note: You should treat this as coordinates, it is a DrawOpBlock struct for performance reasons. </remarks>
         public DrawOpBlock Coords;
         
-        /// <summary> Level the draw operation is being performed upon. </summary>
-        public Level Level;
-        
         /// <summary> Player that is executing the draw operation. </summary>
         public Player Player;
+
+        /// <summary> Level the draw operation is being performed upon. </summary>
+        public Level Level;
         
         /// <summary> BlockDB change flags for blocks affected by this draw operation. </summary>
         public ushort Flags = BlockDBFlags.Drawn;
@@ -100,6 +100,12 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
         
+        /// <summary> Sets the level associated with this draw operation. </summary>
+        public void SetLevel(Level lvl) {
+            Level = lvl;
+            clip = new Vec3S32(lvl.Width - 1, lvl.Height - 1, lvl.Length - 1);
+        }
+        
         protected DrawOpBlock Place(ushort x, ushort y, ushort z, Brush brush) {
             Coords.X = x; Coords.Y = y; Coords.Z = z;
             Coords.Block = brush.NextBlock(this);
@@ -115,10 +121,11 @@ namespace MCGalaxy.Drawing.Ops {
             return Coords;
         }
         
+        Vec3S32 clip = new Vec3S32(ushort.MaxValue);
         protected Vec3U16 Clamp(Vec3S32 pos) {
-            pos.X = Math.Max(0, Math.Min(pos.X, Level.Width - 1));
-            pos.Y = Math.Max(0, Math.Min(pos.Y, Level.Height - 1));
-            pos.Z = Math.Max(0, Math.Min(pos.Z, Level.Length - 1));
+            pos.X = Math.Max(0, Math.Min(pos.X, clip.X));
+            pos.Y = Math.Max(0, Math.Min(pos.Y, clip.Y));
+            pos.Z = Math.Max(0, Math.Min(pos.Z, clip.Z));
             return new Vec3U16((ushort)pos.X, (ushort)pos.Y, (ushort)pos.Z);
         }
     }

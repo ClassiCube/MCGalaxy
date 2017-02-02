@@ -61,7 +61,7 @@ namespace MCGalaxy.Generator.Foilage {
             { "Fern", () => new NormalTree() }, { "Cactus", () => new CactusTree() },
             { "Notch", () => new ClassicTree() }, { "Swamp", () => new SwampTree() },
             { "Bamboo", () => new BambooTree() }, { "Palm", () => new PalmTree() },
-            { "Oak", () => new OakTree() },
+            { "Oak", () => new OakTree() }, { "Ash", () => new AshTree() },
         };
         
         public static Tree Find(string name) {

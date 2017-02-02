@@ -106,6 +106,10 @@ namespace MCGalaxy {
             X = x; Y = y; Z = z;
         }
         
+        public Vec3S32(int value) {
+            X = value; Y = value; Z = value;
+        }
+        
         public override bool Equals(object obj) {
             return (obj is Vec3S32) && Equals((Vec3S32)obj);
         }

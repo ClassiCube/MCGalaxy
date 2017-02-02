@@ -122,7 +122,7 @@ namespace MCGalaxy.Commands.Building {
                 op.Direction = m[1].Z <= m[0].Z ? 3 : 2;
             }
             
-            op.Level = p.level;
+            op.SetLevel(p.level);
             op.Player = p;
             op.Source = bmp;
             op.Layer = dArgs.layer;

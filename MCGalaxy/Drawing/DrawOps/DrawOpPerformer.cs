@@ -44,20 +44,21 @@ namespace MCGalaxy.Drawing.Ops {
         public static bool Do(DrawOp op, Brush brush, Player p,
                               Vec3S32[] marks, bool checkLimit = true) {
             op.SetMarks(marks);
-            op.Level = p == null ? null : p.level;
+            Level lvl = p == null ? null : p.level;
+            op.SetLevel(lvl);
             op.Player = p;
             
-            if (op.Level != null && !op.Level.DrawingAllowed) {
+            if (lvl != null && !lvl.DrawingAllowed) {
                 Player.Message(p, "Drawing commands are turned off on this map.");
                 return false;
             }
-            if (op.Level != null && op.Level.BuildAccess.Check(p) == AccessResult.Blacklisted) {
+            if (lvl != null && lvl.BuildAccess.Check(p) == AccessResult.Blacklisted) {
                 Player.Message(p, "You are blacklisted from building in this map, " +
                                "hence you cannot draw in this map");
                 return false;
             }
             
-            long affected = op.BlocksAffected(op.Level, marks);
+            long affected = op.BlocksAffected(lvl, marks);
             if (p != null && op.AffectedByTransform)
                 p.Transform.GetBlocksAffected(ref affected);
             

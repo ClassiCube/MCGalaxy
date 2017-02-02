@@ -496,6 +496,7 @@
     <Compile Include="Generator\fCraft\MapGenerator.cs" />
     <Compile Include="Generator\fCraft\MapGeneratorArgs.cs" />
     <Compile Include="Generator\fCraft\Noise.cs" />
+    <Compile Include="Generator\Foilage\AshTree.cs" />
     <Compile Include="Generator\Foilage\OakTree.cs" />
     <Compile Include="Generator\Foilage\ForesterTrees.cs" />
     <Compile Include="Generator\Foilage\StandardTrees.cs" />
