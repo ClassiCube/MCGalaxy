@@ -46,7 +46,8 @@ namespace MCGalaxy.Drawing.Ops {
             
             Tree.Output(P.X, P.Y, P.Z, (xT, yT, zT, bT) =>
                         {
-                            if (lvl.GetTile(xT, yT, zT) != Block.air) return;
+                            if (bT == Block.leaf && lvl.GetTile(xT, yT, zT) != Block.air) return;
+                            
                             if (bT != Block.leaf) {
                                 output(Place(xT, yT, zT, bT, 0));
                             } else {

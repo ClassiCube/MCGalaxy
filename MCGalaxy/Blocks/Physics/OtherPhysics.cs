@@ -127,8 +127,8 @@ namespace MCGalaxy.Blocks.Physics {
             tree.SetData(rand);
             tree.Output(x, y, z, (xT, yT, zT, bT) =>
                         {
-                            if (lvl.GetTile(xT, yT, zT) == Block.air)
-                                lvl.Blockchange(xT, yT, zT, bT);
+                            if (bT == Block.leaf && lvl.GetTile(xT, yT, zT) != Block.air) return;
+                            lvl.Blockchange(xT, yT, zT, bT);
                         });
             
             C.data.Data = PhysicsArgs.RemoveFromChecks;
