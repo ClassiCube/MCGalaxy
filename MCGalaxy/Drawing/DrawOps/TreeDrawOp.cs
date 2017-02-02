@@ -37,6 +37,8 @@ namespace MCGalaxy.Drawing.Ops {
         public Tree Tree;
         static Brush defBrush = new SolidBrush(Block.leaf, 0);
         
+        public int Value = -1;
+        
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
@@ -44,7 +46,7 @@ namespace MCGalaxy.Drawing.Ops {
             Vec3U16 P = Clamp(marks[0]);
             Level lvl = Level;
             
-            Tree.Output(P.X, P.Y, P.Z, (xT, yT, zT, bT) =>
+            Tree.Generate(P.X, P.Y, P.Z, (xT, yT, zT, bT) =>
                         {
                             if (bT == Block.leaf && lvl.GetTile(xT, yT, zT) != Block.air) return;
                             
@@ -58,7 +60,9 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void SetMarks(Vec3S32[] marks) {
             base.SetMarks(marks);
-            Tree.SetData(random);
+            int value = Value != -1 ? Value : Tree.DefaultValue(random);
+            Tree.SetData(random, value);
+                        
             Max.Y += Tree.height;
             Min.X -= Tree.size; Min.Z -= Tree.size;
             Max.X += Tree.size; Max.Z += Tree.size;

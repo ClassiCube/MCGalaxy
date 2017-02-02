@@ -29,13 +29,15 @@ using System;
 namespace MCGalaxy.Generator.Foilage {
     public sealed class CactusTree : Tree {
         
-        public override void SetData(Random rnd) {
-            height = (byte)rnd.Next(3, 6);
+        public override int DefaultValue(Random rnd) { return rnd.Next(3, 6); }
+                
+        public override void SetData(Random rnd, int value) {
+            height = (byte)value;
             size = 1;
             this.rnd = rnd;
         }
         
-        public override void Output(ushort x, ushort y, ushort z, TreeOutput output) {
+        public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
             for (ushort dy = 0; dy <= height; dy++) {
                 output(x, (ushort)(y + dy), z, Block.green);
             }
@@ -54,15 +56,17 @@ namespace MCGalaxy.Generator.Foilage {
     }
 
     public sealed class NormalTree : Tree {
+
+        public override int DefaultValue(Random rnd) { return rnd.Next(5, 8); }
         
-        public override void SetData(Random rnd) {
-            height = (byte)rnd.Next(5, 8);
+        public override void SetData(Random rnd, int value) {
+            height = (byte)value;
             top = (byte)(height - rnd.Next(2, 4));
             size = top;
             this.rnd = rnd;
         }
         
-        public override void Output(ushort x, ushort y, ushort z, TreeOutput output) {
+        public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
             for (ushort dy = 0; dy < top + height - 1; dy++)
                 output(x, (ushort)(y + dy), z, Block.trunk);
             
@@ -83,14 +87,16 @@ namespace MCGalaxy.Generator.Foilage {
 
     public sealed class ClassicTree : Tree {
         
-        public override void SetData(Random rnd) {
-            height = (byte)rnd.Next(3, 7);
+        public override int DefaultValue(Random rnd) { return rnd.Next(3, 7); }
+        
+        public override void SetData(Random rnd, int value) {
+            height = (byte)value;
             top = (byte)(height - 2);
             size = 2;
             this.rnd = rnd;
         }
         
-        public override void Output(ushort x, ushort y, ushort z, TreeOutput output) {
+        public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
             for (int dy = 0; dy <= height; dy++)
                 output(x, (ushort)(y + dy), z, Block.trunk);
 
@@ -115,14 +121,16 @@ namespace MCGalaxy.Generator.Foilage {
     
     public sealed class SwampTree : Tree {
         
-        public override void SetData(Random rnd) {
-            height = (byte)rnd.Next(4, 8);
+        public override int DefaultValue(Random rnd) { return rnd.Next(4, 8); }
+
+        public override void SetData(Random rnd, int value) {
+            height = (byte)value;
             top = (byte)(height - 2);
             size = 3;
             this.rnd = rnd;
         }
         
-        public override void Output(ushort x, ushort y, ushort z, TreeOutput output) {
+        public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
             for (int dy = 0; dy <= height; dy++)
                 output(x, (ushort)(y + dy), z, Block.trunk);
 

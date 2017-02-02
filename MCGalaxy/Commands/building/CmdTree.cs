@@ -42,6 +42,16 @@ namespace MCGalaxy.Commands.Building {
             DrawArgs dArgs = default(DrawArgs);
             dArgs.tree = tree;
             dArgs.brushMsg = brushMsg;
+            
+            if (brushMsg != "") {
+                if (!p.group.CanExecute("brush")) {
+                    Player.Message(p, "You cannot use %T/brush%S, so therefore cannot use %T/tree%S with a brush."); return;
+                }
+                
+                Brush brush = ParseBrush(dArgs.brushMsg, p, 0, 0);
+                if (brush == null) return;
+            }
+                        
             Player.Message(p, "Select where you wish your tree to grow");
             p.MakeSelection(1, dArgs, DoTree);
         }
@@ -50,17 +60,13 @@ namespace MCGalaxy.Commands.Building {
             DrawArgs dArgs = (DrawArgs)state;
             TreeDrawOp op = new TreeDrawOp();
             op.Tree = dArgs.tree;
-            Brush brush = null;
+            op.Value = dArgs.value;
             
-            if (dArgs.brushMsg != "") {
-                if (!p.group.CanExecute("brush")) {
-                    Player.Message(p, "You cannot use /brush, so therefore cannot use /tree with a brush."); return false;
-                }
-                brush = ParseBrush(dArgs.brushMsg, p, type, extType);
-                if (brush == null) return false;
-            }
+            Brush brush = null;
+            if (dArgs.brushMsg != "") brush = ParseBrush(dArgs.brushMsg, p, type, extType);
             return DrawOpPerformer.Do(op, brush, p, marks);
         }
+        
         
         static Brush ParseBrush(string raw, Player p, byte block, byte extBlock) {
             string[] parts = raw.SplitSpaces(2);
@@ -76,7 +82,7 @@ namespace MCGalaxy.Commands.Building {
             return brush.Construct(args);
         }
         
-        struct DrawArgs { public Tree tree; public string brushMsg; }
+        struct DrawArgs { public Tree tree; public string brushMsg; public int value; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/tree [type] %H- Draws a tree.");

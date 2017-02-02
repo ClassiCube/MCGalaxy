@@ -25,13 +25,15 @@ namespace MCGalaxy.Generator.Foilage {
 
     public sealed class BambooTree : Tree {
         
-        public override void SetData(Random rnd) {
-            height = (byte)rnd.Next(4, 8);
+        public override int DefaultValue(Random rnd) { return rnd.Next(4, 8); }
+        
+        public override void SetData(Random rnd, int value) {
+            height = (byte)value;
             size = 1;
             this.rnd = rnd;
-        }
+        }        
         
-        public override void Output(ushort x, ushort y, ushort z, TreeOutput output) {
+        public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
             for (int dy = 0; dy <= height; dy++) {
                 ushort yy = (ushort)(y + dy);
                 if (dy < height) output(x, yy, z, Block.trunk);
@@ -47,13 +49,15 @@ namespace MCGalaxy.Generator.Foilage {
     
     public sealed class PalmTree : Tree {
         
-        public override void SetData(Random rnd) {
-            height = (byte)rnd.Next(4, 8);
+        public override int DefaultValue(Random rnd) { return rnd.Next(4, 8); }
+
+        public override void SetData(Random rnd, int value) {
+            height = (byte)value;
             size = 2;
             this.rnd = rnd;
-        }
+        }        
         
-        public override void Output(ushort x, ushort y, ushort z, TreeOutput output) {
+        public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
             for (int dy = 0; dy <= height; dy++)
                 if (dy < height) output(x, (ushort)(y + dy), z, Block.trunk);
             

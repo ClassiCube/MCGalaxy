@@ -140,8 +140,8 @@ namespace MCGalaxy.Generator {
                                 if (genParams.UseCactus) tree = new CactusTree();
                                 else tree = new NormalTree();
                                 
-                                tree.SetData(rand);
-                                tree.Output(x, (ushort)(y + 1), z, (xT, yT, zT, bT) =>
+                                tree.SetData(rand, tree.DefaultValue(rand));
+                                tree.Generate(x, (ushort)(y + 1), z, (xT, yT, zT, bT) =>
                                             {
                                                 if (Lvl.GetTile(xT, yT, zT) == Block.air)
                                                     Lvl.SetTile(xT, yT, zT, bT);
