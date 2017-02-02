@@ -98,8 +98,6 @@ namespace MCGalaxy {
             RemoveFromPending();
             Server.s.PlayerListUpdate();
             
-            //OpenClassic Client Check
-            SendBlockchange(0, 0, 0, 0);
             timeLogged = DateTime.Now;
             lastLogin = DateTime.Now;
             time = new TimeSpan(0, 0, 0, 1);
