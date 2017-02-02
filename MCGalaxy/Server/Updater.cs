@@ -65,7 +65,6 @@ namespace MCGalaxy {
             WebClient Client = new WebClient();
 
             try {
-                Server.s.Log("RIGHTIO! CHECKING!");
                 string raw = Client.DownloadString(CurrentVersionFile);
                 Version latestVersion = new Version(raw);
                 if (latestVersion <= Server.Version) {

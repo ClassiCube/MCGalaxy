@@ -67,10 +67,8 @@ namespace MCGalaxy.Gui {
 
             UpdateListTimer.Elapsed += delegate {
                 try {
-                    UpdateClientList(null);
                     UpdateMapList();
-                }
-                catch { } // needed for slower computers
+                } catch { } // needed for slower computers
                 //Server.s.Log("Lists updated!");
             }; UpdateListTimer.Start();
 
