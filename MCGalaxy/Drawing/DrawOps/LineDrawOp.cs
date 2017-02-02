@@ -39,7 +39,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(marks[0]), p2 = Clamp(marks[1]);
-            List<Vec3U16> buffer = new List<Vec3U16>();
+            List<Vec3S32> buffer = new List<Vec3S32>();
             DrawLine(p1.X, p1.Y, p1.Z, MaxLength, p2.X, p2.Y, p2.Z, buffer);
             if (WallsMode) {
                 ushort yy1 = p1.Y, yy2 = p2.Y;
@@ -47,7 +47,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
             
             for (int i = 0; i < buffer.Count; i++) {
-                Vec3U16 pos = buffer[i];
+                Vec3U16 pos = (Vec3U16)buffer[i];
                 if (WallsMode) {
                     for (ushort yy = p1.Y; yy <= p2.Y; yy++)
                         output(Place(pos.X, yy, pos.Z, brush));
@@ -57,8 +57,8 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
         
-        internal static void DrawLine(ushort x1, ushort y1, ushort z1, int maxLen,
-                                      ushort x2, ushort y2, ushort z2, List<Vec3U16> buffer) {
+        internal static void DrawLine(int x1, int y1, int z1, int maxLen,
+                                      int x2, int y2, int z2, List<Vec3S32> buffer) {
             Line lx, ly, lz;
             int[] pixel = { x1, y1, z1 };
             int dx = x2 - x1, dy = y2 - y1, dz = z2 - z1;
@@ -75,19 +75,19 @@ namespace MCGalaxy.Drawing.Ops {
             else
                 DoLine(ly, lx, lz, zLen, pixel, maxLen, buffer);
             
-            Vec3U16 pos;
-            pos.X = (ushort)pixel[0]; pos.Y = (ushort)pixel[1]; pos.Z = (ushort)pixel[2];
+            Vec3S32 pos;
+            pos.X = pixel[0]; pos.Y = pixel[1]; pos.Z = pixel[2];
             buffer.Add(pos);
         }
         
         struct Line { public int dx2, inc, index; }
         
         static void DoLine(Line l1, Line l2, Line l3, int len, 
-                           int[] pixel, int maxLen, List<Vec3U16> buffer) {
+                           int[] pixel, int maxLen, List<Vec3S32> buffer) {
             int err_1 = l1.dx2 - len, err_2 = l2.dx2 - len;
-            Vec3U16 pos;
+            Vec3S32 pos;
             for (int i = 0; i < len && i < (maxLen - 1); i++) {
-                pos.X = (ushort)pixel[0]; pos.Y = (ushort)pixel[1]; pos.Z = (ushort)pixel[2];
+                pos.X = pixel[0]; pos.Y = pixel[1]; pos.Z = pixel[2];
                 buffer.Add(pos);
 
                 if (err_1 > 0) {
