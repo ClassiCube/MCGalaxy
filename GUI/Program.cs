@@ -76,16 +76,13 @@ namespace MCGalaxy.Gui {
                     ConsoleLoop();
                 } else {
                     IntPtr hConsole = GetConsoleWindow();
-                    if (IntPtr.Zero != hConsole)
-                        ShowWindow(hConsole, 0);
-                    Updater.UpdateCheck(true);
+                    if (IntPtr.Zero != hConsole) ShowWindow(hConsole, 0);
                     
                     if (useHighQualityGui) {
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
                     }
 
-                    Updater.updateTimer.Elapsed += delegate { Updater.UpdateCheck(); }; Updater.updateTimer.Start();
                     Application.Run(new Window());
                 }
                 WriteToConsole("Completed in " + (DateTime.UtcNow - startTime).Milliseconds + "ms");

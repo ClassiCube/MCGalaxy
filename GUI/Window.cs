@@ -92,6 +92,8 @@ namespace MCGalaxy.Gui {
         
         void InitServerTask() {
             Server.s.Start();
+            // The first check for updates is run after 10 seconds, subsequent ones every two hours
+            Server.Background.QueueRepeat(Updater.UpdaterTask, null, TimeSpan.FromSeconds(10));
 
             Player.PlayerConnect += Player_PlayerConnect;
             Player.PlayerDisconnect += Player_PlayerDisconnect;

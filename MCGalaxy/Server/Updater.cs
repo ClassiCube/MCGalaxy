@@ -35,7 +35,6 @@ namespace MCGalaxy {
         const string EXELocation = "https://github.com/Hetal728/MCGalaxy/blob/master/Uploads/MCGalaxy.exe?raw=true";
 
         public static bool CurrentUpdate = false;
-        public static System.Timers.Timer updateTimer = new System.Timers.Timer(120 * 60 * 1000);
         static bool msgOpen = false;
         
         /// <summary> Loads updater properties from given file  </summary>
@@ -54,97 +53,82 @@ namespace MCGalaxy {
                     Server.restartcountdown = int.Parse(value); break;
             }
         }
+        
+        public static void UpdaterTask(SchedulerTask task) {
+            UpdateCheck(null);
+            task.Delay = TimeSpan.FromHours(2);
+        }
 
-        public static void UpdateCheck(bool wait = false, Player p = null) {
+        public static void UpdateCheck(Player p = null) {
             CurrentUpdate = true;
-            if (!Server.checkUpdates) return;
-            
-            Thread updateThread = new Thread(new ThreadStart(
-                delegate
-                {
-                    WebClient Client = new WebClient();
+            if (!Server.checkUpdates) return;            
+            WebClient Client = new WebClient();
 
-                    if (wait) { Thread.Sleep(10000); }
-                    try {
-                        string raw = Client.DownloadString(CurrentVersionFile);
-                        Version availableUpdateVersion = new Version(raw);
-                        if (availableUpdateVersion <= Server.Version) {
-                            Player.Message(p, "No update found!");
-                            return;
-                        }
-                        
-                        if (Server.autoupdate || p != null)
-                        {
-                            if (Server.notifyPlayers || p != null)
-                            {
-                                Chat.MessageAll("Update found. Prepare for restart in &f{0} %Sseconds.", Server.restartcountdown);
-                                Server.s.Log("Update found. Prepare for restart in " + Server.restartcountdown + " seconds.");
-                                int timeLeft = Server.restartcountdown;
-                                System.Timers.Timer countDown = new System.Timers.Timer();
-                                countDown.Interval = 1000;
-                                countDown.Start();
-                                countDown.Elapsed += delegate
-                                {
-                                    if (Server.autoupdate || p != null)
-                                    {
-                                        Chat.MessageAll("Updating in &f{0} %Sseconds.", timeLeft);
-                                        Server.s.Log("Updating in " + timeLeft + " seconds.");
-                                        timeLeft = timeLeft - 1;
-                                        if (timeLeft < 0)
-                                        {
-                                            Chat.MessageAll("---UPDATING SERVER---");
-                                            Server.s.Log("---UPDATING SERVER---");
-                                            countDown.Stop();
-                                            countDown.Dispose();
-                                            PerformUpdate();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Chat.MessageAll("Stopping auto restart.");
-                                        Server.s.Log("Stopping auto restart.");
-                                        countDown.Stop();
-                                        countDown.Dispose();
-                                    }
-                                };
-                            }
-                            else
-                            {
-                                PerformUpdate();
-                            }
-
-                        }
-                        else
-                        {
-                            if (!msgOpen && !MCGalaxy.Gui.App.usingConsole)
-                            {
-                                if (Server.autonotify)
-                                {
-                                    msgOpen = true;
-                                    if (MessageBox.Show("New version found. Would you like to update?", "Update?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                                    {
-                                        PerformUpdate();
-                                    }
-                                    msgOpen = false;
-                                }
-                            }
-                            else
-                            {
-                                ConsoleColor prevColor = Console.ForegroundColor;
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("An update was found!");
-                                Console.WriteLine("Update using the file at " + DLLLocation + " and placing it over the top of your current MCGalaxy_.dll!");
-                                Console.WriteLine("Also update using the file at " + EXELocation + " and placing it over the top of your current MCGalaxy.exe");
-                                Console.ForegroundColor = prevColor;
-                            }
-                        }
+            try {
+                Server.s.Log("RIGHTIO! CHECKING!");
+                string raw = Client.DownloadString(CurrentVersionFile);
+                Version latestVersion = new Version(raw);
+                if (latestVersion <= Server.Version) {
+                    Player.Message(p, "No update found!");
+                    return;
+                }
+                
+                if (Server.autoupdate || p != null) {
+                    if (Server.notifyPlayers || p != null) {
+                        NotifyPlayersOfUpdate(p);
+                    } else {
+                        PerformUpdate();
                     }
-                    catch(Exception e) { /*try { Server.s.Log("No web server found to update on.");*/Logger.WriteError(e); } /*catch { }*/ //}
-                    Client.Dispose();
-                    CurrentUpdate = false;
-                }));
-            updateThread.Name = "MCG_UpdateCheck";
-            updateThread.Start();
+                } else if (!msgOpen) {
+                    msgOpen = true;
+                    if (MessageBox.Show("New version found. Would you like to update?", "Update?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                        PerformUpdate();
+                    }
+                    msgOpen = false;
+                } else if (MCGalaxy.Gui.App.usingConsole) {
+                    ConsoleColor prevColor = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("An update was found!");
+                    Console.WriteLine("Update using the file at " + DLLLocation + " and placing it over the top of your current MCGalaxy_.dll!");
+                    Console.WriteLine("Also update using the file at " + EXELocation + " and placing it over the top of your current MCGalaxy.exe");
+                    Console.ForegroundColor = prevColor;
+                }
+            } catch(Exception e) {
+                Logger.WriteError(e);
+            }
+            
+            Client.Dispose();
+            CurrentUpdate = false;
+        }
+        
+        static void NotifyPlayersOfUpdate(Player p) {
+            Chat.MessageAll("Update found. Prepare for restart in &f{0} %Sseconds.", Server.restartcountdown);
+            Server.s.Log("Update found. Prepare for restart in " + Server.restartcountdown + " seconds.");
+            
+            int timeLeft = Server.restartcountdown;
+            System.Timers.Timer countDown = new System.Timers.Timer();
+            countDown.Interval = 1000;
+            countDown.Start();
+            
+            countDown.Elapsed += delegate {
+                if (Server.autoupdate || p != null) {
+                    Chat.MessageAll("Updating in &f{0} %Sseconds.", timeLeft);
+                    Server.s.Log("Updating in " + timeLeft + " seconds.");
+                    timeLeft = timeLeft - 1;
+                    if (timeLeft < 0) {
+                        Chat.MessageAll("---UPDATING SERVER---");
+                        Server.s.Log("---UPDATING SERVER---");
+                        countDown.Stop();
+                        countDown.Dispose();
+                        PerformUpdate();
+                    }
+                } else {
+                    Chat.MessageAll("Stopping auto restart.");
+                    Server.s.Log("Stopping auto restart.");
+                    countDown.Stop();
+                    countDown.Dispose();
+                }
+            };
         }
 
         public static void PerformUpdate() {
@@ -163,6 +147,7 @@ namespace MCGalaxy {
                 Level[] levels = LevelInfo.Loaded.Items;
                 foreach (Level lvl in levels) {
                     if (!lvl.ShouldSaveChanges()) continue;
+                    
                     lvl.Save();
                     lvl.saveChanges();
                 }
@@ -176,7 +161,7 @@ namespace MCGalaxy {
                 } else {
                     Process.Start("mono", parentfullpathdir + "/Updater.exe securitycheck10934579068013978427893755755270374" + parent);
                 }
-                MCGalaxy.Gui.App.ExitProgram(false);
+                MCGalaxy.Gui.App.ExitProgram(false, "Updating server.");
             } catch (Exception e) {
                 Server.ErrorLog(e);
             }
