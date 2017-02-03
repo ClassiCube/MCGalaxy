@@ -29,6 +29,7 @@ namespace MCGalaxy.Gui {
 
         [DllImport("kernel32")]
         static extern IntPtr GetConsoleWindow();
+        
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         
@@ -38,7 +39,7 @@ namespace MCGalaxy.Gui {
         }
 
         // NOTE: //Console.ReadLine() is ignored while Starter is set as Windows Application in properties. (At least on Windows)
-        static bool useConsole, useHighQualityGui;
+        static bool useConsole, useHighQualityGui, isWindows;
         [STAThread]
         public static void Main(string[] args) {
             Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -55,13 +56,16 @@ namespace MCGalaxy.Gui {
             
             DateTime startTime = DateTime.UtcNow;
             CheckDuplicateProcesses();
-            
+
             Logger.Init();
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;
             Application.ThreadException += ThreadExHandler;
-            useConsole = false; useHighQualityGui = false;
+            useHighQualityGui = false;
             
-
+            PlatformID platform = Environment.OSVersion.Platform;
+            isWindows = platform == PlatformID.Win32NT || platform == PlatformID.Win32Windows;
+            useConsole = !isWindows;
+            
             try {
                 ReadViewmode();
                 if (useConsole) {
@@ -75,8 +79,10 @@ namespace MCGalaxy.Gui {
                     MCGalaxy.Gui.App.usingConsole = true;
                     ConsoleLoop();
                 } else {
-                    IntPtr hConsole = GetConsoleWindow();
-                    if (IntPtr.Zero != hConsole) ShowWindow(hConsole, 0);
+                    if (isWindows) { // get rid of console window on Windows
+                        IntPtr hConsole = GetConsoleWindow();
+                        if (IntPtr.Zero != hConsole) ShowWindow(hConsole, 0);
+                    }
                     
                     if (useHighQualityGui) {
                         Application.EnableVisualStyles();
@@ -91,9 +97,6 @@ namespace MCGalaxy.Gui {
         }
         
         static void ReadViewmode() {
-            PlatformID platform = Environment.OSVersion.Platform;
-            useConsole = !(platform == PlatformID.Win32NT || platform == PlatformID.Win32Windows);
-            
             if (!File.Exists("Viewmode.cfg")) {
                 using (StreamWriter w = new StreamWriter("Viewmode.cfg")) {
                     w.WriteLine("#This file controls how the console window is shown to the server host");
@@ -137,7 +140,7 @@ namespace MCGalaxy.Gui {
                     Server.ErrorLog(ex);
                 }
             }
-        }        
+        }
         
         
         static void GlobalExHandler(object sender, UnhandledExceptionEventArgs e) {

@@ -21,7 +21,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using MCGalaxy.Gui.Native;
 
 //MCGalaxy 6 Preview :D
 
@@ -33,9 +32,7 @@ namespace MCGalaxy.Gui.Components {
         bool _nightMode = false, _colorize = true;
         bool _showDateStamp = true, _autoScroll = true;
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to scroll automaticly
-        /// </summary>
+        /// <summary> Gets or sets a value indicating whether to scroll automaticly </summary>
         /// <value> <c>true</c> if [auto scroll]; otherwise, <c>false</c>. </value>
         [Browsable(true)]
         [Category("MCGalaxy")]
@@ -69,12 +66,8 @@ namespace MCGalaxy.Gui.Components {
             set { _showDateStamp = value; }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the TextBox is in nightmode. This will clear the text box when changed.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [night mode]; otherwise, <c>false</c>.
-        /// </value>
+        /// <summary> Gets or sets a value indicating whether the TextBox is in nightmode. This will clear the text box when changed. </summary>
+        /// <value> <c>true</c> if [night mode]; otherwise, <c>false</c>. </value>
         [Browsable(true)]
         [Category("MCGalaxy")]
         [DefaultValue(false)]
@@ -155,10 +148,15 @@ namespace MCGalaxy.Gui.Components {
                 Invoke((MethodInvoker)(() => ScrollToEnd(startIndex)));
                 return;
             }
+        	
             int lines = GetLineFromCharIndex(TextLength - 1) - startIndex + 1;
-            for (int i = 0; i < lines; i++)
-                Natives.SendMessage(Handle, 0xB5, (IntPtr)1, IntPtr.Zero);
+            for (int i = 0; i < lines; i++) {
+                SendMessage(Handle, 0xB5, (IntPtr)1, IntPtr.Zero);
+            }
             Invalidate();
         }
+        
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
     }
 }
