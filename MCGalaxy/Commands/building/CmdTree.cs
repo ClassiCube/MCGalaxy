@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Building {
             dArgs.tree = tree;
             dArgs.brushMsg = brushMsg;
             dArgs.value = -1;
-            
+
             if (brushMsg != "") {
                 if (!p.group.CanExecute("brush")) {
                     Player.Message(p, "You cannot use %T/brush%S, so therefore cannot use %T/tree%S with a brush."); return;
