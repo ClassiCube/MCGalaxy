@@ -149,9 +149,12 @@ namespace MCGalaxy.Commands.CPE {
             
             if (def.Shape == 0) {
                 Player.Message(p, "  Block is a sprite");
+                Player.Message(p, "  Texture ID: {0}", def.SideTex);
             } else {
                 Player.Message(p, "  Block is a cube from ({0}, {1}, {2}) to ({3}, {4}, {5})",
                                def.MinX, def.MinZ, def.MinY, def.MaxX, def.MaxZ, def.MaxY);
+                Player.Message(p, "  Texture IDs (left: {0}, right: {1}, front: {2}, back: {3}, top: {4}, bottom: {5})", 
+                               def.LeftTex, def.RightTex, def.FrontTex, def.BackTex, def.TopTex, def.BottomTex);
             }
         }
         
