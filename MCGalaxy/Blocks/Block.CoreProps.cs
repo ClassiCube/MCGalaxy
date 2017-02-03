@@ -144,9 +144,10 @@ namespace MCGalaxy {
                 if (i > 0 && i < Block.CpeCount) {
                     BlockDefinition def = BlockDefinition.GlobalDefs[i];
                     if (def != null) name = def.Name;
-                }
-                
+                }               
                 Props[i].Name = name;
+                
+                name = name.ToLower();
                 if (name != "unknown")
                     Aliases[name] = (byte)i;
                 if (name.IndexOf('_') >= 0)
