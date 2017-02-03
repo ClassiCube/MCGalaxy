@@ -53,11 +53,35 @@ namespace MCGalaxy {
 
         public static void Write(string str) { LogMessage(str); }
         public static void LogMessage(string message) {
-
+            if (String.IsNullOrEmpty(message)) return;
+            lock (logLock) msgCache.Enqueue(message);
         }
         
         public static void WriteError(Exception ex) { LogError(ex); }
         public static void LogError(Exception ex) {
+            try {
+                StringBuilder sb = new StringBuilder();
+                Exception e = ex;
+                sb.AppendLine("----" + DateTime.Now + " ----");
+                while (e != null) {
+                    DescribeError(e, sb);
+                    e = e.InnerException;
+                }
+
+                sb.AppendLine();
+                sb.Append('-', 25); sb.AppendLine();
+                string output = sb.ToString();
+                if (Server.s != null) Server.s.ErrorCase(output);
+                lock (logLock) errCache.Enqueue(output);
+            } catch (Exception e) {
+                try {
+                    StringBuilder temp = new StringBuilder();
+                    DescribeError(e, temp);
+                    File.AppendAllText("ErrorLogError.log", temp.ToString());
+                } catch (Exception _ex) {
+                    MessageBox.Show("ErrorLogError Error:\n Could not log the error logs error. This is a big error. \n" + _ex.Message);
+                }
+            }
         }
 
         static void WorkerThread() {
