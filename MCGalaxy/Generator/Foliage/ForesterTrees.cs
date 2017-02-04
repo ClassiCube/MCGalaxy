@@ -142,9 +142,9 @@ namespace MCGalaxy.Generator.Foliage {
             // primidx is the index (0,1,or 2 for x,y,z) for the coordinate
             // which has the largest overall delta.
             int primidx = 0;
-            float maxdist = delta.X;
-            if (delta.Y > maxdist) { primidx = 1; maxdist = delta.Y; }
-            if (delta.Z > maxdist) { primidx = 2; maxdist = delta.Z; }
+            float maxdist = Math.Abs(delta.X);
+            if (Math.Abs(delta.Y) > maxdist) { primidx = 1; maxdist = Math.Abs(delta.Y); }
+            if (Math.Abs(delta.Z) > maxdist) { primidx = 2; maxdist = Math.Abs(delta.Z); }
             if (maxdist == 0) return;
             
             // secidx1 and secidx2 are the remaining indicies out of [0,1,2].
