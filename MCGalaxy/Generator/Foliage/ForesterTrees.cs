@@ -187,7 +187,7 @@ namespace MCGalaxy.Generator.Foliage {
                 FoilageCluster(coord);
             }
             foreach (Vec3S32 coord in foliage_coords) {
-                Place(coord.X, coord.Y, coord.Z, Block.trunk);
+                Place(coord.X, coord.Y, coord.Z, Block.leaf);
             }
         }
 
@@ -301,9 +301,9 @@ namespace MCGalaxy.Generator.Foliage {
         /// <remarks> Primarily, sets up the foliage cluster locations. </remarks>
         public override void Prepare() {
             Vec3S32 treeposition = pos;
-            trunkradius = (float)(0.618 * Math.Sqrt(height * TRUNKTHICKNESS));
+            trunkradius = (float)(Math.Sqrt(height * TRUNKTHICKNESS));
             if (trunkradius < 1) trunkradius = 1;
-            trunkheight = height;
+            trunkheight = 0.618f * height;
             int ystart = treeposition.Y, yend = treeposition.Y + height;
             
             branchdensity = BRANCHDENSITY / FOLIAGEDENSITY;
