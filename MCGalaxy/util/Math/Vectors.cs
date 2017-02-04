@@ -124,15 +124,14 @@ namespace MCGalaxy {
         
         public int this[int index] {
             get {
-                if (index == 0) return X;
-                else if (index == 1) return Y;
-                else if (index == 2) return Z;
-                return 0;
+                if (index == 0) { return X; }
+                else if (index == 1) { return Y; }
+                else { return Z; }
             }         
             set {
                 if (index == 0) { X = value; }
                 else if (index == 1) { Y = value; }
-                else if (index == 2) { Z = value; }
+                else { Z = value; }
             }
         }
         
