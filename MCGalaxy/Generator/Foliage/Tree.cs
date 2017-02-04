@@ -24,18 +24,22 @@ namespace MCGalaxy.Generator.Foliage {
     public delegate void TreeOutput(ushort x, ushort y, ushort z, byte block);
     
     public abstract class Tree {
-        protected internal byte height, size;
+        protected internal int height, size;
         protected Random rnd;
         
-        /// <summary> Calculates a random default value (usually used for height) for this tree. </summary>
-        public abstract int DefaultValue(Random rnd);
-        
-        /// <summary> Minimum allowed value (usually used for height) for this tree. </summary>
-        public virtual int MinValue { get { return 3; } }
 
-        /// <summary> Maximum allowed value (usually used for height) for this tree. </summary>
-        public virtual int MaxValue { get { return 100; } }
+        /// <summary> Minimum allowed size (usually means height) for this tree. </summary>
+        public virtual int MinSize { get { return 3; } }
+
+        /// <summary> Maximum allowed size (usually means height) for this tree. </summary>
+        public virtual int MaxSize { get { return 100; } }
         
+        /// <summary> Estimated the maximum number of blocks affected by this tree. </summary>
+        public abstract int EstimateBlocksAffected();
+        
+        /// <summary> Calculates a random default size (usually means height) for this tree. </summary>
+        public abstract int DefaultSize(Random rnd);
+                
         /// <summary> Initalises data (e.g. height and size) for this tree using the input value. </summary>
         public abstract void SetData(Random rnd, int value);
 

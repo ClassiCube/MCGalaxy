@@ -25,7 +25,11 @@ namespace MCGalaxy.Generator.Foliage {
         int numBranches, maxExtent, maxBranchHeight, trunkHeight;
         List<Vec3S32> branch = new List<Vec3S32>();
         
-        public override int DefaultValue(Random rnd) { return rnd.Next(0, 11); }
+        public override int MinSize { get { return 0; } }
+                
+        public override int EstimateBlocksAffected() { return height * height * height; }
+                
+        public override int DefaultSize(Random rnd) { return rnd.Next(0, 11); }
         
         public override void SetData(Random rnd, int value) {
             numBranches = value;
@@ -104,7 +108,7 @@ namespace MCGalaxy.Generator.Foliage {
             LineDrawOp.DrawLine(p1.X, p1.Y, p1.Z, 100, p2.X, p2.Y, p2.Z, branch);
             
             foreach (Vec3S32 P in branch) {
-            	output((ushort)P.X, (ushort)P.Y, (ushort)P.Z, Block.trunk);
+                output((ushort)P.X, (ushort)P.Y, (ushort)P.Z, Block.trunk);
             }
             branch.Clear();
         }

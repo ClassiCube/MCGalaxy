@@ -124,7 +124,7 @@ namespace MCGalaxy.Blocks.Physics {
             Tree tree = Tree.Find(lvl.TreeType);
             if (tree == null) tree = new NormalTree();
             
-            tree.SetData(rand, tree.DefaultValue(rand));
+            tree.SetData(rand, tree.DefaultSize(rand));
             tree.Generate(x, y, z, (xT, yT, zT, bT) =>
                         {
                             if (bT == Block.leaf && lvl.GetTile(xT, yT, zT) != Block.air) return;
