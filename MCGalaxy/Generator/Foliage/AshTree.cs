@@ -69,13 +69,13 @@ namespace MCGalaxy.Generator.Foliage {
             op.SetMarks(marks);
             op.Perform(marks, brush, b => output(b.X, b.Y, b.Z, b.Block));
             
-            Vec3S32 p1 = new Vec3S32(x, branchStart, z);
+            Vec3S32 p1 = new Vec3S32(x, y + branchStart, z);
             Vec3S32 p2 = new Vec3S32(x + dx, y + branchMax, z + dz);
             Line(p1, p2, output);
         }
         
         void Line(Vec3S32 p1, Vec3S32 p2, TreeOutput output) {
-            LineDrawOp.DrawLine(p1.X, p1.Y, p1.Z, 100, p2.X, p2.Y, p2.Z, branch);
+            LineDrawOp.DrawLine(p1.X, p1.Y, p1.Z, 10000, p2.X, p2.Y, p2.Z, branch);
             
             foreach (Vec3S32 P in branch) {
                 output((ushort)P.X, (ushort)P.Y, (ushort)P.Z, Block.trunk);

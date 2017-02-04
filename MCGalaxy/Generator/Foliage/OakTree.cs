@@ -105,7 +105,7 @@ namespace MCGalaxy.Generator.Foliage {
         }
         
         void Line(Vec3S32 p1, Vec3S32 p2, TreeOutput output) {
-            LineDrawOp.DrawLine(p1.X, p1.Y, p1.Z, 100, p2.X, p2.Y, p2.Z, branch);
+            LineDrawOp.DrawLine(p1.X, p1.Y, p1.Z, 10000, p2.X, p2.Y, p2.Z, branch);
             
             foreach (Vec3S32 P in branch) {
                 output((ushort)P.X, (ushort)P.Y, (ushort)P.Z, Block.trunk);
