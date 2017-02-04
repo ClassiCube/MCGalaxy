@@ -333,8 +333,8 @@ namespace MCGalaxy.Generator.Foliage {
     public class RoundTree : ProceduralTree {
         
         public override void Prepare() {
-            branchslope = 0.382f;
             base.Prepare();
+            branchslope = 0.382f;            
             foliage_shape = new [] { 2, 3, 3, 2.5f, 1.6f };
             trunkradius = trunkradius * 0.8f;
             trunkheight = TRUNKHEIGHT * trunkheight;
@@ -365,8 +365,8 @@ namespace MCGalaxy.Generator.Foliage {
     public class ConeTree : ProceduralTree {
 
         public override void Prepare() {
-            branchslope = 0.15f;
             base.Prepare();
+            branchslope = 0.15f;            
             foliage_shape = new [] { 3, 2.6f, 2, 1 };
             trunkradius = trunkradius * 0.5f;
         }
@@ -387,9 +387,9 @@ namespace MCGalaxy.Generator.Foliage {
     public class RainforestTree : ProceduralTree {
 
         public override void Prepare() {
-            foliage_shape = new [] { 3.4f, 2.6f };
-            branchslope = 1.0f;
             base.Prepare();
+            foliage_shape = new [] { 3.4f, 2.6f };
+            branchslope = 1.0f;            
             trunkradius = trunkradius * 0.382f;
             trunkheight = trunkheight * 0.9f;
         }
@@ -416,8 +416,8 @@ namespace MCGalaxy.Generator.Foliage {
     public class MangroveTree : RoundTree {
 
         public override void Prepare() {
-            branchslope = 1.0f;
             base.Prepare();
+            branchslope = 1.0f;          
             trunkradius = trunkradius * 0.618f;
         }
         
