@@ -283,7 +283,7 @@ namespace MCGalaxy.Generator.Foliage {
                     
                     // Make the root buttress.
                     TaperedCylinder(new Vec3S32(thisx, starty, thisz), new Vec3S32(x, midy, z),
-                        thisbuttressradius, thisbuttressradius);
+                                    thisbuttressradius, thisbuttressradius);
                 }
             } else {
                 // If root buttresses are turned off, set the trunk radius to normal size.
@@ -332,9 +332,11 @@ namespace MCGalaxy.Generator.Foliage {
     /// <summary> This kind of tree is designed to resemble a deciduous tree. </summary>
     public class RoundTree : ProceduralTree {
         
+        public override int DefaultValue(Random rnd) { return rnd.Next(6, 11); }
+        
         public override void Prepare() {
             base.Prepare();
-            branchslope = 0.382f;            
+            branchslope = 0.382f;
             foliage_shape = new [] { 2, 3, 3, 2.5f, 1.6f };
             trunkradius = trunkradius * 0.8f;
             trunkheight = TRUNKHEIGHT * trunkheight;
@@ -364,9 +366,11 @@ namespace MCGalaxy.Generator.Foliage {
     /// <summary> This kind of tree is designed to resemble a conifer tree. </summary>
     public class ConeTree : ProceduralTree {
 
+        public override int DefaultValue(Random rnd) { return rnd.Next(15, 31); }
+        
         public override void Prepare() {
             base.Prepare();
-            branchslope = 0.15f;            
+            branchslope = 0.15f;
             foliage_shape = new [] { 3, 2.6f, 2, 1 };
             trunkradius = trunkradius * 0.5f;
         }
@@ -386,10 +390,12 @@ namespace MCGalaxy.Generator.Foliage {
     /// <summary> This kind of tree is designed to resemble a rainforest tree. </summary>
     public class RainforestTree : ProceduralTree {
 
+        public override int DefaultValue(Random rnd) { return rnd.Next(6, 11); }
+        
         public override void Prepare() {
             base.Prepare();
             foliage_shape = new [] { 3.4f, 2.6f };
-            branchslope = 1.0f;            
+            branchslope = 1.0f;
             trunkradius = trunkradius * 0.382f;
             trunkheight = trunkheight * 0.9f;
         }
@@ -415,9 +421,11 @@ namespace MCGalaxy.Generator.Foliage {
     /// <summary> This kind of tree is designed to resemble a mangrove tree. </summary>
     public class MangroveTree : RoundTree {
 
+        public override int DefaultValue(Random rnd) { return rnd.Next(10, 21); }
+        
         public override void Prepare() {
             base.Prepare();
-            branchslope = 1.0f;          
+            branchslope = 1.0f;
             trunkradius = trunkradius * 0.618f;
         }
         
@@ -437,7 +445,7 @@ namespace MCGalaxy.Generator.Foliage {
             height = (byte)value;
             size = 1;
             this.rnd = rnd;
-        }        
+        }
         
         public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
             for (int dy = 0; dy <= height; dy++) {
@@ -461,7 +469,7 @@ namespace MCGalaxy.Generator.Foliage {
             height = (byte)value;
             size = 2;
             this.rnd = rnd;
-        }        
+        }
         
         public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
             for (int dy = 0; dy <= height; dy++)
@@ -474,5 +482,5 @@ namespace MCGalaxy.Generator.Foliage {
                 output((ushort)(x + dx), (ushort)(y + height), (ushort)(z + dz), Block.leaf);
             }
         }
-    }    
+    }
 }
