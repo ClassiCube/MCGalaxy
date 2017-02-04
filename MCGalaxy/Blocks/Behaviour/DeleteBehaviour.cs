@@ -23,8 +23,8 @@ namespace MCGalaxy.Blocks {
     
     internal static class DeleteBehaviour {
 
-        internal static bool RocketStart(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (p.level.physics < 2 || p.level.physics == 5) { p.RevertBlock(x, y, z); return true; }
+        internal static void RocketStart(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (p.level.physics < 2 || p.level.physics == 5) { p.RevertBlock(x, y, z); return; }
             
             int dx = 0, dy = 0, dz = 0;
             p.RevertBlock(x, y, z);
@@ -41,11 +41,10 @@ namespace MCGalaxy.Blocks {
                 p.level.Blockchange((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ), Block.rockethead);
                 p.level.Blockchange((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz ), Block.lava_fire);
             }
-            return true;
         }
         
-        internal static bool Firework(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (p.level.physics == 0 || p.level.physics == 5) { p.RevertBlock(x, y, z); return true; }
+        internal static void Firework(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (p.level.physics == 0 || p.level.physics == 5) { p.RevertBlock(x, y, z); return; }
             
             Random rand = new Random();
             ushort x2 = (ushort)(x + rand.Next(0, 2) - 1);
@@ -61,21 +60,19 @@ namespace MCGalaxy.Blocks {
                 args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 100;
                 p.level.Blockchange(x2, (ushort)(y + 1), z2, Block.lavastill, false, args);
             }
-            p.RevertBlock(x, y, z); return true;
-        }
-        
-        internal static bool C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
-            C4Physics.BlowUp(new ushort[] { x, y, z }, p.level);
-            p.ChangeBlock(x, y, z, Block.air, 0);
-            return false;
-        }
-        
-        internal static bool RevertDoor(Player p, byte block, ushort x, ushort y, ushort z) {
             p.RevertBlock(x, y, z);
-            return true;
         }
         
-        internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static void C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
+            C4Physics.BlowUp(new ushort[] { x, y, z }, p.level);
+            p.ChangeBlock(x, y, z, Block.air, 0); // if block updated, return false so we add to blockdb
+        }
+        
+        internal static void RevertDoor(Player p, byte block, ushort x, ushort y, ushort z) {
+            p.RevertBlock(x, y, z);
+        }
+        
+        internal static void Door(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics != 0) {
                 bool isExt = false;
                 if (block == Block.custom_block) {
@@ -89,44 +86,39 @@ namespace MCGalaxy.Blocks {
             } else {
                 p.RevertBlock(x, y, z);
             }
-            return true;
         }
         
-        internal static bool ODoor(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static void ODoor(Player p, byte block, ushort x, ushort y, ushort z) {
             if (block == Block.odoor8 || block == Block.odoor8_air) {
                 p.level.Blockchange(x, y, z, Block.Props[block].ODoorId, 0);
             } else {
                 p.RevertBlock(x, y, z);
             }
-            return true;
         }
         
-        internal static bool DoPortal(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (Portal.Handle(p, x, y, z)) return true;
+        internal static void DoPortal(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (Portal.Handle(p, x, y, z)) return;
             p.ChangeBlock(x, y, z, Block.air, 0);
-            return false;
         }
         
-        internal static bool DoMessageBlock(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (MessageBlock.Handle(p, x, y, z, true)) return true;
+        internal static void DoMessageBlock(Player p, byte block, ushort x, ushort y, ushort z) {
+            if (MessageBlock.Handle(p, x, y, z, true)) return;
             p.ChangeBlock(x, y, z, Block.air, 0);
-            return false;
         }
         
-        internal static bool CustomBlock(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static void CustomBlock(Player p, byte block, ushort x, ushort y, ushort z) {
             byte extBlock = p.level.GetExtTile(x, y, z);
             if (p.level.CustomBlockProps[extBlock].IsPortal) {
-                return DoPortal(p, block, x, y, z);
+                DoPortal(p, block, x, y, z);
             } else if (p.level.CustomBlockProps[extBlock].IsMessageBlock) {
-                return DoMessageBlock(p, block, x, y, z);
+                DoMessageBlock(p, block, x, y, z);
             } else if (p.level.CustomBlockProps[extBlock].IsTDoor) {
-                return RevertDoor(p, block, x, y, z);
+                RevertDoor(p, block, x, y, z);
             } else if (p.level.CustomBlockProps[extBlock].IsDoor) {
-                return Door(p, block, x, y, z);
+                Door(p, block, x, y, z);
+            } else {
+                p.ChangeBlock(x, y, z, Block.air, 0);
             }
-            
-            p.ChangeBlock(x, y, z, Block.air, 0);
-            return false;
         }
     }
 }

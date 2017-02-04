@@ -22,18 +22,18 @@ namespace MCGalaxy.Blocks {
     
     internal static class PlaceBehaviour {
 
-        internal static bool Grass(Player p, byte block, ushort x, ushort y, ushort z) {
-            return DirtGrass(p, Block.grass, x, y, z);
+        internal static void Grass(Player p, byte block, ushort x, ushort y, ushort z) {
+            DirtGrass(p, Block.grass, x, y, z);
         }
         
-        internal static bool Dirt(Player p, byte block, ushort x, ushort y, ushort z) {
-            return DirtGrass(p, Block.dirt, x, y, z);
+        internal static void Dirt(Player p, byte block, ushort x, ushort y, ushort z) {
+            DirtGrass(p, Block.dirt, x, y, z);
         }
         
-        static bool DirtGrass(Player p, byte block, ushort x, ushort y, ushort z) {
+        static void DirtGrass(Player p, byte block, ushort x, ushort y, ushort z) {
             Level lvl = p.level;
             if (!lvl.GrassGrow || !(lvl.physics == 0 || lvl.physics == 5)) {
-                p.ChangeBlock(x, y, z, block, 0); return false;
+                p.ChangeBlock(x, y, z, block, 0); return;
             }
             
             byte above = lvl.GetTile(x, (ushort)(y + 1), z), extAbove = 0;
@@ -43,51 +43,49 @@ namespace MCGalaxy.Blocks {
             block = (above == Block.Invalid || Block.LightPass(above, extAbove, lvl.CustomBlockDefs))
                 ? Block.grass : Block.dirt;
             p.ChangeBlock(x, y, z, block, 0);
-            return false;
         }
         
         
-        internal static bool Stairs(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static void Stairs(Player p, byte block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)
                 || p.level.GetTile(x, (ushort)(y - 1), z) != Block.staircasestep) {
-                p.ChangeBlock(x, y, z, Block.staircasestep, 0); return false;
+               p.ChangeBlock(x, y, z, Block.staircasestep, 0); return;
             }
             
-            p.SendBlockchange(x, y, z, Block.air); //send the air block back only to the user.
+            p.SendBlockchange(x, y, z, Block.air); // send the air block back only to the user
             p.ChangeBlock(x, (ushort)(y - 1), z, Block.staircasefull, 0);
-            return false;
         }
         
-        internal static bool CobbleStairs(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static void CobbleStairs(Player p, byte block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)
                 || p.level.GetTile(x, (ushort)(y - 1), z) != Block.cobblestoneslab) {
-                p.ChangeBlock(x, y, z, Block.cobblestoneslab, 0); return false;
+                p.ChangeBlock(x, y, z, Block.cobblestoneslab, 0); return;
             }
             
-            p.SendBlockchange(x, y, z, Block.air); //send the air block back only to the user.
+            p.SendBlockchange(x, y, z, Block.air); // send the air block back only to the user
             p.ChangeBlock(x, (ushort)(y - 1), z, Block.stone, 0);
-            return false;
         }
         
-        internal static bool C4(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static void C4(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0 || p.level.physics == 5) {
-                p.RevertBlock(x, y, z); return false;
+                p.RevertBlock(x, y, z); return;
             }
             
             C4Data c4 = C4Physics.Find(p.level, p.c4circuitNumber);
             if (c4 != null) c4.list.Add(p.level.PosToInt(x, y, z));
-            p.ChangeBlock(x, y, z, Block.c4, 0); return false;
+            p.ChangeBlock(x, y, z, Block.c4, 0);
         }
         
-        internal static bool C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static void C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0 || p.level.physics == 5) {
-                p.c4circuitNumber = -1; p.RevertBlock(x, y, z); return false;
+                p.c4circuitNumber = -1; 
+                p.RevertBlock(x, y, z); return;
             }
             
             C4Data c4 = C4Physics.Find(p.level, p.c4circuitNumber);
             if (c4 != null) c4.detIndex = p.level.PosToInt(x, y, z);
             p.c4circuitNumber = -1; 
-            p.ChangeBlock(x, y, z, Block.c4det, 0); return false;
+            p.ChangeBlock(x, y, z, Block.c4det, 0);
         }
     }
 }

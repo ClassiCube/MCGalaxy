@@ -48,9 +48,8 @@ namespace MCGalaxy {
         
         public void ManualChange(ushort x, ushort y, ushort z, byte action,
                                  byte block, byte extBlock, bool checkPlaceDist) {
-            byte old = level.GetTile(x, y, z), oldExt = 0;
-            if (old == Block.Invalid) return;
-            if (old == Block.custom_block) oldExt = level.GetExtTile(x, y, z);
+            byte oldB = level.GetTile(x, y, z);
+            if (oldB == Block.Invalid) return;
                 
             if (jailed || !agreed || !canBuild) { RevertBlock(x, y, z); return; }
             if (level.IsMuseum && Blockchange == null) return;
@@ -66,7 +65,7 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            if (Server.zombie.Running && Server.zombie.HandlesManualChange(this, x, y, z, action, block, old))
+            if (Server.zombie.Running && Server.zombie.HandlesManualChange(this, x, y, z, action, block, oldB))
                 return;
 
             if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) ) {
@@ -83,7 +82,7 @@ namespace MCGalaxy {
             OnBlockChangeEvent.Call(this, x, y, z, block, extBlock);
             if (cancelBlock) { cancelBlock = false; return; }
 
-            if (old >= Block.air_flood && old <= Block.air_door_air) {
+            if (oldB >= Block.air_flood && oldB <= Block.air_door_air) {
                 SendMessage("Block is active, you cannot disturb it.");
                 RevertBlock(x, y, z); return;
             }
@@ -104,35 +103,25 @@ namespace MCGalaxy {
                 }
             }
 
-            if (!CheckManualChange(old, block, doDelete)) {
+            if (!CheckManualChange(oldB, block, doDelete)) {
                 RevertBlock(x, y, z); return;
             }
 
             byte blockRaw = block;
             if (block < Block.CpeCount) block = bindings[block];
-            ushort flags = BlockDBFlags.ManualPlace;
-            if (painting && !doDelete) flags = BlockDBFlags.Painted;
             
             //Ignores updating blocks that are the same and send block only to the player
-            byte newBlock = (painting || action == 1) ? block : (byte)0;
-            if (old == newBlock && (painting || blockRaw != block)) {
-                if (old != Block.custom_block || extBlock == level.GetExtTile(x, y, z)) {
+            byte newB = (painting || action == 1) ? block : Block.air;
+            if (oldB == newB && (painting || blockRaw != block)) {
+                if (oldB != Block.custom_block || extBlock == level.GetExtTile(x, y, z)) {
                     RevertBlock(x, y, z); return;
                 }
             }
             
-            byte heldExt = 0;
-            byte heldBlock = GetActualHeldBlock(out heldExt);
             if (doDelete) {
-                if (DeleteBlock(old, x, y, z, block, extBlock)) {
-                    level.BlockDB.Cache.Add(this, x, y, z, flags,
-                                            old, oldExt, 0, 0);
-                }
+                DeleteBlock(oldB, x, y, z, block, extBlock);
             } else {
-                if (PlaceBlock(old, x, y, z, block, extBlock)) {
-                    level.BlockDB.Cache.Add(this, x, y, z, flags, 
-                                            old, oldExt, heldBlock, heldExt);
-                }
+                PlaceBlock(oldB, x, y, z, block, extBlock);
             }
         }
         
@@ -149,49 +138,64 @@ namespace MCGalaxy {
             return true;
         }
         
-        bool DeleteBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
-            if (deleteMode) { return ChangeBlock(x, y, z, Block.air, 0); }
-            bool changed = true;
+        void DeleteBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
+            if (deleteMode) { ChangeBlock(x, y, z, Block.air, 0); return; }
 
             HandleDelete handler = BlockBehaviour.deleteHandlers[old];
             if (handler != null) {
-                if (handler(this, old, x, y, z)) return false;
+                handler(this, old, x, y, z);
             } else {
-                changed = ChangeBlock(x, y, z, Block.air, 0);
+                ChangeBlock(x, y, z, Block.air, 0);
             }
-
-            bool autoDelete = level.GrassGrow && (level.physics == 0 || level.physics == 5);
-            if (autoDelete && level.GetTile(x, (ushort)(y - 1), z) == Block.dirt)
-                ChangeBlock(x, (ushort)(y - 1), z, Block.grass, 0);
-            return changed;
         }
 
-        bool PlaceBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
+        void PlaceBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
             if (modeType != 0) {
                 if (old == modeType) SendBlockchange(x, y, z, old);
                 else ChangeBlock(x, y, z, modeType, 0);
-                return true;
+                return;
             }
             
             HandlePlace handler = BlockBehaviour.placeHandlers[block];
             if (handler != null) {
-                if (handler(this, old, x, y, z)) return false;
+                handler(this, old, x, y, z);
             } else {
-                return ChangeBlock(x, y, z, block, extBlock);
+                ChangeBlock(x, y, z, block, extBlock);
+            }
+        }
+        
+        /// <summary> Updates the block at the given position, mainly intended for manual changes by the player. </summary>
+        /// <remarks> Adds to the BlockDB. Also turns block below to grass/dirt depending on light. </remarks>
+        /// <returns> true if block was updated, false if not. </returns>
+        public bool ChangeBlock(ushort x, ushort y, ushort z, byte block, byte extBlock) {
+            byte old = level.GetTile(x, y, z), extOld = 0;
+            if (old == Block.custom_block) extOld = level.GetExtTile(x, y, z);
+            
+            if (!level.DoBlockchange(this, x, y, z, block, extBlock)) return false;
+            Player.GlobalBlockchange(level, x, y, z, block, extBlock);
+            
+            ushort flags = BlockDBFlags.ManualPlace;
+            if (painting && Replacable(old)) flags = BlockDBFlags.Painted;
+            level.BlockDB.Cache.Add(this, x, y, z, flags, old, extOld, block, extBlock);
+            
+            
+            bool autoGrass = level.GrassGrow && (level.physics == 0 || level.physics == 5);
+            if (!autoGrass) return true;
+            
+            byte below = level.GetTile(x, (ushort)(y - 1), z);
+            if (below == Block.dirt && block == Block.air) {
+                level.Blockchange(this, x, (ushort)(y - 1), z, Block.grass);
+            }
+            if (below == Block.grass && !Block.LightPass(block, extBlock, level.CustomBlockDefs)) {
+                level.Blockchange(this, x, (ushort)(y - 1), z, Block.dirt);
             }
             return true;
         }
         
-        /// <summary> Updates the block at the given position, also turning the block below to dirt if the block above blocks light. </summary>
-        internal bool ChangeBlock(ushort x, ushort y, ushort z, byte block, byte extBlock) {
-            if (!level.DoBlockchange(this, x, y, z, block, extBlock)) return false;
-            Player.GlobalBlockchange(level, x, y, z, block, extBlock);
-            
-            if (level.GrassGrow && level.GetTile(x, (ushort)(y - 1), z) == Block.grass
-                && !Block.LightPass(block, extBlock, level.CustomBlockDefs)) {
-                level.Blockchange(this, x, (ushort)(y - 1), z, Block.dirt);
-            }
-            return true;
+        
+        static bool Replacable(byte block) {
+            block = Block.Convert(block);
+            return block == Block.air || (block >= Block.water && block <= Block.lavastill);
         }
         
         byte[] ProcessReceived(byte[] buffer) {
