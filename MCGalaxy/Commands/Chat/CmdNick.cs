@@ -32,7 +32,10 @@ namespace MCGalaxy.Commands {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("xnick", "-own") }; }
         }
-        public override void Use(Player p, string message) { UseBotOrPlayer(p, message, "nick"); }
+        public override void Use(Player p, string message) {
+        	if (p != null && p.muted) { Player.Message(p, "Cannot use /nick while muted."); return; }
+        	UseBotOrPlayer(p, message, "nick");
+        }
 
         protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
             string newName = args.Length > 2 ? args[2] : "";

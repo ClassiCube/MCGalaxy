@@ -26,7 +26,10 @@ namespace MCGalaxy.Commands {
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the login message of others") }; }
         }
-        public override void Use(Player p, string message) { UsePlayer(p, message, "login message"); }
+        public override void Use(Player p, string message) {
+        	if (p != null && p.muted) { Player.Message(p, "Cannot use /loginmessage while muted."); return; }
+        	UsePlayer(p, message, "login message");
+        }
         
         protected override void SetPlayerData(Player p, Player who, string[] args) {
             if (args.Length == 1) {
