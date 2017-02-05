@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
             if (message == "" || message.IndexOf(' ') != -1) { Help(p); return; }
-            if (p.muted) { Player.Message(p, "You cannot start votes while muted."); }
+            if (!MessageCmd.CanSpeak(p, name)) return;
 
             if (Server.voteKickInProgress) { Player.Message(p, "Please wait for the current vote to finish!"); return; }
 

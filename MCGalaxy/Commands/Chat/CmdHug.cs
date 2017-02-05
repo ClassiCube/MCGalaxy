@@ -28,7 +28,6 @@ namespace MCGalaxy.Commands {
             if (p != null && who.name == p.name) {
                 Player.Message(p, "You cannot hug yourself, silly!"); return;
             }
-            if (p != null && p.muted) { Player.Message(p, "Cannot use /hug while muted."); return; }
             
             string hugType = null;
             if (args.Length > 1) {

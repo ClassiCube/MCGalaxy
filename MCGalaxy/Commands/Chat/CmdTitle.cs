@@ -29,9 +29,10 @@ namespace MCGalaxy.Commands {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("xtitle", "-own") }; }
         }
+        
         public override void Use(Player p, string message) {
-        	if (p != null && p.muted) { Player.Message(p, "Cannot use /title while muted."); return; }
-        	UsePlayer(p, message, "title");
+            if (!MessageCmd.CanSpeak(p, name)) return;
+            UsePlayer(p, message, "title");
         }
         
         protected override void SetPlayerData(Player p, Player who, string[] args) {

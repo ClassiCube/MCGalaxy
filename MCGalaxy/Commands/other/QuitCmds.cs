@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             string msg = message != "" ? "Left the game: " + message : "Left the game.";
-            if (p.muted) { msg = "Left the game."; }
+            if (p.muted) msg = "Left the game.";
             p.Leave(msg);
         }
         

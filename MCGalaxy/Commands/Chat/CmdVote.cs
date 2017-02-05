@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            if (p.muted) { Player.Message(p, "You cannot start votes while muted."); }
+            if (!MessageCmd.CanSpeak(p, name)) return;
             
             if (Server.voting) {
                 Player.Message(p, "A vote is in progress!"); return;

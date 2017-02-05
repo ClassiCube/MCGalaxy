@@ -26,9 +26,10 @@ namespace MCGalaxy.Commands {
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the logout message of others") }; }
         }
+        
         public override void Use(Player p, string message) {
-        	if (p != null && p.muted) { Player.Message(p, "Cannot use /logoutmessage while muted."); return; }
-        	UsePlayer(p, message, "logout message");
+            if (!MessageCmd.CanSpeak(p, name)) return;
+            UsePlayer(p, message, "logout message");
         }
         
         protected override void SetPlayerData(Player p, Player who, string[] args) {

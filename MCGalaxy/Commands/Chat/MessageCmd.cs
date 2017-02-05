@@ -55,10 +55,10 @@ namespace MCGalaxy.Commands {
             if (p == null) return true;
             
             if (p.muted) { 
-                Player.Message(p, "Cannot use /{0} while muted.", cmd); return false; 
+                Player.Message(p, "Cannot use %T/{0} %Swhile muted.", cmd); return false; 
             }
             if (Server.chatmod && !p.voice) { 
-                Player.Message(p, "Cannot use /{0} when chat moderation is enabled.", cmd); return false; 
+                Player.Message(p, "Cannot use %T/{0} %Swhile chat moderation is on.", cmd); return false; 
             }
             return true;
         }
