@@ -118,6 +118,7 @@ namespace MCGalaxy {
                 }
             }
             
+            if (modeType != 0) block = modeType;
             if (doDelete) {
                 DeleteBlock(oldB, x, y, z, block, extBlock);
             } else {
@@ -150,12 +151,6 @@ namespace MCGalaxy {
         }
 
         void PlaceBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
-            if (modeType != 0) {
-                if (old == modeType) SendBlockchange(x, y, z, old);
-                else ChangeBlock(x, y, z, modeType, 0);
-                return;
-            }
-            
             HandlePlace handler = BlockBehaviour.placeHandlers[block];
             if (handler != null) {
                 handler(this, old, x, y, z);

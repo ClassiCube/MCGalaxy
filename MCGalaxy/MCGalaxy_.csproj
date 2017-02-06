@@ -335,7 +335,6 @@
     <Compile Include="Commands\Moderation\ModActionCmd.cs" />
     <Compile Include="Commands\other\CmdAscend.cs" />
     <Compile Include="Commands\other\CmdBack.cs" />
-    <Compile Include="Commands\other\CmdC4.cs" />
     <Compile Include="Commands\other\CmdChain.cs" />
     <Compile Include="Commands\other\cmdCTFADSFD.cs" />
     <Compile Include="Commands\other\CmdDescend.cs" />

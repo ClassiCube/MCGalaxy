@@ -37,7 +37,7 @@ namespace MCGalaxy.Blocks {
             }
             
             byte above = lvl.GetTile(x, (ushort)(y + 1), z), extAbove = 0;
-            if (above == Block.custom_block) 
+            if (above == Block.custom_block)
                 extAbove = lvl.GetExtTile(x, (ushort)(y + 1), z);
             
             block = (above == Block.Invalid || Block.LightPass(above, extAbove, lvl.CustomBlockDefs))
@@ -49,7 +49,7 @@ namespace MCGalaxy.Blocks {
         internal static void Stairs(Player p, byte block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)
                 || p.level.GetTile(x, (ushort)(y - 1), z) != Block.staircasestep) {
-               p.ChangeBlock(x, y, z, Block.staircasestep, 0); return;
+                p.ChangeBlock(x, y, z, Block.staircasestep, 0); return;
             }
             
             p.SendBlockchange(x, y, z, Block.air); // send the air block back only to the user
@@ -66,9 +66,25 @@ namespace MCGalaxy.Blocks {
             p.ChangeBlock(x, (ushort)(y - 1), z, Block.stone, 0);
         }
         
+        
         internal static void C4(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0 || p.level.physics == 5) {
                 p.RevertBlock(x, y, z); return;
+            }
+            
+            // Use red wool to detonate c4
+            byte held = p.RawHeldBlock;
+            if (held < Block.CpeCount) held = p.bindings[held];
+            if (held == Block.red) {
+                Player.Message(p, "Placed detonator block, delete it to detonate.");
+                C4Det(p, Block.c4det, x, y, z); return;
+            }
+            
+            if (p.c4circuitNumber == -1) {
+                sbyte num = C4Physics.NextCircuit(p.level);
+                p.level.C4list.Add(new C4Data(num));
+                p.c4circuitNumber = num;
+                Player.Message(p, "Place more blocks for more c4, then place a &c{0} %Sblock for the detonator.", Block.Name(Block.red));
             }
             
             C4Data c4 = C4Physics.Find(p.level, p.c4circuitNumber);
@@ -78,13 +94,13 @@ namespace MCGalaxy.Blocks {
         
         internal static void C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0 || p.level.physics == 5) {
-                p.c4circuitNumber = -1; 
+                p.c4circuitNumber = -1;
                 p.RevertBlock(x, y, z); return;
             }
             
             C4Data c4 = C4Physics.Find(p.level, p.c4circuitNumber);
             if (c4 != null) c4.detIndex = p.level.PosToInt(x, y, z);
-            p.c4circuitNumber = -1; 
+            p.c4circuitNumber = -1;
             p.ChangeBlock(x, y, z, Block.c4det, 0);
         }
     }

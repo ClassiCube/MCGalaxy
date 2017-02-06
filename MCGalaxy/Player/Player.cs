@@ -32,7 +32,7 @@ namespace MCGalaxy {
         public byte GetActualHeldBlock(out byte extBlock) {
             byte block = RawHeldBlock;
             extBlock = 0;
-            if (modeType != 0) return modeType;    
+            if (modeType != 0) return modeType;
             
             if (block < Block.CpeCount) return bindings[block];
             extBlock = block;
