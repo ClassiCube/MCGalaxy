@@ -57,7 +57,7 @@ namespace MCGalaxy.Blocks {
             if (b == Block.staircasestep) return 8;
             if (b == Block.cobblestoneslab) return 8;
             if (b == Block.snow) return 2;
-            return 15;
+            return 16;
         }
         
         static bool FullBright(byte b) {
