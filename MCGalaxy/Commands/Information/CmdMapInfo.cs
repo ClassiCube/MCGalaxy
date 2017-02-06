@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "  Created {0} ago, no backups yet", createDelta.Shorten());
             }
             
-            Player.Message(p, "  BlockDB (Used for /b) is {0}", data.blockDB ? "&aEnabled" : "&cDisabled");
+            Player.Message(p, "  BlockDB (Used for /b) is {0}", data.BlockDB ? "&aEnabled" : "&cDisabled");
             ShowPermissions(p, data);
             Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.Name);
             ShowZombieSurvival(p, data);
@@ -186,27 +186,32 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "Clouds speed: &b{0}%%S, Weather speed: &b{1}%",
                            (data.CloudsSpeed / 256f).ToString("F2"),
                            (data.WeatherSpeed / 256f).ToString("F2"));
-            Player.Message(p, "Weather fade rate: &b{0}%",
-                           (data.WeatherFade / 128).ToString("F2"));
+            Player.Message(p, "Weather fade rate: &b{0}%%S, Exponential fog: {1}",
+                           (data.WeatherFade / 128).ToString("F2"),
+                           data.ExpFog ? "&aON" : "&cOFF");
         }
         
         class MapInfoData {
             public ushort Width, Height, Length;
             public int Physics;
-            public bool Guns, blockDB = true;
+            public bool Guns, BlockDB = true;
             public string Name, RealmOwner;
+            
             // Env data
             public string TerrainUrl, TextureUrl;
             public string Fog, Sky, Clouds, Light, Shadow;
             public int EdgeLevel, CloudsHeight, MaxFog;
             public int CloudsSpeed = 256, WeatherSpeed = 256, WeatherFade = 128;
             public byte EdgeBlock = Block.blackrock, HorizonBlock = Block.water;
+            public bool ExpFog;
+            
             // Permissions data
             public LevelPermission visit, build, visitmax, buildmax;
             public List<string> VisitWhitelist = new List<string>();
             public List<string> VisitBlacklist = new List<string>();
             public List<string> BuildWhitelist = new List<string>();
             public List<string> BuildBlacklist = new List<string>();
+            
             // Zombie data
             public string Authors;
             public int TotalRounds, HumanRounds;
@@ -215,7 +220,7 @@ namespace MCGalaxy.Commands {
             public void FromOnlineLevel(Level lvl) {
                 Name = lvl.name;
                 Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
-                Physics = lvl.physics; Guns = lvl.guns; blockDB = lvl.UseBlockDB;
+                Physics = lvl.physics; Guns = lvl.guns; BlockDB = lvl.UseBlockDB;
                 RealmOwner = lvl.RealmOwner;
                 
                 visit = lvl.permissionvisit; build = lvl.permissionbuild;
@@ -228,7 +233,7 @@ namespace MCGalaxy.Commands {
                 Fog = lvl.FogColor; Sky = lvl.SkyColor; Clouds = lvl.CloudColor;
                 Light = lvl.LightColor; Shadow = lvl.ShadowColor;
                 EdgeLevel = lvl.EdgeLevel; CloudsHeight = lvl.CloudsHeight;
-                MaxFog = lvl.MaxFogDistance;
+                MaxFog = lvl.MaxFogDistance; ExpFog = lvl.ExpFog;
                 CloudsSpeed = lvl.CloudsSpeed; WeatherSpeed = lvl.WeatherSpeed;
                 EdgeBlock = (byte)lvl.EdgeBlock; HorizonBlock = (byte)lvl.HorizonBlock;
                 WeatherFade = lvl.WeatherFade;
@@ -259,7 +264,7 @@ namespace MCGalaxy.Commands {
                 switch (key.ToLower()) {
                     case "physics": Physics = int.Parse(value); break;
                     case "guns": Guns = bool.Parse(value); break;
-                    case "useblockdb": blockDB = bool.Parse(value); break;
+                    case "useblockdb": BlockDB = bool.Parse(value); break;
                     case "realmowner": RealmOwner = value; break;
                     
                     case "perbuild": build = GetPerm(value); break;
@@ -288,6 +293,7 @@ namespace MCGalaxy.Commands {
                     case "horizonblock": HorizonBlock = byte.Parse(value); break;
                     case "cloudsheight": CloudsHeight = short.Parse(value); break;
                     case "maxfog": MaxFog = short.Parse(value); break;
+                    case "expfog": ExpFog = bool.Parse(value); break;
                     
                     case "texture": TerrainUrl = value; break;
                     case "texturepack": TextureUrl = value; break;
