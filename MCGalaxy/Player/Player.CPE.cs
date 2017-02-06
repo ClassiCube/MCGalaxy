@@ -119,6 +119,7 @@ namespace MCGalaxy {
                     case CpeExt.BulkBlockUpdate: return BulkBlockUpdate == version;
                     case CpeExt.EnvMapAspect: return EnvMapAspect == version;
                     case CpeExt.PlayerClick: return PlayerClick == version;
+                    case CpeExt.EntityProperty: return EntityProperty == version;
                     default: return false;
             }
         }
