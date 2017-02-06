@@ -32,8 +32,10 @@ namespace MCGalaxy.Blocks.Extended {
                                                               "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
                 int last = Messages.Rows.Count - 1;
                 if (last == -1) { Messages.Dispose(); return false; }
+                
                 string message = Messages.Rows[last]["Message"].ToString().Trim();
                 message = message.Replace("\\'", "\'");
+                message.Cp437ToUnicodeInPlace();
                 message = message.Replace("@p", p.name);
                 
                 if (message != p.prevMsg || (alwaysRepeat || Server.repeatMessage)) {

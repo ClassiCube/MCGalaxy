@@ -133,6 +133,8 @@ namespace MCGalaxy.Commands.Building {
         void UpdateDatabase(Player p, MBData data, ushort x, ushort y, ushort z) {
             data.Message = data.Message.Replace("'", "\\'");
             data.Message = Colors.EscapeColors(data.Message);
+            data.Message = data.Message.UnicodeToCp437();
+            
             string lvlName = p.level.name;
             object locker = ThreadSafeCache.DBCache.Get(lvlName);
             

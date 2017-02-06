@@ -108,6 +108,7 @@ namespace MCGalaxy.Commands.Building {
         void ExitChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             RevertAndClearState(p, x, y, z);
             PortalData bp = (PortalData)p.blockchangeObject;
+            string dstMap = p.level.name.UnicodeToCp437();
 
             foreach (PortalPos P in bp.Entries) {
                 string lvlName = P.Map;
@@ -126,10 +127,10 @@ namespace MCGalaxy.Commands.Building {
                     
                     if (count == 0) {
                         Database.Backend.AddRow("Portals" + lvlName, "EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap",
-                                                P.x, P.y, P.z, x, y, z, p.level.name);
+                                                P.x, P.y, P.z, x, y, z, dstMap);
                     } else {
                         Database.Backend.UpdateRows("Portals" + lvlName, "ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5",
-                                                    "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", P.x, P.y, P.z, x, y, z, p.level.name);
+                                                    "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", P.x, P.y, P.z, x, y, z, dstMap);
                     }
                 }
                 if (P.Map == p.level.name)

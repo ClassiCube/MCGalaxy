@@ -35,6 +35,8 @@ namespace MCGalaxy.Blocks.Extended {
                 
                 DataRow row = Portals.Rows[last];
                 string map = row["ExitMap"].ToString();
+                map.Cp437ToUnicodeInPlace();
+                
                 if (p.level.name != map) {
                     Level curLevel = p.level;
                     PlayerActions.ChangeMap(p, map, true);
