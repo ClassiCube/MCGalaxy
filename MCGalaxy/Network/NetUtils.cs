@@ -74,7 +74,7 @@ namespace MCGalaxy {
         public static void WriteAscii(string str, byte[] array, int offset) {
             int count = Math.Min(str.Length, StringSize);
             for (int i = 0; i < count; i++) {
-                char raw = str[i];
+                char raw = str[i].UnicodeToCp437();
                 array[offset + i] = raw >= '\u0080' ? (byte)'?' : (byte)raw;
             }
             for (int i = count; i < StringSize; i++)
@@ -84,7 +84,7 @@ namespace MCGalaxy {
         public static void WriteCP437(string str, byte[] array, int offset) {
             int count = Math.Min(str.Length, StringSize);
             for (int i = 0; i < count; i++)
-                array[offset + i] = (byte)str[i];
+                array[offset + i] = (byte)str[i].UnicodeToCp437();
             for (int i = count; i < StringSize; i++)
                 array[offset + i] = (byte)' ';
         }

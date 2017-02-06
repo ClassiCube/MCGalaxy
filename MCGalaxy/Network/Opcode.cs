@@ -64,5 +64,6 @@ namespace MCGalaxy {
         public const byte CpeSetTextColor = 39;
         public const byte CpeSetMapEnvUrl = 40;
         public const byte CpeSetMapEnvProperty = 41;
+        public const byte CpeSetEntityProperty = 42;
     }
 }

@@ -172,5 +172,13 @@ namespace MCGalaxy {
             NetUtils.WriteI32(value, buffer, 2);
             return buffer;
         }
+		
+        public static byte[] EntityProperty(EntityProp prop, int value) {
+            byte[] buffer = new byte[6];
+            buffer[0] = Opcode.CpeSetEntityProperty;
+            buffer[1] = (byte)prop;
+            NetUtils.WriteI32(value, buffer, 2);
+            return buffer;
+        }
     }
 }

@@ -16,33 +16,17 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Drawing;
 
 namespace MCGalaxy {
     public partial class Player {
-        public int ClickDistance = 0;
-        public int CustomBlocks = 0;
-        public int HeldBlock = 0;
-        public int TextHotKey = 0;
-        public int ExtPlayerList = 0;
-        public int EnvColors = 0;
-        public int SelectionCuboid = 0;
-        public int BlockPermissions = 0;
-        public int ChangeModel = 0;
-        public int EnvMapAppearance = 0;
-        public int EnvWeatherType = 0;
-        public int HackControl = 0;
-        public int EmoteFix = 0;
-        public int MessageTypes = 0;
-        public int LongerMessages = 0;
-        public int FullCP437 = 0;
-        public int BlockDefinitions = 0;
-        public int BlockDefinitionsExt = 0;
-        public int TextColors = 0;
-        public int BulkBlockUpdate = 0;
-        public int EnvMapAspect = 0;
-        public int PlayerClick = 0;
+        public int ClickDistance, CustomBlocks, HeldBlock, TextHotKey;
+        public int ExtPlayerList, EnvColors, SelectionCuboid, BlockPermissions;
+        public int ChangeModel, EnvMapAppearance, EnvWeatherType, HackControl;
+        public int EmoteFix, MessageTypes, LongerMessages, FullCP437;
+        public int BlockDefinitions, BlockDefinitionsExt, TextColors, BulkBlockUpdate;
+        public int EnvMapAspect, PlayerClick, EntityProperty;
 
+        // these are checked frequently, so avoid overhead of HasCpeExt
         public bool hasCustomBlocks, hasBlockDefs,
         hasTextColors, hasChangeModel, hasExtList;
 
@@ -105,6 +89,8 @@ namespace MCGalaxy {
                     EnvMapAspect = version; break;
                 case CpeExt.PlayerClick:
                     PlayerClick = version; break;
+                case CpeExt.EntityProperty:
+                    EntityProperty = version; break;
             }
         }
 
@@ -283,6 +269,7 @@ namespace MCGalaxy {
         public const string BulkBlockUpdate = "BulkBlockUpdate";
         public const string EnvMapAspect = "EnvMapAspect";
         public const string PlayerClick = "PlayerClick";
+        public const string EntityProperty = "EntityProperty";
     }
     
     public enum CpeMessageType : byte {
@@ -295,5 +282,9 @@ namespace MCGalaxy {
         SidesBlock = 0, EdgeBlock = 1, EdgeLevel = 2,
         CloudsLevel = 3, MaxFog = 4, CloudsSpeed = 5,
         WeatherSpeed = 6, WeatherFade = 7, ExpFog = 8,
+    }
+    
+    public enum EntityProp : byte {
+        RotX = 0, RotY = 1, RotZ = 2,
     }
 }

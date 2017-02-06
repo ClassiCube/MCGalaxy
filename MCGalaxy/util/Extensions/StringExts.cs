@@ -66,7 +66,7 @@ namespace MCGalaxy {
         }
         
         
-        static char Cp437ToUnicode(char c) {
+        public static char Cp437ToUnicode(this char c) {
             if (c < 0x20) {
                 return FullCP437Handler.ControlCharReplacements[c];
             } else if (c < 0x7F) {
@@ -77,7 +77,7 @@ namespace MCGalaxy {
             return '?';
         }
         
-        static char UnicodeToCp437(char c) {
+        public static char UnicodeToCp437(this char c) {
             int cpIndex = 0;
             if (c >= ' ' && c <= '~') {
                 return c;
