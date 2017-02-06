@@ -109,6 +109,9 @@ namespace MCGalaxy.Commands {
                 case "bedrock":
                     LevelEnv.SetBlock(p, value, EnvProp.SidesBlock,
                              "sides block", Block.blackrock, ref lvl.EdgeBlock); break;
+                case "expfog":
+                    LevelEnv.SetBool(p, value, EnvProp.ExpFog,
+                                     "exp fog", false, ref lvl.ExpFog); break;
                 default:
                     return false;
             }
@@ -201,7 +204,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%T/env [variable] [value]");
             Player.Message(p, "%HVariables: fog, cloud, sky, sun, shadow, weather, level");
             Player.Message(p, "%H   horizon, border, preset, maxfog, cloudsheight");
-            Player.Message(p, "%H   cloudspeed, weatherspeed, weatherfade");
+            Player.Message(p, "%H   cloudspeed, weatherspeed, weatherfade, expfog");
             Player.Message(p, "%HUsing 'normal' as a value will reset the variable");
             Player.Message(p, "%T/env normal %H- resets all variables");
         }

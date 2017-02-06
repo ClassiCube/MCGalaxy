@@ -49,7 +49,7 @@ namespace MCGalaxy.Levels.IO {
                 lvl.roty = header[offset + 11];
                 
                 gs.Read(lvl.blocks, 0, lvl.blocks.Length);
-                ReadBlockDefsSection(lvl, gs);
+                ReadCustomBlocksSection(lvl, gs);
                 
                 if (!metadata) return lvl;
                 ReadPhysicsSection(lvl, gs);
@@ -76,7 +76,7 @@ namespace MCGalaxy.Levels.IO {
             return dims;
         }
         
-        static void ReadBlockDefsSection(Level lvl, Stream gs) {
+        static void ReadCustomBlocksSection(Level lvl, Stream gs) {
             if (gs.ReadByte() != 0xBD) return;
             
             int index = 0;

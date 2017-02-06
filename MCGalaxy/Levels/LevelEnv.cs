@@ -93,6 +93,25 @@ namespace MCGalaxy {
             UpdateEnvColor(p, envType, value);
         }
         
+        public static void SetBool(Player p, string value, EnvProp prop,
+                                   string variable, bool defValue, ref bool target) {
+            if (IsResetString(value)) {
+                Player.Message(p, "Reset {0} for {1} %Sto normal", variable, p.level.ColoredName);
+                target = defValue;
+            } else if (value.CaselessEq("yes") || value.CaselessEq("on")) {
+                Player.Message(p, "Set {0} for {1} %Sto &aON", variable, p.level.ColoredName);
+                target = true;
+            } else if (value.CaselessEq("no") || value.CaselessEq("off")) {
+                Player.Message(p, "Set {0} for {1} %Sto &cOFF", variable, p.level.ColoredName);
+                target = false;
+            } else {
+                Player.Message(p, "Env: \"{0}\" is not a valid boolean.", value);
+                return;
+            }
+            SendCurrentMapAppearance(p.level, prop, target ? 1 : 0);
+        }
+        
+        
         static bool CheckBlock(Player p, string value, string variable, ref int modify) {
             byte extBlock = 0;
             byte block = (byte)DrawCmd.GetBlock(p, value, out extBlock);

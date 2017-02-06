@@ -55,8 +55,6 @@ namespace MCGalaxy.Gui {
             }
             
             DateTime startTime = DateTime.UtcNow;
-            CheckDuplicateProcesses();
-
             Logger.Init();
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;
             Application.ThreadException += ThreadExHandler;
@@ -159,17 +157,6 @@ namespace MCGalaxy.Gui {
 
             if (Server.restartOnError)
                 App.ExitProgram(true);
-        }
-        
-        static void CheckDuplicateProcesses() {
-            Process[] duplicates = Process.GetProcessesByName("MCGalaxy");
-            if (duplicates.Length == 1) return;
-            
-            Process proc = Process.GetCurrentProcess();
-            foreach (Process pr in duplicates) {
-                if (pr.MainModule.BaseAddress == proc.MainModule.BaseAddress)
-                    if (pr.Id != proc.Id) pr.Kill();
-            }
         }
     }
 }

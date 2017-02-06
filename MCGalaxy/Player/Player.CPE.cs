@@ -179,6 +179,7 @@ namespace MCGalaxy {
                 Send(Packet.EnvMapProperty(EnvProp.MaxFog, level.MaxFogDistance));
                 Send(Packet.EnvMapProperty(EnvProp.CloudsSpeed, level.CloudsSpeed));
                 Send(Packet.EnvMapProperty(EnvProp.WeatherSpeed, level.WeatherSpeed));
+                Send(Packet.EnvMapProperty(EnvProp.ExpFog, level.ExpFog ? 1 : 0));
             } else if (HasCpeExt(CpeExt.EnvMapAppearance, 2)) {
                 string url = GetTextureUrl();
                 // reset all other textures back to client default.
@@ -293,6 +294,6 @@ namespace MCGalaxy {
     public enum EnvProp : byte {
         SidesBlock = 0, EdgeBlock = 1, EdgeLevel = 2,
         CloudsLevel = 3, MaxFog = 4, CloudsSpeed = 5,
-        WeatherSpeed = 6, WeatherFade = 7,
+        WeatherSpeed = 6, WeatherFade = 7, ExpFog = 8,
     }
 }

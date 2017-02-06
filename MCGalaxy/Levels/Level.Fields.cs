@@ -144,6 +144,9 @@ namespace MCGalaxy {
         /// <summary> The block which will be displayed on the edge of the map. </summary>
         [ConfigInt("EdgeBlock", "Env", null, Block.blackrock, 0, 255)]
         public int EdgeBlock = Block.blackrock;
+         /// <summary> Whether exponential fog mode is used client-side. </summary>
+        [ConfigBool("ExpFog", "Env", null, false)]
+        public bool ExpFog = false; 
 
         
         // Permission settings
