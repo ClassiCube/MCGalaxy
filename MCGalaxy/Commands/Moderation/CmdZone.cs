@@ -164,7 +164,7 @@ namespace MCGalaxy.Commands {
         internal static string FindZoneOwner(Player p, string cmd, string name, ref string reason) {
             if (Group.Find(name) != null)
                 return "grp" + Group.Find(name).name;
-            return RankCmd.FindName(p, "zone", cmd, "", name, ref reason);
+            return ModActionCmd.FindName(p, "zone", cmd, "", name, ref reason);
         }
         
         public override void Help(Player p) {

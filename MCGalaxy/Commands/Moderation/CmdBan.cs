@@ -18,9 +18,11 @@
 using System;
 
 namespace MCGalaxy.Commands.Moderation {    
-    public sealed class CmdBan : ModActionCmd {        
+    public sealed class CmdBan : Command {
         public override string name { get { return "ban"; } }
         public override string shortcut { get { return ""; } }
+        public override string type { get { return CommandTypes.Moderation; } }
+        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdBan() { }
 
@@ -35,13 +37,13 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.SplitSpaces(2);
             string reason = args.Length > 1 ? args[1] : "";
             
-            string target = RankCmd.FindName(p, "ban", "ban", "", args[0], ref reason);
+            string target = ModActionCmd.FindName(p, "ban", "ban", "", args[0], ref reason);
             if (target == null) return;
             Player who = PlayerInfo.FindExact(target);
             
             if (reason == "") reason = Server.defaultBanMessage;
             if (reason == "-") reason = "&c-";
-            reason = GetReason(p, reason);
+            reason = ModActionCmd.ExpandReason(p, reason);
             
             if (reason == null) return;
             Group group = who == null ? Group.findPlayerGroup(args[0]) : who.group;
@@ -66,7 +68,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             Ban.DeleteBan(target);
             Ban.BanPlayer(p, target, reason, stealth, group.name);
-            RankCmd.ChangeRank(target, group, Group.BannedRank, who);
+            ModActionCmd.ChangeRank(target, group, Group.BannedRank, who);
             
             if (args.Length == 1) Player.AddNote(target, p, "B");
             else Player.AddNote(target, p, "B", reason);

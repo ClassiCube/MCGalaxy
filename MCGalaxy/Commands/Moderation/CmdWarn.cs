@@ -16,9 +16,11 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Moderation {    
-    public sealed class CmdWarn : ModActionCmd {        
+    public sealed class CmdWarn : Command {        
         public override string name { get { return "warn"; } }
         public override string shortcut { get { return ""; } }
+        public override string type { get { return CommandTypes.Moderation; } }
+        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
         public override void Use(Player p, string message) {
@@ -26,7 +28,7 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.SplitSpaces(2);
             Player who = PlayerInfo.FindMatches(p, args[0]);
             string reason = args.Length == 1 ? "you know why." : args[1];
-            reason = GetReason(p, reason);
+            reason = ModActionCmd.ExpandReason(p, reason);
             if (reason == null) return;
             
             if (who == null) { WarnOffline(p, args, reason); return; }

@@ -18,9 +18,11 @@
 using System;
 
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdKick : ModActionCmd {
+    public sealed class CmdKick : Command {
         public override string name { get { return "kick"; } }
         public override string shortcut { get { return "k"; } }
+        public override string type { get { return CommandTypes.Moderation; } }
+        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
         public override void Use(Player p, string message) {
@@ -35,7 +37,7 @@ namespace MCGalaxy.Commands.Moderation {
             else kickMsg = "by " + p.DisplayName;
             
             if (args.Length > 1) {
-                reason = GetReason(p, args[1]);
+                reason = ModActionCmd.ExpandReason(p, args[1]);
                 if (message == null) return;
                 kickMsg += "&f: " + reason; 
             }

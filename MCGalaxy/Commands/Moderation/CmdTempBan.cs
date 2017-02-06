@@ -18,9 +18,11 @@
 using System;
 
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdTempBan : ModActionCmd {       
+    public sealed class CmdTempBan : Command {       
         public override string name { get { return "tempban"; } }
         public override string shortcut { get { return "tb"; } }
+        public override string type { get { return CommandTypes.Moderation; } }
+        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
         public override void Use(Player p, string message) {
@@ -28,9 +30,9 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.SplitSpaces(3);
             string reason = args.Length > 2 ? args[2] : "";
             
-            string target = RankCmd.FindName(p, "temp ban", "tempban",
-                                             args.Length == 1 ? "" : " " + args[1],
-                                             args[0], ref reason);
+            string target = ModActionCmd.FindName(p, "temp ban", "tempban",
+                                                 args.Length == 1 ? "" : " " + args[1],
+                                                 args[0], ref reason);
             if (target == null) return;
             Player who = PlayerInfo.FindExact(target);
             
@@ -46,7 +48,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             Server.TempBan tBan;
             tBan.name = target;
-            tBan.reason = GetReason(p, reason);
+            tBan.reason = ModActionCmd.ExpandReason(p, reason);
             if (tBan.reason == null) return;
             
             tBan.expiryTime = DateTime.UtcNow.Add(time);

@@ -273,7 +273,6 @@
     <Compile Include="Commands\Information\CmdView.cs" />
     <Compile Include="Commands\Information\CmdViewRanks.cs" />
     <Compile Include="Commands\Information\CmdWhere.cs" />
-    <Compile Include="Commands\Information\CmdWhoip.cs" />
     <Compile Include="Commands\Information\CmdWhois.cs" />
     <Compile Include="Commands\Information\CmdWhoNick.cs" />
     <Compile Include="Commands\Information\WhoInfo.cs" />
@@ -334,7 +333,6 @@
     <Compile Include="Commands\Moderation\CmdXmute.cs" />
     <Compile Include="Commands\Moderation\CmdZone.cs" />
     <Compile Include="Commands\Moderation\ModActionCmd.cs" />
-    <Compile Include="Commands\Moderation\RankCmd.cs" />
     <Compile Include="Commands\other\CmdAscend.cs" />
     <Compile Include="Commands\other\CmdBack.cs" />
     <Compile Include="Commands\other\CmdC4.cs" />

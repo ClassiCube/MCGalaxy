@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            message = GetIP(p, message, true);
+            message = ModActionCmd.FindIP(p, message, "IP ban", "banip");
             if (message == null) return;
 
             IPAddress ip;
@@ -57,30 +57,6 @@ namespace MCGalaxy.Commands.Moderation {
             
             Server.bannedIP.Add(message);
             Server.bannedIP.Save();
-        }
-        
-        internal static string GetIP(Player p, string message, bool ban) {
-            IPAddress ip;
-            // TryParse returns "0.0.0.123" for "123", we do not want that behaviour
-            if (IPAddress.TryParse(message, out ip) && message.Split('.').Length == 4) {
-                string account = Server.ClassicubeAccountPlus ? message + "+" : message;
-                if (PlayerInfo.FindName(account) == null) return message;
-
-                // Some classicube.net accounts can be parsed as valid IPs, so warn in this case.
-                Player.Message(p, "Note: \"{0}\" is an IP, but is also an account name. "
-                               + "If you meant to {1} the account, use %T/{2} @{0}",
-                               message, ban ? "IP ban" : "un-IP ban", ban ? "banip" : "unbanip");
-                return message;
-            }
-            
-            if (message[0] == '@') message = message.Remove(0, 1);
-            Player who = PlayerInfo.FindMatches(p, message);
-            if (who != null) return who.ip;
-            
-            Player.Message(p, "Searching PlayerDB..");
-            string databaseIP;
-            PlayerInfo.FindOfflineIPMatches(p, message, out databaseIP);
-            return databaseIP;
         }
         
         static bool CheckIP(Player p, string ip) {

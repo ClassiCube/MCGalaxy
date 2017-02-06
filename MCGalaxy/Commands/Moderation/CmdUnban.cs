@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Moderation {
             Ban.UnbanPlayer(p, name, reason);
             Group banned = Group.BannedRank;
             Player who = PlayerInfo.Find(name);
-            RankCmd.ChangeRank(name, banned, Group.standard, who, false);
+            ModActionCmd.ChangeRank(name, banned, Group.standard, who, false);
             
             string ip = PlayerInfo.FindIP(name);
             if (ip != null && Server.bannedIP.Contains(ip))

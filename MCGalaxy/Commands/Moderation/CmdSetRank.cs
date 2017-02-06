@@ -17,10 +17,13 @@
  */
 using System;
 using System.IO;
+
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdSetRank : ModActionCmd {
+    public sealed class CmdSetRank : Command {
         public override string name { get { return "setrank"; } }
         public override string shortcut { get { return "rank"; } }
+        public override string type { get { return CommandTypes.Moderation; } }
+        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("pr", "+up"), new CommandAlias("de", "-down"),
@@ -36,13 +39,13 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (args[0].CaselessEq("+up")) {
                 rank = args[0];
-                name = RankCmd.FindName(p, "promote", "promote", "", args[1], ref reason);
+                name = ModActionCmd.FindName(p, "promote", "promote", "", args[1], ref reason);
             } else if (args[0].CaselessEq("-down")) {
                 rank = args[0];
-                name = RankCmd.FindName(p, "demote", "demote", "", args[1], ref reason);
+                name = ModActionCmd.FindName(p, "demote", "demote", "", args[1], ref reason);
             } else {
                 rank = args[1];
-                name = RankCmd.FindName(p, "rank", "rank", " " + rank, args[0], ref reason);
+                name = ModActionCmd.FindName(p, "rank", "rank", " " + rank, args[0], ref reason);
             }
             if (name == null) return;
             
@@ -60,13 +63,13 @@ namespace MCGalaxy.Commands.Moderation {
             }
             if (!ChangeRank(name, curRank, newRank, who, p, ref reason)) return;
             
-            rankMsg = RankCmd.FormatRankChange(curRank, newRank, name, reason);
+            rankMsg = ModActionCmd.FormatRankChange(curRank, newRank, name, reason);
             Chat.MessageAll(rankMsg);
             if (who != null)
                 who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
             
             if (p == null) Player.Message(p, rankMsg);            
-            RankCmd.ChangeRank(name, curRank, newRank, who);
+            ModActionCmd.ChangeRank(name, curRank, newRank, who);
             WriteRankInfo(p, name, newRank, curRank, reason);
             Server.IRC.Say(rankMsg);
         }
@@ -78,7 +81,7 @@ namespace MCGalaxy.Commands.Moderation {
                 reason = newRank.Permission >= curRank.Permission ? 
                     Server.defaultPromoteMessage : Server.defaultDemoteMessage;
             }
-            reason = GetReason(p, reason);
+            reason = ModActionCmd.ExpandReason(p, reason);
             if (reason == null) return false;
             
             if (newRank == banned) {
