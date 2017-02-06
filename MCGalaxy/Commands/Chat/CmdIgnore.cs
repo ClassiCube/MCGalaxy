@@ -55,12 +55,17 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "{0} show in chat", 
                                p.ignoreNicks ? "&cCustom player nicks no longer" : "&aCustom player nicks");
                 SaveIgnores(p); return;
+            } else if (action == "8ball") {
+                p.ignore8ball = !p.ignore8ball;
+                Player.Message(p, "{0} ignoring %T/8ball", p.ignore8ball ? "&cNow" : "&aNo longer");
+                SaveIgnores(p); return;
             } else if (action == "list") {
                 Player.Message(p, "&cCurrently ignoring the following players:");
                 string names = p.listignored.Join();
                 if (names != "") Player.Message(p, names);
                 if (p.ignoreAll) Player.Message(p, "&cIgnoring all chat");
                 if (p.ignoreIRC) Player.Message(p, "&cIgnoring IRC chat");
+                if (p.ignore8ball) Player.Message(p, "&cIgnoring %T/8ball");                
                 if (p.ignoreTitles) Player.Message(p, "&cPlayer titles do not show before names in chat.");
                 if (p.ignoreNicks) Player.Message(p, "&cCustom player nicks do not show in chat.");
                 return;
@@ -105,6 +110,7 @@ namespace MCGalaxy.Commands {
                 using (StreamWriter w = new StreamWriter(path)) {
                     if (p.ignoreAll) w.WriteLine("&all");
                     if (p.ignoreIRC) w.WriteLine("&irc");
+                    if (p.ignore8ball) w.WriteLine("&8ball");
                     if (p.ignoreTitles) w.WriteLine("&titles");
                     if (p.ignoreNicks) w.WriteLine("&nicks");
                     
@@ -122,6 +128,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%HUsing the same name again will unignore.");
             Player.Message(p, "%H If name is \"all\", all chat is ignored.");
             Player.Message(p, "%H If name is \"irc\", IRC chat is ignored.");
+            Player.Message(p, "%H If name is \"8ball\", %T/8ball %Sis ignored.");
             Player.Message(p, "%H If name is \"titles\", player titles before names are ignored.");
             Player.Message(p, "%H If name is \"nicks\", custom player nicks do not show in chat.");
             Player.Message(p, "%HOtherwise, all chat from the player with [name] is ignored.");

@@ -120,7 +120,7 @@ namespace MCGalaxy {
         public bool onWhitelist = false;
         public bool whisper = false;
         public string whisperTo = "";
-        public bool ignoreAll, ignoreGlobal, ignoreIRC, ignoreTitles, ignoreNicks;
+        public bool ignoreAll, ignoreGlobal, ignoreIRC, ignoreTitles, ignoreNicks, ignore8ball;
 
         public string storedMessage = "";
 

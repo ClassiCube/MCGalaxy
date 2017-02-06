@@ -78,6 +78,7 @@ namespace MCGalaxy.Core {
                     if (line == "&global") continue; // deprecated /ignore global
                     if (line == "&all") p.ignoreAll = true;
                     else if (line == "&irc") p.ignoreIRC = true;
+                    else if (line == "&8ball") p.ignore8ball = true;
                     else if (line == "&titles") p.ignoreTitles = true;
                     else if (line == "&nicks") p.ignoreNicks = true;
                     else p.listignored.Add(line);
