@@ -59,9 +59,7 @@ namespace MCGalaxy {
         public static Player FindMatches(Player pl, string name, 
                                          out int matches, bool onlyCanSee = true) {
             matches = 0;
-            if (!Player.ValidName(name)) {
-                Player.Message(pl, "\"{0}\" is not a valid player name.", name); return null;
-            }
+            if (!Formatter.ValidName(pl, name, "player")) return null;
             
             return Matcher.Find<Player>(pl, name, out matches, Online.Items,
                                         p => Entities.CanSee(pl, p) || !onlyCanSee,
@@ -69,9 +67,7 @@ namespace MCGalaxy {
         }
         
         public static string FindMatchesPreferOnline(Player p, string name) {
-            if (!Player.ValidName(name)) {
-                Player.Message(p, "\"{0}\" is not a valid player name.", name); return null;
-            }
+            if (!Formatter.ValidName(p, name, "player")) return null;
             int matches = 0;
             Player target = FindMatches(p, name, out matches);
             

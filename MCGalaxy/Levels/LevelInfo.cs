@@ -55,9 +55,7 @@ namespace MCGalaxy {
         
         public static string FindMapMatches(Player pl, string name, out int matches) {
             matches = 0;
-            if (!Player.ValidName(name)) {
-                Player.Message(pl, "\"{0}\" is not a valid level name.", name); return null;
-            }
+            if (!Formatter.ValidName(pl, name, "level")) return null;
             
             string[] files = Directory.GetFiles("levels", "*.lvl");
             string map = Matcher.Find<string>(pl, name, out matches, files,

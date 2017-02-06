@@ -54,6 +54,10 @@ namespace MCGalaxy.Commands.World {
             if (name == "") {
                 Player.Message(p, "You must provide a player name to {0}.", mode); return;
             }
+            if (!Formatter.ValidName(p, name, "player")) return;
+            name = PlayerInfo.FindMatchesPreferOnline(p, name);
+            if (name == null) return;          
+            
             if (p != null && name.CaselessEq(p.name)) {
                 Player.Message(p, "You cannot {0} yourself.", mode); return;
             }
