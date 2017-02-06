@@ -16,9 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System.Collections.Generic;
-using System.Data;
-using System.Text;
-using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands {
     
@@ -31,7 +28,6 @@ namespace MCGalaxy.Commands {
         public CmdClones() { }
 
         public override void Use(Player p, string message) {
-            message = Colors.EscapeColors(message);
             if (message == "" && p != null) message = p.name;
 
             string name = message;
@@ -62,8 +58,8 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/clones <name>");
-            Player.Message(p, "%HFinds everyone with the same IP as <name>");
+            Player.Message(p, "%T/clones [name]");
+            Player.Message(p, "%HFinds everyone with the same IP as [name]");
         }
     }
 }

@@ -21,8 +21,6 @@
 */
 
 using System;
-using System.Globalization;
-
 
 namespace Sharkbite.Irc
 {

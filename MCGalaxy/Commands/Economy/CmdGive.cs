@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Globalization;
+
 namespace MCGalaxy.Commands {
     public sealed class CmdGive : MoneyCmd {
         public override string name { get { return "give"; } }

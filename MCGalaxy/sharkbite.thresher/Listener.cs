@@ -21,14 +21,11 @@
 */
 
 using System;
-using System.Globalization;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Collections;
+using System.Diagnostics;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Threading;
-
 
 namespace Sharkbite.Irc
 {
