@@ -35,8 +35,7 @@ namespace MCGalaxy {
         }
 
         /// <summary> Queues an action that is asynchronously executed one time, as soon as possible. </summary>
-        public SchedulerTask QueueOnce(Action callback)
-        {
+        public SchedulerTask QueueOnce(Action callback) {
             return EnqueueTask(new SchedulerTask(obj => callback(), null, TimeSpan.Zero, false));
         }
 

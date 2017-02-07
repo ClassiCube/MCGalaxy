@@ -25,11 +25,9 @@ namespace MCGalaxy.Bots {
         public override string Name { get { return "hunt"; } }
         
         public override bool Execute(PlayerBot bot, InstructionData data) {
-            int searchRadius = 75;
-            if (data.Metadata != null)
-                searchRadius = (ushort)data.Metadata;
-            
-            int dist = searchRadius * 32;
+            int search = 75;
+            if (data.Metadata != null) search = (ushort)data.Metadata;
+            int dist = search * 32;
             Player[] players = PlayerInfo.Online.Items;
             Player closest = null;
             
@@ -81,7 +79,7 @@ namespace MCGalaxy.Bots {
             return data;
         }
         
-       public override void Output(Player p, string[] args, StreamWriter w) {
+        public override void Output(Player p, string[] args, StreamWriter w) {
             if (args.Length > 3) {
                 w.WriteLine(Name + " " + ushort.Parse(args[3]));
             } else {
@@ -124,7 +122,9 @@ namespace MCGalaxy.Bots {
         public override string Name { get { return "stare"; } }
         
         public override bool Execute(PlayerBot bot, InstructionData data) {
-            int dist = 20000 * 32;
+            int search = 20000;
+            if (data.Metadata != null) search = (ushort)data.Metadata;
+            int dist = search * 32;
             Player[] players = PlayerInfo.Online.Items;
             Player closest = null;
             
@@ -144,6 +144,21 @@ namespace MCGalaxy.Bots {
             return true;
         }
         
+        public override InstructionData Parse(string[] args) {
+            InstructionData data = default(InstructionData);
+            if (args.Length > 1)
+                data.Metadata = ushort.Parse(args[1]);
+            return data;
+        }
+        
+        public override void Output(Player p, string[] args, StreamWriter w) {
+            if (args.Length > 3) {
+                w.WriteLine(Name + " " + ushort.Parse(args[3]));
+            } else {
+                w.WriteLine(Name);
+            }
+        }
+        
         static void FaceTowards(PlayerBot bot, Player p) {
             int dx = p.pos[0] - bot.pos[0], dy = p.pos[1] - bot.pos[1], dz = p.pos[2] - bot.pos[2];
             Vec3F32 dir = new Vec3F32(dx, dy, dz);
@@ -152,8 +167,9 @@ namespace MCGalaxy.Bots {
         }
         
         public override string[] Help { get { return help; } }
-        static string[] help = { "%T/botai add [name] stare",
-            "%HCauses the bot to stare at the closest player.",
+        static string[] help = { "%T/botai add [name] stare <radius>",
+            "%HCauses the bot to stare at the closest player in the search radius.",
+            "%H  <radius> defaults to 20000 blocks.",
         };
     }
 }

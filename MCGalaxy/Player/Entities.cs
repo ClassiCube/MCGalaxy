@@ -141,9 +141,7 @@ namespace MCGalaxy {
             string name = Chat.Format(b.color + b.DisplayName, dst, true, true, false);
             if (b.DisplayName.CaselessEq("empty")) name = "";
             string skin = Chat.Format(b.SkinName, dst, true, true, false);
-            
-            
-            
+
             if (dst.hasExtList) {
                 dst.SendExtAddEntity2(b.id, skin, name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
             } else {
@@ -151,11 +149,6 @@ namespace MCGalaxy {
             }
             if (Server.TablistBots)
                 TabList.Add(dst, b);
-            
-            Server.s.Log("" + dst.HasCpeExt(CpeExt.EntityProperty));
-            Server.s.Log("" + dst.HasCpeExt(CpeExt.EnvMapAspect));
-            if (dst.HasCpeExt(CpeExt.EntityProperty))
-            	dst.Send(Packet.EntityProperty(b.id, EntityProp.RotZ, b.id * 80));
         }
         
         internal static void Despawn(Player dst, byte id) {
