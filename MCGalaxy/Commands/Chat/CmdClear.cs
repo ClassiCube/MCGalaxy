@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
                 
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
-                    ClearChat(p);
+                    ClearChat(pl);
                 }
                 Chat.MessageAll("%4Global Chat Cleared.");
             }
