@@ -192,11 +192,16 @@ namespace MCGalaxy {
             who.SendUserMOTD(); who.SendMap(who.level);
             Entities.SpawnEntities(who);
             who.Loading = false;
-
             if (!showMessage) return;
-            if (p != null && !p.hidden) { who.SendMessage("&bMap reloaded by " + p.name); }
-            if (p != null && p.hidden) { who.SendMessage("&bMap reloaded"); }
-            Player.Message(p, "&4Finished reloading for " + who.name);
+            
+            if (p == null || !Entities.CanSee(who, p)) {
+                who.SendMessage("&bMap reloaded");
+            } else {
+                who.SendMessage("&bMap reloaded by " + p.ColoredName);
+            }
+            if (Entities.CanSee(p, who)) {
+                Player.Message(p, "&4Finished reloading for " + who.ColoredName);
+            }
         }
         
         
