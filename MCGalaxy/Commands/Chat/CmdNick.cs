@@ -45,7 +45,8 @@ namespace MCGalaxy.Commands {
                 Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + " %Sreverted to their original name.");
             } else {
                 string nameTag = newName.CaselessEq("empty") ? "" : newName;
-                if (newName.Length >= 30) { Player.Message(p, "Name must be under 30 letters."); return; }
+                if (newName.Length > 62) { Player.Message(p, "Name must be 62 or fewer letters."); return; }
+                
                 Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Sname was set to " + nameTag + "%S.");
                 bot.DisplayName = Colors.EscapeColors(newName);
             }

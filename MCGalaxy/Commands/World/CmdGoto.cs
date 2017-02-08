@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.IO;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdGoto : Command {
@@ -25,20 +26,31 @@ namespace MCGalaxy.Commands.World {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("j"), new CommandAlias("join") }; }
+            get { return new[] { new CommandAlias("j"), new CommandAlias("join"),
+                    new CommandAlias("gr", "-random"), new CommandAlias("gotorandom", "-random") }; }
         }
         public CmdGoto() { }
 
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
             if (message == "") { Help(p); return; }
-            if (!Formatter.ValidName(p, message, "level")) return;
-            PlayerActions.ChangeMap(p, message);
+            
+            if (message.CaselessEq("-random")) {
+                string[] maps = Directory.GetFiles("levels", "*.lvl");
+                string map = maps[new Random().Next(maps.Length)];
+                
+                map = Path.GetFileNameWithoutExtension(map);
+                PlayerActions.ChangeMap(p, map);
+            } else if (Formatter.ValidName(p, message, "level")) {
+                PlayerActions.ChangeMap(p, message);
+            }
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/goto [map name]");
             Player.Message(p, "%HTeleports yourself to a different level.");
+            Player.Message(p, "%T/goto -random");
+            Player.Message(p, "%HTeleports yourself to a random level.");
         }
     }
 }
