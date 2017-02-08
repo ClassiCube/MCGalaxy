@@ -107,7 +107,7 @@ namespace MCGalaxy.Eco {
                 case "max":
                 case "maximum":
                 case "maximumrank":
-                    Group grp = Group.FindMatches(p, args[2]);
+                    Group grp = Matcher.FindRanks(p, args[2]);
                     if (grp == null) return;
                     if (p != null && p.Rank < grp.Permission) { Player.Message(p, "%cCannot set maxrank to a rank higher than yours."); return; }
                     

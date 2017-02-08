@@ -171,6 +171,7 @@ namespace MCGalaxy {
             return false;
         }
         
+        
         /// <summary> Find the group which has the given name. </summary>
         public static Group Find(string name) {
             name = name.ToLower();
@@ -182,20 +183,7 @@ namespace MCGalaxy {
             return null;
         }
         
-        /// <summary> Find the group(s) which contain the given name. </summary>
-        public static Group FindMatches(Player p, string name, out int matches) {
-            name = name.ToLower();
-            MapName(ref name);
-            return Matcher.Find<Group>(p, name, out matches,
-                                       GroupList, g => true, g => g.name, "ranks");
-        }
-        
-        /// <summary> Find the group(s) which contain the given name. </summary>
-        public static Group FindMatches(Player p, string name) {
-            int matches = 0; return FindMatches(p, name, out matches);
-        }
-        
-        static void MapName(ref string name) {
+        internal static void MapName(ref string name) {
             if (name == "adv") name = "advbuilder";
             if (name == "op") name = "operator";
             if (name == "super" || (name == "admin" && !Exists("admin"))) name = "superop";

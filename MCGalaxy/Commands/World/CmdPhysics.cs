@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
             }
             
             if (args.Length == 2) {
-                level = LevelInfo.FindMatches(p, args[0]);
+                level = Matcher.FindLevels(p, args[0]);
                 if (level == null) return;
             }
             SetPhysics(level, state);

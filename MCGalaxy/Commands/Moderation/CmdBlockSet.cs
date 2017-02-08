@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
 
             byte block = Block.Byte(args[0]);
             if (block == Block.Invalid) { Player.Message(p, "Could not find block entered"); return; }
-            Group grp = Group.FindMatches(p, args[1]);
+            Group grp = Matcher.FindRanks(p, args[1]);
             if (grp == null) return;
             
             if (p != null && grp.Permission > p.Rank) { Player.Message(p, "Cannot set to a rank higher than yourself."); return; }

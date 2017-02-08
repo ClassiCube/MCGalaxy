@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             string[] args = message.SplitSpaces(2);
             
             if (!(message == "" || args[0].CaselessEq("all"))) {
-                lvl = LevelInfo.FindMatches(p, args[0]);
+                lvl = Matcher.FindLevels(p, args[0]);
                 if (lvl == null) return;
             }
             

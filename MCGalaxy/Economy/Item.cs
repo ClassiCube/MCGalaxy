@@ -57,7 +57,7 @@ namespace MCGalaxy.Eco {
                     Enabled = false; break;
                 case "purchaserank":
                     if (args.Length == 2) { Player.Message(p, "You need to provide a rank name."); return; }
-                    Group grp = Group.FindMatches(p, args[2]);
+                    Group grp = Matcher.FindRanks(p, args[2]);
                     if (grp == null) return;
                     
                     PurchaseRank = grp.Permission;

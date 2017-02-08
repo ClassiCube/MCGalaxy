@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
             Level lvl;
             string[] args = message.Split(' ');
             if (args.Length >= 2) {
-                lvl = LevelInfo.FindMatches(p, args[1]);
+                lvl = Matcher.FindLevels(p, args[1]);
                 if (lvl == null) return;
             } else {
                 if (p != null && p.level != null) {

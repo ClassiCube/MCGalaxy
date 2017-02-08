@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
         public CmdUnloaded() { }
 
         public override void Use(Player p, string message) {
-            string[] files = Directory.GetFiles("levels", "*.lvl");
+            string[] files = LevelInfo.AllMapFiles();
             Player.Message(p, "Unloaded maps (&c[no] %Sif not visitable): ");
             MultiPageOutput.Output(p, GetMaps(files), (map, i) => FormatMap(p, map),
                                    "unloaded", "maps", message, false);

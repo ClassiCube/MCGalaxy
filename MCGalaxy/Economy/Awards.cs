@@ -195,12 +195,6 @@ namespace MCGalaxy {
             return null;
         }
         
-        public static string FindMatches(Player p, string name, out int matches) {
-            Award award = Matcher.Find<Award>(p, name, out matches, AwardsList,
-                                              a => true, a => a.Name, "awards");
-            return award == null ? null : award.Name;
-        }
-        
         /// <summary> Gets the description of the award matching the given name, 
         /// or an empty string if no matching award was found. </summary>
         public static string GetDescription(string name) {

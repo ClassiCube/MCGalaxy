@@ -33,14 +33,14 @@ namespace MCGalaxy.Commands {
                 if (parts.Length == 1) {
                     if (!int.TryParse(parts[0], out seconds)) {
                         seconds = 30;
-                        lvl = LevelInfo.FindMatches(p, parts[0]);
+                        lvl = Matcher.FindLevels(p, parts[0]);
                         if (lvl == null) return;
                     }
                 } else {
                     if (!int.TryParse(parts[0], out seconds)) {
                         Player.Message(p, "You must specify pause time in seconds"); return;
                     }
-                    lvl = LevelInfo.FindMatches(p, parts[1]);
+                    lvl = Matcher.FindLevels(p, parts[1]);
                     if (lvl == null) return;
                 }
             }

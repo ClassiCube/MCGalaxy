@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Your rank cannot use this command."); return; 
             }
 
-            Group grp = Group.FindMatches(p, args[1]);
+            Group grp = Matcher.FindRanks(p, args[1]);
             if (grp == null) return;
             if (p != null && grp.Permission > p.Rank) { 
                 Player.Message(p, "Cannot set permissions to a rank higher than yours."); return; 

@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands
         
         public static void DisplayPlayers(Player p, string message, bool showHidden, bool showEmptyRanks) {
             if (message != "") {
-                Group grp = Group.FindMatches(p, message);
+                Group grp = Matcher.FindRanks(p, message);
                 if(grp == null) return;
                 string title = ":" + grp.color + GetPlural(grp.trueName) + ":";
                 Section rankSec = MakeSection(grp, title);                

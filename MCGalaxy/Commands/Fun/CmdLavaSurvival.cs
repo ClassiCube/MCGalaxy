@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands
         
         void HandleSetupMap(Player p, string[] args) {
             if (args.Length < 3) { SetupHelp(p, "map"); return; }
-            Level lvl = LevelInfo.FindMatches(p, args[2]);
+            Level lvl = Matcher.FindLevels(p, args[2]);
             if (lvl == null) return;
             if (lvl == Server.mainLevel) { Player.Message(p, "You cannot use the main map for Lava Survival."); return; }
             

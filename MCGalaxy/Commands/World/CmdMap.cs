@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.World {
                 args = message.SplitSpaces(2);
                 value = args.Length > 1 ? args[1] : "";
             } else {
-                lvl = LevelInfo.FindMatches(p, args[0]);
+                lvl = Matcher.FindLevels(p, args[0]);
                 if (lvl == null) return;
                 if (args.Length == 1) { PrintMapInfo(p, lvl); return; }
                 

@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
             
             string[] args = message.Split(' ');
             if (args.Length <= 2) {
-                Level lvl = LevelInfo.FindMatches(p, args[0]);
+                Level lvl = Matcher.FindLevels(p, args[0]);
                 if (lvl == null) return;
                 
                 string restore = args.Length > 1 ? args[1].ToLower() : "";

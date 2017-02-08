@@ -36,8 +36,8 @@ namespace MCGalaxy.Commands.World {
             if (message == "") { Help(p); return; }
             
             if (message.CaselessEq("-random")) {
-                string[] maps = Directory.GetFiles("levels", "*.lvl");
-                string map = maps[new Random().Next(maps.Length)];
+                string[] files = LevelInfo.AllMapFiles();
+                string map = files[new Random().Next(files.Length)];
                 
                 map = Path.GetFileNameWithoutExtension(map);
                 PlayerActions.ChangeMap(p, map);

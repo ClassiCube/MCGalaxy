@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, Colors.red + "You have already hacked a rank!"); return;
             }
             
-            Group grp = Group.FindMatches(p, message);
+            Group grp = Matcher.FindRanks(p, message);
             if (grp == null) return;
             DoFakeRank(p, grp);
         }

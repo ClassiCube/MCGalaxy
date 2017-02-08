@@ -150,7 +150,8 @@ namespace MCGalaxy.Games.ZS {
         /// <summary> Returns a list of all possible maps (exclusing personal realms if 'ignore realms' setting is true) </summary>
         internal static List<string> GetAllMaps() {
             List<string> maps = new List<string>();
-            string[] files = Directory.GetFiles("levels", "*.lvl");
+            string[] files = LevelInfo.AllMapFiles();
+            
             foreach (string file in files) {
                 string name = Path.GetFileNameWithoutExtension(file);
                 if (name.IndexOf('+') >= 0 && ZombieGameProps.IgnorePersonalWorlds)

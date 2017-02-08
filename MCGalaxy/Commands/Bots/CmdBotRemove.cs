@@ -16,8 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-namespace MCGalaxy.Commands {    
-    public sealed class CmdBotRemove : Command {        
+namespace MCGalaxy.Commands {
+    public sealed class CmdBotRemove : Command {
         public override string name { get { return "botremove"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -27,8 +27,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            if (p == null) { MessageInGameOnly(p); return; }           
-                        
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }            
             if (!p.level.BuildAccess.CheckDetailed(p)) {
                 Player.Message(p, "Hence, you cannot change remove bots from this map.");
                 return;
@@ -36,15 +35,13 @@ namespace MCGalaxy.Commands {
             
             if (message.CaselessEq("all")) {
                 PlayerBot.RemoveAllFromLevel(p.level); return;
+            } else {
+                PlayerBot bot = Matcher.FindBotsInLevel(p, message);
+                if (bot == null) return;
+                
+                PlayerBot.Remove(bot);
+                Player.Message(p, "Removed bot {0}%S", bot.ColoredName);
             }
-            
-            PlayerBot bot = PlayerBot.FindMatchesPreferLevel(p, message);
-            if (bot == null) return;
-            if (!p.level.name.CaselessEq(bot.level.name)) {
-                Player.Message(p, bot.ColoredName + " %Sis in a different level."); return;
-            }
-            PlayerBot.Remove(bot);
-            Player.Message(p, "Removed bot.");
         }
         
         public override void Help(Player p) {

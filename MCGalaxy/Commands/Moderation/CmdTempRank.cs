@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (target == null) return;
             Player who = PlayerInfo.FindExact(target);
 
-            Group group = Group.FindMatches(p, args[1]);
+            Group group = Matcher.FindRanks(p, args[1]);
             if (group == null) return;
             TimeSpan delta;
             if (!args[2].TryParseShort(p, 'h', "temp rank for", out delta)) return;

@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands {
         
         static void SearchUnloaded(Player p, string keyword, string modifier) {
             List<string> maps = new List<string>();
-            string[] files = Directory.GetFiles("levels", "*.lvl");
+            string[] files = LevelInfo.AllMapFiles();
             foreach (string file in files) {
                 string map = Path.GetFileNameWithoutExtension(file);
                 if (map.CaselessContains(keyword)) maps.Add(map);

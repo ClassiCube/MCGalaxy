@@ -27,6 +27,7 @@ namespace MCGalaxy {
         /// <remarks> Note this field is highly volatile, you should cache references to the items array. </remarks>
         public static VolatileArray<Level> Loaded = new VolatileArray<Level>(true);
         
+        [Obsolete("Prefer Matcher.FindLevels() or FindExact()")]
         public static Level Find(string name) {
             Level match = null; int matches = 0;
             Level[] loaded = Loaded.Items;
@@ -39,31 +40,6 @@ namespace MCGalaxy {
             }
             return matches == 1 ? match : null;
         }
-        
-        public static Level FindMatches(Player pl, string name) {
-            int matches = 0; return FindMatches(pl, name, out matches);
-        }
-        
-        public static Level FindMatches(Player pl, string name, out int matches) {
-            return Matcher.Find<Level>(pl, name, out matches, LevelInfo.Loaded.Items,
-                                       l => true, l => l.name, "loaded levels");
-        }
-        
-        public static string FindMapMatches(Player pl, string name) {
-            int matches = 0; return FindMapMatches(pl, name, out matches);
-        }
-        
-        public static string FindMapMatches(Player pl, string name, out int matches) {
-            matches = 0;
-            if (!Formatter.ValidName(pl, name, "level")) return null;
-            
-            string[] files = Directory.GetFiles("levels", "*.lvl");
-            string map = Matcher.Find<string>(pl, name, out matches, files,
-                                              l => true, l => Path.GetFileNameWithoutExtension(l), "levels");
-            if (map != null) 
-                map = Path.GetFileNameWithoutExtension(map);
-            return map;
-        }
 
         public static Level FindExact(string name) {
             Level[] loaded = Loaded.Items;
@@ -72,6 +48,12 @@ namespace MCGalaxy {
             }
             return null;
         }
+        
+        // TODO: support loading other map files eventually
+        public static string[] AllMapFiles() {
+            return Directory.GetFiles("levels", "*.lvl");
+        }
+        
         
         public static bool ExistsOffline(string name) {
             return File.Exists(LevelPath(name));
@@ -102,6 +84,7 @@ namespace MCGalaxy {
             if (!File.Exists(file)) file = "levels/level properties/" + name;
             return File.Exists(file) ? file : null;
         }
+        
         
         public static string FindOfflineProperty(string name, string propKey) {
             string file = FindPropertiesFile(name);

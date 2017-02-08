@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
                 if (Server.zombie.CurLevel != null)
                     Server.zombie.CurLevel.ChatLevel(who.ColoredName + " %Swas queued as the next zombie.");
             } else if (args[0].CaselessEq("level")) {
-                string map = LevelInfo.FindMapMatches(p, value);
+                string map = Matcher.FindMaps(p, value);
                 if (map == null) return;
                 
                 Player.Message(p, map + " was queued.");

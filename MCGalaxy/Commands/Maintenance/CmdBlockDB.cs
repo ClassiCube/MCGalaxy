@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.World {
             
             Level lvl = p == null ? null : p.level;
             if (args.Length > 1) {
-                lvl = LevelInfo.FindMatches(p, args[1]);
+                lvl = Matcher.FindLevels(p, args[1]);
                 if (lvl == null) return;
             }
             

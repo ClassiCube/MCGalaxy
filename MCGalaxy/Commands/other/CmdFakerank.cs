@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
             string[] args = message.Split(' ');
             if (message == "" || args.Length < 2) { Help(p); return; }
             Player who = PlayerInfo.FindMatches(p, args[0]);
-            Group newRank = Group.FindMatches(p, args[1]);
+            Group newRank = Matcher.FindRanks(p, args[1]);
             if (who == null || newRank == null) return;
             
             if (p != null && who.Rank > p.Rank) {

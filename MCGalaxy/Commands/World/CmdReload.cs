@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands {
         bool ReloadAll(Player p, string[] parts) {
             Level lvl = null;
             if (parts.Length == 2) {
-                lvl = LevelInfo.Find(parts[1]);
+                lvl = Matcher.FindLevels(p, parts[1]);
                 if (lvl == null) return false;
             } else if (!Player.IsSuper(p)) {
                 lvl = p.level;

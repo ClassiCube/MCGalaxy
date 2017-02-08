@@ -80,7 +80,7 @@ namespace MCGalaxy {
                 lvl = LevelInfo.Find(name);
                 if (lvl != null) return GotoLevel(p, lvl, ignorePerms);
                 
-                string matches = LevelInfo.FindMapMatches(p, name);
+                string matches = Matcher.FindMaps(p, name);
                 if (matches == null) return false;
                 return LoadOfflineLevel(p, matches, ignorePerms);
             } else {

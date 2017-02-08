@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public static bool DoResize(Player p, string[] args) {
-            Level lvl = LevelInfo.FindMatches(p, args[0]);
+            Level lvl = Matcher.FindLevels(p, args[0]);
             if (lvl == null) return true;
             
             ushort x, y, z;

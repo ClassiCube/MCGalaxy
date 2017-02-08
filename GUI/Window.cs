@@ -633,7 +633,7 @@ namespace MCGalaxy.Gui {
                     selectedLvl = map_lbUnloaded.SelectedItem.ToString();
                 
                 map_lbUnloaded.Items.Clear();
-                string[] files = Directory.GetFiles("levels", "*.lvl");
+                string[] files = LevelInfo.AllMapFiles();
                 foreach (string file in files) {
                     string name = Path.GetFileNameWithoutExtension(file);
                     if (LevelInfo.FindExact(name) == null)

@@ -141,14 +141,8 @@ namespace MCGalaxy {
             return matches == 1 ? match : null;
         }
         
-        public static PlayerBot FindMatches(Player pl, string name) {
-            int matches = 0;
-            return Matcher.Find<PlayerBot>(pl, name, out matches, Bots.Items,
-                                           b => true, b => b.name, "bots");
-        }
-        
         public static PlayerBot FindMatchesPreferLevel(Player pl, string name) {
-            if (Player.IsSuper(pl)) return FindMatches(pl, name);
+            if (Player.IsSuper(pl)) return Matcher.FindBots(pl, name);
             
             // Try for exact match in current level, then partial match against all bots
             PlayerBot[] bots = Bots.Items;
@@ -156,7 +150,7 @@ namespace MCGalaxy {
                 if (pl.level == bots[i].level && name.CaselessEq(bots[i].name))
                     return bots[i];
             }
-            return FindMatches(pl, name);
+            return Matcher.FindBots(pl, name);
         }
         
         void UpdatePosition() {

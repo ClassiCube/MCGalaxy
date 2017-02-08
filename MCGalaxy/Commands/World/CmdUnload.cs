@@ -26,13 +26,12 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             string name = message.ToLower();
-            if (name == "" && p == null) {
-                Player.Message(p, "You must specify a map name when unloading from console."); return;
-            }
+            if (name == "" && Player.IsSuper(p)) { SuperRequiresArgs(p, "level name"); return; }
             
             if (name == "") {
-                if (!p.level.Unload())
+                if (!p.level.Unload()) {
                     Player.Message(p, "You cannot unload this level.");
+                }
             } else if (name == "empty") {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 for (int i = 0; i < loaded.Length; i++) {
@@ -41,10 +40,10 @@ namespace MCGalaxy.Commands.World {
                     lvl.Unload(true);
                 }
             } else {
-                Level level = LevelInfo.Find(name);
-                if (level == null) {
-                    Player.Message(p, "There is no level \"" + name + "\" loaded.");
-                } else if (!level.Unload()) {
+                Level level = Matcher.FindLevels(p, name);
+                if (level == null) return;
+                
+                if (!level.Unload()) {
                     Player.Message(p, "You cannot unload this level.");
                 }
             }

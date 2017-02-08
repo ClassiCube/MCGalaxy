@@ -74,7 +74,7 @@ namespace MCGalaxy.Gui {
                     catch { }
                 }
                 if ( noUseList ) {
-                    string[] files = Directory.GetFiles("levels", "*.lvl");
+                    string[] files = LevelInfo.AllMapFiles();
                     foreach (string file in files) {
                         try {
                             string name = Path.GetFileNameWithoutExtension(file);

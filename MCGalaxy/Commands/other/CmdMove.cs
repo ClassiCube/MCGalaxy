@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
 
             if (args.Length == 2) {    // /move name map
                 Player who = PlayerInfo.FindMatches(p, args[0]);
-                Level where = LevelInfo.FindMatches(p, args[1]);
+                Level where = Matcher.FindLevels(p, args[1]);
                 if (who == null || where == null) return;
                 if (p != null && who.Rank > p.Rank) { 
                     MessageTooHighRank(p, "move", true); return;

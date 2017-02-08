@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.World {
             string[] args = message.Split(' ');
             if (args.Length != 2) { Help(p); return; }
             
-            Level lvl = LevelInfo.FindMatches(p, args[0]);
+            Level lvl = Matcher.FindLevels(p, args[0]);
             if (lvl == null) return;
             string newName = args[1].ToLower();
             if (!Formatter.ValidName(p, newName, "level")) return;

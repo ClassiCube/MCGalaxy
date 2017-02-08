@@ -38,9 +38,8 @@ namespace MCGalaxy.Commands {
             if (plName == null) return;
             
             string award = args.Length > 1 ? args[1] : "";
-            int matches = 0;
-            award = Awards.FindMatches(p, award, out matches);
-            if (award == null) { Player.Message(p, "Use /awards for a list of awards"); return; }
+            award = Matcher.FindAwards(p, award);
+            if (award == null) { Player.Message(p, "Use %T/awards %Sfor a list of awards"); return; }
 
             if (!take) {
                 if (Awards.GiveAward(plName, award)) {

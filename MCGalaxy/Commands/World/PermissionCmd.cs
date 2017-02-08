@@ -27,13 +27,13 @@ namespace MCGalaxy.Commands.World {
         
         protected Level GetArgs(Player p, string[] args, ref Group grp) {
             if (args.Length == 1 && Player.IsSuper(p)) {
-                SuperRequiresArgs(p, "level"); return null;
+                SuperRequiresArgs(p, "level name"); return null;
             }
-            Level level = args.Length == 1 ? p.level : LevelInfo.FindMatches(p, args[0]);
+            Level level = args.Length == 1 ? p.level : Matcher.FindLevels(p, args[0]);
             if (level == null) return null;
             
             string rank = args.Length == 1 ? args[0] : args[1];
-            grp = Group.FindMatches(p, rank);
+            grp = Matcher.FindRanks(p, rank);
             return grp != null ? level : null;
         }
         
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.World {
             if (args.Length == 1 && Player.IsSuper(p)) {
                 Command.SuperRequiresArgs(target, p, "level"); return;
             }
-            Level level = args.Length == 1 ? p.level : LevelInfo.FindMatches(p, args[0]);
+            Level level = args.Length == 1 ? p.level : Matcher.FindLevels(p, args[0]);
             if (level == null) return;
             LevelAccessController access = isVisit ? level.VisitAccess : level.BuildAccess;
             
