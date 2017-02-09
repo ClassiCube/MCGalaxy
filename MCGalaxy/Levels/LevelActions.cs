@@ -29,10 +29,10 @@ namespace MCGalaxy {
         /// <summary> Renames the .lvl (and related) files and database tables.
         /// Does not perform any unloading. </summary>
         public static void Rename(string src, string dst) {
-            File.Move(LevelInfo.LevelPath(src), LevelInfo.LevelPath(dst));
+            File.Move(LevelInfo.MapPath(src), LevelInfo.MapPath(dst));
             
-            SafeMove(LevelInfo.LevelPath(src) + ".backup",
-                     LevelInfo.LevelPath(dst) + ".backup");
+            SafeMove(LevelInfo.MapPath(src) + ".backup",
+                     LevelInfo.MapPath(dst) + ".backup");
             SafeMove("levels/level properties/" + src + ".properties",
                      "levels/level properties/" + dst + ".properties");
             SafeMove("levels/level properties/" + src,
@@ -122,9 +122,9 @@ namespace MCGalaxy {
                 int num = 0;
                 while (File.Exists("levels/deleted/" + name + num + ".lvl")) num++;
 
-                File.Move(LevelInfo.LevelPath(name), "levels/deleted/" + name + num + ".lvl");
+                File.Move(LevelInfo.MapPath(name), "levels/deleted/" + name + num + ".lvl");
             } else {
-                File.Move(LevelInfo.LevelPath(name), "levels/deleted/" + name + ".lvl");
+                File.Move(LevelInfo.MapPath(name), "levels/deleted/" + name + ".lvl");
             }
 
             SafeDelete("levels/level properties/" + name);
@@ -206,7 +206,7 @@ namespace MCGalaxy {
         
         
         public static void CopyLevel(string src, string dst) {
-            File.Copy(LevelInfo.LevelPath(src), LevelInfo.LevelPath(dst));
+            File.Copy(LevelInfo.MapPath(src), LevelInfo.MapPath(dst));
             
             SafeCopy("levels/level properties/" + src,
                      "levels/level properties/" + dst + ".properties");

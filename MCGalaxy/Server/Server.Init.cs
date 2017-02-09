@@ -31,13 +31,13 @@ namespace MCGalaxy {
 
         void LoadMainLevel() {
             try {
-                if (LevelInfo.ExistsOffline(level)) {
+                if (LevelInfo.MapExists(level)) {
                     mainLevel = Level.Load(level);
                     mainLevel.unload = false;
                     if (mainLevel == null) {
-                        if (File.Exists(LevelInfo.LevelPath(level) + ".backup")) {
+                        if (File.Exists(LevelInfo.MapPath(level) + ".backup")) {
                             Log("Attempting to load backup of " + level + ".");
-                            File.Copy(LevelInfo.LevelPath(level) + ".backup", LevelInfo.LevelPath(level), true);
+                            File.Copy(LevelInfo.MapPath(level) + ".backup", LevelInfo.MapPath(level), true);
                             mainLevel = Level.Load(level);
                             if (mainLevel == null) {
                                 Log("BACKUP FAILED!");

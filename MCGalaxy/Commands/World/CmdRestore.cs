@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands {
         
         static void DoRestore(Level lvl, string backup) {
             lock (lvl.saveLock) {
-                File.Copy(LevelInfo.BackupPath(lvl.name, backup), LevelInfo.LevelPath(lvl.name), true);
+                File.Copy(LevelInfo.BackupPath(lvl.name, backup), LevelInfo.MapPath(lvl.name), true);
                 lvl.saveLevel = false;
             }
             
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands {
                 LevelActions.Replace(lvl, restore);
             } else {
                 Server.s.Log("Restore nulled");
-                File.Copy(LevelInfo.LevelPath(lvl.name) + ".backup", LevelInfo.LevelPath(lvl.name), true);
+                File.Copy(LevelInfo.MapPath(lvl.name) + ".backup", LevelInfo.MapPath(lvl.name), true);
             }
         }
         

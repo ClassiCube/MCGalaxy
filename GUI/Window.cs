@@ -577,7 +577,7 @@ namespace MCGalaxy.Gui {
                     MessageBox.Show("Level Creation Failed. Are  you sure you didn't leave a box empty?");
                 }
 
-                if (LevelInfo.ExistsOffline(name)) {
+                if (LevelInfo.MapExists(name)) {
                     MessageBox.Show("Created Level");
                     try {
                         UpdateUnloadedList();

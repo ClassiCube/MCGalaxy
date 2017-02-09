@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.World {
             foreach (Level l in loaded) {
                 if (l.name == name) { Player.Message(p, "Level {0} %Sis already loaded.", l.ColoredName); return null; }
             }
-            if (!LevelInfo.ExistsOffline(name)) {
+            if (!LevelInfo.MapExists(name)) {
                 Player.Message(p, "Level \"{0}\" does not exist", name); return null;
             }
             
@@ -82,16 +82,16 @@ namespace MCGalaxy.Commands.World {
         static Level ReadLevel(Player p, string name) {
             Level level = Level.Load(name);
             if (level != null) return level;
-            if (!File.Exists(LevelInfo.LevelPath(name) + ".backup")) {
+            if (!File.Exists(LevelInfo.MapPath(name) + ".backup")) {
                 Player.Message(p, "Backup of {0} does not exist.", name); return null;
             }
             
-            if (LevelInfo.ExistsOffline(name)) {
+            if (LevelInfo.MapExists(name)) {
                 Server.s.Log(name + ".lvl file is corrupt. Deleting and replacing with " + name + ".lvl.backup file.");
-                File.Delete(LevelInfo.LevelPath(name));
+                File.Delete(LevelInfo.MapPath(name));
             }
             Server.s.Log("Attempting to load backup");
-            File.Copy(LevelInfo.LevelPath(name) + ".backup", LevelInfo.LevelPath(name), true);
+            File.Copy(LevelInfo.MapPath(name) + ".backup", LevelInfo.MapPath(name), true);
             
             level = Level.Load(name);
             if (level == null) {
@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands.World {
                 if (Directory.Exists(backupPath + "/" + name)) {
                     int backupNumber = Directory.GetDirectories(backupPath + "/" + name).Length;
                     Server.s.Log("Attempting to load latest backup, number " + backupNumber + " instead.");
-                    File.Copy(LevelInfo.BackupPath(name, backupNumber.ToString()), LevelInfo.LevelPath(name), true);
+                    File.Copy(LevelInfo.BackupPath(name, backupNumber.ToString()), LevelInfo.MapPath(name), true);
                     level = Level.Load(name);
                     if (level == null) {
                         Player.Message(p, "Loading latest backup failed as well.");

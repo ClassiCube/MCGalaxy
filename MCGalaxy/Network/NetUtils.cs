@@ -56,8 +56,8 @@ namespace MCGalaxy {
         
         public unsafe static string ReadString(byte[] data, int offset) {
             int length = 0;
-            char* characters = stackalloc char[64];
-            for (int i = 63; i >= 0; i--) {
+            char* characters = stackalloc char[StringSize];
+            for (int i = StringSize - 1; i >= 0; i--) {
                 byte code = data[i + offset];
                 if( length == 0 && !(code == 0x00 || code == 0x20))
                     length = i + 1;

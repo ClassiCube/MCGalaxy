@@ -96,9 +96,9 @@ namespace MCGalaxy.Commands {
         
         static string NextLevel(Player p) {
             string level = p.name.ToLower();
-            if (LevelInfo.ExistsOffline(level) || LevelInfo.ExistsOffline(level + "00")) {
+            if (LevelInfo.MapExists(level) || LevelInfo.MapExists(level + "00")) {
                 for (int i = 2; i < p.group.OverseerMaps + 2; i++) {
-                    if (LevelInfo.ExistsOffline(p.name.ToLower() + i)) continue;
+                    if (LevelInfo.MapExists(p.name.ToLower() + i)) continue;
                     if(i > p.group.OverseerMaps) {
                         p.SendMessage("You have reached the limit for your overseer maps."); return null;
                     }
@@ -118,7 +118,7 @@ namespace MCGalaxy.Commands {
              * both map names (UserName and UserName00)
              * I need to figure out how to add a system to do this with the players second map.
              */
-            if (LevelInfo.ExistsOffline(p.name.ToLower() + "00"))
+            if (LevelInfo.MapExists(p.name.ToLower() + "00"))
                 return p.name.ToLower() + "00";
             return p.name.ToLower();
         }

@@ -26,6 +26,7 @@ namespace MCGalaxy {
     public sealed class ClassiCubeBeat : IBeat {
         
         string url = "http://www.classicube.net/heartbeat.jsp";
+        string proxyUrl;
         public string URL { get { return url; } }
 
         public bool Persistance { get { return true; } }
@@ -55,7 +56,12 @@ namespace MCGalaxy {
             }
             
             if (!useIPv6 || firstIPv4 == null) return;
+            
+            #if !NET_20
             url = "http://"  + firstIPv4 + ":80/heartbeat.jsp";
+            #else
+            proxyUrl = "http://"  + firstIPv4 + ":80";
+            #endif
         }
 
         public string PrepareBeat()  {
@@ -83,8 +89,13 @@ namespace MCGalaxy {
             return count;
         }
         
-        public void OnRequest(HttpWebRequest request) {
+        public void OnRequest(HttpWebRequest request) {            
+            #if !NET_20
             request.Host = "www.classicube.net";
+            #else
+            if (proxyUrl == null) return;
+            request.Proxy = new WebProxy(proxyUrl);
+            #endif
         }   
         
         bool foundUrl = false;

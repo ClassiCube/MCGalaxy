@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "  Physics are {0}", physicsState);
             }
 
-            DateTime createTime = File.GetCreationTimeUtc(LevelInfo.LevelPath(data.Name));
+            DateTime createTime = File.GetCreationTimeUtc(LevelInfo.MapPath(data.Name));
             TimeSpan createDelta = DateTime.UtcNow - createTime;
             if (Directory.Exists(Server.backupLocation + "/" + data.Name)) {
                 int latest = Directory.GetDirectories(Server.backupLocation + "/" + data.Name).Length;
@@ -250,7 +250,7 @@ namespace MCGalaxy.Commands {
             
             public void FromOfflineLevel(string name) {
                 this.Name = name;
-                string path = LevelInfo.LevelPath(name);
+                string path = LevelInfo.MapPath(name);
                 Vec3U16 dims = IMapImporter.Formats[0].ReadDimensions(path);
                 Width = dims.X; Height = dims.Y; Length = dims.Z;
 

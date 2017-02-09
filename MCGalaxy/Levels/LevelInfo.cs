@@ -55,15 +55,15 @@ namespace MCGalaxy {
         }
         
         
-        public static bool ExistsOffline(string name) {
-            return File.Exists(LevelPath(name));
+        public static bool MapExists(string name) {
+            return File.Exists(MapPath(name));
         }
         
         public static bool ExistsBackup(string name, string backup) {
             return File.Exists(BackupPath(name, backup));
         }
         
-        public static string LevelPath(string name) {
+        public static string MapPath(string name) {
             return "levels/" + name.ToLower() + ".lvl";
         }
         

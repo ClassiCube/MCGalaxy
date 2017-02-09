@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.World {
             if (!CheckMapSize(p, x, y, z)) return false;
  
             if (!Formatter.ValidName(p, name, "level")) return false;
-            if (LevelInfo.ExistsOffline(name)) {
+            if (LevelInfo.MapExists(name)) {
                 Player.Message(p, "Level \"{0}\" already exists", name); return false;
             }
             if (!MapGen.IsSimpleTheme(args[4]) && !CheckExtraPerm(p)) { 

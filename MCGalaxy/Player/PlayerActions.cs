@@ -74,7 +74,7 @@ namespace MCGalaxy {
             
             if (Server.AutoLoad) {
                 // First try exactly matching unloaded levels
-                if (LevelInfo.ExistsOffline(name))
+                if (LevelInfo.MapExists(name))
                     return LoadOfflineLevel(p, name, ignorePerms);
                 lvl = LevelInfo.Find(name);
                 if (lvl != null) return GotoLevel(p, lvl, ignorePerms);

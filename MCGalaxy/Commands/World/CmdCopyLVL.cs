@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.World {
             src = Matcher.FindMaps(p, src);
             if (src == null) return;
             if (!Formatter.ValidName(p, dst, "level")) return;
-            if (LevelInfo.ExistsOffline(dst)) { Player.Message(p, "The level \"" + dst + "\" already exists."); return; }
+            if (LevelInfo.MapExists(dst)) { Player.Message(p, "The level \"" + dst + "\" already exists."); return; }
             
             try {
                 LevelActions.CopyLevel(src, dst);

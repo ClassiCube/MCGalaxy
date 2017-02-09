@@ -246,7 +246,7 @@ namespace MCGalaxy {
 
         public void Save(bool Override = false, bool clearPhysics = false) {
             if (blocks == null) return;
-            string path = LevelInfo.LevelPath(name);
+            string path = LevelInfo.MapPath(name);
             if (LevelSave != null) LevelSave(this);
             OnLevelSaveEvent.Call(this);
             if (cancelsave1) { cancelsave1 = false; return; }
@@ -303,7 +303,7 @@ namespace MCGalaxy {
                 Directory.CreateDirectory(path);
 
                 string backup = Path.Combine(path, name + ".lvl");
-                string current = LevelInfo.LevelPath(name);
+                string current = LevelInfo.MapPath(name);
                 try {
                     File.Copy(current, backup, true);
                     backedup = true;
@@ -343,7 +343,7 @@ namespace MCGalaxy {
             OnLevelLoadEvent.Call(name);
             if (cancelload) { cancelload = false; return null; }
 
-            string path = LevelInfo.LevelPath(name);
+            string path = LevelInfo.MapPath(name);
             if (!File.Exists(path)) {
                 Server.s.Log("Attempted to load " + name + ", but the level file does not exist.");
                 return null;
