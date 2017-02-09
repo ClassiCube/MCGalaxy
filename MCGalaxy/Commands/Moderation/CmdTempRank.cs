@@ -13,6 +13,7 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -114,12 +115,13 @@ namespace MCGalaxy.Commands.Moderation {
             File.WriteAllText("text/tempranks.txt", all.ToString());
         }
         
-        static void Info(Player p, string name) {
-            foreach (string line in File.ReadAllLines(Paths.TempRanksFile)) {
-                if (!line.CaselessStarts(name)) continue;
+        static void Info(Player p, string name) {            
+            List<string> rankings = Server.TempRanks.FindMatches(p, name, "temp rank");
+            if (rankings == null) return;
+            
+            foreach (string line in rankings) {
                 PrintTempRankInfo(p, line); return;
             }
-            Player.Message(p, "&cPlayer &a{0}&chas not been assigned a temporary rank.", name);
         }        
         
         static void List(Player p) {
@@ -150,7 +152,7 @@ namespace MCGalaxy.Commands.Moderation {
             TimeSpan delta = DateTime.Now - assigned;
             TimeSpan expireDelta = expiry - DateTime.Now;
             
-            Player.Message(p, "Temp rank information for {0}:", args[0]);
+            Player.Message(p, "Temp rank information for {0}:", PlayerInfo.GetColoredName(p, args[0]));
             Player.Message(p, "  From {0} %Sto {1}%S, by {2} &a{3} %Sago, expires in &a{4}",
                            oldRank, tempRank, tempRanker,
                            delta.Shorten(), expireDelta.Shorten());

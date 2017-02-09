@@ -43,11 +43,12 @@ namespace MCGalaxy.Commands {
                 string[] args = line.Split(' ');
                 if (args.Length <= 3) continue;
                 
-                if (args.Length == 4)
+                if (args.Length == 4) {
                     Player.Message(p, Action(args[1]) + " by " + args[2] + " on " + args[3]);
-                else
+                } else {
                     Player.Message(p, Action(args[1]) + " by " + args[2] + " on " + args[3]
                                        + " - " + args[4].Replace("%20", " "));
+                }
             }
         }
         
