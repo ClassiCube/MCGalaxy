@@ -103,21 +103,25 @@ namespace MCGalaxy {
                 if (itemName.IndexOf(name, comp) < 0) continue;
                 
                 match = item; matches++;
-                if (matches <= limit)
+                if (matches <= limit) {
                     nameMatches.Append(itemName).Append(", ");
-                else if (matches == limit + 1)
+                } else if (matches == limit + 1) {
                     nameMatches.Append("(and more)").Append(", ");
+                }
             }
             
             if (matches == 0) {
-                Player.Message(pl, "No " + group + " match \"" + name + "\"."); return default(T);
+                Player.Message(pl, "No " + group + " match \"" + name + "\"."); 
+                return default(T);
             } else if (matches == 1) {
                 return match;
             } else {
                 string count = matches > limit ? limit + "+ " : matches + " ";
                 string names = nameMatches.ToString(0, nameMatches.Length - 2);
+                
                 Player.Message(pl, count + group + " match \"" + name + "\":");
-                Player.Message(pl, names); return default(T);
+                Player.Message(pl, names); 
+                return default(T);
             }
         }
     }

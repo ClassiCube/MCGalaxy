@@ -165,6 +165,10 @@ namespace MCGalaxy {
             return new Vec3S32(a.X / b, a.Y / b, a.Z / b);
         }
         
+        public static Vec3S32 operator * (Vec3S32 a, float b) {
+            return new Vec3S32((int)(a.X * b), (int)(a.Y * b), (int)(a.Z * b));
+        }
+        
 
         public override bool Equals(object obj) {
             return (obj is Vec3S32) && Equals((Vec3S32)obj);

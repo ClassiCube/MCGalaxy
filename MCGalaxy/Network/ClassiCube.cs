@@ -71,7 +71,7 @@ namespace MCGalaxy {
                 "&version=7" +
                 "&salt=" + Server.salt +
                 "&users=" + PlayerCount() + 
-                "&software=MCGalaxy";
+                "&software=" + Uri.EscapeDataString("MCGalaxy " + Server.VersionString);
         }
         
         static int PlayerCount() {

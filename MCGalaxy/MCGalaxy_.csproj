@@ -623,6 +623,7 @@
     <Compile Include="util\Formatting\MultiPageOutput.cs" />
     <Compile Include="util\IO\BufferedBlockSender.cs" />
     <Compile Include="util\IO\Paths.cs" />
+    <Compile Include="util\Math\AABB.cs" />
     <Compile Include="util\Math\DirUtils.cs" />
     <Compile Include="util\Math\Vectors.cs" />
     <Compile Include="util\NET_20.cs" />

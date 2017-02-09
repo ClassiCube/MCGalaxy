@@ -55,13 +55,22 @@ namespace MCGalaxy {
         public static PlayerMetaList AutoloadMaps = new PlayerMetaList("text/autoload.txt");
         public static PlayerMetaList RankInfo = new PlayerMetaList("text/rankinfo.txt");
         public static PlayerMetaList TempRanks = new PlayerMetaList("text/tempranks.txt");
-        public static PlayerMetaList Notes = new PlayerMetaList("text/notes.txt"); 
+        public static PlayerMetaList Notes = new PlayerMetaList("text/notes.txt");
         public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
 
+        static string versionString = null;
+        static object versionLock = new object();
+        
+        // Cache getting the version
         public static string VersionString {
             get {
-                Version v = Version;
-                return v.Major + "." + v.Minor + "." + v.Build + "." + v.Revision;
+                lock (versionLock) {
+                    if (versionString == null) {
+                        Version v = Version;
+                        versionString = v.Major + "." + v.Minor + "." + v.Build + "." + v.Revision;
+                    }
+                    return versionString;
+                }                
             }
         }
 
@@ -84,7 +93,7 @@ namespace MCGalaxy {
         public static readonly List<string> Devs = new List<string>(), Mods = new List<string>();
 
         internal static readonly List<string> opstats = new List<string>(
-            new string[] { "ban", "tempban", "xban", "banip", "kickban", "kick", 
+            new string[] { "ban", "tempban", "xban", "banip", "kickban", "kick",
                 "warn", "mute", "freeze", "demote", "promote", "setrank" }
         );
         public static List<string> Opstats { get { return opstats; } }
@@ -118,7 +127,7 @@ namespace MCGalaxy {
         public static int YesVotes = 0, NoVotes = 0;
         public static bool voting = false, votingforlevel = false;
 
-        public static LavaSurvival lava;       
+        public static LavaSurvival lava;
         public static CountdownGame Countdown;
         
         public static Scheduler MainScheduler, Background;
@@ -168,11 +177,11 @@ namespace MCGalaxy {
         [ConfigBool("tablist-bots", "Tablist", null, false)]
         public static bool TablistBots = false;
 
-        [ConfigString("server-name", "General", null, 
+        [ConfigString("server-name", "General", null,
                       "[MCGalaxy] Default", false, "![]&:.,{}~-+()?_/\\' ", 64)]
         public static string name = "[MCGalaxy] Default";
         [ConfigString("motd", "General", null, "Welcome",
-                     false,  "=![]&:.,{}~-+()?_/\\' ", 128)]
+                      false,  "=![]&:.,{}~-+()?_/\\' ", 128)]
         public static string motd = "Welcome!";
         [ConfigInt("max-players", "Server", null, 12, 1, 128)]
         public static int players = 12;
@@ -262,7 +271,7 @@ namespace MCGalaxy {
         [ConfigEnum("irc-controller-verify", "IRC bot", null, IRCControllerVerify.HalfOp, typeof(IRCControllerVerify))]
         public static IRCControllerVerify IRCVerify = IRCControllerVerify.HalfOp;
         [ConfigPerm("irc-controller-rank", "IRC bot", null, LevelPermission.Nobody)]
-        public static LevelPermission ircControllerRank = LevelPermission.Nobody; 
+        public static LevelPermission ircControllerRank = LevelPermission.Nobody;
         
         [ConfigBool("admin-verification", "Admin", null, true)]
         public static bool verifyadmins = true;
@@ -273,10 +282,10 @@ namespace MCGalaxy {
         public static bool restartOnError = true;
         [ConfigInt("rplimit", "Other", null, 500, 0, 50000)]
         public static int rpLimit = 500;
-        [ConfigInt("rplimit-norm", "Other", null, 10000, 0, 50000)] 
+        [ConfigInt("rplimit-norm", "Other", null, 10000, 0, 50000)]
         public static int rpNormLimit = 10000;
 
-        [ConfigInt("backup-time", "Backup", null, 300, 1)] 
+        [ConfigInt("backup-time", "Backup", null, 300, 1)]
         public static int backupInterval = 300;
         public static int blockInterval = 60;
         [ConfigString("backup-location", "Backup", null, "")]
@@ -308,7 +317,7 @@ namespace MCGalaxy {
         [ConfigBool("check-updates", "Update", null, false)]
         public static bool checkUpdates = true;
 
-        [ConfigBool("UseMySQL", "Database", null, false)] 
+        [ConfigBool("UseMySQL", "Database", null, false)]
         public static bool useMySQL = false;
         [ConfigString("host", "Database", null, "127.0.0.1")]
         public static string MySQLHost = "127.0.0.1";
@@ -336,7 +345,7 @@ namespace MCGalaxy {
         
         [ConfigBool("global-chat-enabled", "Other", null, true)]
         public static bool UseGlobalChat = true;
-        [ConfigInt("afk-minutes", "Other", null, 10)] 
+        [ConfigInt("afk-minutes", "Other", null, 10)]
         public static int afkminutes = 10;
         [ConfigInt("afk-kick", "Other", null, 45)]
         public static int afkkick = 45;
@@ -364,7 +373,7 @@ namespace MCGalaxy {
 
         [ConfigString("money-name", "Other", null, "moneys")]
         public static string moneys = "moneys";
-        public static LevelPermission opchatperm = LevelPermission.Operator;       
+        public static LevelPermission opchatperm = LevelPermission.Operator;
         public static LevelPermission adminchatperm = LevelPermission.Admin;
         
         [ConfigBool("log-heartbeat", "Other", null, false)]
@@ -372,26 +381,26 @@ namespace MCGalaxy {
         [ConfigBool("admins-join-silent", "Other", null, false)]
         public static bool adminsjoinsilent = false;
         public static bool mono { get { return (Type.GetType("Mono.Runtime") != null); } }
-        [ConfigString("server-owner", "Other", null, "Notch")]        
+        [ConfigString("server-owner", "Other", null, "Notch")]
         public static string server_owner = "Notch";
         
-        [ConfigBool("guest-limit-notify", "Other", null, false)]        
+        [ConfigBool("guest-limit-notify", "Other", null, false)]
         public static bool guestLimitNotify = false;
-        [ConfigBool("guest-join-notify", "Other", null, true)]        
+        [ConfigBool("guest-join-notify", "Other", null, true)]
         public static bool guestJoinNotify = true;
-        [ConfigBool("guest-leave-notify", "Other", null, true)]        
+        [ConfigBool("guest-leave-notify", "Other", null, true)]
         public static bool guestLeaveNotify = true;
         [ConfigString("default-texture-url", "General", null, "", true, null, NetUtils.StringSize)]
         public static string defaultTerrainUrl = "";
-        [ConfigString("default-texture-pack-url", "General", null, "", true, null, NetUtils.StringSize)]        
+        [ConfigString("default-texture-pack-url", "General", null, "", true, null, NetUtils.StringSize)]
         public static string defaultTextureUrl = "";
 
         //hackrank stuff
         [ConfigBool("kick-on-hackrank", "Other", null, true)]
         public static bool hackrank_kick = true;
-        [ConfigInt("hackrank-kick-time", "Other", null, 5)]        
+        [ConfigInt("hackrank-kick-time", "Other", null, 5)]
         public static int hackrank_kick_time = 5; //seconds, it converts it to milliseconds in the command.
-        [ConfigBool("show-empty-ranks", "Other", null, false)]  
+        [ConfigBool("show-empty-ranks", "Other", null, false)]
         public static bool showEmptyRanks = false;
 
         [ConfigInt("review-cooldown", "Review", null, 600, 0, 600)]
@@ -401,7 +410,7 @@ namespace MCGalaxy {
         public static int DrawReloadLimit = 10000;
         [ConfigInt("map-gen-limit-admin", "Other", null, 225 * 1000 * 1000)]
         public static int MapGenLimitAdmin = 225 * 1000 * 1000;
-        [ConfigInt("map-gen-limit", "Other", null, 30 * 1000 * 1000)] 
+        [ConfigInt("map-gen-limit", "Other", null, 30 * 1000 * 1000)]
         public static int MapGenLimit = 30 * 1000 * 1000;
         #endregion
     }
