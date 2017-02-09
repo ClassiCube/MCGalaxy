@@ -45,8 +45,7 @@ namespace MCGalaxy.Commands.World {
             try {
                 return LoadLevelCore(p, name, phys, autoLoaded);
             } finally {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+                Server.DoGC();
             }
         }
         

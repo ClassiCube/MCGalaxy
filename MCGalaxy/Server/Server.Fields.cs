@@ -52,7 +52,7 @@ namespace MCGalaxy {
         public static Thread locationChecker;
         public static DateTime StartTime, StartTimeLocal;
         
-        public static PlayerMetaList AutoloadMaps = new PlayerMetaList("text/autoload.txt");
+        public static PlayerExtList AutoloadMaps;
         public static PlayerMetaList RankInfo = new PlayerMetaList("text/rankinfo.txt");
         public static PlayerMetaList TempRanks = new PlayerMetaList("text/tempranks.txt");
         public static PlayerMetaList Notes = new PlayerMetaList("text/notes.txt");

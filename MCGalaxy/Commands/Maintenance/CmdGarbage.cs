@@ -28,8 +28,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             Player.Message(p, "Forcing garbage collection...");
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            Server.DoGC();
             Player.Message(p, "Garbage collection completed!");
         }
         

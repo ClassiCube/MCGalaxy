@@ -59,8 +59,7 @@ namespace MCGalaxy {
                     GotoLevel(p, lvl, ignorePerms) : GotoMap(p, name, ignorePerms);
             } finally {
                 Interlocked.Exchange(ref p.UsingGoto, 0);
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+                Server.DoGC();
             }
             
             if (!didJoin) return false;

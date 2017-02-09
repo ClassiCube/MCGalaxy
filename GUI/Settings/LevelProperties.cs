@@ -126,15 +126,16 @@ namespace MCGalaxy.Gui {
         
         
         bool GetAutoload() {
-            foreach (string line in Server.AutoloadMaps.Find(lvl.name + "="))
-                return true;
-            return false;
+            return Server.AutoloadMaps.Find(lvl.name) != null;
         }
         
         void SetAutoload(bool value) {
-            Server.AutoloadMaps.DeleteStartsWith(lvl.name + "=");
-            if (value)
-                Server.AutoloadMaps.Append(lvl.name + "=" + lvl.physics);
+            if (value) {
+                Server.AutoloadMaps.AddOrReplace(lvl.name, lvl.physics.ToString());
+            } else {
+                Server.AutoloadMaps.Remove(lvl.name);
+            }
+            Server.AutoloadMaps.Save();
         }
     }
 }

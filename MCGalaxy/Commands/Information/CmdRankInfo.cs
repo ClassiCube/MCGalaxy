@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace MCGalaxy.Commands {   
@@ -28,19 +29,17 @@ namespace MCGalaxy.Commands {
         public CmdRankInfo() { }
 
         public override void Use(Player p, string message) {
-            if (message == "") {
-                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
-                message = p.name;
-            }
-            Player who = PlayerInfo.Find(message);
-            string target = who == null ? message : who.name;
-
-            Player.Message(p, "  Rank information for {0}:", 
-                           PlayerInfo.GetColoredName(p, target));
-            bool found = false;
+            if (CheckSuper(p, message, "player name")) return;
+            if (message == "") message = p.name;
+            
+            List<string> rankings = Server.RankInfo.FindMatches(p, message, "rankings");
+            if (rankings == null) return;
+            
+            string target = PlayerMetaList.GetName(rankings[0]);
+            Player.Message(p, "  Rankings for {0}:", PlayerInfo.GetColoredName(p, target));
             DateTime now = DateTime.Now;
             
-            foreach (string line in Server.RankInfo.Find(target)) {
+            foreach (string line in rankings) {
                 string[] parts = line.Split(' ');                
                 string newRank = Group.GetColoredName(parts[7]);
                 string oldRank = Group.GetColoredName(parts[8]);
@@ -55,10 +54,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "&aFrom {0} &ato {1} &a{2} ago", 
                                oldRank, newRank, delta.Shorten(true, false));
                 Player.Message(p, "&aBy %S{0}&a, reason: %S{1}", parts[1], reason);
-                found = true;
             }
-            if (!found)
-                Player.Message(p, "&cPlayer has not been ranked yet.");
         }
         
         public override void Help(Player p) {

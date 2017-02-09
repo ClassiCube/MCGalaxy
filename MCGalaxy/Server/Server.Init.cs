@@ -94,17 +94,17 @@ namespace MCGalaxy {
                 whiteList = PlayerList.Load("whitelist.txt");
         }
         
-        void LoadAutoloadCommands() {
-            if (File.Exists("text/autoload.txt")) {
-                PropertiesFile.Read("text/autoload.txt", AutoLoadLineProcessor);
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-            } else {
-                Log("autoload.txt does not exist");
+        void LoadAutoloadMaps() {
+            AutoloadMaps = PlayerExtList.Load("text/autoload.txt", '=');
+            foreach (string line in AutoloadMaps.lines) {
+                int sepIndex = line.IndexOf('=');
+                string name = sepIndex >= 0 ? line.Substring(0, sepIndex) : line;
+                string value = sepIndex >= 0 ? line.Substring(sepIndex + 1) : "";
+                AutoLoadMap(name, value);
             }
         }
         
-        static void AutoLoadLineProcessor(string name, string phys) {
+        static void AutoLoadMap(string name, string phys) {
             name = name.ToLower();
             if (phys == "") phys = "0";
 

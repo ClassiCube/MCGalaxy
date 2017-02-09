@@ -56,11 +56,6 @@ namespace fNbt {
         }
         byte[] bytes = ZeroArray;
 
-        public byte this[int tagIndex] {
-            get { return Value[tagIndex]; }
-            set { Value[tagIndex] = value; }
-        }
-
         internal override void ReadTag(NbtBinaryReader readStream) {
             int length = readStream.ReadInt32();
             if (length < 0)
@@ -233,16 +228,14 @@ namespace fNbt {
 
         public byte ByteValue {
             get {
-                if (TagType == NbtTagType.Byte)
-                    return ((NbtByte)this).Value;
+                if (TagType == NbtTagType.Byte) return ((NbtByte)this).Value;
                 throw new InvalidCastException("Cannot get ByteValue from " + TagType);
             }
         }
         
         public float FloatValue {
             get {
-                if (TagType == NbtTagType.Float)
-                    return ((NbtFloat)this).Value;
+                if (TagType == NbtTagType.Float) return ((NbtFloat)this).Value;
                 throw new InvalidCastException("Cannot get FloatValue from " + TagType);
             }
         }
@@ -250,10 +243,8 @@ namespace fNbt {
         public short ShortValue {
             get {
                 switch (TagType) {
-                    case NbtTagType.Byte:
-                        return ((NbtByte)this).Value;
-                    case NbtTagType.Short:
-                        return ((NbtShort)this).Value;
+                    case NbtTagType.Byte: return ((NbtByte)this).Value;
+                    case NbtTagType.Short: return ((NbtShort)this).Value;
                     default:
                         throw new InvalidCastException("Cannot get ShortValue from " + TagType);
                 }
@@ -263,12 +254,9 @@ namespace fNbt {
         public int IntValue {
             get {
                 switch (TagType) {
-                    case NbtTagType.Byte:
-                        return ((NbtByte)this).Value;
-                    case NbtTagType.Short:
-                        return ((NbtShort)this).Value;
-                    case NbtTagType.Int:
-                        return ((NbtInt)this).Value;
+                    case NbtTagType.Byte: return ((NbtByte)this).Value;
+                    case NbtTagType.Short: return ((NbtShort)this).Value;
+                    case NbtTagType.Int:  return ((NbtInt)this).Value;
                     default:
                         throw new InvalidCastException("Cannot get IntValue from " + TagType);
                 }
@@ -277,16 +265,14 @@ namespace fNbt {
 
         public byte[] ByteArrayValue {
             get {
-                if (TagType == NbtTagType.ByteArray)
-                    return ((NbtByteArray)this).Value;
+                if (TagType == NbtTagType.ByteArray) return ((NbtByteArray)this).Value;
                 throw new InvalidCastException("Cannot get ByteArrayValue from " + TagType);
             }
         }
         
         public string StringValue {
             get {
-                if (TagType == NbtTagType.String)
-                    return ((NbtString)this).Value;
+                if (TagType == NbtTagType.String) return ((NbtString)this).Value;
                 throw new InvalidCastException("Cannot get StringValue from " + TagType);
             }
         }
@@ -331,25 +317,22 @@ namespace fNbt {
         public override short ReadInt16() {
             if (swapNeeded) {
                 return Swap(base.ReadInt16());
-            } else {
-                return base.ReadInt16();
             }
+            return base.ReadInt16();
         }
 
         public override int ReadInt32() {
             if (swapNeeded) {
                 return Swap(base.ReadInt32());
-            } else {
-                return base.ReadInt32();
             }
+            return base.ReadInt32();
         }
 
         public override long ReadInt64() {
             if (swapNeeded) {
                 return Swap(base.ReadInt64());
-            } else {
-                return base.ReadInt64();
             }
+            return base.ReadInt64();
         }
 
         public override float ReadSingle() {
@@ -357,9 +340,8 @@ namespace fNbt {
                 FillBuffer(sizeof(float));
                 Array.Reverse(buffer, 0, sizeof(float));
                 return BitConverter.ToSingle(buffer, 0);
-            } else {
-                return base.ReadSingle();
             }
+            return base.ReadSingle();
         }
 
         public override double ReadDouble() {
@@ -405,25 +387,19 @@ namespace fNbt {
         }
 
         static short Swap(short v) {
-            unchecked {
-                return (short)((v >> 8) & 0x00FF | (v << 8) & 0xFF00);
-            }
+            return (short)((v >> 8) & 0x00FF | (v << 8) & 0xFF00);
         }
 
         static int Swap(int v) {
-            unchecked {
-                uint v2 = (uint)v;
-                return
-                    (int)
-                    ((v2 >> 24) & 0x000000FF | (v2 >> 8) & 0x0000FF00 | (v2 << 8) & 0x00FF0000 |
-                     (v2 << 24) & 0xFF000000);
-            }
+            uint v2 = (uint)v;
+            return
+                (int)
+                ((v2 >> 24) & 0x000000FF | (v2 >> 8) & 0x0000FF00 | (v2 << 8) & 0x00FF0000 |
+                 (v2 << 24) & 0xFF000000);
         }
 
         static long Swap(long v) {
-            unchecked {
-                return (Swap((int)v) & uint.MaxValue) << 32 | Swap((int)(v >> 32)) & uint.MaxValue;
-            }
+            return (Swap((int)v) & uint.MaxValue) << 32 | Swap((int)(v >> 32)) & uint.MaxValue;
         }
     }
 

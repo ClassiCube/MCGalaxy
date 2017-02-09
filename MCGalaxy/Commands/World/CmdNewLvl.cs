@@ -79,8 +79,7 @@ namespace MCGalaxy.Commands.World {
                 Chat.MessageAll(format, pName, name, seed);
             } finally {
                 if (p != null) Interlocked.Exchange(ref p.GeneratingMap, 0);
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+                Server.DoGC();
             }
             return true;
         }

@@ -158,8 +158,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (pl.level.name.CaselessEq(lvl.name))
                     LevelActions.ReloadMap(p, pl, true);
             }
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            Server.DoGC();
         }
 
         

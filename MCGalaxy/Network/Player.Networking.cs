@@ -332,8 +332,7 @@ namespace MCGalaxy {
                 SendMessage("There was an error sending the map data, you have been sent to the main level.");
                 Server.ErrorLog(ex);
             } finally {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+                Server.DoGC();
             }
             return success;
         }

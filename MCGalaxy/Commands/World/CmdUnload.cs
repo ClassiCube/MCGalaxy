@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             string name = message.ToLower();
-            if (name == "" && Player.IsSuper(p)) { SuperRequiresArgs(p, "level name"); return; }
+            if (CheckSuper(p, message, "level name")) return;
             
             if (name == "") {
                 if (!p.level.Unload()) {

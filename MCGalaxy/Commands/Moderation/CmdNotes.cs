@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 
 namespace MCGalaxy.Commands {    
     public class CmdNotes : Command {        
@@ -32,15 +33,13 @@ namespace MCGalaxy.Commands {
             if (CheckSuper(p, message, "player name")) return;
             if (message == "") message = p.name;
             
-            int matches = 1;
-            Player who = message == "" ? p : PlayerInfo.FindMatches(p, message, out matches);
-            if (matches > 1) return;
-            if (who != null) message = who.name;
+            List<string> notes = Server.Notes.FindMatches(p, message, "notes");
+            if (notes == null) return;
             
-            Player.Message(p, "Notes for " + message + ":");
-            bool foundAny = false;
-            foreach (string line in Server.Notes.Find(message)) {
-                foundAny = true;
+            string target = PlayerMetaList.GetName(notes[0]);
+            Player.Message(p, "  Notes for {0}:",  PlayerInfo.GetColoredName(p, target));
+            
+            foreach (string line in notes) {
                 string[] args = line.Split(' ');
                 if (args.Length <= 3) continue;
                 
@@ -50,8 +49,6 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, Action(args[1]) + " by " + args[2] + " on " + args[3]
                                        + " - " + args[4].Replace("%20", " "));
             }
-            if (!foundAny)
-                Player.Message(p, "No notes found.");
         }
         
         static string Action(string arg) {

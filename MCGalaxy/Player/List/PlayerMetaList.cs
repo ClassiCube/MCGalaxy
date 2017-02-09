@@ -33,9 +33,18 @@ namespace MCGalaxy {
         }
         
         public void EnsureExists() {
-            if (!File.Exists(file)) 
+            if (!File.Exists(file))
                 File.Create(file).Dispose();
         }
+
+        /// <summary> Adds the given line to the end of the file. </summary>
+        public void Append(string data) {
+            lock (locker) {
+                using (StreamWriter w = new StreamWriter(file, true))
+                    w.WriteLine(data);
+            }
+        }
+        
         
         /// <summary> Finds all lines which caselessly start with the given name. </summary>
         public IEnumerable<string> Find(string name) {
@@ -50,36 +59,28 @@ namespace MCGalaxy {
             }
             yield break;
         }
+
+        public List<string> FindMatches(Player p, string name, string group) {
+            int matches = 0;
+            return Matcher.FindMulti<string>(p, name, out matches, AllLines(),
+                                             null, GetName, group);
+        }
         
-        /// <summary> Deletes all lines which start with the given value. </summary>
-        public void DeleteStartsWith(string value) {
-            if (!File.Exists(file)) return;
-            List<string> lines = new List<string>();
+        IEnumerable<string> AllLines() {
+            if (!File.Exists(file)) yield break;
+            
             using (StreamReader r = new StreamReader(file)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {
-                    if (line.StartsWith(value)) continue;
-                    lines.Add(line);
+                    yield return line;
                 }
             }
-            WriteLines(lines);
+            yield break;
         }
         
-        void WriteLines(List<string> lines) {
-            lock (locker) {
-                using (StreamWriter w = new StreamWriter(file, false)) {
-                    foreach (string line in lines)
-                        w.WriteLine(line);
-                }
-            }
-        }
-        
-        /// <summary> Adds the given line to the end of the file. </summary>
-        public void Append(string data) {
-            lock (locker) {
-                using (StreamWriter w = new StreamWriter(file, true))
-                    w.WriteLine(data);
-            }
+        public static string GetName(string line) {
+            int index = line.IndexOf(' ');
+            return index == -1 ? line : line.Substring(0, index);
         }
     }
 }

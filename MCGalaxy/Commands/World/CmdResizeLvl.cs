@@ -85,8 +85,7 @@ namespace MCGalaxy.Commands.World {
                 }
             }
 
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            Server.DoGC();
             return Level.Load(lvl.name);
         }
         

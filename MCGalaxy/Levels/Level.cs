@@ -204,8 +204,7 @@ namespace MCGalaxy {
             } catch {
             } finally {
                 Dispose();
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+                Server.DoGC();
 
                 if (!silent) Chat.MessageOps(ColoredName + " %Swas unloaded.");
                 Server.s.Log(name + " was unloaded.");
@@ -271,8 +270,7 @@ namespace MCGalaxy {
                 Chat.MessageAll("FAILED TO SAVE {0}", ColoredName);
                 Server.ErrorLog(e);
             }
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            Server.DoGC();
         }
         
         void SaveCore(string path) {

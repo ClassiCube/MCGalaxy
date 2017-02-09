@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -82,16 +83,8 @@ namespace MCGalaxy {
         
         
         /// <summary> Finds partial matches of 'name' against the names of the items in the 'items' enumerable. </summary>
-        /// <param name="pl"> The player to output messages to. </param>
-        /// <param name="name"> The name to perform partial matching against. </param>
-        /// <param name="matches"> The number of found/outputted matches. </param>
-        /// <param name="items"> Enumerable of items that may be matched with. </param>
-        /// <param name="filter"> Selects which items from 'items' are actually matched. </param>
-        /// <param name="nameGetter"> Gets the name of a particular item. </param>
-        /// <param name="group"> The group/type of the items. (e.g. 'players', 'commands') </param>
-        /// <param name="limit"> The maximum number of matches that are outputted. </param>
         /// <returns> If exactly one match, the matching item. </returns>
-        public static T Find<T>(Player pl, string name, out int matches, IEnumerable items,
+        public static T Find<T>(Player p, string name, out int matches, IEnumerable items,
                                 Predicate<T> filter, Func<T, string> nameGetter, string group, int limit = 5)  {
             T match = default(T); matches = 0;
             StringBuilder nameMatches = new StringBuilder();
@@ -110,19 +103,76 @@ namespace MCGalaxy {
                 }
             }
             
+            if (matches == 1) return match;
             if (matches == 0) {
-                Player.Message(pl, "No " + group + " match \"" + name + "\"."); 
-                return default(T);
-            } else if (matches == 1) {
-                return match;
+                Player.Message(p, "No " + group + " match \"" + name + "\".");
             } else {
-                string count = matches > limit ? limit + "+ " : matches + " ";
-                string names = nameMatches.ToString(0, nameMatches.Length - 2);
-                
-                Player.Message(pl, count + group + " match \"" + name + "\":");
-                Player.Message(pl, names); 
-                return default(T);
+                OutputMulti(p, name, nameMatches, matches, group, limit);
             }
+            return default(T);
+        }
+        
+        /// <summary> Finds partial matches of 'name' against the names of the items in the 'items' enumerable. </summary>
+        /// <remarks> Outputs multiple matching entries, as 'items' enumerable may have multiple entries. </remarks>
+        /// <returns> If exactly one match, the matching list of items. </returns>
+        public static List<T> FindMulti<T>(Player p, string name, out int matches, IEnumerable items,
+                                           Predicate<T> filter, Func<T, string> nameGetter, string group, int limit = 5)  {
+            List<T> matchItems = null; matches = 0;
+            StringBuilder nameMatches = new StringBuilder();
+            List<string> outputtedNames = new List<string>(limit);
+            string match = null;
+
+            foreach (T item in items) {
+                if (filter != null && !filter(item)) continue;
+                string itemName = nameGetter(item);
+                
+                // Found an exact name match - only output items now which exactly match
+                if (itemName.Equals(name, comp)) {
+                    if (match == null || !name.Equals(match, comp))
+                        matchItems = new List<T>();
+                    matchItems.Add(item);
+                    
+                    matches = 1; match = name;
+                    continue;
+                }
+                
+                if (itemName.IndexOf(name, comp) < 0) continue;
+                if (matches == 0) { // Found our first partial match - init the list
+                    matchItems = new List<T>();
+                    matchItems.Add(item);
+                    match = itemName;
+                } else if (match != null && itemName.Equals(match, comp)) { // Found same partial match
+                    matchItems.Add(item);
+                }
+                
+                // We do not want to output the same name multiple times
+                if (outputtedNames.CaselessContains(itemName) || matches > (limit + 1)) continue;
+                matches++;
+                
+                if (matches <= limit) {
+                    nameMatches.Append(itemName).Append(", ");
+                } else if (matches == limit + 1) {
+                    nameMatches.Append("(and more)").Append(", ");
+                }
+                outputtedNames.Add(itemName);
+            }
+            
+            if (matches == 1) return matchItems;
+            if (matches == 0) {
+                Player.Message(p, "No " + group + " found for \"" + name + "\".");
+            } else {
+                OutputMulti(p, name, nameMatches, matches, "players", limit);
+            }
+            return null;
+        }
+        
+        static void OutputMulti(Player p, string name, StringBuilder nameMatches,
+                                int matches, string group, int limit = 5) {
+            string count = matches > limit ? limit + "+ " : matches + " ";
+            string names = nameMatches.ToString(0, nameMatches.Length - 2);
+            
+            Player.Message(p, count + group + " match \"" + name + "\":");
+            Player.Message(p, names);
         }
     }
 }

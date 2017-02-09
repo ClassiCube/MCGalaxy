@@ -23,49 +23,50 @@ using System.Text;
 namespace MCGalaxy {
     public sealed class PlayerExtList {   
         
+        char separator = ' ';
         string path;
-        List<string> players = new List<string>();
+        List<string> names = new List<string>();
         public List<string> lines = new List<string>();
         readonly object locker = new object(), saveLocker = new object();
         
-        public void Add(string p, string data) {
-            p = p.ToLower();
+        public void Add(string name, string data) {
+            name = name.ToLower();
             lock (locker) {
-                players.Add(p); lines.Add(p + " " + data);
+                names.Add(name); lines.Add(name + separator + data);
             }
         }
         
-        public bool Remove(string p) {
+        public bool Remove(string name) {
             lock (locker) {
-                int idx = players.IndexOf(p.ToLower());
+                int idx = names.IndexOf(name.ToLower());
                 if (idx == -1) return false;
                 
-                players.RemoveAt(idx);
+                names.RemoveAt(idx);
                 lines.RemoveAt(idx);
                 return true;
             }
         }
         
-        public void AddOrReplace(string p, string data) {
-            p = p.ToLower();
+        public void AddOrReplace(string name, string data) {
+            name = name.ToLower();
             lock (locker) {
-                int idx = players.IndexOf(p);
+                int idx = names.IndexOf(name);
                 if (idx == -1) {
-                    players.Add(p); lines.Add(p + " " + data);
+                    names.Add(name); lines.Add(name + separator + data);
                 } else {
-                    lines[idx] = p + " " + data;
+                    lines[idx] = name + separator + data;
                 }
             }
         }
         
-        public string Find(string p) {
+        public string Find(string name) {
             lock (locker) {
-                int idx = players.IndexOf(p.ToLower());
+                int idx = names.IndexOf(name.ToLower());
                 return idx == -1 ? null : lines[idx];
             }
         }
         
-        public int Count { get { lock (locker) return players.Count; } }
+        public int Count { get { lock (locker) return names.Count; } }
         
         
         public void Save() { Save(true); }
@@ -84,9 +85,10 @@ namespace MCGalaxy {
             }
         }
         
-        public static PlayerExtList Load(string path) {
+        public static PlayerExtList Load(string path, char separator = ' ') {
             PlayerExtList list = new PlayerExtList();
             list.path = path;
+            list.separator = separator;
             
             if (!File.Exists(path)) {
                 File.Create(path).Close();
@@ -98,8 +100,8 @@ namespace MCGalaxy {
                 string line = null;
                 while ((line = r.ReadLine()) != null) {
                     list.lines.Add(line);
-                    int space = line.IndexOf(' ');
-                    string name = space >= 0 ? line.Substring(0, space) : line;
+                    int sepIndex = line.IndexOf(separator);
+                    string name = sepIndex >= 0 ? line.Substring(0, sepIndex) : line;
                     
                     // Need to convert uppercase to lowercase, in case user added in entries.
                     bool anyUpper = false;
@@ -108,7 +110,7 @@ namespace MCGalaxy {
                         anyUpper |= (c >= 'A' && c <= 'Z');
                     }
                     if (anyUpper) name = name.ToLower();
-                    list.players.Add(name);
+                    list.names.Add(name);
                 }
             }
             return list;

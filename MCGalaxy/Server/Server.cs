@@ -108,7 +108,7 @@ namespace MCGalaxy {
             Plugin.Load();
             Background.QueueOnce(UpgradeTasks.UpgradeOldBlacklist);
             Background.QueueOnce(LoadPlayerLists);
-            Background.QueueOnce(LoadAutoloadCommands);
+            Background.QueueOnce(LoadAutoloadMaps);
             Background.QueueOnce(UpgradeTasks.MovePreviousLevelFiles);
             Background.QueueOnce(UpgradeTasks.UpgradeOldLockdown);
 
@@ -365,6 +365,16 @@ namespace MCGalaxy {
             mainLevel.unload = false;
             level = mapName;
             return true;
+        }
+        
+        public static void DoGC() {
+            long start = GC.GetTotalMemory(false);
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            
+            long end = GC.GetTotalMemory(false);
+            double delta = (start - end) / 1024.0;
+            Server.s.Log("GC performed (freed " + delta.ToString("F2") + " KB)", true);
         }
     }
 }

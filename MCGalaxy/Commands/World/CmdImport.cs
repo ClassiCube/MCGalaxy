@@ -52,8 +52,7 @@ namespace MCGalaxy.Commands.World {
                     lvl.Save(true);
                 } finally {
                     lvl.Dispose();
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
+                    Server.DoGC();
                 }
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
@@ -61,7 +60,6 @@ namespace MCGalaxy.Commands.World {
                 return;
             }
             Player.Message(p, "Converted map!");
-            //CmdLoad.LoadLevel(p, name); pls
         }
         
         enum FileType { Mcf, Fcm, Dat, Cw };

@@ -70,8 +70,7 @@ namespace MCGalaxy.Commands {
             BlockDBChange.OutputMessageBlock(p, b, id, x, y, z);
             BlockDBChange.OutputPortal(p, b, id, x, y, z);
             
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            Server.DoGC();
         }
         
         static void ListFromDatabase(Player p, ref bool foundAny, Dictionary<int, string> names,

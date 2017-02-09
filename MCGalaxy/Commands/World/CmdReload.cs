@@ -46,8 +46,7 @@ namespace MCGalaxy.Commands {
                 }
                 LevelActions.ReloadMap(p, who, true);
             }
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            Server.DoGC();
         }
         
         bool ReloadAll(Player p, string[] parts) {
