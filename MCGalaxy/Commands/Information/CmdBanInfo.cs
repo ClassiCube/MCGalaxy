@@ -29,17 +29,22 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) {
             if (CheckSuper(p, message, "player name")) return;
             if (message == "") message = p.name;
-            bool banned = Group.IsBanned(message);
-            string msg = message;
-            string ip = PlayerInfo.FindIP(message);
+            
+            string plName = PlayerInfo.FindMatchesPreferOnline(p, message);
+            if (plName == null) return;
+            string colName = PlayerInfo.GetColoredName(p, plName);
+                        
+            bool banned = Group.IsBanned(plName);
+            string msg = colName;
+            string ip = PlayerInfo.FindIP(plName);
             bool ipBanned = ip != null && Server.bannedIP.Contains(ip);
             
-            if (!ipBanned && banned) msg += " is &CBANNED";
-            else if (!ipBanned && !banned) msg += " is not banned";
-            else if (ipBanned && banned) msg += " and their IP are &CBANNED";
-            else msg += " is not banned, but their IP is &CBANNED";
+            if (!ipBanned && banned) msg += " %Sis &CBANNED";
+            else if (!ipBanned && !banned) msg += " %Sis not banned";
+            else if (ipBanned && banned) msg += " %Sand their IP are &CBANNED";
+            else msg += " %Sis not banned, but their IP is &CBANNED";
             
-            string[] data = Ban.GetBanData(message);
+            string[] data = Ban.GetBanData(plName);
             if (data != null && banned) {
                 string grpName = Group.GetColoredName(data[3]);
                 msg += " %S(Former rank: " + grpName + "%S)";
@@ -51,10 +56,10 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "{0} {1} ago by {2}", banned ? "Banned" : "Last banned", delta.Shorten(), data[0]);
                 Player.Message(p, "Reason: {0}", data[1]);
             } else {
-                Player.Message(p, "No ban data found for " + message + ".");
+                Player.Message(p, "No ban data found for {0}%S.", colName);
             }
             
-            data = Ban.GetUnbanData(message);
+            data = Ban.GetUnbanData(plName);
             if (data != null) {
                 TimeSpan delta = GetDelta(data[2]);
                 Player.Message(p, "{0} {1} ago by {2}", banned ? "Last unbanned" : "Unbanned", delta.Shorten(), data[0]);
