@@ -49,7 +49,7 @@ namespace MCGalaxy {
                 MySQLBackend.Instance : SQLiteBackend.Instance;
             
             if (!Directory.Exists(Server.backupLocation))
-                Server.backupLocation = Path.Combine(Utils.FolderPath, "/levels/backups");
+                Server.backupLocation = Path.Combine(Utils.FolderPath, "levels/backups");
             Server.updateTimer.Interval = Server.PositionInterval;
             Save(givenPath);
         }

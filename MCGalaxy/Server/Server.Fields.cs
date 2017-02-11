@@ -291,7 +291,7 @@ namespace MCGalaxy {
         public static int backupInterval = 300;
         public static int blockInterval = 60;
         [ConfigString("backup-location", "Backup", null, "")]
-        public static string backupLocation = Path.Combine(Utils.FolderPath, "/levels/backups");
+        public static string backupLocation = Path.Combine(Utils.FolderPath, "levels/backups");
         [ConfigStringList("disabledstandardtokens", "Other", null)]
         internal static List<string> disabledChatTokens = new List<string>();
 
