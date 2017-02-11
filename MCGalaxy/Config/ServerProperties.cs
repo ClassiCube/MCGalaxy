@@ -19,7 +19,6 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using System.Windows.Forms;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {
@@ -50,7 +49,7 @@ namespace MCGalaxy {
                 MySQLBackend.Instance : SQLiteBackend.Instance;
             
             if (!Directory.Exists(Server.backupLocation))
-                Server.backupLocation = Application.StartupPath + "/levels/backups";
+                Server.backupLocation = Path.Combine(Utils.FolderPath, "/levels/backups");
             Server.updateTimer.Interval = Server.PositionInterval;
             Save(givenPath);
         }

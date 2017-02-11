@@ -30,7 +30,8 @@ namespace MCGalaxy {
         public static bool canceladmin;
         public static bool cancellog;
         public static bool canceloplog;
-        public static string apppath = Application.StartupPath;
+        public static string apppath = Utils.FolderPath;
+        
         public delegate void OnConsoleCommand(string cmd, string message);
         public static event OnConsoleCommand ConsoleCommand;
         public delegate void OnServerError(Exception error);
@@ -42,6 +43,7 @@ namespace MCGalaxy {
         public delegate void PlayerListHandler(List<Player> playerList);
         public delegate void VoidHandler();
         public delegate void LogHandler(string message);
+        
         public event LogHandler OnLog, OnSystem, OnCommand, OnError, OnOp, OnAdmin;
         public event HeartBeatHandler HeartBeatFail;
         public event MessageEventHandler OnURLChange;

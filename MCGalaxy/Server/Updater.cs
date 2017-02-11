@@ -77,7 +77,7 @@ namespace MCGalaxy {
                     } else {
                         PerformUpdate();
                     }
-                } else if (!msgOpen) {
+                } else if (!msgOpen && !MCGalaxy.Gui.App.usingConsole) {
                     msgOpen = true;
                     if (MessageBox.Show("New version found. Would you like to update?", "Update?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
                         PerformUpdate();
@@ -157,7 +157,8 @@ namespace MCGalaxy {
                 if (!mono) {
                     Process.Start("Updater.exe", "securitycheck10934579068013978427893755755270374" + parent);
                 } else {
-                    Process.Start("mono", parentfullpathdir + "/Updater.exe securitycheck10934579068013978427893755755270374" + parent);
+                    string path = Path.Combine(Utils.FolderPath, "Updater.exe");
+                    Process.Start("mono", path + " securitycheck10934579068013978427893755755270374" + parent);
                 }
                 MCGalaxy.Gui.App.ExitProgram(false, "Updating server.");
             } catch (Exception e) {

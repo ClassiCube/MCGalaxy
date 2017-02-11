@@ -178,7 +178,7 @@ namespace MCGalaxy.Commands {
             Server.restarttime = DateTime.Now;
             Server.level = "main";
 
-            Server.backupLocation = System.Windows.Forms.Application.StartupPath + "/levels/backups";
+            Server.backupLocation = Path.Combine(Utils.FolderPath, "/levels/backups");
             Server.blockInterval = 60;
 
             Server.unsafe_plugin = true;

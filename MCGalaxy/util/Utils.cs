@@ -23,6 +23,8 @@ using System.IO;
 namespace MCGalaxy { 
     public static class Utils {
 
+        public static string FolderPath { get { return AppDomain.CurrentDomain.BaseDirectory; } }
+		
         public static bool CheckHex(Player p, ref string arg) {
             if (arg.Length > 0 && arg[0] == '#')
                 arg = arg.Substring(1);
