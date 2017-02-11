@@ -34,7 +34,7 @@ namespace MCGalaxy {
 
         static object logLock = new object();
         static Thread logThread;
-        static string errPath, msgPath;        
+        static string errPath, msgPath;
         static Queue<string> errCache = new Queue<string>(), msgCache = new Queue<string>();
 
         public static void Init() {
@@ -74,13 +74,17 @@ namespace MCGalaxy {
                 if (Server.s != null) Server.s.ErrorCase(output);
                 lock (logLock) errCache.Enqueue(output);
             } catch (Exception e) {
-                try {
-                    StringBuilder temp = new StringBuilder();
-                    DescribeError(e, temp);
-                    File.AppendAllText("ErrorLogError.log", temp.ToString());
-                } catch (Exception _ex) {
-                    MessageBox.Show("ErrorLogError Error:\n Could not log the error logs error. This is a big error. \n" + _ex.Message);
-                }
+                LogErrorError(e);
+            }
+        }
+        
+        static void LogErrorError(Exception e) {
+            try {
+                StringBuilder temp = new StringBuilder();
+                DescribeError(e, temp);
+                File.AppendAllText("ErrorLogError.log", temp.ToString());
+            } catch (Exception _ex) {
+                MessageBox.Show("ErrorLogError Error:\n Could not log the error logs error. This is a big error. \n" + _ex.Message);
             }
         }
 

@@ -57,7 +57,6 @@ namespace MCGalaxy.Gui {
             DateTime startTime = DateTime.UtcNow;
             Logger.Init();
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;
-            Application.ThreadException += ThreadExHandler;
             useHighQualityGui = false;
             
             PlatformID platform = Environment.OSVersion.Platform;
@@ -67,31 +66,40 @@ namespace MCGalaxy.Gui {
             try {
                 ReadViewmode();
                 if (useConsole) {
-                    Server s = new Server();
-                    s.OnLog += WriteToConsole;
-                    s.OnCommand += WriteToConsole;
-                    s.OnSystem += delegate { };
-                    s.Start();
-
-                    Console.Title = Server.name + " - MCGalaxy " + Server.Version;
-                    MCGalaxy.Gui.App.usingConsole = true;
-                    ConsoleLoop();
+                    RunCli();
                 } else {
-                    if (isWindows) { // get rid of console window on Windows
-                        IntPtr hConsole = GetConsoleWindow();
-                        if (IntPtr.Zero != hConsole) ShowWindow(hConsole, 0);
-                    }
-                    
-                    if (useHighQualityGui) {
-                        Application.EnableVisualStyles();
-                        Application.SetCompatibleTextRenderingDefault(false);
-                    }
-
-                    Application.Run(new Window());
+                    RunGui();
                 }
                 WriteToConsole("Completed in " + (DateTime.UtcNow - startTime).Milliseconds + "ms");
             }
             catch (Exception e) { Server.ErrorLog(e); }
+        }
+        
+        static void RunCli() {
+            Server s = new Server();
+            s.OnLog += WriteToConsole;
+            s.OnCommand += WriteToConsole;
+            s.OnSystem += delegate { };
+            MCGalaxy.Gui.App.usingConsole = true;
+            
+            s.Start();
+            Console.Title = Server.name + " - MCGalaxy " + Server.Version;            
+            ConsoleLoop();
+        }
+        
+        static void RunGui() {
+            Application.ThreadException += ThreadExHandler;
+            if (isWindows) { // get rid of console window on Windows
+                IntPtr hConsole = GetConsoleWindow();
+                if (IntPtr.Zero != hConsole) ShowWindow(hConsole, 0);
+            }
+            
+            if (useHighQualityGui) {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+            }
+
+            Application.Run(new Window());
         }
         
         static void ReadViewmode() {

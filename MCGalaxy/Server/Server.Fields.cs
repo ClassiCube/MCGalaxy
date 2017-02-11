@@ -18,9 +18,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Sockets;
 using System.Threading;
-using System.Windows.Forms;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
 
@@ -291,7 +291,7 @@ namespace MCGalaxy {
         public static int backupInterval = 300;
         public static int blockInterval = 60;
         [ConfigString("backup-location", "Backup", null, "")]
-        public static string backupLocation = Application.StartupPath + "/levels/backups";
+        public static string backupLocation = Path.Combine(Utils.FolderPath, "/levels/backups");
         [ConfigStringList("disabledstandardtokens", "Other", null)]
         internal static List<string> disabledChatTokens = new List<string>();
 
