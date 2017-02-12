@@ -35,13 +35,21 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             string[] args = message.ToLower().Split(' ');
             switch (args[0]) {
-                    case "status": HandleStatus(p, message, args); break;
-                    case "start": HandleStart(p, message, args); break;
-                    case "stop": HandleStop(p, message, args); break;
-                    case "force": HandleForceStop(p, message, args); break;
-                    case "hitbox": HandleHitbox(p, message, args); break;
-                    case "maxmove": HandleMaxMove(p, message, args); break;
+                case "go": HandleGo(p, message, args); break;
+                case "status": HandleStatus(p, message, args); break;
+                case "start": HandleStart(p, message, args); break;
+                case "stop": HandleStop(p, message, args); break;
+                case "force": HandleForceStop(p, message, args); break;
+                case "hitbox": HandleHitbox(p, message, args); break;
+                case "maxmove": HandleMaxMove(p, message, args); break;
             }
+        }
+
+        static void HandleGo(Player p, string message, string[] args) {
+            if (Server.zombie.Status == ZombieGameStatus.NotStarted) {
+                Player.Message(p, "Zombie Survival is not currently running."); return;
+            }
+            PlayerActions.ChangeMap(p, Server.zombie.CurLevel);
         }
         
         static void HandleStatus(Player p, string message, string[] args) {
@@ -127,15 +135,16 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/zg status - shows the current status of the Zombie Survival game.");
-            Player.Message(p, "/zg start 0 - Starts a Zombie Survival game for an unlimited amount of rounds.");
-            Player.Message(p, "/zg start [x] - Starts a Zombie Survival game for [x] amount of rounds.");
-            Player.Message(p, "/zg stop - Stops the Zombie Survival game after the round has finished.");
-            Player.Message(p, "/zg force - Force stops the Zombie Survival game immediately.");
-            Player.Message(p, "/zg hitbox [distance] - Sets how far apart players need to be before " +
-                               "they are considered a 'collision'. (32 units = 1 block).");
-            Player.Message(p, "/zg maxmove [distance] - Sets how far apart players are allowed to move in a" +
-                               "movement packet before they are considered speedhacking. (32 units = 1 block).");
+            Player.Message(p, "%T/zg status %H- Shows the current status of Zombie Survival.");
+            Player.Message(p, "%T/zg go %H- Moves you to the Zombie Survival map.");
+            Player.Message(p, "%T/zg start 0 %H- Starts Zombie Survival for an unlimited amount of rounds.");
+            Player.Message(p, "%T/zg start [x] %H- Starts Zombie Survival for [x] amount of rounds.");
+            Player.Message(p, "%T/zg stop %H- Stops Zombie Survival after the round has finished.");
+            Player.Message(p, "%T/zg force %H- Immediately stops Zombie Survival.");
+            Player.Message(p, "%T/zg hitbox [distance] %H- Sets how far apart players need to be before " +
+                           "they are considered a 'collision'. (32 units = 1 block).");
+            Player.Message(p, "%T/zg maxmove [distance] %H- Sets how far apart players are allowed to move in a" +
+                           "movement packet before they are considered speedhacking. (32 units = 1 block).");
         }
     }
 }
