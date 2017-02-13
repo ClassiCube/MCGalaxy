@@ -42,13 +42,13 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Place a block where you would like to check for zones.");
                 p.MakeSelection(1, null, CheckZone);
             } else if (args[0].CaselessEq("add")) {
-                if (!CheckAdd(p, args, "zone map")) return;
+                if (!CheckAdd(p, args, "zone add")) return;
 
                 Player.Message(p, "Place two blocks to determine the edges.");
                 Player.Message(p, "Zone for: &b" + args[1] + ".");
                 p.MakeSelection(2, args[1], AddZone);
             } else if (args[0].CaselessEq("map")) {
-                if (!CheckAdd(p, args, "zone add")) return;
+                if (!CheckAdd(p, args, "zone map")) return;
 
                 ZoneAll(p.level, args[1]);
                 Player.Message(p, "Added zone for &b" + args[1]);

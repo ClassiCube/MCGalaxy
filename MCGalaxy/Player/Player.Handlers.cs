@@ -500,7 +500,6 @@ namespace MCGalaxy {
             if (!loggedIn) return;
             byte continued = packet[1];
             string text = NetUtils.ReadString(packet, 2);
-            text.Cp437ToUnicodeInPlace();
             LastAction = DateTime.UtcNow;
             if (FilterChat(ref text, continued)) return;
 
@@ -524,8 +523,7 @@ namespace MCGalaxy {
                     SendMessage("Your vote for &5" + text.ToLower().Capitalize() + " %Shas been placed. Thanks!");
                     Server.lava.map.ChatLevelOps(name + " voted for &5" + text.ToLower().Capitalize() + "%S.");
                     return;
-                }
-                else {
+                } else {
                     SendMessage("&cYou already voted!");
                     return;
                 }
