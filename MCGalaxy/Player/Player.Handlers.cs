@@ -50,13 +50,13 @@ namespace MCGalaxy {
                                  byte block, byte extBlock, bool checkPlaceDist) {
             byte oldB = level.GetTile(x, y, z);
             if (oldB == Block.Invalid) return;
-                
+            
             if (jailed || !agreed || !canBuild) { RevertBlock(x, y, z); return; }
             if (level.IsMuseum && Blockchange == null) return;
             
             if (action > 1) {
                 const string msg = "Unknown block action!";
-                Leave(msg, msg, true); return; 
+                Leave(msg, msg, true); return;
             }
             bool doDelete = !painting && action == 0;
 
@@ -214,8 +214,8 @@ namespace MCGalaxy {
         
         int PacketSize(byte[] buffer) {
             switch (buffer[0]) {
-                case (byte)'G': return -2; //For wom
-                case Opcode.Handshake: return 131;
+                    case (byte)'G': return -2; //For wom
+                    case Opcode.Handshake: return 131;
                 case Opcode.SetBlockClient:
                     if (!loggedIn) goto default;
                     return 9;
@@ -225,11 +225,11 @@ namespace MCGalaxy {
                 case Opcode.Message:
                     if (!loggedIn) goto default;
                     return 66;
-                case Opcode.CpeExtInfo: return 67;
-                case Opcode.CpeExtEntry: return 69;
-                case Opcode.CpeCustomBlockSupportLevel: return 2;
-                case Opcode.CpePlayerClick: return 15;
-                case Opcode.Ping: return 1;
+                    case Opcode.CpeExtInfo: return 67;
+                    case Opcode.CpeExtEntry: return 69;
+                    case Opcode.CpeCustomBlockSupportLevel: return 2;
+                    case Opcode.CpePlayerClick: return 15;
+                    case Opcode.Ping: return 1;
 
                 default:
                     if (!dontmindme) {
@@ -242,7 +242,7 @@ namespace MCGalaxy {
         
         void HandlePacket(byte[] buffer) {
             switch (buffer[0]) {
-                case Opcode.Ping: break;
+                    case Opcode.Ping: break;
                 case Opcode.Handshake:
                     HandleLogin(buffer); break;
                 case Opcode.SetBlockClient:
@@ -321,7 +321,7 @@ namespace MCGalaxy {
                     SendPos(Entities.SelfID, pos[0], pos[1], pos[2], rotx, roty);
                 }
                 return;
-            }            
+            }
 
             if (Server.Countdown.HandlesMovement(this, x, y, z, rotx, roty))
                 return;
@@ -406,26 +406,40 @@ namespace MCGalaxy {
             return level.GetTile(x, y, z);
         }
 
-        internal void CheckBlock(ushort x, ushort y, ushort z) {
-            byte bHead = level.GetTile(x, y, z);
-            byte bFeet = level.GetTile(x, (ushort)(y - 1), z);
-
-            HandleWalkthrough handler = BlockBehaviour.walkthroughHandlers[bHead];
-            if (handler != null && handler(this, bHead, x, y, z)) {
-                lastWalkthrough = level.PosToInt(x, y, z); return;
-            }
-            handler = BlockBehaviour.walkthroughHandlers[bFeet];
-            if (handler != null && handler(this, bFeet, x, (ushort)(y - 1), z)) {
-                lastWalkthrough = level.PosToInt(x, (ushort)(y - 1), z); return;
-            }
+        internal void CheckBlock() {
+            AABB bb = ModelBB.OffsetPosition(pos);
+            Vec3S32 min = bb.BlockMin, max = bb.BlockMax;
+            bool hitWalkthrough = false;
             
-            lastWalkthrough = level.PosToInt(x, y, z);
-            if ((bHead == Block.tntexplosion || bFeet == Block.tntexplosion) && PlayingTntWars) return;
-            
-            if (Block.Props[bHead].KillerBlock) {
-                HandleDeath(bHead, 0);
-            } else if (Block.Props[bFeet].KillerBlock) {
-                HandleDeath(bFeet, 0);
+            for (int y = min.Y; y <= max.Y; y++)
+                for (int z = min.Z; z <= max.Z; z++)
+                    for (int x = min.X; x <= max.X; x++)
+            {
+                ushort xP = (ushort)x, yP = (ushort)y, zP = (ushort)z;
+                byte block = level.GetTile(xP, yP, zP), extBlock = 0;
+                if (block == Block.Invalid) continue;
+                if (block == Block.custom_block)
+                    extBlock = level.GetExtTileNoCheck(xP, yP, zP);
+                
+                AABB blockBB = Block.BlockAABB(block, extBlock, level)
+                    .Offset(x * 32, y * 32, z * 32);
+                if (!bb.Intersects(blockBB)) continue;
+                
+                // We can activate only one walkthrough block per movement
+                if (!hitWalkthrough) {
+                    HandleWalkthrough handler = BlockBehaviour.walkthroughHandlers[block];
+                    if (handler != null && handler(this, block, xP, yP, zP)) {
+                        lastWalkthrough = level.PosToInt(xP, yP, zP);
+                        hitWalkthrough = true;
+                    }
+                }
+                
+                // Some blocks will cause death of players
+                if (block != Block.custom_block && !Block.Props[block].KillerBlock) continue;
+                if (block == Block.custom_block && !level.CustomBlockProps[extBlock].KillerBlock) continue;
+                
+                if (block == Block.tntexplosion && PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
+                HandleDeath(block, extBlock);
             }
         }
 

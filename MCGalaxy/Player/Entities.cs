@@ -22,6 +22,7 @@ namespace MCGalaxy {
     public static class Entities {
 
         public const byte SelfID = 0xFF;
+        public const ushort CharacterHeight = 51;
         
         #region Spawning / Despawning
         

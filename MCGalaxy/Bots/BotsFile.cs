@@ -63,6 +63,7 @@ namespace MCGalaxy.Bots {
                     bot.AIName = props.AI; bot.hunt = props.Hunt; bot.kill = props.Kill;
                     bot.DisplayName = props.DisplayName;
                     
+                    bot.ModelBB = AABB.ModelAABB(bot.model, lvl);
                     LoadAi(props, bot);
                     PlayerBot.Add(bot, false);
                 }

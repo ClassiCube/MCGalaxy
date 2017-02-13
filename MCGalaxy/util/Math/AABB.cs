@@ -49,6 +49,17 @@ namespace MCGalaxy {
                             pos.X + size.X / 2, pos.Y + size.Y, pos.Z + size.Z / 2);
         }
         
+        public AABB OffsetPosition(ushort[] pos) {
+            return Offset(pos[0], pos[1] - Entities.CharacterHeight, pos[2]);
+        }
+        
+        public AABB Offset(int x, int y, int z) {
+            AABB aabb = this;
+            aabb.Min.X += x; aabb.Min.Y += y; aabb.Min.Z += z;
+            aabb.Max.X += x; aabb.Max.Y += y; aabb.Max.Z += z;
+            return aabb;
+        }
+        
         /// <summary> Returns a new bounding box, with the minimum and maximum coordinates
         /// of the original bounding box scaled away from origin the given value. </summary>
         public AABB Scale(float scale) {
@@ -98,7 +109,7 @@ namespace MCGalaxy {
                 // For model, not a physics blocks means custom block
                 
                 if (block >= Block.CpeCount) { extBlock = block; block = Block.custom_block; }
-                baseBB = Block.BlockAABB(block, extBlock, lvl);
+                baseBB = Block.BlockAABB(block, extBlock, lvl).Offset(-16, 0, -16);
             } else {
                 baseBB = AABB.Make(new Vec3S32(0, 0, 0), BaseSize(model));
             }

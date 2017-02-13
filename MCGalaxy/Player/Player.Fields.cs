@@ -201,6 +201,7 @@ namespace MCGalaxy {
         internal BlockDefinition gbBlock, lbBlock;
         
         public string model = "humanoid";
+        public AABB ModelBB;
         public bool spawned = false;
 
         public bool Mojangaccount { get { return truename.IndexOf('@') >= 0; } }

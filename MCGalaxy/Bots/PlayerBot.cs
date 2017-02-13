@@ -33,6 +33,7 @@ namespace MCGalaxy {
         public bool hunt = false, kill = false;
 
         public string AIName = "", color, model = "humanoid";
+        public AABB ModelBB;
         public string name, SkinName, DisplayName;
         public string ColoredName { get { return color + DisplayName; } }
         
@@ -57,6 +58,7 @@ namespace MCGalaxy {
             DisplayName = n;
             SkinName = n;
             color = "&1";
+            ModelBB = AABB.ModelAABB(model, lvl);
             
             level = lvl;
             id = NextFreeId(this);

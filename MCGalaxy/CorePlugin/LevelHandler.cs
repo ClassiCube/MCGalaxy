@@ -25,6 +25,7 @@ namespace MCGalaxy.Core {
             p.prevMsg = "";
             p.showMBs = false;
             p.showPortals = false;
+            p.ModelBB = AABB.ModelAABB(p.model, level); // in case had been using a level-only custom block for their model
             
             if (p.HasCpeExt(CpeExt.EnvWeatherType))
                 p.Send(Packet.EnvWeatherType((byte)level.Weather));

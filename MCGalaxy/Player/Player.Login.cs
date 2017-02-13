@@ -188,6 +188,7 @@ namespace MCGalaxy {
                 int sep = line.IndexOf(' ');
                 if (sep >= 0) model = line.Substring(sep + 1);
             }
+            ModelBB = AABB.ModelAABB(model, level);
         }
         
         void InitPlayerStats(DataTable playerDb) {

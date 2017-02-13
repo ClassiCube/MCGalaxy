@@ -61,7 +61,7 @@ namespace MCGalaxy.Tasks {
 
                         if (p.level.Death)
                             p.CheckSurvival(x, y, z);
-                        p.CheckBlock(x, y, z);
+                        p.CheckBlock();
                         p.oldIndex = p.level.PosToInt(x, y, z);
                     } catch (Exception e) {
                         Server.ErrorLog(e);

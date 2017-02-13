@@ -234,15 +234,15 @@ namespace MCGalaxy {
                 def = lvl.CustomBlockDefs[extBlock];
                 if (def == null) return new AABB(0, 0, 0, 32, 32, 32);
                 
-                return new AABB(def.MinX, def.MinZ, def.MinY, 
-                                def.MaxX, def.MaxZ, def.MaxY);
+                return new AABB(def.MinX * 2, def.MinZ * 2, def.MinY * 2, 
+                                def.MaxX * 2, def.MaxZ * 2, def.MaxY * 2);
             } else if (block < Block.CpeCount && (def = lvl.CustomBlockDefs[block]) != null) {
-                return new AABB(def.MinX, def.MinZ, def.MinY, 
-                                def.MaxX, def.MaxZ, def.MaxY);
+                return new AABB(def.MinX * 2, def.MinZ * 2, def.MinY * 2, 
+                                def.MaxX * 2, def.MaxZ * 2, def.MaxY * 2);
             } else {
                 block = Block.Convert(block);
                 return new AABB(0, 0, 0,
-                                32, DefaultSet.Height(block), 32);
+                                32, DefaultSet.Height(block) * 2, 32);
             }
         }
     }
