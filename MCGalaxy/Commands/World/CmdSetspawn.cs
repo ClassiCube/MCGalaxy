@@ -36,6 +36,7 @@ namespace MCGalaxy.Commands {
             p.level.rotx = p.rot[0];
             p.level.roty = p.rot[1];
             p.level.changed = true;
+            p.SpawnEntity(p, Entities.SelfID, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
         }
         
         public override void Help(Player p) {
