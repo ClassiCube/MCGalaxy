@@ -70,7 +70,7 @@ namespace MCGalaxy {
         
         internal static BlockDefinition[] Load(bool global, Level lvl) {
             BlockDefinition[] defs = new BlockDefinition[256];
-            string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.name + ".json";
+            string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.MapName + ".json";
             try {
                 if (File.Exists(path)) {
                     string json = File.ReadAllText(path);
@@ -109,7 +109,7 @@ namespace MCGalaxy {
             }
             
             string json = JsonConvert.SerializeObject(defs, Formatting.Indented);
-            string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.name + ".json";
+            string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.MapName + ".json";
             File.WriteAllText(path, json);
         }
         

@@ -45,7 +45,7 @@ namespace MCGalaxy.Levels.IO {
         }
         
         public static void LoadEnv(Level level) {
-            string path = "levels/level properties/" + level.name + ".env";
+		    string path = "levels/level properties/" + level.MapName.ToLower() + ".env";
             PropertiesFile.Read(path, ref level, EnvLineProcessor);
         }
         

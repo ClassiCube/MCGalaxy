@@ -53,15 +53,17 @@ namespace MCGalaxy.Commands.World {
             }
             
             try {
-                JoinMuseum(p, name, path);
+                JoinMuseum(p, name, args[0].ToLower(), path);
             } finally {
                 Interlocked.Exchange(ref p.LoadingMuseum, 0);
             }
         }
         
-        static void JoinMuseum(Player p, string name, string path) {
+        static void JoinMuseum(Player p, string name, string mapName, string path) {
             Level lvl = IMapImporter.Formats[0].Read(path, name, false);
+            lvl.MapName = mapName;
             SetLevelProps(lvl);
+            Level.LoadMetadata(lvl);
 
             p.Loading = true;
             Entities.DespawnEntities(p);

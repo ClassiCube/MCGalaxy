@@ -28,7 +28,7 @@ using MCGalaxy.Util;
 namespace MCGalaxy {
     public sealed partial class Level : IDisposable {
         
-        public string name;
+        public string name, MapName;
         [ConfigString("MOTD", "General", null, "ignore", true, null, 128)]
         public string motd = "ignore";
         

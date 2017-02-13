@@ -38,7 +38,7 @@ namespace MCGalaxy {
     
     public enum BuildType { Normal, ModifyOnly, NoModify };
 
-    public sealed partial class Level : IDisposable {    
+    public sealed partial class Level : IDisposable {
         
         public Level(string n, ushort x, ushort y, ushort z) { Init(n, x, y, z); }
         
@@ -56,9 +56,7 @@ namespace MCGalaxy {
         }
         
         void Init(string n, ushort x, ushort y, ushort z) {
-            Width = x;
-            Height = y;
-            Length = z;
+            Width = x; Height = y; Length = z;
             if (Width < 16) Width = 16;
             if (Height < 16) Height = 16;
             if (Length < 16) Length = 16;
@@ -74,9 +72,9 @@ namespace MCGalaxy {
                 CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
             CustomBlockProps = new BlockProps[256];
             for (int i = 0; i < CustomBlockProps.Length; i++)
-                CustomBlockProps[i] = BlockDefinition.GlobalProps[i];            
+                CustomBlockProps[i] = BlockDefinition.GlobalProps[i];
             
-            name = n;
+            name = n; MapName = n;
             BlockDB = new BlockDB(this);
             EdgeLevel = (short)(y / 2);
             CloudsHeight = (short)(y + 2);
@@ -85,7 +83,7 @@ namespace MCGalaxy {
             ChunksX = (Width + 15) >> 4;
             ChunksY = (Height + 15) >> 4;
             ChunksZ = (Length + 15) >> 4;
-            CustomBlocks = new byte[ChunksX * ChunksY * ChunksZ][];           
+            CustomBlocks = new byte[ChunksX * ChunksY * ChunksZ][];
 
             spawnx = (ushort)(Width / 2);
             spawny = (ushort)(Height * 0.75f);
@@ -124,36 +122,36 @@ namespace MCGalaxy {
             return String.IsNullOrEmpty(p.group.MOTD) ? Server.motd : p.group.MOTD;
         }
 
-        /// <summary> Whether block changes made on this level should be 
+        /// <summary> Whether block changes made on this level should be
         /// saved to the BlockDB and .lvl files. </summary>
         public bool ShouldSaveChanges() {
             if (!saveLevel) return false;
             ZombieGame zs = Server.zombie;
             
             if (zs.Running && !ZombieGameProps.SaveLevelBlockchanges &&
-               (name.CaselessEq(zs.CurLevelName) || name.CaselessEq(zs.LastLevelName))) 
+                (name.CaselessEq(zs.CurLevelName) || name.CaselessEq(zs.LastLevelName)))
                 return false;
-            if (Server.lava.active && Server.lava.HasMap(name)) 
+            if (Server.lava.active && Server.lava.HasMap(name))
                 return false;
             return true;
         }
         
         public bool ShouldShowJoinMessage(Level prev) {
             ZombieGame zs = Server.zombie;
-            if (zs.Running && name.CaselessEq(zs.CurLevelName) && 
-               (prev == this || zs.LastLevelName == "" || prev.name.CaselessEq(zs.LastLevelName))) 
+            if (zs.Running && name.CaselessEq(zs.CurLevelName) &&
+                (prev == this || zs.LastLevelName == "" || prev.name.CaselessEq(zs.LastLevelName)))
                 return false;
-            if (Server.lava.active && Server.lava.HasMap(name)) 
+            if (Server.lava.active && Server.lava.HasMap(name))
                 return false;
             return true;
         }
         
-        /// <summary> The currently active game running on this map, 
+        /// <summary> The currently active game running on this map,
         /// or null if there is no game running. </summary>
         public IGame CurrentGame() {
             if (Server.zombie.Running && name.CaselessEq(Server.zombie.CurLevelName))
                 return Server.zombie;
-            if (Server.lava.active && Server.lava.map == this) 
+            if (Server.lava.active && Server.lava.map == this)
                 return Server.lava;
             return null;
         }
@@ -213,14 +211,14 @@ namespace MCGalaxy {
         }
 
         void MovePlayersToMain() {
-            Player[] players = PlayerInfo.Online.Items; 
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level == this) {
                     Player.Message(p, "You were moved to the main level as " + ColoredName + " %Swas unloaded.");
                     PlayerActions.ChangeMap(p, Server.mainLevel);
                 }
             }
-        }        
+        }
 
         /// <summary> Returns whether the given coordinates are insides the boundaries of this level. </summary>
         public bool InBound(ushort x, ushort y, ushort z) {
@@ -257,7 +255,7 @@ namespace MCGalaxy {
                 if (!Directory.Exists("levels/level properties")) Directory.CreateDirectory("levels/level properties");
                 if (!Directory.Exists("levels/prev")) Directory.CreateDirectory("levels/prev");
                 
-                if (changed || !File.Exists(path) || Override || (physicschanged && clearPhysics)) {            
+                if (changed || !File.Exists(path) || Override || (physicschanged && clearPhysics)) {
                     lock (saveLock)
                         SaveCore(path);
                     
@@ -350,55 +348,61 @@ namespace MCGalaxy {
             }
             
             try {
-                Level level = IMapImporter.Formats[0].Read(path, name, true);
-                level.setPhysics(phys);
-                level.backedup = true;
+                Level lvl = IMapImporter.Formats[0].Read(path, name, true);
+                lvl.setPhysics(phys);
+                lvl.backedup = true;
 
-                level.jailx = (ushort)(level.spawnx * 32);
-                level.jaily = (ushort)(level.spawny * 32);
-                level.jailz = (ushort)(level.spawnz * 32);
-                level.jailrotx = level.rotx;
-                level.jailroty = level.roty;
-                level.StartPhysics();
+                lvl.jailx = (ushort)(lvl.spawnx * 32);
+                lvl.jaily = (ushort)(lvl.spawny * 32);
+                lvl.jailz = (ushort)(lvl.spawnz * 32);
+                lvl.jailrotx = lvl.rotx;
+                lvl.jailroty = lvl.roty;
+                lvl.StartPhysics();
                 
-                try {
-                    string propsPath = LevelInfo.FindPropertiesFile(level.name);
-                    if (propsPath != null)
-                        LvlProperties.Load(level, propsPath);
-                    else
-                        Server.s.Log(".properties file for level " + level.name + " was not found.");
-                    // Backwards compatibility for older levels which had .env files.
-                    LvlProperties.LoadEnv(level);
-                } catch (Exception e) {
-                    Server.ErrorLog(e);
-                }
-                level.BlockDB.Cache.Enabled = level.UseBlockDB;
-                
-                BlockDefinition[] defs = BlockDefinition.Load(false, level);
-                for (int i = 0; i < defs.Length; i++) {
-                    if (defs[i] == null) continue;
-                    level.CustomBlockDefs[i] = defs[i];
-                    level.CustomBlockProps[i] = new BlockProps((byte)i);
-                }
-                BlockProps.Load("lvl_" + level.name, level.CustomBlockProps);
-                Bots.BotsFile.LoadBots(level);
-                
+                LoadMetadata(lvl);
+                Bots.BotsFile.LoadBots(lvl);
+
                 object locker = ThreadSafeCache.DBCache.Get(name);
                 lock (locker) {
-                    LevelDB.LoadZones(level, name);
-                    LevelDB.LoadPortals(level, name);
-                    LevelDB.LoadMessages(level, name);
+                    LevelDB.LoadZones(lvl, name);
+                    LevelDB.LoadPortals(lvl, name);
+                    LevelDB.LoadMessages(lvl, name);
                 }
 
-                Server.s.Log(string.Format("Level \"{0}\" loaded.", level.name));
+                Server.s.Log(string.Format("Level \"{0}\" loaded.", lvl.name));
                 if (LevelLoaded != null)
-                    LevelLoaded(level);
-                OnLevelLoadedEvent.Call(level);
-                return level;
+                    LevelLoaded(lvl);
+                OnLevelLoadedEvent.Call(lvl);
+                return lvl;
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 return null;
             }
+        }
+        
+        public static void LoadMetadata(Level lvl) {
+            try {
+                string propsPath = LevelInfo.FindPropertiesFile(lvl.MapName);
+                if (propsPath != null) {
+                    LvlProperties.Load(lvl, propsPath);
+                } else {
+                    Server.s.Log(".properties file for level " + lvl.MapName + " was not found.");
+                }
+                
+                // Backwards compatibility for older levels which had .env files.
+                LvlProperties.LoadEnv(lvl);
+            } catch (Exception e) {
+                Server.ErrorLog(e);
+            }
+            lvl.BlockDB.Cache.Enabled = lvl.UseBlockDB;
+            
+            BlockDefinition[] defs = BlockDefinition.Load(false, lvl);
+            for (int i = 0; i < defs.Length; i++) {
+                if (defs[i] == null) continue;
+                lvl.CustomBlockDefs[i] = defs[i];
+                lvl.CustomBlockProps[i] = new BlockProps((byte)i);
+            }
+            BlockProps.Load("lvl_" + lvl.MapName, lvl.CustomBlockProps);
         }
 
         public static bool CheckLoadOnGoto(string givenName) {
@@ -409,8 +413,8 @@ namespace MCGalaxy {
             return load;
         }
 
-        public void ChatLevel(string message) { 
-            ChatLevel(message, LevelPermission.Banned); 
+        public void ChatLevel(string message) {
+            ChatLevel(message, LevelPermission.Banned);
         }
 
         public void ChatLevelOps(string message) {
@@ -418,14 +422,14 @@ namespace MCGalaxy {
             ChatLevel(message, rank);
         }
 
-        public void ChatLevelAdmins(string message) { 
+        public void ChatLevelAdmins(string message) {
             LevelPermission rank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
             ChatLevel(message, rank);
         }
         
         /// <summary> Sends a chat messages to all players in the level, who have at least the minPerm rank. </summary>
         public void ChatLevel(string message, LevelPermission minPerm) {
-            Player[] players = PlayerInfo.Online.Items; 
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level != this) continue;
                 if (pl.Rank < minPerm) continue;
@@ -434,7 +438,7 @@ namespace MCGalaxy {
         }
         
         public void UpdateBlockPermissions() {
-            Player[] players = PlayerInfo.Online.Items; 
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != this) continue;
                 if (!p.HasCpeExt(CpeExt.BlockPermissions)) continue;
@@ -452,7 +456,7 @@ namespace MCGalaxy {
         public static string PermissionToName(LevelPermission perm) { return Group.GetName(perm); }
         
         public bool HasPlayers() {
-            Player[] players = PlayerInfo.Online.Items; 
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players)
                 if (p.level == this) return true;
             return false;
@@ -461,7 +465,7 @@ namespace MCGalaxy {
         readonly object dbLock = new object();
         public void saveChanges() {
             lock (dbLock)
-                LevelDB.SaveBlockDB(this); 
+                LevelDB.SaveBlockDB(this);
         }
 
         public List<Player> getPlayers() {
@@ -487,7 +491,7 @@ namespace MCGalaxy {
                     oldRawType = oldExtType; flags |= 1;
                 } else {
                     oldRawType = oldType;
-                }                
+                }
                 if (newType == Block.custom_block) {
                     newRawType = newExtType; flags |= 2;
                 } else {
