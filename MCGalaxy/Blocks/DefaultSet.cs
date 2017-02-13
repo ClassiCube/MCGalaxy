@@ -53,7 +53,7 @@ namespace MCGalaxy.Blocks {
             return def;
         }
         
-        static byte Height(byte b) {
+        internal static byte Height(byte b) {
             if (b == Block.staircasestep) return 8;
             if (b == Block.cobblestoneslab) return 8;
             if (b == Block.snow) return 2;

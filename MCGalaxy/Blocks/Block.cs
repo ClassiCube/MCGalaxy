@@ -227,5 +227,23 @@ namespace MCGalaxy {
 
         [Obsolete]
         public static byte odoor(byte block) { return Props[block].ODoorId; }
+        
+        public static AABB BlockAABB(byte block, byte extBlock, Level lvl) {
+            BlockDefinition def;
+            if (block == Block.custom_block) {
+                def = lvl.CustomBlockDefs[extBlock];
+                if (def == null) return new AABB(0, 0, 0, 32, 32, 32);
+                
+                return new AABB(def.MinX, def.MinZ, def.MinY, 
+                                def.MaxX, def.MaxZ, def.MaxY);
+            } else if (block < Block.CpeCount && (def = lvl.CustomBlockDefs[block]) != null) {
+                return new AABB(def.MinX, def.MinZ, def.MinY, 
+                                def.MaxX, def.MaxZ, def.MaxY);
+            } else {
+                block = Block.Convert(block);
+                return new AABB(0, 0, 0,
+                                32, DefaultSet.Height(block), 32);
+            }
+        }
     }
 }

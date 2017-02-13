@@ -84,5 +84,41 @@ namespace MCGalaxy {
         public override string ToString() {
             return Min + " : " + Max;
         }
+        
+        
+        public static AABB ModelAABB(string model, Level lvl) {
+            int sep = model.IndexOf('|');
+            string scaleStr = sep == -1 ? null : model.Substring(sep + 1);
+            model = sep == -1 ? model : model.Substring(0, sep);
+            
+            AABB baseBB;
+            byte block;
+            if (byte.TryParse(model, out block)) {
+                byte extBlock = 0;
+                // For model, not a physics blocks means custom block
+                
+                if (block >= Block.CpeCount) { extBlock = block; block = Block.custom_block; }
+                baseBB = Block.BlockAABB(block, extBlock, lvl);
+            } else {
+                baseBB = AABB.Make(new Vec3S32(0, 0, 0), BaseSize(model));
+            }
+            
+            float scale;
+            if (!Utils.TryParseDecimal(scaleStr, out scale)) return baseBB;
+            return baseBB.Scale(scale);
+        }
+        
+        static Vec3S32 BaseSize(string model) {
+            if (model.CaselessEq("chicken"))  return new Vec3S32(16, 24, 16);
+            if (model.CaselessEq("creeper"))  return new Vec3S32(16, 52, 16);
+            if (model.CaselessEq("chibi"))    return new Vec3S32(8,  40,  8);
+            if (model.CaselessEq("head"))     return new Vec3S32(31, 31, 31);
+            if (model.CaselessEq("pig"))      return new Vec3S32(28, 28, 28);
+            if (model.CaselessEq("sheep"))    return new Vec3S32(20, 40, 20);
+            if (model.CaselessEq("skeleton")) return new Vec3S32(16, 60, 16);
+            if (model.CaselessEq("spider"))   return new Vec3S32(30, 24, 30);
+            
+            return new Vec3S32(16, 56, 16); // default humanoid size
+        }
     }
 }
