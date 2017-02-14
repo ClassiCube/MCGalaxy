@@ -96,29 +96,7 @@ namespace MCGalaxy {
         
         public bool CheckIfInsideBlock() {
             AABB bb = ModelBB.OffsetPosition(pos);
-            Vec3S32 min = bb.BlockMin, max = bb.BlockMax;
-            
-            for (int y = min.Y; y <= max.Y; y++)
-                for (int z = min.Z; z <= max.Z; z++)
-                    for (int x = min.X; x <= max.X; x++)
-            {
-                ushort xP = (ushort)x, yP = (ushort)y, zP = (ushort)z;
-                byte block = level.GetTile(xP, yP, zP), extBlock = 0;
-                if (block == Block.Invalid) continue;
-                if (block == Block.custom_block)
-                    extBlock = level.GetExtTileNoCheck(xP, yP, zP);
-                
-                AABB blockBB = Block.BlockAABB(block, extBlock, level)
-                    .Offset(x * 32, y * 32, z * 32);
-                if (!bb.Intersects(blockBB)) continue;
-                
-                if (!Block.Walkthrough(Block.Convert(block))) return true;
-                if (block != Block.custom_block) continue;
-                
-                BlockDefinition def = level.CustomBlockDefs[extBlock];
-                if (def == null || def.CollideType == CollideType.Solid) return true;
-            }
-            return false;
+            return AABB.IntersectsSolidBlocks(bb, level);
         }
 
         public void save() {

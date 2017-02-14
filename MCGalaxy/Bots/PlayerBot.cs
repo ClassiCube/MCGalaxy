@@ -247,49 +247,37 @@ namespace MCGalaxy {
         }
         
         void DoMove() {
-            if ((pos[1] - 19) % 32 != 0 && !jumping)
-                pos[1] = (ushort)((pos[1] + 19) - (pos[1] % 32));
-
-            ushort x = (ushort)Math.Round((decimal)(pos[0] - 16) / 32);
-            ushort y = (ushort)((pos[1] - 64) / 32);
-            ushort z = (ushort)Math.Round((decimal)(pos[2] - 16) / 32);
+            AABB bb = ModelBB.OffsetPosition(pos);
+            // Advance the AABB to the bot's next position
             int dx = Math.Sign(foundPos[0] - pos[0]), dz = Math.Sign(foundPos[2] - pos[2]);
-
-            byte b = Block.Convert(level.GetTile(x, y, z));
-            byte b1, b2, b3;
-
-            if (Block.Walkthrough(b) && !jumping)
-                pos[1] = (ushort)(pos[1] - 32);
-            y = (ushort)((pos[1] - 64) / 32);   //Block below feet
-
-            int index = level.PosToInt((ushort)(x + dx), y, (ushort)(z + dz));
-            b = Block.Convert(level.GetTile(index));
-            b1 = Block.Convert(level.GetTile(level.IntOffset(index, 0, 1, 0)));
-            b2 = Block.Convert(level.GetTile(level.IntOffset(index, 0, 2, 0)));
-            b3 = Block.Convert(level.GetTile(level.IntOffset(index, 0, 3, 0)));
-
-            if (Block.Walkthrough(b2) && Block.Walkthrough(b3) && !Block.Walkthrough(b1)) {
-                pos[0] += (ushort)dx; // Get ready to go up step
-                pos[1] += (ushort)32;
-                pos[2] += (ushort)dz;
-            } else if (Block.Walkthrough(b1) && Block.Walkthrough(b2)) {
-                pos[0] += (ushort)dx; // Stay on current level
-                pos[2] += (ushort)dz;
-            } else if (Block.Walkthrough(b) && Block.Walkthrough(b1)) {
-                pos[0] += (ushort)dx; // Drop a level
-                pos[1] -= (ushort)32;
-                pos[2] += (ushort)dz;
-            }
-
-            /*x = (ushort)Math.Round((decimal)(pos[0] - 16) / (decimal)32);
-            y = (ushort)((pos[1] - 64) / 32);
-            z = (ushort)Math.Round((decimal)(pos[2] - 16) / (decimal)32);
-
-            b1 = Block.Convert(level.GetTile(x, (ushort)(y + 1), z));
-            b2 = Block.Convert(level.GetTile(x, (ushort)(y + 2), z));
-            b3 = Block.Convert(level.GetTile(x, y, z));
-
+            bb = bb.Offset(dx, 0, dz);
+            AABB bbCopy = bb;
             
+            // Attempt to drop the bot down up to 1 block
+            int fallY = -32;
+            for (int dy = 0; dy >= -32; dy--) {
+                if (AABB.IntersectsSolidBlocks(bb, level)) { fallY = dy; break; }
+                bb.Min.Y--; bb.Max.Y--;
+            }
+            
+            // Does the bot fall down a block
+            if (fallY < 0) {
+                pos[0] += (ushort)dx; pos[1] += (ushort)fallY; pos[2] += (ushort)dz;
+                return;
+            }
+            
+            // Attempt to move the bot up to 1 block
+            bb = bbCopy;
+            for (int dy = 0; dy <= 32; dy++) {
+                bool collides = AABB.IntersectsSolidBlocks(bb, level);
+                if (!AABB.IntersectsSolidBlocks(bb, level)) {
+                    pos[0] += (ushort)dx; pos[1] += (ushort)dy; pos[2] += (ushort)dz;
+                    return;
+                }
+                bb.Min.Y++; bb.Max.Y++;
+            }
+            
+            /*
                 if ((ushort)(foundPos[1] / 32) > y) {
                     if (b1 == Block.water || b1 == Block.waterstill || b1 == Block.lava || b1 == Block.lavastill) {
                         if (Block.Walkthrough(b2)) {
@@ -308,11 +296,11 @@ namespace MCGalaxy {
         void DoJump() {
             currentjump++;
             switch (currentjump) {
-                case 1: pos[1] += 24; break;
-                case 2: pos[1] += 12; break;
-                case 3: break;
-                case 4: pos[1] -= 12; break;
-                case 5: pos[1] -= 24; jumping = false; currentjump = 0; break;
+                 case 1: pos[1] += 24; break;
+                 case 2: pos[1] += 12; break;
+                 case 3: break;
+                 case 4: pos[1] -= 12; break;
+                 case 5: pos[1] -= 24; jumping = false; currentjump = 0; break;
             }
         }
     }
