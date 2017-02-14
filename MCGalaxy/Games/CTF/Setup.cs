@@ -121,6 +121,7 @@ namespace MCGalaxy.Games {
             } else if (message.CaselessEq("set")) {
                 if (cache[p].s == Step.RandomorSet) {
                     Player.Message(p, "Ok, can you stand in the blue spawn and say \"continue\" (without the \" \")");
+                    cache[p].s = Step.BlueSetSpawn;
                 }
             } else if (message.CaselessEq("continue")) {
                 switch (cache[p].s)

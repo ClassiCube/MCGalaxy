@@ -48,9 +48,9 @@ namespace MCGalaxy.Commands
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/ohide <player> - Hides/unhides the player specified.");
-            Player.Message(p, "/ohide <player> myrank - Hides/unhides the player specified to players below your rank.");
-            Player.Message(p, "Only works on players of lower rank.");
+            Player.Message(p, "%T/ohide [player] %H- Hides/unhides the player specified.");
+            Player.Message(p, "%T/ohide [player] myrank %H- Hides/unhides the player specified to players below your rank.");
+            Player.Message(p, "%HOnly works on players of lower rank.");
         }
     }
 }

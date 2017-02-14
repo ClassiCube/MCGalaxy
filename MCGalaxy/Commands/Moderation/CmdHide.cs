@@ -86,10 +86,10 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/hide - Toggles your visibility to other players, also toggles opchat.");
-            Player.Message(p, "/hide check - Checks your hidden status.");
-            Player.Message(p, "/hide silent - hides without sending a message to other ops/admins.");
-            Player.Message(p, "Use /ohide to hide other players.");
+            Player.Message(p, "%T/hide %H- Toggles your visibility to other players, also toggles opchat.");
+            Player.Message(p, "%T/hide check %H- Checks your hidden status.");
+            Player.Message(p, "%T/hide silent %H- hides without sending a message to other ops/admins.");
+            Player.Message(p, "%HUse %T/ohide %Hto hide other players.");
         }
     }
 }
