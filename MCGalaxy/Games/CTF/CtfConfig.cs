@@ -18,6 +18,7 @@
     permissions and limitations under the Licenses.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.SQL;
 
@@ -41,7 +42,7 @@ namespace MCGalaxy.Games {
                 case "game.capture.points-lose":
                     caplose = int.Parse(value); break;
                 case "auto.setup":
-                    look = bool.Parse(value); break;
+                    needSetup = bool.Parse(value); break;
                 case "base.red.z":
                     redbase.z = ushort.Parse(value); break;
                 case "base.red.block":
@@ -74,16 +75,11 @@ namespace MCGalaxy.Games {
         bool LoadConfig() {
             //Load some configs
             if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
-            if (!File.Exists("CTF/maps.config")) {
-                Server.s.Log("No maps were found!"); return false;
-            }
+            if (!File.Exists("CTF/maps.config")) return false;
             
             string[] lines = File.ReadAllLines("CTF/maps.config");
-            maps.AddRange(lines);            
-            if (maps.Count == 0) { 
-                Server.s.Log("No maps were found!"); return false; 
-            }
-            return true;
+            maps = new List<string>(lines);
+            return maps.Count > 0;
         }
     }
 }

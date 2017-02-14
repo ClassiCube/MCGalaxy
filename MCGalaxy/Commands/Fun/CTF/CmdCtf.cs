@@ -33,16 +33,12 @@ namespace MCGalaxy.Commands
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             
             if (message.CaselessEq("start")) {
-                if (Server.ctf != null && Server.ctf.started) {
-                    Player.Message(p, "A ctf is already in session!"); return;
+                if (Server.ctf == null)  {
+                    Player.Message(p, "Initialising CTF..");
+                    Server.ctf = new CTFGame();
                 }
                 
-                if (Server.ctf == null)  {
-                    Player.Message(p, "Starting CTF..");
-                    Server.ctf = new CTFGame();
-                } else {
-                    Server.ctf.Start();
-                }
+                if (!Server.ctf.Start(p)) return;
                 Chat.MessageAll("A CTF GAME IS STARTING AT CTF! TYPE /goto CTF to join!");
             } else if (message == "stop")  {
                 if (Server.ctf == null || !Server.ctf.started) {

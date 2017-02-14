@@ -107,7 +107,7 @@ namespace MCGalaxy.Games {
         int cappoint = 10;
         int taglose = 5;
         int caplose = 10;
-        bool look = false;
+        bool needSetup = false;
         public int maxpoints = 3;
         Teams redteam;
         Teams blueteam;
@@ -132,33 +132,34 @@ namespace MCGalaxy.Games {
         }
         
         /// <summary> Create a new CTF object </summary>
-        public CTFGame() {
-            if (!LoadConfig()) return;
-            
+        public CTFGame() {           
             redbase = new Base();
             bluebase = new Base();
-            Start();
-
-            Player.PlayerDeath += HandlePlayerDeath;
-            Player.PlayerChat += HandlePlayerChat;
-            Player.PlayerCommand += HandlePlayerCommand;
-            Player.PlayerBlockChange += HandlePlayerBlockChange;
-            Player.PlayerDisconnect += HandlePlayerDisconnect;
-            Level.LevelUnload += HandleLevelUnload;
             
             tagging.Elapsed += CheckTagging;
             tagging.Start();
+            HookEvents();
         }
         
         /// <summary> Stop the CTF game (if its running) </summary>
         public void Stop() {
             tagging.Stop();
             tagging.Dispose();
+            
             mainlevel = null;
             started = false;
             if (LevelInfo.FindExact("ctf") != null)
                 Command.all.Find("unload").Use(null, "ctf");
         }
+        
+        void HookEvents() {
+            Player.PlayerDeath += HandlePlayerDeath;
+            Player.PlayerChat += HandlePlayerChat;
+            Player.PlayerCommand += HandlePlayerCommand;
+            Player.PlayerBlockChange += HandlePlayerBlockChange;
+            Player.PlayerDisconnect += HandlePlayerDisconnect;
+            Level.LevelUnload += HandleLevelUnload;
+        }       
         
         void CheckTagging(object sender, System.Timers.ElapsedEventArgs e) {
             Player[] online = PlayerInfo.Online.Items;
@@ -235,41 +236,46 @@ namespace MCGalaxy.Games {
         };
         
         /// <summary> Start the CTF game </summary>
-        public void Start()
-        {
-            if (LevelInfo.FindExact("ctf") != null)
-            {
+        public bool Start(Player p) {
+            if (LevelInfo.FindExact("ctf") != null) {
                 Command.all.Find("unload").Use(null, "ctf");
                 Thread.Sleep(1000);
             }
-            if (started)
-                return;
+        	
+        	if (started) {
+        		Player.Message(p, "CTF game already running."); return false;
+        	}          
+        	if (!LoadConfig()) {
+        		Player.Message(p, "No CTF maps were found."); return false;
+        	}         
+            
             blueteam = new Teams("blue");
             redteam = new Teams("red");
             LoadMap(maps[new Random().Next(maps.Count)]);
-            if (look)
-            {
-                for (ushort y = 0; y < mainlevel.Height; y++)
-                    for (ushort z = 0; z < mainlevel.Length; z++)
-                        for (ushort x = 0; x < mainlevel.Width; x++)
-                {
-                    if (mainlevel.GetTile(x, y, z) == Block.red)
-                    {
-                        redbase.x = x; redbase.y = y; redbase.z = z;
-                    }
-                    else if (mainlevel.GetTile(x, y, z) == Block.blue || mainlevel.GetTile(x, y, z) == Block.cyan)
-                    {
-                        bluebase.x = x; bluebase.y = y; bluebase.z = z;
-                    }
-                }
-                zline = mainlevel.Length / 2;
-            }
+            
+            if (needSetup) AutoSetup();            
             redbase.block = Block.red;
             bluebase.block = Block.blue;
             Server.s.Log("[Auto_CTF] Running...");
             started = true;
             
             Database.Backend.CreateTable("CTF", createSyntax);
+            return true;
+        }
+        
+        void AutoSetup() {
+            for (ushort y = 0; y < mainlevel.Height; y++)
+                for (ushort z = 0; z < mainlevel.Length; z++)
+                    for (ushort x = 0; x < mainlevel.Width; x++)
+            {
+                byte block = mainlevel.GetTile(x, y, z);
+                if (block == Block.red) {
+                    redbase.x = x; redbase.y = y; redbase.z = z;
+                } else if (block == Block.blue || block == Block.cyan) {
+                    bluebase.x = x; bluebase.y = y; bluebase.z = z;
+                }
+            }
+            zline = mainlevel.Length / 2;
         }
         
         string Vote()
