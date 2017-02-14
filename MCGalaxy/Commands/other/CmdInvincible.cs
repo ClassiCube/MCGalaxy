@@ -43,15 +43,15 @@ namespace MCGalaxy.Commands {
             else
                 Player.Message(p, "{0} %Sis {1}.", who.ColoredName, msg);
             
-            string globalMsg = who.invincible ? Server.cheapMessageGiven : "has stopped being immortal";
+            string globalMsg = who.invincible ? Server.cheapMessageGiven : "has stopped being invincible";
             if (Server.cheapMessage && !who.hidden)
                 Player.SendChatFrom(who, who.ColoredName + " %S" + globalMsg, false);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/invincible [name]");
+            Player.Message(p, "%T/invincible <name>");
             Player.Message(p, "%HTurns invincible mode on/off.");
-            Player.Message(p, "%HIf [name] is given, that player's invincibility is toggled");
+            Player.Message(p, "%HIf <name> is given, that player's invincibility is toggled");
         }
     }
 }

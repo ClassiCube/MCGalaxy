@@ -362,8 +362,8 @@ namespace MCGalaxy {
         [ConfigBool("cheapmessage", "Other", null, true)]
         public static bool cheapMessage = true;
         
-        [ConfigString("cheap-message-given", "Messages", null, " is now being cheap and being immortal")]
-        public static string cheapMessageGiven = " is now being cheap and being immortal";
+        [ConfigString("cheap-message-given", "Messages", null, " is now invincible")]
+        public static string cheapMessageGiven = " is now invincible";
         [ConfigString("custom-ban-message", "Messages", null, "You're banned!")]
         public static string defaultBanMessage = "You're banned!";
         [ConfigString("custom-shutdown-message", "Messages", null, "Server shutdown. Rejoin in 10 seconds.")]
