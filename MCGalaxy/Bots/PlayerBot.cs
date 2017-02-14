@@ -256,7 +256,7 @@ namespace MCGalaxy {
             // Attempt to drop the bot down up to 1 block
             int fallY = -32;
             for (int dy = 0; dy >= -32; dy--) {
-                if (AABB.IntersectsSolidBlocks(bb, level)) { fallY = dy; break; }
+                if (AABB.IntersectsSolidBlocks(bb, level)) { fallY = dy + 1; break; }
                 bb.Min.Y--; bb.Max.Y--;
             }
             
