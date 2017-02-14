@@ -24,9 +24,24 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("tnt", "tnt") }; }
+        }   
         public CmdMode() { }
 
         public override void Use(Player p, string message) {
+            // Special handling for the old TNT command
+            if (message.CaselessStarts("tnt ")) {
+                string[] parts = message.SplitSpaces(2);
+                if (parts[1].CaselessEq("small")) {
+                    message = Block.Name(Block.smalltnt);
+                } else if (parts[1].CaselessEq("big")) {
+                    message = Block.Name(Block.bigtnt);
+                } else if (parts[1].CaselessEq("nuke")) {
+                    message = Block.Name(Block.nuketnt);
+                }
+            }
+            
             if (message == "") {
                 if (p.modeType != 0) {
                     Player.Message(p, "&b{0} %Smode: &cOFF", Block.Name(p.modeType).Capitalize());
@@ -61,9 +76,13 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
+            Player.Message(p, "%T/mode");
+            Player.Message(p, "%HReverts the last %T/mode [block].");
             Player.Message(p, "%T/mode [block]");
             Player.Message(p, "%HMakes every block placed into [block].");
             Player.Message(p, "%H/[block] also works");
+            Player.Message(p, "%T/mode tnt small/big/nuke %H");
+            Player.Message(p, "%HMakes every block placed into exploding TNT (if physics on).");
         }
     }
 }

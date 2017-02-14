@@ -349,7 +349,6 @@
     <Compile Include="Commands\other\CmdSendCmd.cs" />
     <Compile Include="Commands\other\CmdSummon.cs" />
     <Compile Include="Commands\other\CmdTimer.cs" />
-    <Compile Include="Commands\other\CmdTnt.cs" />
     <Compile Include="Commands\other\CmdTp.cs" />
     <Compile Include="Commands\other\CmdTpA.cs" />
     <Compile Include="Commands\other\CmdWarp.cs" />

@@ -254,15 +254,15 @@ namespace MCGalaxy {
             AABB bbCopy = bb;
             
             // Attempt to drop the bot down up to 1 block
-            int fallY = -32;
+            int hitY = -32;
             for (int dy = 0; dy >= -32; dy--) {
-                if (AABB.IntersectsSolidBlocks(bb, level)) { fallY = dy + 1; break; }
+                if (AABB.IntersectsSolidBlocks(bb, level)) { hitY = dy + 1; break; }
                 bb.Min.Y--; bb.Max.Y--;
             }
             
             // Does the bot fall down a block
-            if (fallY < 0) {
-                pos[0] += (ushort)dx; pos[1] += (ushort)fallY; pos[2] += (ushort)dz;
+            if (hitY < 0) {
+                pos[0] += (ushort)dx; pos[1] += (ushort)hitY; pos[2] += (ushort)dz;
                 return;
             }
             
