@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands.World {
         
         static bool HasArgument(string opt) {
             return opt == "physicspeed" || opt == "overload" || opt == "treetype"
-                || opt == "fall" || opt == "drown" || opt == "realmowner";
+                || opt == "fall" || opt == "drown" || opt == "realmowner" || opt == "loaddelay";
         }
         
         static void PrintMapInfo(Player p, Level lvl) {

@@ -29,8 +29,8 @@ namespace MCGalaxy {
             { "motd", SetMotd },
             { "RealmOwner", SetRealmOwner },
             { "TreeType", SetTreeType },
-            { "PhysicSpeed", (p, l, value) => SetPhysicsSpeed(p, l, value, "Physics speed") },
-            { "Overload", (p, l, value) => SetPhysicsOverload(p, l, value, "Physics overload") },
+            { "PhysicSpeed", (p, l, value) => SetInt(p, l, ref l.speedPhysics, value, "Physics speed", SpeedValidator) },
+            { "Overload", (p, l, value) => SetInt(p, l, ref l.overload, value, "Physics overload", OverloadValidator) },
             { "Fall", (p, l, value) => SetInt(p, l, ref l.fall, value, "Fall distance") },
             { "Drown", (p, l, value) => SetInt(p, l, ref l.drown, value, "Drown time (in tenths of a second)") },
             { "Finite", (p, l, value) => Toggle(p, l, ref l.finite, "Finite mode") },
@@ -48,6 +48,7 @@ namespace MCGalaxy {
             { "Guns", ToggleGuns },
             { "Buildable", (p, l, value) => TogglePerms(p, l, ref l.Buildable, "Buildable") },
             { "Deletable", (p, l, value) => TogglePerms(p, l, ref l.Deletable, "Deletable") },
+            { "LoadDelay", (p, l, value) => SetInt(p, l, ref l.LoadDelay, value, "Load delay", DelayValidator) },
         };
         
         public static Dictionary<string, string> Help = new Dictionary<string, string>() {
@@ -73,6 +74,7 @@ namespace MCGalaxy {
             { "Guns", "%HWhether guns and missiles can be used" },
             { "Buildable", "%HWhether any blocks can be placed by players." },
             { "Deletable", "%HWhether any blocks can be deleted by players." },
+            { "LoadDelay", "%HSets the delay before the end of the map is sent. Only useful for forcing players to see the map's MOTD at the loading screen." },
         };
         
         
@@ -123,25 +125,28 @@ namespace MCGalaxy {
         }
         
         
-        static void SetPhysicsSpeed(Player p, Level lvl, string value, string name) {
-            SetInt(p, lvl, ref lvl.speedPhysics, value, name, PhysicsSpeedValidator);
-        }
         
-        static bool PhysicsSpeedValidator(Player p, int raw) {
+        static bool SpeedValidator(Player p, int raw) {
             if (raw < 10) { Player.Message(p, "Physics speed cannot be below 10 milliseconds."); return false; }
             return true;
         }
-
-        static void SetPhysicsOverload(Player p, Level lvl, string value, string name) {
-            SetInt(p, lvl, ref lvl.overload, value, name, PhysicsOverloadValidator);
-        }
         
-        static bool PhysicsOverloadValidator(Player p, int raw) {
+        static bool OverloadValidator(Player p, int raw) {
             if (raw < 500) {
                 Player.Message(p, "Physics overload cannot go below 500 (default is 1500)"); return false;
             }
             if (p != null && p.Rank < LevelPermission.Admin && raw > 2500) {
                 Player.Message(p, "Only SuperOPs may set physics overload higher than 2500"); return false;
+            }
+            return true;
+        }
+        
+        static bool DelayValidator(Player p, int raw) {
+            if (raw < 0) {
+                Player.Message(p, "Load delay cannot go below 0 milliseconds. (default is 0)"); return false;
+            }
+            if (raw > 2000) {
+                Player.Message(p, "Load delay cannot go above 3000 milliseconds."); return false;
             }
             return true;
         }

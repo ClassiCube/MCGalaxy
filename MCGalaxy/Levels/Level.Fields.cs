@@ -88,7 +88,9 @@ namespace MCGalaxy {
         [ConfigBool("UseBlockDB", "Other", null, true)]
         public bool UseBlockDB = true;
         public BlockDB BlockDB;
-
+        [ConfigInt("LoadDelay", "Other", null, 0, 0, 2000)]
+        public int LoadDelay = 0;
+        
         public byte jailrotx, jailroty;
         [ConfigInt("JailX", "Jail", null, 0, 0, 65535)]
         public int jailx;
