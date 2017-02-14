@@ -269,7 +269,6 @@ namespace MCGalaxy {
             // Attempt to move the bot up to 1 block
             bb = bbCopy;
             for (int dy = 0; dy <= 32; dy++) {
-                bool collides = AABB.IntersectsSolidBlocks(bb, level);
                 if (!AABB.IntersectsSolidBlocks(bb, level)) {
                     pos[0] += (ushort)dx; pos[1] += (ushort)dy; pos[2] += (ushort)dz;
                     return;
