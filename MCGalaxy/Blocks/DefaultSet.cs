@@ -196,25 +196,25 @@ namespace MCGalaxy.Blocks {
             30, 30, 18, 19, 32, 33, 34, 21, 22, 48, 49, 64, 65, 66, 67, 68, 69, 70, 71,
             72, 73, 74, 75, 76, 77, 78, 79, 13, 12, 29, 28, 56, 55,  6,  6,  7, 10,  4,
             36, 37, 16, 11, 57, 50, 38, 80, 81, 82, 83, 84, 51, 54, 86, 58, 53, 52 };
-        
-        static class DrawType {
-            public const byte Opaque = 0;
-            public const byte Transparent = 1;
-            public const byte TransparentThick = 2; // e.g. leaves render all neighbours
-            public const byte Translucent = 3;
-            public const byte Gas = 4;
-            public const byte Sprite = 5;
-        }
-        
-        static class CollideType {
-            public const byte WalkThrough = 0; // i.e. gas or sprite
-            public const byte SwimThrough = 1; // i.e. liquid
-            public const byte Solid       = 2; // i.e. solid
-        }
-        
-        public enum SoundType : byte {
-            None, Wood, Gravel, Grass, Stone,
-            Metal, Glass, Cloth, Sand, Snow,
-        }
+    }
+    
+    public static class DrawType {
+        public const byte Opaque = 0;
+        public const byte Transparent = 1;
+        public const byte TransparentThick = 2; // e.g. leaves render all neighbours
+        public const byte Translucent = 3;
+        public const byte Gas = 4;
+        public const byte Sprite = 5;
+    }
+    
+    public static class CollideType {
+        public const byte WalkThrough = 0; // i.e. gas or sprite
+        public const byte SwimThrough = 1; // i.e. liquid
+        public const byte Solid       = 2; // i.e. solid
+    }
+    
+    public enum SoundType : byte {
+        None, Wood, Gravel, Grass, Stone,
+        Metal, Glass, Cloth, Sand, Snow,
     }
 }

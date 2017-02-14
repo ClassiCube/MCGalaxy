@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using MCGalaxy.Blocks;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
@@ -29,6 +30,36 @@ namespace MCGalaxy {
     
     public sealed partial class Player : IDisposable {
 
+        static int sessionCounter;
+
+        //This is so that plugin devs can declare a player without needing a socket..
+        //They would still have to do p.Dispose()..
+        public Player(string playername) { 
+            name = playername;
+            truename = playername;
+            DisplayName = playername;
+            SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
+            spamChecker = new SpamChecker(this);
+        }
+
+        public Player(Socket s) {
+            spamChecker = new SpamChecker(this);
+            try {
+                socket = s;
+                ip = socket.RemoteEndPoint.ToString().Split(':')[0];
+                SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
+                Server.s.Log(ip + " connected to the server.");
+
+                for (byte i = 0; i < Block.CpeCount; i++) bindings[i] = i;
+
+                socket.BeginReceive(tempbuffer, 0, tempbuffer.Length, SocketFlags.None, new AsyncCallback(Receive), this);
+                InitTimers();
+                connections.Add(this);
+            }
+            catch ( Exception e ) { Leave("Login failed!"); Server.ErrorLog(e); }
+        }
+        
+        
         public byte GetActualHeldBlock(out byte extBlock) {
             byte block = RawHeldBlock;
             extBlock = 0;
@@ -64,40 +95,30 @@ namespace MCGalaxy {
         }
         
         public bool CheckIfInsideBlock() {
-            ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);
-            byte head = level.GetTile(x, y, z);
-            byte feet = level.GetTile(x, (ushort)(y - 1), z);
-
-            return !(Block.Walkthrough(Block.Convert(head)) || head == Block.Invalid)
-                && !(Block.Walkthrough(Block.Convert(feet)) || feet == Block.Invalid);
-        }
-        static int sessionCounter;
-
-        //This is so that plugin devs can declare a player without needing a socket..
-        //They would still have to do p.Dispose()..
-        public Player(string playername) { 
-            name = playername;
-            truename = playername;
-            DisplayName = playername;
-            SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
-            spamChecker = new SpamChecker(this);
-        }
-
-        public Player(Socket s) {
-            spamChecker = new SpamChecker(this);
-            try {
-                socket = s;
-                ip = socket.RemoteEndPoint.ToString().Split(':')[0];
-                SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
-                Server.s.Log(ip + " connected to the server.");
-
-                for (byte i = 0; i < Block.CpeCount; i++) bindings[i] = i;
-
-                socket.BeginReceive(tempbuffer, 0, tempbuffer.Length, SocketFlags.None, new AsyncCallback(Receive), this);
-                InitTimers();
-                connections.Add(this);
+            AABB bb = ModelBB.OffsetPosition(pos);
+            Vec3S32 min = bb.BlockMin, max = bb.BlockMax;
+            
+            for (int y = min.Y; y <= max.Y; y++)
+                for (int z = min.Z; z <= max.Z; z++)
+                    for (int x = min.X; x <= max.X; x++)
+            {
+                ushort xP = (ushort)x, yP = (ushort)y, zP = (ushort)z;
+                byte block = level.GetTile(xP, yP, zP), extBlock = 0;
+                if (block == Block.Invalid) continue;
+                if (block == Block.custom_block)
+                    extBlock = level.GetExtTileNoCheck(xP, yP, zP);
+                
+                AABB blockBB = Block.BlockAABB(block, extBlock, level)
+                    .Offset(x * 32, y * 32, z * 32);
+                if (!bb.Intersects(blockBB)) continue;
+                
+                if (!Block.Walkthrough(Block.Convert(block))) return true;
+                if (block != Block.custom_block) continue;
+                
+                BlockDefinition def = level.CustomBlockDefs[extBlock];
+                if (def == null || def.CollideType == CollideType.Solid) return true;
             }
-            catch ( Exception e ) { Leave("Login failed!"); Server.ErrorLog(e); }
+            return false;
         }
 
         public void save() {

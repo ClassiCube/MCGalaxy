@@ -54,10 +54,17 @@ namespace MCGalaxy {
         }
         
         public AABB Offset(int x, int y, int z) {
-            AABB aabb = this;
-            aabb.Min.X += x; aabb.Min.Y += y; aabb.Min.Z += z;
-            aabb.Max.X += x; aabb.Max.Y += y; aabb.Max.Z += z;
-            return aabb;
+            AABB bb = this;
+            bb.Min.X += x; bb.Min.Y += y; bb.Min.Z += z;
+            bb.Max.X += x; bb.Max.Y += y; bb.Max.Z += z;
+            return bb;
+        }
+        
+        public AABB Expand(int amount) {
+            AABB bb = this;
+            bb.Min.X -= amount; bb.Min.Y -= amount; bb.Min.Z -= amount;
+            bb.Max.X += amount; bb.Max.Y += amount; bb.Max.Z += amount;
+            return bb;
         }
         
         /// <summary> Returns a new bounding box, with the minimum and maximum coordinates
@@ -106,10 +113,12 @@ namespace MCGalaxy {
             byte block;
             if (byte.TryParse(model, out block)) {
                 byte extBlock = 0;
-                // For model, not a physics blocks means custom block
-                
+                // For model, not a physics blocks means custom block                
                 if (block >= Block.CpeCount) { extBlock = block; block = Block.custom_block; }
-                baseBB = Block.BlockAABB(block, extBlock, lvl).Offset(-16, 0, -16);
+                
+                baseBB = Block.BlockAABB(block, extBlock, lvl);
+                baseBB = baseBB.Offset(-16, 0, -16); // centre around [-16, 16] instead of [0, 32]
+                baseBB = baseBB.Expand(-1); // adjust the block inwards slightly
             } else {
                 baseBB = AABB.Make(new Vec3S32(0, 0, 0), BaseSize(model));
             }
