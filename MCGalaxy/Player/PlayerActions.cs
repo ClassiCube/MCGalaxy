@@ -22,13 +22,8 @@ using MCGalaxy.Commands.World;
 
 namespace MCGalaxy {
     public static class PlayerActions {
-
-        /// <summary> Moves the player to the specified block coordinates. </summary>
-        public static void MoveCoords(Player p, int bX, int bY, int bZ) {
-            MoveCoords(p, bX, bY, bZ, p.rot[0], p.rot[1]);
-        }
         
-        /// <summary> Moves the player to the specified block coordinates. </summary>
+        /// <summary> Moves the player to the specified block coordinates. (bY is treated as player feet) </summary>
         public static void MoveCoords(Player p, int bX, int bY, int bZ,
                                       byte rotX, byte rotY) {
             ushort x = (ushort)(bX * 32 + 16);

@@ -17,10 +17,10 @@
  */
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {  
-    public sealed class CmdTp : Command {        
+namespace MCGalaxy.Commands {
+    public sealed class CmdTp : Command {
         public override string name { get { return "tp"; } }
-        public override string shortcut { get { return ""; } }
+        public override string shortcut { get { return "move"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] args = message.Split(' ');
-            if (args.Length > 2) { Help(p); return; }
+            if (args.Length > 3) { Help(p); return; }
+            if (args.Length == 3) { TeleportCoords(p, args); return; }
             
             Player target = null;
             PlayerBot bot = null;
@@ -44,7 +45,7 @@ namespace MCGalaxy.Commands {
             }
             
             p.beforeTeleportMap = p.level.name;
-            p.beforeTeleportPos = p.pos;            
+            p.beforeTeleportPos = p.pos;
             Level lvl = bot != null ? bot.level : target.level;
             
             if (bot != null && lvl == null) {
@@ -60,6 +61,16 @@ namespace MCGalaxy.Commands {
             byte[] rot = bot != null ? bot.rot : target.rot;
             p.BlockUntilLoad(10);  //Wait for player to spawn in new map
             p.SendPos(Entities.SelfID, pos[0], pos[1], pos[2], rot[0], rot[1]);
+        }
+        
+        static void TeleportCoords(Player p, string[] args) {
+            int x, y, z;
+            if (!int.TryParse(args[0], out x) || !int.TryParse(args[1], out y) || !int.TryParse(args[2], out z)
+                || x < -1024 || x > 1024 || y < -1024 || y > 1024 || z < -1024 || z > 1024) {
+                Player.Message(p, "Coordinates must be whole numbers between -1024 to 1024.");
+            } else {
+                PlayerActions.MoveCoords(p, x, y, z, p.rot[0], p.rot[1]);
+            }
         }
         
         static bool CheckPlayer(Player p, Player target) {
@@ -80,6 +91,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
+            Player.Message(p, "%T/tp [x y z]");
+            Player.Message(p, "%HTeleports yourself to the given block coordinates.");
             Player.Message(p, "%T/tp [player]");
             Player.Message(p, "%HTeleports yourself to that player.");
             Player.Message(p, "%T/tp bot [name]");

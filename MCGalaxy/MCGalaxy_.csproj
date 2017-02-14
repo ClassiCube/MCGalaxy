@@ -343,7 +343,6 @@
     <Compile Include="Commands\other\CmdHackRank.cs" />
     <Compile Include="Commands\other\CmdInvincible.cs" />
     <Compile Include="Commands\other\CmdKill.cs" />
-    <Compile Include="Commands\other\CmdMove.cs" />
     <Compile Include="Commands\other\CmdRepeat.cs" />
     <Compile Include="Commands\other\CmdRide.cs" />
     <Compile Include="Commands\other\CmdSendCmd.cs" />
