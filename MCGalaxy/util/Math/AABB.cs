@@ -28,11 +28,11 @@ namespace MCGalaxy {
         /// <summary> Fixed-point max coordinate of this bounding box. </summary>
         public Vec3S32 Max;
 
-        /// <summary> World/block coordinate of the min coordinate of this bounding box. </summary>        
+        /// <summary> World/block coordinate of the min coordinate of this bounding box. </summary>
         public Vec3S32 BlockMin { get { return new Vec3S32(Min.X >> 5, Min.Y >> 5, Min.Z >> 5); } }
 
-        /// <summary> World/block coordinate of the max coordinate of this bounding box. </summary>            
-        public Vec3S32 BlockMax { get { return new Vec3S32(Max.X >> 5, Max.Y >> 5, Max.Z >> 5); } }        
+        /// <summary> World/block coordinate of the max coordinate of this bounding box. </summary>
+        public Vec3S32 BlockMax { get { return new Vec3S32(Max.X >> 5, Max.Y >> 5, Max.Z >> 5); } }
         
         
         public AABB(int x1, int y1, int z1, int x2, int y2, int z2) {
@@ -114,15 +114,15 @@ namespace MCGalaxy {
             byte block;
             if (byte.TryParse(model, out block)) {
                 byte extBlock = 0;
-                // For model, not a physics blocks means custom block                
+                // For model, not a physics blocks means custom block
                 if (block >= Block.CpeCount) { extBlock = block; block = Block.custom_block; }
                 
                 baseBB = Block.BlockAABB(block, extBlock, lvl);
                 baseBB = baseBB.Offset(-16, 0, -16); // centre around [-16, 16] instead of [0, 32]
-                baseBB = baseBB.Expand(-1); // adjust the block inwards slightly
             } else {
                 baseBB = AABB.Make(new Vec3S32(0, 0, 0), BaseSize(model));
             }
+            baseBB = baseBB.Expand(-1); // adjust the model AABB inwards slightly
             
             float scale;
             if (!Utils.TryParseDecimal(scaleStr, out scale)) return baseBB;
@@ -159,11 +159,12 @@ namespace MCGalaxy {
                     .Offset(x * 32, y * 32, z * 32);
                 if (!bb.Intersects(blockBB)) continue;
                 
-                if (!Block.Walkthrough(Block.Convert(block))) return true;
-                if (block != Block.custom_block) continue;
-                
-                BlockDefinition def = lvl.CustomBlockDefs[extBlock];
-                if (def == null || def.CollideType == CollideType.Solid) return true;
+                if (block == Block.custom_block) {
+                    if (!Block.Walkthrough(Block.Convert(block))) return true;
+                } else {
+                    BlockDefinition def = lvl.CustomBlockDefs[extBlock];
+                    if (def == null || def.CollideType == CollideType.Solid) return true;
+                }
             }
             return false;
         }
