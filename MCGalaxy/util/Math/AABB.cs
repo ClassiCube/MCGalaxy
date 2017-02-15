@@ -159,7 +159,7 @@ namespace MCGalaxy {
                     .Offset(x * 32, y * 32, z * 32);
                 if (!bb.Intersects(blockBB)) continue;
                 
-                if (block == Block.custom_block) {
+                if (block != Block.custom_block) {
                     if (!Block.Walkthrough(Block.Convert(block))) return true;
                 } else {
                     BlockDefinition def = lvl.CustomBlockDefs[extBlock];
