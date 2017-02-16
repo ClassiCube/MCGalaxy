@@ -506,6 +506,7 @@
     <Compile Include="Levels\Hacks.cs" />
     <Compile Include="Levels\IO\Exporters\LvlExporter.cs" />
     <Compile Include="Levels\IO\fNbt.cs" />
+    <Compile Include="Levels\IO\Importers\BinVoxImporter.cs" />
     <Compile Include="Levels\IO\Importers\CwImporter.cs" />
     <Compile Include="Levels\IO\Importers\DatImporter.cs" />
     <Compile Include="Levels\IO\Importers\FcmImporter.cs" />

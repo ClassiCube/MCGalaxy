@@ -48,7 +48,8 @@ namespace MCGalaxy.Levels.IO {
         public abstract Vec3U16 ReadDimensions(Stream src);
         
         public static List<IMapImporter> Formats = new List<IMapImporter>() {
-            new LvlImporter(), new CwImporter(), new FcmImporter(), new McfImporter(), new DatImporter(),
+            new LvlImporter(), new CwImporter(), new FcmImporter(), new McfImporter(), 
+            new DatImporter(), new BinVoxImporter(),
         };
         
         protected void ConvertCustom(Level lvl) {
