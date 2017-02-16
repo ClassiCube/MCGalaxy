@@ -64,18 +64,20 @@ namespace MCGalaxy.Drawing.Ops {
             ushort z = (ushort)(Origin.Z + dx.Z * P.X + dy.Z * P.Y);
             if (P.A < 20) { output(Place(x, y, z, Block.air, 0)); return; }
             
+            byte block = 0, extBlock = 0;
             if (!DualLayer) {
-                byte block = selector.BestMatch(P.R, P.G, P.B);
-                output(Place(x, y, z, block, 0));
+                block = selector.BestMatch(P.R, P.G, P.B);
             } else {
                 bool backLayer;
-                byte block = selector.BestMatch(P.R, P.G, P.B, out backLayer);
+                block = selector.BestMatch(P.R, P.G, P.B, out backLayer);
                 if (backLayer) {
                     x = (ushort)(x + adj.X);
                     z = (ushort)(z + adj.Z);
                 }
-                output(Place(x, y, z, block, 0));
             }
+            
+            if (block >= Block.CpeCount) { extBlock = block; block = Block.custom_block; }
+            output(Place(x, y, z, block, 0));
         }
         
         void CalcState(int dir) {
