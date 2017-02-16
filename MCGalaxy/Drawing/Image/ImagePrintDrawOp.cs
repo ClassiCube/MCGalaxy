@@ -31,23 +31,20 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         internal Draw.Bitmap Source;
-        internal int Mode, Direction;
-        internal bool Layer;
+        internal int Direction;
+        internal bool DualLayer, LayerMode;
         internal string Filename;
+        public ImagePalette Palette;
         
         Vec3S32 dx, dy, adj;
-        IPalette selector;
-        int threshold;
+        IPaletteMatcher selector;
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             selector = null;
-            CalcThreshold();
-            CalcDirectionVectors(Direction);
+            CalcState(Direction);
             
-            PaletteEntry[] palette = ImagePalette.GetPalette(Mode);
-            if (Mode == 6) selector = new GrayscalePalette();
-            else selector = new RgbPalette();
-            selector.SetAvailableBlocks(palette);            
+            selector = new RgbPaletteMatcher();
+            selector.SetPalette(Palette);
 
             using (PixelGetter getter = new PixelGetter(Source)) {
                 getter.Init();
@@ -58,7 +55,7 @@ namespace MCGalaxy.Drawing.Ops {
             Source = null;
             if (Filename == "tempImage_" + Player.name)
                 File.Delete("extra/images/tempImage_" + Player.name + ".bmp");
-            Player.Message(Player, "Finished printing image using " + ImagePalette.Names[Mode]);
+            Player.Message(Player, "Finished printing image using {0} palette.", Palette.Name);
         }
         
         void OutputPixel(Pixel P, Action<DrawOpBlock> output) {
@@ -67,25 +64,23 @@ namespace MCGalaxy.Drawing.Ops {
             ushort z = (ushort)(Origin.Z + dx.Z * P.X + dy.Z * P.Y);
             if (P.A < 20) { output(Place(x, y, z, Block.air, 0)); return; }
             
-            int position;
-            byte block = selector.BestMatch(P.R, P.G, P.B, out position);
-            // Back layer block
-            if (position <= threshold) {
-                x = (ushort)(x + adj.X);
-                z = (ushort)(z + adj.Z);
-            }
-            output(Place(x, y, z, block, 0));
-        }
-        
-        void CalcThreshold() {
-            threshold = -1;
-            if (Mode == 1 || Mode == 3) {
-                threshold = Mode == 1 ? 20 : 3;
+            if (!DualLayer) {
+                byte block = selector.BestMatch(P.R, P.G, P.B);
+                output(Place(x, y, z, block, 0));
+            } else {
+                bool backLayer;
+                byte block = selector.BestMatch(P.R, P.G, P.B, out backLayer);
+                if (backLayer) {
+                    x = (ushort)(x + adj.X);
+                    z = (ushort)(z + adj.Z);
+                }
+                output(Place(x, y, z, block, 0));
             }
         }
         
-        void CalcDirectionVectors(int dir) {
+        void CalcState(int dir) {
             dx = default(Vec3S32); dy = default(Vec3S32); adj = default(Vec3S32);
+            DualLayer = DualLayer && !LayerMode && Palette.BackLayer != null;
             
             // Calculate back layer offset
             if (dir == 0) adj.Z = 1;
@@ -93,7 +88,7 @@ namespace MCGalaxy.Drawing.Ops {
             if (dir == 2) adj.X = -1;
             if (dir == 3) adj.X = 1;
             
-            if (Layer) {
+            if (LayerMode) {
                 if (dir == 0) { dx.X = 1; dy.Z = -1; }
                 if (dir == 1) { dx.X = -1; dy.Z = 1; }
                 if (dir == 2) { dx.Z = 1; dy.X = 1; }

@@ -41,44 +41,36 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             if (!Directory.Exists("extra/images/"))
                 Directory.CreateDirectory("extra/images/");
-            bool layer = false;
-            byte popType = 1;
-            string bitmapLoc = null;
             if (message == "") { Help(p); return; }
-            
-            if (message.IndexOf(' ') != -1) {
-                string[] args = message.Split(' ');
-                for (int i = 0; i < args.Length; i++)
-                {
-                    if (args[i] == "layer" || args[i] == "l") layer = true;
-                    else if (args[i] == "1" || args[i] == "2color") popType = 1;
-                    else if (args[i] == "2" || args[i] == "1color") popType = 2;
-                    else if (args[i] == "3" || args[i] == "2gray") popType = 3;
-                    else if (args[i] == "4" || args[i] == "1gray") popType = 4;
-                    else if (args[i] == "5" || args[i] == "bw") popType = 5;
-                    else if (args[i] == "6" || args[i] == "gray") popType = 6;
-                }
-                message = args[args.Length - 1];
-            }
-            
-            if (message.IndexOf('/') == -1 && message.IndexOf('.') != -1) {
-                if (!DownloadWebFile("http://www.imgur.com/" + message, p)) return;
-                bitmapLoc = "tempImage_" + p.name;
-            } else if (message.IndexOf('.') != -1) {
-                if (!DownloadWebFile(message, p)) return;
-                bitmapLoc = "tempImage_" + p.name;
-            } else {
-                bitmapLoc = message;
-            }
-
-            if (!File.Exists("extra/images/" + bitmapLoc + ".bmp")) {
-                Player.Message(p, "The URL entered was invalid!"); return;
-            }
+            string[] parts = message.SplitSpaces(3);
             
             DrawArgs dArgs = default(DrawArgs);
-            dArgs.layer = layer;
-            dArgs.name = bitmapLoc;
-            dArgs.popType = popType;
+            dArgs.palette = ImagePalette.Palettes[0];
+            dArgs.dualLayered = true;
+                        
+            if (parts.Length == 3) {
+                string mode = parts[2];
+                if (mode.CaselessEq("horizontal")) dArgs.layer = true;
+                if (mode.CaselessEq("vertical"))   dArgs.dualLayered = false;
+            }
+            
+            if (parts.Length >= 2) {
+                dArgs.palette = ImagePalette.Find(parts[1]);
+                if (dArgs.palette == null) {
+                	Player.Message(p, "Palette {0} not found.", parts[1]); return;
+                }
+            }
+            
+            if (message.IndexOf('.') != -1) {
+                if (!DownloadWebFile(message, p)) return;
+                dArgs.name = "tempImage_" + p.name;
+            } else {
+                dArgs.name = message;
+            }
+
+            if (!File.Exists("extra/images/" + dArgs.name + ".bmp")) {
+                Player.Message(p, "The URL entered was invalid!"); return;
+            }            
             Player.Message(p, "Place two blocks to determine direction.");
             p.MakeSelection(2, dArgs, DoImage);
         }
@@ -123,30 +115,20 @@ namespace MCGalaxy.Commands.Building {
             }
             
             op.SetLevel(p.level);
-            op.Player = p;
-            op.Source = bmp;
-            op.Layer = dArgs.layer;
-            op.Mode = dArgs.popType;
-            op.Filename = dArgs.name;
-            
-            if (op.Layer) {
-                if (op.Mode == 1) op.Mode = 2;
-                if (op.Mode == 3) op.Mode = 4;
-            }
+            op.Player = p; op.Source = bmp;
+            op.LayerMode = dArgs.layer; op.DualLayer = dArgs.dualLayered;
+            op.Palette = dArgs.palette; op.Filename = dArgs.name;
             DrawOpPerformer.Do(op, null, p, m, false);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/imageprint <switch> <localfile> - Print local file in extra/images/ folder.  Must be type .bmp, type filename without extension.");
-            Player.Message(p, "/imageprint <switch> <imgurfile.extension> - Print IMGUR stored file.  Example: /i piCCm.gif will print www.imgur.com/piCCm.gif. Case-sensitive");
-            Player.Message(p, "/imageprint <switch> <webfile> - Print web file in format domain.com/folder/image.jpg. Does not need http:// or www.");
-            Player.Message(p, "Available switches: (&f1%S) 2-Layer Color image, (&f2%S) 1-Layer Color Image, " +
-                           "(&f3%S) 2-Layer Grayscale, (&f4%S) 1-Layer Grayscale, (%f5%S) Black and White, (&f6%S) Mathematical Grayscale");
-            Player.Message(p, "Local filetypes: .bmp.   Remote Filetypes: .gif .png .jpg .bmp.  PNG and GIF may use transparency");
-            Player.Message(p, "Use switch (&flayer%S) or (&fl%S) to print horizontally.");
+            Player.Message(p, "%T/imageprint [file] [palette] <mode> %H- Prints image in extra/images/ folder. (File must have .bmp extension)");
+            Player.Message(p, "%T/imageprint [url] [palette] <mode> %H- Downloads then prints the given image. (transparency supported)");
+            Player.Message(p, "%HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
+            Player.Message(p, "%HModes: &fVertical, Vertical2Layer, Horizontal");
         }
 
-        struct DrawArgs { public bool layer; public byte popType; public string name; }
+        struct DrawArgs { public bool layer, dualLayered; public ImagePalette palette; public string name; }
     }
 }
 

@@ -20,68 +20,70 @@ using System.Drawing;
 
 namespace MCGalaxy.Drawing {
 
-    public interface IPalette {
+    public interface IPaletteMatcher {
         
-        /// <summary> Sets the blocks available for this palette to pick from. </summary>
-        void SetAvailableBlocks(PaletteEntry[] blocks);
+        /// <summary> Sets the palette of blocks used to match colours from. </summary>
+        void SetPalette(ImagePalette palette);
         
         /// <summary> Returns the best matching block for the given color,
         /// based on this palette's colourspace. </summary>
-        byte BestMatch(byte R, byte G, byte B, out int position);
+        byte BestMatch(byte R, byte G, byte B);
+        
+        /// <summary> Returns the best matching block for the given color,
+        /// based on this palette's colourspace. </summary>
+        byte BestMatch(byte R, byte G, byte B, out bool backLayer);
     }
     
-    public sealed class GrayscalePalette : IPalette {
+    public sealed class RgbPaletteMatcher : IPaletteMatcher {
         
-        public void SetAvailableBlocks(PaletteEntry[] blocks) { }
-        
-        public byte BestMatch(byte R, byte G, byte B, out int position) {
-            int brightness = (R + G + B) / 3; position = -1;
-            if (brightness < (256 / 4))
-                return Block.obsidian;
-            else if (brightness >= (256 / 4) && brightness < (256 / 4) * 2)
-                return Block.darkgrey;
-            else if (brightness >= (256 / 4) * 2 && brightness < (256 / 4) * 3)
-                return Block.lightgrey;
-            else
-                return Block.white;
-        }
-    }
-    
-    public sealed class RgbPalette : IPalette {
-        
-        PaletteEntry[] palette;
-        public void SetAvailableBlocks(PaletteEntry[] blocks) {
-            this.palette = blocks;
+        ImagePalette palette;
+        public void SetPalette(ImagePalette palette) {
+            this.palette = palette;
         }
         
-        public byte BestMatch(byte R, byte G, byte B, out int position) {
-            int minimum = int.MaxValue; position = 0;
-            for (int i = 0; i < palette.Length; i++) {
-                PaletteEntry pixel = palette[i];
-                int dist = (R - pixel.R) * (R - pixel.R)
-                         + (G - pixel.G) * (G - pixel.G)
-                         + (B - pixel.B) * (B - pixel.B);
+        public byte BestMatch(byte R, byte G, byte B) {
+            int pos;
+            MinDist(R, G, B, palette.FrontLayer, out pos);
+            return palette.FrontLayer[pos].Block;
+        }
+        
+        public byte BestMatch(byte R, byte G, byte B, out bool backLayer) {
+            int frontPos, backPos;
+            int frontDist = MinDist(R, G, B, palette.FrontLayer, out frontPos);
+            int backDist  = MinDist(R, G, B, palette.BackLayer, out backPos);
+            
+            backLayer = backDist <= frontDist;
+            return backLayer ? palette.BackLayer[backPos].Block : palette.FrontLayer[frontPos].Block;
+        }
+        
+        
+        static int MinDist(byte R, byte G, byte B, PaletteEntry[] entries, out int pos) {
+            int minDist = int.MaxValue; pos = 0;
+            for (int i = 0; i < entries.Length; i++) {
+                PaletteEntry entry = entries[i];
                 
-                if (dist < minimum) {
-                    minimum = dist; position = i;
-                }
+                int dist = (R - entry.R) * (R - entry.R)
+                    + (G - entry.G) * (G - entry.G)
+                    + (B - entry.B) * (B - entry.B);
+                
+                if (dist < minDist) { minDist = dist; pos = i; }
             }
-            return palette[position].Block;
+            return minDist;
         }
     }
     
-    public sealed class LabPalette : IPalette {
+    public sealed class LabPaletteMatcher : IPaletteMatcher {
         
         LabColor[] palette;
-        public void SetAvailableBlocks(PaletteEntry[] blocks) {
-            palette = new LabColor[blocks.Length];
-            for (int i = 0; i < palette.Length; i++)
-                palette[i] = RgbToLab(blocks[i]);
+        public void SetPalette(ImagePalette palette) {
+            this.palette = new LabColor[palette.FrontLayer.Length];
+            for (int i = 0; i < palette.FrontLayer.Length; i++)
+                this.palette[i] = RgbToLab(palette.FrontLayer[i]);
         }
         
-        public byte BestMatch(byte r, byte g, byte b, out int position) {
-            double minimum = int.MaxValue; position = 0;
-            LabColor col = RgbToLab(r, g, b);
+        public byte BestMatch(byte R, byte G, byte B) {
+            double minDist = int.MaxValue; int pos = 0;
+            LabColor col = RgbToLab(R, G, B);
             
             for (int i = 0; i < palette.Length; i++) {
                 LabColor pixel = palette[i];
@@ -90,12 +92,16 @@ namespace MCGalaxy.Drawing {
                     + (col.A - pixel.A) * (col.A - pixel.A)
                     + (col.B - pixel.B) * (col.B - pixel.B);
                 
-                if (dist < minimum) {
-                    minimum = dist; position = i;
-                }
+                if (dist < minDist) { minDist = dist; pos = i; }
             }
-            return palette[position].Block;
+            return palette[pos].Block;
         }
+        
+        public byte BestMatch(byte R, byte G, byte B, out bool backLayer) {
+            backLayer = false;
+            return BestMatch(R, G, B, out backLayer);
+        }
+        
         
         struct LabColor {
             public double L, A, B;

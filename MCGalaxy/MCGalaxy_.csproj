@@ -445,7 +445,7 @@
     <Compile Include="Drawing\Flip.cs" />
     <Compile Include="Drawing\Image\ImagePalette.cs" />
     <Compile Include="Drawing\Image\ImagePrintDrawOp.cs" />
-    <Compile Include="Drawing\Image\IPalette.cs" />
+    <Compile Include="Drawing\Image\IPaletteMatcher.cs" />
     <Compile Include="Drawing\Image\PixelGetter.cs" />
     <Compile Include="Drawing\TransformFactories\RotateTransform.cs" />
     <Compile Include="Drawing\TransformFactories\SimpleTransforms.cs" />

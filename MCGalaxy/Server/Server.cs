@@ -21,6 +21,7 @@ using System.Net;
 using System.Net.Sockets;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands.World;
+using MCGalaxy.Drawing;
 using MCGalaxy.Games;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
@@ -171,6 +172,7 @@ namespace MCGalaxy {
             Alias.Load();
             Bots.BotsFile.Load();
             BlockDefinition.LoadGlobal();
+            ImagePalette.Load();
             
             SrvProperties.Load("properties/server.properties");
             Updater.Load("properties/update.properties");
