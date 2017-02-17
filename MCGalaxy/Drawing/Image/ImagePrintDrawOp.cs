@@ -70,6 +70,7 @@ namespace MCGalaxy.Drawing.Ops {
             } else {
                 bool backLayer;
                 block = selector.BestMatch(P.R, P.G, P.B, out backLayer);
+                
                 if (backLayer) {
                     x = (ushort)(x + adj.X);
                     z = (ushort)(z + adj.Z);
@@ -85,21 +86,21 @@ namespace MCGalaxy.Drawing.Ops {
             DualLayer = DualLayer && !LayerMode && Palette.BackLayer != null;
             
             // Calculate back layer offset
-            if (dir == 0) adj.Z = 1;
-            if (dir == 1) adj.Z = -1;
-            if (dir == 2) adj.X = -1;
-            if (dir == 3) adj.X = 1;
+            if (dir == 0) adj.Z = -1;
+            if (dir == 1) adj.Z = +1;
+            if (dir == 2) adj.X = +1;
+            if (dir == 3) adj.X = -1;
             
             if (LayerMode) {
-                if (dir == 0) { dx.X = 1; dy.Z = -1; }
-                if (dir == 1) { dx.X = -1; dy.Z = 1; }
-                if (dir == 2) { dx.Z = 1; dy.X = 1; }
+                if (dir == 0) { dx.X = +1; dy.Z = -1; }
+                if (dir == 1) { dx.X = -1; dy.Z = +1; }
+                if (dir == 2) { dx.Z = +1; dy.X = +1; }
                 if (dir == 3) { dx.Z = -1; dy.X = -1; }
             } else {
                 dy.Y = 1; // Oriented upwards
-                if (dir == 0) dx.X = 1;
+                if (dir == 0) dx.X = +1;
                 if (dir == 1) dx.X = -1;
-                if (dir == 2) dx.Z = 1;
+                if (dir == 2) dx.Z = +1;
                 if (dir == 3) dx.Z = -1;
             }
         }
