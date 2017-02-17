@@ -63,14 +63,12 @@ namespace MCGalaxy.Blocks {
         
         internal static bool DoPortal(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
-            Portal.Handle(p, x, y, z);
-            return true;
+            return Portal.Handle(p, x, y, z);
         }
         
         internal static bool DoMessageBlock(Player p, byte block, ushort x, ushort y, ushort z) {
             if (p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
-            MessageBlock.Handle(p, x, y, z, false);
-            return true;
+            return MessageBlock.Handle(p, x, y, z, false);
         }
         
         internal static bool Checkpoint(Player p, byte block, ushort x, ushort y, ushort z) {
