@@ -441,6 +441,8 @@ namespace MCGalaxy {
                 if (block == Block.tntexplosion && PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
                 HandleDeath(block, extBlock);
             }
+            
+            if (!hitWalkthrough) lastWalkthrough = -1;
         }
 
         [Obsolete("Use HandleDeath with ExtBlock attribute")]
