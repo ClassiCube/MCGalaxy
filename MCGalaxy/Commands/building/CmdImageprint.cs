@@ -61,11 +61,11 @@ namespace MCGalaxy.Commands.Building {
                 }
             }
             
-            if (message.IndexOf('.') != -1) {
-                if (!DownloadWebFile(message, p)) return;
+            if (parts[0].IndexOf('.') != -1) {
+                if (!DownloadWebFile(parts[0], p)) return;
                 dArgs.name = "tempImage_" + p.name;
             } else {
-                dArgs.name = message;
+                dArgs.name = parts[0];
             }
 
             if (!File.Exists("extra/images/" + dArgs.name + ".bmp")) {
