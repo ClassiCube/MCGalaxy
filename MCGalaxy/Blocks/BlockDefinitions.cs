@@ -172,11 +172,11 @@ namespace MCGalaxy {
                 if (global && pl.level.CustomBlockDefs[id] != GlobalDefs[id]) continue;
                 
                 if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
-                    pl.Send(Packet.DefineBlockExt(def, true));
+                    pl.Send(Packet.DefineBlockExt(def, true, pl.hasCP437));
                 } else if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0) {
-                    pl.Send(Packet.DefineBlockExt(def, false));
+                    pl.Send(Packet.DefineBlockExt(def, false, pl.hasCP437));
                 } else {
-                    pl.Send(Packet.DefineBlock(def));
+                    pl.Send(Packet.DefineBlock(def, pl.hasCP437));
                 }
                 
                 if (pl.HasCpeExt(CpeExt.BlockPermissions))
@@ -247,11 +247,11 @@ namespace MCGalaxy {
                 if (def == null) continue;
                 
                 if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
-                    pl.Send(Packet.DefineBlockExt(def, true));
+                    pl.Send(Packet.DefineBlockExt(def, true, pl.hasCP437));
                 } else if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0) {
-                    pl.Send(Packet.DefineBlockExt(def, false));
+                    pl.Send(Packet.DefineBlockExt(def, false, pl.hasCP437));
                 } else {
-                    pl.Send(Packet.DefineBlock(def));
+                    pl.Send(Packet.DefineBlock(def, pl.hasCP437));
                 }
             }
         }

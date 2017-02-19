@@ -28,7 +28,7 @@ namespace MCGalaxy {
 
         // these are checked frequently, so avoid overhead of HasCpeExt
         public bool hasCustomBlocks, hasBlockDefs,
-        hasTextColors, hasChangeModel, hasExtList;
+        hasTextColors, hasChangeModel, hasExtList, hasCP437;
 
         public void AddExtension(string ext, int version) {
             switch (ext.Trim()) {
@@ -69,7 +69,8 @@ namespace MCGalaxy {
                 case CpeExt.LongerMessages:
                     LongerMessages = version; break;
                 case CpeExt.FullCP437:
-                    FullCP437 = version; break;
+                    FullCP437 = version; 
+                    hasCP437 = true; break;
                 case CpeExt.BlockDefinitions:
                     BlockDefinitions = version;
                     hasBlockDefs = true; break;
@@ -156,8 +157,8 @@ namespace MCGalaxy {
             if (HasCpeExt(CpeExt.EnvMapAspect)) {
                 string url = GetTextureUrl();
                 // reset all other textures back to client default.
-                if (url != lastUrl) Send(Packet.EnvMapUrl(""));
-                Send(Packet.EnvMapUrl(url));
+                if (url != lastUrl) Send(Packet.EnvMapUrl("", hasCP437));
+                Send(Packet.EnvMapUrl(url, hasCP437));
                 
                 Send(Packet.EnvMapProperty(EnvProp.SidesBlock, side));
                 Send(Packet.EnvMapProperty(EnvProp.EdgeBlock, edge));
@@ -171,13 +172,13 @@ namespace MCGalaxy {
                 string url = GetTextureUrl();
                 // reset all other textures back to client default.
                 if (url != lastUrl) {
-                    Send(Packet.MapAppearanceV2("", side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance));
+                    Send(Packet.MapAppearanceV2("", side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance, hasCP437));
                 }
-                Send(Packet.MapAppearanceV2(url, side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance));
+                Send(Packet.MapAppearanceV2(url, side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance, hasCP437));
                 lastUrl = url;
             } else if (HasCpeExt(CpeExt.EnvMapAppearance)) {
                 string url = level.terrainUrl == "" ? Server.defaultTerrainUrl : level.terrainUrl;
-                Send(Packet.MapAppearance(url, side, edge, level.EdgeLevel));
+                Send(Packet.MapAppearance(url, side, edge, level.EdgeLevel, hasCP437));
             }
         }
         

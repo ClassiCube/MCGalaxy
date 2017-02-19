@@ -24,7 +24,7 @@ namespace MCGalaxy {
         public static byte[] ExtInfo(byte count) {
             byte[] buffer = new byte[67];
             buffer[0] = Opcode.CpeExtInfo;
-            NetUtils.WriteAscii("MCGalaxy " + Server.Version, buffer, 1);
+            NetUtils.Write("MCGalaxy " + Server.Version, buffer, 1, false);
             NetUtils.WriteI16((short)count, buffer, 65);
             return buffer;
         }
@@ -32,7 +32,7 @@ namespace MCGalaxy {
         public static byte[] ExtEntry(string name, int version) {
             byte[] buffer = new byte[69];
             buffer[0] = Opcode.CpeExtEntry;
-            NetUtils.WriteAscii(name, buffer, 1);
+            NetUtils.Write(name, buffer, 1, false);
             NetUtils.WriteI32(version, buffer, 65);
             return buffer;
         }
@@ -52,13 +52,42 @@ namespace MCGalaxy {
             return buffer;
         }
         
-        public static byte[] TextHotKey(string label, string input, int keycode, byte mods) {
+        public static byte[] TextHotKey(string label, string input, int keycode,
+		                                byte mods, bool hasCP437) {
             byte[] buffer = new byte[134];
             buffer[0] = Opcode.CpeSetTextHotkey;
-            NetUtils.WriteAscii(label, buffer, 1);
-            NetUtils.WriteAscii(input, buffer, 65);
+            NetUtils.Write(label, buffer, 1, hasCP437);
+            NetUtils.Write(input, buffer, 65, hasCP437);
             NetUtils.WriteI32(keycode, buffer, 129);
             buffer[133] = mods;
+            return buffer;
+        }
+		
+		public static byte[] ExtAddEntity(byte id, string name, string displayname, bool hasCP437) {
+            byte[] buffer = new byte[130];
+            buffer[0] = Opcode.CpeExtAddEntity;
+            buffer[1] = id;
+            NetUtils.Write(name, buffer, 2, hasCP437);
+            NetUtils.Write(displayname, buffer, 66, hasCP437);
+            return buffer;
+        }
+        
+        public static byte[] ExtAddPlayerName(byte id, string listName, string displayName, 
+		                                      string grp, byte grpRank, bool hasCP437) {
+            byte[] buffer = new byte[196];
+            buffer[0] = Opcode.CpeExtAddPlayerName;
+            NetUtils.WriteI16(id, buffer, 1);
+            NetUtils.Write(listName, buffer, 3, hasCP437);
+            NetUtils.Write(displayName, buffer, 67, hasCP437);
+            NetUtils.Write(grp, buffer, 131, hasCP437);
+            buffer[195] = grpRank;
+            return buffer;
+        }
+        
+        public static byte[] ExtRemovePlayerName(byte id) {
+            byte[] buffer = new byte[3];
+            buffer[0] = Opcode.CpeExtRemovePlayerName;
+            NetUtils.WriteI16(id, buffer, 1);
             return buffer;
         }
 
@@ -73,11 +102,11 @@ namespace MCGalaxy {
         }
         
         public static byte[] MakeSelection(byte id, string label, Vec3U16 p1, Vec3U16 p2,
-                                           short r, short g, short b, short opacity ) {
+                                           short r, short g, short b, short opacity, bool hasCP437) {
             byte[] buffer = new byte[86];
             buffer[0] = Opcode.CpeMakeSelection;
             buffer[1] = id;
-            NetUtils.WriteAscii(label, buffer, 2);
+            NetUtils.Write(label, buffer, 2, hasCP437);
             
             NetUtils.WriteU16(p1.X, buffer, 66);
             NetUtils.WriteU16(p1.Y, buffer, 68);
@@ -113,24 +142,34 @@ namespace MCGalaxy {
             buffer[index + 3] = delete ? (byte)1 : (byte)0;            
         }
         
-        public static byte[] MapAppearance(string url, byte side, byte edge, int sideLevel) {
+        public static byte[] ChangeModel(byte id, string model, bool hasCP437) {
+            byte[] buffer = new byte[66];
+            buffer[0] = Opcode.CpeChangeModel;
+            buffer[1] = id;
+            NetUtils.Write(model, buffer, 2, hasCP437);
+            return buffer;
+        }
+        
+        public static byte[] MapAppearance(string url, byte side, byte edge, int sideLevel, 
+		                                   bool hasCP437) {
             byte[] buffer = new byte[69];
-            WriteMapAppearance(buffer, url, side, edge, sideLevel);
+            WriteMapAppearance(buffer, url, side, edge, sideLevel, hasCP437);
             return buffer;
         }
         
         public static byte[] MapAppearanceV2(string url, byte side, byte edge, int sideLevel,
-                                             int cloudHeight, int maxFog) {
+                                             int cloudHeight, int maxFog, bool hasCP437) {
             byte[] buffer = new byte[73];
-            WriteMapAppearance(buffer, url, side, edge, sideLevel);
+            WriteMapAppearance(buffer, url, side, edge, sideLevel, hasCP437);
             NetUtils.WriteI16((short)cloudHeight, buffer, 69);
             NetUtils.WriteI16((short)maxFog, buffer, 71);
             return buffer;
         }
         
-        static void WriteMapAppearance(byte[] buffer, string url, byte side, byte edge, int sideLevel) {
+        static void WriteMapAppearance(byte[] buffer, string url, byte side, byte edge, 
+		                               int sideLevel, bool hasCP437) {
             buffer[0] = Opcode.CpeEnvSetMapApperance;
-            NetUtils.WriteAscii(url, buffer, 1);
+            NetUtils.Write(url, buffer, 1, hasCP437);
             buffer[65] = side;
             buffer[66] = edge;
             NetUtils.WriteI16((short)sideLevel, buffer, 67);
@@ -158,12 +197,12 @@ namespace MCGalaxy {
         }
         
         public static byte[] ExtAddEntity2(byte id, string skinName, string displayName, 
-                                           ushort x, ushort y, ushort z, byte rotx, byte roty) {
+                                           ushort x, ushort y, ushort z, byte rotx, byte roty, bool hasCP437) {
             byte[] buffer = new byte[138];
             buffer[0] = Opcode.CpeExtAddEntity2;
             buffer[1] = id;
-            NetUtils.WriteAscii(displayName.TrimEnd('+'), buffer, 2);
-            NetUtils.WriteAscii(skinName.TrimEnd('+'), buffer, 66);
+            NetUtils.Write(displayName.TrimEnd('+'), buffer, 2, hasCP437);
+            NetUtils.Write(skinName.TrimEnd('+'), buffer, 66, hasCP437);
             NetUtils.WriteU16(x, buffer, 130);
             NetUtils.WriteU16(y, buffer, 132);
             NetUtils.WriteU16(z, buffer, 134);
@@ -173,10 +212,10 @@ namespace MCGalaxy {
         }
 
         
-        public static byte[] EnvMapUrl(string url) {
+        public static byte[] EnvMapUrl(string url, bool hasCP437) {
             byte[] buffer = new byte[65];
             buffer[0] = Opcode.CpeSetMapEnvUrl;
-            NetUtils.WriteAscii(url, buffer, 1);
+            NetUtils.Write(url, buffer, 1, hasCP437);
             return buffer;
         }
         

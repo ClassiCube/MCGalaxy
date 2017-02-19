@@ -160,14 +160,7 @@ namespace MCGalaxy {
             return true;
         }
         
-        public void SendBlankMessage() {
-            byte[] buffer = new byte[66];
-            buffer[0] = Opcode.Message;
-            
-            for (int i = 2; i < buffer.Length; i++)
-                buffer[i] = (byte)' ';
-            Send(buffer);
-        }
+        public void SendBlankMessage() { Send(Packet.BlankMessage()); }
         
         public static void MessageLines(Player p, IEnumerable<string> lines) {
             foreach (string line in lines)
@@ -240,12 +233,8 @@ namespace MCGalaxy {
                     string line = raw;
                     if (!HasCpeExt(CpeExt.EmoteFix) && line.TrimEnd(' ')[line.TrimEnd(' ').Length - 1] < '!')
                         line += '\'';
-                    
-                    byte[] buffer = new byte[66];
-                    buffer[0] = Opcode.Message;
-                    buffer[1] = (byte)id;
-                    NetUtils.Write(line, buffer, 2, HasCpeExt(CpeExt.FullCP437));
-                    Send(buffer);
+
+                    Send(Packet.Message(line, id, hasCP437));
                 }
             } catch ( Exception e ) {
                 message = "&f" + message;
@@ -266,11 +255,7 @@ namespace MCGalaxy {
         
         /// <summary> Sends a raw message without performing any token resolving, emoticon parsing, or color parsing. </summary>
         public void SendRawMessage(CpeMessageType id, string message) {
-            byte[] buffer = new byte[66];
-            buffer[0] = Opcode.Message;
-            buffer[1] = (byte)id;
-            NetUtils.Write(message, buffer, 2, HasCpeExt(CpeExt.FullCP437));
-            Send(buffer);
+            Send(Packet.Message(message, (byte)id, HasCpeExt(CpeExt.FullCP437)));
         }
         
         public void SendMotd() { SendMapMotd(); }
@@ -356,7 +341,7 @@ namespace MCGalaxy {
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) y -= 22;
             
-            Send(Packet.AddEntity(id, name, x, y, z, rotx, roty));
+            Send(Packet.AddEntity(id, name, x, y, z, rotx, roty, hasCP437));
             if (hasChangeModel) UpdateModels();
         }
         
@@ -392,13 +377,14 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 5);
             
             if (block == Block.custom_block) {
-                buffer[7] = hasBlockDefs ? level.GetExtTile(x, y, z) : level.GetFallbackExtTile(x, y, z);
-                if (!hasCustomBlocks) buffer[7] = Block.ConvertCPE(buffer[7]);
-            } else if (hasCustomBlocks) {
-                buffer[7] = Block.Convert(block);
+                block = hasBlockDefs ? level.GetExtTile(x, y, z) : level.GetFallbackExtTile(x, y, z);
             } else {
-                buffer[7] = Block.ConvertCPE(Block.Convert(block));
+                block = Block.Convert(block);
             }
+            
+            // TODO: custom blocks replacing core blocks
+            if (!hasCustomBlocks) block = Block.ConvertCPE(block);
+            buffer[7] = block;
             Send(buffer);
         }
         
@@ -414,65 +400,45 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 5);
             
             if (block == Block.custom_block) {
-                buffer[7] = hasBlockDefs ? extBlock : level.GetFallback(extBlock);
-                if (!hasCustomBlocks) buffer[7] = Block.ConvertCPE(buffer[7]);
-            } else if (hasCustomBlocks) {
-                buffer[7] = Block.Convert(block);
+                block = hasBlockDefs ? extBlock : level.GetFallback(extBlock);
             } else {
-                buffer[7] = Block.Convert(Block.ConvertCPE(block));
+                block = Block.Convert(block);
             }
+
+            if (!hasCustomBlocks) block = Block.ConvertCPE(block);            
+            buffer[7] = block;
             Send(buffer);
         }
 
-        public void SendExtAddEntity(byte id, string name, string displayname = "") {
-            byte[] buffer = new byte[130];
-            buffer[0] = Opcode.CpeExtAddEntity;
-            buffer[1] = id;
-            NetUtils.WriteAscii(name, buffer, 2);
-            if (displayname == "") displayname = name;
-            NetUtils.WriteAscii(displayname, buffer, 66);
-            Send(buffer);
+        public void SendExtAddEntity(byte id, string name, string displayName = "") {
+            Send(Packet.ExtAddEntity(id, name, displayName, hasCP437));
         }
         
         public void SendExtAddEntity2(byte id, string skinName, string displayName, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) y -= 22;
 
-            Send(Packet.ExtAddEntity2(id, skinName, displayName, x, y, z, rotx, roty));
+            Send(Packet.ExtAddEntity2(id, skinName, displayName, x, y, z, rotx, roty, hasCP437));
             if (hasChangeModel) UpdateModels();
         }
         
         public void SendExtAddPlayerName(byte id, string listName, string displayName, string grp, byte grpRank) {
-            byte[] buffer = new byte[196];
-            buffer[0] = Opcode.CpeExtAddPlayerName;
-            NetUtils.WriteI16(id, buffer, 1);
-            NetUtils.WriteAscii(listName, buffer, 3);
-            NetUtils.WriteAscii(displayName, buffer, 67);
-            NetUtils.WriteAscii(grp, buffer, 131);
-            buffer[195] = grpRank;
-            Send(buffer);
+            Send(Packet.ExtAddPlayerName(id, listName, displayName, grp, grpRank, hasCP437));
         }
         
         public void SendExtRemovePlayerName(byte id) {
-            byte[] buffer = new byte[3];
-            buffer[0] = Opcode.CpeExtRemovePlayerName;
-            NetUtils.WriteI16(id, buffer, 1);
-            Send(buffer);
+            Send(Packet.ExtRemovePlayerName(id));
         }
         
-        public void SendChangeModel( byte id, string model ) {
+        public void SendChangeModel(byte id, string model) {
             // Fallback block models for clients that don't support block definitions
             byte block;
             bool fallback = byte.TryParse(model, out block) && block >= Block.CpeCount;
             block = level == null ? block : level.GetFallback(block);
             if (fallback && !hasBlockDefs && block != Block.air)
                 model = block.ToString();
-                
-            byte[] buffer = new byte[66];
-            buffer[0] = Opcode.CpeChangeModel;
-            buffer[1] = id;
-            NetUtils.WriteAscii(model, buffer, 2);
-            Send(buffer);
+
+            Send(Packet.ChangeModel(id, model, hasCP437));
         }
 
         internal void CloseSocket() {

@@ -21,33 +21,34 @@ namespace MCGalaxy {
 
     public static partial class Packet {
         
-        public static byte[] DefineBlock(BlockDefinition def) {
+        public static byte[] DefineBlock(BlockDefinition def, bool hasCP437) {
             byte[] buffer = new byte[80];
             int i = 0;
             buffer[i++] = Opcode.CpeDefineBlock;
-            MakeDefineBlockStart(def, buffer, ref i, false);
+            MakeDefineBlockStart(def, buffer, ref i, false, hasCP437);
             buffer[i++] = def.Shape;
             MakeDefineBlockEnd(def, ref i, buffer);
             return buffer;
         }
         
-        public static byte[] DefineBlockExt(BlockDefinition def, bool uniqueSideTexs) {
+        public static byte[] DefineBlockExt(BlockDefinition def, bool uniqueSideTexs, bool hasCP437) {
             byte[] buffer = new byte[uniqueSideTexs ? 88 : 85];
             int i = 0;
             buffer[i++] = Opcode.CpeDefineBlockExt;
-            MakeDefineBlockStart(def, buffer, ref i, uniqueSideTexs);
+            MakeDefineBlockStart(def, buffer, ref i, uniqueSideTexs, hasCP437);
             buffer[i++] = def.MinX; buffer[i++] = def.MinZ; buffer[i++] = def.MinY;
             buffer[i++] = def.MaxX; buffer[i++] = def.MaxZ; buffer[i++] = def.MaxY;
             MakeDefineBlockEnd(def, ref i, buffer);
             return buffer;
         }
         
-        static void MakeDefineBlockStart(BlockDefinition def, byte[] buffer, ref int i, bool uniqueSideTexs) {
+        static void MakeDefineBlockStart(BlockDefinition def, byte[] buffer, ref int i, 
+		                                 bool uniqueSideTexs, bool hasCP437) {
             // speed = 2^((raw - 128) / 64);
             // therefore raw = 64log2(speed) + 128
             byte rawSpeed = (byte)(64 * Math.Log(def.Speed, 2) + 128);
             buffer[i++] = def.BlockID;
-            NetUtils.WriteAscii(def.Name, buffer, i);
+            NetUtils.Write(def.Name, buffer, i, hasCP437);
             i += NetUtils.StringSize;
             buffer[i++] = def.CollideType;
             buffer[i++] = rawSpeed;
