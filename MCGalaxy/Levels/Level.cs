@@ -334,14 +334,15 @@ namespace MCGalaxy {
             }
         }
 
-        public static Level Load(string name) { return Load(name, 0); }
+        public static Level Load(string name) { return Load(name, LevelInfo.MapPath(name), 0); }
 
-        public static Level Load(string name, byte phys) {
+        public static Level Load(string name, byte phys) { return Load(name, LevelInfo.MapPath(name), phys); }
+        
+        public static Level Load(string name, string path, byte phys) {
             if (LevelLoad != null) LevelLoad(name);
             OnLevelLoadEvent.Call(name);
             if (cancelload) { cancelload = false; return null; }
 
-            string path = LevelInfo.MapPath(name);
             if (!File.Exists(path)) {
                 Server.s.Log("Attempted to load " + name + ", but the level file does not exist.");
                 return null;

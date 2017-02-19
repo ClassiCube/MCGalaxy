@@ -100,7 +100,6 @@ namespace MCGalaxy.Commands.World {
                 if (pl.level != p.level) continue;
                 pl.SendCurrentMapAppearance();
             }
-            p.level.Save();
             Level.SaveSettings(p.level);
         }
         

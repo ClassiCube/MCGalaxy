@@ -86,28 +86,23 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Backup of {0} does not exist.", name); return null;
             }
             
-            if (LevelInfo.MapExists(name)) {
-                Server.s.Log(name + ".lvl file is corrupt. Deleting and replacing with " + name + ".lvl.backup file.");
-                File.Delete(LevelInfo.MapPath(name));
-            }
             Server.s.Log("Attempting to load backup");
-            File.Copy(LevelInfo.MapPath(name) + ".backup", LevelInfo.MapPath(name), true);
+            level = Level.Load(name, LevelInfo.MapPath(name) + ".backup", 0);
+            if (level != null) return level;
             
-            level = Level.Load(name);
-            if (level == null) {
-                Player.Message(p, "Loading backup failed.");
-                string backupPath = Server.backupLocation;
-                if (Directory.Exists(backupPath + "/" + name)) {
-                    int backupNumber = Directory.GetDirectories(backupPath + "/" + name).Length;
-                    Server.s.Log("Attempting to load latest backup, number " + backupNumber + " instead.");
-                    File.Copy(LevelInfo.BackupPath(name, backupNumber.ToString()), LevelInfo.MapPath(name), true);
-                    level = Level.Load(name);
-                    if (level == null) {
-                        Player.Message(p, "Loading latest backup failed as well.");
-                    }
-                } else {
-                    Player.Message(p, "Latest backup of {0} does not exist.", name);
-                }
+            Player.Message(p, "Loading backup failed.");
+            string backupPath = Server.backupLocation;
+            
+            if (Directory.Exists(backupPath + "/" + name)) {
+                int num = Directory.GetDirectories(backupPath + "/" + name).Length;
+                Server.s.Log("Attempting to load latest backup, number " + num + " instead.");
+                
+                string path = LevelInfo.BackupPath(name, num.ToString());
+                level = Level.Load(name, path, 0);
+                if (level == null)
+                    Player.Message(p, "Loading latest backup failed as well.");
+            } else {
+                Player.Message(p, "Latest backup of {0} does not exist.", name);
             }
             return level;
         }
