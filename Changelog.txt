@@ -1,3 +1,33 @@
+v 1.8.8.7
+Added: Console can now see invalid command attempts.
+Added: /ignore 8ball
+Added: /goto random
+Added: Can reference external assemblies in custom commands
+Added: /map treetype to specify what tree types saplings grow into
+Added: forester.py (fCraft like) trees, and some other trees
+Added: /zs go
+Added: .binvox importer
+Fixed: negative blocks affected in vertical /torus
+Fixed: Being able to maintain /fly from current into a non-hax map
+Fixed: all unicode to code page 437 issues
+Fixed: /copylvl and /renamelvl with blockprops
+Fixed: Null reference for zones with non-existent groups
+Fixed: GUI works on mono now
+Fixed: Some ways to bypass /mute
+Fixed: /museum not loading custom blocks/env, bypassing pervisit
+Fixed: /resizelvl resetting spawn
+Improved: when you lb/gb edit/copy a core block, auto creates custom block
+Improved: More fCraft command aliases
+Improved: gb/lb info displays texture ids
+Improved: combine clones/whoip, tnt/mode, move/tp
+Improved: bot nick limit increased to 62
+Improved: Show server version in heartbeat
+Improved: /baninfo, /rankinfo, /notes, /temprankinfo partially match
+Improved: /setspawn now updates own spawn point
+Improved: noclip, bots, walkthrough, killer blocks use real AABB colllisions
+Improved: /imgprint adjusts to env colors, allows custom palettes with /palette
+Improved: paste brush now allows you to specify blocks to include/exclude
+
 v 1.8.8.6
 Fixed: /os lb add/edit always creating blocks with uppercase names
 Fixed: double {{ in IRC messages
