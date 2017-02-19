@@ -52,7 +52,7 @@ namespace MCGalaxy.Drawing {
             int frontDist = MinDist(R, G, B, front, out frontPos);
             int backDist  = MinDist(R, G, B, back, out backPos);
             
-            backLayer = backDist <= frontDist;
+            backLayer = frontDist <= backDist;
             return backLayer ? back[backPos].Block : front[frontPos].Block;
         }
         

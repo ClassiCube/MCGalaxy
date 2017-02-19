@@ -65,12 +65,27 @@ namespace MCGalaxy.Commands {
         
         static void TeleportCoords(Player p, string[] args) {
             int x, y, z;
-            if (!int.TryParse(args[0], out x) || !int.TryParse(args[1], out y) || !int.TryParse(args[2], out z)
-                || x < -1024 || x > 1024 || y < -1024 || y > 1024 || z < -1024 || z > 1024) {
-                Player.Message(p, "Coordinates must be whole numbers between -1024 to 1024.");
-            } else {
-                PlayerActions.MoveCoords(p, x, y, z, p.rot[0], p.rot[1]);
+            if (!ParseCoord(p, args[0], p.pos[0],                            "X", out x)) return;
+            if (!ParseCoord(p, args[1], p.pos[1] - Entities.CharacterHeight, "Y", out y)) return;
+            if (!ParseCoord(p, args[2], p.pos[2],                            "Z", out z)) return;
+
+            PlayerActions.MoveCoords(p, x, y, z, p.rot[0], p.rot[1]);
+        }
+        
+        static bool ParseCoord(Player p, string arg, int cur, string axis, out int value) {
+            bool relative = arg[0] == '~';
+            if (relative) arg = arg.Substring(1);
+            
+            if (!int.TryParse(arg, out value)) {
+                Player.Message(p, axis + " coordinate must be an integer from -1024 to 1024."); return false;
             }
+           
+            if (value < -1024 || value > 1024) {
+                Player.Message(p, axis + " coordinate must be between -1024 to 1024."); return false;
+            }
+            
+            if (relative) value += (cur / 32);
+            return true;
         }
         
         static bool CheckPlayer(Player p, Player target) {
@@ -93,11 +108,12 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/tp [x y z]");
             Player.Message(p, "%HTeleports yourself to the given block coordinates.");
+            Player.Message(p, "%H  Use ~ before a coordinate to move relative to current position.");
             Player.Message(p, "%T/tp [player]");
             Player.Message(p, "%HTeleports yourself to that player.");
             Player.Message(p, "%T/tp bot [name]");
             Player.Message(p, "%HTeleports yourself to that bot.");
-            Player.Message(p, "%H Use /p2p to teleport a given player to a different player.");
+            Player.Message(p, "%H  Use /p2p to teleport a given player to a different player.");
         }
     }
 }

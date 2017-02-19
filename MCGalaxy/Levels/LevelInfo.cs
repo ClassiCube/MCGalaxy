@@ -49,11 +49,11 @@ namespace MCGalaxy {
             return null;
         }
         
+        
         // TODO: support loading other map files eventually
         public static string[] AllMapFiles() {
             return Directory.GetFiles("levels", "*.lvl");
-        }
-        
+        }       
         
         public static bool MapExists(string name) {
             return File.Exists(MapPath(name));
@@ -63,28 +63,38 @@ namespace MCGalaxy {
             return File.Exists(BackupPath(name, backup));
         }
         
+        
+        /// <summary> Relative path of a deleted level's map file </summary>
+        public static string DeletedPath(string name) {
+            return "levels/deleted/" + name + ".lvl";
+        }
+        
+        /// <summary> Relative path of a level's map file </summary>
         public static string MapPath(string name) {
             return "levels/" + name.ToLower() + ".lvl";
         }
         
+        /// <summary> Relative path of a level's previous save map file </summary>
         public static string PrevPath(string name) {
             return "levels/prev/" + name.ToLower() + ".lvl.prev";
         }
         
+        /// <summary> Relative path of a level's backup map file </summary>
         public static string BackupPath(string name, string backup) {
             return Server.backupLocation + "/" + name + "/" + backup + "/" + name + ".lvl";
         }
         
+        /// <summary> Relative path of a level's property file </summary>
         public static string PropertiesPath(string name) {
             return "levels/level properties/" + name + ".properties";
         }
+        
         
         public static string FindPropertiesFile(string name) {
             string file = "levels/level properties/" + name + ".properties";
             if (!File.Exists(file)) file = "levels/level properties/" + name;
             return File.Exists(file) ? file : null;
-        }
-        
+        }      
         
         public static string FindOfflineProperty(string name, string propKey) {
             string file = FindPropertiesFile(name);

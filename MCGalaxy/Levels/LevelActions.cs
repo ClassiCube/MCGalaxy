@@ -118,13 +118,13 @@ namespace MCGalaxy {
             if (!Directory.Exists("levels/deleted"))
                 Directory.CreateDirectory("levels/deleted");
             
-            if (File.Exists("levels/deleted/" + name + ".lvl")) {
+            if (File.Exists(LevelInfo.DeletedPath(name))) {
                 int num = 0;
-                while (File.Exists("levels/deleted/" + name + num + ".lvl")) num++;
+                while (File.Exists(LevelInfo.DeletedPath(name + num))) num++;
 
-                File.Move(LevelInfo.MapPath(name), "levels/deleted/" + name + num + ".lvl");
+                File.Move(LevelInfo.MapPath(name), LevelInfo.DeletedPath(name + num));
             } else {
-                File.Move(LevelInfo.MapPath(name), "levels/deleted/" + name + ".lvl");
+                File.Move(LevelInfo.MapPath(name), LevelInfo.DeletedPath(name));
             }
 
             SafeDelete("levels/level properties/" + name);

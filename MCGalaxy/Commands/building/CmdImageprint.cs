@@ -45,7 +45,8 @@ namespace MCGalaxy.Commands.Building {
             string[] parts = message.SplitSpaces(3);
             
             DrawArgs dArgs = default(DrawArgs);
-            dArgs.palette = ImagePalette.Palettes[0];
+            dArgs.palette = ImagePalette.Find("color");
+            if (dArgs.palette == null) dArgs.palette = ImagePalette.Palettes[0];
             dArgs.dualLayered = true;
                         
             if (parts.Length == 3) {
