@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System.Collections.Generic;
+using System.IO;
 
 namespace MCGalaxy.Drawing {
     
@@ -24,6 +25,9 @@ namespace MCGalaxy.Drawing {
         
         /// <summary> The name of this palette. </summary>
         public string Name;
+        
+        /// <summary> Relative file path on disc. </summary>
+        public string FileName { get { return "extra/palettes/" + Name + ".pal"; } }
         
         /// <summary> Blocks in the front, used in vertical and layer mode. </summary>
         public PaletteEntry[] FrontLayer;
@@ -52,6 +56,74 @@ namespace MCGalaxy.Drawing {
             Palettes.Add(new ImagePalette("Grayscale", Grayscale_Front, Grayscale_Back));
             Palettes.Add(new ImagePalette("BlackWhite", BlackWhite_Front, null));
             Palettes.Add(new ImagePalette("SimpleGrayscale", Grayscale_Mathematical, null));
+            
+            if (!Directory.Exists("extra/palettes"))
+                Directory.CreateDirectory("extra/palettes");
+            string[] files = Directory.GetFiles("extra/palettes");
+            foreach (string file in files)
+                LoadPalette(file);
+        }
+
+        static void LoadPalette(string file) {
+            string name = Path.GetFileNameWithoutExtension(file);
+            ImagePalette palette = Find(name);
+            if (palette != null) Palettes.Remove(palette);
+            palette = new ImagePalette(name, null, null);
+            
+            string[] lines = File.ReadAllLines(file);
+            List<PaletteEntry> front = new List<PaletteEntry>();
+            List<PaletteEntry> back = new List<PaletteEntry>();
+            
+            foreach (string line in lines) {
+                if (line.StartsWith("#") || line.Length == 0) continue;
+                
+                string[] parts = line.Split(':');
+                if (parts.Length != 5) continue;
+                
+                if (parts[0].CaselessEq("front")) {
+                    front.Add(ParseEntry(parts));
+                } else if (parts[0].CaselessEq("back")) {
+                    back.Add(ParseEntry(parts));
+                }
+            }
+            
+            palette.FrontLayer = front.ToArray();
+            if (back.Count > 0) palette.BackLayer = back.ToArray();
+            Palettes.Add(palette);
+        }
+        
+        static PaletteEntry ParseEntry(string[] parts) {
+            byte r = byte.Parse(parts[4]), g = byte.Parse(parts[3]);
+            byte b = byte.Parse(parts[2]), block = byte.Parse(parts[1]);
+            return new PaletteEntry(r, g, b, block);
+        }
+        
+        public static void SavePalette(ImagePalette palette) {
+            using (StreamWriter w = new StreamWriter(palette.FileName)) {
+                w.WriteLine("#Line layout - type:block:red:green:blue");
+                
+                if (palette.FrontLayer != null) {
+                    foreach (PaletteEntry e in palette.FrontLayer)
+                        w.WriteLine("front:" + e.Block + ":" + e.R + ":" + e.G + ":" + e.B);
+                }
+                
+                if (palette.BackLayer != null) {
+                    foreach (PaletteEntry e in palette.BackLayer)
+                        w.WriteLine("back:" + e.Block + ":" + e.R + ":" + e.G + ":" + e.B);
+                }
+            }
+        }
+        
+        public static void Add(string name) {
+            ImagePalette palette = new ImagePalette(name, null, null);
+            Palettes.Add(palette);
+            using (File.Create(palette.FileName)) { }
+        }
+        
+        public static void Remove(ImagePalette palette) {
+            Palettes.Remove(palette);
+            if (!File.Exists(palette.FileName)) return;
+            File.Delete(palette.FileName);
         }
 
         

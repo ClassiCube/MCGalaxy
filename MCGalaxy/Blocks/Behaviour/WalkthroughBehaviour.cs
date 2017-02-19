@@ -48,7 +48,7 @@ namespace MCGalaxy.Blocks {
             byte extBlock = p.level.GetExtTile(x, y, z);
             BlockDefinition def = p.level.CustomBlockDefs[extBlock];
             if (def == null) return false; // custom block was removed      
-            if (def.CollideType == 2) return false;
+            if (def.CollideType == CollideType.Solid) return false;
             
             if (p.level.CustomBlockProps[extBlock].IsPortal) {
                 return DoPortal(p, block, x, y, z);

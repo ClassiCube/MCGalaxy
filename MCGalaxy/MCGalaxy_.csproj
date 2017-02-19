@@ -142,6 +142,7 @@
     <Compile Include="Commands\building\CmdMode.cs" />
     <Compile Include="Commands\building\CmdOutline.cs" />
     <Compile Include="Commands\building\CmdPaint.cs" />
+    <Compile Include="Commands\building\CmdPalette.cs" />
     <Compile Include="Commands\building\CmdPaste.cs" />
     <Compile Include="Commands\building\CmdPlace.cs" />
     <Compile Include="Commands\building\CmdPortal.cs" />

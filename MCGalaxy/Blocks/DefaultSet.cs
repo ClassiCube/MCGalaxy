@@ -104,6 +104,8 @@ namespace MCGalaxy.Blocks {
                 return SoundType.Cloth;
             if (b >= Block.lightpink && b <= Block.turquoise)
                 return SoundType.Cloth;
+            if (b == Block.iron || b == Block.goldsolid)
+                return SoundType.Metal;
             
             if (b == Block.bookcase || b == Block.wood
                 || b == Block.trunk || b == Block.crate || b == Block.fire)

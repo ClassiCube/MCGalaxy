@@ -22,10 +22,10 @@ namespace MCGalaxy.Blocks.Physics {
     public static class LeafPhysics {
         
         public static void DoLeaf(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
             if (lvl.physics > 1) { //Adv physics kills flowers and mushroos in water/lava
+                ushort x, y, z;
+                lvl.IntToPos(C.b, out x, out y, out z);
+            
                 AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x + 1), y, z));
                 AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x - 1), y, z));
                 AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z + 1)));
@@ -33,14 +33,20 @@ namespace MCGalaxy.Blocks.Physics {
                 AirPhysics.PhysAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
             }
 
+            // Just immediately remove from physics list
             if (!lvl.leafDecay) {
                 lvl.leaves.Clear();
                 C.data.Data = PhysicsArgs.RemoveFromChecks; return;
             }
+            
+            // Delay checking for decay for a random amount of time
             if (C.data.Data < 5) {
+                Random rand = lvl.physRandom;
                 if (rand.Next(10) == 0) C.data.Data++;
                 return;
             }
+            
+            // Perform actual leaf decay, then remove from physics list
             if (DoLeafDecay(lvl, ref C)) lvl.AddUpdate(C.b, Block.air);
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
