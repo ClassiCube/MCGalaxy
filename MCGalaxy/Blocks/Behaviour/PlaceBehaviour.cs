@@ -52,7 +52,7 @@ namespace MCGalaxy.Blocks {
                 p.ChangeBlock(x, y, z, Block.staircasestep, 0); return;
             }
             
-            p.SendBlockchange(x, y, z, Block.air); // send the air block back only to the user
+            p.SendBlockchange(x, y, z, Block.air, 0); // send the air block back only to the user
             p.ChangeBlock(x, (ushort)(y - 1), z, Block.staircasefull, 0);
         }
         
@@ -62,7 +62,7 @@ namespace MCGalaxy.Blocks {
                 p.ChangeBlock(x, y, z, Block.cobblestoneslab, 0); return;
             }
             
-            p.SendBlockchange(x, y, z, Block.air); // send the air block back only to the user
+            p.SendBlockchange(x, y, z, Block.air, 0); // send the air block back only to the user
             p.ChangeBlock(x, (ushort)(y - 1), z, Block.stone, 0);
         }
         

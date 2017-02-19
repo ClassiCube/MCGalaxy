@@ -149,10 +149,8 @@ namespace MCGalaxy {
         string lastUrl = "";
         public void SendCurrentMapAppearance() {
             byte side = (byte)level.EdgeBlock, edge = (byte)level.HorizonBlock;
-            if (side >= Block.CpeCount && !hasBlockDefs)
-                side = level.GetFallback(side);
-            if (edge >= Block.CpeCount && !hasBlockDefs)
-                edge = level.GetFallback(edge);
+            if (!hasBlockDefs) side = level.RawFallback(side);
+            if (!hasBlockDefs) edge = level.RawFallback(edge);
             
             if (HasCpeExt(CpeExt.EnvMapAspect)) {
                 string url = GetTextureUrl();

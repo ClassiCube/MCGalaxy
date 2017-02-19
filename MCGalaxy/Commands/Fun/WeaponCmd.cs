@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands {
                     foreach (Vec3U16 cP in toSend) {
                         if (lastSent.Contains(cP)) continue;
                         lastSent.Add(cP);
-                        p.SendBlockchange(cP.X, cP.Y, cP.Z, Block.glass);
+                        p.SendBlockchange(cP.X, cP.Y, cP.Z, Block.glass, 0);
                     }
                     toSend.Clear();
                 }

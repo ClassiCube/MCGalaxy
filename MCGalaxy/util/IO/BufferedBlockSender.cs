@@ -144,7 +144,7 @@ namespace MCGalaxy {
                 data[j++] = (byte)(x >> 8); data[j++] = (byte)x;
                 data[j++] = (byte)(y >> 8); data[j++] = (byte)y;
                 data[j++] = (byte)(z >> 8); data[j++] = (byte)z;
-                data[j++] = types[i] < Block.CpeCount ? types[i] : level.GetFallback(types[i]);
+                data[j++] = level.RawFallback(types[i]);
             }
             return data;
         }
@@ -161,8 +161,7 @@ namespace MCGalaxy {
                 data[j++] = (byte)(x >> 8); data[j++] = (byte)x;
                 data[j++] = (byte)(y >> 8); data[j++] = (byte)y;
                 data[j++] = (byte)(z >> 8); data[j++] = (byte)z;
-                data[j++] = types[i] < Block.CpeCount ? Block.ConvertCPE(types[i])
-                    : Block.ConvertCPE(level.GetFallback(types[i]));
+                data[j++] = types[i] = Block.ConvertCPE(level.RawFallback(types[i]));
             }
             return data;
         }

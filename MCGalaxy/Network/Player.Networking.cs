@@ -366,29 +366,13 @@ namespace MCGalaxy {
             SendRaw(Opcode.RemoveEntity, id);
         }
         
+        [Obsolete("Prefer SendBlockChange(x, y, z, block, extBlock)")]
         public void SendBlockchange(ushort x, ushort y, ushort z, byte block) {
-            //if (x < 0 || y < 0 || z < 0) return;
-            if (x >= level.Width || y >= level.Height || z >= level.Length) return;
-
-            byte[] buffer = new byte[8];
-            buffer[0] = Opcode.SetBlock;
-            NetUtils.WriteU16(x, buffer, 1);
-            NetUtils.WriteU16(y, buffer, 3);
-            NetUtils.WriteU16(z, buffer, 5);
-            
-            if (block == Block.custom_block) {
-                block = hasBlockDefs ? level.GetExtTile(x, y, z) : level.GetFallbackExtTile(x, y, z);
-            } else {
-                block = Block.Convert(block);
-            }
-            
-            // TODO: custom blocks replacing core blocks
-            if (!hasCustomBlocks) block = Block.ConvertCPE(block);
-            buffer[7] = block;
-            Send(buffer);
+            byte extBlock = 0;
+            if (block == Block.custom_block) extBlock = level.GetExtTile(x, y, z);
+            SendBlockchange(x, y, z, block, extBlock);
         }
         
-        // Duplicated as this packet needs to have maximum optimisation.
         public void SendBlockchange(ushort x, ushort y, ushort z, byte block, byte extBlock) {
             //if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
@@ -400,12 +384,18 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 5);
             
             if (block == Block.custom_block) {
-                block = hasBlockDefs ? extBlock : level.GetFallback(extBlock);
+                block = hasBlockDefs ? extBlock : level.RawFallback(extBlock);
             } else {
                 block = Block.Convert(block);
             }
-
-            if (!hasCustomBlocks) block = Block.ConvertCPE(block);            
+            if (!hasCustomBlocks) block = Block.ConvertCPE(block); // client doesn't support CPE
+            
+            // Custom block replaced a core block
+            if (!hasBlockDefs && block < Block.CpeCount) {
+                BlockDefinition def = level.CustomBlockDefs[block];
+                if (def != null) block = def.FallBack;
+            }
+            
             buffer[7] = block;
             Send(buffer);
         }
@@ -433,10 +423,9 @@ namespace MCGalaxy {
         public void SendChangeModel(byte id, string model) {
             // Fallback block models for clients that don't support block definitions
             byte block;
-            bool fallback = byte.TryParse(model, out block) && block >= Block.CpeCount;
-            block = level == null ? block : level.GetFallback(block);
-            if (fallback && !hasBlockDefs && block != Block.air)
-                model = block.ToString();
+            if (byte.TryParse(model, out block) && !hasBlockDefs) {
+                model = level.RawFallback(block).ToString();
+            }
 
             Send(Packet.ChangeModel(id, model, hasCP437));
         }

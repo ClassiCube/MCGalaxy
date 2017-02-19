@@ -90,9 +90,10 @@ namespace MCGalaxy {
             return def == null ? Block.air : def.FallBack;
         }
         
-        public byte GetFallback(byte extType) {
-            BlockDefinition def = CustomBlockDefs[extType];
-            return def == null ? Block.air : def.FallBack;
+        public byte RawFallback(byte raw) {
+            BlockDefinition def = CustomBlockDefs[raw];
+            if (def != null) return def.FallBack;
+            return raw < Block.CpeCount ? raw : Block.air;
         }
         
         public void SetTile(int index, byte block) {

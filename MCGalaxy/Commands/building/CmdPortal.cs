@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.Building {
             if (data.Multi && type == Block.red && data.Entries.Count > 0) { ExitChange(p, x, y, z, type, extType); return; }
 
             p.level.Blockchange(p, x, y, z, data.Block, data.ExtBlock);
-            p.SendBlockchange(x, y, z, Block.green);
+            p.SendBlockchange(x, y, z, Block.green, 0);
             PortalPos Port;
 
             Port.Map = p.level.name;
@@ -162,8 +162,8 @@ namespace MCGalaxy.Commands.Building {
         static void ShowPortals(Player p, DataTable table) {
             foreach (DataRow row in table.Rows) {
                 if (row["ExitMap"].ToString() == p.level.name)
-                    p.SendBlockchange(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]), Block.red);
-                p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), Block.green);
+                    p.SendBlockchange(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]), Block.red, 0);
+                p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), Block.green, 0);
             }
 
             Player.Message(p, "Now showing &a" + table.Rows.Count + " %Sportals.");
