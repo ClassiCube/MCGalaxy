@@ -24,17 +24,20 @@ namespace MCGalaxy {
     public static class Utils {
 
         public static string FolderPath { get { return AppDomain.CurrentDomain.BaseDirectory; } }
-		
+        
         public static bool CheckHex(Player p, ref string arg) {
             if (arg.Length > 0 && arg[0] == '#')
                 arg = arg.Substring(1);
-            if (arg.Length != 6 || !IsValidHex(arg)) {
+            
+            if (!IsValidHex(arg)) {
                 Player.Message(p, "\"#{0}\" is not a valid HEX color.", arg); return false;
             }
             return true;
         }
 
         public static bool IsValidHex(string hex) {
+            if (hex.Length != 6) return false;
+            
             for (int i = 0; i < hex.Length; i++) {
                 if (!Colors.IsStandardColor(hex[i])) return false;
             }
