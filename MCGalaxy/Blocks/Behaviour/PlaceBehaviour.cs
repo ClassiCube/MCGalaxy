@@ -84,7 +84,8 @@ namespace MCGalaxy.Blocks {
                 sbyte num = C4Physics.NextCircuit(p.level);
                 p.level.C4list.Add(new C4Data(num));
                 p.c4circuitNumber = num;
-                Player.Message(p, "Place more blocks for more c4, then place a &c{0} %Sblock for the detonator.", Block.Name(Block.red));
+                Player.Message(p, "Place more blocks for more c4, then place a &c{0} %Sblock for the detonator.", 
+                               p.level.BlockName(Block.red, 0));
             }
             
             C4Data c4 = C4Physics.Find(p.level, p.c4circuitNumber);
