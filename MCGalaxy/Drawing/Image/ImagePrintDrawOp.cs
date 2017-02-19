@@ -40,15 +40,27 @@ namespace MCGalaxy.Drawing.Ops {
         IPaletteMatcher selector;
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
-            selector = null;
-            CalcState(Direction);
-            
+            CalcState(Direction);           
             selector = new RgbPaletteMatcher();
             CalcLayerColors();
 
             using (PixelGetter getter = new PixelGetter(Source)) {
                 getter.Init();
                 getter.Iterate(output, OutputPixel);
+            }
+            selector = null;
+            
+            // Put all the blocks in shadow
+            if (DualLayer) {
+                ushort y = (ushort)(Origin.Y + Source.Height);
+                for (int i = 0; i < Source.Width; i++) {
+                    ushort x = (ushort)(Origin.X + dx.X * i);                   
+                    ushort z = (ushort)(Origin.Z + dx.Z * i);
+                    output(Place(x, y, z, Block.rock, 0));
+                    
+                    x = (ushort)(x + adj.X); z = (ushort)(z + adj.Z);
+                    output(Place(x, y, z, Block.rock, 0));
+                }                
             }
             
             Source.Dispose();

@@ -144,6 +144,25 @@ namespace MCGalaxy.Commands.Building {
             
             return block == Block.custom_block ? extBlock : (byte)block;
         }
+        
+        void HandleEntries(Player p, string[] args) {
+            if (args.Length < 2 || args.Length > 3) { Help(p); return; }
+            
+            ImagePalette palette = ImagePalette.Find(args[1]);
+            if (palette == null) {
+                Player.Message(p, "Palette {0} does not exist.", args[1]); return;
+            }
+            
+            string modifer = args.Length > 2 ? args[2] : "";
+            MultiPageOutput.Output(p, palette.Entries, (e, i) => FormatEntry(e, i, p.level), 
+                                   "palette entries", "entries", modifer, true);
+        }
+        
+        static string FormatEntry(PaletteEntry e, int index, Level lvl) {
+            byte block = e.Block, extBlock = 0;
+            if (block >= Block.CpeCount) { extBlock = block; block = Block.CpeCount; }
+            return lvl.BlockName(block, extBlock) + " - " + Utils.Hex(e.R, e.G, e.B);
+        }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/palette create/delete [name]");
@@ -152,6 +171,8 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%HAdds a block to a palette's entries.");
             Player.Message(p, "%T/palette remove [name] [block]");
             Player.Message(p, "%HRemoves a block from a palette's entries.");
+            Player.Message(p, "%T/palette entries [name]");
+            Player.Message(p, "%HLists the entries of that palette.");
             Player.Message(p, "%HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
         }
     }
