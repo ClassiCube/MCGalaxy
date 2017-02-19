@@ -33,33 +33,22 @@ namespace MCGalaxy.Commands.Building {
         
         public override void Use(Player p, string message) {
             if (p.CopyBuffer == null) { Player.Message(p, "You haven't copied anything yet"); return; }
+            
+            BrushArgs args = new BrushArgs(p, message, 0, 0);
+            Brush brush = BrushFactory.Find("paste").Construct(args);
+            if (brush == null) return;
+            
             Player.Message(p, "Place a block in the corner of where you want to paste.");
-            p.MakeSelection(1, message, DoPaste);
+            p.MakeSelection(1, brush, DoPaste);
         }
 
         bool DoPaste(Player p, Vec3S32[] m, object state, byte type, byte extType) {
-            string message = (string)state;
             CopyState cState = p.CopyBuffer;
             m[0] += cState.Offset;
 
-            if (message == "") {
-                SimplePasteDrawOp simpleOp = new SimplePasteDrawOp();
-                simpleOp.CopyState = p.CopyBuffer;
-                return DrawOpPerformer.Do(simpleOp, null, p, m);
-            }
-            
             PasteDrawOp op = new PasteDrawOp();
             op.CopyState = p.CopyBuffer;
-            string[] args = message.Split(' ');
-            
-            if (args[0].CaselessEq("not")) {
-                op.Exclude = ReplaceBrushFactory.GetBlocks(p, 1, args.Length, args);
-                if (op.Exclude == null) return false;
-            } else {
-                op.Include = ReplaceBrushFactory.GetBlocks(p, 0, args.Length, args);
-                if (op.Include == null) return false;
-            }
-            return DrawOpPerformer.Do(op, null, p, m);
+            return DrawOpPerformer.Do(op, (Brush)state, p, m);
         }
         
         public override void Help(Player p) {

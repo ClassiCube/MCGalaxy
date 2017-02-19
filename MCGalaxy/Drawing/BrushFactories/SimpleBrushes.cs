@@ -19,7 +19,7 @@ using System;
 using MCGalaxy.Commands.Building;
 
 namespace MCGalaxy.Drawing.Brushes {
-    public sealed class SolidBrushFactory : BrushFactory {        
+    public sealed class SolidBrushFactory : BrushFactory {
         public override string Name { get { return "Normal"; } }
         public override string[] Help { get { return HelpString; } }
         
@@ -63,7 +63,7 @@ namespace MCGalaxy.Drawing.Brushes {
             if (args.Message == "") {
                 if (!DrawCmd.CheckBlock(args.Player, args.Block)) return null;
                 return new CheckeredBrush(args.Block, args.ExtBlock, 0, 0);
-            }              
+            }
             string[] parts = args.Message.Split(' ');
             
             byte extBlock1;
@@ -79,13 +79,17 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
-    public sealed class PasteBrushFactory : BrushFactory {    
-        public override string Name { get { return "Paste"; } }       
+    public sealed class PasteBrushFactory : BrushFactory {
+        public override string Name { get { return "Paste"; } }
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
             "%TArguments: none",
-            "%HDraws using blocks from the current copy state.",
+            "%HDraws by pasting blocks from current /copy.",
+            "%TArguments: [block1] [block2]..",
+            "%HDraws by pasting only the specified blocks from current /copy.",
+            "%TArguments: not [block1] [block2]..",
+            "%HDraws by pasting blocks from current /copy, except for the specified blocks.",
         };
         
         public override Brush Construct(BrushArgs args) {
@@ -93,12 +97,25 @@ namespace MCGalaxy.Drawing.Brushes {
                 args.Player.SendMessage("You haven't copied anything yet.");
                 return null;
             }
-            return new PasteBrush(args.Player.CopyBuffer);
+            
+            if (args.Message == "")
+                return new SimplePasteBrush(args.Player.CopyBuffer);            
+            string[] parts = args.Message.Split(' ');
+            PasteBrush brush = new PasteBrush(args.Player.CopyBuffer);
+            
+            if (parts[0].CaselessEq("not")) {
+                brush.Exclude = ReplaceBrushFactory.GetBlocks(args.Player, 1, parts.Length, parts);
+                if (brush.Exclude == null) return null;
+            } else {
+                brush.Include = ReplaceBrushFactory.GetBlocks(args.Player, 0, parts.Length, parts);
+                if (brush.Include == null) return null;
+            }
+            return brush;
         }
     }
     
-    public sealed class StripedBrushFactory : BrushFactory {        
-        public override string Name { get { return "Striped"; } }        
+    public sealed class StripedBrushFactory : BrushFactory {
+        public override string Name { get { return "Striped"; } }
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {

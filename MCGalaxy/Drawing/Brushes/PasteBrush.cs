@@ -21,10 +21,42 @@ using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Drawing.Brushes {    
+namespace MCGalaxy.Drawing.Brushes {
+    public sealed class SimplePasteBrush : Brush {
+        readonly CopyState state;
+        int index;
+        
+        public SimplePasteBrush(CopyState state) { this.state = state; }
+        
+        public override string Name { get { return "Paste"; } }
+
+        public override void Configure(DrawOp op, Player p) {
+            op.Flags = BlockDBFlags.Pasted;
+        }
+        
+        public override byte NextBlock(DrawOp op) {
+            // Figure out local coords for this block
+            int x = (op.Coords.X - op.Min.X) % state.Width;
+            if (x < 0) x += state.Width;
+            int y = (op.Coords.Y - op.Min.Y) % state.Height;
+            if (y < 0) y += state.Height;
+            int z = (op.Coords.Z - op.Min.Z) % state.Length;
+            if (z < 0) z += state.Length;
+            
+            index = state.GetIndex(x, y, z);
+            return state.Blocks[index];
+        }
+        
+        public override byte NextExtBlock(DrawOp op) {
+            return state.ExtBlocks[index];
+        }
+    }
+    
     public sealed class PasteBrush : Brush {
         readonly CopyState state;
         int index;
+        
+        public ExtBlock[] Include, Exclude;
         
         public PasteBrush(CopyState state) { this.state = state; }
         
@@ -44,7 +76,24 @@ namespace MCGalaxy.Drawing.Brushes {
             if (z < 0) z += state.Length;
             
             index = state.GetIndex(x, y, z);
-            return state.Blocks[index];
+            byte b = state.Blocks[index], extB = state.ExtBlocks[index];
+            
+            if (Exclude != null) {
+                for (int i = 0; i < Exclude.Length; i++) {
+                    ExtBlock block = Exclude[i];
+                    if (b == block.Block && (b != Block.custom_block || extB == block.Ext))
+                        return Block.Invalid;
+                }
+                return b;
+            } else {
+                for (int i = 0; i < Include.Length; i++) {
+                    ExtBlock block = Include[i];
+                    if (b == block.Block && (b != Block.custom_block || extB == block.Ext)) {
+                        return b;
+                    }
+                }
+                return Block.Invalid;
+            }
         }
         
         public override byte NextExtBlock(DrawOp op) {

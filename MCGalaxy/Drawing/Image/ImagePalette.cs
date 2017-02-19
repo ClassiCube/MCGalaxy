@@ -90,11 +90,11 @@ namespace MCGalaxy.Drawing {
         
         public void Save() {
             using (StreamWriter w = new StreamWriter(FileName)) {
-                w.WriteLine("#Line layout - type:block:red:green:blue");
+                w.WriteLine("#Line layout - block:red:green:blue");
                 
                 if (Entries == null) return;
-                    foreach (PaletteEntry e in Entries)
-                        w.WriteLine(e.Block + ":" + e.R + ":" + e.G + ":" + e.B);
+                foreach (PaletteEntry e in Entries)
+                    w.WriteLine(e.Block + ":" + e.R + ":" + e.G + ":" + e.B);
             }
         }
         

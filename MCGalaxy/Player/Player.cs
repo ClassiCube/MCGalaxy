@@ -554,8 +554,13 @@ namespace MCGalaxy {
                 Blockchange = null;
                 block = block < Block.CpeCount ? p.bindings[block] : block;
                 bool canRepeat = selCallback(this, selMarks, selState, block, extBlock);
-                if (canRepeat && staticCommands)
+                
+                if (canRepeat && staticCommands) {
                     MakeSelection(selIndex, selState, selCallback);
+                } else {
+                    selState = null;
+                    selCallback = null;
+                }
             }
         }
         

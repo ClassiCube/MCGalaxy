@@ -16,16 +16,15 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Drawing.Ops {    
-    public class SimplePasteDrawOp : DrawOp {
+    public class PasteDrawOp : DrawOp {
         public override string Name { get { return "Paste"; } }        
         public CopyState CopyState;
         
-        public SimplePasteDrawOp() {
+        public PasteDrawOp() {
             Flags = BlockDBFlags.Pasted;
         }
         
@@ -46,67 +45,15 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             CopyState state = CopyState;
-            bool pasteAir = state.PasteAir;
-            // Adjust for the fact that paste origin may be outside the map.
-            int x1 = marks[0].X, y1 = marks[0].Y, z1 = marks[0].Z;
+            bool pasteAir = state.PasteAir;            
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             
-            for (int i = 0; i < state.Blocks.Length; i++ ) {
-                ushort locX, locY, locZ;
-                byte b = state.Blocks[i], extB = state.ExtBlocks[i];
-                state.GetCoords(i, out locX, out locY, out locZ);
-                
-                ushort x = (ushort)(locX + x1), y = (ushort)(locY + y1), z = (ushort)(locZ + z1);
-                if ((b != Block.air || pasteAir) && Level.InBound(x, y, z))
-                    output(Place(x, y, z, b, extB));
-            }
-        }
-    }
-    
-    public class PasteDrawOp : SimplePasteDrawOp {
-        
-        public ExtBlock[] Include, Exclude;
-
-        public PasteDrawOp() {
-            Flags = BlockDBFlags.Pasted;
-        }
-        
-        public override string Name { get { return "Paste"; } }
-        
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
-            CopyState state = CopyState;
-            bool pasteAir = state.PasteAir;
-            ExtBlock[] include = Include, exclude = Exclude;
-            // Adjust for the fact that paste origin may be outside the map.
-            int x1 = marks[0].X, y1 = marks[0].Y, z1 = marks[0].Z;
-            
-            for (int i = 0; i < state.Blocks.Length; i++ ) {
-                ushort locX, locY, locZ;
-                byte b = state.Blocks[i], extB = state.ExtBlocks[i];
-                state.GetCoords(i, out locX, out locY, out locZ);
-                
-                ushort x = (ushort)(locX + x1), y = (ushort)(locY + y1), z = (ushort)(locZ + z1);
-                if ((b == Block.air && !pasteAir) || !Level.InBound(x, y, z)) continue;
-                
-                if (exclude != null) {
-                    bool place = true;
-                    for (int j = 0; j < exclude.Length; j++) {
-                        ExtBlock block = exclude[j];
-                        if (b == block.Block && (b != Block.custom_block || extB == block.Ext)) {
-                            place = false; break;
-                        }
-                    }
-                    if (!place) continue;
-                    output(Place(x, y, z, b, extB));
-                }
-                
-                if (include != null) {
-                    for (int j = 0; j < include.Length; j++) {
-                        ExtBlock block = include[j];
-                        if (b == block.Block && (b != Block.custom_block || extB == block.Ext)) {
-                            output(Place(x, y, z, b, extB)); break;
-                        }
-                    }
-                }
+            for (ushort y = p1.Y; y < p2.Y; y++)
+                for (ushort z = p1.Z; z < p2.Z; z++)
+                    for (ushort x = p1.X; x < p2.X; x++)
+            {
+                DrawOpBlock block = Place(x, y, z, brush);
+                if (pasteAir || block.Block != Block.air) output(block);
             }
         }
     }
