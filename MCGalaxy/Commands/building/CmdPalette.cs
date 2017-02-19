@@ -39,6 +39,10 @@ namespace MCGalaxy.Commands.Building {
                 HandleAdd(p, args);
             } else if (args[0].CaselessEq("remove")) {
                 HandleRemove(p, args);
+            } else if (args[0].CaselessEq("entries")) {
+                HandleEntries(p, args);
+            } else {
+                Help(p);
             }
         }
         
