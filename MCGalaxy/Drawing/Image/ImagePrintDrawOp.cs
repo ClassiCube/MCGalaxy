@@ -106,7 +106,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
             
             if (block >= Block.CpeCount) { extBlock = block; block = Block.custom_block; }
-            output(Place(x, y, z, block, 0));
+            output(Place(x, y, z, block, extBlock));
         }
         
         void CalcState(int dir) {

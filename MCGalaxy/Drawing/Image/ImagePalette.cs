@@ -70,7 +70,6 @@ namespace MCGalaxy.Drawing {
             List<PaletteEntry> entries = new List<PaletteEntry>();
             
             foreach (string line in lines) {
-            	Server.s.Log(line);
                 if (line.StartsWith("#") || line.Length == 0) continue;
                 
                 string[] parts = line.Split(':');
@@ -83,8 +82,8 @@ namespace MCGalaxy.Drawing {
         }
         
         static PaletteEntry ParseEntry(string[] parts) {
-            byte r = byte.Parse(parts[3]), g = byte.Parse(parts[2]);
-            byte b = byte.Parse(parts[1]), block = byte.Parse(parts[0]);
+            byte r = byte.Parse(parts[1]), g = byte.Parse(parts[2]);
+            byte b = byte.Parse(parts[3]), block = byte.Parse(parts[0]);
             return new PaletteEntry(r, g, b, block);
         }
         
