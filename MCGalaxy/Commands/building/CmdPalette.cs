@@ -142,7 +142,7 @@ namespace MCGalaxy.Commands.Building {
             if (block == Block.Invalid) {
                 Player.Message(p, "Skip block may not be used for palettes."); return Block.Invalid;
             }
-            if (block >= Block.CpeCount) {
+            if (block >= Block.CpeCount && block != Block.custom_block) {
                 Player.Message(p, "Physics blocks may not be used for palettes."); return Block.Invalid;
             }
             
