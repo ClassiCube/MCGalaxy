@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing.Ops {
             CalcState(Direction);
             
             selector = new RgbPaletteMatcher();
-            selector.SetPalette(Palette);
+            CalcLayerColors();
 
             using (PixelGetter getter = new PixelGetter(Source)) {
                 getter.Init();
@@ -56,6 +56,34 @@ namespace MCGalaxy.Drawing.Ops {
             if (Filename == "tempImage_" + Player.name)
                 File.Delete("extra/images/tempImage_" + Player.name + ".bmp");
             Player.Message(Player, "Finished printing image using {0} palette.", Palette.Name);
+        }
+        
+        void CalcLayerColors() {
+            PaletteEntry[] front = new PaletteEntry[Palette.Entries.Length];
+            PaletteEntry[] back  = new PaletteEntry[Palette.Entries.Length];
+            
+            CustomColor sun  = Colors.ParseHex("FFFFFF");
+            CustomColor dark = Colors.ParseHex("9B9B9B");
+            if (Utils.IsValidHex(Level.LightColor)) {
+                sun = Colors.ParseHex(Level.LightColor);
+            }
+            if (Utils.IsValidHex(Level.ShadowColor)) {
+                dark = Colors.ParseHex(Level.ShadowColor);
+            }
+            
+            for (int i = 0; i < Palette.Entries.Length; i++) {
+                PaletteEntry entry = Palette.Entries[i];
+                front[i] = Multiply(entry,  sun);
+                back[i]  = Multiply(entry, dark);
+            }
+            selector.SetPalette(front, back);
+        }
+        
+        static PaletteEntry Multiply(PaletteEntry entry, CustomColor rgb) {
+            entry.R = (byte)(entry.R * rgb.R / 255);
+            entry.G = (byte)(entry.G * rgb.G / 255);
+            entry.B = (byte)(entry.B * rgb.B / 255);
+            return entry;
         }
         
         void OutputPixel(Pixel P, Action<DrawOpBlock> output) {
@@ -83,7 +111,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         void CalcState(int dir) {
             dx = default(Vec3S32); dy = default(Vec3S32); adj = default(Vec3S32);
-            DualLayer = DualLayer && !LayerMode && Palette.BackLayer != null;
+            DualLayer = DualLayer && !LayerMode;
             
             // Calculate back layer offset
             if (dir == 0) adj.Z = -1;

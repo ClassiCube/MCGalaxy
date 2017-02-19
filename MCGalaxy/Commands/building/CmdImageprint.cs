@@ -60,8 +60,8 @@ namespace MCGalaxy.Commands.Building {
                     Player.Message(p, "Palette {0} not found.", parts[1]); return;
                 }
                 
-                if (dArgs.palette.FrontLayer == null || dArgs.palette.FrontLayer.Length == 0) {
-                    Player.Message(p, "Palette {0} does not have any entries");
+                if (dArgs.palette.Entries == null || dArgs.palette.Entries.Length == 0) {
+                    Player.Message(p, "Palette {0} does not have any entries", dArgs.palette.Name);
                     Player.Message(p, "Use %T/palette %Sto add entries to it"); return;
                 }
             }

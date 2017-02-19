@@ -34,7 +34,7 @@ namespace MCGalaxy {
             return true;
         }
 
-        static bool IsValidHex(string hex) {
+        public static bool IsValidHex(string hex) {
             for (int i = 0; i < hex.Length; i++) {
                 if (!Colors.IsStandardColor(hex[i])) return false;
             }

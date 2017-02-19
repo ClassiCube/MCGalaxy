@@ -23,7 +23,7 @@ namespace MCGalaxy.Drawing {
     public interface IPaletteMatcher {
         
         /// <summary> Sets the palette of blocks used to match colours from. </summary>
-        void SetPalette(ImagePalette palette);
+        void SetPalette(PaletteEntry[] front, PaletteEntry[] back);
         
         /// <summary> Returns the best matching block for the given color,
         /// based on this palette's colourspace. </summary>
@@ -36,24 +36,24 @@ namespace MCGalaxy.Drawing {
     
     public sealed class RgbPaletteMatcher : IPaletteMatcher {
         
-        ImagePalette palette;
-        public void SetPalette(ImagePalette palette) {
-            this.palette = palette;
+		PaletteEntry[] front, back;
+		public void SetPalette(PaletteEntry[] front, PaletteEntry[] back) {
+            this.front = front; this.back = back;
         }
         
         public byte BestMatch(byte R, byte G, byte B) {
             int pos;
-            MinDist(R, G, B, palette.FrontLayer, out pos);
-            return palette.FrontLayer[pos].Block;
+            MinDist(R, G, B, front, out pos);
+            return front[pos].Block;
         }
         
         public byte BestMatch(byte R, byte G, byte B, out bool backLayer) {
             int frontPos, backPos;
-            int frontDist = MinDist(R, G, B, palette.FrontLayer, out frontPos);
-            int backDist  = MinDist(R, G, B, palette.BackLayer, out backPos);
+            int frontDist = MinDist(R, G, B, front, out frontPos);
+            int backDist  = MinDist(R, G, B, back, out backPos);
             
             backLayer = backDist <= frontDist;
-            return backLayer ? palette.BackLayer[backPos].Block : palette.FrontLayer[frontPos].Block;
+            return backLayer ? back[backPos].Block : front[frontPos].Block;
         }
         
         
@@ -75,10 +75,10 @@ namespace MCGalaxy.Drawing {
     public sealed class LabPaletteMatcher : IPaletteMatcher {
         
         LabColor[] palette;
-        public void SetPalette(ImagePalette palette) {
-            this.palette = new LabColor[palette.FrontLayer.Length];
-            for (int i = 0; i < palette.FrontLayer.Length; i++)
-                this.palette[i] = RgbToLab(palette.FrontLayer[i]);
+        public void SetPalette(PaletteEntry[] front, PaletteEntry[] back) {
+            this.palette = new LabColor[front.Length];
+            for (int i = 0; i < front.Length; i++)
+                this.palette[i] = RgbToLab(front[i]);
         }
         
         public byte BestMatch(byte R, byte G, byte B) {

@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Drawing;
 
 namespace MCGalaxy.Commands.Building {
@@ -27,7 +28,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         public override void Use(Player p, string message) {
-            string[] args = message.SplitSpaces(4);
+            string[] args = message.SplitSpaces(5);
             if (message == "") { Help(p); return; }
             
             if (args[0].CaselessEq("create")) {
@@ -35,9 +36,9 @@ namespace MCGalaxy.Commands.Building {
             } else if (args[0].CaselessEq("delete")) {
                 HandleDelete(p, args);
             } else if (args[0].CaselessEq("add")) {
-                Player.Message(p, "?????");
+                HandleAdd(p, args);
             } else if (args[0].CaselessEq("remove")) {
-                Player.Message(p, "?????");
+                HandleRemove(p, args);
             }
         }
         
@@ -66,13 +67,91 @@ namespace MCGalaxy.Commands.Building {
             }
         }
         
+        void HandleAdd(Player p, string[] args) {
+            if (args.Length != 4) { Help(p); return; }
+            
+            ImagePalette palette = ImagePalette.Find(args[1]);
+            if (palette == null) {
+                Player.Message(p, "Palette {0} does not exist.", args[1]); return;
+            }
+            
+            byte block = GetBlock(p, args[2]);
+            if (block == Block.Invalid) return;
+            
+            if (!Utils.CheckHex(p, ref args[3])) return;
+            CustomColor rgb = Colors.ParseHex(args[3]);
+            PaletteEntry entry = new PaletteEntry(rgb.R, rgb.G, rgb.B, block);
+            AddEntry(p, palette, entry);
+        }
+        
+        static void AddEntry(Player p, ImagePalette palette, PaletteEntry entry) {
+            PaletteEntry[] entries = palette.Entries;
+            List<PaletteEntry> newEntries = new List<PaletteEntry>();
+            if (entries != null) newEntries.AddRange(entries);
+            
+            newEntries.Add(entry);
+            palette.Entries = newEntries.ToArray();
+            palette.Save();
+            Player.Message(p, "Added block to entries of palette {0}", palette.Name);
+        }
+        
+        void HandleRemove(Player p, string[] args) {
+            if (args.Length != 3) { Help(p); return; }
+            
+            ImagePalette palette = ImagePalette.Find(args[1]);
+            if (palette == null) {
+                Player.Message(p, "Palette {0} does not exist.", args[1]); return;
+            }
+            
+            byte block = GetBlock(p, args[2]);
+            if (block == Block.Invalid) return;
+            RemoveEntry(p, palette, block);
+        }
+        
+        
+        static void RemoveEntry(Player p, ImagePalette palette, byte block) {
+            PaletteEntry[] entries = palette.Entries;
+            if (entries == null) {
+                Player.Message(p, "Block not found in entries of palette {0}", palette.Name);
+            }
+            
+            List<PaletteEntry> newEntries = new List<PaletteEntry>();
+            foreach (PaletteEntry entry in entries) {
+                if (entry.Block == block) continue;
+                newEntries.Add(entry);
+            }
+            
+            if (newEntries.Count == entries.Length) {
+                Player.Message(p, "Block not found in entries of palette {0}", palette.Name); return;
+            }
+            
+            palette.Entries = newEntries.ToArray();
+            palette.Save();
+            Player.Message(p, "Removed block from entries of palette {0}", palette.Name);
+        }
+
+        static byte GetBlock(Player p, string name) {
+            byte extBlock;
+            int block = DrawCmd.GetBlock(p, name, out extBlock);
+            
+            if (block == -1) return Block.Invalid;
+            if (block == Block.Invalid) {
+                Player.Message(p, "Skip block may not be used for palettes."); return Block.Invalid;
+            }
+            if (block >= Block.CpeCount) {
+                Player.Message(p, "Physics blocks may not be used for palettes."); return Block.Invalid;
+            }
+            
+            return block == Block.custom_block ? extBlock : (byte)block;
+        }
+
         public override void Help(Player p) {
             Player.Message(p, "%T/palette create/delete [name]");
             Player.Message(p, "%HCreates or deletes a palette for %T/imageprint");
-            Player.Message(p, "%T/palette add [name] [block] [hex color] <back>");
-            Player.Message(p, "???");
+            Player.Message(p, "%T/palette add [name] [block] [hex color]");
+            Player.Message(p, "%HAdds a block to a palette's entries.");
             Player.Message(p, "%T/palette remove [name] [block]");
-            Player.Message(p, "???");
+            Player.Message(p, "%HRemoves a block from a palette's entries.");
             Player.Message(p, "%HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
         }
     }
