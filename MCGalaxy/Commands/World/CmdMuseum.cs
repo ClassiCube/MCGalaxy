@@ -63,7 +63,8 @@ namespace MCGalaxy.Commands.World {
             Level lvl = IMapImporter.Formats[0].Read(path, name, false);
             lvl.MapName = mapName;
             SetLevelProps(lvl);
-            Level.LoadMetadata(lvl);
+            Level.LoadMetadata(lvl);            
+            if (!lvl.CanJoin(p)) return;
 
             p.Loading = true;
             Entities.DespawnEntities(p);
