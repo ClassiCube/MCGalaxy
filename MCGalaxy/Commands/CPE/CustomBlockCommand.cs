@@ -172,7 +172,7 @@ namespace MCGalaxy.Commands.CPE {
                                    "custom blocks", modifier, true);
         }
         
-        static string FormatBlock(BlockDefinition def, int i) {
+        static string FormatBlock(BlockDefinition def) {
             return "Custom block %T" + def.BlockID + " %Shas name %T" + def.Name;
         }
         

@@ -154,11 +154,11 @@ namespace MCGalaxy.Commands.Building {
             }
             
             string modifer = args.Length > 2 ? args[2] : "";
-            MultiPageOutput.Output(p, palette.Entries, (e, i) => FormatEntry(e, i, p.level), 
+            MultiPageOutput.Output(p, palette.Entries, (e) => FormatEntry(e, p.level), 
                                    "palette entries", "entries", modifer, true);
         }
         
-        static string FormatEntry(PaletteEntry e, int index, Level lvl) {
+        static string FormatEntry(PaletteEntry e, Level lvl) {
             byte block = e.Block, extBlock = 0;
             if (block >= Block.CpeCount) { extBlock = block; block = Block.CpeCount; }
             return lvl.BlockName(block, extBlock) + " - " + Utils.Hex(e.R, e.G, e.B);

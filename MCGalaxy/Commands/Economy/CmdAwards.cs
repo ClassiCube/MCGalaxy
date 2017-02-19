@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands {
             return awards;
         }
         
-        static string FormatAward(Awards.Award award, int i) {
+        static string FormatAward(Awards.Award award) {
             return "&6" + award.Name + ": &7" + award.Description;
         }
         

@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands {
             } else {
                 Player.Message(p, "VIPs:");
                 MultiPageOutput.Output(p, list, 
-                                       (name, i) => PlayerInfo.GetColoredName(p, name),
+                                       (name) => PlayerInfo.GetColoredName(p, name),
                                        "vip list", "players", modifier, false);
             }
         }

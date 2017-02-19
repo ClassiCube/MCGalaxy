@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             Level[] loaded = LevelInfo.Loaded.Items;
             Player.Message(p, "Loaded maps [physics level] (&c[no] %Sif not visitable): ");
-            MultiPageOutput.Output(p, loaded, (lvl, i) => FormatMap(p, lvl),
+            MultiPageOutput.Output(p, loaded, (lvl) => FormatMap(p, lvl),
                                    "levels", "maps", message, false);
             Player.Message(p, "Use %T/unloaded %Sfor unloaded levels.");
         }

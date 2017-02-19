@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             string[] files = LevelInfo.AllMapFiles();
             Player.Message(p, "Unloaded maps (&c[no] %Sif not visitable): ");
-            MultiPageOutput.Output(p, GetMaps(files), (map, i) => FormatMap(p, map),
+            MultiPageOutput.Output(p, GetMaps(files), (map) => FormatMap(p, map),
                                    "unloaded", "maps", message, false);
         }
         

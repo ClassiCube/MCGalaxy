@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
             MultiPageOutput.Output(p, inScope, FormatBot, cmd, "bots", modifier, false);
         }
         
-        static string FormatBot(PlayerBot bot, int index) {
+        static string FormatBot(PlayerBot bot) {
             string desc = bot.name + "(" + bot.level.name + ")";
             
             if (bot.AIName != "") desc += "[" + bot.AIName + "]";

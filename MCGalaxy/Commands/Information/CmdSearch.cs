@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands {
             }    
             
             OutputList(p, keyword, "search commands", "commands", 
-                       modifier, cmds, (cmd, i) => CmdHelp.GetColor(cmd) + cmd.name);
+                       modifier, cmds, (cmd) => CmdHelp.GetColor(cmd) + cmd.name);
         }
         
         static void SearchRanks(Player p, string keyword, string modifier) {
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands {
             }
             
             OutputList(p, keyword, "search ranks", "ranks", 
-                       modifier, ranks, (name, i) => name);
+                       modifier, ranks, (name) => name);
         }
         
         static void SearchPlayers(Player p, string keyword, string modifier) {
@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands {
             }
             
             OutputList(p, keyword, "search players", "players", 
-                       modifier, players, (name, i) => name);
+                       modifier, players, (name) => name);
         }
         
         static void SearchLoaded(Player p, string keyword, string modifier) {
@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands {
             }
             
             OutputList(p, keyword, "search loaded", "loaded levels", 
-                       modifier, levels, (level, i) => level);
+                       modifier, levels, (level) => level);
         }
         
         static void SearchUnloaded(Player p, string keyword, string modifier) {
@@ -124,11 +124,11 @@ namespace MCGalaxy.Commands {
             }
 
             OutputList(p, keyword, "search levels", "maps", 
-                       modifier, maps, (map, i) => map);
+                       modifier, maps, (map) => map);
         }
         
         static void OutputList<T>(Player p, string keyword, string cmd, string type, string modifier,
-                                  List<T> items, Func<T, int, string> formatter) {
+                                  List<T> items, Func<T, string> formatter) {
             if (items.Count == 0) {
                 Player.Message(p, "No {0} found containing \"{1}\"", type, keyword);
             } else {

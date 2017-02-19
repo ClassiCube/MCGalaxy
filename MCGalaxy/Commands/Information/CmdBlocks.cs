@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands
         }
         
         
-        internal static string FormatBlockName(string block, int i) {
+        internal static string FormatBlockName(string block) {
             Block.Blocks perms = Block.BlockList[Block.Byte(block)];
             return Group.GetColor(perms.lowestRank) + block;
         }

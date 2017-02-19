@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands {
             }
             
             MultiPageOutput.Output(p, shortcuts,
-                                   (cmd, i) => "&b" + cmd.shortcut + " %S[" + cmd.name + "]",
+                                   (cmd) => "&b" + cmd.shortcut + " %S[" + cmd.name + "]",
                                    "cmds shortcuts", "shortcuts", modifier, false);
         }
         
@@ -124,7 +124,7 @@ namespace MCGalaxy.Commands {
             string type = "cmds " + group.name;
             if (sort != "") type += " " + sort;
             MultiPageOutput.Output(p, cmds,
-                                   (cmd, i) => CmdHelp.GetColor(cmd) + cmd.name,
+                                   (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);
             Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
         }
@@ -142,7 +142,7 @@ namespace MCGalaxy.Commands {
             string type = "cmds all";
             if (sort != "") type += " " + sort;
             MultiPageOutput.Output(p, cmds,
-                                   (cmd, i) => CmdHelp.GetColor(cmd) + cmd.name,
+                                   (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);            
             Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
         }
@@ -167,7 +167,7 @@ namespace MCGalaxy.Commands {
             type = "cmds " + category;
             if (sort != "") type += " " + sort;            
             MultiPageOutput.Output(p, cmds,
-                                   (cmd, i) => CmdHelp.GetColor(cmd) + cmd.name,
+                                   (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);
             Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
         }

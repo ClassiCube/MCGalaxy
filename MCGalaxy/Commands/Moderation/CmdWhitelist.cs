@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands {
             } else {
                 Player.Message(p, "Whitelisted players:");
                 MultiPageOutput.Output(p, list, 
-                                       (name, i) => PlayerInfo.GetColoredName(p, name),
+                                       (name) => PlayerInfo.GetColoredName(p, name),
                                        "whitelist list", "players", modifier, false);
             }
         }
