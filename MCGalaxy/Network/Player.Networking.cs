@@ -356,17 +356,7 @@ namespace MCGalaxy {
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) y -= 22;
             
-            byte[] buffer = new byte[74];
-            buffer[0] = Opcode.AddEntity;
-            buffer[1] = id;
-            NetUtils.WriteAscii(name.TrimEnd('+'), buffer, 2);
-            NetUtils.WriteU16(x, buffer, 66);
-            NetUtils.WriteU16(y, buffer, 68);
-            NetUtils.WriteU16(z, buffer, 70);
-            buffer[72] = rotx;
-            buffer[73] = roty;
-            Send(buffer);
-
+            Send(Packet.AddEntity(id, name, x, y, z, rotx, roty));
             if (hasChangeModel) UpdateModels();
         }
         
@@ -374,19 +364,10 @@ namespace MCGalaxy {
         public void SendPos(byte id, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             pos = new ushort[3] { x, y, z };
             rot = new byte[2] { rotx, roty };
-
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) y -= 22;
-            
-            byte[] buffer = new byte[10];
-            buffer[0] = Opcode.EntityTeleport;
-            buffer[1] = id;
-            NetUtils.WriteU16(x, buffer, 2);
-            NetUtils.WriteU16(y, buffer, 4);
-            NetUtils.WriteU16(z, buffer, 6);
-            buffer[8] = rotx;
-            buffer[9] = roty;
-            Send(buffer);
+
+            Send(Packet.Teleport(id, x, y, z, rotx, roty));
         }
         
          /// <summary> Sends a packet indicating an absolute position + orientation change for the player. </summary>
@@ -411,8 +392,7 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 5);
             
             if (block == Block.custom_block) {
-                buffer[7] = hasBlockDefs ? level.GetExtTile(x, y, z) 
-                    : level.GetFallbackExtTile(x, y, z);
+                buffer[7] = hasBlockDefs ? level.GetExtTile(x, y, z) : level.GetFallbackExtTile(x, y, z);
                 if (!hasCustomBlocks) buffer[7] = Block.ConvertCPE(buffer[7]);
             } else if (hasCustomBlocks) {
                 buffer[7] = Block.Convert(block);
@@ -457,19 +437,8 @@ namespace MCGalaxy {
         public void SendExtAddEntity2(byte id, string skinName, string displayName, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) y -= 22;
-            
-            byte[] buffer = new byte[138];
-            buffer[0] = Opcode.CpeExtAddEntity2;
-            buffer[1] = id;
-            NetUtils.WriteAscii(displayName.TrimEnd('+'), buffer, 2);
-            NetUtils.WriteAscii(skinName.TrimEnd('+'), buffer, 66);
-            NetUtils.WriteU16(x, buffer, 130);
-            NetUtils.WriteU16(y, buffer, 132);
-            NetUtils.WriteU16(z, buffer, 134);
-            buffer[136] = rotx;
-            buffer[137] = roty;
-            Send(buffer);
 
+            Send(Packet.ExtAddEntity2(id, skinName, displayName, x, y, z, rotx, roty));
             if (hasChangeModel) UpdateModels();
         }
         

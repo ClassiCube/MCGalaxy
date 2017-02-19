@@ -163,7 +163,7 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             List<BlockDefinition> defsInScope = new List<BlockDefinition>();
             
-            for( int i = 1; i < 256; i++ ) {
+            for( int i = 1; i < Block.Count; i++ ) {
                 BlockDefinition def = defs[i];
                 if (!ExistsInScope(def, i, global)) continue;
                 defsInScope.Add(def);

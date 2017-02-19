@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands
         }
         
         static List<string> ComplexBlocks() {
-            List<string> items = new List<string>(256);
+            List<string> items = new List<string>(Block.Count);
             for (int i = Block.CpeCount; i < Block.Invalid; i++) {
                 if (Block.Props[i].Name.CaselessEq("unknown")) continue;
                 items.Add(Block.Props[i].Name);
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands
         }
         
         static List<string> RankBlocks(LevelPermission perm) {
-            List<string> items = new List<string>(256);
+            List<string> items = new List<string>(Block.Count);
             foreach (Block.Blocks bl in Block.BlockList) {
                 if (!Block.canPlace(perm, bl.type)) continue;
                 if (Block.Name(bl.type).CaselessEq("unknown")) continue;

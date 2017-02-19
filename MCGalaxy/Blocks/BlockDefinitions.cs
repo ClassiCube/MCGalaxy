@@ -69,7 +69,7 @@ namespace MCGalaxy {
         
         
         internal static BlockDefinition[] Load(bool global, Level lvl) {
-            BlockDefinition[] defs = new BlockDefinition[256];
+            BlockDefinition[] defs = new BlockDefinition[Block.Count];
             string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.MapName + ".json";
             try {
                 if (File.Exists(path)) {
@@ -78,15 +78,15 @@ namespace MCGalaxy {
                 }
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
-                defs = new BlockDefinition[256];
+                defs = new BlockDefinition[Block.Count];
             }
             
-            for (int i = 0; i < 256; i++) {
+            for (int i = 0; i < Block.Count; i++) {
                 if (defs[i] != null && defs[i].Name == null)
                     defs[i] = null;
             }
             
-            for (int i = 0; i < 256; i++) {
+            for (int i = 0; i < Block.Count; i++) {
                 BlockDefinition def = defs[i];
                 if (def == null) continue;
                 
@@ -102,8 +102,8 @@ namespace MCGalaxy {
             BlockDefinition[] defs = global ? GlobalDefs : lvl.CustomBlockDefs;
             // We don't want to save global blocks in the level's custom blocks list
             if (!global) {
-                BlockDefinition[] realDefs = new BlockDefinition[256];
-                for (int i = 0; i < 256; i++)
+                BlockDefinition[] realDefs = new BlockDefinition[Block.Count];
+                for (int i = 0; i < Block.Count; i++)
                     realDefs[i] = defs[i] == GlobalDefs[i] ? null : defs[i];
                 defs = realDefs;
             }
@@ -119,8 +119,8 @@ namespace MCGalaxy {
             GlobalDefs[0] = new BlockDefinition();
             GlobalDefs[0].Name = "Air fallback";
             
-            GlobalProps = new BlockProps[256];
-            for (int i = 0; i < GlobalProps.Length; i++)
+            GlobalProps = new BlockProps[Block.Count];
+            for (int i = 0; i < Block.Count; i++)
                 GlobalProps[i] = new BlockProps((byte)i);
             
             try {

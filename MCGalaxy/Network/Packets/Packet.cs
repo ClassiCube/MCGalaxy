@@ -40,6 +40,33 @@ namespace MCGalaxy {
             return buffer;
         }
         
+        public static byte[] AddEntity(byte id, string name, ushort x, ushort y, 
+                                       ushort z, byte rotx, byte roty) {
+            byte[] buffer = new byte[74];
+            buffer[0] = Opcode.AddEntity;
+            buffer[1] = id;
+            NetUtils.WriteAscii(name.TrimEnd('+'), buffer, 2);
+            NetUtils.WriteU16(x, buffer, 66);
+            NetUtils.WriteU16(y, buffer, 68);
+            NetUtils.WriteU16(z, buffer, 70);
+            buffer[72] = rotx;
+            buffer[73] = roty;
+            return buffer;
+        }
+        
+        public static byte[] Teleport(byte id, ushort x, ushort y, ushort z, 
+                                      byte rotx, byte roty) {
+            byte[] buffer = new byte[10];
+            buffer[0] = Opcode.EntityTeleport;
+            buffer[1] = id;
+            NetUtils.WriteU16(x, buffer, 2);
+            NetUtils.WriteU16(y, buffer, 4);
+            NetUtils.WriteU16(z, buffer, 6);
+            buffer[8] = rotx;
+            buffer[9] = roty;
+            return buffer;
+        }
+        
         public static byte[] BlankMessage() {
             byte[] buffer = new byte[66];
             buffer[0] = Opcode.Message;

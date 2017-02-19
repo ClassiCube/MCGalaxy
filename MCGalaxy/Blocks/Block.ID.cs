@@ -25,6 +25,7 @@ namespace MCGalaxy
         public const byte OriginalCount = OriginalMaxBlock + 1;
         public const byte CpeMaxBlock = stonebrick;
         public const byte CpeCount = CpeMaxBlock + 1;
+        public const int Count = 256;
         
         // Original blocks
         public const byte air = 0;

@@ -156,6 +156,21 @@ namespace MCGalaxy {
             NetUtils.WriteI16(maxJumpHeight, buffer, 6);
             return buffer;
         }
+        
+        public static byte[] ExtAddEntity2(byte id, string skinName, string displayName, 
+                                           ushort x, ushort y, ushort z, byte rotx, byte roty) {
+            byte[] buffer = new byte[138];
+            buffer[0] = Opcode.CpeExtAddEntity2;
+            buffer[1] = id;
+            NetUtils.WriteAscii(displayName.TrimEnd('+'), buffer, 2);
+            NetUtils.WriteAscii(skinName.TrimEnd('+'), buffer, 66);
+            NetUtils.WriteU16(x, buffer, 130);
+            NetUtils.WriteU16(y, buffer, 132);
+            NetUtils.WriteU16(z, buffer, 134);
+            buffer[136] = rotx;
+            buffer[137] = roty;
+            return buffer;
+        }
 
         
         public static byte[] EnvMapUrl(string url) {
@@ -172,7 +187,7 @@ namespace MCGalaxy {
             NetUtils.WriteI32(value, buffer, 2);
             return buffer;
         }
-		
+        
         public static byte[] EntityProperty(byte id, EntityProp prop, int value) {
             byte[] buffer = new byte[7];
             buffer[0] = Opcode.CpeSetEntityProperty;

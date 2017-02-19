@@ -86,17 +86,27 @@ namespace MCGalaxy {
             int bIndex = 0;
             
             // Store on stack instead of performing function call for every block in map
-            byte* conv = stackalloc byte[256];
-            byte* convCPE = stackalloc byte[256];
+            byte* conv = stackalloc byte[Block.Count];
+            byte* convCPE = stackalloc byte[Block.Count];
             for (int i = 0; i < 256; i++)
                 conv[i] = Block.Convert((byte)i);
             
+            // Convert custom blocks (that overwrote core blocks) to their fallbacks
+            if (!p.hasBlockDefs) {
+                for (int i = 0; i < Block.CpeCount ; i++) {
+                    BlockDefinition def = p.level.CustomBlockDefs[i];
+                    if (def != null) conv[i] = def.FallBack;
+                }
+            }
+            
+            // Convert CPE blocks to their fallbacks
             if (!p.hasCustomBlocks) {
-                for (int i = 0; i < 256; i++) {
+                for (int i = 0; i < Block.Count; i++) {
                     convCPE[i] = Block.ConvertCPE((byte)i);
                     conv[i] = Block.ConvertCPE(conv[i]);
                 }
             }
+            
             
             Level lvl = p.level;
             bool hasBlockDefs = p.hasBlockDefs;

@@ -24,7 +24,7 @@ namespace MCGalaxy
 {
     public sealed partial class Block
     {
-        public static Blocks[] BlockList = new Blocks[256];
+        public static Blocks[] BlockList = new Blocks[Block.Count];
         public class Blocks {
             public LevelPermission lowestRank;
             public List<LevelPermission> disallow = null;
@@ -171,7 +171,7 @@ namespace MCGalaxy
         
                 
         static void InitDefaults() {
-            for (int i = 0; i < 256; i++) {
+            for (int i = 0; i < Block.Count; i++) {
                 Blocks b = new Blocks();
                 b.type = (byte)i;
                 switch (i)

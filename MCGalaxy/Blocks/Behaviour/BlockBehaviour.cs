@@ -36,14 +36,14 @@ namespace MCGalaxy.Blocks {
     public delegate void HandlePhysics(Level lvl, ref Check C);
     
     public static class BlockBehaviour {
-        internal static HandleDelete[] deleteHandlers = new HandleDelete[256];
-        internal static HandlePlace[] placeHandlers = new HandlePlace[256];
-        internal static HandleWalkthrough[] walkthroughHandlers = new HandleWalkthrough[256];
-        internal static HandlePhysics[] physicsHandlers = new HandlePhysics[256];
-        internal static HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[256];
+        internal static HandleDelete[] deleteHandlers = new HandleDelete[Block.Count];
+        internal static HandlePlace[] placeHandlers = new HandlePlace[Block.Count];
+        internal static HandleWalkthrough[] walkthroughHandlers = new HandleWalkthrough[Block.Count];
+        internal static HandlePhysics[] physicsHandlers = new HandlePhysics[Block.Count];
+        internal static HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[Block.Count];
         
         internal static void SetupCoreHandlers() {
-            for (int i = 0; i < 256; i++) {
+            for (int i = 0; i < Block.Count; i++) {
                 deleteHandlers[i] = null;
                 placeHandlers[i] = null;
                 walkthroughHandlers[i] = null;
@@ -68,7 +68,7 @@ namespace MCGalaxy.Blocks {
             walkthroughHandlers[Block.train] = WalkthroughBehaviour.Train;
             walkthroughHandlers[Block.custom_block] = WalkthroughBehaviour.CustomBlock;
             
-            for (int i = 0; i < 256; i++) {
+            for (int i = 0; i < Block.Count; i++) {
                 bool walkthrough = Block.Walkthrough(Block.Convert((byte)i));
                 if (Block.Props[i].IsMessageBlock) {
                     if (walkthrough)
@@ -167,7 +167,7 @@ namespace MCGalaxy.Blocks {
             physicsHandlers[Block.tntexplosion] = TntPhysics.DoTntExplosion;
             physicsHandlers[Block.train] = TrainPhysics.Do;
             
-            for (int i = 0; i < 256; i++) {
+            for (int i = 0; i < Block.Count; i++) {
                 //Adv physics updating anything placed next to water or lava
                 if ((i >= Block.red && i <= Block.redmushroom) || i == Block.wood ||
                     i == Block.trunk || i == Block.bookcase) {
