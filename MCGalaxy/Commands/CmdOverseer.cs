@@ -178,7 +178,7 @@ namespace MCGalaxy.Commands {
             "%T/os map physics [level] %H- Sets the physics on your map.",
             "%T/os map delete [num] %H- Deletes your nth map",
             "%T/os map restore [num] %H- Restores backup [num] of your map",
-            "%T/os map resize [width] [length] [height] %H- Resizes your map",
+            "%T/os map resize [width] [height] [length] %H- Resizes your map",
             "%T/os map save %H- Saves your map",
             "%T/os map pervisit [rank] %H- Sets the pervisit of you map",
             "%T/os map perbuild [rank] %H- Sets the perbuild of you map",
