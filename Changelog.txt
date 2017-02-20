@@ -1,3 +1,8 @@
+v 1.8.8.8
+Improved: Allow using code page 437 in custom block names, entity name tags
+Fixed: /b for air displaying 'airfallback'
+Fixed: /say causing massive spam in console
+
 v 1.8.8.7
 Added: Console can now see invalid command attempts.
 Added: /ignore 8ball
