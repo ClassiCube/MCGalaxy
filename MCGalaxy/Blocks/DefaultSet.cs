@@ -138,9 +138,7 @@ namespace MCGalaxy.Blocks {
 
             if (b == Block.ice || b == Block.water || b == Block.waterstill)
                 return DrawType.Translucent;
-            if (b == Block.glass || b == Block.leaf || b == Block.snow)
-                return DrawType.Transparent;
-            if (b == Block.staircasestep || b == Block.cobblestoneslab)
+            if (b == Block.glass || b == Block.leaf)
                 return DrawType.Transparent;
             
             if (b >= Block.yellowflower && b <= Block.redmushroom)
