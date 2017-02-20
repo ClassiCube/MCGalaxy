@@ -32,10 +32,6 @@ namespace MCGalaxy.Commands {
             message = Colors.EscapeColors(message);
             Chat.MessageAll(message);
             Server.IRC.Say(message);
-            
-            for (int i = 0; i < 1000000; i++) {
-            	Server.s.Log("FDSSDFSDFSFDDSF");
-            }
         }
         
         public override void Help(Player p) {
