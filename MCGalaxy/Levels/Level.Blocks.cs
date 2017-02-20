@@ -440,7 +440,7 @@ namespace MCGalaxy {
             if (block == Block.custom_block) {
                 BlockDefinition def = CustomBlockDefs[extBlock];
                 return def == null ? extBlock.ToString() : def.Name.Replace(" ", "");
-            } else if (block >= Block.CpeCount) {
+            } else if (block >= Block.CpeCount || block == Block.air) {
                 return Block.Name(block);
             } else {
                 BlockDefinition def = CustomBlockDefs[block];

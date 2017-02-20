@@ -101,7 +101,7 @@ namespace MCGalaxy {
         
         // Not all languages use . as their decimal point separator
         public static bool TryParseDecimal(string s, out float result) {
-            if (s.IndexOf(',') >= 0) s = s.Replace(',', '.');
+            if (s != null && s.IndexOf(',') >= 0) s = s.Replace(',', '.');
             result = 0;
             float temp;
             const NumberStyles style = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite 
