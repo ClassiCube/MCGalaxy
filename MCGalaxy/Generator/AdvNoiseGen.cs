@@ -103,17 +103,17 @@ namespace MCGalaxy.Generator {
                 for (int x = 0; x < width; ++x)
             {
                 double noise = module.GetValue(x / 100.0, 0.1, z / 100.0);
-                int height2D = (int)System.Math.Floor((noise + 2) * 10) + (half - 20);
-                int height2Dtex01 = (int)System.Math.Floor((noise + 2) * 15) + (half - 30);
-                byte topBlock = height2D < height2Dtex01 ? Block.grass : Block.sand;
-                lvl.SetTile((ushort)x, (ushort)height2D, (ushort)z, topBlock);
+                int dirtHeight = (int)System.Math.Floor((noise + 2) * 10) + (half - 20);
+                int sandHeight = (int)System.Math.Floor((noise + 2) * 15) + (half - 30);
+                byte topBlock = dirtHeight < sandHeight ? Block.grass : Block.sand;
+                lvl.SetTile((ushort)x, (ushort)dirtHeight, (ushort)z, topBlock);
                 
-                if (height2D < waterHeight) {
-                    for (int y = waterHeight; y >= height2D; y--)
+                if (dirtHeight < waterHeight) {
+                    for (int y = waterHeight; y >= dirtHeight; y--)
                         lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.water);
                 }
-                for (int y = height2D - 1; y >= 0; y--) {
-                    byte block = (y > height2D * 3 / 4) ? Block.dirt : Block.rock;
+                for (int y = dirtHeight - 1; y >= 0; y--) {
+                    byte block = (y > dirtHeight * 3 / 4) ? Block.dirt : Block.rock;
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, block);
                 }
             }

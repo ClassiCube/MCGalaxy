@@ -40,7 +40,7 @@ namespace MCGalaxy.Drawing.Ops {
             if (cState.Z != cState.OriginZ) m[0].Z -= (cState.Length - 1);
             
             Min = m[0]; Max = m[0];
-            Max.X += cState.Width; Max.Y += cState.Height; Max.Z += cState.Length;
+            Max.X += cState.Width - 1; Max.Y += cState.Height - 1; Max.Z += cState.Length - 1;
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
@@ -48,9 +48,9 @@ namespace MCGalaxy.Drawing.Ops {
             bool pasteAir = state.PasteAir;            
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             
-            for (ushort y = p1.Y; y < p2.Y; y++)
-                for (ushort z = p1.Z; z < p2.Z; z++)
-                    for (ushort x = p1.X; x < p2.X; x++)
+            for (ushort y = p1.Y; y <= p2.Y; y++)
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
             {
                 DrawOpBlock block = Place(x, y, z, brush);
                 if (pasteAir || block.Block != Block.air) output(block);
