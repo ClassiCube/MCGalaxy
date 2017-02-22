@@ -118,5 +118,12 @@ namespace MCGalaxy {
             }
             return false;
         }
+        
+        public static int CaselessIndexOf(this List<string> items, string value) {
+            for (int i = 0; i < items.Count; i++) {
+                if (items[i].Equals(value, comp)) return i;
+            }
+            return -1;
+        }
     }
 }

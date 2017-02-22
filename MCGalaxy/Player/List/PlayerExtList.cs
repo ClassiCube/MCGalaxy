@@ -30,7 +30,6 @@ namespace MCGalaxy {
         readonly object locker = new object(), saveLocker = new object();
         
         public void Add(string name, string data) {
-            name = name.ToLower();
             lock (locker) {
                 names.Add(name); lines.Add(name + separator + data);
             }
@@ -38,7 +37,7 @@ namespace MCGalaxy {
         
         public bool Remove(string name) {
             lock (locker) {
-                int idx = names.IndexOf(name.ToLower());
+        		int idx = names.CaselessIndexOf(name);
                 if (idx == -1) return false;
                 
                 names.RemoveAt(idx);
@@ -48,9 +47,8 @@ namespace MCGalaxy {
         }
         
         public void AddOrReplace(string name, string data) {
-            name = name.ToLower();
             lock (locker) {
-                int idx = names.IndexOf(name);
+            	int idx = names.CaselessIndexOf(name);
                 if (idx == -1) {
                     names.Add(name); lines.Add(name + separator + data);
                 } else {
@@ -61,7 +59,7 @@ namespace MCGalaxy {
         
         public string Find(string name) {
             lock (locker) {
-                int idx = names.IndexOf(name.ToLower());
+                int idx = names.CaselessIndexOf(name);
                 return idx == -1 ? null : lines[idx];
             }
         }
@@ -102,14 +100,6 @@ namespace MCGalaxy {
                     list.lines.Add(line);
                     int sepIndex = line.IndexOf(separator);
                     string name = sepIndex >= 0 ? line.Substring(0, sepIndex) : line;
-                    
-                    // Need to convert uppercase to lowercase, in case user added in entries.
-                    bool anyUpper = false;
-                    for (int i = 0; i < name.Length; i++) {
-                        char c = line[i];
-                        anyUpper |= (c >= 'A' && c <= 'Z');
-                    }
-                    if (anyUpper) name = name.ToLower();
                     list.names.Add(name);
                 }
             }

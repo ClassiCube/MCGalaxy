@@ -31,17 +31,17 @@ namespace MCGalaxy {
         
         public void Add(string p) {
             lock (locker)
-                players.Add(p.ToLower());
+                players.Add(p);
         }
         
         public bool Remove(string p) {
             lock (locker)
-                return players.Remove(p.ToLower());
+                return players.CaselessRemove(p);
         }
         
         public bool Contains(string p) {
             lock (locker)
-                return players.Contains(p.ToLower());
+                return players.CaselessContains(p);
         }
         
         public List<string> All() {
@@ -54,9 +54,8 @@ namespace MCGalaxy {
         /// <summary> Adds or replaces the given name. </summary>
         /// <returns> Whether the given player name was added to the list. </returns>
         public bool AddIfNotExists(string p) {
-            p = p.ToLower();
             lock (locker) {
-                int idx = players.IndexOf(p);
+            	int idx = players.CaselessIndexOf(p);
                 if (idx >= 0) return false;
                 
                 players.Add(p);
@@ -103,14 +102,6 @@ namespace MCGalaxy {
             using (StreamReader r = new StreamReader(list.path, Encoding.UTF8)) {
                 string line = null;
                 while ((line = r.ReadLine()) != null) {
-                    // Need to convert uppercase to lowercase, in case user added in entries.
-                    bool anyUpper = false;
-                    for (int i = 0; i < line.Length; i++) {
-                        char c = line[i];
-                        anyUpper |= (c >= 'A' && c <= 'Z');
-                    }
-                    
-                    if (anyUpper) line = line.ToLower();
                     list.players.Add(line);
                 }
             }

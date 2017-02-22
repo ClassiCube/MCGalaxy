@@ -43,7 +43,7 @@ namespace MCGalaxy.DB {
             List<string> invalid = Server.invalidIds.All();
             List<int> ids = new List<int>();
             
-            int index = invalid.IndexOf(name.ToLower());
+            int index = invalid.CaselessIndexOf(name);
             if (index >= 0) ids.Add(MaxPlayerID - index);
             
             using (DataTable names = Database.Backend.GetRows("Players", "ID", "WHERE Name=@0", name)) {
@@ -59,7 +59,7 @@ namespace MCGalaxy.DB {
             bool added = Server.invalidIds.AddIfNotExists(name);
             if (added) Server.invalidIds.Save();
             
-            int index = Server.invalidIds.All().IndexOf(name.ToLower());
+            int index = Server.invalidIds.All().CaselessIndexOf(name);
             return MaxPlayerID - index;
         }
     }
