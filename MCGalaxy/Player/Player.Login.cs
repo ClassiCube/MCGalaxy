@@ -161,7 +161,11 @@ namespace MCGalaxy {
                     SendMessage("&cPlease complete admin verification with &a/pass [Password]!");
             }
 
-            Server.s.Log(name + " [" + ip + "] has joined the server.");
+            if (String.IsNullOrEmpty(appName)) {
+                Server.s.Log(name + " [" + ip + "] connected.");
+            } else {
+                Server.s.Log(name + " [" + ip + "] connected using " + appName + ".");
+            }
             Game.InfectMessages = PlayerDB.GetInfectMessages(this);
             Server.zombie.PlayerJoinedServer(this);
             
