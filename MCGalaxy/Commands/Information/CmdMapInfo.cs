@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using MCGalaxy.DB;
 using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Commands {
@@ -70,13 +71,20 @@ namespace MCGalaxy.Commands {
                 int latest = Directory.GetDirectories(Server.backupLocation + "/" + data.Name).Length;
                 DateTime backupTime = File.GetCreationTimeUtc(LevelInfo.BackupPath(data.Name, latest.ToString()));
                 TimeSpan backupDelta = DateTime.UtcNow - backupTime;
-                Player.Message(p, "  Created {2} ago, last backup ({1} ago): &a{0}", 
+                Player.Message(p, "  Created {2} ago, last backup ({1} ago): &a{0}",
                                latest, backupDelta.Shorten(), createDelta.Shorten());
             } else {
                 Player.Message(p, "  Created {0} ago, no backups yet", createDelta.Shorten());
             }
             
-            Player.Message(p, "  BlockDB (Used for /b) is {0}", data.BlockDB ? "&aEnabled" : "&cDisabled");
+            if (data.BlockDBEntries != -1) {
+                Player.Message(p, "  BlockDB (Used for /b) is {0} %Swith {1} entries", 
+                               data.BlockDB ? "&aEnabled" : "&cDisabled", data.BlockDBEntries);
+            } else {
+                Player.Message(p, "  BlockDB (Used for /b) is {0}",
+                               data.BlockDB ? "&aEnabled" : "&cDisabled");
+            }
+            
             ShowPermissions(p, data);
             Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.Name);
             ShowZombieSurvival(p, data);
@@ -196,6 +204,7 @@ namespace MCGalaxy.Commands {
             public int Physics;
             public bool Guns, BlockDB = true;
             public string Name, RealmOwner;
+            public long BlockDBEntries = -1;
             
             // Env data
             public string TerrainUrl, TextureUrl;
@@ -222,6 +231,7 @@ namespace MCGalaxy.Commands {
                 Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
                 Physics = lvl.physics; Guns = lvl.guns; BlockDB = lvl.UseBlockDB;
                 RealmOwner = lvl.RealmOwner;
+                BlockDBEntries = lvl.BlockDB.TotalEntries();
                 
                 visit = lvl.permissionvisit; build = lvl.permissionbuild;
                 visitmax = lvl.pervisitmax; buildmax = lvl.perbuildmax;
@@ -253,6 +263,7 @@ namespace MCGalaxy.Commands {
                 string path = LevelInfo.MapPath(name);
                 Vec3U16 dims = IMapImporter.Formats[0].ReadDimensions(path);
                 Width = dims.X; Height = dims.Y; Length = dims.Z;
+                BlockDBEntries = BlockDBFile.CountEntries(name);
 
                 path = LevelInfo.FindPropertiesFile(name);
                 if (path != null)
@@ -266,7 +277,7 @@ namespace MCGalaxy.Commands {
                     case "guns": Guns = bool.Parse(value); break;
                     case "useblockdb": BlockDB = bool.Parse(value); break;
                     case "realmowner": RealmOwner = value; break;
-                    
+                        
                     case "perbuild": build = GetPerm(value); break;
                     case "pervisit": visit = GetPerm(value); break;
                     case "perbuildmax": buildmax = GetPerm(value); break;
@@ -275,26 +286,26 @@ namespace MCGalaxy.Commands {
                     case "visitblacklist": VisitBlacklist = Parse(value); break;
                     case "buildwhitelist": BuildWhitelist = Parse(value); break;
                     case "buildblacklist": BuildBlacklist = Parse(value); break;
-                    
+                        
                     case "authors": Authors = value; break;
                     case "roundsplayed": TotalRounds = int.Parse(value); break;
                     case "roundshumanwon": HumanRounds = int.Parse(value); break;
                     case "likes": Likes = int.Parse(value); break;
                     case "dislikes": Dislikes = int.Parse(value); break;
-                    
+                        
                     case "cloudcolor": Clouds = value; break;
                     case "fogcolor": Fog = value; break;
                     case "skycolor": Sky = value; break;
                     case "shadowcolor": Shadow = value; break;
                     case "lightcolor": Light = value; break;
-                    
+                        
                     case "edgeblock": EdgeBlock = byte.Parse(value); break;
                     case "edgelevel": EdgeLevel = short.Parse(value); break;
                     case "horizonblock": HorizonBlock = byte.Parse(value); break;
                     case "cloudsheight": CloudsHeight = short.Parse(value); break;
                     case "maxfog": MaxFog = short.Parse(value); break;
                     case "expfog": ExpFog = bool.Parse(value); break;
-                    
+                        
                     case "texture": TerrainUrl = value; break;
                     case "texturepack": TextureUrl = value; break;
                     case "clouds-speed": CloudsSpeed = int.Parse(value); break;

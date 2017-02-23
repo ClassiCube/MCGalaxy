@@ -119,9 +119,9 @@ namespace MCGalaxy.Gui {
         static void ViewmodeLineProcessor(string key, string value) {
             switch (key.ToLower()) {
                 case "cli":
-                    useConsole = value.ToLower() == "true"; break;
+        	        useConsole = value.CaselessEq("true"); break;
                 case "high-quality":
-                    useHighQualityGui = value.ToLower() == "true"; break;
+        	        useHighQualityGui = value.CaselessEq("true"); break;
             }
         }
 

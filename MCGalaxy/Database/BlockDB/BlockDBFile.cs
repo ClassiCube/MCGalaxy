@@ -192,6 +192,16 @@ namespace MCGalaxy.DB {
             File.Move(srcPath, dstPath);
         }
         
+        /// <summary> Returns number of entries in the backing file on disc if it exists. </summary>
+        public static long CountEntries(string map) {
+            string path = FilePath(map);
+            if (!File.Exists(path)) return 0;
+
+            using (Stream src = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
+                return (src.Length / 16) - 1;
+        }
+        
+        
         public static void ResizeBackingFile(BlockDB db) {
             Server.s.Log("Resizing BlockDB for " + db.MapName, true);
             string filePath = FilePath(db.MapName);
@@ -237,13 +247,6 @@ namespace MCGalaxy.DB {
         static void WriteU16(ushort value, byte[] array, int index) {
             array[index++] = (byte)(value);
             array[index++] = (byte)(value >> 8);
-        }
-        
-        static void WriteI32(int value, byte[] array, int index) {
-            array[index++] = (byte)(value);
-            array[index++] = (byte)(value >> 8);
-            array[index++] = (byte)(value >> 16);
-            array[index++] = (byte)(value >> 24);
         }
         
         static void ReadFully(Stream stream, byte[] dst, int count) {

@@ -73,6 +73,16 @@ namespace MCGalaxy.DB {
                 Cache.Clear();
             }
         }
+        
+        /// <summary> Counts the total number of entries of BlockDB entries in memory and on disc. </summary>
+        public long TotalEntries() {
+            using (IDisposable rLock = Locker.AccquireRead(5 * 1000)) {
+                if (rLock != null) {
+                    return Cache.Count + BlockDBFile.CountEntries(MapName);
+                }
+                return -1;
+            }
+        }
 
         
         /// <summary> Outputs all block changes which affect the given coordinates. </summary>
