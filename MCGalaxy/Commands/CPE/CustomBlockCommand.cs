@@ -434,6 +434,8 @@ namespace MCGalaxy.Commands.CPE {
                 case "fallbackblock":
                     byte fallback = GetFallback(p, value);
                     if (fallback == Block.Invalid) return;
+                    
+                    value = Block.Name(fallback);
                     def.FallBack = fallback; break;
                 default:
                     Player.Message(p, "Unrecognised property: " + parts[2]); return;
