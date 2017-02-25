@@ -15,10 +15,10 @@ namespace Updater {
         
         static void Main(string[] args) {
             AppDomain.CurrentDomain.UnhandledException += UnhandledError;
+            usingConsole = IsConsole();
             if (args.Length < 1 || !args[0].Contains(check)) {
                 ShowMessage("Updater was started incorrectly.", true); return;
-            }
-            usingConsole = IsConsole();
+            }           
             
             try {
                 args[0] = args[0].Replace(check, "");
@@ -63,7 +63,6 @@ namespace Updater {
                 if (!UpdateFile("MCGalaxy", ".exe")) continue;
                 if (!UpdateFile("MCGalaxy_", ".dll")) continue;
 
-                Console.WriteLine("Successfully updated MCGalaxy. Starting...");
                 StartMCGalaxy(args[0]);
                 return;
             }
@@ -124,7 +123,6 @@ namespace Updater {
         
         static void ShowMessage(string message, bool error) {
             if (usingConsole) {
-                message = error ? message + " \n\nPress any key to exit." : message;
                 Console.WriteLine(message);
             } else {
                 string title = error ? "Updater Error" : "Updater";
