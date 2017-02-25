@@ -27,8 +27,9 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
-            int dist = 20;
-            if (message != "" && !int.TryParse(message, out dist)) { Help(p); return; }
+            ushort dist = 20;
+            if (message != "" && !CommandParser.GetUShort(p, message, "Distance", ref dist)) return;
+            
             Player.Message(p, "Destroy the block you wish to drill.");
             p.MakeSelection(1, dist, DoDrill);
         }
@@ -38,7 +39,7 @@ namespace MCGalaxy.Commands.Building {
             type = p.level.GetTile(x, y, z); extType = 0;
             if (type == Block.custom_block)
                 extType = p.level.GetExtTile(x, y, z);
-            int dist = (int)state, numBlocks = (3 * 3) * dist;
+            int dist = (ushort)state, numBlocks = (3 * 3) * dist;
             
             if (numBlocks > p.group.maxBlocks) {
                 Player.Message(p, "You tried to drill " + numBlocks + " blocks.");

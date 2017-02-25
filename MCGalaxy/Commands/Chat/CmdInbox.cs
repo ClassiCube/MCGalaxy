@@ -46,13 +46,8 @@ namespace MCGalaxy.Commands {
                 int num = -1;
                 if (parts.Length == 1) {
                     Player.Message(p, "You need to provide either \"all\" or a number."); return;
-                }
-                if (parts[1] != "all" && !int.TryParse(parts[1], out num)) {
-                    Player.Message(p, "Incorrect number given."); return;
-                }
-                if (parts[1] != "all" && num < 0) {
-                    Player.Message(p, "Message number must be greater than or equal to 0."); return;
-                }
+                }               
+                if (parts[1] != "all" && !CommandParser.GetInt(p, parts[1], "Message number", ref num, 0)) return;
                 
                 using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
                     if (num != -1 && num >= Inbox.Rows.Count) {

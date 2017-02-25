@@ -108,7 +108,7 @@ namespace MCGalaxy.Blocks {
                 }
                 byte id;
                 if (!Byte.TryParse(parts[0], out id)) {
-                     Server.s.Log("Invalid line \"" + line + "\" in " + group + " block properties");
+                    Server.s.Log("Invalid line \"" + line + "\" in " + group + " block properties");
                     continue;                   
                 }
                 

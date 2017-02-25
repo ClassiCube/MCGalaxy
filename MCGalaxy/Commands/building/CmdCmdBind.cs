@@ -30,33 +30,33 @@ namespace MCGalaxy.Commands {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
 
             if (message == "") {
-                bool foundBind = false;
-                for (int i = 0; i < 10; i++)  {
+                bool anyBinds = false;
+                for (int i = 0; i < p.cmdBind.Length; i++)  {
                     if (p.cmdBind[i] != null) {
-                        Player.Message(p, "&c/" + i + " %Sbound to &b" + p.cmdBind[i] + " " + p.messageBind[i]);
-                        foundBind = true;
+                        Player.Message(p, "%T/{0} %Sbound to %T/{1} {2}", i, p.cmdBind[i], p.messageBind[i]);
+                        anyBinds = true;
                     }
                 }
-                if (!foundBind) Player.Message(p, "You currently have no commands bound.");
+                
+                if (!anyBinds) Player.Message(p, "You currently have no commands bound.");
                 return;
             }
             
             string[] parts = message.SplitSpaces(3);
-            byte index;
-            if (!byte.TryParse(parts[0], out index) || index >= 10) {
-                Player.Message(p, "Bind number must be between 0 and 9."); return;
-            }
+            int j = 0;
+            if (!CommandParser.GetInt(p, parts[0], "index", ref j, 0, p.cmdBind.Length - 1)) return;
             
             if (parts.Length == 1) {
-                if (p.cmdBind[index] == null)
-                    Player.Message(p, "No command bound for &c/" + index);
-                else
-                    Player.Message(p, "&c/" + index + " %Sbound to &b" + p.cmdBind[index] + " " + p.messageBind[index]);
+                if (p.cmdBind[j] == null) {
+                    Player.Message(p, "No command bound for %T/{0}", j);
+                } else {
+                    Player.Message(p, "%T/{0} %Sbound to %T/{1} {2}", j, p.cmdBind[j], p.messageBind[j]);
+                }
             } else {
-                p.cmdBind[index] = parts[1];
-                p.messageBind[index] = parts.Length > 2 ? parts[2] : "";
+                p.cmdBind[j] = parts[1];
+                p.messageBind[j] = parts.Length > 2 ? parts[2] : "";
 
-                Player.Message(p, "Bound &b/" + p.cmdBind[index] + " " + p.messageBind[index] + " to &c/" + index);
+                Player.Message(p, "Bound %T/{0} {1} %Sto %T/" + j, p.cmdBind[j], p.messageBind[j], j);
             }
         }
         

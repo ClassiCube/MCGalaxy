@@ -197,6 +197,7 @@ namespace MCGalaxy.Commands.CPE {
             string opt = value.ToLower();
             int step = GetStep(p, global);
             BlockDefinition bd = GetBD(p, global);
+            bool temp = false;
             
             if (opt == "revert" && step > 2) {
                 if (step == 17 && bd.FogDensity == 0) step -= 2;
@@ -212,8 +213,8 @@ namespace MCGalaxy.Commands.CPE {
                 bd.Name = value;
                 step++;
             } else if (step == 3) {
-                if (value == "0" || value == "1") {
-                    bd.Shape = value == "1" ? (byte)0 : (byte)16;
+            	if (CommandParser.GetBool(p, value, ref temp)) {
+                    bd.Shape = temp ? (byte)0 : (byte)16;
                     step++;
                 }
             } else if (step == 4) {
@@ -245,8 +246,8 @@ namespace MCGalaxy.Commands.CPE {
                 if (Utils.TryParseDecimal(value, out bd.Speed) && bd.Speed >= 0.25f && bd.Speed <= 3.96f)
                     step++;
             } else if (step == 11) {
-                if (value == "0" || value == "1") {
-                    bd.BlocksLight = value != "0";
+                if (CommandParser.GetBool(p, value, ref temp)) {
+                    bd.BlocksLight = temp;
                     step++;
                 }
             } else if (step == 12) {
@@ -254,8 +255,8 @@ namespace MCGalaxy.Commands.CPE {
                 if (result && bd.WalkSound <= 11)
                     step++;
             } else if (step == 13) {
-                if (value == "0" || value == "1") {
-                    bd.FullBright = value != "0";
+                if (CommandParser.GetBool(p, value, ref temp)) {
+                    bd.FullBright = temp;
                     step++;
                 }
             } else if (step == 14) {
@@ -310,6 +311,7 @@ namespace MCGalaxy.Commands.CPE {
             
             string value = parts[3], blockName = def.Name;
             float fTemp;
+            bool temp = false;
             
             switch (parts[2].ToLower()) {
                 case "name":
@@ -371,10 +373,10 @@ namespace MCGalaxy.Commands.CPE {
                     
                 case "light":
                 case "blockslight":
-                    if( !(value == "0" || value == "1")) {
+                    if (!CommandParser.GetBool(p, value, ref temp)) {
                         SendEditHelp(p, 11, 0); return;
                     }
-                    def.BlocksLight = value != "0";
+                    def.BlocksLight = temp;
                     break;
                     
                 case "sound":
@@ -384,17 +386,17 @@ namespace MCGalaxy.Commands.CPE {
                     
                 case "bright":
                 case "fullbright":
-                    if( !(value == "0" || value == "1")) {
+                    if (!CommandParser.GetBool(p, value, ref temp)) {
                         SendEditHelp(p, 13, 0); return;
                     }
-                    def.FullBright = value != "0";
+                    def.FullBright = temp;
                     break;
                     
                 case "shape":
-                    if( !(value == "0" || value == "1")) {
+                    if (!CommandParser.GetBool(p, value, ref temp)) {
                         SendEditHelp(p, 3, 0); return;
                     }
-                    def.Shape = value == "1" ? (byte)0 : def.MaxZ;
+                    def.Shape = temp ? (byte)0 : def.MaxZ;
                     break;
                     
                 case "draw":
@@ -678,12 +680,12 @@ namespace MCGalaxy.Commands.CPE {
             new[] { "Type a number between '0.25' (25% speed) and '3.96' (396% speed).",
                 "This speed is used when inside or walking on the block. Default speed is 1",
             },
-            new[] { "Type '1' if the block casts a shadow, '0' if it doesn't" },
+            new[] { "Type 'yes' if the block casts a shadow, 'no' if it doesn't" },
             new[] { "Type a number between '0' and '9' for the sound played when walking on it and breaking.",
                 "0 = None, 1 = Wood, 2 = Gravel, 3 = Grass, 4 = Stone",
                 "5 = Metal, 6 = Glass, 7 = Cloth, 8 = Sand, 9 = Snow",
             },
-            new[] { "Type '1' if the block is fully lit (e.g. lava), '0' if not." },
+            new[] { "Type 'yes' if the block is fully lit (e.g. lava), 'no' if not." },
             new[] { "Enter the block's draw method.", "0 = Opaque, 1 = Transparent (Like glass)",
                 "2 = Transparent (Like leaves), 3 = Translucent (Like ice), 4 = Gas (Like air)",
             },

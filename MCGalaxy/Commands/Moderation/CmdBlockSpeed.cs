@@ -41,15 +41,13 @@ namespace MCGalaxy.Commands {
             int value = 0;
             
             if (cmd == "bs") {
-                if (!int.TryParse(args[1], out value)) { 
-                    Player.Message(p, "Invalid number specified."); return; 
-                }
+                if (!CommandParser.GetInt(p, args[1], "Blocks per interval", ref value, 0)) return;
+            	
                 BlockQueue.blockupdates = value;
                 Player.Message(p, "Blocks per interval is now {0}.", BlockQueue.blockupdates);
             } else if (cmd == "ts") {
-                if (!int.TryParse(args[1], out value)) { 
-                    Player.Message(p, "Invalid number specified."); return; 
-                }
+                if (!CommandParser.GetInt(p, args[1], "Block interval", ref value, 50)) return;
+                
                 BlockQueue.time = value;
                 Player.Message(p, "Block interval is now {0}.", BlockQueue.time);
             } else if (cmd == "buf")  {
@@ -59,9 +57,7 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "Block buffering on {0} %Senabled.", p.level.ColoredName);
                 p.level.bufferblocks = !p.level.bufferblocks;
             } else if (cmd == "net") {
-                if (!int.TryParse(args[1], out value)) { 
-                    Player.Message(p, "Invalid number specified."); return; 
-                }
+                if (!CommandParser.GetInt(p, args[1], "value", ref value, 2, 1000)) return;
                 
                 switch (value) {
                     case 2: Set(25, 100); break;

@@ -98,15 +98,11 @@ namespace MCGalaxy {
             if (IsResetString(value)) {
                 Player.Message(p, "Reset {0} for {1} %Sto normal", variable, p.level.ColoredName);
                 target = defValue;
-            } else if (value.CaselessEq("yes") || value.CaselessEq("on")) {
-                Player.Message(p, "Set {0} for {1} %Sto &aON", variable, p.level.ColoredName);
-                target = true;
-            } else if (value.CaselessEq("no") || value.CaselessEq("off")) {
-                Player.Message(p, "Set {0} for {1} %Sto &cOFF", variable, p.level.ColoredName);
-                target = false;
-            } else {
-                Player.Message(p, "Env: \"{0}\" is not a valid boolean.", value);
-                return;
+            } else {            
+                if (!CommandParser.GetBool(p, value, ref target)) return;
+                
+                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, 
+                               p.level.ColoredName, target ? "&aON" : "&cOFF");
             }
             SendCurrentMapAppearance(p.level, prop, target ? 1 : 0);
         }

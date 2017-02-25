@@ -49,10 +49,8 @@ namespace MCGalaxy.Commands {
                 p.level.Authors = args[1].Replace(" ", "%S, ");
                 Player.Message(p, "Sets the authors of the map to: " + args[1]);
             } else if (args[0].CaselessEq("pillar") || args[0].CaselessEq("pillaring")) {
-                bool value;
-                if (!bool.TryParse(args[1], out value)) {
-                    Player.Message(p, "Value must be 'true' or 'false'"); return;
-                }
+                bool value = false;
+                if (!CommandParser.GetBool(p, args[1], ref value)) return;
                 
                 p.level.Pillaring = value;
                 Player.Message(p, "Set pillaring allowed to: " + value);
@@ -93,10 +91,9 @@ namespace MCGalaxy.Commands {
                 p.level.MaxRoundTime = time;
                 Player.Message(p, "Set round time to: " + time + " minutes");
             } else if (args[0].CaselessEq("drawingallowed") || args[0].CaselessEq("drawingenabled")) {
-                bool value;
-                if (!bool.TryParse(args[1], out value)) {
-                    Player.Message(p, "Value must be 'true' or 'false'"); return;
-                }
+                bool value = false;
+                if (!CommandParser.GetBool(p, args[1], ref value)) return;
+                
                 p.level.DrawingAllowed = value;
                 Player.Message(p, "Set drawing commands allowed to: " + value);
             } else {
@@ -117,11 +114,11 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%HThis sets the various options for games on this map.");
             Player.Message(p, "%T/mapset authors [name1] <name2> <name3>...");
             Player.Message(p, "%HThis is shown to players at the start of rounds.");
-            Player.Message(p, "%T/mapset pillaring [true/false]");
+            Player.Message(p, "%T/mapset pillaring [yes/no]");
             Player.Message(p, "%T/mapset build [normal/modifyonly/nomodify]");
             Player.Message(p, "%T/mapset minroundtime [minutes]");
             Player.Message(p, "%T/mapset maxroundtime [minutes]");
-            Player.Message(p, "%T/mapset drawingallowed [true/false]");
+            Player.Message(p, "%T/mapset drawingallowed [yes/no]");
         }
     }
 }

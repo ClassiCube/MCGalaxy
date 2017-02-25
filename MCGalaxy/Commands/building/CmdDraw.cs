@@ -45,23 +45,23 @@ namespace MCGalaxy.Commands.Building {
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             AdvDrawOp op = null;
             switch (dArgs.Mode) {
-                case DrawMode.cone: op = new AdvConeDrawOp(); break;
-                case DrawMode.hcone: op = new AdvHollowConeDrawOp(); break;
-                case DrawMode.icone: op = new AdvConeDrawOp(true); break;
-                case DrawMode.hicone: op = new AdvHollowConeDrawOp(true); break;
-                case DrawMode.pyramid: op = new AdvPyramidDrawOp(); break;
-                case DrawMode.hpyramid: op = new AdvHollowPyramidDrawOp(); break;
-                case DrawMode.ipyramid: op = new AdvPyramidDrawOp(true); break;
-                case DrawMode.hipyramid: op = new AdvHollowPyramidDrawOp(true); break;
-                case DrawMode.sphere: op = new AdvSphereDrawOp(); break;
-                case DrawMode.hsphere: op = new AdvHollowSphereDrawOp(); break;
-                case DrawMode.volcano: op = new AdvVolcanoDrawOp(); break;
-            }            
+                    case DrawMode.cone: op = new AdvConeDrawOp(); break;
+                    case DrawMode.hcone: op = new AdvHollowConeDrawOp(); break;
+                    case DrawMode.icone: op = new AdvConeDrawOp(true); break;
+                    case DrawMode.hicone: op = new AdvHollowConeDrawOp(true); break;
+                    case DrawMode.pyramid: op = new AdvPyramidDrawOp(); break;
+                    case DrawMode.hpyramid: op = new AdvHollowPyramidDrawOp(); break;
+                    case DrawMode.ipyramid: op = new AdvPyramidDrawOp(true); break;
+                    case DrawMode.hipyramid: op = new AdvHollowPyramidDrawOp(true); break;
+                    case DrawMode.sphere: op = new AdvSphereDrawOp(); break;
+                    case DrawMode.hsphere: op = new AdvHollowSphereDrawOp(); break;
+                    case DrawMode.volcano: op = new AdvVolcanoDrawOp(); break;
+            }
             if (op == null) { Help(dArgs.Player); return null; }
             
-            // Validate radius/height when the user first uses the command 
-            ushort radius = 0, height = 0;
-            string[] args = dArgs.Message.Split(' ');            
+            // Validate radius/height when the user first uses the command
+            int radius = 0, height = 0;
+            string[] args = dArgs.Message.Split(' ');
             if ((op.UsesHeight && !CheckTwoArgs(dArgs.Player, ref radius, ref height, args)) ||
                 (!op.UsesHeight && !CheckOneArg(dArgs.Player, ref radius, args)))
                 return null;
@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
-            ushort radius = 0, height = 0;
+            int radius = 0, height = 0;
             string[] args = dArgs.Message.Split(' ');
             AdvDrawOp op = (AdvDrawOp)dArgs.Op;
             
@@ -96,25 +96,19 @@ namespace MCGalaxy.Commands.Building {
             return p.BrushName;
         }
         
-        bool CheckTwoArgs(Player p, ref ushort radius, ref ushort height, string[] parts) {
-            if (parts.Length < 3) { 
+        bool CheckTwoArgs(Player p, ref int radius, ref int height, string[] parts) {
+            if (parts.Length < 3) {
                 Player.Message(p, "You need to provide the radius and the height for the {0}.", parts[parts.Length - 1]); return false;
             }
-            if (!ushort.TryParse(parts[parts.Length - 3], out height) || height > 2000 ||
-                !ushort.TryParse(parts[parts.Length - 2], out radius) || radius > 2000) {
-                Player.Message(p, "Radius and height must be positive integers less than 2000."); return false;
-            }
-            return true;
+            return CommandParser.GetInt(p, parts[parts.Length - 3], "height", ref height, 0, 2000)
+                && CommandParser.GetInt(p, parts[parts.Length - 2], "radius", ref radius, 0, 2000);
         }
         
-        bool CheckOneArg(Player p, ref ushort radius, string[] parts) {
-            if (parts.Length < 2) { 
+        bool CheckOneArg(Player p, ref int radius, string[] parts) {
+            if (parts.Length < 2) {
                 Player.Message(p, "You need to provide the radius for the {0}.", parts[parts.Length - 1]); return false;
             }
-            if (!ushort.TryParse(parts[parts.Length - 2], out radius) || radius > 2000) {
-                Player.Message(p, "Radius must be a positive integer less than 2000."); return false;
-            }
-            return true;
+            return CommandParser.GetInt(p, parts[parts.Length - 2], "radius", ref radius, 0, 2000);
         }
         
         public override void Help(Player p) {

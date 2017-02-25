@@ -33,12 +33,8 @@ namespace MCGalaxy.Commands.Building {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             
             string[] parts = message.Split(' ');
-            if (!ushort.TryParse(parts[0], out distance)) {
-                Player.Message(p, "Distance must be a number less than 65536."); return;
-            }
-            if (parts.Length > 1 && !ushort.TryParse(parts[1], out interval)) {
-                Player.Message(p, "Interval must be a number less than 65536."); return;
-            }
+            if (!CommandParser.GetUShort(p, parts[0], "Distance", ref distance)) return;
+            if (parts.Length > 1 && !CommandParser.GetUShort(p, parts[1], "Interval", ref interval)) return;
 
             if (distance < 1) {
                 Player.Message(p, "Enter a distance greater than 0."); return;
