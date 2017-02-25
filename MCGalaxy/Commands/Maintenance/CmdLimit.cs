@@ -29,12 +29,10 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (message == "") { Help(p); return; }
-            int limit = 0;
-            bool hasLimit = args.Length > 1;
             
-            if (hasLimit && (!int.TryParse(args[1], out limit) || limit <= 0)) {
-                Player.Message(p, "Limit amount must be a whole number and greater than 0."); return;
-            }
+            int limit = 0;
+            bool hasLimit = args.Length > 1;          
+            if (hasLimit && !CommandParser.GetInt(p, args[1], "Limit", ref limit, 1)) return;
             
             switch (args[0].ToLower()) {
                 case "rt":

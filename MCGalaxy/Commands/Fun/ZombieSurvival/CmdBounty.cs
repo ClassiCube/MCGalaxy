@@ -34,10 +34,10 @@ namespace MCGalaxy.Commands {
             
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
+            
             byte amount = 0;
-            if (!byte.TryParse(args[1], out amount)) {
-                Player.Message(p, "The bounty amount must be an positive integer less than 256."); return;
-            }
+            if (!CommandParser.GetByte(p, args[1], "Bounty amount", ref amount)) return;
+            
             if (p.money < amount) {
                 Player.Message(p, "You do not have enough " + Server.moneys + " to place such a large bountry."); return;
             }

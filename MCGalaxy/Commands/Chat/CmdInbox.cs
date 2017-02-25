@@ -67,9 +67,8 @@ namespace MCGalaxy.Commands {
                     else Player.Message(p, "Deleted message.");
                 }
             } else {
-                int num;
-                if (!int.TryParse(message, out num)) { Player.Message(p, "Incorrect number given."); return; }
-                if (num < 0) { Player.Message(p, "Message number must be greater than or equal to 0."); return; }
+                int num = 0;
+                if (!CommandParser.GetInt(p, message, "Message number", ref num, 0)) return;
 
                 using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
                     if (num >= Inbox.Rows.Count) {

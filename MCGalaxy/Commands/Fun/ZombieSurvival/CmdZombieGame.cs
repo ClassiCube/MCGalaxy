@@ -78,9 +78,8 @@ namespace MCGalaxy.Commands {
             
             if (args.Length == 2) {
                 int rounds = 1;
-                if (!int.TryParse(args[1], out rounds)) {
-                    Player.Message(p, "You need to specify a valid option!"); return;
-                }
+                if (!CommandParser.GetInt(p, args[1], "Rounds", ref rounds, 0)) return;
+
                 ZombieGameStatus status = rounds == 0 ?
                     ZombieGameStatus.InfiniteRounds : ZombieGameStatus.VariableRounds;
                 Server.zombie.Start(status, lvl, rounds);

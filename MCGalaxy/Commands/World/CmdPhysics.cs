@@ -32,13 +32,8 @@ namespace MCGalaxy.Commands {
             
             string[] args = message.Split(' ');
             Level level = p != null ? p.level : Server.mainLevel;
-            int state = 0, stateIndex = args.Length == 1 ? 0 : 1;
-            if (!int.TryParse(args[stateIndex], out state)) {
-                Player.Message(p, "Given physics state was not a proper number."); return;
-            }
-            if (state < 0 || state > 5 ) {
-                Player.Message(p, "Given physics state was less than 0, or greater than 5."); return;
-            }
+            int state = 0, stateIndex = args.Length == 1 ? 0 : 1;            
+            if (!CommandParser.GetInt(p, args[stateIndex], "Physics state", ref state, 0, 5)) return;
             
             if (args.Length == 2) {
                 level = Matcher.FindLevels(p, args[0]);

@@ -34,13 +34,9 @@ namespace MCGalaxy.Commands
                 Server.PositionInterval = 2000;
                 Chat.MessageAll("&dLow lag %Sturned &aON %S- positions update every &b2000 %Sms.");
             } else {
-                int interval;
-                if (!int.TryParse(message, out interval)) {
-                    Player.Message(p, "Interval given must be an integer."); return;
-                }
-                if (interval < 20 || interval > 2000) {
-                    Player.Message(p, "Interval must be between 20 and 2000 milliseconds."); return;
-                }
+                int interval = 0;
+                if (!CommandParser.GetInt(p, message, "Interval", ref interval, 20, 2000)) return;
+
                 Server.PositionInterval = interval;
                 Chat.MessageAll("Positions now update every &b{0} %Smilliseconds.", interval);
             }

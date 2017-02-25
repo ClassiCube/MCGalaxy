@@ -49,8 +49,7 @@ namespace MCGalaxy.Commands.World {
             }
         }
         
-        static Level LoadLevelCore(Player p, string name,
-                                   string phys, bool autoLoaded) {
+        static Level LoadLevelCore(Player p, string name, string physStr, bool autoLoaded) {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level l in loaded) {
                 if (l.name == name) { Player.Message(p, "Level {0} %Sis already loaded.", l.ColoredName); return null; }
@@ -71,11 +70,10 @@ namespace MCGalaxy.Commands.World {
             if (!autoLoaded)
                 Chat.MessageWhere("Level {0} %Sloaded.", pl => Entities.CanSee(pl, p), lvl.ColoredName);
             
-            int physLevel;
-            if (!int.TryParse(phys, out physLevel)) {
-                Player.Message(p, "Physics must be an integer between 0 and 5."); return lvl;
-            }
-            if (physLevel >= 1 && physLevel <= 5) lvl.setPhysics(physLevel);
+            int phys = 0;
+            if (!CommandParser.GetInt(p, physStr, "Physics state", ref phys, 0, 5)) return lvl;
+
+            if (phys >= 1 && phys <= 5) lvl.setPhysics(phys);
             return lvl;
         }
         

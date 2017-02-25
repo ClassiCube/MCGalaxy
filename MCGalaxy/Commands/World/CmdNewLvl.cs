@@ -39,11 +39,11 @@ namespace MCGalaxy.Commands.World {
             if (args.Length < 5 || args.Length > 6) { Help(p); return false; }
             if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return false; }
 
-            ushort x, y, z;
+            ushort x = 0, y = 0, z = 0;
             string name = args[0].ToLower();
-            if (!UInt16.TryParse(args[1], out x) || !UInt16.TryParse(args[2], out y) || !UInt16.TryParse(args[3], out z)) {
-                Player.Message(p, "Invalid dimensions."); return false;
-            }
+            if (!CommandParser.GetUShort(p, args[1], "Width",  ref x)) return false;
+            if (!CommandParser.GetUShort(p, args[2], "Height", ref y)) return false;
+            if (!CommandParser.GetUShort(p, args[3], "Length", ref z)) return false;
             
             string seed = args.Length == 6 ? args[5] : "";
             if (!MapGen.OkayAxis(x)) { Player.Message(p, "width must be divisible by 16, and >= 16"); return false; }

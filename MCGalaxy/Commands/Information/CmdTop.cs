@@ -119,29 +119,16 @@ namespace MCGalaxy.Commands {
         static int ParseLimit(Player p, string[] args) {
             int limit = 0;
             string limitArg = args[args.Length - 1];
-            if (!Int32.TryParse(limitArg, out limit)) {
-                Player.Message(p, "&c\"{0}\" is not an integer.", limitArg); return -1;
-            }
             
-            if (limit < 1) {
-                Player.Message(p, "&c\"{0}\" is too small, the min limit is 1.", limitArg); return -1;
-            }
-            if (limit > 15) {
-                Player.Message(p, "&c\"{0}\" is too large, the max limit is 15.", limitArg); return -1;
-            }
+            if (!CommandParser.GetInt(p, args[1], "Limit", ref limit, 1, 15)) return -1;
             return limit;
         }
         
         static int ParseOffset(Player p, string[] args) {
             if (args.Length <= 2) return 0;
             int offset = 0;
-            if (!Int32.TryParse(args[1], out offset)) {
-                Player.Message(p, "&c\"{0}\" is not an integer.", args[1]); return -1;
-            }            
-
-            if (offset < 0) {
-                Player.Message(p, "&cOffset must be greater than or equal to 0.", args[1]); return -1;
-            }
+            
+            if (!CommandParser.GetInt(p, args[1], "Offset", ref offset, 0)) return -1;
             return offset;         
         }
         

@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands.CPE {
             int targetId;
             if (parts.Length >= 2 ) {
                 string id = parts[1];
-                if (!CheckBlockId(p, id, global, out targetId)) return;
+                if (!CheckBlockId(p, id, out targetId)) return;
                 BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
                 BlockDefinition def = defs[targetId];
                 
@@ -105,8 +105,8 @@ namespace MCGalaxy.Commands.CPE {
         static void CopyHandler(Player p, string[] parts, bool global, string cmd) {
             if (parts.Length <= 2) { Help(p, cmd); return; }
             int srcId, dstId;
-            if (!CheckBlockId(p, parts[1], global, out srcId)) return;
-            if (!CheckBlockId(p, parts[2], global, out dstId)) return;
+            if (!CheckBlockId(p, parts[1], out srcId)) return;
+            if (!CheckBlockId(p, parts[2], out dstId)) return;
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             
             BlockDefinition src = defs[srcId], dst = defs[dstId];
@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands.CPE {
         static void InfoHandler(Player p, string[] parts, bool global, string cmd) {
             if (parts.Length == 1) { Help(p, cmd); return; }
             int id;
-            if (!CheckBlockId(p, parts[1], global, out id)) return;
+            if (!CheckBlockId(p, parts[1], out id)) return;
             
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition def = defs[id];
@@ -179,7 +179,7 @@ namespace MCGalaxy.Commands.CPE {
         static void RemoveHandler(Player p, string[] parts, bool global, string cmd) {
             if (parts.Length <= 1) { Help(p, cmd); return; }
             int id;
-            if (!CheckBlockId(p, parts[1], global, out id)) return;
+            if (!CheckBlockId(p, parts[1], out id)) return;
             
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition def = defs[id];
@@ -213,22 +213,22 @@ namespace MCGalaxy.Commands.CPE {
                 bd.Name = value;
                 step++;
             } else if (step == 3) {
-            	if (CommandParser.GetBool(p, value, ref temp)) {
+                if (CommandParser.GetBool(p, value, ref temp)) {
                     bd.Shape = temp ? (byte)0 : (byte)16;
                     step++;
                 }
             } else if (step == 4) {
-                if (byte.TryParse(value, out bd.TopTex)) {
+                if (CommandParser.GetByte(p, value, "Texture ID", ref bd.TopTex)) {
                     step += (bd.Shape == 0 ? 5 : 1); // skip other texture steps for sprites
                     if (bd.Shape == 0) bd.SetAllTex(bd.TopTex);
                 }
             } else if (step == 5) {
-                if (byte.TryParse(value, out bd.SideTex)) {
+                if (CommandParser.GetByte(p, value, "Texture ID", ref bd.SideTex)) {
                     bd.SetSideTex(bd.SideTex);
                     step++;
                 }
             } else if (step == 6) {
-                if (byte.TryParse(value, out bd.BottomTex))
+                if (CommandParser.GetByte(p, value, "Texture ID", ref bd.BottomTex))
                     step++;
             } else if (step == 7) {
                 if (ParseCoords(value, ref bd.MinX, ref bd.MinY, ref bd.MinZ))
@@ -238,10 +238,8 @@ namespace MCGalaxy.Commands.CPE {
                     step++;
                 bd.Shape = bd.MaxY;
             } else if (step == 9) {
-                if (value == "0" || value == "1" || value == "2") {
-                    bd.CollideType = byte.Parse(value);
+                if (CommandParser.GetByte(p, value, "Collide type", ref bd.CollideType, 0, 2))
                     step++;
-                }
             } else if (step == 10) {
                 if (Utils.TryParseDecimal(value, out bd.Speed) && bd.Speed >= 0.25f && bd.Speed <= 3.96f)
                     step++;
@@ -251,21 +249,18 @@ namespace MCGalaxy.Commands.CPE {
                     step++;
                 }
             } else if (step == 12) {
-                bool result = byte.TryParse(value, out bd.WalkSound);
-                if (result && bd.WalkSound <= 11)
+                if (CommandParser.GetByte(p, value, "Walk sound", ref bd.CollideType, 0, 11))
                     step++;
             } else if (step == 13) {
-                if (CommandParser.GetBool(p, value, ref temp)) {
-                    bd.FullBright = temp;
+                if (CommandParser.GetBool(p, value, ref bd.FullBright))
                     step++;
-                }
             } else if (step == 14) {
-                bool result = byte.TryParse(value, out bd.BlockDraw);
-                if (result && bd.BlockDraw >= 0 && bd.BlockDraw <= 4)
+                if (CommandParser.GetByte(p, value, "Block draw", ref bd.BlockDraw, 0, 4))
                     step++;
             } else if (step == 15) {
-                if (byte.TryParse(value, out bd.FogDensity))
+                if (CommandParser.GetByte(p, value, "Fog density", ref bd.FogDensity)) {
                     step += (bd.FogDensity == 0 ? 2 : 1);
+                }
             } else if (step == 16) {
                 if (Utils.CheckHex(p, ref value)) {
                     CustomColor rgb = Colors.ParseHex(value);
@@ -299,7 +294,7 @@ namespace MCGalaxy.Commands.CPE {
                 return;
             }
             int blockId;
-            if (!CheckBlockId(p, parts[1], global, out blockId)) return;
+            if (!CheckBlockId(p, parts[1], out blockId)) return;
             
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition def = defs[blockId];
@@ -540,13 +535,12 @@ namespace MCGalaxy.Commands.CPE {
         static bool EditByte(Player p, string value, string propName, ref byte target,
                              int step, int offset, byte min, byte max) {
             int temp = 0;
-            if (!int.TryParse(value, out temp) || temp < min || temp > max) {
-                Player.Message(p, propName + " must be an integer between {0} and {1}.", min, max);
+            if (!CommandParser.GetInt(p, value, propName, ref temp, min, max)) {
                 if (step != -1) SendEditHelp(p, step, offset);
                 return false;
             }
-            target = (byte)temp;
-            return true;
+            
+            target = (byte)temp; return true;
         }
         
         static bool ParseCoords(string parts, ref byte x, ref byte y, ref byte z) {
@@ -562,14 +556,9 @@ namespace MCGalaxy.Commands.CPE {
             return true;
         }
         
-        static bool CheckBlockId(Player p, string arg, bool global, out int blockId) {
-            if (!int.TryParse(arg, out blockId)) {
-                Player.Message(p, "&cProvided block id is not a number."); return false;
-            }
-            if (blockId <= 0 || blockId >= Block.Invalid) {
-                Player.Message(p, "&cBlock id must be between 1-254"); return false;
-            }
-            return true;
+        static bool CheckBlockId(Player p, string arg, out int blockId) {
+		    blockId = 0;
+            return CommandParser.GetInt(p, arg, "Block ID", ref blockId, 0, 254);
         }
         
         

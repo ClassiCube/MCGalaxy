@@ -43,10 +43,10 @@ namespace MCGalaxy.Commands.World {
             Level lvl = Matcher.FindLevels(p, args[0]);
             if (lvl == null) return true;
             
-            ushort x, y, z;
-            if (!UInt16.TryParse(args[1], out x) || !UInt16.TryParse(args[2], out y) || !UInt16.TryParse(args[3], out z)) {
-                Player.Message(p, "Invalid dimensions."); return true;
-            }
+            ushort x = 0, y = 0, z = 0;
+            if (!CommandParser.GetUShort(p, args[1], "Width",  ref x)) return true;
+            if (!CommandParser.GetUShort(p, args[2], "Height", ref y)) return true;
+            if (!CommandParser.GetUShort(p, args[3], "Length", ref z)) return true;
             
             if (!MapGen.OkayAxis(x)) { Player.Message(p, "width must be divisible by 16, and >= 16"); return true; }
             if (!MapGen.OkayAxis(y)) { Player.Message(p, "height must be divisible by 16, and >= 16"); return true; }

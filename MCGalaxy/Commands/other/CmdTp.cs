@@ -75,15 +75,9 @@ namespace MCGalaxy.Commands {
         static bool ParseCoord(Player p, string arg, int cur, string axis, out int value) {
             bool relative = arg[0] == '~';
             if (relative) arg = arg.Substring(1);
+            value = 0;
             
-            if (!int.TryParse(arg, out value)) {
-                Player.Message(p, axis + " coordinate must be an integer from -1024 to 1024."); return false;
-            }
-           
-            if (value < -1024 || value > 1024) {
-                Player.Message(p, axis + " coordinate must be between -1024 to 1024."); return false;
-            }
-            
+            if (!CommandParser.GetInt(p, arg, axis + " coordinate", ref value, -1024, 1024)) return false;            
             if (relative) value += (cur / 32);
             return true;
         }

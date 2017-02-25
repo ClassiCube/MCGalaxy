@@ -46,24 +46,34 @@ namespace MCGalaxy {
             }
             
             if (value < min || value > max) {
-                Player.Message(p, "{2} must be between {0} and {1}", min, max, type); return false;
+                // Try to provide more helpful range messages
+                if (max == int.MaxValue) {
+                    Player.Message(p, "{0} must be {1} or greater", type, min); 
+                } else if (min == int.MinValue) {
+                    Player.Message(p, "{0} must be {1} or less", type, max); 
+                } else {
+                    Player.Message(p, "{0} must be between {1} and {2}", type, min, max); 
+                }
+                return false;
             }
             
             result = value; return true;
         }
         
         /// <summary> Attempts to parse the given argument as an byte, returning whether that succeeded. </summary>
-        public static bool GetByte(Player p, string input, string type, ref byte result) {
+        public static bool GetByte(Player p, string input, string type, ref byte result,
+                                   byte min = byte.MinValue, byte max = byte.MaxValue) {
             int temp = 0;
-            if (!GetInt(p, input, type, ref temp, byte.MinValue, byte.MaxValue)) return false;
+            if (!GetInt(p, input, type, ref temp, min, max)) return false;
             
             result = (byte)temp; return true;
         }
         
         /// <summary> Attempts to parse the given argument as an byte, returning whether that succeeded. </summary>
-        public static bool GetUShort(Player p, string input, string type, ref ushort result) {
+        public static bool GetUShort(Player p, string input, string type, ref ushort result,
+                                     ushort min = ushort.MinValue, ushort max = ushort.MaxValue) {
             int temp = 0;
-            if (!GetInt(p, input, type, ref temp, ushort.MinValue, ushort.MaxValue)) return false;
+            if (!GetInt(p, input, type, ref temp, min, max)) return false;
             
             result = (ushort)temp; return true;
         }

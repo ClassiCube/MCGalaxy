@@ -101,7 +101,7 @@ namespace MCGalaxy.Commands.CPE {
             if (args != null && args.Length > 1) int.TryParse(args[1], out offset);
             CustomColor[] cols = Colors.ExtColors;
             
-            for( int i = 0; i < cols.Length; i++ ) {
+            for (int i = 0; i < cols.Length; i++) {
                 CustomColor col = cols[i];
                 if (col.Undefined) continue;
                 
