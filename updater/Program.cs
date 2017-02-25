@@ -5,173 +5,134 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Updater
-{
-    class Program
-    {
+namespace Updater {
+    
+    // !! NOTE !!! You must not use any MCGalaxy code here, as you cannot reference the dlls because updating replaces thems
+    class Program {
         static int tries = 0;
         static bool usingConsole = false;
-        static string parent = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
-        static string parentfullpathdir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        static void Main(string[] args)
-        {
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(globalException);
-            try
-            {
-                string[] foundView = File.ReadAllLines("Viewmode.cfg");
-                if (foundView[4].Split(' ')[2].ToLower() == "true")
-                {
-                    usingConsole = true;
+        const string check = "securitycheck10934579068013978427893755755270374";
+        
+        static void Main(string[] args) {
+            AppDomain.CurrentDomain.UnhandledException += UnhandledError;
+            if (args.Length < 1 || !args[0].Contains(check)) {
+                ShowMessage("Updater was started incorrectly.", true); return;
+            }
+            usingConsole = IsConsole();
+            
+            try {
+                args[0] = args[0].Replace(check, "");
+                if (args[0] == ".exe") args[0] = "MCGalaxy.exe";
+                
+                // Wait for other processes to finish
+                Console.WriteLine("Waiting for " + args[0] + " to exit...");
+                while (Process.GetProcessesByName(args[0]).Length > 0) {
+                    Thread.Sleep(1);
                 }
+            } catch (Exception e) { 
+                UpdateFailed(e); 
             }
-            catch { }
-            if (args.Length < 1)
-            {
-                Console.WriteLine("Updater was started incorrectly.");
-                MessageBox.Show("Updater was started incorrectly.", "Updater Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Environment.Exit(0);
-            }
-            else
-            {
-                try
-                {
-                    if (args[0].Contains("securitycheck10934579068013978427893755755270374"))
-                    {
-                        args[0] = args[0].Replace("securitycheck10934579068013978427893755755270374", "");
-                        if (args[0] == ".exe")
-                            args[0] = "securitycheck10934579068013978427893755755270374.exe";
-                        Console.WriteLine("Waiting for " + args[0] + " to exit...");
-                        while (Process.GetProcessesByName(args[0]).Length > 0)
-                        {
-                            //Sit here and do nothing
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Updater was started incorrectly.");
-                        MessageBox.Show("Updater was started incorrectly.", "Updater Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Environment.Exit(0);
-                    }
-                }
-                catch (Exception e) { UpdateFailure(e); }
-                Update(args);
-            }
+            Update(args);
         }
-        static void Update(string[] args)
-        {
+        
+        static bool IsConsole() {
+            try {
+                string[] lines = File.ReadAllLines("Viewmode.cfg");
+                foreach (string line in lines) {
+                    // Find the cli = true/false line
+                    if (!line.StartsWith("cli")) continue;
+                    int sep = line.IndexOf('=');
+                    if (sep == -1) continue;
+                    
+                    string value = line.Substring(sep + 1).Trim();
+                    return value.Equals("true", StringComparison.OrdinalIgnoreCase);
+                }
+            } catch {
+            }
+            return false;
+        }
+        
+        static void Update(string[] args) {
             Console.WriteLine("Updating MCGalaxy...");
-            try
-            {
-                tries++;
-                if (File.Exists("MCGalaxy.update") || File.Exists("MCGalaxy_.update"))
-                {
-                    try
-                    {
-                        if (File.Exists("MCGalaxy.update"))
-                        {
-                            if (File.Exists(args[0]))
-                            {
-                                if (File.Exists("MCGalaxy.backup"))
-                                    File.Delete("MCGalaxy.backup");
-                                File.Move(args[0], "MCGalaxy.backup");
-                            }
-                            File.Move("MCGalaxy.update", args[0]);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        if (tries > 4)
-                        {
-                            UpdateFailure(e);
-                        }
-                        else
-                        {
-                            Console.WriteLine("\n\nAn error occured while updating.  Retrying...\n\n");
-                            Thread.Sleep(100);
-                            Update(args);
-                        }
-                    }
-                    try
-                    {
-                        if (File.Exists("MCGalaxy_.update"))
-                        {
-                            if (File.Exists("MCGalaxy_.dll"))
-                            {
-                                if (File.Exists("MCGalaxy_.backup"))
-                                    File.Delete("MCGalaxy_.backup");
-                                File.Move("MCGalaxy_.dll", "MCGalaxy_.backup");
-                            }
-                            File.Move("MCGalaxy_.update", "MCGalaxy_.dll");
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        if (tries > 4)
-                        {
-                            UpdateFailure(e);
-                        }
-                        else
-                        {
-                            Console.WriteLine("\n\nAn error occured while updating.  Retrying...\n\n");
-                            Thread.Sleep(100);
-                            Update(args);
-                        }
-                    }
-                }
-                else
-                {
-                    NoUpdateFiles();
-                }
-                Console.WriteLine("MCGalaxy successfully updated.  Starting MCGalaxy...");
-                try
-                {
-                    if (!usingConsole)
-                    {
-                        Process.Start(args[0]);
-                    }
-                    else
-                    {
-                        Process.Start("mono", parentfullpathdir + "/" + args[0]);
-                    }
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("Unable to start MCGalaxy.  You will need to start it manually.");
-                    MessageBox.Show("Updater has updated MCGalaxy, but was unable to start it.  You will need to start it manually.", "Updater", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+            // No files to update
+            if (!File.Exists("MCGalaxy.update") && !File.Exists("MCGalaxy_.update")) {
+                ShowMessage("Updater has no files to update", true); return;
             }
-            catch (Exception e)
-            {
-                if (tries > 4)
-                {
-                    UpdateFailure(e);
-                }
-                else
-                {
-                    Console.WriteLine("\n\nAn error occured while updating.  Retrying...\n\n");
-                    Thread.Sleep(100);
-                    Update(args);
-                }
+            
+            for (tries = 1; tries <= 3; tries++) {
+                if (!UpdateFile("MCGalaxy", ".exe")) continue;
+                if (!UpdateFile("MCGalaxy_", ".dll")) continue;
+
+                Console.WriteLine("Successfully updated MCGalaxy. Starting...");
+                StartMCGalaxy(args[0]);
+                return;
             }
         }
-        static void UpdateFailure(Exception e)
-        {
-            Console.WriteLine("Updater is unable to update MCGalaxy.\n\n" + e.ToString() + "\n\nPress any key to exit.");
-            MessageBox.Show("Updater is unable to update MCGalaxy.\n\n" + e.ToString(), "Updater Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            Environment.Exit(0);
+        
+        static bool UpdateFile(string name, string ext) {
+            if (!File.Exists(name + ".update")) return true;
+            
+            try {
+                if (File.Exists(name + ext)) {
+                    if (File.Exists(name + ".backup"))
+                        File.Delete(name + ".backup");
+                    File.Move(name + ext, name + ".backup");
+                }
+                
+                File.Move(name + ".update", name + ext);
+                return true;
+            } catch (Exception ex) {
+                Retry(ex);
+                return false;
+            }
         }
-        static void NoUpdateFiles()
-        {
-            Console.WriteLine("Updater has no files to update.  Press any key to exit.");
-            MessageBox.Show("Updater has no files to update.", "Updater Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            Environment.Exit(0);
+        
+        static void Retry(Exception ex) {
+            if (tries == 3) {
+                UpdateFailed(ex);
+            } else {
+                Console.WriteLine("\n\nAn error occured while updating.  Retrying...\n\n");
+                Thread.Sleep(100);
+            }
         }
-        static void globalException(object sender, UnhandledExceptionEventArgs args)
-        {
+        
+        
+        static void StartMCGalaxy(string file) {
+            Console.WriteLine("Successfully updated MCGalaxy. Starting...");
+            try {
+                bool mono = Type.GetType("Mono.Runtime") != null;
+                if (!mono) {
+                    Process.Start(file);
+                } else {
+                    string absolutePath = AppDomain.CurrentDomain.BaseDirectory;
+                    Process.Start("mono", Path.Combine(absolutePath, file));
+                }
+            } catch (Exception) {
+                ShowMessage("Updater has updated MCGalaxy, but was unable to start it. You will need to start it manually.", false);
+            }
+        }
+        
+        
+        static void UpdateFailed(Exception e) {
+            ShowMessage("Updater failed to update MCGalaxy:\n\n" + e, true);
+        }
+        
+        static void UnhandledError(object sender, UnhandledExceptionEventArgs args) {
             Exception e = (Exception)args.ExceptionObject;
-            Console.WriteLine("UnhandledException:\n\n" + e);
-            MessageBox.Show("UnhandledException:\n\n" + e, "Updater Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            Environment.Exit(0);
+            ShowMessage("UnhandledException:\n\n" + e, true);
+        }
+        
+        static void ShowMessage(string message, bool error) {
+            if (usingConsole) {
+                message = error ? message + " \n\nPress any key to exit." : message;
+                Console.WriteLine(message);
+            } else {
+                string title = error ? "Updater Error" : "Updater";
+                MessageBoxIcon icon = error ? MessageBoxIcon.Error : MessageBoxIcon.Information;
+                MessageBox.Show(message, title, MessageBoxButtons.OK, icon);
+            }
+            
+            if (error) Environment.Exit(0);
         }
     }
 }
