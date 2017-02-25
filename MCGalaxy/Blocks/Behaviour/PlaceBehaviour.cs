@@ -35,6 +35,9 @@ namespace MCGalaxy.Blocks {
             if (!lvl.GrassGrow || !(lvl.physics == 0 || lvl.physics == 5)) {
                 p.ChangeBlock(x, y, z, block, 0); return;
             }
+            if (p.modeType == Block.dirt || p.modeType == Block.grass) {
+                p.ChangeBlock(x, y, z, block, 0); return;
+            }
             
             byte above = lvl.GetTile(x, (ushort)(y + 1), z), extAbove = 0;
             if (above == Block.custom_block)
