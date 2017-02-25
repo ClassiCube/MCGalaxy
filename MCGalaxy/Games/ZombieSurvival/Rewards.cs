@@ -134,7 +134,7 @@ namespace MCGalaxy.Games.ZS {
                                         + amount + " " + Server.moneys);
             }
             game.Lottery.Clear();
-            winner.SetMoney(winner.money + 10);
+            winner.SetMoney(winner.money + amount);
         }
 
         static int GetMoneyReward(Player pl, Player[] alive, Random rand) {
