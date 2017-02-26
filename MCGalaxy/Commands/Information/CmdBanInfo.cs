@@ -53,7 +53,8 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (data != null) {
                 TimeSpan delta = GetDelta(data[2]);
-                Player.Message(p, "{0} {1} ago by {2}", banned ? "Banned" : "Last banned", delta.Shorten(), data[0]);
+                Player.Message(p, "{0} {1} ago by {2}", banned ? "Banned" : "Last banned", 
+                               delta.Shorten(), GetName(p, data[0]));
                 Player.Message(p, "Reason: {0}", data[1]);
             } else {
                 Player.Message(p, "No ban data found for {0}%S.", colName);
@@ -62,9 +63,16 @@ namespace MCGalaxy.Commands.Moderation {
             data = Ban.GetUnbanData(plName);
             if (data != null) {
                 TimeSpan delta = GetDelta(data[2]);
-                Player.Message(p, "{0} {1} ago by {2}", banned ? "Last unbanned" : "Unbanned", delta.Shorten(), data[0]);
+                Player.Message(p, "{0} {1} ago by {2}", banned ? "Last unbanned" : "Unbanned", 
+                               delta.Shorten(), GetName(p, data[0]));
                 Player.Message(p, "Reason: {0}", data[1]);
             }
+        }
+        
+        static string GetName(Player p, string user) {
+            // ban/unban uses truename
+            if (Server.ClassicubeAccountPlus && !user.EndsWith("+")) user += "+";
+            return PlayerInfo.GetColoredName(p, user);
         }
         
         static TimeSpan GetDelta(string data) {
