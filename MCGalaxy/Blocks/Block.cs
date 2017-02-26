@@ -22,7 +22,13 @@ namespace MCGalaxy {
     public sealed partial class Block {
 
         public static bool IsPhysicsId(byte block) { return block >= CpeCount && block != custom_block; }
-		
+        
+        public static void Unpack(byte raw, out byte block, out byte extBlock) {
+            block = raw; extBlock = 0;
+            if (raw < Block.CpeCount) return;           
+            extBlock = raw; block = custom_block;
+        }
+        
         public static bool Walkthrough(byte block) {
             return block == air || block == shrub || block == Block.snow
                 || block == fire || block == rope

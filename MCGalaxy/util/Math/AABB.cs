@@ -111,11 +111,10 @@ namespace MCGalaxy {
             model = sep == -1 ? model : model.Substring(0, sep);
             
             AABB baseBB;
-            byte block;
-            if (byte.TryParse(model, out block)) {
-                byte extBlock = 0;
-                // For model, not a physics blocks means custom block
-                if (block >= Block.CpeCount) { extBlock = block; block = Block.custom_block; }
+            byte raw;
+            if (byte.TryParse(model, out raw)) {
+                byte block, extBlock;
+                Block.Unpack(raw, out block, out extBlock);
                 
                 baseBB = Block.BlockAABB(block, extBlock, lvl);
                 baseBB = baseBB.Offset(-16, 0, -16); // centre around [-16, 16] instead of [0, 32]

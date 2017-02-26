@@ -159,8 +159,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static string FormatEntry(PaletteEntry e, Level lvl) {
-            byte block = e.Block, extBlock = 0;
-            if (block >= Block.CpeCount) { extBlock = block; block = Block.CpeCount; }
+            byte block, extBlock;
+            Block.Unpack(e.Block, out block, out extBlock);
             return lvl.BlockName(block, extBlock) + " - " + Utils.Hex(e.R, e.G, e.B);
         }
 

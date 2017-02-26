@@ -40,7 +40,7 @@ namespace MCGalaxy.Drawing.Ops {
         IPaletteMatcher selector;
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
-            CalcState(Direction);           
+            CalcState(Direction);
             selector = new RgbPaletteMatcher();
             CalcLayerColors();
 
@@ -54,13 +54,13 @@ namespace MCGalaxy.Drawing.Ops {
             if (DualLayer) {
                 ushort y = (ushort)(Origin.Y + Source.Height);
                 for (int i = 0; i < Source.Width; i++) {
-                    ushort x = (ushort)(Origin.X + dx.X * i);                   
+                    ushort x = (ushort)(Origin.X + dx.X * i);
                     ushort z = (ushort)(Origin.Z + dx.Z * i);
                     output(Place(x, y, z, Block.rock, 0));
                     
                     x = (ushort)(x + adj.X); z = (ushort)(z + adj.Z);
                     output(Place(x, y, z, Block.rock, 0));
-                }                
+                }
             }
             
             Source.Dispose();
@@ -85,8 +85,17 @@ namespace MCGalaxy.Drawing.Ops {
             
             for (int i = 0; i < Palette.Entries.Length; i++) {
                 PaletteEntry entry = Palette.Entries[i];
-                front[i] = Multiply(entry,  sun);
-                back[i]  = Multiply(entry, dark);
+                byte block, extBlock;
+                Block.Unpack(entry.Block, out block, out extBlock);
+                BlockDefinition def = Level.GetBlockDef(block, extBlock);
+                
+                if (def != null && def.FullBright) {
+                    front[i] = Multiply(entry, Colors.ParseHex("FFFFFF"));
+                    back[i]  = Multiply(entry, Colors.ParseHex("FFFFFF"));
+                } else {
+                    front[i] = Multiply(entry,  sun);
+                    back[i]  = Multiply(entry, dark);
+                }
             }
             selector.SetPalette(front, back);
         }
