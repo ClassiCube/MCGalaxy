@@ -765,7 +765,7 @@ namespace MCGalaxy {
             Command.Search(ref cmd, ref cmdArgs);
             
             byte bindIndex;
-            if (byte.TryParse(cmd, out bindIndex) && bindIndex < 10) {
+            if (byte.TryParse(cmd, out bindIndex) && bindIndex < cmdBind.Length) {
                 if (messageBind[bindIndex] == null) { SendMessage("No command is bound to: /" + cmd); return null; }
                 cmd = cmdBind[bindIndex];
                 cmdArgs = messageBind[bindIndex] + " " + cmdArgs;

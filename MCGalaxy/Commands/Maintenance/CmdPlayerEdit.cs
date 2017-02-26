@@ -154,12 +154,7 @@ namespace MCGalaxy.Commands {
             }
             
             int value = 0;
-            if (!Int32.TryParse(args[2], out value)) {
-                Player.Message(p, "&c" + args[2] + " is either not a number, or is larger than " + int.MaxValue); return;
-            }
-            if (value < 0 || value >= max) {
-                Player.Message(p, "&cNumber must be less than " + max + " and cannot be negative."); return;
-            }
+            if (!CommandParser.GetInt(p, args[2], "Amount", ref value, 0, max)) return;
             
             if (who != null)
                 setter(value);

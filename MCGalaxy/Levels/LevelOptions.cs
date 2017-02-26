@@ -154,8 +154,8 @@ namespace MCGalaxy {
         static void SetInt(Player p, Level lvl, ref int target, string value, string name,
                            Func<Player, int, bool> validator = null) {
             if (value == "") { Player.Message(p, "You must provide an integer."); return; }
-            int raw;
-            if (!int.TryParse(value, out raw)) { Player.Message(p, "\"{0}\" is not a valid integer.", value); return; }
+            int raw = 0;
+            if (!CommandParser.GetInt(p, value, name, ref raw)) return;
             
             if (validator != null && !validator(p, raw)) return;
             target = raw;

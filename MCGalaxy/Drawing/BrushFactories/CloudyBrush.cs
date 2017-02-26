@@ -63,16 +63,14 @@ namespace MCGalaxy.Drawing.Brushes {
             if (opt == 'p') return ParseDecimal(p, arg, ref args.Persistence, 0.75f);
             
             if (opt == 'o') {
-                if (byte.TryParse(arg, out args.Octaves)
-                    && args.Octaves > 0 && args.Octaves <= 16) return true;
-                Player.Message(p, "\"{0}\" was not an integer between 1 and 16.", arg);
+                if (!CommandParser.GetByte(p, arg, "Octaves", ref args.Octaves, 1, 16)) return false;
             } else if (opt == 's') {
-                if (int.TryParse(arg, out args.Seed)) return true;
-                Player.Message(p, "\"{0}\" was not a valid integer.", arg);
+                if (!CommandParser.GetInt(p, arg, "Seed", ref args.Seed)) return false;
             } else {
                 Player.Message(p, "\"{0}\" was not a valid argument name.", opt);
+                return false;
             }
-            return false;
+            return true;
         }
         
         static bool ParseDecimal(Player p, string arg, ref float target, float baseValue) {

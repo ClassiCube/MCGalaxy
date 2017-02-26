@@ -103,10 +103,9 @@ namespace MCGalaxy.Commands {
         }
         
         static byte GetRoundTime(Player p, string arg) {
-            byte time;
-            if (!byte.TryParse(arg, out time) || time == 0 || time > 10) {
-                Player.Message(p, "Minutes must be an integer between 1 and 10."); return 0;
-            }
+            byte time = 0;
+            if (!CommandParser.GetByte(p, arg, "Minutes", ref time, 1, 10)) return 0;
+            
             return time;
         }
         

@@ -96,10 +96,9 @@ namespace MCGalaxy.Eco {
                         return;
                     }
                     
-                    int cost;
-                    if (!int.TryParse(args[3], out cost)) {
-                        Player.Message(p, "\"" + args[3] + "\" is not a valid integer."); return;
-                    }
+                    int cost = 0;
+                    if (!CommandParser.GetInt(p, args[3], "Price", ref cost, 0)) return;
+                    
                     Player.Message(p, "%aSuccesfully changed the rank price for {0} to: &f{1} &3{2}", rnk.group.ColoredName, cost, Server.moneys);
                     rnk.price = cost; break;
 

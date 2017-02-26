@@ -495,23 +495,11 @@ namespace MCGalaxy.Commands {
                 case "tnt":
                 case "t":
                     int number = 1;
-                    if (!int.TryParse(text[2], out number)) {
-                        Player.Message(p, "TNT Wars Error: '" + text[2] + "' is not a number!"); return;
-                    }
+                    if (!CommandParser.GetInt(p, text[2], "TNT at a time", ref number, 0)) return;
                     
-                    if (number >= 0)
-                    {
-                        it.TntPerPlayerAtATime = number;
-                        if (number == 0)
-                        {
-                            Player.Message(p, "TNT Wars: Number of TNTs placeable by a player at a time is now unlimited");
-                        }
-                        else
-                        {
-                            Player.Message(p, "TNT Wars: Number of TNTs placeable by a player at a time is now " + number.ToString());
-                        }
-                        it.CheckAllSetUp(p);
-                    }
+                    Player.Message(p, "TNT Wars: Number of TNTs placeable by a player at a time is now {0}", 
+                                   number == 0 ? "unlimited" : number.ToString());
+                    it.CheckAllSetUp(p);
                     break;
 
                 case "grace":
@@ -1121,12 +1109,7 @@ namespace MCGalaxy.Commands {
                     if (text[3] == "set" || text[3] == "s" || text[3] == "change")
                         text[3] = text[4];
                     int numb = -1;
-                    if (!int.TryParse(text[3], out numb)) {
-                        Player.Message(p, "TNT Wars Error: Invalid number '{0}'", text[3]); return;
-                    }
-                    if (numb < 0) {
-                        Player.Message(p, "TNT Wars Error: Invalid number '{0}'", text[3]); return;
-                    }
+                    if (!CommandParser.GetInt(p, text[3], "Points", ref numb, 0)) return;
                     
                     target = numb;
                     Player.Message(p, "TNT Wars: {0} is now {1} points!", score, numb);

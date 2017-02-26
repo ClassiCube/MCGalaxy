@@ -24,13 +24,14 @@ namespace Updater {
                 args[0] = args[0].Replace(check, "");
                 if (args[0] == ".exe") args[0] = "MCGalaxy.exe";
                 
+                Console.WriteLine("AYEEE " + args[0]);
                 // Wait for other processes to finish
                 Console.WriteLine("Waiting for " + args[0] + " to exit...");
                 while (Process.GetProcessesByName(args[0]).Length > 0) {
                     Thread.Sleep(1);
                 }
             } catch (Exception e) { 
-                UpdateFailed(e); 
+            	UpdateFailed(e);
             }
             Update(args);
         }

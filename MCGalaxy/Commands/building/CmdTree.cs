@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Building {
             dArgs.tree = tree;
             
             int size;
-            if (parts.Length > 1 && int.TryParse(parts[1], out size)) {               
+            if (parts.Length > 1 && int.TryParse(parts[1], out size)) {
                 if (size < tree.MinSize) {
                     Player.Message(p, "Value must be {0} or above for {1} trees.", tree.MinSize, parts[0]); return;
                 }

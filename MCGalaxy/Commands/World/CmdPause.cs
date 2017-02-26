@@ -37,9 +37,8 @@ namespace MCGalaxy.Commands {
                         if (lvl == null) return;
                     }
                 } else {
-                    if (!int.TryParse(parts[0], out seconds)) {
-                        Player.Message(p, "You must specify pause time in seconds"); return;
-                    }
+                	if (!CommandParser.GetInt(p, parts[0], "Pause time", ref seconds, 0)) return;
+                	
                     lvl = Matcher.FindLevels(p, parts[1]);
                     if (lvl == null) return;
                 }

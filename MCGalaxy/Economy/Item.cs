@@ -125,10 +125,8 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnSetupCommand(Player p, string[] args) {
             if (args[1].CaselessEq("price")) {
-                int cost;
-                if (!int.TryParse(args[2], out cost)) {
-                    Player.Message(p, "\"{0}\" is not a valid integer.", args[2]); return;
-                }
+                int cost = 0;
+                if (!CommandParser.GetInt(p, args[2], "Price", ref cost)) return;
                 
                 Player.Message(p, "Changed price of {0} item to &f{1} &3{2}", Name, cost, Server.moneys);
                 Price = cost;

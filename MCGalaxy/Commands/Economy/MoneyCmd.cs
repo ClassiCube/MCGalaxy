@@ -41,12 +41,8 @@ namespace MCGalaxy.Commands {
 
             int amount = 0;
             data.All = canAll && args[1].CaselessEq("all");
-            if (!data.All && !int.TryParse(args[1], out amount)) {
-                Player.Message(p, "Amount to {0} must be an integer.", action); return false;
-            }
-            if (amount < 0) {
-                Player.Message(p, "You cannot {0} negative &3{1}", action, Server.moneys); return false;
-            }
+            if (!data.All && !CommandParser.GetInt(p, args[1], "Amount", ref amount, 0))  return false;
+            
             data.Amount = amount;
             return true;
         }

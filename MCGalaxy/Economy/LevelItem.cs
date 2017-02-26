@@ -143,9 +143,7 @@ namespace MCGalaxy.Eco {
                 MapGen.PrintThemes(p); return;
             }
             preset.type = args[6].ToLower();
-            if (!int.TryParse(args[7], out preset.price)) {
-                Player.Message(p, "\"" + args[9] + "\" is not a valid integer."); return;
-            }
+            if (!CommandParser.GetInt(p, args[7], "Price", ref preset.price, 0)) return;
 
             Presets.Add(preset);
             Player.Message(p, "%aSuccessfully added the following map preset:");
@@ -181,12 +179,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%aSuccessfully changed preset type to %f" + preset.type);
             } else if (args[3] == "price") {
                 int newPrice = 0;
-                if (!int.TryParse(args[4], out newPrice)) {
-                    Player.Message(p, "\"" + args[4] + "\" is not a valid integer."); return;
-                }
-                if (newPrice < 0) {
-                    Player.Message(p, "%cAmount of %3" + Server.moneys + "%c cannot be negative"); return;
-                }
+                if (!CommandParser.GetInt(p, args[4], "Price", ref newPrice, 0)) return;
                 
                 preset.price = newPrice;
                 Player.Message(p, "%aSuccessfully changed preset price to %f" + preset.price + " %3" + Server.moneys);
