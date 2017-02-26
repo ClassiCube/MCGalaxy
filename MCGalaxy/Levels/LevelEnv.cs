@@ -111,9 +111,9 @@ namespace MCGalaxy {
         
         
         static bool CheckBlock(Player p, string value, string variable, ref int modify) {
-            byte extBlock = 0;
-            byte block = (byte)DrawCmd.GetBlock(p, value, out extBlock);
-            if (block == Block.Invalid) return false;
+            byte block, extBlock;
+            if (!CommandParser.GetBlock(p, value, out block, out extBlock)) return false;
+            
             if (block >= Block.CpeCount && block != Block.custom_block) {
                 Player.Message(p, "Cannot use physics block ids for /env."); return false;
             }

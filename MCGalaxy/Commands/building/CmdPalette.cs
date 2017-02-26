@@ -135,13 +135,9 @@ namespace MCGalaxy.Commands.Building {
         }
 
         static byte GetBlock(Player p, string name) {
-            byte extBlock;
-            int block = DrawCmd.GetBlock(p, name, out extBlock);
+            byte block, extBlock;
+            if (!CommandParser.GetBlock(p, name, out block, out extBlock)) return Block.Invalid;
             
-            if (block == -1) return Block.Invalid;
-            if (block == Block.Invalid) {
-                Player.Message(p, "Skip block may not be used for palettes."); return Block.Invalid;
-            }
             if (block >= Block.CpeCount && block != Block.custom_block) {
                 Player.Message(p, "Physics blocks may not be used for palettes."); return Block.Invalid;
             }

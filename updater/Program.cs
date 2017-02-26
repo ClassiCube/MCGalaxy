@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -24,7 +23,6 @@ namespace Updater {
                 args[0] = args[0].Replace(check, "");
                 if (args[0] == ".exe") args[0] = "MCGalaxy.exe";
                 
-                Console.WriteLine("AYEEE " + args[0]);
                 // Wait for other processes to finish
                 Console.WriteLine("Waiting for " + args[0] + " to exit...");
                 while (Process.GetProcessesByName(args[0]).Length > 0) {
@@ -64,7 +62,7 @@ namespace Updater {
                 if (!UpdateFile("MCGalaxy", ".exe")) continue;
                 if (!UpdateFile("MCGalaxy_", ".dll")) continue;
 
-                StartMCGalaxy(args[0]);
+                StartProcess(args[0]);
                 return;
             }
         }
@@ -97,7 +95,7 @@ namespace Updater {
         }
         
         
-        static void StartMCGalaxy(string file) {
+        static void StartProcess(string file) {
             Console.WriteLine("Successfully updated MCGalaxy. Starting...");
             try {
                 bool mono = Type.GetType("Mono.Runtime") != null;

@@ -77,41 +77,6 @@ namespace MCGalaxy.Commands.Building {
             offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
             return p.BrushName;
         }
-
-        public static int GetBlock(Player p, string msg, out byte extBlock) {
-            byte block = Block.Byte(msg);
-            extBlock = 0;
-            if (msg.CaselessEq("skip") || msg.CaselessEq("none")) return Block.Invalid;
-            if (block != Block.Invalid) return block;
-            
-            // try treat as a block definition id.
-            block = BlockDefinition.GetBlock(msg, p);
-            if (block == Block.Invalid) {
-                Player.Message(p, "&cThere is no block \"{0}\".", msg);
-                return -1;
-            }
-            
-            // custom block overriding a core block
-            if (block < Block.CpeCount) return block;
-            
-            extBlock = block;
-            return Block.custom_block;
-        }
-        
-        public static int GetBlockIfAllowed(Player p, string msg, out byte extBlock) {
-            int block = GetBlock(p, msg, out extBlock);
-            if (block == -1 || block == Block.Invalid) return block;
-            if (!CheckBlock(p, (byte)block)) return -1;
-            return block;
-        }
-        
-        public static bool CheckBlock(Player p, byte block) {
-            if (!Block.canPlace(p, block)) {
-                Formatter.MessageBlock(p, "draw with ", (byte)block); return false;
-            }
-            return true;
-        }
-        
         
         protected static BrushArgs GetBrushArgs(DrawArgs dArgs, int usedFromEnd) {
             int end = dArgs.Message.Length;
@@ -124,6 +89,12 @@ namespace MCGalaxy.Commands.Building {
             if (end >= 0) brushMsg = dArgs.Message.Substring(0, end);
             if (brushMsg == "") brushMsg = dArgs.Player.DefaultBrushArgs;
             return new BrushArgs(dArgs.Player, brushMsg, dArgs.Block, dArgs.ExtBlock);
+        }
+        
+        public static bool CheckBlock(Player p, byte block) {
+            if (Block.canPlace(p, block)) return true;
+            Formatter.MessageBlock(p, "draw with ", block);
+            return false;
         }
         
         protected struct DrawArgs {

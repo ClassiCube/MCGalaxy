@@ -48,9 +48,8 @@ namespace MCGalaxy.Commands.Building {
         bool ValidateArgs(Player p, string[] args) {
             if (args.Length < 2) { Help(p); return false; }
             
-            byte extBlock = 0;
-            int block = DrawCmd.GetBlockIfAllowed(p, args[0], out extBlock);
-            if (block == -1) return false;
+            byte block, extBlock;
+            if (!CommandParser.GetBlockIfAllowed(p, args[0], out block, out extBlock)) return false;
             
             BrushFactory factory = BrushFactory.Find(args[1]);
             if (factory == null) {
@@ -68,9 +67,8 @@ namespace MCGalaxy.Commands.Building {
         
         bool DoReplace(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
             string[] args = ((string)state).SplitSpaces(3);
-            byte extBlock = 0;
-            int block = DrawCmd.GetBlockIfAllowed(p, args[0], out extBlock);
-            if (block == -1) return false;
+            byte block, extBlock;
+            if (!CommandParser.GetBlockIfAllowed(p, args[0], out block, out extBlock)) return false;
             
             BrushFactory factory = BrushFactory.Find(args[1]);
             string brushMessage = args.Length > 2 ? args[2] : "";
@@ -79,8 +77,8 @@ namespace MCGalaxy.Commands.Building {
             if (brush == null) return false;
             
             DrawOp op = null;
-            if (ReplaceNot) op = new ReplaceNotDrawOp((byte)block, extBlock);
-            else op = new ReplaceDrawOp((byte)block, extBlock);
+            if (ReplaceNot) op = new ReplaceNotDrawOp(block, extBlock);
+            else op = new ReplaceDrawOp(block, extBlock);
             return DrawOpPerformer.Do(op, brush, p, marks);
         }
         

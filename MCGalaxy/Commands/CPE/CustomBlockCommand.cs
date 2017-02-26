@@ -470,8 +470,8 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static byte GetFallback(Player p, string value) {
-            byte extBlock;
-            int block = DrawCmd.GetBlock(p, value, out extBlock);
+            byte block, extBlock;
+            if (!CommandParser.GetBlock(p, value, out block, out extBlock)) return Block.Invalid;
             
             if (block == Block.custom_block) {
                 Player.Message(p, "&cCustom blocks cannot be used as fallback blocks.");
@@ -481,11 +481,7 @@ namespace MCGalaxy.Commands.CPE {
                 Player.Message(p, "&cPhysics block cannot be used as fallback blocks.");
                 return Block.Invalid;
             }
-            if (block == Block.Invalid) {
-                Player.Message(p, "&cCannot use 'skip block' as fallback block.");
-                return Block.Invalid;
-            }
-            return (byte)block;
+            return block;
         }
         
         static void ReloadMap(Player p, bool global) {

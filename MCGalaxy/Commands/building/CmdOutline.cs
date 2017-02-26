@@ -30,15 +30,10 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
             if (args.Length != 2) { Help(p); return; }
-            DrawArgs dArgs = default(DrawArgs);           
+            DrawArgs dArgs = default(DrawArgs);
             
-            int block = DrawCmd.GetBlockIfAllowed(p, args[0], out dArgs.extBlock);
-            if (block == -1) return;
-            dArgs.block = (byte)block;
-            
-            int newBlock = DrawCmd.GetBlockIfAllowed(p, args[1], out dArgs.newExtBlock);
-            if (newBlock == -1) return;
-            dArgs.newBlock = (byte)newBlock;
+            if (!CommandParser.GetBlockIfAllowed(p, args[0], out dArgs.block,    out dArgs.extBlock))    return;
+            if (!CommandParser.GetBlockIfAllowed(p, args[1], out dArgs.newBlock, out dArgs.newExtBlock)) return;
 
             Player.Message(p, "Place two blocks to determine the edges.");
             p.MakeSelection(2, dArgs, DoOutline);

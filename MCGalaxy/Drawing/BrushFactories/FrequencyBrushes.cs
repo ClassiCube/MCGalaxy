@@ -44,13 +44,12 @@ namespace MCGalaxy.Drawing.Brushes {
                     continue;
                 }
                 
-                byte extBlock = 0;
+                byte block, extBlock;
                 int sepIndex = parts[i].IndexOf('/');
-                string blockName = sepIndex >= 0 ? parts[i].Substring(0, sepIndex) : parts[i];
-                int block = DrawCmd.GetBlockIfAllowed(p, blockName, out extBlock);
-                if (block == -1) return null;
+                string name = sepIndex >= 0 ? parts[i].Substring(0, sepIndex) : parts[i];
+                if (!CommandParser.GetBlockIfAllowed(p, name, out block, out extBlock, true)) return null;
                 
-                blocks[j].Block = (byte)block; blocks[j].Ext = extBlock;
+                blocks[j].Block = block; blocks[j].Ext = extBlock;
                 if (sepIndex < 0) { j++; continue; }
                 
                 int chance = 0;
