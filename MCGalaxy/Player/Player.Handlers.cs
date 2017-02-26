@@ -439,6 +439,7 @@ namespace MCGalaxy {
                 if (block == Block.custom_block && !level.CustomBlockProps[extBlock].KillerBlock) continue;
                 
                 if (block == Block.tntexplosion && PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
+                if (block == Block.train && trainInvincible) continue;
                 HandleDeath(block, extBlock);
             }
             
