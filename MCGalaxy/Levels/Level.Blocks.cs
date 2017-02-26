@@ -437,15 +437,16 @@ namespace MCGalaxy {
         }
         
         public string BlockName(byte block, byte extBlock) {
-            if (block == Block.custom_block) {
-                BlockDefinition def = CustomBlockDefs[extBlock];
-                return def == null ? extBlock.ToString() : def.Name.Replace(" ", "");
-            } else if (block >= Block.CpeCount || block == Block.air) {
-                return Block.Name(block);
-            } else {
-                BlockDefinition def = CustomBlockDefs[block];
-                return def == null ? Block.Name(block) : def.Name.Replace(" ", "");
-            }
+            BlockDefinition def = GetBlockDef(block, extBlock);
+            if (def != null) return def.Name.Replace(" ", "");
+            
+            return block != Block.custom_block ? Block.Name(block) : extBlock.ToString();
+        }
+        
+        public BlockDefinition GetBlockDef(byte block, byte extBlock) {
+            if (block == Block.custom_block) return CustomBlockDefs[extBlock];
+            if (block >= Block.CpeCount || block == Block.air) return null;
+            return CustomBlockDefs[block];
         }
     }
 }

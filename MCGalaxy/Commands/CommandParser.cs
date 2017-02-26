@@ -35,8 +35,7 @@ namespace MCGalaxy {
             Player.Message(p, "\"{0}\" is not a valid boolean.", input);
             Player.Message(p, "Value must be either 1/yes/on or 0/no/off");
             return false;
-        }
-        
+        }        
         
         /// <summary> Attempts to parse the given argument as an integer, returning whether that succeeded. </summary>
         public static bool GetInt(Player p, string input, string type, ref int result,
@@ -60,6 +59,7 @@ namespace MCGalaxy {
             
             result = value; return true;
         }
+        
         
         /// <summary> Attempts to parse the given argument as an byte, returning whether that succeeded. </summary>
         public static bool GetByte(Player p, string input, string type, ref byte result,

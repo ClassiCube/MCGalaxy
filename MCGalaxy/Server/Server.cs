@@ -95,6 +95,7 @@ namespace MCGalaxy {
             zombie = new ZombieGame();
             Countdown = new CountdownGame();
             LoadAllSettings();
+            SrvProperties.GenerateSalt();
 
             InitDatabase();
             Economy.LoadDatabase();

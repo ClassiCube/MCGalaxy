@@ -24,7 +24,7 @@ namespace MCGalaxy {
     
     public static class SrvProperties {
         
-        static void GenerateSalt() {
+        public static void GenerateSalt() {
             RandomNumberGenerator rng = RandomNumberGenerator.Create();
             char[] chars = new char[16];
             byte[] one = new byte[1];
@@ -38,8 +38,7 @@ namespace MCGalaxy {
             Server.salt = new string(chars);
         }
         
-        public static void Load(string givenPath, bool skipSalt = false) {
-            if (!skipSalt) GenerateSalt();
+        public static void Load(string givenPath, bool ignored = false) {
             oldPerms = new OldPerms();
             if (PropertiesFile.Read(givenPath, ref oldPerms, LineProcessor))
                 Server.s.SettingsUpdate();

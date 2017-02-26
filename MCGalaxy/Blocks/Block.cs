@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using MCGalaxy.Blocks;
 
@@ -28,7 +28,7 @@ namespace MCGalaxy {
                 || (block >= yellowflower && block <= redmushroom);
         }
 
-        public static bool AllowBreak(byte block) {    
+        public static bool AllowBreak(byte block) {
             switch (block) {
                 case blue_portal:
                 case orange_portal:
@@ -91,7 +91,7 @@ namespace MCGalaxy {
 
         public static bool RightClick(byte block, bool countAir = false) {
             if (countAir && block == air) return true;
-            return block >= water && block <= lavastill;            
+            return block >= water && block <= lavastill;
         }
 
         [Obsolete]
@@ -101,7 +101,7 @@ namespace MCGalaxy {
         public static bool Death(byte block) { return Props[block].KillerBlock; }
 
         public static bool BuildIn(byte block) {
-            if (block == op_water || block == op_lava 
+            if (block == op_water || block == op_lava
                 || Props[block].IsPortal || Props[block].IsMessageBlock) return false;
             block = Convert(block);
             return block >= water && block <= lavastill;
@@ -112,10 +112,10 @@ namespace MCGalaxy {
         [Obsolete]
         public static bool FireKill(byte block) { return block != air && Props[block].LavaKills; }
 
-        [Obsolete]        
+        [Obsolete]
         public static bool LavaKill(byte block) { return Props[block].LavaKills; }
 
-        [Obsolete]        
+        [Obsolete]
         public static bool WaterKill(byte block) { return Props[block].WaterKills; }
 
         public static bool LightPass(byte block, byte extBlock, BlockDefinition[] defs) {
@@ -229,21 +229,16 @@ namespace MCGalaxy {
         public static byte odoor(byte block) { return Props[block].ODoorId; }
         
         public static AABB BlockAABB(byte block, byte extBlock, Level lvl) {
-            BlockDefinition def;
-            if (block == Block.custom_block) {
-                def = lvl.CustomBlockDefs[extBlock];
-                if (def == null) return new AABB(0, 0, 0, 32, 32, 32);
-                
-                return new AABB(def.MinX * 2, def.MinZ * 2, def.MinY * 2, 
+            BlockDefinition def = lvl.GetBlockDef(block, extBlock);
+            if (def != null) {
+                return new AABB(def.MinX * 2, def.MinZ * 2, def.MinY * 2,
                                 def.MaxX * 2, def.MaxZ * 2, def.MaxY * 2);
-            } else if (block < Block.CpeCount && (def = lvl.CustomBlockDefs[block]) != null) {
-                return new AABB(def.MinX * 2, def.MinZ * 2, def.MinY * 2, 
-                                def.MaxX * 2, def.MaxZ * 2, def.MaxY * 2);
-            } else {
-                block = Block.Convert(block);
-                return new AABB(0, 0, 0,
-                                32, DefaultSet.Height(block) * 2, 32);
             }
+            
+            if (block == Block.custom_block)
+                return new AABB(0, 0, 0, 32, 32, 32);            
+            block = Block.Convert(block);
+            return new AABB(0, 0, 0, 32, DefaultSet.Height(block) * 2, 32);
         }
     }
 }

@@ -433,7 +433,7 @@ namespace MCGalaxy.Gui {
             Server.MySQLUsername = txtSQLUsername.Text;
             Server.MySQLPassword = txtSQLPassword.Text;
             Server.MySQLDatabaseName = txtSQLDatabase.Text;
-            //Server.MySQLPooling = ; // No setting for this?        	
+            //Server.MySQLPooling = ; // No setting for this?            
         }
         
         void ApplyChatProps() {
@@ -542,7 +542,7 @@ namespace MCGalaxy.Gui {
             try { SaveLavaSettings(); }
             catch { Server.s.Log("Error saving Lava Survival settings!"); }
 
-            SrvProperties.Load("properties/server.properties", true); // loads when saving?
+            SrvProperties.Load("properties/server.properties"); // loads when saving?
             GrpCommands.fillRanks();
 
             // Trigger profanity filter reload
