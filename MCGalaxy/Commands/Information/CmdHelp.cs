@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "4 - &4Maroon %S| 5 - &5Purple %S| 6 - &6Gold %S| 7 - &7Silver");
                     Player.Message(p, "8 - &8Gray %S| 9 - &9Blue %S| a - &aLime %S| b - &bAqua");
                     Player.Message(p, "c - &cRed %S| d - &dPink %S| e - &eYellow %S| f - &fWhite");
-                    CmdCustomColors.ListHandler(p, null, true);
+                    CmdCustomColors.ListHandler(p, "help colors", "all");
                     break;
                 default:
                     if (CmdCommands.DoCommand(p, message)) break;

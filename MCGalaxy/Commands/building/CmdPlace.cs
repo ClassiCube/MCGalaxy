@@ -36,10 +36,10 @@ namespace MCGalaxy.Commands.Building {
                 string[] parts = message.Split(' ');
                 switch (parts.Length) {
                     case 1:
-                	    if (message == "") break;
-                	    
-                	    if (!CommandParser.GetBlock(p, parts[0], out block, out ext)) return;
-                	    break;
+                        if (message == "") break;
+                        
+                        if (!CommandParser.GetBlock(p, parts[0], out block, out ext)) return;
+                        break;
                     case 3:
                         x = (ushort)(ushort.Parse(parts[0]) * 32);
                         y = (ushort)(ushort.Parse(parts[1]) * 32);

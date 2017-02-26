@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace MCGalaxy.Commands.CPE {
@@ -40,7 +41,8 @@ namespace MCGalaxy.Commands.CPE {
                 case "delete":
                     RemoveHandler(p, args); break;
                 case "list":
-                    ListHandler(p, args, false); break;
+                    string modifer = args.Length > 1 ? args[1] : "";
+                    ListHandler(p, "ccols list", modifer); break;
                 case "edit":
                 case "modify":
                     EditHandler(p, args); break;
@@ -96,28 +98,19 @@ namespace MCGalaxy.Commands.CPE {
             Player.Message(p, "Successfully removed a custom color.");
         }
         
-        internal static void ListHandler(Player p, string[] args, bool all) {
-            int offset = 0, index = 0, count = 0;
-            if (args != null && args.Length > 1) int.TryParse(args[1], out offset);
-            CustomColor[] cols = Colors.ExtColors;
-            
-            for (int i = 0; i < cols.Length; i++) {
-                CustomColor col = cols[i];
+        internal static void ListHandler(Player p, string cmd, string modifier) {
+            List<CustomColor> validCols = new List<CustomColor>(Colors.ExtColors.Length);
+            foreach (CustomColor col in Colors.ExtColors) {
                 if (col.Undefined) continue;
-                
-                if (index >= offset) {
-                    count++;
-                    const string format = "{4}{0} &{1}({2}){4} - %{1}, falls back to &{3}%{3}.";
-                    Player.SendMessage(p, String.Format(format, col.Name, col.Code, col.Hex(), col.Fallback, Server.DefaultColor), false);
-                    
-                    if (count >= 8 && !all) {
-                        const string helpFormat = "To see the next set of custom colors, type %T/ccols list {0}";
-                        Player.Message(p, helpFormat, offset + 8);
-                        return;
-                    }
-                }
-                index++;
+                validCols.Add(col);
             }
+            MultiPageOutput.Output(p, validCols, FormatColor, cmd, "colors", modifier, true);
+        }
+        
+        // Not very elegant, because we don't want the % to be escaped like everywhere else
+        static string FormatColor(CustomColor col) {
+            const string format = "{0} &{1}({2})%S - %&S{1}, falls back to &{3}%&{3}{3}";
+            return String.Format(format, col.Name, col.Code, col.Hex(), col.Fallback);
         }
         
         void EditHandler(Player p, string[] args) {
