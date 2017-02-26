@@ -35,13 +35,13 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             string[] args = message.ToLower().Split(' ');
             switch (args[0]) {
-                case "go": HandleGo(p, message, args); break;
-                case "status": HandleStatus(p, message, args); break;
-                case "start": HandleStart(p, message, args); break;
-                case "stop": HandleStop(p, message, args); break;
-                case "force": HandleForceStop(p, message, args); break;
-                case "hitbox": HandleHitbox(p, message, args); break;
-                case "maxmove": HandleMaxMove(p, message, args); break;
+                    case "go": HandleGo(p, message, args); break;
+                    case "status": HandleStatus(p, message, args); break;
+                    case "start": HandleStart(p, message, args); break;
+                    case "stop": HandleStop(p, message, args); break;
+                    case "force": HandleForceStop(p, message, args); break;
+                    case "hitbox": HandleHitbox(p, message, args); break;
+                    case "maxmove": HandleMaxMove(p, message, args); break;
             }
         }
 
@@ -108,29 +108,31 @@ namespace MCGalaxy.Commands {
         }
         
         static void HandleHitbox(Player p, string message, string[] args) {
-            byte precision;
             if (args.Length == 1) {
                 Player.Message(p, "Hitbox detection is currently &a" + ZombieGameProps.HitboxPrecision + " %Sunits apart.");
-            } else if (!byte.TryParse(args[1], out precision)) {
-                Player.Message(p, "Hitbox detection must be an integer between 0 and 256.");
-            } else {
-                ZombieGameProps.HitboxPrecision = precision;
-                Player.Message(p, "Hitbox detection set to &a" + precision + " %Sunits apart.");
-                SrvProperties.Save();
+                return;
             }
+            
+            byte precision = 0;
+            if (!CommandParser.GetByte(p, args[1], "Hitbox detection", ref precision)) return;
+            
+            ZombieGameProps.HitboxPrecision = precision;
+            Player.Message(p, "Hitbox detection set to &a" + precision + " %Sunits apart.");
+            SrvProperties.Save();
         }
         
         static void HandleMaxMove(Player p, string message, string[] args) {
-            byte distance;
             if (args.Length == 1) {
                 Player.Message(p, "Maxmium move distance is currently &a" + ZombieGameProps.MaxMoveDistance + " %Sunits apart.");
-            } else if (!byte.TryParse(args[1], out distance)) {
-                Player.Message(p, "Maximum move distance must be an integer between 0 and 256.");
-            } else {
-                ZombieGameProps.MaxMoveDistance = distance;
-                Player.Message(p, "Maximum move distance set to &a" + distance + " %Sunits apart.");
-                SrvProperties.Save();
+                return;
             }
+            
+            byte distance = 0;
+            if (!CommandParser.GetByte(p, args[1], "Maxmimum move distance", ref distance)) return;
+            
+            ZombieGameProps.MaxMoveDistance = distance;
+            Player.Message(p, "Maximum move distance set to &a" + distance + " %Sunits apart.");
+            SrvProperties.Save();
         }
         
         public override void Help(Player p) {

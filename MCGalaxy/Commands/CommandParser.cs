@@ -37,6 +37,7 @@ namespace MCGalaxy {
             return false;
         }
         
+        
         /// <summary> Attempts to parse the given argument as an integer, returning whether that succeeded. </summary>
         public static bool GetInt(Player p, string input, string type, ref int result,
                                   int min = int.MinValue, int max = int.MaxValue) {
@@ -48,11 +49,11 @@ namespace MCGalaxy {
             if (value < min || value > max) {
                 // Try to provide more helpful range messages
                 if (max == int.MaxValue) {
-                    Player.Message(p, "{0} must be {1} or greater", type, min); 
+                    Player.Message(p, "{0} must be {1} or greater", type, min);
                 } else if (min == int.MinValue) {
-                    Player.Message(p, "{0} must be {1} or less", type, max); 
+                    Player.Message(p, "{0} must be {1} or less", type, max);
                 } else {
-                    Player.Message(p, "{0} must be between {1} and {2}", type, min, max); 
+                    Player.Message(p, "{0} must be between {1} and {2}", type, min, max);
                 }
                 return false;
             }
@@ -76,6 +77,19 @@ namespace MCGalaxy {
             if (!GetInt(p, input, type, ref temp, min, max)) return false;
             
             result = (ushort)temp; return true;
+        }
+        
+        
+        /// <summary> Attempts to parse the given argument as a hex color, returning whether that succeeded. </summary>        
+        public static bool GetHex(Player p, string input, ref CustomColor col) {
+            if (input.Length > 0 && input[0] == '#')
+                input = input.Substring(1);
+            
+            if (!Utils.IsValidHex(input)) {
+                Player.Message(p, "\"#{0}\" is not a valid HEX color.", input); return false;
+            }
+            
+            col = Colors.ParseHex(input); return true;
         }
     }
 }

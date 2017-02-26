@@ -33,9 +33,9 @@ namespace MCGalaxy.Eco {
 
         protected override void DoPurchase(Player p, string message, string[] args) {
             byte count = 1;
-            if (args.Length >= 2 && !byte.TryParse(args[1], out count) || count == 0 || count > 10) {
-                Player.Message(p, "Number of groups of 10 blocks to buy must be an integer between 1 and 10."); return;
-            }
+            const string group = "Number of groups of 10 blocks";
+            if (args.Length >= 2 && !CommandParser.GetByte(p, args[1], group, ref count, 0, 10)) return;
+            
             if (p.money < Price * count) {
                 Player.Message(p, "&cYou don't have enough &3{2} &cto buy {1} {0}.",
                                Name, count * 10, Server.moneys); return;

@@ -53,11 +53,9 @@ namespace MCGalaxy.Drawing.Brushes {
                 blocks[j].Block = (byte)block; blocks[j].Ext = extBlock;
                 if (sepIndex < 0) { j++; continue; }
                 
-                int chance;
-                if (!int.TryParse(parts[i].Substring(sepIndex + 1), out chance)
-                    || chance <= 0 || chance > 10000) {
-                    Player.Message(p, "frequency must be an integer between 1 and 10,000."); return null;
-                }
+                int chance = 0;
+                if (!CommandParser.GetInt(p, parts[i].Substring(sepIndex + 1), "Frequency", ref chance, 1, 10000)) return null;
+                
                 count[j] = chance;
                 j++;
             }

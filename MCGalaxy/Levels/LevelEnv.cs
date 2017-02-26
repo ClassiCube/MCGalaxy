@@ -86,9 +86,11 @@ namespace MCGalaxy {
                 Player.Message(p, "Reset {0} color for {1} %Sto normal", envTypeName, p.level.ColoredName);
                 target = "";
             } else {
-                if (!Utils.CheckHex(p, ref value)) return;
+                CustomColor rgb = default(CustomColor);
+                if (!CommandParser.GetHex(p, value, ref rgb)) return;
+                
                 Player.Message(p, "Set {0} color for {1} %Sto #{2}", envTypeName, p.level.ColoredName, value);
-                target = value;
+                target = Utils.Hex(rgb.R, rgb.G, rgb.B);
             }
             UpdateEnvColor(p, envType, value);
         }
@@ -98,10 +100,10 @@ namespace MCGalaxy {
             if (IsResetString(value)) {
                 Player.Message(p, "Reset {0} for {1} %Sto normal", variable, p.level.ColoredName);
                 target = defValue;
-            } else {            
+            } else {
                 if (!CommandParser.GetBool(p, value, ref target)) return;
                 
-                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, 
+                Player.Message(p, "Set {0} for {1} %Sto {2}", variable,
                                p.level.ColoredName, target ? "&aON" : "&cOFF");
             }
             SendCurrentMapAppearance(p.level, prop, target ? 1 : 0);
@@ -129,15 +131,12 @@ namespace MCGalaxy {
         }
         
         static bool CheckShort(Player p, string raw, string variable, ref int modify) {
-            short value;
-            if (!short.TryParse(raw, out value)) {
-                Player.Message(p, "Env: \"{0}\" is not a valid integer.", value);
-                return false;
-            } else {
-                modify = value;
-                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.ColoredName, value);
-                return true;
-            }
+            int value = 0;
+            if (!CommandParser.GetInt(p, raw, variable, ref value, short.MinValue, short.MaxValue)) return false;
+            
+            modify = (short)value;
+            Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.ColoredName, value);
+            return true;
         }
         
         static bool CheckFloat(Player p, string raw, string variable,

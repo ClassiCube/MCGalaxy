@@ -47,12 +47,7 @@ namespace MCGalaxy.Commands {
             Command.all.Find("mute").Use(p, muter.name);
 
             int time = 120;
-            if (args.Length > 1 && !int.TryParse(args[1], out time)) { 
-                Player.Message(p, "Invalid time given."); Help(p); return; 
-            }
-            if (time <= 0) {
-                Player.Message(p, "Time must be positive and greater than zero."); return;
-            }
+            if (args.Length > 1 && !CommandParser.GetInt(p, args[1], "Time", ref time, 1)) return;
             
             Chat.MessageAll("{0} %Shas been muted for {1} seconds", muter.ColoredName, time);
             Player.Message(muter, "You have been muted for " + time + " seconds");

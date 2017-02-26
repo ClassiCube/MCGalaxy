@@ -70,10 +70,10 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             char fallback;
-            if (!CheckName(p, args[2]) || !CheckFallback(p, args[3], out fallback)
-                || !Utils.CheckHex(p, ref args[4])) return;
-            
+            if (!CheckName(p, args[2]) || !CheckFallback(p, args[3], out fallback)) return;
             CustomColor col = Colors.ParseHex(args[4]);
+            if (!CommandParser.GetHex(p, args[4], ref col)) return;
+            
             col.Code = code; col.Fallback = fallback; col.Name = args[2];
             Colors.AddExtColor(col);
             Player.Message(p, "Successfully added a custom color.");
@@ -145,8 +145,8 @@ namespace MCGalaxy.Commands.CPE {
                     col.Fallback = fallback; break;
                 case "hex":
                 case "color":
-                    if (!Utils.CheckHex(p, ref args[3])) return;
-                    CustomColor rgb = Colors.ParseHex(args[3]);
+                    CustomColor rgb = default(CustomColor);
+                    if (!CommandParser.GetHex(p, args[3], ref rgb)) return;
                     col.R = rgb.R; col.G = rgb.G; col.B = rgb.B;
                     break;
                 default:

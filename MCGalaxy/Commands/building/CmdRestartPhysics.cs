@@ -67,13 +67,8 @@ namespace MCGalaxy.Commands.Building {
                 return true;
             }
             
-            int temp;
-            if (!int.TryParse(arg, out temp)) {
-                Player.Message(p, "/rp [type1] [num] [type2] [num]..."); return false;
-            }
-            if (temp < 0 || temp > 255) {
-                Player.Message(p, "Values must be between 0 and 255."); return false;
-            }
+            byte temp = 0;
+            if (!CommandParser.GetByte(p, arg, "Value", ref temp)) return false;
             value = (byte)temp;
             
             switch (name) {

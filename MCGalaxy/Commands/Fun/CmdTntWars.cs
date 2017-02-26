@@ -760,15 +760,11 @@ namespace MCGalaxy.Commands {
                                         text[3] = text[4];
                                     }
                                     int numb = -1;
-                                    if (!int.TryParse(text[3], out numb))
-                                    { Player.Message(p, "TNT Wars Error: Invalid number '" + text[3] + "'"); return; }
-                                    if (numb <= -1) { Player.Message(p, "TNT Wars Error: Invalid number '" + text[3] + "'"); return; }
-                                    else
-                                    {
-                                        it.ScorePerKill = numb;
-                                        Player.Message(p, "TNT Wars: Score per kill is now " + numb + " points!");
-                                        return;
-                                    }
+                                    if (!CommandParser.GetInt(p, text[3], "Score per kill", ref numb, 0)) return;
+                                    
+                                    it.ScorePerKill = numb;
+                                    Player.Message(p, "TNT Wars: Score per kill is now " + numb + " points!");
+                                    return;
                                     //break;
                             }
                             break;

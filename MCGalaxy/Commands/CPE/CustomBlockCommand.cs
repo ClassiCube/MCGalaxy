@@ -262,8 +262,8 @@ namespace MCGalaxy.Commands.CPE {
                     step += (bd.FogDensity == 0 ? 2 : 1);
                 }
             } else if (step == 16) {
-                if (Utils.CheckHex(p, ref value)) {
-                    CustomColor rgb = Colors.ParseHex(value);
+                CustomColor rgb = default(CustomColor);
+                if (CommandParser.GetHex(p, value, ref rgb)) {
                     bd.FogR = rgb.R; bd.FogG = rgb.G; bd.FogB = rgb.B;
                     step++;
                 }
@@ -421,8 +421,8 @@ namespace MCGalaxy.Commands.CPE {
                 case "col":
                 case "fogcol":
                 case "fogcolor":
-                    if (!Utils.CheckHex(p, ref value)) return;
-                    CustomColor rgb = Colors.ParseHex(value);
+                    CustomColor rgb = default(CustomColor);
+                    if (!CommandParser.GetHex(p, value, ref rgb)) return;
                     def.FogR = rgb.R; def.FogG = rgb.G; def.FogB = rgb.B;
                     break;
                     

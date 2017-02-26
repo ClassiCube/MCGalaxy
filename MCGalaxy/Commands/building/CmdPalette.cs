@@ -82,8 +82,8 @@ namespace MCGalaxy.Commands.Building {
             byte block = GetBlock(p, args[2]);
             if (block == Block.Invalid) return;
             
-            if (!Utils.CheckHex(p, ref args[3])) return;
-            CustomColor rgb = Colors.ParseHex(args[3]);
+            CustomColor rgb = default(CustomColor);
+            if (!CommandParser.GetHex(p, args[3], ref rgb)) return;
             PaletteEntry entry = new PaletteEntry(rgb.R, rgb.G, rgb.B, block);
             AddEntry(p, palette, entry);
         }
