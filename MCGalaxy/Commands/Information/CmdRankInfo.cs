@@ -53,7 +53,8 @@ namespace MCGalaxy.Commands {
                
                 Player.Message(p, "&aFrom {0} &ato {1} &a{2} ago", 
                                oldRank, newRank, delta.Shorten(true, false));
-                Player.Message(p, "&aBy %S{0}&a, reason: %S{1}", parts[1], reason);
+                Player.Message(p, "&aBy %S{0}&a, reason: %S{1}", 
+                               PlayerInfo.GetColoredName(p, parts[1]), reason);
             }
         }
         
