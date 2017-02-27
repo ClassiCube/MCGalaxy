@@ -339,17 +339,17 @@ namespace MCGalaxy {
                                            byte extBlock = 0, bool addUndo = true) {
             if (b < 0 || b >= blocks.Length || blocks == null) return false;
             byte old = blocks[b];
-            byte oldExt = old == Block.custom_block ? GetExtTile(b) : (byte)0;
+            byte oldExt = old == Block.custom_block ? GetExtTile(b) : Block.air;
             try
             {
                 if (!overRide)
                     if (Block.Props[old].OPBlock || (Block.Props[block].OPBlock && data.Raw != 0)) 
                         return false;
 
-                if (b == Block.sponge && physics > 0 && block != Block.sponge)
-                    OtherPhysics.DoSpongeRemoved(this, b);
+                if (old == Block.sponge && physics > 0 && block != Block.sponge)
+                    OtherPhysics.DoSpongeRemoved(this, b, false);
 
-                if (b == Block.lava_sponge && physics > 0 && block != Block.lava_sponge)
+                if (old == Block.lava_sponge && physics > 0 && block != Block.lava_sponge)
                     OtherPhysics.DoSpongeRemoved(this, b, true);
 
                 if (addUndo) {
