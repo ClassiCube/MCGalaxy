@@ -157,7 +157,7 @@ namespace MCGalaxy.Commands.World {
             scope[id].Changed = true;
             
             if (scope == Block.Props) {
-                BlockBehaviour.SetupCoreHandlers();
+                BlockBehaviour.InitCoreHandlers();
                 BlockProps.Save("core", scope);
             } else if (scope == BlockDefinition.GlobalProps) {
                 Level[] loaded = LevelInfo.Loaded.Items;

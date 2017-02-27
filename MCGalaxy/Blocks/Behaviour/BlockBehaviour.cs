@@ -42,7 +42,8 @@ namespace MCGalaxy.Blocks {
         internal static HandlePhysics[] physicsHandlers = new HandlePhysics[Block.Count];
         internal static HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[Block.Count];
         
-        internal static void SetupCoreHandlers() {
+        /// <summary> Initalises deleting, placing, and walkthrough handling behaviour for the core blocks. </summary>
+        internal static void InitCoreHandlers() {
             for (int i = 0; i < Block.Count; i++) {
                 deleteHandlers[i] = null;
                 placeHandlers[i] = null;
@@ -94,7 +95,8 @@ namespace MCGalaxy.Blocks {
             deleteHandlers[Block.door_green_air] = DeleteBehaviour.RevertDoor;
         }
         
-        internal static void SetupCorePhysicsHandlers() {
+        /// <summary> Initalise physics handling behaviour for the core blocks. </summary>
+        internal static void InitCorePhysicsHandlers() {
             physicsHandlers[Block.birdblack] = BirdPhysics.Do;
             physicsHandlers[Block.birdwhite] = BirdPhysics.Do;
             physicsHandlers[Block.birdlava] = BirdPhysics.Do;

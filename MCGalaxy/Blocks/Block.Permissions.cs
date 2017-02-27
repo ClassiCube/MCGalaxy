@@ -34,19 +34,19 @@ namespace MCGalaxy
 
         public static void SetBlocks() {
             SetCoreProperties();
-            BlockBehaviour.SetupCorePhysicsHandlers();
-            InitDefaults();
+            BlockBehaviour.InitCorePhysicsHandlers();
+            SetDefaultPerms();
             
             BlockProps.Load("core", Block.Props);
-            BlockBehaviour.SetupCoreHandlers();
+            BlockBehaviour.InitCoreHandlers();
             
             // Custom permissions set by the user.
             if (File.Exists(Paths.BlockPermsFile)) {
                 string[] lines = File.ReadAllLines(Paths.BlockPermsFile);
                 if (lines.Length > 0 && lines[0] == "#Version 2") {
-                    LoadVersion2(lines);
+                    LoadPermsVersion2(lines);
                 } else {
-                    LoadVersion1(lines);
+                    LoadPermsVersion1(lines);
                 }
             }
             SaveBlocks(BlockList);
@@ -87,7 +87,7 @@ namespace MCGalaxy
         }
         
         
-        static void LoadVersion2(string[] lines) {
+        static void LoadPermsVersion2(string[] lines) {
             string[] colon = new string[] { " : " };
             foreach (string line in lines) {
                 if (line == "" || line[0] == '#') continue;
@@ -121,7 +121,7 @@ namespace MCGalaxy
             }
         }
         
-        static void LoadVersion1(string[] lines) {
+        static void LoadPermsVersion1(string[] lines) {
             foreach (string line in lines) {
                 if (line == "" || line[0] == '#') continue;
                 
@@ -141,13 +141,13 @@ namespace MCGalaxy
         public static void SaveBlocks(IEnumerable<Blocks> givenList) {
             try {
                 lock (saveLock)
-                    SaveBlocksCore(givenList);
+                    SaveBlocksPermsCore(givenList);
             } catch (Exception e) { 
                 Server.ErrorLog(e);
             }
         }
         
-        static void SaveBlocksCore(IEnumerable<Blocks> givenList) {
+        static void SaveBlocksPermsCore(IEnumerable<Blocks> givenList) {
             using (StreamWriter w = new StreamWriter(Paths.BlockPermsFile)) {
                 w.WriteLine("#Version 2");
                 w.WriteLine("#   This file dictates which ranks may use what blocks");
@@ -170,7 +170,7 @@ namespace MCGalaxy
         }        
         
                 
-        static void InitDefaults() {
+        static void SetDefaultPerms() {
             for (int i = 0; i < Block.Count; i++) {
                 Blocks b = new Blocks();
                 b.type = (byte)i;
@@ -228,31 +228,8 @@ namespace MCGalaxy
                     case lava_sponge:
 
                     case door_tree_air:
-                    case door_obsidian_air:
-                    case door_glass_air:
-                    case door_stone_air:
-                    case door_leaves_air:
-                    case door_sand_air:
-                    case door_wood_air:
                     case door_green_air:
                     case door_tnt_air:
-                    case door_stair_air:
-                    case air_switch_air:
-                    case water_door_air:
-                    case lava_door_air:
-                    case air_door_air:
-                    case door_iron_air:
-                    case door_gold_air:
-                    case door_cobblestone_air:
-                    case door_grass_air:
-                    case door_dirt_air:
-                    case door_blue_air:
-                    case door_book_air:
-                    case door_red_air:
-                    case door_darkpink_air:
-                    case door_darkgrey_air:
-                    case door_lightgrey_air:
-                    case door_white_air:
                         
                     case odoor1_air:
                     case odoor2_air:

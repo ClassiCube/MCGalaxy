@@ -140,7 +140,7 @@ namespace MCGalaxy {
             SetDefaultAliases();
             for (int i = 0; i < names.Length; i++) {
                 string name = names[i];
-                if (name == null) name = "unknown";                
+                if (name == null) name = "unknown";
                 if (i > 0 && i < Block.CpeCount) {
                     BlockDefinition def = BlockDefinition.GlobalDefs[i];
                     if (def != null) name = def.Name;
