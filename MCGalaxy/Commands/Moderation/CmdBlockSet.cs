@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             if (grp == null) return;
             
             if (p != null && grp.Permission > p.Rank) { Player.Message(p, "Cannot set to a rank higher than yourself."); return; }
-            if (p != null && !Block.canPlace(p, block)) { Formatter.MessageBlock(p, "change permissions of ", block); return; }
+            if (!CommandParser.IsBlockAllowed(p, "change permissions of ", block)) return;
 
             Block.BlockList[block].lowestRank = grp.Permission;
             Block.UpdateRankPerms();

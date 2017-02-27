@@ -40,9 +40,8 @@ namespace MCGalaxy.Commands.Building {
                 byte dst = Block.Byte(args[1]);
                 if (src == Block.Invalid) { Player.Message(p, "There is no block \"{0}\".", args[0]); return; }
                 if (dst == Block.Invalid) { Player.Message(p, "There is no block \"{0}\".", args[1]); return; }
-
-                if (!Block.Placable(src)) { Player.Message(p, "{0} isn't a special block.", Block.Name(src)); return; }
-                if (!Block.canPlace(p, dst)) { Formatter.MessageBlock(p, "bind ", dst); return; }
+                
+                if (!CommandParser.IsBlockAllowed(p, "bind a block to ", dst)) return;
                 if (src >= Block.CpeCount) { Player.Message(p, "Cannot bind anything to this block."); return; }
                 
                 p.bindings[src] = dst;

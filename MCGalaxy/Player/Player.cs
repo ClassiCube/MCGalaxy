@@ -435,9 +435,14 @@ namespace MCGalaxy {
             while (Loading) 
                 Thread.Sleep(sleep);
         }
+        
+        /// <summary> Sends a block change packet to the user containing the current block at the given coordinates. </summary>
+        /// <remarks> Vanilla client always assumes block place/delete succeeds, so this method is usually used to echo back the
+        /// old block. (e.g. due to insufficient permission to change that block, used as mark for draw operations) </remarks>
         public void RevertBlock(ushort x, ushort y, ushort z) {
-            byte b = level.GetTile(x, y, z);
-            SendBlockchange(x, y, z, b);
+            byte b = level.GetTile(x, y, z), extB = 0;
+            if (b == Block.custom_block) extB = level.GetExtTile(x, y, z);
+            SendBlockchange(x, y, z, b, extB);
         }
 
         public static bool IPInPrivateRange(string ip) {

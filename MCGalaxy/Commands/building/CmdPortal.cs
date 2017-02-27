@@ -45,6 +45,7 @@ namespace MCGalaxy.Commands.Building {
 
             data.Block = GetBlock(p, block, out data.ExtBlock);
             if (data.Block == Block.Invalid) return;
+            if (!CommandParser.IsBlockAllowed(p, "place a portal of ", data.Block)) return;
 
             Player.Message(p, "Place an &aEntry block %Sfor the portal");
             p.ClearBlockchange();
@@ -101,7 +102,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "&aEntry block placed");
             } else {
                 p.Blockchange += EntryChange;
-                Player.Message(p, "&aEntry block placed. &cRed block for exit");
+                Player.Message(p, "&aEntry block placed. &c{0} block for exit", Block.Name(Block.red));
             }
         }
         

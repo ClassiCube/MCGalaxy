@@ -25,21 +25,20 @@ namespace MCGalaxy.Commands {
         public CmdKill() { }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-            bool explode = false;
-            string killer = p == null ? "(console)" : p.ColoredName;
-            
+            if (message == "") { Help(p); return; }            
             string[] args = message.SplitSpaces(2);
             Player target = PlayerInfo.FindMatches(p, args[0]);
+            
             if (target == null) {
                 if (p != null) p.HandleDeath(Block.rock, 0, " killed themselves in their confusion");
                 return;
             }
-
             if (p != null && (target != p && target.Rank >= p.Rank)) {
                 MessageTooHighRank(p, "kill", false); return;
             }
             
+            bool explode = false;
+            string killer = p == null ? "(console)" : p.ColoredName;            
             string deathMsg = GetDeathMessage(args, killer, ref explode);
             target.HandleDeath(Block.rock, 0, deathMsg, explode);
         }
@@ -57,7 +56,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/kill [name] <message>");
             Player.Message(p, "%HKills [name], with <message> if given.");
-            Player.Message(p, "%HCauses explosion if \"explode\" is used for <message>");
+            Player.Message(p, "%HCauses an explosion if \"explode\" is used for <message>");
         }
     }
 }

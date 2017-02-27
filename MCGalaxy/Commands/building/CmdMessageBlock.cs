@@ -44,6 +44,7 @@ namespace MCGalaxy.Commands.Building {
             string block = args[0].ToLower();
             data.Block = GetBlock(p, block, out data.ExtBlock, ref allMessage);
             if (data.Block == Block.Invalid) return;
+            if (!CommandParser.IsBlockAllowed(p, "place a message block of ", data.Block)) return;
             
             if (allMessage) {
                 data.Message = message;
@@ -227,7 +228,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%H  Supported blocks: %S{0}", blocks);
             Player.Message(p, "%H  Use | to separate commands, e.g. /say 1 |/say 2");
             Player.Message(p, "%H  Note: \"@p\" is a placeholder for player who clicked.");
-            Player.Message(p, "%T/mb show %H- Shows or hides MBs");
+            Player.Message(p, "%T/mb show %H- Shows or hides message blocks");
         }
     }
 }

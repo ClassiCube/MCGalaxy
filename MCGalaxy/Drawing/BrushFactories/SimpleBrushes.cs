@@ -31,7 +31,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override Brush Construct(BrushArgs args) {
             if (args.Message == "") {
-                if (!DrawCmd.CheckBlock(args.Player, args.Block)) return null;
+                if (!CommandParser.IsBlockAllowed(args.Player, "draw with ", args.Block)) return null;
                 return new SolidBrush(args.Block, args.ExtBlock);
             }
             
@@ -61,7 +61,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override Brush Construct(BrushArgs args) {
             if (args.Message == "") {
-                if (!DrawCmd.CheckBlock(args.Player, args.Block)) return null;
+                if (!CommandParser.IsBlockAllowed(args.Player, "draw with ", args.Block)) return null;
                 return new CheckeredBrush(args.Block, args.ExtBlock, 0, 0);
             }
             string[] parts = args.Message.Split(' ');
@@ -125,7 +125,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override Brush Construct(BrushArgs args) {
             if (args.Message == "") {
-                if (!DrawCmd.CheckBlock(args.Player, args.Block)) return null;
+                if (!CommandParser.IsBlockAllowed(args.Player, "draw with ", args.Block)) return null;
                 return new StripedBrush(args.Block, args.ExtBlock, 0, 0);
             }
             string[] parts = args.Message.Split(' ');

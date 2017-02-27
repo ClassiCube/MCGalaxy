@@ -127,9 +127,14 @@ namespace MCGalaxy {
                                                out byte extBlock, bool allowSkip = false) {
                if (!GetBlock(p, input, out block, out extBlock, allowSkip)) return false;
                if (allowSkip && block == Block.Invalid) return true;
-               
-               if (Block.canPlace(p, block)) return true;
-               Formatter.MessageBlock(p, "draw with ", block);
+               return IsBlockAllowed(p, "draw with ", block);
+          }
+          
+          /// <summary> Returns whether the player is allowed to place/modify/delete the given block. </summary>
+          /// <remarks> Outputs information of which ranks can modify the block if not. </remarks>
+          public static bool IsBlockAllowed(Player p, string action, byte block) {
+               if (p == null || Block.canPlace(p, block)) return true;
+               Formatter.MessageBlock(p, action, block);
                return false;
           }
      }

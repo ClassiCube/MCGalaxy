@@ -91,12 +91,6 @@ namespace MCGalaxy.Commands.Building {
             return new BrushArgs(dArgs.Player, brushMsg, dArgs.Block, dArgs.ExtBlock);
         }
         
-        public static bool CheckBlock(Player p, byte block) {
-            if (Block.canPlace(p, block)) return true;
-            Formatter.MessageBlock(p, "draw with ", block);
-            return false;
-        }
-        
         protected struct DrawArgs {
             public DrawMode Mode;
             public byte Block, ExtBlock;

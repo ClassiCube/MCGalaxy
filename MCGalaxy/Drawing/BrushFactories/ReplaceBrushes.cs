@@ -64,7 +64,7 @@ namespace MCGalaxy.Drawing.Brushes {
         static bool GetTargetBlock(BrushArgs args, string[] parts, out ExtBlock target) {
             target = default(ExtBlock);
             if (parts.Length == 1) {
-                if (!DrawCmd.CheckBlock(args.Player, args.Block)) return false;
+                if (!CommandParser.IsBlockAllowed(args.Player, "draw with ", args.Block)) return false;
                 
                 target = new ExtBlock(args.Block, args.ExtBlock);
                 return true;

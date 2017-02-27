@@ -131,12 +131,7 @@ namespace MCGalaxy {
                 Formatter.MessageBlock(this, replaceMode ? "replace " : "delete ", old);
                 return false;
             }
-
-            if (!Block.canPlace(this, block)) {
-                Formatter.MessageBlock(this, "place ", block);
-                return false;
-            }
-            return true;
+            return CommandParser.IsBlockAllowed(this, "place ", block);
         }
         
         void DeleteBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
