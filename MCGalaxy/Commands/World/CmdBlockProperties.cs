@@ -106,11 +106,11 @@ namespace MCGalaxy.Commands.World {
                        (ref BlockProps props) => props.LavaKills = !props.LavaKills,
                        (BlockProps props) => props.LavaKills);
             } else if (prop == "door") {
-                Toggle(p, scope, id, "is a door",
+                Toggle(p, scope, id, "a door",
                        (ref BlockProps props) => props.IsDoor = !props.IsDoor,
                        (BlockProps props) => props.IsDoor);
             } else if (prop == "tdoor") {
-                Toggle(p, scope, id, "is a tdoor",
+                Toggle(p, scope, id, "a tdoor",
                        (ref BlockProps props) => props.IsTDoor = !props.IsTDoor,
                        (BlockProps props) => props.IsTDoor);
             } else if (prop == "killer" || prop == "death") {
