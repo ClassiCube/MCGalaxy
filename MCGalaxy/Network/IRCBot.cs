@@ -297,7 +297,7 @@ namespace MCGalaxy {
         bool HandleWhoCommand(string nick, string ircCmd, bool opchat) {
             bool whoCmd = ircCmd == ".who" || ircCmd == ".players" || ircCmd == "!players";
             DateTime last = opchat ? lastOpWho : lastWho;
-            if (!whoCmd || (DateTime.UtcNow - last).TotalSeconds <= 1) return false;
+            if (!whoCmd || (DateTime.UtcNow - last).TotalSeconds <= 5) return false;
             
             try {
                 Player p = MakeIRCPlayer(nick, null);
