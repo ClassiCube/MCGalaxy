@@ -31,21 +31,22 @@ namespace MCGalaxy {
         public static void Rename(string src, string dst) {
             File.Move(LevelInfo.MapPath(src), LevelInfo.MapPath(dst));
             
-            SafeMove(LevelInfo.MapPath(src) + ".backup",
-                     LevelInfo.MapPath(dst) + ".backup");
-            SafeMove("levels/level properties/" + src + ".properties",
-                     "levels/level properties/" + dst + ".properties");
-            SafeMove("levels/level properties/" + src,
-                     "levels/level properties/" + dst + ".properties");
-            SafeMove("blockdefs/lvl_" + src + ".json",
-                     "blockdefs/lvl_" + dst + ".json");
-            SafeMove("blockprops/lvl_" + src + ".txt",
-                     "blockprops/lvl_" + dst + ".txt");
+            MoveIfExists(LevelInfo.MapPath(src) + ".backup",
+                         LevelInfo.MapPath(dst) + ".backup");
+            MoveIfExists("levels/level properties/" + src + ".properties",
+                         "levels/level properties/" + dst + ".properties");
+            MoveIfExists("levels/level properties/" + src,
+                         "levels/level properties/" + dst + ".properties");
+            MoveIfExists("blockdefs/lvl_" + src + ".json",
+                         "blockdefs/lvl_" + dst + ".json");
+            MoveIfExists("blockprops/lvl_" + src + ".txt",
+                         "blockprops/lvl_" + dst + ".txt");
             
             try {
                 MoveBackups(src, dst);
             } catch {
             }
+            
             BotsFile.MoveBots(src, dst);
             RenameDatabaseTables(src, dst);
             BlockDBFile.MoveBackingFile(src, dst);
@@ -75,7 +76,7 @@ namespace MCGalaxy {
             }
         }
         
-        static void SafeMove(string src, string dst) {
+        static void MoveIfExists(string src, string dst) {
             if (!File.Exists(src)) return;
             try {
                 File.Move(src, dst);
@@ -127,10 +128,10 @@ namespace MCGalaxy {
                 File.Move(LevelInfo.MapPath(name), LevelInfo.DeletedPath(name));
             }
 
-            SafeDelete("levels/level properties/" + name);
-            SafeDelete("levels/level properties/" + name + ".properties");
-            SafeDelete("blockdefs/lvl_" + name + ".json");
-            SafeDelete("blockprops/lvl_" + name + ".txt");
+            DeleteIfExists("levels/level properties/" + name);
+            DeleteIfExists("levels/level properties/" + name + ".properties");
+            DeleteIfExists("blockdefs/lvl_" + name + ".json");
+            DeleteIfExists("blockprops/lvl_" + name + ".txt");
             
             BotsFile.DeleteBots(name);
             DeleteDatabaseTables(name);
@@ -155,7 +156,7 @@ namespace MCGalaxy {
             }
         }
 
-        static void SafeDelete(string src) {
+        static void DeleteIfExists(string src) {
             if (!File.Exists(src)) return;
             try {
                 File.Delete(src);
@@ -208,14 +209,16 @@ namespace MCGalaxy {
         public static void CopyLevel(string src, string dst) {
             File.Copy(LevelInfo.MapPath(src), LevelInfo.MapPath(dst));
             
-            SafeCopy("levels/level properties/" + src,
-                     "levels/level properties/" + dst + ".properties");
-            SafeCopy("levels/level properties/" + src + ".properties",
-                     "levels/level properties/" + dst + ".properties");
-            SafeCopy("blockdefs/lvl_" + src + ".json",
-                     "blockdefs/lvl_" + dst + ".json");
-            SafeCopy("blockprops/lvl_" + src + ".txt",
-                     "blockprops/lvl_" + dst + ".txt");
+            CopyIfExists("levels/level properties/" + src,
+                         "levels/level properties/" + dst + ".properties");
+            CopyIfExists("levels/level properties/" + src + ".properties",
+                         "levels/level properties/" + dst + ".properties");
+            CopyIfExists("blockdefs/lvl_" + src + ".json",
+                         "blockdefs/lvl_" + dst + ".json");
+            CopyIfExists("blockprops/lvl_" + src + ".txt",
+                         "blockprops/lvl_" + dst + ".txt");
+            
+            BotsFile.CopyBots(src, dst);
             CopyDatabaseTables(src, dst);
         }
         
@@ -244,7 +247,7 @@ namespace MCGalaxy {
             }
         }
         
-        static void SafeCopy(string src, string dst) {
+        static void CopyIfExists(string src, string dst) {
             if (!File.Exists(src)) return;
             try {
                 File.Copy(src, dst, true);

@@ -109,17 +109,7 @@ namespace MCGalaxy.Bots {
             }
         }
         
-        public static void RemoveLevelBots(string level) {
-            lock (locker) {
-                for (int i = 0; i < SavedBots.Count; i++) {
-                    BotProperties props = SavedBots[i];
-                    if (level != props.Level) continue;
-                    SavedBots.RemoveAt(i); i--;
-                }
-                Save();
-            }
-        }
-        
+        /// <summary> Deletes all bots which are located on the given map.  </summary>
         public static void DeleteBots(string level) {
             lock (locker) {
                 int removed = 0;
@@ -129,20 +119,40 @@ namespace MCGalaxy.Bots {
                     
                     SavedBots.RemoveAt(i);
                     removed++; i--;
-                }
+                }                
                 if (removed > 0) Save();
             }
         }
         
+        /// <summary> Moves all bots located on the given source map to the destination map. </summary>
         public static void MoveBots(string srcLevel, string dstLevel) {
             lock (locker) {
                 int moved = 0;
                 for (int i = 0; i < SavedBots.Count; i++) {
                     BotProperties props = SavedBots[i];
                     if (!props.Level.CaselessEq(srcLevel)) continue;
-                    props.Level = dstLevel; moved++;
+                    
+                    props.Level = dstLevel; 
+                    moved++;
                 }
                 if (moved > 0) Save();
+            }
+        }
+        
+        /// <summary> Copies all bots located on the given source map to the destination map. </summary>
+        public static void CopyBots(string srcLevel, string dstLevel) {
+            lock (locker) {
+                int copied = 0, count = SavedBots.Count;
+                for (int i = 0; i < SavedBots.Count; i++) {
+                    BotProperties props = SavedBots[i];
+                    if (!props.Level.CaselessEq(srcLevel)) continue;
+                    
+                    BotProperties copy = props.Copy();
+                    copy.Level = dstLevel;
+                    SavedBots.Add(copy);
+                    copied++;
+                }
+                if (copied > 0) Save();
             }
         }
         
@@ -194,6 +204,20 @@ namespace MCGalaxy.Bots {
             
             X = bot.pos[0]; Y = bot.pos[1]; Z = bot.pos[2];
             RotX = bot.rot[0]; RotY = bot.rot[1];
+        }
+        
+        public BotProperties Copy() {
+            BotProperties copy = new BotProperties();
+            copy.DisplayName = DisplayName; copy.Name = Name;
+            copy.Level = Level; copy.Skin = Skin;
+            copy.Model = Model; copy.Color = Color;
+            
+            copy.AI = AI; copy.Kill = Kill;
+            copy.Hunt = Hunt; copy.CurInstruction = CurInstruction;
+            
+            copy.X = X; copy.Y = Y; copy.Z = Z;
+            copy.RotX = RotX; copy.RotY = RotY;
+            return copy;
         }
     }
 }
