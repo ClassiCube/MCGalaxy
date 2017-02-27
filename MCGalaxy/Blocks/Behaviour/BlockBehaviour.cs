@@ -64,6 +64,7 @@ namespace MCGalaxy.Blocks {
             
             walkthroughHandlers[Block.checkpoint] = WalkthroughBehaviour.Checkpoint;
             walkthroughHandlers[Block.air_switch] = WalkthroughBehaviour.Door;
+            walkthroughHandlers[Block.air_door] = WalkthroughBehaviour.Door;
             walkthroughHandlers[Block.water_door] = WalkthroughBehaviour.Door;
             walkthroughHandlers[Block.lava_door] = WalkthroughBehaviour.Door;
             walkthroughHandlers[Block.train] = WalkthroughBehaviour.Train;
