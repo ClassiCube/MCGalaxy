@@ -25,41 +25,38 @@ namespace MCGalaxy.Commands {
         public CmdKill() { }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }         
+            if (message == "") { Help(p); return; }
             bool explode = false;
-            string deathMessage;
             string killer = p == null ? "(console)" : p.ColoredName;
-            string[] args = message.SplitSpaces(2);
             
-            Player who = PlayerInfo.FindMatches(p, args[0]);
-            if (args.Length >= 2) {
-                if(args[1].CaselessEq("explode")) {
-                    deathMessage = " was exploded by " + killer;
-                    explode = true;
-                } else {
-                    deathMessage = " " + args[1];
-                }
-            } else {
-                deathMessage = " was killed by " + killer;
-            }           
-
-            if (who == null) {
-                if (p != null) {
-                    p.HandleDeath(Block.rock, 0, " killed themselves in their confusion");
-                }
+            string[] args = message.SplitSpaces(2);
+            Player target = PlayerInfo.FindMatches(p, args[0]);
+            if (target == null) {
+                if (p != null) p.HandleDeath(Block.rock, 0, " killed themselves in their confusion");
                 return;
             }
 
-            if (p != null && who.Rank > p.Rank) {
-                p.HandleDeath(Block.rock, 0, " was killed by " + who.ColoredName);
-                MessageTooHighRank(p, "kill", true); return;
+            if (p != null && (target != p && target.Rank >= p.Rank)) {
+                MessageTooHighRank(p, "kill", false); return;
             }
-            who.HandleDeath(Block.rock, 0, deathMessage, explode);
+            
+            string deathMsg = GetDeathMessage(args, killer, ref explode);
+            target.HandleDeath(Block.rock, 0, deathMsg, explode);
+        }
+        
+        static string GetDeathMessage(string[] args, string killer, ref bool explode) {
+            if (args.Length < 2) return " was killed by " + killer;
+            
+            if (args[1].CaselessEq("explode")) {
+                explode = true;
+                return " was exploded by " + killer;
+            }
+            return " " + args[1];
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/kill [name] <message>");
-            Player.Message(p, "%HKills [name] with <message>.");
+            Player.Message(p, "%HKills [name], with <message> if given.");
             Player.Message(p, "%HCauses explosion if \"explode\" is used for <message>");
         }
     }
