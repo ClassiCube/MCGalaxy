@@ -60,16 +60,16 @@ namespace MCGalaxy
         }
 
         
-        public static bool canPlace(Player p, byte block) { 
+        public static bool canPlace(Player p, byte block) {
             Blocks b = BlockList[block];
             LevelPermission perm = p.Rank;
-            return (perm >= b.lowestRank || (b.allow != null && b.allow.Contains(perm))) 
+            return (perm >= b.lowestRank || (b.allow != null && b.allow.Contains(perm)))
                 && (b.disallow == null || !b.disallow.Contains(perm));
         }
         
         public static bool canPlace(LevelPermission perm, byte block) {
             Blocks b = BlockList[block];
-            return (perm >= b.lowestRank || (b.allow != null && b.allow.Contains(perm))) 
+            return (perm >= b.lowestRank || (b.allow != null && b.allow.Contains(perm)))
                 && (b.disallow == null || !b.disallow.Contains(perm));
         }
         
@@ -108,7 +108,7 @@ namespace MCGalaxy
                     if (disallow != null) {
                         newBlock.disallow = new List<LevelPermission>();
                         foreach (string s in disallow) { newBlock.disallow.Add((LevelPermission)int.Parse(s)); }
-                    }                    
+                    }
                     if (allow != null) {
                         newBlock.allow = new List<LevelPermission>();
                         foreach (string s in allow) { newBlock.allow.Add((LevelPermission)int.Parse(s)); }
@@ -142,7 +142,7 @@ namespace MCGalaxy
             try {
                 lock (saveLock)
                     SaveBlocksPermsCore(givenList);
-            } catch (Exception e) { 
+            } catch (Exception e) {
                 Server.ErrorLog(e);
             }
         }
@@ -162,206 +162,110 @@ namespace MCGalaxy
                 foreach (Blocks bs in givenList) {
                     if (Block.Name(bs.type).CaselessEq("unknown")) continue;
                     
-                    string line = Block.Name(bs.type) + " : " + (int)bs.lowestRank + " : " 
+                    string line = Block.Name(bs.type) + " : " + (int)bs.lowestRank + " : "
                         + GrpCommands.getInts(bs.disallow) + " : " + GrpCommands.getInts(bs.allow);
                     w.WriteLine(line);
                 }
             }
-        }        
+        }
         
-                
+        
         static void SetDefaultPerms() {
             for (int i = 0; i < Block.Count; i++) {
                 Blocks b = new Blocks();
                 b.type = (byte)i;
-                switch (i)
-                {
-                    case Invalid:
-                        b.lowestRank = LevelPermission.Admin;
-                        break;
-
-                    case op_glass:
-                    case opsidian:
-                    case op_brick:
-                    case op_stone:
-                    case op_cobblestone:
-                    case op_air:
-                    case op_water:
-                    case op_lava:
-                    case blackrock:
-
-                    case griefer_stone:
-
-                    case air_flood:
-                    case air_flood_down:
-                    case air_flood_layer:
-                    case air_flood_up:
-
-                    case bigtnt:
-                    case nuketnt:
-                    case rocketstart:
-                    case rockethead:
-
-                    case creeper:
-                    case zombiebody:
-                    case zombiehead:
-
-                    case birdred:
-                    case birdkill:
-                    case birdblue:
-
-                    case fishgold:
-                    case fishsponge:
-                    case fishshark:
-                    case fishsalmon:
-                    case fishbetta:
-                    case fishlavashark:
-
-                    case snake:
-                    case snaketail:
-                    case flagbase:
-
-                        b.lowestRank = LevelPermission.Operator;
-                        break;
-
-                    case wood_float:
-                    case lava_sponge:
-
-                    case door_tree_air:
-                    case door_green_air:
-                    case door_tnt_air:
-                        
-                    case odoor1_air:
-                    case odoor2_air:
-                    case odoor3_air:
-                    case odoor4_air:
-                    case odoor5_air:
-                    case odoor6_air:
-                    case odoor7_air:
-                    case odoor8_air:
-                    case odoor9_air:
-                    case odoor10_air:
-                    case odoor11_air:
-                    case odoor12_air:
-
-                    case MsgAir:
-                    case MsgBlack:
-                    case MsgLava:
-                    case MsgWater:
-                    case MsgWhite:
-                    case air_portal:
-                    case water_portal:
-                    case lava_portal:
-                    case blue_portal:
-                    case orange_portal:
-
-                    case water:
-                    case lava:
-                    case lava_fast:
-                    case WaterDown:
-                    case LavaDown:
-                    case WaterFaucet:
-                    case LavaFaucet:
-                    case finiteWater:
-                    case finiteLava:
-                    case finiteFaucet:
-                    case magma:
-                    case geyser:
-                    case deathlava:
-                    case deathwater:
-                    case deathair:
-                    case activedeathwater:
-                    case activedeathlava:
-                    case fastdeathlava:
-                    case lava_fire:
-
-                    case c4:
-                    case c4det:
-                    case smalltnt:
-                    case tntexplosion:
-                    case firework:
-                    case checkpoint:
-                    case train:
-
-                    case birdwhite:
-                    case birdblack:
-                    case birdwater:
-                    case birdlava:
-                        b.lowestRank = LevelPermission.AdvBuilder;
-                        break;
-
-                    case door_tree:
-                    case door_obsidian:
-                    case door_glass:
-                    case door_stone:
-                    case door_leaves:
-                    case door_sand:
-                    case door_wood:
-                    case door_green:
-                    case door_tnt:
-                    case door_stair:
-                    case air_door:
-                    case air_switch:
-                    case water_door:
-                    case lava_door:
-                    case door_iron:
-                    case door_gold:
-                    case door_grass:
-                    case door_dirt:
-                    case door_blue:
-                    case door_book:
-                    case door_cobblestone:
-                    case door_red:
-
-                    case door_orange:
-                    case door_yellow:
-                    case door_lightgreen:
-                    case door_aquagreen:
-                    case door_cyan:
-                    case door_lightblue:
-                    case door_purple:
-                    case door_lightpurple:
-                    case door_pink:
-                    case door_darkpink:
-                    case door_darkgrey:
-                    case door_lightgrey:
-                    case door_white:
-
-                    case tdoor:
-                    case tdoor2:
-                    case tdoor3:
-                    case tdoor4:
-                    case tdoor5:
-                    case tdoor6:
-                    case tdoor7:
-                    case tdoor8:
-                    case tdoor9:
-                    case tdoor10:
-                    case tdoor11:
-                    case tdoor12:
-                    case tdoor13:
-
-                    case odoor1:
-                    case odoor2:
-                    case odoor3:
-                    case odoor4:
-                    case odoor5:
-                    case odoor6:
-                    case odoor7:
-                    case odoor8:
-                    case odoor9:
-                    case odoor10:
-                    case odoor11:
-                    case odoor12:
-                        b.lowestRank = LevelPermission.Builder;
-                        break;
-
-                    default:
-                        b.lowestRank = LevelPermission.Banned;
-                        break;
+                BlockProps props = Block.Props[i];
+                
+                if (i == Invalid) {
+                    b.lowestRank = LevelPermission.Admin;
+                } else if (props.OPBlock) {
+                    b.lowestRank = LevelPermission.Operator;
+                } else if (props.IsDoor || props.IsTDoor || props.ODoorId != Block.Invalid) {
+                    b.lowestRank = LevelPermission.Builder;
+                } else if (props.IsPortal || props.IsMessageBlock) {
+                    b.lowestRank = LevelPermission.AdvBuilder;
+                } else {
+                	b.lowestRank = DefaultPerm(i);
                 }
                 BlockList[i] = b;
+            }         
+        }
+        
+        static LevelPermission DefaultPerm(int i) {
+            switch (i)
+            {
+                case blackrock:
+                case air_flood:
+                case air_flood_down:
+                case air_flood_layer:
+                case air_flood_up:
+
+                case bigtnt:
+                case nuketnt:
+                case rocketstart:
+                case rockethead:
+
+                case creeper:
+                case zombiebody:
+                case zombiehead:
+
+                case birdred:
+                case birdkill:
+                case birdblue:
+
+                case fishgold:
+                case fishsponge:
+                case fishshark:
+                case fishsalmon:
+                case fishbetta:
+                case fishlavashark:
+
+                case snake:
+                case snaketail:
+                case flagbase:
+                    return LevelPermission.Operator;
+
+                case wood_float:
+                case lava_sponge:
+                case door_tree_air:
+                case door_green_air:
+                case door_tnt_air:
+
+                case water:
+                case lava:
+                case lava_fast:
+                case WaterDown:
+                case LavaDown:
+                case WaterFaucet:
+                case LavaFaucet:
+                case finiteWater:
+                case finiteLava:
+                case finiteFaucet:
+                case magma:
+                case geyser:
+                case deathlava:
+                case deathwater:
+                case deathair:
+                case activedeathwater:
+                case activedeathlava:
+                case fastdeathlava:
+                case lava_fire:
+
+                case c4:
+                case c4det:
+                case smalltnt:
+                case tntexplosion:
+                case firework:
+                case checkpoint:
+                case train:
+
+                case birdwhite:
+                case birdblack:
+                case birdwater:
+                case birdlava:
+                    return LevelPermission.AdvBuilder;
             }
+            return LevelPermission.Banned;
         }
     }
 }
