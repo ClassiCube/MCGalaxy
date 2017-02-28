@@ -401,11 +401,8 @@ namespace MCGalaxy.Generator {
         
         static bool GenerateMap(MapGenArgs genArgs) {
             MapGenTheme theme = MapGenTheme.Forest;
-            if (genArgs.Args != "" && !Utils.TryParseEnum(genArgs.Args, out theme)) {
-                string[] themes = Enum.GetNames(typeof(MapGenTheme));
-                Player.Message(genArgs.Player, "Seed must be one of the following themes: " + themes.Join());
-                return false;
-            }
+            if (genArgs.Args != "" && 
+                !CommandParser.GetEnum(genArgs.Player, genArgs.Args, "Seed", ref theme)) return false;
 
             MapGenTemplate templ = (MapGenTemplate)Enum.Parse(typeof(MapGenTemplate), genArgs.Theme.Substring(3), true);
             fCraftMapGeneratorArgs args = fCraftMapGeneratorArgs.MakeTemplate(templ);

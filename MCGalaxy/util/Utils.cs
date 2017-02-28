@@ -67,16 +67,7 @@ namespace MCGalaxy {
                 *srcByte = value; srcByte++;
             }
         }
-        
-        public static bool TryParseEnum<TEnum>(string value, out TEnum result) where TEnum : struct {
-            try {
-                result = (TEnum)Enum.Parse(typeof(TEnum), value, true);
-                return true;
-            } catch (Exception) {
-                result = default(TEnum);
-                return false;
-            }
-        }
+
 
         public static int Clamp(int value, int lo, int hi) {
             return Math.Max(Math.Min(value, hi), lo);
