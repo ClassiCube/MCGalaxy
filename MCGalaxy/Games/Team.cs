@@ -60,7 +60,12 @@ namespace MCGalaxy.Games {
                 Members.RemoveAt(i); return true;
             }
             return false;
-        }
+        }        
+                
+        public void RemoveIfEmpty() {
+            if (Members.Count > 0) return;
+            TeamsList.Remove(Name);
+        }        
         
         public void UpdatePrefix() {
             foreach (string name in Members) {
