@@ -427,8 +427,10 @@ namespace MCGalaxy {
         void Listener_OnKick(UserInfo user, string channel, string kickee, string reason) {
             List<string> chanNicks = GetNicks(channel);
             RemoveNick(user.Nick, chanNicks);
-            Server.s.Log(user.Nick + " kicked " + kickee + " from IRC");
-            Player.GlobalIRCMessage("%I(IRC) " + user.Nick + " kicked " + kickee);
+            
+            if (reason != "") reason = " (" + reason + ")";
+            Server.s.Log(user.Nick + " kicked " + kickee + " from IRC" + reason);
+            Player.GlobalIRCMessage("%I(IRC) " + user.Nick + " kicked " + kickee + reason);
         }
         
         void Listener_OnKill(UserInfo user, string nick, string reason) {
