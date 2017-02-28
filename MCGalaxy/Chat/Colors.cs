@@ -228,19 +228,11 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 if (!p.HasCpeExt(CpeExt.TextColors)) continue;
-                SendSetTextColor(p, col);
+                p.Send(Packet.SetTextColor(col));
             }
             SaveExtColors();
         }
-        
-        internal static void SendSetTextColor(Player p, CustomColor col) {
-            byte[] buffer = new byte[6];
-            buffer[0] = Opcode.CpeSetTextColor;
-            buffer[1] = col.R; buffer[2] = col.G; buffer[3] = col.B; buffer[4] = col.A; 
-            buffer[5] = (byte)col.Code;
-            p.Send(buffer);
-        }
-        
+
         internal static void SaveExtColors() {
             using (StreamWriter w = new StreamWriter(Paths.CustomColorsFile)) {
                 foreach (CustomColor col in ExtColors) {

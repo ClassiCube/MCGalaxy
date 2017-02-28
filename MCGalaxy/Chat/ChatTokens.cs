@@ -84,8 +84,8 @@ namespace MCGalaxy {
         public static Dictionary<string, string> CustomTokens = new Dictionary<string, string>();        
         internal static void LoadCustom() {
             CustomTokens.Clear();
-            if (File.Exists("text/custom$s.txt")) {
-                using (StreamReader r = new StreamReader("text/custom$s.txt")) {
+            if (File.Exists(Paths.CustomTokensFile)) {
+                using (StreamReader r = new StreamReader(Paths.CustomTokensFile)) {
                     string line;
                     while ((line = r.ReadLine()) != null)  {
                         if (line.StartsWith("//")) continue;
@@ -96,7 +96,7 @@ namespace MCGalaxy {
                 }
             } else {
                 Server.s.Log("custom$s.txt does not exist, creating");
-                using (StreamWriter w = new StreamWriter("text/custom$s.txt")) {
+                using (StreamWriter w = new StreamWriter(Paths.CustomTokensFile)) {
                     w.WriteLine("// This is used to create custom $s");
                     w.WriteLine("// If you start the line with a // it wont be used");
                     w.WriteLine("// It should be formatted like this:");

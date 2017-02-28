@@ -16,9 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace MCGalaxy {
     
@@ -29,5 +26,9 @@ namespace MCGalaxy {
         public const string BlockPermsFile = "properties/block.properties";
         
         public const string TempRanksFile = "text/tempranks.txt";
+        
+        public const string CustomTokensFile = "text/custom$s.txt";
+        
+        public const string BadWordsFile = "text/badwords.txt";
     }
 }

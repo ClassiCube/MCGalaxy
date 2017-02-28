@@ -53,7 +53,7 @@ namespace MCGalaxy {
         }
         
         public static byte[] TextHotKey(string label, string input, int keycode,
-		                                byte mods, bool hasCP437) {
+                                        byte mods, bool hasCP437) {
             byte[] buffer = new byte[134];
             buffer[0] = Opcode.CpeSetTextHotkey;
             NetUtils.Write(label, buffer, 1, hasCP437);
@@ -62,8 +62,8 @@ namespace MCGalaxy {
             buffer[133] = mods;
             return buffer;
         }
-		
-		public static byte[] ExtAddEntity(byte id, string name, string displayname, bool hasCP437) {
+        
+        public static byte[] ExtAddEntity(byte id, string name, string displayname, bool hasCP437) {
             byte[] buffer = new byte[130];
             buffer[0] = Opcode.CpeExtAddEntity;
             buffer[1] = id;
@@ -73,7 +73,7 @@ namespace MCGalaxy {
         }
         
         public static byte[] ExtAddPlayerName(byte id, string listName, string displayName, 
-		                                      string grp, byte grpRank, bool hasCP437) {
+                                              string grp, byte grpRank, bool hasCP437) {
             byte[] buffer = new byte[196];
             buffer[0] = Opcode.CpeExtAddPlayerName;
             NetUtils.WriteI16(id, buffer, 1);
@@ -151,7 +151,7 @@ namespace MCGalaxy {
         }
         
         public static byte[] MapAppearance(string url, byte side, byte edge, int sideLevel, 
-		                                   bool hasCP437) {
+                                           bool hasCP437) {
             byte[] buffer = new byte[69];
             WriteMapAppearance(buffer, url, side, edge, sideLevel, hasCP437);
             return buffer;
@@ -167,7 +167,7 @@ namespace MCGalaxy {
         }
         
         static void WriteMapAppearance(byte[] buffer, string url, byte side, byte edge, 
-		                               int sideLevel, bool hasCP437) {
+                                       int sideLevel, bool hasCP437) {
             buffer[0] = Opcode.CpeEnvSetMapApperance;
             NetUtils.Write(url, buffer, 1, hasCP437);
             buffer[65] = side;
@@ -208,6 +208,14 @@ namespace MCGalaxy {
             NetUtils.WriteU16(z, buffer, 134);
             buffer[136] = rotx;
             buffer[137] = roty;
+            return buffer;
+        }
+        
+        public static byte[] SetTextColor(CustomColor col) {
+            byte[] buffer = new byte[6];
+            buffer[0] = Opcode.CpeSetTextColor;
+            buffer[1] = col.R; buffer[2] = col.G; buffer[3] = col.B; buffer[4] = col.A; 
+            buffer[5] = (byte)col.Code;
             return buffer;
         }
 

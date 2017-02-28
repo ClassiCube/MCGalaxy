@@ -82,8 +82,9 @@ namespace MCGalaxy {
                     
                     for (int i = 0; i < Colors.ExtColors.Length; i++) {
                         if (Colors.ExtColors[i].Undefined) continue;
-                        Colors.SendSetTextColor(this, Colors.ExtColors[i]);
-                    } break;
+                        Send(Packet.SetTextColor(Colors.ExtColors[i]));
+                    } 
+                    break;
                 case CpeExt.BulkBlockUpdate:
                     BulkBlockUpdate = version; break;
                 case CpeExt.EnvMapAspect:

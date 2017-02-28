@@ -66,15 +66,15 @@ namespace MCGalaxy {
         }
         
         static void LoadBadWords() {
-            if (!File.Exists("text/badwords.txt")) {
+            if (!File.Exists(Paths.BadWordsFile)) {
                 // No file exists yet, so let's create one
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("# This file contains a list of bad words to remove via the profanity filter");
                 sb.AppendLine("# Each bad word should be on a new line all by itself");
-                File.WriteAllText("text/badwords.txt", sb.ToString());
+                File.WriteAllText(Paths.BadWordsFile, sb.ToString());
             }
             
-            string[] lines = File.ReadAllLines("text/badwords.txt");
+            string[] lines = File.ReadAllLines(Paths.BadWordsFile);
             // Run the badwords through the reducer to ensure things like Ls become Is and everything is lowercase
             filters = new List<string>();
             foreach (string line in lines) {
