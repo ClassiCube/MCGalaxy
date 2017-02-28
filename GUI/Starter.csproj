@@ -54,6 +54,9 @@
     <Compile Include="LineFormatter.cs" />
     <Compile Include="Handlers.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="PropertyWindow.Adapter.cs">
+      <DependentUpon>PropertyWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Settings\LavaMapProperties.cs" />
     <Compile Include="Settings\LevelProperties.cs" />
     <Compile Include="Settings\LavaProperties.cs" />
@@ -107,21 +110,11 @@
       <DependentUpon>PropertyWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="..\MCGalaxy\properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Eco\EcoLevelWindow.resx">
-      <DependentUpon>EcoLevelWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Eco\EconomyWindow.resx">
       <DependentUpon>EconomyWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditText.resx">
-      <DependentUpon>EditText.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="PortTools.resx">
       <DependentUpon>PortTools.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PropertyWindow.resx">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Window.resx">
       <DependentUpon>Window.cs</DependentUpon>

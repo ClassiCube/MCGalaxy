@@ -173,7 +173,6 @@ namespace MCGalaxy {
             ImagePalette.Load();
             
             SrvProperties.Load("properties/server.properties");
-            Updater.Load("properties/update.properties");
             Group.InitAll();
             Command.InitAll();
             GrpCommands.fillRanks();

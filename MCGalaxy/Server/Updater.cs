@@ -35,23 +35,6 @@ namespace MCGalaxy {
         public static bool CurrentUpdate = false;
         static bool msgOpen = false;
         
-        /// <summary> Loads updater properties from given file  </summary>
-        /// <param name="givenPath">File path relative to server to load properties from</param>
-        public static void Load(string givenPath) {
-            PropertiesFile.Read(givenPath, LineProcessor);
-        }
-        
-        static void LineProcessor(string key, string value) {
-            switch (key.ToLower()) {
-                case "autoupdate":
-                    Server.autoupdate = value.CaselessEq("true"); break;
-                case "notify":
-                    Server.notifyPlayers = value.CaselessEq("true"); break;
-                case "restartcountdown":
-                    Server.restartcountdown = int.Parse(value); break;
-            }
-        }
-        
         public static void UpdaterTask(SchedulerTask task) {
             UpdateCheck(null);
             task.Delay = TimeSpan.FromHours(2);
