@@ -74,7 +74,7 @@ namespace MCGalaxy {
             for (int i = 0; i < CustomBlockProps.Length; i++)
                 CustomBlockProps[i] = BlockDefinition.GlobalProps[i];
             
-            name = n; MapName = n;
+            name = n; MapName = n.ToLower();
             BlockDB = new BlockDB(this);
             EdgeLevel = (short)(y / 2);
             CloudsHeight = (short)(y + 2);
@@ -232,8 +232,10 @@ namespace MCGalaxy {
         public static Level FindExact(string name) { return LevelInfo.FindExact(name); }
 
         public static void SaveSettings(Level lvl) {
+            if (lvl.IsMuseum) return; // museums do not save properties
+            
             lock (lvl.savePropsLock)
-                LvlProperties.Save(lvl, LevelInfo.PropertiesPath(lvl.name));
+                LvlProperties.Save(lvl, LevelInfo.PropertiesPath(lvl.MapName));
         }
 
         // Returns true if ListCheck does not already have an check in the position.
@@ -243,8 +245,9 @@ namespace MCGalaxy {
         }
 
         public void Save(bool Override = false, bool clearPhysics = false) {
-            if (blocks == null) return;
-            string path = LevelInfo.MapPath(name);
+            if (blocks == null || IsMuseum) return; // museums do not save properties
+            
+            string path = LevelInfo.MapPath(MapName);
             if (LevelSave != null) LevelSave(this);
             OnLevelSaveEvent.Call(this);
             if (cancelsave1) { cancelsave1 = false; return; }
