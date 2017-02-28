@@ -149,8 +149,6 @@ namespace MCGalaxy {
         public int overallDeath;
 
         public bool staticCommands = false;
-        internal bool outdatedClient = false; // for ClassicalSharp 0.98.5, which didn't reload map for BlockDefinitions
-
         public DateTime ZoneSpam;
 
         public bool aiming;

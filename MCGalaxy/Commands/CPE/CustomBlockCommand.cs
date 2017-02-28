@@ -440,7 +440,6 @@ namespace MCGalaxy.Commands.CPE {
             
             Player.Message(p, "Set {0} for {1} to {2}", parts[2], blockName, value);
             BlockDefinition.Add(def, defs, p == null ? null : p.level);
-            ReloadMap(p, global);
         }
         
         
@@ -483,18 +482,7 @@ namespace MCGalaxy.Commands.CPE {
             }
             return block;
         }
-        
-        static void ReloadMap(Player p, bool global) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (!pl.hasBlockDefs) continue;
-                if (!global && p.level != pl.level) continue;
-                if (pl.level == null || !pl.level.HasCustomBlocks) continue;
-                if (!pl.outdatedClient) continue;
-                
-                LevelActions.ReloadMap(p, pl, true);
-            }
-        }
+		
         
         static byte GetFreeId(bool global, Level lvl) {
             // Start from opposite ends to avoid overlap.

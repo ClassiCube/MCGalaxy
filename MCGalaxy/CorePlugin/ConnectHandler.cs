@@ -29,7 +29,6 @@ namespace MCGalaxy.Core {
             
             LoadWaypoints(p);
             LoadIgnores(p);
-            CheckOutdatedClient(p);
             CheckLoginJailed(p);
         }
         
@@ -90,25 +89,6 @@ namespace MCGalaxy.Core {
             
             if (p.ignoreAll || p.ignoreIRC || p.ignoreTitles || p.ignoreNicks || p.listignored.Count > 0)
                 p.SendMessage("&cType &a/ignore list &cto see who you are still ignoring");
-        }
-        
-        static void CheckOutdatedClient(Player p) {
-            if (p.appName == null || !p.appName.StartsWith("ClassicalSharp ")) return;
-            int spaceIndex = p.appName.IndexOf(' ');
-            string version = p.appName.Substring(spaceIndex, p.appName.Length - spaceIndex);
-            Version ver;
-            try {
-                ver = new Version(version);
-            } catch {
-                return;
-            }
-            
-            if (ver < new Version("0.98.6")) {
-                p.SendMessage("%aYou are using an outdated version of ClassicalSharp.");
-                p.SendMessage("%aYou can click %eCheck for updates %ain the launcher to update. " +
-                              "(make sure to close the client first)");
-                p.outdatedClient = true;
-            }
         }
         
         static void CheckLoginJailed(Player p) {
