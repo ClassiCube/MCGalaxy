@@ -332,15 +332,6 @@ namespace MCGalaxy.Gui {
         void ParseColor(string value, ComboBox target) {
             target.SelectedIndex = target.Items.IndexOf(Colors.Name(value));
         }
-        
-        public bool ValidString(string str, string allowed) {
-            string allowedchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890" + allowed;
-            foreach ( char ch in str ) {
-                if ( allowedchars.IndexOf(ch) == -1 ) {
-                    return false;
-                }
-            } return true;
-        }
 
         void SaveProperties() {
             try {

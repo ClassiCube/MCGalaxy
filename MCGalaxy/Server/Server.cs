@@ -143,13 +143,10 @@ namespace MCGalaxy {
             Ban.EnsureExists();
 
             if (!Directory.Exists("extra")) Directory.CreateDirectory("extra");
-            if (!Directory.Exists("extra/undo")) Directory.CreateDirectory("extra/undo");
-            if (!Directory.Exists("extra/undoPrevious")) Directory.CreateDirectory("extra/undoPrevious");
             if (!Directory.Exists("extra/copy/")) Directory.CreateDirectory("extra/copy/");
             if (!Directory.Exists("extra/copyBackup/")) Directory.CreateDirectory("extra/copyBackup/");
             if (!Directory.Exists("extra/Waypoints")) Directory.CreateDirectory("extra/Waypoints");
             if (!Directory.Exists("blockdefs")) Directory.CreateDirectory("blockdefs");
-            if (!Directory.Exists("text/rankreqs")) Directory.CreateDirectory("text/rankreqs");
         }
         
         void MoveOutdatedFiles() {
