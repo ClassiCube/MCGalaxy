@@ -30,7 +30,7 @@ namespace MCGalaxy {
         public static string ErrorLogPath { get { return errPath; } set { errPath = value; } }
 
         static bool disposed;
-        static bool reportBack = false; // TODO: implement report back
+        static DateTime last;
 
         static object logLock = new object();
         static Thread logThread;
@@ -38,17 +38,24 @@ namespace MCGalaxy {
         static Queue<string> errCache = new Queue<string>(), msgCache = new Queue<string>();
 
         public static void Init() {
-            reportBack = Server.reportBack;
-            //Should be done as part of the config
             if (!Directory.Exists("logs")) Directory.CreateDirectory("logs");
             if (!Directory.Exists("logs/errors")) Directory.CreateDirectory("logs/errors");
-            msgPath = "logs/" + DateTime.Now.ToString("yyyy-MM-dd").Replace("/", "-") + ".txt";
-            errPath = "logs/errors/" + DateTime.Now.ToString("yyyy-MM-dd").Replace("/", "-") + "error.log";
-
+            UpdatePaths();
+            
             logThread = new Thread(WorkerThread);
             logThread.Name = "MCG_Logger";
             logThread.IsBackground = true;
             logThread.Start();
+        }
+        
+        // Update paths only if a new date
+        static void UpdatePaths() {
+            DateTime now = DateTime.Now;
+            if (now.Year == last.Year && now.Month == last.Month && now.Day == last.Day) return;
+            
+            last = now;
+            msgPath = "logs/" + now.ToString("yyyy-MM-dd").Replace("/", "-") + ".txt";
+            errPath = "logs/errors/" + now.ToString("yyyy-MM-dd").Replace("/", "-") + "error.log";
         }
 
         public static void Write(string str) { LogMessage(str); }
@@ -91,6 +98,7 @@ namespace MCGalaxy {
         static void WorkerThread() {
             while (!disposed) {
                 lock (logLock) {
+                    if (errCache.Count > 0 || msgCache.Count > 0) UpdatePaths();                   
                     if (errCache.Count > 0) FlushCache(errPath, errCache);
                     if (msgCache.Count > 0) FlushCache(msgPath, msgCache);
                 }
