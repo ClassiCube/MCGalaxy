@@ -109,7 +109,7 @@ namespace Sharkbite.Irc
 			Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceInfo,"[" + Thread.CurrentThread.Name +"] Identd::Run()");
 			try 
 			{
-				listener = new TcpListener( IdentdPort );
+				listener = new TcpListener( IPAddress.Any, IdentdPort );
 				listener.Start();
 
 				while (true) 

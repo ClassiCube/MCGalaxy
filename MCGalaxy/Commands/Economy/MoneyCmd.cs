@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
 
             int amount = 0;
             data.All = canAll && args[1].CaselessEq("all");
-            if (!data.All && !CommandParser.GetInt(p, args[1], "Amount", ref amount, 0))  return false;
+            if (!data.All && !CommandParser.GetInt(p, args[1], "Amount", ref amount, 1))  return false;
             
             data.Amount = amount;
             return true;
