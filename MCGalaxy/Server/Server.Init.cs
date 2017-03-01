@@ -31,39 +31,21 @@ namespace MCGalaxy {
 
         void LoadMainLevel() {
             try {
-                if (LevelInfo.MapExists(level)) {
-                    mainLevel = Level.Load(level);
-                    mainLevel.unload = false;
-                    if (mainLevel == null) {
-                        if (File.Exists(LevelInfo.MapPath(level) + ".backup")) {
-                            Log("Attempting to load backup of " + level + ".");
-                            File.Copy(LevelInfo.MapPath(level) + ".backup", LevelInfo.MapPath(level), true);
-                            mainLevel = Level.Load(level);
-                            if (mainLevel == null) {
-                                Log("BACKUP FAILED!");
-                                Console.ReadLine(); return;
-                            }
-                        } else {
-                            Log("mainlevel not found");
-                            mainLevel = new Level(level, 128, 64, 128);
-                            MapGen.Generate(mainLevel, "flat", "", null);
-                            mainLevel.Save();
-                        }
-                    }
-                } else {
-                    Log("mainlevel not found");
-                    mainLevel = new Level(level, 128, 64, 128);
-                    MapGen.Generate(mainLevel, "flat", "", null);
-                    mainLevel.Save();
-                }
+                mainLevel = CmdLoad.LoadLevel(null, level, "0");                
+                if (mainLevel == null) GenerateMain();
+                
+                mainLevel.unload = false;
                 LevelInfo.Loaded.Add(mainLevel);
-
-                // fenderrock - Make sure the level does have a physics thread
-                if (mainLevel.physThread == null)
-                    mainLevel.StartPhysics();
             } catch (Exception e) {
                 ErrorLog(e);
             }
+        }
+        
+        void GenerateMain() {
+            Log("main level not found, generating..");
+            mainLevel = new Level(level, 128, 64, 128);
+            MapGen.Generate(mainLevel, "flat", "", null);
+            mainLevel.Save();
         }
         
         void LoadPlayerLists() {
@@ -99,25 +81,9 @@ namespace MCGalaxy {
             foreach (string line in AutoloadMaps.lines) {
                 int sepIndex = line.IndexOf('=');
                 string name = sepIndex >= 0 ? line.Substring(0, sepIndex) : line;
-                string value = sepIndex >= 0 ? line.Substring(sepIndex + 1) : "";
-                AutoLoadMap(name, value);
-            }
-        }
-        
-        static void AutoLoadMap(string name, string phys) {
-            name = name.ToLower();
-            if (phys == "") phys = "0";
-
-            if (name != mainLevel.name) {
-                CmdLoad.LoadLevel(null, name, phys);
-            } else {
-                try {
-                    int physLevel = int.Parse(phys);
-                    if (physLevel >= 0 && physLevel <= 5)
-                        mainLevel.setPhysics(physLevel);
-                } catch {
-                    s.Log("Physics variable invalid");
-                }
+                
+                name = name.ToLower();               
+                if (name != mainLevel.name) CmdLoad.LoadLevel(null, name, "0");
             }
         }
         
