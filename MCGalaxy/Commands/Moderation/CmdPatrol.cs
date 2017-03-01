@@ -40,8 +40,12 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "There must be at least one guest online to use this command!"); return;
             }
 
+            Random:
             string value = getpatrol[new Random().Next(getpatrol.Count)];
             Player who = PlayerInfo.FindExact(value);
+            // If the selected player is the player using the command then retry.
+            if (p == who)
+                goto Random;
             Command.all.Find("tp").Use(p, who.name);
             Player.Message(p, "Now visiting " + who.ColoredName + "%S.");
         }
