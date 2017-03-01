@@ -25,7 +25,9 @@ namespace MCGalaxy.Commands {
         public CmdKill() { }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }            
+            if (message == "") { Help(p); return; }
+            if (!MessageCmd.CanSpeak(p, name)) return; // do not allow using kill to spam every 2 secs
+            
             string[] args = message.SplitSpaces(2);
             Player target = PlayerInfo.FindMatches(p, args[0]);
             
