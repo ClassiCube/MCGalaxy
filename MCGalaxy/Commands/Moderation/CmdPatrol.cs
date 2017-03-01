@@ -35,32 +35,36 @@ namespace MCGalaxy.Commands {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message != "") { Help(p); return; }
 
-            List<string> getpatrol = FindToPatrol();
-            if (getpatrol.Count <= 0) {
-                Player.Message(p, "There must be at least one guest online to use this command!"); return;
+            List<Player> candidates = GetPatrolCandidates(p);
+            if (candidates.Count == 0) {
+                LevelPermission perm = (LevelPermission)CommandOtherPerms.GetPerm(this);
+                Player.Message(p, "No {0}players ranked {1} %Sor below are online.",
+                               p.Rank <= perm ? "other " : "", // in case we can patrol ourselves
+                               Group.GetColoredName(perm));
+            } else {
+                Player target = candidates[new Random().Next(candidates.Count)];
+                Command.all.Find("tp").Use(p, target.name);
+                Player.Message(p, "Now visiting " + target.ColoredName + "%S.");
             }
-
-            string value = getpatrol[new Random().Next(getpatrol.Count)];
-            Player who = PlayerInfo.FindExact(value);
-            Command.all.Find("tp").Use(p, who.name);
-            Player.Message(p, "Now visiting " + who.ColoredName + "%S.");
         }
         
-        List<string> FindToPatrol() {
-            List<string> players = new List<string>();
-            int perm = CommandOtherPerms.GetPerm(this);
+        List<Player> GetPatrolCandidates(Player p) {
+            List<Player> candidates = new List<Player>();
+            LevelPermission perm = (LevelPermission)CommandOtherPerms.GetPerm(this);
             Player[] online = PlayerInfo.Online.Items;
             
-            foreach (Player p in online) {
-                if ((int)p.Rank <= perm) players.Add(p.name);
+            foreach (Player target in online) {
+                if (target.Rank > perm || target == p || !Entities.CanSee(p, target)) continue;
+                candidates.Add(target);
             }
-            return players;
+            return candidates;
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/patrol");
             LevelPermission perm = (LevelPermission)CommandOtherPerms.GetPerm(this);
-            Player.Message(p, "%HTeleports you to a random {0} %Sor lower", Group.GetColoredName(perm));
+            Player.Message(p, "%HTeleports you to a random {0} %Sor lower",
+                           Group.GetColoredName(perm));
         }
     }
 }
