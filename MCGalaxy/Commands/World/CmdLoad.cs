@@ -34,22 +34,19 @@ namespace MCGalaxy.Commands.World {
             if (message == "") { Help(p); return; }
             string[] args = message.Split(' ');
             if (args.Length > 2) { Help(p); return; }
-
-            string phys = args.Length > 1 ? args[1] : "0";
-            LoadLevel(p, args[0], phys, false);
+            LoadLevel(p, args[0], false);
         }
         
-        public static Level LoadLevel(Player p, string name,
-                                      string phys = "0", bool autoLoaded = false) {
+        public static Level LoadLevel(Player p, string name, bool autoLoaded = false) {
             name = name.ToLower();
             try {
-                return LoadLevelCore(p, name, phys, autoLoaded);
+                return LoadLevelCore(p, name, autoLoaded);
             } finally {
                 Server.DoGC();
             }
         }
         
-        static Level LoadLevelCore(Player p, string name, string physStr, bool autoLoaded) {
+        static Level LoadLevelCore(Player p, string name, bool autoLoaded) {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level l in loaded) {
                 if (l.name == name) { Player.Message(p, "Level {0} %Sis already loaded.", l.ColoredName); return null; }
@@ -69,11 +66,6 @@ namespace MCGalaxy.Commands.World {
             LevelInfo.Loaded.Add(lvl);
             if (!autoLoaded)
                 Chat.MessageWhere("Level {0} %Sloaded.", pl => Entities.CanSee(pl, p), lvl.ColoredName);
-            
-            int phys = 0;
-            if (!CommandParser.GetInt(p, physStr, "Physics state", ref phys, 0, 5)) return lvl;
-
-            if (phys >= 1 && phys <= 5) lvl.setPhysics(phys);
             return lvl;
         }
         
@@ -85,7 +77,7 @@ namespace MCGalaxy.Commands.World {
             }
             
             Server.s.Log("Attempting to load backup");
-            level = Level.Load(name, LevelInfo.MapPath(name) + ".backup", 0);
+            level = Level.Load(name, LevelInfo.MapPath(name) + ".backup");
             if (level != null) return level;
             
             Player.Message(p, "Loading backup failed.");
@@ -96,7 +88,7 @@ namespace MCGalaxy.Commands.World {
                 Server.s.Log("Attempting to load latest backup, number " + num + " instead.");
                 
                 string path = LevelInfo.BackupPath(name, num.ToString());
-                level = Level.Load(name, path, 0);
+                level = Level.Load(name, path);
                 if (level == null)
                     Player.Message(p, "Loading latest backup failed as well.");
             } else {
@@ -106,7 +98,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/load [level] <physics>");
+            Player.Message(p, "%T/load [level]");
             Player.Message(p, "%HLoads a level.");
         }
     }

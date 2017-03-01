@@ -31,7 +31,7 @@ namespace MCGalaxy {
 
         void LoadMainLevel() {
             try {
-                mainLevel = CmdLoad.LoadLevel(null, level, "0");                
+                mainLevel = CmdLoad.LoadLevel(null, level);                
                 if (mainLevel == null) GenerateMain();
                 
                 mainLevel.unload = false;
@@ -83,7 +83,7 @@ namespace MCGalaxy {
                 string name = sepIndex >= 0 ? line.Substring(0, sepIndex) : line;
                 
                 name = name.ToLower();               
-                if (name != mainLevel.name) CmdLoad.LoadLevel(null, name, "0");
+                if (name != mainLevel.name) CmdLoad.LoadLevel(null, name);
             }
         }
         

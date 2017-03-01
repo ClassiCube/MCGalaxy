@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
             }
             
             if (LevelInfo.FindExact(map) == null)
-                CmdLoad.LoadLevel(p, map, "0", Server.AutoLoad);
+                CmdLoad.LoadLevel(p, map, Server.AutoLoad);
             if (LevelInfo.FindExact(map) != null)
                 PlayerActions.ChangeMap(p, map);
         }

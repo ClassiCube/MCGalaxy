@@ -337,11 +337,9 @@ namespace MCGalaxy {
             }
         }
 
-        public static Level Load(string name) { return Load(name, LevelInfo.MapPath(name), 0); }
+        public static Level Load(string name) { return Load(name, LevelInfo.MapPath(name)); }
 
-        public static Level Load(string name, byte phys) { return Load(name, LevelInfo.MapPath(name), phys); }
-        
-        public static Level Load(string name, string path, byte phys) {
+        public static Level Load(string name, string path) {
             if (LevelLoad != null) LevelLoad(name);
             OnLevelLoadEvent.Call(name);
             if (cancelload) { cancelload = false; return null; }
@@ -353,7 +351,6 @@ namespace MCGalaxy {
             
             try {
                 Level lvl = IMapImporter.Formats[0].Read(path, name, true);
-                lvl.setPhysics(phys);
                 lvl.backedup = true;
 
                 lvl.jailx = (ushort)(lvl.spawnx * 32);
@@ -361,7 +358,6 @@ namespace MCGalaxy {
                 lvl.jailz = (ushort)(lvl.spawnz * 32);
                 lvl.jailrotx = lvl.rotx;
                 lvl.jailroty = lvl.roty;
-                lvl.StartPhysics();
                 
                 LoadMetadata(lvl);
                 Bots.BotsFile.LoadBots(lvl);

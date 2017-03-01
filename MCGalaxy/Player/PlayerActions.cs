@@ -94,7 +94,7 @@ namespace MCGalaxy {
                 return false;
             }
             
-            CmdLoad.LoadLevel(p, name, "0", true);
+            CmdLoad.LoadLevel(p, name, true);
             Level lvl = LevelInfo.FindExact(name);
             if (lvl != null) return GotoLevel(p, lvl, ignorePerms);
 
