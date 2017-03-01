@@ -121,7 +121,7 @@ namespace MCGalaxy {
         }
 
         
-        internal static ColumnDesc[] createBlock = {
+        internal static ColumnDesc[] createBlock = new ColumnDesc[] {
             new ColumnDesc("Username", ColumnType.Char, 20),
             new ColumnDesc("TimePerformed", ColumnType.DateTime),
             new ColumnDesc("X", ColumnType.UInt16),
@@ -131,7 +131,7 @@ namespace MCGalaxy {
             new ColumnDesc("Deleted", ColumnType.Bool),
         };
         
-        internal static ColumnDesc[] createPortals = {
+        internal static ColumnDesc[] createPortals = new ColumnDesc[] {
             new ColumnDesc("EntryX", ColumnType.UInt16),
             new ColumnDesc("EntryY", ColumnType.UInt16),
             new ColumnDesc("EntryZ", ColumnType.UInt16),
@@ -141,14 +141,14 @@ namespace MCGalaxy {
             new ColumnDesc("ExitZ", ColumnType.UInt16),
         };
         
-        internal static ColumnDesc[] createMessages = {
+        internal static ColumnDesc[] createMessages = new ColumnDesc[] {
             new ColumnDesc("X", ColumnType.UInt16),
             new ColumnDesc("Y", ColumnType.UInt16),
             new ColumnDesc("Z", ColumnType.UInt16),
             new ColumnDesc("Message", ColumnType.Char, 255),
         };
 
-        internal static ColumnDesc[] createZones = {
+        internal static ColumnDesc[] createZones = new ColumnDesc[] {
             new ColumnDesc("SmallX", ColumnType.UInt16),
             new ColumnDesc("SmallY", ColumnType.UInt16),
             new ColumnDesc("SmallZ", ColumnType.UInt16),

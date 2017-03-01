@@ -23,7 +23,7 @@ using MCGalaxy.SQL;
 namespace MCGalaxy {
     public sealed partial class Server {
         
-        static ColumnDesc[] createPlayers = {
+        static ColumnDesc[] createPlayers = new ColumnDesc[] {
             new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
             new ColumnDesc("Name", ColumnType.Text),
             new ColumnDesc("IP", ColumnType.Char, 15),
@@ -41,7 +41,7 @@ namespace MCGalaxy {
             new ColumnDesc("title_color", ColumnType.VarChar, 6),
         };
         
-        static ColumnDesc[] createOpstats = {
+        static ColumnDesc[] createOpstats = new ColumnDesc[] {
             new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
             new ColumnDesc("Time", ColumnType.DateTime),
             new ColumnDesc("Name", ColumnType.Text),

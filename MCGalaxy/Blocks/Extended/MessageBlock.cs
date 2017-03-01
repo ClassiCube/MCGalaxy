@@ -57,7 +57,7 @@ namespace MCGalaxy.Blocks.Extended {
             }
         }
         
-        static string[] sep = { " |/" };
+        static string[] sep = new string[] { " |/" };
         const StringSplitOptions opts = StringSplitOptions.RemoveEmptyEntries;
         static List<string> empty = new List<string>();
         internal static List<string> GetParts(string message, out string text) {

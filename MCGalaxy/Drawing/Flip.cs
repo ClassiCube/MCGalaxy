@@ -26,7 +26,7 @@ namespace MCGalaxy.Drawing {
             newState.Height = angle == 180 ? state.Height : state.Length;
             newState.Length = angle == 180 ? state.Length : state.Height;
             
-            int[] m = { posX, negZ, posY };
+            int[] m = new int[] { posX, negZ, posY };
             if (angle == 180) { m[1] = negY; m[2] = negZ; }
             if (angle == 270) { m[1] = posZ; m[2] = negY; }
             return Rotate(state, newState, m);
@@ -37,7 +37,7 @@ namespace MCGalaxy.Drawing {
             newState.Width = angle == 180 ? state.Width : state.Length;
             newState.Length = angle == 180 ? state.Length : state.Width;
 
-            int[] m = { negZ, posY, posX };
+            int[] m = new int[] { negZ, posY, posX };
             if (angle == 180) { m[0] = negX; m[2] = negZ; }
             if (angle == 270) { m[0] = posZ; m[2] = negX; }
             return Rotate(state, newState, m);
@@ -48,7 +48,7 @@ namespace MCGalaxy.Drawing {
             newState.Width = angle == 180 ? state.Width : state.Height;
             newState.Height = angle == 180 ? state.Height : state.Width;
             
-            int[] m = { posY, negX, posZ };
+            int[] m = new int[] { posY, negX, posZ };
             if (angle == 180) { m[0] = negX; m[1] = negY; }
             if (angle == 270) { m[0] = negY; m[1] = posX; }
             return Rotate(state, newState, m);

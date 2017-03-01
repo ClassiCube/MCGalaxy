@@ -29,7 +29,7 @@ namespace MCGalaxy {
         public static bool Enabled;
         const string propertiesFile = "properties/economy.properties";
         
-        static ColumnDesc[] createEconomy = {
+        static ColumnDesc[] createEconomy = new ColumnDesc[] {
             new ColumnDesc("player", ColumnType.VarChar, 20, priKey: true),
             new ColumnDesc("money", ColumnType.Int32),
             new ColumnDesc("total", ColumnType.Integer, notNull: true, def: "0"),

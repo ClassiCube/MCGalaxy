@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        static ColumnDesc[] createInbox = {
+        static ColumnDesc[] createInbox = new ColumnDesc[] {
             new ColumnDesc("PlayerFrom", ColumnType.Char, 20),
             new ColumnDesc("TimeSent", ColumnType.DateTime),
             new ColumnDesc("Contents", ColumnType.VarChar, 255),

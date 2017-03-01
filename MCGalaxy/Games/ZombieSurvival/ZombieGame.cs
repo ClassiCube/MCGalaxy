@@ -250,7 +250,7 @@ namespace MCGalaxy.Games {
         
         #region Database
         
-        static ColumnDesc[] createSyntax = {
+        static ColumnDesc[] createSyntax = new ColumnDesc[] {
             new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
             new ColumnDesc("Name", ColumnType.Char, 20),
             new ColumnDesc("TotalRounds", ColumnType.Int32),
