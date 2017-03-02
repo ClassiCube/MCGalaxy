@@ -164,8 +164,8 @@ namespace MCGalaxy {
             if (priIndex == -1) return;
             
             // Find the name of this column
-            char[] sepChars = { '\t', ' ' }; // chars that separate part of a column definition
-            char[] startChars = { '`', '(', ' ', ',', '\t' }; // chars that can start a column definition
+            char[] sepChars = new char[] { '\t', ' ' }; // chars that separate part of a column definition
+            char[] startChars = new char[] { '`', '(', ' ', ',', '\t' }; // chars that can start a column definition
             string before = cmd.Substring(0, priIndex);
             before = before.Substring(0, before.LastIndexOfAny(sepChars)); // get rid of column type           
             int nameStart = before.LastIndexOfAny(startChars) + 1;

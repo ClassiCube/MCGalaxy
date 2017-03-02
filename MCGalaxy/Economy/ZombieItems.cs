@@ -24,7 +24,7 @@ namespace MCGalaxy.Eco {
     public sealed class BlocksItem : SimpleItem {
         
         public BlocksItem() {
-            Aliases = new[] { "blocks", "bl", "b" };
+            Aliases = new string[] { "blocks", "bl", "b" };
             Price = 1;
             AllowsNoArgs = true;
         }
@@ -55,7 +55,7 @@ namespace MCGalaxy.Eco {
     public sealed class QueueLevelItem : SimpleItem {
         
         public QueueLevelItem() {
-            Aliases = new[] { "queuelevel", "queuelvl", "queue" };
+            Aliases = new string[] { "queuelevel", "queuelvl", "queue" };
             Price = 150;
         }
         
@@ -83,7 +83,7 @@ namespace MCGalaxy.Eco {
     public sealed class InfectMessageItem : SimpleItem {
         
         public InfectMessageItem() {
-            Aliases = new[] { "infectmessage", "infectmsg" };
+            Aliases = new string[] { "infectmessage", "infectmsg" };
             Price = 150;
         }
         
@@ -176,7 +176,7 @@ namespace MCGalaxy.Eco {
     public sealed class HumanInvisibilityItem : InvisibilityItem {
         
         public HumanInvisibilityItem() {
-            Aliases = new[] { "invisibility", "invisible", "invis" };
+            Aliases = new string[] { "invisibility", "invisible", "invis" };
             Price = 3;
         }
         
@@ -189,7 +189,7 @@ namespace MCGalaxy.Eco {
     public sealed class ZombieInvisibilityItem : InvisibilityItem {
         
         public ZombieInvisibilityItem() {
-            Aliases = new[] { "zinvisibility", "zinvisible", "zinvis" };
+            Aliases = new string[] { "zinvisibility", "zinvisible", "zinvis" };
             Price = 3;
         }
         

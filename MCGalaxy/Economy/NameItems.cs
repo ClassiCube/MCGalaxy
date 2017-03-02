@@ -22,7 +22,7 @@ namespace MCGalaxy.Eco {
     public sealed class TitleItem : SimpleItem {
         
         public TitleItem() {
-            Aliases = new[] { "titles", "title" };
+            Aliases = new string[] { "titles", "title" };
             AllowsNoArgs = true;
         }
         
@@ -51,7 +51,7 @@ namespace MCGalaxy.Eco {
     public sealed class NickItem : SimpleItem {
         
         public NickItem() {
-            Aliases = new[] { "nickname", "nick", "nicks", "name", "names" };
+            Aliases = new string[] { "nickname", "nick", "nicks", "name", "names" };
             AllowsNoArgs = true;
         }
         
@@ -80,7 +80,7 @@ namespace MCGalaxy.Eco {
     public sealed class TitleColorItem : SimpleItem {
         
         public TitleColorItem() {
-            Aliases = new[] { "tcolor", "tcolors", "titlecolor", "titlecolors", "tc" };
+            Aliases = new string[] { "tcolor", "tcolors", "titlecolor", "titlecolors", "tc" };
         }
         
         public override string Name { get { return "TitleColor"; } }
@@ -103,7 +103,7 @@ namespace MCGalaxy.Eco {
     public sealed class ColorItem : SimpleItem {
         
         public ColorItem() {
-            Aliases = new[] { "colors", "color", "colours", "colour" };
+            Aliases = new string[] { "colors", "color", "colours", "colour" };
         }
         
         public override string Name { get { return "Color"; } }

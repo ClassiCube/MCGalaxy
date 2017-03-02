@@ -89,7 +89,7 @@ namespace MCGalaxy {
                     string line;
                     while ((line = r.ReadLine()) != null)  {
                         if (line.StartsWith("//")) continue;
-                        string[] split = line.Split(new[] { ':' }, 2);
+                        string[] split = line.Split(new[] char{ ':' }, 2);
                         if (split.Length == 2 && !String.IsNullOrEmpty(split[0]))
                             CustomTokens.Add(split[0], split[1]);
                     }

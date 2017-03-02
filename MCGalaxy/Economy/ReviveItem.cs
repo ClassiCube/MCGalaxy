@@ -24,7 +24,7 @@ namespace MCGalaxy.Eco {
     public sealed class ReviveItem : SimpleItem {
         
         public ReviveItem() {
-            Aliases = new[] { "revive", "rev" };
+            Aliases = new string[] { "revive", "rev" };
             Price = 7;
         }
         

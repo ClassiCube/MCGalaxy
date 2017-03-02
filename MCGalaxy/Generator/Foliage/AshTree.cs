@@ -60,12 +60,12 @@ namespace MCGalaxy.Generator.Foliage {
             int branchMax = branchStart + rnd.Next(3, maxBranchHeight);
             
             int R = clusterSize;
-            Vec3S32[] marks = new [] { 
+            Vec3S32[] marks = new Vec3S32[] { 
                 new Vec3S32(x + dx - R, y + branchMax - R, z + dz - R), 
                 new Vec3S32(x + dx + R, y + branchMax + R, z + dz + R) };
             
             DrawOp op = new EllipsoidDrawOp();
-            Brush brush = new RandomBrush(new [] { new ExtBlock(Block.leaf, 0) });            
+            Brush brush = new RandomBrush(new ExtBlock[] { new ExtBlock(Block.leaf, 0) });            
             op.SetMarks(marks);
             op.Perform(marks, brush, b => output(b.X, b.Y, b.Z, b.Block));
             

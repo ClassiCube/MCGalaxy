@@ -22,7 +22,7 @@ namespace MCGalaxy.Eco {
     public sealed class LoginMessageItem : SimpleItem {
         
         public LoginMessageItem() {
-            Aliases = new[] { "login", "loginmsg", "loginmessage" };
+            Aliases = new string[] { "login", "loginmsg", "loginmessage" };
             AllowsNoArgs = true;
         }
         
@@ -51,7 +51,7 @@ namespace MCGalaxy.Eco {
     public sealed class LogoutMessageItem : SimpleItem {
         
         public LogoutMessageItem() {
-            Aliases = new[] { "logout", "logoutmsg", "logoutmessage" };
+            Aliases = new string[] { "logout", "logoutmsg", "logoutmessage" };
             AllowsNoArgs = true;
         }
         

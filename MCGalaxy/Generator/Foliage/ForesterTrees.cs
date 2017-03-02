@@ -338,7 +338,7 @@ namespace MCGalaxy.Generator.Foliage {
         public override void Prepare() {
             base.Prepare();
             branchslope = 0.382f;
-            foliage_shape = new [] { 2, 3, 3, 2.5f, 1.6f };
+            foliage_shape = new float[] { 2, 3, 3, 2.5f, 1.6f };
             trunkradius = trunkradius * 0.8f;
             trunkheight = TRUNKHEIGHT * trunkheight;
         }
@@ -372,7 +372,7 @@ namespace MCGalaxy.Generator.Foliage {
         public override void Prepare() {
             base.Prepare();
             branchslope = 0.15f;
-            foliage_shape = new [] { 3, 2.6f, 2, 1 };
+            foliage_shape = new float[] { 3, 2.6f, 2, 1 };
             trunkradius = trunkradius * 0.5f;
         }
         
@@ -395,7 +395,7 @@ namespace MCGalaxy.Generator.Foliage {
         
         public override void Prepare() {
             base.Prepare();
-            foliage_shape = new [] { 3.4f, 2.6f };
+            foliage_shape = new float[] { 3.4f, 2.6f };
             branchslope = 1.0f;
             trunkradius = trunkradius * 0.382f;
             trunkheight = trunkheight * 0.9f;
