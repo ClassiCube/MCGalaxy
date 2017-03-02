@@ -42,7 +42,8 @@ namespace MCGalaxy.Commands {
             SetPhysics(level, state);
         }
         
-        internal static string[] states = { "&cOFF", "&aNormal", "&aAdvanced", "&aHardcore", "&aInstant", "&4Doors-only" };
+        internal static string[] states = new string[] { "&cOFF", "&aNormal", "&aAdvanced", 
+            "&aHardcore", "&aInstant", "&4Doors-only" };
         
         void ShowPhysics(Player p) {
             Level[] loaded = LevelInfo.Loaded.Items;

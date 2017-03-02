@@ -227,7 +227,7 @@ namespace MCGalaxy.Games {
             }
         }
 
-        static ColumnDesc[] createSyntax = {
+        static ColumnDesc[] createSyntax = new ColumnDesc[] {
             new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
             new ColumnDesc("Name", ColumnType.VarChar, 20),
             new ColumnDesc("Points", ColumnType.UInt24),

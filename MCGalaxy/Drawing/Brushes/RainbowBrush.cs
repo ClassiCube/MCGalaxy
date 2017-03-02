@@ -39,7 +39,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override string Name { get { return "BWRainbow"; } }
         
-        static byte[] blocks = { Block.iron, Block.white, Block.lightgrey,
+        static byte[] blocks = new byte[] { Block.iron, Block.white, Block.lightgrey,
             Block.darkgrey, Block.obsidian, Block.darkgrey, Block.lightgrey, Block.white };
         public override byte NextBlock(DrawOp op) {
             int offset = (op.Coords.X + op.Coords.Y + op.Coords.Z) % 8;

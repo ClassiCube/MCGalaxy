@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public Cmd8Ball() { }
         
-        static string[] messages = { "Not likely." , "Very likely." , "Impossible!" , "No." , "Yes." , "Definitely!" , "Do some more thinking." };
+        static string[] messages = new string[] { "Not likely." , "Very likely." , "Impossible!" , 
+            "No." , "Yes." , "Definitely!" , "Do some more thinking." };
         DateTime nextUse;
         static TimeSpan delay = TimeSpan.FromSeconds(2);
         

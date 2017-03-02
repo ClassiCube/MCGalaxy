@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdAwardMod() { }
-        static char[] awardArgs = { ':' };
+        static char[] awardArgs = new char[] { ':' };
 
         public override void Use(Player p, string message) {
             if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }            

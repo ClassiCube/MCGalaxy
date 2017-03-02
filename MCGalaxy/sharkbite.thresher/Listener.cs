@@ -222,7 +222,7 @@ namespace Sharkbite.Irc
 		private const string MODE = "MODE";
 		private const string KILL = "KILL";
 		private const string ACTION = "\u0001ACTION";
-		private readonly char[] Separator = { ' ' };
+		private readonly char[] Separator = new char[] { ' ' };
 		private readonly Regex userPattern; 
 		private readonly Regex channelPattern;
 		private readonly Regex replyRegex;

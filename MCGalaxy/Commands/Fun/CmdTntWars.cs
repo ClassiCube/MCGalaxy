@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
         bool DeleteZone = false, CheckZone = false, NoTntZone = false;
 
         public override void Use(Player p, string message) {
-            string[] text = { "", "", "", "", "" };
+            string[] text = new string[] { "", "", "", "", "" };
             string[] parts = message.ToLower().Split(' ');
             for (int i = 0; i < Math.Min(text.Length, parts.Length); i++)
                 text[i] = parts[i];

@@ -19,7 +19,7 @@ namespace MCGalaxy {
         }
 
         
-        static char[] trimChars = {'='};
+        static char[] trimChars = new char[] {'='};
         public static bool Load( Player p ) {
             if (!File.Exists("players/" + p.name + "DB.txt")) return false;
             

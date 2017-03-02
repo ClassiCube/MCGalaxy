@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
                 p.SetMoney(p.money - 1);  
         }
         
-        static string[] defMessages = { "guzzled a grape", "chewed a cherry", "ate an avocado" };
+        static string[] defMessages = new string[] { "guzzled a grape", "chewed a cherry", "ate an avocado" };
         
         public override void Help(Player p) {
             Player.Message(p, "%T/eat %H- Eats a random snack.");

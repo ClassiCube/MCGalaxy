@@ -60,13 +60,13 @@ namespace MCGalaxy.Drawing.Ops {
         internal static void DrawLine(int x1, int y1, int z1, int maxLen,
                                       int x2, int y2, int z2, List<Vec3S32> buffer) {
             Line lx, ly, lz;
-            int[] pixel = { x1, y1, z1 };
+            int[] pixel = new int[] { x1, y1, z1 };
             int dx = x2 - x1, dy = y2 - y1, dz = z2 - z1;
-            lx.inc = Math.Sign(dx); ly.inc = Math.Sign(dy); lz.inc = Math.Sign(dz);
+            lx.dir = Math.Sign(dx); ly.dir = Math.Sign(dy); lz.dir = Math.Sign(dz);
 
             int xLen = Math.Abs(dx), yLen = Math.Abs(dy), zLen = Math.Abs(dz);
-            lx.dx2 = xLen << 1; ly.dx2 = yLen << 1; lz.dx2 = zLen << 1;
-            lx.index = 0; ly.index = 1; lz.index = 2;
+            lx.len2 = xLen << 1; ly.len2 = yLen << 1; lz.len2 = zLen << 1;
+            lx.axis = 0; ly.axis = 1; lz.axis = 2;
 
             if (xLen >= yLen && xLen >= zLen)
                 DoLine(ly, lz, lx, xLen, pixel, maxLen, buffer);
@@ -80,26 +80,26 @@ namespace MCGalaxy.Drawing.Ops {
             buffer.Add(pos);
         }
         
-        struct Line { public int dx2, inc, index; }
+        struct Line { public int len2, dir, axis; }
         
         static void DoLine(Line l1, Line l2, Line l3, int len, 
                            int[] pixel, int maxLen, List<Vec3S32> buffer) {
-            int err_1 = l1.dx2 - len, err_2 = l2.dx2 - len;
+            int err_1 = l1.len2 - len, err_2 = l2.len2 - len;
             Vec3S32 pos;
             for (int i = 0; i < len && i < (maxLen - 1); i++) {
                 pos.X = pixel[0]; pos.Y = pixel[1]; pos.Z = pixel[2];
                 buffer.Add(pos);
 
                 if (err_1 > 0) {
-                    pixel[l1.index] += l1.inc;
-                    err_1 -= l3.dx2;
+                    pixel[l1.axis] += l1.dir;
+                    err_1 -= l3.len2;
                 }
                 if (err_2 > 0) {
-                    pixel[l2.index] += l2.inc;
-                    err_2 -= l3.dx2;
+                    pixel[l2.axis] += l2.dir;
+                    err_2 -= l3.len2;
                 }
-                err_1 += l1.dx2; err_2 += l2.dx2;
-                pixel[l3.index] += l3.inc;
+                err_1 += l1.len2; err_2 += l2.len2;
+                pixel[l3.axis] += l3.dir;
             }
         }
     }

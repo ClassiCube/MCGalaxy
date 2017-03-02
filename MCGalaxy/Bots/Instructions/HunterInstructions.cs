@@ -88,7 +88,8 @@ namespace MCGalaxy.Bots {
         }
         
         public override string[] Help { get { return help; } }
-        static string[] help = { "%T/botai add [name] hunt <radius>",
+        static string[] help = new string[] { 
+            "%T/botai add [name] hunt <radius>",
             "%HCauses the bot to move towards the closest player in the search radius.",
             "%H  <radius> defaults to 75 blocks.",
         };
@@ -113,7 +114,8 @@ namespace MCGalaxy.Bots {
         }
         
         public override string[] Help { get { return help; } }
-        static string[] help = { "%T/botai add [name] kill",
+        static string[] help = new string[] {
+            "%T/botai add [name] kill",
             "%HCauses the bot to kill any players it is touching.",
         };
     }
@@ -167,7 +169,8 @@ namespace MCGalaxy.Bots {
         }
         
         public override string[] Help { get { return help; } }
-        static string[] help = { "%T/botai add [name] stare <radius>",
+        static string[] help = new string[] { 
+            "%T/botai add [name] stare <radius>",
             "%HCauses the bot to stare at the closest player in the search radius.",
             "%H  <radius> defaults to 20000 blocks.",
         };

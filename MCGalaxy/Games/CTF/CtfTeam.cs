@@ -23,8 +23,8 @@ namespace MCGalaxy.Games
     {
         public char color;
         public int points = 0;
-        public ushort[] flagBase = { 0, 0, 0 };
-        public ushort[] flagLocation = { 0, 0, 0 };
+        public ushort[] flagBase = new ushort[3];
+        public ushort[] flagLocation = new ushort[3];
         public List<Spawn> spawns = new List<Spawn>();
         public List<Player> players = new List<Player>();
         public Level mapOn;

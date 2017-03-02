@@ -35,7 +35,7 @@ namespace MCGalaxy {
 
         static Timer timer;
 
-        readonly static IBeat[] Beats = {         
+        readonly static IBeat[] Beats = new IBeat[] {         
             new ClassiCubeBeat()
         }; //Keep these in order
 

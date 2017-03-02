@@ -37,7 +37,7 @@ namespace MCGalaxy {
         byte retries = 0;
         
         Dictionary<string, List<string>> users = new Dictionary<string, List<string>>();
-        static char[] trimChars = { ' ' };
+        static char[] trimChars = new char[] { ' ' };
         ConnectionArgs args;
         DateTime lastWho, lastOpWho;
         
