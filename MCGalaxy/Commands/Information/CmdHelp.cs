@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
         }
         public CmdHelp() { }
 
-        public override void Use(Player p, string message) { System.Runtime.Serialization.Formatters.Binary.BinaryFormatter f;
+        public override void Use(Player p, string message) {
             switch (message.ToLower()) {
                 case "":
                     Player.Message(p, "%HCommand Categories:");
