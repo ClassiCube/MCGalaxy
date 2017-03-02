@@ -125,6 +125,10 @@ namespace MCGalaxy {
             
             float scale;
             if (!Utils.TryParseDecimal(scaleStr, out scale)) return baseBB;
+            if (scale < 0.25f) scale = 0.25f;
+            float maxScale = model.CaselessEq("chibi") ? 3 : 2;
+            if (scale > maxScale) scale = maxScale;
+            
             return baseBB.Scale(scale);
         }
         

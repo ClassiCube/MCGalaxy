@@ -30,20 +30,20 @@ namespace MCGalaxy.Commands {
         }
         public CmdHelp() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message) { System.Runtime.Serialization.Formatters.Binary.BinaryFormatter f;
             switch (message.ToLower()) {
                 case "":
-                    Player.Message(p, "Command Categories:");
-                    Player.Message(p, "  %aBuilding Chat Economy Games Info Moderation Other World");
-                    Player.Message(p, "Other Categories:");
-                    Player.Message(p, "  %aRanks Colors Shortcuts Commands");
-                    Player.Message(p, "To view help for a category, type %T/help CategoryName");
-                    Player.Message(p, "To see detailed help for a command, type %T/help CommandName");
-                    Player.Message(p, "To see your stats, type %T/whois");
-                    Player.Message(p, "To see loaded maps, type %T/maps");
-                    Player.Message(p, "To view your personal world options, use %T/OS");
-                    Player.Message(p, "To join a map, type %T/goto WorldName");
-                    Player.Message(p, "To send private messages, type %T@PlayerName Message");
+                    Player.Message(p, "%HCommand Categories:");
+                    Player.Message(p, "  %TBuilding Chat Economy Games Info Moderation Other World");
+                    Player.Message(p, "%HOther Categories:");
+                    Player.Message(p, "  %TRanks Colors Shortcuts Commands");
+                    Player.Message(p, "%HTo view help for a category, type %T/help CategoryName");
+                    Player.Message(p, "%HTo see detailed help for a command, type %T/help CommandName");
+                    Player.Message(p, "%HTo see your stats, type %T/whois");
+                    Player.Message(p, "%HTo see loaded maps, type %T/maps");
+                    Player.Message(p, "%HTo view your personal world options, use %T/realm");
+                    Player.Message(p, "%HTo join a map, type %T/goto WorldName");
+                    Player.Message(p, "%HTo send private messages, type %T@PlayerName Message");
                     break;
                 case "ranks":
                     PrintRanks(p); break;

@@ -435,18 +435,19 @@ namespace MCGalaxy {
             else 
                 Player.GlobalBlockchange(this, x, y, z, block, extBlock);
         }
+                
+        
+        public BlockDefinition GetBlockDef(byte block, byte extBlock) {
+            if (block == Block.custom_block) return CustomBlockDefs[extBlock];
+            if (block >= Block.CpeCount || block == Block.air) return null;
+            return CustomBlockDefs[block];
+        }
         
         public string BlockName(byte block, byte extBlock) {
             BlockDefinition def = GetBlockDef(block, extBlock);
             if (def != null) return def.Name.Replace(" ", "");
             
             return block != Block.custom_block ? Block.Name(block) : extBlock.ToString();
-        }
-        
-        public BlockDefinition GetBlockDef(byte block, byte extBlock) {
-            if (block == Block.custom_block) return CustomBlockDefs[extBlock];
-            if (block >= Block.CpeCount || block == Block.air) return null;
-            return CustomBlockDefs[block];
         }
     }
 }
