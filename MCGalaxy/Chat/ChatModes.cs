@@ -76,10 +76,8 @@ namespace MCGalaxy {
             string format = "To " + group + " &f-{0}&f- {1}";
             
             Chat.MessageWhere(format, 
-                              pl => pl.Rank >= perm && !pl.listignored.Contains(name),
+                              pl => (p == pl || pl.Rank >= perm) && Chat.NotIgnoring(p, pl),
                               displayName, message);
-            if (p != null && p.Rank < perm)
-                Player.Message(p, format, displayName, message);
             
             Server.s.Log("(" + group + "): " + name + ": " + message);
             Server.IRC.Say(displayName + "%S: " + message, true);

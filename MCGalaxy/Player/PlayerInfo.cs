@@ -38,6 +38,7 @@ namespace MCGalaxy {
         }
         
         
+        [Obsolete("Prefer FindMatches() or FindExact()")]
         public static Player Find(string name) {
             Player[] players = PlayerInfo.Online.Items;
             Player match = null; int matches = 0;

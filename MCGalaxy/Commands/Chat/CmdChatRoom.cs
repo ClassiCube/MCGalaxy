@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands {
                 }
                 
                 Player.Message(p, "You joined the chat room '{0}'", room);
-                Chat.ChatRoom(p, p.ColoredName + " %Shas joined your chat room", false, room);
+                Chat.MessageChatRoom(p, p.ColoredName + " %Shas joined your chat room", false, room);
                 p.Chatroom = room;
             } else {
                 Player.Message(p, "There is no chat room with that name");
@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands {
         
         void HandleLeave(Player p) {
             Player.Message(p, "You left the chat room '{0}'", p.Chatroom);
-            Chat.ChatRoom(p, p.ColoredName + " %Shas left the chat room", false, p.Chatroom);
+            Chat.MessageChatRoom(p, p.ColoredName + " %Shas left the chat room", false, p.Chatroom);
             Chat.MessageAll("{0} %Shas left their chat room {1}", p.ColoredName, p.Chatroom);
             p.Chatroom = null;
         }
@@ -210,7 +210,7 @@ namespace MCGalaxy.Commands {
             }
             
             Player.Message(pl, "You've been forced to join the chat room '{0}'", room);
-            Chat.ChatRoom(pl, pl.ColoredName + " %Shas force joined your chat room", false, room);
+            Chat.MessageChatRoom(pl, pl.ColoredName + " %Shas force joined your chat room", false, room);
             pl.Chatroom = room;
             Player.Message(p, pl.ColoredName + " %Swas forced to join the chatroom '{0}' by you", room);
         }
@@ -231,7 +231,7 @@ namespace MCGalaxy.Commands {
             
             Player.Message(pl, "You were kicked from the chat room '" + pl.Chatroom + "'");
             Player.Message(p, pl.ColoredName + " %Swas kicked from the chat room '" + pl.Chatroom + "'");
-            Chat.ChatRoom(pl, pl.ColoredName + " %Swas kicked from your chat room", false, pl.Chatroom);
+            Chat.MessageChatRoom(pl, pl.ColoredName + " %Swas kicked from your chat room", false, pl.Chatroom);
             pl.Chatroom = null;
         }
         
@@ -239,12 +239,12 @@ namespace MCGalaxy.Commands {
             int length = parts.Length > 1 ? parts[0].Length + 1 : parts[0].Length;
             message = message.Substring( length );
             if (CheckExtraPerm(p, 7)) {
-                Chat.GlobalChatRoom(p, message, true);
+                Chat.MessageAllChatRooms(p, message, true);
                 return;
             }
             
             if (p.lastchatroomglobal.AddSeconds(30) < DateTime.UtcNow) {
-                Chat.GlobalChatRoom(p, message, true);
+                Chat.MessageAllChatRooms(p, message, true);
                 p.lastchatroomglobal = DateTime.UtcNow;
             } else {
                 Player.Message(p, "Sorry, you must wait 30 seconds in between each global chatroom message!!");

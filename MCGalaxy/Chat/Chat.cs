@@ -18,50 +18,54 @@ using System.Text;
 namespace MCGalaxy {
     public static class Chat {
         
-        public static void GlobalChatLevel(Player from, string message, bool showname) {
+        public static void GlobalChatLevel(Player source, string message, bool showname) {
             if (showname)
-                message = "<Level>" + from.FullName + ": &f" + message;
+                message = "<Level>" + source.FullName + ": &f" + message;
+            
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p.level == from.level && p.Chatroom == null)
-                    SendMessage(p, from, message);
+                if (!NotIgnoring(source, p)) continue;
+                
+                if (p.level == source.level && p.Chatroom == null)
+                    Player.Message(p, message);
             }
         }
-        
-        public static void GlobalChatRoom(Player from, string message, bool showname) {
-            string rawMessage = message;
-            if (showname)
-                message = "<GlobalChatRoom> " + from.FullName + ": &f" + message;
+
+        /// <summary> Sends a message to all players who are in any chatroom,
+        /// and are not ignoring source player. </summary>
+        /// <remarks> Optionally prefixes message by &lt;GlobalChatRoom&gt; [source name]: </remarks>
+        public static void MessageAllChatRooms(Player source, string message, bool showPrefix) {
+            Server.s.Log("<GlobalChatRoom>" + source.name + ": " + message);
+            if (showPrefix)
+                message = "<GlobalChatRoom> " + source.FullName + ": &f" + message;
 
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
+                if (!NotIgnoring(source, p)) continue;
+                
                 if (p.Chatroom != null)
-                    SendMessage(p, from, message);
+                    Player.Message(p, message);
             }
-            Server.s.Log("<GlobalChatRoom>" + from.name + ": " + rawMessage);
         }
         
-        public static void ChatRoom(Player from, string message, bool showname, string chatroom) {
-            string rawMessage = message;
-            string messageforspy = "<ChatRoomSPY: " + chatroom + "> " + from.FullName + ": &f" + message;
-            if (showname)
-                message = "<ChatRoom: " + chatroom + "> " + from.FullName + ": &f" + message;
+        /// <summary> Sends a message to all players who are either in or spying on the given chatroom,
+        /// and are not ignoring source player. </summary>
+        /// <remarks> Optionally prefixes message by &lt;ChatRoom: [chatRoom]&gt; [source name]: </remarks>
+        public static void MessageChatRoom(Player source, string message, bool showPrefix, string chatRoom) {
+            Server.s.Log("<ChatRoom " + chatRoom + ">" + source.name + ": " + message);
+            string spyMessage = "<ChatRoomSPY: " + chatRoom + "> " + source.FullName + ": &f" + message;
+            if (showPrefix)
+                message = "<ChatRoom: " + chatRoom + "> " + source.FullName + ": &f" + message;
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p.Chatroom == chatroom)
-                    SendMessage(p, from, message);
-                if (p.spyChatRooms.Contains(chatroom) && p.Chatroom != chatroom)
-                    SendMessage(p, from, messageforspy);
+                if (!NotIgnoring(source, p)) continue;
+                
+                if (p.Chatroom == chatRoom)
+                    Player.Message(p, message);
+                if (p.spyChatRooms.Contains(chatRoom) && p.Chatroom != chatRoom)
+                    Player.Message(p, spyMessage);
             }
-            Server.s.Log("<ChatRoom " + chatroom + ">" + from.name + ": " + rawMessage);
-        }
-        
-        static void SendMessage(Player p, Player from, string message) {
-            if (from != null && p.listignored.Contains(from.name)) return;
-            
-            if (!p.ignoreAll || (from != null && from == p))
-                Player.Message(p, Server.DefaultColor + message);
         }
         
         
@@ -90,7 +94,7 @@ namespace MCGalaxy {
             MessageWhere(message, pl => pl.Rank >= rank);
         }
         
-        /// <summary> Sends a message to all players, who do not have 
+        /// <summary> Sends a message to all players, who do not have
         /// isolated level/level only chat, and are not in a chatroom. </summary>
         public static void MessageAll(string message) {
             message = Colors.EscapeColors(message);
@@ -100,12 +104,13 @@ namespace MCGalaxy {
                     p.SendMessage(message, true);
             }
         }
-                
-        public static string Format(string message, Player p, bool colors = true, 
+        
+        
+        public static string Format(string message, Player p, bool colors = true,
                                     bool tokens = true, bool emotes = true) {
             if (colors) message = Colors.EscapeColors(message);
             StringBuilder sb = new StringBuilder(message);
-            if (colors) ParseColors(p, sb);          
+            if (colors) ParseColors(p, sb);
             if (tokens) ChatTokens.Apply(sb, p);
             if (!emotes) return sb.ToString();
             
@@ -137,6 +142,13 @@ namespace MCGalaxy {
                     }
                 }
             }
+        }  
+        
+        /// <summary> Returns true if the target player can see chat messags by source. </summary>
+        public static bool NotIgnoring(Player source, Player target) {
+            if (target.ignoreAll) return source == target; // don't ignore messages from self
+            
+            return source == null || !target.listignored.Contains(source.name);
         }
         
         

@@ -27,11 +27,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces(2);
-            
-            Player who = PlayerInfo.Find(args[0]);
-            string name = who == null ? args[0] : who.name;
             string reason = args.Length > 1 ? args[1] : "(none given)";
-            Unban(p, name, reason);
+            Unban(p, args[0], reason);
         }
         
         void Unban(Player p, string name, string reason) {

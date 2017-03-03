@@ -565,7 +565,7 @@ namespace MCGalaxy {
             }
 
             text = HandleJoker(text);
-            if (Chatroom != null) { Chat.ChatRoom(this, text, true, Chatroom); return; }
+            if (Chatroom != null) { Chat.MessageChatRoom(this, text, true, Chatroom); return; }
 
             if (!level.worldChat) {
                 Server.s.Log("<" + name + ">[level] " + text);

@@ -95,7 +95,7 @@ namespace MCGalaxy.Commands.Moderation {
         static void Delete(Player p, string name) {
             bool assigned = false;
             StringBuilder all = new StringBuilder();
-            Player who = PlayerInfo.Find(name);
+            Player who = PlayerInfo.FindExact(name);
             
             foreach (string line in File.ReadAllLines(Paths.TempRanksFile)) {
                 if (!line.CaselessStarts(name)) { all.AppendLine(line); continue; }
