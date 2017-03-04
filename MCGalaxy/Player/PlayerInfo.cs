@@ -164,23 +164,25 @@ namespace MCGalaxy {
         /// <remarks> This is current IP for online players, last IP for offline players from the database. </remarks>
         public static List<string> FindAccounts(string ip) {
             DataTable clones = Database.Backend.GetRows("Players", "Name", "WHERE IP=@0", ip);
-            List<string> alts = new List<string>();
+            List<string> accounts = new List<string>();
             
             foreach (DataRow row in clones.Rows) {
                 string name = row["Name"].ToString();
-                if (!alts.CaselessContains(name))
-                    alts.Add(name);
+                if (!accounts.CaselessContains(name))
+                    accounts.Add(name);
             }
             
+            // TODO: should we instead do save() when the player logs in
+            // by checking online players we avoid a DB write though
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.ip != ip) continue;
-                if (!alts.CaselessContains(p.name))
-                    alts.Add(p.name);
+                if (!accounts.CaselessContains(p.name))
+                    accounts.Add(p.name);
             }
             
             clones.Dispose();
-            return alts;
+            return accounts;
         }
         
         

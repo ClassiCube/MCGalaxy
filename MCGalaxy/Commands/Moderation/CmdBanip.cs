@@ -61,10 +61,10 @@ namespace MCGalaxy.Commands.Moderation {
         
         static bool CheckIP(Player p, string ip) {
             if (p == null) return true;
-            List<string> alts = PlayerInfo.FindAccounts(ip);
-            if (alts == null || alts.Count == 0) return true;
+            List<string> accounts = PlayerInfo.FindAccounts(ip);
+            if (accounts == null || accounts.Count == 0) return true;
             
-            foreach (string name in alts) {
+            foreach (string name in accounts) {
                 Group grp = Group.findPlayerGroup(name);
                 if (grp == null || grp.Permission < p.Rank) continue;
                 
