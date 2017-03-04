@@ -107,7 +107,6 @@ namespace MCGalaxy {
                 InitPlayerStats(playerDb);
             } else {
                 LoadPlayerStats(playerDb);
-                //save(); // update IP and total logins in the DB
             }
             
             Server.Background.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);

@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands {
                 } else {
                     Player.Message(p, "Accepted numbers are: 0, 1, 2, 3, 4 or 5");
                 }
-            } else if (cmd == "DELETE") {
+            } else if (cmd == "DELETE" || cmd == "REMOVE") {
                 DeleteMap(p, value);
             } else if (cmd == "SAVE") {
                 Command.all.Find("save").Use(p, "");
