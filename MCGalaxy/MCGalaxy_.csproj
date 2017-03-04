@@ -185,7 +185,6 @@
     <Compile Include="Commands\Chat\CmdTColor.cs" />
     <Compile Include="Commands\Chat\CmdTitle.cs" />
     <Compile Include="Commands\Chat\CmdVote.cs" />
-    <Compile Include="Commands\Chat\CmdVoteResults.cs" />
     <Compile Include="Commands\Chat\CmdWhisper.cs" />
     <Compile Include="Commands\Chat\MessageCmd.cs" />
     <Compile Include="Commands\CmdOverseer.cs" />

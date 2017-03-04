@@ -49,6 +49,7 @@ namespace MCGalaxy.Commands {
         public override void Help(Player p) {
             Player.Message(p, "%T/vote [message]");
             Player.Message(p, "%HStarts a vote for 15 seconds.");
+            Player.Message(p, "%HType %TY %Hor %TN %Hinto chat to vote.");
         }
     }
 }
