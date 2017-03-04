@@ -37,22 +37,33 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             string[] args = message.Split(' ');
-            string level;
             bool env = args[0].CaselessEq("env");
-            level = env ? (args.Length > 1 ? args[1] : "") : args[0];
-            
-            Level lvl = level == "" ? p.level : LevelInfo.Find(level);
+            string map = env ? (args.Length > 1 ? args[1] : "") : args[0];
+
+            Level lvl = map == "" ? p.level : null;
             MapInfoData data = new MapInfoData();
-            if (lvl != null) {
-                data.FromOnlineLevel(lvl);
+            
+            if (lvl == null) {
+                if (!GetFromMap(p, data, map)) return;
             } else {
-                string map = Matcher.FindMaps(p, level);
-                if (map == null) return;
-                data.FromOfflineLevel(map);
+                data.FromOnlineLevel(lvl);
             }
             
             if (env) ShowEnv(p, data);
             else ShowNormal(p, data);
+        }
+        
+        bool GetFromMap(Player p, MapInfoData data, string map) {
+            map = Matcher.FindMaps(p, map);
+            if (map == null) return false;
+            
+            Level lvl = LevelInfo.FindExact(map);
+            if (lvl != null) {
+                data.FromOnlineLevel(lvl);
+            } else {
+                data.FromOfflineLevel(map);
+            }
+            return true;
         }
         
         void ShowNormal(Player p, MapInfoData data) {
@@ -78,7 +89,7 @@ namespace MCGalaxy.Commands {
             }
             
             if (data.BlockDBEntries != -1) {
-                Player.Message(p, "  BlockDB (Used for /b) is {0} %Swith {1} entries", 
+                Player.Message(p, "  BlockDB (Used for /b) is {0} %Swith {1} entries",
                                data.BlockDB ? "&aEnabled" : "&cDisabled", data.BlockDBEntries);
             } else {
                 Player.Message(p, "  BlockDB (Used for /b) is {0}",
@@ -273,44 +284,44 @@ namespace MCGalaxy.Commands {
             
             void ParseProperty(string key, string value) {
                 switch (key.ToLower()) {
-                    case "physics": Physics = int.Parse(value); break;
-                    case "guns": Guns = bool.Parse(value); break;
-                    case "useblockdb": BlockDB = bool.Parse(value); break;
-                    case "realmowner": RealmOwner = value; break;
+                        case "physics": Physics = int.Parse(value); break;
+                        case "guns": Guns = bool.Parse(value); break;
+                        case "useblockdb": BlockDB = bool.Parse(value); break;
+                        case "realmowner": RealmOwner = value; break;
                         
-                    case "perbuild": build = GetPerm(value); break;
-                    case "pervisit": visit = GetPerm(value); break;
-                    case "perbuildmax": buildmax = GetPerm(value); break;
-                    case "pervisitmax": visitmax = GetPerm(value); break;
-                    case "visitwhitelist": VisitWhitelist = Parse(value); break;
-                    case "visitblacklist": VisitBlacklist = Parse(value); break;
-                    case "buildwhitelist": BuildWhitelist = Parse(value); break;
-                    case "buildblacklist": BuildBlacklist = Parse(value); break;
+                        case "perbuild": build = GetPerm(value); break;
+                        case "pervisit": visit = GetPerm(value); break;
+                        case "perbuildmax": buildmax = GetPerm(value); break;
+                        case "pervisitmax": visitmax = GetPerm(value); break;
+                        case "visitwhitelist": VisitWhitelist = Parse(value); break;
+                        case "visitblacklist": VisitBlacklist = Parse(value); break;
+                        case "buildwhitelist": BuildWhitelist = Parse(value); break;
+                        case "buildblacklist": BuildBlacklist = Parse(value); break;
                         
-                    case "authors": Authors = value; break;
-                    case "roundsplayed": TotalRounds = int.Parse(value); break;
-                    case "roundshumanwon": HumanRounds = int.Parse(value); break;
-                    case "likes": Likes = int.Parse(value); break;
-                    case "dislikes": Dislikes = int.Parse(value); break;
+                        case "authors": Authors = value; break;
+                        case "roundsplayed": TotalRounds = int.Parse(value); break;
+                        case "roundshumanwon": HumanRounds = int.Parse(value); break;
+                        case "likes": Likes = int.Parse(value); break;
+                        case "dislikes": Dislikes = int.Parse(value); break;
                         
-                    case "cloudcolor": Clouds = value; break;
-                    case "fogcolor": Fog = value; break;
-                    case "skycolor": Sky = value; break;
-                    case "shadowcolor": Shadow = value; break;
-                    case "lightcolor": Light = value; break;
+                        case "cloudcolor": Clouds = value; break;
+                        case "fogcolor": Fog = value; break;
+                        case "skycolor": Sky = value; break;
+                        case "shadowcolor": Shadow = value; break;
+                        case "lightcolor": Light = value; break;
                         
-                    case "edgeblock": EdgeBlock = byte.Parse(value); break;
-                    case "edgelevel": EdgeLevel = short.Parse(value); break;
-                    case "horizonblock": HorizonBlock = byte.Parse(value); break;
-                    case "cloudsheight": CloudsHeight = short.Parse(value); break;
-                    case "maxfog": MaxFog = short.Parse(value); break;
-                    case "expfog": ExpFog = bool.Parse(value); break;
+                        case "edgeblock": EdgeBlock = byte.Parse(value); break;
+                        case "edgelevel": EdgeLevel = short.Parse(value); break;
+                        case "horizonblock": HorizonBlock = byte.Parse(value); break;
+                        case "cloudsheight": CloudsHeight = short.Parse(value); break;
+                        case "maxfog": MaxFog = short.Parse(value); break;
+                        case "expfog": ExpFog = bool.Parse(value); break;
                         
-                    case "texture": TerrainUrl = value; break;
-                    case "texturepack": TextureUrl = value; break;
-                    case "clouds-speed": CloudsSpeed = int.Parse(value); break;
-                    case "weather-speed": WeatherSpeed = int.Parse(value); break;
-                    case "weather-fade": WeatherFade = int.Parse(value); break;
+                        case "texture": TerrainUrl = value; break;
+                        case "texturepack": TextureUrl = value; break;
+                        case "clouds-speed": CloudsSpeed = int.Parse(value); break;
+                        case "weather-speed": WeatherSpeed = int.Parse(value); break;
+                        case "weather-fade": WeatherFade = int.Parse(value); break;
                 }
             }
             

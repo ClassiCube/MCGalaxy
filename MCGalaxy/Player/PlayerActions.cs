@@ -68,17 +68,14 @@ namespace MCGalaxy {
             if (lvl != null) return GotoLevel(p, lvl, ignorePerms);
             
             if (Server.AutoLoad) {
-                // First try exactly matching unloaded levels
-                if (LevelInfo.MapExists(name))
-                    return LoadOfflineLevel(p, name, ignorePerms);
-                lvl = LevelInfo.Find(name);
-                if (lvl != null) return GotoLevel(p, lvl, ignorePerms);
+                string map = Matcher.FindMaps(p, name);
+                if (map == null) return false;
                 
-                string matches = Matcher.FindMaps(p, name);
-                if (matches == null) return false;
-                return LoadOfflineLevel(p, matches, ignorePerms);
+                lvl = LevelInfo.FindExact(map);
+                if (lvl != null) return GotoLevel(p, lvl, ignorePerms);
+                return LoadOfflineLevel(p, map, ignorePerms);
             } else {
-                lvl = LevelInfo.Find(name);
+                lvl = Matcher.FindLevels(p, name);
                 if (lvl == null) {
                     Player.Message(p, "There is no level \"{0}\" loaded. Did you mean..", name);
                     Command.all.Find("search").Use(p, "levels " + name);

@@ -145,7 +145,7 @@ namespace MCGalaxy.Games {
             CurLevelName = next;
             QueuedLevel = null;
             CmdLoad.LoadLevel(null, next);
-            CurLevel = LevelInfo.Find(next);
+            CurLevel = LevelInfo.FindExact(next);
             if (ZombieGameProps.SetMainLevel)
                 Server.mainLevel = CurLevel;
             

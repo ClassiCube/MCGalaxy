@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             if (matches > 1) return;
             
             if (who == null) {
-                Level lvl = LevelInfo.Find(message);
+                Level lvl = Matcher.FindLevels(p, message);
                 if (lvl == null) {
                     Player.Message(p, "Could not find player or map specified"); return;
                 }

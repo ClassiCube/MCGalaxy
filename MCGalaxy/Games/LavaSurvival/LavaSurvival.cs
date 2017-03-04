@@ -270,7 +270,7 @@ namespace MCGalaxy.Games
             Level oldMap = null;
             if (active && map != null) oldMap = map;
             CmdLoad.LoadLevel(null, name);
-            map = LevelInfo.Find(name);
+            map = LevelInfo.FindExact(name);
 
             if (map != null)
             {

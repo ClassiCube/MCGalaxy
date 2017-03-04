@@ -100,9 +100,9 @@ namespace MCGalaxy.Gui {
                 try { name = lsMapNoUse.Items[lsMapNoUse.SelectedIndex].ToString(); }
                 catch { return; }
 
-                if ( LevelInfo.Find(name) == null )
+                if ( LevelInfo.FindExact(name) == null )
                     Command.all.Find("load").Use(null, name);
-                Level level = LevelInfo.Find(name);
+                Level level = LevelInfo.FindExact(name);
                 if ( level == null ) return;
 
                 Server.lava.AddMap(name);
@@ -135,9 +135,9 @@ namespace MCGalaxy.Gui {
                 try { name = lsMapUse.Items[lsMapUse.SelectedIndex].ToString(); }
                 catch { return; }
 
-                if ( LevelInfo.Find(name) == null )
+                if ( LevelInfo.FindExact(name) == null )
                     Command.all.Find("load").Use(null, name);
-                Level level = LevelInfo.Find(name);
+                Level level = LevelInfo.FindExact(name);
                 if ( level == null ) return;
 
                 Server.lava.RemoveMap(name);
@@ -427,7 +427,7 @@ namespace MCGalaxy.Gui {
                     return;
                 }
                 string[] split = slctd.Split(new string[] { " - " }, StringSplitOptions.None);
-                TntWarsGame.GuiLoaded = TntWarsGame.Find(LevelInfo.Find(split[0]));
+                TntWarsGame.GuiLoaded = TntWarsGame.Find(LevelInfo.FindExact(split[0]));
                 LoadTNTWarsTab(sender, e);
             }
             catch { }
@@ -440,7 +440,7 @@ namespace MCGalaxy.Gui {
         private void TntWrsCrtNwTntWrsBt_Click(object sender, EventArgs e) {
             TntWarsGame it = null;
             try {
-                it = new TntWarsGame(LevelInfo.Find(TntWrsMpsList.Items[TntWrsMpsList.SelectedIndex].ToString()));
+                it = new TntWarsGame(LevelInfo.FindExact(TntWrsMpsList.Items[TntWrsMpsList.SelectedIndex].ToString()));
             }
             catch { }
             if ( it == null ) return;

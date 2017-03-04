@@ -65,7 +65,7 @@ namespace MCGalaxy {
             
             string[] files = LevelInfo.AllMapFiles();
             string map = Find<string>(pl, name, out matches, files,
-                                      null, l => Path.GetFileNameWithoutExtension(l), "levels");
+                                      null, l => Path.GetFileNameWithoutExtension(l), "levels", 10);
             
             if (map != null) map = Path.GetFileNameWithoutExtension(map);
             return map;
