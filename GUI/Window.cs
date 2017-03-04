@@ -718,7 +718,7 @@ namespace MCGalaxy.Gui {
 
         void pl_BtnMessage_Click(object sender, EventArgs e) {
             if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
-            Player.SendMessage(curPlayer, "<CONSOLE> " + pl_txtMessage.Text);
+            Player.Message(curPlayer, "<CONSOLE> " + pl_txtMessage.Text);
             AppendPlayerStatus("Sent player message '<CONSOLE> " + pl_txtMessage.Text + "'");
             pl_txtMessage.Text = "";
         }

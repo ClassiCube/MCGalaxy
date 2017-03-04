@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands {
                 Player who = PlayerInfo.FindMatches(p, action);
                 if (who == null) {
                     if (matches == 0)
-                        Player.SendMessage(p, "You must use the full name when unignoring offline players.");
+                        Player.Message(p, "You must use the full name when unignoring offline players.");
                     return;
                 }
                 if (p.name == who.name) { Player.Message(p, "You cannot ignore yourself."); return; }

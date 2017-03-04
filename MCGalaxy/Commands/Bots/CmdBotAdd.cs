@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
             
             if (!Formatter.ValidName(p, message, "bot")) return;
             PlayerBot bot = new PlayerBot(message, p.level, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
-            Player.SendMessage(p, "You added the bot " + bot.ColoredName + "%S.");
+            Player.Message(p, "You added the bot " + bot.ColoredName + "%S.");
             PlayerBot.Add(bot);
         }
 

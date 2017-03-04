@@ -548,7 +548,7 @@ namespace MCGalaxy.Gui {
                         TntWarsGame.GuiLoaded.GameMode = TntWarsGame.TntWarsGameMode.TDM;
                         foreach ( TntWarsGame.player pl in TntWarsGame.GuiLoaded.Players ) {
                             {
-                                Player.SendMessage(pl.p, "TNT Wars: Changed gamemode to Team Deathmatch");
+                                Player.Message(pl.p, "TNT Wars: Changed gamemode to Team Deathmatch");
                                 pl.Red = false;
                                 pl.Blue = false;
                                 if ( TntWarsGame.GuiLoaded.BlueTeam() > TntWarsGame.GuiLoaded.RedTeam() ) {
@@ -671,7 +671,7 @@ namespace MCGalaxy.Gui {
             if ( TntWarsGame.GuiLoaded == null ) return;
             foreach ( TntWarsGame.player pl in TntWarsGame.GuiLoaded.Players ) {
                 pl.p.CurrentTntGameNumber = -1;
-                Player.SendMessage(pl.p, "TNT Wars: The TNT Wars game you are currently playing has been deleted!");
+                Player.Message(pl.p, "TNT Wars: The TNT Wars game you are currently playing has been deleted!");
                 pl.p.PlayingTntWars = false;
                 pl.p.canBuild = true;
                 TntWarsGame.SetTitlesAndColor(pl, true);

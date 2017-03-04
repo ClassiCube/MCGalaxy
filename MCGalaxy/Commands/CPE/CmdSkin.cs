@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.CPE {
             string skin = GetSkin(p, args, 2, bot.name);
             if (skin == null) return;
             bot.SkinName = skin;
-            Player.SendMessage(p, "You changed the skin of bot " + bot.ColoredName + " %Sto &c" + skin);
+            Player.Message(p, "You changed the skin of bot " + bot.ColoredName + " %Sto &c" + skin);
             
             bot.GlobalDespawn();
             bot.GlobalSpawn();

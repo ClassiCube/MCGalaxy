@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands {
         }
         
         static void UpdateBot(Player p, PlayerBot bot, string msg) {
-            Player.SendMessage(p, bot.ColoredName + "%S" + msg);
+            Player.Message(p, bot.ColoredName + "%S" + msg);
             Server.s.Log(bot.name + msg);
             BotsFile.UpdateBot(bot);
         }

@@ -43,18 +43,16 @@ namespace MCGalaxy.Commands {
         void PlacedBlock(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
             if (!p.staticCommands) p.ClearBlockchange();
             byte b = p.level.GetTile(x, y, z);
-            if (b == Block.Invalid) { Player.Message(p, "Invalid Block ({0}, {1}, {2}).", x, y, z); return; }
+            if (b == Block.Invalid) return;
             p.RevertBlock(x, y, z);
             
             byte id = b;
             if (b == Block.custom_block)
                 id = p.level.GetExtTile(x, y, z);
             Dictionary<int, string> names = new Dictionary<int, string>();
-            
-            string blockName = p.level.BlockName(b, id);
-            Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.", x, y, z, id, blockName);
-            bool foundAny = false;
-            
+
+            Player.Message(p, "Retrieving block change records..");
+            bool foundAny = false;            
             ListFromDatabase(p, ref foundAny, names, x, y, z);
             using (IDisposable rLock = p.level.BlockDB.Locker.AccquireRead(30 * 1000)) {
                 if (rLock != null) {
@@ -67,9 +65,12 @@ namespace MCGalaxy.Commands {
             }
             
             if (!foundAny) Player.Message(p, "No block change records found for this block.");
-            BlockDBChange.OutputMessageBlock(p, b, id, x, y, z);
-            BlockDBChange.OutputPortal(p, b, id, x, y, z);
             
+            string blockName = p.level.BlockName(b, id);
+            Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.", x, y, z, id, blockName);
+            
+            BlockDBChange.OutputMessageBlock(p, b, id, x, y, z);
+            BlockDBChange.OutputPortal(p, b, id, x, y, z);           
             Server.DoGC();
         }
         

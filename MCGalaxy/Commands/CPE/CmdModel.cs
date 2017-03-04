@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.CPE {
             bot.ModelBB = AABB.ModelAABB(model, bot.level);
             Entities.UpdateModel(bot.id, model, bot.level, null);
             
-            Player.SendMessage(p, "You changed the model of bot " + bot.ColoredName + " %Sto a &c" + model);
+            Player.Message(p, "You changed the model of bot " + bot.ColoredName + " %Sto a &c" + model);
             BotsFile.UpdateBot(bot);
         }
         
