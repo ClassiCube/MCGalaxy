@@ -107,6 +107,7 @@ namespace Sharkbite.Irc
 				Buffer.Append(SPACE);
 				Buffer.Append('*');
 				Buffer.Append(SPACE);
+				Buffer.Append(':');
 				Buffer.Append( args.RealName );
 				Connection.SendCommand( Buffer );
 			}

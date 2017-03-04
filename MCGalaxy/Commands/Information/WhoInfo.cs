@@ -76,9 +76,9 @@ namespace MCGalaxy.Commands {
             }                
 
             if (Server.Devs.CaselessContains(who.Name.TrimEnd('+')))
-                Player.Message(p, "  Player is an &9MCGalaxy Developer");
+                Player.Message(p, "  Player is an &9{0} Developer", Server.SoftwareName);
             if (Server.Mods.CaselessContains(who.Name.TrimEnd('+')))
-                Player.Message(p, "  Player is an &9MCGalaxy Moderator");
+                Player.Message(p, "  Player is an &9{1} Moderator", Server.SoftwareName);
 
             if (canSeeIP) {
                 string ipMsg = who.IP;

@@ -70,14 +70,14 @@ namespace MCGalaxy {
             Server.lava.OnHeartbeat(ref name);
             name = Colors.StripColors(name);
             
-            return "&port=" + Server.port +
-                "&max=" + Server.players +
-                "&name=" + Uri.EscapeDataString(name) +
-                "&public=" + Server.pub +
+            return "&port="  + Server.port +
+                "&max="      + Server.players +
+                "&name="     + Uri.EscapeDataString(name) +
+                "&public="   + Server.pub +
                 "&version=7" +
-                "&salt=" + Server.salt +
-                "&users=" + PlayerCount() + 
-                "&software=" + Uri.EscapeDataString("MCGalaxy " + Server.VersionString);
+                "&salt="     + Server.salt +
+                "&users="    + PlayerCount() + 
+                "&software=" + Uri.EscapeDataString(Server.SoftwareNameVersioned);
         }
         
         static int PlayerCount() {

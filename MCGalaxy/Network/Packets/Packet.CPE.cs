@@ -24,7 +24,7 @@ namespace MCGalaxy {
         public static byte[] ExtInfo(byte count) {
             byte[] buffer = new byte[67];
             buffer[0] = Opcode.CpeExtInfo;
-            NetUtils.Write("MCGalaxy " + Server.Version, buffer, 1, false);
+            NetUtils.Write(Server.SoftwareNameVersioned, buffer, 1, false);
             NetUtils.WriteI16((short)count, buffer, 65);
             return buffer;
         }

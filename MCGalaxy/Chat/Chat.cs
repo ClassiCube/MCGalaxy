@@ -17,16 +17,21 @@ using System.Text;
 
 namespace MCGalaxy {
     public static class Chat {
-        
-        public static void GlobalChatLevel(Player source, string message, bool showname) {
-            if (showname)
+
+		#region Player messaging
+		
+        /// <summary> Sends a message to all players who in the player's level,
+        /// and are not ignoring source player or in a chatroom. </summary>
+        /// <remarks> Optionally prefixes message by &lt;Level&gt; [source name]: </remarks>		
+        public static void MessageLevel(Player source, string message, bool showPrefix, Level lvl) {
+            if (showPrefix)
                 message = "<Level>" + source.FullName + ": &f" + message;
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (!NotIgnoring(source, p)) continue;
                 
-                if (p.level == source.level && p.Chatroom == null)
+                if (p.level == lvl && p.Chatroom == null)
                     Player.Message(p, message);
             }
         }
@@ -68,6 +73,10 @@ namespace MCGalaxy {
             }
         }
         
+        #endregion
+        
+        
+        #region Server messaging
         
         /// <summary> Sends a message to all players who match the given filter. </summary>
         public static void MessageWhere(string message, Predicate<Player> filter) {
@@ -97,13 +106,15 @@ namespace MCGalaxy {
         /// <summary> Sends a message to all players, who do not have
         /// isolated level/level only chat, and are not in a chatroom. </summary>
         public static void MessageAll(string message) {
-            message = Colors.EscapeColors(message);
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (!p.ignoreAll && p.level.worldChat && p.Chatroom == null)
-                    p.SendMessage(message, true);
+            	if (!p.ignoreAll && p.level.worldChat && p.Chatroom == null) {
+                    Player.Message(p, message);
+            	}
             }
         }
+        
+        #endregion
         
         
         public static string Format(string message, Player p, bool colors = true,

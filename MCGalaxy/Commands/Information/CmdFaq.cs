@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (!File.Exists("text/faq.txt")) {
-                File.WriteAllText("text/faq.txt", "Example: What does this server run on? This server runs on &bMCGalaxy");
+                File.WriteAllText("text/faq.txt", "Example: What does this server run on? This server runs on &b" + Server.SoftwareName);
             }
             
             string[] faq = File.ReadAllLines("text/faq.txt");

@@ -22,7 +22,7 @@ using System.IO;
 namespace MCGalaxy.Core {
 
     public sealed class CorePlugin : Plugin_Simple {
-        public override string creator { get { return "MCGalaxy team"; } }
+        public override string creator { get { return Server.SoftwareName + " team"; } }
         public override string MCGalaxy_Version { get { return Server.VersionString; } }
         public override string name { get { return "CorePlugin"; } }
         SchedulerTask clearTask;

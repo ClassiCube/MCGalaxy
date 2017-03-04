@@ -31,13 +31,10 @@ namespace MCGalaxy {
 
             //Important note:  This does NOT account for foreign keys, BLOB's etc.  It only works for what we actually put in the db.
 
-            sql.WriteLine("-- MCGalaxy SQL Database Dump");
-            sql.WriteLine("-- version 1.5");
-            sql.WriteLine("-- http://mcgalaxy.ml");
-            sql.WriteLine("--");
+            sql.WriteLine("-- {0} SQL Database Dump", Server.SoftwareName);
             sql.WriteLine("-- Host: {0}", Server.MySQLHost);
-            sql.WriteLine("-- Generation Time: {0:d} at {0:HH:mm:ss}", DateTime.Now, DateTime.Now);
-            sql.WriteLine("-- MCGalaxy Version: {0}", Server.Version);
+            sql.WriteLine("-- Generation Time: {0:d} at {0:HH:mm:ss}", DateTime.Now);
+            sql.WriteLine("-- {0} version: {1}", Server.SoftwareName, Server.VersionString);
             sql.WriteLine();
             sql.WriteLine();
 

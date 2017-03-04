@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands {
             if (p.level.worldChat) {
                 Player.SendChatFrom(p, message, false);
             } else {
-                Chat.GlobalChatLevel(p, "<Level>" + message, false);
+                Chat.MessageLevel(p, "<Level>" + message, false, p.level);
             }
             p.CheckForMessageSpam();
             return true;

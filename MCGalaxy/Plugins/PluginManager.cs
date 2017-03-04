@@ -77,7 +77,7 @@ namespace MCGalaxy {
                 
                 string ver = instance.MCGalaxy_Version;
                 if (!String.IsNullOrEmpty(ver) && new Version(ver) > Server.Version) {
-                    Server.s.Log("This plugin (" + instance.name + ") isn't compatible with this version of MCGalaxy!");
+                    Server.s.Log("This plugin (" + instance.name + ") isn't compatible with this version of " + Server.SoftwareName + "!");
                     Thread.Sleep(1000);
                     if (!Server.unsafe_plugin) return;
                     

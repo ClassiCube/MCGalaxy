@@ -72,9 +72,12 @@ namespace MCGalaxy {
                         versionString = v.Major + "." + v.Minor + "." + v.Build + "." + v.Revision;
                     }
                     return versionString;
-                }                
+                }
             }
         }
+        
+        public static string SoftwareName = "MCGalaxy";
+        public static string SoftwareNameVersioned { get { return SoftwareName + " " + VersionString; } }
 
         // URL hash for connecting to the server
         public static string Hash = String.Empty, URL = String.Empty;

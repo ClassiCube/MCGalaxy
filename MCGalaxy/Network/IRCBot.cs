@@ -123,6 +123,7 @@ namespace MCGalaxy {
             server = Server.ircServer;
             
             args = new ConnectionArgs(nick, server);
+            args.RealName = Server.SoftwareNameVersioned;
             args.Port = Server.ircPort;
             args.ServerPassword = Server.ircIdentify && Server.ircPassword != "" ? Server.ircPassword : "*";
         }

@@ -138,7 +138,7 @@ namespace MCGalaxy.Commands {
         void DoBlockDBUpgrade(Player p, string[] args) {
             if (args.Length == 1 || !args[1].CaselessEq("confirm")) {
                 Player.Message(p, "This will export all the BlockDB tables in the database to more efficient .cbdb files.");
-                Player.Message(p, "Note: This is only useful if you have updated from older MCGalaxy versions");
+                Player.Message(p, "Note: This is only useful if you have updated from older {0} versions", Server.SoftwareName);
                 Player.MessageLines(p, DBUpgrader.CompactMessages);
                 Player.Message(p, "Type %T/server upgradeblockdb confirm %Sto begin");
             } else if (DBUpgrader.Upgrading) {

@@ -44,15 +44,15 @@ namespace MCGalaxy.Gui {
         void Window_Load(object sender, EventArgs e) {
             main_btnProps.Enabled = false;
             MaximizeBox = false;
-            Text = "Starting MCGalaxy...";
+            Text = "Starting " + Server.SoftwareNameVersioned + "...";
             Show();
             BringToFront();
             WindowState = FormWindowState.Normal;
             
             InitServer();
 
-            Text = Server.name + " - MCGalaxy " + Server.VersionString;
-            notifyIcon1.Text = ("MCGalaxy Server: " + Server.name).Truncate(63);
+            Text = Server.name + " - " + Server.SoftwareNameVersioned;
+            notifyIcon1.Text =  Server.name.Truncate(63);
             notifyIcon1.ContextMenuStrip = this.icon_context;
             notifyIcon1.Icon = this.Icon;
             notifyIcon1.Visible = true;
@@ -140,8 +140,8 @@ namespace MCGalaxy.Gui {
             if (main_txtLog.InvokeRequired) {
                 Invoke(new VoidDelegate(SettingsUpdate));
             } else {
-                Text = Server.name + " - MCGalaxy " + Server.VersionString;
-                notifyIcon1.Text = ("MCGalaxy Server: " + Server.name).Truncate(63);
+                Text = Server.name + " -" + Server.SoftwareNameVersioned;
+                notifyIcon1.Text = Server.name.Truncate(63);
             }
         }
 

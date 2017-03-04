@@ -766,7 +766,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
         private void forceUpdateBtn_Click(object sender, EventArgs e) {
             forceUpdateBtn.Enabled = false;
-            DialogResult result = MessageBox.Show("Would you like to force update MCGalaxy now?", "Force Update",
+            DialogResult result = MessageBox.Show("Would you like to force update " + Server.SoftwareName + " now?", "Force Update",
                                                   MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (result == DialogResult.OK) {
                 saveStuff();

@@ -466,7 +466,7 @@ namespace MCGalaxy {
                 deathMsg = level.CustomBlockProps[extBlock].DeathMessage;
             }
             if (deathMsg != null) {
-                Chat.GlobalChatLevel(this, deathMsg.Replace("@p", ColoredName), false);
+                Chat.MessageLevel(this, deathMsg.Replace("@p", ColoredName), false, level);
             }
             
             if (block == Block.rockethead) level.MakeExplosion(x, y, z, 0);
@@ -476,7 +476,7 @@ namespace MCGalaxy {
                 if (block == Block.rock) {
                     SendChatFrom(this, ColoredName + "%S" + customMessage, false);
                 } else {
-                    Chat.GlobalChatLevel(this, ColoredName + "%S" + customMessage, false);
+                    Chat.MessageLevel(this, ColoredName + "%S" + customMessage, false, level);
                 }
             }
             
@@ -504,7 +504,7 @@ namespace MCGalaxy {
             }
 
             if (Server.deathcount && (overallDeath > 0 && overallDeath % 10 == 0))
-                Chat.GlobalChatLevel(this, ColoredName + " %Shas died &3" + overallDeath + " times", false);
+                Chat.MessageLevel(this, ColoredName + " %Shas died &3" + overallDeath + " times", false, level);
             lastDeath = DateTime.UtcNow;
         }
 
@@ -569,18 +569,18 @@ namespace MCGalaxy {
 
             if (!level.worldChat) {
                 Server.s.Log("<" + name + ">[level] " + text);
-                Chat.GlobalChatLevel(this, text, true);
+                Chat.MessageLevel(this, text, true, level);
             } else {
                 Server.s.Log("<" + name + "> " + text);
                 if (OnChat != null) OnChat(this, text);
                 if (PlayerChat != null) PlayerChat(this, text);
-                OnPlayerChatEvent.Call(this, text);
-                
+                OnPlayerChatEvent.Call(this, text);                
                 if (cancelchat) { cancelchat = false; return; }
+                
                 if (Server.worldChat) {
                     SendChatFrom(this, text);
                 } else {
-                    Chat.GlobalChatLevel(this, text, true);
+                    Chat.MessageLevel(this, text, true, level);
                 }
             }
             CheckForMessageSpam();
