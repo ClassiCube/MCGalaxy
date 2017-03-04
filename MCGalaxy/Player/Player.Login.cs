@@ -107,6 +107,7 @@ namespace MCGalaxy {
                 InitPlayerStats(playerDb);
             } else {
                 LoadPlayerStats(playerDb);
+                //save(); // update IP and total logins in the DB
             }
             
             Server.Background.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
@@ -223,11 +224,8 @@ namespace MCGalaxy {
             if (p == null || p.ip == "127.0.0.1" || p.disconnected) return;
             
             List<string> alts = PlayerInfo.FindAccounts(p.ip);
-            // Remove online accounts from the list of accounts on the IP
-            for (int i = alts.Count - 1; i >= 0; i--) {
-                if (PlayerInfo.FindExact(alts[i]) == null) continue;
-                alts.RemoveAt(i);
-            }
+            // in older versions it was possible for your name to appear multiple times in DB
+            while (alts.CaselessRemove(p.name)) { }
             if (alts.Count == 0) return;
             
             LevelPermission adminChatRank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);

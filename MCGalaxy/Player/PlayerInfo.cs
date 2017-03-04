@@ -160,8 +160,8 @@ namespace MCGalaxy {
             return row == null ? null : row["Name"].ToString();
         }
         
-        /// <summary> Retrieves from the database the names of all players whose 
-        /// last IP address matches the given IP address. </summary>
+        /// <summary> Retrieves names of all players whose IP address matches the given IP address. </summary>
+        /// <remarks> This is current IP for online players, last IP for offline players from the database. </remarks>
         public static List<string> FindAccounts(string ip) {
             DataTable clones = Database.Backend.GetRows("Players", "Name", "WHERE IP=@0", ip);
             List<string> alts = new List<string>();
@@ -171,6 +171,14 @@ namespace MCGalaxy {
                 if (!alts.CaselessContains(name))
                     alts.Add(name);
             }
+            
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.ip != ip) continue;
+                if (!alts.CaselessContains(p.name))
+                    alts.Add(p.name);
+            }
+            
             clones.Dispose();
             return alts;
         }

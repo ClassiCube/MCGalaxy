@@ -40,6 +40,11 @@ namespace MCGalaxy.Commands {
             }
 
             List<string> accounts = PlayerInfo.FindAccounts(message);
+            // in older versions it was possible for your name to appear multiple times in DB
+            if (p != null) {
+                while (accounts.CaselessRemove(p.name)) { }
+            }
+            
             if (accounts.Count == 0) {
                 Player.Message(p, "No players last played with the given IP.");
             } else {
