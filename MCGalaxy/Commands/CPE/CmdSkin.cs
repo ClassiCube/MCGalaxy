@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.CPE {
             string skin = GetSkin(p, args, 2, bot.name);
             if (skin == null) return;
             bot.SkinName = skin;
-            Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Sskin was changed to &c" + skin);
+            Player.SendMessage(p, "You changed the skin of bot " + bot.ColoredName + " %Sto &c" + skin);
             
             bot.GlobalDespawn();
             bot.GlobalSpawn();
@@ -71,7 +71,6 @@ namespace MCGalaxy.Commands.CPE {
         
         static string GetSkin(Player p, string[] args, int i, string defSkin) {
             string skin = args.Length > i ? args[i] : defSkin;
-            if (!Formatter.ValidName(p, skin, "skin")) return null;
             if (skin[0] == '+')
                 skin = "http://skins.minecraft.net/MinecraftSkins/" + skin.Substring(1) + ".png";
             return skin;
