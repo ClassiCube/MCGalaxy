@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands {
                 bot.kill = false;
                 bot.hunt = false;
                 bot.AIName = "";
-                UpdateBot(bot, "'s AI was turned off.");
+                UpdateBot(p, bot, "'s AI was turned off.");
                 return;
             } else if (args.Length != 2) {
                 Help(p); return;
@@ -57,22 +57,22 @@ namespace MCGalaxy.Commands {
                 bot.hunt = !bot.hunt;
                 bot.Instructions.Clear();
                 bot.AIName = "";
-                UpdateBot(bot, "'s hunt instinct: " + bot.hunt);
+                UpdateBot(p, bot, "'s hunt instinct: " + bot.hunt);
                 return;
             } else if (ai == "kill") {
                 if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
                 bot.kill = !bot.kill;
-                UpdateBot(bot, "'s kill instinct: " + bot.kill);
+                UpdateBot(p, bot, "'s kill instinct: " + bot.kill);
                 return;
             }
             
             if (!ScriptFile.Parse(p, bot, "bots/" + ai)) return;
             bot.AIName = ai;
-            UpdateBot(bot, "'s AI was set to " + ai);
+            UpdateBot(p, bot, "'s AI was set to " + ai);
         }
         
-        static void UpdateBot(PlayerBot bot, string msg) {
-            Chat.MessageLevel(bot.level, bot.ColoredName + "%S" + msg);
+        static void UpdateBot(Player p, PlayerBot bot, string msg) {
+            Player.SendMessage(p, bot.ColoredName + "%S" + msg);
             Server.s.Log(bot.name + msg);
             BotsFile.UpdateBot(bot);
         }
