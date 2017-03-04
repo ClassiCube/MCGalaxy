@@ -21,23 +21,46 @@ using System.IO;
 using System.Text;
 
 namespace MCGalaxy {
-    public sealed class PlayerExtList {   
+    
+    /// <summary> Represents a list of player names and simple associated data. Case insensitive. Thread safe. </summary>
+    public sealed class PlayerExtList {
         
-        char separator = ' ';
-        string path;
-        List<string> names = new List<string>();
-        public List<string> lines = new List<string>();
+        /// <summary> Separator between name and data within a line. Defaults to space. </summary>
+        public char Separator = ' ';
+        
+        /// <summary> Path to the file that stores this list on disc. </summary>
+        public string Path;
+        
+        List<string> names = new List<string>(), lines = new List<string>();
         readonly object locker = new object(), saveLocker = new object();
+
+        /// <summary> Returns a copy of all names in the list. </summary>
+        public List<string> AllNames() {
+            lock (locker)
+                return new List<string>(names);
+        }
         
+        /// <summary> Returns a copy of all lines (name + separator + data) in the list. </summary>
+        public List<string> AllLines() {
+            lock (locker)
+                return new List<string>(lines);
+        }
+        
+        /// <summary> Returns the number of names in the list. </summary>
+        public int Count { get { lock (locker) return names.Count; } }
+        
+        /// <summary> Adds the given name and data to the list. Does not check for duplicates. </summary>
         public void Add(string name, string data) {
             lock (locker) {
-                names.Add(name); lines.Add(name + separator + data);
+                names.Add(name); lines.Add(name + Separator + data);
             }
         }
         
+        /// <summary> Removes the given name (and associated data) to the list,
+        /// returning whether it was in the list to begin with. </summary>
         public bool Remove(string name) {
             lock (locker) {
-        		int idx = names.CaselessIndexOf(name);
+                int idx = names.CaselessIndexOf(name);
                 if (idx == -1) return false;
                 
                 names.RemoveAt(idx);
@@ -45,35 +68,48 @@ namespace MCGalaxy {
                 return true;
             }
         }
+
+        /// <summary> Returns whether the given name is in the list. </summary>
+        public bool Contains(string name) {
+            lock (locker)
+                return names.CaselessContains(name);
+        }
         
+        /// <summary> Adds or updates the given name and data in the list. </summary>
         public void AddOrReplace(string name, string data) {
             lock (locker) {
-            	int idx = names.CaselessIndexOf(name);
+                int idx = names.CaselessIndexOf(name);
                 if (idx == -1) {
-                    names.Add(name); lines.Add(name + separator + data);
+                    names.Add(name); lines.Add(name + Separator + data);
                 } else {
-                    lines[idx] = name + separator + data;
+                    lines[idx] = name + Separator + data;
                 }
             }
         }
         
-        public string Find(string name) {
+        /// <summary> Finds the data associated with the given name. </summary>
+        public string FindData(string name) {
             lock (locker) {
                 int idx = names.CaselessIndexOf(name);
-                return idx == -1 ? null : lines[idx];
+                if (idx == -1) return null;
+                
+                string line = lines[idx];
+                idx = line.IndexOf(Separator);
+                return idx == -1 ? null : line.Substring(idx + 1);
             }
         }
         
-        public int Count { get { lock (locker) return names.Count; } }
         
-        
+        /// <summary> Saves the list of names to disc, also logging to console. </summary>
         public void Save() { Save(true); }
+        
+        /// <summary> Saves the list of names to disc, optionally logging to console. </summary>
         public void Save(bool console) {
             lock (saveLocker) {
-                using (StreamWriter w = new StreamWriter(path))
+                using (StreamWriter w = new StreamWriter(Path))
                     SaveEntries(w);
             }
-            if (console) Server.s.Log("SAVED: " + path, true);
+            if (console) Server.s.Log("SAVED: " + Path, true);
         }
         
         void SaveEntries(StreamWriter w) {
@@ -85,8 +121,8 @@ namespace MCGalaxy {
         
         public static PlayerExtList Load(string path, char separator = ' ') {
             PlayerExtList list = new PlayerExtList();
-            list.path = path;
-            list.separator = separator;
+            list.Path = path;
+            list.Separator = separator;
             
             if (!File.Exists(path)) {
                 File.Create(path).Close();

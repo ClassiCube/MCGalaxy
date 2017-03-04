@@ -181,17 +181,11 @@ namespace MCGalaxy {
         }
         
         void LoadCpeData() {
-            string line = Server.skins.Find(name);
-            if (line != null) {
-                int sep = line.IndexOf(' ');
-                if (sep >= 0) skinName = line.Substring(sep + 1);
-            }
+            string savedSkin = Server.skins.FindData(name);
+            if (savedSkin != null) skinName = savedSkin;
             
-            line = Server.models.Find(name);
-            if (line != null) {
-                int sep = line.IndexOf(' ');
-                if (sep >= 0) model = line.Substring(sep + 1);
-            }
+            string savedModel = Server.models.FindData(name);
+            if (savedModel != null) model = savedModel;
             ModelBB = AABB.ModelAABB(model, level);
         }
         

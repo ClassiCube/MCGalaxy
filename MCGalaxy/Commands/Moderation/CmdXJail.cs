@@ -52,8 +52,7 @@ namespace MCGalaxy.Commands {
             Command freeze = Command.all.Find("freeze");
             Command mute = Command.all.Find("mute");
             
-            string data = Server.jailed.Find(who.name);
-            if (data == null) {
+            if (!Server.jailed.Contains(who.name)) {
                 if (!who.muted) mute.Use(p, message);
                 if (!who.frozen) freeze.Use(p, message);
                 

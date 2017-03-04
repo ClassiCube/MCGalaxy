@@ -78,11 +78,10 @@ namespace MCGalaxy {
         
         void LoadAutoloadMaps() {
             AutoloadMaps = PlayerExtList.Load("text/autoload.txt", '=');
-            foreach (string line in AutoloadMaps.lines) {
-                int sepIndex = line.IndexOf('=');
-                string name = sepIndex >= 0 ? line.Substring(0, sepIndex) : line;
-                
-                name = name.ToLower();               
+            List<string> maps = AutoloadMaps.AllNames();
+            
+            foreach (string map in maps) {
+                string name = map.ToLower();               
                 if (name != mainLevel.name) CmdLoad.LoadLevel(null, name);
             }
         }

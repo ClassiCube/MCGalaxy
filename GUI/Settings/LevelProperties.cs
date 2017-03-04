@@ -126,7 +126,7 @@ namespace MCGalaxy.Gui {
         
         
         bool GetAutoload() {
-            return Server.AutoloadMaps.Find(lvl.name) != null;
+            return Server.AutoloadMaps.Contains(lvl.name);
         }
         
         void SetAutoload(bool value) {

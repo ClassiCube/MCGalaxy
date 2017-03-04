@@ -45,15 +45,13 @@ namespace MCGalaxy.Core {
         }
         
         static void LoadReach(Player p) {
-            string line = Server.reach.Find(p.name);
-            if (line == null) return;
-            int space = line.IndexOf(' ');
-            if (space == -1) return;
-            string reach = line.Substring(space + 1);
+            string reach = Server.reach.FindData(p.name);
+            if (reach == null) return;
             
             short reachDist;
             if (!short.TryParse(reach, out reachDist)) return;
             p.ReachDistance = reachDist / 32f;
+            
             if (p.HasCpeExt(CpeExt.ClickDistance))
                 p.Send(Packet.ClickDistance(reachDist));
         }
@@ -92,11 +90,8 @@ namespace MCGalaxy.Core {
         }
         
         static void CheckLoginJailed(Player p) {
-            string line = Server.jailed.Find(p.name);
-            if (line == null) return;
-            int space = line.IndexOf(' ');
-            if (space == -1) return;
-            string level = line.Substring(space + 1);
+            string level = Server.jailed.FindData(p.name);
+            if (level == null) return;
             
             try {
                 PlayerActions.ChangeMap(p, level);

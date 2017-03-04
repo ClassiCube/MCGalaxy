@@ -21,88 +21,105 @@ using System.IO;
 using System.Text;
 
 namespace MCGalaxy {
+    
+    /// <summary> Represents a list of player names. Case insensitive. Thread safe. </summary>
     public sealed class PlayerList {
-        string path;
-        List<string> players = new List<string>();
+        
+        /// <summary> Path to the file that stores this list on disc. </summary>
+        public string Path;
+        
+        List<string> names = new List<string>();        
         readonly object locker = new object(), saveLocker = new object();
         
         public PlayerList() { }
-        public PlayerList(string path) { this.path = path; }
+        public PlayerList(string path) { Path = path; }
         
-        public void Add(string p) {
-            lock (locker)
-                players.Add(p);
-        }
-        
-        public bool Remove(string p) {
-            lock (locker)
-                return players.CaselessRemove(p);
-        }
-        
-        public bool Contains(string p) {
-            lock (locker)
-                return players.CaselessContains(p);
-        }
-        
+        /// <summary> Returns a copy of all names in the list. </summary>
         public List<string> All() {
             lock (locker)
-                return new List<string>(players);
+                return new List<string>(names);
         }
         
-        public int Count { get { lock (locker) return players.Count; } }
+        /// <summary> Returns the number of names in the list. </summary>
+        public int Count { get { lock (locker) return names.Count; } }
         
-        /// <summary> Adds or replaces the given name. </summary>
-        /// <returns> Whether the given player name was added to the list. </returns>
-        public bool AddIfNotExists(string p) {
+        
+        /// <summary> Adds the given name to the list. Does not check for duplicates. </summary>
+        public void Add(string name) {
+            lock (locker)
+                names.Add(name);
+        }
+
+        /// <summary> Removes the given name to the list, 
+        /// returning whether it was in the list to begin with. </summary>
+        public bool Remove(string name) {
+            lock (locker)
+                return names.CaselessRemove(name);
+        }
+        
+        /// <summary> Returns whether the given name is in the list. </summary>
+        public bool Contains(string name) {
+            lock (locker)
+                return names.CaselessContains(name);
+        }
+        
+        /// <summary> Adds the given name, if it is not already in the list. </summary>
+        /// <returns> Whether the given name was added to the list. </returns>
+        public bool AddIfNotExists(string name) {
             lock (locker) {
-            	int idx = players.CaselessIndexOf(p);
+                int idx = names.CaselessIndexOf(name);
                 if (idx >= 0) return false;
                 
-                players.Add(p);
+                names.Add(name);
             }
             return true;
         }
         
+        /// <summary> Finds matches within this list for the given name. </summary>
         public string FindMatches(Player p, string name, string type, out int matches) {
             lock (locker) {
-                return Matcher.Find<string>(p, name, out matches, players,
+                return Matcher.Find<string>(p, name, out matches, names,
                                             null, n => n, type, 20);
             }
         }
         
         
+        /// <summary> Saves the list of names to disc, also logging to console. </summary>
         public void Save() { Save(true); }
-        public void Save(bool console) {
+        
+        /// <summary> Saves the list of names to disc, optionally logging to console. </summary>
+        public void Save(bool log) {
             lock (saveLocker) {
-                using (StreamWriter w = new StreamWriter(path))
+                using (StreamWriter w = new StreamWriter(Path))
                     SaveEntries(w);
             }
-            if (console) Server.s.Log("SAVED: " + path, true);
+            if (log) Server.s.Log("SAVED: " + Path, true);
         }
         
         void SaveEntries(StreamWriter w) {
             lock (locker) {
-                foreach (string p in players)
+                foreach (string p in names)
                     w.WriteLine(p);
             }
         }
         
+        /// <summary> Loads a list of names from disc. </summary>
         public static PlayerList Load(string file) {
             if (!Directory.Exists("ranks")) Directory.CreateDirectory("ranks");
             PlayerList list = new PlayerList(file);
             if (file.IndexOf('/') == -1) file = "ranks/" + file;
-            list.path = file;
+            list.Path = file;
             
-            if (!File.Exists(list.path)) {
-                File.Create(list.path).Close();
-                Server.s.Log("CREATED NEW: " + list.path);
+            if (!File.Exists(list.Path)) {
+                File.Create(list.Path).Close();
+                Server.s.Log("CREATED NEW: " + list.Path);
                 return list;
             }
             
-            using (StreamReader r = new StreamReader(list.path, Encoding.UTF8)) {
+            using (StreamReader r = new StreamReader(list.Path, Encoding.UTF8)) {
                 string line = null;
                 while ((line = r.ReadLine()) != null) {
-                    list.players.Add(line);
+                    list.names.Add(line);
                 }
             }
             return list;
