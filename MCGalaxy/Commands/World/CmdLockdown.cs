@@ -25,7 +25,10 @@ namespace MCGalaxy.Commands {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("wlock", "map"), new CommandAlias("wunlock", "map") }; }
+        }
+        
         public override void Use(Player p, string message) {
             if (!Directory.Exists("text/lockdown"))
                 Directory.CreateDirectory("text/lockdown");
