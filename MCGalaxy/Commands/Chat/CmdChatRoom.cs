@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands {
         void HandleLeave(Player p) {
             Player.Message(p, "You left the chat room '{0}'", p.Chatroom);
             Chat.MessageChatRoom(p, p.ColoredName + " %Shas left the chat room", false, p.Chatroom);
-            Chat.MessageAll("{0} %Shas left their chat room {1}", p.ColoredName, p.Chatroom);
+            Chat.MessageGlobal("{0} %Shas left their chat room {1}", p.ColoredName, p.Chatroom);
             p.Chatroom = null;
         }
         
@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "The chatoom '{0}' already exists", room);
             } else {
                 Server.Chatrooms.Add(room);
-                Chat.MessageAll("A new chat room '{0}' has been created", room);
+                Chat.MessageGlobal("A new chat room '{0}' has been created", room);
             }
         }
         
@@ -145,7 +145,7 @@ namespace MCGalaxy.Commands {
                 }
             }
             
-            Chat.MessageAll("{0} is being deleted", room);
+            Chat.MessageGlobal("{0} is being deleted", room);
             if (p.Chatroom == room)
                 HandleLeave(p);
             Server.Chatrooms.Remove(room);
@@ -163,7 +163,7 @@ namespace MCGalaxy.Commands {
                                    room, p.ColoredName);
                 }
             }
-            Chat.MessageAll("The chatroom '{0}' has been deleted", room);
+            Chat.MessageGlobal("The chatroom '{0}' has been deleted", room);
         }
         
         void HandleSpy(Player p, string[] parts) {

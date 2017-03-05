@@ -116,8 +116,8 @@ namespace MCGalaxy {
             Entities.SpawnEntities(p, x, y, z, lvl.rotx, lvl.roty);
             CheckGamesJoin(p, oldLevel);
             
-            if (!p.hidden && p.level.ShouldShowJoinMessage(oldLevel)) {
-                Player.SendChatFrom(p, p.ColoredName + " %Swent to " + lvl.ColoredName, false);
+            if (p.level.ShouldShowJoinMessage(oldLevel)) {
+                Chat.MessageGlobal(p, p.ColoredName + " %Swent to " + lvl.ColoredName, false, true);
                 Player.RaisePlayerAction(p, PlayerAction.JoinWorld, lvl.name);
             }
             return true;

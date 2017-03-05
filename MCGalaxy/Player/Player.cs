@@ -146,35 +146,14 @@ namespace MCGalaxy {
             chatmessage.time = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
             Last50Chat.Add(chatmessage);
             
-            string msg_NT = message, msg_NN = message, msg_NNNT = message;
-            if (showname) {
-                string msg = ": &f" + message;
-                string pre = from.color + from.prefix;     
-                message = pre + from.DisplayName + msg; // Titles + Nickname
-                msg_NN = pre + from.truename + msg; // Titles + Account name
-                
-                pre = from.group.prefix == "" ? "" : "&f" + from.group.prefix;
-                msg_NT = pre + from.color + from.DisplayName + msg; // Nickname
-                msg_NNNT = pre + from.color + from.truename + msg; // Account name
-            }
-            
-            Player[] players = PlayerInfo.Online.Items; 
-            foreach (Player p in players) {
-                if (p.Chatroom != null || p.listignored.Contains(from.name)) continue;
-                if (!p.level.worldChat || (p.ignoreAll && p != from)) continue;
-                
-                if (p.ignoreNicks && p.ignoreTitles) Player.Message(p, msg_NNNT);
-                else if (p.ignoreNicks) Player.Message(p, msg_NN);
-                else if (p.ignoreTitles) Player.Message(p, msg_NT);
-                else Player.Message(p, message);
-            }
+            Chat.MessageGlobal(from, message, showname, false);
         }
 
         public static List<ChatMessage> Last50Chat = new List<ChatMessage>();
         [Obsolete("Use Chat.MessageAll() instead")]
-        public static void GlobalMessage(string message) { Chat.MessageAll(message); }
+        public static void GlobalMessage(string message) { Chat.MessageGlobal(message); }
         [Obsolete("Use Chat.MessageAll() instead")]
-        public static void GlobalMessage(string message, bool global) { Chat.MessageAll(message); }
+        public static void GlobalMessage(string message, bool global) { Chat.MessageGlobal(message); }
         
         public static void GlobalIRCMessage(string message) {
             message = Colors.EscapeColors(message);
@@ -188,7 +167,7 @@ namespace MCGalaxy {
         }
         
         public static void GlobalMessage(Player from, string message) {
-            if (from == null) Chat.MessageAll(message);
+            if (from == null) Chat.MessageGlobal(message);
             else SendChatFrom(from, message, false);
         }
         
@@ -346,14 +325,11 @@ namespace MCGalaxy {
                 string leavem = "&c- " + FullName + " %S" + chatMsg;
                 const LevelPermission perm = LevelPermission.Guest;
                 if (group.Permission > perm || (Server.guestLeaveNotify && group.Permission <= perm)) {
-                    Player[] players = PlayerInfo.Online.Items;
-                    foreach (Player pl in players) {
-                        if (Entities.CanSee(pl, this)) Player.Message(pl, leavem);
-                    }
+                    Chat.MessageGlobal(this, leavem, false, true);
                 }
                 Server.s.Log(name + " disconnected (" + chatMsg + "%S).");
             } else {
-                SendChatFrom(this, "&c- " + FullName + " %Skicked %S" + chatMsg, false);
+                 Chat.MessageGlobal(this, "&c- " + FullName + " %Skicked %S" + chatMsg, false);
                 Server.s.Log(name + " kicked (" + chatMsg + "%S).");
             }
         }

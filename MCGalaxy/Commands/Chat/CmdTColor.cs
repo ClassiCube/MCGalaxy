@@ -34,12 +34,13 @@ namespace MCGalaxy.Commands {
         protected override void SetPlayerData(Player p, Player who, string[] args) {
             string color = "";
             if (args.Length == 1) {
-                Player.SendChatFrom(who, who.ColoredName + " %Shad their title color removed.", false);
+                Chat.MessageGlobal(who, who.ColoredName + " %Shad their title color removed.", false);
             } else  {
                 color = Colors.Parse(args[1]);
                 if (color == "") { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
                 else if (color == who.titlecolor) { Player.Message(p, who.DisplayName + " %Salready has that title color."); return; }
-                Player.SendChatFrom(who, who.ColoredName + " %Shad their title color changed to " + color + Colors.Name(color) + "%S.", false);                
+                
+                Chat.MessageGlobal(who, who.ColoredName + " %Shad their title color changed to " + color + Colors.Name(color) + "%S.", false);                
             }
             
             who.titlecolor = color;

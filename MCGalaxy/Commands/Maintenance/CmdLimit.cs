@@ -70,11 +70,11 @@ namespace MCGalaxy.Commands {
             switch (args[0].ToLower()) {
                 case "dl":
                 case "drawlimit":
-                    Chat.MessageAll("{0}%S's draw limit set to &b{1}", grp.ColoredName, limit);
+                    Chat.MessageGlobal("{0}%S's draw limit set to &b{1}", grp.ColoredName, limit);
                     grp.maxBlocks = limit; break;
                 case "mu":
                 case "maxundo":
-                    Chat.MessageAll("{0}%S's undo limit set to &b{1}", grp.ColoredName, limit);
+                    Chat.MessageGlobal("{0}%S's undo limit set to &b{1}", grp.ColoredName, limit);
                     grp.maxUndo = limit; break;
                 default:
                     Help(p); return;
@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, format + ": &b" + target);
             } else {
                 target = value;
-                Chat.MessageAll(format + " set to &b" + target);                
+                Chat.MessageGlobal(format + " set to &b" + target);                
                 SrvProperties.Save();
             }
         }

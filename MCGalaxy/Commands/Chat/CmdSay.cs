@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
 
             message = Colors.EscapeColors(message);
-            Chat.MessageAll(message);
+            Chat.MessageGlobal(message);
             Server.IRC.Say(message);
         }
         

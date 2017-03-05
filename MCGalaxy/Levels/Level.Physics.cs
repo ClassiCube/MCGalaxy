@@ -92,7 +92,7 @@ namespace MCGalaxy {
                                 setPhysics(0);
                             ClearPhysics();
 
-                            Chat.MessageAll("Physics shutdown on {0}", ColoredName);
+                            Chat.MessageGlobal("Physics shutdown on {0}", ColoredName);
                             Server.s.Log("Physics shutdown on " + name);
                             if (PhysicsStateChanged != null)
                                 PhysicsStateChanged(this, PhysicsState.Stopped);

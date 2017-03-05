@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
                 foreach (Player pl in players) {
                     ClearChat(pl);
                 }
-                Chat.MessageAll("%4Global Chat Cleared.");
+                Chat.MessageGlobal("%4Global Chat Cleared.");
             }
         }
         

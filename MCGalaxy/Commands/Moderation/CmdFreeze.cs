@@ -37,12 +37,12 @@ namespace MCGalaxy.Commands
             
             string frozenby = (p == null) ? "(console)" : p.ColoredName;
             if (!who.frozen) {
-                Player.SendChatFrom(who, who.ColoredName + " %Swas &bfrozen %Sby " + frozenby + "%S.", false);
+                Chat.MessageGlobal(who, who.ColoredName + " %Swas &bfrozen %Sby " + frozenby + "%S.", false);
                 Server.s.Log(who.name + " was frozen by " + frozenby);
                 Player.AddNote(who.name, p, "F");
                 Server.frozen.AddIfNotExists(who.name);
             } else {
-                Player.SendChatFrom(who, who.ColoredName + " %Swas &adefrosted %Sby " + frozenby + "%S.", false);
+                Chat.MessageGlobal(who, who.ColoredName + " %Swas &adefrosted %Sby " + frozenby + "%S.", false);
                 Server.s.Log(who.name + " was defrosted by " + frozenby);
                 Server.frozen.Remove(who.name);
             }

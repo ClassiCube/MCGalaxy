@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Building {
 
             string namesStr = names.Join(name => PlayerInfo.GetColoredName(p, name));
             if (op.found) {
-                Chat.MessageAll("Undid {1}%S's changes for the past &b{0}", delta.Shorten(true), namesStr);
+                Chat.MessageGlobal("Undid {1}%S's changes for the past &b{0}", delta.Shorten(true), namesStr);
                 Server.s.Log(names.Join() + "'s actions for the past " + delta.Shorten(true) + " were undone.");
             } else {
                 Player.Message(p, "No changes found by {1} %Sin the past &b{0}", delta.Shorten(true), namesStr);

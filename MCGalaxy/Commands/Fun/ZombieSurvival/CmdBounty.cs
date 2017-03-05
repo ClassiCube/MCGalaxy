@@ -48,10 +48,10 @@ namespace MCGalaxy.Commands {
             }
             
             if (old == null) {
-                Chat.MessageAll("Looks like someone really wants the brains of {0}%S! A bounty of &a{1} %S{2} was placed on them.", 
+                Chat.MessageGlobal("Looks like someone really wants the brains of {0}%S! A bounty of &a{1} %S{2} was placed on them.", 
                                 who.ColoredName, amount, Server.moneys);
             } else {
-                Chat.MessageAll("{0} %Sis popular! The bounty on them was increased from &a{3} %Sto &a{1} %S{2}.", 
+                Chat.MessageGlobal("{0} %Sis popular! The bounty on them was increased from &a{3} %Sto &a{1} %S{2}.", 
                                 who.ColoredName, amount, Server.moneys, old.Amount);
                 Server.zombie.Bounties.Remove(old);
             }

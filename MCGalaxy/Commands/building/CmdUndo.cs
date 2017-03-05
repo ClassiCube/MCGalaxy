@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Building {
             op.Start = DateTime.UtcNow.Subtract(delta);
             DrawOpPerformer.Do(op, null, p, new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal } );
             
-            Chat.MessageAll("Physics were undone &b{0}", delta.Shorten());
+            Chat.MessageGlobal("Physics were undone &b{0}", delta.Shorten());
             Server.s.Log("Physics were undone &b" + delta.Shorten());
             p.level.Save(true);
         }

@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands
             
             string map = args.Length > 1 ? args[1] : "";
             switch (Server.lava.Start(map)) {
-                case 0: Chat.MessageAll("Lava Survival has started! Join the fun with /ls go"); return;
+                case 0: Chat.MessageGlobal("Lava Survival has started! Join the fun with /ls go"); return;
                 case 1: Player.Message(p, "There is already an active Lava Survival game."); return;
                 case 2: Player.Message(p, "You must have at least 3 configured maps to play Lava Survival."); return;
                 case 3: Player.Message(p, "The specified map doesn't exist."); return;
@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands
             }
             
             switch (Server.lava.Stop()) {
-                case 0: Chat.MessageAll("Lava Survival has ended! We hope you had fun!"); return;
+                case 0: Chat.MessageGlobal("Lava Survival has ended! We hope you had fun!"); return;
                 case 1: Player.Message(p, "There isn't an active Lava Survival game."); return;
                 default: Player.Message(p, "An unknown error occurred."); return;
             }

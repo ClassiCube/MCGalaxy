@@ -478,7 +478,7 @@ namespace MCGalaxy {
             if (block == Block.rock || block == Block.stone) {
                 if (explode) level.MakeExplosion(x, y, z, 1);
                 if (block == Block.rock) {
-                    SendChatFrom(this, ColoredName + "%S" + customMessage, false);
+                    Chat.MessageGlobal(this, ColoredName + "%S" + customMessage, false);
                 } else {
                     Chat.MessageLevel(this, ColoredName + "%S" + customMessage, false, level);
                 }

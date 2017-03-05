@@ -199,7 +199,7 @@ namespace MCGalaxy.Games
             }
             string teamkillling = "Disabled";
             if (TeamKills) teamkillling = "Enabled";
-            Chat.MessageAll("&cTNT Wars %Son " + lvl.ColoredName + " %Shas started &3" + Gamemode + " %Swith a difficulty of &3" +
+            Chat.MessageGlobal("&cTNT Wars %Son " + lvl.ColoredName + " %Shas started &3" + Gamemode + " %Swith a difficulty of &3" +
                             Difficulty + " %S(&3" + HitsToDie + " %Shits to die, a &3" + explosiontime + 
                             " %Sexplosion delay and with a &3" + explosionsize + " %Sexplosion size)" + 
                             ", team killing is &3" + teamkillling + " %Sand you can place &3" + TntPerPlayerAtATime 
@@ -316,21 +316,21 @@ namespace MCGalaxy.Games
             //Message about winners etc.
             if (Players.Count <= 1)
             {
-                Chat.MessageAll("&cTNT Wars %Shas ended because there are no longer enough players!");
+                Chat.MessageGlobal("&cTNT Wars %Shas ended because there are no longer enough players!");
             }
             else
             {
-                Chat.MessageAll("&cTNT Wars %Shas ended!!");
+                Chat.MessageGlobal("&cTNT Wars %Shas ended!!");
             }
             if (GameMode == TntWarsGameMode.TDM)
             {
                 if (RedScore >= BlueScore)
                 {
-                    Chat.MessageAll("TNT Wars: Team &cRed %Swon &cTNT Wars %Sby {0} points!", RedScore - BlueScore);
+                    Chat.MessageGlobal("TNT Wars: Team &cRed %Swon &cTNT Wars %Sby {0} points!", RedScore - BlueScore);
                 }
                 if (BlueScore >= RedScore)
                 {
-                    Chat.MessageAll("TNT Wars: Team &9Blue %Swon &cTNT Wars %Sby {1} points!", BlueScore - RedScore);
+                    Chat.MessageGlobal("TNT Wars: Team &9Blue %Swon &cTNT Wars %Sby {1} points!", BlueScore - RedScore);
                 }
                 try
                 {
@@ -354,7 +354,7 @@ namespace MCGalaxy.Games
                     player pl = pls[i];
                     if (i == 0) 
                     {
-                        Chat.MessageAll("&cTNT Wars %S1st Place: " + pl.p.ColoredName + " %Swith a score of " + pl.p.color + pl.Score);
+                        Chat.MessageGlobal("&cTNT Wars %S1st Place: " + pl.p.ColoredName + " %Swith a score of " + pl.p.color + pl.Score);
                     }
                     else if (i == 1)
                     {

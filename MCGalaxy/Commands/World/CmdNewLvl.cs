@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.World {
                 
                 string format = seed != "" ? "{0}%S created level {1}%S with seed \"{2}\"" : "{0}%S created level {1}";
                 string pName = p == null ? "(console)" : p.ColoredName;
-                Chat.MessageAll(format, pName, name, seed);
+                Chat.MessageGlobal(format, pName, name, seed);
             } finally {
                 if (p != null) Interlocked.Exchange(ref p.GeneratingMap, 0);
                 Server.DoGC();

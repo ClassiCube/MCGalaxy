@@ -59,7 +59,7 @@ namespace MCGalaxy.Games {
                 CurLevel = level;
             }
             
-            Chat.MessageAll("A game of zombie survival is starting on: {0}", CurLevelName);
+            Chat.MessageGlobal("A game of zombie survival is starting on: {0}", CurLevelName);
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != CurLevel) continue;

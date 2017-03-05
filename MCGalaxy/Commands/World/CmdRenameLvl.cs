@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.World {
             
             LevelActions.Rename(lvl.name, newName);
             CmdLoad.LoadLevel(p, newName);
-            Chat.MessageAll("Renamed {0} to {1}", lvl.name, newName);
+            Chat.MessageGlobal("Renamed {0} to {1}", lvl.name, newName);
             // Move all the old players to the renamed map
             foreach (Player pl in players)
                 PlayerActions.ChangeMap(pl, newName);

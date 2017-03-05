@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
                 if (cantSend) {
                     Player.Message(p, "You are now marked as being AFK.");
                 } else {
-                    MessageOthers(p, "-" + p.ColoredName + "%S- is AFK " + message);
+                    Chat.MessageGlobal(p, "-" + p.ColoredName + "%S- is AFK " + message, false, true);
                     Player.RaisePlayerAction(p, PlayerAction.AFK, message);
                     p.CheckForMessageSpam();
                 }
@@ -62,16 +62,11 @@ namespace MCGalaxy.Commands {
                 if (cantSend) {
                     Player.Message(p, "You are no longer marked as being AFK.");
                 } else {
-                    MessageOthers(p, "-" + p.ColoredName + "%S- is no longer AFK");
+                    Chat.MessageGlobal(p, "-" + p.ColoredName + "%S- is no longer AFK", false, true);
                     Player.RaisePlayerAction(p, PlayerAction.UnAFK, message);
                     p.CheckForMessageSpam();
                 }
             }
-        }
-        
-        static void MessageOthers(Player p, string msg) {
-            Chat.MessageWhere(msg,
-                              pl => Entities.CanSee(pl, p) && !pl.listignored.Contains(p.name) && !pl.ignoreAll);
         }
         
         public override void Help(Player p) {

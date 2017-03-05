@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands {
 
             if (!take) {
                 if (Awards.GiveAward(plName, award)) {
-                    Chat.MessageAll("{0} %Swas awarded: &b{1}", 
+                    Chat.MessageGlobal("{0} %Swas awarded: &b{1}", 
                                     PlayerInfo.GetColoredName(p, plName), award);
                     Awards.SavePlayers();
                 } else {
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
                 }
             } else {
                 if (Awards.TakeAward(plName, award)) {
-                    Chat.MessageAll("{0} %Shad their &b{1} %Saward removed", 
+                    Chat.MessageGlobal("{0} %Shad their &b{1} %Saward removed", 
                                     PlayerInfo.GetColoredName(p, plName), award);
                     Awards.SavePlayers();
                 } else {

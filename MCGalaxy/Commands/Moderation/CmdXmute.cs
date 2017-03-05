@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
             int time = 120;
             if (args.Length > 1 && !CommandParser.GetInt(p, args[1], "Time", ref time, 1)) return;
             
-            Chat.MessageAll("{0} %Shas been muted for {1} seconds", muter.ColoredName, time);
+            Chat.MessageGlobal("{0} %Shas been muted for {1} seconds", muter.ColoredName, time);
             Player.Message(muter, "You have been muted for " + time + " seconds");
             Thread.Sleep(time * 1000);
             Command.all.Find("mute").Use(p, muter.name);

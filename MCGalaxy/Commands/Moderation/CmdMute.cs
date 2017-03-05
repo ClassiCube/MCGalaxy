@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (Server.muted.Contains(message)) {
                     Server.muted.Remove(message);
                     Server.muted.Save();
-                    Chat.MessageAll("{0} %Sis not online but is now &bun-muted", message);
+                    Chat.MessageGlobal("{0} %Sis not online but is now &bun-muted", message);
                 }
                 return;
             }
@@ -42,14 +42,14 @@ namespace MCGalaxy.Commands.Moderation {
 
             if (who.muted) {
                 who.muted = false;
-                Player.SendChatFrom(who, who.ColoredName + " %Swas &bun-muted", false);
+                Chat.MessageGlobal(who, who.ColoredName + " %Swas &bun-muted", false);
                 Server.muted.Remove(who.name);
             } else  {
                 if (p != null && who.Rank >= p.Rank) { 
                     MessageTooHighRank(p, "mute", false); return;
                 }
                 who.muted = true;
-                Player.SendChatFrom(who, who.ColoredName + " %Swas &8muted", false);
+                Chat.MessageGlobal(who, who.ColoredName + " %Swas &8muted", false);
                 Server.muted.AddIfNotExists(who.name);
                 Player.AddNote(who.name, p, "M");
             }

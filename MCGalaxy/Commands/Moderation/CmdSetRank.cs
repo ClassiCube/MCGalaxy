@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (!ChangeRank(name, curRank, newRank, who, p, ref reason)) return;
             
             rankMsg = ModActionCmd.FormatRankChange(curRank, newRank, name, reason);
-            Chat.MessageAll(rankMsg);
+            Chat.MessageGlobal(rankMsg);
             if (who != null)
                 who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
             

@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands {
             
             string globalMsg = who.invincible ? Server.cheapMessageGiven : "has stopped being invincible";
             if (Server.cheapMessage && !who.hidden)
-                Player.SendChatFrom(who, who.ColoredName + " %S" + globalMsg, false);
+                Chat.MessageGlobal(who, who.ColoredName + " %S" + globalMsg, false);
         }
         
         public override void Help(Player p) {

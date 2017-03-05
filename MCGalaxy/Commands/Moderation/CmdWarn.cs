@@ -38,8 +38,8 @@ namespace MCGalaxy.Commands.Moderation {
             }           
             
             string warnedby = (p == null) ? "(console)" : p.ColoredName;
-            Chat.MessageAll("{0} %ewarned {1} %ebecause:", warnedby, who.ColoredName);
-            Chat.MessageAll("&c" + reason);
+            Chat.MessageGlobal("{0} %ewarned {1} %ebecause:", warnedby, who.ColoredName);
+            Chat.MessageGlobal("&c" + reason);
             Server.IRC.Say(warnedby + " %ewarned " + who.ColoredName + " %efor: %c" + reason);
             Server.s.Log(warnedby + " warned " + who.name);
 
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Moderation {
             } else if (who.warn == 1) {
                 Player.Message(who, "Do it one more time and you will get kicked!");
             } else if (who.warn == 2) {
-                Chat.MessageAll("{0} %Swas warn-kicked by {1}", who.ColoredName, warnedby);
+                Chat.MessageGlobal("{0} %Swas warn-kicked by {1}", who.ColoredName, warnedby);
                 string chatMsg = "by " + warnedby + "%S: " + reason;
                 string kickMsg = "Kicked by " + warnedby + "&f: " + reason;
                 who.Kick(chatMsg, kickMsg);

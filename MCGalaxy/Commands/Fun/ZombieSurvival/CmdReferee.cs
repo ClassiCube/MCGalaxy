@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
 
             if (p.Game.Referee) {
-                Player.SendChatFrom(p, p.ColoredName + " %Sis no longer a referee", false);
+                Chat.MessageGlobal(p, p.ColoredName + " %Sis no longer a referee", false);
                 p.Game.Referee = !p.Game.Referee;
                 if (p.level == Server.zombie.CurLevel)
                     Server.zombie.PlayerJoinedLevel(p, Server.zombie.CurLevel, Server.zombie.CurLevel);
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
                     p.Send(Hacks.MakeHackControl(p));
                 Command.all.Find("spawn").Use(p, "");
             } else {
-                Player.SendChatFrom(p, p.ColoredName + " %Sis now a referee", false);               
+                Chat.MessageGlobal(p, p.ColoredName + " %Sis now a referee", false);               
                 Server.zombie.PlayerLeftServer(p);
                 Entities.GlobalDespawn(p, false, true);
                 p.Game.Referee = !p.Game.Referee;

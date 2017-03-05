@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands {
                 CommandOtherPerms.Save();
                 
                 string permName = "extra permission " + otherPermIndex;
-                Chat.MessageAll("&d{0}%S's {1} was set to {2}", cmd.name, permName, grp.ColoredName);
+                Chat.MessageGlobal("&d{0}%S's {1} was set to {2}", cmd.name, permName, grp.ColoredName);
                 if (Player.IsSuper(p))
                     Player.Message(p, "{0}'s {1} was set to {2}", cmd.name, permName, grp.ColoredName);
             }
@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands {
         static void UpdatePermissions(Command cmd, Player p, string message) {
              GrpCommands.Save(GrpCommands.allowedCommands);
              GrpCommands.fillRanks();
-             Chat.MessageAll("&d{0}%S{1}", cmd.name, message);
+             Chat.MessageGlobal("&d{0}%S{1}", cmd.name, message);
              if (Player.IsSuper(p))
                  Player.Message(p, cmd.name + message);
         }

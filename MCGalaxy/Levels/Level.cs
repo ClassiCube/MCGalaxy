@@ -268,7 +268,7 @@ namespace MCGalaxy {
                 }
             } catch (Exception e) {
                 Server.s.Log("FAILED TO SAVE :" + name);
-                Chat.MessageAll("FAILED TO SAVE {0}", ColoredName);
+                Chat.MessageGlobal("FAILED TO SAVE {0}", ColoredName);
                 Server.ErrorLog(e);
             }
             Server.DoGC();

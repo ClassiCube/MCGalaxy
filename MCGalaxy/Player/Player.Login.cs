@@ -141,12 +141,10 @@ namespace MCGalaxy {
             
             string joinm = "&a+ " + FullName + " %S" + PlayerDB.GetLoginMessage(this);
             if (hidden) joinm = "&8(hidden)" + joinm;
+            
             const LevelPermission perm = LevelPermission.Guest;
             if (group.Permission > perm || (Server.guestJoinNotify && group.Permission <= perm)) {
-                Player[] players = PlayerInfo.Online.Items;
-                foreach (Player pl in players) {
-                    if (Entities.CanSee(pl, this)) Player.Message(pl, joinm);
-                }
+                Chat.MessageGlobal(this, joinm, false, true);
             }
 
             if (Server.agreetorulesonentry && group.Permission == LevelPermission.Guest && !Server.agreed.Contains(name)) {
@@ -203,11 +201,12 @@ namespace MCGalaxy {
         void CheckState() {
             if (Server.muted.Contains(name)) {
                 muted = true;
-                Chat.MessageAll("{0} &cis still muted from previously.", DisplayName);
+                Chat.MessageGlobal(this, DisplayName + " &cis still muted from previously.", false);
             }
+			
             if (Server.frozen.Contains(name)) {
                 frozen = true;
-                Chat.MessageAll("{0} &cis still frozen from previously.", DisplayName);
+                Chat.MessageGlobal(this, DisplayName + " &cis still frozen from previously.", false);
             }
         }
         

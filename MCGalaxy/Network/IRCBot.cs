@@ -170,7 +170,7 @@ namespace MCGalaxy {
                 msg = "*" + p.DisplayName + " " + message;
             else if (action == PlayerAction.Review)
                 msg = p.ColoredName + " %Sis requesting a review.";
-            else if (action == PlayerAction.JoinWorld && Server.ircShowWorldChanges)
+            else if (action == PlayerAction.JoinWorld && Server.ircShowWorldChanges && !p.hidden)
                 msg = p.ColoredName + " %Swent to &8" + message;
             
             if (msg != null) Say(msg, stealth);

@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "Cannot disinfect player");
             } else if (!who.Game.Referee) {
                 Server.zombie.DisinfectPlayer(who);
-                Chat.MessageAll("{0} %Swas disinfected.", who.ColoredName);
+                Chat.MessageGlobal("{0} %Swas disinfected.", who.ColoredName);
             }
         }
         

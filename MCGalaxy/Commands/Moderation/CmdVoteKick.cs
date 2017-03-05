@@ -37,13 +37,13 @@ namespace MCGalaxy.Commands {
             if (who == null) return;
 
             if (who.Rank >= p.Rank) {
-                Player.SendChatFrom(p, p.ColoredName + " %Stried to votekick " + who.ColoredName + " %Sbut failed!", false);
+                Chat.MessageGlobal(p, p.ColoredName + " %Stried to votekick " + who.ColoredName + " %Sbut failed!", false);
                 return;
             }
 
             Chat.MessageOps(p.ColoredName + " %Sused &a/votekick");
-            Chat.MessageAll("&9A vote to kick {0} %Shas been called!", who.ColoredName);
-            Chat.MessageAll("&9Type &aY %Sor &cN %Sto vote.");
+            Chat.MessageGlobal("&9A vote to kick {0} %Shas been called!", who.ColoredName);
+            Chat.MessageGlobal("&9Type &aY %Sor &cN %Sto vote.");
 
             // 1/3rd of the players must vote or nothing happens
             // Keep it at 0 to disable min number of votes
@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands {
             string name = (string)task.State;
             Player who = PlayerInfo.FindExact(name);
             if (who == null) {
-                Chat.MessageAll("{0} was not kicked, as they already left the server.", name); return;
+                Chat.MessageGlobal("{0} was not kicked, as they already left the server.", name); return;
             }
 
             int netVotesYes = votesYes - votesNo;
@@ -74,12 +74,12 @@ namespace MCGalaxy.Commands {
             Server.s.Log("VoteKick results for " + who.DisplayName + ": " + votesYes + " yes and " + votesNo + " no votes.");
 
             if (votesYes + votesNo < Server.voteKickVotesNeeded) {
-                Chat.MessageAll("Not enough votes were made. {0} %Sshall remain!", who.ColoredName);
+                Chat.MessageGlobal("Not enough votes were made. {0} %Sshall remain!", who.ColoredName);
             } else if (netVotesYes > 0) {
-                Chat.MessageAll("The people have spoken, {0} %Sis gone!", who.ColoredName);
+                Chat.MessageGlobal("The people have spoken, {0} %Sis gone!", who.ColoredName);
                 who.Kick("Vote-Kick: The people have spoken!");
             } else {
-                Chat.MessageAll("{0} %Sshall remain!", who.ColoredName);
+                Chat.MessageGlobal("{0} %Sshall remain!", who.ColoredName);
             }
         }
         

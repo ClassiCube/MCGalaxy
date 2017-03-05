@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands {
                     Server.ErrorLog(ex);
                 }
             }
-            Chat.MessageAll("All levels have been saved.");
+            Chat.MessageGlobal("All levels have been saved.");
         }
         
         static void Save(Player p, Level lvl, string restoreName) {
@@ -72,10 +72,10 @@ namespace MCGalaxy.Commands {
             
             if (restoreName == "") {
                 Server.s.Log("Backup " + num + " saved for " + lvl.name);
-                Chat.MessageAll("Backup {0} saved for {1}", num, lvl.ColoredName);
+                Chat.MessageGlobal("Backup {0} saved for {1}", num, lvl.ColoredName);
             } else {
                 Server.s.Log(lvl.name + " had a backup created named &b" + restoreName);
-                Chat.MessageAll("{1} %Shad a backup created named &b{0}", restoreName, lvl.ColoredName);
+                Chat.MessageGlobal("{1} %Shad a backup created named &b{0}", restoreName, lvl.ColoredName);
             }
         }
         

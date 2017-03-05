@@ -26,7 +26,7 @@ namespace MCGalaxy.Games {
             if (!Server.Countdown.players.Contains(p)) {
                 Server.Countdown.players.Add(p);
                 Player.Message(p, "You've joined the Countdown game!!");
-                Chat.MessageAll("{0} has joined Countdown!!", p.name);
+                Chat.MessageGlobal("{0} has joined Countdown!!", p.name);
                 if (p.level != Server.Countdown.mapon)
                     PlayerActions.ChangeMap(p, "countdown");
                 p.playerofcountdown = true;

@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands
                 }
                 
                 if (!Server.ctf.Start(p)) return;
-                Chat.MessageAll("A CTF GAME IS STARTING AT CTF! TYPE /goto CTF to join!");
+                Chat.MessageGlobal("A CTF GAME IS STARTING AT CTF! TYPE /goto CTF to join!");
             } else if (message == "stop")  {
                 if (Server.ctf == null || !Server.ctf.started) {
                     Player.Message(p, "No CTF game is active."); return;

@@ -336,7 +336,7 @@ namespace MCGalaxy {
 
         static void RandomMessage(SchedulerTask task) {
             if (Player.number != 0 && messages.Count > 0)
-                Chat.MessageAll(messages[new Random().Next(0, messages.Count)]);
+                Chat.MessageGlobal(messages[new Random().Next(0, messages.Count)]);
         }
 
         internal void SettingsUpdate() {

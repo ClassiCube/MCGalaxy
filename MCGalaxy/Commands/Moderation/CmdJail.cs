@@ -49,14 +49,14 @@ namespace MCGalaxy.Commands
                                      who.level.jailrotx, who.level.jailroty, true);
                 
                 Server.jailed.AddOrReplace(who.name, who.level.name);
-                Player.SendChatFrom(who, who.ColoredName + " %Swas &8jailed", false);
+                Chat.MessageGlobal(who, who.ColoredName + " %Swas &8jailed", false);
                 Player.AddNote(who.name, p, "J");                
             } else {
                 Server.jailed.Remove(who.name);
                 who.jailed = false;
                 Command.all.Find("spawn").Use(who, "");
                 Player.Message(p, "You freed " + who.name + " from jail");
-                Player.SendChatFrom(who, who.ColoredName + " %Swas &afreed %Sfrom jail", false);
+                Chat.MessageGlobal(who, who.ColoredName + " %Swas &afreed %Sfrom jail", false);
             }
             Server.jailed.Save(true);
         }

@@ -44,8 +44,8 @@ namespace MCGalaxy.Commands.Moderation {
 
             if (p != null && p == who) { Player.Message(p, "You cannot kick yourself."); return; }
             if (p != null && who.Rank >= p.Rank) {
-                Player.SendChatFrom(p, p.ColoredName + " %Stried to kick "
-                                    + who.ColoredName + " %Sbut failed.", false);
+                Chat.MessageGlobal(p, p.ColoredName + " %Stried to kick "
+                                   + who.ColoredName + " %Sbut failed.", false);
                 return;
             }
             

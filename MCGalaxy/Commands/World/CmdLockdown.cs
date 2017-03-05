@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
                 if (!Formatter.ValidName(p, args[1], "level")) return;
                 
                 bool unlocking = Server.lockdown.Contains(args[1]);
-                Chat.MessageAll("The map {0} has been {1}locked", args[1], unlocking ? "un" : "");
+                Chat.MessageGlobal("The map {0} has been {1}locked", args[1], unlocking ? "un" : "");
                 string srcName = (p == null) ? "(console)" : p.ColoredName;
                 
                 if (unlocking) {
@@ -68,10 +68,10 @@ namespace MCGalaxy.Commands {
                         PlayerActions.ChangeMap(who, p.level);
                         who.BlockUntilLoad(500);
                     }
-                    Chat.MessageAll("{0} %Shas been locked down!", who.ColoredName);
+                    Chat.MessageGlobal("{0} %Shas been locked down!", who.ColoredName);
                     Chat.MessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
                 } else {
-                    Chat.MessageAll("{0} %Shas been unlocked.", who.ColoredName);
+                    Chat.MessageGlobal("{0} %Shas been unlocked.", who.ColoredName);
                     Chat.MessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
                 }
                 who.jailed = !who.jailed;

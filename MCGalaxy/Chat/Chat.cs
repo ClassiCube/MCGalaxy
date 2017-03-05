@@ -18,18 +18,49 @@ using System.Text;
 namespace MCGalaxy {
     public static class Chat {
 
-		#region Player messaging
-		
+        #region Player messaging
+
+        /// <summary> Sends a message to all players, who are not in a chatroom, are not ignoring all chat,
+        /// are not on a level that does not have isolated/level only chat, and are not ignoring source. </summary>
+        public static void MessageGlobal(Player source, string message, bool showPrefix, 
+                                         bool visibleOnly = false) {
+            string msg_NT = message, msg_NN = message, msg_NNNT = message;
+            if (showPrefix) {
+                string msg = ": &f" + message;
+                string pre = source.color + source.prefix;
+                message = pre + source.DisplayName + msg; // Titles + Nickname
+                msg_NN = pre + source.truename + msg; // Titles + Account name
+                
+                pre = source.group.prefix == "" ? "" : "&f" + source.group.prefix;
+                msg_NT = pre + source.color + source.DisplayName + msg; // Nickname
+                msg_NNNT = pre + source.color + source.truename + msg; // Account name
+            }
+            
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (!NotIgnoring(source, p)) continue;
+                if (visibleOnly && !Entities.CanSee(p, source)) continue;
+                if (!p.level.worldChat || p.Chatroom != null) continue;
+                
+                if (p.ignoreNicks && p.ignoreTitles) Player.Message(p, msg_NNNT);
+                else if (p.ignoreNicks) Player.Message(p, msg_NN);
+                else if (p.ignoreTitles) Player.Message(p, msg_NT);
+                else Player.Message(p, message);
+            }
+        }
+        
         /// <summary> Sends a message to all players who in the player's level,
         /// and are not ignoring source player or in a chatroom. </summary>
-        /// <remarks> Optionally prefixes message by &lt;Level&gt; [source name]: </remarks>		
-        public static void MessageLevel(Player source, string message, bool showPrefix, Level lvl) {
+        /// <remarks> Optionally prefixes message by &lt;Level&gt; [source name]: </remarks>
+        public static void MessageLevel(Player source, string message, bool showPrefix, 
+                                        Level lvl, bool visibleOnly = false) {
             if (showPrefix)
                 message = "<Level>" + source.FullName + ": &f" + message;
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (!NotIgnoring(source, p)) continue;
+                if (visibleOnly && !Entities.CanSee(p, source)) continue;
                 
                 if (p.level == lvl && p.Chatroom == null)
                     Player.Message(p, message);
@@ -86,9 +117,10 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Sends a message to all players who are on the given level, and are not in a chatroom. </summary>
+        /// <summary> Sends a message to all players who are on the given level,
+        /// are not in a chatroom, and are not ignoring all chat. </summary>
         public static void MessageLevel(Level lvl, string message) {
-            MessageWhere(message, pl => pl.level == lvl && pl.Chatroom == null);
+            MessageWhere(message, pl => !pl.ignoreAll && pl.level == lvl && pl.Chatroom == null);
         }
         
         /// <summary> Sends a message to all players who are have the permission to read opchat. </summary>
@@ -103,15 +135,10 @@ namespace MCGalaxy {
             MessageWhere(message, pl => pl.Rank >= rank);
         }
         
-        /// <summary> Sends a message to all players, who do not have
-        /// isolated level/level only chat, and are not in a chatroom. </summary>
-        public static void MessageAll(string message) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-            	if (!p.ignoreAll && p.level.worldChat && p.Chatroom == null) {
-                    Player.Message(p, message);
-            	}
-            }
+        /// <summary> Sends a message to all players, who are not in a chatroom, are not ignoring all chat,
+        /// and are not on a level that does not have isolated/level only chat. </summary>
+        public static void MessageGlobal(string message) {
+            MessageWhere(message, pl => !pl.ignoreAll && pl.level.worldChat && pl.Chatroom == null);
         }
         
         #endregion
@@ -153,7 +180,7 @@ namespace MCGalaxy {
                     }
                 }
             }
-        }  
+        }
         
         /// <summary> Returns true if the target player can see chat messags by source. </summary>
         public static bool NotIgnoring(Player source, Player target) {
@@ -165,20 +192,20 @@ namespace MCGalaxy {
         
         #region Format helpers
         
-        public static void MessageAll(string message, object a0) {
-            MessageAll(String.Format(message, a0));
+        public static void MessageGlobal(string message, object a0) {
+            MessageGlobal(String.Format(message, a0));
         }
         
-        public static void MessageAll(string message, object a0, object a1) {
-            MessageAll(String.Format(message, a0, a1));
+        public static void MessageGlobal(string message, object a0, object a1) {
+            MessageGlobal(String.Format(message, a0, a1));
         }
         
-        public static void MessageAll(string message, object a0, object a1, object a2) {
-            MessageAll(String.Format(message, a0, a1, a2));
+        public static void MessageGlobal(string message, object a0, object a1, object a2) {
+            MessageGlobal(String.Format(message, a0, a1, a2));
         }
         
-        public static void MessageAll(string message, params object[] args) {
-            MessageAll(String.Format(message, args));
+        public static void MessageGlobal(string message, params object[] args) {
+            MessageGlobal(String.Format(message, args));
         }
         
         public static void MessageWhere(string message, Predicate<Player> filter, object a0) {

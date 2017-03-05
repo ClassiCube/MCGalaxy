@@ -82,7 +82,7 @@ namespace MCGalaxy {
         }
         
         static void NotifyPlayersOfUpdate(Player p) {
-            Chat.MessageAll("Update found. Prepare for restart in &f{0} %Sseconds.", Server.restartcountdown);
+            Chat.MessageGlobal("Update found. Prepare for restart in &f{0} %Sseconds.", Server.restartcountdown);
             Server.s.Log("Update found. Prepare for restart in " + Server.restartcountdown + " seconds.");
             
             int timeLeft = Server.restartcountdown;
@@ -92,18 +92,18 @@ namespace MCGalaxy {
             
             countDown.Elapsed += delegate {
                 if (Server.autoupdate || p != null) {
-                    Chat.MessageAll("Updating in &f{0} %Sseconds.", timeLeft);
+                    Chat.MessageGlobal("Updating in &f{0} %Sseconds.", timeLeft);
                     Server.s.Log("Updating in " + timeLeft + " seconds.");
                     timeLeft = timeLeft - 1;
                     if (timeLeft < 0) {
-                        Chat.MessageAll("---UPDATING SERVER---");
+                        Chat.MessageGlobal("---UPDATING SERVER---");
                         Server.s.Log("---UPDATING SERVER---");
                         countDown.Stop();
                         countDown.Dispose();
                         PerformUpdate();
                     }
                 } else {
-                    Chat.MessageAll("Stopping auto restart.");
+                    Chat.MessageGlobal("Stopping auto restart.");
                     Server.s.Log("Stopping auto restart.");
                     countDown.Stop();
                     countDown.Dispose();

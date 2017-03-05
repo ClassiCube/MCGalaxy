@@ -38,11 +38,11 @@ namespace MCGalaxy.Commands {
             
             if (newRank.Permission == LevelPermission.Banned) {
                 string banner = p == null ? "console" : p.ColoredName;
-                Chat.MessageAll("{0} %Swas &8banned %Sby {1}%S.", 
+                Chat.MessageGlobal("{0} %Swas &8banned %Sby {1}%S.", 
                                 who.ColoredName, banner);
             } else {
                 string rankMsg = ModActionCmd.FormatRankChange(who.group, newRank, who.name, "Congratulations!");
-                Chat.MessageAll(rankMsg);
+                Chat.MessageGlobal(rankMsg);
                 Player.Message(who, "You are now ranked {0}%S, type /help for your new set of commands.", 
                                newRank.ColoredName);
             }

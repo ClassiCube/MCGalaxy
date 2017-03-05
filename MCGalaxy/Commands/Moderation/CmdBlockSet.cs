@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
             Block.ResendBlockPermissions(block);           
             // TODO: custom blocks permissions
 
-            Chat.MessageAll("&d{0}%S's permission was changed to {1}", Block.Name(block), grp.ColoredName);
+            Chat.MessageGlobal("&d{0}%S's permission was changed to {1}", Block.Name(block), grp.ColoredName);
             if (p == null)
                 Player.Message(p, "{0}'s permission was changed to {1}", Block.Name(block), grp.ColoredName);
         }

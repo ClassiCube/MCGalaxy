@@ -59,7 +59,7 @@ namespace MCGalaxy {
                     return false;
                 
                 Command.all.Find("mute").Use(null, p.name);
-                Chat.MessageAll("{0} %Shas been &0muted %Sfor spamming!", p.ColoredName);
+                Chat.MessageGlobal("{0} %Shas been &0muted %Sfor spamming!", p.ColoredName);
                 Server.MainScheduler.QueueOnce(UnmuteTask, p.name,
                                                TimeSpan.FromSeconds(Server.mutespamtime));
                 return true;

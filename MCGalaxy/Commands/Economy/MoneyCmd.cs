@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands {
             string targetName = PlayerInfo.GetColoredName(p, target);
             string msgReason = data.Reason == "" ? "" : " %S(" + data.Reason + "%S)";
             
-            Chat.MessageAll(format, data.Source, targetName, 
+            Chat.MessageGlobal(format, data.Source, targetName, 
                             data.Amount, Server.moneys, msgReason);
         }
 
