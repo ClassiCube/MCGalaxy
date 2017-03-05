@@ -93,7 +93,7 @@ namespace MCGalaxy {
         public static CTFGame ctf = null;
         public static PlayerList bannedIP, whiteList, ircControllers, muted, invalidIds;
         public static PlayerList ignored, frozen, hidden, agreed, vip, noEmotes, lockdown;
-        public static PlayerExtList jailed, models, skins, reach;
+        public static PlayerExtList jailed, models, skins, reach, tempBans;
 
         public static readonly List<string> Devs = new List<string>(), Mods = new List<string>();
 
@@ -102,9 +102,6 @@ namespace MCGalaxy {
                 "warn", "mute", "freeze", "demote", "promote", "setrank" }
         );
         public static List<string> Opstats { get { return opstats; } }
-
-        public static List<TempBan> tempBans = new List<TempBan>();
-        public struct TempBan { public string name, reason; public DateTime expiryTime; }
 
         public static PerformanceCounter PCCounter = null;
         public static PerformanceCounter ProcessCounter = null;

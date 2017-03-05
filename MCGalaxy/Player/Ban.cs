@@ -35,6 +35,17 @@ namespace MCGalaxy {
         
         public static string FormatBan(string banner, string reason) {
             return "Banned by " + banner + ": " + reason;
+        }        
+        
+        public static string PackTempBanData(string reason, string banner, DateTime expiry) {
+            return banner + " " + expiry.Ticks + " " + reason;
+        }
+        
+        public static void UnpackTempBanData(string line, out string reason, out string banner, out DateTime expiry) {
+            string[] parts = line.SplitSpaces(3);
+            banner = parts[0];
+            expiry = new DateTime(long.Parse(parts[1]), DateTimeKind.Utc);
+            reason = parts.Length > 2 ? parts[2] : "";
         }
         
         

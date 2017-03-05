@@ -37,10 +37,9 @@ namespace MCGalaxy.Commands.Moderation {
             Group banned = Group.BannedRank;
 
             // Check tempbans first
-            foreach (Server.TempBan tban in Server.tempBans) {
-                if (!tban.name.CaselessEq(name)) continue;
-                
-                Server.tempBans.Remove(tban);
+            if (Server.tempBans.Remove(name)) {
+                Server.tempBans.Save();
+            	
                 Chat.MessageAll("{0} had their temporary ban lifted by {1}.", name, srcFull);
                 Server.s.Log("UNBANNED: " + name + " by " + src);
                 Server.IRC.Say(name + " was unbanned by " + src + ".");

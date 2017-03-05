@@ -163,8 +163,7 @@ namespace MCGalaxy.Commands {
         void SetToDefault() {
             foreach (var elem in Server.serverConfig)
                 elem.Field.SetValue(null, elem.Attrib.DefaultValue);
-
-            Server.tempBans = new List<Server.TempBan>();
+            
             Server.ircafkset = new List<string>();
             Server.messages = new List<string>();
             Server.chatmod = false;

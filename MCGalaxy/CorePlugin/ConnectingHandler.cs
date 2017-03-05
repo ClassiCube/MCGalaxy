@@ -93,12 +93,21 @@ namespace MCGalaxy.Core {
         
         static bool CheckTempban(Player p) {
             try {
-                Server.TempBan tBan = Server.tempBans.Find(tB => tB.name.CaselessEnds(p.name));
-                if (tBan.expiryTime < DateTime.UtcNow) {
-                    Server.tempBans.Remove(tBan);
+                string data = Server.tempBans.FindData(p.name);
+                if (data == null) return true;
+                
+                string banner, reason;
+                DateTime expiry;
+                Ban.UnpackTempBanData(data, out reason, out banner, out expiry);
+                
+                if (expiry < DateTime.UtcNow) {
+                    Server.tempBans.Remove(p.name);
+                    Server.tempBans.Save();
                 } else {
-                    string reason = String.IsNullOrEmpty(tBan.reason) ? "" :" (" + tBan.reason + ")";
-                    p.Kick(null, "You're still temp banned!" + reason, true);
+                    reason = reason == "" ? "" :" (" + reason + ")";
+                    string delta = (expiry - DateTime.UtcNow).Shorten(true);
+                    
+                    p.Kick(null, "Banned by " + banner + " for another " + delta + reason, true);
                     return false;
                 }
             } catch { }
