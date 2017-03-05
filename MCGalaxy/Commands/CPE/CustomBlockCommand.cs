@@ -249,7 +249,7 @@ namespace MCGalaxy.Commands.CPE {
                     step++;
                 }
             } else if (step == 12) {
-                if (CommandParser.GetByte(p, value, "Walk sound", ref bd.CollideType, 0, 11))
+                if (CommandParser.GetByte(p, value, "Walk sound", ref bd.WalkSound, 0, 11))
                     step++;
             } else if (step == 13) {
                 if (CommandParser.GetBool(p, value, ref bd.FullBright))
