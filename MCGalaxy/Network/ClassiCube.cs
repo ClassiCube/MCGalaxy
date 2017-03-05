@@ -86,6 +86,9 @@ namespace MCGalaxy {
             foreach (Player p in players) {
                 if (!p.hidden) count++;
             }
+            // This may happen if a VIP or a dev/mod joins an already full server.
+            if (count > Server.players)
+                count = Server.players;
             return count;
         }
         
