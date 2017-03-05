@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Blocks;
 using MCGalaxy.Blocks.Physics;
 using MCGalaxy.DB;
 using MCGalaxy.Games;
@@ -465,6 +466,12 @@ namespace MCGalaxy {
             if (def != null) return def.Name.Replace(" ", "");
             
             return block != Block.custom_block ? Block.Name(block) : extBlock.ToString();
+        }
+        
+        public bool LightPasses(byte block, byte extBlock) {
+            BlockDefinition def = GetBlockDef(block, extBlock);
+            if (def != null) return !def.BlocksLight || def.BlockDraw != DrawType.Opaque;
+            return Block.LightPass(block);
         }
     }
 }

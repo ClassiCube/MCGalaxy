@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands
         static void OutputBlockProps(Player p, byte b) {
             BlockProps props = Block.Props[b];
 
-            if (Block.LightPass(b, 0, BlockDefinition.GlobalDefs))
+            if (Block.LightPass(b))
                 Player.Message(p, "Block will allow light through");
             if (Block.Physics(b))
                 Player.Message(p, "Block affects physics in some way"); //AFFECT!

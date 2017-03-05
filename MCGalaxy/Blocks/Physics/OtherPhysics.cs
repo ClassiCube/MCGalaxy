@@ -144,7 +144,7 @@ namespace MCGalaxy.Blocks.Physics {
                 if (block == Block.custom_block)
                     extBlock = lvl.GetExtTile(x, (ushort)(y + 1), z);
                 
-                if (Block.LightPass(block, extBlock, lvl.CustomBlockDefs))
+                if (lvl.LightPasses(block, extBlock))
                     lvl.AddUpdate(C.b, Block.grass);
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
             } else {

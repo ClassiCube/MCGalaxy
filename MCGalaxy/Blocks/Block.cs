@@ -126,7 +126,7 @@ namespace MCGalaxy {
         [Obsolete]
         public static bool WaterKill(byte block) { return Props[block].WaterKills; }
 
-        public static bool LightPass(byte block, byte extBlock, BlockDefinition[] defs) {
+        public static bool LightPass(byte block) {
             switch (Convert(block)) {
                 case air:
                 case glass:
@@ -138,12 +138,8 @@ namespace MCGalaxy {
                 case shrub:
                 case rope:
                     return true;
-                case custom_block:
-                    BlockDefinition def = defs[extBlock];
-                    return def == null ? false : !def.BlocksLight;
-                default:
-                    return false;
             }
+            return false;
         }
 
         public static bool NeedRestart(byte block)

@@ -180,7 +180,7 @@ namespace MCGalaxy {
             if (below == Block.dirt && block == Block.air) {
                 level.Blockchange(this, x, (ushort)(y - 1), z, Block.grass);
             }
-            if (below == Block.grass && !Block.LightPass(block, extBlock, level.CustomBlockDefs)) {
+            if (below == Block.grass && !level.LightPasses(block, extBlock)) {
                 level.Blockchange(this, x, (ushort)(y - 1), z, Block.dirt);
             }
             return type;
