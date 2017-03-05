@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
             Group grp = Matcher.FindRanks(p, rank);
             if (grp == null) return;
             
-            Chat.MessageWhere("{3}<{2}>{0}: &f{1}", pl => pl.group == grp || pl == p,
+            Chat.MessageWhere("{3}<{2}>{0}: &f{1}", pl => Chat.NotIgnoring(p, pl) && (pl.group == grp || pl == p),
                               p.ColoredName, text.Trim(), grp.trueName, grp.color);
             p.CheckForMessageSpam();
         }
