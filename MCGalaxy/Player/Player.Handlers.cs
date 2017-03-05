@@ -161,8 +161,9 @@ namespace MCGalaxy {
             byte old = level.GetTile(x, y, z), extOld = 0;
             if (old == Block.custom_block) extOld = level.GetExtTile(x, y, z);
             
-            if (!level.DoBlockchange(this, x, y, z, block, extBlock)) return false;
-            Player.GlobalBlockchange(level, x, y, z, block, extBlock);
+            int type = level.DoBlockchange(this, x, y, z, block, extBlock);
+            if (type == 0) return false;                                              // no change performed
+            if (type == 2) Player.GlobalBlockchange(level, x, y, z, block, extBlock); // different visually
             
             ushort flags = BlockDBFlags.ManualPlace;
             if (painting && Replacable(old)) flags = BlockDBFlags.Painted;

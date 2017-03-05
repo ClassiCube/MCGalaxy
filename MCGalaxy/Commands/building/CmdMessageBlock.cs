@@ -120,7 +120,7 @@ namespace MCGalaxy.Commands.Building {
             
             byte old = p.level.GetTile(x, y, z);
             if (p.level.CheckAffectPermissions(p, x, y, z, old, data.Block, data.ExtBlock)) {
-                p.level.Blockchange(p, x, y, z, data.Block, data.ExtBlock);
+                p.level.UpdateBlock(p, x, y, z, data.Block, data.ExtBlock);
                 UpdateDatabase(p, data, x, y, z);
                 Player.Message(p, "Message block created.");
             } else {                

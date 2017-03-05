@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Building {
             Vec3U16 P = Vec3U16.ClampPos(x, y, z, p.level);
             
             P.X /= 32; P.Y /= 32; P.Z /= 32;
-            p.level.UpdateBlock(p, P.X, P.Y, P.Z, (byte)block, ext, BlockDBFlags.ManualPlace);
+            p.level.UpdateBlock(p, P.X, P.Y, P.Z, (byte)block, ext);
             string blockName = p.level.BlockName((byte)block, ext);
             Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", P.X, P.Y, P.Z, blockName);
         }

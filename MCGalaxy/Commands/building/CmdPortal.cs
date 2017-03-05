@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.Building {
 
             if (data.Multi && type == Block.red && data.Entries.Count > 0) { ExitChange(p, x, y, z, type, extType); return; }
 
-            p.level.Blockchange(p, x, y, z, data.Block, data.ExtBlock);
+            p.level.UpdateBlock(p, x, y, z, data.Block, data.ExtBlock);
             p.SendBlockchange(x, y, z, Block.green, 0);
             PortalPos Port;
 

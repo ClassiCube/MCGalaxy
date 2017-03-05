@@ -253,23 +253,35 @@ namespace MCGalaxy {
         
         public void Blockchange(Player p, ushort x, ushort y, ushort z, 
                                 byte block, byte extBlock = 0) {
-            if (DoBlockchange(p, x, y, z, block, extBlock))
+            if (DoBlockchange(p, x, y, z, block, extBlock) == 2)
                 Player.GlobalBlockchange(this, x, y, z, block, extBlock);
         }
         
-        public bool DoBlockchange(Player p, ushort x, ushort y, ushort z, 
+        /// <summary> Returns: <br/> 
+        /// 0 - block change was not performed <br/>
+        /// 1 - old block was same as new block visually (e.g. white to door_white)<br/>
+        /// 2 - old block was different to new block visually </summary>
+        /// <remarks> The return code can be used to avoid sending redundant block changes. </remarks>
+        public int DoBlockchange(Player p, ushort x, ushort y, ushort z, 
                                   byte block, byte extBlock = 0, bool drawn = false) {
             string errorLocation = "start";
             try
             {
                 //if (x < 0 || y < 0 || z < 0) return;
-                if (x >= Width || y >= Height || z >= Length) return false;
+                if (x >= Width || y >= Height || z >= Length) return 0;
                 byte old = GetTile(x, y, z), extOld = 0;
                 if (old == Block.custom_block) extOld = GetExtTile(x, y, z);
 
                 errorLocation = "Permission checking";
                 if (!CheckAffectPermissions(p, x, y, z, old, block, extBlock)) {
-                    p.RevertBlock(x, y, z); return false;
+                    p.RevertBlock(x, y, z); return 0;
+                }
+                
+                // Test for exact same block ID
+                if (old == Block.custom_block) {
+                    if (extOld == extBlock) return 0;
+                } else {
+                    if (old == block) return 0;
                 }
 
                 if (old == Block.sponge && physics > 0 && block != Block.sponge)
@@ -297,14 +309,16 @@ namespace MCGalaxy {
 
                 changed = true;
                 backedup = false;
-                bool diffBlock = old == Block.custom_block ? extOld != extBlock :
-                    Block.Convert(old) != Block.Convert(block);
-                return diffBlock;
+                
+                if (old != Block.custom_block) {
+                    if (Block.Convert(old) == Block.Convert(block)) return 1; // same visually               
+                }
+                return 2;
             } catch (Exception e) {
                 Server.ErrorLog(e);
                 Chat.MessageOps(p.name + " triggered a non-fatal error on " + ColoredName + ", %Sat location: " + errorLocation);
                 Server.s.Log(p.name + " triggered a non-fatal error on " + ColoredName + ", %Sat location: " + errorLocation);
-                return false;
+                return 0;
             }
         }
         
@@ -419,21 +433,24 @@ namespace MCGalaxy {
             return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
         }
         
-        public void UpdateBlock(Player p, ushort x, ushort y, ushort z, 
-                                byte block, byte extBlock, ushort flags) {
+        public void UpdateBlock(Player p, ushort x, ushort y, ushort z, byte block, byte ext, 
+                                ushort flags = BlockDBFlags.ManualPlace) {
             byte old = GetTile(x, y, z), oldExt = 0;
             if (old == Block.custom_block) oldExt = GetExtTile(x, y, z);
             
             bool drawn = (flags & BlockDBFlags.ManualPlace) != 0;
-            if (!DoBlockchange(p, x, y, z, block, extBlock, drawn)) return;            
+            int type = DoBlockchange(p, x, y, z, block, ext, drawn);
+            if (type == 0) return; // no block change performed
+            
             BlockDB.Cache.Add(p, x, y, z, flags, 
-                              old, oldExt, block, extBlock);
+                              old, oldExt, block, ext);            
+            if (type == 1) return; // not different visually
             
             int index = PosToInt(x, y, z);
             if (bufferblocks) 
-                BlockQueue.Addblock(p, index, block, extBlock);
+                BlockQueue.Addblock(p, index, block, ext);
             else 
-                Player.GlobalBlockchange(this, x, y, z, block, extBlock);
+                Player.GlobalBlockchange(this, x, y, z, block, ext);
         }
                 
         

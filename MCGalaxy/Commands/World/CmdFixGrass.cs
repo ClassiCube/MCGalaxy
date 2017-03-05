@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.World {
                         extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + 1), (ushort)z);
                     
                     if (Block.LightPass(above, extAbove, lvl.CustomBlockDefs)) {
-                        if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass)) {
+                        if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass) == 2) {
                             buffer.Add(index, Block.grass, 0);
                             totalFixed++;
                         }
@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands.World {
                         extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + 1), (ushort)z);
                     
                     if (!Block.LightPass(above, extAbove, lvl.CustomBlockDefs)) {
-                        if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.dirt)) {
+                        if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.dirt) == 2) {
                             buffer.Add(index, Block.dirt, 0);
                             totalFixed++;
                         }
@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.World {
                         }
                     }
                     
-                    if (!inShadow && p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass)) {
+                    if (!inShadow && p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass) == 2) {
                         buffer.Add(index, Block.grass, 0);
                         totalFixed++;
                     }
@@ -118,7 +118,7 @@ namespace MCGalaxy.Commands.World {
                         }
                     }
                     
-                    if (inShadow && p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.dirt)) {
+                    if (inShadow && p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.dirt) == 2) {
                         buffer.Add(index, Block.dirt, 0);
                         totalFixed++;
                     }
@@ -143,7 +143,7 @@ namespace MCGalaxy.Commands.World {
                     extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + 1), (ushort)z);
                 
                 if (Block.LightPass(above, extAbove, lvl.CustomBlockDefs)) {
-                    if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass)) {
+                	if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass) == 2) {
                         buffer.Add(index, Block.grass, 0);
                         totalFixed++;
                     }
@@ -168,7 +168,7 @@ namespace MCGalaxy.Commands.World {
                     extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + 1), (ushort)z);
                 
                 if (!Block.LightPass(above, extAbove, lvl.CustomBlockDefs)) {
-                    if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.dirt)) {
+                    if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.dirt) == 2) {
                         buffer.Add(index, Block.dirt, 0);
                         totalFixed++;
                     }
