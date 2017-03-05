@@ -53,7 +53,6 @@ namespace MCGalaxy {
                 case CpeExt.BlockPermissions:
                     BlockPermissions = version; break;
                 case CpeExt.ChangeModel:
-                    UpdateModels();
                     ChangeModel = version;
                     hasChangeModel = true; break;
                 case CpeExt.EnvMapAppearance:
@@ -123,27 +122,6 @@ namespace MCGalaxy {
                     case CpeExt.PlayerClick: return PlayerClick == version;
                     case CpeExt.EntityProperty: return EntityProperty == version;
                     default: return false;
-            }
-        }
-        
-        public void UpdateModels() {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.level != level) continue;
-                if (p == this) {
-                    if (model != "humanoid") SendChangeModel(Entities.SelfID, model);
-                    continue;
-                }
-                
-                if (p.model != "humanoid") SendChangeModel(p.id, p.model);
-                if (p.hasChangeModel && model != "humanoid")
-                    p.SendChangeModel(id, model);
-            }
-            
-            PlayerBot[] bots = PlayerBot.Bots.Items;
-            foreach (PlayerBot b in bots) {
-                if (level != b.level) continue;
-                if (b.model != "humanoid") SendChangeModel(b.id, b.model);
             }
         }
         

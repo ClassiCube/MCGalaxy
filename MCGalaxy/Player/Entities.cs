@@ -81,9 +81,9 @@ namespace MCGalaxy {
             if (!Server.zombie.Running || !p.Game.Infected) {
                 string col = GetSupportedCol(dst, p.color);
                 if (dst.hasExtList) {
-                    dst.SendExtAddEntity2(id, p.skinName, col + p.truename + possession, x, y, z, rotx, roty);
+                    dst.SendExtAddEntity2(id, p.skinName, col + p.truename + possession, p.model, x, y, z, rotx, roty);
                 } else {
-                    dst.SendSpawn(id, col + p.truename + possession, x, y, z, rotx, roty);
+                    dst.SendSpawn(id, col + p.truename + possession, p.model, x, y, z, rotx, roty);
                 }
                 return;
             }
@@ -93,14 +93,12 @@ namespace MCGalaxy {
                 name = ZombieGameProps.ZombieName; skinName = name;
             }
             
+            string model = id == Entities.SelfID ? p.model : ZombieGameProps.ZombieModel;
             if (dst.hasExtList) {
-                dst.SendExtAddEntity2(id, skinName, Colors.red + name + possession, x, y, z, rotx, roty);
+                dst.SendExtAddEntity2(id, skinName, Colors.red + name + possession, model, x, y, z, rotx, roty);
             } else {
-                dst.SendSpawn(id, Colors.red + name + possession, x, y, z, rotx, roty);
+                dst.SendSpawn(id, Colors.red + name + possession, model, x, y, z, rotx, roty);
             }
-            
-            if (dst.hasChangeModel && id != Entities.SelfID)
-                dst.SendChangeModel(id, ZombieGameProps.ZombieModel);
         }
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
@@ -144,9 +142,11 @@ namespace MCGalaxy {
             string skin = Chat.Format(b.SkinName, dst, true, true, false);
 
             if (dst.hasExtList) {
-                dst.SendExtAddEntity2(b.id, skin, name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+                dst.SendExtAddEntity2(b.id, skin, name, b.model, 
+            	                      b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
             } else {
-                dst.SendSpawn(b.id, name, b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+                dst.SendSpawn(b.id, name, b.model, 
+            	              b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
             }
             if (Server.TablistBots)
                 TabList.Add(dst, b);
