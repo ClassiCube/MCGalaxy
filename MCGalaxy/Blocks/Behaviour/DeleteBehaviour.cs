@@ -65,7 +65,7 @@ namespace MCGalaxy.Blocks {
         
         internal static void C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
             C4Physics.BlowUp(new ushort[] { x, y, z }, p.level);
-            p.ChangeBlock(x, y, z, Block.air, 0); // if block updated, return false so we add to blockdb
+            p.ChangeBlock(x, y, z, Block.air, 0);
         }
         
         internal static void RevertDoor(Player p, byte block, ushort x, ushort y, ushort z) {

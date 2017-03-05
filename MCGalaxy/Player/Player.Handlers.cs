@@ -120,9 +120,12 @@ namespace MCGalaxy {
             
             if (modeType != 0) block = modeType;
             if (doDelete) {
-                DeleteBlock(oldB, x, y, z, block, extBlock);
+                bool deleted = DeleteBlock(oldB, x, y, z, block, extBlock);
             } else {
-                PlaceBlock(oldB, x, y, z, block, extBlock);
+                bool placed = PlaceBlock(oldB, x, y, z, block, extBlock);
+                // Client always assumes delete succeeds, so we need to echo back the painted over block
+                // if the block was not changed visually (e.g. they paint white with door_white)
+                if (!placed && painting) RevertBlock(x, y, z);
             }
         }
         
@@ -134,35 +137,35 @@ namespace MCGalaxy {
             return CommandParser.IsBlockAllowed(this, "place ", block);
         }
         
-        void DeleteBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
-            if (deleteMode) { ChangeBlock(x, y, z, Block.air, 0); return; }
+        bool DeleteBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
+            if (deleteMode) { return ChangeBlock(x, y, z, Block.air, 0) == 2; }
 
             HandleDelete handler = BlockBehaviour.deleteHandlers[old];
             if (handler != null) {
                 handler(this, old, x, y, z);
-            } else {
-                ChangeBlock(x, y, z, Block.air, 0);
+                return true;
             }
+            return ChangeBlock(x, y, z, Block.air, 0) == 2;
         }
 
-        void PlaceBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
+        bool PlaceBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
             HandlePlace handler = BlockBehaviour.placeHandlers[block];
             if (handler != null) {
                 handler(this, old, x, y, z);
-            } else {
-                ChangeBlock(x, y, z, block, extBlock);
+                return true;
             }
+            return ChangeBlock(x, y, z, block, extBlock) == 2;
         }
         
         /// <summary> Updates the block at the given position, mainly intended for manual changes by the player. </summary>
         /// <remarks> Adds to the BlockDB. Also turns block below to grass/dirt depending on light. </remarks>
-        /// <returns> true if block was updated, false if not. </returns>
-        public bool ChangeBlock(ushort x, ushort y, ushort z, byte block, byte extBlock) {
+        /// <returns> Return code from DoBlockchange </returns>
+        public int ChangeBlock(ushort x, ushort y, ushort z, byte block, byte extBlock) {
             byte old = level.GetTile(x, y, z), extOld = 0;
             if (old == Block.custom_block) extOld = level.GetExtTile(x, y, z);
             
             int type = level.DoBlockchange(this, x, y, z, block, extBlock);
-            if (type == 0) return false;                                              // no change performed
+            if (type == 0) return type;                                               // no change performed
             if (type == 2) Player.GlobalBlockchange(level, x, y, z, block, extBlock); // different visually
             
             ushort flags = BlockDBFlags.ManualPlace;
@@ -171,7 +174,7 @@ namespace MCGalaxy {
             
             
             bool autoGrass = level.GrassGrow && (level.physics == 0 || level.physics == 5);
-            if (!autoGrass) return true;
+            if (!autoGrass) return type;
             
             byte below = level.GetTile(x, (ushort)(y - 1), z);
             if (below == Block.dirt && block == Block.air) {
@@ -180,7 +183,7 @@ namespace MCGalaxy {
             if (below == Block.grass && !Block.LightPass(block, extBlock, level.CustomBlockDefs)) {
                 level.Blockchange(this, x, (ushort)(y - 1), z, Block.dirt);
             }
-            return true;
+            return type;
         }
         
         
