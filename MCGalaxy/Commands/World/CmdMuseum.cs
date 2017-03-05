@@ -80,8 +80,7 @@ namespace MCGalaxy.Commands.World {
             Entities.GlobalSpawn(p, x, y, z, lvl.rotx, lvl.roty, true);
             p.ClearBlockchange();
 
-            Chat.MessageWhere("{0} %Swent to the {1}",
-                              pl => Entities.CanSee(pl, p), p.ColoredName, lvl.name);
+            Chat.MessageGlobal(p, p.ColoredName + " %Swent to the " + lvl.name, false, true);
         }
         
         static void SetLevelProps(Level lvl) {

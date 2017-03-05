@@ -141,6 +141,12 @@ namespace MCGalaxy {
             MessageWhere(message, pl => !pl.ignoreAll && pl.level.worldChat && pl.Chatroom == null);
         }
         
+        /// <summary> Sends a message to everyone, regardless of their level, chatroom or ignoring all chat. </summary>
+        /// <remarks> Typically used for situations such as shutting down or updating the server. </remarks>
+        public static void MessageAll(string message) {
+            MessageWhere(message, pl => true);
+        }
+        
         #endregion
         
         

@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands {
         
         
         static void Log(string message) {
-            Chat.MessageGlobal("&4" + message);
+            Chat.MessageAll("&4" + message);
             Server.s.Log(message);
         }
         
