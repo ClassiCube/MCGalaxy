@@ -64,9 +64,6 @@ namespace MCGalaxy.Drawing.Transforms {
             rotY = sinZ * dx + cosZ * dy;
             dx = rotX; dy = rotY;
             
-            Server.s.Log("BASE: " + b.X + ", " + b.Y + ", + " + b.Z);
-            Server.s.Log("ROTATED: " + (dx + P.X) + ", " + (dy + P.Y) + ", " + (dz + P.Z));
-            
             b.X = (ushort)(dx + P.X + ((dx % 1) >= 0.5 ? 1 : 0));
             b.Y = (ushort)(dy + P.Y + ((dy % 1) >= 0.5 ? 1 : 0));
             b.Z = (ushort)(dz + P.Z + ((dz % 1) >= 0.5 ? 1 : 0));
