@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Building {
         public CmdCenter() { }
         
         public override void Use(Player p, string message) {
-            Player.Message(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Place or break two blocks to determine the edges.");
             p.ClearBlockchange();
             p.MakeSelection(2, null, DoCentre);
         }

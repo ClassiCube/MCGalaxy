@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
             args.delta = CmdUndo.GetDelta(p, parts[0], parts, 1);
             if (args.delta == TimeSpan.MinValue) return;
             
-            Player.Message(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Place or break two blocks to determine the edges.");
             p.MakeSelection(2, args, DoUndo);
         }
         

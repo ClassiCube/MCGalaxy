@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Building {
             if (!CommandParser.GetBlockIfAllowed(p, args[0], out dArgs.block,    out dArgs.extBlock))    return;
             if (!CommandParser.GetBlockIfAllowed(p, args[1], out dArgs.newBlock, out dArgs.newExtBlock)) return;
 
-            Player.Message(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Place or break two blocks to determine the edges.");
             p.MakeSelection(2, dArgs, DoOutline);
         }
         

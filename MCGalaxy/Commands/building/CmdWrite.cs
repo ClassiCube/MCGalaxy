@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Building {
             WriteArgs wArgs = default(WriteArgs);
             wArgs.scale = scale; wArgs.spacing = spacing;
             wArgs.message = args[2].ToUpper();
-            Player.Message(p, "Place two blocks to determine direction.");
+            Player.Message(p, "Place or break two blocks to determine direction.");
             p.MakeSelection(2, wArgs, DoWrite);
         }
 

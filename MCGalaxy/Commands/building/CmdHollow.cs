@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Building {
                 if (skip == Block.Invalid) { Player.Message(p, "Cannot find block entered."); return; }
             }
 
-            Player.Message(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Place or break two blocks to determine the edges.");
             p.MakeSelection(2, skip, DoHollow);
         }
         
