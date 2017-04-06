@@ -46,10 +46,16 @@ namespace MCGalaxy.Commands.World {
             if (!CommandParser.GetUShort(p, args[3], "Length", ref z)) return false;
             
             string seed = args.Length == 6 ? args[5] : "";
-            if (!MapGen.OkayAxis(x)) { Player.Message(p, "width must be divisible by 16, and >= 16"); return false; }
-            if (!MapGen.OkayAxis(y)) { Player.Message(p, "height must be divisible by 16, and >= 16"); return false; }
-            if (!MapGen.OkayAxis(z)) { Player.Message(p, "length must be divisible by 16, and >= 16."); return false; }
-            if (!CheckMapSize(p, x, y, z)) return false;
+            ushort xFixed = (ushort)MapGen.MakeOkayAxis(x);
+            ushort yFixed = (ushort)MapGen.MakeOkayAxis(y);
+            ushort zFixed = (ushort)MapGen.MakeOkayAxis(z);
+            if (!MapGen.OkayAxis(x)) {  Player.Message(p, "&cWidth should be divisible by 16! %STruncating to " + xFixed + "."); }
+            if (!MapGen.OkayAxis(y)) { Player.Message(p, "&cHeight should be divisible by 16! %STruncating to " + yFixed + "."); }
+            if (!MapGen.OkayAxis(z)) { Player.Message(p, "&cLength should be divisible by 16! %STruncating to " + zFixed + "."); }
+            if (!CheckMapSize(p, xFixed, yFixed, zFixed)) return false;
+            x = xFixed;
+            y = yFixed;
+            z = zFixed;
  
             if (!Formatter.ValidName(p, name, "level")) return false;
             if (LevelInfo.MapExists(name)) {
