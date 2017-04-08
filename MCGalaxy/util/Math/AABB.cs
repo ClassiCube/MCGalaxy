@@ -154,7 +154,6 @@ namespace MCGalaxy {
             {
                 ushort xP = (ushort)x, yP = (ushort)y, zP = (ushort)z;
                 byte block = lvl.GetTile(xP, yP, zP), extBlock = 0;
-                if (block == Block.Invalid) continue;
                 if (block == Block.custom_block)
                     extBlock = lvl.GetExtTileNoCheck(xP, yP, zP);
                 
@@ -162,11 +161,11 @@ namespace MCGalaxy {
                     .Offset(x * 32, y * 32, z * 32);
                 if (!bb.Intersects(blockBB)) continue;
                 
-                if (block != Block.custom_block) {
-                    if (!Block.Walkthrough(Block.Convert(block))) return true;
+                BlockDefinition def = lvl.GetBlockDef(block, extBlock);
+                if (def != null) {
+                    if (def.CollideType == CollideType.Solid) return true;
                 } else {
-                    BlockDefinition def = lvl.CustomBlockDefs[extBlock];
-                    if (def == null || def.CollideType == CollideType.Solid) return true;
+                    if (block == Block.Invalid || !Block.Walkthrough(Block.Convert(block))) return true;
                 }
             }
             return false;
