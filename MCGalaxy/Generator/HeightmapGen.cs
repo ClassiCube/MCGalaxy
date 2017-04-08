@@ -86,15 +86,40 @@ namespace MCGalaxy.Generator {
                 for (int z = 0; z < bmp.Height; z++)
                     for (int x = 0; x < bmp.Width; x++)
                 {
+                    const int drop = 2;
                     int height = bmp.GetPixel(x, z).R * lvl.Height / 255;
+                    
+                    byte dirtBlock = Block.dirt;
+                    byte grassBlock = Block.grass;
+                    
+                    if (
+                        IsShorterBy(height, drop, bmp, lvl.Height, x-1, z) ||
+                        IsShorterBy(height, drop, bmp, lvl.Height, x+1, z) ||
+                        IsShorterBy(height, drop, bmp, lvl.Height, x, z-1) ||
+                        IsShorterBy(height, drop, bmp, lvl.Height, x, z+1)
+                       ) {
+                        dirtBlock = Block.rock;
+                        grassBlock = Block.rock;
+                    }
+                        
                     for (int y = 0; y < height - 1; y++)
-                        lvl.blocks[index + oneY * y] = Block.dirt;
+                        lvl.blocks[index + oneY * y] = dirtBlock;
                     if (height > 0)
-                        lvl.blocks[index + oneY * (height - 1)] = Block.grass;
+                        lvl.blocks[index + oneY * (height - 1)] = grassBlock;
                     index++;
                 }
             }
             return true;
+        }
+        
+        static bool IsShorterBy(int height, int drop, Bitmap bmp, ushort lvlHeight, int x, int z) {
+            if (x >= bmp.Width || x < 0 || z >= bmp.Height || z < 0 ) {
+                return false;
+            }
+            
+            int heightNeighbor = bmp.GetPixel(x, z).R * lvlHeight / 255;
+            
+            return height - heightNeighbor >= drop;
         }
     }
 }

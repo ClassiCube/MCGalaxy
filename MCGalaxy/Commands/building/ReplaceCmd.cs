@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Building {
             string name = ReplaceNot ? "replacenot" : "replace";
             if (!BrushFactory.Find(name).Validate(args)) return;
             
-            Player.Message(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Place or break two blocks to determine the edges.");
             p.MakeSelection(2, message.ToLower(), DoReplace);
         }
         

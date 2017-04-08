@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
                 }
             }
             
-            Player.Message(p, "Place two blocks to determine the edges.");
+            Player.Message(p, "Place or break two blocks to determine the edges.");
             p.MakeSelection(2, toIgnore, DoMeasure);
         }
         

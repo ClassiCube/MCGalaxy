@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "fill"; } }
         public override string shortcut { get { return "f"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        protected override string PlaceMessage { get { return "Destroy the block you wish to fill."; } }
+        protected override string PlaceMessage { get { return "Place or break a block to mark the area you wish to fill."; } }
         public override int MarksCount { get { return 1; } }
         
         protected override DrawMode GetMode(string[] parts) {

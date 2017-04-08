@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands.Building {
             if (!File.Exists("extra/images/" + dArgs.name + ".bmp")) {
                 Player.Message(p, "The URL entered was invalid!"); return;
             }            
-            Player.Message(p, "Place two blocks to determine direction.");
+            Player.Message(p, "Place or break two blocks to determine direction.");
             p.MakeSelection(2, dArgs, DoImage);
         }
         

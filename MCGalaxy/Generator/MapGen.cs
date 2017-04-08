@@ -47,6 +47,10 @@ namespace MCGalaxy.Generator {
         public static bool OkayAxis(int len) {
             return len >= 16 && len <= 8192 && (len % 16) == 0;
         }
+        
+        public static int MakeOkayAxis(int len) {
+            return (len / 16) * 16;
+        }
 
         public static bool Generate(Level lvl, string theme, string args, Player p) {
             MapGenArgs genArgs = new MapGenArgs();

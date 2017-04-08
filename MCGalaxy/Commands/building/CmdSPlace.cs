@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Building {
 
             DrawArgs dArgs = default(DrawArgs);
             dArgs.distance = distance; dArgs.interval = interval;
-            Player.Message(p, "Place two blocks to determine direction.");
+            Player.Message(p, "Place or break two blocks to determine direction.");
             p.MakeSelection(2, dArgs, DoSPlace);
         }
         

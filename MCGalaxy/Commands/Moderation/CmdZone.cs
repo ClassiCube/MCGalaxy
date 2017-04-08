@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
             } else if (args[0].CaselessEq("add")) {
                 if (!CheckAdd(p, args, "zone add")) return;
 
-                Player.Message(p, "Place two blocks to determine the edges.");
+                Player.Message(p, "Place or break two blocks to determine the edges.");
                 Player.Message(p, "Zone for: &b" + args[1] + ".");
                 p.MakeSelection(2, args[1], AddZone);
             } else if (args[0].CaselessEq("map")) {

@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Building {
     public sealed class CmdLine : DrawCmd {
         public override string name { get { return "line"; } }
         public override string shortcut { get { return "l"; } }
-        protected override string PlaceMessage { get { return "Place two blocks to determine the endpoints."; } }
+        protected override string PlaceMessage { get { return "Place or break two blocks to determine the endpoints."; } }
         
         protected override DrawMode GetMode(string[] parts) {
             string mode = parts[parts.Length - 1];

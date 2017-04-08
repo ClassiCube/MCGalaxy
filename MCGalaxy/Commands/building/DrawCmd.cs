@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected virtual string PlaceMessage {
-            get { return "Place two blocks to determine the edges."; }
+            get { return "Place or break two blocks to determine the edges."; }
         }
         
         

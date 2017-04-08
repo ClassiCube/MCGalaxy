@@ -48,9 +48,9 @@ namespace MCGalaxy.Commands.World {
             if (!CommandParser.GetUShort(p, args[2], "Height", ref y)) return true;
             if (!CommandParser.GetUShort(p, args[3], "Length", ref z)) return true;
             
-            if (!MapGen.OkayAxis(x)) { Player.Message(p, "width must be divisible by 16, and >= 16"); return true; }
-            if (!MapGen.OkayAxis(y)) { Player.Message(p, "height must be divisible by 16, and >= 16"); return true; }
-            if (!MapGen.OkayAxis(z)) { Player.Message(p, "length must be divisible by 16, and >= 16."); return true; }
+            x = (ushort)MapGen.MakeOkayAxis(x);
+            y = (ushort)MapGen.MakeOkayAxis(y);
+            z = (ushort)MapGen.MakeOkayAxis(z);
             if (!CmdNewLvl.CheckMapSize(p, x, y, z)) return true;
             
             bool confirmed = args.Length > 4 && args[4].CaselessEq("confirm");
