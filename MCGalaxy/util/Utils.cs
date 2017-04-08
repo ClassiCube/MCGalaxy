@@ -81,6 +81,9 @@ namespace MCGalaxy {
             return Math.Max(Math.Min(value, hi), lo);
         }
         
+        /// <summary> Divides by 16, rounding up if there is a remainder. </summary>
+        public static int CeilDiv16(int x) { return (x + 15) / 16; }
+        
         // Not all languages use . as their decimal point separator
         public static bool TryParseDecimal(string s, out float result) {
             if (s != null && s.IndexOf(',') >= 0) s = s.Replace(',', '.');

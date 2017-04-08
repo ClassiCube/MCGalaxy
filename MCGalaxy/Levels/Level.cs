@@ -80,9 +80,9 @@ namespace MCGalaxy {
             CloudsHeight = (short)(y + 2);
             
             blocks = new byte[Width * Height * Length];
-            ChunksX = (Width + 15) >> 4;
-            ChunksY = (Height + 15) >> 4;
-            ChunksZ = (Length + 15) >> 4;
+            ChunksX = Utils.CeilDiv16(Width);
+            ChunksY = Utils.CeilDiv16(Height);
+            ChunksZ = Utils.CeilDiv16(Length);
             CustomBlocks = new byte[ChunksX * ChunksY * ChunksZ][];
 
             spawnx = (ushort)(Width / 2);
