@@ -84,13 +84,13 @@ namespace MCGalaxy {
             
             CheckFile("MySql.Data.dll");
             CheckFile("System.Data.SQLite.dll");
-            CheckFile("sqlite3.dll");
             CheckFile("sqlite3_x32.dll");
             CheckFile("sqlite3_x64.dll");
             CheckFile("Newtonsoft.Json.dll");
             CheckFile("LibNoise.dll");
 
             EnsureFilesExist();
+            MoveSqliteDll();
             MoveOutdatedFiles();
 
             lava = new LavaSurvival();
@@ -133,6 +133,16 @@ namespace MCGalaxy {
                                    null, TimeSpan.FromSeconds(Server.blockInterval));
             Background.QueueRepeat(ThreadSafeCache.DBCache.CleanupTask, 
                                    null, TimeSpan.FromMinutes(5));
+        }
+        
+        void MoveSqliteDll() {
+            try {
+                if (File.Exists("sqlite3_x32.dll") && IntPtr.Size == 4)
+                    File.Copy("sqlite3_x32.dll", "sqlite3.dll", true);
+                
+                if (File.Exists("sqlite3_x64.dll") && IntPtr.Size == 8)
+                    File.Copy("sqlite3_x64.dll", "sqlite3.dll", true);
+            } catch { }
         }
         
         void EnsureFilesExist() {
