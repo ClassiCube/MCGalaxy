@@ -58,14 +58,6 @@ namespace MCGalaxy.Games {
             ushort y1 = (ushort)((mapon.Height - 2) * 32);
             ushort z1 = (ushort)(midZ * 32 + 16);
             
-            foreach (Player pl in players) {
-                if (pl.level != mapon) {
-                    pl.SendMessage("Sending you to the correct map.");
-                    PlayerActions.ChangeMap(pl, mapon.name);
-                }
-                p.SpawnEntity(p, Entities.SelfID, x1, y1, z1, 0, 0);
-            }
-            
             squaresLeft.Clear();
             for(int zz = 6; zz < mapon.Length - 6; zz += 3)
                 for (int xx = 6; xx < mapon.Width - 6; xx += 3)
@@ -77,6 +69,7 @@ namespace MCGalaxy.Games {
                 mapon.ChatLevel("Countdown starting with difficulty " + speedtype + " and mode normal in:");
             
             Thread.Sleep(2000);
+            SpawnPlayers(x1, y1, z1);
             mapon.ChatLevel("-----&b5%S-----");
             
             Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, Block.air, mapon);
@@ -108,6 +101,16 @@ namespace MCGalaxy.Games {
                 
                 RemoveGlassBlocks();
                 RemoveRandomSquares();
+            }
+        }
+        
+        void SpawnPlayers(ushort x, ushort y, ushort z) {
+            foreach (Player pl in players) {
+                if (pl.level != mapon) {
+                    pl.SendMessage("Sending you to the correct map.");
+                    PlayerActions.ChangeMap(pl, mapon.name);
+                }
+                pl.SpawnEntity(pl, Entities.SelfID, x, y, z, 0, 0);
             }
         }
         
