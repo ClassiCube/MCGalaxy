@@ -175,30 +175,17 @@ namespace MCGalaxy.Commands {
         }
         
         static void DeleteMap(Player p, string value) {
-            byte mapNum = 0;
-            if (value == "") {
-                Player.Message(p, "To delete one of your maps, type %T/os map delete [map number]");
-            } else if (value == "1") {
-                string map = FirstMapName(p);
-                if (!LevelInfo.MapExists(map)) {
-                    Player.Message(p, "You don't have a map with that map number."); return;
-                }
-                
-                Player.Message(p, "Created backup.");
-                LevelActions.Delete(map);
-                Player.Message(p, "Map 1 has been removed.");
-            } else if (byte.TryParse(value, out mapNum)) {
-                string map = p.name.ToLower() + value;
-                if (!LevelInfo.MapExists(map)) {
-                    Player.Message(p, "You don't have a map with that map number."); return;
-                }
-                
-                Player.Message(p, "Created backup.");
-                LevelActions.Delete(map);
-                Player.Message(p, "Map " + value + " has been removed.");
-            } else {
-                Player.MessageLines(p, mapHelp);
+            if (value != "") {
+                Player.Message(p, "To delete your current map, type %T/os map delete");
+                return;
             }
+            
+            string map = p.level.name;
+            if (!OwnsMap(p, p.level)) return;
+            
+            Player.Message(p, "Created backup.");
+            LevelActions.Delete(map);
+            Player.Message(p, "Map " + map + " was removed.");
         }
 
 

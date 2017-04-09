@@ -176,7 +176,7 @@ namespace MCGalaxy.Commands {
             "%T/os map add [width] [height] [length] [type]",
             "%H  See %T/help newlvl types %Hfor a list of map types.",
             "%T/os map physics [level] %H- Sets the physics on your map.",
-            "%T/os map delete [num] %H- Deletes your nth map",
+            "%T/os map delete %H- Deletes your map",
             "%T/os map restore [num] %H- Restores backup [num] of your map",
             "%T/os map resize [width] [height] [length] %H- Resizes your map",
             "%T/os map save %H- Saves your map",
