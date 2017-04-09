@@ -30,7 +30,9 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             byte block, ext = 0;
             block = p.GetActualHeldBlock(out ext);
-            ushort x = p.pos[0], y = (ushort)(p.pos[1] - 32), z = p.pos[2];
+            int x = (short)p.pos[0] / 32;
+            int y = ((short)p.pos[1] - 32) / 32;
+            int z = (short)p.pos[2] / 32;
 
             try {
                 string[] parts = message.Split(' ');
@@ -41,16 +43,16 @@ namespace MCGalaxy.Commands.Building {
                         if (!CommandParser.GetBlock(p, parts[0], out block, out ext)) return;
                         break;
                     case 3:
-                        x = (ushort)(ushort.Parse(parts[0]) * 32);
-                        y = (ushort)(ushort.Parse(parts[1]) * 32);
-                        z = (ushort)(ushort.Parse(parts[2]) * 32);
+                        x = int.Parse(parts[0]);
+                        y = int.Parse(parts[1]);
+                        z = int.Parse(parts[2]);
                         break;
                     case 4:
                         if (!CommandParser.GetBlock(p, parts[0], out block, out ext)) return;
                         
-                        x = (ushort)(ushort.Parse(parts[1]) * 32);
-                        y = (ushort)(ushort.Parse(parts[2]) * 32);
-                        z = (ushort)(ushort.Parse(parts[3]) * 32);
+                        x = int.Parse(parts[1]);
+                        y = int.Parse(parts[2]);
+                        z = int.Parse(parts[3]);
                         break;
                     default: Player.Message(p, "Invalid number of parameters"); return;
                 }
@@ -59,12 +61,20 @@ namespace MCGalaxy.Commands.Building {
             }
 
             if (!CommandParser.IsBlockAllowed(p, "place ", block)) return;
-            Vec3U16 P = Vec3U16.ClampPos(x, y, z, p.level);
             
-            P.X /= 32; P.Y /= 32; P.Z /= 32;
-            p.level.UpdateBlock(p, P.X, P.Y, P.Z, (byte)block, ext);
-            string blockName = p.level.BlockName((byte)block, ext);
-            Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", P.X, P.Y, P.Z, blockName);
+            x = Clamp(x, p.level.Width);
+            y = Clamp(y, p.level.Height);
+            z = Clamp(z, p.level.Length);
+            
+            p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, block, ext);
+            string blockName = p.level.BlockName(block, ext);
+            Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", x, y, z, blockName);
+        }
+        
+        static int Clamp(int value, int axisLen) {
+            if (value < 0) return 0;
+            if (value >= axisLen) return axisLen - 1;
+            return value;
         }
         
         public override void Help(Player p) {
