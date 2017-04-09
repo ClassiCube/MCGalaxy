@@ -41,22 +41,11 @@ namespace MCGalaxy.Commands.World {
 
             ushort x = 0, y = 0, z = 0;
             string name = args[0].ToLower();
-            if (!CommandParser.GetUShort(p, args[1], "Width",  ref x)) return false;
-            if (!CommandParser.GetUShort(p, args[2], "Height", ref y)) return false;
-            if (!CommandParser.GetUShort(p, args[3], "Length", ref z)) return false;
-            
+            if (!CheckMapAxis(p, args[1], "Width",  ref x)) return false;
+            if (!CheckMapAxis(p, args[2], "Height", ref y)) return false;
+            if (!CheckMapAxis(p, args[3], "Length", ref z)) return false;            
             string seed = args.Length == 6 ? args[5] : "";
-            ushort xFixed = (ushort)MapGen.MakeOkayAxis(x);
-            ushort yFixed = (ushort)MapGen.MakeOkayAxis(y);
-            ushort zFixed = (ushort)MapGen.MakeOkayAxis(z);
-            if (!MapGen.OkayAxis(x)) {  Player.Message(p, "&cWidth should be divisible by 16! %STruncating to " + xFixed + "."); }
-            if (!MapGen.OkayAxis(y)) { Player.Message(p, "&cHeight should be divisible by 16! %STruncating to " + yFixed + "."); }
-            if (!MapGen.OkayAxis(z)) { Player.Message(p, "&cLength should be divisible by 16! %STruncating to " + zFixed + "."); }
-            if (!CheckMapSize(p, xFixed, yFixed, zFixed)) return false;
-            x = xFixed;
-            y = yFixed;
-            z = zFixed;
- 
+            
             if (!Formatter.ValidName(p, name, "level")) return false;
             if (LevelInfo.MapExists(name)) {
                 Player.Message(p, "Level \"{0}\" already exists", name); return false;
@@ -90,7 +79,21 @@ namespace MCGalaxy.Commands.World {
             return true;
         }
         
-        internal static bool CheckMapSize(Player p, int x, int y, int z) {
+        
+        internal static bool CheckMapAxis(Player p, string input, string type, ref ushort len) {
+            if (!CommandParser.GetUShort(p, input, type, ref len)) return false;
+            if (len == 0) { Player.Message(p, "&c{0} cannot be 0.", type); return false; }
+            if (len > 16384) { Player.Message(p, "&c{0} must be 16384 or less.", type); return false; }
+            
+            int lenPadded = Utils.CeilDiv16(len) * 16;
+            if (lenPadded != len) {
+                Player.Message(p, "&c{0} not divisible by 16! %SRounding up to {1}.", type, lenPadded);
+                len = (ushort)lenPadded;
+            }
+            return true;
+        }
+        
+        internal static bool CheckMapVolume(Player p, int x, int y, int z) {
             if (p == null) return true;
             int limit = p.Rank < LevelPermission.Admin ? Server.MapGenLimit : Server.MapGenLimitAdmin;
             if ((long)x * y * z <= limit ) return true;
@@ -102,6 +105,8 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, text);
             return false;
         }
+        
+        
         
         public override void Help(Player p) {
             Player.Message(p, "%T/newlvl [name] [width] [height] [length] [theme] <seed>");

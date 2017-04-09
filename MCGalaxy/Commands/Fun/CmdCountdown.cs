@@ -226,7 +226,7 @@ namespace MCGalaxy.Commands {
             if (width < 32 || !MapGen.OkayAxis(width)) width = 32;
             if (height < 32 || !MapGen.OkayAxis(height)) height = 32;
             if (length < 32 || !MapGen.OkayAxis(length)) length = 32;
-            if (!CmdNewLvl.CheckMapSize(p, width, height, length)) return;
+            if (!CmdNewLvl.CheckMapVolume(p, width, height, length)) return;
             
             Level lvl = CountdownMapGen.Generate(width, height, length);
             lvl.Deletable = false;
