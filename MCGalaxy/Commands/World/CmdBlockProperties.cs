@@ -34,10 +34,10 @@ namespace MCGalaxy.Commands.World {
             BlockProps[] scope = GetScope(p, args[0]);
             if (scope == null) return;
             
-            byte id = GetBlock(p, scope, args[1]);
-            if (id == Block.Invalid) return;
+            byte block = GetBlock(p, scope, args[1]);
+            if (block == Block.Invalid) return;
             string prop = args[2].ToLower();
-            SetProperty(p, scope, id, prop, args);
+            SetProperty(p, scope, block, prop, args);
         }
         
         BlockProps[] GetScope(Player p, string scope) {
@@ -57,29 +57,29 @@ namespace MCGalaxy.Commands.World {
             return null;
         }
         
-        byte GetBlock(Player p, BlockProps[] scope, string block) {
-            byte id = 0;
+        byte GetBlock(Player p, BlockProps[] scope, string input) {
+            byte block = 0;
             if (scope == Block.Props) {
-                if (!byte.TryParse(block, out id))
-                    id = Block.Byte(block);
+                if (!byte.TryParse(input, out block))
+                    block = Block.Byte(input);
                 
-                if (Block.Name(id).CaselessEq("unknown")) {
-                    Player.Message(p, "&cThere is no block with id or name \"{0}\"", block);
-                    id = Block.Invalid;
+                if (Block.Name(block).CaselessEq("unknown")) {
+                    Player.Message(p, "&cThere is no block with id or name \"{0}\"", input);
+                    block = Block.Invalid;
                 }
             } else if (scope == BlockDefinition.GlobalProps) {
-                id = BlockDefinition.GetBlock(block, BlockDefinition.GlobalDefs);
-                if (id == Block.Invalid)
-                    Player.Message(p, "&cThere is no global custom block with id or name \"{0}\"", block);
+                block = BlockDefinition.GetBlock(input, BlockDefinition.GlobalDefs);
+                if (block == Block.Invalid)
+                    Player.Message(p, "&cThere is no global custom block with id or name \"{0}\"", input);
             } else {
-                id = BlockDefinition.GetBlock(block, p.level.CustomBlockDefs);
-                if (id == Block.Invalid)
-                    Player.Message(p, "&cThere is no level custom block with id or name \"{0}\"", block);
-                if (p.level.CustomBlockDefs[id] == BlockDefinition.GlobalDefs[id]) {
+                block = BlockDefinition.GetBlock(input, p.level.CustomBlockDefs);
+                if (block == Block.Invalid)
+                    Player.Message(p, "&cThere is no level custom block with id or name \"{0}\"", input);
+                if (p.level.CustomBlockDefs[block] == BlockDefinition.GlobalDefs[block]) {
                     Player.Message(p, "&cUse %T/blockprops global &cto modify this custom block."); return Block.Invalid;
                 }
             }
-            return id;
+            return block;
         }
         
         

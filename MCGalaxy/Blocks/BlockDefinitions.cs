@@ -152,24 +152,24 @@ namespace MCGalaxy {
         
         
         public static void Add(BlockDefinition def, BlockDefinition[] defs, Level level) {
-            byte id = def.BlockID;
+            byte block = def.BlockID;
             bool global = defs == GlobalDefs;
             if (global) {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level lvl in loaded) {
-                    if (lvl.CustomBlockDefs[id] == null) {
-                        lvl.CustomBlockDefs[id] = def;
+                    if (lvl.CustomBlockDefs[block] == null) {
+                        lvl.CustomBlockDefs[block] = def;
                     }
                 }
             }
-            defs[id] = def;
+            defs[block] = def;
             if (global) Block.SetDefaultNames();
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
                 if (!pl.hasBlockDefs) continue;
-                if (global && pl.level.CustomBlockDefs[id] != GlobalDefs[id]) continue;
+                if (global && pl.level.CustomBlockDefs[block] != GlobalDefs[block]) continue;
                 
                 if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
                     pl.Send(Packet.DefineBlockExt(def, true, pl.hasCP437));
@@ -186,26 +186,26 @@ namespace MCGalaxy {
         }
         
         public static void Remove(BlockDefinition def, BlockDefinition[] defs, Level level) {
-            byte id = def.BlockID;
+            byte block = def.BlockID;
             bool global = defs == GlobalDefs;
             if (global) {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level lvl in loaded) {
-                    if (lvl.CustomBlockDefs[id] == GlobalDefs[id]) {
-                        lvl.CustomBlockDefs[id] = null;
+                    if (lvl.CustomBlockDefs[block] == GlobalDefs[block]) {
+                        lvl.CustomBlockDefs[block] = null;
                     }
                 }
             }
-            defs[id] = null;
+            defs[block] = null;
             if (global) Block.SetDefaultNames();
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
-                if (global && pl.level.CustomBlockDefs[id] != null) continue;
+                if (global && pl.level.CustomBlockDefs[block] != null) continue;
                 
                 if (pl.hasBlockDefs)
-                    pl.SendRaw(Opcode.CpeRemoveBlockDefinition, id);
+                    pl.SendRaw(Opcode.CpeRemoveBlockDefinition, block);
             }
             Save(global, level);
         }

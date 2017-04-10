@@ -547,16 +547,16 @@ namespace MCGalaxy.Commands.CPE {
         
         
         static void UpdateBlockProps(bool global, Player p, BlockProps props) {
-            byte id = props.BlockId;
+            byte block = props.BlockId;
             if (!global) {
-                p.level.CustomBlockProps[id] = props;
+                p.level.CustomBlockProps[block] = props;
             } else {
-                BlockDefinition.GlobalProps[id] = props;
+                BlockDefinition.GlobalProps[block] = props;
                 Level[] loaded = LevelInfo.Loaded.Items;
                 
                 foreach (Level lvl in loaded) {
-                    if (lvl.CustomBlockDefs[id] != null) continue;
-                    lvl.CustomBlockProps[id] = props;
+                    if (lvl.CustomBlockDefs[block] != null) continue;
+                    lvl.CustomBlockProps[block] = props;
                 }
             }
         }
