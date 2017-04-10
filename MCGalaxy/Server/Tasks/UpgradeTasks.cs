@@ -69,6 +69,8 @@ namespace MCGalaxy.Tasks {
         
         internal static void MovePreviousLevelFiles() {
             if (!Directory.Exists("levels")) return;
+            if (Directory.Exists("levels/prev")) return;
+            
             try {
                 string[] files = Directory.GetFiles("levels", "*.prev");
                 if (files.Length == 0) return;
