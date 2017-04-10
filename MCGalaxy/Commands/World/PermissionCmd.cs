@@ -20,7 +20,6 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.World {
     public abstract class PermissionCmd : Command {
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }

@@ -21,7 +21,6 @@ using System.IO;
 namespace MCGalaxy.Commands {
     public sealed class CmdScripting : Command {
         public override string name { get { return "scripting"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }

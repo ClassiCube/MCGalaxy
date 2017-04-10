@@ -22,7 +22,6 @@ using System.IO;
 namespace MCGalaxy.Commands {
     public sealed class CmdRules : Command {
         public override string name { get { return "rules"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
@@ -34,13 +33,13 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Use(Player p, string message) {
-            if (!File.Exists("text/rules.txt")) {
-                File.WriteAllText("text/rules.txt", "No rules entered yet!");
+            if (!File.Exists(Paths.RulesFile)) {
+                File.WriteAllText(Paths.RulesFile, "No rules entered yet!");
             }
             if (message.CaselessEq("agree")) { Agree(p); return; }
             if (message.CaselessEq("disagree")) { Disagree(p); return; }
             
-            string[] rules = File.ReadAllLines("text/rules.txt");
+            string[] rules = File.ReadAllLines(Paths.RulesFile);
             Player who = p;
             if (message != "") {
                 if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }

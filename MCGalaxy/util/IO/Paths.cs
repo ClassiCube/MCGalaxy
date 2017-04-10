@@ -30,5 +30,17 @@ namespace MCGalaxy {
         public const string CustomTokensFile = "text/custom$s.txt";
         
         public const string BadWordsFile = "text/badwords.txt";
+        
+        public const string BotsFile = "extra/bots.json";
+        
+        public const string EatMessagesFile = "text/eatmessages.txt";
+        
+        public const string RulesFile = "text/rules.txt";
+        
+        public const string OprulesFile = "text/oprules.txt";
+        
+        public const string FaqFile = "text/faq.txt";
+        
+        public const string AnnouncementsFile = "text/messages.txt";
     }
 }

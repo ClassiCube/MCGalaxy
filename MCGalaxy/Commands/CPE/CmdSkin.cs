@@ -21,7 +21,6 @@ using MCGalaxy.Bots;
 namespace MCGalaxy.Commands.CPE {
     public class CmdSkin : EntityPropertyCmd {
         public override string name { get { return "skin"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {

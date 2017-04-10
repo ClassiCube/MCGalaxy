@@ -19,7 +19,6 @@ using System;
 namespace MCGalaxy.Commands {
     public sealed class CmdFollow : Command {
         public override string name { get { return "follow"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }

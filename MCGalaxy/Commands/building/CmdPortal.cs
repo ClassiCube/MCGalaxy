@@ -56,26 +56,26 @@ namespace MCGalaxy.Commands.Building {
         
         byte GetBlock(Player p, string name, out byte extBlock) {
             extBlock = 0;
-            byte id = Block.Byte(name);
-            if (Block.Props[id].IsPortal) return id;
+            byte block = Block.Byte(name);
+            if (Block.Props[block].IsPortal) return block;
             if (name == "show") { ShowPortals(p); return Block.Invalid; }
 
-            id = BlockDefinition.GetBlock(name, p);
-            if (p.level.CustomBlockProps[id].IsPortal) {
-                extBlock = id; return Block.custom_block;
+            block = BlockDefinition.GetBlock(name, p);
+            if (p.level.CustomBlockProps[block].IsPortal) {
+                extBlock = block; return Block.custom_block;
             }
             
             // Hardcoded aliases for backwards compatibility
-            id = Block.Invalid;
-            if (name == "") id = Block.blue_portal;
-            if (name == "blue") id = Block.blue_portal;
-            if (name == "orange") id = Block.orange_portal;
-            if (name == "air") id = Block.air_portal;
-            if (name == "water") id = Block.water_portal;
-            if (name == "lava") id = Block.lava_portal;
+            block = Block.Invalid;
+            if (name == "") block = Block.blue_portal;
+            if (name == "blue") block = Block.blue_portal;
+            if (name == "orange") block = Block.orange_portal;
+            if (name == "air") block = Block.air_portal;
+            if (name == "water") block = Block.water_portal;
+            if (name == "lava") block = Block.lava_portal;
             
-            if (!Block.Props[id].IsPortal) { Help(p); return Block.Invalid; }
-            return id;
+            if (!Block.Props[block].IsPortal) { Help(p); return Block.Invalid; }
+            return block;
         }
 
         void EntryChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
@@ -194,11 +194,12 @@ namespace MCGalaxy.Commands.Building {
             return props.Name;
         }
         
-        static bool Check(BlockProps props, byte id, string name) {
-            if (props.BlockId != id) return false;
+        static bool Check(BlockProps props, byte block, string name) {
+            if (props.BlockId != block) return false;
             if (props.Name == "unknown") return false; // custom blocks
-            id = Block.Byte(name);
-            return !Block.Props[id].IsPortal;
+            
+            block = Block.Byte(name);
+            return !Block.Props[block].IsPortal;
         }
         
         static string FormatCustom(Level lvl, BlockProps props) {

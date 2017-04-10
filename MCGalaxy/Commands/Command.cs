@@ -25,7 +25,7 @@ namespace MCGalaxy {
     public abstract partial class Command {
         
         public abstract string name { get; }
-        public abstract string shortcut { get; }
+        public virtual string shortcut { get { return ""; } }
         public abstract string type { get; }
         public abstract bool museumUsable { get; }
         public abstract LevelPermission defaultRank { get; }

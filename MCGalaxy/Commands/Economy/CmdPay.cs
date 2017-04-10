@@ -20,7 +20,6 @@ using System;
 namespace MCGalaxy.Commands {
     public sealed class CmdPay : MoneyCmd {
         public override string name { get { return "pay"; } }
-        public override string shortcut { get { return ""; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdPay() { }
 

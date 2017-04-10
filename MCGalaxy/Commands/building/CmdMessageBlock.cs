@@ -26,7 +26,6 @@ using MCGalaxy.Util;
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMessageBlock : Command {
         public override string name { get { return "mb"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
@@ -69,26 +68,26 @@ namespace MCGalaxy.Commands.Building {
         byte GetBlock(Player p, string name, out byte extBlock, 
                       ref bool allMessage) {
             extBlock = 0;
-            byte id = Block.Byte(name);
-            if (Block.Props[id].IsMessageBlock) return id;
+            byte block = Block.Byte(name);
+            if (Block.Props[block].IsMessageBlock) return block;
             if (name == "show") { ShowMessageBlocks(p); return Block.Invalid; }
             
-            id = BlockDefinition.GetBlock(name, p);
-            if (p.level.CustomBlockProps[id].IsMessageBlock) {
-                extBlock = id; return Block.custom_block;
+            block = BlockDefinition.GetBlock(name, p);
+            if (p.level.CustomBlockProps[block].IsMessageBlock) {
+                extBlock = block; return Block.custom_block;
             }
             
             // Hardcoded aliases for backwards compatibility
-            id = Block.MsgWhite;
-            if (name == "white") id = Block.MsgWhite;      
-            if (name == "black") id = Block.MsgBlack;
-            if (name == "air") id = Block.MsgAir;
-            if (name == "water") id = Block.MsgWater;
-            if (name == "lava") id = Block.MsgLava;
+            block = Block.MsgWhite;
+            if (name == "white") block = Block.MsgWhite;      
+            if (name == "black") block = Block.MsgBlack;
+            if (name == "air") block = Block.MsgAir;
+            if (name == "water") block = Block.MsgWater;
+            if (name == "lava") block = Block.MsgLava;
             
-            allMessage = id == Block.MsgWhite && name != "white";
-            if (!Block.Props[id].IsMessageBlock) { Help(p); return Block.Invalid; }
-            return id;
+            allMessage = block == Block.MsgWhite && name != "white";
+            if (!Block.Props[block].IsMessageBlock) { Help(p); return Block.Invalid; }
+            return block;
         }
         
         bool CheckCommand(Player p, string message) {
@@ -201,11 +200,12 @@ namespace MCGalaxy.Commands.Building {
             return props.Name;
         }
         
-        static bool Check(BlockProps props, byte id, string name) {
-            if (props.BlockId != id) return false;
+        static bool Check(BlockProps props, byte block, string name) {
+            if (props.BlockId != block) return false;
             if (props.Name == "unknown") return false;
-            id = Block.Byte(name);
-            return !Block.Props[id].IsMessageBlock;
+            
+            block = Block.Byte(name);
+            return !Block.Props[block].IsMessageBlock;
         }
 
         static string FormatCustom(Level lvl, BlockProps props) {

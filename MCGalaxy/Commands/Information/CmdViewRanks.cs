@@ -22,7 +22,6 @@ using System.Text;
 namespace MCGalaxy.Commands {
     public sealed class CmdViewRanks : Command {
         public override string name { get { return "viewranks"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }

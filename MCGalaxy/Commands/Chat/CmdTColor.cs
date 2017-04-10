@@ -20,7 +20,6 @@ using MCGalaxy.SQL;
 namespace MCGalaxy.Commands {
     public class CmdTColor : EntityPropertyCmd {
         public override string name { get { return "tcolor"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandPerm[] ExtraPerms {

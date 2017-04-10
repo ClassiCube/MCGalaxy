@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands {
     public sealed class CmdHighlight : Command {
         
         public override string name { get { return "highlight"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }

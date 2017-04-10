@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (!assigned) {
                 Player.Message(p, "&a{0}&c has not been assigned a temp rank.", name); return;
             }
-            File.WriteAllText("text/tempranks.txt", all.ToString());
+            File.WriteAllText(Paths.TempRanksFile, all.ToString());
         }
         
         static void Info(Player p, string name) {            

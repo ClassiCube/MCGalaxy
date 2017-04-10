@@ -18,7 +18,6 @@
 namespace MCGalaxy.Commands {    
     public sealed class CmdInfect : Command {        
         public override string name { get { return "infect"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }

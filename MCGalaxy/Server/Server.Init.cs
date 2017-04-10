@@ -107,11 +107,11 @@ namespace MCGalaxy {
             };
             updateTimer.Start();
 
-            if (File.Exists("text/messages.txt")) {
-                string[] lines = File.ReadAllLines("text/messages.txt");
+            if (File.Exists(Paths.AnnouncementsFile)) {
+                string[] lines = File.ReadAllLines(Paths.AnnouncementsFile);
                 messages = new List<string>(lines);
             } else {
-                using (File.Create("text/messages.txt")) {}
+                using (File.Create(Paths.AnnouncementsFile)) {}
             }
             Server.MainScheduler.QueueRepeat(RandomMessage, null, TimeSpan.FromMinutes(5));
         }

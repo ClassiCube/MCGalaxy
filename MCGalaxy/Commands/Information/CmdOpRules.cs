@@ -21,17 +21,16 @@ using System.IO;
 namespace MCGalaxy.Commands {
     public sealed class CmdOpRules : Command {
         public override string name { get { return "oprules"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdOpRules() { }
 
         public override void Use(Player p, string message) {
-            if (!File.Exists("text/oprules.txt")) {
-                File.WriteAllText("text/oprules.txt", "No oprules entered yet!");
+            if (!File.Exists(Paths.OprulesFile)) {
+                File.WriteAllText(Paths.OprulesFile, "No oprules entered yet!");
             }
-            string[] oprules = File.ReadAllLines("text/oprules.txt");
+            string[] oprules = File.ReadAllLines(Paths.OprulesFile);
 
             Player who = p;
             if (message != "") {
