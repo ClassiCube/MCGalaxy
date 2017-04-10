@@ -304,11 +304,7 @@ namespace MCGalaxy {
                 if (level.LoadDelay > 0)
                     System.Threading.Thread.Sleep(level.LoadDelay);
                 
-                byte[] buffer = new byte[7];
-                buffer[0] = Opcode.LevelFinalise;
-                NetUtils.WriteI16((short)level.Width, buffer, 1);
-                NetUtils.WriteI16((short)level.Height, buffer, 3);
-                NetUtils.WriteI16((short)level.Length, buffer, 5);
+                byte[] buffer = Packet.LevelFinalise(level.Width, level.Height, level.Length);
                 Send(buffer);
                 Loading = false;
                 
