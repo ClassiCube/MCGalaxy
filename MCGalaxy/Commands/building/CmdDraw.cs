@@ -22,7 +22,6 @@ using MCGalaxy.Drawing.Ops;
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdDraw : DrawCmd {
         public override string name { get { return "draw"; } }
-        public override string shortcut { get { return ""; } }
         protected override string PlaceMessage { get { return "Place a block to determine the origin."; } }
         public override int MarksCount { get { return 1; } }
         

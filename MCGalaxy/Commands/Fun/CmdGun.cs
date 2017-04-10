@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands {
     public sealed class CmdGun : WeaponCmd
     {
         public override string name { get { return "gun"; } }
-        public override string shortcut { get { return ""; } }
         protected override string Weapon { get { return "Gun"; } }
         
         protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {

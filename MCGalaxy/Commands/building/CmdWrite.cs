@@ -72,7 +72,6 @@ namespace MCGalaxy.Commands.Building {
     
     public sealed class CmdWrite : CmdWriteText {       
         public override string name { get { return "write"; } }
-        public override string shortcut { get { return ""; } }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }

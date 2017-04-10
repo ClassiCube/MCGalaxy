@@ -20,7 +20,6 @@ using System.Text;
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMode : Command {
         public override string name { get { return "mode"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }

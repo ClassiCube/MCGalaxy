@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands
     public sealed class CmdCTF : Command
     {
         public override string name { get { return "ctf"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }

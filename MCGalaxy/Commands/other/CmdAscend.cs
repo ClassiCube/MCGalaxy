@@ -20,7 +20,6 @@ using System;
 namespace MCGalaxy.Commands {
     public class CmdAscend : Command {
         public override string name { get { return "ascend"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }

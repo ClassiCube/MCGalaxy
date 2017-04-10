@@ -22,7 +22,6 @@ using MCGalaxy.Drawing.Transforms;
 namespace MCGalaxy.Commands.Building {  
     public sealed class CmdTransform : Command {
         public override string name { get { return "transform"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }

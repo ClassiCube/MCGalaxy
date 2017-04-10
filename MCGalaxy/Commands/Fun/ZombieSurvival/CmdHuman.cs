@@ -21,7 +21,6 @@ using MCGalaxy.Games;
 namespace MCGalaxy.Commands {    
     public sealed class CmdHuman : Command {
         public override string name { get { return "human"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }

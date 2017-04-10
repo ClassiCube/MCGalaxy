@@ -18,7 +18,6 @@
 namespace MCGalaxy.Commands.World {
     public sealed class CmdUnload : Command {
         public override string name { get { return "unload"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }

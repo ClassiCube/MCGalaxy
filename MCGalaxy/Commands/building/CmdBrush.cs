@@ -22,7 +22,6 @@ using MCGalaxy.Drawing.Brushes;
 namespace MCGalaxy.Commands.Building {  
     public sealed class CmdBrush : Command {
         public override string name { get { return "brush"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }

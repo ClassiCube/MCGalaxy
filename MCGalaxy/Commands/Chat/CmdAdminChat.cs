@@ -15,7 +15,6 @@ permissions and limitations under the Licenses.
 namespace MCGalaxy.Commands {
     public sealed class CmdAdminChat : Command {
         public override string name { get { return "adminchat"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }

@@ -39,7 +39,6 @@ namespace MCGalaxy.Commands {
     
     public sealed class CmdQuit : Command {        
         public override string name { get { return "quit"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }

@@ -20,7 +20,6 @@ using MCGalaxy.SQL;
 namespace MCGalaxy.Commands.World {
     public sealed class CmdBlockDB : Command {
         public override string name { get { return "blockdb"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }

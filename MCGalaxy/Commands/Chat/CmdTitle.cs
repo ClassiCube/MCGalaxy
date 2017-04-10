@@ -20,7 +20,6 @@ namespace MCGalaxy.Commands {
     
     public class CmdTitle : EntityPropertyCmd {        
         public override string name { get { return "title"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandPerm[] ExtraPerms {

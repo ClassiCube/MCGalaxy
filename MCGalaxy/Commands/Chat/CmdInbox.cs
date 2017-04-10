@@ -22,7 +22,6 @@ using MCGalaxy.SQL;
 namespace MCGalaxy.Commands {
     public sealed class CmdInbox : Command {
         public override string name { get { return "inbox"; } }
-        public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
