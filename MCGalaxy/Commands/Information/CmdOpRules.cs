@@ -27,10 +27,10 @@ namespace MCGalaxy.Commands {
         public CmdOpRules() { }
 
         public override void Use(Player p, string message) {
-            if (!File.Exists("text/oprules.txt")) {
-                File.WriteAllText("text/oprules.txt", "No oprules entered yet!");
+            if (!File.Exists(Paths.OprulesFile)) {
+                File.WriteAllText(Paths.OprulesFile, "No oprules entered yet!");
             }
-            string[] oprules = File.ReadAllLines("text/oprules.txt");
+            string[] oprules = File.ReadAllLines(Paths.OprulesFile);
 
             Player who = p;
             if (message != "") {

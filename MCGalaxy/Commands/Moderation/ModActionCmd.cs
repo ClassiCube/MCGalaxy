@@ -44,9 +44,9 @@ namespace MCGalaxy.Commands.Moderation {
         
         static Dictionary<int, string> GetRuleSections() {
             Dictionary<int, string> sections = new Dictionary<int, string>();
-            if (!File.Exists("text/rules.txt")) return sections;
+            if (!File.Exists(Paths.RulesFile)) return sections;
             
-            string[] rules = File.ReadAllLines("text/rules.txt");
+            string[] rules = File.ReadAllLines(Paths.RulesFile);
             foreach (string rule in rules)
                 ParseRule(rule, sections);
             return sections;

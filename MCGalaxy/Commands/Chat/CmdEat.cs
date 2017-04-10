@@ -36,11 +36,11 @@ namespace MCGalaxy.Commands {
                                    " %Sto purchase a snack."); return;
             }            
                       
-            if (!File.Exists("text/eatmessages.txt")) {
-                File.WriteAllLines("text/eatmessages.txt", defMessages);
+            if (!File.Exists(Paths.EatMessagesFile)) {
+                File.WriteAllLines(Paths.EatMessagesFile, defMessages);
             }
             
-            string[] actions = File.ReadAllLines("text/eatmessages.txt");
+            string[] actions = File.ReadAllLines(Paths.EatMessagesFile);
             string action = "ate some food";
             if (actions.Length > 0)
                 action = actions[new Random().Next(actions.Length)];

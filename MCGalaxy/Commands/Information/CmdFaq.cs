@@ -26,11 +26,11 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
 
         public override void Use(Player p, string message) {
-            if (!File.Exists("text/faq.txt")) {
-                File.WriteAllText("text/faq.txt", "Example: What does this server run on? This server runs on &b" + Server.SoftwareName);
+            if (!File.Exists(Paths.FaqFile)) {
+                File.WriteAllText(Paths.FaqFile, "Example: What does this server run on? This server runs on &b" + Server.SoftwareName);
             }
             
-            string[] faq = File.ReadAllLines("text/faq.txt");
+            string[] faq = File.ReadAllLines(Paths.FaqFile);
             Player.Message(p, "&cFAQ&f:");
             foreach (string line in faq)
                 Player.Message(p, "&f" + line);

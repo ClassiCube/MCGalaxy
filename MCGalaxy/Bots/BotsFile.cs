@@ -30,9 +30,9 @@ namespace MCGalaxy.Bots {
         static readonly object locker = new object();
         
         public static void Load() {
-            if (!File.Exists("extra/bots.json")) return;
+            if (!File.Exists(Paths.BotsFile)) return;
             lock (locker) {
-                string json = File.ReadAllText("extra/bots.json");
+                string json = File.ReadAllText(Paths.BotsFile);
                 BotProperties[] bots = JsonConvert.DeserializeObject<BotProperties[]>(json);
                 SavedBots = new List<BotProperties>(bots);
                 
@@ -47,7 +47,7 @@ namespace MCGalaxy.Bots {
             BotProperties[] bots = SavedBots.ToArray();
             string json = JsonConvert.SerializeObject(bots);
             try {
-                File.WriteAllText("extra/bots.json", json);
+                File.WriteAllText(Paths.BotsFile, json);
             } catch (Exception ex) {
                 Server.s.Log("Error when trying to save bots.");
                 Server.ErrorLog(ex);
