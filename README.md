@@ -1,13 +1,9 @@
 MCGalaxy Classic
 ===============
 
-Minecraft Classic Custom Server Software
+MCGalaxy is a **ClassiCube Server Software** based on MCForge, which is in turn based on MCLawl.
 
-
-About MCGalaxy Classic
----------------------
-
-MCGalaxy classic is a classic Minecraft server software based on MCForge, which is in turn based on MCLawl.  It has been released under an open-source license to allow the community to help us develop it further.  We welcome all pull requests and will merge them in at our own discretion.  For more information, visit [our wiki](https://github.com/Hetal728/MCGalaxy/wiki).
+Pull requests are welcomed and willb be merged in at our own discretion.  For more information, visit [our wiki](https://github.com/Hetal728/MCGalaxy/wiki).
 
 Contributors
 ------------
