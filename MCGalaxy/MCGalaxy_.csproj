@@ -278,7 +278,6 @@
     <Compile Include="Commands\Information\CmdWhoNick.cs" />
     <Compile Include="Commands\Information\WhoInfo.cs" />
     <Compile Include="Commands\Maintenance\CmdBlockDB.cs" />
-    <Compile Include="Commands\Maintenance\CmdGarbage.cs" />
     <Compile Include="Commands\Maintenance\CmdInfoSwap.cs" />
     <Compile Include="Commands\Maintenance\CmdIRCBot.cs" />
     <Compile Include="Commands\Maintenance\CmdLimit.cs" />
