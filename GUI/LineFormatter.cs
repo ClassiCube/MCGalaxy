@@ -93,7 +93,7 @@ namespace MCGalaxy.Gui {
         
         public static void FormatGui(char col, string message, 
                                      ColoredTextBox box, Color foreCol) {
-            box.AppendLog(message, GetGuiCol(col, foreCol));
+            box.AppendColoredText(message, GetGuiCol(col, foreCol));
         }
         
         static Color GetGuiCol(char c, Color foreCol) {

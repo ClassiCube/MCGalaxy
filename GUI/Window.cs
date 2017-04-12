@@ -825,7 +825,7 @@ namespace MCGalaxy.Gui {
         
         void tsLog_Clear_Click(object sender, EventArgs e) {
             if (MessageBox.Show("Are you sure you want to clear logs?", "You sure?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-                main_txtLog.Clear();
+        		main_txtLog.ClearLog();
             }
         }
         #endregion
