@@ -16,17 +16,14 @@ http://www.gnu.org/licenses/gpl-3.0.html
 */
 
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-//MCGalaxy 6 Preview :D
-
 namespace MCGalaxy.Gui.Components {
 
-    /// <summary> A rich text box, that can parse Minecraft/MCGalaxy color codes. </summary>
+    /// <summary> Extended rich text box that auto-colors minecraft classic text. </summary>
     public partial class ColoredTextBox : RichTextBox {
 
         bool _nightMode = false, _colorize = true;
@@ -65,50 +62,55 @@ namespace MCGalaxy.Gui.Components {
 
         /// <summary> Initializes a new instance of the <see cref="ColoredTextBox"/> class. </summary>
         public ColoredTextBox() : base() {
-            InitializeComponent();
+            LinkClicked += HandleLinkClicked;
         }
 
-        /// <summary> Appends the log. </summary>
-        /// <param name="text">The text to log.</param>
+        /// <summary> Appends text to this textbox. </summary>
         public void AppendLog(string text, Color foreColor, bool dateStamp) {
             if (InvokeRequired) {
                 Invoke((MethodInvoker)(() => AppendLog(text, foreColor, dateStamp)));
                 return;
             }
-            if (dateStamp) Append(CurrentDate, Color.Gray);
+            if (dateStamp) AppendLog(CurrentDate, Color.Gray);
             int line = GetLineFromCharIndex(Math.Max(0, TextLength - 1));
             
-            if (!Colorize) {                
-                AppendText(text);                
-                if (AutoScroll) ScrollToEnd(line);
-                return;
-            }
-            LineFormatter.Format(text, (c, s) => LineFormatter.FormatGui(c, s, this, foreColor));
+            if (!Colorize) {
+                AppendText(text);
+            } else {
+                 LineFormatter.Format(text, (c, s) => LineFormatter.FormatGui(c, s, this, foreColor));
+            }         
             if (AutoScroll) ScrollToEnd(line);
         }
 
-        /// <summary> Appends the log. </summary>
-        /// <param name="text">The text to log.</param>
-        public void AppendLog(string text) {
-            AppendLog(text, ForeColor, DateStamp);
-        }
+        /// <summary> Appends text to this textbox. </summary>
+        public void AppendLog(string text) { AppendLog(text, ForeColor, DateStamp); }
 
-        /// <summary> Appends the log. </summary>
-        /// <param name="text">The text to log.</param>
-        /// <param name="foreColor">Color of the foreground.</param>
-        internal void Append(string text, Color foreColor) {
+        /// <summary> Appends text to this textbox. </summary>
+        internal void AppendLog(string text, Color color) {
             if (InvokeRequired) {
-                Invoke((MethodInvoker)(() => Append(text, foreColor))); return;
+                Invoke((MethodInvoker)(() => AppendLog(text, color))); return;
             }
-
+            
+            int selLength = SelectionLength, selStart = 0;
+            if (selLength > 0) selStart = SelectionStart;
+            AppendColoredText(text, color);
+            
+            // preserve user's selection when appending text
+            if (selLength == 0) return;
+            SelectionStart = selStart;
+            SelectionLength = selLength;
+        }
+        
+        void AppendColoredText(string text, Color color) {
             SelectionStart = TextLength;
             SelectionLength = 0;
-            SelectionColor = foreColor;
+            
+            SelectionColor = color;
             AppendText(text);
-            SelectionColor = ForeColor;
+            SelectionColor = ForeColor;            
         }
 
-        void ColoredReader_LinkClicked(object sender, System.Windows.Forms.LinkClickedEventArgs e) {
+        void HandleLinkClicked(object sender, System.Windows.Forms.LinkClickedEventArgs e) {
             if ( !e.LinkText.StartsWith("http://www.minecraft.net/classic/play/") ) {
                 if ( MessageBox.Show("Never open links from people that you don't trust!", "Warning!!", MessageBoxButtons.OKCancel) == DialogResult.Cancel )
                     return;
@@ -116,7 +118,6 @@ namespace MCGalaxy.Gui.Components {
 
             try { Process.Start(e.LinkText); }
             catch { }
-
         }
 
         /// <summary> Scrolls to the end of the log </summary>
@@ -125,7 +126,7 @@ namespace MCGalaxy.Gui.Components {
                 Invoke((MethodInvoker)(() => ScrollToEnd(startIndex)));
                 return;
             }
-        	
+            
             int lines = GetLineFromCharIndex(TextLength - 1) - startIndex + 1;
             for (int i = 0; i < lines; i++) {
                 SendMessage(Handle, 0xB5, (IntPtr)1, IntPtr.Zero);
@@ -134,6 +135,6 @@ namespace MCGalaxy.Gui.Components {
         }
         
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
     }
 }

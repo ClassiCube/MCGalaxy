@@ -75,9 +75,6 @@
     <Compile Include="ColoredTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ColoredTextBox.Designer.cs">
-      <DependentUpon>ColoredTextBox.cs</DependentUpon>
-    </Compile>
     <Compile Include="Eco\EcoLevelWindow.cs">
       <SubType>Form</SubType>
     </Compile>
