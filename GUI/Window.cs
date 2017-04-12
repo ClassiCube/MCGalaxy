@@ -573,8 +573,9 @@ namespace MCGalaxy.Gui {
                     string args = name + " " + x + " " + y + " " + z + " " + type;
                     if (!String.IsNullOrEmpty(seed)) args += " " + seed;
                     Command.all.Find("newlvl").Use(null, args);
-                } catch {
-                    MessageBox.Show("Level Creation Failed. Are  you sure you didn't leave a box empty?");
+                } catch (Exception ex) {
+                    Server.ErrorLog(ex);
+                    MessageBox.Show("Level creation failed. Check error logs for details.");
                 }
 
                 if (LevelInfo.MapExists(name)) {

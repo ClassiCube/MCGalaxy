@@ -32,11 +32,6 @@ namespace MCGalaxy.Gui.Components {
         bool _nightMode = false, _colorize = true;
         bool _showDateStamp = true, _autoScroll = true;
 
-        /// <summary> Gets or sets a value indicating whether to scroll automaticly </summary>
-        /// <value> <c>true</c> if [auto scroll]; otherwise, <c>false</c>. </value>
-        [Browsable(true)]
-        [Category("MCGalaxy")]
-        [DefaultValue(true)]
         public bool AutoScroll {
             get { return _autoScroll; }
             set {
@@ -44,39 +39,21 @@ namespace MCGalaxy.Gui.Components {
                 if ( value ) ScrollToEnd(0);
             }
         }
-
-
-        /// <summary> Gets or sets a value indicating whether this <see cref="ColoredTextBox"/> is colorized. </summary>
-        /// <value> <c>true</c> if colorized; otherwise, <c>false</c>. </value>
-        [Browsable(true)]
-        [Category("MCGalaxy")]
-        [DefaultValue(true)]
+        
         public bool Colorize {
             get { return _colorize; }
             set { _colorize = value; }
         }
-
-        /// <summary> Gets or sets a value indicating whether it will include a date stamp in the log </summary>
-        /// <value> <c>true</c> if [date stamp]; otherwise, <c>false</c>. </value>
-        [Browsable(true)]
-        [Category("MCGalaxy")]
-        [DefaultValue(true)]
+        
         public bool DateStamp {
             get { return _showDateStamp; }
             set { _showDateStamp = value; }
         }
-
-        /// <summary> Gets or sets a value indicating whether the TextBox is in nightmode. This will clear the text box when changed. </summary>
-        /// <value> <c>true</c> if [night mode]; otherwise, <c>false</c>. </value>
-        [Browsable(true)]
-        [Category("MCGalaxy")]
-        [DefaultValue(false)]
+        
         public bool NightMode {
             get { return _nightMode; }
             set {
                 _nightMode = value;
-                Clear();
-
                 ForeColor = value ? Color.Black : Color.White;
                 BackColor = value ? Color.White : Color.Black;
                 Invalidate();
