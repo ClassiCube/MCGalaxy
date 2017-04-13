@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands
         public CmdBlocks() { }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             string modifier = args.Length > 1 ? args[1] : "";
             
             if (args[0] == "" || args[0].CaselessEq("basic")) {

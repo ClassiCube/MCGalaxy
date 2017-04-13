@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands
         public override bool museumUsable { get { return true; } }
         
         public override void Use(Player p, string message) {
-            string[] param = message.Split(' ');
+            string[] param = message.SplitSpaces();
             if (message == "") { Help(p); return; }
 
             if (param.Length == 1) {

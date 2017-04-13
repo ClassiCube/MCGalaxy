@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "  Notes for {0}:",  PlayerInfo.GetColoredName(p, target));
             
             foreach (string line in notes) {
-                string[] args = line.Split(' ');
+                string[] args = line.SplitSpaces();
                 if (args.Length <= 3) continue;
                 
                 if (args.Length == 4) {

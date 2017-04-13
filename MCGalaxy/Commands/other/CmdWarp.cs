@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             WarpList warps = WarpList.Global;
-            string[] args = message.ToLower().Split(' ');
+            string[] args = message.ToLower().SplitSpaces();
             string cmd = args[0];
             if (cmd == "") { Help(p); return; }
             

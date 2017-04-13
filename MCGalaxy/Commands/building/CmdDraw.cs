@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Building {
             
             // Validate radius/height when the user first uses the command
             int radius = 0, height = 0;
-            string[] args = dArgs.Message.Split(' ');
+            string[] args = dArgs.Message.SplitSpaces();
             if ((op.UsesHeight && !CheckTwoArgs(dArgs.Player, ref radius, ref height, args)) ||
                 (!op.UsesHeight && !CheckOneArg(dArgs.Player, ref radius, args)))
                 return null;
@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Building {
         
         protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
             int radius = 0, height = 0;
-            string[] args = dArgs.Message.Split(' ');
+            string[] args = dArgs.Message.SplitSpaces();
             AdvDrawOp op = (AdvDrawOp)dArgs.Op;
             
             if ((op.UsesHeight && !CheckTwoArgs(dArgs.Player, ref radius, ref height, args)) ||

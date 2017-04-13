@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Building {
                 Flip.MirrorZ(p.CopyBuffer);
                 Player.Message(p, "Flipped copy across the Z (north/south) axis.");
             } else {
-                string[] args = opt.Split(' ');
+                string[] args = opt.SplitSpaces();
                 char axis = 'Y';
                 int angle = 90;
                 if (!Handle(ref axis, ref angle, args[0])) { Help(p); return; }

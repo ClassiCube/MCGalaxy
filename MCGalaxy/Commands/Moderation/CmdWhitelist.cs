@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (!Server.useWhitelist) { Player.Message(p, "Whitelist is not enabled."); return; }
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
 
             if (args[0].CaselessEq("add")) {
                 if (args.Length < 2) { Help(p); return; }

@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands {
                 Command.all.Find("restore").Use(p, value);
             } else if (cmd == "RESIZE") {
                 value = p.level.name + " " + value;
-                string[] args = value.Split(' ');
+                string[] args = value.SplitSpaces();
                 if (args.Length < 4) { Command.all.Find("resizelvl").Help(p); return; }
 
                 if (CmdResizeLvl.DoResize(p, args)) return;
@@ -148,7 +148,7 @@ namespace MCGalaxy.Commands {
             if (value == "") value = "128 64 128 flat";
             else if (value.IndexOf(' ') == -1) value = "128 64 128 " + value;
             
-            string[] args = value.TrimEnd().Split(' ');
+            string[] args = value.TrimEnd().SplitSpaces();
             if (args.Length == 3) value += " flat";
 
             CmdNewLvl newLvl = (CmdNewLvl)Command.all.Find("newlvl"); // TODO: this is a nasty hack, find a better way
@@ -232,7 +232,7 @@ namespace MCGalaxy.Commands {
         }
         
         static void AddBuildPlayer(Player p, string name) {
-            string[] zoneArgs = name.Split(' ');
+            string[] zoneArgs = name.SplitSpaces();
             name = zoneArgs[0];
             string reason = zoneArgs.Length > 1 ? zoneArgs[1] : "";
             name = CmdZone.FindZoneOwner(p, "os zone add", name, ref reason);

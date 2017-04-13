@@ -126,8 +126,8 @@ namespace MCGalaxy
                 if (line == "" || line[0] == '#') continue;
                 
                 try {
-                    byte block = Block.Byte(line.Split(' ')[0]);
-                    Group group = Group.Find(line.Split(' ')[2]);
+                    byte block = Block.Byte(line.SplitSpaces()[0]);
+                    Group group = Group.Find(line.SplitSpaces()[2]);
                     if (group != null)
                         BlockList[block].lowestRank = group.Permission;
                     else

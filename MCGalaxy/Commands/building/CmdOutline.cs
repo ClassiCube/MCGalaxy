@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Building {
         public CmdOutline() { }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length != 2) { Help(p); return; }
             DrawArgs dArgs = default(DrawArgs);
             

@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length != 2) { Help(p); return; }
             
             Level lvl = Matcher.FindLevels(p, args[0]);

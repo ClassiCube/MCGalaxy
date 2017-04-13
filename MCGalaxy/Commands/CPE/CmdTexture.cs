@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             string scope = args[0].ToLower();
             if (scope == "local") scope = "level";
             if (scope == "localzip") scope = "levelzip";

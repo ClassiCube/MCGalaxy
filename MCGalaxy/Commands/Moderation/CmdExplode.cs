@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (!(args.Length == 1 || args.Length == 3)) { Help(p); return; }
             if (message == "me" && p != null) args[0] = p.name;
             

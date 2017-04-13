@@ -26,7 +26,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public static ExtBlock[] GetBlocks(BrushArgs args, out int[] count,
                                            Predicate<string> filter, Predicate<string> handler) {
-            string[] parts = args.Message.Split(' ');
+            string[] parts = args.Message.SplitSpaces();
             Player p = args.Player;
             ExtBlock[] blocks;
             GetRaw(parts, filter, args, out blocks, out count);

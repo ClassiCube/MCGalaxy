@@ -36,7 +36,7 @@ namespace MCGalaxy.Tasks {
                 
                 // Lines are in the format: day.month.year name+
                 foreach (string entry in blacklist) {
-                    string[] parts = entry.Split(' ');
+                    string[] parts = entry.SplitSpaces();
                     string name = parts[parts.Length - 1];
                     name = name.Substring(0, name.Length - 1);
                     names.Add(name);

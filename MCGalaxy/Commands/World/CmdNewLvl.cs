@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message) { GenerateMap(p, message); }
         
         internal bool GenerateMap(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length < 5 || args.Length > 6) { Help(p); return false; }
             if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return false; }
 

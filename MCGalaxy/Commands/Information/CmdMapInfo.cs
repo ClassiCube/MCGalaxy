@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             bool env = args[0].CaselessEq("env");
             string map = env ? (args.Length > 1 ? args[1] : "") : args[0];
 
@@ -180,7 +180,7 @@ namespace MCGalaxy.Commands {
             string[] lines = File.ReadAllLines(path);
             foreach (string line in lines) {
                 if (line.IndexOf(' ') < 0) continue;
-                blacklist.Add(line.Split(' ')[1]);
+                blacklist.Add(line.SplitSpaces()[1]);
             }
         }
         

@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            string[] args = message.ToLower().Split(' ');
+            string[] args = message.ToLower().SplitSpaces();
             if (args.Length > 2) { Help(p); return; }
             
             if (args[0] == "clear") {

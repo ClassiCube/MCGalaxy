@@ -64,7 +64,7 @@ namespace MCGalaxy.Drawing.Brushes {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with ", args.Block)) return null;
                 return new CheckeredBrush(args.Block, args.ExtBlock, 0, 0);
             }
-            string[] parts = args.Message.Split(' ');
+            string[] parts = args.Message.SplitSpaces();
             
             byte block1, ext1;
             if (!CommandParser.GetBlockIfAllowed(args.Player, parts[0], out block1, out ext1, true)) return null;
@@ -98,7 +98,7 @@ namespace MCGalaxy.Drawing.Brushes {
             
             if (args.Message == "")
                 return new SimplePasteBrush(args.Player.CopyBuffer);            
-            string[] parts = args.Message.Split(' ');
+            string[] parts = args.Message.SplitSpaces();
             PasteBrush brush = new PasteBrush(args.Player.CopyBuffer);
             
             if (parts[0].CaselessEq("not")) {
@@ -128,7 +128,7 @@ namespace MCGalaxy.Drawing.Brushes {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with ", args.Block)) return null;
                 return new StripedBrush(args.Block, args.ExtBlock, 0, 0);
             }
-            string[] parts = args.Message.Split(' ');
+            string[] parts = args.Message.SplitSpaces();
             
             byte block1, ext1;
             if (!CommandParser.GetBlockIfAllowed(args.Player, parts[0], out block1, out ext1, true)) return null;

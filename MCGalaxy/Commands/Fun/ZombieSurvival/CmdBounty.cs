@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length < 2) { Help(p); return; }
             
             Player who = PlayerInfo.FindMatches(p, args[0]);

@@ -87,7 +87,7 @@ namespace MCGalaxy {
         public static string[] GetBanData(string who) {
             who = who.ToLower();
             foreach (string line in File.ReadAllLines(bans.file)) {
-                string[] parts = line.Split(' ');
+                string[] parts = line.SplitSpaces();
                 if (parts.Length <= 5 || parts[1] != who) continue;
                 
                 parts[2] = parts[2].Replace("%20", " ");
@@ -102,7 +102,7 @@ namespace MCGalaxy {
         public static string[] GetUnbanData(string who) {
             who = who.ToLower();
             foreach (string line in File.ReadAllLines(unbans.file)) {
-                string[] parts = line.Split(' ');
+                string[] parts = line.SplitSpaces();
                 if (parts.Length <= 3 || parts[1] != who) continue;
                 
                 parts[2] = parts[2].Replace("%20", " ");
@@ -125,7 +125,7 @@ namespace MCGalaxy {
             StringBuilder sb = new StringBuilder();
             
             foreach (string line in File.ReadAllLines(list.file)) {
-                string[] parts = line.Split(' ');
+                string[] parts = line.SplitSpaces();
                 if (parts.Length <= 1 || parts[1] != name)
                     sb.AppendLine(line);
                 else
@@ -153,7 +153,7 @@ namespace MCGalaxy {
             StringBuilder sb = new StringBuilder();
             
             foreach (string line in File.ReadAllLines(list.file)) {
-                string[] parts = line.Split(' ');
+                string[] parts = line.SplitSpaces();
                 if (parts.Length > 2 && parts[1] == who) {
                     success = true;
                     sb.AppendLine(String.Join(" ", parts));

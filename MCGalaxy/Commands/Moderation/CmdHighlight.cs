@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
             TimeSpan delta;
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") message = p.name + " 1800";
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
 
             if (args.Length >= 2) {
                 if (!args[1].TryParseShort(p, 's', "highlight the past", out delta)) return;

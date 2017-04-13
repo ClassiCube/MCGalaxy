@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             string[] text = new string[] { "", "", "", "", "" };
-            string[] parts = message.ToLower().Split(' ');
+            string[] parts = message.ToLower().SplitSpaces();
             for (int i = 0; i < Math.Min(text.Length, parts.Length); i++)
                 text[i] = parts[i];
 

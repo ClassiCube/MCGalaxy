@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (p == null) { MessageInGameOnly(p); return; }
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             string action = args[0].ToLower();
             
             if (action == "all") {

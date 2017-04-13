@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Use(Player p, string message) {
-            string[] raw = message.Split(' ');
+            string[] raw = message.SplitSpaces();
             string[] args = new string[] { "", "", "", "", "", "", "", "" };
             for (int i = 0; i < Math.Min(args.Length, raw.Length); i++)
                 args[i] = raw[i];

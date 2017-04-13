@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
         }
         
         internal static bool DoCommand(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             string sort = args.Length > 1 ? args[1].ToLower() : "";
             string modifier = args.Length > 2 ? args[2] : sort;
             

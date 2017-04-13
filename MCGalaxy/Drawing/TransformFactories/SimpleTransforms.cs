@@ -46,7 +46,7 @@ namespace MCGalaxy.Drawing.Transforms {
         };
         
         public override Transform Construct(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length > 4) { Player.MessageLines(p, Help); return null; }
             int mul = 0, div = 0;
             ScaleTransform scaler = new ScaleTransform();

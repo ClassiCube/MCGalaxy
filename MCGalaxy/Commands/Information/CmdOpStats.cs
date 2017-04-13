@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             string end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             string start = "thismonth", name = null;
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             
             if (message == "" || ValidTimespan(message.ToLower())) {
                 if (p == null) { Help(p); return; }

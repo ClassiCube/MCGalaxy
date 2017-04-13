@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
 
-            string name = message.Split(' ')[0];
+            string name = message.SplitSpaces()[0];
             Player who = PlayerInfo.Find(name);
             Command.all.Find("ban").Use(p, message);
             Command.all.Find("banip").Use(p, "@" + name);

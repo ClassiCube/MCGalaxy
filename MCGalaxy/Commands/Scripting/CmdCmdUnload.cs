@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string cmdName = message.Split(' ')[0];
+            string cmdName = message.SplitSpaces()[0];
             
             if (Command.core.Contains(cmdName)) {
                 Player.Message(p, "/{0} is a core command, you cannot unload it.", cmdName); return;

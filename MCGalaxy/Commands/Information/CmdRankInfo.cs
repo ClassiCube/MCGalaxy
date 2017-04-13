@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands {
             DateTime now = DateTime.Now;
             
             foreach (string line in rankings) {
-                string[] parts = line.Split(' ');                
+                string[] parts = line.SplitSpaces();                
                 string newRank = Group.GetColoredName(parts[7]);
                 string oldRank = Group.GetColoredName(parts[8]);
                 

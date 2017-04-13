@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool ParseArgs(Player p, string message, ref PhysicsArgs extraInfo) {
-            string[] parts = message.Split(' ');
+            string[] parts = message.SplitSpaces();
             if (parts.Length % 2 == 1) {
                 Player.Message(p, "Number of parameters must be even");
                 Help(p); return false;

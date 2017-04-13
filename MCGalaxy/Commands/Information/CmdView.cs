@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
                 }
             } else {
                 Player who = p;
-                string[] args = message.Split(' ');
+                string[] args = message.SplitSpaces();
                 if (args.Length > 1) {
                     who = PlayerInfo.FindMatches(p, args[1]);
                     if (who == null) return;

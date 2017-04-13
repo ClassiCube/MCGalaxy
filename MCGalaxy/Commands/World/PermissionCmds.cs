@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.World {
         public override string name { get { return "perbuildmax"; } }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
             Group grp = null;
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
             string name = args[args.Length - 1];
@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.World {
         public override string name { get { return "pervisitmax"; } }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
             Group grp = null;
@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
             string name = args[args.Length - 1];

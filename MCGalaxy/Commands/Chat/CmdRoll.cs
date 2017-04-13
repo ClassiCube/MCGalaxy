@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands {
         public CmdRoll() { }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             Random rand = new Random();
             int min, max;
             

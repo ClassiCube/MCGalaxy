@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Building {
             if (offsetIndex != -1)
                 message = message.Replace("@ ", "").Replace("@", "");
             
-            string[] parts = message.Split(' ');
+            string[] parts = message.SplitSpaces();
             string opt = parts[0].ToLower();
             
             if (opt == "save") {

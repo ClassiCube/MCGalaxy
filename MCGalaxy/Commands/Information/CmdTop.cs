@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length < 2) { Help(p); return; }
             
             int offset = ParseOffset(p, args);

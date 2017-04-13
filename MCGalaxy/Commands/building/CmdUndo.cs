@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Use(Player p, string message) {
             if (message == "") { UndoLastDrawOp(p); return; }
-            string[] parts = message.Split(' ');
+            string[] parts = message.SplitSpaces();
             bool undoPhysics = parts[0].CaselessEq("physics");
             
             TimeSpan delta = GetDelta(p, p.name, parts, undoPhysics ? 1 : 0);

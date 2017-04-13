@@ -28,6 +28,10 @@ namespace MCGalaxy {
     public static class Extensions {
         
         static char[] trimChars = new char[] {' '};
+        public static string[] SplitSpaces(this string value) {
+            return value.Split(trimChars);
+        }
+        
         public static string[] SplitSpaces(this string value, int maxParts) {
             return value.Split(trimChars, maxParts);
         }

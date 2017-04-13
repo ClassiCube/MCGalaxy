@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             PlayerBot bot = PlayerBot.FindMatchesPreferLevel(p, args[0]);
             if (bot == null) return;
             

@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length > 2) { Help(p); return; }
             if (args.Length == 1) { Player.Message(p, "You did not specify the target player."); return; }
             Player source = PlayerInfo.FindMatches(p, args[0]);

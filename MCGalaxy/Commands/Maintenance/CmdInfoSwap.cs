@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
 
         public override void Use(Player p, string text) {
-            string[] args = text.Split(' ');
+            string[] args = text.SplitSpaces();
             if (args.Length != 2) { Help(p); return; }
             if (!Formatter.ValidName(p, args[0], "player")) return;
             if (!Formatter.ValidName(p, args[1], "player")) return;

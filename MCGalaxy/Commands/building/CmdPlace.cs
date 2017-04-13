@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Building {
             int z = (short)p.pos[2] / 32;
 
             try {
-                string[] parts = message.Split(' ');
+                string[] parts = message.SplitSpaces();
                 switch (parts.Length) {
                     case 1:
                         if (message == "") break;

@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") { Player.Message(p, "You need to provide a player name."); return; }
             
-            string[] parts = message.Split(' '), names = null;
+            string[] parts = message.SplitSpaces(), names = null;
             int[] ids = GetIds(p, parts, out names);
             if (ids == null) return;
             

@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Moderation {
         public CmdMute() { }
 
         public override void Use(Player p, string message) {
-            if (message == "" || message.Split(' ').Length > 2) { Help(p); return; }
+            if (message == "" || message.SplitSpaces().Length > 2) { Help(p); return; }
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) {
                 if (Server.muted.Contains(message)) {

@@ -32,7 +32,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override Brush Construct(BrushArgs args) { return ProcessReplace(args, false); }
         
         internal static Brush ProcessReplace(BrushArgs args, bool not) {
-            string[] parts = args.Message.Split(' ');
+            string[] parts = args.Message.SplitSpaces();
             if (args.Message == "") {
                 args.Player.SendMessage("You need at least one block to replace."); return null;
             }

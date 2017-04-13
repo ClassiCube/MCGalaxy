@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "This command can only be used in-game. Use /mute [Player] instead."); return;
             }
 
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             Player muter = PlayerInfo.FindMatches(p, args[0]);
             if (muter == null) return;
 

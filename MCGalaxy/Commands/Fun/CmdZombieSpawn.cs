@@ -104,8 +104,8 @@ using System.Threading;
 
         public override void Use(Player theP, string message)
         {
-            int number = message.Split(' ').Length;
-            String[] param = message.Split(' ');
+            int number = message.SplitSpaces().Length;
+            String[] param = message.SplitSpaces();
 
             if(number == 1)
             {

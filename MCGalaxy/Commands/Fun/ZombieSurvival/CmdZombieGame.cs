@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] args = message.ToLower().Split(' ');
+            string[] args = message.ToLower().SplitSpaces();
             switch (args[0]) {
                     case "go": HandleGo(p, message, args); break;
                     case "status": HandleStatus(p, message, args); break;

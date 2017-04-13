@@ -35,7 +35,7 @@ namespace MCGalaxy {
             
             bool fly = true, noclip = true, speed = true, respawn = true, _3rdPerson = true;
             short maxJump = -1;
-            string[] parts = motd.Split(' ');
+            string[] parts = motd.SplitSpaces();
             for (int i = 0; i < parts.Length; i++) {
                 string part = parts[i];
                 if (part.CaselessEq("-hax")) {

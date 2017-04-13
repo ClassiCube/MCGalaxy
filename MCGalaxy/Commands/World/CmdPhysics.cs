@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
             if (message == "") { ShowPhysics(p); return; }
             if (message.CaselessEq("kill")) { KillPhysics(p); return; }
             
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             Level level = p != null ? p.level : Server.mainLevel;
             int state = 0, stateIndex = args.Length == 1 ? 0 : 1;            
             if (!CommandParser.GetInt(p, args[stateIndex], "Physics state", ref state, 0, 5)) return;

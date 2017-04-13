@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
             int seconds = 30;
             Level lvl = p != null ? p.level : Server.mainLevel;
             if (message != "") {
-                string[] parts = message.Split(' ');
+                string[] parts = message.SplitSpaces();
                 if (parts.Length == 1) {
                     if (!int.TryParse(parts[0], out seconds)) {
                         seconds = 30;

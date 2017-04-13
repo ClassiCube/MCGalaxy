@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             if (p == null) { MessageInGameOnly(p); return; }
 
-            string[] args = message.ToLower().Split(' ');
+            string[] args = message.ToLower().SplitSpaces();
             string cmd = args[0], arg1 = "", arg2 = "", arg3 = "";
             if (args.Length > 1) arg1 = args[1];
             if (args.Length > 2) arg2 = args[2];

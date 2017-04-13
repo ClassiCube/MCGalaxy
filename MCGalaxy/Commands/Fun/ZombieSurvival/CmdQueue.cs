@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
         public CmdQueue() { }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length != 2) { Help(p); return; }
             string value = args[1];
             

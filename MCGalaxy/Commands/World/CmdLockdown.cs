@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
             if (!Directory.Exists("text/lockdown/map"))
                 Directory.CreateDirectory("text/lockdown/map");
 
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length != 2 || !(args[0].CaselessEq("map") || args[0].CaselessEq("player"))) {
                 Help(p); return;
             }

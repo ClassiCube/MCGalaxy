@@ -29,7 +29,7 @@ namespace MCGalaxy.Undo {
         protected override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
             UndoFormatEntry pos;
             pos.NewExtBlock = 0; pos.ExtBlock = 0;
-            string[] lines = new StreamReader(s).ReadToEnd().Split(' ');
+            string[] lines = new StreamReader(s).ReadToEnd().SplitSpaces();
             Player p = args.Player;
             bool super = p == null || p.ircNick != null;
             DateTime start = args.Start;

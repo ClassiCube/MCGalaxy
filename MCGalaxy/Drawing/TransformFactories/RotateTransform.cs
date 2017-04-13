@@ -32,7 +32,7 @@ namespace MCGalaxy.Drawing.Transforms {
         };
         
         public override Transform Construct(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length < 3 || args.Length > 4) { Player.MessageLines(p, Help); return null; }
             float angleX, angleY, angleZ;
             RotateTransform rotater = new RotateTransform();

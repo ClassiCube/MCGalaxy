@@ -249,7 +249,7 @@ namespace MCGalaxy {
             CustomColor col = default(CustomColor);
             
             for (int i = 0; i < lines.Length; i++) {
-                string[] parts = lines[i].Split(' ');
+                string[] parts = lines[i].SplitSpaces();
                 if (parts.Length != 7) continue;
                 col.Code = parts[0][0]; col.Fallback = parts[1][0];
                 col.Name = parts[2];

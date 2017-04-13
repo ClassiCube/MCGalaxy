@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length >= 3) {
                 Assign(p, args);
             } else if (args.Length == 1) {
@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands.Moderation {
             foreach (string line in File.ReadAllLines(Paths.TempRanksFile)) {
                 if (!line.CaselessStarts(name)) { all.AppendLine(line); continue; }
                 
-                string[] parts = line.Split(' ');
+                string[] parts = line.SplitSpaces();
                 Group newgroup = Group.Find(parts[2]);
                 Command.all.Find("setrank").Use(null, name + " " + newgroup.name + " temp rank unassigned");
                 Player.Message(p, "&eTemp rank of &a{0}&e has been unassigned", name);
@@ -137,7 +137,7 @@ namespace MCGalaxy.Commands.Moderation {
         }        
         
         static void PrintTempRankInfo(Player p, string line) {
-            string[] args = line.Split(' ');
+            string[] args = line.SplitSpaces();
             string tempRanker = args[9];
             string tempRank = Group.GetColoredName(args[1]);
             string oldRank = Group.GetColoredName(args[2]);

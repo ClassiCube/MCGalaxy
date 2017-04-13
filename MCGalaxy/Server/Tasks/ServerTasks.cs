@@ -130,7 +130,7 @@ namespace MCGalaxy.Tasks {
                 foreach (Player p in players)
             {
                 if (!line.CaselessStarts(p.name)) continue;
-                string[] args = line.Split(' ');
+                string[] args = line.SplitSpaces();
 
                 int min = int.Parse(args[4]), hour = int.Parse(args[5]);
                 int day = int.Parse(args[6]), month = int.Parse(args[7]), year = int.Parse(args[8]);

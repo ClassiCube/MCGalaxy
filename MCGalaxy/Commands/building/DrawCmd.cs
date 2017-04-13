@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             message = message.ToLower();
-            string[] parts = message.Split(' ');
+            string[] parts = message.SplitSpaces();
             
             DrawArgs dArgs = default(DrawArgs);
             dArgs.Message = message;

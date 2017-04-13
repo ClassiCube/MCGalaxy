@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
             int TotalTime = 0;
             try
             {
-                TotalTime = int.Parse(message.Split(' ')[0]);
+                TotalTime = int.Parse(message.SplitSpaces()[0]);
                 message = message.Substring(message.IndexOf(' ') + 1);
             }
             catch

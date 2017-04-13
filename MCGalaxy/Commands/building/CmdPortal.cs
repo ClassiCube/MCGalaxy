@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             PortalData data;
             data.Multi = false;
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             string block = message == "" ? "" : args[0].ToLower();
 
             if (args.Length >= 2 && args[1].CaselessEq("multi")) {

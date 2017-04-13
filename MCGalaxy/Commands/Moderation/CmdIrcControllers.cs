@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            string[] parts = message.Split(' ');
+            string[] parts = message.SplitSpaces();
             
             switch (parts[0].ToLower()) {
                 case "reload":

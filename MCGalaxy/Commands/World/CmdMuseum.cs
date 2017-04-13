@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             string path = args.Length == 1 ? LevelInfo.MapPath(args[0]) :
                 LevelInfo.BackupPath(args[0], args[1]);
             if (!File.Exists(path)) {

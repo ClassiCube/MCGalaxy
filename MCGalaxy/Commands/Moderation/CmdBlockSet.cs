@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands {
         public CmdBlockSet() { }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length < 2) { Help(p); return; }
 
             byte block = Block.Byte(args[0]);

@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands
         public CmdBotAI() { }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (p == null) { MessageInGameOnly(p); return; }
             if (args.Length < 2) { Help(p); return; }
             string ai = args[1].ToLower();

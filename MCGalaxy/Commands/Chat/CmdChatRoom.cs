@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
         
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            string[] parts = message.ToLower().Split(' ');
+            string[] parts = message.ToLower().SplitSpaces();
             
             if (message == "") {
                 if (Server.Chatrooms.Count == 0) {

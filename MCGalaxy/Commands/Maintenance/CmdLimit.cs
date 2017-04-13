@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
         public CmdLimit() { }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (message == "") { Help(p); return; }
             
             int limit = 0;

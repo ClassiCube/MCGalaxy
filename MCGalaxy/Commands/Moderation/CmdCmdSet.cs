@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (message == "" || args.Length == 1) { Help(p); return; }
             Command cmd = Command.all.Find(args[0]);
             if (cmd == null) { Player.Message(p, "Could not find command entered"); return; }

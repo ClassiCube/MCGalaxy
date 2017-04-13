@@ -32,7 +32,7 @@ namespace MCGalaxy.Bots {
 
             foreach (string line in codes) {
                 if (line == "" || line[0] == '#') continue;
-                string[] args = line.Split(' ');
+                string[] args = line.SplitSpaces();
 
                 try {
                     BotInstruction ins = BotInstruction.Find(args[0]);

@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string text) {
             if (text == "") { SendEstimation(p); return; }            
-            string[] args = text.Split(' ');
+            string[] args = text.SplitSpaces();
             string cmd = args[0].ToLower();
             if (cmd == "clear") {
                 Level[] loaded = LevelInfo.Loaded.Items;

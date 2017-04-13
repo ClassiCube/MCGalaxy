@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
             if (message == "") { OutputBackups(p); return; }
             
             Level lvl;
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length >= 2) {
                 lvl = Matcher.FindLevels(p, args[1]);
                 if (lvl == null) return;

@@ -528,7 +528,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static bool ParseCoords(string parts, ref byte x, ref byte y, ref byte z) {
-            string[] coords = parts.Split(' ');
+            string[] coords = parts.SplitSpaces();
             if (coords.Length != 3) return false;
             
             byte tx = 0, ty = 0, tz = 0;

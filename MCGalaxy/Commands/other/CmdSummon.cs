@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands {
         }
         
         static void SummonPlayer(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             bool confirmed = args.Length > 1 && args[1].CaselessEq("confirm");
             
             Player who = PlayerInfo.FindMatches(p, args[0]);

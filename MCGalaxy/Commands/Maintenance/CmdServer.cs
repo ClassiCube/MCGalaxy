@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
         public CmdServer() { }
 
         public override void Use(Player p, string message) {
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             switch (args[0].ToLower()) {
                 case "public": SetPublic(p, args); break;
                 case "private": SetPrivate(p, args); break;

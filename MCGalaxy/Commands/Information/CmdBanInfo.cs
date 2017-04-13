@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         static TimeSpan GetDelta(string data) {
             data = data.Replace(",", "");
-            string[] date = data.Split(' ');
+            string[] date = data.SplitSpaces();
             string[] minuteHour = date[5].Split(':');
             
             int hour = int.Parse(minuteHour[0]), minute = int.Parse(minuteHour[1]);

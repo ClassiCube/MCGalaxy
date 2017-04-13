@@ -37,8 +37,8 @@ namespace MCGalaxy {
 
         // Replace any whole word containing a bad word inside it (including partial word matches)
         static string FilterWords(string text) {
-            string[] words = text.Split(' ');
-            string[] reduced = Reduce(text).Split(' ');
+        	string[] words = text.SplitSpaces();
+            string[] reduced = Reduce(text).SplitSpaces();
 
             // Loop through each reduced word, looking for a bad word
             for (int i = 0; i < reduced.Length; i++) {

@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands {
                 SendPresetsMessage(p); return;
             }
             
-            string[] args = message.Split(' ');
+            string[] args = message.SplitSpaces();
             if (args.Length <= 1) {
                 if (!message.CaselessEq("normal")) { Help(p); return; }
                 ResetEnv(p);
@@ -159,7 +159,7 @@ namespace MCGalaxy.Commands {
                 preset = new EnvPreset("131947", "070A23", "1E223A", "181828", "0F0F19");
             } else if (File.Exists("presets/" + value.ToLower() + ".env")) {
                 string text = File.ReadAllText("presets/" + value.ToLower() + ".env");
-                string[] parts = text.Split(' ');
+                string[] parts = text.SplitSpaces();
                 preset = new EnvPreset(parts[0], parts[1], parts[2], parts[3], parts[4]);
             }            
             if (preset == null) { SendPresetsMessage(p); return false; }

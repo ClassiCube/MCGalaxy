@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Building {
             if (message == "") { Help(p); return; }
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             
-            string[] parts = message.Split(' ');
+            string[] parts = message.SplitSpaces();
             if (!CommandParser.GetUShort(p, parts[0], "Distance", ref distance)) return;
             if (parts.Length > 1 && !CommandParser.GetUShort(p, parts[1], "Interval", ref interval)) return;
 

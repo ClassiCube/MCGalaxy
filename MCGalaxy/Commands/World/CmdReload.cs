@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (CheckSuper(p, message, "player or level name")) return;
             if (message == "") message = p.name;
-            string[] parts = message.ToLower().Split(' ');
+            string[] parts = message.ToLower().SplitSpaces();
             
             if (parts[0] == "all") {
                 if (!ReloadAll(p, parts)) return;

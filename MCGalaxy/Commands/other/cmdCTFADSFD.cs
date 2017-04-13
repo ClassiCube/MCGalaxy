@@ -32,12 +32,12 @@ namespace MCGalaxy.Commands
         {
             if (message.IndexOf(' ') != -1)
             {
-                if (message.Split(' ')[0].ToLower() == "team")
+                if (message.SplitSpaces()[0].ToLower() == "team")
                 {
-                    if (message.Split(' ')[1].ToLower() == "create")
+                    if (message.SplitSpaces()[1].ToLower() == "create")
                     {
-                        if (message.Split(' ').Length < 3) { Help(p); return; }
-                        string color = c.Parse(message.Split(' ')[2].ToLower());
+                        if (message.SplitSpaces().Length < 3) { Help(p); return; }
+                        string color = c.Parse(message.SplitSpaces()[2].ToLower());
                         char teamCol = (char)color[1];
                         switch (teamCol)
                         {
@@ -56,39 +56,39 @@ namespace MCGalaxy.Commands
                         }
                         return;
                     }
-                    else if (message.Split(' ')[1].ToLower() == "add")
+                    else if (message.SplitSpaces()[1].ToLower() == "add")
                     {
-                        if (message.Split(' ').Length < 4) { Help(p); return; }
-                        Player newPlayer = PlayerInfo.Find(message.Split(' ')[2].ToLower());
+                        if (message.SplitSpaces().Length < 4) { Help(p); return; }
+                        Player newPlayer = PlayerInfo.Find(message.SplitSpaces()[2].ToLower());
                         if (newPlayer == null) { Help(p); return; }
-                        string color = c.Parse(message.Split(' ')[3].ToLower());
+                        string color = c.Parse(message.SplitSpaces()[3].ToLower());
                         AddTeamMember(p, newPlayer, color);
                         return;
                     }
-                    else if (message.Split(' ')[1].ToLower() == "remove")
+                    else if (message.SplitSpaces()[1].ToLower() == "remove")
                     {
-                        if (message.Split(' ').Length < 3) { Help(p); return; }
-                        Player newPlayer = PlayerInfo.Find(message.Split(' ')[2].ToLower());
+                        if (message.SplitSpaces().Length < 3) { Help(p); return; }
+                        Player newPlayer = PlayerInfo.Find(message.SplitSpaces()[2].ToLower());
                         Team workTeam = newPlayer.level.teams.Find(team => team.color == newPlayer.onTeam);
                         workTeam.removePlayer(newPlayer);
                         if (newPlayer == null) { Help(p); return; }
 
                     }
                 }
-                else if (message.Split(' ')[0].ToLower() == "flag")
+                else if (message.SplitSpaces()[0].ToLower() == "flag")
                 {
-                    if (message.Split(' ').Length < 2) { Help(p); return; }
-                    string color = c.Parse(message.Split(' ')[1].ToLower());
+                    if (message.SplitSpaces().Length < 2) { Help(p); return; }
+                    string color = c.Parse(message.SplitSpaces()[1].ToLower());
                     CatchPos cpos;
                     cpos.x = 0; cpos.y = 0; cpos.z = 0; cpos.color = color; p.blockchangeObject = cpos;
                     Player.Message(p, "Place a block to determine where to place the flag.");
                     p.ClearBlockchange();
                     p.Blockchange += AddFlag;
                 }
-                else if (message.Split(' ')[0].ToLower() == "reset")
+                else if (message.SplitSpaces()[0].ToLower() == "reset")
                 {
-                    if (message.Split(' ').Length < 2) { Help(p); return; }
-                    if (message.Split(' ')[1] == "round")
+                    if (message.SplitSpaces().Length < 2) { Help(p); return; }
+                    if (message.SplitSpaces()[1] == "round")
                     {
                         foreach (Team team in p.level.teams)
                         {
@@ -98,24 +98,24 @@ namespace MCGalaxy.Commands
                     else { Help(p); return; }
 
                 }
-                else if (message.Split(' ')[0].ToLower() == "spawn")
+                else if (message.SplitSpaces()[0].ToLower() == "spawn")
                 {
-                    if (message.Split(' ').Length < 2) { Help(p); return; }
-                    string color = c.Parse(message.Split(' ')[1].ToLower());
+                    if (message.SplitSpaces().Length < 2) { Help(p); return; }
+                    string color = c.Parse(message.SplitSpaces()[1].ToLower());
                     AddTeamSpawn(p, color);
                 }
-                else if (message.Split(' ')[0].ToLower() == "points")
+                else if (message.SplitSpaces()[0].ToLower() == "points")
                 {
-                    if (message.Split(' ').Length < 2) { Help(p); return; }
+                    if (message.SplitSpaces().Length < 2) { Help(p); return; }
                     int i;
-                    Int32.TryParse(message.Split(' ')[1], out i);
+                    Int32.TryParse(message.SplitSpaces()[1], out i);
                     if (i == 0) { p.SendMessage("You must indicate a numeric points value greater than 0."); return; }
                     p.level.maxroundpoints = i;
                     Player.Message(p, "Max points has been set to " + i);
                 }
 
             }
-            else if (message.Split(' ')[0].ToLower() == "debug")
+            else if (message.SplitSpaces()[0].ToLower() == "debug")
             {
                 p.SendMessage("Player debug info: hasFlag: " + p.hasFlag + ", holdingflag: " + p.holdingFlag);
                 p.SendMessage("OnTeam: " + p.onTeam + ", inCtf: " + p.inCtf);
@@ -125,9 +125,9 @@ namespace MCGalaxy.Commands
                 p.SendMessage("Flag loc:  x: " + workTeam.flagLocation[0] + ", y: " + workTeam.flagLocation[1] + ", z: " + workTeam.flagLocation[2]);
                 p.SendMessage("Level ctfmode: " + workTeam.mapOn.ctfmode);
             } 
-            else if (message.Split(' ')[0].ToLower() == "clear")
+            else if (message.SplitSpaces()[0].ToLower() == "clear")
             {
-                if (message.Split(' ').Length > 1 && message.Split(' ').Length < 1) { Help(p); return;}
+                if (message.SplitSpaces().Length > 1 && message.SplitSpaces().Length < 1) { Help(p); return;}
                 foreach (Team team in p.level.teams)
                 {
                     foreach (Player p1 in team.onTeam)
