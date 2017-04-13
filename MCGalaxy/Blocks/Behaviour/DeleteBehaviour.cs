@@ -97,13 +97,19 @@ namespace MCGalaxy.Blocks {
         }
         
         internal static void DoPortal(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (Portal.Handle(p, x, y, z)) return;
-            p.ChangeBlock(x, y, z, Block.air, 0);
+            if (Portal.Handle(p, x, y, z)) {
+                p.RevertBlock(x, y, z);
+            } else {
+                p.ChangeBlock(x, y, z, Block.air, 0);
+            }
         }
         
         internal static void DoMessageBlock(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (MessageBlock.Handle(p, x, y, z, true)) return;
-            p.ChangeBlock(x, y, z, Block.air, 0);
+            if (MessageBlock.Handle(p, x, y, z, true)) {
+                p.RevertBlock(x, y, z);
+            } else {
+                p.ChangeBlock(x, y, z, Block.air, 0);
+            }
         }
         
         internal static void CustomBlock(Player p, byte block, ushort x, ushort y, ushort z) {

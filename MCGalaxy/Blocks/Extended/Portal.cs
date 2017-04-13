@@ -23,7 +23,6 @@ namespace MCGalaxy.Blocks.Extended {
     public static class Portal {
         
         public static bool Handle(Player p, ushort x, ushort y, ushort z) {
-            p.RevertBlock(x, y, z);
             if (!p.level.hasPortals) return false;
             
             try {

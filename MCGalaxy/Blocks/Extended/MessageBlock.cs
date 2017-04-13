@@ -24,7 +24,6 @@ namespace MCGalaxy.Blocks.Extended {
     public static class MessageBlock {
         
         public static bool Handle(Player p, ushort x, ushort y, ushort z, bool alwaysRepeat) {
-            p.RevertBlock(x, y, z);
             if (!p.level.hasMessageBlocks) return false;
             
             try {
