@@ -88,7 +88,7 @@ namespace MCGalaxy {
             for ( int i = 0; i < lines.Count; i++ ) // Gotta do it the old fashioned way...
             {
                 char[] temp = lines[i].ToCharArray();
-                if ( temp[temp.Length - 2] == '%' || temp[temp.Length - 2] == '&' ) {
+                if ( temp[temp.Length - 2] == '&' ) {
                     temp[temp.Length - 1] = ' ';
                     temp[temp.Length - 2] = ' ';
                 }
