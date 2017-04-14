@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System;
+using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands.Building {
@@ -27,13 +28,19 @@ namespace MCGalaxy.Commands.Building {
         public CmdOutline() { }
 
         public override void Use(Player p, string message) {
-            string[] args = message.SplitSpaces();
-            if (args.Length != 2) { Help(p); return; }
+            string[] args = message.SplitSpaces(2);
             DrawArgs dArgs = default(DrawArgs);
             
-            if (!CommandParser.GetBlockIfAllowed(p, args[0], out dArgs.block,    out dArgs.extBlock))    return;
-            if (!CommandParser.GetBlockIfAllowed(p, args[1], out dArgs.newBlock, out dArgs.newExtBlock)) return;
-
+            if (!CommandParser.GetBlockIfAllowed(p, args[0], out dArgs.block, out dArgs.extBlock)) return;
+            string brushArgs = args.Length > 1 ? args[1] : "";
+            dArgs.brushArgs = brushArgs;
+            
+            BrushFactory factory = BrushFactory.Find(p.BrushName);
+            byte held, extHeld;
+            held = p.GetActualHeldBlock(out extHeld);
+            BrushArgs bArgs = new BrushArgs(p, brushArgs, held, extHeld);
+            if (!factory.Validate(bArgs)) return;
+            
             Player.Message(p, "Place or break two blocks to determine the edges.");
             p.MakeSelection(2, dArgs, DoOutline);
         }
@@ -42,14 +49,20 @@ namespace MCGalaxy.Commands.Building {
             DrawArgs dArgs = (DrawArgs)state;
             OutlineDrawOp op = new OutlineDrawOp();
             op.Block = dArgs.block; op.ExtBlock = dArgs.extBlock;
-            op.NewBlock = dArgs.newBlock; op.NewExtBlock = dArgs.newExtBlock;
-            return DrawOpPerformer.Do(op, null, p, marks);
+            
+            BrushFactory factory = BrushFactory.Find(p.BrushName);
+            BrushArgs bArgs = new BrushArgs(p, dArgs.brushArgs, type, extType);
+            Brush brush = factory.Construct(bArgs);
+            if (brush == null) return false;
+            
+            return DrawOpPerformer.Do(op, brush, p, marks);
         }
-        struct DrawArgs { public byte block, extBlock, newBlock, newExtBlock; }
+        struct DrawArgs { public byte block, extBlock; public string brushArgs; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/outline [block] [block2]");
-            Player.Message(p, "%HOutlines [block] with [block2]");
+            Player.Message(p, "%T/outline [block] <brush args>");
+            Player.Message(p, "%HOutlines [block] with output of your current brush.");
+            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
         }
     }
 }

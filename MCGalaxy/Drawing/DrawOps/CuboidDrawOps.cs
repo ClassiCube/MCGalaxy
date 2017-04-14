@@ -58,7 +58,7 @@ namespace MCGalaxy.Drawing.Ops {
     
     public class OutlineDrawOp : CuboidDrawOp {        
         public override string Name { get { return "Outline"; } }
-        public byte Block, ExtBlock, NewBlock, NewExtBlock;
+        public byte Block, ExtBlock;
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
@@ -75,7 +75,7 @@ namespace MCGalaxy.Drawing.Ops {
                 outline |= Check(x, (ushort)(y + 1), z);
 
                 if (outline && !Check(x, y, z))
-                    output(Place(x, y, z, NewBlock, NewExtBlock));
+                    output(Place(x, y, z, brush));
             }
         }
         
