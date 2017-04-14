@@ -41,24 +41,25 @@ namespace MCGalaxy.Commands {
 
             int otherPermIndex = 0;
             if (args.Length == 2) {
-                var allowed = GrpCommands.allowedCommands.Find(rA => rA.commandName == cmd.name);
-                allowed.lowestRank = grp.Permission;
+                CommandPerms perms = CommandPerms.Find(cmd.name);
+                perms.MinRank = grp.Permission;
                 UpdatePermissions(cmd, p, "'s permission was set to " + grp.ColoredName);
             } else if (args[2].CaselessEq("allow")) {
-                var allowed = GrpCommands.allowedCommands.Find(rA => rA.commandName == cmd.name);
-                allowed.disallow.Remove(grp.Permission);
-                if (!allowed.allow.Contains(grp.Permission))
-                    allowed.allow.Add(grp.Permission);
+                CommandPerms perms = CommandPerms.Find(cmd.name);
+
+                perms.Disallowed.Remove(grp.Permission);
+                if (!perms.Allowed.Contains(grp.Permission))
+                    perms.Allowed.Add(grp.Permission);
                 UpdatePermissions(cmd, p, " can now be used by " + grp.ColoredName);
             } else if (args[2].CaselessEq("disallow")) {
                 if (p != null && p.Rank == grp.Permission) {
                     Player.Message(p, "You cannot disallow your own rank from using a command."); return;
                 }
                 
-                var allowed = GrpCommands.allowedCommands.Find(rA => rA.commandName == cmd.name);
-                allowed.allow.Remove(grp.Permission);
-                if (!allowed.disallow.Contains(grp.Permission))
-                    allowed.disallow.Add(grp.Permission);
+                CommandPerms perms = CommandPerms.Find(cmd.name);
+                perms.Allowed.Remove(grp.Permission);
+                if (!perms.Disallowed.Contains(grp.Permission))
+                    perms.Disallowed.Add(grp.Permission);
                 UpdatePermissions(cmd, p, " is no longer usable by " + grp.ColoredName);
             } else if (!int.TryParse(args[2], out otherPermIndex)) {
                 Player.Message(p, "\"{0}\" must be \"allow\", \"disallow\", or an integer.", args[2]);
@@ -81,8 +82,7 @@ namespace MCGalaxy.Commands {
         }
         
         static void UpdatePermissions(Command cmd, Player p, string message) {
-             GrpCommands.Save(GrpCommands.allowedCommands);
-             GrpCommands.fillRanks();
+             CommandPerms.Save();
              Chat.MessageGlobal("&d{0}%S{1}", cmd.name, message);
              if (Player.IsSuper(p))
                  Player.Message(p, cmd.name + message);

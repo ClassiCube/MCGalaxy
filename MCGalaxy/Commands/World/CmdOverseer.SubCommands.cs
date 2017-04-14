@@ -165,7 +165,7 @@ namespace MCGalaxy.Commands {
             
             LevelPermission osPerm = Server.osPerbuildDefault;
             if (osPerm == LevelPermission.Nobody)
-                osPerm = GrpCommands.MinPerm(Command.all.Find("overseer"));
+                osPerm = CommandPerms.MinPerm(Command.all.Find("overseer"));
             Group grp = Group.findPerm(osPerm);
             if (grp == null) return;
             

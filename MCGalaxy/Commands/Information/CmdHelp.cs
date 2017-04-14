@@ -180,7 +180,7 @@ namespace MCGalaxy.Commands {
         }
 
         internal static string GetColor(Command cmd) {
-            LevelPermission perm = GrpCommands.MinPerm(cmd);
+            LevelPermission perm = CommandPerms.MinPerm(cmd);
             return Group.GetColor(perm);
         }
 

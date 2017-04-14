@@ -20,136 +20,126 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace MCGalaxy {
+    
     public class GrpCommands {
         
-        public class rankAllowance {
-            public string commandName;
-            public LevelPermission lowestRank;
-            public List<LevelPermission> disallow = new List<LevelPermission>();
-            public List<LevelPermission> allow = new List<LevelPermission>();
-        }
-        public static List<rankAllowance> allowedCommands;
+        [Obsolete("Use CommandPerms.Load()")]
+        public static void fillRanks() { CommandPerms.Load(); }
+    }
 
-        public static LevelPermission defaultRanks(string command) {
-            Command cmd = Command.all.Find(command);
-            return cmd != null ? cmd.defaultRank : LevelPermission.Null;
-        }
+    /// <summary> Represents which ranks are allowed (and which are disallowed) to use a command. </summary>
+    public class CommandPerms {
         
+        /// <summary> Name of the command these permissions are for. </summary>
+        public string CmdName;
+        
+        /// <summary> Minimum rank able to use the command. </summary>
+        public LevelPermission MinRank;
+        
+        /// <summary> Ranks specifically allowed to use the command. </summary>
+        public List<LevelPermission> Allowed = new List<LevelPermission>();
+        
+        /// <summary> Ranks specifically prevented from using the command. </summary>
+        public List<LevelPermission> Disallowed = new List<LevelPermission>();
+        
+        static List<CommandPerms> list = new List<CommandPerms>();
+        
+        
+        /// <summary> Finds the rank permissions for a given command. </summary>
+        /// <returns> null if rank permissions were not found for the given command. </returns>
+        public static CommandPerms Find(string cmd) {
+            foreach (CommandPerms perms in list) {
+                if (perms.CmdName.CaselessEq(cmd)) return perms;
+            }
+            return null;
+        }
+
+        /// <summary> Returns the lowest rank that can use the given command. </summary>        
         public static LevelPermission MinPerm(Command cmd) {
-            var perms = GrpCommands.allowedCommands.Find(C => C.commandName == cmd.name);
-            return perms == null ? cmd.defaultRank : perms.lowestRank;
+            CommandPerms perms = Find(cmd.name);
+            return perms == null ? cmd.defaultRank : perms.MinRank;
         }
         
-        public static bool Remove(string cmdName) {
-            for (int i = 0; i < allowedCommands.Count; i++) {
-                if (allowedCommands[i].commandName != cmdName) continue;
-                allowedCommands.RemoveAt(i); return true;
-            }
-            return false;
+        /// <summary> Retrieves a copy of list of all rank permissions for commands. </summary>
+        public static List<CommandPerms> CopyAll() {
+            return new List<CommandPerms>(list);
         }
 
-        public static void fillRanks() {
-            List<string> cmdNames = Command.all.commandNames();
-            allowedCommands = new List<rankAllowance>();
-
-            rankAllowance allowVar;
-            foreach (Command cmd in Command.all.All()) {
-                allowVar = new rankAllowance();
-                allowVar.commandName = cmd.name;
-                allowVar.lowestRank = cmd.defaultRank;
-                allowedCommands.Add(allowVar);
+        
+        /// <summary> Sets the rank permissions for a given command. </summary>
+        public static void Set(string cmd, LevelPermission min,
+                              List<LevelPermission> allowed, List<LevelPermission> disallowed) {
+            if (min > LevelPermission.Nobody) return;
+            
+            // add or replace existing
+            CommandPerms perms = Find(cmd);
+            if (perms == null) {
+                perms = new CommandPerms(); list.Add(perms);
             }
-
-            if (File.Exists("properties/command.properties")) {
-                string[] lines = File.ReadAllLines("properties/command.properties");
-                //if (lines.Length == 0) ; // this is useless?
-                if (lines[0] == "#Version 2") ReadVersion2(lines, cmdNames);
-                else ReadVersion1(lines, cmdNames);
-            } else {
-                Save(allowedCommands);
-            }
-
-            foreach (Group grp in Group.GroupList) {
-                grp.fillCommands();
-            }
+            
+            if (allowed == null) allowed = new List<LevelPermission>();
+            if (disallowed == null) disallowed = new List<LevelPermission>();
+            
+            perms.CmdName = cmd;
+            perms.MinRank = min;
+            perms.Allowed = allowed;
+            perms.Disallowed = disallowed;
         }
         
-        static void ReadVersion2(string[] lines, List<string> cmdNames) {
-            char[] colon = new char[] { ':' };
-            foreach (string line in lines) {
-                if (line == "" || line[0] == '#') continue;
-                rankAllowance perms = new rankAllowance();
-                //Name : Lowest : Disallow : Allow
-                string[] args = line.Replace(" ", "").Split(colon);
-
-                if (!cmdNames.Contains(args[0])) continue;
-                perms.commandName = args[0];
-
-                string[] disallow = new string[0];
-                if (args[2] != "") disallow = args[2].Split(',');
-                string[] allow = new string[0];
-                if (args[3] != "") allow = args[3].Split(',');
-
-                try {
-                    perms.lowestRank = (LevelPermission)int.Parse(args[1]);
-                    foreach (string s in disallow) { perms.disallow.Add((LevelPermission)int.Parse(s)); }
-                    foreach (string s in allow) { perms.allow.Add((LevelPermission)int.Parse(s)); }
-                } catch {
-                    Server.s.Log("Hit an error on the command " + line); continue;
-                }
-
-                for (int i = 0; i < allowedCommands.Count; i++) {
-                    if (args[0] == allowedCommands[i].commandName) {
-                        allowedCommands[i] = perms; break;
-                    }
-                }
-            }
+        
+        /// <summary> Joins a list of rank permissions into a single string, comma separated.</summary>
+        public static string JoinPerms(List<LevelPermission> list) {
+            if (list == null || list.Count == 0) return "";
+            return list.Join(p => ((int)p).ToString(), ",");
         }
         
-        static void ReadVersion1(string[] lines, List<string> cmdNames) {
-            foreach (string line in lines) {
-                if (line == "" || line[0] == '#') continue;
-                rankAllowance perms = new rankAllowance();
-                string key = line.Split('=')[0].Trim().ToLower();
-                string value = line.Split('=')[1].Trim().ToLower();
-
-                if (!cmdNames.Contains(key)) {
-                } else if (Group.Find(value) == null) {
-                    Server.s.Log("No group found for command " + key + ", using default value.");
-                } else {
-                    perms.commandName = key;
-                    perms.lowestRank = Group.Find(value).Permission;
-
-                    for (int i = 0; i < allowedCommands.Count; i++) {
-                        if (allowedCommands[i].commandName == key) {
-                            allowedCommands[i] = perms; break;
-                        }
-                    }
+        /// <summary> Expands a comma separated string into a list of rank permissions. </summary>
+        public static List<LevelPermission> ExpandPerms(string input) {
+            List<LevelPermission> perms = new List<LevelPermission>();
+            if (input == null || input == "") return perms;
+            
+            foreach (string perm in input.Split(',')) {
+                perms.Add((LevelPermission)int.Parse(perm));
+            }
+            return perms;
+        }
+        
+        /// <summary> Gets the list of all loaded commands that the given rank can use. </summary>
+        public static CommandList AllCommandsUsableBy(LevelPermission perm) {
+            CommandList commands = new CommandList();
+            foreach (CommandPerms perms in list) {
+                bool canUse = perms.MinRank <= perm && !perms.Disallowed.Contains(perm);
+                if (canUse || perms.Allowed.Contains(perm)) {
+                    Command cmd = Command.all.Find(perms.CmdName);
+                    if (cmd != null) commands.Add(cmd);
                 }
             }
+            return commands;
         }
+
 
         static readonly object saveLock = new object();
-        public static void Save(List<rankAllowance> givenList) {
+        
+        /// <summary> Saves the list of all command permissions. </summary>
+        public static void Save() {
             lock (saveLock)
-                SaveCore(givenList);
+                SaveCore(list);
         }
         
-        static void SaveCore(List<rankAllowance> givenList) {
+        static void SaveCore(List<CommandPerms> givenList) {
             try {
                 using (StreamWriter w = new StreamWriter("properties/command.properties")) {
                     w.WriteLine("#Version 2");
-                    w.WriteLine("#   This file contains a reference to every command found in the server software");
-                    w.WriteLine("#   Use this file to specify which ranks get which commands");
-                    w.WriteLine("#   Current ranks: " + Group.concatList(false, false, true));
-                    w.WriteLine("#   Disallow and allow can be left empty, just make sure there's 2 spaces between the colons");
-                    w.WriteLine("#   This works entirely on permission values, not names. Do not enter a rank name. Use its permission value");
-                    w.WriteLine("#   CommandName : LowestRank : Disallow : Allow");
+                    w.WriteLine("#   This file list the ranks that can use each command.");
+                    w.WriteLine("#   Disallow and allow can be left empty.");
+                    w.WriteLine("#   Works entirely on rank permission values, not rank names.");
+                    w.WriteLine("#");
+                    w.WriteLine("#   Layout: CommandName : LowestRank : Disallow : Allow");
                     w.WriteLine("#   gun : 60 : 80,67 : 40,41,55");
                     w.WriteLine("");
 
-                    foreach (rankAllowance aV in givenList) {
-                        w.WriteLine(aV.commandName + " : " + (int)aV.lowestRank + " : " + getInts(aV.disallow) + " : " + getInts(aV.allow));
+                    foreach (CommandPerms perms in givenList) {
+                        w.WriteLine(perms.CmdName + " : " + (int)perms.MinRank + " : " + JoinPerms(perms.Disallowed) + " : " + JoinPerms(perms.Allowed));
                     }
                 }
             } catch {
@@ -157,18 +147,65 @@ namespace MCGalaxy {
             }
         }
         
-        public static string getInts(List<LevelPermission> givenList) {
-            if (givenList == null) return "";
-            return givenList.Join(p => ((int)p).ToString(), ",");
-        }
-        
-        public static void AddCommands(out CommandList commands, LevelPermission perm) {
-            commands = new CommandList();
-            foreach (rankAllowance perms in allowedCommands) {
-                bool canUse = perms.lowestRank <= perm && !perms.disallow.Contains(perm);
-                if (canUse || perms.allow.Contains(perm))                
-                    commands.Add(Command.all.Find(perms.commandName));
+
+        /// <summary> Loads the list of all command permissions. </summary>        
+        public static void Load() {
+            foreach (Command cmd in Command.all.All()) {
+                Set(cmd.name, cmd.defaultRank, null, null);
+            }
+
+            if (File.Exists("properties/command.properties")) {
+                string[] lines = File.ReadAllLines("properties/command.properties");
+                if (lines.Length > 0 && lines[0] == "#Version 2") {
+                    LoadVersion2(lines);
+                } else {
+                    LoadVersion1(lines);
+                }
+            } else {
+                Save();
+            }
+
+            foreach (Group grp in Group.GroupList) {
+                grp.fillCommands();
+            }
+        }        
+                
+        static void LoadVersion2(string[] lines) {
+            char[] colon = new char[] { ':' };
+            foreach (string line in lines) {
+                if (line == "" || line[0] == '#') continue;
+                //Name : Lowest : Disallow : Allow
+                string[] args = line.Replace(" ", "").Split(colon);
+                
+                try {                    
+                    LevelPermission minRank = (LevelPermission)int.Parse(args[1]);                    
+                    string disallowRaw = args.Length > 2 ? args[2] : null;
+                    string allowRaw = args.Length > 3 ? args[3] : null;
+                    
+                    List<LevelPermission> allow = ExpandPerms(allowRaw);
+                    List<LevelPermission> disallow = ExpandPerms(disallowRaw);
+                    Set(args[0], minRank, allow, disallow);
+                } catch {
+                    Server.s.Log("Hit an error on the command " + line); continue;
+                }
             }
         }
+        
+        static void LoadVersion1(string[] lines) {
+            foreach (string line in lines) {
+                if (line == "" || line[0] == '#') continue;
+                
+                string cmd = line.Split('=')[0].Trim();
+                string value = line.Split('=')[1].Trim();
+
+                if (Group.Find(value) == null) {
+                    Server.s.Log("No group found for command " + cmd + ", using default value.");
+                } else {
+                    LevelPermission lowestRank = Group.Find(value).Permission;
+                    Set(cmd, lowestRank, null, null);
+                }
+            }
+        }
+
     }
 }

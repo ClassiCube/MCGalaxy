@@ -178,8 +178,8 @@ namespace MCGalaxy.Commands {
                           .CompareTo(b.name));
             }
             if (sort == "rank" || sort == "ranks") {
-                cmds.Sort((a, b) => GrpCommands.MinPerm(a)
-                          .CompareTo(GrpCommands.MinPerm(b)));
+                cmds.Sort((a, b) => CommandPerms.MinPerm(a)
+                          .CompareTo(CommandPerms.MinPerm(b)));
             }
         }
 

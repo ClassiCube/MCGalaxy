@@ -41,13 +41,13 @@ namespace MCGalaxy {
         }
         
         public static void PrintCommandInfo(Player p, Command cmd) {
-            var perms = GrpCommands.allowedCommands.Find(C => C.commandName == cmd.name);
+            CommandPerms perms = CommandPerms.Find(cmd.name);
             StringBuilder builder = new StringBuilder();
             builder.Append("Usable by: ");
             if (perms == null) {
                 builder.Append(Group.GetColoredName(cmd.defaultRank) + "%S+");
             } else {
-                PrintRanks(perms.lowestRank, perms.allow, perms.disallow, builder);
+                PrintRanks(perms.MinRank, perms.Allowed, perms.Disallowed, builder);
             }
             Player.Message(p, builder.ToString());
             

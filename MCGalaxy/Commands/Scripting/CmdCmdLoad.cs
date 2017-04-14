@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands {
             
             string error = Scripting.Load("Cmd" + message);
             if (error != null) { Player.Message(p, error); return; }
-            GrpCommands.fillRanks();
+            CommandPerms.Load();
             Player.Message(p, "Command was successfully loaded.");
         }
 

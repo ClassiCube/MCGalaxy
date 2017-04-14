@@ -187,7 +187,7 @@ namespace MCGalaxy {
             SrvProperties.Load("properties/server.properties");
             Group.InitAll();
             Command.InitAll();
-            GrpCommands.fillRanks();
+            CommandPerms.Load();
             Block.SetBlocks();
             Awards.Load();
             Economy.Load();

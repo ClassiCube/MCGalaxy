@@ -83,9 +83,9 @@ namespace MCGalaxy {
         }
         
         internal void MessageCannotUse(Player p) {
-            var perms = GrpCommands.allowedCommands.Find(C => C.commandName == name);
+            CommandPerms perms = CommandPerms.Find(name);
             StringBuilder builder = new StringBuilder("Only ");
-            Formatter.PrintRanks(perms.lowestRank, perms.allow, perms.disallow, builder);
+            Formatter.PrintRanks(perms.MinRank, perms.Allowed, perms.Disallowed, builder);
             builder.Append(" can use %T/" + name);
             Player.Message(p, builder.ToString());
         }

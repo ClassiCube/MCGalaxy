@@ -135,7 +135,7 @@ namespace MCGalaxy.Gui {
         }
 
         List<Group> storedRanks = new List<Group>();
-        List<GrpCommands.rankAllowance> storedCommands = new List<GrpCommands.rankAllowance>();
+        List<CommandPerms> storedCommands = new List<CommandPerms>();
         List<Block.Blocks> storedBlocks = new List<Block.Blocks>();
 
         public void LoadRanks() {
@@ -160,11 +160,11 @@ namespace MCGalaxy.Gui {
 
         public void LoadCommands() {
             listCommands.Items.Clear();
-            storedCommands.Clear();
-            foreach ( GrpCommands.rankAllowance aV in GrpCommands.allowedCommands ) {
-                storedCommands.Add(aV);
-                listCommands.Items.Add(aV.commandName);
+            storedCommands = CommandPerms.CopyAll();
+            foreach (CommandPerms perms in storedCommands) {
+                listCommands.Items.Add(perms.CmdName);
             }
+            
             if ( listCommands.SelectedIndex == -1 )
                 listCommands.SelectedIndex = 0;
             // Sort the commands list
@@ -172,8 +172,8 @@ namespace MCGalaxy.Gui {
             listCommands.Sorted = false;
         }
         public void SaveCommands() {
-            GrpCommands.Save(storedCommands);
-            GrpCommands.fillRanks();
+            CommandPerms.Save();
+            CommandPerms.Load();
             LoadCommands();
         }
 
@@ -289,7 +289,7 @@ namespace MCGalaxy.Gui {
             catch { Server.s.Log("Error saving Lava Survival settings!"); }
 
             SrvProperties.Load("properties/server.properties"); // loads when saving?
-            GrpCommands.fillRanks();
+            CommandPerms.Load();
 
             // Trigger profanity filter reload
             // Not the best way of doing things, but it kinda works
@@ -451,15 +451,13 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
         #region commandTab
         private void listCommands_SelectedIndexChanged(object sender, EventArgs e) {
-            Command cmd = Command.all.Find(listCommands.SelectedItem.ToString());
-            GrpCommands.rankAllowance allowVar = storedCommands.Find(aV => aV.commandName == cmd.name);
-
-            if ( Group.findPerm(allowVar.lowestRank) == null ) allowVar.lowestRank = cmd.defaultRank;
-            txtCmdLowest.Text = (int)allowVar.lowestRank + "";
+            string cmdName = listCommands.SelectedItem.ToString();
+            CommandPerms perms = CommandPerms.Find(cmdName);
+            txtCmdLowest.Text = (int)perms.MinRank + "";
 
             bool foundOne = false;
             txtCmdDisallow.Text = "";
-            foreach ( LevelPermission perm in allowVar.disallow ) {
+            foreach ( LevelPermission perm in perms.Disallowed ) {
                 foundOne = true;
                 txtCmdDisallow.Text += "," + (int)perm;
             }
@@ -467,20 +465,20 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
             foundOne = false;
             txtCmdAllow.Text = "";
-            foreach ( LevelPermission perm in allowVar.allow ) {
+            foreach ( LevelPermission perm in perms.Allowed ) {
                 foundOne = true;
                 txtCmdAllow.Text += "," + (int)perm;
             }
             if ( foundOne ) txtCmdAllow.Text = txtCmdAllow.Text.Remove(0, 1);
         }
         private void txtCmdLowest_TextChanged(object sender, EventArgs e) {
-            fillLowest(ref txtCmdLowest, ref storedCommands[listCommands.SelectedIndex].lowestRank);
+            fillLowest(ref txtCmdLowest, ref storedCommands[listCommands.SelectedIndex].MinRank);
         }
         private void txtCmdDisallow_TextChanged(object sender, EventArgs e) {
-            fillAllowance(ref txtCmdDisallow, ref storedCommands[listCommands.SelectedIndex].disallow);
+            fillAllowance(ref txtCmdDisallow, ref storedCommands[listCommands.SelectedIndex].Disallowed);
         }
         private void txtCmdAllow_TextChanged(object sender, EventArgs e) {
-            fillAllowance(ref txtCmdAllow, ref storedCommands[listCommands.SelectedIndex].allow);
+            fillAllowance(ref txtCmdAllow, ref storedCommands[listCommands.SelectedIndex].Allowed);
         }
         #endregion
 
@@ -714,7 +712,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                 Command.all.Add(cmd);
                 Server.s.Log("Added " + cmd.name + " to commands");
             }
-            GrpCommands.fillRanks();
+            CommandPerms.Load();
         }
 
         private void btnUnload_Click(object sender, EventArgs e) {
@@ -725,7 +723,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
             lstCommands.Items.Remove( cmd.name );
             Command.all.Remove(cmd);
-            GrpCommands.fillRanks();
+            CommandPerms.Load();
             MessageBox.Show("Command was successfully unloaded.", "");
         }
 

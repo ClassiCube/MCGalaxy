@@ -91,9 +91,7 @@ namespace MCGalaxy {
         
         /// <summary> Fill the commands that this group can use </summary>
         public void fillCommands() {
-            CommandList _commands = new CommandList();
-            GrpCommands.AddCommands(out _commands, Permission);
-            commands = _commands;
+            commands = CommandPerms.AllCommandsUsableBy(Permission);
         }
         
         /// <summary> Fill the blocks that this group can use </summary>

@@ -26,7 +26,7 @@ namespace MCGalaxy {
     public class CommandExtraPerms {
 
         /// <summary> Name of the command this extra permission is for. </summary>
-        public string Command;
+        public string CmdName;
         
         /// <summary> Minimum rank required by a player to have this extra permission. </summary>
         public LevelPermission MinRank;
@@ -44,7 +44,7 @@ namespace MCGalaxy {
         /// <returns> null if the nth extra permission does not exist. </returns>
         public static CommandExtraPerms Find(string cmd, int num = 1) {
             foreach (CommandExtraPerms perms in list) {
-                if (perms.Command.CaselessEq(cmd) && perms.Number == num) return perms;
+                if (perms.CmdName.CaselessEq(cmd) && perms.Number == num) return perms;
             }
             return null;
         }
@@ -64,7 +64,7 @@ namespace MCGalaxy {
         public static List<CommandExtraPerms> FindAll(string cmd) {
             List<CommandExtraPerms> allPerms = new List<CommandExtraPerms>();
             foreach (CommandExtraPerms perms in list) {
-                if (perms.Command.CaselessEq(cmd)) allPerms.Add(perms);
+                if (perms.CmdName.CaselessEq(cmd)) allPerms.Add(perms);
             }
             return allPerms;
         }
@@ -77,11 +77,10 @@ namespace MCGalaxy {
             // add or replace existing
             CommandExtraPerms perms = Find(cmd, num);
             if (perms == null) {
-                perms = new CommandExtraPerms();
-                list.Add(perms);
+                perms = new CommandExtraPerms(); list.Add(perms);
             }
             
-            perms.Command = cmd;
+            perms.CmdName = cmd;
             perms.MinRank = perm;
             perms.Description = desc;
             perms.Number = num;
@@ -96,7 +95,7 @@ namespace MCGalaxy {
                 try {
                     SaveCore();
                 } catch (Exception ex) {
-                    Server.s.Log("Saving properties/ExtraCommandPermissions.properties failed.");
+                    Server.s.Log("Saving " + file + " failed.");
                     Server.ErrorLog(ex);
                 }
             }
@@ -105,19 +104,19 @@ namespace MCGalaxy {
         const string file = "properties/ExtraCommandPermissions.properties";
         static void SaveCore() {
             using (StreamWriter w = new StreamWriter(file)) {
-                w.WriteLine("#     This file sets extra permissions used in some commands.");
+                w.WriteLine("#   This file sets extra permissions used in some commands.");
+                w.WriteLine("#   Note descriptions cannot contain ':', and permissions cannot be above 120");
                 w.WriteLine("#");
-                w.WriteLine("#     LAYOUT: [commandname]:[additionalpermissionnumber]:[permissionlevel]:[description]");
-                w.WriteLine("#     e.g.  : countdown:2:80:Lowest rank that can setup countdown (download, start, restart, enable, disable, cancel)");
-                w.WriteLine("#");
-                w.WriteLine("#     Note descriptions cannot contain ':', and permissions cannot be above 120");
-                w.WriteLine("#");
+                w.WriteLine("#   LAYOUT: [commandname]:[additionalpermissionnumber]:[permissionlevel]:[description]");
+                w.WriteLine("#   e.g.  : countdown:2:80:Lowest rank that can setup countdown (download, start, restart, enable, disable, cancel)");
+                w.WriteLine("");
                 
                 foreach (CommandExtraPerms perms in list) {
-                    w.WriteLine(perms.Command + ":" + perms.Number + ":" + (int)perms.MinRank + ":" + perms.Description);
+                    w.WriteLine(perms.CmdName + ":" + perms.Number + ":" + (int)perms.MinRank + ":" + perms.Description);
                 }
             }
         }
+        
 
         /// <summary> Loads the list of all extra permissions. </summary>
         public static void Load() {

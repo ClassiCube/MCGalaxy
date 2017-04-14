@@ -88,31 +88,26 @@ namespace MCGalaxy
         
         
         static void LoadPermsVersion2(string[] lines) {
-            string[] colon = new string[] { " : " };
+            char[] colon = new char[] { ':' };
             foreach (string line in lines) {
                 if (line == "" || line[0] == '#') continue;
                 //Name : Lowest : Disallow : Allow
-                string[] block = line.Split(colon, StringSplitOptions.None);
+                string[] args = line.Replace(" ", "").Split(colon);
+                
                 Blocks newBlock = new Blocks();
-
-                if (Block.Byte(block[0]) == Block.Invalid) continue;
-                newBlock.type = Block.Byte(block[0]);
-
-                string[] disallow = null;
-                if (block[2] != "") disallow = block[2].Split(',');
-                string[] allow = null;
-                if (block[3] != "") allow = block[3].Split(',');
+                if (Block.Byte(args[0]) == Block.Invalid) continue;
+                newBlock.type = Block.Byte(args[0]);
 
                 try {
-                    newBlock.lowestRank = (LevelPermission)int.Parse(block[1]);
-                    if (disallow != null) {
-                        newBlock.disallow = new List<LevelPermission>();
-                        foreach (string s in disallow) { newBlock.disallow.Add((LevelPermission)int.Parse(s)); }
-                    }
-                    if (allow != null) {
-                        newBlock.allow = new List<LevelPermission>();
-                        foreach (string s in allow) { newBlock.allow.Add((LevelPermission)int.Parse(s)); }
-                    }
+                    newBlock.lowestRank = (LevelPermission)int.Parse(args[1]);
+                    string allowRaw = args.Length > 2 ? args[2] : null;
+                    string disallowRaw = args.Length > 3 ? args[3] : null;
+                    
+                    List<LevelPermission> allow = CommandPerms.ExpandPerms(allowRaw);
+                    List<LevelPermission> disallow = CommandPerms.ExpandPerms(disallowRaw);
+                    
+                    if (allow.Count > 0) newBlock.allow = allow;
+                    if (disallow.Count > 0) newBlock.disallow = disallow;
                 } catch {
                     Server.s.Log("Hit an error on the block " + line);
                     continue;
@@ -163,7 +158,7 @@ namespace MCGalaxy
                     if (Block.Name(bs.type).CaselessEq("unknown")) continue;
                     
                     string line = Block.Name(bs.type) + " : " + (int)bs.lowestRank + " : "
-                        + GrpCommands.getInts(bs.disallow) + " : " + GrpCommands.getInts(bs.allow);
+                        + CommandPerms.JoinPerms(bs.disallow) + " : " + CommandPerms.JoinPerms(bs.allow);
                     w.WriteLine(line);
                 }
             }
@@ -185,7 +180,7 @@ namespace MCGalaxy
                 } else if (props.IsPortal || props.IsMessageBlock) {
                     b.lowestRank = LevelPermission.AdvBuilder;
                 } else {
-                	b.lowestRank = DefaultPerm(i);
+                    b.lowestRank = DefaultPerm(i);
                 }
                 BlockList[i] = b;
             }         
