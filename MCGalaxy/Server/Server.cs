@@ -192,7 +192,7 @@ namespace MCGalaxy {
             Awards.Load();
             Economy.Load();
             WarpList.Global.Load(null);
-            CommandOtherPerms.Load();
+            CommandExtraPerms.Load();
             ProfanityFilter.Init();
             Team.LoadList();
             ChatTokens.LoadCustom();
@@ -201,23 +201,23 @@ namespace MCGalaxy {
         
         static void FixupOldPerms() {
             SrvProperties.OldPerms perms = SrvProperties.oldPerms;
-            Server.opchatperm = CommandOtherPerms.FindPerm("opchat", LevelPermission.Operator);
-            Server.adminchatperm = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+            Server.opchatperm = CommandExtraPerms.MinPerm("opchat", LevelPermission.Operator);
+            Server.adminchatperm = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
             if (perms.clearPerm == -1 && perms.nextPerm == -1 && perms.viewPerm == -1
                 && perms.opchatPerm == -1 && perms.adminchatPerm == -1) return;
             
             // Backwards compatibility with old config, where some permissions were global
             if (perms.viewPerm != -1)
-                CommandOtherPerms.Find("review", 1).Permission = perms.viewPerm;
+            	CommandExtraPerms.Find("review", 1).MinRank = (LevelPermission)perms.viewPerm;
             if (perms.nextPerm != -1)
-                CommandOtherPerms.Find("review", 2).Permission = perms.nextPerm;
+                CommandExtraPerms.Find("review", 2).MinRank = (LevelPermission)perms.nextPerm;
             if (perms.clearPerm != -1)
-                CommandOtherPerms.Find("review", 3).Permission = perms.clearPerm;
+                CommandExtraPerms.Find("review", 3).MinRank = (LevelPermission)perms.clearPerm;
             if (perms.opchatPerm != -1)
-                CommandOtherPerms.Find("opchat").Permission = perms.opchatPerm;
+                CommandExtraPerms.Find("opchat").MinRank    = (LevelPermission)perms.opchatPerm;
             if (perms.adminchatPerm != -1)
-                CommandOtherPerms.Find("adminchat").Permission = perms.adminchatPerm;
-            CommandOtherPerms.Save();
+                CommandExtraPerms.Find("adminchat").MinRank = (LevelPermission)perms.adminchatPerm;
+            CommandExtraPerms.Save();
         }
 
         public static void Setup() {

@@ -418,12 +418,12 @@ namespace MCGalaxy {
         }
 
         public void ChatLevelOps(string message) {
-            LevelPermission rank = CommandOtherPerms.FindPerm("opchat", LevelPermission.Operator);
+            LevelPermission rank = CommandExtraPerms.MinPerm("opchat", LevelPermission.Operator);
             ChatLevel(message, rank);
         }
 
         public void ChatLevelAdmins(string message) {
-            LevelPermission rank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+            LevelPermission rank = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
             ChatLevel(message, rank);
         }
         

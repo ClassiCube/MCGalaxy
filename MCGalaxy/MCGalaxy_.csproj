@@ -187,12 +187,9 @@
     <Compile Include="Commands\Chat\CmdVote.cs" />
     <Compile Include="Commands\Chat\CmdWhisper.cs" />
     <Compile Include="Commands\Chat\MessageCmd.cs" />
-    <Compile Include="Commands\CmdOverseer.cs" />
-    <Compile Include="Commands\CmdOverseer.SubCommands.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\Command.Helpers.cs" />
     <Compile Include="Commands\CommandList.cs" />
-    <Compile Include="Commands\CommandOtherPerms.cs" />
     <Compile Include="Commands\CommandParser.cs" />
     <Compile Include="Commands\CPE\CmdCustomColors.cs" />
     <Compile Include="Commands\CPE\CmdEnvironment.cs" />
@@ -353,6 +350,8 @@
     <Compile Include="Commands\other\CmdWarp.cs" />
     <Compile Include="Commands\other\CmdWaypoint.cs" />
     <Compile Include="Commands\other\QuitCmds.cs" />
+    <Compile Include="Commands\Permissions\CommandExtraPerms.cs" />
+    <Compile Include="Commands\Permissions\CommandPerms.cs" />
     <Compile Include="Commands\Scripting\CmdCmdCreate.cs" />
     <Compile Include="Commands\Scripting\CmdCmdLoad.cs" />
     <Compile Include="Commands\Scripting\CmdCmdUnload.cs" />
@@ -371,6 +370,8 @@
     <Compile Include="Commands\World\CmdMap.cs" />
     <Compile Include="Commands\World\CmdMuseum.cs" />
     <Compile Include="Commands\World\CmdNewLvl.cs" />
+    <Compile Include="Commands\World\CmdOverseer.cs" />
+    <Compile Include="Commands\World\CmdOverseer.SubCommands.cs" />
     <Compile Include="Commands\World\CmdPause.cs" />
     <Compile Include="Commands\World\PermissionCmds.cs" />
     <Compile Include="Commands\World\CmdPhysics.cs" />
@@ -553,7 +554,6 @@
     <Compile Include="Network\Packets\Packet.cs" />
     <Compile Include="Player\Entities.cs" />
     <Compile Include="Player\Group\Group.cs" />
-    <Compile Include="Player\Group\GroupCommands.cs" />
     <Compile Include="Player\Group\GroupProperties.cs" />
     <Compile Include="Player\List\PlayerExtList.cs" />
     <Compile Include="Player\List\PlayerList.cs" />
@@ -701,6 +701,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands\Maintenance" />
+    <Folder Include="Commands\Permissions" />
     <Folder Include="Network\Packets" />
     <Folder Include="util\Formatting" />
     <Folder Include="util\Threading" />

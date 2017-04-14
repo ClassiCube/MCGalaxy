@@ -63,15 +63,15 @@ namespace MCGalaxy.Commands {
             } else if (!int.TryParse(args[2], out otherPermIndex)) {
                 Player.Message(p, "\"{0}\" must be \"allow\", \"disallow\", or an integer.", args[2]);
             } else {
-                CommandOtherPerms.OtherPerms perms = CommandOtherPerms.Find(cmd, otherPermIndex);
+                CommandExtraPerms.ExtraPerms perms = CommandExtraPerms.Find(cmd.name, otherPermIndex);
                 if (perms == null) {
                     Player.Message(p, "This command has no extra permission by that number."); return;
                 }
-                if (p != null && (int)p.Rank < perms.Permission) {
+                if (p != null && p.Rank < perms.MinRank) {
                     Player.Message(p, "Your rank cannot modify this extra permission."); return;
                 }                
-                perms.Permission = (int)grp.Permission;
-                CommandOtherPerms.Save();
+                perms.MinRank = grp.Permission;
+                CommandExtraPerms.Save();
                 
                 string permName = "extra permission " + otherPermIndex;
                 Chat.MessageGlobal("&d{0}%S's {1} was set to {2}", cmd.name, permName, grp.ColoredName);

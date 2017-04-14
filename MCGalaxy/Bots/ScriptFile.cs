@@ -58,8 +58,7 @@ namespace MCGalaxy.Bots {
                     Player.Message(p, "Could not find instruction \"" + action + "\""); return;
                 }
                 
-                CommandOtherPerms.OtherPerms perms = CommandOtherPerms.Find("botset");
-                LevelPermission killPerm = (LevelPermission)perms.Permission;
+                LevelPermission killPerm = CommandExtraPerms.MinPerm("botset");
                 if (ins.Name.CaselessEq("kill") && p.Rank < killPerm) {
                     Formatter.MessageNeedMinPerm(p, "+ can toggle a bot's killer instinct.", killPerm);
                     return;

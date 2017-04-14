@@ -86,7 +86,7 @@ namespace MCGalaxy {
         }
         
         void CompleteLoginProcess() {
-            LevelPermission adminChatRank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+            LevelPermission adminChatRank = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
             
             SendUserMOTD();
             SendMap(null);
@@ -220,7 +220,7 @@ namespace MCGalaxy {
             while (alts.CaselessRemove(p.name)) { }
             if (alts.Count == 0) return;
             
-            LevelPermission adminChatRank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+            LevelPermission adminChatRank = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
             string altsMsg = p.ColoredName + " %Sis lately known as: " + alts.Join();
             if (p.group.Permission < adminChatRank || !Server.adminsjoinsilent) {
                 Chat.MessageOps(altsMsg);

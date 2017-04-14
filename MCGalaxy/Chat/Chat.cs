@@ -125,13 +125,13 @@ namespace MCGalaxy {
         
         /// <summary> Sends a message to all players who are have the permission to read opchat. </summary>
         public static void MessageOps(string message) {
-            LevelPermission rank = CommandOtherPerms.FindPerm("opchat", LevelPermission.Operator);
+            LevelPermission rank = CommandExtraPerms.MinPerm("opchat", LevelPermission.Operator);
             MessageWhere(message, pl => pl.Rank >= rank);
         }
         
         /// <summary> Sends a message to all players who are have the permission to read adminchat. </summary>
         public static void MessageAdmins(string message) {
-            LevelPermission rank = CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+            LevelPermission rank = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
             MessageWhere(message, pl => pl.Rank >= rank);
         }
         

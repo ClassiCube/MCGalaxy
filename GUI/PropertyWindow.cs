@@ -55,9 +55,9 @@ namespace MCGalaxy.Gui {
             string opchatperm = "", adminchatperm = "";
             string verifyadminsperm = "", afkkickrank = "", osmaprank = "";
             LevelPermission adminChatRank =
-                CommandOtherPerms.FindPerm("adminchat", LevelPermission.Admin);
+                CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
             LevelPermission opChatRank =
-                CommandOtherPerms.FindPerm("opchat", LevelPermission.Operator);
+                CommandExtraPerms.MinPerm("opchat", LevelPermission.Operator);
 
             foreach (Group grp in Group.GroupList) {
                 cmbDefaultRank.Items.Add(grp.name);
@@ -222,7 +222,7 @@ namespace MCGalaxy.Gui {
                 lsSettings.ApplyToServer();
                 
                 SrvProperties.Save();
-                CommandOtherPerms.Save();
+                CommandExtraPerms.Save();
             } catch( Exception ex ) {
                 Server.ErrorLog(ex);
                 Server.s.Log("SAVE FAILED! properties/server.properties");
@@ -785,31 +785,38 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             Command cmd = Command.all.Find(listCommandsExtraCmdPerms.SelectedItem.ToString());
             oldcmd = cmd;
             skipExtraPermChanges = true;
-            extracmdpermnumber.Maximum = CommandOtherPerms.GetMaxNumber(cmd);
+            extracmdpermnumber.Maximum = CommandExtraPerms.GetMaxNumber(cmd);
             extracmdpermnumber.ReadOnly = extracmdpermnumber.Maximum == 1;
             extracmdpermnumber.Value = 1;
             skipExtraPermChanges = false;
-            extracmdpermdesc.Text = CommandOtherPerms.Find(cmd, 1).Description;
-            extracmdpermperm.Text = CommandOtherPerms.Find(cmd, 1).Permission.ToString();
+            
+            ExtraPermSetDescriptions(cmd, 1);
             oldnumber = (int)extracmdpermnumber.Value;
         }
 
         private void SaveOldExtraCustomCmdChanges() {
             if (oldcmd == null || skipExtraPermChanges) return;
-            CommandOtherPerms.Find(oldcmd, oldnumber).Permission = int.Parse(extracmdpermperm.Text);
-            CommandOtherPerms.Save();
+            
+            CommandExtraPerms.Find(oldcmd.name, oldnumber).MinRank = (LevelPermission)int.Parse(extracmdpermperm.Text);
+            CommandExtraPerms.Save();
         }
 
         private void extracmdpermnumber_ValueChanged(object sender, EventArgs e) {
             SaveOldExtraCustomCmdChanges();
             oldnumber = (int)extracmdpermnumber.Value;
-            extracmdpermdesc.Text = CommandOtherPerms.Find(oldcmd, (int)extracmdpermnumber.Value).Description;
-            extracmdpermperm.Text = CommandOtherPerms.Find(oldcmd, (int)extracmdpermnumber.Value).Permission.ToString();
+            ExtraPermSetDescriptions(oldcmd, (int)extracmdpermnumber.Value);
         }
+        
+        private void ExtraPermSetDescriptions(Command cmd, int number) {
+            CommandExtraPerms.ExtraPerms perms =  CommandExtraPerms.Find(cmd.name, number);
+            extracmdpermdesc.Text = perms.Description;
+            extracmdpermperm.Text = ((int)perms.MinRank).ToString();
+        }
+        
         private void LoadExtraCmdCmds() {
             listCommandsExtraCmdPerms.Items.Clear();
             foreach ( Command cmd in Command.all.commands ) {
-                if ( CommandOtherPerms.Find(cmd) != null ) {
+                if ( CommandExtraPerms.Find(cmd.name) != null ) {
                     listCommandsExtraCmdPerms.Items.Add(cmd.name);
                 }
             }

@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands {
 
             bool opsOn = false;
             Player[] players = PlayerInfo.Online.Items;
-            LevelPermission nextPerm = (LevelPermission)CommandOtherPerms.GetPerm(this, 2);
+            LevelPermission nextPerm = CommandExtraPerms.MinPerm(this.name, 2);
             foreach (Player pl in players) {
                 if (pl.Rank >= nextPerm && Entities.CanSee(p, pl)) {
                     opsOn = true; break;

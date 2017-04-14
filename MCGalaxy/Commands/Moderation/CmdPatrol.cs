@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
 
             List<Player> candidates = GetPatrolCandidates(p);
             if (candidates.Count == 0) {
-                LevelPermission perm = (LevelPermission)CommandOtherPerms.GetPerm(this);
+                LevelPermission perm = CommandExtraPerms.MinPerm(name);
                 Player.Message(p, "No {0}players ranked {1} %Sor below are online.",
                                p.Rank <= perm ? "other " : "", // in case we can patrol ourselves
                                Group.GetColoredName(perm));
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
         
         List<Player> GetPatrolCandidates(Player p) {
             List<Player> candidates = new List<Player>();
-            LevelPermission perm = (LevelPermission)CommandOtherPerms.GetPerm(this);
+            LevelPermission perm = CommandExtraPerms.MinPerm(name);
             Player[] online = PlayerInfo.Online.Items;
             
             foreach (Player target in online) {
@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/patrol");
-            LevelPermission perm = (LevelPermission)CommandOtherPerms.GetPerm(this);
+            LevelPermission perm = CommandExtraPerms.MinPerm(name);
             Player.Message(p, "%HTeleports you to a random {0} %Sor lower",
                            Group.GetColoredName(perm));
         }

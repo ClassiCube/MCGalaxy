@@ -57,9 +57,9 @@ namespace MCGalaxy {
             
             Player.Message(p, "%TExtra permissions:");
             for (int i = 0; i < addPerms.Length; i++) {
-                CommandOtherPerms.OtherPerms extra = CommandOtherPerms.Find(cmd, i + 1);
-                LevelPermission perm = (LevelPermission)extra.Permission;
-                Player.Message(p, "{0}) {1}%S{2}", i + 1, Group.GetColoredName(perm), extra.Description);
+                CommandExtraPerms.ExtraPerms extra = CommandExtraPerms.Find(cmd.name, i + 1);
+                Player.Message(p, "{0}) {1}%S{2}", i + 1, 
+                               Group.GetColoredName(extra.MinRank), extra.Description);
             }
         }
         

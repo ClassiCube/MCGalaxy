@@ -223,10 +223,10 @@ namespace MCGalaxy.Gui {
             Server.adminsjoinsilent = chkAdminsJoinSilent.Checked;
             
             Server.osPerbuildDefault = Program.GetPermission(cmbOsMap, LevelPermission.Nobody);
-            var perms = CommandOtherPerms.Find("opchat");
-            perms.Permission = (int)Program.GetPermission(cmbOpChat, LevelPermission.Operator);
-            perms = CommandOtherPerms.Find("adminchat");
-            perms.Permission = (int)Program.GetPermission(cmbAdminChat, LevelPermission.Admin);
+            var perms = CommandExtraPerms.Find("opchat");
+            perms.MinRank = Program.GetPermission(cmbOpChat, LevelPermission.Operator);
+            perms = CommandExtraPerms.Find("adminchat");
+            perms.MinRank = Program.GetPermission(cmbAdminChat, LevelPermission.Admin);
         }
         
         

@@ -62,13 +62,13 @@ namespace MCGalaxy {
         }
         
         protected bool CheckExtraPerm(Player p, int num = 1) {
-            return p == null || (int)p.Rank >= CommandOtherPerms.GetPerm(this, num);
+            return p == null || p.Rank >= CommandExtraPerms.MinPerm(name, num);
         }
         
         protected void MessageNeedExtra(Player p, int num = 1) {
-            int perm = CommandOtherPerms.GetPerm(this, num);
+            LevelPermission perm = CommandExtraPerms.MinPerm(name, num);
             string action = ExtraPerms[num - 1].Description;
-            Formatter.MessageNeedMinPerm(p, action, (LevelPermission)perm);
+            Formatter.MessageNeedMinPerm(p, action, perm);
         }
         
         protected static void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {

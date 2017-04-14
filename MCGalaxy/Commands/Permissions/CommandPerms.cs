@@ -82,9 +82,7 @@ namespace MCGalaxy {
                 //Name : Lowest : Disallow : Allow
                 string[] args = line.Replace(" ", "").Split(colon);
 
-                if (!cmdNames.Contains(args[0])) {
-                    Server.s.Log("Incorrect command name: " + args[0]); continue;
-                }
+                if (!cmdNames.Contains(args[0])) continue;
                 perms.commandName = args[0];
 
                 string[] disallow = new string[0];
@@ -116,9 +114,8 @@ namespace MCGalaxy {
                 string value = line.Split('=')[1].Trim().ToLower();
 
                 if (!cmdNames.Contains(key)) {
-                    Server.s.Log("Incorrect command name: " + key);
                 } else if (Group.Find(value) == null) {
-                    Server.s.Log("Incorrect value given for " + key + ", using default value.");
+                    Server.s.Log("No group found for command " + key + ", using default value.");
                 } else {
                     perms.commandName = key;
                     perms.lowestRank = Group.Find(value).Permission;

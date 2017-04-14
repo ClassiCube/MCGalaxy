@@ -44,10 +44,11 @@ namespace MCGalaxy.Commands.Moderation {
             string opsMsg = String.Format("{1} was &8un-IP banned %Sby {0}%S.", unbanner, message);
             
             Server.IRC.Say(normMsg, false);
-            Server.IRC.Say(opsMsg, true);            
-            int seeIPperm = CommandOtherPerms.GetPerm(Command.all.Find("whois"));
-            Chat.MessageWhere(normMsg, pl => (int)pl.Rank < seeIPperm);
-            Chat.MessageWhere(opsMsg, pl => (int)pl.Rank >= seeIPperm);
+            Server.IRC.Say(opsMsg, true);
+            
+            LevelPermission seeIPperm = CommandExtraPerms.MinPerm("whois");
+            Chat.MessageWhere(normMsg, pl => pl.Rank < seeIPperm);
+            Chat.MessageWhere(opsMsg, pl  => pl.Rank >= seeIPperm);
             Server.s.Log("IP-UNBANNED: " + message.ToLower() + " by " + unbanner + ".");
             
             Server.bannedIP.Remove(message);
