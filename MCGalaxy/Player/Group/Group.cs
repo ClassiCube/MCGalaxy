@@ -83,7 +83,8 @@ namespace MCGalaxy {
             fileName = file;
             OverseerMaps = maps;
             this.prefix = prefix;
-            playerList = PlayerList.Load(fileName);
+            
+            LoadPlayers();
             if (OnGroupLoaded != null)
                 OnGroupLoaded(this);
             OnGroupLoadedEvent.Call(this);
@@ -157,6 +158,42 @@ namespace MCGalaxy {
             
             if (OnGroupSave != null) OnGroupSave();
             OnGroupSaveEvent.Call();
+        }
+        
+        void LoadPlayers() {
+            string desired =  (int)Permission + "_rank";
+            // Try to use the auto filename format
+            if (!fileName.StartsWith(desired))
+                MoveToDesired(desired);
+            
+            playerList = PlayerList.Load(fileName);
+        }
+        
+        void MoveToDesired(string desired) {
+            // rank doesn't exist to begin with
+            if (!File.Exists("ranks/" + fileName)) {
+                fileName = desired + ".txt";
+            } else if (MoveToFile(desired + ".txt")) {
+            } else {
+                // try appending a and z if duplicate
+                for (char c = 'a'; c <= 'z'; c++) {
+                    string newFile = desired + c + ".txt";
+                    if (MoveToFile(newFile)) return;
+                }
+            }
+        }
+        
+        bool MoveToFile(string newFile) {
+            if (File.Exists("ranks/" + newFile)) return false;
+            
+            try {
+                File.Move("ranks/" + fileName, "ranks/" + newFile);
+                fileName = newFile;
+                return true;
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                return false;
+            }
         }
         
         

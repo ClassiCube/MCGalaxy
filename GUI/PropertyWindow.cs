@@ -349,7 +349,6 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             txtMaxUndo.Text = grp.maxUndo.ToString();
             cmbColor.SelectedIndex = cmbColor.Items.IndexOf(Colors.Name(grp.color));
             txtGrpMOTD.Text = String.IsNullOrEmpty(grp.MOTD) ? String.Empty : grp.MOTD;
-            txtFileName.Text = grp.fileName;
             txtOSMaps.Text = grp.OverseerMaps.ToString();
             txtPrefix.Text = grp.prefix;
         }
@@ -420,19 +419,14 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                 storedRanks[listRanks.SelectedIndex].OverseerMaps = maxMaps;
             }
         }
-
-        private void txtFileName_TextChanged(object sender, EventArgs e) {
-            if ( txtFileName.Text != "" ) {
-                storedRanks[listRanks.SelectedIndex].fileName = txtFileName.Text;
-            }
-        }
         
         private void txtPrefix_TextChanged(object sender, EventArgs e) {
             storedRanks[listRanks.SelectedIndex].prefix = txtPrefix.Text;
         }
 
         private void btnAddRank_Click(object sender, EventArgs e) {
-            Group newGroup = new Group((LevelPermission)5, 600, 30, "CHANGEME", '1', String.Empty, "CHANGEME.txt");
+            string filename = Guid.NewGuid().ToString() + ".txt";
+            Group newGroup = new Group((LevelPermission)5, 600, 30, "CHANGEME", '1', String.Empty, filename);
             storedRanks.Add(newGroup);
             listRanks.Items.Add(newGroup.trueName + " = " + (int)newGroup.Permission);
         }

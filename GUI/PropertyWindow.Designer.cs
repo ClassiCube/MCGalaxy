@@ -174,10 +174,8 @@ namespace MCGalaxy.Gui
             this.lblColor = new System.Windows.Forms.Label();
             this.txtGrpMOTD = new System.Windows.Forms.TextBox();
             this.txtPermission = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
             this.txtRankName = new System.Windows.Forms.TextBox();
             this.cmbColor = new System.Windows.Forms.ComboBox();
-            this.txtFileName = new System.Windows.Forms.TextBox();
             this.lblMOTD = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -1696,10 +1694,8 @@ namespace MCGalaxy.Gui
             this.gbRankSettings.Controls.Add(this.lblColor);
             this.gbRankSettings.Controls.Add(this.txtGrpMOTD);
             this.gbRankSettings.Controls.Add(this.txtPermission);
-            this.gbRankSettings.Controls.Add(this.label14);
             this.gbRankSettings.Controls.Add(this.txtRankName);
             this.gbRankSettings.Controls.Add(this.cmbColor);
-            this.gbRankSettings.Controls.Add(this.txtFileName);
             this.gbRankSettings.Controls.Add(this.lblMOTD);
             this.gbRankSettings.Controls.Add(this.label11);
             this.gbRankSettings.Controls.Add(this.label13);
@@ -1790,16 +1786,6 @@ namespace MCGalaxy.Gui
             this.txtPermission.TabIndex = 6;
             this.txtPermission.TextChanged += new System.EventHandler(this.txtPermission_TextChanged);
             // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(23, 225);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(54, 13);
-            this.label14.TabIndex = 3;
-            this.label14.Text = "Filename:";
-            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // txtRankName
             // 
             this.txtRankName.Location = new System.Drawing.Point(85, 20);
@@ -1817,14 +1803,6 @@ namespace MCGalaxy.Gui
             this.cmbColor.Size = new System.Drawing.Size(79, 21);
             this.cmbColor.TabIndex = 12;
             this.cmbColor.SelectedIndexChanged += new System.EventHandler(this.cmbColor_SelectedIndexChanged);
-            // 
-            // txtFileName
-            // 
-            this.txtFileName.Location = new System.Drawing.Point(85, 223);
-            this.txtFileName.Name = "txtFileName";
-            this.txtFileName.Size = new System.Drawing.Size(100, 21);
-            this.txtFileName.TabIndex = 4;
-            this.txtFileName.TextChanged += new System.EventHandler(this.txtFileName_TextChanged);
             // 
             // lblMOTD
             // 
@@ -4266,11 +4244,9 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label lblColor;
         private System.Windows.Forms.ComboBox cmbColor;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.TextBox txtFileName;
         private System.Windows.Forms.TextBox txtLimit;
         private System.Windows.Forms.TextBox txtPermission;
         private System.Windows.Forms.TextBox txtRankName;
-        private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label11;
