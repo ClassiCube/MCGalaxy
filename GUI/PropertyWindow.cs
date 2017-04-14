@@ -798,7 +798,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             var all = CommandExtraPerms.FindAll(cmd.name);
             int maxNum = 0;
             
-            foreach (CommandExtraPerms.ExtraPerms perms in all) {
+            foreach (CommandExtraPerms perms in all) {
                 maxNum = Math.Max(maxNum, perms.Number);
             }
             return maxNum;
@@ -818,7 +818,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         }
         
         private void ExtraPermSetDescriptions(Command cmd, int number) {
-            CommandExtraPerms.ExtraPerms perms =  CommandExtraPerms.Find(cmd.name, number);
+            CommandExtraPerms perms =  CommandExtraPerms.Find(cmd.name, number);
             extracmdpermdesc.Text = perms.Description;
             extracmdpermperm.Text = ((int)perms.MinRank).ToString();
         }

@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands {
             } else if (!int.TryParse(args[2], out otherPermIndex)) {
                 Player.Message(p, "\"{0}\" must be \"allow\", \"disallow\", or an integer.", args[2]);
             } else {
-                CommandExtraPerms.ExtraPerms perms = CommandExtraPerms.Find(cmd.name, otherPermIndex);
+                CommandExtraPerms perms = CommandExtraPerms.Find(cmd.name, otherPermIndex);
                 if (perms == null) {
                     Player.Message(p, "This command has no extra permission by that number."); return;
                 }

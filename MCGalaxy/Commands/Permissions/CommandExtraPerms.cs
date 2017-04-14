@@ -21,33 +21,29 @@ using System.IO;
 
 namespace MCGalaxy {
     
-    /// <summary> Holds extra permissions for some commands. </summary>
-    public static class CommandExtraPerms {
+    /// <summary> Represents additional permissions required to perform a special action in a command. </summary>
+    /// <remarks> For example, /color command has an extra permission for changing the color of other players. </remarks>
+    public class CommandExtraPerms {
 
-        static List<ExtraPerms> list = new List<ExtraPerms>();
+        /// <summary> Name of the command this extra permission is for. </summary>
+        public string Command;
         
-        /// <summary> Represents additional permissions required to perform a special action in a command. </summary>
-        /// <remarks> For example, /color command has an extra permission for changing the color of other players. </remarks>
-        public class ExtraPerms {
-            
-            /// <summary> Name of the command this extra permission is for. </summary>
-            public string Command;
-            
-            /// <summary> Minimum rank required by a player to have this extra permission. </summary>
-            public LevelPermission MinRank;
-            
-            /// <summary> Describes the action that having this extra permission allows a player to perform. </summary>
-            public string Description = "";
-            
-            /// <summary> The number / identifier of this extra permission. </summary>
-            public int Number;
-        }
-
+        /// <summary> Minimum rank required by a player to have this extra permission. </summary>
+        public LevelPermission MinRank;
+        
+        /// <summary> Describes the action that having this extra permission allows a player to perform. </summary>
+        public string Description = "";
+        
+        /// <summary> The number / identifier of this extra permission. </summary>
+        public int Number;        
+        
+        static List<CommandExtraPerms> list = new List<CommandExtraPerms>();
+        
         
         /// <summary> Finds the nth extra permission for a given command. </summary>
         /// <returns> null if the nth extra permission does not exist. </returns>
-        public static ExtraPerms Find(string cmd, int num = 1) {
-            foreach (ExtraPerms perms in list) {
+        public static CommandExtraPerms Find(string cmd, int num = 1) {
+            foreach (CommandExtraPerms perms in list) {
                 if (perms.Command.CaselessEq(cmd) && perms.Number == num) return perms;
             }
             return null;
@@ -56,7 +52,7 @@ namespace MCGalaxy {
         /// <summary> Returns the lowest rank that has the nth extra permission for a given command. </summary>
         /// <returns> defPerm if the nth extra permission does not exist, otherwise the lowest rank. </returns>
         public static LevelPermission MinPerm(string cmd, LevelPermission defPerm, int num = 1) {
-            ExtraPerms perms = Find(cmd, num);
+            CommandExtraPerms perms = Find(cmd, num);
             return perms == null ? defPerm : perms.MinRank;
         }
 
@@ -65,9 +61,9 @@ namespace MCGalaxy {
         
         /// <summary> Finds all extra permissions for a given command. </summary>
         /// <remarks> list is empty when no extra permissions are found, not null. </remarks>
-        public static List<ExtraPerms> FindAll(string cmd) {
-            List<ExtraPerms> allPerms = new List<ExtraPerms>();
-            foreach (ExtraPerms perms in list) {
+        public static List<CommandExtraPerms> FindAll(string cmd) {
+            List<CommandExtraPerms> allPerms = new List<CommandExtraPerms>();
+            foreach (CommandExtraPerms perms in list) {
                 if (perms.Command.CaselessEq(cmd)) allPerms.Add(perms);
             }
             return allPerms;
@@ -79,9 +75,9 @@ namespace MCGalaxy {
             if (perm > LevelPermission.Nobody) return;
             
             // add or replace existing
-            ExtraPerms perms = Find(cmd, num);
+            CommandExtraPerms perms = Find(cmd, num);
             if (perms == null) {
-                perms = new ExtraPerms();
+                perms = new CommandExtraPerms();
                 list.Add(perms);
             }
             
@@ -117,7 +113,7 @@ namespace MCGalaxy {
                 w.WriteLine("#     Note descriptions cannot contain ':', and permissions cannot be above 120");
                 w.WriteLine("#");
                 
-                foreach (ExtraPerms perms in list) {
+                foreach (CommandExtraPerms perms in list) {
                     w.WriteLine(perms.Command + ":" + perms.Number + ":" + (int)perms.MinRank + ":" + perms.Description);
                 }
             }
@@ -154,7 +150,7 @@ namespace MCGalaxy {
             int number = int.Parse(parts[1]), minPerm = int.Parse(parts[2]);
             string desc = parts.Length > 3 ? parts[3] : "";
             
-            ExtraPerms existing = Find(cmdName, number);
+            CommandExtraPerms existing = Find(cmdName, number);
             if (existing != null) desc = existing.Description;
             Set(cmdName, (LevelPermission)minPerm, desc, number);
         }
