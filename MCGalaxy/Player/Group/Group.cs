@@ -83,11 +83,15 @@ namespace MCGalaxy {
             fileName = file;
             OverseerMaps = maps;
             this.prefix = prefix;
+        }
+        
+        public static void AddAndLoadGroup(Group grp) {
+            GroupList.Add(grp);
+            grp.LoadPlayers();
             
-            LoadPlayers();
             if (OnGroupLoaded != null)
-                OnGroupLoaded(this);
-            OnGroupLoadedEvent.Call(this);
+                OnGroupLoaded(grp);
+            OnGroupLoadedEvent.Call(grp);
         }
         
         /// <summary> Fill the commands that this group can use </summary>
@@ -120,17 +124,17 @@ namespace MCGalaxy {
                 GroupProperties.InitAll();
             } else {
                 // Add some default ranks
-                GroupList.Add(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', String.Empty, "builders.txt"));
-                GroupList.Add(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', String.Empty, "advbuilders.txt"));
-                GroupList.Add(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', String.Empty, "operators.txt"));
-                GroupList.Add(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', String.Empty, "uberOps.txt"));
+                AddAndLoadGroup(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', "", null));
+                AddAndLoadGroup(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', "", null));
+                AddAndLoadGroup(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', "", null));
+                AddAndLoadGroup(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', "", null));
             }
 
             if (BannedRank == null)
-                GroupList.Add(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', String.Empty, "banned.txt"));
+                AddAndLoadGroup(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', "", null));
             if (GuestRank == null)
-                GroupList.Add(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', String.Empty, "guest.txt"));
-            GroupList.Add(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', String.Empty, "nobody.txt"));
+                AddAndLoadGroup(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', "", null));
+            AddAndLoadGroup(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', "", null));
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
 
             if (Find(Server.defaultRank) != null) {
@@ -161,9 +165,9 @@ namespace MCGalaxy {
         }
         
         void LoadPlayers() {
-            string desired =  (int)Permission + "_rank";
+            string desired = (int)Permission + "_rank";
             // Try to use the auto filename format
-            if (!fileName.StartsWith(desired))
+            if (fileName == null || !fileName.StartsWith(desired))
                 MoveToDesired(desired);
             
             playerList = PlayerList.Load(fileName);
@@ -171,7 +175,7 @@ namespace MCGalaxy {
         
         void MoveToDesired(string desired) {
             // rank doesn't exist to begin with
-            if (!File.Exists("ranks/" + fileName)) {
+            if (fileName == null || !File.Exists("ranks/" + fileName)) {
                 fileName = desired + ".txt";
             } else if (MoveToFile(desired + ".txt")) {
             } else {

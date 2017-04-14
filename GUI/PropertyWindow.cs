@@ -425,8 +425,15 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         }
 
         private void btnAddRank_Click(object sender, EventArgs e) {
-            string filename = Guid.NewGuid().ToString() + ".txt";
-            Group newGroup = new Group((LevelPermission)5, 600, 30, "CHANGEME", '1', String.Empty, filename);
+            // Find first free rank permission
+            int freePerm = 5;
+            for (int i = (int)LevelPermission.Guest; i <= (int)LevelPermission.Nobody; i++) {
+                if (Group.findPermInt(i) != null) continue;
+                
+                freePerm = i; break;
+            }
+            
+            Group newGroup = new Group((LevelPermission)freePerm, 600, 30, "CHANGEME", '1', "", null);
             storedRanks.Add(newGroup);
             listRanks.Items.Add(newGroup.trueName + " = " + (int)newGroup.Permission);
         }
