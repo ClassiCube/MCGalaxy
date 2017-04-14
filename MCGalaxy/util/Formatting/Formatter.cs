@@ -52,14 +52,13 @@ namespace MCGalaxy {
             Player.Message(p, builder.ToString());
             
             PrintAliases(p, cmd);
-            CommandPerm[] addPerms = cmd.ExtraPerms;
-            if (addPerms == null) return;
+            List<CommandExtraPerms.ExtraPerms> extraPerms = CommandExtraPerms.FindAll(cmd.name);
+            if (extraPerms.Count == 0) return;
             
             Player.Message(p, "%TExtra permissions:");
-            for (int i = 0; i < addPerms.Length; i++) {
-                CommandExtraPerms.ExtraPerms extra = CommandExtraPerms.Find(cmd.name, i + 1);
-                Player.Message(p, "{0}) {1}%S{2}", i + 1, 
-                               Group.GetColoredName(extra.MinRank), extra.Description);
+            foreach (CommandExtraPerms.ExtraPerms extra in extraPerms) {
+                Player.Message(p, "{0}) {1}%S{2}", extra.Number, 
+            	               Group.GetColoredName(extra.MinRank), extra.Description);
             }
         }
         

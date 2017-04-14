@@ -63,6 +63,16 @@ namespace MCGalaxy {
         /// <summary> Returns the lowest rank that has the nth extra permission for a given command. </summary>
         public static LevelPermission MinPerm(string cmd, int num = 1) { return Find(cmd, num).MinRank; }
         
+        /// <summary> Finds all extra permissions for a given command. </summary>
+        /// <remarks> list is empty when no extra permissions are found, not null. </remarks>
+        public static List<ExtraPerms> FindAll(string cmd) {
+            List<ExtraPerms> allPerms = new List<ExtraPerms>();
+            foreach (ExtraPerms perms in list) {
+                if (perms.Command.CaselessEq(cmd)) allPerms.Add(perms);
+            }
+            return allPerms;
+        }
+        
 
         /// <summary> Sets the nth extra permission for a given command. </summary>
         public static void Set(string cmd, LevelPermission perm, string desc, int num = 1) {
@@ -80,20 +90,13 @@ namespace MCGalaxy {
             perms.Description = desc;
             perms.Number = num;
         }
-
-        /// <summary> Returns the highest number/identifier of an extra permission for the given command. </summary>
-        public static int GetMaxNumber(Command cmd) {
-            for (int i = 1; ; i++) {
-                if (Find(cmd.name, i) == null) return (i - 1);
-            }
-        }
         
 
-        static readonly object saveLock = new object();
+        static readonly object ioLock = new object();
         
         /// <summary> Saves the list of all extra permissions. </summary>
         public static void Save() {
-            lock (saveLock) {
+            lock (ioLock) {
                 try {
                     SaveCore();
                 } catch (Exception ex) {
@@ -115,15 +118,21 @@ namespace MCGalaxy {
                 w.WriteLine("#");
                 
                 foreach (ExtraPerms perms in list) {
-                	w.WriteLine(perms.Command + ":" + perms.Number + ":" + (int)perms.MinRank + ":" + perms.Description);
+                    w.WriteLine(perms.Command + ":" + perms.Number + ":" + (int)perms.MinRank + ":" + perms.Description);
                 }
             }
         }
 
         /// <summary> Loads the list of all extra permissions. </summary>
         public static void Load() {
-            if (!File.Exists(file)) Save();
-            
+            lock (ioLock) {
+                if (!File.Exists(file)) Save();
+                
+                LoadCore();
+            }
+        }
+        
+        static void LoadCore() {
             using (StreamReader r = new StreamReader(file)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {

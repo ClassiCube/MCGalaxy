@@ -785,13 +785,23 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             Command cmd = Command.all.Find(listCommandsExtraCmdPerms.SelectedItem.ToString());
             oldcmd = cmd;
             skipExtraPermChanges = true;
-            extracmdpermnumber.Maximum = CommandExtraPerms.GetMaxNumber(cmd);
+            extracmdpermnumber.Maximum = MaxExtraPermissionNumber(cmd);
             extracmdpermnumber.ReadOnly = extracmdpermnumber.Maximum == 1;
             extracmdpermnumber.Value = 1;
             skipExtraPermChanges = false;
             
             ExtraPermSetDescriptions(cmd, 1);
             oldnumber = (int)extracmdpermnumber.Value;
+        }
+        
+        private int MaxExtraPermissionNumber(Command cmd) {
+            var all = CommandExtraPerms.FindAll(cmd.name);
+            int maxNum = 0;
+            
+            foreach (CommandExtraPerms.ExtraPerms perms in all) {
+                maxNum = Math.Max(maxNum, perms.Number);
+            }
+            return maxNum;
         }
 
         private void SaveOldExtraCustomCmdChanges() {
