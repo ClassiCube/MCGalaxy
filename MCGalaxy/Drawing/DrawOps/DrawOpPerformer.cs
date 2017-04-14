@@ -135,9 +135,11 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 p.DrawOps.Add(entry);
                 if (p.DrawOps.Count > 200)
-                    p.DrawOps.RemoveFirst();
+                    p.DrawOps.RemoveFirst();  
+                
                 if (item.Op.TotalModified > Server.DrawReloadLimit)
                     DoReload(p, item.Op.Level);
+                item.Op.TotalModified = 0; // reset total modified (as drawop instances are used in static mode)
             }
         }
         
