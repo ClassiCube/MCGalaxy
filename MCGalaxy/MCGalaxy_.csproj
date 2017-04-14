@@ -463,6 +463,8 @@
     <Compile Include="Economy\MessageItems.cs" />
     <Compile Include="Economy\NameItems.cs" />
     <Compile Include="Economy\RankItem.cs" />
+    <Compile Include="Entity\Entities.cs" />
+    <Compile Include="Entity\Entity.cs" />
     <Compile Include="Events\Level.Events.cs" />
     <Compile Include="Events\Player.Events.cs" />
     <Compile Include="Events\PlayerClick.cs" />
@@ -552,7 +554,6 @@
     <Compile Include="Network\Packets\Packet.BlockDefs.cs" />
     <Compile Include="Network\Packets\Packet.CPE.cs" />
     <Compile Include="Network\Packets\Packet.cs" />
-    <Compile Include="Player\Entities.cs" />
     <Compile Include="Player\Group\Group.cs" />
     <Compile Include="Player\Group\GroupProperties.cs" />
     <Compile Include="Player\List\PlayerExtList.cs" />
@@ -703,6 +704,7 @@
     <Folder Include="Commands\Maintenance" />
     <Folder Include="Commands\Permissions" />
     <Folder Include="Network\Packets" />
+    <Folder Include="Entity" />
     <Folder Include="util\Formatting" />
     <Folder Include="util\Threading" />
   </ItemGroup>
