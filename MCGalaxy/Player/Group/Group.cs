@@ -177,9 +177,10 @@ namespace MCGalaxy {
             // rank doesn't exist to begin with
             if (fileName == null || !File.Exists("ranks/" + fileName)) {
                 fileName = desired + ".txt";
+                // TODO: should start backwards from z to a
             } else if (MoveToFile(desired + ".txt")) {
             } else {
-                // try appending a and z if duplicate
+                // try appending a and z if duplicate file
                 for (char c = 'a'; c <= 'z'; c++) {
                     string newFile = desired + c + ".txt";
                     if (MoveToFile(newFile)) return;

@@ -172,6 +172,8 @@ namespace MCGalaxy {
         
         [ConfigPerm("os-perbuild-default", "Other", null, LevelPermission.Nobody)]
         public static LevelPermission osPerbuildDefault = LevelPermission.Nobody;
+        [ConfigBool("software-staff-prefixes", "Other", null, true)]
+        public static bool SoftwareStaffPrefixes = true;
         [ConfigBool("tablist-rank-sorted", "Tablist", null, true)]
         public static bool TablistRankSorted = true;
         [ConfigBool("tablist-global", "Tablist", null, false)]
