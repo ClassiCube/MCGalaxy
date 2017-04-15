@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands {
             } else {
                 if (newName.Length >= 30) { Player.Message(p, "Nick must be under 30 letters."); return; }     
                 
-                Chat.MessageGlobal(who, who.FullName + " %Schanged their nick to " + who.color + newName + "%S.", false);
+                Chat.MessageGlobal(who, who.FullName + " %Shad their nick changed to " + who.color + newName + "%S.", false);
                 who.DisplayName = newName;
             }
             
