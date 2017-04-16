@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.IO;
 
 namespace MCGalaxy.Core {
     internal static class LevelHandler {
@@ -46,6 +47,29 @@ namespace MCGalaxy.Core {
             }
             if (!p.level.UseBlockDB) {
                 Player.Message(p, "BlockDB is disabled here, &cyou will not be able to /undo or /redo");
+            }
+            ShowWelcome(p);
+        }
+        
+        static void ShowWelcome(Player p) {
+            if (p.showedWelcome) return;
+            p.showedWelcome = true;
+            p.LastAction = DateTime.UtcNow;
+            
+            if (!File.Exists("text/welcome.txt")) {
+                Server.s.Log("Could not find Welcome.txt. Using default.");
+                try {
+                    File.WriteAllText("text/welcome.txt", "Welcome to my server!");
+                } catch (Exception ex) {
+                    Server.ErrorLog(ex);
+                }
+            }
+            
+            try {
+                string[] welcome = File.ReadAllLines("text/welcome.txt");
+                Player.MessageLines(p, welcome);
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
             }
         }
     }

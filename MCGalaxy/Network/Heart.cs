@@ -40,14 +40,7 @@ namespace MCGalaxy {
         }; //Keep these in order
 
         static Heart() {
-            timer = new Timer(
-                OnBeat, null,
-                #if DEBUG
-                6000, 6000
-                #else
-                45000, 45000
-                #endif
-            );
+            timer = new Timer(OnBeat, null, 30000, 30000);
         }
 
         static void OnBeat(object state) {

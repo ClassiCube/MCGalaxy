@@ -57,7 +57,6 @@ namespace MCGalaxy {
         public string truename, skinName;
         internal bool dontmindme = false;
         public Socket socket;
-        System.Timers.Timer loginTimer = new System.Timers.Timer(1000);
         System.Timers.Timer extraTimer = new System.Timers.Timer(22000);
         public System.Timers.Timer checkTimer = new System.Timers.Timer(2000);
         public DateTime LastAction, AFKCooldown;
@@ -211,6 +210,7 @@ namespace MCGalaxy {
 
         public bool showPortals = false, showMBs = false;
         public string prevMsg = "";
+        internal bool showedWelcome = false;
 
         //Movement
         public int oldIndex = -1, lastWalkthrough = -1, oldFallY = 10000;

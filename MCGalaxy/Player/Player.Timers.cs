@@ -23,30 +23,9 @@ namespace MCGalaxy {
     public sealed partial class Player : IDisposable {
 
         void InitTimers() {
-            loginTimer.Elapsed += LoginTimerElapsed;
-            loginTimer.Start();
             extraTimer.Elapsed += ExtraTimerElapsed;        
             checkTimer.Elapsed += CheckTimerElapsed;
             checkTimer.Start();
-        }
-        
-        void LoginTimerElapsed(object sender, ElapsedEventArgs e) {
-            if ( !Loading ) {
-                DisposeTimer(loginTimer, LoginTimerElapsed);
-                if ( File.Exists("text/welcome.txt") ) {
-                    try {
-                        string[] welcome = File.ReadAllLines("text/welcome.txt");
-                        MessageLines(this, welcome);
-                    } catch {
-                    }
-                } else {
-                    Server.s.Log("Could not find Welcome.txt. Using default.");
-                    File.WriteAllText("text/welcome.txt", "Welcome to my server!");
-                    SendMessage("Welcome to my server!");
-                }
-                extraTimer.Start();
-            }
-            LastAction = DateTime.UtcNow;
         }
         
         void ExtraTimerElapsed(object sender, ElapsedEventArgs e) {
@@ -119,7 +98,6 @@ namespace MCGalaxy {
         bool Moved() { return oldrot[0] != rot[0] || oldrot[1] != rot[1]; }
         
         void DisposeTimers() {
-            DisposeTimer(loginTimer, LoginTimerElapsed);
             DisposeTimer(extraTimer, ExtraTimerElapsed);
             DisposeTimer(checkTimer, CheckTimerElapsed);
         }
