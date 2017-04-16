@@ -396,7 +396,7 @@ namespace MCGalaxy.Commands.CPE {
                     
                 case "draw":
                 case "blockdraw":
-                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, 14, 1, 0, 4)) return;
+                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, 14, 1, 0, 255)) return;
                     break;
                     
                 case "min":

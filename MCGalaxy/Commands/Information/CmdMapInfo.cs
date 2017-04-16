@@ -276,7 +276,7 @@ namespace MCGalaxy.Commands {
                 Width = dims.X; Height = dims.Y; Length = dims.Z;
                 
                 EdgeLevel = Height / 2;
-                SidesLevel = Height / 2 - 2;
+                SidesLevel = -1;
                 CloudsHeight = Height + 2;
                 BlockDBEntries = BlockDBFile.CountEntries(name);
 
@@ -284,6 +284,7 @@ namespace MCGalaxy.Commands {
                 if (path != null)
                     PropertiesFile.Read(path, ParseProperty, '=');
                 if (Authors == null) Authors = "";
+                if (SidesLevel == -1) SidesLevel = EdgeLevel - 2;
             }
             
             void ParseProperty(string key, string value) {
