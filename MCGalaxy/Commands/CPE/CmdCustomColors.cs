@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.CPE {
             
             char fallback;
             if (!CheckName(p, args[2]) || !CheckFallback(p, args[3], out fallback)) return;
-            CustomColor col = Colors.ParseHex(args[4]);
+            CustomColor col = default(CustomColor);
             if (!CommandParser.GetHex(p, args[4], ref col)) return;
             
             col.Code = code; col.Fallback = fallback; col.Name = args[2];
