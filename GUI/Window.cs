@@ -792,9 +792,6 @@ namespace MCGalaxy.Gui {
         #region Main tab log - context menu
 
         void tsLog_Night_Click(object sender, EventArgs e) {
-            if (MessageBox.Show("Changing to and from night mode will clear your logs. Do you still want to change?", "You sure?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
-                return;
-
             main_txtLog.NightMode = tsLog_night.Checked;
             tsLog_night.Checked = !tsLog_night.Checked;
         }
