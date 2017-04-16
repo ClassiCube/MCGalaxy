@@ -177,7 +177,7 @@ namespace MCGalaxy {
         [ConfigBool("tablist-rank-sorted", "Tablist", null, true)]
         public static bool TablistRankSorted = true;
         [ConfigBool("tablist-global", "Tablist", null, false)]
-        public static bool TablistGlobal = false;
+        public static bool TablistGlobal = true;
         [ConfigBool("tablist-bots", "Tablist", null, false)]
         public static bool TablistBots = false;
 
