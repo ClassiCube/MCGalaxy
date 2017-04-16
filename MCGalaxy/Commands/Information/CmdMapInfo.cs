@@ -199,8 +199,8 @@ namespace MCGalaxy.Commands {
             Player.Message(p, format, Color(data.Fog), Color(data.Sky), Color(data.Clouds),
                            Color(data.Light), Color(data.Shadow));
             
-            Player.Message(p, "Water level: &b{0}%S, Bedrock level: &b{1}%S, Clouds height: &b{2}%S, Max fog distance: &b{3}",
-                           data.EdgeLevel, data.SidesLevel, data.CloudsHeight, data.MaxFog);
+            Player.Message(p, "Water level: &b{0}%S, Bedrock offset: &b{1}%S, Clouds height: &b{2}%S, Max fog distance: &b{3}",
+                           data.EdgeLevel, data.SidesOffset, data.CloudsHeight, data.MaxFog);
             Player.Message(p, "Edge Block: &b{0}%S, Horizon Block: &b{1}", data.EdgeBlock, data.HorizonBlock);
             Player.Message(p, "Clouds speed: &b{0}%%S, Weather speed: &b{1}%",
                            (data.CloudsSpeed / 256f).ToString("F2"),
@@ -220,7 +220,7 @@ namespace MCGalaxy.Commands {
             // Env data
             public string TerrainUrl, TextureUrl;
             public string Fog, Sky, Clouds, Light, Shadow;
-            public int EdgeLevel, SidesLevel, CloudsHeight, MaxFog;
+            public int EdgeLevel, SidesOffset = -2, CloudsHeight, MaxFog;
             public int CloudsSpeed = 256, WeatherSpeed = 256, WeatherFade = 128;
             public byte EdgeBlock = Block.blackrock, HorizonBlock = Block.water;
             public bool ExpFog;
@@ -253,7 +253,7 @@ namespace MCGalaxy.Commands {
                 
                 Fog = lvl.FogColor; Sky = lvl.SkyColor; Clouds = lvl.CloudColor;
                 Light = lvl.LightColor; Shadow = lvl.ShadowColor;
-                EdgeLevel = lvl.EdgeLevel; SidesLevel = lvl.SidesLevel; CloudsHeight = lvl.CloudsHeight;
+                EdgeLevel = lvl.EdgeLevel; SidesOffset = lvl.SidesOffset; CloudsHeight = lvl.CloudsHeight;
                 MaxFog = lvl.MaxFogDistance; ExpFog = lvl.ExpFog;
                 CloudsSpeed = lvl.CloudsSpeed; WeatherSpeed = lvl.WeatherSpeed;
                 EdgeBlock = (byte)lvl.EdgeBlock; HorizonBlock = (byte)lvl.HorizonBlock;
@@ -275,16 +275,14 @@ namespace MCGalaxy.Commands {
                 Vec3U16 dims = IMapImporter.Formats[0].ReadDimensions(path);
                 Width = dims.X; Height = dims.Y; Length = dims.Z;
                 
-                EdgeLevel = Height / 2;
-                SidesLevel = int.MinValue;
-                CloudsHeight = Height + 2;
+                EdgeLevel = Height / 2; CloudsHeight = Height + 2;
                 BlockDBEntries = BlockDBFile.CountEntries(name);
 
                 path = LevelInfo.FindPropertiesFile(name);
                 if (path != null)
                     PropertiesFile.Read(path, ParseProperty, '=');
                 if (Authors == null) Authors = "";
-                if (SidesLevel == int.MinValue) SidesLevel = EdgeLevel - 2;
+                if (SidesOffset == int.MinValue) SidesOffset = EdgeLevel - 2;
             }
             
             void ParseProperty(string key, string value) {
@@ -317,7 +315,7 @@ namespace MCGalaxy.Commands {
                         
                         case "edgeblock": EdgeBlock = byte.Parse(value); break;
                         case "edgelevel": EdgeLevel = short.Parse(value); break;
-                        case "sideslevel": SidesLevel = short.Parse(value); break;
+                        case "sidesoffset": SidesOffset = short.Parse(value); break;
                         case "horizonblock": HorizonBlock = byte.Parse(value); break;
                         case "cloudsheight": CloudsHeight = short.Parse(value); break;
                         case "maxfog": MaxFog = short.Parse(value); break;

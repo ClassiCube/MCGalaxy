@@ -84,8 +84,7 @@ namespace MCGalaxy.Levels.IO {
             lvl.EdgeLevel = comp["SideLevel"].ShortValue;
             
             if (lvl.EdgeLevel == -1)
-                lvl.EdgeLevel = (short)(lvl.Height / 2);
-            lvl.SidesLevel = lvl.EdgeLevel - 2;           
+                lvl.EdgeLevel = (short)(lvl.Height / 2);          
             if (!comp.Contains("TextureURL")) return;
             
             string url = comp["TextureURL"].StringValue;

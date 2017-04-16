@@ -26,29 +26,32 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public CmdBots() { }
 
-        public override void Use(Player p, string message) {
-            PlayerBot[] bots = PlayerBot.Bots.Items;         
-            Level lvl = null;
+        public override void Use(Player p, string message) { 
+            Level lvl = p.level;
             string[] args = message.SplitSpaces(2);
+            int ignored;
             
-            if (!(message == "" || args[0].CaselessEq("all"))) {
+            if (!(message == "" || args[0].CaselessEq("all") || int.TryParse(args[0], out ignored))) {
                 lvl = Matcher.FindLevels(p, args[0]);
                 if (lvl == null) return;
             }
             
+            PlayerBot[] bots = PlayerBot.Bots.Items;
             List<PlayerBot> inScope = new List<PlayerBot>();
             foreach (PlayerBot bot in bots) {
-                if (lvl != null && bot.level != lvl) continue;
+                if (bot.level != lvl) continue;
                 inScope.Add(bot);
             }
             
-            string cmd = lvl == null ? "bots all" : "bots " + lvl.name;
+            string cmd = lvl == p.level ? "bots" : "bots " + lvl.name;
             string modifier = args.Length > 1 ? args[1] : "";
+            Player.Message(p, "Bots in {0}:", lvl.ColoredName);
             MultiPageOutput.Output(p, inScope, FormatBot, cmd, "bots", modifier, false);
         }
         
         static string FormatBot(PlayerBot bot) {
-            string desc = bot.name + "(" + bot.level.name + ")";
+            string desc = bot.DisplayName;
+            if (bot.DisplayName != bot.name) desc += "%S(" + bot.name + ")";
             
             if (bot.AIName != "") desc += "[" + bot.AIName + "]";
             else if (bot.hunt) desc += "[Hunt]";
@@ -57,8 +60,8 @@ namespace MCGalaxy.Commands {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/bots %H- Shows a list of bots, their AIs and levels");
-            Player.Message(p, "%T/bots [level] %H- Only shows bots on the given level");
+            Player.Message(p, "%T/bots %H- Shows a list of bots on your level, and their AIs and levels");
+            Player.Message(p, "%T/bots [level] %H- Shows bots on the given level");
         }
     }
 }

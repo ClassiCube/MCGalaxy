@@ -127,9 +127,9 @@ namespace MCGalaxy {
         /// <summary> Elevation of the "ocean" that surrounds maps. Default is map height / 2. </summary>
         [ConfigInt("EdgeLevel", "Env", null, -1, short.MinValue, short.MaxValue)]
         public int EdgeLevel;
-        /// <summary> Elevation of the "bedrock" that surrounds map sides. Default is (map height / 2) - 2. </summary>
-        [ConfigInt("SidesLevel", "Env", null, -1, short.MinValue, short.MaxValue)]
-        public int SidesLevel;
+        /// <summary> Offset of the "bedrock" that surrounds map sides from edge level. Default is -2. </summary>
+        [ConfigInt("SidesOffset", "Env", null, -2, short.MinValue, short.MaxValue)]
+        public int SidesOffset = -2;
         /// <summary> Elevation of the clouds. Default is map height + 2. </summary>
         [ConfigInt("CloudsHeight", "Env", null, -1, short.MinValue, short.MaxValue)]
         public int CloudsHeight;

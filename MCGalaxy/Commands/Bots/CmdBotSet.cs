@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces();
-            PlayerBot bot = PlayerBot.FindMatchesPreferLevel(p, args[0]);
+            PlayerBot bot = Matcher.FindBotsInLevel(p, args[0]);
             if (bot == null) return;
             
             if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {
