@@ -382,6 +382,7 @@ namespace MCGalaxy {
         }
         
         public static void LoadMetadata(Level lvl) {
+            lvl.SidesLevel = int.MinValue;
             try {
                 string propsPath = LevelInfo.FindPropertiesFile(lvl.MapName);
                 if (propsPath != null) {
@@ -395,6 +396,9 @@ namespace MCGalaxy {
             } catch (Exception e) {
                 Server.ErrorLog(e);
             }
+            
+            // backwards compatibility: old properties files don't have this field
+            if (lvl.SidesLevel == int.MinValue) lvl.SidesLevel = lvl.EdgeLevel - 2;
             lvl.BlockDB.Cache.Enabled = lvl.UseBlockDB;
             
             BlockDefinition[] defs = BlockDefinition.Load(false, lvl);
