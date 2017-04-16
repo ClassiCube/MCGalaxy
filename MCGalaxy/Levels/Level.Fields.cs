@@ -103,6 +103,7 @@ namespace MCGalaxy {
         // Environment settings
         [ConfigInt("Weather", "Env", null, 0, 0, 2)]
         public int Weather;
+        
         [ConfigString("Texture", "Env", null, "", true, null, NetUtils.StringSize)]
         public string terrainUrl = "";
         [ConfigString("TexturePack", "Env", null, "", true, null, NetUtils.StringSize)]
@@ -122,12 +123,17 @@ namespace MCGalaxy {
         /// <summary> Color of the blocks in the light (RGB packed into an int). Set to -1 to use client defaults. </summary>
         [ConfigString("LightColor", "Env", null, "", true)]
         public string LightColor = "";
+        
         /// <summary> Elevation of the "ocean" that surrounds maps. Default is map height / 2. </summary>
         [ConfigInt("EdgeLevel", "Env", null, -1, short.MinValue, short.MaxValue)]
         public int EdgeLevel;
+        /// <summary> Elevation of the "bedrock" that surrounds map sides. Default is (map height / 2) - 2. </summary>
+        [ConfigInt("SidesLevel", "Env", null, -1, short.MinValue, short.MaxValue)]
+        public int SidesLevel;
         /// <summary> Elevation of the clouds. Default is map height + 2. </summary>
         [ConfigInt("CloudsHeight", "Env", null, -1, short.MinValue, short.MaxValue)]
         public int CloudsHeight;
+        
         /// <summary> Max fog distance the client can see. Default is 0, means use client-side defined max fog distance. </summary>
         [ConfigInt("MaxFog", "Env", null, 0, short.MinValue, short.MaxValue)]
         public int MaxFogDistance;

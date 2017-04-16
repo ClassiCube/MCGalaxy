@@ -77,6 +77,7 @@ namespace MCGalaxy {
             name = n; MapName = n.ToLower();
             BlockDB = new BlockDB(this);
             EdgeLevel = (short)(y / 2);
+            SidesLevel = (short)(y / 2 - 2);
             CloudsHeight = (short)(y + 2);
             
             blocks = new byte[Width * Height * Length];

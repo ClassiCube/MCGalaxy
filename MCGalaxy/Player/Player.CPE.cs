@@ -139,8 +139,11 @@ namespace MCGalaxy {
                 
                 Send(Packet.EnvMapProperty(EnvProp.SidesBlock, side));
                 Send(Packet.EnvMapProperty(EnvProp.EdgeBlock, edge));
+                
                 Send(Packet.EnvMapProperty(EnvProp.EdgeLevel, level.EdgeLevel));
+                Send(Packet.EnvMapProperty(EnvProp.SidesLevel, level.SidesLevel));
                 Send(Packet.EnvMapProperty(EnvProp.CloudsLevel, level.CloudsHeight));
+                
                 Send(Packet.EnvMapProperty(EnvProp.MaxFog, level.MaxFogDistance));
                 Send(Packet.EnvMapProperty(EnvProp.CloudsSpeed, level.CloudsSpeed));
                 Send(Packet.EnvMapProperty(EnvProp.WeatherSpeed, level.WeatherSpeed));
@@ -261,6 +264,7 @@ namespace MCGalaxy {
         SidesBlock = 0, EdgeBlock = 1, EdgeLevel = 2,
         CloudsLevel = 3, MaxFog = 4, CloudsSpeed = 5,
         WeatherSpeed = 6, WeatherFade = 7, ExpFog = 8,
+        SidesLevel = 9,
     }
     
     public enum EntityProp : byte {

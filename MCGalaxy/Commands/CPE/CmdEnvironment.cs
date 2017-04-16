@@ -83,6 +83,11 @@ namespace MCGalaxy.Commands {
                 case "level":
                     LevelEnv.SetShort(p, value, EnvProp.EdgeLevel,
                              "water level", (short)(lvl.Height / 2), ref lvl.EdgeLevel); break;
+                case "bedrocklevel":
+                case "sideslevel":
+                case "sidelevel":
+                    LevelEnv.SetShort(p, value, EnvProp.SidesLevel,
+                             "bedrock level", (short)(lvl.Height / 2 - 2), ref lvl.SidesLevel); break;
                 case "maxfogdistance":
                 case "maxfog":
                 case "fogdistance":
@@ -131,6 +136,8 @@ namespace MCGalaxy.Commands {
             
             LevelEnv.SetShort(p, "normal", EnvProp.EdgeLevel,
                      "water level", (short)(lvl.Height / 2), ref lvl.EdgeLevel);
+            LevelEnv.SetShort(p, "normal", EnvProp.EdgeLevel,
+                     "bedrock level", (short)(lvl.Height / 2 - 2), ref lvl.SidesLevel);
             LevelEnv.SetShort(p, "normal", EnvProp.CloudsLevel,
                      "clouds height", (short)(lvl.Height + 2), ref lvl.CloudsHeight);
         }
@@ -204,7 +211,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%T/env [variable] [value]");
             Player.Message(p, "%HVariables: fog, cloud, sky, sun, shadow, weather, level");
             Player.Message(p, "%H   horizon, border, preset, maxfog, cloudsheight");
-            Player.Message(p, "%H   cloudspeed, weatherspeed, weatherfade, expfog");
+            Player.Message(p, "%H   cloudspeed, weatherspeed, weatherfade, expfog, sideslevel");
             Player.Message(p, "%HUsing 'normal' as a value will reset the variable");
             Player.Message(p, "%T/env normal %H- resets all variables");
         }
