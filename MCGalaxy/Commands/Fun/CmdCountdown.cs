@@ -246,10 +246,8 @@ namespace MCGalaxy.Commands {
             Player.Message(p, format, width, height, length);
             PlayerActions.ChangeMap(p, "countdown");
             
-            const ushort x = 8 * 32 + 16;
-            const ushort y = 23 * 32 + 32;
-            const ushort z = 17 * 32 + 16;
-            p.SendPos(Entities.SelfID, x, y, z, p.rot[0], p.rot[1]);
+            Position pos = new Position(16 + 8 * 32, 32 + 23 * 32, 16 + 17 * 32);
+            p.SendPos(Entities.SelfID, pos, p.Rot);
         }
         
         void HandleEnable(Player p) {

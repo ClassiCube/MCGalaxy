@@ -47,9 +47,9 @@ namespace MCGalaxy {
         internal PlayerRotateEvent(Player.OnPlayerRotate method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
-        public static void Call(Player p, byte[] rot) {
+        public static void Call(Player p, byte yaw, byte pitch) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, rot));
+            CallImpl(pl => pl(p, yaw, pitch));
         }
     }
     

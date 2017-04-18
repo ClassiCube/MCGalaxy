@@ -110,10 +110,7 @@ namespace MCGalaxy {
             p.level = lvl; 
             p.SendUserMOTD(); p.SendMap(oldLevel);
 
-            ushort x = (ushort)(lvl.spawnx * 32 + 16);
-            ushort y = (ushort)(lvl.spawny * 32 + 32);
-            ushort z = (ushort)(lvl.spawnz * 32 + 16);
-            Entities.SpawnEntities(p, x, y, z, lvl.rotx, lvl.roty);
+            Entities.SpawnEntities(p, lvl.SpawnPos, lvl.SpawnRot);
             CheckGamesJoin(p, oldLevel);
             
             if (p.level.ShouldShowJoinMessage(oldLevel)) {

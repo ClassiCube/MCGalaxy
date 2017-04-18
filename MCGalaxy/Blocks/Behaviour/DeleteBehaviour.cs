@@ -28,11 +28,12 @@ namespace MCGalaxy.Blocks {
             
             int dx = 0, dy = 0, dz = 0;
             p.RevertBlock(x, y, z);
-            DirUtils.EightYaw(p.rot[0], out dx, out dz);
-            DirUtils.Pitch(p.rot[1], out dy);
+            DirUtils.EightYaw(p.Rot.RotY, out dx, out dz);
+            DirUtils.Pitch(p.Rot.HeadX, out dy);
 
             // Looking straight up or down
-            if (p.rot[1] >= 192 && p.rot[1] <= 196 || p.rot[1] >= 60 && p.rot[1] <= 64) { dx = 0; dz = 0; }
+            byte pitch = p.Rot.HeadX;
+            if (pitch >= 192 && pitch <= 196 || pitch >= 60 && pitch <= 64) { dx = 0; dz = 0; }
 
             byte b1 = p.level.GetTile((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ));
             byte b2 = p.level.GetTile((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz ));

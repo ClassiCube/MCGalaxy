@@ -72,13 +72,12 @@ namespace MCGalaxy.Commands {
             if (p.level != who.level) Command.all.Find("tp").Use(p, who.name);
             if (p.following != "") {
                 Player old = PlayerInfo.FindExact(p.following);
-                if (old != null)
-                    p.SpawnEntity(old, old.id, old.pos[0], old.pos[1], old.pos[2], old.rot[0], old.rot[1]);
+                if (old != null) Entities.Spawn(p, old);
             }
             
             p.following = who.name;
             Player.Message(p, "Following " + who.ColoredName + "%S. Use \"/follow\" to stop.");
-            p.DespawnEntity(who.id);
+            Entities.Despawn(p, who.id);
         }
         
         public override void Help(Player p) {

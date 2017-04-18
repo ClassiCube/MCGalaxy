@@ -31,7 +31,7 @@ namespace MCGalaxy.Bots {
 
             Orientation rot = bot.Rot;
             rot.RotY += meta.Speed;
-            bot.rot = Rot;
+            bot.Rot = rot;
 
             if (bot.countdown == 0) { bot.NextInstruction(); return false; }
             return true;

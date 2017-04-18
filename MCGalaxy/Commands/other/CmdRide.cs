@@ -38,40 +38,27 @@ namespace MCGalaxy.Commands {
            p.trainInvincible = true;
             while (p.onTrain) {
                 Thread.Sleep(10);
-                ushort x = (ushort)(p.pos[0] / 32);
-                ushort y = (ushort)(p.pos[1] / 32);
-                ushort z = (ushort)(p.pos[2] / 32);
+                Vec3S32 P = p.Pos.BlockCoords;
 
                 for (int dx = -1; dx <= 1; dx++)
                     for (int dy = -1; dy <= 1; dy++)
                         for (int dz = -1; dz <= 1; dz++)
                 {
-                    ushort xx = (ushort)(x + dx), yy = (ushort)(y + dy), zz = (ushort)(z + dz);
+                    ushort xx = (ushort)(P.X + dx), yy = (ushort)(P.Y + dy), zz = (ushort)(P.Z + dz);
                     if (p.level.GetTile(xx, yy, zz) != Block.train) continue;
                     p.trainGrab = true;
-                    byte yaw = 0, pitch = 0;
-
-                    if (y - yy == -1) pitch = 240;
-                    else if (y - yy == 0) pitch = 0;
+                    
+                    byte yaw, pitch;
+                    Vec3F32 dir = new Vec3F32(dx, 0, dz);
+                    DirUtils.GetYawPitch(dir, out yaw, out pitch);
+                    
+                    if (dy == 1) pitch = 240;
+                    else if (dy == 0) pitch = 0;
                     else pitch = 8;
-                    ushort xT = (ushort)(xx * 32 + 16);
-                    ushort yT = (ushort)(yy * 32);
-                    ushort zT = (ushort)(zz * 32 + 16);
-
-                    if (x - xx == -1) {
-                        if (z - zz == -1) yaw = 96;
-                        else if (z - zz == 0) yaw = 64;
-                        else yaw = 32;
-                    } else if (x - xx == 0) {
-                        if (z - zz == -1) yaw = 128;
-                        else if (z - zz == 0) { goto skip; }
-                        else yaw = 0;
-                    } else {
-                        if (z - zz == -1) yaw = 160;
-                        else if (z - zz == 0) yaw = 192;
-                        else yaw = 224;
+                    
+                    if (dx != 0 || dy != 0 || dz != 0) {
+                        PlayerActions.MoveCoords(p, P.X + dx, P.Y + dy, P.Z + dz, yaw, pitch);
                     }
-                    p.SendOwnFeetPos(xT, yT, zT, yaw, pitch);
                     goto skip;
                 }
 

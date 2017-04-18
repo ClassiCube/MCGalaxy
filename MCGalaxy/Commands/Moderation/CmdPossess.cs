@@ -82,7 +82,8 @@ namespace MCGalaxy.Commands {
                 
                 bool result = (skin == "#") ? who.MarkPossessed() : who.MarkPossessed(p.name);
                 if (!result) return;
-                p.DespawnEntity(who.id);
+                
+                Entities.Despawn(p, who.id);
                 who.canBuild = false;
                 Player.Message(p, "Successfully possessed {0}%S.", who.ColoredName);
             }

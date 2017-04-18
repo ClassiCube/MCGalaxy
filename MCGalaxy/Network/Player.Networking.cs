@@ -333,23 +333,26 @@ namespace MCGalaxy {
         
         /// <summary> Sends a packet indicating an entity was spawned in the current map
         /// at the given absolute position + coordinates </summary>
-        public void SendSpawn(byte id, string name, string model, 
-                              ushort x, ushort y, ushort z, byte rotx, byte roty) {
+        public void SendSpawn(byte id, string name, string model, Position pos, Orientation rot) {
             // NOTE: Fix for standard clients
-            if (id == Entities.SelfID) y -= 22;
+            if (id == Entities.SelfID) pos.Y -= 22;
             
-            Send(Packet.AddEntity(id, name, x, y, z, rotx, roty, hasCP437));
+            Send(Packet.AddEntity(id, name, pos, rot, hasCP437));
             if (hasChangeModel) Send(Packet.ChangeModel(id, model, hasCP437));
         }
         
         /// <summary> Sends a packet indicating an absolute position + orientation change for an enity. </summary>
         public void SendPos(byte id, ushort x, ushort y, ushort z, byte rotx, byte roty) {
-            pos = new ushort[3] { x, y, z };
-            rot = new byte[2] { rotx, roty };
-            // NOTE: Fix for standard clients
-            if (id == Entities.SelfID) y -= 22;
-
-            Send(Packet.Teleport(id, x, y, z, rotx, roty));
+            SendPos(id, new Position(x, y, z), new Orientation(rotx, roty));
+        }
+        
+        /// <summary> Sends a packet indicating an absolute position + orientation change for an enity. </summary>
+        public void SendPos(byte id, Position pos, Orientation rot) {
+            if (id == Entities.SelfID) {
+                Pos = pos; Rot = rot; 
+                pos.Y -= 22;  // NOTE: Fix for standard clients
+            }           
+            Send(Packet.Teleport(id, pos, rot));
         }
         
          /// <summary> Sends a packet indicating an absolute position + orientation change for the player. </summary>
@@ -403,11 +406,11 @@ namespace MCGalaxy {
         }
         
         public void SendExtAddEntity2(byte id, string skinName, string displayName, string model,
-                                      ushort x, ushort y, ushort z, byte rotx, byte roty) {
+                                      Position pos, Orientation rot) {
             // NOTE: Fix for standard clients
-            if (id == Entities.SelfID) y -= 22;
+            if (id == Entities.SelfID) pos.Y -= 22;
 
-            Send(Packet.ExtAddEntity2(id, skinName, displayName, x, y, z, rotx, roty, hasCP437));
+            Send(Packet.ExtAddEntity2(id, skinName, displayName, pos, rot, hasCP437));
             if (hasChangeModel) Send(Packet.ChangeModel(id, model, hasCP437));
         }
         

@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands {
             PlayerBot bot = Matcher.FindBotsInLevel(p, message);
             if (bot == null) return;
             
-            bot.SetPos(p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
+            bot.Pos = p.Pos; bot.Rot = p.Rot;
             BotsFile.UpdateBot(bot);
         }
         

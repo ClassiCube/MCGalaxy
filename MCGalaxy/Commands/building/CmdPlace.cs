@@ -30,9 +30,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             byte block, ext = 0;
             block = p.GetActualHeldBlock(out ext);
-            int x = (short)p.pos[0] / 32;
-            int y = ((short)p.pos[1] - 32) / 32;
-            int z = (short)p.pos[2] / 32;
+            int x = p.Pos.BlockX, y = (p.Pos.Y - 32) / 32, z = p.Pos.BlockZ;
 
             try {
                 string[] parts = message.SplitSpaces();

@@ -23,19 +23,16 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdBack() { }
 
-        public override void Use(Player p, string message)
-        {
-            if (p.beforeTeleportMap == "")
-            {
-                p.SendMessage("You have not teleported anywhere yet");
-                return;
+        public override void Use(Player p, string message) {
+            if (p.beforeTeleportMap == "") {
+                p.SendMessage("You have not teleported anywhere yet"); return;
             }
             if (!p.level.name.CaselessEq(p.beforeTeleportMap))
                 PlayerActions.ChangeMap(p, p.beforeTeleportMap);
-            p.SendPos(Entities.SelfID, p.beforeTeleportPos[0], p.beforeTeleportPos[1], p.beforeTeleportPos[2], 0, 0);
+            p.SendPos(Entities.SelfID, p.beforeTeleportPos, new Orientation(0, 0));
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.Message(p, "%T/back");
             Player.Message(p, "%HTakes you back to the position you were in before teleportation");
         }

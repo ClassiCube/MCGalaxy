@@ -34,8 +34,8 @@ namespace MCGalaxy.Blocks.Physics {
                     case 1:
                     case 2:
                     case 3:
-                        if ((closest.pos[0] / 32) - x != 0) {
-                            index = lvl.PosToInt((ushort)(x + Math.Sign((closest.pos[0] / 32) - x)), y, z);
+                        if (closest.Pos.BlockX - x != 0) {
+                            index = lvl.PosToInt((ushort)(x + Math.Sign(closest.Pos.BlockX - x)), y, z);
                             if (MoveFish(lvl, C.b, index, target)) return;
                         }                    
                         dirsVisited++;
@@ -44,8 +44,8 @@ namespace MCGalaxy.Blocks.Physics {
                     case 4:
                     case 5:
                     case 6:
-                        if ((closest.pos[1] / 32) - y != 0) {
-                            index = lvl.PosToInt(x, (ushort)(y + Math.Sign((closest.pos[1] / 32) - y)), z);
+                        if (closest.Pos.BlockY - y != 0) {
+                        	index = lvl.PosToInt(x, (ushort)(y + Math.Sign(closest.Pos.BlockY - y)), z);
                             if (MoveFish(lvl, C.b, index, target)) return;
                         }
                         dirsVisited++;
@@ -54,8 +54,8 @@ namespace MCGalaxy.Blocks.Physics {
                     case 7:
                     case 8:
                     case 9:
-                        if ((closest.pos[2] / 32) - z != 0) {
-                            index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign((closest.pos[2] / 32) - z)));
+                        if (closest.Pos.BlockZ - z != 0) {
+                        	index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign(closest.Pos.BlockZ - z)));
                             if (MoveFish(lvl, C.b, index, target)) return;
                         }
                         dirsVisited++;
@@ -79,8 +79,8 @@ namespace MCGalaxy.Blocks.Physics {
                     case 1:
                     case 2:
                     case 3:
-                        if ((closest.pos[0] / 32) - x != 0) {
-                            index = lvl.PosToInt((ushort)(x - Math.Sign((closest.pos[0] / 32) - x)), y, z);
+                        if (closest.Pos.BlockX - x != 0) {
+                			index = lvl.PosToInt((ushort)(x - Math.Sign(closest.Pos.BlockX - x)), y, z);
                             if (MoveFish(lvl, C.b, index, target)) return;
                         }                        
                         dirsVisited++;
@@ -89,8 +89,8 @@ namespace MCGalaxy.Blocks.Physics {
                     case 4:
                     case 5:
                     case 6:
-                        if ((closest.pos[1] / 32) - y != 0) {
-                            index = lvl.PosToInt(x, (ushort)(y - Math.Sign((closest.pos[1] / 32) - y)), z);
+                        if (closest.Pos.BlockY - y != 0) {
+                        	index = lvl.PosToInt(x, (ushort)(y - Math.Sign(closest.Pos.BlockY - y)), z);
                             if (MoveFish(lvl, C.b, index, target)) return;
                         }
                         dirsVisited++;
@@ -99,8 +99,8 @@ namespace MCGalaxy.Blocks.Physics {
                     case 7:
                     case 8:
                     case 9:
-                        if ((closest.pos[2] / 32) - z != 0) {
-                            index = lvl.PosToInt(x, y, (ushort)(z - Math.Sign((closest.pos[2] / 32) - z)));
+                        if (closest.Pos.BlockZ - z != 0) {
+                        	index = lvl.PosToInt(x, y, (ushort)(z - Math.Sign(closest.Pos.BlockZ - z)));
                             if (MoveFish(lvl, C.b, index, target)) return;
                         }
                         dirsVisited++;

@@ -94,7 +94,7 @@ namespace MCGalaxy {
 
             if (group.Permission == LevelPermission.Banned) return;
             if (checkPlaceDist && group.Permission == LevelPermission.Guest) {
-                int dx = ((short)pos[0] / 32) - x, dy = ((short)pos[1] / 32) - y, dz = ((short)pos[2] / 32) - z;
+                int dx = Pos.BlockX - x, dy = Pos.BlockY - y, dz = Pos.BlockZ - z;
                 int diff = (int)Math.Sqrt(dx * dx + dy * dy + dz * dz);
                 if (diff > ReachDistance + 4) {
                     Server.s.Log(name + " attempted to build with a " + diff + " distance offset");
@@ -310,37 +310,36 @@ namespace MCGalaxy {
             ushort x = NetUtils.ReadU16(packet, 2);
             ushort y = NetUtils.ReadU16(packet, 4);
             ushort z = NetUtils.ReadU16(packet, 6);
-            byte rotx = packet[8], roty = packet[9];
+            Orientation rot = Rot;
+            byte yaw = packet[8], pitch = packet[9];
             
             if (frozen) {
-                bool movedX = Math.Abs((short)x - (short)pos[0]) > 4; // moved more than 0.125 blocks horizontally
-                bool movedY = Math.Abs((short)y - (short)pos[1]) > 40; // moved more than 1.25 blocks vertically
-                bool movedZ = Math.Abs((short)z - (short)pos[2]) > 4; // moved more than 0.125 blocks horizontally
-                if (movedX || movedY || movedZ) {
-                    SendPos(Entities.SelfID, pos[0], pos[1], pos[2], rotx, roty);
-                }
+                bool movedX = Math.Abs((short)x - Pos.X) > 4; // moved more than 0.125 blocks horizontally
+                bool movedY = Math.Abs((short)y - Pos.Y) > 40; // moved more than 1.25 blocks vertically
+                bool movedZ = Math.Abs((short)z - Pos.Z) > 4; // moved more than 0.125 blocks horizontally
+                SetYawPitch(yaw, pitch);
+                
+                if (movedX || movedY || movedZ) { SendPos(Entities.SelfID, Pos, Rot); }
                 return;
             }
 
-            if (Server.Countdown.HandlesMovement(this, x, y, z, rotx, roty))
+            if (Server.Countdown.HandlesMovement(this, x, y, z, yaw, pitch))
                 return;
-            if (Server.zombie.Running && Server.zombie.HandlesMovement(this, x, y, z, rotx, roty))
+            if (Server.zombie.Running && Server.zombie.HandlesMovement(this, x, y, z, yaw, pitch))
                 return;
             
             if (OnMove != null) OnMove(this, x, y, z);
             if (PlayerMove != null) PlayerMove(this, x, y, z);
             PlayerMoveEvent.Call(this, x, y, z);
 
-            if (OnRotate != null) OnRotate(this, rot);
-            if (PlayerRotate != null) PlayerRotate(this, rot);
-            PlayerRotateEvent.Call(this, rot);
+            if (OnRotate != null) OnRotate(this, yaw, pitch);
+            if (PlayerRotate != null) PlayerRotate(this, yaw, pitch);
+            PlayerRotateEvent.Call(this, yaw, pitch);
             
-            if (cancelmove) {
-                SendPos(Entities.SelfID, pos[0], pos[1], pos[2], rot[0], rot[1]); return;
-            }
+            if (cancelmove) { SendPos(Entities.SelfID, Pos, Rot); return; }            
+            Pos = new Position((short)x, (short)y, (short)z);
+            SetYawPitch(yaw, pitch);
             
-            pos = new ushort[3] { x, y, z };
-            rot = new byte[2] { rotx, roty };
             if (!Moved() || Loading) return;
             if (DateTime.UtcNow < AFKCooldown) return;
             
@@ -406,7 +405,7 @@ namespace MCGalaxy {
         }
 
         internal void CheckBlock() {
-            AABB bb = ModelBB.OffsetPosition(pos);
+            AABB bb = ModelBB.OffsetPosition(Pos);
             Vec3S32 min = bb.BlockMin, max = bb.BlockMax;
             bool hitWalkthrough = false;
             
@@ -461,7 +460,7 @@ namespace MCGalaxy {
             if (!level.Killer || invincible || hidden) return;
 
             onTrain = false; trainInvincible = false; trainGrab = false;
-            ushort x = (ushort)(pos[0] / 32), y = (ushort)(pos[1] / 32), z = (ushort)(pos[2] / 32);
+            ushort x = (ushort)Pos.BlockX, y = (ushort)Pos.BlockY, z = (ushort)Pos.BlockZ;
             
             string deathMsg = null;
             if (block != Block.custom_block) {

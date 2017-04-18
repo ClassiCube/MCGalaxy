@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands
             }
             
             int dirX = 0, dirZ = 0;
-            DirUtils.EightYaw(p.rot[0], out dirX, out dirZ);
+            DirUtils.EightYaw(p.Rot.RotY, out dirX, out dirZ);
             DoChain(p, x, y, z, dirX, dirZ);       
         }
         

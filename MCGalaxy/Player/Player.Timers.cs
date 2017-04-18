@@ -95,7 +95,7 @@ namespace MCGalaxy {
             }
         }
         
-        bool Moved() { return oldrot[0] != rot[0] || oldrot[1] != rot[1]; }
+        bool Moved() { return lastRot.RotY != Rot.RotY || lastRot.HeadX != Rot.HeadX; }
         
         void DisposeTimers() {
             DisposeTimer(extraTimer, ExtraTimerElapsed);

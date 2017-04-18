@@ -31,10 +31,11 @@ namespace MCGalaxy.Commands {
             Player[] players = PlayerInfo.Online.Items;
             Player.Message(p, "AKA mode is now: " + (p.Game.Aka ? "&aOn" : "&cOff"));
             
-            foreach (Player pl in players) {
-                if (pl.level != p.level || p == pl || !Entities.CanSeeEntity(p, pl)) continue;
-                p.DespawnEntity(pl.id);
-                p.SpawnEntity(pl, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
+            foreach (Player other in players) {
+                if (other.level != p.level || p == other || !Entities.CanSeeEntity(p, other)) continue;
+                
+                Entities.Despawn(p, other.id);
+                Entities.Spawn(p, other);
             }
             TabList.Add(p, p, Entities.SelfID);
         }

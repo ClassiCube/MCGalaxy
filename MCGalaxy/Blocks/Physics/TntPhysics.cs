@@ -85,7 +85,7 @@ namespace MCGalaxy.Blocks.Physics {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player p1 in players) {
                     if (p1.level == lvl && p1.PlayingTntWars && p1 != p
-                        && Math.Abs((int)(p1.pos[0] / 32) - x) + Math.Abs((int)(p1.pos[1] / 32) - y) + Math.Abs((int)(p1.pos[2] / 32) - z) < ((power * 3) + 1)) {
+                        && Math.Abs(p1.Pos.BlockX - x) + Math.Abs(p1.Pos.BlockY - y) + Math.Abs(p1.Pos.BlockZ - z) < ((power * 3) + 1)) {
                         Killed.Add(p1);
                     }
                 }

@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
             foreach (Player pl in players) {
                 if (pl.level == p.level && pl != p && p.Rank > pl.Rank) {
                     pl.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
-                    pl.SendPos(Entities.SelfID, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
+                    pl.SendPos(Entities.SelfID, p.Pos, p.Rot);
                     pl.SendMessage("You were summoned by " + p.ColoredName + "%S.");
                 }
             }
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands {
             if (p.level != who.level) return; // in case they were unable to move to this level
             
             who.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
-            who.SendPos(Entities.SelfID, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
+            who.SendPos(Entities.SelfID, p.Pos, p.Rot);
             who.SendMessage("You were summoned by " + p.ColoredName + "%S.");
         }
         

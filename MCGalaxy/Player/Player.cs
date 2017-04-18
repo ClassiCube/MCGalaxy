@@ -107,7 +107,7 @@ namespace MCGalaxy {
         }
         
         public bool CheckIfInsideBlock() {
-            AABB bb = ModelBB.OffsetPosition(pos);
+            AABB bb = ModelBB.OffsetPosition(Pos);
             return AABB.IntersectsSolidBlocks(bb, level);
         }
 
@@ -184,21 +184,16 @@ namespace MCGalaxy {
         }
         
         
+        [Obsolete("Use Entities.GlobalSpawn()")]
         public static void GlobalSpawn(Player p, bool self, string possession = "") {
-           Entities.GlobalSpawn(p, self, possession);
+            Entities.GlobalSpawn(p, self, possession);
         }
         
+        [Obsolete("Use Entities.GlobalSpawn()")]
         public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z, 
                                        byte rotx, byte roty, bool self, string possession = "") {
-            Entities.GlobalSpawn(p, x, y, z, rotx, roty, self, possession);
+            Entities.GlobalSpawn(p, new Position(x, y, z), new Orientation(rotx, roty), self, possession);
         }
-        
-        internal void SpawnEntity(Player p, byte id, ushort x, ushort y, ushort z, 
-                                       byte rotx, byte roty, string possession = "") {
-            Entities.Spawn(this, p, id, x, y, z, rotx, roty, possession);
-        }
-        
-        internal void DespawnEntity(byte id) { Entities.Despawn(this, id); }
         
         public static void GlobalDespawn(Player p, bool self) { Entities.GlobalDespawn(p, self); }
 

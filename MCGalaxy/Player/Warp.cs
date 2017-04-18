@@ -19,7 +19,7 @@ using System.IO;
 namespace MCGalaxy {
     
     public class Warp {
-        public ushort x, y, z;
+        public int x, y, z;
         public byte rotx, roty;
         public string name;
         public string lvlname;
@@ -51,7 +51,9 @@ namespace MCGalaxy {
                 PlayerActions.ChangeMap(p, lvl);
             
             if (p.level.name.CaselessEq(wp.lvlname)) {
-                p.SendPos(Entities.SelfID, wp.x, wp.y, wp.z, wp.rotx, wp.roty);
+            	p.SendPos(Entities.SelfID, 
+            	          new Position(wp.x, wp.y, wp.z),
+            	          new Orientation(wp.rotx, wp.roty));
                 Player.Message(p, "Sent you to waypoint/warp");
             } else {
                 Player.Message(p, "Unable to send you to the warp as the map it is on is not loaded.");
@@ -60,8 +62,9 @@ namespace MCGalaxy {
 
         public void Create(string warp, Player p) {
             Warp wp = new Warp();
-            wp.x = p.pos[0]; wp.y = p.pos[1]; wp.z = p.pos[2];
-            wp.rotx = p.rot[0]; wp.roty = p.rot[1];
+            wp.x = p.Pos.X; wp.y = p.Pos.Y; wp.z = p.Pos.Z;
+            wp.rotx = p.Rot.RotY; wp.roty = p.Rot.HeadX;
+            
             wp.name = warp;
             wp.lvlname = p.level.name;
             Items.Add(wp);

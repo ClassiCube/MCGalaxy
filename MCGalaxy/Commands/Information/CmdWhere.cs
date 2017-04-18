@@ -35,12 +35,14 @@ namespace MCGalaxy.Commands {
                 Player.Message(p, "You can only use /where on people in games when you are in referee mode."); return;
             }
             
-            int x = (short)pl.pos[0], y = (short)pl.pos[1] - Entities.CharacterHeight, z = (short)pl.pos[2];
+            int x = pl.Pos.X, y = pl.Pos.Y - Entities.CharacterHeight, z = pl.Pos.Z;
             Player.Message(p, "{0} %Sis on {1}", pl.ColoredName, pl.level.ColoredName);
             Player.Message(p, "   X: &b{0:F5} %SY: &b{1:F5} %SZ: &b{2:F5}",
                            x / 32.0, y / 32.0, z / 32.0);
+            
             Player.Message(p, "   Yaw: &b{0} %Sdegrees, Pitch: &b{1} %Sdegrees",
-                           (int)(p.rot[0] * 360 / 256), (int)(p.rot[1] * 360 / 256));
+                           Orientation.PackedToDegrees(p.Rot.RotY),
+                           Orientation.PackedToDegrees(p.Rot.HeadX));
         }      
 
         public override void Help(Player p) {

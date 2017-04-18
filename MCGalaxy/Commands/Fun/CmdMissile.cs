@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands {
             while (true) {
                 Vec3U16 start = MakePos(p);
                 total++;
-                Vec3F32 dir = DirUtils.GetFlatDirVector(p.rot[0], p.rot[1]);
+                Vec3F32 dir = DirUtils.GetFlatDirVector(p.Rot.RotY, p.Rot.HeadX);
 
                 Vec3U16 lookedAt;
                 int i;

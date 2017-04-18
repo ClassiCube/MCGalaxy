@@ -131,9 +131,8 @@ namespace MCGalaxy {
         /// <summary> Called when the player moves. </summary>
         public event OnPlayerMove OnMove;
         
-        /// <summary> Called when a player rotates on the server. 
-        /// (rot[0] is yaw, rot[1] is pitch). </summary>
-        public delegate void OnPlayerRotate(Player p, byte[] rot);
+        /// <summary> Called when a player rotates on the server. </summary>
+        public delegate void OnPlayerRotate(Player p, byte yaw, byte pitch);
         /// <summary> Called when a player rotates. </summary>
         public static event OnPlayerRotate PlayerRotate;
         /// <summary> Called when the player rotates. </summary>

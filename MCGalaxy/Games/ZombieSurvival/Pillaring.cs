@@ -48,8 +48,8 @@ namespace MCGalaxy.Games.ZS {
         
         static bool CheckCoords(Player p, ushort x, ushort y, ushort z) {
             if (p.Game.LastY != y - 1 || p.Game.LastX != x || p.Game.LastZ != z) return false;
-            int minX = (p.pos[0] - 8) / 32, minZ = (p.pos[2] - 8) / 32;
-            int maxX = (p.pos[0] + 8) / 32, maxZ = (p.pos[2] + 8) / 32;
+            int minX = (p.Pos.X - 8) / 32, minZ = (p.Pos.Z - 8) / 32;
+            int maxX = (p.Pos.X + 8) / 32, maxZ = (p.Pos.Z + 8) / 32;
             
             // Check the four possible coords/blocks the player could be pillaring up on
             return (minX == x && minZ == z) || (minX == x && maxZ == z)

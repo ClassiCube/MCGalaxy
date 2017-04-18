@@ -934,11 +934,11 @@ namespace MCGalaxy.Commands {
         
         static void SetSpawn(Player p, ref ushort[] target, string name) {
             target = new ushort[5];
-            target[0] = (ushort)(p.pos[0] / 32);
-            target[1] = (ushort)(p.pos[1] / 32);
-            target[2] = (ushort)(p.pos[2] / 32);
-            target[3] = p.rot[0];
-            target[4] = p.rot[1];
+            target[0] = (ushort)p.Pos.BlockX;
+            target[1] = (ushort)p.Pos.BlockY;
+            target[2] = (ushort)p.Pos.BlockZ;
+            target[3] = p.Rot.RotY;
+            target[4] = p.Rot.HeadX;
             Player.Message(p, "TNT Wars: Set " + name);
         }
         

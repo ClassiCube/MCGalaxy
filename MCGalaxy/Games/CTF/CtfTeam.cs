@@ -74,34 +74,23 @@ namespace MCGalaxy.Games
 
         public void SpawnPlayer(Player p)
         {
-            //p.spawning = true;
-            if (spawns.Count != 0)
-            {
+            Position pos = default(Position);
+            byte yaw = 0, pitch = 0;
+            
+            if (spawns.Count != 0) {
                 Random random = new Random();
                 int rnd = random.Next(0, spawns.Count);
-                ushort x, y, z, rotx;
-
-                x = spawns[rnd].x;
-                y = spawns[rnd].y;
-                z = spawns[rnd].z;
-
-                ushort x1 = (ushort)((0.5 + x) * 32);
-                ushort y1 = (ushort)((1 + y) * 32);
-                ushort z1 = (ushort)((0.5 + z) * 32);
-                rotx = spawns[rnd].rotx;
-                p.SpawnEntity(p, Entities.SelfID, x1, y1, z1, (byte)rotx, 0);
+                
+                pos.X = 16 + spawns[rnd].x * 32;
+                pos.Y = 32 + spawns[rnd].y * 32;
+                pos.Z = 16 + spawns[rnd].z * 32;             
+                yaw = (byte)spawns[rnd].rotx;
                 //p.health = 100;
+            } else {
+                pos = mapOn.SpawnPos;
+                yaw = mapOn.rotx; pitch = mapOn.roty;
             }
-            else
-            {
-                ushort x = (ushort)((0.5 + mapOn.spawnx) * 32);
-                ushort y = (ushort)((1 + mapOn.spawny) * 32);
-                ushort z = (ushort)((0.5 + mapOn.spawnz) * 32);
-                ushort rotx = mapOn.rotx;
-                ushort roty = mapOn.roty;
-                p.SpawnEntity(p, Entities.SelfID, x, y, z, (byte)rotx, (byte)roty);
-            }
-            //p.spawning = false;
+            Entities.Spawn(p, p, pos, new Orientation(yaw, pitch));
         }
 
         public void AddSpawn(ushort x, ushort y, ushort z, ushort rotx, ushort roty)
@@ -150,9 +139,9 @@ namespace MCGalaxy.Games
             else
             {
                 //DRAW ON PLAYER HEAD
-                x = (ushort)(holdingFlag.pos[0] / 32);
-                y = (ushort)(holdingFlag.pos[1] / 32 + 3);
-                z = (ushort)(holdingFlag.pos[2] / 32);
+                x = (ushort)(holdingFlag.Pos.BlockX);
+                y = (ushort)(holdingFlag.Pos.BlockY + 3);
+                z = (ushort)(holdingFlag.Pos.BlockZ);
 
                 if (tempFlagblock.x == x && tempFlagblock.y == y && tempFlagblock.z == z) { return; }
 
@@ -167,8 +156,6 @@ namespace MCGalaxy.Games
                 tempFlagblock.y = y;
                 tempFlagblock.z = z;
             }
-            
-
         }
 
         public static byte GetColorBlock(char color)

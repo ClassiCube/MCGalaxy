@@ -33,7 +33,7 @@ namespace MCGalaxy.Blocks.Physics {
                     case 1:
                     case 2:
                     case 3:
-                        index = lvl.PosToInt((ushort)(x + Math.Sign((closest.pos[0] / 32) - x)), y, z);
+                        index = lvl.PosToInt((ushort)(x + Math.Sign(closest.Pos.BlockX - x)), y, z);
                         if (index != C.b && MoveSnake(lvl, ref C, index)) return;
                         
                         dirsVisited++;
@@ -42,7 +42,7 @@ namespace MCGalaxy.Blocks.Physics {
                     case 4:
                     case 5:
                     case 6:
-                        index = lvl.PosToInt(x, (ushort) (y + Math.Sign((closest.pos[1] / 32) - y)), z);
+                        index = lvl.PosToInt(x, (ushort) (y + Math.Sign(closest.Pos.BlockY - y)), z);
                         if (index != C.b && MoveSnakeY(lvl, ref C, index)) return;
                         
                         dirsVisited++;
@@ -51,7 +51,7 @@ namespace MCGalaxy.Blocks.Physics {
                     case 7:
                     case 8:
                     case 9:
-                        index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign((closest.pos[2] / 32) - z)));
+                        index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign(closest.Pos.BlockZ - z)));
                         if (index != C.b && MoveSnake(lvl, ref C, index)) return;
                         
                         dirsVisited++;

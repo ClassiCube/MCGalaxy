@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Building {
             }
 
             int dx = 0, dz = 0;
-            DirUtils.FourYaw(p.rot[0], out dx, out dz);
+            DirUtils.FourYaw(p.Rot.RotY, out dx, out dz);
             Level lvl = p.level;
 
             if (dx != 0) {

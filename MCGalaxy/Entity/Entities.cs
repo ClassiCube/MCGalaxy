@@ -28,12 +28,11 @@ namespace MCGalaxy {
         
         /// <summary> Spawns this player to all other players that can see the player in the current world. </summary>
         public static void GlobalSpawn(Player p, bool self, string possession = "") {
-            GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], self, possession);
+            GlobalSpawn(p, p.Pos, p.Rot, self, possession);
         }
         
         /// <summary> Spawns this player to all other players that can see the player in the current world. </summary>
-        public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z,
-                                       byte rotx, byte roty, bool self, string possession = "") {
+        public static void GlobalSpawn(Player p, Position pos, Orientation rot, bool self, string possession = "") {
             Player[] players = PlayerInfo.Online.Items;
             p.Game.lastSpawnColor = p.Game.Infected ? ZombieGame.InfectCol : p.color;  
             TabList.Update(p, self);
@@ -42,11 +41,11 @@ namespace MCGalaxy {
                 if ((other.Loading && p != other) || p.level != other.level) continue;
                 
                 if (p != other && Entities.CanSeeEntity(other, p)) {
-                    Spawn(other, p, p.id, x, y, z, rotx, roty, possession);
+                    Spawn(other, p, pos, rot, possession);
                 } else if (p == other && self) {
-                    other.pos = new ushort[3] { x, y, z }; other.rot = new byte[2] { rotx, roty };
-                    other.oldpos = other.pos; other.oldrot = other.rot;
-                    Spawn(other, p, Entities.SelfID, x, y, z, rotx, roty, possession);
+                    other.Pos = pos; other.SetYawPitch(rot.RotY, rot.HeadX);
+                    other.lastPos = other.Pos; other.lastRot = other.Rot;
+                    Spawn(other, p, pos, rot, possession);
                 }
             }
         }
@@ -70,20 +69,20 @@ namespace MCGalaxy {
             }
         }
         
-        internal static void Spawn(Player dst, Player p) {
-            Spawn(dst, p, p.id, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
-        }
+        internal static void Spawn(Player dst, Player p) { Spawn(dst, p, p.Pos, p.Rot); }
         
-        internal static void Spawn(Player dst, Player p, byte id, ushort x, ushort y, ushort z,
-                                   byte rotx, byte roty, string possession = "") {
+        internal static void Spawn(Player dst, Player p, Position pos, 
+                                   Orientation rot, string possession = "") {
+            byte id = p == dst ? Entities.SelfID : p.id;
+            
             if (!Server.TablistGlobal)
                 TabList.Add(dst, p, id);
             if (!Server.zombie.Running || !p.Game.Infected) {
                 string col = GetSupportedCol(dst, p.color);
                 if (dst.hasExtList) {
-                    dst.SendExtAddEntity2(id, p.skinName, col + p.truename + possession, p.model, x, y, z, rotx, roty);
+                    dst.SendExtAddEntity2(id, p.skinName, col + p.truename + possession, p.model, pos, rot);
                 } else {
-                    dst.SendSpawn(id, col + p.truename + possession, p.model, x, y, z, rotx, roty);
+                    dst.SendSpawn(id, col + p.truename + possession, p.model, pos, rot);
                 }
                 return;
             }
@@ -95,25 +94,23 @@ namespace MCGalaxy {
             
             string model = id == Entities.SelfID ? p.model : ZombieGameProps.ZombieModel;
             if (dst.hasExtList) {
-                dst.SendExtAddEntity2(id, skinName, Colors.red + name + possession, model, x, y, z, rotx, roty);
+                dst.SendExtAddEntity2(id, skinName, Colors.red + name + possession, model, pos, rot);
             } else {
-                dst.SendSpawn(id, Colors.red + name + possession, model, x, y, z, rotx, roty);
+                dst.SendSpawn(id, Colors.red + name + possession, model, pos, rot);
             }
         }
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
-        internal static void SpawnEntities(Player p, bool bots = true) { 
-            SpawnEntities(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], bots); 
-        }
+        internal static void SpawnEntities(Player p, bool bots = true) { SpawnEntities(p, p.Pos, p.Rot, bots); }
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
-        internal static void SpawnEntities(Player p, ushort x, ushort y, ushort z, byte rotX, byte rotY, bool bots = true) {
+        internal static void SpawnEntities(Player p, Position pos, Orientation rot, bool bots = true) {
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (pl.level != p.level || !CanSeeEntity(p, pl) || p == pl) continue;
-                Spawn(p, pl, pl.id, pl.pos[0], pl.pos[1], pl.pos[2], pl.rot[0], pl.rot[1], "");
+            foreach (Player other in players) {
+                if (other.level != p.level || !CanSeeEntity(p, other) || p == other) continue;
+                Spawn(p, other);
             }           
-            GlobalSpawn(p, x, y, z, rotX, rotY, true);
+            GlobalSpawn(p, pos, rot, true);
 
             if (!bots) return;            
             PlayerBot[] botsList = PlayerBot.Bots.Items;
@@ -124,8 +121,8 @@ namespace MCGalaxy {
         /// <summary> Despawns this player to all other players, and despawns all others players to this player. </summary>
         internal static void DespawnEntities(Player p, bool bots = true) {
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (p.level == pl.level && p != pl) Despawn(p, pl.id);
+            foreach (Player other in players) {
+                if (p.level == other.level && p != other) Despawn(p, other.id);
             }
             GlobalDespawn(p, true, true);
             
@@ -142,11 +139,9 @@ namespace MCGalaxy {
             string skin = Chat.Format(b.SkinName, dst, true, true, false);
 
             if (dst.hasExtList) {
-                dst.SendExtAddEntity2(b.id, skin, name, b.model, 
-            	                      b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+                dst.SendExtAddEntity2(b.id, skin, name, b.model, b.Pos, b.Rot);
             } else {
-                dst.SendSpawn(b.id, name, b.model, 
-            	              b.pos[0], b.pos[1], b.pos[2], b.rot[0], b.rot[1]);
+                dst.SendSpawn(b.id, name, b.model, b.Pos, b.Rot);
             }
             if (Server.TablistBots)
                 TabList.Add(dst, b);
@@ -213,52 +208,53 @@ namespace MCGalaxy {
             byte[] buffer = new byte[10];
             buffer[0] = Opcode.EntityTeleport;
             buffer[1] = bot.id;
-            NetUtils.WriteU16(bot.pos[0], buffer, 2);
-            NetUtils.WriteU16(bot.pos[1], buffer, 4);
-            NetUtils.WriteU16(bot.pos[2], buffer, 6);
+            NetUtils.WriteU16((ushort)bot.Pos.X, buffer, 2);
+            NetUtils.WriteU16((ushort)bot.Pos.Y, buffer, 4);
+            NetUtils.WriteU16((ushort)bot.Pos.Z, buffer, 6);
             buffer[8] = bot.Rot.RotY;
             buffer[9] = bot.Rot.HeadX;
             return buffer;
         }
         
-        public unsafe static void GetPositionPacket(ref byte* ptr, byte id, ushort[] pos, ushort[] oldpos,
-                                                    byte[] rot, byte[] oldrot, byte realPitch) {
-            bool posChanged = false, oriChanged = false, absPosUpdate = false;
-            if (oldpos[0] != pos[0] || oldpos[1] != pos[1] || oldpos[2] != pos[2])
-                posChanged = true;
-            if (oldrot[0] != rot[0] || oldrot[1] != rot[1])
-                oriChanged = true;
-            if (Math.Abs(pos[0] - oldpos[0]) > 32 || Math.Abs(pos[1] - oldpos[1]) > 32 || Math.Abs(pos[2] - oldpos[2]) > 32)
-                absPosUpdate = true;
+        public unsafe static void GetPositionPacket(ref byte* ptr, byte id, Position pos, 
+                                                    Position oldPos, Orientation rot, Orientation oldRot) {
+            Position delta = GetDelta(pos, oldPos);            
+            bool posChanged = delta.X != 0 || delta.Y != 0 || delta.Z != 0;
+            bool oriChanged = rot.RotY != oldRot.RotY || rot.HeadX != oldRot.HeadX;
+            bool absPosUpdate = Math.Abs(delta.X) > 32 || Math.Abs(delta.Y) > 32 || Math.Abs(delta.Z) > 32;
 
             if (absPosUpdate) {
                 *ptr = Opcode.EntityTeleport; ptr++;
                 *ptr = id; ptr++;
-                *ptr = (byte)(pos[0] >> 8); ptr++; *ptr = (byte)pos[0]; ptr++;
-                *ptr = (byte)(pos[1] >> 8); ptr++; *ptr = (byte)pos[1]; ptr++;      
-                *ptr = (byte)(pos[2] >> 8); ptr++; *ptr = (byte)pos[2]; ptr++;
-                *ptr = rot[0]; ptr++;
-                *ptr = realPitch; ptr++;
+                *ptr = (byte)(pos.X >> 8); ptr++; *ptr = (byte)pos.X; ptr++;
+                *ptr = (byte)(pos.Y >> 8); ptr++; *ptr = (byte)pos.Y; ptr++;      
+                *ptr = (byte)(pos.Z >> 8); ptr++; *ptr = (byte)pos.Z; ptr++;
             } else if (posChanged && oriChanged) {
                 *ptr = Opcode.RelPosAndOrientationUpdate; ptr++;
                 *ptr = id; ptr++;
-                *ptr = (byte)(pos[0] - oldpos[0]); ptr++;
-                *ptr = (byte)(pos[1] - oldpos[1]); ptr++;
-                *ptr = (byte)(pos[2] - oldpos[2]); ptr++;
-                *ptr = rot[0]; ptr++; 
-                *ptr = realPitch; ptr++;
+                *ptr = (byte)(delta.X); ptr++;
+                *ptr = (byte)(delta.Y); ptr++;
+                *ptr = (byte)(delta.Z); ptr++;
             } else if (posChanged) {
                 *ptr = Opcode.RelPosUpdate; ptr++; 
                 *ptr = id; ptr++;
-                *ptr = (byte)(pos[0] - oldpos[0]); ptr++;
-                *ptr = (byte)(pos[1] - oldpos[1]); ptr++;
-                *ptr = (byte)(pos[2] - oldpos[2]); ptr++;
+                *ptr = (byte)(delta.X); ptr++;
+                *ptr = (byte)(delta.Y); ptr++;
+                *ptr = (byte)(delta.Z); ptr++;
             } else if (oriChanged) {
                 *ptr = Opcode.OrientationUpdate; ptr++; 
                 *ptr = id; ptr++;
-                *ptr = rot[0]; ptr++;
-                *ptr = realPitch; ptr++;
             }
+            
+            if (absPosUpdate || oriChanged) {
+                *ptr = rot.RotY; ptr++;
+                *ptr = rot.HeadX; ptr++;
+            }
+        }
+        
+        static Position GetDelta(Position pos, Position oldPos) {
+            return new Position(pos.X - oldPos.X, pos.Y - oldPos.Y, pos.Z - oldPos.Z);
+        	// TODO: proper delta calculation for 16 bit clients
         }
         
         public static void GlobalUpdate() {
@@ -280,9 +276,10 @@ namespace MCGalaxy {
              Player[] players = PlayerInfo.Online.Items;
              byte* src = stackalloc byte[10 * 256]; // 10 = size of absolute update
              byte* ptr = src;
+             
              foreach (Player pl in players) {
                  if (p == pl || p.level != pl.level || !CanSeeEntity(p, pl)) continue;
-                 byte pitch = p.hasChangeModel ? MakePitch(pl) : MakeClassicPitch(pl);                
+                 byte pitch = p.hasChangeModel ? MakePitch(pl) : MakeClassicPitch(pl);
                  Entities.GetPositionPacket(ref ptr, pl.id, pl.tempPos, pl.oldpos, pl.rot, pl.oldrot, pitch);
              }
              

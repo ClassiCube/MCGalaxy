@@ -26,11 +26,8 @@ namespace MCGalaxy.Bots {
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             Coords coords = (Coords)data.Metadata;
-            bot.pos[0] = coords.X; bot.pos[1] = coords.Y; bot.pos[2] = coords.Z;
-            
-            Orientation rot = bot.Rot;
-            rot.RotY = coords.RotX; rot.HeadX = coords.RotY;
-            bot.Rot = rot;
+            bot.Pos = new Position(coords.X, coords.Y, coords.Z);
+            bot.SetYawPitch(coords.RotX, coords.RotY);
             
             bot.NextInstruction();
             return true;
@@ -38,9 +35,9 @@ namespace MCGalaxy.Bots {
         
         public override InstructionData Parse(string[] args) {
             Coords coords;
-            coords.X = ushort.Parse(args[1]);
-            coords.Y = ushort.Parse(args[2]);
-            coords.Z = ushort.Parse(args[3]);
+            coords.X = int.Parse(args[1]);
+            coords.Y = int.Parse(args[2]);
+            coords.Z = int.Parse(args[3]);
             coords.RotX = byte.Parse(args[4]);
             coords.RotY = byte.Parse(args[5]);
             
@@ -50,16 +47,16 @@ namespace MCGalaxy.Bots {
         }
         
         public override void Output(Player p, string[] args, StreamWriter w) {
-            w.WriteLine(Name + " " + p.pos[0] + " " + p.pos[1] + " " + p.pos[2] + " " + p.rot[0] + " " + p.rot[1]);
+            w.WriteLine(Name + " " + p.Pos.X + " " + p.Pos.Y + " " + p.Pos.Z + " " + p.Rot.RotY + " " + p.Rot.HeadX);
         }
         
         protected struct Coords {
-            public ushort X, Y, Z;
+            public int X, Y, Z;
             public byte RotX, RotY;
         }
         
         public override string[] Help { get { return help; } }
-        static string[] help = new string[] { 
+        static string[] help = new string[] {
             "%T/botai add [name] teleport",
             "%HCauses the bot to instantly teleport to a position.",
             "%H  Note: The position saved to the AI is your current position.",
@@ -72,25 +69,20 @@ namespace MCGalaxy.Bots {
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             Coords target = (Coords)data.Metadata;
-            bot.foundPos[0] = target.X; bot.foundPos[1] = target.Y; bot.foundPos[2] = target.Z;
+            bot.TargetPos = new Position(target.X, target.Y, target.Z);
             bot.movement = true;
 
-            if ((ushort)(bot.pos[0] / 32) == (ushort)(target.X / 32)) {
-                if ((ushort)(bot.pos[2] / 32) == (ushort)(target.Z / 32)) {
-                    Orientation rot = bot.Rot;
-                    rot.RotY = target.RotX; rot.HeadX = target.RotY;
-                    bot.Rot = rot;
-            
-                    bot.movement = false;
-                    bot.NextInstruction(); return false;
-                }
+            if (bot.Pos.BlockX == bot.TargetPos.BlockX && bot.Pos.BlockZ == bot.TargetPos.BlockZ) {
+                bot.SetYawPitch(target.RotX, target.RotY);
+                bot.movement = false;
+                bot.NextInstruction(); return false;
             }
-            bot.AdvanceRotation();
-            return true;
+            
+            bot.AdvanceRotation(); return true;
         }
         
         public override string[] Help { get { return help; } }
-        static string[] help = new string[] { 
+        static string[] help = new string[] {
             "%T/botai add [name] walk",
             "%HCauses the bot to walk towards to a position.",
             "%H  Note: The position saved to the AI is your current position.",
@@ -107,7 +99,7 @@ namespace MCGalaxy.Bots {
         }
         
         public override string[] Help { get { return help; } }
-        static string[] help = new string[] { 
+        static string[] help = new string[] {
             "%T/botai add [name] jump",
             "%HCauses the bot to perform a jump.",
             "%H  Note bots can also do other instructions while jumping",
@@ -137,7 +129,7 @@ namespace MCGalaxy.Bots {
         }
         
         public override string[] Help { get { return help; } }
-        static string[] help = new string[] { 
+        static string[] help = new string[] {
             "%T/botai add [name] speed [percentage]",
             "%HSets how fast the bot moves, relative to its normal speed.",
             "%H  100 means it moves at normal speed",

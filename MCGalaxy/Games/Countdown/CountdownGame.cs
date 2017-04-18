@@ -54,9 +54,9 @@ namespace MCGalaxy.Games {
             mapon.ChatLevel("Countdown is about to start!!");
             mapon.permissionbuild = LevelPermission.Nobody;
             int midX = mapon.Width / 2, midY = mapon.Height / 2, midZ = mapon.Length / 2;
-            ushort x1 = (ushort)(midX * 32 + 16);
-            ushort y1 = (ushort)((mapon.Height - 2) * 32);
-            ushort z1 = (ushort)(midZ * 32 + 16);
+            int xSpawn = (midX * 32 + 16);
+            int ySpawn = ((mapon.Height - 2) * 32);
+            int zSpawn = (midZ * 32 + 16);
             
             squaresLeft.Clear();
             for(int zz = 6; zz < mapon.Length - 6; zz += 3)
@@ -69,7 +69,7 @@ namespace MCGalaxy.Games {
                 mapon.ChatLevel("Countdown starting with difficulty " + speedtype + " and mode normal in:");
             
             Thread.Sleep(2000);
-            SpawnPlayers(x1, y1, z1);
+            SpawnPlayers(xSpawn, ySpawn, zSpawn);
             mapon.ChatLevel("-----&b5%S-----");
             
             Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, Block.air, mapon);
@@ -104,13 +104,14 @@ namespace MCGalaxy.Games {
             }
         }
         
-        void SpawnPlayers(ushort x, ushort y, ushort z) {
+        void SpawnPlayers(int x, int y, int z) {
+            Position pos = new Position(x, y, z);
             foreach (Player pl in players) {
                 if (pl.level != mapon) {
                     pl.SendMessage("Sending you to the correct map.");
                     PlayerActions.ChangeMap(pl, mapon.name);
                 }
-                pl.SpawnEntity(pl, Entities.SelfID, x, y, z, 0, 0);
+                Entities.Spawn(pl, pl, pos, pl.Rot);
             }
         }
         

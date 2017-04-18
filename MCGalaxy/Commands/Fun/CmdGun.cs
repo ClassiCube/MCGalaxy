@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands {
         
         void DoShoot(Player p, byte type, byte extType) {
             CatchPos bp = (CatchPos)p.blockchangeObject;
-            Vec3F32 dir = DirUtils.GetFlatDirVector(p.rot[0], p.rot[1]);
+            Vec3F32 dir = DirUtils.GetFlatDirVector(p.Rot.RotY, p.Rot.HeadX);
 
             double bigDiag = Math.Sqrt(Math.Sqrt(p.level.Width * p.level.Width + p.level.Length * p.level.Length) 
                                        + p.level.Height * p.level.Height + p.level.Width * p.level.Width);

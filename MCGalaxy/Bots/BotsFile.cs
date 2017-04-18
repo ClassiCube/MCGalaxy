@@ -58,7 +58,10 @@ namespace MCGalaxy.Bots {
             lock (locker) {
                 foreach (BotProperties props in SavedBots) {
                     if (lvl.name != props.Level) continue;
-                    PlayerBot bot = new PlayerBot(props.Name, lvl, props.X, props.Y, props.Z, props.RotX, props.RotY);
+                    PlayerBot bot = new PlayerBot(props.Name, lvl);
+                    bot.Pos = new Position(props.X, props.Y, props.Z);
+                    bot.SetYawPitch(props.RotX, props.RotY);
+                    
                     bot.SkinName = props.Skin; bot.model = props.Model; bot.color = props.Color;
                     bot.AIName = props.AI; bot.hunt = props.Hunt; bot.kill = props.Kill;
                     bot.DisplayName = props.DisplayName;
@@ -188,9 +191,9 @@ namespace MCGalaxy.Bots {
         public bool Hunt { get; set; }
         public int CurInstruction { get; set; }
         
-        public ushort X { get; set; }
-        public ushort Y { get; set; }
-        public ushort Z { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
         public byte RotX { get; set; }
         public byte RotY { get; set; }
         
@@ -202,7 +205,7 @@ namespace MCGalaxy.Bots {
             DisplayName = bot.DisplayName;
             CurInstruction = bot.cur;
             
-            X = bot.pos[0]; Y = bot.pos[1]; Z = bot.pos[2];
+            X = bot.Pos.X; Y = bot.Pos.Y; Z = bot.Pos.Z;
             RotX = bot.Rot.RotY; RotY = bot.Rot.HeadX;
         }
         

@@ -30,7 +30,7 @@ namespace MCGalaxy.Blocks.Extended {
                                                              "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
                 int last = Portals.Rows.Count - 1;
                 if (last == -1) { Portals.Dispose(); return false; }
-                byte rotX = p.rot[0], rotY = p.rot[1];
+                byte yaw = p.Rot.RotY, pitch = p.Rot.HeadX;
                 
                 DataRow row = Portals.Rows[last];
                 string map = row["ExitMap"].ToString();
@@ -46,7 +46,7 @@ namespace MCGalaxy.Blocks.Extended {
                 x = ushort.Parse(row["ExitX"].ToString());
                 y = ushort.Parse(row["ExitY"].ToString());
                 z = ushort.Parse(row["ExitZ"].ToString());
-                PlayerActions.MoveCoords(p, x, y, z, rotX, rotY);
+                PlayerActions.MoveCoords(p, x, y, z, yaw, pitch);
                 Portals.Dispose();
                 return true;
             } catch {

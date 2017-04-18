@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands {
                 Thread.Sleep(1000);
             }
 
-            sender.SendPos(Entities.SelfID, p.pos[0], p.pos[1], p.pos[2], p.rot[0], 0);
+            sender.SendPos(Entities.SelfID, p.Pos, p.Rot);
         }
         
         void DoDeny(Player p) {

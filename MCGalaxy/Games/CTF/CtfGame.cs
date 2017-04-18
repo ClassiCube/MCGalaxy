@@ -65,22 +65,19 @@ namespace MCGalaxy.Games {
         public byte block;
         
         public void SendToSpawn(Level mainlevel, CTFGame game, Player p1) {
+            Position pos = new Position(spawnx, spawny, spawny);
             if (spawnx == 0 && spawny == 0 && spawnz == 0) {
                 Random rand = new Random();
-                ushort xx = (ushort)(rand.Next(0, mainlevel.Width));
-                ushort yy = (ushort)(rand.Next(0, mainlevel.Height));
-                ushort zz = (ushort)(rand.Next(0, mainlevel.Length));
-                
-                while (mainlevel.GetTile(xx, yy, zz) != Block.air && game.OnSide((ushort)(zz * 32), this)) {
+                ushort xx, yy, zz;
+                do {
                     xx = (ushort)(rand.Next(0, mainlevel.Width));
                     yy = (ushort)(rand.Next(0, mainlevel.Height));
                     zz = (ushort)(rand.Next(0, mainlevel.Length));
-                }
-                p1.SendPos(Entities.SelfID, (ushort)(xx * 32), (ushort)(yy * 32), (ushort)(zz * 32), p1.rot[0], p1.rot[1]);
-            } else {
-                p1.SendPos(Entities.SelfID, spawnx, spawny, spawnz, p1.rot[0], p1.rot[1]);
+                } while (mainlevel.GetTile(xx, yy, zz) != Block.air && game.OnSide(zz, this));
+                
+                pos.X = xx * 32; pos.Y = yy * 32; pos.Z = zz * 32;
             }
-
+            p1.SendPos(Entities.SelfID, pos, p1.Rot);
         }
         
         public Base(ushort x, ushort y, ushort z, Teams team) {
@@ -132,7 +129,7 @@ namespace MCGalaxy.Games {
         }
         
         /// <summary> Create a new CTF object </summary>
-        public CTFGame() {           
+        public CTFGame() {
             redbase = new Base();
             bluebase = new Base();
             
@@ -159,14 +156,13 @@ namespace MCGalaxy.Games {
             Player.PlayerBlockChange += HandlePlayerBlockChange;
             Player.PlayerDisconnect += HandlePlayerDisconnect;
             Level.LevelUnload += HandleLevelUnload;
-        }       
+        }
         
         void CheckTagging(object sender, System.Timers.ElapsedEventArgs e) {
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
                 if (p.level != mainlevel) continue;
                 
-                ushort x = p.pos[0], y = p.pos[1], z = p.pos[2];
                 Base b = null;
                 if (redteam.members.Contains(p)) {
                     b = redbase;
@@ -177,7 +173,7 @@ namespace MCGalaxy.Games {
                 }
                 
                 if (GetPlayer(p).tagging) continue;
-                if (!OnSide(p.pos[2], b)) continue;
+                if (!OnSide(p.Pos.BlockZ, b)) continue;
                 
                 List<Player> opponents = redteam.members;
                 if (redteam.members.Contains(p))
@@ -241,19 +237,19 @@ namespace MCGalaxy.Games {
                 Command.all.Find("unload").Use(null, "ctf");
                 Thread.Sleep(1000);
             }
-        	
-        	if (started) {
-        		Player.Message(p, "CTF game already running."); return false;
-        	}          
-        	if (!LoadConfig()) {
-        		Player.Message(p, "No CTF maps were found."); return false;
-        	}         
+            
+            if (started) {
+                Player.Message(p, "CTF game already running."); return false;
+            }
+            if (!LoadConfig()) {
+                Player.Message(p, "No CTF maps were found."); return false;
+            }
             
             blueteam = new Teams("blue");
             redteam = new Teams("red");
             LoadMap(maps[new Random().Next(maps.Count)]);
             
-            if (needSetup) AutoSetup();            
+            if (needSetup) AutoSetup();
             redbase.block = Block.red;
             bluebase.block = Block.blue;
             Server.s.Log("[Auto_CTF] Running...");
@@ -370,19 +366,19 @@ namespace MCGalaxy.Games {
                 Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
             }
             
-            if (blueteam.members.Contains(p) && x == redbase.x && y == redbase.y && z == redbase.z 
+            if (blueteam.members.Contains(p) && x == redbase.x && y == redbase.y && z == redbase.z
                 && mainlevel.GetTile(redbase.x, redbase.y, redbase.z) != Block.air) {
                 Chat.MessageLevel(mainlevel, blueteam.color + p.name + " took the " + redteam.color + " red team's FLAG!");
                 GetPlayer(p).hasflag = true;
             }
             
-            if (redteam.members.Contains(p) && x == bluebase.x && y == bluebase.y && z == bluebase.z 
+            if (redteam.members.Contains(p) && x == bluebase.x && y == bluebase.y && z == bluebase.z
                 && mainlevel.GetTile(bluebase.x, bluebase.y, bluebase.z) != Block.air) {
                 Chat.MessageLevel(mainlevel, redteam.color + p.name + " took the " + blueteam.color + " blue team's FLAG");
                 GetPlayer(p).hasflag = true;
             }
             
-            if (blueteam.members.Contains(p) && x == bluebase.x && y == bluebase.y && z == bluebase.z 
+            if (blueteam.members.Contains(p) && x == bluebase.x && y == bluebase.y && z == bluebase.z
                 && mainlevel.GetTile(bluebase.x, bluebase.y, bluebase.z) != Block.air) {
                 if (GetPlayer(p).hasflag) {
                     Chat.MessageLevel(mainlevel, blueteam.color + p.name + " RETURNED THE FLAG!");
@@ -401,7 +397,7 @@ namespace MCGalaxy.Games {
                 }
             }
             
-            if (redteam.members.Contains(p) && x == redbase.x && y == redbase.y && z == redbase.z 
+            if (redteam.members.Contains(p) && x == redbase.x && y == redbase.y && z == redbase.z
                 && mainlevel.GetTile(redbase.x, redbase.y, redbase.z) != Block.air) {
                 if (GetPlayer(p).hasflag) {
                     Chat.MessageLevel(mainlevel, redteam.color + p.name + " RETURNED THE FLAG!");
@@ -552,9 +548,9 @@ namespace MCGalaxy.Games {
             GetPlayer(p).hasflag = false;
         }
         
-        internal bool OnSide(ushort z, Base b) {
-            if (b.z < zline && z / 32 < zline) return true;
-            if (b.z > zline && z / 32 > zline) return true;
+        internal bool OnSide(int z, Base b) {
+            if (b.z < zline && z < zline) return true;
+            if (b.z > zline && z > zline) return true;
             return false;
         }
     }

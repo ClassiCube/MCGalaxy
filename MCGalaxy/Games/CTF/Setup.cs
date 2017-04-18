@@ -127,22 +127,22 @@ namespace MCGalaxy.Games {
                 switch (cache[p].s)
                 {
                     case Step.GetCenter:
-                        cache[p].middle = p.pos[2] / 32;
+                        cache[p].middle = p.Pos.BlockZ;
                         Player.Message(p, "I got " + cache[p].middle);
                         Player.Message(p, "Ok, now I need to know where the blue flag is. Can you point me to it?");
                         Player.Message(p, "Simply hit the block..");
                         cache[p].s = Step.GetBlueFlag;
                         break;
                     case Step.BlueSetSpawn:
-                        cache[p].bluex = p.pos[0];
-                        cache[p].bluey = p.pos[1];
-                        cache[p].bluez = p.pos[2];
+                        cache[p].bluex = p.Pos.X;
+                        cache[p].bluey = p.Pos.Y;
+                        cache[p].bluez = p.Pos.Z;
                         Player.Message(p, "Ok, now can you stand in the red spawn and say \"conintue\"");
                         cache[p].s = Step.RedSetSpawn;
                         break;
                     case Step.RedSetSpawn:
                         Player.Message(p, "ALMOST DONE!");
-                        Finish(p, cache[p].bluex, cache[p].bluey, cache[p].bluez, p.pos[0], p.pos[1], p.pos[2]);
+                        Finish(p, cache[p].bluex, cache[p].bluey, cache[p].bluez, p.Pos.X, p.Pos.Y, p.Pos.Z);
                         cache.Remove(p);
                         Player.Message(p, "Setup Complete!");
                         break;

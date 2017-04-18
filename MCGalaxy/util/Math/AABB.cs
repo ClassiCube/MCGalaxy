@@ -50,8 +50,8 @@ namespace MCGalaxy {
                             pos.X + size.X / 2, pos.Y + size.Y, pos.Z + size.Z / 2);
         }
         
-        public AABB OffsetPosition(ushort[] pos) {
-            return Offset(pos[0], pos[1] - Entities.CharacterHeight, pos[2]);
+        public AABB OffsetPosition(Position pos) {
+            return Offset(pos.X, pos.Y - Entities.CharacterHeight, pos.Z);
         }
         
         public AABB Offset(int x, int y, int z) {

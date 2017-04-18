@@ -231,7 +231,7 @@ namespace MCGalaxy {
         public bool Loading = true; //True if player is loading a map.
         internal int UsingGoto = 0, GeneratingMap = 0, LoadingMuseum = 0;
         public Vec3U16 lastClick = Vec3U16.Zero;
-        public ushort[] beforeTeleportPos = new ushort[3];
+        public Position beforeTeleportPos = default(Position);
         public string beforeTeleportMap = "";
         public ushort[] pos = new ushort[3];        
         public byte[] rot = new byte[2];

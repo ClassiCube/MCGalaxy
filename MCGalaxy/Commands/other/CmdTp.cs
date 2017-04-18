@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands {
             }
             
             p.beforeTeleportMap = p.level.name;
-            p.beforeTeleportPos = p.pos;
+            p.beforeTeleportPos = p.Pos;
             Level lvl = bot != null ? bot.level : target.level;
             
             if (bot != null && lvl == null) {
@@ -57,19 +57,19 @@ namespace MCGalaxy.Commands {
                 target.BlockUntilLoad(10);
             }
             
-            ushort[] pos = bot != null ? bot.pos : target.pos;
-            byte[] rot = bot != null ? bot.rot : target.rot;
+            Position pos = bot != null ? bot.Pos : target.Pos;
+            Orientation rot = bot != null ? bot.Rot : target.Rot;
             p.BlockUntilLoad(10);  //Wait for player to spawn in new map
-            p.SendPos(Entities.SelfID, pos[0], pos[1], pos[2], rot[0], rot[1]);
+            p.SendPos(Entities.SelfID, pos, rot);
         }
         
         static void TeleportCoords(Player p, string[] args) {
             int x, y, z;
-            if (!ParseCoord(p, args[0], p.pos[0],                            "X", out x)) return;
-            if (!ParseCoord(p, args[1], p.pos[1] - Entities.CharacterHeight, "Y", out y)) return;
-            if (!ParseCoord(p, args[2], p.pos[2],                            "Z", out z)) return;
+            if (!ParseCoord(p, args[0], p.Pos.X,                            "X", out x)) return;
+            if (!ParseCoord(p, args[1], p.Pos.Y - Entities.CharacterHeight, "Y", out y)) return;
+            if (!ParseCoord(p, args[2], p.Pos.Z,                            "Z", out z)) return;
 
-            PlayerActions.MoveCoords(p, x, y, z, p.rot[0], p.rot[1]);
+            PlayerActions.MoveCoords(p, x, y, z, p.Rot.RotY, p.Rot.HeadX);
         }
         
         static bool ParseCoord(Player p, string arg, int cur, string axis, out int value) {

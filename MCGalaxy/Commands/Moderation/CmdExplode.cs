@@ -38,9 +38,9 @@ namespace MCGalaxy.Commands {
                 Player who = PlayerInfo.FindMatches(p, args[0]);
                 if (who == null) return;
                 
-                x = (ushort)(who.pos[0] / 32);
-                y = (ushort)(who.pos[1] / 32);
-                z = (ushort)(who.pos[2] / 32);
+                x = (ushort)who.Pos.BlockX;
+                y = (ushort)who.Pos.BlockY;
+                z = (ushort)who.Pos.BlockZ;
                 if (DoExplode(p, who.level, x, y, z))
                     Player.Message(p, who.ColoredName + " %Shas been exploded!");
             } else if (args.Length == 3) {
@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "/explode - Satisfying all your exploding needs :)");
             Player.Message(p, "/explode me - Explodes at your location");
             Player.Message(p, "/explode [Player] - Explode the specified player");
-            Player.Message(p, "/explode [X] [Y] [Z] - Explode at the specified co-ordinates");
+            Player.Message(p, "/explode [x y z] - Explode at the specified co-ordinates");
         }
     }
 }

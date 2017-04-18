@@ -44,8 +44,9 @@ namespace MCGalaxy {
         public bool nodUp = false;
         public List<InstructionData> Instructions = new List<InstructionData>();
         
-        public ushort[] pos = new ushort[3], oldpos = new ushort[3], foundPos = new ushort[3];
-        public byte[] rot = new byte[2], oldrot = new byte[2];
+        public Position TargetPos;
+        public ushort[] pos = new ushort[3];
+        public byte[] rot = new byte[2];
         public bool movement = false;
         public int movementSpeed = 3;
         internal bool jumping = false;
@@ -53,24 +54,25 @@ namespace MCGalaxy {
 
         System.Timers.Timer botTimer = new System.Timers.Timer(100);
 
+        
+        public PlayerBot(string n, Level lvl) { Init(n, lvl); }
+        
         public PlayerBot(string n, Level lvl, ushort x, ushort y, ushort z, byte rotx, byte roty) {
-            name = n;
-            DisplayName = n;
-            SkinName = n;
+            Pos = new Position(x, y, z);
+            SetYawPitch(rotx, roty);
+            Init(n, lvl);
+        }
+        
+        void Init(string n, Level lvl) {
+            name = n; DisplayName = n; SkinName = n;
             color = "&1";
             ModelBB = AABB.ModelAABB(model, lvl);
             
             level = lvl;
             id = NextFreeId(this);
-            SetPos(x, y, z, rotx, roty);
 
             botTimer.Elapsed += BotTimerFunc;
             botTimer.Start();
-        }
-        
-        public void SetPos(ushort x, ushort y, ushort z, byte rotx, byte roty) {
-            pos = new ushort[3] { x, y, z };
-            rot = new byte[2] { rotx, roty };
         }
         
         protected override void OnSetPos() {
@@ -172,8 +174,9 @@ namespace MCGalaxy {
                     DoMove();
             }
             
+        	// TODO: check if external code modified pos/rot
             byte[] packet = Entities.GetPositionPacket(this);
-            oldpos = pos; oldrot = rot;
+            lastPos = Pos; lastRot = Rot;
             if (packet == null) return;
 
             Player[] players = PlayerInfo.Online.Items;
@@ -258,9 +261,10 @@ namespace MCGalaxy {
         }
         
         void DoMove() {
+            Position pos = Pos;
             AABB bb = ModelBB.OffsetPosition(pos);
             // Advance the AABB to the bot's next position
-            int dx = Math.Sign(foundPos[0] - pos[0]), dz = Math.Sign(foundPos[2] - pos[2]);
+            int dx = Math.Sign(TargetPos.X - Pos.X), dz = Math.Sign(TargetPos.Z - Pos.Z);
             bb = bb.Offset(dx, 0, dz);
             AABB bbCopy = bb;
             
@@ -269,20 +273,20 @@ namespace MCGalaxy {
             for (int dy = 0; dy >= -32; dy--) {
                 if (AABB.IntersectsSolidBlocks(bb, level)) { hitY = dy + 1; break; }
                 bb.Min.Y--; bb.Max.Y--;
-            }
+            }          
             
             // Does the bot fall down a block
             if (hitY < 0) {
-                pos[0] += (ushort)dx; pos[1] += (ushort)hitY; pos[2] += (ushort)dz;
-                return;
+                pos.X += dx; pos.Y += hitY; pos.Z += dz;
+                Pos = pos; return;
             }
             
             // Attempt to move the bot up to 1 block
             bb = bbCopy;
             for (int dy = 0; dy <= 32; dy++) {
                 if (!AABB.IntersectsSolidBlocks(bb, level)) {
-                    pos[0] += (ushort)dx; pos[1] += (ushort)dy; pos[2] += (ushort)dz;
-                    return;
+                    pos.X += dx; pos.Y += dy; pos.Z += dz;
+                    Pos = pos; return;
                 }
                 bb.Min.Y++; bb.Max.Y++;
             }
@@ -305,13 +309,15 @@ namespace MCGalaxy {
         
         void DoJump() {
             currentjump++;
+            Position pos = Pos;
             switch (currentjump) {
-                 case 1: pos[1] += 24; break;
-                 case 2: pos[1] += 12; break;
+                 case 1: pos.Y += 24; break;
+                 case 2: pos.Y += 12; break;
                  case 3: break;
-                 case 4: pos[1] -= 12; break;
-                 case 5: pos[1] -= 24; jumping = false; currentjump = 0; break;
+                 case 4: pos.Y -= 12; break;
+                 case 5: pos.Y -= 24; jumping = false; currentjump = 0; break;
             }
+            Pos = pos;
         }
     }
 }

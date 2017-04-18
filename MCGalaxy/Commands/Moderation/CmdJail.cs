@@ -29,8 +29,8 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message) {
             if (message.CaselessEq("set") && p != null) {
-                p.level.jailx = p.pos[0]; p.level.jaily = p.pos[1]; p.level.jailz = p.pos[2];
-                p.level.jailrotx = p.rot[0]; p.level.jailroty = p.rot[1];
+                p.level.jailx = p.Pos.X; p.level.jaily = p.Pos.Y; p.level.jailz = p.Pos.Z;
+                p.level.jailrotx = p.Rot.RotY; p.level.jailroty = p.Rot.HeadX;
                 Player.Message(p, "Set Jail point.");
                 return;
             }
@@ -44,8 +44,10 @@ namespace MCGalaxy.Commands
                 Player.Message(p, "You jailed " + who.DisplayName);
                 Entities.GlobalDespawn(who, false);
                 who.jailed = true;
-                Entities.GlobalSpawn(who, (ushort)who.level.jailx, (ushort)who.level.jaily, (ushort)who.level.jailz,
-                                     who.level.jailrotx, who.level.jailroty, true);
+                
+                Position pos = new Position(who.level.jailx, who.level.jaily, who.level.jailz);
+                Orientation rot = new Orientation(who.level.jailrotx, who.level.jailroty);
+                Entities.GlobalSpawn(who, pos, rot, true);
                 
                 Server.jailed.AddOrReplace(who.name, who.level.name);
                 Chat.MessageGlobal(who, who.ColoredName + " %Swas &8jailed", false);

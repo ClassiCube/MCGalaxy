@@ -43,7 +43,7 @@ namespace MCGalaxy.Bots {
             foreach (Player p in players) {
                 if (p.level != bot.level || p.invincible || p.hidden) continue;
                 
-                int dx = p.pos[0] - bot.pos[0], dy = p.pos[1] - bot.pos[1], dz = p.pos[2] - bot.pos[2];
+                int dx = p.Pos.X - bot.Pos.X, dy = p.Pos.Y - bot.Pos.Y, dz = p.Pos.Z - bot.Pos.Z;
                 int playerDist = Math.Abs(dx) + Math.Abs(dy) + Math.Abs(dz);
                 if (playerDist >= maxDist) continue;
                 
@@ -54,19 +54,19 @@ namespace MCGalaxy.Bots {
         }
         
         static bool MoveTowards(PlayerBot bot, Player p) {
-            int dx = p.pos[0] - bot.pos[0], dy = p.pos[1] - bot.pos[1], dz = p.pos[2] - bot.pos[2];
-            bot.foundPos = p.pos;
+            int dx = p.Pos.X - bot.Pos.X, dy = p.Pos.Y - bot.Pos.Y, dz = p.Pos.Z - bot.Pos.Z;
+            bot.TargetPos = p.Pos;
             bot.movement = true;
             
             Vec3F32 dir = new Vec3F32(dx, dy, dz);
             dir = Vec3F32.Normalise(dir);
-            Orientation rot;
+            Orientation rot = bot.Rot;
             DirUtils.GetYawPitch(dir, out rot.RotY, out rot.HeadX);
             
             // If we are very close to a player, switch from trying to look
             // at them to just facing the opposite direction to them
             if (Math.Abs(dx) < 4 && Math.Abs(dz) < 4) {
-                rot.HeadX = (byte)(p.rot[0] + 128);
+                rot.RotY = (byte)(p.Rot.RotY + 128);
             }
             bot.Rot = rot;
             
@@ -103,9 +103,9 @@ namespace MCGalaxy.Bots {
         public override bool Execute(PlayerBot bot, InstructionData data) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                int dx = Math.Abs(bot.pos[0] - p.pos[0]);
-                int dy = Math.Abs(bot.pos[1] - p.pos[1]);
-                int dz = Math.Abs(bot.pos[2] - p.pos[2]);
+                int dx = Math.Abs(bot.Pos.X - p.Pos.X);
+                int dy = Math.Abs(bot.Pos.Y - p.Pos.Y);
+                int dz = Math.Abs(bot.Pos.Z - p.Pos.Z);
                 
                 if (dx <= 8 && dy <= 16 && dz <= 8) {
                     p.HandleDeath(Block.Invalid, 0);
@@ -150,7 +150,7 @@ namespace MCGalaxy.Bots {
         }
         
         static void FaceTowards(PlayerBot bot, Player p) {
-            int dx = p.pos[0] - bot.pos[0], dy = p.pos[1] - bot.pos[1], dz = p.pos[2] - bot.pos[2];
+            int dx = p.Pos.X - bot.Pos.X, dy = p.Pos.Y - bot.Pos.Y, dz = p.Pos.Z - bot.Pos.Z;
             Vec3F32 dir = new Vec3F32(dx, dy, dz);
             dir = Vec3F32.Normalise(dir);
             

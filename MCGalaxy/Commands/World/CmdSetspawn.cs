@@ -29,13 +29,13 @@ namespace MCGalaxy.Commands {
             if (message != "") { Help(p); return;  }
             
             Player.Message(p, "Spawn location set to your current position.");
-            p.level.spawnx = (ushort)(p.pos[0] / 32);
-            p.level.spawny = (ushort)(p.pos[1] / 32);
-            p.level.spawnz = (ushort)(p.pos[2] / 32);
-            p.level.rotx = p.rot[0];
-            p.level.roty = p.rot[1];
+            p.level.spawnx = (ushort)p.Pos.BlockX;
+            p.level.spawny = (ushort)p.Pos.BlockY;
+            p.level.spawnz = (ushort)p.Pos.BlockZ;
+            p.level.rotx = p.Rot.RotY;
+            p.level.roty = p.Rot.HeadX;
             p.level.changed = true;
-            p.SpawnEntity(p, Entities.SelfID, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
+            Entities.Spawn(p, p);
         }
         
         public override void Help(Player p) {

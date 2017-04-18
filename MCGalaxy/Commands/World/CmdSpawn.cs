@@ -31,8 +31,8 @@ namespace MCGalaxy.Commands {
             ushort x = (ushort)(16 + (cpSpawn ? p.checkpointX : p.level.spawnx) * 32);
             ushort y = (ushort)(32 + (cpSpawn ? p.checkpointY : p.level.spawny) * 32);
             ushort z = (ushort)(16 + (cpSpawn ? p.checkpointZ : p.level.spawnz) * 32);
-            byte rotX = cpSpawn ? p.checkpointRotX : p.level.rotx;
-            byte rotY = cpSpawn ? p.checkpointRotY : p.level.roty;
+            byte yaw = cpSpawn ? p.checkpointRotX : p.level.rotx;
+            byte pitch = cpSpawn ? p.checkpointRotY : p.level.roty;
             
             if (!p.Game.Referee && !p.Game.Infected && Server.zombie.RoundInProgress)
                 Server.zombie.InfectPlayer(p, null);
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands {
                     return;
                 }
             }
-            p.SendPos(Entities.SelfID, x, y, z, rotX, rotY);
+            p.SendPos(Entities.SelfID, x, y, z, yaw, pitch);
         }
         
         public override void Help(Player p) {

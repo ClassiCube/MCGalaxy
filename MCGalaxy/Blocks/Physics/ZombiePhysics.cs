@@ -39,16 +39,16 @@ namespace MCGalaxy.Blocks.Physics {
 
             if (closest != null && rand.Next(1, 20) < 18) {
                 if (rand.Next(1, 7) <= 3) {
-                    index = lvl.PosToInt((ushort)(x + Math.Sign((closest.pos[0] / 32) - x)), y, z);
+                    index = lvl.PosToInt((ushort)(x + Math.Sign(closest.Pos.BlockX - x)), y, z);
                     if (index != C.b && MoveZombie(lvl, ref C, index)) return;
                     
-                    index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign((closest.pos[2] / 32) - z)));
+                    index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign((closest.Pos.BlockZ - z))));
                     if (index != C.b && MoveZombie(lvl, ref C, index)) return;
                 } else {
-                    index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign((closest.pos[2] / 32) - z)));
+            		index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign(closest.Pos.BlockZ - z)));
                     if (index != C.b && MoveZombie(lvl, ref C, index)) return;
                     
-                    index = lvl.PosToInt((ushort)(x + Math.Sign((closest.pos[0] / 32) - x)), y, z);
+                    index = lvl.PosToInt((ushort)(x + Math.Sign(closest.Pos.BlockX - x)), y, z);
                     if (index != C.b && MoveZombie(lvl, ref C, index)) return;
                 }
                 checkTime = false;

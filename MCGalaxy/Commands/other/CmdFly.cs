@@ -37,29 +37,29 @@ namespace MCGalaxy.Commands {
             if (!p.isFlying) return;
             Player.Message(p, "You are now flying. &cJump!");
 
-            Thread flyThread = new Thread(new ThreadStart(
-                () => {
-                    ushort[] oldpos = new ushort[3];
-                    List<Vec3U16> last = new List<Vec3U16>(), next = new List<Vec3U16>();
-                    while (p.isFlying && !p.disconnected)
-                        DoFly(p, oldpos, last, next);
-
-                    foreach (Vec3U16 cP in last)
-                        p.SendBlockchange(cP.X, cP.Y, cP.Z, Block.air, 0);
-                    Player.Message(p, "Stopped flying");
-                }));
+            Thread flyThread = new Thread(() => FlyThread(p));
             flyThread.Name = "MCG_Fly";
             flyThread.Start();
         }
         
-        void DoFly(Player p, ushort[] old, List<Vec3U16> last, List<Vec3U16> next) {
+        void FlyThread(Player p) {
+            Position oldpos = default(Position);
+            List<Vec3U16> last = new List<Vec3U16>(), next = new List<Vec3U16>();
+            while (p.isFlying && !p.disconnected)
+                DoFly(p, ref oldpos, last, next);
+
+            foreach (Vec3U16 cP in last)
+                p.SendBlockchange(cP.X, cP.Y, cP.Z, Block.air, 0);
+            Player.Message(p, "Stopped flying");
+        }
+        
+        void DoFly(Player p, ref Position old, List<Vec3U16> last, List<Vec3U16> next) {
             Thread.Sleep(20);
-            if (p.pos[0] == old[0] && p.pos[1] == old[1] && p.pos[2] == old[2]) return;
+            if (p.Pos == old) return;
             
             try {
-                ushort x = (ushort)((p.pos[0]) / 32);
+                int x = p.Pos.BlockX, z = p.Pos.BlockZ;
                 ushort y = (ushort)((p.pos[1] - 60) / 32);
-                ushort z = (ushort)((p.pos[2]) / 32);
 
                 for (int yy = y - 1; yy <= y; yy++)
                     for (int zz = z - 2; zz <= z + 2; zz++)
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands {
                 }
                 next.Clear();
             } catch (Exception ex) { Server.ErrorLog(ex); }
-            old[0] = p.pos[0]; old[1] = p.pos[1]; old[2] = p.pos[2];
+            old = p.Pos;
         }
         
         public override void Help(Player p) {

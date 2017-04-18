@@ -72,11 +72,7 @@ namespace MCGalaxy.Commands.World {
             p.SendUserMOTD();
             if (!p.SendRawMap(oldLevel, lvl)) return;
 
-            ushort x = (ushort)(lvl.spawnx * 32 + 16);
-            ushort y = (ushort)(lvl.spawny * 32 + 32);
-            ushort z = (ushort)(lvl.spawnz * 32 + 16);
-
-            Entities.GlobalSpawn(p, x, y, z, lvl.rotx, lvl.roty, true);
+            Entities.GlobalSpawn(p, lvl.SpawnPos, lvl.SpawnRot, true);
             p.ClearBlockchange();
 
             Chat.MessageGlobal(p, p.ColoredName + " %Swent to the " + lvl.name, false, true);
@@ -87,9 +83,9 @@ namespace MCGalaxy.Commands.World {
             lvl.backedup = true;
             lvl.permissionbuild = LevelPermission.Nobody;
 
-            lvl.jailx = (ushort)(lvl.spawnx * 32);
-            lvl.jaily = (ushort)(lvl.spawny * 32);
-            lvl.jailz = (ushort)(lvl.spawnz * 32);
+            lvl.jailx = lvl.spawnx * 32;
+            lvl.jaily = lvl.spawny * 32;
+            lvl.jailz = lvl.spawnz * 32;
             lvl.jailrotx = lvl.rotx; lvl.jailroty = lvl.roty;
         }
         

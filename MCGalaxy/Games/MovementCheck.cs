@@ -21,9 +21,9 @@ namespace MCGalaxy.Games {
     internal static class MovementCheck {
         
         public static bool InRange(Player a, Player b, int dist) {
-            int dx = Math.Abs(a.pos[0] - b.pos[0]);
-            int dy = Math.Abs(a.pos[1] - b.pos[1]);
-            int dz = Math.Abs(a.pos[2] - b.pos[2]);
+            int dx = Math.Abs(a.Pos.X - b.Pos.X);
+            int dy = Math.Abs(a.Pos.Y - b.Pos.Y);
+            int dz = Math.Abs(a.Pos.Z - b.Pos.Z);
             return dx <= dist && dy <= dist && dz <= dist;
         }
         
@@ -44,7 +44,7 @@ namespace MCGalaxy.Games {
                 return false;
             
             Warn(ref p.Game.LastSpeedhackWarn, p, "speedhack");
-            p.SendPos(Entities.SelfID, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1]);
+            p.SendPos(Entities.SelfID, p.Pos, p.Rot);
             return true;
         }
         

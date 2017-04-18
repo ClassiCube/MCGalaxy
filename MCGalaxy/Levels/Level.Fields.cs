@@ -42,6 +42,9 @@ namespace MCGalaxy {
         
         public byte rotx, roty;
         public ushort spawnx, spawny, spawnz;
+        public Position SpawnPos { get { return new Position(16 + spawnx * 32, 32 + spawny * 32, 16 + spawnz * 32); } }
+        public Orientation SpawnRot { get { return new Orientation(rotx, roty); } }
+        	
         public BlockDefinition[] CustomBlockDefs;
         public BlockProps[] CustomBlockProps;
         public ExtrasCollection Extras = new ExtrasCollection();

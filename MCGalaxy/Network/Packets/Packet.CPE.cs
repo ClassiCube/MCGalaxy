@@ -197,17 +197,17 @@ namespace MCGalaxy {
         }
         
         public static byte[] ExtAddEntity2(byte id, string skinName, string displayName, 
-                                           ushort x, ushort y, ushort z, byte rotx, byte roty, bool hasCP437) {
+                                           Position pos, Orientation rot, bool hasCP437) {
             byte[] buffer = new byte[138];
             buffer[0] = Opcode.CpeExtAddEntity2;
             buffer[1] = id;
             NetUtils.Write(displayName.TrimEnd('+'), buffer, 2, hasCP437);
             NetUtils.Write(skinName.TrimEnd('+'), buffer, 66, hasCP437);
-            NetUtils.WriteU16(x, buffer, 130);
-            NetUtils.WriteU16(y, buffer, 132);
-            NetUtils.WriteU16(z, buffer, 134);
-            buffer[136] = rotx;
-            buffer[137] = roty;
+            NetUtils.WriteU16((ushort)pos.X, buffer, 130);
+            NetUtils.WriteU16((ushort)pos.Y, buffer, 132);
+            NetUtils.WriteU16((ushort)pos.Z, buffer, 134);
+            buffer[136] = rot.RotY;
+            buffer[137] = rot.HeadX;
             return buffer;
         }
         

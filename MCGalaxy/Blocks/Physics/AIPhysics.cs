@@ -29,9 +29,9 @@ namespace MCGalaxy.Blocks.Physics {
             
             foreach (Player p in players) {
                 if (p.level == lvl && !p.invincible) {
-                    int curDist = Math.Abs((p.pos[0] / 32) - x) +
-                        Math.Abs((p.pos[1] / 32) - y) +
-                        Math.Abs((p.pos[2] / 32) - z);
+                    int curDist = Math.Abs(p.Pos.BlockX - x) +
+                        Math.Abs(p.Pos.BlockY - y) +
+                        Math.Abs(p.Pos.BlockZ - z);
                     
                     if (curDist < closestDist) {
                         closestDist = curDist;
