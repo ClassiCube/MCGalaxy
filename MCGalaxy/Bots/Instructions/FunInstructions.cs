@@ -29,10 +29,9 @@ namespace MCGalaxy.Bots {
             if (bot.countdown == 0) { bot.countdown = meta.Seconds; return true; }
             bot.countdown--;
 
-            byte speed = meta.Speed;
-            if (bot.rot[0] + speed > 255) bot.rot[0] = 0;
-            else if (bot.rot[0] + speed < 0) bot.rot[0] = 255;
-            else bot.rot[0] += speed;
+            Orientation rot = bot.Rot;
+            rot.RotY += meta.Speed;
+            bot.rot = Rot;
 
             if (bot.countdown == 0) { bot.NextInstruction(); return false; }
             return true;
@@ -74,21 +73,23 @@ namespace MCGalaxy.Bots {
             bot.countdown--;
 
             byte speed = meta.Speed;
+            Orientation rot = bot.Rot;
             if (bot.nodUp) {
-                if (bot.rot[1] > 32 && bot.rot[1] < 128) {
+                if (rot.HeadX > 32 && rot.HeadX < 128) {
                     bot.nodUp = !bot.nodUp;
                 } else {
-                    if (bot.rot[1] + speed > 255) bot.rot[1] = 0;
-                    else bot.rot[1] += speed;
+                    if (rot.HeadX + speed > 255) rot.HeadX = 0;
+                    else rot.HeadX += speed;
                 }
             } else {
-                if (bot.rot[1] > 128 && bot.rot[1] < 224) {
+                if (rot.HeadX > 128 && rot.HeadX < 224) {
                     bot.nodUp = !bot.nodUp;
                 } else {
-                    if (bot.rot[1] - speed < 0) bot.rot[1] = 255;
-                    else bot.rot[1] -= speed;
+                    if (rot.HeadX - speed < 0) rot.HeadX = 255;
+                    else rot.HeadX -= speed;
                 }
-            }
+            }            
+            bot.Rot = rot;
 
             if (bot.countdown == 0) { bot.NextInstruction(); return false; }
             return true;

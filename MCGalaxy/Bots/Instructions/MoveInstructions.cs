@@ -27,7 +27,11 @@ namespace MCGalaxy.Bots {
         public override bool Execute(PlayerBot bot, InstructionData data) {
             Coords coords = (Coords)data.Metadata;
             bot.pos[0] = coords.X; bot.pos[1] = coords.Y; bot.pos[2] = coords.Z;
-            bot.rot[0] = coords.RotX; bot.rot[1] = coords.RotY;
+            
+            Orientation rot = bot.Rot;
+            rot.RotY = coords.RotX; rot.HeadX = coords.RotY;
+            bot.Rot = rot;
+            
             bot.NextInstruction();
             return true;
         }
@@ -73,7 +77,10 @@ namespace MCGalaxy.Bots {
 
             if ((ushort)(bot.pos[0] / 32) == (ushort)(target.X / 32)) {
                 if ((ushort)(bot.pos[2] / 32) == (ushort)(target.Z / 32)) {
-                    bot.rot[0] = target.RotX; bot.rot[1] = target.RotY;
+                    Orientation rot = bot.Rot;
+                    rot.RotY = target.RotX; rot.HeadX = target.RotY;
+                    bot.Rot = rot;
+            
                     bot.movement = false;
                     bot.NextInstruction(); return false;
                 }

@@ -241,12 +241,14 @@ namespace MCGalaxy {
         
         public void AdvanceRotation() {
             if (!movement && Instructions.Count > 0) {
-                if (rot[0] < 245) rot[0] += 8;
-                else rot[0] = 0;
+                Orientation rot = Rot;
+                if (rot.RotY < 245) rot.RotY += 8;
+                else rot.RotY = 0;
 
-                if (rot[1] > 32 && rot[1] < 64) rot[1] = 224;
-                else if (rot[1] > 250) rot[1] = 0;
-                else rot[1] += 4;
+                if (rot.HeadX > 32 && rot.HeadX < 64) rot.HeadX = 224;
+                else if (rot.HeadX > 250) rot.HeadX = 0;
+                else rot.HeadX += 4;
+                Rot = rot;
             }
         }
         

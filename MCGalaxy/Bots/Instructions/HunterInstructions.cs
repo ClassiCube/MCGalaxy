@@ -60,19 +60,15 @@ namespace MCGalaxy.Bots {
             
             Vec3F32 dir = new Vec3F32(dx, dy, dz);
             dir = Vec3F32.Normalise(dir);
-            byte yaw, pitch;
-            DirUtils.GetYawPitch(dir, out yaw, out pitch);
+            Orientation rot;
+            DirUtils.GetYawPitch(dir, out rot.RotY, out rot.HeadX);
             
             // If we are very close to a player, switch from trying to look
             // at them to just facing the opposite direction to them
-            if (Math.Abs(dx) >= 4 || Math.Abs(dz) >= 4) {
-                bot.rot[0] = yaw;
-            } else if (p.rot[0] < 128) {
-                bot.rot[0] = (byte)(p.rot[0] + 128);
-            } else {
-                bot.rot[0] = (byte)(p.rot[0] - 128);
+            if (Math.Abs(dx) < 4 && Math.Abs(dz) < 4) {
+                rot.HeadX = (byte)(p.rot[0] + 128);
             }
-            bot.rot[1] = pitch;
+            bot.Rot = rot;
             
             return dx <= 8 && dy <= 16 && dz <= 8;
         }
@@ -157,7 +153,10 @@ namespace MCGalaxy.Bots {
             int dx = p.pos[0] - bot.pos[0], dy = p.pos[1] - bot.pos[1], dz = p.pos[2] - bot.pos[2];
             Vec3F32 dir = new Vec3F32(dx, dy, dz);
             dir = Vec3F32.Normalise(dir);
-            DirUtils.GetYawPitch(dir, out bot.rot[0], out bot.rot[1]);
+            
+            Orientation rot = bot.Rot;
+            DirUtils.GetYawPitch(dir, out rot.RotY, out rot.HeadX);
+            bot.Rot = rot;
         }
         
         public override string[] Help { get { return help; } }

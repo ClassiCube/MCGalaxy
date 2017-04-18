@@ -203,7 +203,7 @@ namespace MCGalaxy.Bots {
             CurInstruction = bot.cur;
             
             X = bot.pos[0]; Y = bot.pos[1]; Z = bot.pos[2];
-            RotX = bot.rot[0]; RotY = bot.rot[1];
+            RotX = bot.Rot.RotY; RotY = bot.Rot.HeadX;
         }
         
         public BotProperties Copy() {

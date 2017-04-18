@@ -216,8 +216,8 @@ namespace MCGalaxy {
             NetUtils.WriteU16(bot.pos[0], buffer, 2);
             NetUtils.WriteU16(bot.pos[1], buffer, 4);
             NetUtils.WriteU16(bot.pos[2], buffer, 6);
-            buffer[8] = bot.rot[0];
-            buffer[9] = bot.rot[1];
+            buffer[8] = bot.Rot.RotY;
+            buffer[9] = bot.Rot.HeadX;
             return buffer;
         }
         
