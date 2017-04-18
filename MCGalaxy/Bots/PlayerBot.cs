@@ -24,7 +24,7 @@ using MCGalaxy.Bots;
 
 namespace MCGalaxy {
     
-    public sealed class PlayerBot {
+    public sealed class PlayerBot : Entity {
         
         [Obsolete("Use PlayerBot.Bots.Items instead")]
         public static List<PlayerBot> playerbots;
@@ -71,6 +71,16 @@ namespace MCGalaxy {
         public void SetPos(ushort x, ushort y, ushort z, byte rotx, byte roty) {
             pos = new ushort[3] { x, y, z };
             rot = new byte[2] { rotx, roty };
+        }
+        
+        protected override void OnSetPos() {
+            Position p = Pos;
+            pos[0] = (ushort)p.X; pos[1] = (ushort)p.Y; pos[2] = (ushort)p.Z;
+        }
+        
+        protected override void OnSetRot() {
+            Orientation r = Rot;
+            rot[0] = r.RotY; rot[1] = r.HeadX;
         }
         
         public static void Add(PlayerBot bot, bool save = true) {

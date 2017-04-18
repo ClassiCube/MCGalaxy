@@ -18,42 +18,75 @@
 using System;
 
 namespace MCGalaxy {
-	
-	public abstract class Entity {
-		public Orientation Rot;
-		public Position Pos;
-		
-	}
-	
-	/// <summary> Represents the position of an entity in the world. </summary>
-	public struct Position {
-		
-		/// <summary> X fixed-point location in the world. </summary>
-		public int X;
-		
-		/// <summary> Y fixed-point location in the world. (vertical) </summary>
-		public int Y;
-		
-		/// <summary> Z fixed-point location in the world. </summary>
-		public int Z;
-		
-		/// <summary> World/block coordinate of this position. </summary>
+    
+    public abstract class Entity {
+        
+        // Raw orientation/position - NOT threadsafe
+        protected Orientation _rot;
+        protected Position _pos;
+        
+        // Last sent orientation/position, for delta calculation
+        protected Orientation lastRot;
+        protected Position lastPos;
+        
+        /// <summary> Gets or sets the orientation of this entity. </summary>
+        public Orientation Rot {
+            get { return _rot; }
+            set { _rot = value; OnSetRot(); }
+        }
+        
+        /// <summary> Gets or sets the position of this entity. </summary>
+        public Position Pos {
+            get { return _pos; }
+            set { _pos = value; OnSetPos(); }
+        }
+        
+        protected virtual void OnSetPos() { }
+        
+        protected virtual void OnSetRot() { }
+        
+    }
+    
+    /// <summary> Represents the position of an entity in the world. </summary>
+    public struct Position {
+        
+        /// <summary> X fixed-point location in the world. </summary>
+        public int X;
+        
+        /// <summary> Y fixed-point location in the world. (vertical) </summary>
+        public int Y;
+        
+        /// <summary> Z fixed-point location in the world. </summary>
+        public int Z;
+        
+        /// <summary> World/block coordinate of this position. </summary>
         public Vec3S32 BlockCoords { get { return new Vec3S32(X >> 5, Y >> 5, Z >> 5); } }
-	}
-	
-	/// <summary> Represents orientation / rotation of an entity. </summary>
-	public struct Orientation {
-		
-		/// <summary> Rotation around X axis in degrees. </summary>
-		public short RotX;
-		
-		/// <summary> Rotation around Y axis in degrees. (yaw) </summary>
-		public short RotY;
-		
-		/// <summary> Rotation around Z axis in degrees. </summary>
-		public short RotZ;
-		
-		/// <summary> Rotation of head around X axis in degrees. (pitch) </summary>
-		public short HeadX;
-	}
+    }
+    
+    /// <summary> Represents orientation / rotation of an entity. </summary>
+    public struct Orientation {
+        
+        /// <summary> Rotation around X axis in packed form. </summary>
+        public byte RotX;
+        
+        /// <summary> Rotation around Y axis in packed form. (yaw) </summary>
+        public byte RotY;
+        
+        /// <summary> Rotation around Z axis in packed form. </summary>
+        public byte RotZ;
+        
+        /// <summary> Rotation of head around X axis in packed form. (pitch) </summary>
+        public byte HeadX;
+        
+        
+        /// <summary> Converts angle in range [0, 256) into range [0, 360). </summary>
+        public static short PackedToDegrees(byte packed) {
+            return (short)(packed * 360 / 256);
+        }
+        
+        /// <summary> Converts angle in degrees into range [0, 256) </summary>
+        public static byte DegreesToPacked(short degrees) {
+            return (byte)(degrees * 256 / 360);
+        }
+    }
 }

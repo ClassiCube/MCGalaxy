@@ -28,7 +28,7 @@ namespace MCGalaxy {
         public string username { get; set; }
     }
     
-    public sealed partial class Player : IDisposable {
+    public sealed partial class Player : Entity, IDisposable {
 
         static int sessionCounter;
 
@@ -57,6 +57,16 @@ namespace MCGalaxy {
                 connections.Add(this);
             }
             catch ( Exception e ) { Leave("Login failed!"); Server.ErrorLog(e); }
+        }
+        
+         protected override void OnSetPos() {
+            Position p = Pos;
+            pos[0] = (ushort)p.X; pos[1] = (ushort)p.Y; pos[2] = (ushort)p.Z;
+        }
+        
+        protected override void OnSetRot() {
+            Orientation r = Rot;
+            rot[0] = r.RotY; rot[1] = r.HeadX;
         }
         
         

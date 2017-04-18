@@ -27,7 +27,16 @@ namespace MCGalaxy.Bots {
         public override bool Execute(PlayerBot bot, InstructionData data) {
             int search = 75;
             if (data.Metadata != null) search = (ushort)data.Metadata;
-            int dist = search * 32;
+            Player closest = ClosestPlayer(bot, search);
+            
+            if (closest == null) { bot.NextInstruction(); return false; }
+            bool overlapsPlayer = MoveTowards(bot, closest);
+            if (overlapsPlayer) { bot.NextInstruction(); return false; }
+            return true;
+        }
+        
+        internal static Player ClosestPlayer(PlayerBot bot, int search) {
+            int maxDist = search * 32;
             Player[] players = PlayerInfo.Online.Items;
             Player closest = null;
             
@@ -36,16 +45,12 @@ namespace MCGalaxy.Bots {
                 
                 int dx = p.pos[0] - bot.pos[0], dy = p.pos[1] - bot.pos[1], dz = p.pos[2] - bot.pos[2];
                 int playerDist = Math.Abs(dx) + Math.Abs(dy) + Math.Abs(dz);
-                if (playerDist >= dist) continue;
+                if (playerDist >= maxDist) continue;
                 
                 closest = p;
-                dist = playerDist;
+                maxDist = playerDist;
             }
-            
-            if (closest == null) { bot.NextInstruction(); return false; }
-            bool overlapsPlayer = MoveTowards(bot, closest);
-            if (overlapsPlayer) { bot.NextInstruction(); return false; }
-            return true;
+            return closest;
         }
         
         static bool MoveTowards(PlayerBot bot, Player p) {
@@ -126,20 +131,7 @@ namespace MCGalaxy.Bots {
         public override bool Execute(PlayerBot bot, InstructionData data) {
             int search = 20000;
             if (data.Metadata != null) search = (ushort)data.Metadata;
-            int dist = search * 32;
-            Player[] players = PlayerInfo.Online.Items;
-            Player closest = null;
-            
-            foreach (Player p in players) {
-                if (p.level != bot.level || p.hidden) continue;
-                
-                int dx = p.pos[0] - bot.pos[0], dy = p.pos[1] - bot.pos[1], dz = p.pos[2] - bot.pos[2];
-                int playerDist = Math.Abs(dx) + Math.Abs(dy) + Math.Abs(dz);
-                if (playerDist >= dist) continue;
-                
-                closest = p;
-                dist = playerDist;
-            }
+            Player closest = HuntInstruction.ClosestPlayer(bot, search);
             
             if (closest == null) return true;
             FaceTowards(bot, closest);
