@@ -192,6 +192,7 @@
     <Compile Include="Commands\CommandList.cs" />
     <Compile Include="Commands\CommandParser.cs" />
     <Compile Include="Commands\CPE\CmdCustomColors.cs" />
+    <Compile Include="Commands\CPE\CmdEntityRot.cs" />
     <Compile Include="Commands\CPE\CmdEnvironment.cs" />
     <Compile Include="Commands\CPE\CmdModel.cs" />
     <Compile Include="Commands\CPE\CmdReachDistance.cs" />

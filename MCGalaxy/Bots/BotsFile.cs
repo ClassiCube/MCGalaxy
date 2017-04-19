@@ -60,7 +60,11 @@ namespace MCGalaxy.Bots {
                     if (lvl.name != props.Level) continue;
                     PlayerBot bot = new PlayerBot(props.Name, lvl);
                     bot.Pos = new Position(props.X, props.Y, props.Z);
+                    
                     bot.SetYawPitch(props.RotX, props.RotY);
+                    Orientation rot = bot.Rot;
+                    rot.RotX = props.BodyX; rot.RotZ = props.BodyZ;
+                    bot.Rot = rot;
                     
                     bot.SkinName = props.Skin; bot.Model = props.Model; bot.color = props.Color;
                     bot.AIName = props.AI; bot.hunt = props.Hunt; bot.kill = props.Kill;
@@ -196,6 +200,8 @@ namespace MCGalaxy.Bots {
         public int Z { get; set; }
         public byte RotX { get; set; }
         public byte RotY { get; set; }
+        public byte BodyX { get; set; }
+        public byte BodyZ { get; set; }
         
         public void FromBot(PlayerBot bot) {
             Name = bot.name; Level = bot.level.name;
@@ -207,6 +213,7 @@ namespace MCGalaxy.Bots {
             
             X = bot.Pos.X; Y = bot.Pos.Y; Z = bot.Pos.Z;
             RotX = bot.Rot.RotY; RotY = bot.Rot.HeadX;
+            BodyX = bot.Rot.RotX; BodyZ = bot.Rot.RotZ;
         }
         
         public BotProperties Copy() {
@@ -220,6 +227,7 @@ namespace MCGalaxy.Bots {
             
             copy.X = X; copy.Y = Y; copy.Z = Z;
             copy.RotX = RotX; copy.RotY = RotY;
+            copy.BodyX = BodyX; copy.BodyZ = BodyZ;
             return copy;
         }
     }

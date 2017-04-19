@@ -84,12 +84,12 @@ namespace MCGalaxy {
         public Orientation(byte yaw, byte pitch) { RotX = 0; RotY = yaw; RotZ = 0; HeadX = pitch; }        
         
         /// <summary> Converts angle in range [0, 256) into range [0, 360). </summary>
-        public static short PackedToDegrees(byte packed) {
-            return (short)(packed * 360 / 256);
+        public static int PackedToDegrees(byte packed) {
+            return (packed * 360 / 256);
         }
         
         /// <summary> Converts angle in degrees into range [0, 256) </summary>
-        public static byte DegreesToPacked(short degrees) {
+        public static byte DegreesToPacked(int degrees) {
             return (byte)(degrees * 256 / 360);
         }
     }

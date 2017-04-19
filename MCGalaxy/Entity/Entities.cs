@@ -177,7 +177,7 @@ namespace MCGalaxy {
             return p.Rank >= target.Rank;
         }
         
-        /// <summary> Updates the model of the entity with the specified id to all other players. </summary>
+        /// <summary> Updates the model of an entity to all other players in same level. </summary>
         public static void UpdateModel(Entity entity, string model) {
             Player[] players = PlayerInfo.Online.Items;
             entity.Model = model;
@@ -190,6 +190,31 @@ namespace MCGalaxy {
                 
                 byte id = (pl == entity) ? Entities.SelfID : entity.EntityID;
                 pl.SendChangeModel(id, model);
+            }
+        }
+
+        /// <summary> Updates a property of an entity to all other players in same level. </summary>     
+        public static void UpdateEntityProp(Entity entity, EntityProp prop, int value) {
+            Player[] players = PlayerInfo.Online.Items;
+            Level lvl = entity.Level;
+            
+            Orientation rot = entity.Rot;
+            if (prop == EntityProp.RotX) 
+                rot.RotX = Orientation.DegreesToPacked(value);
+            if (prop == EntityProp.RotY) 
+                rot.RotY = Orientation.DegreesToPacked(value);
+            if (prop == EntityProp.RotZ) 
+                rot.RotZ = Orientation.DegreesToPacked(value);
+            
+            entity.Rot = rot;
+            if (prop == EntityProp.RotY) entity.SetYawPitch(rot.RotY, rot.HeadX);
+
+            foreach (Player pl in players) {
+                if (pl.level != lvl || !pl.HasCpeExt(CpeExt.EntityProperty)) continue;
+                if (!pl.CanSeeEntity(entity)) continue;
+                
+                byte id = (pl == entity) ? Entities.SelfID : entity.EntityID;
+                pl.Send(Packet.EntityProperty(id, prop, value));
             }
         }
         
@@ -246,7 +271,7 @@ namespace MCGalaxy {
         
         static Position GetDelta(Position pos, Position oldPos) {
             return new Position(pos.X - oldPos.X, pos.Y - oldPos.Y, pos.Z - oldPos.Z);
-        	// TODO: proper delta calculation for 16 bit clients
+            // TODO: proper delta calculation for 16 bit clients
         }
         
         public static void GlobalUpdate() {
