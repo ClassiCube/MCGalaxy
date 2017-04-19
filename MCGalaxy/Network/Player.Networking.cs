@@ -333,12 +333,11 @@ namespace MCGalaxy {
         
         /// <summary> Sends a packet indicating an entity was spawned in the current map
         /// at the given absolute position + coordinates </summary>
-        public void SendSpawn(byte id, string name, string model, Position pos, Orientation rot) {
+        public void SendSpawn(byte id, string name, Position pos, Orientation rot) {
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) pos.Y -= 22;
             
             Send(Packet.AddEntity(id, name, pos, rot, hasCP437));
-            if (hasChangeModel) Send(Packet.ChangeModel(id, model, hasCP437));
         }
         
         /// <summary> Sends a packet indicating an absolute position + orientation change for an enity. </summary>
@@ -394,18 +393,16 @@ namespace MCGalaxy {
             Send(buffer);
         }
 
-        public void SendExtAddEntity(byte id, string name, string displayName, string model) {
+        public void SendExtAddEntity(byte id, string name, string displayName) {
             Send(Packet.ExtAddEntity(id, name, displayName, hasCP437));
-            if (hasChangeModel) Send(Packet.ChangeModel(id, model, hasCP437));
         }
         
-        public void SendExtAddEntity2(byte id, string skinName, string displayName, string model,
+        public void SendExtAddEntity2(byte id, string skinName, string displayName,
                                       Position pos, Orientation rot) {
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) pos.Y -= 22;
 
             Send(Packet.ExtAddEntity2(id, skinName, displayName, pos, rot, hasCP437));
-            if (hasChangeModel) Send(Packet.ChangeModel(id, model, hasCP437));
         }
         
         public void SendExtAddPlayerName(byte id, string listName, string displayName, string grp, byte grpRank) {
