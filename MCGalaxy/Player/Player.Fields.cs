@@ -54,7 +54,7 @@ namespace MCGalaxy {
 
         public static bool storeHelp = false;
         public static string storedHelp = "";
-        public string truename, skinName;
+        public string truename;
         internal bool dontmindme = false;
         public Socket socket;
         System.Timers.Timer extraTimer = new System.Timers.Timer(22000);
@@ -196,9 +196,6 @@ namespace MCGalaxy {
         // BlockDefinitions
         internal int gbStep = 0, lbStep = 0;
         internal BlockDefinition gbBlock, lbBlock;
-        
-        public string model = "humanoid";
-        public AABB ModelBB;
         public bool spawned = false;
 
         public bool Mojangaccount { get { return truename.IndexOf('@') >= 0; } }

@@ -62,11 +62,11 @@ namespace MCGalaxy.Bots {
                     bot.Pos = new Position(props.X, props.Y, props.Z);
                     bot.SetYawPitch(props.RotX, props.RotY);
                     
-                    bot.SkinName = props.Skin; bot.model = props.Model; bot.color = props.Color;
+                    bot.SkinName = props.Skin; bot.Model = props.Model; bot.color = props.Color;
                     bot.AIName = props.AI; bot.hunt = props.Hunt; bot.kill = props.Kill;
                     bot.DisplayName = props.DisplayName;
                     
-                    bot.ModelBB = AABB.ModelAABB(bot.model, lvl);
+                    bot.ModelBB = AABB.ModelAABB(bot.Model, lvl);
                     LoadAi(props, bot);
                     PlayerBot.Add(bot, false);
                 }
@@ -200,7 +200,7 @@ namespace MCGalaxy.Bots {
         public void FromBot(PlayerBot bot) {
             Name = bot.name; Level = bot.level.name;
             Skin = bot.SkinName; AI = bot.AIName;
-            Model = bot.model; Color = bot.color;
+            Model = bot.Model; Color = bot.color;
             Kill = bot.kill; Hunt = bot.hunt;
             DisplayName = bot.DisplayName;
             CurInstruction = bot.cur;

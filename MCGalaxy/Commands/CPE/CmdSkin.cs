@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.CPE {
         protected override void SetPlayerData(Player p, Player who, string[] args) {
             string skin = GetSkin(p, args, 1, who.truename);
             if (skin == null) return;
-            who.skinName = skin;
+            who.SkinName = skin;
             Entities.GlobalDespawn(who, true);
             Entities.GlobalSpawn(who, true);
             

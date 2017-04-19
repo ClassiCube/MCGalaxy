@@ -40,7 +40,7 @@ namespace MCGalaxy {
             foreach (Player other in players) {
                 if ((other.Loading && p != other) || p.level != other.level) continue;
                 
-                if (p != other && Entities.CanSeeEntity(other, p)) {
+                if (p != other && other.CanSeeEntity(p)) {
                     Spawn(other, p, pos, rot, possession);
                 } else if (p == other && self) {
                     other.Pos = pos; other.SetYawPitch(rot.RotY, rot.HeadX);
@@ -59,8 +59,9 @@ namespace MCGalaxy {
             foreach (Player other in players) {
                 if (p.level != other.level) continue;
                 
-                bool despawn = !Entities.CanSeeEntity(other, p);
-                if (toVisible) despawn = !despawn;
+                bool despawn = other.CanSeeEntity(p);
+                if (!toVisible) despawn = !despawn;
+                
                 if (p != other && despawn) {
                     Despawn(other, p.id);
                 } else if (p == other && self) {
@@ -80,19 +81,19 @@ namespace MCGalaxy {
             if (!Server.zombie.Running || !p.Game.Infected) {
                 string col = GetSupportedCol(dst, p.color);
                 if (dst.hasExtList) {
-                    dst.SendExtAddEntity2(id, p.skinName, col + p.truename + possession, p.model, pos, rot);
+                    dst.SendExtAddEntity2(id, p.SkinName, col + p.truename + possession, p.Model, pos, rot);
                 } else {
-                    dst.SendSpawn(id, col + p.truename + possession, p.model, pos, rot);
+                    dst.SendSpawn(id, col + p.truename + possession, p.Model, pos, rot);
                 }
                 return;
             }
             
-            string name = p.truename, skinName = p.skinName;
+            string name = p.truename, skinName = p.SkinName;
             if (ZombieGameProps.ZombieName != "" && !dst.Game.Aka) {
                 name = ZombieGameProps.ZombieName; skinName = name;
             }
             
-            string model = id == Entities.SelfID ? p.model : ZombieGameProps.ZombieModel;
+            string model = id == Entities.SelfID ? p.Model : ZombieGameProps.ZombieModel;
             if (dst.hasExtList) {
                 dst.SendExtAddEntity2(id, skinName, Colors.red + name + possession, model, pos, rot);
             } else {
@@ -107,7 +108,7 @@ namespace MCGalaxy {
         internal static void SpawnEntities(Player p, Position pos, Orientation rot, bool bots = true) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {
-                if (other.level != p.level || !CanSeeEntity(p, other) || p == other) continue;
+                if (other.level != p.level || !p.CanSeeEntity(other) || p == other) continue;
                 Spawn(p, other);
             }           
             GlobalSpawn(p, pos, rot, true);
@@ -139,9 +140,9 @@ namespace MCGalaxy {
             string skin = Chat.Format(b.SkinName, dst, true, true, false);
 
             if (dst.hasExtList) {
-                dst.SendExtAddEntity2(b.id, skin, name, b.model, b.Pos, b.Rot);
+                dst.SendExtAddEntity2(b.id, skin, name, b.Model, b.Pos, b.Rot);
             } else {
-                dst.SendSpawn(b.id, name, b.model, b.Pos, b.Rot);
+                dst.SendSpawn(b.id, name, b.Model, b.Pos, b.Rot);
             }
             if (Server.TablistBots)
                 TabList.Add(dst, b);
@@ -176,28 +177,19 @@ namespace MCGalaxy {
             return p.Rank >= target.Rank;
         }
         
-        /// <summary> Returns whether the given player is able to see the target player as an in-game entity. </summary>
-        public static bool CanSeeEntity(Player p, Player target) {
-            bool mayBeHidden = target.hidden;
-            mayBeHidden |= (target.Game.Referee || target.Game.Invisible) && Server.zombie.Running;
-            if (p == null || !mayBeHidden || p == target) return true;
-            if (target.Game.Referee && !p.Game.Referee 
-                && Server.zombie.Running) return false;
-            if (target.Game.Invisible && !p.Game.Referee 
-                && Server.zombie.Running) return false;
-            if (target.otherRankHidden) return p.Rank >= target.oHideRank;
-            return p.Rank >= target.Rank;
-        }
-        
         /// <summary> Updates the model of the entity with the specified id to all other players. </summary>
-        public static void UpdateModel(byte id, string model, Level lvl, Player who) {
+        public static void UpdateModel(Entity entity, string model) {
             Player[] players = PlayerInfo.Online.Items;
+            entity.Model = model;
+            Level lvl = entity.Level;
+            entity.ModelBB = AABB.ModelAABB(model, lvl);          
+            
             foreach (Player pl in players) {
                 if (pl.level != lvl || !pl.HasCpeExt(CpeExt.ChangeModel)) continue;
-                if (who != null && !CanSeeEntity(pl, who)) continue;
+                if (!pl.CanSeeEntity(entity)) continue;
                 
-                byte sendId = (pl.id == id) ? Entities.SelfID : id;
-                pl.SendChangeModel(sendId, model);
+                byte id = (pl == entity) ? Entities.SelfID : entity.EntityID;
+                pl.SendChangeModel(id, model);
             }
         }
         
@@ -278,7 +270,7 @@ namespace MCGalaxy {
              byte* ptr = src;
              
              foreach (Player pl in players) {
-                 if (p == pl || p.level != pl.level || !CanSeeEntity(p, pl)) continue;
+                 if (p == pl || p.level != pl.level || !p.CanSeeEntity(pl)) continue;
                  
                  Orientation rot = pl.Rot;
                  rot.HeadX = p.hasChangeModel ? MakePitch(pl, rot.HeadX) : MakeClassicPitch(pl, rot.HeadX);

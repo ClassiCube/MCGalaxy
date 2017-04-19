@@ -32,9 +32,8 @@ namespace MCGalaxy {
 
         public bool hunt = false, kill = false;
 
-        public string AIName = "", color, model = "humanoid";
-        public AABB ModelBB;
-        public string name, SkinName, DisplayName;
+        public string AIName = "", color;
+        public string name, DisplayName;
         public string ColoredName { get { return color + DisplayName; } }
         
         public byte id;
@@ -66,7 +65,7 @@ namespace MCGalaxy {
         void Init(string n, Level lvl) {
             name = n; DisplayName = n; SkinName = n;
             color = "&1";
-            ModelBB = AABB.ModelAABB(model, lvl);
+            ModelBB = AABB.ModelAABB(Model, lvl);
             
             level = lvl;
             id = NextFreeId(this);
@@ -74,6 +73,10 @@ namespace MCGalaxy {
             botTimer.Elapsed += BotTimerFunc;
             botTimer.Start();
         }
+        
+        public override bool CanSeeEntity(Entity other) { return true; }
+        public override byte EntityID { get { return id; } }
+        public override Level Level { get { return level; } }
         
         protected override void OnSetPos() {
             Position p = Pos;
@@ -152,18 +155,6 @@ namespace MCGalaxy {
                 }
             }
             return matches == 1 ? match : null;
-        }
-        
-        public static PlayerBot FindMatchesPreferLevel(Player pl, string name) {
-            if (Player.IsSuper(pl)) return Matcher.FindBots(pl, name);
-            
-            // Try for exact match in current level, then partial match against all bots
-            PlayerBot[] bots = Bots.Items;
-            for (int i = 0; i < bots.Length; i++) {
-                if (pl.level == bots[i].level && name.CaselessEq(bots[i].name))
-                    return bots[i];
-            }
-            return Matcher.FindBots(pl, name);
         }
         
         void UpdatePosition() {

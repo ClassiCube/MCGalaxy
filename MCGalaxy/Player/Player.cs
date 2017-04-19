@@ -59,6 +59,24 @@ namespace MCGalaxy {
             catch ( Exception e ) { Leave("Login failed!"); Server.ErrorLog(e); }
         }
         
+        public override byte EntityID { get { return id; } }
+        public override Level Level { get { return level; } }
+        
+        public override bool CanSeeEntity(Entity other) {
+            Player target = other as Player;
+            if (target == null) return true; // not a player
+            
+            bool mayBeHidden = target.hidden;
+            mayBeHidden |= (target.Game.Referee || target.Game.Invisible) && Server.zombie.Running;            
+            if (!mayBeHidden || this == other) return true;
+            
+            if (target.Game.Referee && !Game.Referee && Server.zombie.Running) return false;
+            if (target.Game.Invisible && !Game.Referee && Server.zombie.Running) return false;
+            
+            if (target.otherRankHidden) return Rank >= target.oHideRank;
+            return Rank >= target.Rank;
+        }
+        
          protected override void OnSetPos() {
             Position p = Pos;
             pos[0] = (ushort)p.X; pos[1] = (ushort)p.Y; pos[2] = (ushort)p.Z;

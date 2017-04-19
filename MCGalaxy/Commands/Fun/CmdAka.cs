@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "AKA mode is now: " + (p.Game.Aka ? "&aOn" : "&cOff"));
             
             foreach (Player other in players) {
-                if (other.level != p.level || p == other || !Entities.CanSeeEntity(p, other)) continue;
+                if (other.level != p.level || p == other || !p.CanSeeEntity(other)) continue;
                 
                 Entities.Despawn(p, other.id);
                 Entities.Spawn(p, other);

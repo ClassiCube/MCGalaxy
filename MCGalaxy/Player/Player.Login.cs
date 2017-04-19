@@ -29,7 +29,7 @@ namespace MCGalaxy {
             if (version != Server.version) { Leave(null, "Wrong version!", true); return; }
             
             name = NetUtils.ReadString(packet, 2);
-            skinName = name; DisplayName = name; truename = name;
+            SkinName = name; DisplayName = name; truename = name;
             if (Server.ClassicubeAccountPlus) name += "+";
             
             string mppass = NetUtils.ReadString(packet, 66);
@@ -177,11 +177,11 @@ namespace MCGalaxy {
         
         void LoadCpeData() {
             string savedSkin = Server.skins.FindData(name);
-            if (savedSkin != null) skinName = savedSkin;
+            if (savedSkin != null) SkinName = savedSkin;
             
             string savedModel = Server.models.FindData(name);
-            if (savedModel != null) model = savedModel;
-            ModelBB = AABB.ModelAABB(model, level);
+            if (savedModel != null) Model = savedModel;
+            ModelBB = AABB.ModelAABB(Model, level);
         }
         
         void InitPlayerStats(DataTable playerDb) {

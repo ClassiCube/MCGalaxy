@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands {
                 if (target == null) return;
                 if (!CheckPlayer(p, target)) return;
             } else if (args[0].CaselessEq("bot")) {
-                bot = PlayerBot.FindMatchesPreferLevel(p, args[1]);
+                bot = Matcher.FindBotsInLevel(p, args[1]);
                 if (bot == null) return;
             } else {
                 Help(p); return;
@@ -47,10 +47,7 @@ namespace MCGalaxy.Commands {
             p.beforeTeleportMap = p.level.name;
             p.beforeTeleportPos = p.Pos;
             Level lvl = bot != null ? bot.level : target.level;
-            
-            if (bot != null && lvl == null) {
-                Player.Message(p, bot.ColoredName + " %Sis on an unloaded map."); return;
-            }
+
             if (p.level != lvl) PlayerActions.ChangeMap(p, lvl.name);
             if (target != null && target.Loading) {
                 Player.Message(p, "Waiting for " + target.ColoredName + " %Sto spawn..");

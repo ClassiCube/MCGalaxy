@@ -42,9 +42,7 @@ namespace MCGalaxy.Commands.CPE {
         
         protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
             string model = GetModel(p, args, 2);
-            bot.model = model;
-            bot.ModelBB = AABB.ModelAABB(model, bot.level);
-            Entities.UpdateModel(bot.id, model, bot.level, null);
+            Entities.UpdateModel(bot, model);
             
             Player.Message(p, "You changed the model of bot " + bot.ColoredName + " %Sto a &c" + model);
             BotsFile.UpdateBot(bot);
@@ -52,9 +50,7 @@ namespace MCGalaxy.Commands.CPE {
         
         protected override void SetPlayerData(Player p, Player who, string[] args) {
             string model = GetModel(p, args, 1);
-            who.model = model;
-            who.ModelBB = AABB.ModelAABB(model, who.level);
-            Entities.UpdateModel(who.id, model, who.level, who);
+            Entities.UpdateModel(who, model);
             
             if (p != who) {
                 Player.GlobalMessage(who, who.ColoredName + "'s %Smodel was changed to a &c" + model);

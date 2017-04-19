@@ -72,9 +72,9 @@ namespace MCGalaxy {
                 }
                 if (!Server.TablistGlobal && p.level != other.level) continue;
                 
-                if (Entities.CanSeeEntity(other, p))
+                if (other.CanSeeEntity(p))
                     Add(other, p, p.id);
-                if (Entities.CanSeeEntity(p, other))
+                if (p.CanSeeEntity(other))
                     Add(p, other, other.id);
             }
         }
@@ -90,12 +90,12 @@ namespace MCGalaxy {
                     continue;
                 }
                 
-                bool despawn = !Entities.CanSeeEntity(other, p);
-                if (toVisible) despawn = !despawn;
+                bool despawn = other.CanSeeEntity(p);
+                if (!toVisible) despawn = !despawn;
                 if (despawn) Remove(other, p.id);
                 
-                despawn = !Entities.CanSeeEntity(p, other);
-                if (toVisible) despawn = !despawn;
+                despawn = p.CanSeeEntity(other);
+                if (!toVisible) despawn = !despawn;
                 if (despawn) Remove(p, other.id);
             }
         }
