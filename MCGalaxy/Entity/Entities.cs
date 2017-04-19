@@ -146,8 +146,8 @@ namespace MCGalaxy {
             
             if (dst.hasChangeModel) dst.Send(Packet.ChangeModel(id, model, dst.hasCP437));
             if (dst.HasCpeExt(CpeExt.EntityProperty)) {
-                dst.Send(Packet.EntityProperty(id, EntityProp.RotX, rot.RotX));
-                dst.Send(Packet.EntityProperty(id, EntityProp.RotZ, rot.RotZ));
+                dst.Send(Packet.EntityProperty(id, EntityProp.RotX, Orientation.PackedToDegrees(rot.RotX));
+                dst.Send(Packet.EntityProperty(id, EntityProp.RotZ, Orientation.PackedToDegrees(rot.RotZ));
             }
         }
         
