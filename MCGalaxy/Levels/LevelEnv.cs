@@ -159,7 +159,7 @@ namespace MCGalaxy {
         }
         
         static bool IsResetString(string value) {
-            return value.CaselessEq("-1") || value.CaselessEq("normal") ||
+            return value.CaselessEq("normal") ||
                 value.CaselessEq("reset") || value.CaselessEq("default");
         }
         

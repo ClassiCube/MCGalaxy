@@ -21,6 +21,7 @@ using MCGalaxy.Bots;
 namespace MCGalaxy.Commands.CPE {
     public class CmdEntityRot : EntityPropertyCmd {
         public override string name { get { return "entityrot"; } }
+        public override string shortcut { get { return "entrot"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandPerm[] ExtraPerms {
