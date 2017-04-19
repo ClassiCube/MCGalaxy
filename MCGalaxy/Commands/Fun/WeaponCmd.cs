@@ -81,9 +81,9 @@ namespace MCGalaxy.Commands {
             while (p.aiming) {
                 Vec3F32 dir = DirUtils.GetFlatDirVector(p.Rot.RotY, p.Rot.HeadX);
                 try {
-                    ushort x = (ushort)Math.Round((ushort)(p.pos[0] / 32) + dir.X * 3);
-                    ushort y = (ushort)Math.Round((ushort)(p.pos[1] / 32) + dir.Y * 3);
-                    ushort z = (ushort)Math.Round((ushort)(p.pos[2] / 32) + dir.Z * 3);
+                    ushort x = (ushort)Math.Round(p.Pos.BlockX + dir.X * 3);
+                    ushort y = (ushort)Math.Round(p.Pos.BlockY + dir.Y * 3);
+                    ushort z = (ushort)Math.Round(p.Pos.BlockZ + dir.Z * 3);
 
                     int signX = Math.Sign(dir.X) >= 0 ? 1 : -1, signZ = Math.Sign(dir.Z) >= 0 ? 1 : -1;
                     CheckTile(p.level, toSend, x, y, z);
@@ -121,11 +121,11 @@ namespace MCGalaxy.Commands {
         
         void CheckTile(Level lvl, List<Vec3U16> toSend, int x, int y, int z) {
             Vec3U16 pos;
-            if (lvl.GetTile((ushort)x, (ushort)(y - 1), (ushort)z) == Block.air) {
+            if (lvl.GetBlock(x, y - 1, z) == Block.air) {
                 pos.X = (ushort)x; pos.Y = (ushort)(y - 1); pos.Z = (ushort)z;
                 toSend.Add(pos);
             }
-            if (lvl.GetTile((ushort)x, (ushort)y, (ushort)z) == Block.air) {
+            if (lvl.GetBlock(x, y, z) == Block.air) {
                 pos.X = (ushort)x; pos.Y = (ushort)y; pos.Z = (ushort)z;
                 toSend.Add(pos);
             }
@@ -149,10 +149,10 @@ namespace MCGalaxy.Commands {
             return null;
         }
         
-        protected static void DoTeleport(Player p, Vec3U16 pos) {
+        protected static void DoTeleport(Player p, Vec3U16 coords) {
             try {
-                p.SendPos(Entities.SelfID, (ushort)(pos.X * 32), (ushort)(pos.Y * 32 + 32), 
-                          (ushort)(pos.Z * 32), p.rot[0], p.rot[1]);
+                Position pos = new Position(coords.X * 32, coords.Y * 32 + 32, coords.Z * 32);
+                p.SendPos(Entities.SelfID, pos, p.Rot);
             } catch {
             }
         }

@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands {
             
             try {
                 int x = p.Pos.BlockX, z = p.Pos.BlockZ;
-                ushort y = (ushort)((p.pos[1] - 60) / 32);
+                int y = (p.Pos.Y - 60) / 32;
 
                 for (int yy = y - 1; yy <= y; yy++)
                     for (int zz = z - 2; zz <= z + 2; zz++)

@@ -55,19 +55,6 @@ namespace MCGalaxy {
             return P;
         }
         
-        /// <summary> Clamps the given player position coordinates to inside the map. </summary>
-        public static Vec3U16 ClampPos(ushort x, ushort y, ushort z, Level lvl) {
-            Vec3U16 P = new Vec3U16(x, y, z);
-            if (P.X >= 32768) P.X = 0;
-            if (P.Y >= 32768) P.Y = 0;
-            if (P.Z >= 32768) P.Z = 0;
-            
-            if (P.X >= lvl.Width * 32) P.X = (ushort)(32 * lvl.Width - 32);
-            if (P.Y >= lvl.Height * 32) P.Y = (ushort)(32 * lvl.Height - 32);
-            if (P.Z >= lvl.Length * 32) P.Z = (ushort)(32 * lvl.Length - 32);
-            return P;
-        }
-        
 
         public override bool Equals(object obj) {
             return (obj is Vec3U16) && Equals((Vec3U16)obj);

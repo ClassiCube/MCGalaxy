@@ -28,9 +28,9 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
             bool cpSpawn = p.useCheckpointSpawn;
-            ushort x = (ushort)(16 + (cpSpawn ? p.checkpointX : p.level.spawnx) * 32);
-            ushort y = (ushort)(32 + (cpSpawn ? p.checkpointY : p.level.spawny) * 32);
-            ushort z = (ushort)(16 + (cpSpawn ? p.checkpointZ : p.level.spawnz) * 32);
+            int x = 16 + (cpSpawn ? p.checkpointX : p.level.spawnx) * 32;
+            int y = 32 + (cpSpawn ? p.checkpointY : p.level.spawny) * 32;
+            int z = 16 + (cpSpawn ? p.checkpointZ : p.level.spawnz) * 32;
             byte yaw = cpSpawn ? p.checkpointRotX : p.level.rotx;
             byte pitch = cpSpawn ? p.checkpointRotY : p.level.roty;
             
@@ -42,16 +42,17 @@ namespace MCGalaxy.Commands {
                 if (game.GameMode == TntWarsGame.TntWarsGameMode.TDM && game.GameStatus != TntWarsGame.TntWarsGameStatus.WaitingForPlayers
                     && game.GameStatus != TntWarsGame.TntWarsGameStatus.Finished && game.RedSpawn != null && game.BlueSpawn != null) {
                     bool blue = game.FindPlayer(p).Blue;
-                    p.SendPos(Entities.SelfID,
-                              (ushort)((0.5 + (blue ? game.BlueSpawn[0] : game.RedSpawn[0]) * 32)),
-                              (ushort)((1 + (blue ? game.BlueSpawn[1] : game.RedSpawn[1]) * 32)),
-                              (ushort)((0.5 + (blue ? game.BlueSpawn[2] : game.RedSpawn[2]) * 32)),
-                              (byte)(blue ? game.BlueSpawn[3] : game.RedSpawn[3]),
-                              (byte)(blue ? game.BlueSpawn[4] : game.RedSpawn[4]));
-                    return;
+                    
+                    x = 16 + (blue ? game.BlueSpawn[0] : game.RedSpawn[0]) * 32;
+                    y = 32 + (blue ? game.BlueSpawn[1] : game.RedSpawn[1]) * 32;
+                    z = 16 + (blue ? game.BlueSpawn[2] : game.RedSpawn[2]) * 32;                    
+                    yaw = (byte)(blue ? game.BlueSpawn[3] : game.RedSpawn[3]);
+                    pitch = (byte)(blue ? game.BlueSpawn[4] : game.RedSpawn[4]);
                 }
             }
-            p.SendPos(Entities.SelfID, x, y, z, yaw, pitch);
+            
+            p.SendPos(Entities.SelfID, new Position(x, y, z), 
+                      new Orientation(yaw, pitch));
         }
         
         public override void Help(Player p) {

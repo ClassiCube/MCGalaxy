@@ -185,25 +185,25 @@ namespace MCGalaxy.Games {
             //beneath this is checking the glass next to the square
             bool up = false, left = false, right = false, down = false;
             //directly next to
-            if (mapon.GetTile(x1, y, (ushort)(z2 + 2)) == Block.air) //right
+            if (mapon.GetBlock(x1, y, z2 + 2) == Block.air) //right
             {
                 mapon.Blockchange(x1, y, (ushort)(z2 + 1), Block.air);
                 mapon.Blockchange(x2, y, (ushort)(z2 + 1), Block.air);
                 right = true;
             }
-            if (mapon.GetTile(x1, y, (ushort)(z1 - 2)) == Block.air) //left
+            if (mapon.GetBlock(x1, y, z1 - 2) == Block.air) //left
             {
                 mapon.Blockchange(x1, y, (ushort)(z1 - 1), Block.air);
                 mapon.Blockchange(x2, y, (ushort)(z1 - 1), Block.air);
                 left = true;
             }
-            if (mapon.GetTile((ushort)(x2 + 2), y, z1) == Block.air) //up
+            if (mapon.GetBlock(x2 + 2, y, z1) == Block.air) //up
             {
                 mapon.Blockchange((ushort)(x2 + 1), y, z1, Block.air);
                 mapon.Blockchange((ushort)(x2 + 1), y, z2, Block.air);
                 up = true;
             }
-            if (mapon.GetTile((ushort)(x1 - 2), y, z1) == Block.air) //down
+            if (mapon.GetBlock(x1 - 2, y, z1) == Block.air) //down
             {
                 mapon.Blockchange((ushort)(x1 - 1), y, z1, Block.air);
                 mapon.Blockchange((ushort)(x1 - 1), y, z2, Block.air);
@@ -211,19 +211,19 @@ namespace MCGalaxy.Games {
             }
             
             //diagonal >:(
-            if ((mapon.GetTile((ushort)(x1 - 2), y, (ushort)(z1 - 2)) == Block.air) && left && down) //bottom left
+            if ((mapon.GetBlock(x1 - 2, y, z1 - 2) == Block.air) && left && down) //bottom left
             {
                 mapon.Blockchange((ushort)(x1 - 1), y, (ushort)(z1 - 1), Block.air);
             }
-            if ((mapon.GetTile((ushort)(x1 - 2), y, (ushort)(z2 + 2)) == Block.air) && right && down) //bottom right
+            if ((mapon.GetBlock(x1 - 2, y, z2 + 2) == Block.air) && right && down) //bottom right
             {
                 mapon.Blockchange((ushort)(x1 - 1), y, (ushort)(z2 + 1), Block.air);
             }
-            if ((mapon.GetTile((ushort)(x2 + 2), y, (ushort)(z1 - 2)) == Block.air) && left && up) //top left
+            if ((mapon.GetBlock(x2 + 2, y, z1 - 2) == Block.air) && left && up) //top left
             {
                 mapon.Blockchange((ushort)(x2 + 1), y, (ushort)(z1 - 1), Block.air);
             }
-            if ((mapon.GetTile((ushort)(x2 + 2), y, (ushort)(z2 + 2)) == Block.air) && right && up) //top right
+            if ((mapon.GetBlock(x2 + 2, y, z2 + 2) == Block.air) && right && up) //top right
             {
                 mapon.Blockchange((ushort)(x2 + 1), y, (ushort)(z2 + 1), Block.air);
             }

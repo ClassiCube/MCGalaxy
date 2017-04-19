@@ -30,19 +30,21 @@ namespace MCGalaxy.Commands {
             if (!Hacks.CanUseHacks(p, p.level)) {
                 Player.Message(p, "You cannot use /ascend on this map."); return;
             }
-            ushort x = (ushort)(p.pos[0] / 32), y = (ushort)(p.pos[1] / 32), z = (ushort)(p.pos[2] / 32);
+            int x = p.Pos.BlockX, y = p.Pos.BlockY, z = p.Pos.BlockZ;
+            if (y < 0) y = 0;
             
-            while (y < p.level.Height) {
-                y++;
-                byte block = p.level.GetTile(x, y, z);
+            for (; y < p.level.Height; y++) {
+                byte block = p.level.GetBlock(x, y, z);
                 if (!(Block.Convert(block) == Block.air || block == Block.Invalid)) continue;               
-                byte above = p.level.GetTile(x, (ushort)(y + 1), z);             
+                byte above = p.level.GetBlock(x, y + 1, z);             
                 if (!(Block.Convert(above) == Block.air || above == Block.Invalid)) continue;
 
-                byte below = p.level.GetTile(x, (ushort)(y - 1), z);
+                byte below = p.level.GetBlock(x, y - 1, z);
                 if (Solid(Block.Convert(below))) {
                     Player.Message(p, "Teleported you up.");
-                    p.SendOwnFeetPos(p.pos[0], (ushort)(y * 32), p.pos[2], p.rot[0], p.rot[1]);
+                    
+                    Position pos = Position.FromFeet(p.Pos.X, y * 32, p.Pos.Z);
+                    p.SendPos(Entities.SelfID, pos, p.Rot);
                     return;
                 }
             }

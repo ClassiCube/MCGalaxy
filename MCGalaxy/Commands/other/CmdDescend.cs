@@ -28,21 +28,25 @@ namespace MCGalaxy.Commands {
             if (!Hacks.CanUseHacks(p, p.level)) {
                 Player.Message(p, "You cannot use /descend on this map."); return;
             }
-            if (p.pos[1] < 51 + 4) { Player.Message(p, "No free spaces found below you."); return; }
+            if (p.Pos.Y < 51 + 4) { Player.Message(p, "No free spaces found below you."); return; }
             // Move starting position down half a block since players are a little bit above the ground.
-            ushort x = (ushort)(p.pos[0] / 32), y = (ushort)((p.pos[1] - 51 - 4) / 32), z = (ushort)(p.pos[2] / 32);
+            int x = p.Pos.BlockX, y = (p.Pos.Y - 51 - 4) / 32, z = p.Pos.BlockZ;
             
-            while (y > 0) {
-                y--;
-                byte block = p.level.GetTile(x, y, z);
+            if (y > p.level.Height) y = p.level.Height;
+            y--; // start at block below initially
+            
+            for (; y > 0; y--) {
+                byte block = p.level.GetBlock(x, y, z);
                 if (!(Block.Convert(block) == Block.air || block == Block.Invalid)) continue;               
-                byte above = p.level.GetTile(x, (ushort)(y + 1), z);             
+                byte above = p.level.GetBlock(x, y + 1, z);             
                 if (!(Block.Convert(above) == Block.air || above == Block.Invalid)) continue;
                 
-                byte below = p.level.GetTile(x, (ushort)(y - 1), z);
+                byte below = p.level.GetBlock(x, y - 1, z);
                 if (Solid(Block.Convert(below))) {
                     Player.Message(p, "Teleported you down.");
-                    p.SendOwnFeetPos(p.pos[0], (ushort)(y * 32), p.pos[2], p.rot[0], p.rot[1]);
+                    
+                    Position pos = Position.FromFeet(p.Pos.X, y * 32, p.Pos.Z);
+                    p.SendPos(Entities.SelfID, pos, p.Rot);
                     return;
                 }
             }

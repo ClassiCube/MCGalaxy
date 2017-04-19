@@ -112,8 +112,7 @@ namespace MCGalaxy.Games
             ushort y = flagLocation[1];
             ushort z = flagLocation[2];
 
-            if (mapOn.GetTile(x, (ushort)(y - 1), z) == Block.air)
-            {
+            if (mapOn.GetBlock(x, y - 1, z) == Block.air) {
                 flagLocation[1] = (ushort)(flagLocation[1] - 1);
             }
 
@@ -128,8 +127,8 @@ namespace MCGalaxy.Games
                 tfb.type = mapOn.GetTile(x, y, z);
 
                 if (mapOn.GetTile(x, y, z) != Block.flagbase) { mapOn.Blockchange(x, y, z, Block.flagbase); }
-                if (mapOn.GetTile(x, (ushort)(y + 1), z) != Block.mushroom) { mapOn.Blockchange(x, (ushort)(y + 1), z, Block.mushroom); }
-                if (mapOn.GetTile(x, (ushort)(y + 2), z) != GetColorBlock(color)) { mapOn.Blockchange(x, (ushort)(y + 2), z, GetColorBlock(color)); }
+                if (mapOn.GetBlock(x, y + 1, z) != Block.mushroom) { mapOn.Blockchange(x, (ushort)(y + 1), z, Block.mushroom); }
+                if (mapOn.GetBlock(x, y + 2, z) != GetColorBlock(color)) { mapOn.Blockchange(x, (ushort)(y + 2), z, GetColorBlock(color)); }
 
                 tfb.x = x;
                 tfb.y = y;

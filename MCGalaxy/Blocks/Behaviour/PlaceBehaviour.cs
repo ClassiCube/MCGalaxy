@@ -39,7 +39,7 @@ namespace MCGalaxy.Blocks {
                 p.ChangeBlock(x, y, z, block, 0); return;
             }
             
-            byte above = lvl.GetTile(x, (ushort)(y + 1), z), extAbove = 0;
+            byte above = lvl.GetBlock(x, y + 1, z), extAbove = 0;
             if (above == Block.custom_block)
                 extAbove = lvl.GetExtTile(x, (ushort)(y + 1), z);
             
@@ -50,7 +50,7 @@ namespace MCGalaxy.Blocks {
         
         internal static void Stairs(Player p, byte block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)
-                || p.level.GetTile(x, (ushort)(y - 1), z) != Block.staircasestep) {
+                || p.level.GetBlock(x, y - 1, z) != Block.staircasestep) {
                 p.ChangeBlock(x, y, z, Block.staircasestep, 0); return;
             }
             
@@ -60,7 +60,7 @@ namespace MCGalaxy.Blocks {
         
         internal static void CobbleStairs(Player p, byte block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)
-                || p.level.GetTile(x, (ushort)(y - 1), z) != Block.cobblestoneslab) {
+                || p.level.GetBlock(x, y - 1, z) != Block.cobblestoneslab) {
                 p.ChangeBlock(x, y, z, Block.cobblestoneslab, 0); return;
             }
             

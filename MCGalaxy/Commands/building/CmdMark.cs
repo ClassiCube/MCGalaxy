@@ -44,8 +44,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             // convert player pos to block coords
-            Vec3U16 P = Vec3U16.ClampPos(p.pos[0], (ushort)(p.pos[1] - 32), p.pos[2], p.level);
-            P.X /= 32; P.Y /= 32; P.Z /= 32;
+            Vec3U16 P = ClampPos(p.Pos, p.level);
             if (message != "" && !ParseCoords(message, p, ref P)) return;            
             P = Vec3U16.Clamp(P.X, P.Y, P.Z, p.level);
             
@@ -64,6 +63,21 @@ namespace MCGalaxy.Commands.Building {
                                    "nor could the existing block at the coordinates be activated."); return;
                 }
             }
+        }
+
+        static Vec3U16 ClampPos(Position pos, Level lvl) {
+            Vec3S32 p = pos.BlockCoords;
+            p.Y--;
+            
+            if (p.X < 0) p.X = 0;
+            if (p.Y < 0) p.Y = 0;
+            if (p.Z < 0) p.Z = 0;
+            
+            if (p.X >= lvl.Width) p.X = lvl.Width - 1;
+            if (p.Y >= lvl.Height) p.Y = lvl.Height - 1;
+            if (p.X >= lvl.Length) p.Z = lvl.Length - 1;
+            
+            return (Vec3U16)p;
         }
         
         bool ParseCoords(string message, Player p, ref Vec3U16 P) {

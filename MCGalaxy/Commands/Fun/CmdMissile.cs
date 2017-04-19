@@ -122,11 +122,7 @@ namespace MCGalaxy.Commands {
         }
         
         static Vec3U16 MakePos(Player p) {
-            Vec3U16 pos;
-            pos.X = (ushort)(p.pos[0] / 32);
-            pos.Y = (ushort)(p.pos[1] / 32);
-            pos.Z = (ushort)(p.pos[2] / 32);
-            return pos;
+            return (Vec3U16)p.Pos.BlockCoords;
         }
         
         void FindNext(Vec3U16 lookedAt, ref Vec3U16 pos, List<Vec3S32> buffer) {

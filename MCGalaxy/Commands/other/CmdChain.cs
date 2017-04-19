@@ -34,14 +34,14 @@ namespace MCGalaxy.Commands
             }
             
             Level lvl = p.level;
-            ushort x = (ushort)(p.pos[0] / 32), y = (ushort)(p.pos[1] / 32), z = (ushort)(p.pos[2] / 32);
-            if (x >= lvl.Width || z >= lvl.Length) {
+            int x = p.Pos.BlockX, y = p.Pos.BlockY, z = p.Pos.BlockZ;
+            if (x < 0 || z < 0 || x >= lvl.Width || z >= lvl.Length) {
                 Player.Message(p, "You must be inside the map to use this command."); return;
             }
             
             int dirX = 0, dirZ = 0;
             DirUtils.EightYaw(p.Rot.RotY, out dirX, out dirZ);
-            DoChain(p, x, y, z, dirX, dirZ);       
+            DoChain(p, (ushort)x, (ushort)y, (ushort)z, dirX, dirZ);
         }
         
         void DoChain(Player p, ushort x, ushort y, ushort z, int dirX, int dirZ) {

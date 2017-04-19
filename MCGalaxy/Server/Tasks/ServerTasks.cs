@@ -50,15 +50,12 @@ namespace MCGalaxy.Tasks {
                             if (who == null || who.level != p.level)
                                 p.possess = "";
                         }
-
-                        ushort x = (ushort)(p.pos[0] / 32);
-                        ushort y = (ushort)(p.pos[1] / 32);
-                        ushort z = (ushort)(p.pos[2] / 32);
-
+                        
+                        Vec3U16 P = (Vec3U16)p.Pos.BlockCoords;
                         if (p.level.Death)
-                            p.CheckSurvival(x, y, z);
+                            p.CheckSurvival(P.X, P.Y, P.Z);
                         p.CheckBlock();
-                        p.oldIndex = p.level.PosToInt(x, y, z);
+                        p.oldIndex = p.level.PosToInt(P.X, P.Y, P.Z);
                     } catch (Exception e) {
                         Server.ErrorLog(e);
                     }

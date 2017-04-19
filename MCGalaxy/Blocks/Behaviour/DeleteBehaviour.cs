@@ -35,8 +35,8 @@ namespace MCGalaxy.Blocks {
             byte pitch = p.Rot.HeadX;
             if (pitch >= 192 && pitch <= 196 || pitch >= 60 && pitch <= 64) { dx = 0; dz = 0; }
 
-            byte b1 = p.level.GetTile((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ));
-            byte b2 = p.level.GetTile((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz ));
+            byte b1 = p.level.GetBlock(x + dx * 2, y + dy * 2, z + dz * 2);
+            byte b2 = p.level.GetBlock(x + dx    , y + dy,     z + dz);
             if ( b1 == Block.air && b2 == Block.air && p.level.CheckClear((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ))
                 && p.level.CheckClear((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz )) ) {
                 p.level.Blockchange((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ), Block.rockethead);
@@ -50,8 +50,8 @@ namespace MCGalaxy.Blocks {
             Random rand = new Random();
             ushort x2 = (ushort)(x + rand.Next(0, 2) - 1);
             ushort z2 = (ushort)(z + rand.Next(0, 2) - 1);
-            byte b1 = p.level.GetTile(x2, (ushort)(y + 2), z2);
-            byte b2 = p.level.GetTile(x2, (ushort)(y + 1), z2);
+            byte b1 = p.level.GetBlock(x2, y + 2, z2);
+            byte b2 = p.level.GetBlock(x2, y + 1, z2);
             
             if (b1 == Block.air && b2 == Block.air && p.level.CheckClear(x2, (ushort)(y + 1), z2)
                 && p.level.CheckClear(x2, (ushort)(y + 2), z2)) {
@@ -65,7 +65,8 @@ namespace MCGalaxy.Blocks {
         }
         
         internal static void C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
-            C4Physics.BlowUp(new ushort[] { x, y, z }, p.level);
+            int index = p.level.PosToInt(x, y, z);
+            C4Physics.BlowUp(index, p.level);
             p.ChangeBlock(x, y, z, Block.air, 0);
         }
         

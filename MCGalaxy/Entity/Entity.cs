@@ -70,6 +70,8 @@ namespace MCGalaxy {
         
         public Position(int x, int y, int z) { X = x; Y = y; Z = z; }
         
+        public static Position FromFeet(int x, int y, int z) { return new Position(x, y + Entities.CharacterHeight, z); }
+        
         /// <summary> World/block coordinate of this position. </summary>
         public Vec3S32 BlockCoords { get { return new Vec3S32(X >> 5, Y >> 5, Z >> 5); } }
         

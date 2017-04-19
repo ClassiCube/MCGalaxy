@@ -38,7 +38,7 @@ namespace MCGalaxy.Games {
         
         public static bool DetectSpeedhack(Player p, ushort x, ushort y, ushort z, int maxMove) {
             if (p.Game.Referee || Hacks.CanUseHacks(p, p.level)) return false;
-            int dx = Math.Abs(p.pos[0] - x), dz = Math.Abs(p.pos[2] - z);
+            int dx = Math.Abs(p.Pos.X - x), dz = Math.Abs(p.Pos.Z - z);
             bool speedhacking = dx >= maxMove || dz >= maxMove;
             if (!speedhacking || p.Game.SpeedhackLog.AddSpamEntry(5, 1))
                 return false;

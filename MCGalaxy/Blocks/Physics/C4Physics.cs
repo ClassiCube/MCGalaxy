@@ -22,15 +22,14 @@ namespace MCGalaxy.Blocks.Physics {
     
     public static class C4Physics {
         
-        public static void BlowUp(ushort[] pos, Level lvl) {
-            int srcIndex = lvl.PosToInt(pos[0], pos[1], pos[2]);
+        public static void BlowUp(int index, Level lvl) {
             try {
                 foreach (C4Data c4 in lvl.C4list) {
-                    if (c4.detIndex != srcIndex) continue;
+                    if (c4.detIndex != index) continue;
                     
-                    foreach (int index in c4.list) {
+                    foreach (int explodeIndex in c4.list) {
                         ushort x, y, z;
-                        lvl.IntToPos(index, out x, out y, out z);
+                        lvl.IntToPos(explodeIndex, out x, out y, out z);
                         lvl.MakeExplosion(x, y, z, 0);
                     }
                     lvl.C4list.Remove(c4);

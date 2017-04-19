@@ -26,10 +26,8 @@ namespace MCGalaxy {
         /// <summary> Moves the player to the specified block coordinates. (bY is treated as player feet) </summary>
         public static void MoveCoords(Player p, int bX, int bY, int bZ,
                                       byte rotX, byte rotY) {
-            ushort x = (ushort)(bX * 32 + 16);
-            ushort y = (ushort)(bY * 32);
-            ushort z = (ushort)(bZ * 32 + 16);
-            p.SendOwnFeetPos(x, y, z, rotX, rotY);
+            Position pos = Position.FromFeet(16 + bX * 32, bY * 32, 16 + bZ * 32);
+            p.SendPos(Entities.SelfID, pos, new Orientation(rotX, rotY));
         }
         
         /// <summary> Moves the player to the specified map. </summary>

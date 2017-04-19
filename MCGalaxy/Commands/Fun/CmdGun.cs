@@ -46,18 +46,15 @@ namespace MCGalaxy.Commands {
             List<Vec3U16> allBlocks = new List<Vec3U16>();
             Vec3U16 pos;
             
-            ushort startX = (ushort)(p.pos[0] / 32);
-            ushort startY = (ushort)(p.pos[1] / 32);
-            ushort startZ = (ushort)(p.pos[2] / 32);
-
-            pos.X = (ushort)Math.Round(startX + dir.X * 3);
-            pos.Y = (ushort)Math.Round(startY + dir.Y * 3);
-            pos.Z = (ushort)Math.Round(startZ + dir.Z * 3);
+            Vec3S32 start = p.Pos.BlockCoords;
+            pos.X = (ushort)Math.Round(start.X + dir.X * 3);
+            pos.Y = (ushort)Math.Round(start.Y + dir.Y * 3);
+            pos.Z = (ushort)Math.Round(start.Z + dir.Z * 3);
 
             for (double t = 4; bigDiag > t; t++) {
-                pos.X = (ushort)Math.Round(startX + (double)(dir.X * t));
-                pos.Y = (ushort)Math.Round(startY + (double)(dir.Y * t));
-                pos.Z = (ushort)Math.Round(startZ + (double)(dir.Z * t));
+                pos.X = (ushort)Math.Round(start.X + (double)(dir.X * t));
+                pos.Y = (ushort)Math.Round(start.Y + (double)(dir.Y * t));
+                pos.Z = (ushort)Math.Round(start.Z + (double)(dir.Z * t));
 
                 byte by = p.level.GetTile(pos.X, pos.Y, pos.Z);
                 if (by != Block.air && !allBlocks.Contains(pos) && HandlesHitBlock(p, by, bp, pos, true))

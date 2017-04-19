@@ -235,8 +235,7 @@ namespace MCGalaxy {
         public string beforeTeleportMap = "";
         public ushort[] pos = new ushort[3];        
         public byte[] rot = new byte[2];
-        internal ushort[] oldpos = new ushort[3], tempPos = new ushort[3];
-        internal byte[] oldrot = new byte[2];
+        internal Position tempPos;
 
         //ushort[] clippos = new ushort[3] { 0, 0, 0 };
         //byte[] cliprot = new byte[2] { 0, 0 };

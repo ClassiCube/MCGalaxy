@@ -45,6 +45,15 @@ namespace MCGalaxy {
             if (index < 0 || blocks == null) return Block.Invalid;
             return blocks[index];
         }
+        
+        /// <summary> Gets the block at the given coordinates. </summary>
+        /// <returns> Block.Invalid if coordinates outside map. </returns>
+        public byte GetBlock(int x, int y, int z) {
+            if (x < 0 || y < 0 || z < 0 || blocks == null) return Block.Invalid;
+            if (x >= Width || y >= Height || z >= Length)  return Block.Invalid;
+            
+            return blocks[x + Width * (z + y * Length)];
+        }
 
         public byte GetTile(int b) {
             ushort x = 0, y = 0, z = 0;

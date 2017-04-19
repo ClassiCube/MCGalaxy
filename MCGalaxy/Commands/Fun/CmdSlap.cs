@@ -50,23 +50,23 @@ namespace MCGalaxy.Commands {
         }
         
         void DoSlap(Player p, Player who) {
-            ushort curX = (ushort)(who.pos[0] / 32), curY = (ushort)(who.pos[1] / 32), curZ = (ushort)(who.pos[2] / 32);
-            ushort foundHeight = ushort.MaxValue;
+            int x = who.Pos.BlockX, y = who.Pos.BlockY, z = who.Pos.BlockZ;
+            if (y < 0) y = 0;
+            Position pos = who.Pos;
 
             string src = p == null ? "(console)" : p.ColoredName;
-            for (ushort yy = curY; yy <= 1000; yy++) {
-                if (!Block.Walkthrough(who.level.GetTile(curX, yy, curZ)) && who.level.GetTile(curX, yy, curZ) != Block.Invalid) {
-                    foundHeight = (ushort)(yy - 1);
+            for (; y <= p.level.Height; y++) {
+                if (!Block.Walkthrough(who.level.GetBlock(x, y, z)) && who.level.GetBlock(x, y, z) != Block.Invalid) {
+                    pos.Y = (y - 1) * 32;
                     who.level.ChatLevel(who.ColoredName + " %Swas slapped into the roof by " + src);
-                    break;
+                    who.SendPos(Entities.SelfID, pos, who.Rot);
+                    return;
                 }
             }
-            
-            if (foundHeight == ushort.MaxValue) {
-                who.level.ChatLevel(who.ColoredName + " %Swas slapped sky high by " + src);
-                foundHeight = 1000;
-            }
-            who.SendPos(Entities.SelfID, who.pos[0], (ushort)(foundHeight * 32), who.pos[2], who.rot[0], who.rot[1]);
+              
+            pos.Y = 1000 * 32;
+            who.level.ChatLevel(who.ColoredName + " %Swas slapped sky high by " + src);
+            who.SendPos(Entities.SelfID, pos, who.Rot);
         }
         
         public override void Help(Player p) {

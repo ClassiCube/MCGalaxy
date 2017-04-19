@@ -263,12 +263,12 @@ namespace MCGalaxy {
             // Avoids the very rare issue of player's position changing mid-way through iteration,
             // which can cause this player to show minorly offset to other players.
             foreach (Player p in players)
-                p.tempPos = p.pos;
+                p.tempPos = p.Pos;
             
             foreach (Player p in players)
                 UpdatePosition(p);
             foreach (Player p in players) {
-                 p.oldpos = p.tempPos; p.oldrot = p.rot;
+                p.lastPos = p.tempPos; p.lastRot = p.Rot;
             }
         }
         
@@ -279,8 +279,10 @@ namespace MCGalaxy {
              
              foreach (Player pl in players) {
                  if (p == pl || p.level != pl.level || !CanSeeEntity(p, pl)) continue;
-                 byte pitch = p.hasChangeModel ? MakePitch(pl) : MakeClassicPitch(pl);
-                 Entities.GetPositionPacket(ref ptr, pl.id, pl.tempPos, pl.oldpos, pl.rot, pl.oldrot, pitch);
+                 
+                 Orientation rot = pl.Rot;
+                 rot.HeadX = p.hasChangeModel ? MakePitch(pl, rot.HeadX) : MakeClassicPitch(pl, rot.HeadX);
+                 Entities.GetPositionPacket(ref ptr, pl.id, pl.tempPos, pl.lastPos, rot, pl.lastRot);
              }
              
              int count = (int)(ptr - src);
@@ -291,18 +293,18 @@ namespace MCGalaxy {
              p.Send(packet);
         }
         
-        static byte MakePitch(Player p) {
+        static byte MakePitch(Player p, byte pitch) {
             if (Server.flipHead || p.flipHead)
-                if (p.rot[1] > 64 && p.rot[1] < 192) return p.rot[1];
+                if (pitch > 64 && pitch < 192) return pitch;
                 else return 128;
-            return p.rot[1];
+            return pitch;
         }
         
-        static byte MakeClassicPitch(Player p) {
+        static byte MakeClassicPitch(Player p, byte pitch) {
             if (Server.flipHead || p.flipHead || p.Game.Infected)
-                if (p.rot[1] > 64 && p.rot[1] < 192) return p.rot[1];
+                if (pitch > 64 && pitch < 192) return pitch;
                 else return 128;
-            return p.rot[1];
+            return pitch;
         }
         #endregion
     }
