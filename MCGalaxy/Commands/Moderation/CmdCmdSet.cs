@@ -83,6 +83,8 @@ namespace MCGalaxy.Commands {
         
         static void UpdatePermissions(Command cmd, Player p, string message) {
              CommandPerms.Save();
+             CommandPerms.Load();
+             
              Chat.MessageGlobal("&d{0}%S{1}", cmd.name, message);
              if (Player.IsSuper(p))
                  Player.Message(p, cmd.name + message);
