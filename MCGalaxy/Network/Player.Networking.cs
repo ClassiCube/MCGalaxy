@@ -151,17 +151,6 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Sends a message to the target player, unless the 
-        /// target player is ignoring this player. </summary>
-        /// <returns> Whether the target player is ignoring this player. </returns>
-        public bool MessageTo(Player other, string message) {
-            if (other.ignoreAll || other.listignored.CaselessContains(name)) return false;
-            other.SendMessage(message);
-            return true;
-        }
-        
-        public void SendBlankMessage() { Send(Packet.BlankMessage()); }
-        
         public static void MessageLines(Player p, IEnumerable<string> lines) {
             foreach (string line in lines)
                 SendMessage(p, line, true);
@@ -348,7 +337,7 @@ namespace MCGalaxy {
         /// <summary> Sends a packet indicating an absolute position + orientation change for an enity. </summary>
         public void SendPos(byte id, Position pos, Orientation rot) {
             if (id == Entities.SelfID) {
-                Pos = pos; Rot = rot; 
+                Pos = pos; SetYawPitch(rot.RotY, rot.HeadX);
                 pos.Y -= 22;  // NOTE: Fix for standard clients
             }           
             Send(Packet.Teleport(id, pos, rot));

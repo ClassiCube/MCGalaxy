@@ -63,9 +63,11 @@ namespace MCGalaxy.Commands {
         }
         
         static void ShowRequestMessage(Player p, Player target) {
-            p.MessageTo(target, p.ColoredName + " %Swould like to teleport to you.");
-            p.MessageTo(target, "Type &2/tpaccept %Sor &4/tpdeny%S.");
-            p.MessageTo(target, "This request will timeout after &b90 %Sseconds.");
+            if (!Chat.NotIgnoring(p, target)) return;
+        	
+            Player.Message(target, p.ColoredName + " %Swould like to teleport to you.");
+            Player.Message(target, "Type &2/tpaccept %Sor &4/tpdeny%S.");
+            Player.Message(target, "This request will timeout after &b90 %Sseconds.");
         }
         
         void DoAccept(Player p) {

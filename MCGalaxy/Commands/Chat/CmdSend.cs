@@ -55,9 +55,9 @@ namespace MCGalaxy.Commands {
             if (receiver == null) return;
             
             if (Player.IsSuper(p)) {
-                receiver.SendMessage("Message recieved from " + senderNick + "%S.");
-            } else {
-                p.MessageTo(receiver, "Message recieved from " + senderNick + "%S.");
+                Player.Message(receiver, "Message recieved from " + senderNick + "%S.");
+            } else if (Chat.NotIgnoring(p, receiver)) {
+                Player.Message(receiver, "Message recieved from " + senderNick + "%S.");
             }
         }
         
