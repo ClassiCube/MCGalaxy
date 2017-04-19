@@ -18,8 +18,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands {    
-    public class CmdNotes : Command {        
+namespace MCGalaxy.Commands {
+    public class CmdNotes : Command {
         public override string name { get { return "notes"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
@@ -29,14 +29,23 @@ namespace MCGalaxy.Commands {
             if (!Server.LogNotes) {
                 Player.Message(p, "The server does not have notes logging enabled."); return;
             }
+            
             if (CheckSuper(p, message, "player name")) return;
             if (message == "") message = p.name;
+            string name = PlayerInfo.FindMatchesPreferOnline(p, message);
+            if (name == null) return;
             
-            List<string> notes = Server.Notes.FindMatches(p, message, "notes");
-            if (notes == null) return;
+            List<string> notes = new List<string>();
+            foreach (string note in Server.Notes.Find(name)) {
+                notes.Add(note);
+            }
             
-            string target = PlayerMetaList.GetName(notes[0]);
-            Player.Message(p, "  Notes for {0}:",  PlayerInfo.GetColoredName(p, target));
+            string target = PlayerInfo.GetColoredName(p, name);
+            if (notes.Count == 0) {
+            	Player.Message(p, "{0} %Shas no notes.", target); return;
+            } else {
+            	Player.Message(p, "  Notes for {0}:",  target);
+            }
             
             foreach (string line in notes) {
                 string[] args = line.SplitSpaces();
@@ -46,7 +55,7 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, Action(args[1]) + " by " + args[2] + " on " + args[3]);
                 } else {
                     Player.Message(p, Action(args[1]) + " by " + args[2] + " on " + args[3]
-                                       + " - " + args[4].Replace("%20", " "));
+                                   + " - " + args[4].Replace("%20", " "));
                 }
             }
         }
@@ -63,12 +72,12 @@ namespace MCGalaxy.Commands {
         }
 
         public override void Help(Player p) {
-           Player.Message(p, "%T/notes [name] %H- views that player's notes.");
-           Player.Message(p, "%HNotes are things such as bans, kicks, warns, mutes.");
+            Player.Message(p, "%T/notes [name] %H- views that player's notes.");
+            Player.Message(p, "%HNotes are things such as bans, kicks, warns, mutes.");
         }
     }
     
-    public sealed class CmdMyNotes : CmdNotes {        
+    public sealed class CmdMyNotes : CmdNotes {
         public override string name { get { return "mynotes"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
