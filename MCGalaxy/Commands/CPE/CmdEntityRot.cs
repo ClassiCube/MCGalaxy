@@ -51,12 +51,8 @@ namespace MCGalaxy.Commands.CPE {
             if (!ParseArgs(p, args, 1, ref prop, ref angle)) return;
             
             Entities.UpdateEntityProp(who, prop, angle);
-            /*if (model != "humanoid") {
-                Server.models.AddOrReplace(who.name, model);
-            } else {
-                Server.models.Remove(who.name);
-            }
-            Server.models.Save();*/
+            Server.rotations.AddOrReplace(who.name, who.Rot.RotX + " " + who.Rot.RotZ);
+            Server.rotations.Save();
         }
         
         static bool ParseArgs(Player p, string[] args, int i, ref EntityProp prop, ref int angle) {

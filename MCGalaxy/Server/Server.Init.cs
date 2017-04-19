@@ -72,6 +72,7 @@ namespace MCGalaxy {
             reach = PlayerExtList.Load("extra/reach.txt");
             invalidIds = PlayerList.Load("extra/invalidids.txt");
             tempBans = PlayerExtList.Load("text/tempbans.txt");
+            rotations = PlayerExtList.Load("extra/rotations.txt");
             
             if (useWhitelist)
                 whiteList = PlayerList.Load("whitelist.txt");

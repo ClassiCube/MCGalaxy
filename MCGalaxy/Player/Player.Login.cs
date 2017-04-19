@@ -176,12 +176,22 @@ namespace MCGalaxy {
         }
         
         void LoadCpeData() {
-            string savedSkin = Server.skins.FindData(name);
-            if (savedSkin != null) SkinName = savedSkin;
+            string skin = Server.skins.FindData(name);
+            if (skin != null) SkinName = skin;
             
-            string savedModel = Server.models.FindData(name);
-            if (savedModel != null) Model = savedModel;
+            string model = Server.models.FindData(name);
+            if (model != null) Model = model;
             ModelBB = AABB.ModelAABB(Model, level);
+            
+            string rotations = Server.rotations.FindData(name);
+            if (rotations == null) return;
+            string[] rotParts = rotations.SplitSpaces(2);
+            if (rotParts.Length != 2) return;
+            
+            Orientation rot = Rot;
+            byte.TryParse(rotParts[0], out rot.RotX);
+            byte.TryParse(rotParts[1], out rot.RotZ);
+            Rot = rot;
         }
         
         void InitPlayerStats(DataTable playerDb) {
@@ -200,7 +210,7 @@ namespace MCGalaxy {
                 muted = true;
                 Chat.MessageGlobal(this, DisplayName + " &cis still muted from previously.", false);
             }
-			
+            
             if (Server.frozen.Contains(name)) {
                 frozen = true;
                 Chat.MessageGlobal(this, DisplayName + " &cis still frozen from previously.", false);
