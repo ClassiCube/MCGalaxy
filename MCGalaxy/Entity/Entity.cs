@@ -29,6 +29,7 @@ namespace MCGalaxy {
         // Last sent orientation/position, for delta calculation
         protected internal Orientation lastRot;
         protected internal Position lastPos;
+        internal bool supportsExtPositions;
         // TODO: struct assignment needs to be THREADSAFE
         
         

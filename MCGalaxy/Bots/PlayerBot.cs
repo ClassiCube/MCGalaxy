@@ -69,6 +69,7 @@ namespace MCGalaxy {
             
             level = lvl;
             id = NextFreeId(this);
+            supportsExtPositions = true;
 
             botTimer.Elapsed += BotTimerFunc;
             botTimer.Start();

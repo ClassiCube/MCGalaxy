@@ -233,9 +233,9 @@ namespace MCGalaxy {
             return buffer;
         }
         
-        public unsafe static void GetPositionPacket(ref byte* ptr, byte id, Position pos, 
+        public unsafe static void GetPositionPacket(ref byte* ptr, byte id, bool extPositions, Position pos, 
                                                     Position oldPos, Orientation rot, Orientation oldRot) {
-            Position delta = GetDelta(pos, oldPos);            
+        	Position delta = GetDelta(pos, oldPos, extPositions);
             bool posChanged = delta.X != 0 || delta.Y != 0 || delta.Z != 0;
             bool oriChanged = rot.RotY != oldRot.RotY || rot.HeadX != oldRot.HeadX;
             bool absPosUpdate = Math.Abs(delta.X) > 32 || Math.Abs(delta.Y) > 32 || Math.Abs(delta.Z) > 32;
@@ -269,9 +269,12 @@ namespace MCGalaxy {
             }
         }
         
-        static Position GetDelta(Position pos, Position oldPos) {
-            return new Position(pos.X - oldPos.X, pos.Y - oldPos.Y, pos.Z - oldPos.Z);
-            // TODO: proper delta calculation for 16 bit clients
+        static Position GetDelta(Position pos, Position old, bool extPositions) {
+            Position delta = new Position(pos.X - old.X, pos.Y - old.Y, pos.Z - old.Z);
+            if (extPositions) return delta;
+            
+            delta.X = (short)delta.X; delta.Y = (short)delta.Y; delta.Z = (short)delta.Z;
+            return delta;
         }
         
         public static void GlobalUpdate() {
@@ -299,7 +302,8 @@ namespace MCGalaxy {
                  
                  Orientation rot = pl.Rot;
                  rot.HeadX = p.hasChangeModel ? MakePitch(pl, rot.HeadX) : MakeClassicPitch(pl, rot.HeadX);
-                 Entities.GetPositionPacket(ref ptr, pl.id, pl.tempPos, pl.lastPos, rot, pl.lastRot);
+                 Entities.GetPositionPacket(ref ptr, pl.id, pl.supportsExtPositions,
+                                            pl.tempPos, pl.lastPos, rot, pl.lastRot);
              }
              
              int count = (int)(ptr - src);
