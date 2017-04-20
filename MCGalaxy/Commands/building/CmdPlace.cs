@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
 */
 using System;
-using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPlace : Command {        
