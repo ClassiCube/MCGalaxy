@@ -126,6 +126,7 @@ namespace MCGalaxy {
             locationChecker.Start();
              
             InitZombieSurvival();
+            InitLavaSurvival();
             BlockQueue.Start();
 
             Log("Finished setting up server, finding classicube.net url..");
@@ -140,6 +141,13 @@ namespace MCGalaxy {
                 // Did zombie survival change the main world?
                 if (oldMain != null && oldMain != Server.mainLevel)
                     oldMain.Unload(true, false);
+            } catch (Exception e) { Server.ErrorLog(e); }
+        }
+		
+		void InitLavaSurvival() {
+            if (!Server.lava.startOnStartup) return;
+            try {
+                Server.lava.Start();
             } catch (Exception e) { Server.ErrorLog(e); }
         }
     }

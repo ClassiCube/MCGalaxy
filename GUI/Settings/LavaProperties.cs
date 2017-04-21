@@ -59,6 +59,8 @@ namespace MCGalaxy.Gui {
             Lives = Server.lava.lifeNum;
             VoteTime = Server.lava.voteTime;
             VoteCount = Server.lava.voteCount;
+            StartImmediately = Server.lava.startOnStartup;
+            AFKToMain = Server.lava.sendAfkMain;
         }
         
         public void ApplyToServer() {
@@ -71,6 +73,8 @@ namespace MCGalaxy.Gui {
             Server.lava.lifeNum = Lives;
             Server.lava.voteTime = VoteTime;
             Server.lava.voteCount = VoteCount;
+            Server.lava.startOnStartup = StartImmediately;
+            Server.lava.sendAfkMain = AFKToMain;
         }    
     }
 }
