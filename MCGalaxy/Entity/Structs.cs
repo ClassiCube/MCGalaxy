@@ -116,7 +116,7 @@ namespace MCGalaxy {
         
         
         internal int Pack() {
-            return RotX | (RotY << 8) | (RotZ << 16) | HeadX;
+            return RotX | (RotY << 8) | (RotZ << 16) | (HeadX << 24);
         }
         
         internal static Orientation Unpack(int raw) {
