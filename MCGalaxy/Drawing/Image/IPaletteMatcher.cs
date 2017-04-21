@@ -36,8 +36,8 @@ namespace MCGalaxy.Drawing {
     
     public sealed class RgbPaletteMatcher : IPaletteMatcher {
         
-		PaletteEntry[] front, back;
-		public void SetPalette(PaletteEntry[] front, PaletteEntry[] back) {
+        PaletteEntry[] front, back;
+        public void SetPalette(PaletteEntry[] front, PaletteEntry[] back) {
             this.front = front; this.back = back;
         }
         

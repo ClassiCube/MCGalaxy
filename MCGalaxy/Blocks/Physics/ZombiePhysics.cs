@@ -45,7 +45,7 @@ namespace MCGalaxy.Blocks.Physics {
                     index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign((closest.Pos.BlockZ - z))));
                     if (index != C.b && MoveZombie(lvl, ref C, index)) return;
                 } else {
-            		index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign(closest.Pos.BlockZ - z)));
+                    index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign(closest.Pos.BlockZ - z)));
                     if (index != C.b && MoveZombie(lvl, ref C, index)) return;
                     
                     index = lvl.PosToInt((ushort)(x + Math.Sign(closest.Pos.BlockX - x)), y, z);

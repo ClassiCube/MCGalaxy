@@ -30,13 +30,13 @@ namespace MCGalaxy.Commands {
         }
         public override void Use(Player p, string message) { UsePlayer(p, message, "title color"); }
         
-        protected override void SetPlayerData(Player p, Player who, string[] args) {
+        protected override void SetPlayerData(Player p, Player who, string colName) {
             string color = "";
-            if (args.Length == 1) {
+            if (colName == "") {
                 Chat.MessageGlobal(who, who.ColoredName + " %Shad their title color removed.", false);
             } else  {
-                color = Colors.Parse(args[1]);
-                if (color == "") { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
+                color = Colors.Parse(colName);
+                if (color == "") { Player.Message(p, "There is no color \"" + colName + "\"."); return; }
                 else if (color == who.titlecolor) { Player.Message(p, who.DisplayName + " %Salready has that title color."); return; }
                 
                 Chat.MessageGlobal(who, who.ColoredName + " %Shad their title color changed to " + color + Colors.Name(color) + "%S.", false);                

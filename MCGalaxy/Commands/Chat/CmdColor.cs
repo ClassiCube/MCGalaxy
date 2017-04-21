@@ -32,14 +32,14 @@ namespace MCGalaxy.Commands {
         }        
         public override void Use(Player p, string message) { UseBotOrPlayer(p, message, "color"); }
 
-        protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
+        protected override void SetBotData(Player p, PlayerBot bot, string colName) {
             if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {
                 Player.Message(p, "Hence, you cannot change the color of that bot.");
                 return;
             }
             
-            string color = args.Length > 2 ? Colors.Parse(args[2]) : "&1";
-            if (color == "") { Player.Message(p, "There is no color \"" + args[2] + "\"."); return; }
+            string color = colName == "" ? "&1" : Colors.Parse(colName);
+            if (color == "") { Player.Message(p, "There is no color \"" + colName + "\"."); return; }
             Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Scolor was set to " 
                               + color + Colors.Name(color));            
             bot.color = color;
@@ -49,14 +49,14 @@ namespace MCGalaxy.Commands {
             BotsFile.UpdateBot(bot);
         }
         
-        protected override void SetPlayerData(Player p, Player who, string[] args) {
+        protected override void SetPlayerData(Player p, Player who, string colName) {
             string color = "";
-            if (args.Length == 1) {
+            if (colName == "") {
                 Chat.MessageGlobal(who, who.ColoredName + " %Shad their color removed.", false);
                 who.color = who.group.color;
             } else {
-                color = Colors.Parse(args[1]);
-                if (color == "") { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
+                color = Colors.Parse(colName);
+                if (color == "") { Player.Message(p, "There is no color \"" + colName + "\"."); return; }
                 else if (color == who.color) { Player.Message(p, who.DisplayName + " %Salready has that color."); return; }
                 
                 Chat.MessageGlobal(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);

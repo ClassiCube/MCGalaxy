@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
             // Check tempbans first
             if (Server.tempBans.Remove(name)) {
                 Server.tempBans.Save();
-            	
+                
                 Chat.MessageGlobal("{0} had their temporary ban lifted by {1}.", name, srcFull);
                 Server.s.Log("UNBANNED: " + name + " by " + src);
                 Server.IRC.Say(name + " was unbanned by " + src + ".");

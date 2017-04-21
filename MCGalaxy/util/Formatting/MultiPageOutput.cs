@@ -23,8 +23,8 @@ namespace MCGalaxy {
     /// <summary> Outputs a large range of values across a number of 'pages'. (Pagination) </summary>
     public static class MultiPageOutput {
 
-    	/// <summary> Outputs a large range of values across a number of 'pages'. (Pagination) </summary>
-    	/// <param name="lines">true if each item is printed on a separate line, false if combined. </param>
+        /// <summary> Outputs a large range of values across a number of 'pages'. (Pagination) </summary>
+        /// <param name="lines">true if each item is printed on a separate line, false if combined. </param>
         public static void Output<T>(Player p, IList<T> items, Func<T, string> formatter,
                                      string cmd, string type, string modifier, bool lines) {
             int page = 0, total = items.Count;

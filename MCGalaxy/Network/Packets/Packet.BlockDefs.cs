@@ -43,7 +43,7 @@ namespace MCGalaxy {
         }
         
         static void MakeDefineBlockStart(BlockDefinition def, byte[] buffer, ref int i, 
-		                                 bool uniqueSideTexs, bool hasCP437) {
+                                         bool uniqueSideTexs, bool hasCP437) {
             // speed = 2^((raw - 128) / 64);
             // therefore raw = 64log2(speed) + 128
             byte rawSpeed = (byte)(64 * Math.Log(def.Speed, 2) + 128);

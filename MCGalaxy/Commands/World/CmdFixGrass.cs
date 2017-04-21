@@ -143,7 +143,7 @@ namespace MCGalaxy.Commands.World {
                     extAbove = lvl.GetExtTile((ushort)x, (ushort)(y + 1), (ushort)z);
                 
                 if (lvl.LightPasses(above, extAbove)) {
-                	if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass) == 2) {
+                    if (p.level.DoBlockchange(p, (ushort)x, (ushort)y, (ushort)z, Block.grass) == 2) {
                         buffer.Add(index, Block.grass, 0);
                         totalFixed++;
                     }

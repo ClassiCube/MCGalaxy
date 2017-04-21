@@ -58,7 +58,7 @@ namespace MCGalaxy {
             Player.Message(p, "%TExtra permissions:");
             foreach (CommandExtraPerms extra in extraPerms) {
                 Player.Message(p, "{0}) {1}%S{2}", extra.Number, 
-            	               Group.GetColoredName(extra.MinRank), extra.Description);
+                               Group.GetColoredName(extra.MinRank), extra.Description);
             }
         }
         

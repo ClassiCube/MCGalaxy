@@ -51,9 +51,9 @@ namespace MCGalaxy {
                 PlayerActions.ChangeMap(p, lvl);
             
             if (p.level.name.CaselessEq(wp.lvlname)) {
-            	p.SendPos(Entities.SelfID, 
-            	          new Position(wp.x, wp.y, wp.z),
-            	          new Orientation(wp.rotx, wp.roty));
+                p.SendPos(Entities.SelfID, 
+                          new Position(wp.x, wp.y, wp.z),
+                          new Orientation(wp.rotx, wp.roty));
                 Player.Message(p, "Sent you to waypoint/warp");
             } else {
                 Player.Message(p, "Unable to send you to the warp as the map it is on is not loaded.");

@@ -37,44 +37,39 @@ namespace MCGalaxy.Commands.CPE {
             UseBotOrPlayer(p, message, "rotation");
         }
         
-        protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
-            EntityProp prop = EntityProp.RotX;
-            int angle = 0;
-            if (!ParseArgs(p, args, 2, ref prop, ref angle)) return;
-            
-            Entities.UpdateEntityProp(bot, prop, angle);
+        protected override void SetBotData(Player p, PlayerBot bot, string args) {
+            if (!ParseArgs(p, args, bot)) return;
             BotsFile.UpdateBot(bot);
         }
         
-        protected override void SetPlayerData(Player p, Player who, string[] args) {
-            EntityProp prop = EntityProp.RotX;
-            int angle = 0;
-            if (!ParseArgs(p, args, 1, ref prop, ref angle)) return;
-            
-            Entities.UpdateEntityProp(who, prop, angle);
+        protected override void SetPlayerData(Player p, Player who, string args) {
+            if (!ParseArgs(p, args, who)) return;
             Server.rotations.AddOrReplace(who.name, who.Rot.RotX + " " + who.Rot.RotZ);
             Server.rotations.Save();
         }
         
-        static bool ParseArgs(Player p, string[] args, int i, ref EntityProp prop, ref int angle) {
-            string[] bits;
-            if (args.Length <= i) {
-                Player.Message(p, "You need to provide an axis name and angle."); return false;
+        static bool ParseArgs(Player p, string args, Entity entity) {
+            if (args == "") {
+                Entities.UpdateEntityProp(entity, EntityProp.RotX, 0);
+                Entities.UpdateEntityProp(entity, EntityProp.RotZ, 0);
+                return true;
             }
-            bits = args[i].SplitSpaces();
+            
+            string[] bits = args.SplitSpaces();
             if (bits.Length != 2) {
                 Player.Message(p, "You need to provide an axis name and angle."); return false;
             }
+            int angle = 0;
+            if (!CommandParser.GetInt(p, bits[1], "Angle", ref angle, -360, 360)) return false;
             
             if (bits[0].CaselessEq("x")) {
-                prop = EntityProp.RotX;
+                Entities.UpdateEntityProp(entity, EntityProp.RotX, angle);
             } else if (bits[0].CaselessEq("z")) {
-                prop = EntityProp.RotZ;
+                Entities.UpdateEntityProp(entity, EntityProp.RotZ, angle);
             } else {
                 Player.Message(p, "Axis name must be X or Z."); return false;
             }
-            
-            return CommandParser.GetInt(p, bits[1], "Angle", ref angle, -360, 360);
+            return true;
         }
 
         public override void Help(Player p) {

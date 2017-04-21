@@ -38,17 +38,16 @@ namespace MCGalaxy.Commands {
             UseBotOrPlayer(p, message, "nick");
         }
 
-        protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
-            string newName = args.Length > 2 ? args[2] : "";
-            if (newName == "") {
+        protected override void SetBotData(Player p, PlayerBot bot, string nick) {
+            if (nick == "") {
                 bot.DisplayName = bot.name;
                 Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + " %Sreverted to their original name.");
             } else {
-                string nameTag = newName.CaselessEq("empty") ? "" : newName;
-                if (newName.Length > 62) { Player.Message(p, "Name must be 62 or fewer letters."); return; }
+                string nameTag = nick.CaselessEq("empty") ? "" : nick;
+                if (nick.Length > 62) { Player.Message(p, "Name must be 62 or fewer letters."); return; }
                 
                 Player.Message(p, "You changed the name of bot " + bot.ColoredName + " %Sto &c" + nameTag);
-                bot.DisplayName = Colors.EscapeColors(newName);
+                bot.DisplayName = Colors.EscapeColors(nick);
             }
             
             bot.GlobalDespawn();
@@ -56,16 +55,15 @@ namespace MCGalaxy.Commands {
             BotsFile.UpdateBot(bot);
         }
         
-        protected override void SetPlayerData(Player p, Player who, string[] args) {
-            string newName = args.Length > 1 ? args[1] : "";
-            if (newName == "") {                
+        protected override void SetPlayerData(Player p, Player who, string nick) {
+            if (nick == "") {                
                 Chat.MessageGlobal(who, who.FullName + " %Sreverted their nick to their original name.", false);
                 who.DisplayName = who.truename;
             } else {
-                if (newName.Length >= 30) { Player.Message(p, "Nick must be under 30 letters."); return; }     
+                if (nick.Length >= 30) { Player.Message(p, "Nick must be under 30 letters."); return; }     
                 
-                Chat.MessageGlobal(who, who.FullName + " %Shad their nick changed to " + who.color + newName + "%S.", false);
-                who.DisplayName = newName;
+                Chat.MessageGlobal(who, who.FullName + " %Shad their nick changed to " + who.color + nick + "%S.", false);
+                who.DisplayName = nick;
             }
             
             PlayerDB.Save(who);

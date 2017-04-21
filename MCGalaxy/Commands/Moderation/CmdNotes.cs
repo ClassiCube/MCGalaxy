@@ -42,9 +42,9 @@ namespace MCGalaxy.Commands {
             
             string target = PlayerInfo.GetColoredName(p, name);
             if (notes.Count == 0) {
-            	Player.Message(p, "{0} %Shas no notes.", target); return;
+                Player.Message(p, "{0} %Shas no notes.", target); return;
             } else {
-            	Player.Message(p, "  Notes for {0}:",  target);
+                Player.Message(p, "  Notes for {0}:",  target);
             }
             
             foreach (string line in notes) {

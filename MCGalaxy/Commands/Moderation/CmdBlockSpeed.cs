@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands {
             
             if (cmd == "bs") {
                 if (!CommandParser.GetInt(p, args[1], "Blocks per interval", ref value, 0)) return;
-            	
+                
                 BlockQueue.blockupdates = value;
                 Player.Message(p, "Blocks per interval is now {0}.", BlockQueue.blockupdates);
             } else if (cmd == "ts") {

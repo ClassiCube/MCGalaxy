@@ -482,7 +482,7 @@ namespace MCGalaxy.Commands.CPE {
             }
             return block;
         }
-		
+        
         
         static byte GetFreeId(bool global, Level lvl) {
             // Start from opposite ends to avoid overlap.
@@ -541,7 +541,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static bool CheckBlockId(Player p, string arg, out int blockId) {
-		    blockId = 0;
+            blockId = 0;
             return CommandParser.GetInt(p, arg, "Block ID", ref blockId, 0, 254);
         }
         

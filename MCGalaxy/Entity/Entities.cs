@@ -202,12 +202,10 @@ namespace MCGalaxy {
             Level lvl = entity.Level;
             
             Orientation rot = entity.Rot;
-            if (prop == EntityProp.RotX)
-                rot.RotX = Orientation.DegreesToPacked(value);
-            if (prop == EntityProp.RotY)
-                rot.RotY = Orientation.DegreesToPacked(value);
-            if (prop == EntityProp.RotZ)
-                rot.RotZ = Orientation.DegreesToPacked(value);
+            byte angle = Orientation.DegreesToPacked(value);
+            if (prop == EntityProp.RotX) rot.RotX = angle;
+            if (prop == EntityProp.RotY) rot.RotY = angle;
+            if (prop == EntityProp.RotZ) rot.RotZ = angle;
             
             entity.Rot = rot;
             if (prop == EntityProp.RotY) entity.SetYawPitch(rot.RotY, rot.HeadX);
@@ -217,7 +215,8 @@ namespace MCGalaxy {
                 if (!pl.CanSeeEntity(entity)) continue;
                 
                 byte id = (pl == entity) ? Entities.SelfID : entity.EntityID;
-                pl.Send(Packet.EntityProperty(id, prop, value));
+                pl.Send(Packet.EntityProperty(id, prop, 
+                                              Orientation.PackedToDegrees(angle)));
             }
         }
         

@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands {
                     Player.Message(p, "Hence, you cannot change the " + type + " of that bot.");
                     return;
                 }
-                SetBotData(p, bot, args);
+                SetBotData(p, bot, args.Length > 2 ? args[2] : "");
             } else {
                 if (p != who && !CheckExtraPerm(p, 1)) {
                     MessageNeedExtra(p, 1); return;
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands {
                 if (p != null && who.Rank > p.Rank) {
                     MessageTooHighRank(p, "change the " + type + " of", true); return;
                 }
-                SetPlayerData(p, who, args);
+                SetPlayerData(p, who, args.Length > 1 ? args[1] : "");
             }
         }
         
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands {
                 MessageTooHighRank(p, "change the " + type + " of", true); return;
             }
             if (p != who && !CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
-            SetPlayerData(p, who, args);
+            SetPlayerData(p, who, args.Length > 1 ? args[1] : "");
         }
         
         bool CheckOwn(Player p, string[] args, string type) {
@@ -77,8 +77,8 @@ namespace MCGalaxy.Commands {
             return true;
         }
 
-        protected virtual void SetBotData(Player p, PlayerBot bot, string[] args) { }
+        protected virtual void SetBotData(Player p, PlayerBot bot, string args) { }
         
-        protected virtual void SetPlayerData(Player p, Player who, string[] args) { }
+        protected virtual void SetPlayerData(Player p, Player who, string args) { }
     }
 }

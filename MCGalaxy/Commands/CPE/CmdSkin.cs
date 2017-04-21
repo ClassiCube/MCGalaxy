@@ -36,9 +36,8 @@ namespace MCGalaxy.Commands.CPE {
             UseBotOrPlayer(p, message, "skin");
         }
 
-        protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
-            string skin = GetSkin(p, args, 2, bot.name);
-            if (skin == null) return;
+        protected override void SetBotData(Player p, PlayerBot bot, string skin) {
+            skin = GetSkin(skin, bot.name);
             bot.SkinName = skin;
             Player.Message(p, "You changed the skin of bot " + bot.ColoredName + " %Sto &c" + skin);
             
@@ -47,9 +46,8 @@ namespace MCGalaxy.Commands.CPE {
             BotsFile.UpdateBot(bot);
         }
         
-        protected override void SetPlayerData(Player p, Player who, string[] args) {
-            string skin = GetSkin(p, args, 1, who.truename);
-            if (skin == null) return;
+        protected override void SetPlayerData(Player p, Player who, string skin) {
+            skin = GetSkin(skin, who.truename);
             who.SkinName = skin;
             Entities.GlobalDespawn(who, true);
             Entities.GlobalSpawn(who, true);
@@ -68,8 +66,8 @@ namespace MCGalaxy.Commands.CPE {
             Server.skins.Save();
         }
         
-        static string GetSkin(Player p, string[] args, int i, string defSkin) {
-            string skin = args.Length > i ? args[i] : defSkin;
+        static string GetSkin(string skin, string defSkin) {
+            if (skin == "") skin = defSkin;
             if (skin[0] == '+')
                 skin = "http://skins.minecraft.net/MinecraftSkins/" + skin.Substring(1) + ".png";
             return skin;

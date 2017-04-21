@@ -208,7 +208,7 @@ namespace MCGalaxy {
             
             // Backwards compatibility with old config, where some permissions were global
             if (perms.viewPerm != -1)
-            	CommandExtraPerms.Find("review", 1).MinRank = (LevelPermission)perms.viewPerm;
+                CommandExtraPerms.Find("review", 1).MinRank = (LevelPermission)perms.viewPerm;
             if (perms.nextPerm != -1)
                 CommandExtraPerms.Find("review", 2).MinRank = (LevelPermission)perms.nextPerm;
             if (perms.clearPerm != -1)

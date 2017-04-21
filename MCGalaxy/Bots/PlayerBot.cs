@@ -166,7 +166,7 @@ namespace MCGalaxy {
                     DoMove();
             }
             
-        	// TODO: check if external code modified pos/rot
+            // TODO: check if external code modified pos/rot
             byte[] packet = Entities.GetPositionPacket(this);
             lastPos = Pos; lastRot = Rot;
             if (packet == null) return;

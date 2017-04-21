@@ -21,9 +21,9 @@ using System.IO;
 using System.Net;
 
 namespace MCGalaxy.Commands.Moderation {
-	
-	/// <summary> Provides common helper methods for moderation commands. </summary>
-	public static class ModActionCmd {
+    
+    /// <summary> Provides common helper methods for moderation commands. </summary>
+    public static class ModActionCmd {
         
         /// <summary> Expands @[rule number] to the actual rule with that number. </summary>
         public static string ExpandReason(Player p, string reason) {

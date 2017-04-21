@@ -38,7 +38,7 @@ namespace MCGalaxy {
             buffer[130] = Block.canPlace(p, Block.blackrock) ? (byte)100 : (byte)0;
             return buffer;
         }
-		
+        
         public static byte[] LevelFinalise(ushort width, ushort height, ushort length) {
             byte[] buffer = new byte[7];
             buffer[0] = Opcode.LevelFinalise;
@@ -49,7 +49,7 @@ namespace MCGalaxy {
         }
         
         public static byte[] AddEntity(byte id, string name, Position pos, 
-		                               Orientation rot, bool hasCP437) {
+                                       Orientation rot, bool hasCP437) {
             byte[] buffer = new byte[74];
             buffer[0] = Opcode.AddEntity;
             buffer[1] = id;

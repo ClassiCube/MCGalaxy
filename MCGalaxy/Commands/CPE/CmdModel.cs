@@ -40,16 +40,16 @@ namespace MCGalaxy.Commands.CPE {
             UseBotOrPlayer(p, message, "model");
         }
         
-        protected override void SetBotData(Player p, PlayerBot bot, string[] args) {
-            string model = GetModel(p, args, 2);
+        protected override void SetBotData(Player p, PlayerBot bot, string model) {
+            model = GetModel(model);
             Entities.UpdateModel(bot, model);
             
             Player.Message(p, "You changed the model of bot " + bot.ColoredName + " %Sto a &c" + model);
             BotsFile.UpdateBot(bot);
         }
         
-        protected override void SetPlayerData(Player p, Player who, string[] args) {
-            string model = GetModel(p, args, 1);
+        protected override void SetPlayerData(Player p, Player who, string model) {
+            model = GetModel(model);
             Entities.UpdateModel(who, model);
             
             if (p != who) {
@@ -66,8 +66,8 @@ namespace MCGalaxy.Commands.CPE {
             Server.models.Save();
         }
         
-        static string GetModel(Player p, string[] args, int i) {
-            string model = args.Length > i ? args[i] : "humanoid";
+        static string GetModel(string model) {
+            if (model == "") model = "humanoid";
             model = model.ToLower();
             model = model.Replace(':', '|'); // since many assume : is for scale instead of |.
             return model;

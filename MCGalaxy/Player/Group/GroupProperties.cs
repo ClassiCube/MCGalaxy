@@ -106,7 +106,7 @@ namespace MCGalaxy {
         }
         
         static void AddGroup(ref Group grp) {
-        	Group.AddAndLoadGroup(
+            Group.AddAndLoadGroup(
                 new Group(grp.Permission, grp.maxBlocks, grp.maxUndo, grp.trueName,
                           grp.color[0], grp.MOTD, grp.fileName, grp.OverseerMaps, grp.prefix));
             grp = null;

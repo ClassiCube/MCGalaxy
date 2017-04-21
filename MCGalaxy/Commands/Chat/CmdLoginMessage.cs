@@ -32,16 +32,16 @@ namespace MCGalaxy.Commands {
             UsePlayer(p, message, "login message");
         }
         
-        protected override void SetPlayerData(Player p, Player who, string[] args) {
-            if (args.Length == 1) {
+        protected override void SetPlayerData(Player p, Player who, string loginMsg) {
+            if (loginMsg == "") {
                 string path = PlayerDB.LoginPath(who.name);
                 if (File.Exists(path)) File.Delete(path);
                 Player.Message(p, "The login message of {0} %Shas been removed.",
                                who.ColoredName);
             } else {
-                PlayerDB.SetLoginMessage(who.name, args[1]);
+                PlayerDB.SetLoginMessage(who.name, loginMsg);
                 Player.Message(p, "The login message of {0} %Shas been changed to: {1}",
-                               who.ColoredName, args[1]);
+                               who.ColoredName, loginMsg);
             }
         }
         

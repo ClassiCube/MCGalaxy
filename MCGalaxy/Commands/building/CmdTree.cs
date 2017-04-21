@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
                     Player.Message(p, "Value must be {0} or below for {1} trees.", tree.MaxSize, parts[0]); return;
                 }
                 
-            	dArgs.size = size;
+                dArgs.size = size;
                 dArgs.brushMsg = parts.Length >= 3 ? parts[2] : ""; // type value brush
             } else {
                 dArgs.brushMsg = parts.Length >= 2 ? parts[1] : ""; // type brush
