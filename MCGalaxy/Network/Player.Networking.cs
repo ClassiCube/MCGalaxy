@@ -278,14 +278,15 @@ namespace MCGalaxy {
             AccessResult access = level.BuildAccess.Check(this);
             AllowBuild = access == AccessResult.Whitelisted || access == AccessResult.Allowed;
             
-            try {               
+            try {                 
+                SendRaw(Opcode.LevelInitialise);
+                
                 if (hasBlockDefs) {
                     if (oldLevel != null && oldLevel != level)
                         RemoveOldLevelCustomBlocks(oldLevel);
                     BlockDefinition.SendLevelCustomBlocks(this);
                 }
                 
-                SendRaw(Opcode.LevelInitialise);
                 using (LevelChunkStream s = new LevelChunkStream(this))
                     LevelChunkStream.CompressMap(this, s);
                 
