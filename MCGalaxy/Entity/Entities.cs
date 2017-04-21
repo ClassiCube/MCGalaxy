@@ -222,22 +222,14 @@ namespace MCGalaxy {
         
         #region Position updates
         
-        public static byte[] GetPositionPacket(PlayerBot bot) {
+        public static byte[] GetPositionPacket(PlayerBot bot, bool extPos) {
             // TODO: not sure why bots only work with absolute packets
-            byte[] buffer = new byte[10];
-            buffer[0] = Opcode.EntityTeleport;
-            buffer[1] = bot.id;
-            NetUtils.WriteU16((ushort)bot.Pos.X, buffer, 2);
-            NetUtils.WriteU16((ushort)bot.Pos.Y, buffer, 4);
-            NetUtils.WriteU16((ushort)bot.Pos.Z, buffer, 6);
-            buffer[8] = bot.Rot.RotY;
-            buffer[9] = bot.Rot.HeadX;
-            return buffer;
+            return Packet.Teleport(bot.id, bot.Pos, bot.Rot, extPos);
         }
         
-        public unsafe static void GetPositionPacket(ref byte* ptr, byte id, bool extPositions, Position pos,
-                                                    Position oldPos, Orientation rot, Orientation oldRot) {
-            Position delta = GetDelta(pos, oldPos, extPositions);
+        public unsafe static void GetPositionPacket(ref byte* ptr, byte id, bool srcExtPos, bool extPos, 
+                                                    Position pos, Position oldPos, Orientation rot, Orientation oldRot) {
+            Position delta = GetDelta(pos, oldPos, srcExtPos);
             bool posChanged = delta.X != 0 || delta.Y != 0 || delta.Z != 0;
             bool oriChanged = rot.RotY != oldRot.RotY || rot.HeadX != oldRot.HeadX;
             bool absPosUpdate = Math.Abs(delta.X) > 32 || Math.Abs(delta.Y) > 32 || Math.Abs(delta.Z) > 32;
@@ -245,18 +237,17 @@ namespace MCGalaxy {
             if (absPosUpdate) {
                 *ptr = Opcode.EntityTeleport; ptr++;
                 *ptr = id; ptr++;
-                *ptr = (byte)(pos.X >> 8); ptr++; *ptr = (byte)pos.X; ptr++;
-                *ptr = (byte)(pos.Y >> 8); ptr++; *ptr = (byte)pos.Y; ptr++;
-                *ptr = (byte)(pos.Z >> 8); ptr++; *ptr = (byte)pos.Z; ptr++;
-            } else if (posChanged && oriChanged) {
-                *ptr = Opcode.RelPosAndOrientationUpdate; ptr++;
-                *ptr = id; ptr++;
-                *ptr = (byte)(delta.X); ptr++;
-                *ptr = (byte)(delta.Y); ptr++;
-                *ptr = (byte)(delta.Z); ptr++;
+                
+                if (extPos) {
+                    WriteI32(ref ptr, pos.X); WriteI32(ref ptr, pos.Y); WriteI32(ref ptr, pos.Z);
+                } else {
+                	WriteI16(ref ptr, (short)pos.X); WriteI16(ref ptr, (short)pos.Y); WriteI16(ref ptr, (short)pos.Z);
+                }
             } else if (posChanged) {
-                *ptr = Opcode.RelPosUpdate; ptr++;
+                byte opcode = oriChanged ? Opcode.RelPosAndOrientationUpdate : Opcode.RelPosUpdate;
+                *ptr = opcode; ptr++;
                 *ptr = id; ptr++;
+                
                 *ptr = (byte)(delta.X); ptr++;
                 *ptr = (byte)(delta.Y); ptr++;
                 *ptr = (byte)(delta.Z); ptr++;
@@ -271,6 +262,15 @@ namespace MCGalaxy {
             }
         }
         
+        unsafe static void WriteI32(ref byte* ptr, int value) {
+            *ptr = (byte)(value >> 24); ptr++; *ptr = (byte)(value >> 16); ptr++;
+            *ptr = (byte)(value >> 8); ptr++; *ptr = (byte)value; ptr++;
+        }
+        
+        unsafe static void WriteI16(ref byte* ptr, short value) {
+            *ptr = (byte)(value >> 8); ptr++; *ptr = (byte)value; ptr++;
+        }
+        
         static Position GetDelta(Position pos, Position old, bool extPositions) {
             Position delta = new Position(pos.X - old.X, pos.Y - old.Y, pos.Z - old.Z);
             if (extPositions) return delta;
@@ -278,6 +278,7 @@ namespace MCGalaxy {
             delta.X = (short)delta.X; delta.Y = (short)delta.Y; delta.Z = (short)delta.Z;
             return delta;
         }
+        
         
         public static void GlobalUpdate() {
             Player[] players = PlayerInfo.Online.Items;
@@ -296,7 +297,7 @@ namespace MCGalaxy {
         
         unsafe static void UpdatePosition(Player p) {
             Player[] players = PlayerInfo.Online.Items;
-            byte* src = stackalloc byte[10 * 256]; // 10 = size of absolute update
+            byte* src = stackalloc byte[16 * 256]; // 16 = size of absolute update, with extended positions
             byte* ptr = src;
             
             foreach (Player pl in players) {
@@ -304,7 +305,7 @@ namespace MCGalaxy {
                 
                 Orientation rot = pl.Rot;
                 rot.HeadX = p.hasChangeModel ? MakePitch(pl, rot.HeadX) : MakeClassicPitch(pl, rot.HeadX);
-                Entities.GetPositionPacket(ref ptr, pl.id, pl.supportsExtPositions,
+                Entities.GetPositionPacket(ref ptr, pl.id, pl.hasExtPositions, p.hasExtPositions,
                                            pl.tempPos, pl.lastPos, rot, pl.lastRot);
             }
             

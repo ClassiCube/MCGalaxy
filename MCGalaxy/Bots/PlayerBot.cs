@@ -69,7 +69,7 @@ namespace MCGalaxy {
             
             level = lvl;
             id = NextFreeId(this);
-            supportsExtPositions = true;
+            hasExtPositions = true;
 
             botTimer.Elapsed += BotTimerFunc;
             botTimer.Start();
@@ -167,13 +167,18 @@ namespace MCGalaxy {
             }
             
             // TODO: check if external code modified pos/rot
-            byte[] packet = Entities.GetPositionPacket(this);
+            byte[] packet = Entities.GetPositionPacket(this, false);
             lastPos = Pos; lastRot = Rot;
             if (packet == null) return;
+            byte[] extPacket = Entities.GetPositionPacket(this, true);
 
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players)
-                if (p.level == level) p.Send(packet);
+            foreach (Player p in players) {
+                if (p.level != level) continue;
+                
+                if (p.hasExtPositions) p.Send(extPacket);
+                else p.Send(packet);
+            }
         }
 
         

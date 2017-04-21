@@ -30,7 +30,7 @@ namespace MCGalaxy {
         // Last sent orientation/position, for delta calculation
         protected internal Orientation lastRot;
         protected internal Position lastPos;
-        internal bool supportsExtPositions;
+        internal bool hasExtPositions;
         
         
         /// <summary> Model name of this entity. </summary>

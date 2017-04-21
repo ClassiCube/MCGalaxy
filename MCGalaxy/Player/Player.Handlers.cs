@@ -220,7 +220,7 @@ namespace MCGalaxy {
                     return 9;
                 case Opcode.EntityTeleport:
                     if (!loggedIn) goto default;
-                    return 10 + (supportsExtPositions ? 6 : 0);
+                    return 10 + (hasExtPositions ? 6 : 0);
                 case Opcode.Message:
                     if (!loggedIn) goto default;
                     return 66;
@@ -308,7 +308,7 @@ namespace MCGalaxy {
                 RawHeldBlock = heldBlock;
             
             int x, y, z;
-            if (supportsExtPositions) {
+            if (hasExtPositions) {
                 x = NetUtils.ReadI32(packet, 2);
                 y = NetUtils.ReadI32(packet, 6);
                 z = NetUtils.ReadI32(packet, 10);
@@ -318,7 +318,8 @@ namespace MCGalaxy {
                 z = NetUtils.ReadI16(packet, 6);
             }
             
-            byte yaw = packet[8], pitch = packet[9];
+            int offset = 8 + (hasExtPositions ? 6 : 0);
+            byte yaw = packet[offset + 0], pitch = packet[offset + 1];
             Position next = new Position(x, y, z);
 
             if (Server.Countdown.HandlesMovement(this, next, yaw, pitch))

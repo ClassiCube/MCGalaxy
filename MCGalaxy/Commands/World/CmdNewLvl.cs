@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "%T/newlvl [name] [width] [height] [length] [theme] <seed>");
             Player.Message(p, "%HCreates/generates a new level.");
             Player.Message(p, "  %HSizes must be >= 16 and <= 8192, and divisible by 16.");
-            Player.Message(p, "  %HDue to limitations, other players don't show past 1024.");
+            Player.Message(p, "  %HNOTE: Other players on older clients don't show past 1024.");
             Player.Message(p, "  %HType %T/help newlvl themes %Hto see a list of themes.");
             Player.Message(p, "%HSeed is optional, and controls how the level is generated.");
             Player.Message(p, "  %HFlat theme: Seed specifies the grass height.");

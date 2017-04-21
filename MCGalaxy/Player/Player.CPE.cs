@@ -24,7 +24,7 @@ namespace MCGalaxy {
         public int ChangeModel, EnvMapAppearance, EnvWeatherType, HackControl;
         public int EmoteFix, MessageTypes, LongerMessages, FullCP437;
         public int BlockDefinitions, BlockDefinitionsExt, TextColors, BulkBlockUpdate;
-        public int EnvMapAspect, PlayerClick, EntityProperty;
+        public int EnvMapAspect, PlayerClick, EntityProperty, ExtEntityPositions;
 
         // these are checked frequently, so avoid overhead of HasCpeExt
         public bool hasCustomBlocks, hasBlockDefs,
@@ -68,7 +68,7 @@ namespace MCGalaxy {
                 case CpeExt.LongerMessages:
                     LongerMessages = version; break;
                 case CpeExt.FullCP437:
-                    FullCP437 = version; 
+                    FullCP437 = version;
                     hasCP437 = true; break;
                 case CpeExt.BlockDefinitions:
                     BlockDefinitions = version;
@@ -82,7 +82,7 @@ namespace MCGalaxy {
                     for (int i = 0; i < Colors.ExtColors.Length; i++) {
                         if (Colors.ExtColors[i].Undefined) continue;
                         Send(Packet.SetTextColor(Colors.ExtColors[i]));
-                    } 
+                    }
                     break;
                 case CpeExt.BulkBlockUpdate:
                     BulkBlockUpdate = version; break;
@@ -92,6 +92,9 @@ namespace MCGalaxy {
                     PlayerClick = version; break;
                 case CpeExt.EntityProperty:
                     EntityProperty = version; break;
+                case CpeExt.ExtEntityPositions:
+                    ExtEntityPositions = version;
+                    hasExtPositions = true; break;
             }
         }
 
@@ -121,6 +124,7 @@ namespace MCGalaxy {
                     case CpeExt.EnvMapAspect: return EnvMapAspect == version;
                     case CpeExt.PlayerClick: return PlayerClick == version;
                     case CpeExt.EntityProperty: return EntityProperty == version;
+                    case CpeExt.ExtEntityPositions: return ExtEntityPositions == version;
                     default: return false;
             }
         }
@@ -221,7 +225,7 @@ namespace MCGalaxy {
             int j = coreCount * 4;
             
             for (int i = Block.CpeCount; i < Block.Count; i++) {
-                if (level.CustomBlockDefs[i] == null) continue;               
+                if (level.CustomBlockDefs[i] == null) continue;
                 Packet.WriteBlockPermission((byte)i, level.CanPlace, level.CanDelete, bulk, j);
                 j += 4;
             }
@@ -252,6 +256,7 @@ namespace MCGalaxy {
         public const string EnvMapAspect = "EnvMapAspect";
         public const string PlayerClick = "PlayerClick";
         public const string EntityProperty = "EntityProperty";
+        public const string ExtEntityPositions = "ExtEntityPositions";
     }
     
     public enum CpeMessageType : byte {

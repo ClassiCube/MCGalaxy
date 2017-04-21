@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands {
             if (relative) arg = arg.Substring(1);
             value = 0;
             
-            if (!CommandParser.GetInt(p, arg, axis + " coordinate", ref value, -1024, 1024)) return false;            
+            if (!CommandParser.GetInt(p, arg, axis + " coordinate", ref value)) return false;            
             if (relative) value += (cur / 32);
             return true;
         }
