@@ -19,7 +19,19 @@ using System;
 using System.IO;
 
 namespace MCGalaxy.Core {
-    internal static class LevelHandler {
+    internal static class MiscHandlers {
+        
+        internal static void HandlePlayerMove(Player p, Position next, byte yaw, byte pitch) {
+            if (!p.frozen) return;
+            
+            bool movedX = Math.Abs(next.X - p.Pos.X) > 4;  // moved more than 0.125 blocks horizontally
+            bool movedY = Math.Abs(next.Y - p.Pos.Y) > 40; // moved more than 1.25 blocks vertically
+            bool movedZ = Math.Abs(next.Z - p.Pos.Z) > 4;  // moved more than 0.125 blocks horizontally
+            p.SetYawPitch(yaw, pitch);
+            
+            if (movedX || movedY || movedZ) { p.SendPos(Entities.SelfID, p.Pos, p.Rot); }            
+            Plugin.CancelPlayerEvent(PlayerEvents.PlayerMove, p);            
+        }
         
         internal static void HandleOnJoinedLevel(Player p, Level prevLevel, Level level) {
             p.AFKCooldown = DateTime.UtcNow.AddSeconds(2);

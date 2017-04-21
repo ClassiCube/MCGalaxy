@@ -53,13 +53,12 @@ namespace MCGalaxy.Games {
             return false;
         }
         
-        public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z,
-                                             byte rotX, byte rotY) {
+        public override bool HandlesMovement(Player p, Position next, byte rotX, byte rotY) {
             if (!Running || !RoundInProgress) return false;
             if (p.level == null || !p.level.name.CaselessEq(CurLevelName)) return false;
             
-            return MovementCheck.DetectNoclip(p, x, y, z) 
-                || MovementCheck.DetectSpeedhack(p, x, y, z, ZombieGameProps.MaxMoveDistance);
+            return MovementCheck.DetectNoclip(p, next) 
+                || MovementCheck.DetectSpeedhack(p, next, ZombieGameProps.MaxMoveDistance);
         }
         
         public override bool HandlesChatMessage(Player p, string message) {

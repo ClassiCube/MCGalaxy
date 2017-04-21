@@ -176,8 +176,8 @@ namespace MCGalaxy {
         //Countdown
         public bool playerofcountdown = false;
         public bool incountdown = false;
-        public ushort countdowntempx;
-        public ushort countdowntempz;
+        public int countdowntempx;
+        public int countdowntempz;
         public bool countdownsettemps = false;
 
         //Tnt Wars

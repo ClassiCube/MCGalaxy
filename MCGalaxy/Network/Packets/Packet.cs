@@ -49,28 +49,26 @@ namespace MCGalaxy {
         }
         
         public static byte[] AddEntity(byte id, string name, Position pos, 
-                                       Orientation rot, bool hasCP437) {
-            byte[] buffer = new byte[74];
+                                       Orientation rot, bool hasCP437, bool extPos) {
+            byte[] buffer = new byte[74 + (extPos ? 6 : 0)];
             buffer[0] = Opcode.AddEntity;
             buffer[1] = id;
             NetUtils.Write(name.TrimEnd('+'), buffer, 2, hasCP437);
-            NetUtils.WriteU16((ushort)pos.X, buffer, 66);
-            NetUtils.WriteU16((ushort)pos.Y, buffer, 68);
-            NetUtils.WriteU16((ushort)pos.Z, buffer, 70);
-            buffer[72] = rot.RotY;
-            buffer[73] = rot.HeadX;
+            
+            int offset = NetUtils.WritePos(pos, buffer, 66, extPos);
+            buffer[66 + offset] = rot.RotY;
+            buffer[67 + offset] = rot.HeadX;
             return buffer;
         }
         
-        public static byte[] Teleport(byte id, Position pos, Orientation rot) {
-            byte[] buffer = new byte[10];
+        public static byte[] Teleport(byte id, Position pos, Orientation rot, bool extPos) {
+            byte[] buffer = new byte[10 + (extPos ? 6 : 0)];
             buffer[0] = Opcode.EntityTeleport;
             buffer[1] = id;
-            NetUtils.WriteU16((ushort)pos.X, buffer, 2);
-            NetUtils.WriteU16((ushort)pos.Y, buffer, 4);
-            NetUtils.WriteU16((ushort)pos.Z, buffer, 6);
-            buffer[8] = rot.RotY;
-            buffer[9] = rot.HeadX;
+            
+            int offset = NetUtils.WritePos(pos, buffer, 2, extPos);
+            buffer[2 + offset] = rot.RotY;
+            buffer[3 + offset] = rot.HeadX;
             return buffer;
         }
         

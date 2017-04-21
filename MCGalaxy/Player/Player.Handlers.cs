@@ -220,7 +220,7 @@ namespace MCGalaxy {
                     return 9;
                 case Opcode.EntityTeleport:
                     if (!loggedIn) goto default;
-                    return 10;
+                    return 10 + (supportsExtPositions ? 6 : 0);
                 case Opcode.Message:
                     if (!loggedIn) goto default;
                     return 66;
@@ -307,45 +307,37 @@ namespace MCGalaxy {
             if (HasCpeExt(CpeExt.HeldBlock))
                 RawHeldBlock = heldBlock;
             
-            ushort x = NetUtils.ReadU16(packet, 2);
-            ushort y = NetUtils.ReadU16(packet, 4);
-            ushort z = NetUtils.ReadU16(packet, 6);
-            Orientation rot = Rot;
-            byte yaw = packet[8], pitch = packet[9];
-            
-            if (frozen) {
-                bool movedX = Math.Abs((short)x - Pos.X) > 4; // moved more than 0.125 blocks horizontally
-                bool movedY = Math.Abs((short)y - Pos.Y) > 40; // moved more than 1.25 blocks vertically
-                bool movedZ = Math.Abs((short)z - Pos.Z) > 4; // moved more than 0.125 blocks horizontally
-                SetYawPitch(yaw, pitch);
-                
-                if (movedX || movedY || movedZ) { SendPos(Entities.SelfID, Pos, Rot); }
-                return;
+            int x, y, z;
+            if (supportsExtPositions) {
+                x = NetUtils.ReadI32(packet, 2);
+                y = NetUtils.ReadI32(packet, 6);
+                z = NetUtils.ReadI32(packet, 10);
+            } else {
+                x = NetUtils.ReadI16(packet, 2);
+                y = NetUtils.ReadI16(packet, 4);
+                z = NetUtils.ReadI16(packet, 6);
             }
+            
+            byte yaw = packet[8], pitch = packet[9];
+            Position next = new Position(x, y, z);
 
-            if (Server.Countdown.HandlesMovement(this, x, y, z, yaw, pitch))
+            if (Server.Countdown.HandlesMovement(this, next, yaw, pitch))
                 return;
-            if (Server.zombie.Running && Server.zombie.HandlesMovement(this, x, y, z, yaw, pitch))
+            if (Server.zombie.Running && Server.zombie.HandlesMovement(this, next, yaw, pitch))
                 return;
             
-            if (OnMove != null) OnMove(this, x, y, z);
-            if (PlayerMove != null) PlayerMove(this, x, y, z);
-            PlayerMoveEvent.Call(this, x, y, z);
-
-            if (OnRotate != null) OnRotate(this, yaw, pitch);
-            if (PlayerRotate != null) PlayerRotate(this, yaw, pitch);
-            PlayerRotateEvent.Call(this, yaw, pitch);
+            if (OnMove != null) OnMove(this, next, yaw, pitch);
+            if (PlayerMove != null) PlayerMove(this, next, yaw, pitch);
+            OnPlayerMoveEvent.Call(this, next, yaw, pitch);
+            if (cancelmove) { cancelmove = false; return; }
             
-            if (cancelmove) { SendPos(Entities.SelfID, Pos, Rot); return; }            
-            Pos = new Position((short)x, (short)y, (short)z);
+            Pos = next;
             SetYawPitch(yaw, pitch);
-            
             if (!Moved() || Loading) return;
             if (DateTime.UtcNow < AFKCooldown) return;
             
             LastAction = DateTime.UtcNow;
             if (IsAfk) CmdAfk.ToggleAfk(this, "");
-            /*if (!CheckIfInsideBlock()) { clippos = pos; cliprot = rot; }*/
         }
 
         internal void CheckSurvival(ushort x, ushort y, ushort z) {
@@ -577,7 +569,7 @@ namespace MCGalaxy {
                 Server.s.Log("<" + name + "> " + text);
                 if (OnChat != null) OnChat(this, text);
                 if (PlayerChat != null) PlayerChat(this, text);
-                OnPlayerChatEvent.Call(this, text);                
+                OnPlayerChatEvent.Call(this, text);
                 if (cancelchat) { cancelchat = false; return; }
                 
                 if (Server.worldChat) {

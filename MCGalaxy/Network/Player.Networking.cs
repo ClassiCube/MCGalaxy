@@ -326,7 +326,7 @@ namespace MCGalaxy {
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) pos.Y -= 22;
             
-            Send(Packet.AddEntity(id, name, pos, rot, hasCP437));
+            Send(Packet.AddEntity(id, name, pos, rot, hasCP437, supportsExtPositions));
         }
         
         /// <summary> Sends a packet indicating an absolute position + orientation change for an enity. </summary>
@@ -340,7 +340,7 @@ namespace MCGalaxy {
                 Pos = pos; SetYawPitch(rot.RotY, rot.HeadX);
                 pos.Y -= 22;  // NOTE: Fix for standard clients
             }           
-            Send(Packet.Teleport(id, pos, rot));
+            Send(Packet.Teleport(id, pos, rot, supportsExtPositions));
         }
 
         /// <summary> Sends a packet indicating an entity was removed from the current map. </summary>
@@ -391,7 +391,7 @@ namespace MCGalaxy {
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) pos.Y -= 22;
 
-            Send(Packet.ExtAddEntity2(id, skinName, displayName, pos, rot, hasCP437));
+            Send(Packet.ExtAddEntity2(id, skinName, displayName, pos, rot, hasCP437, supportsExtPositions));
         }
         
         public void SendExtAddPlayerName(byte id, string listName, string displayName, string grp, byte grpRank) {

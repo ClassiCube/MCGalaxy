@@ -397,7 +397,7 @@
     <Compile Include="CorePlugin\CorePlugin.cs" />
     <Compile Include="CorePlugin\ConnectHandler.cs" />
     <Compile Include="CorePlugin\IPThrottler.cs" />
-    <Compile Include="CorePlugin\LevelHandler.cs" />
+    <Compile Include="CorePlugin\MiscHandlers.cs" />
     <Compile Include="Database\Backends\SQLite.cs" />
     <Compile Include="Database\BlockDB\BlockDB.cs" />
     <Compile Include="Database\BlockDB\BlockDBCache.cs" />

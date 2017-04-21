@@ -27,7 +27,7 @@ namespace MCGalaxy.Games {
             return dx <= dist && dy <= dist && dz <= dist;
         }
         
-        public static bool DetectNoclip(Player p, ushort x, ushort y, ushort z) {
+        public static bool DetectNoclip(Player p, Position newPos) {
             if (p.Game.Referee || Hacks.CanUseHacks(p, p.level)) return false;
             if (!p.CheckIfInsideBlock() || p.Game.NoclipLog.AddSpamEntry(5, 1))
                 return false;
@@ -36,9 +36,9 @@ namespace MCGalaxy.Games {
             return false;
         }
         
-        public static bool DetectSpeedhack(Player p, ushort x, ushort y, ushort z, int maxMove) {
+        public static bool DetectSpeedhack(Player p, Position newPos, int maxMove) {
             if (p.Game.Referee || Hacks.CanUseHacks(p, p.level)) return false;
-            int dx = Math.Abs(p.Pos.X - x), dz = Math.Abs(p.Pos.Z - z);
+            int dx = Math.Abs(p.Pos.X - newPos.X), dz = Math.Abs(p.Pos.Z - newPos.Z);
             bool speedhacking = dx >= maxMove || dz >= maxMove;
             if (!speedhacking || p.Game.SpeedhackLog.AddSpamEntry(5, 1))
                 return false;

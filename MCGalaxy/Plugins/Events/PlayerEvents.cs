@@ -32,24 +32,13 @@ namespace MCGalaxy {
     }
     
     /// <summary> This event is called whenever a player moves </summary>
-    public sealed class PlayerMoveEvent : IPluginEvent<Player.OnPlayerMove> {
-        internal PlayerMoveEvent(Player.OnPlayerMove method, Priority priority, Plugin plugin)
+    public sealed class OnPlayerMoveEvent : IPluginEvent<Player.OnPlayerMove> {
+        internal OnPlayerMoveEvent(Player.OnPlayerMove method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
-        public static void Call(Player p, ushort x, ushort y,  ushort z) {
+        public static void Call(Player p, Position next, byte yaw, byte pitch) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, x, y, z));
-        }
-    }
-    
-    /// <summary> This event is called whenever a player rotates </summary>
-    public sealed class PlayerRotateEvent : IPluginEvent<Player.OnPlayerRotate> {        
-        internal PlayerRotateEvent(Player.OnPlayerRotate method, Priority priority, Plugin plugin)
-            : base(method, priority, plugin) { }
-        
-        public static void Call(Player p, byte yaw, byte pitch) {
-            if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, yaw, pitch));
+            CallImpl(pl => pl(p, next, yaw, pitch));
         }
     }
     

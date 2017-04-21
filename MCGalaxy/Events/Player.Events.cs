@@ -124,19 +124,12 @@ namespace MCGalaxy {
         public static event OnPlayerDeath PlayerDeath;
         public void ClearPlayerDeath() { OnDeath = null; }
          
-        /// <summary> TCalled when a player moves on the server </summary>
-        public delegate void OnPlayerMove(Player p, ushort x, ushort y, ushort z);
+        /// <summary> Called when a player moves on the server </summary>
+        public delegate void OnPlayerMove(Player p, Position next, byte yaw, byte pitch);
         /// <summary> Called when a player moves. </summary>
         public static event OnPlayerMove PlayerMove;
         /// <summary> Called when the player moves. </summary>
         public event OnPlayerMove OnMove;
-        
-        /// <summary> Called when a player rotates on the server. </summary>
-        public delegate void OnPlayerRotate(Player p, byte yaw, byte pitch);
-        /// <summary> Called when a player rotates. </summary>
-        public static event OnPlayerRotate PlayerRotate;
-        /// <summary> Called when the player rotates. </summary>
-        public event OnPlayerRotate OnRotate;
         
         /// <summary> Called when the player performs an action. </summary>
         public delegate void OnPlayerAction(Player p, PlayerAction action, 

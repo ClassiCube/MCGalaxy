@@ -51,6 +51,20 @@ namespace MCGalaxy {
             array[index++] = (byte)(value >> 16);
             array[index++] = (byte)(value >> 8);
             array[index++] = (byte)(value);
+        }
+
+
+        internal static int WritePos(Position pos, byte[] arr, int offset, bool extPos) {
+            if (!extPos) {
+                WriteI16((short)pos.X, arr, offset + 0);
+                WriteI16((short)pos.Y, arr, offset + 2);
+                WriteI16((short)pos.Z, arr, offset + 4);
+            } else {
+                WriteI32((int)pos.X, arr, offset + 0);
+                WriteI32((int)pos.Y, arr, offset + 4);
+                WriteI32((int)pos.Z, arr, offset + 8);
+            }
+            return extPos ? 12 : 6;
         }        
 
         

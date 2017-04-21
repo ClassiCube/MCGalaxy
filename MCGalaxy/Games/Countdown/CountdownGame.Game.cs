@@ -53,24 +53,23 @@ namespace MCGalaxy.Games {
             MessagePlayersLeft();
         }
         
-        public override bool HandlesMovement(Player p, ushort x, ushort y, ushort z,
-                                             byte yaw, byte pitch) {
+        public override bool HandlesMovement(Player p, Position next, byte yaw, byte pitch) {
             if( !p.incountdown || gamestatus != CountdownGameStatus.InProgress || !freezemode)
                 return false;
             if (p.countdownsettemps) {
-                p.countdowntempx = x;
+                p.countdowntempx = next.X;
                 Thread.Sleep(100);
-                p.countdowntempz = z;
+                p.countdowntempz = next.Z;
                 Thread.Sleep(100);
                 p.countdownsettemps = false;
             }
             
-            if (x != p.countdowntempx || z != p.countdowntempz) {
-                x = p.countdowntempx; z = p.countdowntempz;
-                p.SendPos(Entities.SelfID, x, y, z, yaw, pitch);
+            if (next.X != p.countdowntempx || next.Z != p.countdowntempz) {
+                next.X = p.countdowntempx; next.Z = p.countdowntempz;
+                p.SendPos(Entities.SelfID, next, new Orientation(yaw, pitch));
             }
             
-            p.Pos = new Position(x, y, z);
+            p.Pos = next;
             p.SetYawPitch(yaw, pitch);
             return true;
         }

@@ -31,8 +31,7 @@ namespace MCGalaxy.Games {
         }
         
         /// <summary> Returns whether this game handled the player moving to a new position. </summary>
-        public virtual bool HandlesMovement(Player p, ushort x, ushort y, ushort z, 
-                                                byte rotX, byte rotY) {
+        public virtual bool HandlesMovement(Player p, Position pos, byte rotX, byte rotY) {
             return false;
         }
         

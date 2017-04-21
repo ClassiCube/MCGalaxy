@@ -34,8 +34,10 @@ namespace MCGalaxy.Core {
                                           Priority.Critical, this, false);
             OnPlayerConnectingEvent.Register(ConnectingHandler.HandleConnecting,
                                           Priority.Critical, this, false);
-            OnJoinedLevelEvent.Register(LevelHandler.HandleOnJoinedLevel,
+            OnJoinedLevelEvent.Register(MiscHandlers.HandleOnJoinedLevel,
                                         Priority.Critical, this, false);
+            OnPlayerMoveEvent.Register(MiscHandlers.HandlePlayerMove,
+                                       Priority.Critical, this, false);
             
             clearTask = Server.Background.QueueRepeat(IPThrottler.CleanupTask, null, 
                                                       TimeSpan.FromMinutes(10));
@@ -46,6 +48,7 @@ namespace MCGalaxy.Core {
             OnPlayerCommandEvent.UnRegister(this);
             OnPlayerConnectingEvent.UnRegister(this);
             OnJoinedLevelEvent.UnRegister(this);
+            OnPlayerMoveEvent.UnRegister(this);
             Server.Background.Cancel(clearTask);
         }
     }
