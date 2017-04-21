@@ -23,10 +23,9 @@ using System.IO;
 namespace MCGalaxy {
     public sealed class GroupProperties {
         
-        const string filename = "properties/ranks.properties";
         public static void InitAll() {
             Group grp = null;
-            PropertiesFile.Read(filename, ref grp, ParseProperty, '=', false);
+            PropertiesFile.Read(Paths.RankPropsFile, ref grp, ParseProperty, '=', false);
             if (grp != null) AddGroup(ref grp);
         }
         
@@ -115,7 +114,7 @@ namespace MCGalaxy {
         /// <summary> Save givenList group </summary>
         /// <param name="givenList">The list of groups to save</param>
         public static void SaveGroups(List<Group> givenList) {
-            using (StreamWriter w = new StreamWriter(filename)) {
+            using (StreamWriter w = new StreamWriter(Paths.RankPropsFile)) {
                 w.WriteLine("#Version 3");
                 w.WriteLine("#RankName = string");
                 w.WriteLine("#\tThe name of the rank, use capitalization.");

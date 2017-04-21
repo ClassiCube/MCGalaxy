@@ -16,21 +16,21 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Threading;
 
 namespace MCGalaxy {
     
     /// <summary> Represents a player or an NPC. </summary>
     public abstract class Entity {
         
-        // Raw orientation/position - NOT threadsafe
-        protected Orientation _rot;
-        protected Position _pos;
+        // Raw orientation/position - access must be threadsafe
+        int _rot;
+        long _pos;
         
         // Last sent orientation/position, for delta calculation
         protected internal Orientation lastRot;
         protected internal Position lastPos;
         internal bool supportsExtPositions;
-        // TODO: struct assignment needs to be THREADSAFE
         
         
         /// <summary> Model name of this entity. </summary>
@@ -45,14 +45,14 @@ namespace MCGalaxy {
         
         /// <summary> Gets or sets the orientation of this entity. </summary>
         public Orientation Rot {
-            get { return _rot; }
-            set { _rot = value; OnSetRot(); }
+        	get { return Orientation.Unpack(Thread.VolatileRead(ref _rot)); }
+        	set { Thread.VolatileWrite(ref _rot, value.Pack()); OnSetRot(); }
         }
         
         /// <summary> Gets or sets the position of this entity. </summary>
         public Position Pos {
-            get { return _pos; }
-            set { _pos = value; OnSetPos(); }
+            get { return Position.Unpack(Thread.VolatileRead(ref _pos)); }
+            set { Thread.VolatileWrite(ref _pos, value.Pack()); OnSetPos(); }
         }
         
         /// <summary> Sets only the yaw and pitch of the orientation of this entity. </summary>

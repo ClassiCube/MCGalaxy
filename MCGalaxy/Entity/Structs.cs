@@ -18,7 +18,7 @@
 using System;
 
 namespace MCGalaxy {
-	
+    
     /// <summary> Represents the position of an entity in the world. </summary>
     public struct Position: IEquatable<Position> {
         
@@ -62,6 +62,27 @@ namespace MCGalaxy {
         public static bool operator == (Position a, Position b) { return a.Equals(b); }
         
         public static bool operator != (Position a, Position b) { return !a.Equals(b); }
+        
+        
+        const long mask = 0x1FFFFF;
+        internal long Pack() {
+            return (X & mask) | ((Y & mask) << 21) | ((Z & mask) << 42);
+        }
+        
+        internal static Position Unpack(long raw) {
+            Position pos;
+            pos.X = SignExtend(raw);
+            pos.Y = SignExtend(raw >> 21);
+            pos.Z = SignExtend(raw >> 42);
+            return pos;
+        }
+        
+        static int SignExtend(long parts) {
+            int value = (int)(parts & mask);
+            value <<= (32 - 21);
+            value >>= (32 - 21);
+            return value;
+        }
     }
     
     
@@ -91,6 +112,18 @@ namespace MCGalaxy {
         /// <summary> Converts angle in degrees into range [0, 256) </summary>
         public static byte DegreesToPacked(int degrees) {
             return (byte)(degrees * 256 / 360);
+        }
+        
+        
+        internal int Pack() {
+            return RotX | (RotY << 8) | (RotZ << 16) | HeadX;
+        }
+        
+        internal static Orientation Unpack(int raw) {
+            Orientation rot;
+            rot.RotX = (byte)raw; rot.RotY = (byte)(raw >> 8);
+            rot.RotZ = (byte)(raw >> 16); rot.HeadX = (byte)(raw >> 24);
+            return rot;
         }
     }
 }
