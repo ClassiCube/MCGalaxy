@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands {
                 
                 string discMsg = PlayerDB.GetLogoutMessage(p);
                 Chat.MessageGlobal(p, "&c- " + p.FullName + " %S" + discMsg, false);
-                Server.IRC.Say(p.DisplayName + " %Sleft the game (" + discMsg + "%S)");
+                Server.IRC.Say(p.DisplayName + " %Sleft the game (disconnected%S)");
                 if (messageOps && !p.opchat) opchat.Use(p, message);
                 Server.hidden.AddIfNotExists(p.name);
             } else {
