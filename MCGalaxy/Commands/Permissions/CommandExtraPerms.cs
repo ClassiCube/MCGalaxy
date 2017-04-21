@@ -95,15 +95,15 @@ namespace MCGalaxy {
                 try {
                     SaveCore();
                 } catch (Exception ex) {
-                    Server.s.Log("Saving " + file + " failed.");
+                    Server.s.Log("Saving " + Paths.CmdExtraPermsFile + " failed.");
                     Server.ErrorLog(ex);
                 }
             }
         }
         
-        const string file = "properties/ExtraCommandPermissions.properties";
+        
         static void SaveCore() {
-            using (StreamWriter w = new StreamWriter(file)) {
+            using (StreamWriter w = new StreamWriter(Paths.CmdExtraPermsFile)) {
                 w.WriteLine("#   This file sets extra permissions used in some commands.");
                 w.WriteLine("#   Note descriptions cannot contain ':', and permissions cannot be above 120");
                 w.WriteLine("#");
@@ -121,14 +121,14 @@ namespace MCGalaxy {
         /// <summary> Loads the list of all extra permissions. </summary>
         public static void Load() {
             lock (ioLock) {
-                if (!File.Exists(file)) Save();
+                if (!File.Exists(Paths.CmdExtraPermsFile)) Save();
                 
                 LoadCore();
             }
         }
         
         static void LoadCore() {
-            using (StreamReader r = new StreamReader(file)) {
+            using (StreamReader r = new StreamReader(Paths.CmdExtraPermsFile)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {
                     if (line.Length == 0 || line[0] == '#' || line.IndexOf(':') == -1) continue;

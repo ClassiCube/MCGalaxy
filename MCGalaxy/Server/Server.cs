@@ -164,10 +164,10 @@ namespace MCGalaxy {
         void MoveOutdatedFiles() {
             try {
                 if (File.Exists("blocks.json")) File.Move("blocks.json", "blockdefs/global.json");
-                if (File.Exists("server.properties")) File.Move("server.properties", "properties/server.properties");
-                if (File.Exists("rules.txt")) File.Move("rules.txt", "text/rules.txt");
-                if (File.Exists("welcome.txt")) File.Move("welcome.txt", "text/welcome.txt");
-                if (File.Exists("messages.txt")) File.Move("messages.txt", "text/messages.txt");
+                if (File.Exists("server.properties")) File.Move("server.properties", Paths.ServerPropsFile);
+                if (File.Exists("rules.txt")) File.Move("rules.txt", Paths.RulesFile);
+                if (File.Exists("welcome.txt")) File.Move("welcome.txt", Paths.WelcomeFile);
+                if (File.Exists("messages.txt")) File.Move("messages.txt", Paths.AnnouncementsFile);
                 if (File.Exists("externalurl.txt")) File.Move("externalurl.txt", "text/externalurl.txt");
                 if (File.Exists("autoload.txt")) File.Move("autoload.txt", "text/autoload.txt");
                 if (File.Exists("IRC_Controllers.txt")) File.Move("IRC_Controllers.txt", "ranks/IRC_Controllers.txt");
@@ -184,7 +184,7 @@ namespace MCGalaxy {
             BlockDefinition.LoadGlobal();
             ImagePalette.Load();
             
-            SrvProperties.Load("properties/server.properties");
+            SrvProperties.Load(Paths.ServerPropsFile);
             Group.InitAll();
             Command.InitAll();
             CommandPerms.Load();

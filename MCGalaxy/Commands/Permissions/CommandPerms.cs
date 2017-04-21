@@ -128,7 +128,7 @@ namespace MCGalaxy {
         
         static void SaveCore(List<CommandPerms> givenList) {
             try {
-                using (StreamWriter w = new StreamWriter("properties/command.properties")) {
+                using (StreamWriter w = new StreamWriter(Paths.CmdPermsFile)) {
                     w.WriteLine("#Version 2");
                     w.WriteLine("#   This file list the ranks that can use each command.");
                     w.WriteLine("#   Disallow and allow can be left empty.");
@@ -154,8 +154,8 @@ namespace MCGalaxy {
                 Set(cmd.name, cmd.defaultRank, null, null);
             }
 
-            if (File.Exists("properties/command.properties")) {
-                string[] lines = File.ReadAllLines("properties/command.properties");
+            if (File.Exists(Paths.CmdPermsFile)) {
+                string[] lines = File.ReadAllLines(Paths.CmdPermsFile);
                 if (lines.Length > 0 && lines[0] == "#Version 2") {
                     LoadVersion2(lines);
                 } else {

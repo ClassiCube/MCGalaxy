@@ -25,13 +25,12 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         
-        const string newsFile = "text/news.txt";
         public override void Use(Player p, string message) {
-            if (!File.Exists(newsFile)) {
-                File.WriteAllText(newsFile, "News have not been created. Put News in '" + newsFile + "'."); return;
+            if (!File.Exists(Paths.NewsFile)) {
+                File.WriteAllText(Paths.NewsFile, "News have not been created. Put News in '" + Paths.NewsFile + "'."); return;
             }
             
-            string[] lines = File.ReadAllLines(newsFile);
+            string[] lines = File.ReadAllLines(Paths.NewsFile);
             Player.MessageLines(p, lines);
         }
         

@@ -120,7 +120,7 @@ namespace MCGalaxy {
         /// <summary> Load up all server groups </summary>
         public static void InitAll() {
             GroupList = new List<Group>();
-            if (File.Exists("properties/ranks.properties")) {
+            if (File.Exists(Paths.RankPropsFile)) {
                 GroupProperties.InitAll();
             } else {
                 // Add some default ranks

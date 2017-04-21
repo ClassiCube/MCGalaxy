@@ -27,7 +27,6 @@ namespace MCGalaxy {
     public static class Economy {
 
         public static bool Enabled;
-        const string propertiesFile = "properties/economy.properties";
         
         static ColumnDesc[] createEconomy = new ColumnDesc[] {
             new ColumnDesc("player", ColumnType.VarChar, 20, priKey: true),
@@ -76,12 +75,12 @@ namespace MCGalaxy {
         }
 
         public static void Load() {
-            if (!File.Exists(propertiesFile)) {
+            if (!File.Exists(Paths.EconomyPropsFile)) {
                 Server.s.Log("Economy properties don't exist, creating");
                 Save();
             }
             
-            using (StreamReader r = new StreamReader(propertiesFile)) {
+            using (StreamReader r = new StreamReader(Paths.EconomyPropsFile)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {
                     line = line.ToLower().Trim();
@@ -113,7 +112,7 @@ namespace MCGalaxy {
         }
 
         public static void Save() {
-            using (StreamWriter w = new StreamWriter(propertiesFile, false)) {
+            using (StreamWriter w = new StreamWriter(Paths.EconomyPropsFile, false)) {
                 w.WriteLine("enabled:" + Enabled);
                 foreach (Item item in Items) {
                     w.WriteLine();

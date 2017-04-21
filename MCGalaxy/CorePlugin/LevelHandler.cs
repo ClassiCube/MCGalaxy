@@ -56,17 +56,17 @@ namespace MCGalaxy.Core {
             p.showedWelcome = true;
             p.LastAction = DateTime.UtcNow;
             
-            if (!File.Exists("text/welcome.txt")) {
+            if (!File.Exists(Paths.WelcomeFile)) {
                 Server.s.Log("Could not find Welcome.txt. Using default.");
                 try {
-                    File.WriteAllText("text/welcome.txt", "Welcome to my server!");
+                    File.WriteAllText(Paths.WelcomeFile, "Welcome to my server!");
                 } catch (Exception ex) {
                     Server.ErrorLog(ex);
                 }
             }
             
             try {
-                string[] welcome = File.ReadAllLines("text/welcome.txt");
+                string[] welcome = File.ReadAllLines(Paths.WelcomeFile);
                 Player.MessageLines(p, welcome);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);

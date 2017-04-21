@@ -79,7 +79,7 @@ namespace MCGalaxy {
         internal class OldPerms { public int viewPerm = -1, nextPerm = -1, 
             clearPerm = -1, opchatPerm = -1, adminchatPerm = -1; }
         
-        public static void Save() { Save("properties/server.properties"); }
+        public static void Save() { Save(Paths.ServerPropsFile); }
         static readonly object saveLock = new object();
         public static void Save(string givenPath) {
             try {

@@ -28,7 +28,6 @@ namespace MCGalaxy {
         
         public static List<Alias> coreAliases = new List<Alias>();
         public static List<Alias> aliases = new List<Alias>();
-        public const string file = "text/aliases.txt";
         public string Trigger, Target, Prefix, Suffix;
 
         public Alias(string trigger, string target) {
@@ -53,8 +52,8 @@ namespace MCGalaxy {
             aliases.Clear();
             coreAliases.Clear();
             
-            if (!File.Exists(file)) { Save(); return; }
-            PropertiesFile.Read(file, LineProcessor, ':');
+            if (!File.Exists(Paths.AliasesFile)) { Save(); return; }
+            PropertiesFile.Read(Paths.AliasesFile, LineProcessor, ':');
         }
         
         static void LineProcessor(string key, string value) {
@@ -62,7 +61,7 @@ namespace MCGalaxy {
         }
 
         public static void Save() {
-            using (StreamWriter sw = new StreamWriter(file)) {
+            using (StreamWriter sw = new StreamWriter(Paths.AliasesFile)) {
                 sw.WriteLine("# The format goes trigger : command");
                 sw.WriteLine("# For example, \"y : help me\" means that when /y is typed,");
                 sw.WriteLine("# it is treated as /help me <args given by user>.");
