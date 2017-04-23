@@ -216,7 +216,7 @@ namespace MCGalaxy.Gui {
                 ApplyChatProps();
                 ApplyIrcSqlProps();
                 ApplyMiscProps();
-                ApplyRankProps();                
+                ApplyRankProps(); 
                 ApplySecurityProps();
                 zsSettings.ApplyToServer();
                 lsSettings.ApplyToServer();

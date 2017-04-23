@@ -206,11 +206,7 @@ namespace MCGalaxy {
             int count = hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
             if (!hasBlockDefs) return count;
 
-            for (int i = Block.CpeCount; i < Block.Count; i++) {
-                if (level.CustomBlockDefs[i] == null) continue;
-                count++;
-            }
-            return count;
+            return count + (Block.Count - Block.CpeCount);
         }
         
         void WriteBlockPermissions(byte[] bulk) {
@@ -225,7 +221,6 @@ namespace MCGalaxy {
             int j = coreCount * 4;
             
             for (int i = Block.CpeCount; i < Block.Count; i++) {
-                if (level.CustomBlockDefs[i] == null) continue;
                 Packet.WriteBlockPermission((byte)i, level.CanPlace, level.CanDelete, bulk, j);
                 j += 4;
             }
