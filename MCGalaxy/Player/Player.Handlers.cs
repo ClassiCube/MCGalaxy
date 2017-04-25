@@ -170,8 +170,7 @@ namespace MCGalaxy {
             
             ushort flags = BlockDBFlags.ManualPlace;
             if (painting && Replacable(old)) flags = BlockDBFlags.Painted;
-            level.BlockDB.Cache.Add(this, x, y, z, flags, old, extOld, block, extBlock);
-            
+            level.BlockDB.Cache.Add(this, x, y, z, flags, old, extOld, block, extBlock);           
             
             bool autoGrass = level.GrassGrow && (level.physics == 0 || level.physics == 5);
             if (!autoGrass) return type;

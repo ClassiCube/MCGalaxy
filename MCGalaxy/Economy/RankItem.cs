@@ -52,8 +52,8 @@ namespace MCGalaxy.Eco {
                 rnk.price = int.Parse(args[3]);
             } else if (args[1] == "maxrank") {
                 MaxRank = LevelPermission.AdvBuilder;
-                Group grp = Group.Find(args[2]);
-                if (grp != null) MaxRank = grp.Permission;
+                LevelPermission perm = Group.ParsePermOrName(args[2]);
+                if (perm != LevelPermission.Null) MaxRank = perm;
             }
         }
         
@@ -61,7 +61,7 @@ namespace MCGalaxy.Eco {
             writer.WriteLine("rank:enabled:" + Enabled);
             writer.WriteLine("rank:purchaserank:" + (int)PurchaseRank);
             
-            writer.WriteLine("rank:maxrank:" + MaxRank);
+            writer.WriteLine("rank:maxrank:" + (int)MaxRank);
             foreach (Rank rnk in RanksList) {
                 writer.WriteLine("rank:price:" + rnk.group.name + ":" + rnk.price);
                 if (rnk.group.Permission >= MaxRank) break;
