@@ -100,6 +100,11 @@ namespace MCGalaxy {
                 case "prefix":
                     if (!String.IsNullOrEmpty(value))
                         grp.prefix = raw.TrimStart();
+                    
+                    if (Colors.StripColors(grp.prefix).Length > 2) {
+                        Server.s.Log("Prefixes may only consist of color codes and two letters");
+                        grp.prefix = grp.prefix.Substring(0, 2);
+                    }
                     break;
             }
         }
