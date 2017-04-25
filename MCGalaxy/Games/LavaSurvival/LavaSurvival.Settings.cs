@@ -46,6 +46,7 @@ namespace MCGalaxy.Games {
         }
         
         void ProcessSettingsLine(string key, string value) {
+            LevelPermission perm;
             switch (key.ToLower()) {
                 case "start-on-startup": startOnStartup = bool.Parse(value); break;
                 case "send-afk-to-main": sendAfkMain = bool.Parse(value); break;
@@ -54,12 +55,12 @@ namespace MCGalaxy.Games {
                 case "lives": lifeNum = int.Parse(value); break;
                     
                 case "setup-rank":
-                    if (Group.Find(value) != null)
-                        setupRank = Group.Find(value).Permission;
+                    perm = Group.ParsePermOrName(value);
+                    if (perm != LevelPermission.Null) setupRank = perm;
                     break;
                 case "control-rank":
-                    if (Group.Find(value) != null)
-                        controlRank = Group.Find(value).Permission;
+                    perm = Group.ParsePermOrName(value);
+                    if (perm != LevelPermission.Null) controlRank = perm;
                     break;
                 case "maps":
                     foreach (string name in value.Split(',')) {
@@ -79,8 +80,8 @@ namespace MCGalaxy.Games {
                 w.WriteLine("vote-count = " + voteCount);
                 w.WriteLine("vote-time = " + voteTime);
                 w.WriteLine("lives = " + lifeNum);
-                w.WriteLine("setup-rank = " + Group.GetName(setupRank));
-                w.WriteLine("control-rank = " + Group.GetName(controlRank));
+                w.WriteLine("setup-rank = " + (int)setupRank);
+                w.WriteLine("control-rank = " + (int)controlRank);
                 w.WriteLine("maps = " + maps.Join());
             }
         }
