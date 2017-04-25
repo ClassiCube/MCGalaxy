@@ -130,10 +130,10 @@ namespace MCGalaxy.Gui
             this.chkVerify = new System.Windows.Forms.CheckBox();
             this.chkWorld = new System.Windows.Forms.CheckBox();
             this.chkAutoload = new System.Windows.Forms.CheckBox();
-            this.chkPublic = new System.Windows.Forms.CheckBox();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.txtMOTD = new System.Windows.Forms.TextBox();
-            this.txtPort = new System.Windows.Forms.TextBox();
+            this.srv_chkPublic = new System.Windows.Forms.CheckBox();
+            this.srv_txtName = new System.Windows.Forms.TextBox();
+            this.srv_txtMOTD = new System.Windows.Forms.TextBox();
+            this.srv_txtPort = new System.Windows.Forms.TextBox();
             this.chkLogBeat = new System.Windows.Forms.CheckBox();
             this.chkUseSQL = new System.Windows.Forms.CheckBox();
             this.sec_cmbVerifyRank = new System.Windows.Forms.ComboBox();
@@ -249,12 +249,12 @@ namespace MCGalaxy.Gui
             this.editTxtsBt = new System.Windows.Forms.Button();
             this.chkRestart = new System.Windows.Forms.CheckBox();
             this.grpGeneral = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.txtServerOwner = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.ChkPort = new System.Windows.Forms.Button();
+            this.srv_lblPort = new System.Windows.Forms.Label();
+            this.srv_lblOwner = new System.Windows.Forms.Label();
+            this.srv_txtOwner = new System.Windows.Forms.TextBox();
+            this.srv_lblName = new System.Windows.Forms.Label();
+            this.srv_lblMotd = new System.Windows.Forms.Label();
+            this.srv_btnPort = new System.Windows.Forms.Button();
             this.grpUpdate = new System.Windows.Forms.GroupBox();
             this.forceUpdateBtn = new System.Windows.Forms.Button();
             this.updateTimeNumeric = new System.Windows.Forms.NumericUpDown();
@@ -1319,44 +1319,7 @@ namespace MCGalaxy.Gui
             this.chkAutoload.Text = "Load on /goto";
             this.toolTip.SetToolTip(this.chkAutoload, "Load a map when a user wishes to go to it, and unload empty maps");
             this.chkAutoload.UseVisualStyleBackColor = true;
-            // 
-            // chkPublic
-            // 
-            this.chkPublic.AutoSize = true;
-            this.chkPublic.Location = new System.Drawing.Point(9, 124);
-            this.chkPublic.Name = "chkPublic";
-            this.chkPublic.Size = new System.Drawing.Size(55, 17);
-            this.chkPublic.TabIndex = 4;
-            this.chkPublic.Text = "Public";
-            this.toolTip.SetToolTip(this.chkPublic, "Whether or not the server will appear on the server list.");
-            this.chkPublic.UseVisualStyleBackColor = true;
-            // 
-            // txtName
-            // 
-            this.txtName.Location = new System.Drawing.Point(83, 19);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(387, 21);
-            this.txtName.TabIndex = 0;
-            this.toolTip.SetToolTip(this.txtName, "The name of the server.\nPick something good!");
-            // 
-            // txtMOTD
-            // 
-            this.txtMOTD.Location = new System.Drawing.Point(83, 46);
-            this.txtMOTD.Name = "txtMOTD";
-            this.txtMOTD.Size = new System.Drawing.Size(387, 21);
-            this.txtMOTD.TabIndex = 0;
-            this.toolTip.SetToolTip(this.txtMOTD, "The MOTD of the server.\nUse \"+hax\" to allow any WoM hack, \"-hax\" to disallow any " +
-                        "hacks at all and use \"-fly\" and whatnot to disallow other things.");
-            // 
-            // txtPort
-            // 
-            this.txtPort.Location = new System.Drawing.Point(83, 73);
-            this.txtPort.Name = "txtPort";
-            this.txtPort.Size = new System.Drawing.Size(63, 21);
-            this.txtPort.TabIndex = 2;
-            this.toolTip.SetToolTip(this.txtPort, "The port that the server will output on.\nDefault = 25565\n\nChanging will reset you" +
-                        "r ExternalURL.");
-            this.txtPort.TextChanged += new System.EventHandler(this.txtPort_TextChanged);
+
             // 
             // chkLogBeat
             // 
@@ -2560,16 +2523,16 @@ namespace MCGalaxy.Gui
             // grpGeneral
             // 
             this.grpGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpGeneral.Controls.Add(this.label3);
-            this.grpGeneral.Controls.Add(this.label7);
-            this.grpGeneral.Controls.Add(this.chkPublic);
-            this.grpGeneral.Controls.Add(this.txtServerOwner);
-            this.grpGeneral.Controls.Add(this.label1);
-            this.grpGeneral.Controls.Add(this.txtName);
-            this.grpGeneral.Controls.Add(this.label2);
-            this.grpGeneral.Controls.Add(this.txtMOTD);
-            this.grpGeneral.Controls.Add(this.txtPort);
-            this.grpGeneral.Controls.Add(this.ChkPort);
+            this.grpGeneral.Controls.Add(this.srv_lblName);
+            this.grpGeneral.Controls.Add(this.srv_txtName);
+            this.grpGeneral.Controls.Add(this.srv_lblMotd);
+            this.grpGeneral.Controls.Add(this.srv_txtMOTD);
+            this.grpGeneral.Controls.Add(this.srv_lblPort);
+            this.grpGeneral.Controls.Add(this.srv_txtPort);
+            this.grpGeneral.Controls.Add(this.srv_btnPort);
+            this.grpGeneral.Controls.Add(this.srv_lblOwner);
+            this.grpGeneral.Controls.Add(this.srv_txtOwner);
+            this.grpGeneral.Controls.Add(this.srv_chkPublic);
             this.grpGeneral.Location = new System.Drawing.Point(8, 6);
             this.grpGeneral.Name = "grpGeneral";
             this.grpGeneral.Size = new System.Drawing.Size(483, 148);
@@ -2577,59 +2540,101 @@ namespace MCGalaxy.Gui
             this.grpGeneral.TabStop = false;
             this.grpGeneral.Text = "General Configuration";
             // 
-            // label3
+            // srv_lblName
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 76);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(30, 13);
-            this.label3.TabIndex = 27;
-            this.label3.Text = "Port:";
+            this.srv_lblName.AutoSize = true;
+            this.srv_lblName.Location = new System.Drawing.Point(6, 22);
+            this.srv_lblName.Name = "srv_lblName";
+            this.srv_lblName.Size = new System.Drawing.Size(38, 13);
+            this.srv_lblName.TabIndex = 100;
+            this.srv_lblName.Text = "Name:";
             // 
-            // label7
+            // srv_txtName
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 103);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(72, 13);
-            this.label7.TabIndex = 26;
-            this.label7.Text = "Server owner:";
+            this.srv_txtName.Location = new System.Drawing.Point(83, 19);
+            this.srv_txtName.Name = "srv_txtName";
+            this.srv_txtName.Size = new System.Drawing.Size(387, 21);
+            this.srv_txtName.TabIndex = 0;
+            this.srv_txtName.MaxLength = 64;
+            this.toolTip.SetToolTip(this.srv_txtName, "The name of the server.\nPick something good!");
             // 
-            // txtServerOwner
+            // srv_lblMotd
             // 
-            this.txtServerOwner.Location = new System.Drawing.Point(83, 100);
-            this.txtServerOwner.Name = "txtServerOwner";
-            this.txtServerOwner.Size = new System.Drawing.Size(119, 21);
-            this.txtServerOwner.TabIndex = 0;
+            this.srv_lblMotd.AutoSize = true;
+            this.srv_lblMotd.Location = new System.Drawing.Point(6, 49);
+            this.srv_lblMotd.Name = "srv_lblMotd";
+            this.srv_lblMotd.Size = new System.Drawing.Size(38, 13);
+            this.srv_lblMotd.TabIndex = 101;
+            this.srv_lblMotd.Text = "MOTD:";
             // 
-            // label1
+            // srv_txtMOTD
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Name:";
+            this.srv_txtMOTD.Location = new System.Drawing.Point(83, 46);
+            this.srv_txtMOTD.Name = "srv_txtMOTD";
+            this.srv_txtMOTD.Size = new System.Drawing.Size(387, 21);
+            this.srv_txtMOTD.TabIndex = 1;
+            this.srv_txtMOTD.MaxLength = 64;
+            this.toolTip.SetToolTip(this.srv_txtMOTD, "The MOTD of the server.\nUse \"+hax\" to allow any WoM hack, \"-hax\" to disallow any " +
+                        "hacks at all and use \"-fly\" and whatnot to disallow other things.");
             // 
-            // label2
+            // srv_lblPort
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 49);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(38, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "MOTD:";
+            this.srv_lblPort.AutoSize = true;
+            this.srv_lblPort.Location = new System.Drawing.Point(6, 76);
+            this.srv_lblPort.Name = "srv_lblPort";
+            this.srv_lblPort.Size = new System.Drawing.Size(30, 13);
+            this.srv_lblPort.TabIndex = 102;
+            this.srv_lblPort.Text = "Port:";
             // 
-            // ChkPort
+            // srv_txtPort
             // 
-            this.ChkPort.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ChkPort.Location = new System.Drawing.Point(152, 71);
-            this.ChkPort.Name = "ChkPort";
-            this.ChkPort.Size = new System.Drawing.Size(110, 23);
-            this.ChkPort.TabIndex = 25;
-            this.ChkPort.Text = "Server Port Utilities";
-            this.ChkPort.UseVisualStyleBackColor = true;
-            this.ChkPort.Click += new System.EventHandler(this.ChkPort_Click);
+            this.srv_txtPort.Location = new System.Drawing.Point(83, 73);
+            this.srv_txtPort.Name = "srv_txtPort";
+            this.srv_txtPort.Size = new System.Drawing.Size(63, 21);
+            this.srv_txtPort.TabIndex = 2;
+            this.srv_txtPort.MaxLength = 6;
+            this.toolTip.SetToolTip(this.srv_txtPort, "The port that the server will output on.\nDefault = 25565\n\nChanging will reset you" +
+                        "r ExternalURL.");
+            this.srv_txtPort.TextChanged += new System.EventHandler(this.txtPort_TextChanged);
+            // 
+            // srv_btnPort
+            // 
+            this.srv_btnPort.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.srv_btnPort.Location = new System.Drawing.Point(152, 71);
+            this.srv_btnPort.Name = "srv_btnPort";
+            this.srv_btnPort.Size = new System.Drawing.Size(110, 23);
+            this.srv_btnPort.TabIndex = 3;
+            this.srv_btnPort.Text = "Server Port Utilities";
+            this.srv_btnPort.UseVisualStyleBackColor = true;
+            this.srv_btnPort.Click += new System.EventHandler(this.ChkPort_Click);
+            // 
+            // srv_lblOwner
+            // 
+            this.srv_lblOwner.AutoSize = true;
+            this.srv_lblOwner.Location = new System.Drawing.Point(6, 103);
+            this.srv_lblOwner.Name = "srv_lblOwner";
+            this.srv_lblOwner.Size = new System.Drawing.Size(72, 13);
+            this.srv_lblOwner.TabIndex = 104;
+            this.srv_lblOwner.Text = "Server owner:";
+            // 
+            // srv_txtOwner
+            // 
+            this.srv_txtOwner.Location = new System.Drawing.Point(83, 100);
+            this.srv_txtOwner.Name = "srv_txtOwner";
+            this.srv_txtOwner.TabIndex = 4;
+            this.srv_txtOwner.MaxLength = 64;
+            this.srv_txtOwner.Size = new System.Drawing.Size(119, 21);
+            // 
+            // srv_chkPublic
+            // 
+            this.srv_chkPublic.AutoSize = true;
+            this.srv_chkPublic.Location = new System.Drawing.Point(9, 124);
+            this.srv_chkPublic.Name = "srv_chkPublic";
+            this.srv_chkPublic.Size = new System.Drawing.Size(55, 17);
+            this.srv_chkPublic.TabIndex = 5;
+            this.srv_chkPublic.Text = "Public";
+            this.toolTip.SetToolTip(this.srv_chkPublic, "Whether or not the server will appear on the server list.");
+            this.srv_chkPublic.UseVisualStyleBackColor = true;
             // 
             // grpUpdate
             // 
@@ -4207,7 +4212,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox txtOSMaps;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label srv_lblOwner;
         private System.Windows.Forms.GroupBox gbRankSettings;
         private System.Windows.Forms.GroupBox gbRankGeneral;
 
@@ -4302,10 +4307,10 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.TextBox txtMain;
         private System.Windows.Forms.TextBox chat_txtConsole;
-        private System.Windows.Forms.TextBox txtPort;
-        private System.Windows.Forms.TextBox txtMOTD;
-        private System.Windows.Forms.TextBox txtName;
-        private System.Windows.Forms.Button ChkPort;
+        private System.Windows.Forms.TextBox srv_txtPort;
+        private System.Windows.Forms.TextBox srv_txtMOTD;
+        private System.Windows.Forms.TextBox srv_txtName;
+        private System.Windows.Forms.Button srv_btnPort;
         private System.Windows.Forms.CheckBox chkLogBeat;
         private System.Windows.Forms.ComboBox cmbOpChat;
         private System.Windows.Forms.Label lblOpChat;
@@ -4314,7 +4319,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label chat_colDefault;
         private System.Windows.Forms.ComboBox chat_cmbDefault;
         private System.Windows.Forms.CheckBox chkRestart;
-        private System.Windows.Forms.CheckBox chkPublic;
+        private System.Windows.Forms.CheckBox srv_chkPublic;
         private System.Windows.Forms.CheckBox chkAutoload;
         private System.Windows.Forms.CheckBox chkWorld;
         private System.Windows.Forms.CheckBox chkUpdates;
@@ -4323,9 +4328,9 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label chat_lblConsole;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label srv_lblPort;
+        private System.Windows.Forms.Label srv_lblMotd;
+        private System.Windows.Forms.Label srv_lblName;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.CheckBox chkAgreeToRules;
         private System.Windows.Forms.ComboBox cmbAdminChat;
@@ -4338,7 +4343,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox grpAdvanced;
         private System.Windows.Forms.GroupBox grpPlayers;
         private System.Windows.Forms.GroupBox grpLevels;
-        private System.Windows.Forms.TextBox txtServerOwner;
+        private System.Windows.Forms.TextBox srv_txtOwner;
         private System.Windows.Forms.GroupBox grpExtra;
         private System.Windows.Forms.GroupBox grpMessages;
         private System.Windows.Forms.GroupBox grpPhysics;

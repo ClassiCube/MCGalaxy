@@ -264,7 +264,7 @@ namespace MCGalaxy.Gui {
             }
         }
 
-        private void txtPort_TextChanged(object sender, EventArgs e) { removeDigit(txtPort); }
+        private void txtPort_TextChanged(object sender, EventArgs e) { removeDigit(srv_txtPort); }
         private void txtBackup_TextChanged(object sender, EventArgs e) { removeDigit(txtBackup); }
 
         private void btnSave_Click(object sender, EventArgs e) { saveStuff(); Dispose(); }

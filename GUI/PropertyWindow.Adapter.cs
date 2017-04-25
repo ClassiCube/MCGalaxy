@@ -22,11 +22,11 @@ namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
         
         void LoadGeneralProps() {
-            txtName.Text = Server.name;
-            txtMOTD.Text = Server.motd;
-            txtPort.Text = Server.port.ToString();
-            txtServerOwner.Text = Server.server_owner;
-            chkPublic.Checked = Server.pub;
+            srv_txtName.Text = Server.name;
+            srv_txtMOTD.Text = Server.motd;
+            srv_txtPort.Text = Server.port.ToString();
+            srv_txtOwner.Text = Server.server_owner;
+            srv_chkPublic.Checked = Server.pub;
             
             numPlayers.Value = Server.players;
             numGuests.Value = Server.maxGuests;
@@ -48,11 +48,11 @@ namespace MCGalaxy.Gui {
         }
     	
     	void ApplyGeneralProps() {
-            Server.name = txtName.Text;
-            Server.motd = txtMOTD.Text;
-            Server.port = int.Parse(txtPort.Text);
-            Server.server_owner = txtServerOwner.Text;
-            Server.pub = chkPublic.Checked;
+            Server.name = srv_txtName.Text;
+            Server.motd = srv_txtMOTD.Text;
+            Server.port = int.Parse(srv_txtPort.Text);
+            Server.server_owner = srv_txtOwner.Text;
+            Server.pub = srv_chkPublic.Checked;
             
             Server.players = (byte)numPlayers.Value;
             Server.maxGuests = (byte)numGuests.Value;
