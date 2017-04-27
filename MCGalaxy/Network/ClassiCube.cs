@@ -23,15 +23,14 @@ using Newtonsoft.Json;
 
 namespace MCGalaxy {
     
-    public sealed class ClassiCubeBeat : IBeat {
+    /// <summary> Heartbeat to ClassiCube.net's web server. </summary>
+    public sealed class ClassiCubeBeat : Heartbeat {
         
         string url = "http://www.classicube.net/heartbeat.jsp";
         string proxyUrl;
-        public string URL { get { return url; } }
-
-        public bool Persistance { get { return true; } }
+        public override string URL { get { return url; } }
         
-        public void Init() {
+        public override void Init() {
             try {
                 IPAddress[] addresses = Dns.GetHostAddresses("www.classicube.net");
                 EnsureIPv4Url(addresses);
@@ -64,7 +63,7 @@ namespace MCGalaxy {
             #endif
         }
 
-        public string PrepareBeat()  {
+        public override string GetHeartbeatData()  {
             string name = Server.name;
             Server.zombie.OnHeartbeat(ref name);
             Server.lava.OnHeartbeat(ref name);
@@ -92,7 +91,7 @@ namespace MCGalaxy {
             return count;
         }
         
-        public void OnRequest(HttpWebRequest request) {            
+        public override void OnRequest(HttpWebRequest request) {            
             #if !NET_20
             request.Host = "www.classicube.net";
             #else
@@ -101,22 +100,23 @@ namespace MCGalaxy {
             #endif
         }   
         
-        bool foundUrl = false;
-        public void OnResponse(string line) {
-            if (String.IsNullOrEmpty(line.Trim())) return;
-            string newHash = line.Substring(line.LastIndexOf('/') + 1);
+        public override void OnResponse(string response) {
+            if (String.IsNullOrEmpty(response.Trim())) return;
+            
+            // in form of http://www.classicube.net/server/play/<hash>/
+            if (response.EndsWith("/")) 
+                response = response.Substring(0, response.Length - 1);
+            string hash = response.Substring(response.LastIndexOf('/') + 1);
 
             // Run this code if we don't already have a hash or if the hash has changed
-            if (String.IsNullOrEmpty(Server.Hash) || !newHash.Equals(Server.Hash)) {
-                Server.Hash = newHash;
-                Server.URL = line;
+            if (String.IsNullOrEmpty(Server.Hash) || hash != Server.Hash) {
+                Server.Hash = hash;
+                Server.URL = response;
+                
                 if (!Server.URL.Contains("\"errors\": [")) {
                     Server.s.UpdateUrl(Server.URL);
                     File.WriteAllText("text/externalurl.txt", Server.URL);
-                    if (!foundUrl) {
-                        Server.s.Log("ClassiCube URL found: " + Server.URL);
-                        foundUrl = true;
-                    }
+                    Server.s.Log("ClassiCube URL found: " + Server.URL);
                 } else {
                     Response resp = JsonConvert.DeserializeObject<Response>(Server.URL);
                     if (resp.errors != null && resp.errors.Length > 0 && resp.errors[0].Length > 0)

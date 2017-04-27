@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.IO;
 using System.Net;
@@ -24,48 +24,47 @@ using System.Threading;
 
 namespace MCGalaxy {
 
-    public static class Heart {
+    /// <summary> Sends a heartbeat (optionally repeatedly every certain interval) to a web server. </summary>
+    public abstract class Heartbeat {
 
-        /// <summary> The max number of retries it runs for a beat </summary>
+        /// <summary> The max number of retries attempted for a heartbeat. </summary>
         public const int MAX_RETRIES = 3;
+        
+        /// <summary> Gets the URL the heartbeat is sent to. </summary>
+        public abstract string URL { get; }
+        
+        /// <summary> Gets whether this heartbeat periodically repeats beats. </summary>
+        public virtual bool Persistent { get { return true; } }
+        
+        /// <summary> Initialises data for this heartbeat. </summary>
+        public abstract void Init();
+        
+        /// <summary> Gets the data to be sent for a heartbeat. </summary>
+        public abstract string GetHeartbeatData();
+        
+        /// <summary> Called when a request is about to be send to the web server. </summary>
+        public abstract void OnRequest(HttpWebRequest request);
+        
+        /// <summary> Called when a response is received from the web server. </summary>
+        public abstract void OnResponse(string response);
 
-        /// <summary> Gets or sets a value indicating whether this instance can beat. </summary>
-        /// <value> <c>true</c> if this instance can beat; otherwise, <c>false</c>. </value>
-        public static bool CanBeat { get; set; }
-
-        static Timer timer;
-
-        readonly static IBeat[] Beats = new IBeat[] {         
-            new ClassiCubeBeat()
-        }; //Keep these in order
-
-        static Heart() {
-            timer = new Timer(OnBeat, null, 30000, 30000);
-        }
-
-        static void OnBeat(object state) {
-            for (int i = 0; i < Beats.Length; i++) {
-                if (Beats[i].Persistance) Pump(Beats[i]);
-            }
-        }
-
-        /// <summary> Inits this instance. </summary>
-        public static void Init() {
+        
+        /// <summary> Initialises all heartbeats. </summary>
+        public static void InitHeartbeats() {
             if (Server.logbeat && !File.Exists("heartbeat.log")) {
                 using (File.Create("heartbeat.log")) { }
             }
-            
-            CanBeat = true;            
+
+            canBeat = true;
             for (int i = 0; i < Beats.Length; i++) {
                 Beats[i].Init();
                 Pump(Beats[i]);
             }
         }
 
-        /// <summary> Pumps the specified beat. </summary>
-        public static void Pump(IBeat beat) {
-            if (!CanBeat) return;
-            byte[] data = Encoding.ASCII.GetBytes(beat.PrepareBeat());
+        /// <summary> Pumps the specified heartbeat. </summary>
+        public static void Pump(Heartbeat beat) {
+            byte[] data = Encoding.ASCII.GetBytes(beat.GetHeartbeatData());
 
             for (int i = 0; i < MAX_RETRIES; i++) {
                 try {
@@ -73,10 +72,10 @@ namespace MCGalaxy {
                     req.Method = "POST";
                     req.ContentType = "application/x-www-form-urlencoded";
                     req.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-                    req.Timeout = 15000;
-                    req.ContentLength = data.Length;
+                    req.Timeout = 15000;                    
                     beat.OnRequest(req);
 
+                    req.ContentLength = data.Length;
                     using (Stream w = req.GetRequestStream()) {
                         w.Write(data, 0, data.Length);
                         if (Server.logbeat) Server.s.Log("Beat " + beat + " was sent");
@@ -95,6 +94,22 @@ namespace MCGalaxy {
             }
 
             if (Server.logbeat) Server.s.Log("Beat: " + beat + " failed.");
+        }
+        
+        
+        static Timer timer;
+        static bool canBeat = false;
+        readonly static Heartbeat[] Beats = new Heartbeat[] { new ClassiCubeBeat() };
+
+        static Heartbeat() {
+            timer = new Timer(OnBeat, null, 30000, 30000);
+        }
+
+        static void OnBeat(object state) {
+            if (!canBeat) return;
+            for (int i = 0; i < Beats.Length; i++) {
+                if (Beats[i].Persistent) Pump(Beats[i]);
+            }
         }
     }
 }

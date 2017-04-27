@@ -95,7 +95,7 @@ namespace MCGalaxy {
         
         void InitHeartbeat() {
             try {
-                Heart.Init();
+				Heartbeat.InitHeartbeats();
             } catch (Exception e) {
                 Server.ErrorLog(e);
             }
