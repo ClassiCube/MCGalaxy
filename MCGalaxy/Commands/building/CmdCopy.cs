@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands.Building {
                     for (ushort xx = minX; xx <= maxX; ++xx)
             {
                 byte b = p.level.GetTile(xx, yy, zz), extB = 0;
-                if (!BlockPerms.CanModify(p, b)) { index++; continue; }
+                if (!p.group.CanModify[b]) { index++; continue; }
                 if (b == Block.custom_block)
                     extB = p.level.GetExtTile(xx, yy, zz);
                 

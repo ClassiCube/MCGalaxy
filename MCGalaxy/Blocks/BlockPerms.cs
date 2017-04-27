@@ -32,10 +32,10 @@ namespace MCGalaxy.Blocks {
         public LevelPermission MinRank;
         
         /// <summary> Ranks specifically allowed to use the block </summary>
-        public List<LevelPermission> Allowed = null;
+        public List<LevelPermission> Allowed = new List<LevelPermission>();
         
         /// <summary> Ranks specifically prevented from using the block. </summary>
-        public List<LevelPermission> Disallowed = null;
+        public List<LevelPermission> Disallowed = new List<LevelPermission>();
         
         public static BlockPerms[] List = new BlockPerms[256];
 
@@ -44,15 +44,13 @@ namespace MCGalaxy.Blocks {
         public static bool CanModify(Player p, byte block) {
             BlockPerms b = List[block];
             LevelPermission perm = p.Rank;
-            return (perm >= b.MinRank || (b.Allowed != null && b.Allowed.Contains(perm)))
-                && (b.Disallowed == null || !b.Disallowed.Contains(perm));
+            return (perm >= b.MinRank || b.Allowed.Contains(perm)) && !b.Disallowed.Contains(perm);
         }
         
         /// <summary> Returns whether the given rank can modify the given block. </summary>
         public static bool CanModify(LevelPermission perm, byte block) {
             BlockPerms b = List[block];
-            return (perm >= b.MinRank || (b.Allowed != null && b.Allowed.Contains(perm)))
-                && (b.Disallowed == null || !b.Disallowed.Contains(perm));
+            return (perm >= b.MinRank || b.Allowed.Contains(perm)) && !b.Disallowed.Contains(perm);
         }
         
         /// <summary> Globally sends appropriate CPE block permission packets for after a block's permission is changed. </summary>
@@ -140,14 +138,11 @@ namespace MCGalaxy.Blocks {
 
                 try {
                     perms.MinRank = (LevelPermission)int.Parse(args[1]);
-                    string allowRaw = args.Length > 2 ? args[2] : null;
-                    string disallowRaw = args.Length > 3 ? args[3] : null;
+                    string disallowRaw = args.Length > 2 ? args[2] : null;
+                    string allowRaw = args.Length > 3 ? args[3] : null;
                     
-                    List<LevelPermission> allow = CommandPerms.ExpandPerms(allowRaw);
-                    List<LevelPermission> disallow = CommandPerms.ExpandPerms(disallowRaw);
-                    
-                    if (allow.Count > 0) perms.Allowed = allow;
-                    if (disallow.Count > 0) perms.Disallowed = disallow;
+                    perms.Allowed = CommandPerms.ExpandPerms(allowRaw);
+                    perms.Disallowed = CommandPerms.ExpandPerms(disallowRaw);
                 } catch {
                     Server.s.Log("Hit an error on the block " + line);
                     continue;

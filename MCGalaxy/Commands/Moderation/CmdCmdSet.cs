@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
-            if (message == "" || args.Length == 1) { Help(p); return; }
+            if (args.Length == 1) { Help(p); return; }
+            
             Command cmd = Command.all.Find(args[0]);
             if (cmd == null) { Player.Message(p, "Could not find command entered"); return; }
             if (p != null && !p.group.CanExecute(cmd)) {
