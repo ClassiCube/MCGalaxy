@@ -38,21 +38,21 @@ namespace MCGalaxy {
         }
         
         /// <summary> Attempts to parse the given argument as an enumeration member. </summary>
-        public static bool GetEnum<TEnum>(Player p, string input, string type, 
+        public static bool GetEnum<TEnum>(Player p, string input, string argName, 
                                           ref TEnum result) where TEnum : struct {
             try {
                 result = (TEnum)Enum.Parse(typeof(TEnum), input, true);
                 return true;
             } catch (Exception) {
                 string[] names = Enum.GetNames(typeof(TEnum));
-                Player.Message(p, type + " must be one of the following: " + names.Join());
+                Player.Message(p, argName + " must be one of the following: " + names.Join());
                 return false;
             }
         }
         
         
         /// <summary> Attempts to parse the given argument as an integer. </summary>
-        public static bool GetInt(Player p, string input, string type, ref int result,
+        public static bool GetInt(Player p, string input, string argName, ref int result,
                                   int min = int.MinValue, int max = int.MaxValue) {
             int value;
             if (!int.TryParse(input, out value)) {
@@ -62,11 +62,11 @@ namespace MCGalaxy {
             if (value < min || value > max) {
                 // Try to provide more helpful range messages
                 if (max == int.MaxValue) {
-                    Player.Message(p, "{0} must be {1} or greater", type, min);
+                    Player.Message(p, "{0} must be {1} or greater", argName, min);
                 } else if (min == int.MinValue) {
-                    Player.Message(p, "{0} must be {1} or less", type, max);
+                    Player.Message(p, "{0} must be {1} or less", argName, max);
                 } else {
-                    Player.Message(p, "{0} must be between {1} and {2}", type, min, max);
+                    Player.Message(p, "{0} must be between {1} and {2}", argName, min, max);
                 }
                 return false;
             }
@@ -76,19 +76,19 @@ namespace MCGalaxy {
         
         
         /// <summary> Attempts to parse the given argument as an byte. </summary>
-        public static bool GetByte(Player p, string input, string type, ref byte result,
+        public static bool GetByte(Player p, string input, string argName, ref byte result,
                                    byte min = byte.MinValue, byte max = byte.MaxValue) {
             int temp = 0;
-            if (!GetInt(p, input, type, ref temp, min, max)) return false;
+            if (!GetInt(p, input, argName, ref temp, min, max)) return false;
             
             result = (byte)temp; return true;
         }
         
         /// <summary> Attempts to parse the given argument as an byte. </summary>
-        public static bool GetUShort(Player p, string input, string type, ref ushort result,
+        public static bool GetUShort(Player p, string input, string argName, ref ushort result,
                                      ushort min = ushort.MinValue, ushort max = ushort.MaxValue) {
             int temp = 0;
-            if (!GetInt(p, input, type, ref temp, min, max)) return false;
+            if (!GetInt(p, input, argName, ref temp, min, max)) return false;
             
             result = (ushort)temp; return true;
         }

@@ -22,8 +22,6 @@ using MCGalaxy.Network;
 namespace MCGalaxy {
     public sealed partial class Player : IDisposable {
 
-        public NetworkStream Stream;
-
         static void Receive(IAsyncResult result) {
             //Server.s.Log(result.AsyncState.ToString());
             Player p = (Player)result.AsyncState;

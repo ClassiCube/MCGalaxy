@@ -20,6 +20,8 @@ using System.IO;
 using System.IO.Compression;
 
 namespace MCGalaxy.Network {
+    
+    /// <summary> Streams the compressed form of a map directly to a player's network socket. </summary>
     public sealed class LevelChunkStream : Stream {
         public override bool CanRead { get { return false; } }
         public override bool CanSeek { get { return false; } }

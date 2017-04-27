@@ -18,7 +18,7 @@
 using System;
 
 namespace MCGalaxy.Network {
-    /// <summary> Combines block changes and sends them as either a CPE BulkBlockUpdate packet,
+    /// <summary> Combines block changes and sends them as either a single CPE BulkBlockUpdate packet,
     /// or 256 SetBlock packets combined as a single byte array to reduce overhead. </summary>
     public sealed class BufferedBlockSender {
         
@@ -42,6 +42,9 @@ namespace MCGalaxy.Network {
             this.level = player.level;
         }
         
+        /// <summary> Adds a block change, and potentially sends block change packets if 
+        /// number of buffered block changes has reached the limit. </summary>
+        /// <returns> Whether block change packets were actually sent. </returns>
         public bool Add(int index, byte block, byte extBlock) {
             indices[count] = index;
             if (block == Block.custom_block) types[count] = extBlock;
@@ -51,16 +54,16 @@ namespace MCGalaxy.Network {
         }
         
         /// <summary> Sends the block change packets if either 'force' is true, 
-        /// or the number of blocks in the buffer has reached the limit. </summary>
+        /// or the number of buffered block changes has reached the limit. </summary>
         /// <returns> Whether block change packets were actually sent. </returns>
         public bool Send(bool force) {
             if (count > 0 && (force || count == 256)) {
                 if (player != null) SendPlayer();
                 else SendLevel();
                 count = 0;
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
         
         void SendLevel() {
