@@ -68,7 +68,7 @@ namespace MCGalaxy {
         
         void HandleExtInfo(byte[] packet) {
             appName = NetUtils.ReadString(packet, 1);
-            extensionCount = packet[66];          
+            extensionCount = packet[66];
             CheckReadAllExtensions(); // in case client supports 0 CPE packets
         }
 

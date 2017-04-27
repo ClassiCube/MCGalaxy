@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
@@ -29,6 +30,10 @@ namespace MCGalaxy {
 
         /// <summary> The max number of retries attempted for a heartbeat. </summary>
         public const int MAX_RETRIES = 3;
+        
+        /// <summary> List of all heartbeats to pump. </summary>
+        public static List<Heartbeat> Heartbeats = new List<Heartbeat>() { new ClassiCubeBeat() };
+        
         
         /// <summary> Gets the URL the heartbeat is sent to. </summary>
         public abstract string URL { get; }
@@ -72,7 +77,7 @@ namespace MCGalaxy {
                     req.Method = "POST";
                     req.ContentType = "application/x-www-form-urlencoded";
                     req.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-                    req.Timeout = 15000;                    
+                    req.Timeout = 15000;
                     beat.OnRequest(req);
 
                     req.ContentLength = data.Length;
@@ -82,17 +87,22 @@ namespace MCGalaxy {
                     }
 
                     using (StreamReader r = new StreamReader(req.GetResponse().GetResponseStream())) {
-                        string read = r.ReadToEnd().Trim();
-                        beat.OnResponse(read);
+                        string response = r.ReadToEnd().Trim();
+                        beat.OnResponse(response);
 
-                        if (Server.logbeat) Server.s.Log("Beat: \"" + read + "\" was recieved");
+                        if (Server.logbeat) Server.s.Log("Beat: \"" + response + "\" was recieved");
                     }
                     return;
-                } catch {
+                } catch (Exception ex) {
+                    // Make sure to dispose response to prevent resource leak on mono
+                    if (ex is WebException) {
+                        WebException webEx = (WebException)ex;
+                        if (webEx.Response != null) webEx.Response.Close();                        
+                    }
                     continue;
-                }
+                }            
             }
-
+            
             if (Server.logbeat) Server.s.Log("Beat: " + beat + " failed.");
         }
         

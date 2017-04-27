@@ -101,7 +101,7 @@ namespace MCGalaxy {
         }   
         
         public override void OnResponse(string response) {
-            if (String.IsNullOrEmpty(response.Trim())) return;
+            if (String.IsNullOrEmpty(response)) return;
             
             // in form of http://www.classicube.net/server/play/<hash>/
             if (response.EndsWith("/")) 
@@ -113,7 +113,7 @@ namespace MCGalaxy {
                 Server.Hash = hash;
                 Server.URL = response;
                 
-                if (!Server.URL.Contains("\"errors\": [")) {
+                if (!response.Contains("\"errors\": [")) {
                     Server.s.UpdateUrl(Server.URL);
                     File.WriteAllText("text/externalurl.txt", Server.URL);
                     Server.s.Log("ClassiCube URL found: " + Server.URL);
@@ -124,7 +124,7 @@ namespace MCGalaxy {
                     else
                         Server.URL = "Error while finding URL. Is the port open?";
                     Server.s.UpdateUrl(Server.URL);
-                    Server.s.Log(Server.URL);
+                    Server.s.Log(response);
                 }
             }
         }        
