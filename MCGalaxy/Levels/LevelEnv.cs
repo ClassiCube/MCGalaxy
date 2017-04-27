@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Commands.Building;
+using MCGalaxy.Network;
 
 namespace MCGalaxy {
     public static class LevelEnv {

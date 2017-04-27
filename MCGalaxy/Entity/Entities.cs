@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Text;
 using MCGalaxy.Games;
+using MCGalaxy.Network;
 
 namespace MCGalaxy {
 

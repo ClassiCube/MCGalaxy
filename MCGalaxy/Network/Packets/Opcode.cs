@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Network {
 
     public static class Opcode {
         

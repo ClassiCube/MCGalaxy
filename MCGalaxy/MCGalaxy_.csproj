@@ -550,12 +550,16 @@
     <Compile Include="Blocks\Physics\TrainPhysics.cs" />
     <Compile Include="Blocks\Physics\TntPhysics.cs" />
     <Compile Include="Blocks\Physics\ZombiePhysics.cs" />
-    <Compile Include="Network\Heartbeat.cs" />
+    <Compile Include="Network\Heartbeat\ClassiCube.cs" />
+    <Compile Include="Network\Heartbeat\Heartbeat.cs" />
     <Compile Include="Network\IRCBot.cs" />
-    <Compile Include="Network\LevelChunkStream.cs" />
+    <Compile Include="Network\Packets\Opcode.cs" />
     <Compile Include="Network\Packets\Packet.BlockDefs.cs" />
     <Compile Include="Network\Packets\Packet.CPE.cs" />
     <Compile Include="Network\Packets\Packet.cs" />
+    <Compile Include="Network\Utils\BufferedBlockSender.cs" />
+    <Compile Include="Network\Utils\LevelChunkStream.cs" />
+    <Compile Include="Network\Utils\NetUtils.cs" />
     <Compile Include="Player\Group\Group.cs" />
     <Compile Include="Player\Group\GroupProperties.cs" />
     <Compile Include="Player\List\PlayerExtList.cs" />
@@ -582,8 +586,6 @@
     <Compile Include="Plugins\Events\LevelEvents.cs" />
     <Compile Include="Plugins\Events\PlayerEvents.cs" />
     <Compile Include="Plugins\Events\ServerEvents.cs" />
-    <Compile Include="Network\NetUtils.cs" />
-    <Compile Include="Network\Opcode.cs" />
     <Compile Include="Network\Player.Networking.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\Plugin.Events.cs" />
@@ -622,7 +624,6 @@
     <Compile Include="util\Formatting\Formatter.cs" />
     <Compile Include="util\Formatting\Matcher.cs" />
     <Compile Include="util\Formatting\MultiPageOutput.cs" />
-    <Compile Include="util\IO\BufferedBlockSender.cs" />
     <Compile Include="util\IO\Paths.cs" />
     <Compile Include="util\Math\AABB.cs" />
     <Compile Include="util\Math\DirUtils.cs" />
@@ -651,7 +652,6 @@
     <Compile Include="sharkbite.thresher\UserInfo.cs" />
     <Compile Include="sharkbite.thresher\WhoisInfo.cs" />
     <Compile Include="util\ExtrasCollection.cs" />
-    <Compile Include="Network\ClassiCube.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
     <Compile Include="util\Hasher.cs" />
     <Compile Include="Player\Player.CPE.cs" />
@@ -704,6 +704,8 @@
   <ItemGroup>
     <Folder Include="Commands\Maintenance" />
     <Folder Include="Commands\Permissions" />
+    <Folder Include="Network\Heartbeat" />
+    <Folder Include="Network\Utils" />
     <Folder Include="Network\Packets" />
     <Folder Include="Entity" />
     <Folder Include="util\Formatting" />

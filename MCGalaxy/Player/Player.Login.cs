@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using MCGalaxy.Games;
+using MCGalaxy.Network;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {

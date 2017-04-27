@@ -24,6 +24,7 @@ using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
 using MCGalaxy.Tasks;
+using MCGalaxy.Network;
 
 namespace MCGalaxy {
     

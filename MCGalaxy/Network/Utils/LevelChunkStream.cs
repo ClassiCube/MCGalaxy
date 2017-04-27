@@ -19,7 +19,7 @@ using System;
 using System.IO;
 using System.IO.Compression;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Network {
     public sealed class LevelChunkStream : Stream {
         public override bool CanRead { get { return false; } }
         public override bool CanSeek { get { return false; } }

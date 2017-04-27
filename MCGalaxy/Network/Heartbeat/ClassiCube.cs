@@ -21,7 +21,7 @@ using System.Net;
 using System.Net.Sockets;
 using Newtonsoft.Json;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Network {
     
     /// <summary> Heartbeat to ClassiCube.net's web server. </summary>
     public sealed class ClassiCubeBeat : Heartbeat {

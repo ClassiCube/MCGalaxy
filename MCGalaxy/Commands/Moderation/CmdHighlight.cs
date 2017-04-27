@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.DB;
+using MCGalaxy.Network;
 using MCGalaxy.Undo;
 
 namespace MCGalaxy.Commands {

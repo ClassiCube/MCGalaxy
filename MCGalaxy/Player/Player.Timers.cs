@@ -18,6 +18,7 @@ using System.IO;
 using System.Timers;
 using MCGalaxy.Commands;
 using MCGalaxy.SQL;
+using MCGalaxy.Network;
 
 namespace MCGalaxy {
     public sealed partial class Player : IDisposable {

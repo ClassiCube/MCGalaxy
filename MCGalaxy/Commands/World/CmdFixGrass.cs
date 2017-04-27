@@ -16,6 +16,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using MCGalaxy.Network;
+
 namespace MCGalaxy.Commands.World {
     public sealed class CmdFixGrass : Command {
         public override string name { get { return "fixgrass"; } }

@@ -20,6 +20,7 @@ using System.Threading;
 using MCGalaxy.Blocks;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
+using MCGalaxy.Network;
 
 namespace MCGalaxy {
     public class ChatMessage {

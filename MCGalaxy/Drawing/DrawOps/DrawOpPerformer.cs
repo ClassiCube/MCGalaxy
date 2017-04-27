@@ -21,6 +21,7 @@ using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Commands;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
+using MCGalaxy.Network;
 using MCGalaxy.Undo;
 
 namespace MCGalaxy.Drawing {

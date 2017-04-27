@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
 */
 using System;
+using MCGalaxy.Network;
+
 namespace MCGalaxy {
     
     public static class BlockQueue {

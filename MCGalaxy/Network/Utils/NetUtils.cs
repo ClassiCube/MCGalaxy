@@ -18,7 +18,7 @@
 using System;
 
 namespace MCGalaxy {
-    /// <summary>Utility methods for reading/writing big endian integers, and fixed length strings. </summary>
+    /// <summary> Utility methods for reading/writing big endian integers, and fixed length strings. </summary>
     public static class NetUtils {
         
         public const int StringSize = 64;

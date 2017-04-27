@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Network {
     /// <summary> Combines block changes and sends them as either a CPE BulkBlockUpdate packet,
     /// or 256 SetBlock packets combined as a single byte array to reduce overhead. </summary>
     public sealed class BufferedBlockSender {

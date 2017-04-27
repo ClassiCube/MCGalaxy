@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using MCGalaxy.Games;
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands {    
     public sealed class CmdReferee : Command {

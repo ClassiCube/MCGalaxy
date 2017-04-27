@@ -23,7 +23,7 @@ using System.Net.Cache;
 using System.Text;
 using System.Threading;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Network {
 
     /// <summary> Sends a heartbeat (optionally repeatedly every certain interval) to a web server. </summary>
     public abstract class Heartbeat {

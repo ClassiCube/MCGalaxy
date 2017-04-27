@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
+using MCGalaxy.Network;
 
 namespace MCGalaxy {
     public sealed partial class Player : IDisposable {

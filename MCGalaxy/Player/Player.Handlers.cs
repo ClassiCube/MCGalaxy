@@ -23,6 +23,7 @@ using MCGalaxy.Blocks.Physics;
 using MCGalaxy.DB;
 using MCGalaxy.Commands;
 using MCGalaxy.Games;
+using MCGalaxy.Network;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {

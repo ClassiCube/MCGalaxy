@@ -20,6 +20,7 @@ using System.Threading;
 using MCGalaxy.Blocks;
 using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Games;
+using MCGalaxy.Network;
 
 namespace MCGalaxy {
     

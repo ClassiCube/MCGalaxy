@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using MCGalaxy.Network;
+
 namespace MCGalaxy.Commands {
     public sealed class CmdClear : Command {
         public override string name { get { return "clear"; } }

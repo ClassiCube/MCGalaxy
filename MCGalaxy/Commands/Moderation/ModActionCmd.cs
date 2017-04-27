@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Moderation {
     

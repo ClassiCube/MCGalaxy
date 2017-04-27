@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using MCGalaxy;
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Core {
     internal static class ConnectHandler {
