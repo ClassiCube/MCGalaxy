@@ -18,11 +18,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Windows.Forms;
 using MCGalaxy.Games;
 using MCGalaxy.Gui.Popups;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
+using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
@@ -678,16 +680,19 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
                 string fileName = dialog.FileName;
                 if (fileName.EndsWith(".dll")) {
-                    commands = MCGalaxyScripter.FromAssemblyFile(fileName);
+                    Assembly lib = Assembly.LoadFile(fileName);
+                    commands = IScripting.LoadFrom(lib).ToArray();
                 } else {
-                    ScriptLanguage language = fileName.EndsWith(".cs") ? ScriptLanguage.CSharp : ScriptLanguage.VB;
+                    IScripting engine = fileName.EndsWith(".cs") ? IScripting.CS : IScripting.VB;
                     if (!File.Exists(fileName)) return;
                     
-                    var result = MCGalaxyScripter.Compile(File.ReadAllText(fileName), language);
+                    CompilerParameters args = new CompilerParameters();
+                    args.GenerateInMemory = true;
+                    var result = engine.CompileSource(File.ReadAllText(fileName), args);
                     if (result == null) { MessageBox.Show ( "Error compiling files" ); return; }
 
-                    if (result.CompilerErrors != null) {
-                        foreach (CompilerError err in result.CompilerErrors) {
+                    if (result.Errors.HasErrors) {
+                    	foreach (CompilerError err in result.Errors) {
                             Server.s.ErrorCase("Error #" + err.ErrorNumber);
                             Server.s.ErrorCase("Message: " + err.ErrorText);
                             Server.s.ErrorCase("Line: " + err.Line);
@@ -696,7 +701,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
                         MessageBox.Show("Error compiling from source. Check logs for error");
                         return;
                     }
-                    commands = result.Commands;
+                    commands = IScripting.LoadFrom(result.CompiledAssembly).ToArray();
                 }
             }
 

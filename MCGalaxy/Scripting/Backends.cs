@@ -19,8 +19,8 @@
  */
 using System;
 
-namespace MCGalaxy {    
-    public sealed class ScriptingCS : Scripting {    
+namespace MCGalaxy.Scripting {
+    public sealed class ScriptingCS : IScripting {    
         
         public override string Ext { get { return ".cs"; } }        
         public override string ProviderName { get { return "CSharp"; } }
@@ -77,7 +77,7 @@ namespace MCGalaxy
         }
     }
     
-    public sealed class ScriptingVB : Scripting {
+    public sealed class ScriptingVB : IScripting {
         
         public override string Ext { get { return ".vb"; } }
         public override string ProviderName { get { return "VisualBasic"; } }

@@ -17,6 +17,8 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Scripting;
+
 namespace MCGalaxy.Commands {
     public sealed class CmdCompile : Command {
         
@@ -30,16 +32,16 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces();
             
-            Scripting engine = null;
+            IScripting engine = null;
             if (args.Length == 1) {
-                engine = Scripting.CS;
+                engine = IScripting.CS;
             } else if (args[1] == "vb") {
-                engine = Scripting.VB;
+                engine = IScripting.VB;
             } else {
                 Help(p); return;
             }
 
-            if (!File.Exists(Scripting.SourceDir + "Cmd" + args[0] + engine.Ext)) {
+            if (!File.Exists(IScripting.SourceDir + "Cmd" + args[0] + engine.Ext)) {
                 Player.Message(p, "File &9Cmd" + args[0] + engine.Ext + " %Snot found."); return;
             }
             bool success = false;
@@ -54,7 +56,7 @@ namespace MCGalaxy.Commands {
             if (success)
                 Player.Message(p, "Compiled successfully.");
             else
-                Player.Message(p, "Compilation error. Please check " + Scripting.ErrorPath + " for more information.");
+                Player.Message(p, "Compilation error. Please check " + IScripting.ErrorPath + " for more information.");
         }
 
         public override void Help(Player p) {

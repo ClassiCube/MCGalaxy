@@ -591,7 +591,6 @@
     <Compile Include="Plugins\Plugin.Events.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="properties\GlobalSuppressions.cs" />
-    <Compile Include="Scripting\MCForgeScripter.cs" />
     <Compile Include="Scripting\Scripting.cs" />
     <Compile Include="Player\Ban.cs" />
     <Compile Include="Games\CTF\Setup.cs" />

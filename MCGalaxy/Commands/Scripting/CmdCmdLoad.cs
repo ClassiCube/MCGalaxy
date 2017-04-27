@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System.IO;
+using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Commands {
     public sealed class CmdCmdLoad : Command {
@@ -29,11 +30,11 @@ namespace MCGalaxy.Commands {
             if (Command.all.Contains(message)) {
                 Player.Message(p, "That command is already loaded!"); return;
             }           
-            if (!File.Exists(Scripting.DllDir + "Cmd" + message + ".dll")) {
+            if (!File.Exists(IScripting.DllDir + "Cmd" + message + ".dll")) {
                 Player.Message(p, "File &9Cmd" + message + ".dll %Snot found."); return;
             }
             
-            string error = Scripting.Load("Cmd" + message);
+            string error = IScripting.Load("Cmd" + message);
             if (error != null) { Player.Message(p, error); return; }
             CommandPerms.Load();
             Player.Message(p, "Command was successfully loaded.");

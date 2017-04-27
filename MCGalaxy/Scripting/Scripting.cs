@@ -24,10 +24,10 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Scripting {
     
     /// <summary> Compiles source code files from a particular language into a .dll file. </summary>
-    public abstract class Scripting {
+    public abstract class IScripting {
         
         public const string AutoloadFile = "text/cmdautoload.txt";
         public const string SourceDir = "extra/commands/source/";
@@ -43,10 +43,10 @@ namespace MCGalaxy {
         public abstract string ProviderName { get; }
         public abstract string CommandSkeleton { get; }
         
-        public static Scripting CS = new ScriptingCS();
-        public static Scripting VB = new ScriptingVB();
+        public static IScripting CS = new ScriptingCS();
+        public static IScripting VB = new ScriptingVB();
         
-        public Scripting() {
+        public IScripting() {
             compiler = CodeDomProvider.CreateProvider(ProviderName);
             if (compiler == null) {
                 Server.s.Log("WARNING: Provider " + ProviderName + 
@@ -153,7 +153,7 @@ namespace MCGalaxy {
             
             foreach (string cmdName in list) {
                 if (cmdName == "") continue;
-                string error = Scripting.Load("Cmd" + cmdName);
+                string error = IScripting.Load("Cmd" + cmdName);
                 if (error != null) { Server.s.Log(error); continue; }
                 Server.s.Log("AUTOLOAD: Loaded Cmd" + cmdName + ".dll");
             }

@@ -17,6 +17,8 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Scripting;
+
 namespace MCGalaxy.Commands {
     public sealed class CmdCmdCreate : Command {
         
@@ -30,16 +32,16 @@ namespace MCGalaxy.Commands {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces();
 
-            Scripting engine = null;
+            IScripting engine = null;
             if (args.Length == 1) {
-                engine = Scripting.CS;
+                engine = IScripting.CS;
             } else if (args[1] == "vb") {
-                engine = Scripting.VB;
+                engine = IScripting.VB;
             } else {
                 Help(p); return;
             }
             
-            if (File.Exists(Scripting.SourceDir + args[0] + engine.Ext)) {
+            if (File.Exists(IScripting.SourceDir + args[0] + engine.Ext)) {
                 Player.Message(p, "File Cmd" + args[0] + engine.Ext + " already exists. Choose another name."); return;
             }
             

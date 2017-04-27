@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using MCGalaxy.Commands;
+using MCGalaxy.Scripting;
 
 namespace MCGalaxy {
     
@@ -59,7 +60,7 @@ namespace MCGalaxy {
                 }
             }            
             core.commands = new List<Command>(all.commands);
-            Scripting.Autoload();
+            IScripting.Autoload();
         }
         
         /// <summary> Modifies the parameters if they match any command shortcut or command alias. </summary>
