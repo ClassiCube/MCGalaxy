@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using MCGalaxy.Blocks;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
@@ -109,7 +110,7 @@ namespace MCGalaxy.Commands.Building {
                     for (ushort xx = minX; xx <= maxX; ++xx)
             {
                 byte b = p.level.GetTile(xx, yy, zz), extB = 0;
-                if (!Block.canPlace(p, b)) { index++; continue; }
+                if (!BlockPerms.CanModify(p, b)) { index++; continue; }
                 if (b == Block.custom_block)
                     extB = p.level.GetExtTile(xx, yy, zz);
                 

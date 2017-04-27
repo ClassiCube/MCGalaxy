@@ -131,7 +131,7 @@ namespace MCGalaxy {
         }
         
         internal bool CheckManualChange(byte old, byte block, bool replaceMode) {
-            if (!Block.canPlace(this, old) && !Block.BuildIn(old) && !Block.AllowBreak(old)) {
+            if (!BlockPerms.CanModify(this, old) && !Block.BuildIn(old) && !Block.AllowBreak(old)) {
                 Formatter.MessageBlock(this, replaceMode ? "replace " : "delete ", old);
                 return false;
             }

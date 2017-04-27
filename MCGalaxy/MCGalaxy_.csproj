@@ -93,8 +93,8 @@
     <Compile Include="Blocks\Block.CoreProps.cs" />
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\Block.ID.cs" />
-    <Compile Include="Blocks\Block.Permissions.cs" />
     <Compile Include="Blocks\BlockDefinitions.cs" />
+    <Compile Include="Blocks\BlockPerms.cs" />
     <Compile Include="Blocks\BlockProperties.cs" />
     <Compile Include="Blocks\DefaultSet.cs" />
     <Compile Include="Blocks\Extended\MessageBlock.cs" />

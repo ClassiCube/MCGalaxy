@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MCGalaxy.Blocks;
 
 namespace MCGalaxy {
     /// <summary> This is the group object, where ranks and their data are stored </summary>
@@ -102,7 +103,7 @@ namespace MCGalaxy {
         /// <summary> Fill the blocks that this group can use </summary>
         public void FillBlocks() {
             for (int i = 0; i < CanModify.Length; i++)
-                CanModify[i] = Block.canPlace(Permission, (byte)i);
+                CanModify[i] = BlockPerms.CanModify(Permission, (byte)i);
         }
         
         public bool CanExecute(string cmdName) {

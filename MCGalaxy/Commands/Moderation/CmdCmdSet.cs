@@ -118,7 +118,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%HAllows a specific rank to use [cmd]");
             Player.Message(p, "%T/cmdset [cmd] -[rank]");
             Player.Message(p, "%HPrevents a specific rank from using [cmd]");
-            Player.Message(p, "%T/cmdset [cmd] [rank] <extra permission number>");
+            Player.Message(p, "%T/cmdset [cmd] [rank] [extra permission number]");
             Player.Message(p, "%HSet the lowest rank that has that extra permission for [cmd]");
             Player.Message(p, "To see available ranks, type %T/viewranks");
         }

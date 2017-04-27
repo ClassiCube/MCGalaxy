@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MCGalaxy.Blocks;
 
 namespace MCGalaxy {
     public static class Formatter {
@@ -91,8 +92,8 @@ namespace MCGalaxy {
         
         public static void MessageBlock(Player p, string action, byte block) {
             StringBuilder builder = new StringBuilder("Only ");
-            Block.Blocks perms = Block.BlockList[block];
-            PrintRanks(perms.lowestRank, perms.allow, perms.disallow, builder);
+            BlockPerms perms = BlockPerms.List[block];
+            PrintRanks(perms.MinRank, perms.Allowed, perms.Disallowed, builder);
             
             builder.Append( " %Scan ").Append(action);
             builder.Append(Block.Name(block)).Append(".");

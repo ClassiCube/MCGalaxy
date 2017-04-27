@@ -244,5 +244,20 @@ namespace MCGalaxy {
             block = Block.Convert(block);
             return new AABB(0, 0, 0, 32, DefaultSet.Height(block) * 2, 32);
         }
+        
+        public static void SetBlocks() {
+            SetCoreProperties();
+            BlockBehaviour.InitCorePhysicsHandlers();
+            BlockProps.Load("core", Block.Props);
+            BlockBehaviour.InitCoreHandlers();
+            
+            BlockPerms.Load();
+        }
+        
+        [Obsolete("Use BlockPerms.CanModify()")]
+        public static bool canPlace(Player p, byte type) { return BlockPerms.CanModify(p, type); }
+        
+        [Obsolete("Use BlockPerms.CanModify()")]
+        public static bool canPlace(LevelPermission perm, byte type) { return BlockPerms.CanModify(perm, type); }
     }
 }

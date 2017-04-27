@@ -76,18 +76,18 @@ namespace MCGalaxy.Commands
         
         static List<string> RankBlocks(LevelPermission perm) {
             List<string> items = new List<string>(Block.Count);
-            foreach (Block.Blocks bl in Block.BlockList) {
-                if (!Block.canPlace(perm, bl.type)) continue;
-                if (Block.Name(bl.type).CaselessEq("unknown")) continue;
-                items.Add(Block.Name(bl.type));
+            foreach (BlockPerms perms in BlockPerms.List) {
+                if (!BlockPerms.CanModify(perm, perms.BlockID)) continue;
+                if (Block.Name(perms.BlockID).CaselessEq("unknown")) continue;
+                items.Add(Block.Name(perms.BlockID));
             }
             return items;
         }
         
         
         internal static string FormatBlockName(string block) {
-            Block.Blocks perms = Block.BlockList[Block.Byte(block)];
-            return Group.GetColor(perms.lowestRank) + block;
+            BlockPerms perms =  BlockPerms.List[Block.Byte(block)];
+            return Group.GetColor(perms.MinRank) + block;
         }
         
         static void OutputBlockData(Player p, string block) {

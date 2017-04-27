@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Blocks;
 using MCGalaxy.Network;
 
 namespace MCGalaxy {
@@ -213,8 +214,8 @@ namespace MCGalaxy {
         void WriteBlockPermissions(byte[] bulk) {
             int coreCount = hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
             for (byte i = 0; i < coreCount; i++) {
-                bool place = Block.canPlace(this, i) && level.CanPlace;
-                bool delete = Block.canPlace(this, i) && level.CanDelete;
+                bool place = BlockPerms.CanModify(this, i) && level.CanPlace;
+                bool delete = BlockPerms.CanModify(this, i) && level.CanDelete;
                 Packet.WriteBlockPermission(i, place, delete, bulk, i * 4);
             }
             

@@ -33,7 +33,7 @@ namespace MCGalaxy {
         /// <summary> Name of the command these permissions are for. </summary>
         public string CmdName;
         
-        /// <summary> Minimum rank able to use the command. </summary>
+        /// <summary> Minimum rank normally able to use the command. </summary>
         public LevelPermission MinRank;
         
         /// <summary> Ranks specifically allowed to use the command. </summary>

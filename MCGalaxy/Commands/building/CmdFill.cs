@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Blocks;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands.Building {
@@ -60,7 +61,7 @@ namespace MCGalaxy.Commands.Building {
             if (oldBlock == Block.custom_block)
                 oldExtBlock = p.level.GetExtTile(x, y, z);
 
-            if (!Block.canPlace(p, oldBlock) && !Block.BuildIn(oldBlock)) {
+            if (!BlockPerms.CanModify(p, oldBlock) && !Block.BuildIn(oldBlock)) {
                 Formatter.MessageBlock(p, "fill over ", oldBlock); return false;
             }
             

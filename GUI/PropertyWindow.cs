@@ -20,6 +20,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
+using MCGalaxy.Blocks;
 using MCGalaxy.Games;
 using MCGalaxy.Gui.Popups;
 using MCGalaxy.SQL;
@@ -138,7 +139,7 @@ namespace MCGalaxy.Gui {
 
         List<Group> storedRanks = new List<Group>();
         List<CommandPerms> storedCommands = new List<CommandPerms>();
-        List<Block.Blocks> storedBlocks = new List<Block.Blocks>();
+        List<BlockPerms> storedBlocks = new List<BlockPerms>();
 
         public void LoadRanks() {
             txtCmdRanks.Text = "The following ranks are available: \r\n\r\n";
@@ -182,17 +183,17 @@ namespace MCGalaxy.Gui {
         public void LoadBlocks() {
             listBlocks.Items.Clear();
             storedBlocks.Clear();
-            storedBlocks.AddRange(Block.BlockList);
-            foreach ( Block.Blocks bs in storedBlocks ) {
-                if ( Block.Name(bs.type) != "unknown" )
-                    listBlocks.Items.Add(Block.Name(bs.type));
+            storedBlocks.AddRange(BlockPerms.List);
+            foreach ( BlockPerms bs in storedBlocks ) {
+                if ( Block.Name(bs.BlockID) != "unknown" )
+                    listBlocks.Items.Add(Block.Name(bs.BlockID));
             }
             if ( listBlocks.SelectedIndex == -1 )
                 listBlocks.SelectedIndex = 0;
         }
 
         public void SaveBlocks() {
-            Block.SaveBlocks(storedBlocks);
+            BlockPerms.Save(storedBlocks);
             Block.SetBlocks();
             LoadBlocks();
         }
@@ -488,14 +489,14 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         #region BlockTab
         private void listBlocks_SelectedIndexChanged(object sender, EventArgs e) {
             byte b = Block.Byte(listBlocks.SelectedItem.ToString());
-            Block.Blocks bs = storedBlocks.Find(bS => bS.type == b);
+            BlockPerms bs = storedBlocks.Find(bS => bS.BlockID == b);
 
-            txtBlLowest.Text = (int)bs.lowestRank + "";
+            txtBlLowest.Text = (int)bs.MinRank + "";
 
             bool foundOne = false;
             txtBlDisallow.Text = "";
-            if (bs.disallow != null) {
-                foreach ( LevelPermission perm in bs.disallow ) {
+            if (bs.Disallowed != null) {
+                foreach ( LevelPermission perm in bs.Disallowed ) {
                     foundOne = true;
                     txtBlDisallow.Text += "," + (int)perm;
                 }
@@ -504,8 +505,8 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
 
             foundOne = false;
             txtBlAllow.Text = "";
-            if (bs.allow != null) {
-                foreach ( LevelPermission perm in bs.allow ) {
+            if (bs.Allowed != null) {
+                foreach ( LevelPermission perm in bs.Allowed ) {
                     foundOne = true;
                     txtBlAllow.Text += "," + (int)perm;
                 }
@@ -513,17 +514,17 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             if ( foundOne ) txtBlAllow.Text = txtBlAllow.Text.Remove(0, 1);
         }
         private void txtBlLowest_TextChanged(object sender, EventArgs e) {
-            fillLowest(ref txtBlLowest, ref storedBlocks[Block.Byte(listBlocks.SelectedItem.ToString())].lowestRank);
+        	fillLowest(ref txtBlLowest, ref storedBlocks[Block.Byte(listBlocks.SelectedItem.ToString())].MinRank);
         }
         private void txtBlDisallow_TextChanged(object sender, EventArgs e) {
-            if (storedBlocks[listBlocks.SelectedIndex].disallow == null)
-                storedBlocks[listBlocks.SelectedIndex].disallow = new List<LevelPermission>();
-            fillAllowance(ref txtBlDisallow, ref storedBlocks[listBlocks.SelectedIndex].disallow);
+            if (storedBlocks[listBlocks.SelectedIndex].Disallowed == null)
+                storedBlocks[listBlocks.SelectedIndex].Disallowed = new List<LevelPermission>();
+            fillAllowance(ref txtBlDisallow, ref storedBlocks[listBlocks.SelectedIndex].Disallowed);
         }
         private void txtBlAllow_TextChanged(object sender, EventArgs e) {
-            if (storedBlocks[listBlocks.SelectedIndex].allow == null)
-                storedBlocks[listBlocks.SelectedIndex].allow = new List<LevelPermission>();
-            fillAllowance(ref txtBlAllow, ref storedBlocks[listBlocks.SelectedIndex].allow);
+            if (storedBlocks[listBlocks.SelectedIndex].Allowed == null)
+                storedBlocks[listBlocks.SelectedIndex].Allowed = new List<LevelPermission>();
+            fillAllowance(ref txtBlAllow, ref storedBlocks[listBlocks.SelectedIndex].Allowed);
         }
         #endregion
         private void fillAllowance(ref TextBox txtBox, ref List<LevelPermission> addTo) {

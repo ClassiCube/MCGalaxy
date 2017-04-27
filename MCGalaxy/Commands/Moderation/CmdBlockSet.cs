@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using MCGalaxy.Blocks;
+
 namespace MCGalaxy.Commands {
     public sealed class CmdBlockSet : Command {
         public override string name { get { return "blockset"; } }
@@ -35,10 +37,10 @@ namespace MCGalaxy.Commands {
             if (p != null && grp.Permission > p.Rank) { Player.Message(p, "Cannot set to a rank higher than yourself."); return; }
             if (!CommandParser.IsBlockAllowed(p, "change permissions of ", block)) return;
 
-            Block.BlockList[block].lowestRank = grp.Permission;
-            Block.UpdateRankPerms();
-            Block.SaveBlocks(Block.BlockList);
-            Block.ResendBlockPermissions(block);           
+            BlockPerms.List[block].MinRank = grp.Permission;
+            BlockPerms.Save(BlockPerms.List);
+            BlockPerms.Load();
+            BlockPerms.ResendBlockPermissions(block);           
             // TODO: custom blocks permissions
 
             Chat.MessageGlobal("&d{0}%S's permission was changed to {1}", Block.Name(block), grp.ColoredName);

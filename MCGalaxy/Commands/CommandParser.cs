@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Blocks;
 
 namespace MCGalaxy {
     
@@ -145,7 +146,7 @@ namespace MCGalaxy {
         /// <summary> Returns whether the player is allowed to place/modify/delete the given block. </summary>
         /// <remarks> Outputs information of which ranks can modify the block if not. </remarks>
         public static bool IsBlockAllowed(Player p, string action, byte block) {
-            if (p == null || Block.canPlace(p, block)) return true;
+            if (p == null || BlockPerms.CanModify(p, block)) return true;
             Formatter.MessageBlock(p, action, block);
             return false;
         }
