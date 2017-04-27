@@ -29,48 +29,59 @@ namespace MCGalaxy.Commands {
             if (message == "" || args.Length == 1) { Help(p); return; }
             Command cmd = Command.all.Find(args[0]);
             if (cmd == null) { Player.Message(p, "Could not find command entered"); return; }
-            if (p != null && !p.group.CanExecute(cmd)) { 
-                Player.Message(p, "Your rank cannot use this command."); return; 
+            if (p != null && !p.group.CanExecute(cmd)) {
+                Player.Message(p, "Your rank cannot use this command."); return;
             }
 
-            Group grp = Matcher.FindRanks(p, args[1]);
-            if (grp == null) return;
-            if (p != null && grp.Permission > p.Rank) { 
-                Player.Message(p, "Cannot set permissions to a rank higher than yours."); return; 
-            }
-
-            int otherPermIndex = 0;
-            if (args.Length == 2) {
-                CommandPerms perms = CommandPerms.Find(cmd.name);
-                perms.MinRank = grp.Permission;
-                UpdatePermissions(cmd, p, "'s permission was set to " + grp.ColoredName);
-            } else if (args[2].CaselessEq("allow")) {
+            if (args.Length == 2 && args[1][0] == '+') {
+                Group grp = GetGroup(p, args[1].Substring(1));
+                if (grp == null) return;
                 CommandPerms perms = CommandPerms.Find(cmd.name);
 
-                perms.Disallowed.Remove(grp.Permission);
-                if (!perms.Allowed.Contains(grp.Permission))
+                if (perms.Disallowed.Contains(grp.Permission)) {
+                    perms.Disallowed.Remove(grp.Permission);
+                } else if (!perms.Allowed.Contains(grp.Permission)) {
                     perms.Allowed.Add(grp.Permission);
+                }
+                
                 UpdatePermissions(cmd, p, " can now be used by " + grp.ColoredName);
-            } else if (args[2].CaselessEq("disallow")) {
+            } else if (args.Length == 2 && args[1][0] == '-') {
+                Group grp = GetGroup(p, args[1].Substring(1));
+                if (grp == null) return;
+                CommandPerms perms = CommandPerms.Find(cmd.name);
+                
                 if (p != null && p.Rank == grp.Permission) {
                     Player.Message(p, "You cannot disallow your own rank from using a command."); return;
                 }
                 
-                CommandPerms perms = CommandPerms.Find(cmd.name);
-                perms.Allowed.Remove(grp.Permission);
-                if (!perms.Disallowed.Contains(grp.Permission))
+                if (perms.Allowed.Contains(grp.Permission)) {
+                    perms.Allowed.Remove(grp.Permission);
+                } else if (!perms.Disallowed.Contains(grp.Permission)) {
                     perms.Disallowed.Add(grp.Permission);
+                }
+                
                 UpdatePermissions(cmd, p, " is no longer usable by " + grp.ColoredName);
-            } else if (!int.TryParse(args[2], out otherPermIndex)) {
-                Player.Message(p, "\"{0}\" must be \"allow\", \"disallow\", or an integer.", args[2]);
+            } else if (args.Length == 2) {
+                Group grp = GetGroup(p, args[1]);
+                if (grp == null) return;
+                CommandPerms perms = CommandPerms.Find(cmd.name);
+                
+                perms.MinRank = grp.Permission;
+                UpdatePermissions(cmd, p, "'s permission was set to " + grp.ColoredName);
             } else {
+                int otherPermIndex = 0;
+                if (!CommandParser.GetInt(p, args[2], "Extra permission number", ref otherPermIndex)) return;
+                
                 CommandExtraPerms perms = CommandExtraPerms.Find(cmd.name, otherPermIndex);
                 if (perms == null) {
                     Player.Message(p, "This command has no extra permission by that number."); return;
                 }
                 if (p != null && p.Rank < perms.MinRank) {
                     Player.Message(p, "Your rank cannot modify this extra permission."); return;
-                }                
+                }
+                
+                Group grp = GetGroup(p, args[1]);
+                if (grp == null) return;
                 perms.MinRank = grp.Permission;
                 CommandExtraPerms.Save();
                 
@@ -81,21 +92,31 @@ namespace MCGalaxy.Commands {
             }
         }
         
+        static Group GetGroup(Player p, string grpName) {
+            Group grp = Matcher.FindRanks(p, grpName);
+            if (grp == null) return null;
+            
+            if (p != null && grp.Permission > p.Rank) {
+                Player.Message(p, "Cannot set permissions to a rank higher than yours."); return null;
+            }
+            return grp;
+        }
+        
         static void UpdatePermissions(Command cmd, Player p, string message) {
-             CommandPerms.Save();
-             CommandPerms.Load();
-             
-             Chat.MessageGlobal("&d{0}%S{1}", cmd.name, message);
-             if (Player.IsSuper(p))
-                 Player.Message(p, cmd.name + message);
+            CommandPerms.Save();
+            CommandPerms.Load();
+            
+            Chat.MessageGlobal("&d{0}%S{1}", cmd.name, message);
+            if (Player.IsSuper(p))
+                Player.Message(p, cmd.name + message);
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/cmdset [cmd] [rank]");
             Player.Message(p, "%HSets lowest rank that can use [cmd] to [rank]");
-            Player.Message(p, "%T/cmdset [cmd] [rank] allow");
+            Player.Message(p, "%T/cmdset [cmd] +[rank]");
             Player.Message(p, "%HAllows a specific rank to use [cmd]");
-            Player.Message(p, "%T/cmdset [cmd] [rank] disallow");
+            Player.Message(p, "%T/cmdset [cmd] -[rank]");
             Player.Message(p, "%HPrevents a specific rank from using [cmd]");
             Player.Message(p, "%T/cmdset [cmd] [rank] <extra permission number>");
             Player.Message(p, "%HSet the lowest rank that has that extra permission for [cmd]");
