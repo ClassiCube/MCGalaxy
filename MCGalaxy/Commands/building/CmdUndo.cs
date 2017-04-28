@@ -106,13 +106,13 @@ namespace MCGalaxy.Commands.Building {
                 
         const int undoMax = -1; // allows everything to be undone.
         internal static TimeSpan GetDelta(Player p, string name, string[] parts, int offset) {
-            TimeSpan delta;
+            TimeSpan delta = TimeSpan.Zero;
             string timespan = parts.Length > offset ? parts[parts.Length - 1] : "30m";
             bool canAll = p == null || p.name.CaselessEq(name) || p.group.maxUndo == undoMax;            
             
             if (timespan.CaselessEq("all")) {
                 return TimeSpan.FromSeconds(canAll ? int.MaxValue : p.group.maxUndo);
-            } else if (!timespan.TryParseShort(p, 's', "undo the past", out delta)) {
+            } else if (!CommandParser.GetTimespan(p, timespan, ref delta, "undo the past", 's')) {
                 return TimeSpan.MinValue;
             }
 

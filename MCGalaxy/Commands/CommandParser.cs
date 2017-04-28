@@ -51,6 +51,23 @@ namespace MCGalaxy {
             }
         }
         
+        /// <summary> Attempts to parse the given argument as an timespan in short form. </summary>                
+        public static bool GetTimespan(Player p, string input, ref TimeSpan span,
+                                       string action, char defUnit) {
+            span = TimeSpan.Zero;
+            try {
+                span = input.ParseShort(defUnit);
+                return true;
+            } catch (OverflowException) {
+                Player.Message(p, "Timespan given is too big.");
+            } catch (FormatException ex) {
+                Player.Message(p, "{0} is not a valid quantifier.", ex.Message);
+                Player.Message(p, TimespanHelp, action);
+            }
+            return false;
+        }
+        public const string TimespanHelp = "For example, to {0} 25 and a half hours, use \"1d1h30m\".";
+        
         
         /// <summary> Attempts to parse the given argument as an integer. </summary>
         public static bool GetInt(Player p, string input, string argName, ref int result,

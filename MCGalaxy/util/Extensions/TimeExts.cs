@@ -57,23 +57,6 @@ namespace MCGalaxy {
             return TimeSpan.FromTicks(total);
         }
         
-        public static bool TryParseShort(this string value, Player p, char defUnit,
-                                         string action, out TimeSpan span) {
-            span = TimeSpan.Zero;
-            try {
-                span = ParseShort(value, defUnit);
-                return true;
-            } catch (OverflowException) {
-                Player.Message(p, "Timespan given is too big.");
-            } catch (FormatException ex) {
-                Player.Message(p, "{0} is not a valid quantifier.", ex.Message);
-                Player.Message(p, Help, action);
-            }
-            return false;
-        }
-        
-        public const string Help = "For example, to {0} 25 and a half hours, use \"1d1h30m\".";
-        
         static void Add(ref string time, int amount, char suffix, bool spaces) {
             if (amount == 0) return;
             

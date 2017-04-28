@@ -56,8 +56,8 @@ namespace MCGalaxy.Commands.Moderation {
 
             Group group = Matcher.FindRanks(p, args[1]);
             if (group == null) return;
-            TimeSpan delta;
-            if (!args[2].TryParseShort(p, 'h', "temp rank for", out delta)) return;
+            TimeSpan delta = TimeSpan.Zero;
+            if (!CommandParser.GetTimespan(p, args[2], ref delta, "temp rank for", 'h')) return;
 
             foreach (string line in Server.TempRanks.Find(target)) {
                 Player.Message(p, "&cThe player already has a temporary rank assigned!"); return;

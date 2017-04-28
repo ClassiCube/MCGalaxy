@@ -31,13 +31,13 @@ namespace MCGalaxy.Commands {
         public CmdHighlight() { }
 
         public override void Use(Player p, string message) {
-            TimeSpan delta;
+            TimeSpan delta = TimeSpan.Zero;
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") message = p.name + " 1800";
             string[] args = message.SplitSpaces();
 
             if (args.Length >= 2) {
-                if (!args[1].TryParseShort(p, 's', "highlight the past", out delta)) return;
+                if (!CommandParser.GetTimespan(p, args[1], ref delta, "highlight the past", 's')) return;
             } else if (ParseTimespan(args[0], out delta)) {
                 args[0] = p.name;
             } else {
