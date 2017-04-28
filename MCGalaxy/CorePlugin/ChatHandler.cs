@@ -22,6 +22,8 @@ namespace MCGalaxy.Core {
     internal static class ChatHandler {
         
         internal static void HandleCommand(string cmd, Player p, string message) {
+            if (!Server.CoreSecretCommands) return;
+			
             //DO NOT REMOVE THE TWO COMMANDS BELOW, /PONY AND /RAINBOWDASHLIKESCOOLTHINGS. -EricKilla
             if (cmd == "pony") {
                 if (p.ponycount < 2) {

@@ -249,6 +249,8 @@ namespace MCGalaxy {
 
         [ConfigBool("report-back", "Error handling", null, true)]
         public static bool reportBack = true;
+        [ConfigBool("core-secret-commands", "Other", null, true)]
+        public static bool CoreSecretCommands = true;
 
         [ConfigBool("irc", "IRC bot", null, false)]
         public static bool irc = false;
