@@ -78,8 +78,6 @@ namespace MCGalaxy {
         }
 
         void HandlePlayerClicked(byte[] packet) {
-            if (OnPlayerClick == null) return;
-
             MouseButton Button = (MouseButton)packet[1];
             MouseAction Action = (MouseAction)packet[2];
             ushort Yaw = NetUtils.ReadU16(packet, 3);
@@ -93,7 +91,7 @@ namespace MCGalaxy {
             TargetBlockFace face = TargetBlockFace.None;
             if (Face < (byte)face)
                 face = (TargetBlockFace)Face;
-            OnPlayerClick(this, Button, Action, Yaw, Pitch, EntityID, X, Y, Z, face);
+            if (OnPlayerClick != null) OnPlayerClick(this, Button, Action, Yaw, Pitch, EntityID, X, Y, Z, face);
             OnPlayerClickEvent.Call(this, Button, Action, Yaw, Pitch, EntityID, X, Y, Z, face);
         }
 

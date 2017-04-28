@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Blocks.Extended;
 using MCGalaxy.Network;
 
 namespace MCGalaxy.Core {
@@ -30,8 +31,8 @@ namespace MCGalaxy.Core {
             bool movedZ = Math.Abs(next.Z - p.Pos.Z) > 4;  // moved more than 0.125 blocks horizontally
             p.SetYawPitch(yaw, pitch);
             
-            if (movedX || movedY || movedZ) { p.SendPos(Entities.SelfID, p.Pos, p.Rot); }            
-            Plugin.CancelPlayerEvent(PlayerEvents.PlayerMove, p);            
+            if (movedX || movedY || movedZ) { p.SendPos(Entities.SelfID, p.Pos, p.Rot); }
+            Plugin.CancelPlayerEvent(PlayerEvents.PlayerMove, p);
         }
         
         internal static void HandleOnJoinedLevel(Player p, Level prevLevel, Level level) {
@@ -84,6 +85,24 @@ namespace MCGalaxy.Core {
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
             }
+        }
+        
+        internal static void HandlePlayerClick(Player p, MouseButton button, MouseAction action, ushort yaw, ushort pitch, 
+                                              byte entity, ushort x, ushort y, ushort z, TargetBlockFace face) {
+            if (p.level.Deletable || action != MouseAction.Pressed || !p.level.IsValidPos(x, y, z)) return;
+            
+            byte block = p.level.GetTile(x, y, z);
+            bool isMB = Block.Props[block].IsMessageBlock;
+            bool isPortal = Block.Props[block].IsPortal;
+            
+            if (block == Block.custom_block) {
+                block = p.level.GetExtTile(x, y, z);
+                isMB = p.level.CustomBlockProps[block].IsMessageBlock;
+                isPortal = p.level.CustomBlockProps[block].IsMessageBlock;
+            }
+            
+            if (isMB) { MessageBlock.Handle(p, x, y, z, true); }
+            if (isPortal) { Portal.Handle(p, x, y, z); }
         }
     }
 }

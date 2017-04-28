@@ -29,15 +29,17 @@ namespace MCGalaxy.Core {
 
         public override void Load(bool startup) {
             OnPlayerConnectEvent.Register(ConnectHandler.HandleConnect,
-                                          Priority.Critical, this, false);
+                                          Priority.Critical, this);
             OnPlayerCommandEvent.Register(ChatHandler.HandleCommand,
-                                          Priority.Critical, this, false);
+                                          Priority.Critical, this);
             OnPlayerConnectingEvent.Register(ConnectingHandler.HandleConnecting,
-                                          Priority.Critical, this, false);
+                                          Priority.Critical, this);
             OnJoinedLevelEvent.Register(MiscHandlers.HandleOnJoinedLevel,
-                                        Priority.Critical, this, false);
+                                        Priority.Critical, this);
             OnPlayerMoveEvent.Register(MiscHandlers.HandlePlayerMove,
-                                       Priority.Critical, this, false);
+                                       Priority.Critical, this);
+        	OnPlayerClickEvent.Register(MiscHandlers.HandlePlayerClick,
+        	                            Priority.Critical, this);
             
             clearTask = Server.Background.QueueRepeat(IPThrottler.CleanupTask, null, 
                                                       TimeSpan.FromMinutes(10));
