@@ -62,21 +62,22 @@ namespace MCGalaxy.Commands.World {
                 p.SendMessage("The URL must be " + NetUtils.StringSize + " characters or less."); return; 
             }
             
+            string path = url == "" ? "normal" : url;
             if (scope == "global") {
                 Server.defaultTerrainUrl = url;
-                Player.Message(p, "Set server's default terrain to " + args[1]);
+                Player.Message(p, "Set server's default terrain to " + path);
                 UpdateGlobally(p, false);
             } else if (scope == "level") {
                 p.level.terrainUrl = url;
-                Player.Message(p, "Set level's terrain to " + args[1]);
+                Player.Message(p, "Set level's terrain to " + path);
                 UpdateLevel(p);
             } else if (scope == "globalzip") {
                 Server.defaultTextureUrl = url;
-                Player.Message(p, "Set server's default texture pack to " + args[1]);
+                Player.Message(p, "Set server's default texture pack to " + path);
                 UpdateGlobally(p, true);
             } else if (scope == "levelzip") {
                 p.level.texturePackUrl = url;
-                Player.Message(p, "Set level's texture pack to " + args[1]);
+                Player.Message(p, "Set level's texture pack to " + path);
                 UpdateLevel(p);
             } else {
                 Help(p);
