@@ -29,10 +29,11 @@ namespace MCGalaxy.Commands {
         public override void Use(Player p, string message) { 
             Level lvl = p.level;
             string[] args = message.SplitSpaces(2);
-            int ignored;
+            int ignored, offset = 0;
             
-            if (!(message == "" || args[0].CaselessEq("all") || int.TryParse(args[0], out ignored))) {
+            if (args.Length == 2 || !(message == "" || args[0].CaselessEq("all") || int.TryParse(args[0], out ignored))) {
                 lvl = Matcher.FindLevels(p, args[0]);
+                offset = 1;
                 if (lvl == null) return;
             }
             
@@ -44,7 +45,7 @@ namespace MCGalaxy.Commands {
             }
             
             string cmd = lvl == p.level ? "bots" : "bots " + lvl.name;
-            string modifier = args.Length > 1 ? args[1] : "";
+            string modifier = args.Length > offset ? args[offset] : "";
             Player.Message(p, "Bots in {0}:", lvl.ColoredName);
             MultiPageOutput.Output(p, inScope, FormatBot, cmd, "bots", modifier, false);
         }
