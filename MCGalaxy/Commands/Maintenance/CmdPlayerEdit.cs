@@ -16,10 +16,11 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Data;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {    
-    public sealed class CmdPlayerEdit : Command {        
+namespace MCGalaxy.Commands {
+    public sealed class CmdPlayerEdit : Command {
         public override string name { get { return "playeredit"; } }
         public override string shortcut { get { return "pe"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -29,6 +30,8 @@ namespace MCGalaxy.Commands {
             get { return new [] { new CommandAlias("setinfo") }; }
         }
         public CmdPlayerEdit() { }
+
+        delegate void DBSetter(string name, string column, string data);
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
@@ -47,9 +50,20 @@ namespace MCGalaxy.Commands {
                     SetDate(p, args, "FirstLogin", who, v => who.firstLogin = v); break;
                 case "lastlogin":
                     SetDate(p, args, "LastLogin", who, v => who.timeLogged = v); break;
+                    
+                case "logins":
                 case "totallogin":
                 case "totallogins":
-                    SetInteger(p, args, "totalLogin", 1000000000, who, v => who.totalLogins = v); break;
+                    SetInteger(p, args, "totalLogin", 1000000000, who,
+                               v => who.totalLogins = v, UpdateDB); break;
+                case "deaths":
+                case "totaldeaths":
+                    SetInteger(p, args, "TotalDeaths", 1000000, who,
+                               v => who.overallDeath = v, UpdateDB); break;
+                case "money":
+                    SetInteger(p, args, "Money", 100000000, who,
+                               v => who.money = v, UpdateDB); break;
+
                 case "title":
                     if (args.Length < 3) {
                         Player.Message(p, "Title can be up to 20 characters. Use \"null\" to remove the title"); return;
@@ -63,17 +77,27 @@ namespace MCGalaxy.Commands {
                     }
                     UpdateDB(args[0], args[2], "Title");
                     MessageDataChanged(p, args[0], args[1], args[2]); break;
-                case "totaldeaths":
-                    SetInteger(p, args, "TotalDeaths", 1000000, who, v => who.overallDeath = v); break;
-                case "money":
-                    SetInteger(p, args, "Money", 100000000, who, v => who.money = v); break;
+
+                    
+                case "modified":
                 case "totalblocks":
-                    SetInteger(p, args, "totalBlocks", int.MaxValue, who, v => who.overallBlocks = v); break;
+                    SetInteger(p, args, "totalBlocks", int.MaxValue, who,
+                               v => who.overallBlocks = v, UpdateDBLo); break;
+                case "drawn":
                 case "totalcuboided":
                 case "totalcuboid":
-                    SetInteger(p, args, "totalCuboided", int.MaxValue, who, v => who.TotalDrawn = v); break;
+                    SetInteger(p, args, "totalCuboided", int.MaxValue, who,
+                               v => who.TotalDrawn = v, UpdateDBLo); break;
+                case "placed":
+                    SetInteger(p, args, "totalBlocks", int.MaxValue, who,
+                               v => who.TotalPlaced = v, UpdateDBHi); break;
+                case "deleted":
+                    SetInteger(p, args, "totalCuboided", int.MaxValue, who,
+                               v => who.TotalDeleted = v, UpdateDBHi); break;
+                    
                 case "totalkicked":
-                    SetInteger(p, args, "totalKicked", 1000000000, who, v => who.totalKicked = v); break;
+                    SetInteger(p, args, "totalKicked", 1000000000, who,
+                               v => who.totalKicked = v, UpdateDB); break;
                 case "timespent":
                     SetTimespan(p, args, "TimeSpent", who, v => who.time = v.ParseDBTime()); break;
                 case "color":
@@ -85,6 +109,7 @@ namespace MCGalaxy.Commands {
                     MessageValidTypes(p); break;
             }
         }
+        
         
         static void SetColor(Player p, string[] args, string column, Player who, Action<string> setter) {
             if (args.Length < 3) {
@@ -143,7 +168,8 @@ namespace MCGalaxy.Commands {
             MessageDataChanged(p, args[0], args[1], timeFrame.Shorten(true));
         }
         
-        static void SetInteger(Player p, string[] args, string column, int max, Player who, Action<int> setter) {
+        static void SetInteger(Player p, string[] args, string column, int max, Player who,
+                               Action<int> setter, DBSetter dbSetter) {
             if (args.Length < 3) {
                 max--;
                 int digits = 1; max /= 10;
@@ -156,15 +182,42 @@ namespace MCGalaxy.Commands {
             int value = 0;
             if (!CommandParser.GetInt(p, args[2], "Amount", ref value, 0, max)) return;
             
-            if (who != null)
+            if (who != null) {
                 setter(value);
-            else
-                UpdateDB(args[0], args[2], column);
+            } else {
+                dbSetter(args[0], args[2], column);
+            }
             MessageDataChanged(p, args[0], args[1], args[2]);
         }
         
+        
         static void UpdateDB(string name, string value, string column) {
             Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, value.UnicodeToCp437());
+        }
+        
+        // special case handling for packed forms of totalBlocks and totalCuboided
+        static void UpdateDBLo(string name, string value, string column) {
+            long loValue = long.Parse(value);
+            // OR with existing high bits of value in DB
+            using (DataTable results = Database.Backend.GetRows("Players", column, "WHERE Name = @0", name)) {
+            	if (results.Rows.Count > 0) {
+            		long curValue = PlayerData.ParseLong(results.Rows[0][column].ToString());
+            		loValue |= (curValue & ~PlayerData.LowerBitsMask);
+            	}                
+            }
+            Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, loValue);
+        }
+        
+        static void UpdateDBHi(string name, string value, string column) {
+            long hiValue = long.Parse(value) << PlayerData.LowerBits;
+            // OR with existing low bits of value in DB
+            using (DataTable results = Database.Backend.GetRows("Players", column, "WHERE Name = @0", name)) {
+            	if (results.Rows.Count > 0) {
+            		long curValue = PlayerData.ParseLong(results.Rows[0][column].ToString());
+            		hiValue |= (curValue & PlayerData.LowerBitsMask);
+            	}              
+            }            
+            Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, hiValue);
         }
         
         static void MessageDataChanged(Player p, string name, string type, string value) {
@@ -175,8 +228,8 @@ namespace MCGalaxy.Commands {
         }
 
         static void MessageValidTypes(Player p) {
-            Player.Message(p, "%HValid types: %SFirstLogin, LastLogin, TotalLogins, Title, TotalDeaths, Money, " +
-                               "TotalBlocks, TotalCuboid, TotalKicked, TimeSpent, Color, TitleColor ");
+            Player.Message(p, "%HValid types: %SFirstLogin, LastLogin, Logins, Title, Deaths, Money, " +
+                           "Modified, Drawn, Placed, Deleted, TotalKicked, TimeSpent, Color, TitleColor ");
         }
         
         public override void Help(Player p) {
