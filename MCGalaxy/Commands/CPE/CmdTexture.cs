@@ -50,6 +50,7 @@ namespace MCGalaxy.Commands.World {
             } else if (!(url.StartsWith("http://") || url.StartsWith("https://"))) {
                 Player.Message(p, "Please use http:// or https:// in front of your URL"); return;
             }
+            FilterURL(ref url);
             
             if ((scope == "global" || scope == "level") && !(url == "" || url.EndsWith(".png"))) {
                 Player.Message(p, "The terrain URL must end in a .png"); return;
@@ -80,6 +81,17 @@ namespace MCGalaxy.Commands.World {
             } else {
                 Help(p);
             }
+        }
+        
+        static void FilterURL(ref string url) {
+            // a lot of people try linking to the dropbox page instead of directly to file, so we auto correct them
+            if (url.StartsWith("http://www.dropbox")) {
+                url = "http://dl.dropbox" + url.Substring("http://www.dropbox".Length);
+                url = url.Replace("?dl=0", "");
+            } else if (url.StartsWith("https://www.dropbox")) {
+                url = "https://dl.dropbox" + url.Substring("https://www.dropbox".Length);
+                url = url.Replace("?dl=0", "");
+            } 
         }
         
         static string GetPath(string url) { return url == "" ? "(none)" : url; }
