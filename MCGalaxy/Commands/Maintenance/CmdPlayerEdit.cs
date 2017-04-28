@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands {
                                v => who.totalLogins = v, UpdateDB); break;
                 case "deaths":
                 case "totaldeaths":
-                    SetInteger(p, args, "TotalDeaths", 1000000, who,
+                    SetInteger(p, args, "TotalDeaths", short.MaxValue, who,
                                v => who.overallDeath = v, UpdateDB); break;
                 case "money":
                     SetInteger(p, args, "Money", 100000000, who,
@@ -171,12 +171,7 @@ namespace MCGalaxy.Commands {
         static void SetInteger(Player p, string[] args, string column, int max, Player who,
                                Action<int> setter, DBSetter dbSetter) {
             if (args.Length < 3) {
-                max--;
-                int digits = 1; max /= 10;
-                while (max > 0) {
-                    digits++; max /= 10;
-                }
-                Player.Message(p, "You must specify a number, which can be " + digits + " digits at most."); return;
+                Player.Message(p, "You must specify a positive integer, which can be {0} at most.", max); return;
             }
             
             int value = 0;

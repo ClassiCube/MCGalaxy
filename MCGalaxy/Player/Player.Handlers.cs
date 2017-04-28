@@ -497,6 +497,8 @@ namespace MCGalaxy {
             } else {
                 Command.all.Find("spawn").Use(this, "");
                 overallDeath++;
+                // NOTE: If deaths column is ever increased past 16 bits, remove this clamp
+                if (overallDeath > short.MaxValue) overallDeath = short.MaxValue;
             }
 
             if (Server.deathcount && (overallDeath > 0 && overallDeath % 10 == 0))
