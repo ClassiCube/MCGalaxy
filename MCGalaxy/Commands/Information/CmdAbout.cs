@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdAbout() { }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("binfo"), new CommandAlias("bi"), new CommandAlias("whodid") }; }
+            get { return new [] { new CommandAlias("binfo"), new CommandAlias("whodid") }; }
         }
             
         public override void Use(Player p, string message) {

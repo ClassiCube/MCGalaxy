@@ -238,7 +238,7 @@ namespace MCGalaxy.Commands.CPE {
                     step++;
                 bd.Shape = bd.MaxY;
             } else if (step == 9) {
-                if (CommandParser.GetByte(p, value, "Collide type", ref bd.CollideType, 0, 2))
+                if (CommandParser.GetByte(p, value, "Collide type", ref bd.CollideType, 0, 6))
                     step++;
             } else if (step == 10) {
                 if (Utils.TryParseDecimal(value, out bd.Speed) && bd.Speed >= 0.25f && bd.Speed <= 3.96f)
@@ -313,10 +313,8 @@ namespace MCGalaxy.Commands.CPE {
                     def.Name = value; break;
                     
                 case "collide":
-                    if( !(value == "0" || value == "1" || value == "2")) {
-                        SendEditHelp(p, 9, 0); return;
-                    }
-                    def.CollideType = byte.Parse(value); break;
+                    if (!EditByte(p, value, "Collide type", ref def.CollideType, 9, 1, 0, 6)) return;
+                    break;
                     
                 case "speed":
                     if (!Utils.TryParseDecimal(value, out fTemp) || fTemp < 0.25f || fTemp > 3.96f) {

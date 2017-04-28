@@ -101,7 +101,7 @@ namespace MCGalaxy {
         }
         
         static void SetRealmOwner(Player p, Level lvl, string value) {
-            lvl.RealmOwner = value;
+            lvl.RealmOwner = value.Replace(' ', ',');
             if (value == "") Player.Message(p, "Removed realm owner for this level.");
             else Player.Message(p, "Set realm owner/owners of this level to {0}.", value);
         }
