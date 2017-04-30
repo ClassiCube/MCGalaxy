@@ -79,20 +79,20 @@ namespace MCGalaxy.Tasks {
             count--;
             Level[] levels = LevelInfo.Loaded.Items;
             
-            foreach (Level l in levels) {
+            foreach (Level lvl in levels) {
                 try {
-                    if (!l.changed || !l.ShouldSaveChanges()) continue;
+                    if (!lvl.changed || !lvl.ShouldSaveChanges()) continue;
 
-                    l.Save();
+                    lvl.Save();
                     if (count == 0)  {
-                        int backupNumber = l.Backup();
+                        int backupNumber = lvl.Backup();
                         if (backupNumber != -1) {
-                            l.ChatLevel("Backup " + backupNumber + " saved.");
-                            Server.s.Log("Backup " + backupNumber + " saved for " + l.name);
+                            lvl.ChatLevel("Backup " + backupNumber + " saved.");
+                            Server.s.Log("Backup " + backupNumber + " saved for " + lvl.name);
                         }
                     }
                 } catch {
-                    Server.s.Log("Backup for " + l.name + " has caused an error.");
+                    Server.s.Log("Backup for " + lvl.name + " has caused an error.");
                 }
             }
 
