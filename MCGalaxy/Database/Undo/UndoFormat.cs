@@ -28,7 +28,7 @@ namespace MCGalaxy.Undo {
     }
 
     /// <summary> Retrieves and saves undo data in a particular format. </summary>
-    /// <remarks> Note most formats only support retrieving undo data. </remarks>
+    /// <remarks> Undo files are obsolete, so only reading them is supported. </remarks>
     public abstract partial class UndoFormat {
         
         protected const string undoDir = "extra/undo", prevUndoDir = "extra/undoPrevious";
@@ -36,8 +36,12 @@ namespace MCGalaxy.Undo {
         public static UndoFormat BinFormat = new UndoFormatBin();
         public static UndoFormat NewFormat = new UndoFormatCBin();
         
-        protected abstract IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args);       
+        /// <summary> Enumerates through all the entries in the undo file. </summary>
+        protected abstract IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args);
+        
+        /// <summary> File extension of undo files in this format. </summary>
         protected abstract string Ext { get; }    
+        
         
         /// <summary> Gets a list of all undo file names for the given player. </summary>
         /// <remarks> This list is sorted, such that the first element is the

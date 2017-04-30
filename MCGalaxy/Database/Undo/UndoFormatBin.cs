@@ -22,6 +22,7 @@ using System.Text;
 
 namespace MCGalaxy.Undo {
 
+    /// <summary> Reads undo entries in the old MCGalaxy undo binary format. </summary>
     public sealed class UndoFormatBin : UndoFormat {
         
         protected override string Ext { get { return ".unbin"; } }

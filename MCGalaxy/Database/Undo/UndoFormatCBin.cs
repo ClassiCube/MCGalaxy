@@ -22,6 +22,7 @@ using System.Text;
 
 namespace MCGalaxy.Undo {
 
+    /// <summary> Reads undo entries in the old MCGalaxy optimised undo binary format. </summary>
     public sealed class UndoFormatCBin : UndoFormat {
         
         protected override string Ext { get { return ".uncbin"; } }
@@ -110,7 +111,7 @@ namespace MCGalaxy.Undo {
             return header;
         }
         
-        public struct UndoCacheItem {
+        struct UndoCacheItem {
             public int Index;
             public byte Type, NewType;
             public ushort Flags; // upper 2 bits for 'ext' or 'physics' type, lower 14 bits for time delta.

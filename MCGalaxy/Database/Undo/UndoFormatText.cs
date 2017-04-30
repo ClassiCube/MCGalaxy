@@ -22,6 +22,7 @@ using System.IO;
 
 namespace MCGalaxy.Undo {
 
+	/// <summary> Reads undo entries in the old MCForge undo text format. </summary>
     public sealed class UndoFormatText : UndoFormat {
         
         protected override string Ext { get { return ".undo"; } }
@@ -31,7 +32,7 @@ namespace MCGalaxy.Undo {
             pos.NewExtBlock = 0; pos.ExtBlock = 0;
             string[] lines = new StreamReader(s).ReadToEnd().SplitSpaces();
             Player p = args.Player;
-            bool super = p == null || p.ircNick != null;
+            bool super = Player.IsSuper(p);
             DateTime start = args.Start;
             
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
