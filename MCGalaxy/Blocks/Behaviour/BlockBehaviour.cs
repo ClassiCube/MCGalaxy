@@ -98,14 +98,9 @@ namespace MCGalaxy.Blocks {
         
         /// <summary> Initalise physics handling behaviour for the core blocks. </summary>
         internal static void InitCorePhysicsHandlers() {
-            physicsHandlers[Block.birdblack] = BirdPhysics.Do;
-            physicsHandlers[Block.birdwhite] = BirdPhysics.Do;
-            physicsHandlers[Block.birdlava] = BirdPhysics.Do;
-            physicsHandlers[Block.birdwater] = BirdPhysics.Do;
-            physicsHandlers[Block.birdred] = (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.air);
-            physicsHandlers[Block.birdblue] = (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.air);
-            physicsHandlers[Block.birdkill] = (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.air);
-            
+            for (int i = 0; i < Block.Count; i++) {
+                physicsHandlers[i] = null;
+            }
             physicsHandlers[Block.snaketail] = SnakePhysics.DoTail;
             physicsHandlers[Block.snake] = SnakePhysics.Do;
             physicsHandlers[Block.rockethead] = RocketPhysics.Do;
@@ -113,13 +108,6 @@ namespace MCGalaxy.Blocks {
             physicsHandlers[Block.zombiebody] = ZombiePhysics.Do;
             physicsHandlers[Block.zombiehead] = ZombiePhysics.DoHead;
             physicsHandlers[Block.creeper] = ZombiePhysics.Do;
-
-            physicsHandlers[Block.fishbetta] = (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.water);
-            physicsHandlers[Block.fishshark] = (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.water);
-            physicsHandlers[Block.fishlavashark] = (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.lava);
-            physicsHandlers[Block.fishgold] = (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.water);
-            physicsHandlers[Block.fishsalmon] = (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.water);
-            physicsHandlers[Block.fishsponge] = (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.water);
             
             physicsHandlers[Block.water] = SimpleLiquidPhysics.DoWater;
             physicsHandlers[Block.activedeathwater] = SimpleLiquidPhysics.DoWater;
@@ -171,6 +159,9 @@ namespace MCGalaxy.Blocks {
             physicsHandlers[Block.train] = TrainPhysics.Do;
             
             for (int i = 0; i < Block.Count; i++) {
+            	HandlePhysics animalAI = AnimalAIHandler(Block.Props[i].AnimalAI);
+                if (animalAI != null) { physicsHandlers[i] = animalAI; continue; }
+                
                 //Adv physics updating anything placed next to water or lava
                 if ((i >= Block.red && i <= Block.redmushroom) || i == Block.wood ||
                     i == Block.trunk || i == Block.bookcase) {
@@ -183,6 +174,27 @@ namespace MCGalaxy.Blocks {
                     physicsDoorsHandlers[i] = DoorPhysics.oDoor;
                 }
             }
+        }
+        
+        static HandlePhysics AnimalAIHandler(AnimalAI ai) {
+            if (ai == AnimalAI.Fly) return BirdPhysics.Do;
+
+            if (ai == AnimalAI.FleeAir) {
+                return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.air);
+            } else if (ai == AnimalAI.FleeWater) {
+                return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.water);
+            } else if (ai == AnimalAI.FleeLava) {
+                return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.lava);
+            } 
+            
+            if (ai == AnimalAI.KillerAir) {
+                return (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.air);
+            } else if (ai == AnimalAI.KillerWater) {
+                return (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.water);
+            } else if (ai == AnimalAI.KillerLava) {
+                return (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.lava);
+            }
+            return null;
         }
     }
 }

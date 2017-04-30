@@ -85,7 +85,25 @@ namespace MCGalaxy {
             Props[wood].LavaKills = true; Props[trunk].LavaKills = true;
             Props[sponge].LavaKills = true; Props[bookcase].LavaKills = true;
             Props[leaf].LavaKills = true; Props[crate].LavaKills = true;
-            Props[red].IsRails = true; Props[op_air].IsRails = true;        
+            Props[red].IsRails = true; Props[op_air].IsRails = true;
+            
+            // Block specific physics properties
+            Props[Block.birdblack].AnimalAI = AnimalAI.Fly;
+            Props[Block.birdwhite].AnimalAI = AnimalAI.Fly;
+            Props[Block.birdlava].AnimalAI = AnimalAI.Fly;
+            Props[Block.birdwater].AnimalAI = AnimalAI.Fly;
+            
+            Props[Block.birdred].AnimalAI = AnimalAI.KillerAir;
+            Props[Block.birdblue].AnimalAI = AnimalAI.KillerAir;
+            Props[Block.birdkill].AnimalAI = AnimalAI.KillerAir;
+
+            Props[Block.fishbetta].AnimalAI = AnimalAI.KillerWater;
+            Props[Block.fishshark].AnimalAI = AnimalAI.KillerWater;
+            Props[Block.fishlavashark].AnimalAI = AnimalAI.KillerLava;
+            
+            Props[Block.fishgold].AnimalAI = AnimalAI.FleeWater;
+            Props[Block.fishsalmon].AnimalAI = AnimalAI.FleeWater;
+            Props[Block.fishsponge].AnimalAI = AnimalAI.FleeWater;
             
             SetDefaultNames();
             SetDefaultDeaths();

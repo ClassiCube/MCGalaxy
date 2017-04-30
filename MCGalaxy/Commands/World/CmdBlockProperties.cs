@@ -120,10 +120,14 @@ namespace MCGalaxy.Commands.World {
             } else if (prop == "deathmsg" || prop == "deathmessage") {
                 string msg = args.Length > 3 ? args[3] : null;
                 SetDeathMessage(p, scope, id, msg);
+            } else if (prop == "animalai" || prop == "animal") {
+                string msg = args.Length > 3 ? args[3] : null;
+                SetEnum(p, scope, id, msg);
             } else {
                 Help(p);
             }
         }
+        
         
         delegate void BoolSetter(ref BlockProps props);
         static void Toggle(Player p, BlockProps[] scope, byte id, string type,
@@ -136,7 +140,18 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "Block {0} is {1}: {2}",
                            BlockName(scope, lvl, id),
                            type, getter(props) ? "&aYes" : "&cNo");
-            OnPropsChanged(scope, lvl, id);
+            OnPropsChanged(scope, lvl, id, false);
+        }
+        
+        static void SetEnum(Player p, BlockProps[] scope, byte id, string msg) {
+            Level lvl = Player.IsSuper(p) ? null : p.level;            
+            AnimalAI ai = AnimalAI.None;
+            if (!CommandParser.GetEnum(p, msg, "Animal AI", ref ai)) return;
+            
+            scope[id].AnimalAI = ai;
+            Player.Message(p, "Animal AI for {0} set to: {1}",
+                               BlockName(scope, lvl, id), ai);
+            OnPropsChanged(scope, lvl, id, true);
         }
         
         static void SetDeathMessage(Player p, BlockProps[] scope, byte id, string msg) {
@@ -150,14 +165,16 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Death message for {0} set to: {1}",
                                BlockName(scope, lvl, id), msg);
             }
-            OnPropsChanged(scope, lvl, id);
+            OnPropsChanged(scope, lvl, id, false);
         }
+        
 
-        static void OnPropsChanged(BlockProps[] scope, Level level, byte id) {
+        static void OnPropsChanged(BlockProps[] scope, Level level, byte id, bool physics) {
             scope[id].Changed = true;
             
             if (scope == Block.Props) {
                 BlockBehaviour.InitCoreHandlers();
+                if (physics) BlockBehaviour.InitCorePhysicsHandlers();
                 BlockProps.Save("core", scope);
             } else if (scope == BlockDefinition.GlobalProps) {
                 Level[] loaded = LevelInfo.Loaded.Items;
@@ -190,7 +207,7 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "%H[scope] can be: %Score, global, level");
             
             Player.Message(p, "%Hproperties: %Sportal, messageblock, rails, waterkills, " +
-                           "lavakills, door, tdoor, killer, deathmessage");
+                           "lavakills, door, tdoor, killer, deathmessage, animalai");
             Player.Message(p, "%HType %T/help blockprops [property] %Hfor more details");
         }
         
@@ -214,6 +231,10 @@ namespace MCGalaxy.Commands.World {
             } else if (message.CaselessEq("deathmessage")) {
                 Player.Message(p, "%HSets or removes the death message for this block");
                 Player.Message(p, "%H  Note: %S@p %His a placeholder for the player's name");
+            } else if (message.CaselessEq("animalai")) {
+                Player.Message(p, "%HSets the flying or swimming animal AI for this block.");
+                string[] aiNames = Enum.GetNames(typeof(AnimalAI));
+                Player.Message(p, "%H  Types: &f{0}", aiNames.Join());
             } else {
                 Player.Message(p, "&cUnrecognised property \"{0}\"", message);
             }

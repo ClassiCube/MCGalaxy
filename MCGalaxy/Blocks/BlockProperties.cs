@@ -21,6 +21,12 @@ using System.IO;
 
 namespace MCGalaxy.Blocks {
     
+    /// <summary> Type of animal this block behaves as. </summary>
+    public enum AnimalAI : byte {
+        None, Fly, FleeAir, KillerAir, FleeWater, KillerWater, FleeLava, KillerLava,
+    }
+    
+    /// <summary> Extended and physics properties of a block. </summary>
     public struct BlockProps {
         
         /// <summary> ID of block these properties are associated with. </summary>
@@ -60,6 +66,9 @@ namespace MCGalaxy.Blocks {
         /// <summary> Whether this block should allow trains to go over them. </summary>
         public bool IsRails;
         
+        /// <summary> Animal AI behaviour of this block. </summary>
+        public AnimalAI AnimalAI;
+        
         /// <summary> Whether the properties for this block have been modified and hence require saving. </summary>
         public bool Changed;
         
@@ -79,7 +88,7 @@ namespace MCGalaxy.Blocks {
             using (StreamWriter w = new StreamWriter("blockprops/" + group + ".txt")) {
                 w.WriteLine("# This represents the physics properties for blocks, in the format of:");
                 w.WriteLine("# id : Is rails : Is tdoor : Is door : Is message block : Is portal : " +
-                            "Killed by water : Killed by lava : Kills players : death message");
+                            "Killed by water : Killed by lava : Kills players : death message : Animal AI type");
                 for (int i = 0; i < scope.Length; i++) {
                     if (!scope[i].Changed) continue;
                     BlockProps props = scope[i];
@@ -87,7 +96,8 @@ namespace MCGalaxy.Blocks {
                     string deathMsg = props.DeathMessage == null ? "" : props.DeathMessage.Replace(":", "\\;");
                     w.WriteLine(i + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor + ":"
                                 + props.IsMessageBlock + ":" + props.IsPortal + ":" + props.WaterKills + ":" 
-                                + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg);
+                                + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg + ":" 
+                                + (byte)props.AnimalAI);
                 }
             }
         }
@@ -125,6 +135,11 @@ namespace MCGalaxy.Blocks {
                 scope[id].DeathMessage = parts[9].Replace("\\;", ":");
                 if (scope[id].DeathMessage == "")
                     scope[id].DeathMessage = null;
+                
+                if (parts.Length > 10) {
+                    byte ai; byte.TryParse(parts[10], out ai);
+                    scope[id].AnimalAI = (AnimalAI)ai;
+                }
             }
         }
     }

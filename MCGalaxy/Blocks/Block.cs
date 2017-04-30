@@ -247,11 +247,11 @@ namespace MCGalaxy {
         
         public static void SetBlocks() {
             SetCoreProperties();
-            BlockBehaviour.InitCorePhysicsHandlers();
             BlockProps.Load("core", Block.Props);
-            BlockBehaviour.InitCoreHandlers();
-            
             BlockPerms.Load();
+            
+            BlockBehaviour.InitCorePhysicsHandlers();            
+            BlockBehaviour.InitCoreHandlers();
         }
         
         [Obsolete("Use BlockPerms.CanModify()")]

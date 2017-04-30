@@ -121,7 +121,7 @@ namespace MCGalaxy.Blocks.Physics {
             CheckAt(lvl, lvl.PosToInt(x, y, (ushort)(z + 1)));
             CheckAt(lvl, lvl.PosToInt(x, y, (ushort)(z - 1)));
             CheckAt(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
-            // ommision of y-1 to match original behaviour
+            // ommission of y-1 to match original behaviour
         }
         
         internal static void CheckAt(Level lvl, int index) {
