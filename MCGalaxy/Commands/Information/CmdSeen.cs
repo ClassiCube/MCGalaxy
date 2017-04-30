@@ -45,6 +45,8 @@ namespace MCGalaxy.Commands {
         static void Show(Player p, string name, DateTime first, DateTime last) {
             TimeSpan firstDelta = DateTime.Now - first;
             TimeSpan lastDelta = DateTime.Now - last;
+            
+            name = PlayerInfo.GetColoredName(p, name);
             Player.Message(p, "{0} %Swas first seen at {1:H:mm} on {1:d} ({2} ago)", name, first, firstDelta.Shorten());
             Player.Message(p, "{0} %Swas last seen at {1:H:mm} on {1:d} ({2} ago)", name, last, lastDelta.Shorten());
         }
