@@ -85,6 +85,7 @@ namespace MCGalaxy.Blocks.Physics {
             }
         }
         
+        
         internal static PhysicsArgs GetDoorArgs(byte raw, bool isExt, out byte physForm) {
             PhysicsArgs args = default(PhysicsArgs);
             args.Type1 = PhysicsArgs.Wait; args.Value1 = 16 - 1;
@@ -111,6 +112,47 @@ namespace MCGalaxy.Blocks.Physics {
             args.Door = true;
             args.ExtBlock = isExt;
             return args;
+        }
+        
+        
+        internal static void CheckNeighbours(Level lvl, ushort x, ushort y, ushort z) {
+            CheckAt(lvl, lvl.PosToInt((ushort)(x + 1), y, z));
+            CheckAt(lvl, lvl.PosToInt((ushort)(x - 1), y, z));
+            CheckAt(lvl, lvl.PosToInt(x, y, (ushort)(z + 1)));
+            CheckAt(lvl, lvl.PosToInt(x, y, (ushort)(z - 1)));
+            CheckAt(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
+            // ommision of y-1 to match original behaviour
+        }
+        
+        internal static void CheckAt(Level lvl, int index) {
+            if (index == -1) return;
+            byte block = lvl.blocks[index];
+            byte convBlock = Block.Convert(block);
+            if (convBlock == Block.water || convBlock == Block.lava ||
+                (block >= Block.red && block <= Block.white)) {
+                lvl.AddCheck(index); return;
+            }
+
+            switch (block) {
+                    //case Block.water:
+                    //case Block.lava:
+                case Block.shrub:
+                case Block.sand:
+                case Block.gravel:
+                case Block.leaf:
+                case Block.wood_float:
+                    /*case Block.lava_fast:
+                    case Block.WaterDown:
+                    case Block.LavaDown:
+                    case Block.deathlava:
+                    case Block.deathwater:
+                    case Block.geyser:
+                    case Block.magma:*/
+                    lvl.AddCheck(index);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

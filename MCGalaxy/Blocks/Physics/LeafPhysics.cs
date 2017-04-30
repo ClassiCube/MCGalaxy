@@ -24,13 +24,8 @@ namespace MCGalaxy.Blocks.Physics {
         public static void DoLeaf(Level lvl, ref Check C) {
             if (lvl.physics > 1) { //Adv physics kills flowers and mushroos in water/lava
                 ushort x, y, z;
-                lvl.IntToPos(C.b, out x, out y, out z);
-            
-                AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x + 1), y, z));
-                AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x - 1), y, z));
-                AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z + 1)));
-                AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z - 1)));
-                AirPhysics.PhysAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
+                lvl.IntToPos(C.b, out x, out y, out z);            
+                ActivateablePhysics.CheckNeighbours(lvl, x, y, z);
             }
 
             // Just immediately remove from physics list

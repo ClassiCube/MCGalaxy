@@ -26,12 +26,8 @@ namespace MCGalaxy.Blocks.Physics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
-            PhysAir(lvl, lvl.PosToInt((ushort)(x + 1), y, z));
-            PhysAir(lvl, lvl.PosToInt((ushort)(x - 1), y, z));
-            PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z + 1)));
-            PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z - 1)));
-            PhysAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
-            PhysAir(lvl, lvl.PosToInt(x, (ushort)(y - 1), z));
+            ActivateablePhysics.CheckNeighbours(lvl, x, y, z);
+            ActivateablePhysics.CheckAt(lvl, lvl.PosToInt(x, (ushort)(y - 1), z));
 
             //Edge of map water
             if (lvl.edgeWater && (y < lvl.Height / 2 && y >= (lvl.Height / 2) - 2)) {
@@ -76,37 +72,6 @@ namespace MCGalaxy.Blocks.Physics {
             byte curBlock = Block.Convert(lvl.blocks[index]);
             if (curBlock == Block.water || curBlock == Block.lava)
                 lvl.AddUpdate(index, block);
-        }
-        
-        internal static void PhysAir(Level lvl, int index) {
-            if (index == -1) return;
-            byte block = lvl.blocks[index];
-            byte convBlock = Block.Convert(block);
-            if (convBlock == Block.water || convBlock == Block.lava ||
-                (block >= Block.red && block <= Block.white)) {
-                lvl.AddCheck(index); return;
-            }
-
-            switch (block) {
-                //case Block.water:
-                //case Block.lava:
-                case Block.shrub:
-                case Block.sand:
-                case Block.gravel:
-                case Block.leaf:
-                case Block.wood_float:
-                    /*case Block.lava_fast:
-                    case Block.WaterDown:
-                    case Block.LavaDown:
-                    case Block.deathlava:
-                    case Block.deathwater:
-                    case Block.geyser:
-                    case Block.magma:*/
-                    lvl.AddCheck(index);
-                    break;
-                default:
-                    break;
-            }
         }
     }
 }

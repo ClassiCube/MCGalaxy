@@ -62,11 +62,7 @@ namespace MCGalaxy.Blocks.Physics {
                 else
                     lvl.AddUpdate(lvl.IntOffset(index, 0, 1, 0), block);
                 
-                AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x + 1), y, z));
-                AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x - 1), y, z));
-                AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z + 1)));
-                AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z - 1)));
-                AirPhysics.PhysAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
+                ActivateablePhysics.CheckNeighbours(lvl, x, y, z);
             }
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
@@ -107,11 +103,7 @@ namespace MCGalaxy.Blocks.Physics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             if (lvl.physics > 1) { //Adv physics kills flowers and mushroos in water/lava
-                AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x + 1), y, z));
-                AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x - 1), y, z));
-                AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z + 1)));
-                AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z - 1)));
-                AirPhysics.PhysAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
+                ActivateablePhysics.CheckNeighbours(lvl, x, y, z);
             }
 
             if (!lvl.growTrees) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
@@ -190,11 +182,7 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             //Adv physics kills flowers and mushroos in water/lava
-            AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x + 1), y, z));
-            AirPhysics.PhysAir(lvl, lvl.PosToInt((ushort)(x - 1), y, z));
-            AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z + 1)));
-            AirPhysics.PhysAir(lvl, lvl.PosToInt(x, y, (ushort)(z - 1)));
-            AirPhysics.PhysAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
+            ActivateablePhysics.CheckNeighbours(lvl, x, y, z);
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
     }
