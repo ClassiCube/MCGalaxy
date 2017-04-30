@@ -33,6 +33,12 @@ namespace MCGalaxy.Commands
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
+            if (args[0].CaselessEq("list")) {
+                string modifier = args.Length > 1 ? args[1] : "";
+                HandleList(p, modifier);
+                return;
+            }
+            
             if (p == null) { MessageInGameOnly(p); return; }
             if (args.Length < 2) { Help(p); return; }
             string ai = args[1].ToLower();
@@ -125,6 +131,15 @@ namespace MCGalaxy.Commands
             }
         }
         
+        void HandleList(Player p, string modifier) {
+            string[] files = Directory.GetFiles("bots");
+            for (int i = 0; i < files.Length; i++) {
+                files[i] = Path.GetFileNameWithoutExtension(files[i]);
+            }
+            
+            MultiPageOutput.Output(p, files, f => f, "botai list", "bot AIs", modifier, false);
+        }
+        
         void HandleInfo(Player p, string ai) {
             if (!File.Exists("bots/" + ai)) {
                 Player.Message(p, "There is no bot AI with that name."); return;
@@ -140,6 +155,7 @@ namespace MCGalaxy.Commands
             Player.Message(p, "%T/botai del [name] %H- deletes that AI");
             Player.Message(p, "%T/botai del [name] last%H- deletes last instruction of that AI");
             Player.Message(p, "%T/botai info [name] %H- prints list of instructions that AI has");
+            Player.Message(p, "%T/botai list %H- lists all current AIs");
             Player.Message(p, "%T/botai add [name] [instruction] <args>");
             
             Player.Message(p, "%HInstructions: %S{0}, reverse",

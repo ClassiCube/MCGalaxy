@@ -102,7 +102,7 @@ namespace MCGalaxy.Blocks {
                 if (line.Length == 0 || line[0] == '#') continue;
                 
                 string[] parts = line.Split(':');
-                if (parts.Length != 10) {
+                if (parts.Length < 10) {
                     Server.s.Log("Invalid line \"" + line + "\" in " + group + " block properties");
                     continue;
                 }
