@@ -213,8 +213,8 @@ namespace MCGalaxy {
         
         int PacketSize(byte[] buffer) {
             switch (buffer[0]) {
-                    case (byte)'G': return -2; //For wom
-                    case Opcode.Handshake: return 131;
+                case (byte)'G': return -2; //For wom
+                case Opcode.Handshake: return 131;
                 case Opcode.SetBlockClient:
                     if (!loggedIn) goto default;
                     return 9;
@@ -241,7 +241,7 @@ namespace MCGalaxy {
         
         void HandlePacket(byte[] buffer) {
             switch (buffer[0]) {
-                    case Opcode.Ping: break;
+                case Opcode.Ping: break;
                 case Opcode.Handshake:
                     HandleLogin(buffer); break;
                 case Opcode.SetBlockClient:

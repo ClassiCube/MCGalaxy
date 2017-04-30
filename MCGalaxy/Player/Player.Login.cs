@@ -44,7 +44,6 @@ namespace MCGalaxy {
             byte type = packet[130];
             Loading = true;
             if (disconnected) return;
-            id = NextFreeId();
             
             if (type == 0x42) { hasCpe = true; SendCpeExtensions(); }
             if (type != 0x42) CompleteLoginProcess();
@@ -89,14 +88,16 @@ namespace MCGalaxy {
         }
         
         void CompleteLoginProcess() {
-            LevelPermission adminChatRank = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
+            lock (PlayerInfo.Online.locker) {
+                id = NextFreeId();
+                PlayerInfo.Online.Add(this);
+            }
             
             SendUserMOTD();
             SendMap(null);
+            
             if (disconnected) return;
             loggedIn = true;
-
-            PlayerInfo.Online.Add(this);
             connections.Remove(this);
             RemoveFromPending();
             Server.s.PlayerListUpdate();
@@ -131,6 +132,7 @@ namespace MCGalaxy {
             if (Server.noEmotes.Contains(name))
                 parseEmotes = !Server.parseSmiley;
 
+            LevelPermission adminChatRank = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
             hidden = group.CanExecute("hide") && Server.hidden.Contains(name);
             if (hidden) SendMessage("&8Reminder: You are still hidden.");
             if (group.Permission >= adminChatRank && Server.adminsjoinsilent) {

@@ -292,6 +292,7 @@ namespace MCGalaxy {
                 if (disconnected) {
                     CloseSocket();
                     connections.Remove(this);
+                    PlayerInfo.Online.Remove(this);
                     return;
                 }
                 // FlyBuffer.Clear();
@@ -309,6 +310,7 @@ namespace MCGalaxy {
                 if (!loggedIn) {
                     connections.Remove(this);
                     RemoveFromPending();
+                    PlayerInfo.Online.Remove(this);
                     
                     string user = String.IsNullOrEmpty(name) ? ip : name + " (" + ip + ")";
                     Server.s.Log(user + " disconnected. (" + discMsg + ")");
