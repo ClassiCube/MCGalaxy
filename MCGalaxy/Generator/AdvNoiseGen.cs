@@ -110,7 +110,7 @@ namespace MCGalaxy.Generator {
                 
                 if (dirtHeight < waterHeight) {
                     for (int y = waterHeight; y >= dirtHeight; y--)
-                        lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.water);
+                        lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.waterstill);
                 }
                 for (int y = dirtHeight - 1; y >= 0; y--) {
                     byte block = (y > dirtHeight * 3 / 4) ? Block.dirt : Block.rock;

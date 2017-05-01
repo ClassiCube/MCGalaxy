@@ -104,9 +104,10 @@ namespace MCGalaxy {
             { green, "\u00033" }, { red, "\u00034" }, { maroon, "\u00035" },
             { purple, "\u00036" }, { gold, "\u00037" }, { yellow, "\u00038" },
             { lime, "\u00039" },
-        };
-        
+        };        
         static readonly Regex IrcTwoColorCode = new Regex("(\x03\\d{1,2}),\\d{1,2}");
+        
+        /// <summary> Converts IRC colour codes into normal colour codes. </summary>
         public static string IrcToMinecraftColors(string input) {
             if (input == null) throw new ArgumentNullException("input");
             // get rid of background colour component of some IRC colour codes.
@@ -125,12 +126,13 @@ namespace MCGalaxy {
             return sb.ToString();
         }
 
+        /// <summary> Escapces then converts colour codes into IRC colour codes. </summary>
         public static string MinecraftToIrcColors(string input) {
             if (input == null) throw new ArgumentNullException("input");
             input = EscapeColors(input);
             StringBuilder sb = new StringBuilder(input);
             
-            for (int i = 0; i < 128; i++) {
+            for (int i = 0; i < ExtColors.Length; i++) {
                 CustomColor col = ExtColors[i];
                 if (col.Undefined) continue;
                 sb.Replace("&" + col.Code, "&" + col.Fallback);
@@ -142,10 +144,12 @@ namespace MCGalaxy {
             return sb.ToString();
         }
         
+        /// <summary> Returns whether c is a colour code in 0-9, a-f, or A-F. </summary>
         public static bool IsStandardColor(char c) {
             return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
         }
 
+        /// <summary> Converts percentage colour codes to actual/real colour codes. </summary>
         public static string EscapeColors(string value) {
             if (value.IndexOf('%') == -1) return value;
             char[] chars = new char[value.Length];
@@ -166,6 +170,9 @@ namespace MCGalaxy {
             return new string(chars);
         }
         
+        /// <summary> Maps internal system colour codes to their actual colour code. </summary>
+        /// <remarks> Also converts uppercase standard colour codes to lowercase. </remarks>
+        /// <returns> Whether color was a valid colour code. </returns>
         public static bool MapColor(ref char color) {
             if (IsStandardColor(color)) {
                 if (color >= 'A' && color <= 'F') color += ' ';
@@ -195,6 +202,7 @@ namespace MCGalaxy {
             }
             return new string(output, 0, usedChars);
         }
+        
         
         public static CustomColor[] ExtColors = new CustomColor[256];
         
