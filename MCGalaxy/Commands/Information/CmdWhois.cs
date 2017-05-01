@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands {
             string prefix = data.Title == "" ? "" : color + "[" + data.TitleColor + data.Title + color + "] ";
             
             WhoInfo info = new WhoInfo();
-            info.FullName = prefix + color + data.Name.TrimEnd('+');
+            info.FullName = prefix + color + data.Name.RemoveLastPlus();
             info.Name = data.Name;
             info.Group = group;
             info.Money = data.Money; info.Deaths = data.Deaths;

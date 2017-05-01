@@ -31,7 +31,7 @@ namespace MCGalaxy.Tasks {
                         string type = line.Split(':')[0].ToLower();
                         List<string> list = (type == "devs") ? Server.Devs : (type == "mods") ? Server.Mods : null;
                         foreach (string name in line.Split(':')[1].Split())
-                            list.Add(name.TrimEnd('+'));
+                            list.Add(name.RemoveLastPlus());
                     }
                 }
             } catch (Exception e) {

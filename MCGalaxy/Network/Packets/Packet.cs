@@ -54,7 +54,7 @@ namespace MCGalaxy.Network {
             byte[] buffer = new byte[74 + (extPos ? 6 : 0)];
             buffer[0] = Opcode.AddEntity;
             buffer[1] = id;
-            NetUtils.Write(name.TrimEnd('+'), buffer, 2, hasCP437);
+            NetUtils.Write(name.RemoveLastPlus(), buffer, 2, hasCP437);
             
             int offset = NetUtils.WritePos(pos, buffer, 66, extPos);
             buffer[66 + offset] = rot.RotY;

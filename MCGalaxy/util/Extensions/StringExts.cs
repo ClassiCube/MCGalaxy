@@ -21,16 +21,25 @@ namespace MCGalaxy {
     
     public static class StringExts {
 
+        /// <summary> Sets the first character of the input string touppercase. </summary>
         public static string Capitalize(this string str) {
-            if (String.IsNullOrEmpty(str))
-                return String.Empty;
+            if (String.IsNullOrEmpty(str)) return str;
             
             char[] a = str.ToCharArray();
             a[0] = char.ToUpper(a[0]);
             return new string(a);
         }
         
+        /// <summary> Removes an ending + from an account name. </summary>
+        public static string RemoveLastPlus(this string str) {
+            if (String.IsNullOrEmpty(str)) return str;
+            
+            if (str[str.Length - 1] != '+') return str;
+            return str.Substring(0, str.Length - 1);
+        }
         
+        
+        /// <summary> Converts a string consisting of code page 437 indices into unicode. </summary>
         public static string Cp437ToUnicode(this string str) {
             if (str == null || str.Length == 0 || !HasSpecial(str)) return str;
             
@@ -39,7 +48,9 @@ namespace MCGalaxy {
                 c[i] = Cp437ToUnicode(str[i]);
             return new String(c);
         }
-        
+
+        /// <summary> Converts a unicode string into a string consisting of code page 437 indices. </summary>
+        /// <remarks> Unicode characters not in code page 437 are converted to '?'. </remarks> 
         public static string UnicodeToCp437(this string str) {
             if (str == null || str.Length == 0 || !HasSpecial(str)) return str;
             
@@ -49,6 +60,7 @@ namespace MCGalaxy {
             return new String(c);
         }
 
+        /// <summary> Modifies the characters of a string consisting of code page 437 indices into unicode. </summary>
         public unsafe static void Cp437ToUnicodeInPlace(this string str) {
             fixed (char* ptr = str) {
                 for (int i = 0; i < str.Length; i++) {
@@ -56,7 +68,9 @@ namespace MCGalaxy {
                 }
             }
         }
-        
+
+        /// <summary> Modifies the characters of a unicode string into code page 437 indices. </summary>
+        /// <remarks> Unicode characters not in code page 437 are replaced with '?'. </remarks>              
         public static unsafe void UnicodeToCp437InPlace(this string str) {
             fixed (char* ptr = str) {
                 for (int i = 0; i < str.Length; i++) {
@@ -66,6 +80,7 @@ namespace MCGalaxy {
         }
         
         
+        /// <summary> Converts a code page 437 indice into unicode. </summary>
         public static char Cp437ToUnicode(this char c) {
             if (c < 0x20) {
                 return FullCP437Handler.ControlCharReplacements[c];
@@ -76,7 +91,8 @@ namespace MCGalaxy {
             }
             return '?';
         }
-        
+
+        /// <summary> Converts a unicode character into a code page 437 indice. </summary>        
         public static char UnicodeToCp437(this char c) {
             int cpIndex = 0;
             if (c >= ' ' && c <= '~') {

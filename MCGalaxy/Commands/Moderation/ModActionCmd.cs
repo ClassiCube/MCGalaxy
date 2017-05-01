@@ -127,7 +127,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (confirmed != null) reason = confirmed;
             
             if (match != null) {
-                if (match.CaselessEq(name)) return match;
+                if (match.RemoveLastPlus().CaselessEq(name.RemoveLastPlus())) return match;
                 // Not an exact match, may be wanting to ban a non-existent account
                 Player.Message(p, "1 player matches \"{0}\": {1}", name, match);
             }

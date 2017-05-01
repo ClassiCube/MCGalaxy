@@ -201,8 +201,8 @@ namespace MCGalaxy.Network {
 			byte[] buffer = new byte[138 + (extPos ? 6 : 0)];
             buffer[0] = Opcode.CpeExtAddEntity2;
             buffer[1] = id;
-            NetUtils.Write(displayName.TrimEnd('+'), buffer, 2, hasCP437);
-            NetUtils.Write(skinName.TrimEnd('+'), buffer, 66, hasCP437);
+            NetUtils.Write(displayName.RemoveLastPlus(), buffer, 2, hasCP437);
+            NetUtils.Write(skinName.RemoveLastPlus(), buffer, 66, hasCP437);
             
             int offset = NetUtils.WritePos(pos, buffer, 130, extPos);
             buffer[130 + offset] = rot.RotY;

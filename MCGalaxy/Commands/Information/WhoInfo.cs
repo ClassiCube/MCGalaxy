@@ -75,9 +75,9 @@ namespace MCGalaxy.Commands {
                 }
             }                
 
-            if (Server.Devs.CaselessContains(who.Name.TrimEnd('+')))
+            if (Server.Devs.CaselessContains(who.Name.RemoveLastPlus()))
                 Player.Message(p, "  Player is an &9{0} Developer", Server.SoftwareName);
-            if (Server.Mods.CaselessContains(who.Name.TrimEnd('+')))
+            if (Server.Mods.CaselessContains(who.Name.RemoveLastPlus()))
                 Player.Message(p, "  Player is an &9{0} Moderator", Server.SoftwareName);
             if (Server.server_owner.CaselessEq(who.Name))
                 Player.Message(p, "  Player is the &cServer owner");
