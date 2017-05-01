@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.Building {
             if (oldBlock == Block.custom_block)
                 oldExtBlock = p.level.GetExtTile(x, y, z);
 
-            if (!BlockPerms.CanModify(p, oldBlock) && !Block.BuildIn(oldBlock)) {
+            if (!BlockPerms.CanModify(p, oldBlock)) {
                 Formatter.MessageBlock(p, "fill over ", oldBlock); return false;
             }
             

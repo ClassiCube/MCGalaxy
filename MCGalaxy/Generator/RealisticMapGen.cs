@@ -154,7 +154,7 @@ namespace MCGalaxy.Generator {
                 int pos = x + Lvl.Width * (z + LiquidLevel * Lvl.Length);
                 for (ushort yy = 0; LiquidLevel - yy >= 0; yy++) {
                     if (LiquidLevel - yy > y) {
-                        Lvl.blocks[pos] = Block.water;    //better fill the water above me
+                        Lvl.blocks[pos] = Block.waterstill;    //better fill the water above me
                     } else if (LiquidLevel - yy > y - 3) {
                         byte block = overlay[index] < 0.75f ? Block.sand : Block.gravel; // sand on top
                         Lvl.blocks[pos] = block;
