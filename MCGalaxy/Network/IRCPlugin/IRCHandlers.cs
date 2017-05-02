@@ -212,7 +212,7 @@ namespace MCGalaxy.Network {
             string ircCmd = parts[0].ToLower();
             if (HandleWhoCommand(user, channel, ircCmd, opchat)) return;
             
-            if (ircCmd == ".x" && !HandleChannelcommand(user, channel, message, parts)) return;
+            if (ircCmd == Server.ircCommandPrefix && !HandleChannelcommand(user, channel, message, parts)) return;
 
             if (channel.CaselessEq(bot.opchannel)) {
                 Server.s.Log(String.Format("(OPs): (IRC) {0}: {1}", user.Nick, message));
