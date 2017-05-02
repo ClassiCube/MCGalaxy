@@ -552,7 +552,8 @@
     <Compile Include="Blocks\Physics\ZombiePhysics.cs" />
     <Compile Include="Network\Heartbeat\ClassiCube.cs" />
     <Compile Include="Network\Heartbeat\Heartbeat.cs" />
-    <Compile Include="Network\IRCBot.cs" />
+    <Compile Include="Network\IRCPlugin\IRCBot.cs" />
+    <Compile Include="Network\IRCPlugin\IRCHandlers.cs" />
     <Compile Include="Network\Packets\Opcode.cs" />
     <Compile Include="Network\Packets\Packet.BlockDefs.cs" />
     <Compile Include="Network\Packets\Packet.CPE.cs" />
@@ -704,6 +705,7 @@
     <Folder Include="Commands\Maintenance" />
     <Folder Include="Commands\Permissions" />
     <Folder Include="Network\Heartbeat" />
+    <Folder Include="Network\IRCPlugin" />
     <Folder Include="Network\Utils" />
     <Folder Include="Network\Packets" />
     <Folder Include="Entity" />
