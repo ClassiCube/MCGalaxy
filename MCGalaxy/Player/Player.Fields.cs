@@ -104,7 +104,7 @@ namespace MCGalaxy {
         public DateTime NextReviewTime, NextEat;
         public float ReachDistance = 5;
         public bool hackrank;
-        internal string ircNick;
+        internal string ircChannel, ircNick;
         
         public string FullName { get { return color + prefix + DisplayName; } }
         
@@ -262,7 +262,7 @@ namespace MCGalaxy {
         public bool verifiedName;
         
         /// <summary> Returns whether the given player is console or IRC. </summary>
-        public static bool IsSuper(Player p) { return p == null || p.ircNick != null; }
+        public static bool IsSuper(Player p) { return p == null || p.ircChannel != null || p.ircNick != null; }
         
         public void SetMoney(int amount) {
             money = amount;

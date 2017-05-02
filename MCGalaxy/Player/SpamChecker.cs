@@ -52,7 +52,7 @@ namespace MCGalaxy {
         
         public bool CheckChatSpam() {
             Player.lastMSG = p.name;
-            if (!Server.checkspam || p.ircNick != null) return false;
+            if (!Server.checkspam || Player.IsSuper(p)) return false;
             
             lock (chatLock) {
                 if (chatLog.AddSpamEntry(Server.spamcounter, Server.spamcountreset)) 
@@ -67,7 +67,7 @@ namespace MCGalaxy {
         }
         
         public bool CheckCommandSpam() {
-            if (!Server.CmdSpamCheck || p.ircNick != null) return false;
+        	if (!Server.CmdSpamCheck || Player.IsSuper(p)) return false;
             
             lock (cmdLock) {
                 if (cmdLog.AddSpamEntry(Server.CmdSpamCount, Server.CmdSpamInterval)) 
