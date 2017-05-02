@@ -278,7 +278,6 @@ namespace MCGalaxy {
             if (chatMsg != null) chatMsg = Colors.EscapeColors(chatMsg);
             discMsg = Colors.EscapeColors(discMsg);
             
-            OnPlayerDisconnectEvent.Call(this, discMsg);
             //Umm...fixed?
             if (name == "") {
                 if (socket != null) CloseSocket();
@@ -334,8 +333,10 @@ namespace MCGalaxy {
 
                 PlayerInfo.Online.Remove(this);
                 Server.s.PlayerListUpdate();
-                if (PlayerDisconnect != null)
-                    PlayerDisconnect(this, discMsg);
+                
+                OnPlayerDisconnectEvent.Call(this, discMsg);
+                if (PlayerDisconnect != null) PlayerDisconnect(this, discMsg);
+                
                 if (Server.AutoLoad && level.unload && !level.IsMuseum && IsAloneOnCurrentLevel())
                     level.Unload(true);
                 Dispose();

@@ -33,17 +33,13 @@ namespace MCGalaxy.Network {
         Dictionary<string, List<string>> userMap = new Dictionary<string, List<string>>();
         DateTime lastWho, lastOpWho;
         static char[] trimChars = new char[] { ' ' };
+        IRCPlugin plugin = new IRCPlugin();
         
         /// <summary> Hooks IRC events so they are handled. </summary>
         public void Hook() {
             if (hookedEvents) return;
             hookedEvents = true;
-            
-            // Register events for outgoing
-            Player.PlayerChat += Player_PlayerChat;
-            Player.PlayerConnect += Player_PlayerConnect;
-            Player.PlayerDisconnect += Player_PlayerDisconnect;
-            Player.DoPlayerAction += Player_PlayerAction;
+            plugin.Load(false);
 
             // Regster events for incoming
             bot.connection.Listener.OnNick += Listener_OnNick;
@@ -68,12 +64,7 @@ namespace MCGalaxy.Network {
             if (!hookedEvents) return;
             hookedEvents = false;
             userMap.Clear();
-
-            // Register events for outgoing
-            Player.PlayerChat -= Player_PlayerChat;
-            Player.PlayerConnect -= Player_PlayerConnect;
-            Player.PlayerDisconnect -= Player_PlayerDisconnect;
-            Player.DoPlayerAction -= Player_PlayerAction;
+            plugin.Unload(false);
             
             // Regster events for incoming
             bot.connection.Listener.OnNick -= Listener_OnNick;

@@ -54,7 +54,7 @@ namespace MCGalaxy {
         /// <summary> Load a plugin </summary>
         /// <param name="name">The name of the plugin.</param>
         /// <param name="startup">Is this startup?</param>
-        public static void Load(string name, bool startup){
+        public static void Load(string name, bool startup) {
             string creator = "";
             string path = "plugins/" + name + ".dll";
             try {
@@ -140,11 +140,13 @@ namespace MCGalaxy {
             Games.CtfSetup ctf = new Games.CtfSetup();
             ctf.Load(true);
             Plugin.all.Add(ctf);
-            
-            CorePlugin core = new CorePlugin();
-            core.Load(true);
-            Plugin.all.Add(core);
-            Plugin.core.Add(core);
+            LoadCorePlugin(new CorePlugin());
+        }
+        
+        internal static void LoadCorePlugin(Plugin plugin) {
+            plugin.Load(true);
+            Plugin.all.Add(plugin);
+            Plugin.core.Add(plugin);
         }
     }
 }
