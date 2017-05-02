@@ -22,23 +22,30 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override CommandAlias[] Aliases {
+            get { return new [] { new CommandAlias("uban", "-noip") }; }
+        }
         public CmdXban() { }
         
         public override void Use(Player p, string message) {
+            bool banIP = true;
+            if (message.CaselessStarts("-noip ")) {
+                message = message.Substring("-noip ".Length);
+                banIP = false;
+            }            
             if (message == "") { Help(p); return; }
 
             string name = message.SplitSpaces()[0];
-            Player who = PlayerInfo.Find(name);
-            Command.all.Find("ban").Use(p, message);
-            Command.all.Find("banip").Use(p, "@" + name);
-            if (who != null)
-                Command.all.Find("kick").Use(p, message);
             Command.all.Find("undoplayer").Use(p, name + " all");
+            if (banIP) Command.all.Find("banip").Use(p, "@" + name);
+            Command.all.Find("kickban").Use(p, message);    
         }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/xban [name] [message]");
             Player.Message(p, "%HBans, IP bans, undoes, and kicks [name] with [message], if specified.");
+            Player.Message(p, "%T/uban [name] [message]");
+            Player.Message(p, "%HSame as /xban, but does not ban the IP.");
         }
     }
 }

@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }            
+            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (!p.level.BuildAccess.CheckDetailed(p)) {
                 Player.Message(p, "Hence, you cannot change remove bots from this map.");
                 return;
