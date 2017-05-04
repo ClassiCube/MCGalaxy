@@ -181,7 +181,7 @@ namespace MCGalaxy {
             return p.Rank >= target.Rank;
         }
         
-        /// <summary> Updates the model of an entity to all other players in same level. </summary>
+        /// <summary> Updates the model of an entity to all players in same level. </summary>
         public static void UpdateModel(Entity entity, string model) {
             Player[] players = PlayerInfo.Online.Items;
             entity.Model = model;

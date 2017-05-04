@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%HViews information about the specific item, such as its cost.");
             Player.Message(p, "%T/store");
             Player.Message(p, "%HViews information about all enabled items.");
-            Player.Message(p, "%H  Available items: %S" + Economy.GetItemNames());
+            Player.Message(p, "%H  Available items: %S" + Economy.EnabledItemNames());
         }
     }
 }

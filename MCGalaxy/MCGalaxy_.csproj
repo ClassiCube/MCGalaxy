@@ -456,6 +456,7 @@
     <Compile Include="Drawing\Transform\SimpleTransforms.cs" />
     <Compile Include="Drawing\Transform\Transform.cs" />
     <Compile Include="Economy\Awards.cs" />
+    <Compile Include="Economy\Economy.DB.cs" />
     <Compile Include="Economy\ReviveItem.cs" />
     <Compile Include="Economy\ZombieItems.cs" />
     <Compile Include="Economy\Economy.cs" />

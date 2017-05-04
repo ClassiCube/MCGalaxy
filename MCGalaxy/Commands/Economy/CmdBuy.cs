@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands {
             Player.Message(p, "%T/buy [item] [value] <map name>");
             Player.Message(p, "%Hmap name is only used for %T/buy map%H.");
             Player.Message(p, "%HUse %T/store [item] %Hto see more information for an item.");
-            Player.Message(p, "%H  Available items: %S" + Economy.GetItemNames());
+            Player.Message(p, "%H  Available items: %S" + Economy.EnabledItemNames());
         }
     }
 }

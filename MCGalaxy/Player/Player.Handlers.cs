@@ -649,18 +649,13 @@ namespace MCGalaxy {
         
         string HandleJoker(string text) {
             if (!joker) return text;
-            if (!File.Exists("text/joker.txt")) {
-                File.Create("text/joker.txt").Dispose(); return text;
+            if (!File.Exists(Paths.JokerFile)) {
+                File.Create(Paths.JokerFile).Dispose(); return text;
             }
             Server.s.Log("<JOKER>: " + name + ": " + text);
             Chat.MessageOps("%S<&aJ&bO&cK&5E&9R%S>: " + ColoredName + ":&f " + text);
 
-            List<string> lines = new List<string>();
-            using (StreamReader r = new StreamReader("text/joker.txt")) {
-                string line = null;
-                while ((line = r.ReadLine()) != null)
-                    lines.Add(line);
-            }
+            List<string> lines = Utils.ReadAllLinesList(Paths.JokerFile);
             Random rnd = new Random();
             return lines.Count > 0 ? lines[rnd.Next(lines.Count)] : text;
         }

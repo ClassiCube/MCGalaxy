@@ -99,7 +99,7 @@ namespace MCGalaxy {
         }
 
                 
-        public static List<string> ReadAllLinesList(String path) {
+        public static List<string> ReadAllLinesList(string path) {
             List<string> lines = new List<string>();
             using (StreamReader r = new StreamReader(path)) {
                 string item;

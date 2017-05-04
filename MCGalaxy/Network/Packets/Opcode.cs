@@ -19,6 +19,7 @@ using System;
 
 namespace MCGalaxy.Network {
 
+	/// <summary> List of packet opcode bytes. (Packet identifiers) </summary>
     public static class Opcode {
         
         public const byte Handshake = 0;

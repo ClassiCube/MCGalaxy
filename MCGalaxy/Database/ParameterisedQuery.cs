@@ -22,14 +22,18 @@ using System.Data.Common;
 
 namespace MCGalaxy.SQL {
 
+	/// <summary> Callback function invoked on a row returned from an SQL query. </summary>
     public delegate void ReaderCallback(IDataReader reader);
     
+    /// <summary> Represents an SQL command or query, that takes named parameters/arguments. </summary>
     public abstract class ParameterisedQuery {
         
         protected Dictionary<string, object> parameters = new Dictionary<string, object>();
         
+        /// <summary> Adds a named parameter/argument to this query. </summary>
         public void AddParam(string name, object param) { parameters.Add(name, param); }
         
+        /// <summary> Clears the cached named parameters/arguments. </summary>
         public void ClearParams() { parameters.Clear(); }
         
         public static ParameterisedQuery Create() {
@@ -48,6 +52,7 @@ namespace MCGalaxy.SQL {
         protected abstract IDbDataParameter CreateParameter();
         
         
+        /// <summary> Executes an SQL command that does not return any results. </summary>
         public void Execute(string query, string connString, bool createDB = false) {
             using (IDbConnection conn = CreateConnection(connString)) {
                 conn.Open();
@@ -62,6 +67,7 @@ namespace MCGalaxy.SQL {
             }
         }
 
+        /// <summary> Excecutes an SQL query, returning all rows into a single DataTable. </summary>
         public void Fill(string query, string connString, DataTable toReturn) {
             using (IDbConnection conn = CreateConnection(connString)) {
                 conn.Open();
@@ -76,7 +82,8 @@ namespace MCGalaxy.SQL {
                 conn.Close();
             }
         }
-        
+
+        /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
         public void ExecuteReader(string query, string connString, ReaderCallback callback) {
             using (IDbConnection conn = CreateConnection(connString)) {
                 conn.Open();

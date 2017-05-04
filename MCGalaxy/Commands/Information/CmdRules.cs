@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands {
             
             if (who != null) who.hasreadrules = true;
             Player.Message(who, "Server Rules:");
-            Player.MessageLines(p, rules);
+            Player.MessageLines(who, rules);
             
             if (who != null && who.name != p.name) {
                 Player.Message(p, "Sent the rules to " + who.ColoredName + "%S.");
