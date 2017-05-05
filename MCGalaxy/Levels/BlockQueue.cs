@@ -70,7 +70,7 @@ namespace MCGalaxy {
         
         static void ProcessLevelBlocks(Level lvl) {
             try {
-                if (lvl.blockqueue.Count < 1) return;
+                if (lvl.blockqueue.Count == 0) return;
                 bulkSender.level = lvl;
                 int count = blockupdates;
                 if (lvl.blockqueue.Count < blockupdates || !lvl.HasPlayers())

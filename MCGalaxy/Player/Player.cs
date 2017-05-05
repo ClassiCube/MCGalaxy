@@ -295,7 +295,7 @@ namespace MCGalaxy {
                     return;
                 }
                 // FlyBuffer.Clear();
-                DisposeTimers();
+                DisposeTimer(checkTimer, CheckTimerElapsed);
                 LastAction = DateTime.UtcNow;
                 IsAfk = false;
                 isFlying = false;

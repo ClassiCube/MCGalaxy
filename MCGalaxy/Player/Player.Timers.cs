@@ -23,49 +23,9 @@ using MCGalaxy.Network;
 namespace MCGalaxy {
     public sealed partial class Player : IDisposable {
 
-        void InitTimers() {
-            extraTimer.Elapsed += ExtraTimerElapsed;        
+        void InitTimers() {      
             checkTimer.Elapsed += CheckTimerElapsed;
             checkTimer.Start();
-        }
-        
-        void ExtraTimerElapsed(object sender, ElapsedEventArgs e) {
-            DisposeTimer(extraTimer, ExtraTimerElapsed);
-
-            try {
-                if (group.commands.Contains("inbox") && Database.TableExists("Inbox" + name) ) {
-                    using (DataTable table = Database.Backend.GetRows("Inbox" + name, "*")) {
-                        if (table.Rows.Count > 0)
-                            SendMessage("You have &a" + table.Rows.Count + " %Smessages in /inbox");
-                    }
-                }
-            } catch {
-            }
-            
-            if ( Server.updateTimer.Interval > 1000 )
-                SendMessage("Lowlag mode is currently &aON.");
-            if (Economy.Enabled)
-                SendMessage("You currently have &a" + money + " %S" + Server.moneys);
-            
-            try {
-                Group nobody = Group.NobodyRank;
-                if (!nobody.commands.Contains("award") && !nobody.commands.Contains("awards") && !nobody.commands.Contains("awardmod") )
-                    SendMessage("You have " + Awards.AwardAmount(name) + " awards.");
-            } catch {
-            }
-
-            Player[] players = PlayerInfo.Online.Items;
-            int visible = 0;
-            foreach (Player pl in players) {
-                if (pl == this || Entities.CanSee(this, pl)) visible++;
-            }
-            
-            string prefix = visible == 1 ? "There is" : "There are";
-            string suffix = visible == 1 ? " player online" : " players online";
-            SendMessage(prefix + " currently &a" + visible + suffix);
-            
-            if (Server.lava.active)
-                SendMessage("There is a &aLava Survival %Sgame active! Join it by typing /ls go");
         }
         
         void CheckTimerElapsed(object sender, ElapsedEventArgs e) {
@@ -97,11 +57,6 @@ namespace MCGalaxy {
         }
         
         bool Moved() { return lastRot.RotY != Rot.RotY || lastRot.HeadX != Rot.HeadX; }
-        
-        void DisposeTimers() {
-            DisposeTimer(extraTimer, ExtraTimerElapsed);
-            DisposeTimer(checkTimer, CheckTimerElapsed);
-        }
         
         void DisposeTimer(Timer timer, ElapsedEventHandler handler) {
             // Note: Some frameworks throw an ObjectDisposedException, 

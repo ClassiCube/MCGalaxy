@@ -164,6 +164,19 @@ namespace MCGalaxy {
                 else
                     SendMessage("&cPlease complete admin verification with &a/pass [Password]!");
             }
+            
+           try {
+                if (group.commands.Contains("inbox") && Database.TableExists("Inbox" + name) ) {
+                    using (DataTable table = Database.Backend.GetRows("Inbox" + name, "*")) {
+                        if (table.Rows.Count > 0)
+                            SendMessage("You have &a" + table.Rows.Count + " %Smessages in /inbox");
+                    }
+                }
+            } catch {
+            }
+            
+            if (Server.updateTimer.Interval > 1000)
+                SendMessage("Lowlag mode is currently &aON.");
 
             if (String.IsNullOrEmpty(appName)) {
                 Server.s.Log(name + " [" + ip + "] connected.");
@@ -172,6 +185,7 @@ namespace MCGalaxy {
             }
             Game.InfectMessages = PlayerDB.GetInfectMessages(this);
             Server.zombie.PlayerJoinedServer(this);
+            Server.lava.PlayerJoinedServer(this);
             
             Pos = level.SpawnPos;
             SetYawPitch(level.rotx, level.roty);

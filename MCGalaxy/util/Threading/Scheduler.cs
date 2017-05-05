@@ -107,8 +107,8 @@ namespace MCGalaxy {
             lock (taskLock) {
                 foreach (SchedulerTask task in tasks) {
                     int remaining = (int)(task.NextRun - now).TotalMilliseconds;
-                    // minimum wait time is 10 milliseconds
-                    remaining = Math.Max(10, remaining);
+                    // minimum wait time is 1 millisecond
+                    remaining = Math.Max(1, remaining);
                     wait = Math.Min(wait, remaining);
                 }
             }
