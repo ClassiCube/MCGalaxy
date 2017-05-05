@@ -19,7 +19,7 @@ using System;
 using System.IO;
 using System.Net;
 
-namespace MCGalaxy.Commands.Moderation {    
+namespace MCGalaxy.Commands.Moderation {
     public class CmdLocation : Command {
         
         public override string name { get { return "location"; } }
@@ -44,33 +44,16 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (Player.IPInPrivateRange(ip)) {
                 Player.Message(p, Colors.red + "Player has an internal IP, cannot trace"); return;
-            }        
-            Player.Message(p, "The IP of &a" + target + " %Shas been traced to: &b" + GetIPLocation(ip));
-        }
-        
-        static string GetIPLocation(string IP) {
-            string city, country;
-            WebRequest reqCity = WebRequest.Create("http://ipinfo.io/" + IP + "/city");
-            WebRequest reqCountry = WebRequest.Create("http://ipinfo.io/" + IP + "/country");
-            using (WebResponse resp = reqCity.GetResponse())
-                using (StreamReader reader = new StreamReader(resp.GetResponseStream()))
-            {
-                city = reader.ReadToEnd().Replace("\n", "");
-                if (city == "")
-                    city = "Unknown";
             }
-            
-            using (WebResponse resp = reqCountry.GetResponse())
-                using (StreamReader reader = new StreamReader(resp.GetResponseStream()))
-            {
-                country = reader.ReadToEnd().Replace("\n", "");
-            }
-            return city + "/" + country;
+
+            string country = new WebClient().DownloadString("http://ipinfo.io/" + ip + "/country");
+            country = country.Replace("\n", "");
+            Player.Message(p, "The IP of &a" + target + " %Shas been traced to: &b" + country);
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/location [name]");
-            Player.Message(p, "%HTracks down the location of the IP associated with [name].");
+            Player.Message(p, "%HTracks down the country of the IP associated with [name].");
         }
     }
 }
