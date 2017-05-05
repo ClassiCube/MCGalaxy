@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands.Moderation {
+namespace MCGalaxy.Commands.Info {
     public sealed class CmdBanInfo : Command {
         public override string name { get { return "baninfo"; } }
         public override string type { get { return CommandTypes.Moderation; } }

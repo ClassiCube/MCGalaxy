@@ -16,8 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System;
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Chatting {    
     public sealed class CmdRoll : MessageCmd {
         public override string name { get { return "roll"; } }
         public CmdRoll() { }

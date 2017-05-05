@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.Commands.Moderation;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdZone : Command {
         public override string name { get { return "zone"; } }
         public override string type { get { return CommandTypes.Moderation; } }

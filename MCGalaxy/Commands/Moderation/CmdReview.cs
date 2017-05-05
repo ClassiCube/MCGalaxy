@@ -20,7 +20,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdReview : Command {
         public override string name { get { return "review"; } }
         public override string shortcut { get { return "rvw"; } }

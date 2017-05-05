@@ -138,6 +138,7 @@
     <Compile Include="Commands\building\CmdImageprint.cs" />
     <Compile Include="Commands\building\CmdLine.cs" />
     <Compile Include="Commands\building\CmdMaze.cs" />
+    <Compile Include="Commands\building\CmdMeasure.cs" />
     <Compile Include="Commands\building\CmdMessageBlock.cs" />
     <Compile Include="Commands\building\CmdMode.cs" />
     <Compile Include="Commands\building\CmdOutline.cs" />
@@ -164,7 +165,9 @@
     <Compile Include="Commands\building\CmdUndo.cs" />
     <Compile Include="Commands\building\CmdWrite.cs" />
     <Compile Include="Commands\building\DrawCmd.cs" />
+    <Compile Include="Commands\Chat\Cmd8Ball.cs" />
     <Compile Include="Commands\Chat\CmdAdminChat.cs" />
+    <Compile Include="Commands\Chat\CmdAfk.cs" />
     <Compile Include="Commands\Chat\CmdChatRoom.cs" />
     <Compile Include="Commands\Chat\CmdColor.cs" />
     <Compile Include="Commands\Chat\CmdEat.cs" />
@@ -211,9 +214,8 @@
     <Compile Include="Commands\Economy\CmdTake.cs" />
     <Compile Include="Commands\Economy\MoneyCmd.cs" />
     <Compile Include="Commands\EntityPropertyCmd.cs" />
-    <Compile Include="Commands\Fun\Cmd8Ball.cs" />
-    <Compile Include="Commands\Fun\CmdAka.cs" />
     <Compile Include="Commands\Fun\CmdCountdown.cs" />
+    <Compile Include="Commands\Fun\CmdExplode.cs" />
     <Compile Include="Commands\Fun\CmdFlipHeads.cs" />
     <Compile Include="Commands\Fun\CmdGun.cs" />
     <Compile Include="Commands\Fun\CmdLavaSurvival.cs" />
@@ -227,6 +229,7 @@
     <Compile Include="Commands\Fun\CTF\CmdCtf.cs" />
     <Compile Include="Commands\Fun\RateMapCmds.cs" />
     <Compile Include="Commands\Fun\WeaponCmd.cs" />
+    <Compile Include="Commands\Fun\ZombieSurvival\CmdAka.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdAlive.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdBounties.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdBounty.cs" />
@@ -242,7 +245,6 @@
     <Compile Include="Commands\Fun\ZombieSurvival\CmdShowQueue.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdZombieGame.cs" />
     <Compile Include="Commands\Information\CmdAbout.cs" />
-    <Compile Include="Commands\Information\CmdAfk.cs" />
     <Compile Include="Commands\Information\CmdBanInfo.cs" />
     <Compile Include="Commands\Information\CmdBlocks.cs" />
     <Compile Include="Commands\Information\CmdClones.cs" />
@@ -255,7 +257,6 @@
     <Compile Include="Commands\Information\CmdLastCmd.cs" />
     <Compile Include="Commands\Information\CmdLevels.cs" />
     <Compile Include="Commands\Information\CmdMapInfo.cs" />
-    <Compile Include="Commands\Information\CmdMeasure.cs" />
     <Compile Include="Commands\Information\CmdNews.cs" />
     <Compile Include="Commands\Information\CmdOpRules.cs" />
     <Compile Include="Commands\Information\CmdOpStats.cs" />
@@ -268,7 +269,6 @@
     <Compile Include="Commands\Information\CmdTime.cs" />
     <Compile Include="Commands\Information\CmdTop.cs" />
     <Compile Include="Commands\Information\CmdUnloaded.cs" />
-    <Compile Include="Commands\Information\CmdUpdate.cs" />
     <Compile Include="Commands\Information\CmdView.cs" />
     <Compile Include="Commands\Information\CmdViewRanks.cs" />
     <Compile Include="Commands\Information\CmdWhere.cs" />
@@ -276,20 +276,21 @@
     <Compile Include="Commands\Information\CmdWhoNick.cs" />
     <Compile Include="Commands\Information\WhoInfo.cs" />
     <Compile Include="Commands\Maintenance\CmdBlockDB.cs" />
+    <Compile Include="Commands\Maintenance\CmdBlockSpeed.cs" />
     <Compile Include="Commands\Maintenance\CmdInfoSwap.cs" />
     <Compile Include="Commands\Maintenance\CmdIRCBot.cs" />
     <Compile Include="Commands\Maintenance\CmdLimit.cs" />
+    <Compile Include="Commands\Maintenance\CmdLowlag.cs" />
     <Compile Include="Commands\Maintenance\CmdPlayerEdit.cs" />
     <Compile Include="Commands\Maintenance\CmdRestart.cs" />
     <Compile Include="Commands\Maintenance\CmdServer.cs" />
     <Compile Include="Commands\Maintenance\CmdShutdown.cs" />
+    <Compile Include="Commands\Maintenance\CmdUpdate.cs" />
     <Compile Include="Commands\Moderation\CmdBan.cs" />
     <Compile Include="Commands\Moderation\CmdBanEdit.cs" />
     <Compile Include="Commands\Moderation\CmdBanip.cs" />
     <Compile Include="Commands\Moderation\CmdBlockSet.cs" />
-    <Compile Include="Commands\Moderation\CmdBlockSpeed.cs" />
     <Compile Include="Commands\Moderation\CmdCmdSet.cs" />
-    <Compile Include="Commands\Moderation\CmdExplode.cs" />
     <Compile Include="Commands\Moderation\CmdFollow.cs" />
     <Compile Include="Commands\Moderation\CmdFreeze.cs" />
     <Compile Include="Commands\Moderation\CmdHide.cs" />
@@ -300,7 +301,6 @@
     <Compile Include="Commands\Moderation\CmdKick.cs" />
     <Compile Include="Commands\Moderation\CmdKickban.cs" />
     <Compile Include="Commands\Moderation\CmdLocation.cs" />
-    <Compile Include="Commands\Moderation\CmdLowlag.cs" />
     <Compile Include="Commands\Moderation\CmdModerate.cs" />
     <Compile Include="Commands\Moderation\CmdMoveAll.cs" />
     <Compile Include="Commands\Moderation\CmdMute.cs" />

@@ -17,10 +17,9 @@
 */
 using System.Data;
 using MCGalaxy.SQL;
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdWhoNick : Command {
-        
+
+namespace MCGalaxy.Commands.Info {
+    public sealed class CmdWhoNick : Command {        
         public override string name { get { return "whonick"; } }
         public override string shortcut { get { return "realname"; } }
         public override string type { get { return CommandTypes.Information; } }

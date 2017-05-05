@@ -20,8 +20,8 @@
 using System;
 using System.Data;
 using MCGalaxy.SQL;
-namespace MCGalaxy.Commands {
-    
+
+namespace MCGalaxy.Commands.Info { 
     public sealed class CmdOpStats : Command {
         public override string name { get { return "opstats"; } }
         public override string type { get { return CommandTypes.Information; } }

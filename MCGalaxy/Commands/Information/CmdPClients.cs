@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Info {
     
     public sealed class CmdPClients : Command {
         

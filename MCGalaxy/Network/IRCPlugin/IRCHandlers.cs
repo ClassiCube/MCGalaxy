@@ -237,7 +237,8 @@ namespace MCGalaxy.Network {
             
             try {
                 Player p = MakeIRCPlayer(user.Nick, channel);
-                CmdPlayers.DisplayPlayers(p, "", false, false);
+                p.group = Group.GuestRank;
+                Command.all.Find("players").Use(p, "");
             } catch (Exception e) {
                 Server.ErrorLog(e);
             }

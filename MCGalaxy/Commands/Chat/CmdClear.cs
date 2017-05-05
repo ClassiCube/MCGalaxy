@@ -17,7 +17,7 @@
  */
 using MCGalaxy.Network;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdClear : Command {
         public override string name { get { return "clear"; } }
         public override string shortcut { get { return "cls"; } }

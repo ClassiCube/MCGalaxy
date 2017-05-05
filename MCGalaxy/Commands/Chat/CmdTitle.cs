@@ -16,8 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using MCGalaxy.SQL;
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Chatting {    
     public class CmdTitle : EntityPropertyCmd {        
         public override string name { get { return "title"; } }
         public override string type { get { return CommandTypes.Chat; } }

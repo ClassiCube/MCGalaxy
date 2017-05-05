@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Commands {
     
     /// <summary> Represents additional permissions required to perform a special action in a command. </summary>
     /// <remarks> For example, /color command has an extra permission for changing the color of other players. </remarks>

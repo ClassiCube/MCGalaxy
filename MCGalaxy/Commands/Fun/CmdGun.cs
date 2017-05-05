@@ -19,10 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdGun : WeaponCmd
-    {
+namespace MCGalaxy.Commands.Fun {  
+    public sealed class CmdGun : WeaponCmd {
         public override string name { get { return "gun"; } }
         protected override string Weapon { get { return "Gun"; } }
         

@@ -17,8 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.World {   
     public sealed class CmdSave : Command {
         
         public override string name { get { return "save"; } }

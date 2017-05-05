@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Bots {
     public sealed class CmdBotRemove : Command {
         public override string name { get { return "botremove"; } }
         public override string type { get { return CommandTypes.Moderation; } }

@@ -19,8 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Info {
     public sealed class CmdWhois : Command {
         public override string name { get { return "whois"; } }
         public override string shortcut { get { return "whowas"; } }

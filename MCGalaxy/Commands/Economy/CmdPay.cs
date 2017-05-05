@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Economic {
     public sealed class CmdPay : MoneyCmd {
         public override string name { get { return "pay"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }

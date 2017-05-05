@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.Games.ZS;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Fun {
     public sealed class CmdMapSet : Command {
         public override string name { get { return "mapset"; } }
         public override string shortcut { get { return "mset"; } }

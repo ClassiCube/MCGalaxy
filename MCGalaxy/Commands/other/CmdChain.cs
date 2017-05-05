@@ -17,7 +17,7 @@
  */
 using System;
 using System.Threading;
-namespace MCGalaxy.Commands
+namespace MCGalaxy.Commands.Misc
 {
     public sealed class CmdChain : Command
     {

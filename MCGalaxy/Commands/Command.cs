@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -48,7 +48,7 @@ namespace MCGalaxy {
             
             for (int i = 0; i < types.Length; i++) {
                 Type type = types[i];
-                if (!type.IsSubclassOf(typeof(Command)) || type.IsAbstract) continue;                
+                if (!type.IsSubclassOf(typeof(Command)) || type.IsAbstract) continue;
                 Command cmd = (Command)Activator.CreateInstance(type);
                 all.Add(cmd);
                 
@@ -58,7 +58,7 @@ namespace MCGalaxy {
                     Alias alias = new Alias(a.Trigger, cmd.name, a.Prefix, a.Suffix);
                     Alias.coreAliases.Add(alias);
                 }
-            }            
+            }
             core.commands = new List<Command>(all.commands);
             IScripting.Autoload();
         }
@@ -81,6 +81,13 @@ namespace MCGalaxy {
         }
     }
     
+    [Flags]
+    public enum CommandEnable {
+        Always = 0, Economy = 1, Zombie = 2, Lava = 4,
+    }
+}
+
+namespace MCGalaxy.Commands {
     public struct CommandPerm {
         public LevelPermission Perm;
         public string Description;
@@ -96,10 +103,5 @@ namespace MCGalaxy {
         public CommandAlias(string cmd, string prefix = null, string suffix = null) {
             Trigger = cmd; Prefix = prefix; Suffix = suffix;
         }
-    }
-    
-    [Flags]
-    public enum CommandEnable {
-        Always = 0, Economy = 1, Zombie = 2, Lava = 4,
     }
 }

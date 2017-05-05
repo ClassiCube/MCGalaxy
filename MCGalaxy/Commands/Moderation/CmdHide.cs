@@ -17,7 +17,7 @@
 */
 using System.IO;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdHide : Command {
         public override string name { get { return "hide"; } }
         public override string type { get { return CommandTypes.Moderation; } }

@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Chatting {    
     public class CmdHug : MessageCmd {
         public override string name { get { return "hug"; } }
         

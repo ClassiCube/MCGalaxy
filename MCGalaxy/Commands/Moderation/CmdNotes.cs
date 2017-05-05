@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public class CmdNotes : Command {
         public override string name { get { return "notes"; } }
         public override string type { get { return CommandTypes.Moderation; } }

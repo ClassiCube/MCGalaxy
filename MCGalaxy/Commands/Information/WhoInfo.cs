@@ -17,8 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Info { 
     class WhoInfo {
         public string FullName, Name;
         public Group Group;

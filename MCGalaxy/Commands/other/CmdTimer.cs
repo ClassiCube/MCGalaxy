@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Misc {
     public sealed class CmdTimer : Command {
         public override string name { get { return "timer"; } }
         public override string type { get { return CommandTypes.Other; } }

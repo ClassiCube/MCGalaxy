@@ -20,10 +20,8 @@ using MCGalaxy.DB;
 using MCGalaxy.Network;
 using MCGalaxy.Undo;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdHighlight : Command {
-        
+namespace MCGalaxy.Commands.Moderation { 
+    public sealed class CmdHighlight : Command {        
         public override string name { get { return "highlight"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }

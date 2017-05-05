@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 using MCGalaxy.Commands.CPE;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Info {
     public sealed class CmdHelp : Command {
         public override string name { get { return "help"; } }
         public override string type { get { return CommandTypes.Information; } }

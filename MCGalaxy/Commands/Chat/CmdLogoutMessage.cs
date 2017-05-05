@@ -17,7 +17,7 @@
  */
 using System.IO;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdLogoutMessage : EntityPropertyCmd {
         public override string name { get { return "logoutmessage"; } }
         public override string shortcut { get { return "logoutmsg"; } }

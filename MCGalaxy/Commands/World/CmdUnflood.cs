@@ -16,10 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdUnflood : Command
-    {
+namespace MCGalaxy.Commands.World {
+    public sealed class CmdUnflood : Command {
         public override string name { get { return "unflood"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }

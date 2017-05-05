@@ -21,6 +21,7 @@ using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
 using MCGalaxy.Blocks;
+using MCGalaxy.Commands;
 using MCGalaxy.Games;
 using MCGalaxy.Gui.Popups;
 using MCGalaxy.SQL;

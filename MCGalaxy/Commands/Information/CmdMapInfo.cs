@@ -19,13 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using MCGalaxy.Commands.World;
 using MCGalaxy.DB;
 using MCGalaxy.Levels.IO;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdMapInfo : Command {
-        
+namespace MCGalaxy.Commands.Info {
+    public sealed class CmdMapInfo : Command {       
         public override string name { get { return "mapinfo"; } }
         public override string shortcut { get { return "mi"; } }
         public override string type { get { return CommandTypes.Information; } }

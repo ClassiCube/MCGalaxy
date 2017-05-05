@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdWhisper : Command {
         public override string name { get { return "whisper"; } }
         public override string type { get { return CommandTypes.Chat; } }

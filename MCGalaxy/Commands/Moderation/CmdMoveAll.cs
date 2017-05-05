@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdMoveAll : Command {
         public override string name { get { return "moveall"; } }
         public override string shortcut { get { return "ma"; } }

@@ -18,7 +18,7 @@
 using System;
 using System.Text;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Chatting {
     public sealed class Cmd8Ball : Command {
         public override string name { get { return "8ball"; } }
         public override string shortcut { get { return ""; } }

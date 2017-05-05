@@ -20,8 +20,7 @@ using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Eco;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Fun {   
     public sealed class CmdLottery : Command {
         public override string name { get { return "lottery"; } }
         public override string shortcut { get { return "luck"; } }

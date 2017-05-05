@@ -22,7 +22,7 @@ using System.Threading;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdServer : Command {
         public override string name { get { return "server"; } }
         public override string shortcut { get { return "serv"; } }

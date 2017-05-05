@@ -15,10 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdLimit : Command {
-        
+namespace MCGalaxy.Commands.Maintenance {
+    public sealed class CmdLimit : Command {        
         public override string name { get { return "limit"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }

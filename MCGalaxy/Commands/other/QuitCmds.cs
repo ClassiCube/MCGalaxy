@@ -19,7 +19,7 @@
 using System;
 using System.Threading;
 
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Misc {    
     public sealed class CmdRagequit : Command {        
         public override string name { get { return "ragequit"; } }
         public override string shortcut { get { return "rq"; } }

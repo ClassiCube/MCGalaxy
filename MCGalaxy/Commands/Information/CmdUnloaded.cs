@@ -20,8 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Info {
     public sealed class CmdUnloaded : Command {
         public override string name { get { return "unloaded"; } }
         public override string type { get { return CommandTypes.Information; } }

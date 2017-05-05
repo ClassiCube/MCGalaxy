@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Commands {
     
     /// <summary> Describes an alias so that when the user types /trigger,
     /// it is treated as /target &lt;args given by user&gt; </summary>

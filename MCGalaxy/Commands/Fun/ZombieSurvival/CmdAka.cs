@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Fun {
     
     public sealed class CmdAka : Command {
         

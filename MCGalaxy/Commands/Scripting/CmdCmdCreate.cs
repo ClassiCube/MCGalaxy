@@ -19,7 +19,7 @@ using System;
 using System.IO;
 using MCGalaxy.Scripting;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Scripting {
     public sealed class CmdCmdCreate : Command {
         
         public override string name { get { return "cmdcreate"; } }

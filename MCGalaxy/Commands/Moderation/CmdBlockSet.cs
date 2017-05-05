@@ -17,7 +17,7 @@
 */
 using MCGalaxy.Blocks;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdBlockSet : Command {
         public override string name { get { return "blockset"; } }
         public override string type { get { return CommandTypes.Moderation; } }

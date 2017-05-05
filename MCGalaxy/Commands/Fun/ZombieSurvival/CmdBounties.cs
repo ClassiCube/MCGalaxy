@@ -18,7 +18,7 @@
 using System.Collections.Generic;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Fun {
     
     public sealed class CmdBounties : Command {
         

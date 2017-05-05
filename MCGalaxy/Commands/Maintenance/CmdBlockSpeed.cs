@@ -17,7 +17,7 @@
 */
 using System;
 
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Maintenance { 
     public sealed class CmdBlockSpeed : Command {        
         public override string name { get { return "blockspeed"; } }
         public override string shortcut { get { return "bs"; } }

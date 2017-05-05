@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands
+namespace MCGalaxy.Commands.Fun
 {
     public sealed class CmdCTF : Command
     {

@@ -19,10 +19,8 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Blocks;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdBlocks : Command
-    {
+namespace MCGalaxy.Commands.Info {
+    public sealed class CmdBlocks : Command {
         public override string name { get { return "blocks"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }

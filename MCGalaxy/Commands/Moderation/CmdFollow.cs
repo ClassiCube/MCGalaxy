@@ -16,7 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-namespace MCGalaxy.Commands {
+
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdFollow : Command {
         public override string name { get { return "follow"; } }
         public override string type { get { return CommandTypes.Moderation; } }

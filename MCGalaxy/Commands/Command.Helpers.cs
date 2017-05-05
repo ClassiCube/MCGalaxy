@@ -17,6 +17,7 @@
  */
 using System;
 using System.Text;
+using MCGalaxy.Commands;
 
 namespace MCGalaxy {
     

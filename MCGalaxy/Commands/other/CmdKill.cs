@@ -15,7 +15,9 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands {
+using MCGalaxy.Commands.Chatting;
+
+namespace MCGalaxy.Commands.Misc {
     public sealed class CmdKill : Command {
         public override string name { get { return "kill"; } }
         public override string type { get { return CommandTypes.Other; } }

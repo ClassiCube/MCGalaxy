@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.World {
     public sealed class CmdReload : Command {
         public override string name { get { return "reload"; } }
         public override string shortcut { get { return "reveal"; } }

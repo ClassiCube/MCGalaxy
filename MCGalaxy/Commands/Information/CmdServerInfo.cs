@@ -20,7 +20,7 @@ using System.Data;
 using System.Diagnostics;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Info {
     public sealed class CmdServerInfo : Command {
         public override string name { get { return "serverinfo"; } }
         public override string shortcut { get { return "sinfo"; } }

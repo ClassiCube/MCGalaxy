@@ -12,7 +12,7 @@ BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdAdminChat : Command {
         public override string name { get { return "adminchat"; } }
         public override string type { get { return CommandTypes.Chat; } }

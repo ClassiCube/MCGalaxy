@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdAfk : MessageCmd {
         public override string name { get { return "afk"; } }
         public override string type { get { return CommandTypes.Information; } }

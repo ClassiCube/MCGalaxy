@@ -15,10 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdCompLoad : Command
-    {
+namespace MCGalaxy.Commands.Scripting {
+    public sealed class CmdCompLoad : Command {
         public override string name { get { return "compload"; } }
         public override string shortcut { get { return "cml"; } }
         public override string type { get { return CommandTypes.Other; } }

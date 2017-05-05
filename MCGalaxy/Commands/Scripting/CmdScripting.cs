@@ -18,7 +18,7 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Scripting {
     public sealed class CmdScripting : Command {
         public override string name { get { return "scripting"; } }
         public override string type { get { return CommandTypes.Other; } }

@@ -15,8 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Chatting {  
     public abstract class MessageCmd : Command {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }

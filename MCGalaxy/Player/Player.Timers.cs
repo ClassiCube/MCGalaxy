@@ -16,7 +16,7 @@ using System;
 using System.Data;
 using System.IO;
 using System.Timers;
-using MCGalaxy.Commands;
+using MCGalaxy.Commands.Chatting;
 using MCGalaxy.SQL;
 using MCGalaxy.Network;
 

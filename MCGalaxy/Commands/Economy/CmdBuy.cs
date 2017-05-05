@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.Eco;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Economic {
     public sealed class CmdBuy : Command {
         public override string name { get { return "buy"; } }
         public override string shortcut { get { return "purchase"; } }

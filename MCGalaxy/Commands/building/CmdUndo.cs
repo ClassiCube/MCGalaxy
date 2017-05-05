@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands.World;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Undo;

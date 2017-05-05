@@ -20,6 +20,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using MCGalaxy.Blocks;
+using MCGalaxy.Commands;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Drawing;
 using MCGalaxy.Games;

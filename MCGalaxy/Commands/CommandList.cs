@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System.Collections.Generic;
+using MCGalaxy.Commands;
 
 namespace MCGalaxy {
     public sealed class CommandList {

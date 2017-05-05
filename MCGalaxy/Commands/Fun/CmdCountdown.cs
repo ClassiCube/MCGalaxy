@@ -24,7 +24,7 @@ using MCGalaxy.Games;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Generator;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Fun {
     
     public sealed class CmdCountdown : Command {
         

@@ -19,7 +19,7 @@ using System;
 using System.IO;
 using MCGalaxy.Bots;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Bots {
     public sealed class CmdBotSet : Command {
         public override string name { get { return "botset"; } }
         public override string type { get { return CommandTypes.Other; } }

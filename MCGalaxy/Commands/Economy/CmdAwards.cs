@@ -18,10 +18,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdAwards : Command {
-        
+namespace MCGalaxy.Commands.Economic {
+    public sealed class CmdAwards : Command {        
         public override string name { get { return "awards"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return true; } }

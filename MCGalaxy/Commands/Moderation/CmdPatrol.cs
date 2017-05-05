@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdPatrol : Command {
         public override string name { get { return "patrol"; } }
         public override string type { get { return CommandTypes.Moderation; } }

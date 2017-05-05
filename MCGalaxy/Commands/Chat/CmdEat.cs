@@ -19,8 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Chatting {  
     public sealed class CmdEat : MessageCmd {
         public override string name { get { return "eat"; } }
         

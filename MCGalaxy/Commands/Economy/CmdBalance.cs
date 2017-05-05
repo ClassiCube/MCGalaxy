@@ -17,10 +17,8 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdBalance : Command {
-        
+namespace MCGalaxy.Commands.Economic { 
+    public sealed class CmdBalance : Command {        
         public override string name { get { return "balance"; } }
         public override string shortcut { get { return "money"; } }
         public override string type { get { return CommandTypes.Economy; } }

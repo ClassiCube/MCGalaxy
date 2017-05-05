@@ -18,7 +18,7 @@
 using System.IO;
 using System.Text;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.World {
     public sealed class CmdRestore : Command {        
         public override string name { get { return "restore"; } }
         public override string type { get { return CommandTypes.World; } }

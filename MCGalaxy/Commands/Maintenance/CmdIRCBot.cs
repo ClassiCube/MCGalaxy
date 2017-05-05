@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdIRCBot : Command {
         public override string name { get { return "ircbot"; } }
         public override string type { get { return CommandTypes.Moderation; } }

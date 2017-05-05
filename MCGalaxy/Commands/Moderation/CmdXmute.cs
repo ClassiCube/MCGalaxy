@@ -18,10 +18,9 @@
 */
 using System;
 using System.Threading;
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdXmute : Command {
-        
+
+namespace MCGalaxy.Commands.Moderation {   
+    public sealed class CmdXmute : Command {        
         public override string name { get { return "xmute"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }

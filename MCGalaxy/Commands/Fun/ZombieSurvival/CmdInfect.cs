@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdInfect : Command {        
         public override string name { get { return "infect"; } }
         public override string type { get { return CommandTypes.Games; } }

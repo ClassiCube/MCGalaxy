@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands;
 
 namespace MCGalaxy.Drawing.Brushes {
     public sealed class CloudyBrushFactory : BrushFactory {       

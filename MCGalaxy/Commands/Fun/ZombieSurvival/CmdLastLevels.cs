@@ -18,7 +18,7 @@
 using System.Collections.Generic;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdLastLevels : Command {
         public override string name { get { return "lastlevels"; } }
         public override string shortcut { get { return "ll"; } }

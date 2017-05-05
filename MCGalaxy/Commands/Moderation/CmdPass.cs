@@ -21,7 +21,7 @@ using System;
 using System.IO;
 using MCGalaxy.Util;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdPass : Command {
         public override string name { get { return "pass"; } }
         public override string type { get { return CommandTypes.Moderation; } }

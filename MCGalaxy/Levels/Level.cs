@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using MCGalaxy.Blocks;
+using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;

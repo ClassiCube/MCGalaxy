@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdHuman : Command {
         public override string name { get { return "human"; } }
         public override string type { get { return CommandTypes.Moderation; } }

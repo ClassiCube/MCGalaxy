@@ -21,7 +21,7 @@ using System.Data;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Info {
     public sealed class CmdAbout : Command {
         public override string name { get { return "about"; } }
         public override string shortcut { get { return "b"; } }

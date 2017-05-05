@@ -19,7 +19,7 @@ using System;
 using MCGalaxy;
 using MCGalaxy.Bots;
 
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Chatting {    
     public class CmdNick : EntityPropertyCmd {       
         public override string name { get { return "nick"; } }
         public override string shortcut { get { return "nickname"; } }

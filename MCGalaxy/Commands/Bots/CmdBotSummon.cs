@@ -17,7 +17,7 @@
 */
 using MCGalaxy.Bots;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Bots {
     public sealed class CmdBotSummon : Command {
         public override string name { get { return "botsummon"; } }
         public override string type { get { return CommandTypes.Moderation; } }

@@ -16,10 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdLevels : Command {
-        
+
+namespace MCGalaxy.Commands.Info {   
+    public sealed class CmdLevels : Command {       
         public override string name { get { return "levels"; } }
         public override string shortcut { get { return "maps"; } }
         public override string type { get { return CommandTypes.Information; } }

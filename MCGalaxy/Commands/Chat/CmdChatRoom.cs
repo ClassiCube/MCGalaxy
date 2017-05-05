@@ -16,8 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdChatRoom : Command {
         
         public override string name { get { return "chatroom"; } }

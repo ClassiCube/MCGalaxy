@@ -18,10 +18,8 @@
 using System;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
-    
-    public sealed class CmdInfoSwap : Command {
-        
+namespace MCGalaxy.Commands.Maintenance {
+    public sealed class CmdInfoSwap : Command {       
         public override string name { get { return "infoswap"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }

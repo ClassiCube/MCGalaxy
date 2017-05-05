@@ -19,8 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Fun {
     public abstract class WeaponCmd : Command {
         
         public override string type { get { return CommandTypes.Other; } }

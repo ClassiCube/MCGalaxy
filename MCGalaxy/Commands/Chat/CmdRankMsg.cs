@@ -19,7 +19,7 @@
 */
 using System;
 
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Chatting {    
     public sealed class CmdRankMsg : Command {        
         public override string name { get { return "rankmsg"; } }
         public override string shortcut { get { return "rm"; } }

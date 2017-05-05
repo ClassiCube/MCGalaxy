@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Commands.CPE;
-using MCGalaxy.Commands.World;
+using MCGalaxy.Commands.Moderation;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.World {
     public sealed partial class CmdOverseer : Command {
 
         static void HandleBlockProps(Player p, string arg1, string arg2) {

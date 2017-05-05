@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdVote : Command {
         public override string name { get { return "vote"; } }
         public override string shortcut { get { return "vo"; } }

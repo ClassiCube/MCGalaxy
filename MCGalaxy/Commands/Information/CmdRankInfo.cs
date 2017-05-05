@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy.Commands {   
+namespace MCGalaxy.Commands.Info { 
     public sealed class CmdRankInfo : Command {        
         public override string name { get { return "rankinfo"; } }
         public override string shortcut { get { return "ri"; } }

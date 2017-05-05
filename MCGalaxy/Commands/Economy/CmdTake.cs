@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Economic {
     public sealed class CmdTake : MoneyCmd {
         public override string name { get { return "take"; } }
         public override string shortcut { get { return ""; } }

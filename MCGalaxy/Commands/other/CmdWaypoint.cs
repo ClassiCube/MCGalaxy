@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Misc {
     public sealed class CmdWaypoint : Command {
         public override string name { get { return "waypoint"; } }
         public override string shortcut { get { return "wp"; } }

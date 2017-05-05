@@ -19,9 +19,8 @@ using System;
 using System.Data;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {    
-    public sealed class CmdTop : Command {
-        
+namespace MCGalaxy.Commands.Info {
+    public sealed class CmdTop : Command {        
         public override string name { get { return "top"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }

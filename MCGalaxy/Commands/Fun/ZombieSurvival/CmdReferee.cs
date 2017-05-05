@@ -18,7 +18,7 @@
 using MCGalaxy.Games;
 using MCGalaxy.Network;
 
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdReferee : Command {
         public override string name { get { return "ref"; } }
         public override string type { get { return CommandTypes.Moderation; } }

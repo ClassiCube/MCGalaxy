@@ -18,7 +18,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Fun {
     public sealed class CmdExplode : Command {
         public override string name { get { return "explode"; } }
         public override string shortcut { get { return "ex"; } }

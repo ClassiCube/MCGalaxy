@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdIrcControllers : Command {
         public override string name { get { return "irccontrollers"; } }
         public override string shortcut { get { return "ircctrl"; } }

@@ -17,7 +17,7 @@
  */
 using MCGalaxy.Commands.Moderation;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Misc {
     public sealed class CmdFakeRank : Command {
         public override string name { get { return "fakerank"; } }
         public override string shortcut { get { return "frk"; } }

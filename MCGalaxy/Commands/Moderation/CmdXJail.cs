@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdXJail : Command {        
         public override string name { get { return "xjail"; } }
         public override string shortcut { get { return "xj"; } }

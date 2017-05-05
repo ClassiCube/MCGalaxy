@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Commands;
 
 namespace MCGalaxy.Bots {
     public static class ScriptFile {

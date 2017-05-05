@@ -19,7 +19,7 @@ using System;
 using System.Text.RegularExpressions;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdSend : Command {
         public override string name { get { return "send"; } }
         public override string type { get { return CommandTypes.Chat; } }

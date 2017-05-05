@@ -20,10 +20,8 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Bots;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdBotAI : Command
-    {
+namespace MCGalaxy.Commands.Bots{
+    public sealed class CmdBotAI : Command {
         public override string name { get { return "botai"; } }
         public override string shortcut { get { return "bai"; } }
         public override string type { get { return CommandTypes.Other; } }

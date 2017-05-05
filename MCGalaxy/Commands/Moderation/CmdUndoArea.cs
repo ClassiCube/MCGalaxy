@@ -18,8 +18,7 @@
 using System;
 using MCGalaxy.Commands.Building;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Moderation {  
     public sealed class CmdUndoArea : CmdUndoPlayer {
         public override string name { get { return "undoarea"; } }
         public override string shortcut { get { return "ua"; } }

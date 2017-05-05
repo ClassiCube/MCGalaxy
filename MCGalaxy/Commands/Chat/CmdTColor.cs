@@ -17,7 +17,7 @@
  */
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Chatting {
     public class CmdTColor : EntityPropertyCmd {
         public override string name { get { return "tcolor"; } }
         public override string type { get { return CommandTypes.Chat; } }

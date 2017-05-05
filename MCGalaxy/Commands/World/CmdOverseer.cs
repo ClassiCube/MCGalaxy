@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.World {
     public sealed partial class CmdOverseer : Command {
         public override string name { get { return "overseer"; } }
         public override string shortcut { get { return "os"; } }

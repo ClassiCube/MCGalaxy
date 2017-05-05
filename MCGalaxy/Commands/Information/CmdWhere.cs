@@ -17,8 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Info {
     public sealed class CmdWhere : Command {
         public override string name { get { return "where"; } }
         public override string shortcut { get { return "where"; } }

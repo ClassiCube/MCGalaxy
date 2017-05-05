@@ -21,7 +21,7 @@ using System;
 using System.IO;
 using System.Threading;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdShutdown : Command {
         public override string name { get { return "shutdown"; } }
         public override string type { get { return CommandTypes.Moderation; } }

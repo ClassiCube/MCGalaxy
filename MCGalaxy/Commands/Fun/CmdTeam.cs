@@ -18,8 +18,7 @@
 using System;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {
-
+namespace MCGalaxy.Commands.Fun {
     public sealed class CmdTeam : Command {        
         public override string name { get { return "team"; } }
         public override string type { get { return CommandTypes.Games; } }

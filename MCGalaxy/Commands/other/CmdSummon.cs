@@ -18,7 +18,7 @@
 using System;
 using System.Threading;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Misc {
     public sealed class CmdSummon : Command {
         public override string name { get { return "summon"; } }
         public override string shortcut { get { return "s"; } }

@@ -17,7 +17,7 @@
  */
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Bots {
     public sealed class CmdBots : Command {
         public override string name { get { return "bots"; } }
         public override string shortcut { get { return "botlist"; } }

@@ -18,7 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-namespace MCGalaxy.Commands {
+
+namespace MCGalaxy.Commands.Misc {
     public sealed class CmdFly : Command {
         public override string name { get { return "fly"; } }
         public override string type { get { return CommandTypes.Other; } }

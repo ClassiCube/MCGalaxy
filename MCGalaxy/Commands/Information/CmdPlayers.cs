@@ -19,10 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdPlayers : Command
-    {
+namespace MCGalaxy.Commands.Info {
+    public sealed class CmdPlayers : Command {
         public override string name { get { return "players"; } }
         public override string shortcut { get { return "who"; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -31,10 +29,6 @@ namespace MCGalaxy.Commands
         public CmdPlayers() { }
 
         public override void Use(Player p, string message) {
-            DisplayPlayers(p, message, true, Server.showEmptyRanks);
-        }
-        
-        public static void DisplayPlayers(Player p, string message, bool showHidden, bool showEmptyRanks) {
             if (message != "") {
                 Group grp = Matcher.FindRanks(p, message);
                 if(grp == null) return;
@@ -44,7 +38,6 @@ namespace MCGalaxy.Commands
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl.group != grp) continue;
-                    if (pl.hidden && !showHidden) continue;
                     if (p == pl || Entities.CanSee(p, pl)) {
                         string name = Colors.StripColors(pl.DisplayName);
                         AddStates(pl, ref name);
@@ -69,7 +62,6 @@ namespace MCGalaxy.Commands
             int totalPlayers = 0;
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
-                if (pl.hidden && !showHidden) continue;
                 if (p == pl || Entities.CanSee(p, pl)) {
                     totalPlayers++;
                     string name = Colors.StripColors(pl.DisplayName);
@@ -84,7 +76,7 @@ namespace MCGalaxy.Commands
                 Player.Message(p, "There are &a" + totalPlayers + " %Splayers online.");
             
             for (int i = playerList.Count - 1; i >= 0; i--)
-                playerList[i].Print(p, showEmptyRanks);
+                playerList[i].Print(p, Server.showEmptyRanks);
         }
         
         static void AddStates(Player pl, ref string name) {

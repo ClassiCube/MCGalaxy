@@ -17,10 +17,8 @@
  */
 using System.IO;
 
-namespace MCGalaxy.Commands
-{
-    public sealed class CmdJail : Command
-    {
+namespace MCGalaxy.Commands.Moderation {
+    public sealed class CmdJail : Command {
         public override string name { get { return "jail"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }

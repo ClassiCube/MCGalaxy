@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Info {
     public sealed class CmdSeen : Command {
         public override string name { get { return "seen"; } }
         public override bool museumUsable { get { return true; } }

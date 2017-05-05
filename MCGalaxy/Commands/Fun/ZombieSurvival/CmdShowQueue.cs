@@ -18,7 +18,7 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdShowQueue : Command {      
         public override string name { get { return "showqueue"; } }
         public override string shortcut { get { return "sq"; } }

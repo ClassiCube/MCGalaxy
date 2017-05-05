@@ -18,7 +18,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Info {
     public sealed class CmdNews : Command {
         public override string name { get { return "news"; } }
         public override string type { get { return CommandTypes.Information; } }

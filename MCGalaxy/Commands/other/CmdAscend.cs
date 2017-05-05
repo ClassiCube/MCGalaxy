@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Misc {
     public class CmdAscend : Command {
         public override string name { get { return "ascend"; } }
         public override string type { get { return CommandTypes.Other; } }

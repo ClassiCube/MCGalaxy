@@ -17,7 +17,7 @@
  */
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdVIP : Command {
         public override string name { get { return "vip"; } }
         public override string type { get { return CommandTypes.Moderation; } }

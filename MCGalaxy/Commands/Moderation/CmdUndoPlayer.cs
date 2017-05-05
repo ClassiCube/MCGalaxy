@@ -17,11 +17,12 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Commands.Building;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Undo;
 
-namespace MCGalaxy.Commands.Building {
+namespace MCGalaxy.Commands.Moderation {
     public class CmdUndoPlayer : Command {
         public override string name { get { return "undoplayer"; } }
         public override string shortcut { get { return "up"; } }

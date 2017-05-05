@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Scripting {
     public sealed class CmdCmdUnload : Command {
         public override string name { get { return "cmdunload"; } }
         public override string type { get { return CommandTypes.Other; } }

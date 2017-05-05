@@ -17,7 +17,7 @@
  */
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.World {
     public sealed class CmdSpawn : Command {
         public override string name { get { return "spawn"; } }
         public override string type { get { return CommandTypes.World; } }

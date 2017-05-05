@@ -19,7 +19,7 @@ using System;
 using System.Data;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdInbox : Command {
         public override string name { get { return "inbox"; } }
         public override string type { get { return CommandTypes.Chat; } }

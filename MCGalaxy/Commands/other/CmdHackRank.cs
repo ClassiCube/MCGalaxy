@@ -21,7 +21,7 @@
 using System;
 using MCGalaxy.Commands.Moderation;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Misc {
     
     public sealed class CmdHackRank : Command {
         public override string name { get { return "hackrank"; } }

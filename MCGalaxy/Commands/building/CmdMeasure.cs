@@ -17,13 +17,12 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Building {    
     public sealed class CmdMeasure : Command {
         
         public override string name { get { return "measure"; } }
         public override string shortcut { get { return "ms"; } }
-        public override string type { get { return CommandTypes.Information; } }
+        public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 

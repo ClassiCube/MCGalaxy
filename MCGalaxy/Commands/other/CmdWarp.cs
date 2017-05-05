@@ -18,7 +18,7 @@
 using System;
 using System.Threading;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Misc {
     public sealed class CmdWarp : Command {
         public override string name { get { return "warp"; } }
         public override string type { get { return CommandTypes.Other; } }

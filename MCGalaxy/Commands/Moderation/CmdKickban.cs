@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdKickban : Command {
         public override string name { get { return "kickban"; } }
         public override string shortcut { get { return "kb"; } }

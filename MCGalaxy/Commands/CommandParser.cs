@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.Blocks;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Commands {
     
     /// <summary> Provides helper methods for parsing arguments for commands. </summary>
     public static class CommandParser {

@@ -17,10 +17,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace MCGalaxy.Commands {
-    
-    public class CmdSearch : Command {
-        
+namespace MCGalaxy.Commands.Info {
+    public class CmdSearch : Command {        
         public override string name { get { return "search"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }

@@ -19,7 +19,7 @@ using System;
 using System.IO;
 using MCGalaxy.Commands.Building;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.CPE {
     public sealed class CmdEnvironment : Command {
         public override string name { get { return "environment"; } }
         public override string shortcut { get { return "env"; } }

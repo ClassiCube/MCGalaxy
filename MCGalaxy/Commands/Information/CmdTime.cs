@@ -18,8 +18,7 @@
 using System;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Info {
     public sealed class CmdTime : Command {
         public override string name { get { return "time"; } }
         public override string shortcut { get { return "ti"; } }

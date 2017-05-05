@@ -20,8 +20,7 @@ using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Drawing.Ops;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands.Fun {   
     public sealed class CmdMissile : WeaponCmd {
 
         public override string name { get { return "missile"; } }

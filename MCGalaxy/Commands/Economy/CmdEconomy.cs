@@ -1,5 +1,5 @@
 /*
-    Copyright 2011 MCForge
+    Copyright 2015 MCGalaxy
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -18,9 +18,7 @@
 using System;
 using MCGalaxy.Eco;
 
-namespace MCGalaxy.Commands {
-    
-    /// <summary> Economy Beta v1.0 QuantumHive  </summary>
+namespace MCGalaxy.Commands.Economic {
     public sealed class CmdEconomy : Command {
         public override string name { get { return "economy"; } }
         public override string shortcut { get { return "eco"; } }
@@ -36,53 +34,42 @@ namespace MCGalaxy.Commands {
             string[] args = new string[] { "", "", "", "", "", "", "", "" };
             for (int i = 0; i < Math.Min(args.Length, raw.Length); i++)
                 args[i] = raw[i];
-            HandleSetup(p, args);
-        }
-        
-        void HandleSetup(Player p, string[] args) {
             if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
             
             if (args[0].CaselessEq("apply")) {
                 Economy.Load();
-                Player.Message(p, "%aApplied changes");
+                Player.Message(p, "Reloaded economy items from disc.");
             } else if (args[0].CaselessEq("enable")) {
-                Player.Message(p, "%aThe economy system is now enabled");
+                Player.Message(p, "Economy is now &aenabled");
                 Economy.Enabled = true; Economy.Save();
             } else if (args[0].CaselessEq("disable")) {
-                Player.Message(p, "%aThe economy system is now disabled");
+                Player.Message(p, "Economy is now &cdisabled");
                 Economy.Enabled = false; Economy.Save();
-            } else if (args[0].CaselessEq("help")) {
-                SetupHelp(p, args);
             } else {
                 Item item = Economy.GetItem(args[0]);
                 if (item != null) {
                     item.Setup(p, args);
-                    Economy.Save(); return;
+                    Economy.Save();
+                } else if (args[1] == "") {
+                    Help(p);
+                } else {
+                    Help(p, args[1]);
                 }
-                
-                if (args[1] == "") { SetupHelp(p, args); return; }
-                Player.Message(p, "%cThat wasn't a valid command addition!");
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%cMost commands have been removed from /economy, " +
-                           "use the appropriate command from %T/help economy %cinstead.");
-            if (CheckExtraPerm(p)) {
-                Player.Message(p, "%T/eco <type> %H- to setup economy");
-                Player.Message(p, "%T/eco help %H- get more specific help for setting up the economy");
-            }
+            Player.Message(p, "%T/eco apply %H- Reload changes made to 'economy.properties'.");
+            Player.Message(p, "%T/eco enable/disable %H- Enables/disables the economy system.");
+            Player.Message(p, "%T/eco help [item] %H- Outputs help for setting up that item.");
+            Player.Message(p, "   %HAll items: %S" + Economy.Items.Join(item => item.Name));
         }
-
-        void SetupHelp(Player p, string[] args) {
-            if (args[1] == "") {
-                Player.Message(p, "%T/eco apply %H- Reload changes made to 'economy.properties'");
-                Player.Message(p, "%T/eco enable/disable %H- Enables/disables the economy system");
-                Player.Message(p, "%T/eco help [item] %H- Outputs help for setting up that item");
-                Player.Message(p, "   %HAll items: %S" + Economy.Items.Join(item => item.Name));
+        
+        public override void Help(Player p, string message) {
+            Item item = Economy.GetItem(message);
+            if (item == null) {
+                Player.Message(p, "No item has that name, see %T/eco help %Sfor a list of items.");
             } else {
-                Item item = Economy.GetItem(args[1]);
-                if (item == null) { Player.Message(p, "No item by that name, see %T/eco help %Sfor a list of items."); return; }
                 item.OnSetupCommandHelp(p);
             }
         }

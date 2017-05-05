@@ -17,7 +17,7 @@
  */
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdWhitelist : Command {
         public override string name { get { return "whitelist"; } }
         public override string shortcut { get { return "w"; } }

@@ -17,7 +17,7 @@
  */
 using System.IO;
 using System.Threading;
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.World {
     
     public sealed class CmdLockdown : Command {
         public override string name { get { return "lockdown"; } }

@@ -17,7 +17,7 @@
  */
 using System.Threading;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Misc {
     public sealed class CmdRide : Command {
         public override string name { get { return "ride"; } }
         public override string type { get { return CommandTypes.Other; } }

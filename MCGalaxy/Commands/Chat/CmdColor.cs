@@ -18,7 +18,7 @@
 using MCGalaxy.Bots;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Chatting {    
     public class CmdColor : EntityPropertyCmd {
         public override string name { get { return "color"; } }
         public override string type { get { return CommandTypes.Chat; } }

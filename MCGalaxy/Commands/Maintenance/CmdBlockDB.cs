@@ -17,7 +17,7 @@
  */
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands.World {
+namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdBlockDB : Command {
         public override string name { get { return "blockdb"; } }
         public override string type { get { return CommandTypes.World; } }

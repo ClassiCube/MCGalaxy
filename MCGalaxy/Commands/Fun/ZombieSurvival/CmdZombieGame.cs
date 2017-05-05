@@ -19,7 +19,7 @@
 using System;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Fun {
     public sealed class CmdZombieGame : Command {
         public override string name { get { return "zombiegame"; } }
         public override string shortcut { get { return "zg"; } }

@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Info {
     public sealed class CmdViewRanks : Command {
         public override string name { get { return "viewranks"; } }
         public override string type { get { return CommandTypes.Information; } }

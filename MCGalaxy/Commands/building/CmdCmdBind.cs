@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands {   
+namespace MCGalaxy.Commands.Building {   
     public sealed class CmdCmdBind : Command {        
         public override string name { get { return "cmdbind"; } }
         public override string shortcut { get { return "cb"; } }

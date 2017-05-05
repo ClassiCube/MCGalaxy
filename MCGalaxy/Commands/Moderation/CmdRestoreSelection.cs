@@ -19,7 +19,7 @@ using System;
 using MCGalaxy.DB;
 using MCGalaxy.Levels.IO;
 
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Moderation {    
     public sealed class CmdRestoreSelection : Command {        
         public override string name { get { return "rs"; } }
         public override string shortcut { get { return "restoreselection"; } }

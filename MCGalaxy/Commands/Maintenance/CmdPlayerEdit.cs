@@ -19,7 +19,7 @@ using System;
 using System.Data;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdPlayerEdit : Command {
         public override string name { get { return "playeredit"; } }
         public override string shortcut { get { return "pe"; } }

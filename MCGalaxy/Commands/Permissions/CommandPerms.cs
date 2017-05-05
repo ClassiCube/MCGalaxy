@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MCGalaxy.Commands;
 
 namespace MCGalaxy {
     
@@ -26,6 +27,9 @@ namespace MCGalaxy {
         [Obsolete("Use CommandPerms.Load()")]
         public static void fillRanks() { CommandPerms.Load(); }
     }
+}
+
+namespace MCGalaxy.Commands {
 
     /// <summary> Represents which ranks are allowed (and which are disallowed) to use a command. </summary>
     public class CommandPerms {

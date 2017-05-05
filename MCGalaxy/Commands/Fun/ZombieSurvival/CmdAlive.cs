@@ -17,7 +17,7 @@
 */
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Fun {
     
     public sealed class CmdAlive : Command {
         public override string name { get { return "alive"; } }

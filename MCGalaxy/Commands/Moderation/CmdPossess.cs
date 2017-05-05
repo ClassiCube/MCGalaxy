@@ -17,7 +17,7 @@
  */
 
 using System;
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Moderation {
     
     public sealed class CmdPossess : Command {
         public override string name { get { return "possess"; } }

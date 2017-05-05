@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands {    
+namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdFlipHead : Command {    
         public override string name { get { return "fliphead"; } }
         public override string shortcut { get { return "fh"; } }

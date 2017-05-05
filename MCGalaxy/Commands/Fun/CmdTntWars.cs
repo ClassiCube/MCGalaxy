@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Fun {
     public sealed class CmdTntWars : Command {
         public override string name { get { return "tntwars"; } }
         public override string shortcut { get { return "tw"; } }

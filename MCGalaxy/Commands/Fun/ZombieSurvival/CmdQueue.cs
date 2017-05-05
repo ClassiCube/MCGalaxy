@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System.IO;
-namespace MCGalaxy.Commands {
+namespace MCGalaxy.Commands.Fun {
     public sealed class CmdQueue : Command {
         public override string name { get { return "queue"; } }
         public override string shortcut { get { return "qz"; } }
