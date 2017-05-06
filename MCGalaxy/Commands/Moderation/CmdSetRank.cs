@@ -143,7 +143,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Help(Player p) {
             Player.Message(p, "%T/rank [player] [rank] <reason>");
             Player.Message(p, "%HSets that player's rank/group, with an optional reason.");
-            Player.Message(p, "%H  See /viewranks for a list of ranks.");
+            Player.Message(p, "%HTo see available ranks, type %T/viewranks");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }

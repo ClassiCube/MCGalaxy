@@ -141,7 +141,7 @@ namespace MCGalaxy.Commands.Info {
             Player.Message(p, "%T/blocks [basic block] %H- Lists all blocks which look the same");
             Player.Message(p, "%T/blocks [complex block] %H- Lists specific info on that block");
             Player.Message(p, "%T/blocks [rank] %H- Lists all blocks [rank] can use");
-            Player.Message(p, "  %HSee %T/viewranks %Hfor a list of ranks");
+            Player.Message(p, "%HTo see available ranks, type %T/viewranks");
         }
     }
 }

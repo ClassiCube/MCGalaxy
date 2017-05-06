@@ -119,7 +119,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "%HPrevents a specific rank from using [cmd]");
             Player.Message(p, "%T/cmdset [cmd] [rank] [extra permission number]");
             Player.Message(p, "%HSet the lowest rank that has that extra permission for [cmd]");
-            Player.Message(p, "To see available ranks, type %T/viewranks");
+            Player.Message(p, "%HTo see available ranks, type %T/viewranks");
         }
     }
 }

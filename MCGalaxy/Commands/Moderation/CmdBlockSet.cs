@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "%HAllows a specific rank to modify/use [block]");
             Player.Message(p, "%T/blockset [block] -[rank]");
             Player.Message(p, "%HPrevents a specific rank from modifying/using [block]");
-            Player.Message(p, "To see available ranks, type %T/viewranks");
+            Player.Message(p, "%HTo see available ranks, type %T/viewranks");
         }
     }
 }
