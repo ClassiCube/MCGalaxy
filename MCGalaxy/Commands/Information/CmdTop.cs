@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Info {
             DataTable db = Database.Backend.GetRows(stat.Table, "DISTINCT Name, " + stat.Column,
                                                     "ORDER BY " + stat.Column + " " + order + strLimit);
             
-            Player.Message(p, stat.Title());
+            Player.Message(p, "&a{0}:", stat.Title());
             for (int i = 0; i < db.Rows.Count; i++) {
             	string player = PlayerInfo.GetColoredName(p, db.Rows[i]["Name"].ToString());
                 string item = db.Rows[i][stat.Column].ToString();

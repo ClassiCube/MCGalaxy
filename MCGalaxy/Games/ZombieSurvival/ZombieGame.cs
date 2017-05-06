@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Threading;
+using MCGalaxy.DB;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Games.ZS;
 using MCGalaxy.SQL;
@@ -40,6 +41,7 @@ namespace MCGalaxy.Games {
             RoundsDone = 0;
             if (!SetStartLevel(level)) return;
             
+            HookTopStats();
             Thread t = new Thread(MainLoop);
             t.Name = "MCG_ZombieGame";
             t.Start();
@@ -207,6 +209,7 @@ namespace MCGalaxy.Games {
             LastLevelName = "";
             CurLevelName = "";
             CurLevel = null;
+            UnhookTopStats();
         }
         
         public BountyData FindBounty(string target) {
@@ -299,6 +302,32 @@ namespace MCGalaxy.Games {
                                             "WHERE Name=@4", p.Game.TotalRoundsSurvived, p.Game.MaxRoundsSurvived,
                                             p.Game.TotalInfected, p.Game.MaxInfected, p.name);
             }
+        }
+        
+        TopStat statMostInfected, statMaxInfected, statMostSurvived, statMaxSurvived;
+        void HookTopStats() {
+            if (TopStat.Stats.Contains(statMostInfected)) return; // don't duplicate
+            
+            statMostInfected = new TopStat("Infected", "ZombieStats", "TotalInfected",
+                                           () => "Most players infected", TopStat.FormatInteger);
+            statMaxInfected = new TopStat("Survived", "ZombieStats", "TotalRounds",
+                                           () => "Most rounds survived", TopStat.FormatInteger);
+            statMostSurvived = new TopStat("ConsecutiveInfected", "ZombieStats", "MaxInfected",
+                                           () => "Most consecutive infections", TopStat.FormatInteger);
+            statMaxSurvived = new TopStat("ConsecutiveSurvived", "ZombieStats", "MaxRounds",
+                                           () => "Most consecutive rounds survived", TopStat.FormatInteger);
+
+            TopStat.Stats.Add(statMostInfected);
+            TopStat.Stats.Add(statMostSurvived);
+            TopStat.Stats.Add(statMaxInfected);
+            TopStat.Stats.Add(statMaxSurvived);
+        }
+        
+        void UnhookTopStats() {
+            TopStat.Stats.Remove(statMostInfected);
+            TopStat.Stats.Remove(statMostSurvived);
+            TopStat.Stats.Remove(statMaxInfected);
+            TopStat.Stats.Remove(statMaxSurvived);
         }
         #endregion
     }

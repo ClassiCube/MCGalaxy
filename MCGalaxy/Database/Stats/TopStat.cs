@@ -73,8 +73,6 @@ namespace MCGalaxy.DB {
             new TopStat("Deleted", PlayerData.DBTable, 
                         PlayerData.ColumnTotalCuboided + " >> " + PlayerData.LowerBits,
                         () => "Most blocks deleted", FormatInteger),
-            
-            // TODO: only add when ZS is running
         };
         
         public static string FormatInteger(string input) {
@@ -87,22 +85,5 @@ namespace MCGalaxy.DB {
             TimeSpan delta = DateTime.Now - time;
             return String.Format("{0:H:mm} on {0:d} ({1} ago)", time, delta.Shorten());
         }
-
-    /*case "11":
-        col = "TotalInfected";
-        title = "&aMost players infected:";
-        table = "ZombieStats"; break;
-    case "12":
-        col = "TotalRounds";
-        title = "&aMost rounds survived:";
-        table = "ZombieStats"; break;
-    case "13":
-        col = "MaxInfected";
-        title = "&aMost consecutive infections:";
-        table = "ZombieStats"; break;
-    case "14":
-        col = "MaxRounds";
-        title = "&aMost consecutive rounds survived:";
-        table = "ZombieStats"; break;*/
     }
 }
