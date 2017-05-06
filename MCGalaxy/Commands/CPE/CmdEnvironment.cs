@@ -108,7 +108,7 @@ namespace MCGalaxy.Commands.CPE {
                 case "edge":
                 case "water":
                     LevelEnv.SetBlock(p, value, EnvProp.EdgeBlock,
-                             "edge block", Block.waterstill, ref lvl.HorizonBlock); break;
+                             "edge block", Block.water, ref lvl.HorizonBlock); break;
                 case "side":
                 case "border":
                 case "bedrock":
@@ -130,7 +130,7 @@ namespace MCGalaxy.Commands.CPE {
             LevelEnv.SetWeather(p, lvl, "normal");
             
             LevelEnv.SetBlock(p, "normal", EnvProp.EdgeBlock,
-                     "edge block", Block.waterstill, ref lvl.HorizonBlock);
+                     "edge block", Block.water, ref lvl.HorizonBlock);
             LevelEnv.SetBlock(p, "normal", EnvProp.SidesBlock,
                      "sides block", Block.blackrock, ref lvl.EdgeBlock);
             

@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using MCGalaxy.Network;
 
@@ -22,35 +22,20 @@ namespace MCGalaxy {
     
     public static class BlockQueue {
         
-        public static int time { get { return (int)blocktimer.Interval; } set { blocktimer.Interval = value; } }
+        public static int time = 100;
         public static int blockupdates = 250;
-        static System.Timers.Timer blocktimer = new System.Timers.Timer(100);
-        static bool started = false;
         static BufferedBlockSender bulkSender = new BufferedBlockSender();
 
-        public static void Start() {
-            blocktimer.Elapsed += delegate {
-                if (started) return;
-                started = true;
-                try {
-                    Level[] loaded = LevelInfo.Loaded.Items;
-                    foreach (Level lvl in loaded) {
-                        lock (lvl.queueLock)
-                            ProcessLevelBlocks(lvl);
-                    }
-                    bulkSender.level = null;
-                } catch (Exception ex) {
-                    Server.ErrorLog(ex);
-                    throw;
-                } finally {
-                    started = false;
-                }
-            };
-            blocktimer.Start();
+        public static void Loop(SchedulerTask task) {
+            Level[] loaded = LevelInfo.Loaded.Items;
+            foreach (Level lvl in loaded) {
+                lock (lvl.queueLock)
+                    ProcessLevelBlocks(lvl);
+            }
+            
+            bulkSender.level = null;
+            task.Delay = TimeSpan.FromMilliseconds(time);
         }
-        
-        public static void Pause() { blocktimer.Enabled = false; }
-        public static void Resume() { blocktimer.Enabled = true; }
 
         public static void Addblock(Player p, int index, byte type, byte extType = 0) {
             if (index == -1) return;
@@ -71,16 +56,18 @@ namespace MCGalaxy {
         static void ProcessLevelBlocks(Level lvl) {
             try {
                 if (lvl.blockqueue.Count == 0) return;
+                if (!lvl.HasPlayers()) { lvl.blockqueue.Clear(); return; }
+                    
                 bulkSender.level = lvl;
                 int count = blockupdates;
-                if (lvl.blockqueue.Count < blockupdates || !lvl.HasPlayers())
+                if (lvl.blockqueue.Count < blockupdates)
                     count = lvl.blockqueue.Count;
 
                 for (int i = 0; i < count; i++) {
                     ulong flags = lvl.blockqueue[i];
-                    int index = (int)(flags >> 32);                    
+                    int index = (int)(flags >> 32);
                     byte block = (flags & 0x100) != 0 ? Block.custom_block : (byte)flags;
-                    byte extBlock = (flags & 0x100) != 0 ? (byte)flags : Block.air;                    
+                    byte extBlock = (flags & 0x100) != 0 ? (byte)flags : Block.air;
                     bulkSender.Add(index, block, extBlock);
                 }
                 bulkSender.Send(true);

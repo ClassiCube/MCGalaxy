@@ -117,8 +117,8 @@ namespace MCGalaxy {
         public static void LoadGlobal() {
             BlockDefinition[] oldDefs = GlobalDefs;
             GlobalDefs = Load(true, null);
-            GlobalDefs[0] = new BlockDefinition();
-            GlobalDefs[0].Name = "Air fallback";
+            GlobalDefs[Block.air] = DefaultSet.MakeCustomBlock(Block.air);
+            GlobalDefs[Block.air].Name = "Air fallback";
             
             GlobalProps = new BlockProps[Block.Count];
             for (int i = 0; i < Block.Count; i++)

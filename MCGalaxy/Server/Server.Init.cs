@@ -128,7 +128,8 @@ namespace MCGalaxy {
              
             InitZombieSurvival();
             InitLavaSurvival();
-            BlockQueue.Start();
+            MainScheduler.QueueRepeat(BlockQueue.Loop, null, 
+                                      TimeSpan.FromMilliseconds(BlockQueue.time));
 
             Log("Finished setting up server, finding classicube.net url..");
             ServerSetupFinished = true;

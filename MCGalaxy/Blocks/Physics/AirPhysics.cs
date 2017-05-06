@@ -27,7 +27,7 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             ActivateablePhysics.CheckNeighbours(lvl, x, y, z);
-            ActivateablePhysics.CheckAt(lvl, lvl.PosToInt(x, (ushort)(y - 1), z));
+            ActivateablePhysics.CheckAt(lvl, lvl.PosToInt(x, (ushort)(y - 1), z)); 
 
             //Edge of map water
             if (lvl.edgeWater && (y < lvl.EdgeLevel && y >= (lvl.EdgeLevel + lvl.SidesOffset))) {
