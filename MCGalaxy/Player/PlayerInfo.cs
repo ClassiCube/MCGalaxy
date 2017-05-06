@@ -35,7 +35,7 @@ namespace MCGalaxy {
         public static string GetColoredName(Player p, string name) {
             Player target = FindExact(name);
             return target != null && Entities.CanSee(p, target) ? 
-            	target.ColoredName : GetColor(name) + name; // TODO: select color from database?
+                target.ColoredName : GetColor(name) + name.RemoveLastPlus(); // TODO: select color from database?
         }
         
         

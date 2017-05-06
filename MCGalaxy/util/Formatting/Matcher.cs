@@ -78,7 +78,7 @@ namespace MCGalaxy {
             
             int matches = 0;
             return Find<Group>(p, name, out matches, Group.GroupList,
-                               null, g => g.name, "ranks");
+                               null, g => Colors.StripColors(g.name), "ranks");
         }
         
         

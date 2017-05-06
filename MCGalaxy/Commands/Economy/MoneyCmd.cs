@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Economic {
             if (p == null) {
                 data.SourceRaw = "(console)"; data.Source = "(console)";
             } else {
-                data.SourceRaw = p.color + p.name; data.Source = p.ColoredName;
+                data.SourceRaw = p.color + p.truename; data.Source = p.ColoredName;
             }
 
             int amount = 0;
