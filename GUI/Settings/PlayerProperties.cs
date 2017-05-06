@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using MCGalaxy.DB;
 
 namespace MCGalaxy.Gui {
     public sealed class PlayerProperties {

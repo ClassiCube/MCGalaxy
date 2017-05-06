@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy;
 using MCGalaxy.Bots;
+using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Chatting {    
     public class CmdNick : EntityPropertyCmd {       

@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System.IO;
+using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdLoginMessage : EntityPropertyCmd {

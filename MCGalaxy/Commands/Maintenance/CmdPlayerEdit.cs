@@ -17,6 +17,7 @@
  */
 using System;
 using System.Data;
+using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Maintenance {
@@ -47,21 +48,23 @@ namespace MCGalaxy.Commands.Maintenance {
             
             switch (args[1].ToLower()) {
                 case "firstlogin":
-                    SetDate(p, args, "FirstLogin", who, v => who.firstLogin = v); break;
+                    SetDate(p, args, PlayerData.ColumnFirstLogin, who, 
+            		        v => who.firstLogin = v); break;
                 case "lastlogin":
-                    SetDate(p, args, "LastLogin", who, v => who.timeLogged = v); break;
+                    SetDate(p, args, PlayerData.ColumnLastLogin, who, 
+            		        v => who.timeLogged = v); break;
                     
                 case "logins":
                 case "totallogin":
                 case "totallogins":
-                    SetInteger(p, args, "totalLogin", 1000000000, who,
+                    SetInteger(p, args, PlayerData.ColumnLogins, 1000000000, who,
                                v => who.totalLogins = v, UpdateDB); break;
                 case "deaths":
                 case "totaldeaths":
-                    SetInteger(p, args, "TotalDeaths", short.MaxValue, who,
+                    SetInteger(p, args, PlayerData.ColumnDeaths, short.MaxValue, who,
                                v => who.overallDeath = v, UpdateDB); break;
                 case "money":
-                    SetInteger(p, args, "Money", 100000000, who,
+                    SetInteger(p, args, PlayerData.ColumnMoney, 100000000, who,
                                v => who.money = v, UpdateDB); break;
 
                 case "title":
@@ -75,35 +78,34 @@ namespace MCGalaxy.Commands.Maintenance {
                         who.title = args[2];
                         who.SetPrefix();
                     }
-                    UpdateDB(args[0], args[2], "Title");
+                    UpdateDB(args[0], args[2], PlayerData.ColumnTitle);
                     MessageDataChanged(p, args[0], args[1], args[2]); break;
 
                     
                 case "modified":
                 case "totalblocks":
-                    SetInteger(p, args, "totalBlocks", int.MaxValue, who,
+                    SetInteger(p, args, PlayerData.ColumnTotalBlocks, int.MaxValue, who,
                                v => who.overallBlocks = v, UpdateDBLo); break;
                 case "drawn":
                 case "totalcuboided":
                 case "totalcuboid":
-                    SetInteger(p, args, "totalCuboided", int.MaxValue, who,
+                    SetInteger(p, args, PlayerData.ColumnTotalCuboided, int.MaxValue, who,
                                v => who.TotalDrawn = v, UpdateDBLo); break;
                 case "placed":
-                    SetInteger(p, args, "totalBlocks", int.MaxValue, who,
+                    SetInteger(p, args, PlayerData.ColumnTotalBlocks, int.MaxValue, who,
                                v => who.TotalPlaced = v, UpdateDBHi); break;
                 case "deleted":
-                    SetInteger(p, args, "totalCuboided", int.MaxValue, who,
+                    SetInteger(p, args, PlayerData.ColumnTotalCuboided, int.MaxValue, who,
                                v => who.TotalDeleted = v, UpdateDBHi); break;
                     
                 case "totalkicked":
-                    SetInteger(p, args, "totalKicked", 1000000000, who,
+                    SetInteger(p, args, PlayerData.ColumnKicked, 1000000000, who,
                                v => who.totalKicked = v, UpdateDB); break;
                 case "timespent":
-                    SetTimespan(p, args, "TimeSpent", who, v => who.time = v.ParseDBTime()); break;
+                    SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, v => who.time = v.ParseDBTime()); break;
                 case "color":
-                    SetColor(p, args, "color", who, v => who.color = (v == "" ? who.group.color : v)); break;
+                    SetColor(p, args, PlayerData.ColumnColor, who, v => who.color = (v == "" ? who.group.color : v)); break;
                 case "titlecolor":
-                    SetColor(p, args, "title_color", who, v => who.titlecolor = (v == "" ? "" : v)); break;
                 default:
                     Player.Message(p, Colors.red + "Invalid type.");
                     MessageValidTypes(p); break;

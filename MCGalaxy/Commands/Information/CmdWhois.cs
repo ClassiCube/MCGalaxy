@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.DB;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Info {

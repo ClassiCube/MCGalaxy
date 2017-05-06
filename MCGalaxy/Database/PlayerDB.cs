@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy {
+namespace MCGalaxy.DB {
     
 	/// <summary> Stores per-player persistent data. </summary>
     public static class PlayerDB {

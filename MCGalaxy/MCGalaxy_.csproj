@@ -411,6 +411,8 @@
     <Compile Include="Database\IDatabaseBackend.cs" />
     <Compile Include="Database\Backends\MySQL.cs" />
     <Compile Include="Database\ParameterisedQuery.cs" />
+    <Compile Include="Database\PlayerData.cs" />
+    <Compile Include="Database\Stats\TopStat.cs" />
     <Compile Include="Drawing\Brushes\Brush.cs" />
     <Compile Include="Drawing\Brushes\CloudyBrush.cs" />
     <Compile Include="Drawing\Brushes\PasteBrush.cs" />
@@ -572,7 +574,6 @@
     <Compile Include="Player\Player.Handlers.cs" />
     <Compile Include="Player\Player.Login.cs" />
     <Compile Include="Player\PlayerActions.cs" />
-    <Compile Include="Player\PlayerData.cs" />
     <Compile Include="Player\PlayerInfo.cs" />
     <Compile Include="Player\SpamChecker.cs" />
     <Compile Include="Player\TabList.cs" />
@@ -706,6 +707,7 @@
   <ItemGroup>
     <Folder Include="Commands\Maintenance" />
     <Folder Include="Commands\Permissions" />
+    <Folder Include="Database\Stats" />
     <Folder Include="Network\Heartbeat" />
     <Folder Include="Network\IRCPlugin" />
     <Folder Include="Network\Utils" />

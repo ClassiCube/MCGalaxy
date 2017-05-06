@@ -17,11 +17,30 @@
  */
 using System;
 using System.Data;
-using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy {
+namespace MCGalaxy.DB {
+	
+	/// <summary> Retrieves or sets player stats in the database. </summary>
     public class PlayerData {
+        
+        public const string DBTable = "Players";
+        public const string ColumnDeaths = "totalDeaths";
+        public const string ColumnLogins = "totalLogin";
+        public const string ColumnMoney = "Money";
+        public const string ColumnKicked = "totalKicked";
+        
+        public const string ColumnColor = "color";
+        public const string ColumnTitle = "title";
+        public const string ColumnTColor = "title_color";
+        
+        public const string ColumnFirstLogin = "FirstLogin";
+        public const string ColumnLastLogin = "LastLogin";
+        public const string ColumnTimeSpent = "TimeSpent";
+        
+        public const string ColumnTotalBlocks = "totalBlocks";
+        public const string ColumnTotalCuboided = "totalCuboided";
+            
         public string Name, Color, Title, TitleColor, TotalTime, IP;
         public DateTime FirstLogin, LastLogin;
         public int UserID, Money, Deaths, Logins, Kicks;
@@ -43,11 +62,11 @@ namespace MCGalaxy {
             p.TotalDrawn = 0;
             string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             
-            Database.Backend.AddRow("Players", "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
+            Database.Backend.AddRow(DBTable, "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
                                     "totalDeaths, Money, totalBlocks, totalKicked, TimeSpent",
                                     p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, p.time.ToDBTime());
             
-            using (DataTable ids = Database.Backend.GetRows("Players",
+            using (DataTable ids = Database.Backend.GetRows(DBTable,
                                                             "ID", "WHERE Name = @0", p.name)) {
                 if (ids.Rows.Count > 0) {
                     string id = ids.Rows[0]["ID"].ToString();
@@ -87,22 +106,22 @@ namespace MCGalaxy {
             data.IP = row["IP"].ToString().Trim();
             data.UserID = ParseInt(row["ID"].ToString());
             
-            data.TotalTime = row["TimeSpent"].ToString();
-            data.FirstLogin = DateTime.Parse(row["FirstLogin"].ToString());
-            data.LastLogin = DateTime.Parse(row["LastLogin"].ToString());
+            data.TotalTime = row[ColumnTimeSpent].ToString();
+            data.FirstLogin = DateTime.Parse(row[ColumnFirstLogin].ToString());
+            data.LastLogin = DateTime.Parse(row[ColumnLastLogin].ToString());
             
-            data.Title = row["Title"].ToString().Trim();
+            data.Title = row[ColumnTitle].ToString().Trim();
             data.Title.Cp437ToUnicodeInPlace();
-            data.TitleColor = ParseColor(row["title_color"]);
-            data.Color = ParseColor(row["color"]);
+            data.TitleColor = ParseColor(row[ColumnTColor]);
+            data.Color = ParseColor(row[ColumnColor]);
             
-            data.Money = ParseInt(row["Money"].ToString());
-            data.Deaths = ParseInt(row["TotalDeaths"].ToString());
-            data.Logins = ParseInt(row["totalLogin"].ToString());
-            data.Kicks = ParseInt(row["totalKicked"].ToString());
+            data.Money = ParseInt(row[ColumnMoney].ToString());
+            data.Deaths = ParseInt(row[ColumnDeaths].ToString());
+            data.Logins = ParseInt(row[ColumnLogins].ToString());
+            data.Kicks = ParseInt(row[ColumnKicked].ToString());
             
-            long blocks = ParseLong(row["totalBlocks"].ToString());
-            long cuboided = ParseLong(row["totalCuboided"].ToString());
+            long blocks = ParseLong(row[ColumnTotalBlocks].ToString());
+            long cuboided = ParseLong(row[ColumnTotalCuboided].ToString());
             data.TotalModified = blocks & LowerBitsMask;
             data.TotalPlaced = blocks >> LowerBits;
             data.TotalDrawn = cuboided & LowerBitsMask;

@@ -19,6 +19,7 @@
  */
 using System;
 using System.Data;
+using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info { 

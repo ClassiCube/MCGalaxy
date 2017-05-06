@@ -17,18 +17,20 @@
  */
 using System;
 using System.Data;
+using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdTop : Command {        
+    public sealed class CmdTop : Command {
         public override string name { get { return "top"; } }
+        public override string shortcut { get { return "most"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdTop() { }
         public override CommandAlias[] Aliases {
             get { return new [] { new CommandAlias("topten", null, "10"), new CommandAlias("topfive", null, "5"),
-                     new CommandAlias("top10", null, "10"), }; }
+                    new CommandAlias("top10", null, "10"), }; }
         }
         
         public override void Use(Player p, string message) {
@@ -36,81 +38,25 @@ namespace MCGalaxy.Commands.Info {
             if (args.Length < 2) { Help(p); return; }
             
             int offset = ParseOffset(p, args);
-            int limit = ParseLimit(p, args);            
+            int limit = ParseLimit(p, args);
             if (limit == -1 || offset == -1) return;
             
-            string col, title;
-            string table = "Players", order = "desc";
-            switch (args[0]) {
-                case "1":
-                    col = "TotalLogin";
-                    title = "&aMost logins:";
-                    break;
-                case "2":
-                    col = "TotalDeaths";
-                    title = "&aMost deaths:";
-                    break;
-                case "3":
-                    col = "money";
-                    title = "&aMost " + Server.moneys + ":";
-                    break;
-                case "4":
-                    col = "firstlogin";
-                    title = "&aOldest players:";
-                    order = "asc";
-                    break;
-                case "5":
-                    col = "lastlogin";
-                    title = "&aMost recent players:";
-                    break;
-                case "6":
-                    col = "TotalKicked";
-                    title = "&aMost times kicked:";
-                    break;
-                case "7":
-                    col = "totalBlocks & " + PlayerData.LowerBitsMask;
-                    title = "&aMost blocks modified:";
-                    break;
-                case "8":
-                    col = "totalCuboided & " + PlayerData.LowerBitsMask;
-                    title = "&aMost blocks drawn:";
-                    break;
-                case "9":
-                    col = "totalBlocks >> " + PlayerData.LowerBits;
-                    title = "&aMost blocks placed:";
-                    break;
-                case "10":
-                    col = "totalCuboided >> " + PlayerData.LowerBits;
-                    title = "&aMost blocks deleted:";
-                    break;
-                case "11":
-                    col = "TotalInfected";
-                    title = "&aMost players infected:";
-                    table = "ZombieStats"; break;
-                case "12":
-                    col = "TotalRounds";
-                    title = "&aMost rounds survived:";
-                    table = "ZombieStats"; break;
-                case "13":
-                    col = "MaxInfected";
-                    title = "&aMost consecutive infections:";
-                    table = "ZombieStats"; break;
-                case "14":
-                    col = "MaxRounds";
-                    title = "&aMost consecutive rounds survived:";
-                    table = "ZombieStats"; break;
-                default:
-                    Player.Message(p, "/Top: Unrecognised type \"{0}\".", args[0]);
-                    return;
+            TopStat stat = FindTopStat(args[0]);
+            if (stat == null) {
+                Player.Message(p, "/Top: Unrecognised type \"{0}\".", args[0]);
+                return;
             }
             
+            string order = stat.Ascending ? "asc" : "desc";
             string strLimit = " LIMIT " + offset + "," + limit;
-            DataTable db = Database.Backend.GetRows(table, "DISTINCT Name, " + col, 
-                                                    "ORDER BY " + col + " " + order + strLimit);
+            DataTable db = Database.Backend.GetRows(stat.Table, "DISTINCT Name, " + stat.Column,
+                                                    "ORDER BY " + stat.Column + " " + order + strLimit);
             
-            Player.Message(p, title);
+            Player.Message(p, stat.Title());
             for (int i = 0; i < db.Rows.Count; i++) {
-                Player.Message(p, "{0}) {1} - {2}", offset + (i + 1), db.Rows[i]["Name"], db.Rows[i][col]);
+            	string player = PlayerInfo.GetColoredName(p, db.Rows[i]["Name"].ToString());
+                string item = db.Rows[i][stat.Column].ToString();
+                Player.Message(p, "{0}) {1} %S- {2}", offset + (i + 1), player, stat.Formatter(item));
             }
             db.Dispose();
         }
@@ -128,22 +74,28 @@ namespace MCGalaxy.Commands.Info {
             int offset = 0;
             
             if (!CommandParser.GetInt(p, args[1], "Offset", ref offset, 0)) return -1;
-            return offset;         
+            return offset;
+        }
+        
+        static TopStat FindTopStat(string input) {
+            foreach (TopStat stat in TopStat.Stats) {
+                if (stat.Identifier.CaselessEq(input)) return stat;
+            }
+            
+            int number;
+            if (int.TryParse(input, out number)) {
+                // Backwards compatibility where top used to take a number
+                if (number >= 1 && number <= TopStat.Stats.Count)
+                    return TopStat.Stats[number - 1];
+            }
+            return null;
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/top [stat] <offset> [number of players to show] ");
             Player.Message(p, "%HPrints a list of players who have the " +
                            "most/top of a particular stat. Available stats:");
-            
-            Player.Message(p, "1) Most logins, 2) Most deaths, 3) Money");
-            Player.Message(p, "4) First joined, 5) Recently joined, 6) Most kicks");
-            Player.Message(p, "7) Blocks modified, 8) Blocks drawn");
-            Player.Message(p, "9) Blocks placed, 10) Blocks deleted");
-             
-            if (!Server.zombie.Running) return;
-            Player.Message(p, "11) Most infected, 12) Most rounds survived");
-            Player.Message(p, "13) Max infected, 14) Max rounds survived");
+            Player.Message(p, "&f" + TopStat.Stats.Join(stat => stat.Identifier));
         }
     }
 }

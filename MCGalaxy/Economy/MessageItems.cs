@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.DB;
 
 namespace MCGalaxy.Eco {
     

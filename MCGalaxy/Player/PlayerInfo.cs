@@ -16,6 +16,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Collections.Generic;
 using System.Data;
+using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {
@@ -34,7 +35,7 @@ namespace MCGalaxy {
         public static string GetColoredName(Player p, string name) {
             Player target = FindExact(name);
             return target != null && Entities.CanSee(p, target) ? 
-                target.ColoredName : GetColor(name) + name; // TODO: select color from database?
+            	target.ColoredName : GetColor(name) + name; // TODO: select color from database?
         }
         
         

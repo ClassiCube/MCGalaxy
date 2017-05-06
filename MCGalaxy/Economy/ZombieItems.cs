@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands;
+using MCGalaxy.DB;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Eco {
