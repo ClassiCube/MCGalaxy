@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Misc {
         
         void DoRide(Player p) {
            p.trainInvincible = true;
-            while (p.onTrain) {
+            while (p.onTrain && !p.disconnected) {
                 Thread.Sleep(10);
                 Vec3S32 P = p.Pos.BlockCoords;
 
