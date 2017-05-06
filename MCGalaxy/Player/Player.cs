@@ -55,7 +55,6 @@ namespace MCGalaxy {
                 for (byte i = 0; i < Block.CpeCount; i++) bindings[i] = i;
 
                 socket.BeginReceive(tempbuffer, 0, tempbuffer.Length, SocketFlags.None, new AsyncCallback(Receive), this);
-                InitTimers();
                 connections.Add(this);
             }
             catch ( Exception e ) { Leave("Login failed!"); Server.ErrorLog(e); }
@@ -296,7 +295,6 @@ namespace MCGalaxy {
                     return;
                 }
                 // FlyBuffer.Clear();
-                DisposeTimer(checkTimer, CheckTimerElapsed);
                 LastAction = DateTime.UtcNow;
                 IsAfk = false;
                 isFlying = false;

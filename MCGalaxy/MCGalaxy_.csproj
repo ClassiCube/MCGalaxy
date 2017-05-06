@@ -580,7 +580,6 @@
     <Compile Include="Database\Undo\UndoFormat.Helpers.cs" />
     <Compile Include="Database\Undo\UndoFormatCBin.cs" />
     <Compile Include="Player\Warp.cs" />
-    <Compile Include="Player\Player.Timers.cs" />
     <Compile Include="Database\Undo\UndoFormat.cs" />
     <Compile Include="Database\Undo\UndoFormatBin.cs" />
     <Compile Include="Database\Undo\UndoFormatText.cs" />

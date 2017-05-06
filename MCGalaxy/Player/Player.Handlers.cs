@@ -341,6 +341,8 @@ namespace MCGalaxy {
             LastAction = DateTime.UtcNow;
             if (IsAfk) CmdAfk.ToggleAfk(this, "");
         }
+        
+        bool Moved() { return lastRot.RotY != Rot.RotY || lastRot.HeadX != Rot.HeadX; }
 
         internal void CheckSurvival(ushort x, ushort y, ushort z) {
             byte bFeet = GetSurvivalBlock(x, (ushort)(y - 2), z);

@@ -19,8 +19,10 @@
 using System;
 using System.IO;
 using System.Threading;
+using MCGalaxy.Commands.Chatting;
+using MCGalaxy.Network;
 
-namespace MCGalaxy.Tasks {    
+namespace MCGalaxy.Tasks {
     internal static class ServerTasks {
 
         internal static void LocationChecks() {
@@ -62,7 +64,33 @@ namespace MCGalaxy.Tasks {
                 }
             }
         }
-
+        
+        internal static void CheckState(SchedulerTask task) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                p.SendRaw(Opcode.Ping);
+                if (Server.afkminutes <= 0) return;
+                if (DateTime.UtcNow < p.AFKCooldown) return;
+                
+                if (p.IsAfk) {
+                    int time = Server.afkkick;
+                    if (p.AutoAfk) time += Server.afkminutes;
+                    
+                    if (Server.afkkick > 0 && p.Rank < Server.afkkickperm) {
+                        if (p.LastAction.AddMinutes(time) < DateTime.UtcNow)
+                            p.Leave("Auto-kick, AFK for " + Server.afkkick + " minutes");
+                    }
+                } else {
+                    DateTime lastAction = p.LastAction;
+                    if (lastAction.AddMinutes(Server.afkminutes) < DateTime.UtcNow) {
+                        CmdAfk.ToggleAfk(p, "auto: Not moved for " + Server.afkminutes + " minutes");
+                        p.AutoAfk = true;
+                        p.LastAction = lastAction;
+                    }
+                }
+            }
+        }
+        
         internal static void BlockUpdates(SchedulerTask task) {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
@@ -117,7 +145,7 @@ namespace MCGalaxy.Tasks {
         }
         
         internal static void TemprankExpiry(SchedulerTask task) {
-            Player[] players = PlayerInfo.Online.Items;         
+            Player[] players = PlayerInfo.Online.Items;
             
             foreach (string line in File.ReadAllLines(Paths.TempRanksFile))
                 foreach (Player p in players)

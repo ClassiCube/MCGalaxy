@@ -57,7 +57,6 @@ namespace MCGalaxy {
         public string truename;
         internal bool dontmindme = false;
         public Socket socket;
-        public System.Timers.Timer checkTimer = new System.Timers.Timer(2000);
         public DateTime LastAction, AFKCooldown;
         public bool IsAfk = false, AutoAfk;
         public bool cmdTimer = false;

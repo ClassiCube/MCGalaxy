@@ -128,6 +128,9 @@ namespace MCGalaxy {
             
             MainScheduler.QueueRepeat(ServerTasks.TemprankExpiry, 
                                       null, TimeSpan.FromMinutes(1));
+            MainScheduler.QueueRepeat(ServerTasks.CheckState, 
+                                      null, TimeSpan.FromSeconds(3));
+            
             Background.QueueRepeat(ServerTasks.AutoSave, 
                                    1, TimeSpan.FromSeconds(Server.backupInterval));
             Background.QueueRepeat(ServerTasks.BlockUpdates, 
