@@ -69,18 +69,18 @@ namespace MCGalaxy.Commands.Building {
             
             byte heldExt = 0;
             byte heldBlock = p.GetActualHeldBlock(out heldExt);
-            p.level.UpdateBlock(p, endX, endY, endZ, heldBlock, heldExt, BlockDBFlags.Drawn);
+            p.level.UpdateBlock(p, endX, endY, endZ, heldBlock, heldExt, BlockDBFlags.Drawn, true);
             
             if (interval > 0) {
                 int x = m[0].X, y = m[0].Y, z = m[0].Z;
                 int delta = 0;
                 while (x >= 0 && y >= 0 && z >= 0 && x < p.level.Width && y < p.level.Height && z < p.level.Length && delta < distance) {
-                    p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, heldBlock, heldExt, BlockDBFlags.Drawn);
+                    p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, heldBlock, heldExt, BlockDBFlags.Drawn, true);
                     x += dirX * interval; y += dirY * interval; z += dirZ * interval;
                     delta = Math.Abs(x - m[0].X) + Math.Abs(y - m[0].Y) + Math.Abs(z - m[0].Z);
                 }
             } else {
-                p.level.UpdateBlock(p, (ushort)m[0].X, (ushort)m[0].Y, (ushort)m[0].Z, heldBlock, heldExt, BlockDBFlags.Drawn);
+                p.level.UpdateBlock(p, (ushort)m[0].X, (ushort)m[0].Y, (ushort)m[0].Z, heldBlock, heldExt, BlockDBFlags.Drawn, true);
             }
 
             Player.Message(p, "Placed stone blocks {0} apart.", interval > 0 ? interval : distance);

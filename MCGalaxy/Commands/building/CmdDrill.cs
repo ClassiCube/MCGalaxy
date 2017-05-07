@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Building {
             if (cur == Block.custom_block) extCur = lvl.GetExtTile(x, y, z);
             
             bool same = block == Block.custom_block ? ext == extCur : block == cur;
-            if (same) p.level.UpdateBlock(p, x, y, z, Block.air, 0, BlockDBFlags.Drawn);
+            if (same) p.level.UpdateBlock(p, x, y, z, Block.air, 0, BlockDBFlags.Drawn, true);
         }
         
         public override void Help(Player p) {

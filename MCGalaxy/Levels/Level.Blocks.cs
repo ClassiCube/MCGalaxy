@@ -444,7 +444,7 @@ namespace MCGalaxy {
         }
         
         public void UpdateBlock(Player p, ushort x, ushort y, ushort z, byte block, byte ext, 
-                                ushort flags = BlockDBFlags.ManualPlace) {
+                                ushort flags = BlockDBFlags.ManualPlace, bool buffered = false) {
             byte old = GetTile(x, y, z), oldExt = 0;
             if (old == Block.custom_block) oldExt = GetExtTile(x, y, z);
             
@@ -457,7 +457,7 @@ namespace MCGalaxy {
             if (type == 1) return; // not different visually
             
             int index = PosToInt(x, y, z);
-            if (bufferblocks) 
+            if (buffered) 
                 BlockQueue.Addblock(p, index, block, ext);
             else 
                 Player.GlobalBlockchange(this, x, y, z, block, ext);

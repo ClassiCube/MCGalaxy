@@ -50,12 +50,6 @@ namespace MCGalaxy.Commands.Maintenance {
                 
                 BlockQueue.time = value;
                 Player.Message(p, "Block interval is now {0}.", BlockQueue.time);
-            } else if (cmd == "buf")  {
-                if (p.level.bufferblocks)
-                    Player.Message(p, "Block buffering on {0} %Sdisabled.", p.level.ColoredName);
-                else
-                    Player.Message(p, "Block buffering on {0} %Senabled.", p.level.ColoredName);
-                p.level.bufferblocks = !p.level.bufferblocks;
             } else if (cmd == "net") {
                 if (!CommandParser.GetInt(p, args[1], "value", ref value, 2, 1000)) return;
                 
@@ -87,7 +81,7 @@ namespace MCGalaxy.Commands.Maintenance {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/bs [option] [value].");
-            Player.Message(p, "%HOptions: %Sbs (blocks per interval), ts (interval in milliseconds), buf (toggles buffering), clear");
+            Player.Message(p, "%HOptions: %Sbs (blocks per interval), ts (interval in milliseconds), clear");
             Player.Message(p, "%T/bs net [2,4,8,12,16,20,24]");
             Player.Message(p, "%HPresets, divide by 8 and times by 1000 to get blocks per second.");
         }
