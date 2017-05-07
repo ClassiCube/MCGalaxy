@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Misc {
 
         public override void Use(Player p, string message) {
             if (p.beforeTeleportMap == "") {
-                p.SendMessage("You have not teleported anywhere yet"); return;
+                Player.Message(p, "You have not teleported anywhere yet"); return;
             }
             if (!p.level.name.CaselessEq(p.beforeTeleportMap))
                 PlayerActions.ChangeMap(p, p.beforeTeleportMap);

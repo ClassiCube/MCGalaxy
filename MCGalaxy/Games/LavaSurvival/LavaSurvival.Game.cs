@@ -25,10 +25,10 @@ namespace MCGalaxy.Games {
             message = message.ToLower();
             if (HasPlayer(p) && HasVote(message)) {
                 if (AddVote(p, message)) {
-                    p.SendMessage("Your vote for &5" + message.Capitalize() + " %Shas been placed. Thanks!");
+                    Player.Message(p, "Your vote for &5" + message.Capitalize() + " %Shas been placed. Thanks!");
                     return true;
                 } else {
-                    p.SendMessage("&cYou already voted!");
+                    Player.Message(p, "&cYou already voted!");
                     return true;
                 }
             }

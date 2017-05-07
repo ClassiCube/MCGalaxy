@@ -65,12 +65,12 @@ namespace MCGalaxy.Games.ZS {
                 }
                 
                 string action = p.Game.PillarFined ? "kicked" : "fined 10 " + Server.moneys;
-                p.SendMessage("You are pillaring! &cStop before you are " + action + "!");
+                Player.Message(p, "You are pillaring! &cStop before you are " + action + "!");
             } else if (p.Game.BlocksStacked == 4) {
                 if (!p.Game.PillarFined) {
                     Chat.MessageOps("  &cWarning: " + p.ColoredName + " %Sis pillaring!");
                     Command.all.Find("take").Use(null, p.name + " 10 Auto fine for pillaring");
-                    p.SendMessage("  &cThe next time you pillar, you will be &4kicked&c.");
+                    Player.Message(p, "  &cThe next time you pillar, you will be &4kicked&c.");
                 } else {
                     p.Kick("No pillaring allowed!");
                     Player.AddNote(p.name, null, "K", "Auto kick for pillaring");

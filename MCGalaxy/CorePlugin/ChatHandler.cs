@@ -29,7 +29,7 @@ namespace MCGalaxy.Core {
                 if (p.ponycount < 2) {
                     Chat.MessageGlobal("{0} %Sjust so happens to be a proud brony! Everyone give {0} %Sa brohoof!", p.ColoredName);
                 } else {
-                    p.SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
+                    Player.Message(p, "You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
                 }
                 
                 p.ponycount++;
@@ -38,7 +38,7 @@ namespace MCGalaxy.Core {
                 if (p.rdcount < 2) {
                     Chat.MessageGlobal("&4T&6H&eI&aS&3 S&9E&1R&4V&6E&eR &aJ&3U&9S&1T &4G&6O&eT &a2&30 &9P&1E&4R&6C&eE&aN&3T &9C&1O&4O&6L&eE&aR&3!");                   
                 } else {
-                    p.SendMessage("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
+                    Player.Message(p, "You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
                 }
                 
                 p.rdcount++;

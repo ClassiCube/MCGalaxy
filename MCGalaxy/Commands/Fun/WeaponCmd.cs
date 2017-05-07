@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Fun {
             p.ClearBlockchange();
             p.Blockchange += PlacedMark;
 
-            p.SendMessage(Weapon + " mode engaged, fire at will");
+            Player.Message(p, Weapon + " mode engaged, fire at will");
             if (p.aiming) return;
 
             p.aiming = true;

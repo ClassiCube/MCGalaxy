@@ -73,7 +73,7 @@ namespace MCGalaxy {
                 if (cmdLog.AddSpamEntry(Server.CmdSpamCount, Server.CmdSpamInterval)) 
                     return false;
                 
-                p.SendMessage("You have been blocked from using commands for " +
+                Player.Message(p, "You have been blocked from using commands for " +
                               Server.CmdSpamBlockTime + " seconds due to spamming");
                 p.cmdUnblocked = DateTime.UtcNow.AddSeconds(Server.CmdSpamBlockTime);
                 return true;

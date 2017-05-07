@@ -100,12 +100,12 @@ namespace MCGalaxy.Commands.World {
                 for (int i = 2; i < p.group.OverseerMaps + 2; i++) {
                     if (LevelInfo.MapExists(p.name.ToLower() + i)) continue;
                     if(i > p.group.OverseerMaps) {
-                        p.SendMessage("You have reached the limit for your overseer maps."); return null;
+                        Player.Message(p, "You have reached the limit for your overseer maps."); return null;
                     }
                     return p.name.ToLower() + i;
                 }
                 if (level == p.name.ToLower()) {
-                    p.SendMessage("You have reached the limit for your overseer maps."); return null;
+                    Player.Message(p, "You have reached the limit for your overseer maps."); return null;
                 }
             }
             return level;

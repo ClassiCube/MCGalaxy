@@ -171,8 +171,8 @@ namespace MCGalaxy.Games.ZS {
                 p.SendCpeMessage(CpeMessageType.BottomRight3, line1);
                 p.SendCpeMessage(CpeMessageType.BottomRight2, line2);
             } else {
-                p.SendMessage(line1);
-                p.SendMessage(line2);
+                Player.Message(p, line1);
+                Player.Message(p, line2);
             }
         }
     }

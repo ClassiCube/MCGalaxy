@@ -54,14 +54,14 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void HandleKick(Player p, string name, string ignored) {
-            if (name == "") { p.SendMessage("You must specify a player to kick."); return; }
+            if (name == "") { Player.Message(p, "You must specify a player to kick."); return; }
             Player pl = PlayerInfo.FindMatches(p, name);
             if (pl == null) return;
             
             if (pl.level.name == p.level.name) {
                 PlayerActions.ChangeMap(pl, Server.mainLevel);
             } else {
-                p.SendMessage("Player is not on your level!");
+                Player.Message(p, "Player is not on your level!");
             }
         }
         

@@ -68,7 +68,7 @@ namespace MCGalaxy.Games.ZS {
 
         static void IncreaseAliveStats(Player p, ZombieGame game) {
             if (p.Game.PledgeSurvive) {
-                p.SendMessage("You received &a5 %3" + Server.moneys +
+                Player.Message(p, "You received &a5 %3" + Server.moneys +
                               " %Sfor successfully pledging that you would survive.");
                 p.SetMoney(p.money + 5);
             }

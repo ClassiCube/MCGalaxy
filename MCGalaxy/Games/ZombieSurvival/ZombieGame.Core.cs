@@ -246,7 +246,7 @@ namespace MCGalaxy.Games {
                 if (!p.Game.Invisible || p.level != CurLevel) continue;
                 DateTime end = p.Game.InvisibilityEnd;
                 if (now >= end) {
-                    p.SendMessage("&cYou are &bvisible &cagain");
+                    Player.Message(p, "&cYou are &bvisible &cagain");
                     ResetInvisibility(p); 
                     continue;
                 }
@@ -259,7 +259,7 @@ namespace MCGalaxy.Games {
                 if (p.HasCpeExt(CpeExt.MessageTypes)) {
                     p.SendCpeMessage(CpeMessageType.BottomRight2, msg);
                 } else {
-                    p.SendMessage(msg);
+                    Player.Message(p, msg);
                 }
             }
         }

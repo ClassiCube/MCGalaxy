@@ -41,7 +41,7 @@ namespace MCGalaxy.Games {
             foreach (string name in Members) {
                 Player p = PlayerInfo.FindExact(name);
                 if (p == null) continue;
-                p.SendMessage(toSend);
+                Player.Message(p, toSend);
             }
         }
         
@@ -50,7 +50,7 @@ namespace MCGalaxy.Games {
             foreach (string name in Members) {
                 Player p = PlayerInfo.FindExact(name);
                 if (p == null) continue;
-                p.SendMessage(toSend);
+                Player.Message(p, toSend);
             }
         }
         

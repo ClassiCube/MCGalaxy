@@ -52,9 +52,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/paste - Pastes the stored copy.");
-            Player.Message(p, "/paste [block] [block2].. - Pastes only the specified blocks from the copy.");
-            Player.Message(p, "/paste not [block] [block2].. - Pastes all blocks from the copy, except for the specified blocks.");
+            Player.Message(p, "%T/paste %H- Pastes the stored copy.");
+            Player.Message(p, "%T/paste [block] [block2].. %H- Pastes only the specified blocks from the copy.");
+            Player.Message(p, "%T/paste not [block] [block2].. %H- Pastes all blocks from the copy, except for the specified blocks.");
             Player.Message(p, "&4BEWARE: %SThe blocks will always be pasted in a set direction");
         }
     }

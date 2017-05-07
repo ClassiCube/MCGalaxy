@@ -193,7 +193,7 @@ namespace MCGalaxy {
                 if (p.ignoreAll || p.ignoreIRC) continue;
                 
                 if (p.level.worldChat && p.Chatroom == null)
-                    p.SendMessage(message);
+                    Player.Message(p, message);
             }
         }
         
@@ -510,7 +510,7 @@ namespace MCGalaxy {
         internal static bool CheckVote(string message, Player p, string a, string b, ref int totalVotes) {
             if (!p.voted && (message == a || message == b)) {
                 totalVotes++;
-                p.SendMessage(Colors.red + "Thanks for voting!");
+                Player.Message(p, Colors.red + "Thanks for voting!");
                 p.voted = true;
                 return true;
             }

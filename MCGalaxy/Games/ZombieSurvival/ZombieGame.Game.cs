@@ -42,13 +42,13 @@ namespace MCGalaxy.Games {
                 if (!p.level.name.CaselessEq(CurLevelName) || p.Game.Referee) return false;
                 
                 if (p.Game.BlocksLeft == 0) {
-                    p.SendMessage("You have no blocks left.");
+                    Player.Message(p, "You have no blocks left.");
                     p.RevertBlock(x, y, z); return true;
                 }
 
                 p.Game.BlocksLeft--;
                 if ((p.Game.BlocksLeft % 10) == 0 || (p.Game.BlocksLeft >= 0 && p.Game.BlocksLeft <= 10))
-                    p.SendMessage("Blocks Left: &4" + p.Game.BlocksLeft);
+                    Player.Message(p, "Blocks Left: &4" + p.Game.BlocksLeft);
             }
             return false;
         }
@@ -77,7 +77,7 @@ namespace MCGalaxy.Games {
                 return true;
             } else if (message[0] == '`' && message.Length > 1) {
                 if (p.Game.Team == null) {
-                    p.SendMessage("You are not on a team, so cannot send a team message."); return true;
+                    Player.Message(p, "You are not on a team, so cannot send a team message."); return true;
                 }
                 p.Game.Team.Chat(p, message.Substring(1));
                 return true;
@@ -129,7 +129,7 @@ namespace MCGalaxy.Games {
             p.SendCpeMessage(CpeMessageType.BottomRight1, "");
             if (RoundInProgress && lvl.name.CaselessEq(CurLevelName)) {
                 if (Running && p != null) {
-                    p.SendMessage("You joined in the middle of a round. &cYou are now infected!");
+                    Player.Message(p, "You joined in the middle of a round. &cYou are now infected!");
                     p.Game.BlocksLeft = 25;
                     InfectPlayer(p, null);
                 }
@@ -138,10 +138,10 @@ namespace MCGalaxy.Games {
             if (lvl.name.CaselessEq(CurLevelName)) {
                 double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
                 if (startLeft >= 0)
-                    p.SendMessage("%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
-                p.SendMessage("This map has &a" + CurLevel.Likes +
+                    Player.Message(p, "%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
+                Player.Message(p, "This map has &a" + CurLevel.Likes +
                               " likes %Sand &c" + CurLevel.Dislikes + " dislikes");
-                p.SendMessage("This map's win chance is &a" + CurLevel.WinChance + "%S%");
+                Player.Message(p, "This map's win chance is &a" + CurLevel.WinChance + "%S%");
                 
                 if (CurLevel.Authors != "") {
                     string[] authors = CurLevel.Authors.Replace(" ", "").Split(',');
@@ -171,7 +171,7 @@ namespace MCGalaxy.Games {
             if (lvl.name.CaselessEq(CurLevelName)) return true;
             
             if (RoundInProgress && !p.Game.Referee) {
-                p.SendMessage("Sorry, you cannot leave a zombie survival map until the current round has ended.");
+                Player.Message(p, "Sorry, you cannot leave a zombie survival map until the current round has ended.");
                 return false;
             }
             return true;

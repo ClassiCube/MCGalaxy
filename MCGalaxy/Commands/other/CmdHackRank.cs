@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Misc {
             string rankMsg = ModActionCmd.FormatRankChange(p.group, newRank, p.name, "Congratulations!");
             Chat.MessageGlobal(rankMsg);
             
-            p.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
+            Player.Message(p, "You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
             p.color = newRank.color;
             DoKick(p, newRank);
         }

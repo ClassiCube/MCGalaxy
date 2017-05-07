@@ -109,7 +109,7 @@ namespace MCGalaxy.Commands
                     if (message.SplitSpaces().Length < 2) { Help(p); return; }
                     int i;
                     Int32.TryParse(message.SplitSpaces()[1], out i);
-                    if (i == 0) { p.SendMessage("You must indicate a numeric points value greater than 0."); return; }
+                    if (i == 0) { Player.Message(p, "You must indicate a numeric points value greater than 0."); return; }
                     p.level.maxroundpoints = i;
                     Player.Message(p, "Max points has been set to " + i);
                 }
@@ -117,13 +117,13 @@ namespace MCGalaxy.Commands
             }
             else if (message.SplitSpaces()[0].ToLower() == "debug")
             {
-                p.SendMessage("Player debug info: hasFlag: " + p.hasFlag + ", holdingflag: " + p.holdingFlag);
-                p.SendMessage("OnTeam: " + p.onTeam + ", inCtf: " + p.inCtf);
+                Player.Message(p, "Player debug info: hasFlag: " + p.hasFlag + ", holdingflag: " + p.holdingFlag);
+                Player.Message(p, "OnTeam: " + p.onTeam + ", inCtf: " + p.inCtf);
                 Team workTeam = p.level.teams.Find(team => team.color == p.onTeam);
-                p.SendMessage("Team debug info: flagishome: " + workTeam.flagishome + ", Points: " + workTeam.points);
-                p.SendMessage("Flag base: x: " + workTeam.flagBase[0] + ", y: " + workTeam.flagBase[1] + ", z: " + workTeam.flagBase[2]);
-                p.SendMessage("Flag loc:  x: " + workTeam.flagLocation[0] + ", y: " + workTeam.flagLocation[1] + ", z: " + workTeam.flagLocation[2]);
-                p.SendMessage("Level ctfmode: " + workTeam.mapOn.ctfmode);
+                Player.Message(p, "Team debug info: flagishome: " + workTeam.flagishome + ", Points: " + workTeam.points);
+                Player.Message(p, "Flag base: x: " + workTeam.flagBase[0] + ", y: " + workTeam.flagBase[1] + ", z: " + workTeam.flagBase[2]);
+                Player.Message(p, "Flag loc:  x: " + workTeam.flagLocation[0] + ", y: " + workTeam.flagLocation[1] + ", z: " + workTeam.flagLocation[2]);
+                Player.Message(p, "Level ctfmode: " + workTeam.mapOn.ctfmode);
             } 
             else if (message.SplitSpaces()[0].ToLower() == "clear")
             {
@@ -219,7 +219,7 @@ namespace MCGalaxy.Commands
             Level workLevel = p.level;
             Team workTeam = new Team();
             char teamCol = (char)color[1];
-            if (workLevel.teams.Find(team => team.color == teamCol) != null) { p.SendMessage("That team already exists."); return; }
+            if (workLevel.teams.Find(team => team.color == teamCol) != null) { Player.Message(p, "That team already exists."); return; }
             workTeam.color = teamCol;
             workTeam.points = 0;
             workTeam.maxpoints = p.level.maxroundpoints;

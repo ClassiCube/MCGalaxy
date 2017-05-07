@@ -43,7 +43,7 @@ namespace MCGalaxy.Core {
             if (count == 0) return;
             
             string suffix = count == 1 ? " player is " : " players are ";
-            p.SendMessage(count + suffix + "waiting for a review. Type %T/review view");
+            Player.Message(p, count + suffix + "waiting for a review. Type %T/review view");
         }
         
         static void LoadReach(Player p) {
@@ -62,7 +62,7 @@ namespace MCGalaxy.Core {
             try {
                 p.Waypoints.Load(p);
             } catch (IOException ex) {
-                p.SendMessage("Error loading waypoints.");
+                Player.Message(p, "Error loading waypoints.");
                 Server.ErrorLog(ex);
             }
         }
@@ -88,7 +88,7 @@ namespace MCGalaxy.Core {
             }
             
             if (p.ignoreAll || p.ignoreIRC || p.ignoreTitles || p.ignoreNicks || p.listignored.Count > 0)
-                p.SendMessage("&cType &a/ignore list &cto see who you are still ignoring");
+                Player.Message(p, "&cType &a/ignore list &cto see who you are still ignoring");
         }
         
         static void CheckLoginJailed(Player p) {

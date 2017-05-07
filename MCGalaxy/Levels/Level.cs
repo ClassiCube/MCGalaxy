@@ -434,7 +434,8 @@ namespace MCGalaxy {
             foreach (Player pl in players) {
                 if (pl.level != this) continue;
                 if (pl.Rank < minPerm) continue;
-                pl.SendMessage(message);
+                
+                Player.Message(pl, message);
             }
         }
         

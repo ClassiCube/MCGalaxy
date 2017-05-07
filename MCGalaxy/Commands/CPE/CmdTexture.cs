@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "The texture pack URL must end in a .zip"); return;
             }
             if (url.Length > NetUtils.StringSize) { 
-                p.SendMessage("The URL must be " + NetUtils.StringSize + " characters or less."); return; 
+                Player.Message(p, "The URL must be " + NetUtils.StringSize + " characters or less."); return; 
             }
             
             string path = url == "" ? "normal" : url;

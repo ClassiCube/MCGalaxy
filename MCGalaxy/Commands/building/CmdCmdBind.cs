@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands.Building {
     public sealed class CmdCmdBind : Command {        
         public override string name { get { return "cmdbind"; } }
         public override string shortcut { get { return "cb"; } }
-        public override string type { get { return CommandTypes.Building; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public CmdCmdBind() { }

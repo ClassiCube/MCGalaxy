@@ -27,8 +27,8 @@ namespace MCGalaxy.Commands.Fun {
 
         public override void Use(Player p, string message) {
             p.flipHead = !p.flipHead;
-            if (p.flipHead) p.SendMessage("Your head was broken!");
-            else p.SendMessage("Your head was healed!");
+            if (p.flipHead) Player.Message(p, "Your head was broken!");
+            else Player.Message(p, "Your head was healed!");
         }
         
         public override void Help(Player p) {
