@@ -39,7 +39,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class CuboidHollowsDrawOp : DrawOp {       
+    public class CuboidHollowsDrawOp : DrawOp {
         public override string Name { get { return "Cuboid Hollow"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {

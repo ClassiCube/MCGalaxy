@@ -439,6 +439,7 @@
     <Compile Include="Drawing\DrawOps\PasteDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\RedoDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\ReplaceDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\RestoreSelectionDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\SpheroidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\TorusDrawOp.cs" />

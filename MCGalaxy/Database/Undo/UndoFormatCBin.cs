@@ -112,7 +112,6 @@ namespace MCGalaxy.Undo {
         }
         
         struct UndoCacheItem {
-            public int Index;
             public byte Type, NewType;
             public ushort Flags; // upper 2 bits for 'ext' or 'physics' type, lower 14 bits for time delta.
             

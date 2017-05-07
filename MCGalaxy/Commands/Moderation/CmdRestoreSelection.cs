@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Drawing;
+using MCGalaxy.Drawing.Ops;
 using MCGalaxy.DB;
 using MCGalaxy.Levels.IO;
 
@@ -29,6 +31,7 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
+            if (!Formatter.ValidName(p, name, "level")) return;
             
             if (LevelInfo.ExistsBackup(p.level.name, message)) {
                 p.SendMessage("Select two corners for restore.");
@@ -39,40 +42,20 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         bool DoRestore(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-            string path = LevelInfo.BackupPath(p.level.name, (string)state);           
-            try {
-                using (Level other = IMapImporter.Formats[0].Read(path, "templevel", false)) {
-                    return CopyBlocks(p, other, marks);
-                }
-            } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                Server.s.Log("Restore selection failed");
-                return false;
-            }
-        }
-        
-        static bool CopyBlocks(Player p, Level other, Vec3S32[] m) {
-            byte[] blocks = other.blocks;
-            if (blocks.Length != p.level.blocks.Length) {
-                Player.Message(p, "Cannot restore selection of different size maps.");
-                return false;
-            }
+            string path = LevelInfo.BackupPath(p.level.name, (string)state);
+            Level source = IMapImporter.Formats[0].Read(path, "templevel", false);
             
-            int width = other.Width, length = other.Length;
-            for (int y = Math.Min(m[0].Y, m[1].Y); y <= Math.Max(m[0].Y, m[1].Y); y++)
-                for (int z = Math.Min(m[0].Z, m[1].Z); z <= Math.Max(m[0].Z, m[1].Z); z++)
-                    for (int x = Math.Min(m[0].X, m[1].X); x <= Math.Max(m[0].X, m[1].X); x++)
-            {
-                byte block = blocks[x + width * (z + y * length)], ext = 0;
-                if (block == Block.custom_block) 
-                    ext = other.GetExtTile((ushort)x, (ushort)y, (ushort)z);
-                p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, block, ext, BlockDBFlags.Restored);
-            }
-            return true;
+            RestoreSelectionDrawOp op = new RestoreSelectionDrawOp();
+            op.Source = source;
+            if (DrawOpPerformer.Do(op, null, p, marks)) return false;
+            
+            // Not high enough draw limit
+            source.Dispose();
+            return false;
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/restoreselection [number]");
+            Player.Message(p, "%T/restoreselection [backup name]");
             Player.Message(p, "%HRestores a previous backup of the current selection");
         }
     }
