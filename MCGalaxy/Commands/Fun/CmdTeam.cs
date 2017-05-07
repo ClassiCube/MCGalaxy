@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "Only the team owner can set a new team owner."); return;
             }
             team.Owner = who.name;
-            team.Action(who, "set the team owner to " + who.ColoredName);
+            team.Action(p, "set the team owner to " + who.ColoredName);
             Team.SaveList();
         }
 
