@@ -38,8 +38,7 @@ namespace MCGalaxy {
                     ClickDistance = version; break;
                 case CpeExt.CustomBlocks:
                     CustomBlocks = version;
-                    if (version == 1)
-                        SendRaw(Opcode.CpeCustomBlockSupportLevel, 1);
+                    if (version == 1) Send(Packet.CustomBlockSupportLevel(1));
                     hasCustomBlocks = true; break;
                 case CpeExt.HeldBlock:
                     HeldBlock = version; break;

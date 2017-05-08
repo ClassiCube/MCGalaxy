@@ -31,6 +31,10 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
+        public static byte[] UndefineBlock(byte block) {
+            return new byte[] { Opcode.CpeRemoveBlockDefinition, block };
+        }
+        
         public static byte[] DefineBlockExt(BlockDefinition def, bool uniqueSideTexs, bool hasCP437) {
             byte[] buffer = new byte[uniqueSideTexs ? 88 : 85];
             int i = 0;

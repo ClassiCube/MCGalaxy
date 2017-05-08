@@ -206,7 +206,7 @@ namespace MCGalaxy {
                 if (global && pl.level.CustomBlockDefs[block] != null) continue;
                 
                 if (pl.hasBlockDefs)
-                    pl.SendRaw(Opcode.CpeRemoveBlockDefinition, block);
+                    pl.Send(Packet.UndefineBlock(block));
             }
             Save(global, level);
         }

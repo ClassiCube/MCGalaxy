@@ -101,30 +101,6 @@ namespace MCGalaxy {
                 finishedCpeLogin = true;
             }
         }
-
-
-        public void SendRaw(int id) {
-            byte[] buffer = new byte[] { (byte)id };
-            Send(buffer);
-        }
-        
-        public void SendRaw(int id, byte data) {
-            byte[] buffer = new byte[] { (byte)id, data };
-            Send(buffer);
-        }
-        
-        [Obsolete("Include the opcode in the array to avoid an extra temp allocation.")]
-        public void SendRaw(int id, byte[] send, bool sync = false) {
-            byte[] buffer = new byte[send.Length + 1];
-            buffer[0] = (byte)id;
-            for ( int i = 0; i < send.Length; i++ )
-                buffer[i + 1] = send[i];
-            SendRaw(buffer, sync);
-            buffer = null;
-        }
-        
-        [Obsolete("Use Send() instead.")]
-        public void SendRaw(byte[] buffer, bool sync = false) { Send(buffer, sync); }
         
         public void Send(byte[] buffer, bool sync = false) {
             // Abort if socket has been closed
@@ -269,7 +245,7 @@ namespace MCGalaxy {
             AllowBuild = access == AccessResult.Whitelisted || access == AccessResult.Allowed;
             
             try {                 
-                SendRaw(Opcode.LevelInitialise);
+                Send(Packet.LevelInitalise());
                 
                 if (hasBlockDefs) {
                     if (oldLevel != null && oldLevel != level)
@@ -307,7 +283,8 @@ namespace MCGalaxy {
             for (int i = 1; i < 256; i++) {
                 BlockDefinition def = defs[i];
                 if (def == null || def == BlockDefinition.GlobalDefs[i]) continue;
-                SendRaw(Opcode.CpeRemoveBlockDefinition, (byte)i);
+                
+                Send(Packet.UndefineBlock((byte)i));
             }
         }
         

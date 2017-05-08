@@ -44,6 +44,10 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
+        public static byte[] CustomBlockSupportLevel(byte level) {
+            return new byte[] { Opcode.CpeCustomBlockSupportLevel, level };
+        }
+        
         public static byte[] HoldThis(byte block, bool locked) {
             byte[] buffer = new byte[3];
             buffer[0] = Opcode.CpeHoldThis;
@@ -198,7 +202,7 @@ namespace MCGalaxy.Network {
         
         public static byte[] ExtAddEntity2(byte id, string skinName, string displayName, 
                                            Position pos, Orientation rot, bool hasCP437, bool extPos) {
-			byte[] buffer = new byte[138 + (extPos ? 6 : 0)];
+            byte[] buffer = new byte[138 + (extPos ? 6 : 0)];
             buffer[0] = Opcode.CpeExtAddEntity2;
             buffer[1] = id;
             NetUtils.Write(displayName.RemoveLastPlus(), buffer, 2, hasCP437);

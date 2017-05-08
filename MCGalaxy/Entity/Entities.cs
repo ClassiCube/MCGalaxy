@@ -159,13 +159,13 @@ namespace MCGalaxy {
         }
         
         internal static void Despawn(Player dst, byte id) {
-            dst.SendRaw(Opcode.RemoveEntity, id);
+            dst.Send(Packet.RemoveEntity(id));
             if (!Server.TablistGlobal)
                 TabList.Remove(dst, id);
         }
         
         internal static void Despawn(Player dst, PlayerBot b) {
-            dst.SendRaw(Opcode.RemoveEntity, b.id);
+            dst.Send(Packet.RemoveEntity(b.id));
             if (Server.TablistBots)
                 TabList.Remove(dst, b.id);
         }
