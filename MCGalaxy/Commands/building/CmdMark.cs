@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands.Building {
             
             if (p.X >= lvl.Width) p.X = lvl.Width - 1;
             if (p.Y >= lvl.Height) p.Y = lvl.Height - 1;
-            if (p.X >= lvl.Length) p.Z = lvl.Length - 1;
+            if (p.Z >= lvl.Length) p.Z = lvl.Length - 1;
             
             return (Vec3U16)p;
         }
