@@ -256,5 +256,18 @@ namespace MCGalaxy {
                 }
             }
         }
+        
+        public static void UpdateFallback(bool global, byte block, Level level) {         
+            Player[] players = PlayerInfo.Online.Items;            
+            foreach (Player pl in players) {
+                if (!global && pl.level != level) continue;
+                if (pl.hasBlockDefs) continue;
+                
+                // if custom block is replacing core block, need to always reload for fallback
+                if (block >= Block.CpeCount && !pl.level.HasCustomBlocks) continue;
+                
+                LevelActions.ReloadMap(pl, pl, false);
+            }
+        }
     }
 }

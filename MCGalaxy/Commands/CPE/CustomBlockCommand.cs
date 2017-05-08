@@ -306,7 +306,7 @@ namespace MCGalaxy.Commands.CPE {
             
             string value = parts[3], blockName = def.Name;
             float fTemp;
-            bool temp = false;
+            bool temp = false, changedFallback = false;
             
             switch (parts[2].ToLower()) {
                 case "name":
@@ -429,6 +429,7 @@ namespace MCGalaxy.Commands.CPE {
                 case "fallbackblock":
                     byte fallback = GetFallback(p, value);
                     if (fallback == Block.Invalid) return;
+                    changedFallback = true;
                     
                     value = Block.Name(fallback);
                     def.FallBack = fallback; break;
@@ -438,6 +439,8 @@ namespace MCGalaxy.Commands.CPE {
             
             Player.Message(p, "Set {0} for {1} to {2}", parts[2], blockName, value);
             BlockDefinition.Add(def, defs, p == null ? null : p.level);
+            if (changedFallback) 
+                BlockDefinition.UpdateFallback(global, def.BlockID, p == null ? null : p.level);
         }
         
         
