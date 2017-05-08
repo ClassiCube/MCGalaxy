@@ -50,6 +50,40 @@ Removed: /os map delete [num], now just /os map delete
 Removed: /garbage as pointless, every level join does GC anyways
 Removed: City from /location, now only goes to country level
 
+v 1.8.8.9
+Added: Show client's app name in server logs when connecting
+Added: /mi now also shows number of BlockDB entries
+Fixed: /paste on map borders
+Fixed: /zmodel without args changing your own model to '-own'
+Fixed: /mode dirt/grass
+Fixed: ZS lottery
+Fixed: /ride not working
+Fixed: lava sponge / sponge not being properly removed
+Fixed: air_door not working
+Fixed: don't let pay/give/take 0 money
+Fixed: Importing maps with upper case letters on linux
+Fixed: Show reason for kick from IRC
+Fixed: do not allow killing same rank, when muted/chat moderation
+Fixed: Empty teams not being removed
+Fixed: Don't patrol yourself
+Fixed: Prevent using /summon to reset AFK
+Fixed: Make /tempban save and show time left in kick message
+Fixed: Some block changes not adding to BlockDB
+Fixed: Not showing /goto messages at all when hidden
+Fixed: being able to use /rankmsg to bypass ignore
+Fixed: Don't pointlessly send models
+Fixed: /clones not including online players
+Improved: /viewranks, /whitelist, etc now show proper case of name
+Improved: Fixed lb/gb edit fallback not showing name
+Improved: Generate server salt only at startup, so /server reload deoesn't reload salt
+Improved: /ccols list uses pagination too
+Improved: /img accounts for whether a custom block is fullbright
+Improved: /copylvl now also copies bots
+Improved: Logs are now per day instead of being combined
+Improved: Show block id/name message at end of /b
+Improved: /goto and /mapinfo match against all maps, not just loaded
+Removed: /voteresults, as it is pointless
+
 v 1.8.8.8
 Improved: Allow using code page 437 in custom block names, entity name tags
 Fixed: /b for air displaying 'airfallback'
