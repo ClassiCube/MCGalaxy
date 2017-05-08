@@ -1,3 +1,55 @@
+v 1.8.9.0
+Added: MCGalaxy can natively run in 64 bit
+Added: Can set map sides (bedrock) offset
+Added: Positions are now supported past -1024 or 1024 (currently 32768)
+Added: Ability to rotate players and bots on X and Z axis
+Added: Can whitelist/blacklist specific ranks in /blockset
+Added: /botai list
+Added: /uban as /xban alias, except doesn't ban IP
+Added: Can change animal AI of core blocks
+Fixed: /rules [name] sending rules to self
+Fixed: Can ban/rank offline players with or without last +
+Fixed: Prevent /save from revealing hide
+Fixed: Maps should generate with still water
+Fixed: Being able to fill over active_water, even if can't use active_water
+Fixed: Two entities being able to assigned same entity ID
+Fixed: fall death
+Fixed: /place not working when coords above 1024 or below -1024
+Fixed: Bots falling outside map on bottom and map borders
+Fixed: Not all players not being sent to spawn in countdown
+Fixed: Night mode doesn't clear gui log anymore
+Fixed: User selection preserved when chat is appended to gui log
+Fixed: % being removed when last character in message
+Fixed: Visual bug with custom and non-custom blocks in a drawop
+Fixed: /ccols add not checking hex colour properly
+Fixed: can use non-existent LB from another map to 'build' on non-buildable map
+Fixed: Heartbeat URL not showing up changed in gui when IP changes
+Fixed: Stats corruption when over 32767 deaths
+Fixed: /top10 with offset
+Fixed: /map edge always using half map height, instead of edge level
+Fixed: train ride thread not being removed after player disconnected
+Fixed: /place with sand/gravel and physics on leaving ghost blocks
+Improved: Show actual name of command that can't be used in an /mb
+Improved: /restoreselection is a drawop, works with different sized ma[ backups
+Improved: /top uses coloured names, accepts name identifiers instead of names, better formatting
+Improved: Less pointless spam on login
+Improved: Can activate portals and message blocks in non-deletable map
+Improved: /pe can change total placed/deleted/drawn now
+Improved: auto filter dropbox urls to point to download page in /texture
+Improved: Simplified /cmdset usage
+Improved: using /main while in /main sends to spawn
+Improved: Less usage of timers, less CPU usage on mono
+Improved: /awards, /seen uses player's coloured name
+Improved: Heightmap gen has stone cliffs now
+Improved: /newlvl and /resizelvl automatically round to multiple of 16
+Improved: Don't bother doing MovePreviousLevelFiles() is pointless
+Improved: Gui log now has limited long length, preventing excessive memory usdager after long usage
+Improved: Rank filenames now automatically calculated
+Improved: Brush support added to /outline
+Removed: /os map delete [num], now just /os map delete
+Removed: /garbage as pointless, every level join does GC anyways
+Removed: City from /location, now only goes to country level
+
 v 1.8.8.8
 Improved: Allow using code page 437 in custom block names, entity name tags
 Fixed: /b for air displaying 'airfallback'

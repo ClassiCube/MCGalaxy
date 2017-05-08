@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.World {
         public override string shortcut { get { return "fg"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
             int totalFixed = 0;
