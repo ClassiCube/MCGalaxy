@@ -22,15 +22,16 @@ namespace MCGalaxy.Network {
 
     public static partial class Packet {
         
+		/// <summary> Constructs a handshake/motd packet. The text is shown to clients during map loading. </summary>
+		/// <remarks> Some clients recognise special modifiers such as -hax +fly in this packet. </remarks>
         public static byte[] Motd(Player p, string motd) {
             byte[] buffer = new byte[131];
             buffer[0] = Opcode.Handshake;
             buffer[1] = Server.version;
             
-            motd = ChatTokens.Apply(motd, p);
-            if (motd.Length > 64) {
+            if (motd.Length > NetUtils.StringSize) {
                 NetUtils.Write(motd, buffer, 2, p.hasCP437);
-                NetUtils.Write(motd.Substring(64), buffer, 66, p.hasCP437);
+                NetUtils.Write(motd.Substring(NetUtils.StringSize), buffer, 66, p.hasCP437);
             } else {
                 NetUtils.Write(Server.name, buffer, 2, p.hasCP437);
                 NetUtils.Write(motd, buffer, 66, p.hasCP437);
@@ -40,6 +41,7 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
+		/// <summary> Constructs a packet describing the dimensions of a level. </summary>
         public static byte[] LevelFinalise(ushort width, ushort height, ushort length) {
             byte[] buffer = new byte[7];
             buffer[0] = Opcode.LevelFinalise;
@@ -49,6 +51,7 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
+		/// <summary> Constructs a packet that spawns / adds an entity. </summary>
         public static byte[] AddEntity(byte id, string name, Position pos, 
                                        Orientation rot, bool hasCP437, bool extPos) {
             byte[] buffer = new byte[74 + (extPos ? 6 : 0)];
@@ -62,6 +65,7 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
+		/// <summary> Constructs an absolute position / teleport and rotation movement packet. </summary>
         public static byte[] Teleport(byte id, Position pos, Orientation rot, bool extPos) {
             byte[] buffer = new byte[10 + (extPos ? 6 : 0)];
             buffer[0] = Opcode.EntityTeleport;
@@ -73,16 +77,20 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
+		/// <summary> Constructs a chat message packet with an empty message. </summary>
         public static byte[] BlankMessage() { return Message("", 0, false); }
         
-        public static byte[] Message(string message, byte id, bool hasCp437) {
+        /// <summary> Constructs a chat message packet. </summary>
+        public static byte[] Message(string message, CpeMessageType type, bool hasCp437) {
             byte[] buffer = new byte[66];
             buffer[0] = Opcode.Message;
-            buffer[1] = id;
+            buffer[1] = (byte)type;
             NetUtils.Write(message, buffer, 2, hasCp437);
             return buffer;
         }
         
+        /// <summary> Constructs a set user type/permission packet. </summary>
+        /// <remarks> For certain clients, sets whether they are allowed to place bedrock, use ophax, place liquids. </remarks>
         public static byte[] UserType(Player p) {
             byte[] buffer = new byte[2];
             buffer[0] = Opcode.SetPermission;
@@ -90,6 +98,7 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
+        /// <summary> Constructs a kick / disconnect packet with the given reason / message. </summary>
         public static byte[] Kick(string message, bool cp437) {
             byte[] buffer = new byte[65];
             buffer[0] = Opcode.Kick;

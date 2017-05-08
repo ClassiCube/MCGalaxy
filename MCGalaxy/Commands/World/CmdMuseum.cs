@@ -69,7 +69,6 @@ namespace MCGalaxy.Commands.World {
             Entities.DespawnEntities(p);
             Level oldLevel = p.level;
             p.level = lvl;
-            p.SendUserMOTD();
             if (!p.SendRawMap(oldLevel, lvl)) return;
 
             Entities.GlobalSpawn(p, lvl.SpawnPos, lvl.SpawnRot, true);

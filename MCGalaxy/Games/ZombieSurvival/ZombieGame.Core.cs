@@ -22,6 +22,7 @@ using System.IO;
 using System.Threading;
 using System.Timers;
 using MCGalaxy.Games.ZS;
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Games {
     
@@ -235,7 +236,8 @@ namespace MCGalaxy.Games {
                 if (p.level != CurLevel) continue;
                 CpeMessageType type = announce && p.HasCpeExt(CpeExt.MessageTypes)
                     ? CpeMessageType.Announcement : CpeMessageType.Normal;
-                p.SendRawMessage(type, message);
+                
+                p.Send(Packet.Message(message, type, p.hasCP437));
             }
         }
         

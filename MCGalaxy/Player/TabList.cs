@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Games;
+using MCGalaxy.Network;
 
 namespace MCGalaxy {
 
@@ -58,7 +59,7 @@ namespace MCGalaxy {
         /// <summary> Removes the given player from player's tab list (if their client supports it). </summary>
         public static void Remove(Player dst, byte id) {
             if (!dst.hasExtList) return;
-            dst.SendExtRemovePlayerName(id);
+            dst.Send(Packet.ExtRemovePlayerName(id));
         }
         
         /// <summary> Updates the tab list entry for this player to all other players 

@@ -190,7 +190,7 @@ namespace MCGalaxy {
         public static void ReloadMap(Player p, Player who, bool showMessage) {
             who.Loading = true;
             Entities.DespawnEntities(who);
-            who.SendUserMOTD(); who.SendMap(who.level);
+            who.SendMap(who.level);
             Entities.SpawnEntities(who);
             who.Loading = false;
             if (!showMessage) return;

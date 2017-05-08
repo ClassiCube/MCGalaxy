@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Building {
                 p.cmdBind[j] = parts[1];
                 p.messageBind[j] = parts.Length > 2 ? parts[2] : "";
 
-                Player.Message(p, "Bound %T/{0} {1} %Sto %T/" + j, p.cmdBind[j], p.messageBind[j], j);
+                Player.Message(p, "Bound %T/{0} {1}%Sto %T/" + j, p.cmdBind[j], p.messageBind[j], j);
             }
         }
         

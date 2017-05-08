@@ -217,7 +217,7 @@ namespace MCGalaxy {
                     if (!HasCpeExt(CpeExt.EmoteFix) && line.TrimEnd(' ')[line.TrimEnd(' ').Length - 1] < '!')
                         line += '\'';
 
-                    Send(Packet.Message(line, id, hasCP437));
+                    Send(Packet.Message(line, (CpeMessageType)id, hasCP437));
                 }
             } catch ( Exception e ) {
                 message = "&f" + message;
@@ -227,25 +227,20 @@ namespace MCGalaxy {
             }
         }
         
-        public void SendCpeMessage(CpeMessageType id, string message, bool colorParse = true) {
-            if (id != CpeMessageType.Normal && !HasCpeExt(CpeExt.MessageTypes)) {
-                if (id == CpeMessageType.Announcement) id = CpeMessageType.Normal;
+        public void SendCpeMessage(CpeMessageType type, string message, bool colorParse = true) {
+            if (type != CpeMessageType.Normal && !HasCpeExt(CpeExt.MessageTypes)) {
+                if (type == CpeMessageType.Announcement) type = CpeMessageType.Normal;
                 else return;
             }
             message = Chat.Format(message, this, colorParse);
-            SendRawMessage(id, message);
+            Send(Packet.Message(message, type, hasCP437));
         }
-        
-        /// <summary> Sends a raw message without performing any token resolving, emoticon parsing, or color parsing. </summary>
-        public void SendRawMessage(CpeMessageType id, string message) {
-            Send(Packet.Message(message, (byte)id, HasCpeExt(CpeExt.FullCP437)));
-        }
-        
-        public void SendMotd() { SendMapMotd(); }
-        public void SendUserMOTD() { SendMapMotd(); }
 
-        void SendMapMotd() {
-            byte[] packet = Packet.Motd(this, level.GetMotd(this));
+        public void SendMapMotd() {
+            string motd = level.GetMotd(this);
+            motd = ChatTokens.Apply(motd, this);
+            
+            byte[] packet = Packet.Motd(this, motd);
             if (OnSendMOTD != null) OnSendMOTD(this, packet);
             Send(packet);
             
@@ -269,6 +264,7 @@ namespace MCGalaxy {
             useCheckpointSpawn = false;
             lastCheckpointIndex = -1;
             
+            SendMapMotd();
             AccessResult access = level.BuildAccess.Check(this);
             AllowBuild = access == AccessResult.Whitelisted || access == AccessResult.Allowed;
             
@@ -315,15 +311,6 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Sends a packet indicating an entity was spawned in the current map
-        /// at the given absolute position + coordinates </summary>
-        public void SendSpawn(byte id, string name, Position pos, Orientation rot) {
-            // NOTE: Fix for standard clients
-            if (id == Entities.SelfID) pos.Y -= 22;
-            
-            Send(Packet.AddEntity(id, name, pos, rot, hasCP437, hasExtPositions));
-        }
-        
         /// <summary> Sends a packet indicating an absolute position + orientation change for an enity. </summary>
         public void SendPos(byte id, ushort x, ushort y, ushort z, byte rotx, byte roty) {
             SendPos(id, new Position(x, y, z), new Orientation(rotx, roty));
@@ -336,11 +323,6 @@ namespace MCGalaxy {
                 pos.Y -= 22;  // NOTE: Fix for standard clients
             }           
             Send(Packet.Teleport(id, pos, rot, hasExtPositions));
-        }
-
-        /// <summary> Sends a packet indicating an entity was removed from the current map. </summary>
-        public void SendDespawn(byte id) {
-            SendRaw(Opcode.RemoveEntity, id);
         }
         
         [Obsolete("Prefer SendBlockChange(x, y, z, block, extBlock)")]
@@ -376,35 +358,9 @@ namespace MCGalaxy {
             buffer[7] = block;
             Send(buffer);
         }
-
-        public void SendExtAddEntity(byte id, string name, string displayName) {
-            Send(Packet.ExtAddEntity(id, name, displayName, hasCP437));
-        }
-        
-        public void SendExtAddEntity2(byte id, string skinName, string displayName,
-                                      Position pos, Orientation rot) {
-            // NOTE: Fix for standard clients
-            if (id == Entities.SelfID) pos.Y -= 22;
-
-            Send(Packet.ExtAddEntity2(id, skinName, displayName, pos, rot, hasCP437, hasExtPositions));
-        }
         
         public void SendExtAddPlayerName(byte id, string listName, string displayName, string grp, byte grpRank) {
             Send(Packet.ExtAddPlayerName(id, listName, displayName, grp, grpRank, hasCP437));
-        }
-        
-        public void SendExtRemovePlayerName(byte id) {
-            Send(Packet.ExtRemovePlayerName(id));
-        }
-        
-        public void SendChangeModel(byte id, string model) {
-            // Fallback block models for clients that don't support block definitions
-            byte block;
-            if (byte.TryParse(model, out block) && !hasBlockDefs) {
-                model = level.RawFallback(block).ToString();
-            }
-
-            Send(Packet.ChangeModel(id, model, hasCP437));
         }
 
         internal void CloseSocket() {

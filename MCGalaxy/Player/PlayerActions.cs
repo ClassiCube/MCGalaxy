@@ -106,7 +106,7 @@ namespace MCGalaxy {
             Entities.DespawnEntities(p);
             Level oldLevel = p.level;
             p.level = lvl; 
-            p.SendUserMOTD(); p.SendMap(oldLevel);
+            p.SendMap(oldLevel);
 
             Entities.SpawnEntities(p, lvl.SpawnPos, lvl.SpawnRot);
             CheckGamesJoin(p, oldLevel);

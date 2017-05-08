@@ -94,10 +94,8 @@ namespace MCGalaxy {
                 id = NextFreeId();
                 PlayerInfo.Online.Add(this);
             }
-            
-            SendUserMOTD();
-            SendMap(null);
-            
+			
+            SendMap(null);            
             if (disconnected) return;
             loggedIn = true;
             connections.Remove(this);

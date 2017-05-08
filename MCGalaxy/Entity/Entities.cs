@@ -81,7 +81,7 @@ namespace MCGalaxy {
                 TabList.Add(dst, p, id);
             if (!Server.zombie.Running || !p.Game.Infected) {
                 string col = GetSupportedCol(dst, p.color);
-                Spawn(dst, id, p.SkinName, col + p.truename + possession, p.Model, p.Pos, p.Rot);
+                SpawnRaw(dst, id, p.SkinName, col + p.truename + possession, p.Model, p.Pos, p.Rot);
                 return;
             }
             
@@ -91,7 +91,7 @@ namespace MCGalaxy {
             }
             
             string model = p == dst ? p.Model : ZombieGameProps.ZombieModel;
-            Spawn(dst, id, skinName, Colors.red + name + possession, model, p.Pos, p.Rot);
+            SpawnRaw(dst, id, skinName, Colors.red + name + possession, model, p.Pos, p.Rot);
         }
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
@@ -132,20 +132,26 @@ namespace MCGalaxy {
             if (b.DisplayName.CaselessEq("empty")) name = "";
             string skin = Chat.Format(b.SkinName, dst, true, true, false);
 
-            Spawn(dst, b.id, skin, name, b.Model, b.Pos, b.Rot);            
+            SpawnRaw(dst, b.id, skin, name, b.Model, b.Pos, b.Rot);
             if (Server.TablistBots)
                 TabList.Add(dst, b);
         }
         
-        static void Spawn(Player dst, byte id, string skin, string name,
-                          string model, Position pos, Orientation rot) {
+        public static void SpawnRaw(Player dst, byte id, string skin, string name,
+                                    string model, Position pos, Orientation rot) {
+            // NOTE: Fix for standard clients
+            if (id == Entities.SelfID) pos.Y -= 22;
+            
             if (dst.hasExtList) {
-                dst.SendExtAddEntity2(id, skin, name, pos, rot);
+                dst.Send(Packet.ExtAddEntity2(id, skin, name, pos, rot, dst.hasCP437, dst.hasExtPositions));
             } else {
-                dst.SendSpawn(id, name, pos, rot);
+                dst.Send(Packet.AddEntity(id, name, pos, rot, dst.hasCP437, dst.hasExtPositions));
             }
             
-            if (dst.hasChangeModel) dst.Send(Packet.ChangeModel(id, model, dst.hasCP437));
+            if (dst.hasChangeModel && model != "humanoid") {
+                dst.Send(Packet.ChangeModel(id, model, dst.hasCP437));
+            }
+            
             if (dst.HasCpeExt(CpeExt.EntityProperty)) {
                 dst.Send(Packet.EntityProperty(id, EntityProp.RotX, Orientation.PackedToDegrees(rot.RotX)));
                 dst.Send(Packet.EntityProperty(id, EntityProp.RotZ, Orientation.PackedToDegrees(rot.RotZ)));
@@ -193,7 +199,15 @@ namespace MCGalaxy {
                 if (!pl.CanSeeEntity(entity)) continue;
                 
                 byte id = (pl == entity) ? Entities.SelfID : entity.EntityID;
-                pl.SendChangeModel(id, model);
+                
+                // Fallback block models for clients that don't support block definitions
+                string modelSend = model;
+                byte block;
+                if (byte.TryParse(model, out block) && !pl.hasBlockDefs) {
+                    modelSend = pl.level.RawFallback(block).ToString();
+                }
+
+                pl.Send(Packet.ChangeModel(id, modelSend, pl.hasCP437));
             }
         }
 
@@ -216,7 +230,7 @@ namespace MCGalaxy {
                 if (!pl.CanSeeEntity(entity)) continue;
                 
                 byte id = (pl == entity) ? Entities.SelfID : entity.EntityID;
-                pl.Send(Packet.EntityProperty(id, prop, 
+                pl.Send(Packet.EntityProperty(id, prop,
                                               Orientation.PackedToDegrees(angle)));
             }
         }
@@ -228,7 +242,7 @@ namespace MCGalaxy {
             return Packet.Teleport(bot.id, bot.Pos, bot.Rot, extPos);
         }
         
-        public unsafe static void GetPositionPacket(ref byte* ptr, byte id, bool srcExtPos, bool extPos, 
+        public unsafe static void GetPositionPacket(ref byte* ptr, byte id, bool srcExtPos, bool extPos,
                                                     Position pos, Position oldPos, Orientation rot, Orientation oldRot) {
             Position delta = GetDelta(pos, oldPos, srcExtPos);
             bool posChanged = delta.X != 0 || delta.Y != 0 || delta.Z != 0;
@@ -242,7 +256,7 @@ namespace MCGalaxy {
                 if (extPos) {
                     WriteI32(ref ptr, pos.X); WriteI32(ref ptr, pos.Y); WriteI32(ref ptr, pos.Z);
                 } else {
-                	WriteI16(ref ptr, (short)pos.X); WriteI16(ref ptr, (short)pos.Y); WriteI16(ref ptr, (short)pos.Z);
+                    WriteI16(ref ptr, (short)pos.X); WriteI16(ref ptr, (short)pos.Y); WriteI16(ref ptr, (short)pos.Z);
                 }
             } else if (posChanged) {
                 byte opcode = oriChanged ? Opcode.RelPosAndOrientationUpdate : Opcode.RelPosUpdate;
