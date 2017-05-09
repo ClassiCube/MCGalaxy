@@ -57,7 +57,13 @@ namespace MCGalaxy.DB {
             new TopStat("Newest", PlayerData.DBTable, 
                         PlayerData.ColumnLastLogin,
                         () => "Most recent players", FormatDate),
-            
+            new TopStat("Earliest", PlayerData.DBTable,
+                        PlayerData.ColumnFirstLogin,
+                        () => "Most recent players", FormatDate),
+            new TopStat("Recent", PlayerData.DBTable,
+                        PlayerData.ColumnLastLogin,
+                        () => "Most recent players", FormatDate, true),
+
             new TopStat("Kicked", PlayerData.DBTable, 
                         PlayerData.ColumnKicked,
                         () => "Most times kicked", FormatInteger),

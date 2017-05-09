@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Info {
             int limit = 0;
             string limitArg = args[args.Length - 1];
             
-            if (!CommandParser.GetInt(p, limitArg, "Limit", ref limit, 1, 15)) return -1;
+            if (!CommandParser.GetInt(p, limitArg, "Limit", ref limit, 1, 200)) return -1;
             return limit;
         }
         
