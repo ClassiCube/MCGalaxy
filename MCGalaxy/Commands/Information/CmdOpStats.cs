@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdOpStats() { }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             string start = "thismonth", name = null;
             string[] args = message.SplitSpaces();

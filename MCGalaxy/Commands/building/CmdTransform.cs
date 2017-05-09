@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.Building {
             get { return new[] { new CommandAlias("transforms", "list"), new CommandAlias("scale", "scale") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") {
                 Player.Message(p, "Your current transform is: " + p.Transform.Name); return;

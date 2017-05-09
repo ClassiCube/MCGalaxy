@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.Economic {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can setup the economy") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] raw = message.SplitSpaces();
             string[] args = new string[] { "", "", "", "", "", "", "", "" };
             for (int i = 0; i < Math.Min(args.Length, raw.Length); i++)

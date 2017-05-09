@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdFollow() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (!p.canBuild) { Player.Message(p, "You're currently being &4possessed%S!"); return; }
             string[] args = message.SplitSpaces(2);

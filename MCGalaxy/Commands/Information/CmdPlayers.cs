@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdPlayers() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message != "") {
                 Group grp = Matcher.FindRanks(p, message);
                 if(grp == null) return;

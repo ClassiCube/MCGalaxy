@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.Info {
         }
         public CmdClones() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "" && p != null) {
                 message = p.ip;
             } else {

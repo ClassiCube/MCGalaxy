@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Misc {
             get { return new[] { new CommandAlias("tpaccept", "accept"), new CommandAlias("tpdeny", "deny") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             
             if (message.CaselessEq("accept")) {

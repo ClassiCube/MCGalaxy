@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.Misc {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdHackRank() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             if (p == null) { MessageInGameOnly(p); return; }
             

@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdView() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!Directory.Exists("extra/text/")) 
                 Directory.CreateDirectory("extra/text");
             if (message == "") {

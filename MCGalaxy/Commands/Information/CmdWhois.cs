@@ -34,7 +34,8 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandAlias("info"), new CommandAlias("i") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") message = p.name;
             int matches;
             Player pl = PlayerInfo.FindMatches(p, message, out matches);
@@ -67,8 +68,11 @@ namespace MCGalaxy.Commands.Info {
             
             info.TimeSpent = who.time; info.TimeOnline = DateTime.Now - who.timeLogged;
             info.First = who.firstLogin;
+            info.Last = who.lastLogin;
+            info.TotalTimeOnline = DateTime.Now - who.firstLogin;
             info.Logins = who.totalLogins; info.Kicks = who.totalKicked;
             info.IP = who.ip; info.AfkMessage = who.afkMessage;
+            info.LastAction = who.LastAction;
             info.IdleTime = DateTime.UtcNow - who.LastAction;
             
             info.RoundsTotal = who.Game.TotalRoundsSurvived;
@@ -96,6 +100,7 @@ namespace MCGalaxy.Commands.Info {
             info.TimeSpent = data.TotalTime.ParseDBTime();
             info.First = data.FirstLogin;
             info.Last = data.LastLogin;
+            info.TotalTime = data.LastLogin - data.FirstLogin;
             info.Logins = data.Logins; info.Kicks = data.Kicks;
             info.IP = data.IP;
             

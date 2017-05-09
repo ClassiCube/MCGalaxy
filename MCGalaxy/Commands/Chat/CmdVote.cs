@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.Chatting {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdVote() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             if (!MessageCmd.CanSpeak(p, name)) return;
             

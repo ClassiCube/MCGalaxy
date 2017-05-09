@@ -24,7 +24,8 @@ namespace MCGalaxy.Commands.Economic {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }       
         public CmdGive() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             MoneyCmdData data;
             if (!ParseArgs(p, message, false, "give", out data)) return;
             

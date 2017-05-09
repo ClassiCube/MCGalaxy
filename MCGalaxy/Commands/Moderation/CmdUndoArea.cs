@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override CommandPerm[] ExtraPerms { get { return null; } }
         public override CommandAlias[] Aliases { get { return null; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             UndoAreaArgs args = default(UndoAreaArgs);
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") { Player.Message(p, "You need to provide a player name."); return; }

@@ -299,6 +299,7 @@
     <Compile Include="Commands\Moderation\CmdJail.cs" />
     <Compile Include="Commands\Moderation\CmdJoker.cs" />
     <Compile Include="Commands\Moderation\CmdKick.cs" />
+	<Compile Include="Commands\Moderation\CmdKickAll.cs" />
     <Compile Include="Commands\Moderation\CmdKickban.cs" />
     <Compile Include="Commands\Moderation\CmdLocation.cs" />
     <Compile Include="Commands\Moderation\CmdModerate.cs" />

@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.Building {
             get { return new[] { new CommandAlias("brushes", "list") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") {
                 Player.Message(p, "Your current brush is: " + p.BrushName); return;

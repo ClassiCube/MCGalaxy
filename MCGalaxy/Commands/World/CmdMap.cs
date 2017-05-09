@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands.World {
                     new CommandAlias("allowguns", null, "guns") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (CheckSuper(p, message, "level name")) return;
             if (message == "") message = p.level.name;
             string[] args = message.SplitSpaces(3);

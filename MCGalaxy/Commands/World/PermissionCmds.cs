@@ -22,7 +22,8 @@ namespace MCGalaxy.Commands.World {
     public sealed class CmdPerbuildMax : PermissionCmd {        
         public override string name { get { return "perbuildmax"; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
@@ -40,7 +41,8 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("wbuild"), new CommandAlias("worldbuild") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
@@ -60,7 +62,8 @@ namespace MCGalaxy.Commands.World {
     public sealed class CmdPervisitMax : PermissionCmd {        
         public override string name { get { return "pervisitmax"; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             
@@ -78,7 +81,8 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("waccess"), new CommandAlias("worldaccess") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (args.Length < 1 || args.Length > 2) { Help(p); return; }
             

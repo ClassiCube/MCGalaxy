@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdHighlight() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             TimeSpan delta = TimeSpan.Zero;
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") message = p.name + " 1800";

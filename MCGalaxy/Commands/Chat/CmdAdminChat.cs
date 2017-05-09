@@ -23,7 +23,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
         public CmdAdminChat() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message != "") { ChatModes.MessageAdmins(p, message); return; }
             
             p.adminchat = !p.adminchat;

@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.World {
         }
         public CmdLoad() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces();
             if (args.Length > 2) { Help(p); return; }

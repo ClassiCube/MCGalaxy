@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.CPE {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") { Help(p); return; }
             

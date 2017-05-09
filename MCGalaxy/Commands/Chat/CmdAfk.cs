@@ -22,7 +22,8 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Information; } }
         public CmdAfk() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "list") {
                 Player[] players = PlayerInfo.Online.Items;

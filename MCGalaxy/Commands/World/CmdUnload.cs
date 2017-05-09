@@ -23,7 +23,8 @@ namespace MCGalaxy.Commands.World {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdUnload() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string name = message.ToLower();
             if (CheckSuper(p, message, "level name")) return;
             

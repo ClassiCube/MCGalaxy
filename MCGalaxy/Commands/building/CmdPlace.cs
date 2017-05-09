@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdPlace() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             byte block, ext = 0;
             block = p.GetActualHeldBlock(out ext);
             int x = p.Pos.BlockX, y = (p.Pos.Y - 32) / 32, z = p.Pos.BlockZ;

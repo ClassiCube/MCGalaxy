@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.CPE {
                     new CommandPerm(LevelPermission.Operator, "+ can change the skin of bots") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message.IndexOf(' ') == -1) {
                 message = "-own " + message;
                 message = message.TrimEnd();

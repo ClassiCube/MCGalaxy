@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         public CmdUnbanip() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             message = ModActionCmd.FindIP(p, message, "un-IP ban", "unbanip");
             if (message == null) return;

@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Fun {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         protected abstract string Weapon { get; }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!p.level.guns) {
                 Player.Message(p, Weapon + "s cannot be used on this map!"); return;
             }

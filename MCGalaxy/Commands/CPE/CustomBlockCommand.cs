@@ -699,7 +699,8 @@ namespace MCGalaxy.Commands.CPE {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdGlobalBlock() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             CustomBlockCommand.Execute(p, message, true, "/gb");
         }
         
@@ -717,7 +718,8 @@ namespace MCGalaxy.Commands.CPE {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdLevelBlock() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (p == null) { MessageInGameOnly(p); return; }
             CustomBlockCommand.Execute(p, message, false, "/lb");
         }

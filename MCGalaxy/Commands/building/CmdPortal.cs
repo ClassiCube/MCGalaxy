@@ -31,7 +31,8 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdPortal() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             PortalData data;
             data.Multi = false;
             string[] args = message.SplitSpaces();

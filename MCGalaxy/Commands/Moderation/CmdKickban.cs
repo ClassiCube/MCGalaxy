@@ -24,7 +24,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdKickban() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             Command.all.Find("ban").Use(p, message);
             Command.all.Find("kick").Use(p, message);

@@ -23,7 +23,8 @@ namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdEat : MessageCmd {
         public override string name { get { return "eat"; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (p == null) { MessageInGameOnly(p); return; }
             
             if (DateTime.UtcNow < p.NextEat) {

@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdLastCmd() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {

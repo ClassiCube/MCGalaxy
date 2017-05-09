@@ -34,7 +34,8 @@ namespace MCGalaxy.Commands.Maintenance {
 
         delegate void DBSetter(string name, string column, string data);
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces(3);
             args[0] = PlayerInfo.FindMatchesPreferOnline(p, args[0]);

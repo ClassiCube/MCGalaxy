@@ -23,7 +23,8 @@ namespace MCGalaxy.Commands.Maintenance {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdLimit() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (message == "") { Help(p); return; }
             

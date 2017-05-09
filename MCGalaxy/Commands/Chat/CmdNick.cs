@@ -34,7 +34,8 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new[] { new CommandAlias("xnick", "-own") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!MessageCmd.CanSpeak(p, name)) return;
             UseBotOrPlayer(p, message, "nick");
         }

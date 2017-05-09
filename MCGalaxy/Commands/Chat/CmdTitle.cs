@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new[] { new CommandAlias("xtitle", "-own") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!MessageCmd.CanSpeak(p, name)) return;
             UsePlayer(p, message, "title");
         }

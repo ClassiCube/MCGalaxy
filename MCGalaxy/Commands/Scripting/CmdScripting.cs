@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.Scripting {
                     new CommandAlias("pload", "pload"), new CommandAlias("punload", "punload") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] parts = message.SplitSpaces(2);
             if (parts.Length == 1) { Help(p); return; }
             if (!Formatter.ValidName(p, parts[1], "plugin")) return;

@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdBlockSet() { }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (args.Length == 1) { Help(p); return; }
             

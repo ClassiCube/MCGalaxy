@@ -31,7 +31,8 @@ namespace MCGalaxy.Commands.World {
         }
         public CmdGoto() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (p == null) { MessageInGameOnly(p); return; }
             if (message == "") { Help(p); return; }
             

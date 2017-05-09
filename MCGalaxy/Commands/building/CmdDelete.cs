@@ -24,7 +24,8 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdDelete() { }
 
-        public override void Use(Player p, string message)  {
+        public override void Use(Player p, string message)
+        {
             if (message != "") { Help(p); return; }
 
             p.deleteMode = !p.deleteMode;

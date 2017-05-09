@@ -33,7 +33,8 @@ namespace MCGalaxy.Commands.Info {
                     new CommandAlias("top10", null, "10"), }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (args.Length < 2) { Help(p); return; }
             
@@ -65,7 +66,7 @@ namespace MCGalaxy.Commands.Info {
             int limit = 0;
             string limitArg = args[args.Length - 1];
             
-            if (!CommandParser.GetInt(p, limitArg, "Limit", ref limit, 1, 15)) return -1;
+            if (!CommandParser.GetInt(p, limitArg, "Limit", ref limit, 1, 200)) return -1;
             return limit;
         }
         

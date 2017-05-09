@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdRankInfo() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (CheckSuper(p, message, "player name")) return;
             if (message == "") message = p.name;
             

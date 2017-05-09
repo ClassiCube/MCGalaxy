@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Info {
         }
         public CmdCommands() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!DoCommand(p, message)) Help(p);
         }
         

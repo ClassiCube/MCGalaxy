@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public CmdSPlace() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             ushort distance = 0, interval = 0;
             if (message == "") { Help(p); return; }
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }

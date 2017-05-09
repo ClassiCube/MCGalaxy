@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdCenter() { }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             Player.Message(p, "Place or break two blocks to determine the edges.");
             p.ClearBlockchange();
             p.MakeSelection(2, null, DoCentre);
