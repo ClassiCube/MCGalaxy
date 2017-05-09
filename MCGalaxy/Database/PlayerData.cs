@@ -45,7 +45,7 @@ namespace MCGalaxy.DB {
             
         public string Name, Color, Title, TitleColor, TotalTime, IP;
         public DateTime FirstLogin, LastLogin;
-        public int UserID, Money, Deaths, Logins, kicks, Bans;
+        public int UserID, Money, Deaths, Logins, Kicks;
         public long TotalModified, TotalDrawn, TotalPlaced, TotalDeleted;
         
         internal static void Create(Player p) {
@@ -99,8 +99,7 @@ namespace MCGalaxy.DB {
             p.TotalDeleted = data.TotalDeleted;
             
             p.money = data.Money;
-            p.totalKicked = data.kicks;
-            p.totalBanned = data.Bans;
+            p.totalKicked = data.Kicks;
         }
         
         public static PlayerData Fill(DataRow row) {
@@ -121,9 +120,8 @@ namespace MCGalaxy.DB {
             data.Money = ParseInt(row[ColumnMoney].ToString());
             data.Deaths = ParseInt(row[ColumnDeaths].ToString());
             data.Logins = ParseInt(row[ColumnLogins].ToString());
-            data.kicks = ParseInt(row[ColumnKicked].ToString());
-            data.Bans = ParseInt(row[ColumnBanned].ToString());
-
+            data.Kicks = ParseInt(row[ColumnKicked].ToString());
+            
             long blocks = ParseLong(row[ColumnTotalBlocks].ToString());
             long cuboided = ParseLong(row[ColumnTotalCuboided].ToString());
             data.TotalModified = blocks & LowerBitsMask;
