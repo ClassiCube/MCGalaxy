@@ -101,7 +101,7 @@ namespace MCGalaxy.Commands.Info {
             info.First = data.FirstLogin;
             info.Last = data.LastLogin;
             info.TotalTime = data.LastLogin - data.FirstLogin;
-            info.Logins = data.Logins; info.Kicks = data.Kicks;
+            info.Logins = data.Logins; info.Kicks = data.kicks;
             info.IP = data.IP;
             
             if (Server.zombie.Running) {

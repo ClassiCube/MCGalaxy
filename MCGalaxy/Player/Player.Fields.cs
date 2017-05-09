@@ -143,6 +143,7 @@ namespace MCGalaxy {
         public DateTime firstLogin, lastLogin;
         public int totalLogins;
         public int totalKicked;
+        public int totalBanned;
         public int overallDeath;
 
         public bool staticCommands = false;

@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.Maintenance {
             Database.Backend.UpdateRows(
                 "Players", columns, "WHERE Name=@13",
                 blocks, cuboided, src.Color,
-                src.Deaths, first, src.IP, src.Kicks, last, src.Logins,
+                src.Deaths, first, src.IP, src.kicks, last, src.Logins,
                 src.Money, src.Title, src.TitleColor, src.TotalTime, dstName);
         }
         
