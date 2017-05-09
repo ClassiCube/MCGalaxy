@@ -24,7 +24,8 @@ namespace MCGalaxy.Commands.Chatting {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdMe() { }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Player.Message(p, "You"); return; }
             if (p == null) { MessageInGameOnly(p); return; }
             if (p.joker) { Player.Message(p, "Cannot use /me while jokered."); return; }

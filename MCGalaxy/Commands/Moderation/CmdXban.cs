@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         public CmdXban() { }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             bool banIP = true;
             if (message.CaselessStarts("-noip ")) {
                 message = message.Substring("-noip ".Length);

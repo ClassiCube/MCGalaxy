@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.Bots {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can set bots to be killer") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces();
             PlayerBot bot = Matcher.FindBotsInLevel(p, args[0]);

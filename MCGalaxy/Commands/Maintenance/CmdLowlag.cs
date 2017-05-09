@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Maintenance
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdLowlag() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "" && Server.updateTimer.Interval > 1000) {
                 Server.PositionInterval = 100;
                 Chat.MessageGlobal("&dLow lag %Sturned &cOFF %S- positions update every &b100 %Sms.");

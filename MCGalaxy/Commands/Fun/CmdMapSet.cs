@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.Fun {
             get { return new[] { new CommandAlias("roundtime", null, "roundtime") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (p == null) { MessageInGameOnly(p); return; }
             if (message == "") {
                 Player.Message(p, "Map authors: " + p.level.Authors);

@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Scripting {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!Formatter.ValidName(p, message, "command")) return;            
             if (Command.all.Contains(message)) {
                 Player.Message(p, "That command is already loaded!"); return;

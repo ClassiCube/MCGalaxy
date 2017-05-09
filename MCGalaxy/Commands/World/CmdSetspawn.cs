@@ -24,7 +24,8 @@ namespace MCGalaxy.Commands.World {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdSetspawn() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message != "") { Help(p); return;  }
             
             Player.Message(p, "Spawn location set to your current position.");

@@ -35,7 +35,8 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new[] { new CommandAlias("ozone", "map"), new CommandAlias("oz", "map") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (message == "") {
                 Player.Message(p, "Place a block where you would like to check for zones.");

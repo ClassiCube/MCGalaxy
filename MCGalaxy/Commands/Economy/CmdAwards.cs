@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Economic {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (args.Length > 2) { Help(p); return; }
             string plName = "", modifier = args[args.Length - 1];

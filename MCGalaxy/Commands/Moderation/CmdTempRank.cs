@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.Moderation {
                     new CommandAlias("trl", null, "list"), new CommandAlias("tempranklist", null, "list") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (args.Length >= 3) {
                 Assign(p, args);

@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.World {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdSpawn() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message != "") { Help(p); return; }
             bool cpSpawn = p.useCheckpointSpawn;
             int x = 16 + (cpSpawn ? p.checkpointX : p.level.spawnx) * 32;

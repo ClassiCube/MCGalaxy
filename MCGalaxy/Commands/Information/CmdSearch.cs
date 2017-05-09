@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return; }
             args[0] = args[0].ToLower();

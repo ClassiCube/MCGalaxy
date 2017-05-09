@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.Fun {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             p.Game.Aka = !p.Game.Aka;
             Player[] players = PlayerInfo.Online.Items;
             Player.Message(p, "AKA mode is now: " + (p.Game.Aka ? "&aOn" : "&cOff"));

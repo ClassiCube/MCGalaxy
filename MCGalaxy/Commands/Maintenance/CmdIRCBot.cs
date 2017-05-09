@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Maintenance {
             get { return new[] { new CommandAlias("resetbot", "reset"), new CommandAlias("resetirc", "reset") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message.CaselessEq("reset") || message.CaselessEq("reconnect")) {
                 if (!Server.irc) { Player.Message(p, "The server does not have IRC enabled."); }
                 Server.IRC.Reset();

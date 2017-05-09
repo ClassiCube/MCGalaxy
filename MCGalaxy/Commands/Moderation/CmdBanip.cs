@@ -31,7 +31,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         public CmdBanip() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             message = ModActionCmd.FindIP(p, message, "IP ban", "banip");
             if (message == null) return;

@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.Fun
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdLavaSurvival() { }
 
-        public override void Use(Player p, string message)  {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             string[] args = message.ToLower().SplitSpaces();
 

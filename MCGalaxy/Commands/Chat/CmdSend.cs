@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Chatting {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public CmdSend() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] parts = message.SplitSpaces(2);
             if (message == "" || parts.Length == 1) { Help(p); return; }
             if (!MessageCmd.CanSpeak(p, name)) return;

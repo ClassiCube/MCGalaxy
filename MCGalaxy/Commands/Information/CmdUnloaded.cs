@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdUnloaded() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] files = LevelInfo.AllMapFiles();
             Player.Message(p, "Unloaded maps (&c[no] %Sif not visitable): ");
             MultiPageOutput.Output(p, GetMaps(files), (map) => FormatMap(p, map),

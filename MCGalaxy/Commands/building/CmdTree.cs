@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Building {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] parts = message.SplitSpaces(3);
             

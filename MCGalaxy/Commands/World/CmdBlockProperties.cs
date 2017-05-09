@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.World {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces(4);
             if (args.Length < 3) { Help(p); return; }

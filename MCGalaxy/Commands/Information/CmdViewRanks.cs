@@ -31,7 +31,8 @@ namespace MCGalaxy.Commands.Info {
         }
         public CmdViewRanks() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces(2);
             if (message == "") { 
                 Player.Message(p, "Available ranks: " + Group.concatList()); return; 

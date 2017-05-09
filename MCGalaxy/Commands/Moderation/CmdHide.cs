@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         public CmdHide() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "check") {
                 string state = p.hidden ? "" : "not ";

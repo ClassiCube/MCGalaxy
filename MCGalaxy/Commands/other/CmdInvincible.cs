@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Misc {
         }
         public CmdInvincible() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             Player who = message == "" ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
 

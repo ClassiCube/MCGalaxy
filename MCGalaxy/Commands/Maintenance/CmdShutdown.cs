@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.Maintenance {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         static SchedulerTask shutdownTask;
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message.CaselessEq("abort") || message.CaselessEq("cancel")) {
                 if (shutdownTask == null) {
                     Player.Message(p, "No server shutdown is in progress."); return;

@@ -38,7 +38,8 @@ namespace MCGalaxy.Commands.Building {
         }
         public CmdImageprint() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!Directory.Exists("extra/images/"))
                 Directory.CreateDirectory("extra/images/");
             if (message == "") { Help(p); return; }

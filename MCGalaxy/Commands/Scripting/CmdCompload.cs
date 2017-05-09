@@ -23,7 +23,8 @@ namespace MCGalaxy.Commands.Scripting {
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
         public override bool museumUsable { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] param = message.SplitSpaces();
             if (message == "") { Help(p); return; }
 

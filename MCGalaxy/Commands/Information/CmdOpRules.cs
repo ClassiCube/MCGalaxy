@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdOpRules() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!File.Exists(Paths.OprulesFile)) {
                 File.WriteAllText(Paths.OprulesFile, "No oprules entered yet!");
             }

@@ -27,10 +27,10 @@ namespace MCGalaxy {
     public static class Updater {
         
         public static string parent = Path.GetFileName(Assembly.GetEntryAssembly().Location);
-        const string CurrentVersionFile = "https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Uploads/current_version.txt";
-        const string DLLLocation = "https://github.com/Hetal728/MCGalaxy/blob/master/Uploads/MCGalaxy_.dll?raw=true";
-        const string ChangelogLocation = "https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Changelog.txt";
-        const string EXELocation = "https://github.com/Hetal728/MCGalaxy/blob/master/Uploads/MCGalaxy.exe?raw=true";
+        const string CurrentVersionFile = "https://raw.githubusercontent.com/DireDay-the-coder/MCGalaxy/master/Uploads/current_version.txt";
+        const string DLLLocation = "https://github.com/DireDay-the-coder/MCGalaxy/blob/master/Uploads/MCGalaxy_.dll?raw=true";
+        const string ChangelogLocation = "https://raw.githubusercontent.com/DireDay-the-coder/MCGalaxy/master/Changelog.txt";
+        const string EXELocation = "https://github.com/DireDay-the-coder/MCGalaxy/blob/master/Uploads/MCGalaxy.exe?raw=true";
 
         public static bool CurrentUpdate = false;
         static bool msgOpen = false;

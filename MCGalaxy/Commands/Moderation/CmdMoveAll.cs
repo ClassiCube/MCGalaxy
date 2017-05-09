@@ -16,14 +16,15 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdMoveAll : Command {
+    public sealed class CmdKickAll : Command {
         public override string name { get { return "moveall"; } }
         public override string shortcut { get { return "ma"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             Level level = Matcher.FindLevels(p, message);
             if (level == null) return;
             

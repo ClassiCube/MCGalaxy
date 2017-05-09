@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Maintenance {
                     new CommandAlias("cbc", "clear") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (args.Length == 1 && Player.IsSuper(p)) { SuperRequiresArgs(p, "map name"); return; }
             

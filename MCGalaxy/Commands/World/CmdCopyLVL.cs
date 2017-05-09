@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("wcopy"), new CommandAlias("worldcopy") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             string[] args = message.ToLower().SplitSpaces();
             if (args.Length < 2) {

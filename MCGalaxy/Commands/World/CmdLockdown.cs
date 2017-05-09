@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("wlock", "map"), new CommandAlias("wunlock", "map") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!Directory.Exists("text/lockdown"))
                 Directory.CreateDirectory("text/lockdown");
             if (!Directory.Exists("text/lockdown/map"))

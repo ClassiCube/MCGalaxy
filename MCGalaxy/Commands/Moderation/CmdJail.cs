@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdJail() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message.CaselessEq("set") && p != null) {
                 p.level.jailx = p.Pos.X; p.level.jaily = p.Pos.Y; p.level.jailz = p.Pos.Z;
                 p.level.jailrotx = p.Rot.RotY; p.level.jailroty = p.Rot.HeadX;

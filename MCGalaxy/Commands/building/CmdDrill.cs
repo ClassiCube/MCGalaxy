@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Building {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             ushort dist = 20;
             if (message != "" && !CommandParser.GetUShort(p, message, "Distance", ref dist)) return;
             

@@ -31,7 +31,8 @@ namespace MCGalaxy.Commands.Building {
             get { return new[] { new CommandAlias("pastenot", "not"), new CommandAlias("pn", "not") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (p.CopyBuffer == null) { Player.Message(p, "You haven't copied anything yet"); return; }
             
             BrushArgs args = new BrushArgs(p, message, 0, 0);

@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdVoteKick() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (p == null) { MessageInGameOnly(p); return; }
             if (message == "" || message.IndexOf(' ') != -1) { Help(p); return; }
             if (!MessageCmd.CanSpeak(p, name)) return;

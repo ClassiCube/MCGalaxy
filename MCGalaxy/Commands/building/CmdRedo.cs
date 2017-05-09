@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdRedo() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message != "") { Help(p); return; }
             PerformRedo(p);
         }

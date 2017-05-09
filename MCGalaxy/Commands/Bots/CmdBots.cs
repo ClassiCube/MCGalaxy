@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.Bots {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public CmdBots() { }
 
-        public override void Use(Player p, string message) { 
+        public override void Use(Player p, string message)
+        { 
             Level lvl = p.level;
             string[] args = message.SplitSpaces(2);
             int ignored, offset = 0;

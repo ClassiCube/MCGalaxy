@@ -33,7 +33,8 @@ namespace MCGalaxy.Commands.Misc {
         }
         public CmdSummon() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             

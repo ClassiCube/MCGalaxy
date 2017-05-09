@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Fun {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (args.Length < 2) { Help(p); return; }
             

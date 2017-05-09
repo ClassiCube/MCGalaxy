@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Chatting {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdInbox() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); }
             string[] parts = message.ToLower().SplitSpaces(2);
             if (!Database.TableExists("Inbox" + p.name)) {

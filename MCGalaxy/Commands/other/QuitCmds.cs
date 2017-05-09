@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Misc {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         
-        public override void Use(Player p, string message)  {
+        public override void Use(Player p, string message)
+        {
             p.Leave("RAGEQUIT!!");
         }
 
@@ -43,7 +44,8 @@ namespace MCGalaxy.Commands.Misc {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string msg = message != "" ? "Left the game: " + message : "Left the game.";
             if (p.muted) msg = "Left the game.";
             p.Leave(msg);
@@ -62,7 +64,8 @@ namespace MCGalaxy.Commands.Misc {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message != "") { Help(p); return; }
             int code = p.random.Next(int.MinValue, int.MaxValue);
             p.Leave("Server crash! Error code 0x" + Convert.ToString(code, 16).ToUpper());
@@ -81,7 +84,8 @@ namespace MCGalaxy.Commands.Misc {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message != "") {
                 Player.Message(p, "&cIncorrect syntax. Abuse detected.");
                 Thread.Sleep(3000);

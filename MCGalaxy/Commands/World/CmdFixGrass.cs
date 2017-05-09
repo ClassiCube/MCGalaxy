@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.World {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             int totalFixed = 0;
             Level lvl = p.level;
             if (p != null && !lvl.BuildAccess.CheckDetailed(p)) {

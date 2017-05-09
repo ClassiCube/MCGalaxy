@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Economic {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] parts = message.SplitSpaces();
             Item item = Economy.GetItem(parts[0]);

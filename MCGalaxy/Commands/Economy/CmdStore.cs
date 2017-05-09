@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.Economic {
             get { return new[] { new CommandAlias("item") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") {
                 foreach (Item item in Economy.Items) {
                     if (!item.Enabled) continue;

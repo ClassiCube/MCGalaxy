@@ -34,7 +34,8 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandAlias("winfo"), new CommandAlias("worldinfo") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             bool env = args[0].CaselessEq("env");
             string map = env ? (args.Length > 1 ? args[1] : "") : args[0];

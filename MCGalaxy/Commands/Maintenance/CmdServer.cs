@@ -31,7 +31,8 @@ namespace MCGalaxy.Commands.Maintenance {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdServer() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             switch (args[0].ToLower()) {
                 case "public": SetPublic(p, args); break;

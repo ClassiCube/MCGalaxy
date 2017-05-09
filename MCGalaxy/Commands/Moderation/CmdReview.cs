@@ -36,7 +36,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         public CmdReview() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (p != null && message == "") message = "enter";
             
             switch (message.ToLower()) {

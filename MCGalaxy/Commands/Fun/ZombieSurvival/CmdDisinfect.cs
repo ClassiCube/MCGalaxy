@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         public CmdDisInfect() { }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             Player who = message == "" ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             

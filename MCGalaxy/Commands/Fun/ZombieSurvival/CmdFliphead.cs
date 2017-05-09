@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         public CmdFlipHead() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             p.flipHead = !p.flipHead;
             if (p.flipHead) Player.Message(p, "Your head was broken!");
             else Player.Message(p, "Your head was healed!");

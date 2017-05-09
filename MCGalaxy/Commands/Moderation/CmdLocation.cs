@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdLocation() { }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string ip = "";
             Player match = PlayerInfo.FindMatches(p, message);
             string target = message;
