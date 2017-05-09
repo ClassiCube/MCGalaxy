@@ -37,7 +37,8 @@ namespace MCGalaxy.Commands.Building {
         }
         public CmdCopy() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             int offsetIndex = message.IndexOf('@');
             if (offsetIndex != -1)
                 message = message.Replace("@ ", "").Replace("@", "");

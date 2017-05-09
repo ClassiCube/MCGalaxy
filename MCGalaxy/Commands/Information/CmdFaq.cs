@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Info {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!File.Exists(Paths.FaqFile)) {
                 File.WriteAllText(Paths.FaqFile, "Example: What does this server run on? This server runs on &b" + Server.SoftwareName);
             }

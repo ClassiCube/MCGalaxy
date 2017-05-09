@@ -23,7 +23,8 @@ namespace MCGalaxy.Commands.Economic {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdAward() { }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }
             bool take = false;
             if (message.CaselessStarts("give ")) {

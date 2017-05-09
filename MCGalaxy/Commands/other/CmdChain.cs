@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Misc
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdChain() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (p.level.permissionbuild > p.Rank) {
                 Player.Message(p, "You cannot build on this map!"); return;

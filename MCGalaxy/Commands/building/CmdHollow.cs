@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public CmdHollow() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             byte skip = Block.Invalid;
             if (message != "") {
                 skip = Block.Byte(message);

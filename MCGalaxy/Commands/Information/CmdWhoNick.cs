@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdWhoNick() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             Player nick = PlayerInfo.FindNick(p, message);
             if (nick == null) {

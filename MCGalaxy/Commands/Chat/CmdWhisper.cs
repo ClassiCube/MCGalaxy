@@ -23,7 +23,8 @@ namespace MCGalaxy.Commands.Chatting {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdWhisper() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") {
                 p.whisper = !p.whisper; p.whisperTo = "";
                 if (p.whisper) Player.Message(p, "All messages sent will now auto-whisper");

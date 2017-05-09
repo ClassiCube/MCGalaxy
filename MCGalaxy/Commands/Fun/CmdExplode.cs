@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Fun {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdExplode() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces();
             if (!(args.Length == 1 || args.Length == 3)) { Help(p); return; }

@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandAlias("agree", "agree"), new CommandAlias("disagree", "disagree") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!File.Exists(Paths.RulesFile)) {
                 File.WriteAllText(Paths.RulesFile, "No rules entered yet!");
             }

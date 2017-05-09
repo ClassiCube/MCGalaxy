@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         public CmdEndRound() { }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Server.zombie.RoundInProgress) {
                 Server.zombie.EndRound();
             } else {

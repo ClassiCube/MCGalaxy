@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Building {
         }   
         public CmdMode() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             // Special handling for the old TNT command
             if (message.CaselessStarts("tnt ")) {
                 string[] parts = message.SplitSpaces(2);

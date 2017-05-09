@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         protected virtual bool ReplaceNot { get { return false; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string brushMsg = message.ToLower();
             byte block, extBlock;
             block = p.GetActualHeldBlock(out extBlock);
@@ -79,7 +80,8 @@ namespace MCGalaxy.Commands.Building {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             ushort x2 = (ushort)(p.level.Width - 1);
             ushort y2 = (ushort)(p.level.Height - 1);
             ushort z2 = (ushort)(p.level.Length - 1);

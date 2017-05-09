@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!Server.LogNotes) {
                 Player.Message(p, "The server does not have notes logging enabled."); return;
             }
@@ -83,7 +84,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             base.Use(p, p.name);
         }

@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new [] { new CommandAlias("deafen", "all") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (p == null) { MessageInGameOnly(p); return; }
             string[] args = message.SplitSpaces();
             string action = args[0].ToLower();

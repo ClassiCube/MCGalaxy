@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Misc {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdRide() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             p.onTrain = !p.onTrain;
             if (!p.onTrain) return;
             Thread trainThread = new Thread(() => DoRide(p));

@@ -31,7 +31,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         public CmdSetRank() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return; }
             string rank = null, name = null;

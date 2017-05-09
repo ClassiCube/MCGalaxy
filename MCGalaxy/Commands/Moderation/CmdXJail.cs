@@ -24,7 +24,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool museumUsable { get { return true; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string xjailMap = Server.xjailLevel;
             if (xjailMap == "(main)") xjailMap = Server.mainLevel.name;
             if (message == "") { Help(p); return; }

@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdPossess() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] args = message.SplitSpaces();
             if (args.Length > 2) { Help(p); return; }

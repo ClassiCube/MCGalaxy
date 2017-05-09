@@ -33,7 +33,8 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new[] { new CommandAlias("reports", "list") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces(2);
             if (!Directory.Exists("extra/reported"))

@@ -65,7 +65,8 @@ namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdHigh5 : MessageCmd {
         public override string name { get { return "high5"; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             TryMessageAction(p, message, "{0} %Sjust highfived {1}", true);
         }
 

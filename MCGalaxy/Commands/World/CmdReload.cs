@@ -31,7 +31,8 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can reload for all players") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (CheckSuper(p, message, "player or level name")) return;
             if (message == "") message = p.name;
             string[] parts = message.ToLower().SplitSpaces();

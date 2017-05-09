@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Building {
         }
         public CmdStatic() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             p.staticCommands = !p.staticCommands;
             p.ClearBlockchange();
             p.modeType = 0;

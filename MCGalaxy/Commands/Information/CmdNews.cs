@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Info {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!File.Exists(Paths.NewsFile)) {
                 File.WriteAllText(Paths.NewsFile, "News have not been created. Put News in '" + Paths.NewsFile + "'."); return;
             }

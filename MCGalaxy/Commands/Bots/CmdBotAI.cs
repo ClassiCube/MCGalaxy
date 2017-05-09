@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.Bots{
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdBotAI() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (args[0].CaselessEq("list")) {
                 string modifier = args.Length > 1 ? args[1] : "";

@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Misc {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public CmdRepeat() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (p.lastCMD == "") { Player.Message(p, "No commands used yet."); return; }
 
             Player.Message(p, "Repeating &b/" + p.lastCMD);

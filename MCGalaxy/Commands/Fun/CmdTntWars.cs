@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         bool DeleteZone = false, CheckZone = false, NoTntZone = false;
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] text = new string[] { "", "", "", "", "" };
             string[] parts = message.ToLower().SplitSpaces();
             for (int i = 0; i < Math.Min(text.Length, parts.Length); i++)

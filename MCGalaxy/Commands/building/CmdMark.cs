@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.Building {
                     new CommandAlias("markall", "all"), new CommandAlias("ma", "all") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             
             if (message.CaselessEq("all")) {

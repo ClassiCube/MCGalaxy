@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands.CPE {
             get { return new[] { new CommandAlias("xmodel") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message.IndexOf(' ') == -1) {
                 message = "-own " + message;
                 message = message.TrimEnd();

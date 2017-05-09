@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("wmain", "worldmain") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") {
                 if (Player.IsSuper(p)) {
                     Player.Message(p, "Main level is {0}", Server.mainLevel.ColoredName);

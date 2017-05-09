@@ -31,7 +31,8 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new[] { new CommandAlias("setpass", "set"), new CommandAlias("resetpass", "reset") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!Directory.Exists("extra/passwords"))
                 Directory.CreateDirectory("extra/passwords");
             if (p != null && p.Rank < Server.verifyadminsrank) {

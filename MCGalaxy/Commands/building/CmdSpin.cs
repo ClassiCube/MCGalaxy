@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.Building {
             get { return new [] { new CommandAlias("mirror", "mirror"), new CommandAlias("rotate") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") message = "y";
             if (p.CopyBuffer == null) {
                 Player.Message(p, "You haven't copied anything yet"); return;

@@ -34,7 +34,8 @@ namespace MCGalaxy.Commands.Building {
             get { return new[] { new CommandPerm(LevelPermission.Nobody, "+ can use moderation commands in MBs") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
 
             bool allMessage = false;

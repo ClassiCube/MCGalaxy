@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.Info {
         }
         public CmdHelp() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             switch (message.ToLower()) {
                 case "":
                     Player.Message(p, "%HCommand Categories:");

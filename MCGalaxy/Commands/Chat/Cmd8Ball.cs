@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands.Chatting {
         DateTime nextUse;
         static TimeSpan delay = TimeSpan.FromSeconds(2);
         
-        public override void Use(Player p, string message) {            
+        public override void Use(Player p, string message)
+        {            
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (!MessageCmd.CanSpeak(p, name)) return;
             if (message == "") { Help(p); return; }

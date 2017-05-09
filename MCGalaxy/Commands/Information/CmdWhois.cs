@@ -34,7 +34,8 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandAlias("info"), new CommandAlias("i") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") message = p.name;
             int matches;
             Player pl = PlayerInfo.FindMatches(p, message, out matches);

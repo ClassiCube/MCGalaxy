@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.World {
         }
         public CmdOverseer() { }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             string[] parts = message.SplitSpaces(3);
             string cmd = parts[0].ToUpper();

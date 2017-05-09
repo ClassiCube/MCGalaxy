@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.World {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public CmdPause() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             int seconds = 30;
             Level lvl = p != null ? p.level : Server.mainLevel;
             if (message != "") {

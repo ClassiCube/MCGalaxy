@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.World {
         }
         public CmdSave() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message.CaselessEq("all")) { SaveAll(); return; }
             if (message == "") {
                 if (Player.IsSuper(p)) { SaveAll(); } 

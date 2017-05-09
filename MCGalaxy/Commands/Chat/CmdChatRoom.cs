@@ -36,7 +36,8 @@ namespace MCGalaxy.Commands.Chatting {
                 }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] parts = message.ToLower().SplitSpaces();
             

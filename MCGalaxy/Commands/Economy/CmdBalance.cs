@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.Economic {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (CheckSuper(p, message, "player name")) return;
             if (!Formatter.ValidName(p, message, "player")) return;
             int matches = 1;

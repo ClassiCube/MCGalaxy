@@ -20,7 +20,8 @@ namespace MCGalaxy.Commands.Chatting {
     public class CmdHug : MessageCmd {
         public override string name { get { return "hug"; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces();
             Player who = PlayerInfo.FindMatches(p, args[0]);

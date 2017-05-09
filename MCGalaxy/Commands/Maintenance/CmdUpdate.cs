@@ -23,7 +23,8 @@ namespace MCGalaxy.Commands.Maintenance {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public CmdUpdate() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (!message.CaselessEq("force")) {
                 Updater.UpdateCheck(p);
             } else {

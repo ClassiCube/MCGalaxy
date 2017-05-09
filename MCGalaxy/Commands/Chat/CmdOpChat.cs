@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
         public CmdOpChat() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message != "") { ChatModes.MessageOps(p, message); return; }
             
             p.opchat = !p.opchat;

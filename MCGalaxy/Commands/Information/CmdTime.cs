@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdTime() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             Player.Message(p, "Server time: {0:HH:mm:ss} on {0:d}", DateTime.Now);
             if (!Server.zombie.Running) return;
             

@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public CmdPClients() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             Dictionary<string, List<Player>> clients = new Dictionary<string, List<Player>>();
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {

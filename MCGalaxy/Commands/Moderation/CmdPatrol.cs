@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new[] { new CommandPerm(LevelPermission.Guest, " and below are patrolled") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message != "") { Help(p); return; }
 

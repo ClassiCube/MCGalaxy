@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public virtual int MarksCount { get { return 2; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             message = message.ToLower();
             string[] parts = message.SplitSpaces();

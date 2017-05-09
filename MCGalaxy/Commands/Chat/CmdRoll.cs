@@ -21,7 +21,8 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "roll"; } }
         public CmdRoll() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             Random rand = new Random();
             int min, max;

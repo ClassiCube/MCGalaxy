@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.Info {
         }
         public CmdBlocks() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             string modifier = args.Length > 1 ? args[1] : "";
             

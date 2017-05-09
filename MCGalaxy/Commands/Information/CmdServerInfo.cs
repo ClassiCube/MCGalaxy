@@ -35,7 +35,8 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can see server CPU and memory usage") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message != "") { Help(p); return; }
             
             Player.Message(p, "Server's name: &b{0}%S", Server.name);

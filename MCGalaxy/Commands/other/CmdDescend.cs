@@ -23,7 +23,8 @@ namespace MCGalaxy.Commands.Misc {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public CmdDescend() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (!Hacks.CanUseHacks(p, p.level)) {
                 Player.Message(p, "You cannot use /descend on this map."); return;

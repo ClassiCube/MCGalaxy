@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("killphysics", "kill") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "") { ShowPhysics(p); return; }
             if (message.CaselessEq("kill")) { KillPhysics(p); return; }
             

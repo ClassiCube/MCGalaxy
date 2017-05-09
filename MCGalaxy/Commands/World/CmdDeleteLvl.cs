@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("wdelete"), new CommandAlias("worlddelete"), new CommandAlias("wremove") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (message == "" || message.SplitSpaces().Length > 1) { Help(p); return; }
             if (!Formatter.ValidName(p, message, "level")) return;
             string map = Matcher.FindMaps(p, message);

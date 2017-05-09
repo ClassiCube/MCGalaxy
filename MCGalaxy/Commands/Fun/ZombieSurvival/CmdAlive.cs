@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         public CmdAlive() { }
         
-         public override void Use(Player p, string message) {
+         public override void Use(Player p, string message)
+        {
             Player[] alive = Server.zombie.Alive.Items;
             if (alive.Length == 0) { Player.Message(p, "No one is alive."); return; }
             

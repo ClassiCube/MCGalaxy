@@ -33,7 +33,8 @@ namespace MCGalaxy.Commands.Info {
             get { return new [] { new CommandAlias("binfo"), new CommandAlias("whodid") }; }
         }
             
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             Player.Message(p, "Break/build a block to display information.");
             p.ClearBlockchange();

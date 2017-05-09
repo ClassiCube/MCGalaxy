@@ -29,7 +29,8 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("wrename"), new CommandAlias("worldrename") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             string[] args = message.SplitSpaces();
             if (args.Length != 2) { Help(p); return; }
             

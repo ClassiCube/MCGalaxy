@@ -34,7 +34,8 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new[] { new CommandAlias("xundo", null, "all") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; } // TODO: fix this to work from IRC and Console
             if (CheckSuper(p, message, "player name")) return;
             if (message == "") { Player.Message(p, "You need to provide a player name."); return; }

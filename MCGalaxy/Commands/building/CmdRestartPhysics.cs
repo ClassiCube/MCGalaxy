@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdRestartPhysics() { }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message)
+        {
             PhysicsArgs extraInfo = default(PhysicsArgs);
             message = message.ToLower();
             if (message != "" && !ParseArgs(p, message, ref extraInfo)) return;
