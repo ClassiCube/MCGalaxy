@@ -29,7 +29,9 @@ namespace MCGalaxy.DB {
         public const string ColumnLogins = "totalLogin";
         public const string ColumnMoney = "Money";
         public const string ColumnKicked = "totalKicked";
-        
+        public const string ColumnBanned = "totalBanned";
+
+
         public const string ColumnColor = "color";
         public const string ColumnTitle = "title";
         public const string ColumnTColor = "title_color";
