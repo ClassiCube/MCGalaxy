@@ -35,6 +35,12 @@ namespace MCGalaxy.SQL {
         }
         public override bool EnforcesTextLength { get { return false; } }
         
+        public SQLiteBackend() {
+            CaselessWhereSuffix = " COLLATE NOCASE";
+            CaselessLikeSuffix = " COLLATE NOCASE";
+        }
+        
+        
         public override void CreateDatabase() { }
         
         public override BulkTransaction CreateBulk() {

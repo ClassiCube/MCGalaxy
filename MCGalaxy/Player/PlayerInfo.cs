@@ -188,13 +188,13 @@ namespace MCGalaxy {
         
         
         internal static DataTable Query(string name, string columns) {
-            string suffix = Server.useMySQL ? " utf8_general_ci" : " NOCASE";
+            string suffix = Database.Backend.CaselessWhereSuffix;
             return Database.Backend.GetRows("Players", columns,
-                                            "WHERE Name=@0 COLLATE" + suffix, name);
+                                            "WHERE Name=@0" + suffix, name);
         }
         
         internal static DataRow QueryMulti(Player p, string name, string columns) {
-            string suffix = Server.useMySQL ? "" : " COLLATE NOCASE";
+            string suffix = Database.Backend.CaselessLikeSuffix;
             using (DataTable results = Database.Backend.GetRows("Players", columns,
                                                                 "WHERE Name LIKE @0 LIMIT 21" + suffix,
                                                                 "%" + name + "%")) {

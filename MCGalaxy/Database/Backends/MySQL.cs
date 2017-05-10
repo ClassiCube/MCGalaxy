@@ -35,6 +35,12 @@ namespace MCGalaxy.SQL {
                                        Server.MySQLUsername, Server.MySQLPassword, Server.DatabasePooling); }
         }
         public override bool EnforcesTextLength { get { return true; } }
+
+        public MySQLBackend() {
+            CaselessWhereSuffix = " COLLATE utf8_general_ci";
+            CaselessLikeSuffix = "";
+        }
+
         
         public override void CreateDatabase() {
             ParameterisedQuery query = GetStaticParameterised();

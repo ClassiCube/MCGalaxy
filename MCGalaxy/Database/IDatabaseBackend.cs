@@ -32,6 +32,13 @@ namespace MCGalaxy.SQL {
         /// <summary> Whether this backend enforces the character length in VARCHAR columns. </summary>
         public abstract bool EnforcesTextLength { get; }
         
+        /// <summary> Suffix required after a WHERE clause for caseless string comparison. </summary>
+        public string CaselessWhereSuffix { get; protected set; }
+
+        /// <summary> Suffix required after a LIKE clause for caseless string comparison. </summary>        
+        public string CaselessLikeSuffix { get; protected set; }
+
+        
         /// <summary> Creates the schema for this database (if required). </summary>
         public abstract void CreateDatabase();
         
