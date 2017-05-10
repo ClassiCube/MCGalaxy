@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdShutdown : Command {

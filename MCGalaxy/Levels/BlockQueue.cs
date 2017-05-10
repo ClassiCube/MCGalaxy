@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Network;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
     

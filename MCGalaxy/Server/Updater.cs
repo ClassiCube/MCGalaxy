@@ -21,7 +21,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
-using MCGalaxy;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
     public static class Updater {

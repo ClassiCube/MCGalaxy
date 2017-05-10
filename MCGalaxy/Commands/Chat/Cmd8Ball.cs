@@ -17,6 +17,7 @@
  */
 using System;
 using System.Text;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class Cmd8Ball : Command {

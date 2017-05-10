@@ -23,6 +23,7 @@ using MCGalaxy.Events;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
 using MCGalaxy.Network;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
     public class ChatMessage {

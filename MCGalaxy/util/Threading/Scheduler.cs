@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Tasks {
     public sealed partial class Scheduler {
 
         readonly List<SchedulerTask> tasks = new List<SchedulerTask>();
@@ -33,6 +33,7 @@ namespace MCGalaxy {
             thread.IsBackground = true;
             thread.Start();
         }
+        
 
         /// <summary> Queues an action that is asynchronously executed one time, as soon as possible. </summary>
         public SchedulerTask QueueOnce(Action callback) {

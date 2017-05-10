@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Events;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Core {
 

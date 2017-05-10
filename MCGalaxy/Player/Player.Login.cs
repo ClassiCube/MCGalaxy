@@ -22,6 +22,7 @@ using MCGalaxy.Events;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
 using MCGalaxy.SQL;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
     public sealed partial class Player : IDisposable {

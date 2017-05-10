@@ -18,9 +18,8 @@
 using System;
 using System.Data;
 using System.IO;
-using MCGalaxy.SQL;
 
-namespace MCGalaxy {
+namespace MCGalaxy.SQL {
     public sealed class TableDumper {
         
         bool gottenRows;

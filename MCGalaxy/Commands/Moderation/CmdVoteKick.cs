@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Commands.Chatting;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdVoteKick : Command {

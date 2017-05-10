@@ -413,6 +413,7 @@
     <Compile Include="Database\ParameterisedQuery.cs" />
     <Compile Include="Database\PlayerData.cs" />
     <Compile Include="Database\Stats\TopStat.cs" />
+    <Compile Include="Database\TableDumper.cs" />
     <Compile Include="Drawing\Brushes\Brush.cs" />
     <Compile Include="Drawing\Brushes\CloudyBrush.cs" />
     <Compile Include="Drawing\Brushes\PasteBrush.cs" />
@@ -613,7 +614,6 @@
     <Compile Include="Server\Server.DB.cs" />
     <Compile Include="Server\Server.Fields.cs" />
     <Compile Include="Server\Server.Init.cs" />
-    <Compile Include="Server\TableDumper.cs" />
     <Compile Include="Server\Tasks\InitTasks.cs" />
     <Compile Include="Server\Tasks\ServerTasks.cs" />
     <Compile Include="Server\Tasks\UpgradeTasks.cs" />

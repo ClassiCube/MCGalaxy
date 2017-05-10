@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdVote : Command {

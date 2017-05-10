@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdTimer : Command {
