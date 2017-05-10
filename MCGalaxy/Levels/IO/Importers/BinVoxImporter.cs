@@ -49,7 +49,7 @@ namespace MCGalaxy.Levels.IO {
                     int x = (index / dims.Y) / dims.Z; // need to reorder from X Z Y to Y Z X
                     int y = (index / dims.Y) % dims.Z;
                     int z = index % dims.Z;
-                    lvl.blocks[(y * dims.Z + z) * dims.X + x] = value;
+                    blocks[(y * dims.Z + z) * dims.X + x] = value;
                 }
                 i += count;
             }

@@ -304,7 +304,7 @@ namespace MCGalaxy {
                 aiming = false;
                 
                 string kickPacketMsg = ChatTokens.Apply(discMsg, this);
-                Send(Packet.Kick(discMsg, hasCP437), sync);
+                Send(Packet.Kick(kickPacketMsg, hasCP437), sync);
                 disconnected = true;
                 if (isKick) totalKicked++;
                 
