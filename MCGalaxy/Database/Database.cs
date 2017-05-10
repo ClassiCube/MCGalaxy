@@ -20,46 +20,41 @@ using System.Data;
 using System.IO;
 
 namespace MCGalaxy.SQL {
-    public static partial class Database {
+    public static class Database {
         
         public static IDatabaseBackend Backend;
         
+        /// <summary> Returns whether the given table exists in the database. </summary>
         public static bool TableExists(string table) {
             return Backend.TableExists(table);
         }
+
         
-        [Obsolete("Use Execute() method instead.")]
-        public static void executeQuery(string sql, bool createDB = false) {
-            ParameterisedQuery query = Backend.GetStaticParameterised();
-            Execute(query, sql, createDB, null);
-        }
-        
+        /// <summary> Executes an SQL command that does not return any results. </summary>
         public static void Execute(string sql) {
             ParameterisedQuery query = Backend.GetStaticParameterised();
             Execute(query, sql, false, null);
         }
-        
+
+        /// <summary> Executes an SQL command that does not return any results. </summary>
         public static void Execute(string sql, params object[] args) {
             ParameterisedQuery query = Backend.CreateParameterised();
             Execute(query, sql, false, args);
         }
-        
+
+        /// <summary> Executes an SQL query, invoking callback function on each returned row. </summary>
         public static void ExecuteReader(string sql, ReaderCallback callback, params object[] args) {
             ParameterisedQuery query = Backend.CreateParameterised();
             DoDatabaseCall(query, sql, false, null, callback, args);
         }
         
-        [Obsolete("Use Fill() method instead.")]
-        public static DataTable fillData(string sql, bool skipError = false) {
-            ParameterisedQuery query = Backend.GetStaticParameterised();
-            return Fill(query, sql, null);
-        }
-        
+        /// <summary> Executes an SQL query, returning all read rows into a DataTable. </summary>
         public static DataTable Fill(string sql) {
             ParameterisedQuery query = Backend.GetStaticParameterised();
             return Fill(query, sql, null);
         }
-        
+
+        /// <summary> Executes an SQL query, returning all read rows into a DataTable. </summary>        
         public static DataTable Fill(string sql, params object[] args) {
             ParameterisedQuery query = Backend.CreateParameterised();
             return Fill(query, sql, args);

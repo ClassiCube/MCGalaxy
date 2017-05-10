@@ -118,7 +118,7 @@ namespace MCGalaxy {
         internal static void ImportSql(Stream sql) {
             // Import data (we only have CREATE TABLE and INSERT INTO statements)
             using (StreamReader reader = new StreamReader(sql))
-                using (BulkTransaction helper = BulkTransaction.Create())
+                using (BulkTransaction helper = Database.Backend.CreateBulk())
             {
                 List<string> buffer = new List<string>();
                 while (!reader.EndOfStream) {

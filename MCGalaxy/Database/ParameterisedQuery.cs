@@ -35,10 +35,6 @@ namespace MCGalaxy.SQL {
         
         /// <summary> Clears the cached named parameters/arguments. </summary>
         public void ClearParams() { parameters.Clear(); }
-        
-        public static ParameterisedQuery Create() {
-            return Database.Backend.CreateParameterised();
-        }
 
         
         protected abstract bool MultipleSchema { get; }
