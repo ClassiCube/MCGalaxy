@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Drawing.Ops;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Fun {   
     public sealed class CmdMissile : WeaponCmd {

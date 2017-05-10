@@ -17,6 +17,7 @@
 */
 using System;
 using MCGalaxy.Drawing.Ops;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMaze : Command {

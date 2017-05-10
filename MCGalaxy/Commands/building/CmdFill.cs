@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Blocks;
 using MCGalaxy.Drawing.Ops;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdFill : DrawCmd {

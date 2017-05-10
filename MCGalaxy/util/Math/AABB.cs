@@ -18,7 +18,7 @@
 using System;
 using MCGalaxy.Blocks;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Maths {
     
     public struct AABB {
         

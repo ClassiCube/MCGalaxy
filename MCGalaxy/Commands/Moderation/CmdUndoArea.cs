@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Commands.Building;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Moderation {  
     public sealed class CmdUndoArea : CmdUndoPlayer {

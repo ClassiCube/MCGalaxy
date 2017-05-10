@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using System.Timers;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Games {
     public sealed partial class LavaSurvival {

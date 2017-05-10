@@ -23,6 +23,7 @@ using System.Threading;
 using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Generator;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdImageprint : Command {

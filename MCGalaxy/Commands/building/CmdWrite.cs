@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {    
     public class CmdWriteText : Command {        

@@ -23,6 +23,7 @@ using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Network;
 using MCGalaxy.Undo;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing {
     internal struct PendingDrawOp {

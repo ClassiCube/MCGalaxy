@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing.Transforms {
     public sealed class NoTransform : Transform {

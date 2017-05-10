@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Bots {
     

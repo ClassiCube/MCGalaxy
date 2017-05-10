@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Blocks;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy {
     public sealed partial class Block {

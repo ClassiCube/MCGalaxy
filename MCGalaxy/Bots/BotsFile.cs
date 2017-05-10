@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Bots {
 

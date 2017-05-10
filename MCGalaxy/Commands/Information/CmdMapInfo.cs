@@ -22,6 +22,7 @@ using System.Text;
 using MCGalaxy.Commands.World;
 using MCGalaxy.DB;
 using MCGalaxy.Levels.IO;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdMapInfo : Command {       

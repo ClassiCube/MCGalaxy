@@ -19,6 +19,7 @@ using System;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Undo;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing.Ops {
     

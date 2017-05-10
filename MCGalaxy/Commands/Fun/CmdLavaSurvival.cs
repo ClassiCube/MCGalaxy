@@ -18,6 +18,7 @@
  */
 using System;
 using MCGalaxy.Games;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Fun
 {

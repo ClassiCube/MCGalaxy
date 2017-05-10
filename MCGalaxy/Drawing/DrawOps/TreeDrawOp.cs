@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Generator.Foliage;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing.Ops {
     public class TreeDrawOp : DrawOp {

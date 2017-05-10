@@ -17,6 +17,8 @@
  */
 using System;
 using System.Threading;
+using MCGalaxy.Maths;
+
 namespace MCGalaxy.Commands.Misc
 {
     public sealed class CmdChain : Command

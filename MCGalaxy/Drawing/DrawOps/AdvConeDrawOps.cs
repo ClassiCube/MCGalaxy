@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing.Ops {
     public class AdvConeDrawOp : AdvDrawOp {

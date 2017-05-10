@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using Draw = System.Drawing;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing.Ops {
 

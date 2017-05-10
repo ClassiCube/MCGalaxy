@@ -24,6 +24,7 @@ using MCGalaxy.Games;
 using MCGalaxy.SQL;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy {
     public class ChatMessage {

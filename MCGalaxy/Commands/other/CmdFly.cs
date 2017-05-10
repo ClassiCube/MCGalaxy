@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdFly : Command {

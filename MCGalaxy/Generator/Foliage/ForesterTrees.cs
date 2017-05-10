@@ -21,6 +21,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Generator.Foliage {
 

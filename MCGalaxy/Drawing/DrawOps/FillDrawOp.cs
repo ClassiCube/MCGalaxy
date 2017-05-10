@@ -21,6 +21,7 @@ using MCGalaxy.Commands.Building;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Util;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing.Ops {
     

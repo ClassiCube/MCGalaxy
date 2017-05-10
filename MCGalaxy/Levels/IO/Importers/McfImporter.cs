@@ -22,6 +22,7 @@ THE SOFTWARE.
 using System;
 using System.IO;
 using System.IO.Compression;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Levels.IO {
     public sealed class McfImporter : IMapImporter {

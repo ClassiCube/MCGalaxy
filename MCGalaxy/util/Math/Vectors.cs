@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy {  
+namespace MCGalaxy.Maths { 
     public struct Vec3U16 : IEquatable<Vec3U16> {
         public ushort X, Y, Z;
         public static Vec3U16 Zero = new Vec3U16(0);

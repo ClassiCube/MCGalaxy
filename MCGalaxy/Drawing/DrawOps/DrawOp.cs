@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy {
     

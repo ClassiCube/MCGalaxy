@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Network;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Undo {
 

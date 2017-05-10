@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing.Ops {    
     public class MazeDrawOp : CuboidHollowsDrawOp {       

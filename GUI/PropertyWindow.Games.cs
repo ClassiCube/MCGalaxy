@@ -18,6 +18,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using MCGalaxy.Games;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {

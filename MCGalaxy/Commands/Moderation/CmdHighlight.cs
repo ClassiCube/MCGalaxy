@@ -19,6 +19,7 @@ using System;
 using MCGalaxy.DB;
 using MCGalaxy.Network;
 using MCGalaxy.Undo;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Moderation { 
     public sealed class CmdHighlight : Command {        

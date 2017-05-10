@@ -17,6 +17,7 @@
  */
 using System.Collections.Generic;
 using MCGalaxy.DB;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdDrill : Command {

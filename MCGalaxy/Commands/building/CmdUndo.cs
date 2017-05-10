@@ -20,6 +20,7 @@ using MCGalaxy.Commands.World;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Undo;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public class CmdUndo : Command {

@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing.Ops {    
     public class PasteDrawOp : DrawOp {

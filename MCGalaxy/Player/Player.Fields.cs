@@ -20,6 +20,7 @@ using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Transforms;
 using MCGalaxy.Games;
 using MCGalaxy.Undo;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy {
     

@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Undo;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {   
     public sealed class CmdRedo : Command {   

@@ -20,6 +20,7 @@ using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.DB;
 using MCGalaxy.Levels.IO;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Moderation {    
     public sealed class CmdRestoreSelection : Command {        

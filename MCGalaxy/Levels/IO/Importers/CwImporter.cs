@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using fNbt;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Levels.IO {
     public sealed class CwImporter : IMapImporter {
