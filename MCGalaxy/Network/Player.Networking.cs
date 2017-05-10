@@ -191,7 +191,7 @@ namespace MCGalaxy {
             retryTag: try {
                 foreach (string raw in LineWrapper.Wordwrap(message)) {
                     string line = raw;
-                    if (!HasCpeExt(CpeExt.EmoteFix) && line.TrimEnd(' ')[line.TrimEnd(' ').Length - 1] < '!')
+                    if (!HasCpeExt(CpeExt.EmoteFix) && LineEndsInEmote(line))
                         line += '\'';
 
                     Send(Packet.Message(line, (CpeMessageType)id, hasCP437));
@@ -202,6 +202,14 @@ namespace MCGalaxy {
                 if ( totalTries < 10 ) goto retryTag;
                 else Server.ErrorLog(e);
             }
+        }
+        
+        static bool LineEndsInEmote(string line) {
+            line = line.TrimEnd(' ');
+            if (line.Length == 0) return false;
+            
+            char last = line[line.Length - 1];
+            return last.UnicodeToCp437() != last;
         }
         
         public void SendCpeMessage(CpeMessageType type, string message, bool colorParse = true) {
