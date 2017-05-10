@@ -97,7 +97,7 @@ namespace MCGalaxy {
                 PlayerInfo.Online.Add(this);
             }
 			
-            SendMap(null);            
+            SendMap(null);
             if (disconnected) return;
             loggedIn = true;
             connections.Remove(this);

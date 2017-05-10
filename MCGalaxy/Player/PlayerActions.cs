@@ -112,7 +112,8 @@ namespace MCGalaxy {
             CheckGamesJoin(p, oldLevel);
             
             if (p.level.ShouldShowJoinMessage(oldLevel)) {
-                Chat.MessageGlobal(p, p.ColoredName + " %Swent to " + lvl.ColoredName, false, true);
+                string msg = p.level.IsMuseum ? "%Swent to the " : "%Swent to ";
+                Chat.MessageGlobal(p, p.ColoredName + " %Swent " + lvl.ColoredName, false, true);
                 Player.RaisePlayerAction(p, PlayerAction.JoinWorld, lvl.name);
             }
             return true;

@@ -62,19 +62,10 @@ namespace MCGalaxy.Commands.World {
             Level lvl = IMapImporter.Formats[0].Read(path, name, false);
             lvl.MapName = mapName;
             SetLevelProps(lvl);
-            Level.LoadMetadata(lvl);            
-            if (!lvl.CanJoin(p)) return;
-
-            p.Loading = true;
-            Entities.DespawnEntities(p);
-            Level oldLevel = p.level;
-            p.level = lvl;
-            if (!p.SendRawMap(oldLevel, lvl)) return;
-
-            Entities.GlobalSpawn(p, lvl.SpawnPos, lvl.SpawnRot, true);
+            Level.LoadMetadata(lvl);
+            
+            if (!PlayerActions.ChangeMap(p, lvl)) return;
             p.ClearBlockchange();
-
-            Chat.MessageGlobal(p, p.ColoredName + " %Swent to the " + lvl.name, false, true);
         }
         
         static void SetLevelProps(Level lvl) {
