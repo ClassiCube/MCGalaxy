@@ -15,11 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy
-{
+namespace MCGalaxy.Events {
+	
     /// <summary> These are server event that can be canceled </summary>
-    public enum ServerEvents
-    {
+    public enum ServerEvents {
         //TODO
         //Make these do things
         ServerLog,
@@ -29,8 +28,7 @@ namespace MCGalaxy
     }
     
     /// <summary> These are player events that can be canceled </summary>
-    public enum PlayerEvents
-    {
+    public enum PlayerEvents {
         PlayerCommand,
         PlayerChat,
         MessageRecieve,
@@ -43,26 +41,14 @@ namespace MCGalaxy
     }
     
     /// <summary> These are Global (static) level events that can be canceled </summary>
-    public enum GlobalLevelEvents
-    {
+    public enum GlobalLevelEvents {
         LevelLoad,
         LevelSave
     }
     
     /// <summary> These are level events that can be canceled </summary>
-    public enum LevelEvents
-    {
+    public enum LevelEvents {
         LevelUnload,
         LevelSave
-    }
-    
-    /// <summary> Importance </summary>
-    public enum Priority : byte
-    {
-        Low = 0,
-        Normal = 1,
-        High = 2,
-        Critical = 3,
-        System_Level = 4
     }
 }

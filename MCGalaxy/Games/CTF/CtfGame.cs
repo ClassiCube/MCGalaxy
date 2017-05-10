@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using MCGalaxy.Commands.World;
+using MCGalaxy.Events;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Games {

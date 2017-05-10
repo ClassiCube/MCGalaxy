@@ -14,6 +14,7 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Security.Cryptography;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Core {
     internal static class ConnectingHandler {

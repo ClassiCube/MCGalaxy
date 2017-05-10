@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Events {
     
     public sealed class OnGroupLoadedEvent : IPluginEvent<Group.GroupLoaded> {
         

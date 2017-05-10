@@ -22,4 +22,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("ClassiCube Server Software")]
 [assembly: AssemblyProduct("MCGalaxy")]
 [assembly: AssemblyCopyright("Copyright © 2015-2017")]
-[assembly: AssemblyVersion(MCGalaxy.Server.VersionInternal)]
+[assembly: AssemblyVersion(MCGalaxy.Server.InternalVersion)]

@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Core {
 

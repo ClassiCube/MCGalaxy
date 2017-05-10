@@ -16,10 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Blocks.Physics;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Events {
     
     public sealed class OnLevelLoadedEvent : IPluginEvent<Level.OnLevelLoaded> {        
         internal OnLevelLoadedEvent(Level.OnLevelLoaded method, Priority priority, Plugin plugin)

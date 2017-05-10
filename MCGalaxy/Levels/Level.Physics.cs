@@ -19,6 +19,7 @@ using System;
 using System.Threading;
 using MCGalaxy.Blocks;
 using MCGalaxy.Blocks.Physics;
+using MCGalaxy.Events;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
 

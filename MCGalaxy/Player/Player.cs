@@ -19,6 +19,7 @@ using System.Net.Sockets;
 using System.Threading;
 using MCGalaxy.Blocks;
 using MCGalaxy.DB;
+using MCGalaxy.Events;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
 using MCGalaxy.Network;

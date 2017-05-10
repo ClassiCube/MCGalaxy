@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Events {
     
     /// <summary> This event is called whenever a player chats on the server </summary>
     public sealed class OnPlayerChatEvent : IPluginEvent<Player.OnPlayerChat> {        

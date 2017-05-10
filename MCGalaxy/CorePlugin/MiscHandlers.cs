@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using MCGalaxy.Blocks.Extended;
+using MCGalaxy.Events;
 using MCGalaxy.Network;
 
 namespace MCGalaxy.Core {

@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Events {
     // NOTE: You must use a different delegate type for each subclass
     // This is because the static events are unique to each generic instantiation, not each subclass.
     public class IPluginEvent<IMethod> {

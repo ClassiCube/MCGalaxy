@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Events {
     
     public sealed class OnConsoleCommandEvent : IPluginEvent<Server.OnConsoleCommand> {       
         internal OnConsoleCommandEvent(Server.OnConsoleCommand method, Priority priority, Plugin plugin)

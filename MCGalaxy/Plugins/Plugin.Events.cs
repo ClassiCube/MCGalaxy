@@ -15,6 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using MCGalaxy.Events;
 
 namespace MCGalaxy {
     public partial class Plugin {

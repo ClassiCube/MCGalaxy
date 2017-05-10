@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
+using MCGalaxy.Events;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
 using MCGalaxy.Levels.IO;

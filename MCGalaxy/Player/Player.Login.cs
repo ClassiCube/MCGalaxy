@@ -18,6 +18,7 @@ using System.Data;
 using System.IO;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
+using MCGalaxy.Events;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
 using MCGalaxy.SQL;
