@@ -58,23 +58,11 @@ namespace MCGalaxy {
         public static PlayerMetaList RankInfo = new PlayerMetaList("text/rankinfo.txt");
         public static PlayerMetaList TempRanks = new PlayerMetaList("text/tempranks.txt");
         public static PlayerMetaList Notes = new PlayerMetaList("text/notes.txt");
-        public static Version Version { get { return System.Reflection.Assembly.GetAssembly(typeof(Server)).GetName().Version; } }
-
-        static string versionString = null;
-        static object versionLock = new object();
         
-        // Cache getting the version
-        public static string VersionString {
-            get {
-                lock (versionLock) {
-                    if (versionString == null) {
-                        Version v = Version;
-                        versionString = v.Major + "." + v.Minor + "." + v.Build + "." + v.Revision;
-                    }
-                    return versionString;
-                }
-            }
-        }
+        /// <summary> *** DO NOT USE THIS! *** Use VersionString, as this field is a constant and is inlined if used. </summary>
+        public const string InternalVersion = "1.8.9.0";
+        public static Version Version { get { return new Version(InternalVersion); } }
+        public static string VersionString { get { return InternalVersion; } }
         
         public static string SoftwareName = "MCGalaxy";
         public static string SoftwareNameVersioned { get { return SoftwareName + " " + VersionString; } }

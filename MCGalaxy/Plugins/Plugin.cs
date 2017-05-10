@@ -16,10 +16,6 @@
     permissions and limitations under the Licenses.
 */
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Threading;
 
 namespace MCGalaxy {
     /// <summary> This class provides for more advanced modification to MCGalaxy </summary>
