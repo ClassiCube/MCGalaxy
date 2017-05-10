@@ -50,7 +50,7 @@ namespace MCGalaxy {
             Log(file + " doesn't exist, Downloading");
             try {
                 using (WebClient web = new WebClient())
-                    web.DownloadFile("https://github.com/Hetal728/MCGalaxy/blob/master/" + file + "?raw=true", file);
+                    web.DownloadFile(Updater.BaseURL + file + "?raw=true", file);
                 if (File.Exists(file))
                     Log(file + " download succesful!");
             } catch {

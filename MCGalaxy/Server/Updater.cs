@@ -27,10 +27,11 @@ namespace MCGalaxy {
     public static class Updater {
         
         public static string parent = Path.GetFileName(Assembly.GetEntryAssembly().Location);
-        const string CurrentVersionFile = "https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Uploads/current_version.txt";
-        const string DLLLocation = "https://github.com/Hetal728/MCGalaxy/blob/master/Uploads/MCGalaxy_.dll?raw=true";
-        const string ChangelogLocation = "https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Changelog.txt";
-        const string EXELocation = "https://github.com/Hetal728/MCGalaxy/blob/master/Uploads/MCGalaxy.exe?raw=true";
+        public const string BaseURL = "https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/";
+        const string CurrentVersionFile = BaseURL + "Uploads/current_version.txt";
+        const string DLLLocation = BaseURL + "Uploads/MCGalaxy_.dll?raw=true";
+        const string ChangelogLocation = BaseURL + "Changelog.txt";
+        const string EXELocation = BaseURL + "Uploads/MCGalaxy.exe?raw=true";
 
         public static bool CurrentUpdate = false;
         static bool msgOpen = false;
@@ -42,7 +43,7 @@ namespace MCGalaxy {
 
         public static void UpdateCheck(Player p = null) {
             CurrentUpdate = true;
-            if (!Server.checkUpdates) return;            
+            if (!Server.checkUpdates) return;
             WebClient Client = new WebClient();
 
             try {

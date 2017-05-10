@@ -22,7 +22,7 @@ using System.Net;
 namespace MCGalaxy.Tasks {   
     internal static class InitTasks {
 
-        const string staffUrl = "https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/Uploads/devs.txt";       
+        const string staffUrl = Updater.BaseURL + "Uploads/devs.txt";       
         internal static void UpdateStaffList() {
             try {
                 using (WebClient web = new WebClient()) {
