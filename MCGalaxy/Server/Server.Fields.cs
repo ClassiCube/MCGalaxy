@@ -121,7 +121,8 @@ namespace MCGalaxy {
         public static LavaSurvival lava;
         public static CountdownGame Countdown;
         
-        public static Scheduler MainScheduler, Background;
+        public static Scheduler MainScheduler = new Scheduler("MCG_MainScheduler");
+        public static Scheduler Background = new Scheduler("MCG_BackgroundScheduler");
         public static Server s;
 
         public const byte version = 7;

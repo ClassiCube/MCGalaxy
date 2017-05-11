@@ -34,8 +34,6 @@ namespace MCGalaxy {
     public sealed partial class Server {
        
         public Server() {
-            MainScheduler = new Scheduler("MCG_MainScheduler");
-            Background = new Scheduler("MCG_BackgroundScheduler");
             Server.s = this;
         }
         

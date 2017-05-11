@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
     
@@ -33,19 +33,17 @@ namespace MCGalaxy {
         static DateTime last;
 
         static object logLock = new object();
-        static Thread logThread;
         static string errPath, msgPath;
         static Queue<string> errCache = new Queue<string>(), msgCache = new Queue<string>();
+        static SchedulerTask logTask;
 
         public static void Init() {
             if (!Directory.Exists("logs")) Directory.CreateDirectory("logs");
             if (!Directory.Exists("logs/errors")) Directory.CreateDirectory("logs/errors");
             UpdatePaths();
             
-            logThread = new Thread(WorkerThread);
-            logThread.Name = "MCG_Logger";
-            logThread.IsBackground = true;
-            logThread.Start();
+            logTask = Server.MainScheduler.QueueRepeat(LogTask, null,
+                                                       TimeSpan.FromMilliseconds(500));
         }
         
         // Update paths only if a new date
@@ -95,14 +93,12 @@ namespace MCGalaxy {
             }
         }
 
-        static void WorkerThread() {
-            while (!disposed) {
-                lock (logLock) {
-                    if (errCache.Count > 0 || msgCache.Count > 0) UpdatePaths();                   
-                    if (errCache.Count > 0) FlushCache(errPath, errCache);
-                    if (msgCache.Count > 0) FlushCache(msgPath, msgCache);
-                }
-                Thread.Sleep(500);
+        static void LogTask(SchedulerTask task) {
+            lock (logLock) {
+                if (errCache.Count > 0 || msgCache.Count > 0) UpdatePaths();
+                
+                if (errCache.Count > 0) FlushCache(errPath, errCache);
+                if (msgCache.Count > 0) FlushCache(msgPath, msgCache);
             }
         }
 
@@ -128,6 +124,8 @@ namespace MCGalaxy {
         public static void Dispose() {
             if (disposed) return;
             disposed = true;
+            Server.MainScheduler.Cancel(logTask);
+            
             lock (logLock) {
                 if (errCache.Count > 0)
                     FlushCache(errPath, errCache);
