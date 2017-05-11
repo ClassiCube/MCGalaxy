@@ -170,12 +170,12 @@ namespace MCGalaxy {
         [ConfigBool("tablist-bots", "Tablist", null, false)]
         public static bool TablistBots = false;
 
-        [ConfigString("server-name", "General", null,
-                      "[MCGalaxy] Default", false, "![]&:.,{}~-+()?_/\\' ", 64)]
+        const string asciiChars = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+        [ConfigString("server-name", "General", null, "[MCGalaxy] Default", false, asciiChars, 64)]
         public static string name = "[MCGalaxy] Default";
-        [ConfigString("motd", "General", null, "Welcome",
-                      false,  "=![]&:.,{}~-+()?_/\\' ", 128)]
+        [ConfigString("motd", "General", null, "Welcome", false, asciiChars, 128)]
         public static string motd = "Welcome!";
+        
         [ConfigInt("max-players", "Server", null, 12, 1, 128)]
         public static int players = 12;
         [ConfigInt("max-guests", "Server", null, 10, 1, 128)]
