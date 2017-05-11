@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Info { 
     class WhoInfo {
@@ -24,11 +23,10 @@ namespace MCGalaxy.Commands.Info {
         public Group Group;
         public int Money, Deaths;
         public long TotalBlocks, LoginBlocks, TotalDrawn, TotalPlaced, TotalDeleted;
-        public TimeSpan TimeSpent, TimeOnline, TotalTimeOnline, TotalTime;
-        public DateTime First, Last, LastAction;
+        public TimeSpan TimeSpent, TimeOnline;
+        public DateTime First, Last;
         public int Logins, Kicks;
         public string IP;
-        public string Status;
         public int RoundsTotal, RoundsMax;
         public int InfectedTotal, InfectedMax;
         public TimeSpan IdleTime;
@@ -57,20 +55,14 @@ namespace MCGalaxy.Commands.Info {
                                who.TimeSpent.Shorten(), who.TimeOnline.Shorten());
             else
                 Player.Message(p, "  Spent &a{0} %Son the server", who.TimeSpent.Shorten());
-
-            if (who.TotalTimeOnline.Ticks > 0)
-                Player.Message(p, "  %Shas been a player on the server for &a{0} since &a{1}",
-                               who.TotalTime.Shorten(), who.Last.ToString("dd-MM-yyyy hh:mm tt"));
-            else
-                Player.Message(p, "  %Shas been a player on the server for &a{0}", who.TotalTimeOnline.Shorten());
-
+            
             if (who.Last.Ticks > 0)
-                Player.Message(p, "  First login &a" + who.First.ToString("dd-MM-yyyy hh:mm tt")
-                                   + "%S, last login &a" + who.Last.ToString("dd-MM-yyyy hh:mm tt"));
+                Player.Message(p, "  First login &a" + who.First.ToString("yyyy-MM-dd")
+                                   + "%S, last login &a" + who.Last.ToString("yyyy-MM-dd"));
             else
-                Player.Message(p, "  First login on &a" + who.First.ToString("dd-MM-yyyy hh:mm tt") +
-                                   "%S, and is currently &aonline");
-
+                Player.Message(p, "  First login on &a" + who.First.ToString("yyyy-MM-dd")
+                                   + "%S, and is currently &aonline");
+            
             Player.Message(p, "  Logged in &a{0} %Stimes, &c{1} %Sof which ended in a kick", who.Logins, who.Kicks);        
             if (who.Group.Permission == LevelPermission.Banned) {
                 string[] data = Ban.GetBanData(who.Name);
@@ -98,10 +90,9 @@ namespace MCGalaxy.Commands.Info {
             }
             
             if (who.AfkMessage != null) {
-                Player.Message(p, "  Idle for {0} (AFK {1}%S) last action was at {1}", who.IdleTime.Shorten(), who.AfkMessage, who.LastAction.ToString("dd-MM-yyyy hh:mm tt"));
-                Player.Message(p, "   {0} (AFK {1}%S)", who.IdleTime.Shorten(), who.AfkMessage);
+                Player.Message(p, "  Idle for {0} (AFK {1}%S)", who.IdleTime.Shorten(), who.AfkMessage);
             } else if (who.IdleTime.TotalMinutes >= 1) {
-                Player.Message(p, "  Idle for {0},last action was at {1}", who.IdleTime.Shorten(), who.LastAction.ToString("dd-MM-yyyy hh:mm tt"));
+                Player.Message(p, "  Idle for {0}", who.IdleTime.Shorten());
             }
             
             if (!Server.zombie.Running) return;
