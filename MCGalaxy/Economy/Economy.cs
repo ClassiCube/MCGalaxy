@@ -19,9 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using MCGalaxy.Eco;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Eco {
     public static partial class Economy {
 
         public static bool Enabled;

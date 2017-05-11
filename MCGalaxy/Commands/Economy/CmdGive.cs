@@ -16,8 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Eco;
 
-namespace MCGalaxy.Commands.Economic {
+namespace MCGalaxy.Commands.Eco {
     public sealed class CmdGive : MoneyCmd {
         public override string name { get { return "give"; } }
         public override string shortcut { get { return "gib"; } }

@@ -19,7 +19,7 @@ using System;
 using System.Globalization;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands.Economic {
+namespace MCGalaxy.Commands.Eco {
     public abstract class MoneyCmd : Command {
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return true; } }

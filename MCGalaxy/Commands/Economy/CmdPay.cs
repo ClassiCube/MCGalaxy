@@ -16,8 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Eco;
 
-namespace MCGalaxy.Commands.Economic {
+namespace MCGalaxy.Commands.Eco {
     public sealed class CmdPay : MoneyCmd {
         public override string name { get { return "pay"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }

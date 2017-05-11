@@ -23,6 +23,7 @@ using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Drawing;
+using MCGalaxy.Eco;
 using MCGalaxy.Events;
 using MCGalaxy.Games;
 using MCGalaxy.Tasks;

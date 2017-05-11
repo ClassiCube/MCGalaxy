@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Eco {
     
     /// <summary> Manages the awards the server has, and which players have which awards. </summary>
     public static class Awards {

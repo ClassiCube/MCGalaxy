@@ -15,7 +15,9 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands.Economic {   
+using MCGalaxy.Eco;
+
+namespace MCGalaxy.Commands.Eco {   
     public sealed class CmdAwardMod : Command {        
         public override string name { get { return "awardmod"; } }
         public override string type { get { return CommandTypes.Economy; } }

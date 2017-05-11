@@ -20,7 +20,7 @@ using System.Data;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Eco {
     public static partial class Economy {
         
         static ColumnDesc[] createEconomy = new ColumnDesc[] {

@@ -17,8 +17,9 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Eco;
 
-namespace MCGalaxy.Commands.Economic {
+namespace MCGalaxy.Commands.Eco {
     public sealed class CmdAwards : Command {        
         public override string name { get { return "awards"; } }
         public override string type { get { return CommandTypes.Economy; } }

@@ -17,6 +17,7 @@
 */
 using System;
 using MCGalaxy.Games;
+using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdHuman : Command {
