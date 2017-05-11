@@ -144,7 +144,7 @@ namespace MCGalaxy {
                                         "totalBlocks=@5, totalCuboided=@6, totalKicked=@7, TimeSpent=@8", "WHERE Name=@9", 
                                         ip, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                                         totalLogins, overallDeath, money, blocks,
-                                        cuboided, totalKicked, time.ToDBTime(), name);
+                                        cuboided, totalKicked, (long)time.TotalSeconds, name);
             
             Server.zombie.SaveZombieStats(this);
         }

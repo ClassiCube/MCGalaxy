@@ -23,6 +23,10 @@ using System.Threading;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
+using MCGalaxy.DB;
+using System.Data;
+using System.Data.Common;
+using MCGalaxy.SQL;
 
 namespace MCGalaxy.Tasks {
     internal static class UpgradeTasks {
@@ -145,6 +149,62 @@ namespace MCGalaxy.Tasks {
             
             Server.lockdown.Save();
             Directory.Delete("text/lockdown/map");
+        }
+        
+        internal static void UpgradeDBTimeSpent() {
+            DataTable table = Database.Backend.GetRows(PlayerData.DBTable, "TimeSpent", "LIMIT 1");
+            if (table.Rows.Count == 0) return; // no players
+            
+            string time = table.Rows[0]["TimeSpent"].ToString();
+            if (time.IndexOf(' ') == -1) return; // already upgraded
+            
+            Server.s.Log("Upgrading TimeSpent column in database to new format..");
+            DumpPlayerTimeSpents();
+            UpgradePlayerTimeSpents();
+            Server.s.Log("Upgraded " + playerCount + " rows. (" + playerFailed + " rows failed)");
+        }
+        
+        static List<int> playerIds;
+        static List<long> playerSeconds;
+        static int playerCount, playerFailed = 0;
+        
+        
+        static void DumpPlayerTimeSpents() {
+            playerIds = new List<int>();
+            playerSeconds = new List<long>();
+            Database.ExecuteReader("SELECT ID, TimeSpent FROM Players", AddPlayerTimeSpent);            
+        }
+        
+        static void AddPlayerTimeSpent(IDataReader reader) {
+            playerCount++;
+            try {
+                int id = reader.GetInt32(0);
+                TimeSpan span = reader.GetString(1).ParseDBTime();
+                
+                playerIds.Add(id);
+                playerSeconds.Add((long)span.TotalSeconds);
+            } catch {
+                playerFailed++;
+            }
+        }
+        
+        static void UpgradePlayerTimeSpents() {
+            
+            using (BulkTransaction bulk = Database.Backend.CreateBulk()) {
+                IDataParameter idParam = bulk.CreateParam("@0", DbType.Int32);
+                IDataParameter secsParam = bulk.CreateParam("@1", DbType.Int64);
+                IDbCommand cmd = bulk.CreateCommand("UPDATE Players SET TimeSpent = @1 WHERE ID = @0");
+                cmd.Parameters.Add(idParam);
+                cmd.Parameters.Add(secsParam);
+                
+                for (int i = 0; i < playerIds.Count; i++) {
+                    idParam.Value = playerIds[i];
+                    secsParam.Value = playerSeconds[i];
+                    cmd.ExecuteNonQuery();
+                }
+                
+                bulk.Commit();
+            }
         }
     }
 }

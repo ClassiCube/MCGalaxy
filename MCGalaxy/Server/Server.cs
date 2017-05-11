@@ -116,7 +116,8 @@ namespace MCGalaxy {
             Background.QueueOnce(LoadAutoloadMaps);
             Background.QueueOnce(UpgradeTasks.MovePreviousLevelFiles);
             Background.QueueOnce(UpgradeTasks.UpgradeOldLockdown);
-
+            Background.QueueOnce(UpgradeTasks.UpgradeDBTimeSpent);
+            
             Background.QueueOnce(SetupSocket);
             Background.QueueOnce(InitTimers);
             Background.QueueOnce(InitRest);

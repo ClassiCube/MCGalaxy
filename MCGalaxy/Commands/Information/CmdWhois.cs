@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands.Info {
             info.TotalPlaced = data.TotalPlaced; info.TotalDeleted = data.TotalDeleted;
             info.LoginBlocks = -1;           
             
-            info.TimeSpent = data.TotalTime.ParseDBTime();
+            info.TimeSpent = data.TotalTime;
             info.First = data.FirstLogin;
             info.Last = data.LastLogin;
             info.Logins = data.Logins; info.Kicks = data.Kicks;

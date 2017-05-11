@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands.Maintenance {
                     SetInteger(p, args, PlayerData.ColumnKicked, 1000000000, who,
                                v => who.totalKicked = v, UpdateDB); break;
                 case "timespent":
-                    SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, v => who.time = v.ParseDBTime()); break;
+                    SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, v => who.time = v); break;
                 case "color":
                     SetColor(p, args, PlayerData.ColumnColor, who, v => who.color = (v == "" ? who.group.color : v)); break;
                 case "titlecolor":
@@ -151,23 +151,23 @@ namespace MCGalaxy.Commands.Maintenance {
             MessageDataChanged(p, args[0], args[1], args[2]);
         }
         
-        static void SetTimespan(Player p, string[] args, string column, Player who, Action<string> setter) {
+        static void SetTimespan(Player p, string[] args, string column, Player who, Action<TimeSpan> setter) {
             if (args.Length < 3) {
                 Player.Message(p, "Timespan must be in the format: <number><quantifier>..");
                 Player.Message(p, CommandParser.TimespanHelp, "set time spent to");
                 return;
             }
             
-            TimeSpan timeFrame = TimeSpan.Zero;
-            if (!CommandParser.GetTimespan(p, args[2], ref timeFrame, "set time spent to", 'm')) return;
+            TimeSpan span = TimeSpan.Zero;
+            if (!CommandParser.GetTimespan(p, args[2], ref span, "set time spent to", 'm')) return;
             
-            string time = timeFrame.ToDBTime();
             if (who != null) {
-                setter(time);
+                setter(span);
             } else {
-                UpdateDB(args[0], time, column);
+                long secs = (long)span.TotalSeconds;
+            	UpdateDB(args[0], secs.ToString(), column);
             }
-            MessageDataChanged(p, args[0], args[1], timeFrame.Shorten(true));
+            MessageDataChanged(p, args[0], args[1], span.Shorten(true));
         }
         
         static void SetInteger(Player p, string[] args, string column, int max, Player who,

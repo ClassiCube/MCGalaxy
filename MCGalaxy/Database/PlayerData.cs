@@ -20,8 +20,8 @@ using System.Data;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.DB {
-	
-	/// <summary> Retrieves or sets player stats in the database. </summary>
+    
+    /// <summary> Retrieves or sets player stats in the database. </summary>
     public class PlayerData {
         
         public const string DBTable = "Players";
@@ -40,11 +40,12 @@ namespace MCGalaxy.DB {
         
         public const string ColumnTotalBlocks = "totalBlocks";
         public const string ColumnTotalCuboided = "totalCuboided";
-            
-        public string Name, Color, Title, TitleColor, TotalTime, IP;
+        
+        public string Name, Color, Title, TitleColor, IP;
         public DateTime FirstLogin, LastLogin;
         public int UserID, Money, Deaths, Logins, Kicks;
         public long TotalModified, TotalDrawn, TotalPlaced, TotalDeleted;
+        public TimeSpan TotalTime;
         
         internal static void Create(Player p) {
             p.prefix = "";
@@ -64,7 +65,7 @@ namespace MCGalaxy.DB {
             
             Database.Backend.AddRow(DBTable, "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
                                     "totalDeaths, Money, totalBlocks, totalKicked, TimeSpent",
-                                    p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, p.time.ToDBTime());
+                                    p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, (long)p.time.TotalSeconds);
             
             using (DataTable ids = Database.Backend.GetRows(DBTable,
                                                             "ID", "WHERE Name = @0", p.name)) {
@@ -80,7 +81,7 @@ namespace MCGalaxy.DB {
         internal static void Load(DataTable playerDb, Player p) {
             PlayerData data = PlayerData.Fill(playerDb.Rows[0]);
             p.totalLogins = data.Logins + 1;
-            p.time = data.TotalTime.ParseDBTime();
+            p.time = data.TotalTime;
             p.UserID = data.UserID;
             p.firstLogin = data.FirstLogin;
             p.lastLogin = data.LastLogin;
@@ -106,7 +107,12 @@ namespace MCGalaxy.DB {
             data.IP = row["IP"].ToString().Trim();
             data.UserID = ParseInt(row["ID"].ToString());
             
-            data.TotalTime = row[ColumnTimeSpent].ToString();
+            try {
+                long secs = PlayerData.ParseLong(row[ColumnTimeSpent].ToString());
+                data.TotalTime = TimeSpan.FromSeconds(secs);
+            } catch {
+                data.TotalTime = row[ColumnTimeSpent].ToString().ParseDBTime();
+            }
             data.FirstLogin = DateTime.Parse(row[ColumnFirstLogin].ToString());
             data.LastLogin = DateTime.Parse(row[ColumnLastLogin].ToString());
             
