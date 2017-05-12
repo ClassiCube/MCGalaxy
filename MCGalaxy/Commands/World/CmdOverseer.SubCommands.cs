@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.World {
         
         static void HandleMap(Player p, string cmd, string value) {
             cmd = cmd.ToUpper();
-            bool mapOnly = !(cmd == "ADD" || cmd == "DELETE");
+            bool mapOnly = !(cmd == "ADD" || cmd == "DELETE" || cmd == "");
             if (mapOnly && !OwnsMap(p, p.level)) {
                 Player.Message(p, "You may only perform that action on your own map."); return;
             }
