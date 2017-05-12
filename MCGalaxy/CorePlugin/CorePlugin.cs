@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MCGalaxy.Eco;
 using MCGalaxy.Events;
 using MCGalaxy.Tasks;
 
@@ -36,12 +37,15 @@ namespace MCGalaxy.Core {
                                           Priority.Critical, this);
             OnPlayerConnectingEvent.Register(ConnectingHandler.HandleConnecting,
                                           Priority.Critical, this);
+            
             OnJoinedLevelEvent.Register(MiscHandlers.HandleOnJoinedLevel,
                                         Priority.Critical, this);
             OnPlayerMoveEvent.Register(MiscHandlers.HandlePlayerMove,
                                        Priority.Critical, this);
-        	OnPlayerClickEvent.Register(MiscHandlers.HandlePlayerClick,
-        	                            Priority.Critical, this);
+            OnPlayerClickEvent.Register(MiscHandlers.HandlePlayerClick,
+                                        Priority.Critical, this);
+            OnEcoTransactionEvent.Register(EcoHandlers.HandleEcoTransaction,
+                                           Priority.Critical, this);
             
             clearTask = Server.Background.QueueRepeat(IPThrottler.CleanupTask, null, 
                                                       TimeSpan.FromMinutes(10));
@@ -51,8 +55,12 @@ namespace MCGalaxy.Core {
             OnPlayerConnectEvent.UnRegister(this);
             OnPlayerCommandEvent.UnRegister(this);
             OnPlayerConnectingEvent.UnRegister(this);
+            
             OnJoinedLevelEvent.UnRegister(this);
             OnPlayerMoveEvent.UnRegister(this);
+            OnPlayerClickEvent.UnRegister(this);
+            OnEcoTransactionEvent.UnRegister(this);
+            
             Server.Background.Cancel(clearTask);
         }
     }

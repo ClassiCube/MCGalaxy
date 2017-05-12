@@ -19,11 +19,17 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Eco {
+    
     public static partial class Economy {
 
         public static bool Enabled;
+        
+        public delegate void OnMoneyChanged(Player p);
+        
+        public delegate void OnEcoTransaction(EcoTransaction transaction);
 
         public static void Load() {
             if (!File.Exists(Paths.EconomyPropsFile)) {
@@ -105,13 +111,13 @@ namespace MCGalaxy.Eco {
         
         public static void MakePurchase(Player p, int cost, string item) {
             p.SetMoney(p.money - cost);
-            Player.Message(p, "Your balance is now &f{0} &3{1}", p.money, Server.moneys);
-
-            Economy.EcoStats stats = RetrieveStats(p.name);
-            stats.TotalSpent += cost;
-            stats.Purchase = item + "%3 for %f" + cost + " %3" + Server.moneys +
-                " on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-            Economy.UpdateStats(stats);
+            EcoTransaction transaction = new EcoTransaction();
+            transaction.TargetName = p.name;
+            transaction.TargetFormatted = p.ColoredName;
+            transaction.Amount = cost;
+            transaction.Type = EcoTransactionType.Purchase;
+            transaction.ItemName = item;
+            OnEcoTransactionEvent.Call(transaction);
         }
     }
 }

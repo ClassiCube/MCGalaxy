@@ -395,6 +395,7 @@
     <Compile Include="CorePlugin\ConnectingHandler.cs" />
     <Compile Include="CorePlugin\CorePlugin.cs" />
     <Compile Include="CorePlugin\ConnectHandler.cs" />
+    <Compile Include="CorePlugin\EcoHandlers.cs" />
     <Compile Include="CorePlugin\IPThrottler.cs" />
     <Compile Include="CorePlugin\MiscHandlers.cs" />
     <Compile Include="Database\Backends\SQLite.cs" />
@@ -462,6 +463,7 @@
     <Compile Include="Drawing\Transform\Transform.cs" />
     <Compile Include="Economy\Awards.cs" />
     <Compile Include="Economy\Economy.DB.cs" />
+    <Compile Include="Economy\EcoTransaction.cs" />
     <Compile Include="Economy\ReviveItem.cs" />
     <Compile Include="Economy\ZombieItems.cs" />
     <Compile Include="Economy\Economy.cs" />
@@ -586,6 +588,7 @@
     <Compile Include="Database\Undo\UndoFormat.cs" />
     <Compile Include="Database\Undo\UndoFormatBin.cs" />
     <Compile Include="Database\Undo\UndoFormatText.cs" />
+    <Compile Include="Plugins\Events\EconomyEvents.cs" />
     <Compile Include="Plugins\Events\Enums.cs" />
     <Compile Include="Plugins\Events\GroupEvents.cs" />
     <Compile Include="Plugins\Events\IPluginEvent.cs" />

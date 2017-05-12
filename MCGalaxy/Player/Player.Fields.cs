@@ -21,6 +21,7 @@ using MCGalaxy.Drawing.Transforms;
 using MCGalaxy.Games;
 using MCGalaxy.Undo;
 using MCGalaxy.Maths;
+using MCGalaxy.Events;
 
 namespace MCGalaxy {
     
@@ -262,10 +263,5 @@ namespace MCGalaxy {
         
         /// <summary> Returns whether the given player is console or IRC. </summary>
         public static bool IsSuper(Player p) { return p == null || p.ircChannel != null || p.ircNick != null; }
-        
-        public void SetMoney(int amount) {
-            money = amount;
-            OnMoneyChanged();
-        }
     }
 }

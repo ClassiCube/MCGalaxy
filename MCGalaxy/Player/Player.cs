@@ -479,14 +479,13 @@ namespace MCGalaxy {
             catch { }
             return false;
         }
-
-        public bool EnoughMoney(int amount) {
-            return money >= amount;
-        }
-        
-        public void OnMoneyChanged() {
+   
+        public void SetMoney(int amount) {
+            money = amount;
+            
             if (Server.zombie.Running) Server.zombie.PlayerMoneyChanged(this);
             if (Server.lava.active) Server.lava.PlayerMoneyChanged(this);
+            OnMoneyChangedEvent.Call(this);
         }
 
         public void TntAtATime() {

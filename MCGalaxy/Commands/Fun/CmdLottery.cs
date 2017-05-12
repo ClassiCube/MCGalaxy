@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Fun {
 
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            if (!p.EnoughMoney(10)) {
+            if (p.money < 10) {
                 Player.Message(p, "You need &f10 " + Server.moneys + " %Sto enter the lottery."); return;
             }
             
