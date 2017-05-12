@@ -38,6 +38,7 @@ namespace MCGalaxy.Commands.Info {
             if (message == "") message = p.name;
             int matches;
             Player pl = PlayerInfo.FindMatches(p, message, out matches);
+            PlayerData target = null;
             if (matches > 1) return;
             
             WhoInfo info;
@@ -45,12 +46,23 @@ namespace MCGalaxy.Commands.Info {
                 info = FromOnline(pl);
             } else {
                 if (!Formatter.ValidName(p, message, "player")) return;
-                Player.Message(p, "Searching database for the player..");           
-                PlayerData target = PlayerInfo.FindOfflineMatches(p, message);
+                Player.Message(p, "Searching database for the player..");
+                target = PlayerInfo.FindOfflineMatches(p, message);
                 if (target == null) return;
                 info = FromOffline(target, message);
             }
             WhoInfo.Output(p, info, CheckExtraPerm(p));
+            
+            Player.Message(p, "-------------");
+            if (pl != null) {
+                foreach (OnlineStatPrinter printer in OnlineStat.Stats) {
+                    printer(p, pl);
+                }
+            } else {
+                foreach (OfflineStatPrinter printer in OfflineStat.Stats) {
+                    printer(p, target);
+                }
+            }
         }
         
         WhoInfo FromOnline(Player who) {
@@ -59,17 +71,6 @@ namespace MCGalaxy.Commands.Info {
             info.FullName = prefix + who.ColoredName;
             info.Name = who.name;
             info.Group = who.group;
-            info.Money = who.money; info.Deaths = who.overallDeath;
-            
-            info.TotalBlocks = who.overallBlocks; info.TotalDrawn = who.TotalDrawn;
-            info.TotalPlaced = who.TotalPlaced; info.TotalDeleted = who.TotalDeleted;
-            info.LoginBlocks = who.loginBlocks;
-            
-            info.TimeSpent = who.time; info.TimeOnline = DateTime.Now - who.timeLogged;
-            info.First = who.firstLogin;
-            info.Logins = who.totalLogins; info.Kicks = who.totalKicked;
-            info.IP = who.ip; info.AfkMessage = who.afkMessage;
-            info.IdleTime = DateTime.UtcNow - who.LastAction;
             
             info.RoundsTotal = who.Game.TotalRoundsSurvived;
             info.RoundsMax = who.Game.MaxRoundsSurvived;
@@ -87,17 +88,6 @@ namespace MCGalaxy.Commands.Info {
             info.FullName = prefix + color + data.Name.RemoveLastPlus();
             info.Name = data.Name;
             info.Group = group;
-            info.Money = data.Money; info.Deaths = data.Deaths;
-            
-            info.TotalBlocks = data.TotalModified; info.TotalDrawn = data.TotalDrawn;
-            info.TotalPlaced = data.TotalPlaced; info.TotalDeleted = data.TotalDeleted;
-            info.LoginBlocks = -1;           
-            
-            info.TimeSpent = data.TotalTime;
-            info.First = data.FirstLogin;
-            info.Last = data.LastLogin;
-            info.Logins = data.Logins; info.Kicks = data.Kicks;
-            info.IP = data.IP;
             
             if (Server.zombie.Running) {
                 ZombieStats stats = Server.zombie.LoadZombieStats(data.Name);
@@ -105,6 +95,24 @@ namespace MCGalaxy.Commands.Info {
                 info.RoundsMax = stats.MaxRounds; info.InfectedMax = stats.MaxInfected;
             }
             return info;
+        }
+        
+        class WhoInfo {
+            public string FullName, Name;
+            public Group Group;
+            public int RoundsTotal, RoundsMax;
+            public int InfectedTotal, InfectedMax;
+            
+            public static void Output(Player p, WhoInfo who, bool canSeeIP) {
+                Player.Message(p, who.FullName + " %S(" + who.Name + ") has:");
+                Player.Message(p, "  Rank of " + who.Group.ColoredName);
+                
+                if (!Server.zombie.Running) return;
+                Player.Message(p, "  Survived &a{0} %Srounds (max &e{1}%S)",
+                               who.RoundsTotal, who.RoundsMax);
+                Player.Message(p, "  Infected &a{0} %Splayers (max &e{1}%S)",
+                               who.InfectedTotal, who.InfectedMax);
+            }
         }
 
         public override void Help(Player p) {

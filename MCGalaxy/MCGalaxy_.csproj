@@ -274,7 +274,6 @@
     <Compile Include="Commands\Information\CmdWhere.cs" />
     <Compile Include="Commands\Information\CmdWhois.cs" />
     <Compile Include="Commands\Information\CmdWhoNick.cs" />
-    <Compile Include="Commands\Information\WhoInfo.cs" />
     <Compile Include="Commands\Maintenance\CmdBlockDB.cs" />
     <Compile Include="Commands\Maintenance\CmdBlockSpeed.cs" />
     <Compile Include="Commands\Maintenance\CmdInfoSwap.cs" />
@@ -412,6 +411,8 @@
     <Compile Include="Database\Backends\MySQL.cs" />
     <Compile Include="Database\ParameterisedQuery.cs" />
     <Compile Include="Database\PlayerData.cs" />
+    <Compile Include="Database\Stats\OfflineStat.cs" />
+    <Compile Include="Database\Stats\OnlineStat.cs" />
     <Compile Include="Database\Stats\TopStat.cs" />
     <Compile Include="Database\TableDumper.cs" />
     <Compile Include="Drawing\Brushes\Brush.cs" />

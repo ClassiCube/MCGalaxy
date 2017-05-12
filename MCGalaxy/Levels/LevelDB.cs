@@ -121,16 +121,6 @@ namespace MCGalaxy {
         }
 
         
-        internal static ColumnDesc[] createBlock = new ColumnDesc[] {
-            new ColumnDesc("Username", ColumnType.Char, 20),
-            new ColumnDesc("TimePerformed", ColumnType.DateTime),
-            new ColumnDesc("X", ColumnType.UInt16),
-            new ColumnDesc("Y", ColumnType.UInt16),
-            new ColumnDesc("Z", ColumnType.UInt16),
-            new ColumnDesc("Type", ColumnType.UInt8),
-            new ColumnDesc("Deleted", ColumnType.Bool),
-        };
-        
         internal static ColumnDesc[] createPortals = new ColumnDesc[] {
             new ColumnDesc("EntryX", ColumnType.UInt16),
             new ColumnDesc("EntryY", ColumnType.UInt16),
