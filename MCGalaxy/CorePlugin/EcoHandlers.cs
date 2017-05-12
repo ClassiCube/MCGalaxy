@@ -16,13 +16,10 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
-using MCGalaxy.Blocks.Extended;
-using MCGalaxy.Events;
-using MCGalaxy.Maths;
-using MCGalaxy.Network;
-using MCGalaxy.Eco;
 using System.Globalization;
+using MCGalaxy.DB;
+using MCGalaxy.SQL;
+using MCGalaxy.Eco;
 
 namespace MCGalaxy.Core {
     internal static class EcoHandlers {
@@ -31,18 +28,75 @@ namespace MCGalaxy.Core {
             switch (transaction.Type) {
                 case EcoTransactionType.Purchase:
                     HandlePurchase(transaction); break;
+                case EcoTransactionType.Take:
+                    HandleTake(transaction); break;
+                case EcoTransactionType.Give:
+                    HandleGive(transaction); break;
+                case EcoTransactionType.Payment:
+                    HandlePayment(transaction); break;
             }
         }
         
-        static void HandlePurchase(EcoTransaction transaction) {
-            Economy.EcoStats stats = Economy.RetrieveStats(transaction.TargetName);
-            stats.TotalSpent += transaction.Amount;
-            stats.Purchase = transaction.ItemName + "%3 for %f" + transaction.Amount + " %3" + Server.moneys
+        static void HandlePurchase(EcoTransaction data) {
+            Economy.EcoStats stats = Economy.RetrieveStats(data.TargetName);
+            stats.TotalSpent += data.Amount;
+            stats.Purchase = data.ItemDescription + "%3 for %f" + data.Amount + " %3" + Server.moneys
                 + " on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
             
-            Player p = PlayerInfo.FindExact(transaction.TargetName);
+            Player p = PlayerInfo.FindExact(data.TargetName);
             if (p != null) Player.Message(p, "Your balance is now &f{0} &3{1}", p.money, Server.moneys);
             Economy.UpdateStats(stats);
+        }
+        
+        static void HandleTake(EcoTransaction data) {
+            MessageAll("{0} %Stook &f{2} &3{3} %Sfrom {1}{4}", data);
+            Economy.EcoStats stats = Economy.RetrieveStats(data.TargetName);
+            stats.Fine = Format(" by " + data.SourceName, data);
+            Economy.UpdateStats(stats);
+        }
+        
+        static void HandleGive(EcoTransaction data) {
+            MessageAll("{0} %Sgave {1} &f{2} &3{3}{4}", data);
+            Economy.EcoStats stats = Economy.RetrieveStats(data.TargetName);
+            stats.Salary = Format(" by " + data.SourceName, data);
+            Economy.UpdateStats(stats);
+        }
+        
+        static void HandlePayment(EcoTransaction data) {
+            MessageAll("{0} %Spaid {1} &f{2} &3{3}{4}", data);
+            Economy.EcoStats stats = Economy.RetrieveStats(data.TargetName);
+            stats.Salary = Format(" by " + data.SourceName, data);
+            Economy.UpdateStats(stats);
+            
+            if (Player.IsSuper(data.SourcePlayer)) return;
+            stats = Economy.RetrieveStats(data.SourceName);
+            stats.Payment = Format(" to " + data.TargetName, data);
+            Economy.UpdateStats(stats);
+        }        
+        
+        
+        static void MessageAll(string format, EcoTransaction data) {
+            string reason = data.Reason == null ? "" : " %S(" + data.Reason + "%S)";
+            Chat.MessageGlobal(format, data.SourceFormatted, data.TargetFormatted,
+                               data.Amount, Server.moneys, reason);
+        }
+
+        static string Format(string action, EcoTransaction data) {
+            string entry = "%f" + data.Amount + "%3 " + Server.moneys + action
+                + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            string reason = data.Reason;
+            
+            if (reason == null) return entry;
+            if (!Database.Backend.EnforcesTextLength)
+                return entry + " (" + reason + ")";
+            
+            int totalLen = entry.Length + 3 + reason.Length;
+            if (totalLen >= 256) {
+                int truncatedLen = reason.Length - (totalLen - 255);
+                reason = reason.Substring(0, truncatedLen);
+                Player.Message(data.SourcePlayer, "Reason too long, truncating to: {0}", reason);
+            }
+            return entry + " (" + reason + ")";
         }
     }
 }

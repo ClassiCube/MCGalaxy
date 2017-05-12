@@ -1,7 +1,7 @@
 ﻿/*
     Copyright 2011 MCForge
         
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -16,8 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Globalization;
-using MCGalaxy.SQL;
+using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {
     public abstract class MoneyCmd : Command {
@@ -25,60 +24,26 @@ namespace MCGalaxy.Commands.Eco {
         public override bool museumUsable { get { return true; } }
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
 
-        protected bool ParseArgs(Player p, string message, bool canAll,
-                                 string action, out MoneyCmdData data) {
-            data = default(MoneyCmdData);
+        protected bool ParseArgs(Player p, string message, ref bool all, 
+                                 string action, out EcoTransaction data) {
+            data = new EcoTransaction();
             string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return false; }
-            data.Name = args[0];
-            data.Reason = args.Length > 2 ? args[2] : "";
+            
+            data.TargetName = args[0];
+            data.Reason = args.Length > 2 ? args[2] : null;
+            data.SourcePlayer = p;
             
             if (p == null) {
-                data.SourceRaw = "(console)"; data.Source = "(console)";
+                data.SourceName = "(console)";
+                data.SourceFormatted = "(console)";
             } else {
-                data.SourceRaw = p.color + p.truename; data.Source = p.ColoredName;
+                data.SourceName = p.name;
+                data.SourceFormatted = p.ColoredName;
             }
 
-            int amount = 0;
-            data.All = canAll && args[1].CaselessEq("all");
-            if (!data.All && !CommandParser.GetInt(p, args[1], "Amount", ref amount, 1))  return false;
-            
-            data.Amount = amount;
-            return true;
-        }
-        
-        protected struct MoneyCmdData {
-            public string Source, SourceRaw, Name, Reason;
-            public int Amount;
-            public bool All;
-        }
-        
-        protected static void MessageAll(Player p, string format, 
-                                         string target, MoneyCmdData data) {
-            string targetName = PlayerInfo.GetColoredName(p, target);
-            string msgReason = data.Reason == "" ? "" : " %S(" + data.Reason + "%S)";
-            
-            Chat.MessageGlobal(format, data.Source, targetName, 
-                            data.Amount, Server.moneys, msgReason);
-        }
-
-        protected static string Format(Player p, string action,
-                                       MoneyCmdData data) {
-            string entry = "%f" + data.Amount + "%3 " + Server.moneys + action
-                + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
-            string reason = data.Reason;
-            
-            if (reason == "") return entry;
-            if (!Database.Backend.EnforcesTextLength)
-                return entry + " (" + reason + ")";
-            
-            int totalLen = entry.Length + 3 + reason.Length;
-            if (totalLen >= 256) {
-                int truncatedLen = reason.Length - (totalLen - 255);
-                reason = reason.Substring(0, truncatedLen);
-                Player.Message(p, "Reason too long, truncating to: {0}", reason);
-            }
-            return entry + " (" + reason + ")";
+            all = all && args[1].CaselessEq("all");
+            return all || CommandParser.GetInt(p, args[1], "Amount", ref data.Amount, 1);
         }
     }
 }

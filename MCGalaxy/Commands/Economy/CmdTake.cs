@@ -1,7 +1,7 @@
 /*
     Copyright 2011 MCForge
         
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Eco;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Eco {
     public sealed class CmdTake : MoneyCmd {
@@ -26,35 +27,37 @@ namespace MCGalaxy.Commands.Eco {
         public CmdTake() { }
 
         public override void Use(Player p, string message) {
-            MoneyCmdData data;
-            if (!ParseArgs(p, message, true, "take", out data)) return;
+            EcoTransaction data;
+            bool all = true;
+            if (!ParseArgs(p, message, ref all, "take", out data)) return;
             
             int matches = 1;
-            Player who = PlayerInfo.FindMatches(p, data.Name, out matches);
+            Player who = PlayerInfo.FindMatches(p, data.TargetName, out matches);
             if (matches > 1) return;
             if (p != null && p == who) { Player.Message(p, "%cYou can't take %3" + Server.moneys + "%c from yourself"); return; }
             
-            string target = null;
             int money = 0;
             if (who == null) {
-                target = Economy.FindMatches(p, data.Name, out money);
-                if (target == null) return;
-                Take(ref money, ref data);
-                Economy.UpdateMoney(target, money);
+                data.TargetName = Economy.FindMatches(p, data.TargetName, out money);
+                if (data.TargetName == null) return;
+                
+                Take(ref money, all, data);
+                Economy.UpdateMoney(data.TargetName, money);
             } else {
-                target = who.name; money = who.money;
-                Take(ref money, ref data);
+                data.TargetName = who.name;
+                money = who.money;
+                
+                Take(ref money, all, data);
                 who.SetMoney(money);
             }
-            MessageAll(p, "{0} %Stook &f{2} &3{3} %Sfrom {1}{4}", target, data);
             
-            Economy.EcoStats stats = Economy.RetrieveStats(target);
-            stats.Fine = Format(p, " by " + data.SourceRaw, data);
-            Economy.UpdateStats(stats);
+            data.TargetFormatted = PlayerInfo.GetColoredName(p, data.TargetName);
+            data.Type = EcoTransactionType.Take;
+            OnEcoTransactionEvent.Call(data);
         }
         
-        static void Take(ref int money, ref MoneyCmdData data) {
-            if (data.All || money < data.Amount) {
+        static void Take(ref int money, bool all, EcoTransaction data) {
+            if (all || money < data.Amount) {
                 data.Amount = money;
                 money = 0;
             } else {

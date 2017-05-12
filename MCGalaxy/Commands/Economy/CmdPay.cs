@@ -1,7 +1,7 @@
 /*
     Copyright 2011 MCForge
         
-    Dual-licensed under the    Educational Community License, Version 2.0 and
+    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Eco;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Eco {
     public sealed class CmdPay : MoneyCmd {
@@ -25,40 +26,34 @@ namespace MCGalaxy.Commands.Eco {
         public CmdPay() { }
 
         public override void Use(Player p, string message) {
-            MoneyCmdData data;
-            if (!ParseArgs(p, message, false, "pay", out data)) return;
+            EcoTransaction data;
+            bool all = false;
+            if (!ParseArgs(p, message, ref all, "pay", out data)) return;
             
             int matches = 1;
-            Player who = PlayerInfo.FindMatches(p, data.Name, out matches);
+            Player who = PlayerInfo.FindMatches(p, data.TargetName, out matches);
             if (matches > 1) return;
             if (p != null && p == who) { Player.Message(p, "You cannot pay yourself %3" + Server.moneys); return; }
-            string target = null;
             int money, srcMoney = Player.IsSuper(p) ? int.MaxValue : p.money;
             
             if (who == null) {
-                target = Economy.FindMatches(p, data.Name, out money);
-                if (target == null) return;
+                data.TargetName = Economy.FindMatches(p, data.TargetName, out money);
+                if (data.TargetName == null) return;
                 
                 if (!IsLegalPayment(p, srcMoney, money, data.Amount)) return;
                 money += data.Amount;
-                Economy.UpdateMoney(target, money);
+                Economy.UpdateMoney(data.TargetName, money);
             } else {
-                target = who.name; money = who.money;
+                data.TargetName = who.name; 
+                money = who.money;
+                
                 if (!IsLegalPayment(p, srcMoney, money, data.Amount)) return;
                 who.SetMoney(who.money + data.Amount);
             }
-            if (!Player.IsSuper(p)) p.SetMoney(p.money - data.Amount);
-            MessageAll(p, "{0} %Spaid {1} &f{2} &3{3}{4}", target, data);
-
-            Economy.EcoStats stats = Economy.RetrieveStats(target);
-            stats.Salary = Format(p, " by " + data.SourceRaw, data);
-            Economy.UpdateStats(stats);
             
-            if (Player.IsSuper(p)) return;
-            stats = Economy.RetrieveStats(p.name);
-            string targetName = PlayerInfo.GetColoredName(p, target);
-            stats.Payment = Format(p, " to " + targetName, data);
-            Economy.UpdateStats(stats);
+            data.TargetFormatted = PlayerInfo.GetColoredName(p, data.TargetName);
+            data.Type = EcoTransactionType.Payment;
+            OnEcoTransactionEvent.Call(data);
         }
 
         static bool IsLegalPayment(Player p, int payer, int receiver, int amount) {

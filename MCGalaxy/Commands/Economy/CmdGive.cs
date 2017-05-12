@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Eco;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Eco {
     public sealed class CmdGive : MoneyCmd {
@@ -26,33 +27,34 @@ namespace MCGalaxy.Commands.Eco {
         public CmdGive() { }
 
         public override void Use(Player p, string message) {
-            MoneyCmdData data;
-            if (!ParseArgs(p, message, false, "give", out data)) return;
+            EcoTransaction data;
+            bool all = false;
+            if (!ParseArgs(p, message, ref all, "give", out data)) return;
             
             int matches = 1;
-            Player who = PlayerInfo.FindMatches(p, data.Name, out matches);
+            Player who = PlayerInfo.FindMatches(p, data.TargetName, out matches);
             if (matches > 1) return;
             if (p != null && p == who) { Player.Message(p, "You cannot give yourself %3" + Server.moneys); return; }
-
-            string target = null;
             int money = 0;
+            
             if (who == null) {
-                target = Economy.FindMatches(p, data.Name, out money);
-                if (target == null) return;
+                data.TargetName = Economy.FindMatches(p, data.TargetName, out money);
+                if (data.TargetName == null) return;
                 
                 if (ReachedMax(p, money, data.Amount)) return;
                 money += data.Amount;
-                Economy.UpdateMoney(target, money);
+                Economy.UpdateMoney(data.TargetName, money);
             } else {
-                target = who.name; money = who.money;
+                data.TargetName = who.name; 
+                money = who.money;
+                
                 if (ReachedMax(p, money, data.Amount)) return;
                 who.SetMoney(who.money + data.Amount);
             }
-            MessageAll(p, "{0} %Sgave {1} &f{2} &3{3}{4}", target, data);
             
-            Economy.EcoStats stats = Economy.RetrieveStats(target);
-            stats.Salary = Format(p, " by " + data.SourceRaw, data);
-            Economy.UpdateStats(stats);
+            data.TargetFormatted = PlayerInfo.GetColoredName(p, data.TargetName);
+            data.Type = EcoTransactionType.Give;
+            OnEcoTransactionEvent.Call(data);
         }
         
         static bool ReachedMax(Player p, int current, int amount) {

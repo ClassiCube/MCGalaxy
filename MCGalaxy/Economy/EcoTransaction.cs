@@ -35,9 +35,11 @@ namespace MCGalaxy.Eco {
         public string TargetFormatted;
         
         
+        /// <summary> Source player who caused the transaction. Can be null. </summary>
+        public Player SourcePlayer;
         
-        /// <summary> Name of the item involved in the transaction. Can be null. </summary>
-        public string ItemName;
+        /// <summary> Description of the item involved in the transaction. Can be null. </summary>
+        public string ItemDescription;
         
         /// <summary> Reason provided for the transaction. Can be null. </summary>
         public string Reason;

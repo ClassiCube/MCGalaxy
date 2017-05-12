@@ -116,7 +116,7 @@ namespace MCGalaxy.Eco {
             transaction.TargetFormatted = p.ColoredName;
             transaction.Amount = cost;
             transaction.Type = EcoTransactionType.Purchase;
-            transaction.ItemName = item;
+            transaction.ItemDescription = item;
             OnEcoTransactionEvent.Call(transaction);
         }
     }
