@@ -117,10 +117,18 @@ namespace MCGalaxy {
         
         internal static void ImportSql(Stream sql) {
             // Import data (we only have CREATE TABLE and INSERT INTO statements)
-            using (StreamReader reader = new StreamReader(sql))
-                using (BulkTransaction helper = Database.Backend.CreateBulk())
-            {
-                List<string> buffer = new List<string>();
+            
+            using (StreamReader reader = new StreamReader(sql)) {
+                ImportBulk(reader);
+            }
+        }
+        
+        static void ImportBulk(StreamReader reader) {
+            BulkTransaction helper = null;
+            List<string> buffer = new List<string>();
+            
+            try {
+                helper = Database.Backend.CreateBulk();
                 while (!reader.EndOfStream) {
                     string cmd = NextStatement(reader, buffer);
                     if (cmd == null || cmd.Length == 0) continue;
@@ -129,9 +137,17 @@ namespace MCGalaxy {
                     if (index > -1) ParseCreate(ref cmd, index);
                     
                     //Run the command in the transaction.
-                    helper.Execute(cmd);
+                    if (helper.Execute(cmd)) continue;
+
+                    // Something went wrong.. commit what we've imported so far.
+                    // We need to recreate connection otherwise every helper.Execute fails
+                    helper.Commit();
+                    helper.Dispose();
+                    helper = Database.Backend.CreateBulk();
                 }
                 helper.Commit();
+            } finally {
+                if (helper != null) helper.Dispose();
             }
         }
         
@@ -164,7 +180,7 @@ namespace MCGalaxy {
             char[] sepChars = new char[] { '\t', ' ' }; // chars that separate part of a column definition
             char[] startChars = new char[] { '`', '(', ' ', ',', '\t' }; // chars that can start a column definition
             string before = cmd.Substring(0, priIndex);
-            before = before.Substring(0, before.LastIndexOfAny(sepChars)); // get rid of column type           
+            before = before.Substring(0, before.LastIndexOfAny(sepChars)); // get rid of column type
             int nameStart = before.LastIndexOfAny(startChars) + 1;
             string name = before.Substring(nameStart);
             

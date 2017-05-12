@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Info {
             
             string strLimit = " LIMIT " + offset + "," + limit;
             DataTable db = Database.Backend.GetRows(stat.Table, "DISTINCT Name, " + stat.Column,
-                                                    "ORDER BY " + stat.OrderBy + strLimit);
+                                                    "ORDER BY" + stat.OrderBy + strLimit);
             
             Player.Message(p, "&a{0}:", stat.Title());
             for (int i = 0; i < db.Rows.Count; i++) {

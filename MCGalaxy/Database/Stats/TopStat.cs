@@ -39,7 +39,7 @@ namespace MCGalaxy.DB {
             OrderBy = orderBy;
             if (OrderBy == null)
                 OrderBy = " " + col + " ";            
-            OrderBy += (ascending ? " asc" : " desc");
+            OrderBy += (ascending ? "asc" : "desc");
         }
         
         /// <summary> List of stats that can be ordered. </summary>
@@ -85,7 +85,7 @@ namespace MCGalaxy.DB {
             new TopStat("TimeSpent", PlayerData.DBTable, 
                         PlayerData.ColumnTimeSpent,
                         () => "Most time spent", FormatTimespan,
-                        false, " CAST(TimeSpent as BIGINT) "),
+                        false, " CAST(TimeSpent as unsigned) "),
         };
         
         public static string FormatInteger(string input) {
