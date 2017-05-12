@@ -41,7 +41,10 @@ namespace MCGalaxy.Commands.Misc {
                 Chat.MessageGlobal("{0} %Swas &8banned %Sby {1}%S.", 
                                 who.ColoredName, banner);
             } else {
-                string rankMsg = ModActionCmd.FormatRankChange(who.group, newRank, who.name, "Congratulations!");
+                string reason = newRank.Permission >= who.Rank ? 
+                    Server.defaultPromoteMessage : Server.defaultDemoteMessage;
+                string rankMsg = ModActionCmd.FormatRankChange(who.group, newRank, who.name, reason);
+                
                 Chat.MessageGlobal(rankMsg);
                 Player.Message(who, "You are now ranked {0}%S, type /help for your new set of commands.", 
                                newRank.ColoredName);
