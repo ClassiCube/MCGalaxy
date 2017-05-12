@@ -24,19 +24,22 @@ namespace MCGalaxy.DB {
     /// <summary> Outputs ordered stats from a column in a database table. </summary>
     public sealed class TopStat {
         
-        public readonly string Identifier, Table, Column;
-        public readonly bool Ascending;
+        public readonly string Identifier, Table, Column, OrderBy;
         public readonly Func<string> Title;
         public readonly Func<string, string> Formatter;
         
         public TopStat(string identifier, string table, string col, Func<string> title,
-                       Func<string, string> formatter, bool ascending = false) {
+                       Func<string, string> formatter, bool ascending = false, string orderBy = null) {
             Identifier = identifier;
             Table = table;
             Column = col;
             Title = title;
             Formatter = formatter;
-            Ascending = ascending;
+            
+            OrderBy = orderBy;
+            if (OrderBy == null)
+                OrderBy = " " + col + " ";            
+            OrderBy += (ascending ? " asc" : " desc");
         }
         
         /// <summary> List of stats that can be ordered. </summary>
@@ -79,11 +82,20 @@ namespace MCGalaxy.DB {
             new TopStat("Deleted", PlayerData.DBTable, 
                         PlayerData.ColumnTotalCuboided + " >> " + PlayerData.LowerBits,
                         () => "Most blocks deleted", FormatInteger),
+            new TopStat("TimeSpent", PlayerData.DBTable, 
+                        PlayerData.ColumnTimeSpent,
+                        () => "Most time spent", FormatTimespan,
+                        false, " CAST(TimeSpent as BIGINT) "),
         };
         
         public static string FormatInteger(string input) {
             long value = PlayerData.ParseLong(input);
             return value.ToString("N0");
+        }
+        
+        public static string FormatTimespan(string input) {
+            long value = PlayerData.ParseLong(input);
+            return TimeSpan.FromSeconds(value).Shorten(true, true);
         }
         
         public static string FormatDate(string input) {

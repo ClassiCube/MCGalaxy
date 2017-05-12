@@ -47,10 +47,9 @@ namespace MCGalaxy.Commands.Info {
                 return;
             }
             
-            string order = stat.Ascending ? "asc" : "desc";
             string strLimit = " LIMIT " + offset + "," + limit;
             DataTable db = Database.Backend.GetRows(stat.Table, "DISTINCT Name, " + stat.Column,
-                                                    "ORDER BY " + stat.Column + " " + order + strLimit);
+                                                    "ORDER BY " + stat.OrderBy + strLimit);
             
             Player.Message(p, "&a{0}:", stat.Title());
             for (int i = 0; i < db.Rows.Count; i++) {

@@ -172,7 +172,7 @@ namespace MCGalaxy.Tasks {
         static void DumpPlayerTimeSpents() {
             playerIds = new List<int>();
             playerSeconds = new List<long>();
-            Database.ExecuteReader("SELECT ID, TimeSpent FROM Players", AddPlayerTimeSpent);            
+            Database.ExecuteReader("SELECT ID, TimeSpent FROM Players", AddPlayerTimeSpent);
         }
         
         static void AddPlayerTimeSpent(IDataReader reader) {
@@ -193,14 +193,16 @@ namespace MCGalaxy.Tasks {
             using (BulkTransaction bulk = Database.Backend.CreateBulk()) {
                 IDataParameter idParam = bulk.CreateParam("@0", DbType.Int32);
                 IDataParameter secsParam = bulk.CreateParam("@1", DbType.Int64);
-                IDbCommand cmd = bulk.CreateCommand("UPDATE Players SET TimeSpent = @1 WHERE ID = @0");
-                cmd.Parameters.Add(idParam);
-                cmd.Parameters.Add(secsParam);
                 
                 for (int i = 0; i < playerIds.Count; i++) {
                     idParam.Value = playerIds[i];
                     secsParam.Value = playerSeconds[i];
-                    cmd.ExecuteNonQuery();
+                    
+                    using (IDbCommand cmd = bulk.CreateCommand("UPDATE Players SET TimeSpent = @1 WHERE ID = @0")) {
+                        cmd.Parameters.Add(idParam);
+                        cmd.Parameters.Add(secsParam);
+                        cmd.ExecuteNonQuery();
+                    }
                 }
                 
                 bulk.Commit();
