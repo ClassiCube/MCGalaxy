@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Info {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "+ can see IPs and if a player is whitelisted") }; }
+            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "+ can see player's IP and if on whitelist") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("info"), new CommandAlias("i") }; }
@@ -37,81 +37,22 @@ namespace MCGalaxy.Commands.Info {
         public override void Use(Player p, string message) {
             if (message == "") message = p.name;
             int matches;
-            Player pl = PlayerInfo.FindMatches(p, message, out matches);
-            PlayerData target = null;
+            Player who = PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;
             
-            WhoInfo info;
-            if (matches == 1) {
-                info = FromOnline(pl);
-            } else {
+            if (matches == 0) {
                 if (!Formatter.ValidName(p, message, "player")) return;
                 Player.Message(p, "Searching database for the player..");
-                target = PlayerInfo.FindOfflineMatches(p, message);
+                PlayerData target = PlayerInfo.FindOfflineMatches(p, message);
                 if (target == null) return;
-                info = FromOffline(target, message);
-            }
-            WhoInfo.Output(p, info, CheckExtraPerm(p));
-            
-            Player.Message(p, "-------------");
-            if (pl != null) {
-                foreach (OnlineStatPrinter printer in OnlineStat.Stats) {
-                    printer(p, pl);
-                }
-            } else {
+                
                 foreach (OfflineStatPrinter printer in OfflineStat.Stats) {
                     printer(p, target);
                 }
-            }
-        }
-        
-        WhoInfo FromOnline(Player who) {
-            WhoInfo info = new WhoInfo();
-            string prefix = who.title == "" ? "" : who.color + "[" + who.titlecolor + who.title + who.color + "] ";
-            info.FullName = prefix + who.ColoredName;
-            info.Name = who.name;
-            info.Group = who.group;
-            
-            info.RoundsTotal = who.Game.TotalRoundsSurvived;
-            info.RoundsMax = who.Game.MaxRoundsSurvived;
-            info.InfectedTotal = who.Game.TotalInfected;
-            info.InfectedMax = who.Game.MaxInfected;
-            return info;
-        }
-        
-        WhoInfo FromOffline(PlayerData data, string message) {
-            Group group = Group.findPlayerGroup(data.Name);
-            string color = data.Color == "" ? group.color : data.Color;
-            string prefix = data.Title == "" ? "" : color + "[" + data.TitleColor + data.Title + color + "] ";
-            
-            WhoInfo info = new WhoInfo();
-            info.FullName = prefix + color + data.Name.RemoveLastPlus();
-            info.Name = data.Name;
-            info.Group = group;
-            
-            if (Server.zombie.Running) {
-                ZombieStats stats = Server.zombie.LoadZombieStats(data.Name);
-                info.RoundsTotal = stats.TotalRounds; info.InfectedTotal = stats.TotalInfected;
-                info.RoundsMax = stats.MaxRounds; info.InfectedMax = stats.MaxInfected;
-            }
-            return info;
-        }
-        
-        class WhoInfo {
-            public string FullName, Name;
-            public Group Group;
-            public int RoundsTotal, RoundsMax;
-            public int InfectedTotal, InfectedMax;
-            
-            public static void Output(Player p, WhoInfo who, bool canSeeIP) {
-                Player.Message(p, who.FullName + " %S(" + who.Name + ") has:");
-                Player.Message(p, "  Rank of " + who.Group.ColoredName);
-                
-                if (!Server.zombie.Running) return;
-                Player.Message(p, "  Survived &a{0} %Srounds (max &e{1}%S)",
-                               who.RoundsTotal, who.RoundsMax);
-                Player.Message(p, "  Infected &a{0} %Splayers (max &e{1}%S)",
-                               who.InfectedTotal, who.InfectedMax);
+            } else {
+                foreach (OnlineStatPrinter printer in OnlineStat.Stats) {
+                    printer(p, who);
+                }
             }
         }
 

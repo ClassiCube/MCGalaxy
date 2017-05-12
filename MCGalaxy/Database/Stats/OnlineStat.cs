@@ -29,17 +29,29 @@ namespace MCGalaxy.DB {
 
         /// <summary> List of stats that can be output to /whois. </summary>
         public static List<OnlineStatPrinter> Stats = new List<OnlineStatPrinter>() {
+            OnlineCoreLine,
             (p, who) => MiscLine(p, who.name, who.overallDeath, who.money),
             BlocksModifiedLine,
             (p, who) => BlockStatsLine(p, who.TotalPlaced, who.TotalDeleted, who.TotalDrawn),
             TimeSpentLine,
             LoginLine,
             (p, who) => LoginsLine(p, who.totalLogins, who.totalKicked),
-            (p, who) => BanLine(p, who.name, who.group),
+            (p, who) => BanLine(p, who.name),
             (p, who) => SpecialGroupLine(p, who.name),
             (p, who) => IPLine(p, who.name, who.ip),
             IdleLine,
         };
+        
+        static void OnlineCoreLine(Player p, Player who) {
+            string prefix = who.title == "" ? "" : who.color + "[" + who.titlecolor + who.title + who.color + "] ";
+            string fullName = prefix + who.ColoredName;
+            CoreLine(p, fullName, who.name, who.group);
+        }
+        
+        internal static void CoreLine(Player p, string fullName, string name, Group grp) {
+            Player.Message(p, fullName + " %S(" + name + ") has:");
+            Player.Message(p, "  Rank of " + grp.ColoredName);
+        }
         
         internal static void MiscLine(Player p, string name, int deaths, int money) {
             if (Economy.Enabled) {
@@ -75,8 +87,8 @@ namespace MCGalaxy.DB {
             Player.Message(p, "  Logged in &a{0} %Stimes, &c{1} %Sof which ended in a kick", logins, kicks);
         }
         
-        internal static void BanLine(Player p, string name, Group grp) {
-            if (grp.Permission != LevelPermission.Banned) return;
+        internal static void BanLine(Player p, string name) {
+            if (!Group.BannedRank.playerList.Contains(name)) return;
             
             string[] data = Ban.GetBanData(name);
             if (data != null) {

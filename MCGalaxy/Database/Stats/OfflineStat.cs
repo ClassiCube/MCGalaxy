@@ -27,16 +27,25 @@ namespace MCGalaxy.DB {
 
         /// <summary> List of stats that can be output to /whois. </summary>
         public static List<OfflineStatPrinter> Stats = new List<OfflineStatPrinter>() {
+            OfflineCoreLine,
             (p, who) => OnlineStat.MiscLine(p, who.Name, who.Deaths, who.Money),
             BlocksModifiedLine,
             (p, who) => OnlineStat.BlockStatsLine(p, who.TotalPlaced, who.TotalDeleted, who.TotalDrawn),
             TimeSpentLine,
             LoginLine,
             (p, who) => OnlineStat.LoginsLine(p, who.Logins, who.Kicks),
-            (p, who) => OnlineStat.BanLine(p, who.Name, Group.findPlayerGroup(who.Name)),
+            (p, who) => OnlineStat.BanLine(p, who.Name),
             (p, who) => OnlineStat.SpecialGroupLine(p, who.Name),
             (p, who) => OnlineStat.IPLine(p, who.Name, who.IP),            
         };
+        
+        static void OfflineCoreLine(Player p, PlayerData data) {
+            Group group = Group.findPlayerGroup(data.Name);
+            string color = data.Color == "" ? group.color : data.Color;
+            string prefix = data.Title == "" ? "" : color + "[" + data.TitleColor + data.Title + color + "] ";
+            string fullName = prefix + color + data.Name.RemoveLastPlus();
+            OnlineStat.CoreLine(p, fullName, data.Name, group);
+        }
         
         static void BlocksModifiedLine(Player p, PlayerData who) {
             Player.Message(p, "  Modified &a{0} %Sblocks", who.TotalModified);

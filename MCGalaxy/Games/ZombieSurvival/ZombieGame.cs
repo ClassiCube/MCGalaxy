@@ -41,7 +41,7 @@ namespace MCGalaxy.Games {
             RoundsDone = 0;
             if (!SetStartLevel(level)) return;
             
-            HookTopStats();
+            HookStats();
             Thread t = new Thread(MainLoop);
             t.Name = "MCG_ZombieGame";
             t.Start();
@@ -209,7 +209,7 @@ namespace MCGalaxy.Games {
             LastLevelName = "";
             CurLevelName = "";
             CurLevel = null;
-            UnhookTopStats();
+            UnhookStats();
         }
         
         public BountyData FindBounty(string target) {
@@ -305,17 +305,24 @@ namespace MCGalaxy.Games {
         }
         
         TopStat statMostInfected, statMaxInfected, statMostSurvived, statMaxSurvived;
-        void HookTopStats() {
+        OfflineStatPrinter offlineZSStats;
+        OnlineStatPrinter onlineZSStats;
+        void HookStats() {
             if (TopStat.Stats.Contains(statMostInfected)) return; // don't duplicate
             
             statMostInfected = new TopStat("Infected", "ZombieStats", "TotalInfected",
                                            () => "Most players infected", TopStat.FormatInteger);
             statMaxInfected = new TopStat("Survived", "ZombieStats", "TotalRounds",
-                                           () => "Most rounds survived", TopStat.FormatInteger);
+                                          () => "Most rounds survived", TopStat.FormatInteger);
             statMostSurvived = new TopStat("ConsecutiveInfected", "ZombieStats", "MaxInfected",
                                            () => "Most consecutive infections", TopStat.FormatInteger);
             statMaxSurvived = new TopStat("ConsecutiveSurvived", "ZombieStats", "MaxRounds",
-                                           () => "Most consecutive rounds survived", TopStat.FormatInteger);
+                                          () => "Most consecutive rounds survived", TopStat.FormatInteger);
+            
+            offlineZSStats = PrintOfflineZSStats;
+            onlineZSStats = PrintOnlineZSStats;
+            OfflineStat.Stats.Add(offlineZSStats);
+            OnlineStat.Stats.Add(onlineZSStats);
 
             TopStat.Stats.Add(statMostInfected);
             TopStat.Stats.Add(statMostSurvived);
@@ -323,11 +330,30 @@ namespace MCGalaxy.Games {
             TopStat.Stats.Add(statMaxSurvived);
         }
         
-        void UnhookTopStats() {
+        void UnhookStats() {
+            OfflineStat.Stats.Remove(offlineZSStats);
+            OnlineStat.Stats.Remove(onlineZSStats);
+            
             TopStat.Stats.Remove(statMostInfected);
             TopStat.Stats.Remove(statMostSurvived);
             TopStat.Stats.Remove(statMaxInfected);
             TopStat.Stats.Remove(statMaxSurvived);
+        }
+        
+        static void PrintOnlineZSStats(Player p, Player who) {
+            PrintZSStats(p, who.Game.TotalRoundsSurvived, who.Game.TotalInfected,
+                         who.Game.MaxRoundsSurvived, who.Game.MaxInfected);
+        }
+        
+        static void PrintOfflineZSStats(Player p, PlayerData who) {
+            ZombieStats stats = Server.zombie.LoadZombieStats(who.Name);
+            PrintZSStats(p, stats.TotalRounds, stats.TotalInfected,
+                         stats.MaxRounds, stats.MaxInfected);
+        }
+        
+        static void PrintZSStats(Player p, int rounds, int infected, int roundsMax, int infectedMax) {
+            Player.Message(p, "  Survived &a{0} %Srounds (max &e{1}%S)", rounds, roundsMax);
+            Player.Message(p, "  Infected &a{0} %Splayers (max &e{1}%S)", infected, infectedMax);
         }
         #endregion
     }
