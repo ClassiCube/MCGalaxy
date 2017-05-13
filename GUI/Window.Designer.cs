@@ -820,7 +820,7 @@ namespace MCGalaxy.Gui
             this.map_btnLoad.TabIndex = 1;
             this.map_btnLoad.Text = "Load map";
             this.map_btnLoad.UseVisualStyleBackColor = true;
-            this.map_btnLoad.Click += new System.EventHandler(this.mao_BtnLoad_Click);
+            this.map_btnLoad.Click += new System.EventHandler(this.map_BtnLoad_Click);
             // 
             // map_lbUnloaded
             // 
@@ -918,17 +918,6 @@ namespace MCGalaxy.Gui
             // map_cmbType
             // 
             this.map_cmbType.FormattingEnabled = true;
-            this.map_cmbType.Items.AddRange(new object[] {
-                                    "Island",
-                                    "Mountains",
-                                    "Forest",
-                                    "Ocean",
-                                    "Flat",
-                                    "Pixel",
-                                    "Desert",
-                                    "Space",
-                                    "Rainbow",
-                                    "Hell"});
             this.map_cmbType.Location = new System.Drawing.Point(51, 75);
             this.map_cmbType.Name = "map_cmbType";
             this.map_cmbType.Size = new System.Drawing.Size(121, 21);

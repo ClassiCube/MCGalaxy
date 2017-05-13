@@ -21,6 +21,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using MCGalaxy.Generator;
 
 namespace MCGalaxy.Gui {
     public partial class Window : Form {
@@ -48,15 +49,14 @@ namespace MCGalaxy.Gui {
             Show();
             BringToFront();
             WindowState = FormWindowState.Normal;
-            
-            InitServer();
 
+            InitServer();
+            foreach (string theme in MapGen.SimpleThemeNames) {
+                map_cmbType.Items.Add(theme);
+            }
+            
             Text = Server.name + " - " + Server.SoftwareNameVersioned;
-            notifyIcon1.Text =  Server.name.Truncate(63);
-            notifyIcon1.ContextMenuStrip = this.icon_context;
-            notifyIcon1.Icon = this.Icon;
-            notifyIcon1.Visible = true;
-            notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(notifyIcon1_MouseClick);
+            MakeNotifyIcon();
             
             // Bind player list
             main_Players.DataSource = pc;
@@ -72,6 +72,15 @@ namespace MCGalaxy.Gui {
                 //Server.s.Log("Lists updated!");
             }; UpdateListTimer.Start();
 
+        }
+        
+        void MakeNotifyIcon() {
+            
+            notifyIcon1.Text =  Server.name.Truncate(63);
+            notifyIcon1.ContextMenuStrip = this.icon_context;
+            notifyIcon1.Icon = this.Icon;
+            notifyIcon1.Visible = true;
+            notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(notifyIcon1_MouseClick);
         }
         
         void InitServer() {
@@ -541,30 +550,20 @@ namespace MCGalaxy.Gui {
         #region Map tab
         
         void map_BtnGen_Click(object sender, EventArgs e) {
-            if (mapgen) { MessageBox.Show("A map is already being generated."); return; }
-            string name, x, y, z, type, seed;
+            if (mapgen) { MessageBox.Show("Another map is already being generated."); return; }
 
-            try { name = map_txtName.Text.ToLower(); }
-            catch { name = ""; }
+            string name = map_txtName.Text.ToLower();
+            string seed = map_txtSeed.Text.ToLower();
             if (String.IsNullOrEmpty(name)) { MessageBox.Show("Map name cannot be blank."); return; }
-            try { x = map_cmbX.SelectedItem.ToString(); }
-            catch { x = ""; }
-            if (String.IsNullOrEmpty(x)) { MessageBox.Show("Map width cannot be blank."); return; }
             
-            try { y = map_cmbY.SelectedItem.ToString(); }
-            catch { y = ""; }
-            if (String.IsNullOrEmpty(y)) { MessageBox.Show("Map height cannot be blank."); return; }
-            
-            try { z = map_cmbZ.SelectedItem.ToString(); }
-            catch { z = ""; }
-            if (String.IsNullOrEmpty(z)) { MessageBox.Show("Map length cannot be blank."); return; }
-            
-            try { type = map_cmbType.SelectedItem.ToString().ToLower(); }
-            catch { type = ""; }
-            if (String.IsNullOrEmpty(type)) { MessageBox.Show("Map type cannot be blank."); return; }
-            
-            try { seed = map_txtSeed.Text; }
-            catch { seed = ""; }
+            string x = GetComboboxItem(map_cmbX, "width");
+            if (x == null) return;           
+            string y = GetComboboxItem(map_cmbY, "height");
+            if (y == null) return;            
+            string z = GetComboboxItem(map_cmbZ, "length");
+            if (z == null) return;            
+            string type = GetComboboxItem(map_cmbType, "type");
+            if (type == null) return;            
 
             Thread genThread = new Thread(() =>
             {
@@ -575,18 +574,20 @@ namespace MCGalaxy.Gui {
                     Command.all.Find("newlvl").Use(null, args);
                 } catch (Exception ex) {
                     Server.ErrorLog(ex);
-                    MessageBox.Show("Level creation failed. Check error logs for details.");
+                    MessageBox.Show("Failed to generate level. Check error logs for details.");
+                    mapgen = false;
+                    return;
                 }
 
                 if (LevelInfo.MapExists(name)) {
-                    MessageBox.Show("Created Level");
+                    MessageBox.Show("Level successfully generated.");
                     try {
                         UpdateUnloadedList();
                         UpdateMapList();
                     } catch { 
                     }
                 } else {
-                    MessageBox.Show("Level may not have been created.");
+                    MessageBox.Show("Level was not generated. Check main log for details.");
                 }
                 mapgen = false;
             });
@@ -594,7 +595,18 @@ namespace MCGalaxy.Gui {
             genThread.Start();
         }
         
-        void mao_BtnLoad_Click(object sender, EventArgs e) {
+        string GetComboboxItem(ComboBox box, string propName) {
+            object selected = box.SelectedItem;
+            string value = selected == null ? "" : selected.ToString().ToLower();
+            
+            if (value == "") {
+                MessageBox.Show("Map " + propName + " cannot be blank.");
+                return null;
+            }
+            return value;
+        }
+        
+        void map_BtnLoad_Click(object sender, EventArgs e) {
             try {
                 Command.all.Find("load").Use(null, map_lbUnloaded.SelectedItem.ToString());
             } catch { 
@@ -822,7 +834,7 @@ namespace MCGalaxy.Gui {
         
         void tsLog_Clear_Click(object sender, EventArgs e) {
             if (MessageBox.Show("Are you sure you want to clear logs?", "You sure?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-        		main_txtLog.ClearLog();
+                main_txtLog.ClearLog();
             }
         }
         #endregion

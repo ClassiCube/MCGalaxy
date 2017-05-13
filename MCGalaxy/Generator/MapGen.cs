@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2015 MCGalaxy
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -28,22 +28,33 @@ namespace MCGalaxy.Generator {
         public int Seed;
     }
     
+    /// <summary> Maintains a list of map generator instances. </summary>
     public static class MapGen {
         
+        /// <summary> Returns whether the given map generation theme name is recognised. </summary>
         public static bool IsRecognisedTheme(string s) {
             s = s.ToLower();
             return simpleGens.ContainsKey(s) || advGens.ContainsKey(s);
         }
-        
+
         public static bool IsSimpleTheme(string s) {
             return simpleGens.ContainsKey(s.ToLower());
         }
         
+        /// <summary> Outputs list of all map generator themes to the given player. </summary>
         public static void PrintThemes(Player p) {
             Player.Message(p, "Simple themes: " + simpleGens.Keys.Join(", "));
             Player.Message(p, "Advanced themes: " + advGens.Keys.Join(", "));
         }
         
+        /// <summary> Retrieves the list of theme names of simple map generators. </summary>
+        public static IEnumerable<string> SimpleThemeNames { get { return simpleGens.Keys; } }
+        
+        /// <summary> Retrieves the list of theme names of advanced map generators. </summary>
+        public static IEnumerable<string> AdvancedThemeNames { get { return advGens.Keys; } }
+        
+        
+        /// <summary> Returns whether the given axis length is acceptable for map generation. </summary>
         public static bool OkayAxis(int len) {
             return len >= 16 && len <= 8192 && (len % 16) == 0;
         }
