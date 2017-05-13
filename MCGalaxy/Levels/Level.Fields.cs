@@ -33,19 +33,21 @@ namespace MCGalaxy {
         [ConfigString("MOTD", "General", null, "ignore", true, null, 128)]
         public string motd = "ignore";
         
-        public string ColoredName {
+        public string Color {
             get {
                 LevelPermission maxPerm = permissionvisit;
                 if (maxPerm < permissionbuild) maxPerm = permissionbuild;
-                return Group.GetColor(maxPerm) + name;
+                return Group.GetColor(maxPerm);
             }
         }
+        
+        public string ColoredName { get { return Color + name; } }
         
         public byte rotx, roty;
         public ushort spawnx, spawny, spawnz;
         public Position SpawnPos { get { return new Position(16 + spawnx * 32, 32 + spawny * 32, 16 + spawnz * 32); } }
         public Orientation SpawnRot { get { return new Orientation(rotx, roty); } }
-        	
+            
         public BlockDefinition[] CustomBlockDefs;
         public BlockProps[] CustomBlockProps;
         public ExtrasCollection Extras = new ExtrasCollection();

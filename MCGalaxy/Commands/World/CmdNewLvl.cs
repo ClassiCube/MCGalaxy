@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
 using System.Threading;
 using MCGalaxy.Generator;
 
@@ -43,7 +42,8 @@ namespace MCGalaxy.Commands.World {
             string name = args[0].ToLower();
             if (!CheckMapAxis(p, args[1], "Width",  ref x)) return false;
             if (!CheckMapAxis(p, args[2], "Height", ref y)) return false;
-            if (!CheckMapAxis(p, args[3], "Length", ref z)) return false;            
+            if (!CheckMapAxis(p, args[3], "Length", ref z)) return false;
+            if (!CheckMapVolume(p, x, y, z)) return true;
             string seed = args.Length == 6 ? args[5] : "";
             
             if (!Formatter.ValidName(p, name, "level")) return false;

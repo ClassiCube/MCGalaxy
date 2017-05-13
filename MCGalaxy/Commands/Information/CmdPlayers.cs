@@ -110,7 +110,8 @@ namespace MCGalaxy.Commands.Info {
                 }
                 
                 builder.Append(name);
-                builder.Append(" (").Append(pl.level.name).Append("),");
+                string lvlName = Colors.StripColors(pl.level.name); // for museums
+                builder.Append(" (").Append(lvlName).Append("),");
             }
         }
         
