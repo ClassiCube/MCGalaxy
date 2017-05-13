@@ -1,3 +1,12 @@
+v 1.8.9.1
+Fixed: colour bleeding in /who when on a museum map (Thanks fam0r)
+Improved: /top supports timespent now
+Improved: Allow any ASCII character in server name/motd
+Fixed: emotes in message breaking WoM
+Fixed: joining museums after joining a world not causing world to auto-unload
+Fixed: /mark
+Fixed: changing fallback not auto-reloading clients that don't support custom blocks
+
 v 1.8.9.0
 Added: MCGalaxy can natively run in 64 bit
 Added: Can set map sides (bedrock) offset
