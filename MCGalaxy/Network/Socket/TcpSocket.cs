@@ -30,13 +30,12 @@ namespace MCGalaxy.Network {
         }
         
         public string RemoteIP {
-            // TODO: This is very icky
-            get { return socket.RemoteEndPoint.ToString().Split(':')[0]; }
+            get { return ((IPEndPoint)socket.RemoteEndPoint).Address.ToString(); }
         }
         
-        
+        static AsyncCallback recvCallback = new AsyncCallback(Receive);
         public void ReceiveNextAsync() {
-            socket.BeginReceive(tempbuffer, 0, tempbuffer.Length, SocketFlags.None, new AsyncCallback(Receive), this);
+            socket.BeginReceive(tempbuffer, 0, tempbuffer.Length, SocketFlags.None, recvCallback, this);
         }
         
         static void Receive(IAsyncResult result) {
