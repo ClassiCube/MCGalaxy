@@ -59,7 +59,7 @@ namespace MCGalaxy {
                     } if (perm > 119 || perm < -50) {
                         Server.s.Log("Permission must be between -50 and 119 for ranks");
                         grp = null;
-                    } else if (Group.GroupList.Find(g => g.Permission == (LevelPermission)perm) == null) {
+                    } else if (Group.findPermInt(perm) == null) {
                         grp.Permission = (LevelPermission)perm;
                     } else {
                         Server.s.Log("Cannot have 2 ranks set at permission level " + value);

@@ -33,12 +33,12 @@ namespace MCGalaxy.Network {
             get { return ((IPEndPoint)socket.RemoteEndPoint).Address.ToString(); }
         }
         
-        static AsyncCallback recvCallback = new AsyncCallback(Receive);
+        static AsyncCallback recvCallback = new AsyncCallback(ReceiveCallback);
         public void ReceiveNextAsync() {
             socket.BeginReceive(tempbuffer, 0, tempbuffer.Length, SocketFlags.None, recvCallback, this);
         }
         
-        static void Receive(IAsyncResult result) {
+        static void ReceiveCallback(IAsyncResult result) {
             TcpSocket s = (TcpSocket)result.AsyncState;
             Player p = s.player;
             if (p.disconnected) return;
@@ -73,15 +73,17 @@ namespace MCGalaxy.Network {
             }
         }
         
+        
+        static AsyncCallback sendCallback = new AsyncCallback(SendCallback);
         public void Send(byte[] buffer, bool sync = false) {
             // Abort if socket has been closed
             if (player.disconnected || !socket.Connected) return;
-            
+
             try {
                 if (sync)
                     socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
                 else
-                    socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, delegate(IAsyncResult result) { }, null);
+                    socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, sendCallback, this);
                 buffer = null;
             } catch (SocketException e) {
                 buffer = null;
@@ -94,6 +96,22 @@ namespace MCGalaxy.Network {
                 buffer = null;
             }
         }
+        
+        static void SendCallback(IAsyncResult result) {
+            TcpSocket s = (TcpSocket)result.AsyncState;
+            
+            try {
+                int sent = s.socket.EndSend(result);
+            } catch (SocketException e) {
+                s.player.Disconnect();
+                #if DEBUG
+                Server.ErrorLog(e);
+                #endif
+            } catch (ObjectDisposedException) {
+                // socket was already closed by another thread.
+            }
+        }
+        
         
         public void Close() {
             // Try to close the socket.

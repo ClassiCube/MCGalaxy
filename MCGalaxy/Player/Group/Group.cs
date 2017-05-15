@@ -242,12 +242,6 @@ namespace MCGalaxy {
         public static Group findPermInt(int Perm) {
             return GroupList.Find(grp => (int)grp.Permission == Perm);
         }
-        
-
-        /// <summary> Get the group name that player /playerName/ is in </summary>
-        /// <param name="name">The player Name</param>
-        /// <returns>The group name</returns>
-        public static string findPlayer(string name) { return findPlayerGroup(name).name; }
 
         /// <summary> Find the group object that the player /playerName/ is in </summary>
         /// <param name="name">The player name</param>
