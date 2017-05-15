@@ -98,7 +98,8 @@ namespace MCGalaxy.Network {
         }
         
         static void SendCallback(IAsyncResult result) {
-            TcpSocket s = (TcpSocket)result.AsyncState;
+            // TODO: call EndSend, need to check if all data was sent or not!
+            /*TcpSocket s = (TcpSocket)result.AsyncState;
             
             try {
                 int sent = s.socket.EndSend(result);
@@ -109,7 +110,7 @@ namespace MCGalaxy.Network {
                 #endif
             } catch (ObjectDisposedException) {
                 // socket was already closed by another thread.
-            }
+            }*/
         }
         
         
