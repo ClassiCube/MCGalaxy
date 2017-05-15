@@ -50,14 +50,14 @@ namespace MCGalaxy {
         public Player(Socket s) {
             spamChecker = new SpamChecker(this);
             try {
-                socket = s;
-                ip = socket.RemoteEndPoint.ToString().Split(':')[0];
+            	socket = new TcpSocket(this, s);
+                ip = socket.RemoteIP;
                 SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
                 Server.s.Log(ip + " connected to the server.");
 
                 for (byte i = 0; i < Block.CpeCount; i++) bindings[i] = i;
 
-                socket.BeginReceive(tempbuffer, 0, tempbuffer.Length, SocketFlags.None, new AsyncCallback(Receive), this);
+                socket.ReceiveNextAsync();
                 connections.Add(this);
             }
             catch ( Exception e ) { Leave("Login failed!"); Server.ErrorLog(e); }

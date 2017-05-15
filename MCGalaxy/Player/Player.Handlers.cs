@@ -33,7 +33,7 @@ namespace MCGalaxy {
     public sealed partial class Player : IDisposable {
         
         bool removedFromPending = false;
-        void RemoveFromPending() {
+        internal void RemoveFromPending() {
             if (removedFromPending) return;
             removedFromPending = true;
             
@@ -195,7 +195,7 @@ namespace MCGalaxy {
             return block == Block.air || (block >= Block.water && block <= Block.lavastill);
         }
         
-        byte[] ProcessReceived(byte[] buffer) {
+        internal byte[] ProcessReceived(byte[] buffer) {
             try {
                 int size = PacketSize(buffer);
                 if (size == -2) return new byte[1]; // WoM get request

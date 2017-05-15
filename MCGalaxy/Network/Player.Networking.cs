@@ -23,43 +23,6 @@ using MCGalaxy.Network;
 namespace MCGalaxy {
     public sealed partial class Player : IDisposable {
 
-        static void Receive(IAsyncResult result) {
-            //Server.s.Log(result.AsyncState.ToString());
-            Player p = (Player)result.AsyncState;
-            if (p.disconnected || p.socket == null) return;
-            
-            try {
-                int length = p.socket.EndReceive(result);
-                if (length == 0) { p.Disconnect(); return; }
-
-                byte[] allData = new byte[p.leftBuffer.Length + length];
-                Buffer.BlockCopy(p.leftBuffer, 0, allData, 0, p.leftBuffer.Length);
-                Buffer.BlockCopy(p.tempbuffer, 0, allData, p.leftBuffer.Length, length);
-                p.leftBuffer = p.ProcessReceived(allData);
-                
-                if (p.dontmindme && p.leftBuffer.Length == 0) {
-                    Server.s.Log("Disconnected");
-                    p.socket.Close();
-                    p.disconnected = true;
-                    return;
-                }
-                if ( !p.disconnected )
-                    p.socket.BeginReceive(p.tempbuffer, 0, p.tempbuffer.Length, SocketFlags.None,
-                                          new AsyncCallback(Receive), p);
-            } catch ( SocketException ) {
-                p.Disconnect();
-            }  catch ( ObjectDisposedException ) {
-                // Player is no longer connected, socket was closed
-                // Mark this as disconnected and remove them from active connection list
-                connections.Remove(p);
-                p.RemoveFromPending();
-                p.disconnected = true;
-            } catch ( Exception e ) {
-                Server.ErrorLog(e);
-                p.Leave("Error!");
-            }
-        }
-        
         public bool hasCpe, finishedCpeLogin = false;
         public string appName;
         public int extensionCount;
@@ -103,27 +66,7 @@ namespace MCGalaxy {
             }
         }
         
-        public void Send(byte[] buffer, bool sync = false) {
-            // Abort if socket has been closed
-            if (disconnected || socket == null || !socket.Connected) return;
-            
-            try {
-                if (sync)
-                    socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
-                else
-                    socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, delegate(IAsyncResult result) { }, null);
-                buffer = null;
-            } catch (SocketException e) {
-                buffer = null;
-                Disconnect();
-                #if DEBUG
-                Server.ErrorLog(e);
-                #endif
-            } catch (ObjectDisposedException) {
-                // socket was already closed by another thread.
-                buffer = null;
-            }
-        }
+        public void Send(byte[] buffer, bool sync = false) { socket.Send(buffer, sync); }
         
         public static void MessageLines(Player p, IEnumerable<string> lines) {
             foreach (string line in lines)
@@ -349,37 +292,9 @@ namespace MCGalaxy {
             Send(Packet.ExtAddPlayerName(id, listName, displayName, grp, grpRank, hasCP437));
         }
 
-        internal void CloseSocket() {
-            // Try to close the socket.
-            // Sometimes its already closed so these lines will cause an error
-            // We just trap them and hide them from view :P
-            try {
-                // Close the damn socket connection!
-                socket.Shutdown(SocketShutdown.Both);
-                #if DEBUG
-                Server.s.Log("Socket was shutdown for " + name ?? ip);
-                #endif
-            }
-            catch ( Exception e ) {
-                #if DEBUG
-                Exception ex = new Exception("Failed to shutdown socket for " + name ?? ip, e);
-                Server.ErrorLog(ex);
-                #endif
-            }
-
-            try {
-                socket.Close();
-                #if DEBUG
-                Server.s.Log("Socket was closed for " + name ?? ip);
-                #endif
-            }
-            catch ( Exception e ) {
-                #if DEBUG
-                Exception ex = new Exception("Failed to close socket for " + name ?? ip, e);
-                Server.ErrorLog(ex);
-                #endif
-            }
-            RemoveFromPending();
+        internal void CloseSocket() { 
+            socket.Close();
+            RemoveFromPending();            
         }
     }
 }

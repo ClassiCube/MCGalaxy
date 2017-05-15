@@ -22,6 +22,7 @@ using MCGalaxy.Games;
 using MCGalaxy.Undo;
 using MCGalaxy.Maths;
 using MCGalaxy.Events;
+using MCGalaxy.Network;
 
 namespace MCGalaxy {
     
@@ -58,7 +59,8 @@ namespace MCGalaxy {
         public static string storedHelp = "";
         public string truename;
         internal bool dontmindme = false;
-        public Socket socket;
+        INetworkSocket socket;
+        
         public DateTime LastAction, AFKCooldown;
         public bool IsAfk = false, AutoAfk;
         public bool cmdTimer = false;
@@ -66,9 +68,6 @@ namespace MCGalaxy {
         public string BrushName = "normal", DefaultBrushArgs = "";
         public Transform Transform = NoTransform.Instance;
         public string afkMessage;
-
-        byte[] leftBuffer = new byte[0];
-        byte[] tempbuffer = new byte[0xFF];
         public bool disconnected = false;
         
         DateTime startTime;
