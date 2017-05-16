@@ -64,12 +64,12 @@ namespace MCGalaxy.Gui {
                 CommandExtraPerms.MinPerm("opchat", LevelPermission.Operator);
 
             foreach (Group grp in Group.GroupList) {
-                cmbDefaultRank.Items.Add(grp.name);
-                cmbOpChat.Items.Add(grp.name);
-                cmbAdminChat.Items.Add(grp.name);
+                rank_cmbDefault.Items.Add(grp.name);
+                rank_cmbOpChat.Items.Add(grp.name);
+                rank_cmbAdminChat.Items.Add(grp.name);
                 sec_cmbVerifyRank.Items.Add(grp.name);
-                cmbAFKKickPerm.Items.Add(grp.name);
-                cmbOsMap.Items.Add(grp.name);
+                afk_cmbKickPerm.Items.Add(grp.name);
+                rank_cmbOsMap.Items.Add(grp.name);
 
                 if (grp.Permission == opChatRank)
                     opchatperm = grp.name;
@@ -83,12 +83,12 @@ namespace MCGalaxy.Gui {
                     osmaprank = grp.name;
             }
             
-            cmbDefaultRank.SelectedIndex = 1;
-            cmbOpChat.SelectedIndex = ( opchatperm != String.Empty ? cmbOpChat.Items.IndexOf(opchatperm) : 1 );
-            cmbAdminChat.SelectedIndex = ( adminchatperm != String.Empty ? cmbAdminChat.Items.IndexOf(adminchatperm) : 1 );
+            rank_cmbDefault.SelectedIndex = 1;
+            rank_cmbOpChat.SelectedIndex = ( opchatperm != String.Empty ? rank_cmbOpChat.Items.IndexOf(opchatperm) : 1 );
+            rank_cmbAdminChat.SelectedIndex = ( adminchatperm != String.Empty ? rank_cmbAdminChat.Items.IndexOf(adminchatperm) : 1 );
             sec_cmbVerifyRank.SelectedIndex = ( verifyadminsperm != String.Empty ? sec_cmbVerifyRank.Items.IndexOf(verifyadminsperm) : 1 );
-            cmbAFKKickPerm.SelectedIndex = ( afkkickrank != String.Empty ? cmbAFKKickPerm.Items.IndexOf(afkkickrank) : 1 );
-            cmbOsMap.SelectedIndex = ( osmaprank != String.Empty ? cmbOsMap.Items.IndexOf(osmaprank) : 1 );
+            afk_cmbKickPerm.SelectedIndex = ( afkkickrank != String.Empty ? afk_cmbKickPerm.Items.IndexOf(afkkickrank) : 1 );
+            rank_cmbOsMap.SelectedIndex = ( osmaprank != String.Empty ? rank_cmbOsMap.Items.IndexOf(osmaprank) : 1 );
 
             //Load server stuff
             LoadProp("properties/server.properties");
@@ -269,7 +269,7 @@ namespace MCGalaxy.Gui {
         }
 
         private void txtPort_TextChanged(object sender, EventArgs e) { removeDigit(srv_txtPort); }
-        private void txtBackup_TextChanged(object sender, EventArgs e) { removeDigit(txtBackup); }
+        private void txtBackup_TextChanged(object sender, EventArgs e) { removeDigit(bak_txtTime); }
 
         private void btnSave_Click(object sender, EventArgs e) { saveStuff(); Dispose(); }
         private void btnApply_Click(object sender, EventArgs e) { saveStuff(); }
@@ -322,8 +322,8 @@ namespace MCGalaxy.Gui {
         private void chkGC_CheckedChanged(object sender, EventArgs e) {
         }
 
-        private void chkIRC_CheckedChanged(object sender, EventArgs e) {
-            ToggleIrcSettings(chkIRC.Checked);
+        private void irc_ChkEnabled_CheckedChanged(object sender, EventArgs e) {
+            ToggleIrcSettings(irc_chkEnabled.Checked);
         }
 
         private void btnBackup_Click(object sender, EventArgs e) {
@@ -639,7 +639,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             numGuests.Maximum = numPlayers.Value;
         }
 
-        private void editTxtsBt_Click_1(object sender, EventArgs e) {
+        private void adv_btnEditTexts_Click(object sender, EventArgs e) {
             new EditText().Show();
         }
 
@@ -757,7 +757,7 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             }
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+        private void sql_linkDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             try {
                 System.Diagnostics.Process.Start("http://dev.mysql.com/downloads/");
             }
@@ -766,8 +766,8 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
             }
         }
 
-        private void chkUseSQL_CheckedChanged(object sender, EventArgs e) {
-            ToggleMySQLSettings(chkUseSQL.Checked);
+        private void sql_chkUseSQL_CheckedChanged(object sender, EventArgs e) {
+            ToggleMySQLSettings(sql_chkUseSQL.Checked);
         }
 
         private void forceUpdateBtn_Click(object sender, EventArgs e) {
@@ -870,22 +870,22 @@ txtBackupLocation.Text = folderDialog.SelectedPath;
         }
         
         void ToggleIrcSettings(bool enabled) {
-            txtIRCServer.Enabled = enabled;
-            txtIRCPort.Enabled = enabled;
-            txtNick.Enabled = enabled;
-            txtChannel.Enabled = enabled;
-            txtOpChannel.Enabled = enabled;
-            txtIrcId.Enabled = enabled;
-            chkIrcId.Enabled = enabled;
+            irc_txtServer.Enabled = enabled;
+            irc_txtPort.Enabled = enabled;
+            irc_txtNick.Enabled = enabled;
+            irc_txtChannel.Enabled = enabled;
+            irc_txtOpChannel.Enabled = enabled;
+            irc_txtPass.Enabled = enabled;
+            irc_chkPass.Enabled = enabled;
             irc_cbTitles.Enabled = enabled;
         }
 
         void ToggleMySQLSettings(bool enabled) {
-            txtSQLUsername.Enabled = enabled;
-            txtSQLPassword.Enabled = enabled;
-            txtSQLPort.Enabled = enabled;
-            txtSQLHost.Enabled = enabled;
-            txtSQLDatabase.Enabled = enabled;
+            sql_txtUser.Enabled = enabled;
+            sql_txtPass.Enabled = enabled;
+            sql_txtPort.Enabled = enabled;
+            sql_txtHost.Enabled = enabled;
+            sql_txtDBName.Enabled = enabled;
         }
         
         void ToggleChatSpamSettings(bool enabled) {

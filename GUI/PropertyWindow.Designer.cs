@@ -47,11 +47,11 @@ namespace MCGalaxy.Gui
         {
             this.components = new System.ComponentModel.Container();
             this.tabChat = new System.Windows.Forms.TabPage();
-            this.chat_gbTab = new System.Windows.Forms.GroupBox();
+            this.chat_grpTab = new System.Windows.Forms.GroupBox();
             this.chat_cbTabRank = new System.Windows.Forms.CheckBox();
             this.chat_cbTabLevel = new System.Windows.Forms.CheckBox();
             this.chat_cbTabBots = new System.Windows.Forms.CheckBox();
-            this.chat_gbMessages = new System.Windows.Forms.GroupBox();
+            this.chat_grpMessages = new System.Windows.Forms.GroupBox();
             this.chat_lblDemote = new System.Windows.Forms.Label();
             this.chat_lblPromote = new System.Windows.Forms.Label();
             this.chat_lblBan = new System.Windows.Forms.Label();
@@ -62,10 +62,10 @@ namespace MCGalaxy.Gui
             this.chat_txtCheap = new System.Windows.Forms.TextBox();
             this.chat_chkCheap = new System.Windows.Forms.CheckBox();
             this.chat_txtShutdown = new System.Windows.Forms.TextBox();
-            this.chat_gbOther = new System.Windows.Forms.GroupBox();
+            this.chat_grpOther = new System.Windows.Forms.GroupBox();
             this.chat_lblConsole = new System.Windows.Forms.Label();
             this.chat_txtConsole = new System.Windows.Forms.TextBox();
-            this.chat_gbColors = new System.Windows.Forms.GroupBox();
+            this.chat_grpColors = new System.Windows.Forms.GroupBox();
             this.chat_colDesc = new System.Windows.Forms.Label();
             this.chat_cmbDesc = new System.Windows.Forms.ComboBox();
             this.chat_lblDesc = new System.Windows.Forms.Label();
@@ -118,33 +118,33 @@ namespace MCGalaxy.Gui
             this.label24 = new System.Windows.Forms.Label();
             this.chkPhysicsRest = new System.Windows.Forms.CheckBox();
             this.chkDeath = new System.Windows.Forms.CheckBox();
-            this.txtBackup = new System.Windows.Forms.TextBox();
-            this.txtafk = new System.Windows.Forms.TextBox();
-            this.txtAFKKick = new System.Windows.Forms.TextBox();
+            this.bak_txtTime = new System.Windows.Forms.TextBox();
+            this.afk_txtTimer = new System.Windows.Forms.TextBox();
+            this.afk_txtKickTime = new System.Windows.Forms.TextBox();
             this.hackrank_kick = new System.Windows.Forms.CheckBox();
-            this.chkIRC = new System.Windows.Forms.CheckBox();
-            this.txtNick = new System.Windows.Forms.TextBox();
-            this.txtIRCServer = new System.Windows.Forms.TextBox();
-            this.txtChannel = new System.Windows.Forms.TextBox();
-            this.txtOpChannel = new System.Windows.Forms.TextBox();
-            this.chkVerify = new System.Windows.Forms.CheckBox();
-            this.chkWorld = new System.Windows.Forms.CheckBox();
-            this.chkAutoload = new System.Windows.Forms.CheckBox();
+            this.irc_chkEnabled = new System.Windows.Forms.CheckBox();
+            this.irc_txtNick = new System.Windows.Forms.TextBox();
+            this.irc_txtServer = new System.Windows.Forms.TextBox();
+            this.irc_txtChannel = new System.Windows.Forms.TextBox();
+            this.irc_txtOpChannel = new System.Windows.Forms.TextBox();
+            this.adv_chkVerify = new System.Windows.Forms.CheckBox();
+            this.lvl_chkWorld = new System.Windows.Forms.CheckBox();
+            this.lvl_chkAutoload = new System.Windows.Forms.CheckBox();
             this.srv_chkPublic = new System.Windows.Forms.CheckBox();
             this.srv_txtName = new System.Windows.Forms.TextBox();
             this.srv_txtMOTD = new System.Windows.Forms.TextBox();
             this.srv_txtPort = new System.Windows.Forms.TextBox();
-            this.chkLogBeat = new System.Windows.Forms.CheckBox();
-            this.chkUseSQL = new System.Windows.Forms.CheckBox();
+            this.adv_chkLogBeat = new System.Windows.Forms.CheckBox();
+            this.sql_chkUseSQL = new System.Windows.Forms.CheckBox();
             this.sec_cmbVerifyRank = new System.Windows.Forms.ComboBox();
             this.sec_cbVerifyAdmins = new System.Windows.Forms.CheckBox();
-            this.cmbAFKKickPerm = new System.Windows.Forms.ComboBox();
+            this.afk_cmbKickPerm = new System.Windows.Forms.ComboBox();
             this.chkGuestLimitNotify = new System.Windows.Forms.CheckBox();
-            this.cmbAdminChat = new System.Windows.Forms.ComboBox();
-            this.cmbOpChat = new System.Windows.Forms.ComboBox();
-            this.chkTpToHigherRanks = new System.Windows.Forms.CheckBox();
-            this.cmbDefaultRank = new System.Windows.Forms.ComboBox();
-            this.cmbOsMap = new System.Windows.Forms.ComboBox();
+            this.rank_cmbAdminChat = new System.Windows.Forms.ComboBox();
+            this.rank_cmbOpChat = new System.Windows.Forms.ComboBox();
+            this.rank_chkTpToHigherRanks = new System.Windows.Forms.CheckBox();
+            this.rank_cmbDefault = new System.Windows.Forms.ComboBox();
+            this.rank_cmbOsMap = new System.Windows.Forms.ComboBox();
             this.sec_cbWhitelist = new System.Windows.Forms.CheckBox();
             this.sec_cbLogNotes = new System.Windows.Forms.CheckBox();
             this.sec_cbChatAuto = new System.Windows.Forms.CheckBox();
@@ -208,47 +208,47 @@ namespace MCGalaxy.Gui
             this.txtRP = new System.Windows.Forms.TextBox();
             this.label28 = new System.Windows.Forms.Label();
             this.txtNormRp = new System.Windows.Forms.TextBox();
-            this.grpAFK = new System.Windows.Forms.GroupBox();
-            this.label76 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.label26 = new System.Windows.Forms.Label();
-            this.grpBackups = new System.Windows.Forms.GroupBox();
-            this.label32 = new System.Windows.Forms.Label();
-            this.txtBackupLocation = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
+            this.afk_grp = new System.Windows.Forms.GroupBox();
+            this.afk_lblKickRank = new System.Windows.Forms.Label();
+            this.afk_lblTimer = new System.Windows.Forms.Label();
+            this.afk_lblKickTime = new System.Windows.Forms.Label();
+            this.bak_grp = new System.Windows.Forms.GroupBox();
+            this.bak_lblLocation = new System.Windows.Forms.Label();
+            this.bak_txtLocation = new System.Windows.Forms.TextBox();
+            this.bak_lblTime = new System.Windows.Forms.Label();
             this.chkProfanityFilter = new System.Windows.Forms.CheckBox();
             this.pageIRC = new System.Windows.Forms.TabPage();
-            this.grpSQL = new System.Windows.Forms.GroupBox();
-            this.txtSQLPort = new System.Windows.Forms.TextBox();
-            this.label70 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.txtSQLHost = new System.Windows.Forms.TextBox();
-            this.label43 = new System.Windows.Forms.Label();
-            this.txtSQLDatabase = new System.Windows.Forms.TextBox();
-            this.label42 = new System.Windows.Forms.Label();
-            this.label40 = new System.Windows.Forms.Label();
-            this.label41 = new System.Windows.Forms.Label();
-            this.txtSQLPassword = new System.Windows.Forms.TextBox();
-            this.txtSQLUsername = new System.Windows.Forms.TextBox();
-            this.grpIRC = new System.Windows.Forms.GroupBox();
-            this.txtIRCPort = new System.Windows.Forms.TextBox();
-            this.label50 = new System.Windows.Forms.Label();
-            this.label49 = new System.Windows.Forms.Label();
-            this.txtIrcId = new System.Windows.Forms.TextBox();
-            this.chkIrcId = new System.Windows.Forms.CheckBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label31 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.sql_grp = new System.Windows.Forms.GroupBox();
+            this.sql_txtPort = new System.Windows.Forms.TextBox();
+            this.sql_lblPort = new System.Windows.Forms.Label();
+            this.sql_linkDownload = new System.Windows.Forms.LinkLabel();
+            this.sql_txtHost = new System.Windows.Forms.TextBox();
+            this.sql_lblHost = new System.Windows.Forms.Label();
+            this.sql_txtDBName = new System.Windows.Forms.TextBox();
+            this.sql_lblDBName = new System.Windows.Forms.Label();
+            this.sql_lblPass = new System.Windows.Forms.Label();
+            this.sql_lblUser = new System.Windows.Forms.Label();
+            this.sql_txtPass = new System.Windows.Forms.TextBox();
+            this.sql_txtUser = new System.Windows.Forms.TextBox();
+            this.irc_grp = new System.Windows.Forms.GroupBox();
+            this.irc_txtPort = new System.Windows.Forms.TextBox();
+            this.irc_lblPort = new System.Windows.Forms.Label();
+            this.irc_lblPass = new System.Windows.Forms.Label();
+            this.irc_txtPass = new System.Windows.Forms.TextBox();
+            this.irc_chkPass = new System.Windows.Forms.CheckBox();
+            this.irc_lblServer = new System.Windows.Forms.Label();
+            this.irc_lblOpChannel = new System.Windows.Forms.Label();
+            this.irc_lblNick = new System.Windows.Forms.Label();
+            this.irc_lblChannel = new System.Windows.Forms.Label();
             this.irc_cbTitles = new System.Windows.Forms.CheckBox();
             this.pageServer = new System.Windows.Forms.TabPage();
-            this.grpLevels = new System.Windows.Forms.GroupBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.txtMain = new System.Windows.Forms.TextBox();
-            this.grpAdvanced = new System.Windows.Forms.GroupBox();
-            this.editTxtsBt = new System.Windows.Forms.Button();
-            this.chkRestart = new System.Windows.Forms.CheckBox();
-            this.grpGeneral = new System.Windows.Forms.GroupBox();
+            this.lvl_grp = new System.Windows.Forms.GroupBox();
+            this.lvl_lblMain = new System.Windows.Forms.Label();
+            this.lvl_txtMain = new System.Windows.Forms.TextBox();
+            this.adv_grp = new System.Windows.Forms.GroupBox();
+            this.adv_btnEditTexts = new System.Windows.Forms.Button();
+            this.adv_chkRestart = new System.Windows.Forms.CheckBox();
+            this.srv_grp = new System.Windows.Forms.GroupBox();
             this.srv_lblPort = new System.Windows.Forms.Label();
             this.srv_lblOwner = new System.Windows.Forms.Label();
             this.srv_txtOwner = new System.Windows.Forms.TextBox();
@@ -331,7 +331,7 @@ namespace MCGalaxy.Gui
             this.tabPage11 = new System.Windows.Forms.TabPage();
             this.propsZG = new System.Windows.Forms.PropertyGrid();
             this.pageSecurity = new System.Windows.Forms.TabPage();
-            this.sec_gbIP = new System.Windows.Forms.GroupBox();
+            this.sec_grpIP = new System.Windows.Forms.GroupBox();
             this.sec_cbIPAuto = new System.Windows.Forms.CheckBox();
             this.sec_lblIPOnMute = new System.Windows.Forms.Label();
             this.sec_numIPMsgs = new System.Windows.Forms.NumericUpDown();
@@ -341,14 +341,14 @@ namespace MCGalaxy.Gui
             this.sec_lblIPForMute = new System.Windows.Forms.Label();
             this.sec_numIPMute = new System.Windows.Forms.NumericUpDown();
             this.sec_lblIPForSecs = new System.Windows.Forms.Label();
-            this.sec_gbBlocks = new System.Windows.Forms.GroupBox();
+            this.sec_grpBlocks = new System.Windows.Forms.GroupBox();
             this.sec_cbBlocksAuto = new System.Windows.Forms.CheckBox();
             this.sec_lblBlocksOnMute = new System.Windows.Forms.Label();
             this.sec_numBlocksMsgs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
-            this.sec_gbCmd = new System.Windows.Forms.GroupBox();
+            this.sec_grpCmd = new System.Windows.Forms.GroupBox();
             this.sec_cbCmdAuto = new System.Windows.Forms.CheckBox();
             this.sec_lblCmdOnMute = new System.Windows.Forms.Label();
             this.sec_numCmdMsgs = new System.Windows.Forms.NumericUpDown();
@@ -358,9 +358,9 @@ namespace MCGalaxy.Gui
             this.sec_lblCmdForMute = new System.Windows.Forms.Label();
             this.sec_numCmdMute = new System.Windows.Forms.NumericUpDown();
             this.sec_lblCmdForSecs = new System.Windows.Forms.Label();
-            this.sec_gbOther = new System.Windows.Forms.GroupBox();
+            this.sec_grpOther = new System.Windows.Forms.GroupBox();
             this.sec_lblRank = new System.Windows.Forms.Label();
-            this.sec_gbChat = new System.Windows.Forms.GroupBox();
+            this.sec_grpChat = new System.Windows.Forms.GroupBox();
             this.sec_lblChatOnMute = new System.Windows.Forms.Label();
             this.sec_numChatMsgs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblChatOnMsgs = new System.Windows.Forms.Label();
@@ -370,10 +370,10 @@ namespace MCGalaxy.Gui
             this.sec_numChatMute = new System.Windows.Forms.NumericUpDown();
             this.sec_lblChatForSecs = new System.Windows.Forms.Label();
             this.tabChat.SuspendLayout();
-            this.chat_gbTab.SuspendLayout();
-            this.chat_gbMessages.SuspendLayout();
-            this.chat_gbOther.SuspendLayout();
-            this.chat_gbColors.SuspendLayout();
+            this.chat_grpTab.SuspendLayout();
+            this.chat_grpMessages.SuspendLayout();
+            this.chat_grpOther.SuspendLayout();
+            this.chat_grpColors.SuspendLayout();
             this.pageCommands.SuspendLayout();
             this.pageCommandsList.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -392,15 +392,15 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).BeginInit();
             this.grpMessages.SuspendLayout();
             this.grpPhysics.SuspendLayout();
-            this.grpAFK.SuspendLayout();
-            this.grpBackups.SuspendLayout();
+            this.afk_grp.SuspendLayout();
+            this.bak_grp.SuspendLayout();
             this.pageIRC.SuspendLayout();
-            this.grpSQL.SuspendLayout();
-            this.grpIRC.SuspendLayout();
+            this.sql_grp.SuspendLayout();
+            this.irc_grp.SuspendLayout();
             this.pageServer.SuspendLayout();
-            this.grpLevels.SuspendLayout();
-            this.grpAdvanced.SuspendLayout();
-            this.grpGeneral.SuspendLayout();
+            this.lvl_grp.SuspendLayout();
+            this.adv_grp.SuspendLayout();
+            this.srv_grp.SuspendLayout();
             this.grpUpdate.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updateTimeNumeric)).BeginInit();
             this.grpPlayers.SuspendLayout();
@@ -430,19 +430,19 @@ namespace MCGalaxy.Gui
             this.groupBox30.SuspendLayout();
             this.tabPage11.SuspendLayout();
             this.pageSecurity.SuspendLayout();
-            this.sec_gbIP.SuspendLayout();
+            this.sec_grpIP.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numIPMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numIPSecs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numIPMute)).BeginInit();
-            this.sec_gbBlocks.SuspendLayout();
+            this.sec_grpBlocks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).BeginInit();
-            this.sec_gbCmd.SuspendLayout();
+            this.sec_grpCmd.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numCmdMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numCmdSecs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numCmdMute)).BeginInit();
-            this.sec_gbOther.SuspendLayout();
-            this.sec_gbChat.SuspendLayout();
+            this.sec_grpOther.SuspendLayout();
+            this.sec_grpChat.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numChatMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numChatSecs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numChatMute)).BeginInit();
@@ -451,10 +451,10 @@ namespace MCGalaxy.Gui
             // tabChat
             // 
             this.tabChat.BackColor = System.Drawing.SystemColors.Control;
-            this.tabChat.Controls.Add(this.chat_gbTab);
-            this.tabChat.Controls.Add(this.chat_gbMessages);
-            this.tabChat.Controls.Add(this.chat_gbOther);
-            this.tabChat.Controls.Add(this.chat_gbColors);
+            this.tabChat.Controls.Add(this.chat_grpTab);
+            this.tabChat.Controls.Add(this.chat_grpMessages);
+            this.tabChat.Controls.Add(this.chat_grpOther);
+            this.tabChat.Controls.Add(this.chat_grpColors);
             this.tabChat.Location = new System.Drawing.Point(4, 22);
             this.tabChat.Name = "tabChat";
             this.tabChat.Padding = new System.Windows.Forms.Padding(3);
@@ -462,17 +462,17 @@ namespace MCGalaxy.Gui
             this.tabChat.TabIndex = 10;
             this.tabChat.Text = "Chat";
             // 
-            // chat_gbTab
+            // chat_grpTab
             // 
-            this.chat_gbTab.Controls.Add(this.chat_cbTabRank);
-            this.chat_gbTab.Controls.Add(this.chat_cbTabLevel);
-            this.chat_gbTab.Controls.Add(this.chat_cbTabBots);
-            this.chat_gbTab.Location = new System.Drawing.Point(235, 59);
-            this.chat_gbTab.Name = "chat_gbTab";
-            this.chat_gbTab.Size = new System.Drawing.Size(256, 92);
-            this.chat_gbTab.TabIndex = 3;
-            this.chat_gbTab.TabStop = false;
-            this.chat_gbTab.Text = "Tab list";
+            this.chat_grpTab.Controls.Add(this.chat_cbTabRank);
+            this.chat_grpTab.Controls.Add(this.chat_cbTabLevel);
+            this.chat_grpTab.Controls.Add(this.chat_cbTabBots);
+            this.chat_grpTab.Location = new System.Drawing.Point(235, 59);
+            this.chat_grpTab.Name = "chat_grpTab";
+            this.chat_grpTab.Size = new System.Drawing.Size(256, 92);
+            this.chat_grpTab.TabIndex = 3;
+            this.chat_grpTab.TabStop = false;
+            this.chat_grpTab.Text = "Tab list";
             // 
             // chat_cbTabRank
             // 
@@ -504,24 +504,24 @@ namespace MCGalaxy.Gui
             this.chat_cbTabBots.Text = "Show bots in tab list";
             this.chat_cbTabBots.UseVisualStyleBackColor = true;
             // 
-            // chat_gbMessages
+            // chat_grpMessages
             // 
-            this.chat_gbMessages.Controls.Add(this.chat_lblDemote);
-            this.chat_gbMessages.Controls.Add(this.chat_lblPromote);
-            this.chat_gbMessages.Controls.Add(this.chat_lblBan);
-            this.chat_gbMessages.Controls.Add(this.chat_txtDemote);
-            this.chat_gbMessages.Controls.Add(this.chat_txtPromote);
-            this.chat_gbMessages.Controls.Add(this.chat_lblShutdown);
-            this.chat_gbMessages.Controls.Add(this.chat_txtBan);
-            this.chat_gbMessages.Controls.Add(this.chat_txtCheap);
-            this.chat_gbMessages.Controls.Add(this.chat_chkCheap);
-            this.chat_gbMessages.Controls.Add(this.chat_txtShutdown);
-            this.chat_gbMessages.Location = new System.Drawing.Point(8, 157);
-            this.chat_gbMessages.Name = "chat_gbMessages";
-            this.chat_gbMessages.Size = new System.Drawing.Size(483, 180);
-            this.chat_gbMessages.TabIndex = 2;
-            this.chat_gbMessages.TabStop = false;
-            this.chat_gbMessages.Text = "Messages";
+            this.chat_grpMessages.Controls.Add(this.chat_lblDemote);
+            this.chat_grpMessages.Controls.Add(this.chat_lblPromote);
+            this.chat_grpMessages.Controls.Add(this.chat_lblBan);
+            this.chat_grpMessages.Controls.Add(this.chat_txtDemote);
+            this.chat_grpMessages.Controls.Add(this.chat_txtPromote);
+            this.chat_grpMessages.Controls.Add(this.chat_lblShutdown);
+            this.chat_grpMessages.Controls.Add(this.chat_txtBan);
+            this.chat_grpMessages.Controls.Add(this.chat_txtCheap);
+            this.chat_grpMessages.Controls.Add(this.chat_chkCheap);
+            this.chat_grpMessages.Controls.Add(this.chat_txtShutdown);
+            this.chat_grpMessages.Location = new System.Drawing.Point(8, 157);
+            this.chat_grpMessages.Name = "chat_grpMessages";
+            this.chat_grpMessages.Size = new System.Drawing.Size(483, 180);
+            this.chat_grpMessages.TabIndex = 2;
+            this.chat_grpMessages.TabStop = false;
+            this.chat_grpMessages.Text = "Messages";
             // 
             // chat_lblDemote
             // 
@@ -609,16 +609,16 @@ namespace MCGalaxy.Gui
             this.chat_txtShutdown.Size = new System.Drawing.Size(343, 21);
             this.chat_txtShutdown.TabIndex = 29;
             // 
-            // chat_gbOther
+            // chat_grpOther
             // 
-            this.chat_gbOther.Controls.Add(this.chat_lblConsole);
-            this.chat_gbOther.Controls.Add(this.chat_txtConsole);
-            this.chat_gbOther.Location = new System.Drawing.Point(235, 6);
-            this.chat_gbOther.Name = "chat_gbOther";
-            this.chat_gbOther.Size = new System.Drawing.Size(256, 47);
-            this.chat_gbOther.TabIndex = 1;
-            this.chat_gbOther.TabStop = false;
-            this.chat_gbOther.Text = "Other";
+            this.chat_grpOther.Controls.Add(this.chat_lblConsole);
+            this.chat_grpOther.Controls.Add(this.chat_txtConsole);
+            this.chat_grpOther.Location = new System.Drawing.Point(235, 6);
+            this.chat_grpOther.Name = "chat_grpOther";
+            this.chat_grpOther.Size = new System.Drawing.Size(256, 47);
+            this.chat_grpOther.TabIndex = 1;
+            this.chat_grpOther.TabStop = false;
+            this.chat_grpOther.Text = "Other";
             // 
             // chat_lblConsole
             // 
@@ -637,26 +637,26 @@ namespace MCGalaxy.Gui
             this.chat_txtConsole.TabIndex = 3;
             this.chat_txtConsole.TextChanged += new System.EventHandler(this.txtPort_TextChanged);
             // 
-            // chat_gbColors
+            // chat_grpColors
             // 
-            this.chat_gbColors.Controls.Add(this.chat_colDesc);
-            this.chat_gbColors.Controls.Add(this.chat_cmbDesc);
-            this.chat_gbColors.Controls.Add(this.chat_lblDesc);
-            this.chat_gbColors.Controls.Add(this.chat_colSyntax);
-            this.chat_gbColors.Controls.Add(this.chat_cmbSyntax);
-            this.chat_gbColors.Controls.Add(this.chat_lblSyntax);
-            this.chat_gbColors.Controls.Add(this.chat_colIRC);
-            this.chat_gbColors.Controls.Add(this.chat_cmbIRC);
-            this.chat_gbColors.Controls.Add(this.chat_lblIRC);
-            this.chat_gbColors.Controls.Add(this.chat_colDefault);
-            this.chat_gbColors.Controls.Add(this.chat_cmbDefault);
-            this.chat_gbColors.Controls.Add(this.chat_lblDefault);
-            this.chat_gbColors.Location = new System.Drawing.Point(8, 6);
-            this.chat_gbColors.Name = "chat_gbColors";
-            this.chat_gbColors.Size = new System.Drawing.Size(221, 145);
-            this.chat_gbColors.TabIndex = 0;
-            this.chat_gbColors.TabStop = false;
-            this.chat_gbColors.Text = "Colors";
+            this.chat_grpColors.Controls.Add(this.chat_colDesc);
+            this.chat_grpColors.Controls.Add(this.chat_cmbDesc);
+            this.chat_grpColors.Controls.Add(this.chat_lblDesc);
+            this.chat_grpColors.Controls.Add(this.chat_colSyntax);
+            this.chat_grpColors.Controls.Add(this.chat_cmbSyntax);
+            this.chat_grpColors.Controls.Add(this.chat_lblSyntax);
+            this.chat_grpColors.Controls.Add(this.chat_colIRC);
+            this.chat_grpColors.Controls.Add(this.chat_cmbIRC);
+            this.chat_grpColors.Controls.Add(this.chat_lblIRC);
+            this.chat_grpColors.Controls.Add(this.chat_colDefault);
+            this.chat_grpColors.Controls.Add(this.chat_cmbDefault);
+            this.chat_grpColors.Controls.Add(this.chat_lblDefault);
+            this.chat_grpColors.Location = new System.Drawing.Point(8, 6);
+            this.chat_grpColors.Name = "chat_grpColors";
+            this.chat_grpColors.Size = new System.Drawing.Size(221, 145);
+            this.chat_grpColors.TabIndex = 0;
+            this.chat_grpColors.TabStop = false;
+            this.chat_grpColors.Text = "Colors";
             // 
             // chat_colDesc
             // 
@@ -1204,31 +1204,6 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.chkDeath, "\"Bob has died 10 times.\"");
             this.chkDeath.UseVisualStyleBackColor = true;
             // 
-            // txtBackup
-            // 
-            this.txtBackup.Location = new System.Drawing.Point(81, 43);
-            this.txtBackup.Name = "txtBackup";
-            this.txtBackup.Size = new System.Drawing.Size(41, 21);
-            this.txtBackup.TabIndex = 5;
-            this.toolTip.SetToolTip(this.txtBackup, "How often should backups be taken, in seconds.\nDefault = 300");
-            // 
-            // txtafk
-            // 
-            this.txtafk.Location = new System.Drawing.Point(61, 16);
-            this.txtafk.Name = "txtafk";
-            this.txtafk.Size = new System.Drawing.Size(66, 21);
-            this.txtafk.TabIndex = 10;
-            this.toolTip.SetToolTip(this.txtafk, "How long the server should wait before declaring someone ask afk. (0 = No timer a" +
-                        "t all)");
-            // 
-            // txtAFKKick
-            // 
-            this.txtAFKKick.Location = new System.Drawing.Point(61, 43);
-            this.txtAFKKick.Name = "txtAFKKick";
-            this.txtAFKKick.Size = new System.Drawing.Size(66, 21);
-            this.txtAFKKick.TabIndex = 9;
-            this.toolTip.SetToolTip(this.txtAFKKick, "Kick the user after they have been afk for this many minutes (0 = No kick)");
-            // 
             // hackrank_kick
             // 
             this.hackrank_kick.AutoSize = true;
@@ -1239,115 +1214,6 @@ namespace MCGalaxy.Gui
             this.hackrank_kick.Text = "Kick people who use hackrank after ";
             this.toolTip.SetToolTip(this.hackrank_kick, "Hackrank kicks people? Or not?");
             this.hackrank_kick.UseVisualStyleBackColor = true;
-            // 
-            // chkIRC
-            // 
-            this.chkIRC.AutoSize = true;
-            this.chkIRC.Location = new System.Drawing.Point(9, 20);
-            this.chkIRC.Name = "chkIRC";
-            this.chkIRC.Size = new System.Drawing.Size(61, 17);
-            this.chkIRC.TabIndex = 22;
-            this.chkIRC.Text = "Use IRC";
-            this.toolTip.SetToolTip(this.chkIRC, "Whether to use the IRC bot or not.\nIRC stands for Internet Relay Chat and allows " +
-                        "for communication with the server while outside Minecraft.");
-            this.chkIRC.UseVisualStyleBackColor = true;
-            this.chkIRC.CheckedChanged += new System.EventHandler(this.chkIRC_CheckedChanged);
-            // 
-            // txtNick
-            // 
-            this.txtNick.Location = new System.Drawing.Point(82, 101);
-            this.txtNick.Name = "txtNick";
-            this.txtNick.Size = new System.Drawing.Size(106, 21);
-            this.txtNick.TabIndex = 16;
-            this.toolTip.SetToolTip(this.txtNick, "The Nick that the IRC bot will try and use.");
-            // 
-            // txtIRCServer
-            // 
-            this.txtIRCServer.Location = new System.Drawing.Point(82, 47);
-            this.txtIRCServer.Name = "txtIRCServer";
-            this.txtIRCServer.Size = new System.Drawing.Size(106, 21);
-            this.txtIRCServer.TabIndex = 15;
-            this.toolTip.SetToolTip(this.txtIRCServer, "The IRC server to be used.\nDefault = irc.geekshed.net\nAnother choice = irc.esper." +
-                        "netd.net");
-            // 
-            // txtChannel
-            // 
-            this.txtChannel.Location = new System.Drawing.Point(82, 128);
-            this.txtChannel.Name = "txtChannel";
-            this.txtChannel.Size = new System.Drawing.Size(106, 21);
-            this.txtChannel.TabIndex = 17;
-            this.toolTip.SetToolTip(this.txtChannel, "The IRC channel to be used.");
-            // 
-            // txtOpChannel
-            // 
-            this.txtOpChannel.Location = new System.Drawing.Point(82, 155);
-            this.txtOpChannel.Name = "txtOpChannel";
-            this.txtOpChannel.Size = new System.Drawing.Size(106, 21);
-            this.txtOpChannel.TabIndex = 26;
-            this.toolTip.SetToolTip(this.txtOpChannel, "The IRC channel to be used.");
-            // 
-            // chkVerify
-            // 
-            this.chkVerify.AutoSize = true;
-            this.chkVerify.Location = new System.Drawing.Point(9, 20);
-            this.chkVerify.Name = "chkVerify";
-            this.chkVerify.Size = new System.Drawing.Size(87, 17);
-            this.chkVerify.TabIndex = 4;
-            this.chkVerify.Text = "Verify Names";
-            this.toolTip.SetToolTip(this.chkVerify, "Make sure the user is who they claim to be.");
-            this.chkVerify.UseVisualStyleBackColor = true;
-            // 
-            // chkWorld
-            // 
-            this.chkWorld.AutoSize = true;
-            this.chkWorld.Location = new System.Drawing.Point(9, 72);
-            this.chkWorld.Name = "chkWorld";
-            this.chkWorld.Size = new System.Drawing.Size(105, 17);
-            this.chkWorld.TabIndex = 4;
-            this.chkWorld.Text = "Server-wide chat";
-            this.toolTip.SetToolTip(this.chkWorld, "If disabled, every map has isolated chat.\nIf enabled, every map is able to commun" +
-                        "icate without special letters.");
-            this.chkWorld.UseVisualStyleBackColor = true;
-            // 
-            // chkAutoload
-            // 
-            this.chkAutoload.AutoSize = true;
-            this.chkAutoload.Location = new System.Drawing.Point(9, 49);
-            this.chkAutoload.Name = "chkAutoload";
-            this.chkAutoload.Size = new System.Drawing.Size(90, 17);
-            this.chkAutoload.TabIndex = 4;
-            this.chkAutoload.Text = "Load on /goto";
-            this.toolTip.SetToolTip(this.chkAutoload, "Load a map when a user wishes to go to it, and unload empty maps");
-            this.chkAutoload.UseVisualStyleBackColor = true;
-
-            // 
-            // chkLogBeat
-            // 
-            this.chkLogBeat.AutoSize = true;
-            this.chkLogBeat.Location = new System.Drawing.Point(9, 68);
-            this.chkLogBeat.Name = "chkLogBeat";
-            this.chkLogBeat.Size = new System.Drawing.Size(98, 17);
-            this.chkLogBeat.TabIndex = 24;
-            this.chkLogBeat.Text = "Log Heartbeat?";
-            this.toolTip.SetToolTip(this.chkLogBeat, "Debugging feature -- Toggles whether to log heartbeat activity.\r\nUseful when your" +
-                        " server gets a URL slowly or not at all.");
-            this.chkLogBeat.UseVisualStyleBackColor = true;
-            // 
-            // chkUseSQL
-            // 
-            this.chkUseSQL.AutoSize = true;
-            this.chkUseSQL.Location = new System.Drawing.Point(12, 20);
-            this.chkUseSQL.Name = "chkUseSQL";
-            this.chkUseSQL.Size = new System.Drawing.Size(77, 17);
-            this.chkUseSQL.TabIndex = 28;
-            this.chkUseSQL.Tag = "Whether or not the use of MySQL is enabled. You will need to have installed it fo" +
-            "r this to work. MySQL includes features such as block tracking, colors, titles a" +
-            "nd player info.";
-            this.chkUseSQL.Text = "Use MySQL";
-            this.toolTip.SetToolTip(this.chkUseSQL, "Whether to use the IRC bot or not.\nIRC stands for Internet Relay Chat and allows " +
-                        "for communication with the server while outside Minecraft.");
-            this.chkUseSQL.UseVisualStyleBackColor = true;
-            this.chkUseSQL.CheckedChanged += new System.EventHandler(this.chkUseSQL_CheckedChanged);
             // 
             // sec_cmbVerifyRank
             // 
@@ -1371,15 +1237,6 @@ namespace MCGalaxy.Gui
             this.sec_cbVerifyAdmins.UseVisualStyleBackColor = true;
             this.sec_cbVerifyAdmins.CheckedChanged += new System.EventHandler(this.VerifyAdminsChecked);
             // 
-            // cmbAFKKickPerm
-            // 
-            this.cmbAFKKickPerm.FormattingEnabled = true;
-            this.cmbAFKKickPerm.Location = new System.Drawing.Point(61, 71);
-            this.cmbAFKKickPerm.Name = "cmbAFKKickPerm";
-            this.cmbAFKKickPerm.Size = new System.Drawing.Size(66, 21);
-            this.cmbAFKKickPerm.TabIndex = 46;
-            this.toolTip.SetToolTip(this.cmbAFKKickPerm, "Maximum rank that will be kicked by AFK kick.");
-            // 
             // chkGuestLimitNotify
             // 
             this.chkGuestLimitNotify.AutoSize = true;
@@ -1391,55 +1248,55 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.chkGuestLimitNotify, "Notify in-game if a guest can\'t join due to the guest limit being reached.");
             this.chkGuestLimitNotify.UseVisualStyleBackColor = true;
             // 
-            // cmbAdminChat
+            // rank_cmbAdminChat
             // 
-            this.cmbAdminChat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAdminChat.FormattingEnabled = true;
-            this.cmbAdminChat.Location = new System.Drawing.Point(104, 74);
-            this.cmbAdminChat.Name = "cmbAdminChat";
-            this.cmbAdminChat.Size = new System.Drawing.Size(81, 21);
-            this.cmbAdminChat.TabIndex = 38;
-            this.toolTip.SetToolTip(this.cmbAdminChat, "Default rank required to read op chat.");
+            this.rank_cmbAdminChat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.rank_cmbAdminChat.FormattingEnabled = true;
+            this.rank_cmbAdminChat.Location = new System.Drawing.Point(104, 74);
+            this.rank_cmbAdminChat.Name = "cmbAdminChat";
+            this.rank_cmbAdminChat.Size = new System.Drawing.Size(81, 21);
+            this.rank_cmbAdminChat.TabIndex = 38;
+            this.toolTip.SetToolTip(this.rank_cmbAdminChat, "Default rank required to read op chat.");
             // 
-            // cmbOpChat
+            // rank_cmbOpChat
             // 
-            this.cmbOpChat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbOpChat.FormattingEnabled = true;
-            this.cmbOpChat.Location = new System.Drawing.Point(104, 47);
-            this.cmbOpChat.Name = "cmbOpChat";
-            this.cmbOpChat.Size = new System.Drawing.Size(81, 21);
-            this.cmbOpChat.TabIndex = 36;
-            this.toolTip.SetToolTip(this.cmbOpChat, "Default rank required to read op chat.");
+            this.rank_cmbOpChat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.rank_cmbOpChat.FormattingEnabled = true;
+            this.rank_cmbOpChat.Location = new System.Drawing.Point(104, 47);
+            this.rank_cmbOpChat.Name = "rank_cmbOpChat";
+            this.rank_cmbOpChat.Size = new System.Drawing.Size(81, 21);
+            this.rank_cmbOpChat.TabIndex = 36;
+            this.toolTip.SetToolTip(this.rank_cmbOpChat, "Default rank required to read op chat.");
             // 
-            // chkTpToHigherRanks
+            // rank_chkTpToHigherRanks
             // 
-            this.chkTpToHigherRanks.AutoSize = true;
-            this.chkTpToHigherRanks.Location = new System.Drawing.Point(11, 142);
-            this.chkTpToHigherRanks.Name = "chkTpToHigherRanks";
-            this.chkTpToHigherRanks.Size = new System.Drawing.Size(136, 17);
-            this.chkTpToHigherRanks.TabIndex = 42;
-            this.chkTpToHigherRanks.Text = "Allow tp to higher ranks";
-            this.toolTip.SetToolTip(this.chkTpToHigherRanks, "Allows the use of /tp to players of higher rank");
-            this.chkTpToHigherRanks.UseVisualStyleBackColor = true;
+            this.rank_chkTpToHigherRanks.AutoSize = true;
+            this.rank_chkTpToHigherRanks.Location = new System.Drawing.Point(11, 142);
+            this.rank_chkTpToHigherRanks.Name = "rank_chkTpToHigherRanks";
+            this.rank_chkTpToHigherRanks.Size = new System.Drawing.Size(136, 17);
+            this.rank_chkTpToHigherRanks.TabIndex = 42;
+            this.rank_chkTpToHigherRanks.Text = "Allow tp to higher ranks";
+            this.toolTip.SetToolTip(this.rank_chkTpToHigherRanks, "Allows the use of /tp to players of higher rank");
+            this.rank_chkTpToHigherRanks.UseVisualStyleBackColor = true;
             // 
-            // cmbDefaultRank
+            // rank_cmbDefaultRank
             // 
-            this.cmbDefaultRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbDefaultRank.FormattingEnabled = true;
-            this.cmbDefaultRank.Location = new System.Drawing.Point(104, 20);
-            this.cmbDefaultRank.Name = "cmbDefaultRank";
-            this.cmbDefaultRank.Size = new System.Drawing.Size(81, 21);
-            this.cmbDefaultRank.TabIndex = 44;
-            this.toolTip.SetToolTip(this.cmbDefaultRank, "Default rank assigned to new visitors to the server.");
+            this.rank_cmbDefault.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.rank_cmbDefault.FormattingEnabled = true;
+            this.rank_cmbDefault.Location = new System.Drawing.Point(104, 20);
+            this.rank_cmbDefault.Name = "rank_cmbDefault";
+            this.rank_cmbDefault.Size = new System.Drawing.Size(81, 21);
+            this.rank_cmbDefault.TabIndex = 44;
+            this.toolTip.SetToolTip(this.rank_cmbDefault, "Default rank assigned to new visitors to the server.");
             // 
-            // cmbOsMap
+            // rank_cmbOsMap
             // 
-            this.cmbOsMap.FormattingEnabled = true;
-            this.cmbOsMap.Location = new System.Drawing.Point(143, 207);
-            this.cmbOsMap.Name = "cmbOsMap";
-            this.cmbOsMap.Size = new System.Drawing.Size(172, 21);
-            this.cmbOsMap.TabIndex = 47;
-            this.toolTip.SetToolTip(this.cmbOsMap, "Default min rank that can build on maps made with /os map add.\nIf \'nobody\' is sel" +
+            this.rank_cmbOsMap.FormattingEnabled = true;
+            this.rank_cmbOsMap.Location = new System.Drawing.Point(143, 207);
+            this.rank_cmbOsMap.Name = "cmbOsMap";
+            this.rank_cmbOsMap.Size = new System.Drawing.Size(172, 21);
+            this.rank_cmbOsMap.TabIndex = 47;
+            this.toolTip.SetToolTip(this.rank_cmbOsMap, "Default min rank that can build on maps made with /os map add.\nIf \'nobody\' is sel" +
                         "ected, the default min rank used is the min rank that can use /os.");
             // 
             // sec_cbWhitelist
@@ -1592,12 +1449,12 @@ namespace MCGalaxy.Gui
             this.gbRankGeneral.AutoSize = true;
             this.gbRankGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbRankGeneral.Controls.Add(this.label29);
-            this.gbRankGeneral.Controls.Add(this.cmbDefaultRank);
+            this.gbRankGeneral.Controls.Add(this.rank_cmbDefault);
             this.gbRankGeneral.Controls.Add(this.chkAdminsJoinSilent);
-            this.gbRankGeneral.Controls.Add(this.chkTpToHigherRanks);
+            this.gbRankGeneral.Controls.Add(this.rank_chkTpToHigherRanks);
             this.gbRankGeneral.Controls.Add(this.lblOpChat);
-            this.gbRankGeneral.Controls.Add(this.cmbAdminChat);
-            this.gbRankGeneral.Controls.Add(this.cmbOpChat);
+            this.gbRankGeneral.Controls.Add(this.rank_cmbAdminChat);
+            this.gbRankGeneral.Controls.Add(this.rank_cmbOpChat);
             this.gbRankGeneral.Controls.Add(this.label37);
             this.gbRankGeneral.Location = new System.Drawing.Point(11, 317);
             this.gbRankGeneral.Name = "gbRankGeneral";
@@ -1868,8 +1725,8 @@ namespace MCGalaxy.Gui
             this.pageMisc.Controls.Add(this.grpExtra);
             this.pageMisc.Controls.Add(this.grpMessages);
             this.pageMisc.Controls.Add(this.grpPhysics);
-            this.pageMisc.Controls.Add(this.grpAFK);
-            this.pageMisc.Controls.Add(this.grpBackups);
+            this.pageMisc.Controls.Add(this.afk_grp);
+            this.pageMisc.Controls.Add(this.bak_grp);
             this.pageMisc.Controls.Add(this.chkProfanityFilter);
             this.pageMisc.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pageMisc.Location = new System.Drawing.Point(4, 22);
@@ -1905,7 +1762,7 @@ namespace MCGalaxy.Gui
             this.grpExtra.Controls.Add(this.nudCooldownTime);
             this.grpExtra.Controls.Add(this.label84);
             this.grpExtra.Controls.Add(this.lblOsMap);
-            this.grpExtra.Controls.Add(this.cmbOsMap);
+            this.grpExtra.Controls.Add(this.rank_cmbOsMap);
             this.grpExtra.Controls.Add(this.chkGuestLimitNotify);
             this.grpExtra.Controls.Add(this.chkShowEmptyRanks);
             this.grpExtra.Controls.Add(this.chkRepeatMessages);
@@ -2100,88 +1957,121 @@ namespace MCGalaxy.Gui
             this.txtNormRp.Size = new System.Drawing.Size(55, 21);
             this.txtNormRp.TabIndex = 13;
             // 
-            // grpAFK
+            // afk_grp
             // 
-            this.grpAFK.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpAFK.Controls.Add(this.cmbAFKKickPerm);
-            this.grpAFK.Controls.Add(this.label76);
-            this.grpAFK.Controls.Add(this.label25);
-            this.grpAFK.Controls.Add(this.txtafk);
-            this.grpAFK.Controls.Add(this.label26);
-            this.grpAFK.Controls.Add(this.txtAFKKick);
-            this.grpAFK.Location = new System.Drawing.Point(352, 13);
-            this.grpAFK.Name = "grpAFK";
-            this.grpAFK.Size = new System.Drawing.Size(133, 100);
-            this.grpAFK.TabIndex = 37;
-            this.grpAFK.TabStop = false;
-            this.grpAFK.Text = "AFK";
+            this.afk_grp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.afk_grp.Controls.Add(this.afk_lblKickRank);
+            this.afk_grp.Controls.Add(this.afk_cmbKickPerm);
+            this.afk_grp.Controls.Add(this.afk_lblTimer);
+            this.afk_grp.Controls.Add(this.afk_txtTimer);
+            this.afk_grp.Controls.Add(this.afk_lblKickTime);
+            this.afk_grp.Controls.Add(this.afk_txtKickTime);
+            this.afk_grp.Location = new System.Drawing.Point(352, 13);
+            this.afk_grp.Name = "afk_grp";
+            this.afk_grp.Size = new System.Drawing.Size(133, 100);
+            this.afk_grp.TabIndex = 37;
+            this.afk_grp.TabStop = false;
+            this.afk_grp.Text = "AFK";
             // 
-            // label76
+            // afk_lblKickRank
             // 
-            this.label76.AutoSize = true;
-            this.label76.Location = new System.Drawing.Point(5, 74);
-            this.label76.Name = "label76";
-            this.label76.Size = new System.Drawing.Size(54, 13);
-            this.label76.TabIndex = 13;
-            this.label76.Text = "Kick Rank:";
+            this.afk_lblKickRank.AutoSize = true;
+            this.afk_lblKickRank.Location = new System.Drawing.Point(5, 74);
+            this.afk_lblKickRank.Name = "afk_lblKickRank";
+            this.afk_lblKickRank.Size = new System.Drawing.Size(54, 13);
+            this.afk_lblKickRank.TabIndex = 13;
+            this.afk_lblKickRank.Text = "Kick Rank:";
             // 
-            // label25
+            // afk_cmbKickPerm
             // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(5, 21);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(54, 13);
-            this.label25.TabIndex = 12;
-            this.label25.Text = "AFK timer:";
+            this.afk_cmbKickPerm.FormattingEnabled = true;
+            this.afk_cmbKickPerm.Location = new System.Drawing.Point(61, 71);
+            this.afk_cmbKickPerm.Name = "afk_cmbKickPerm";
+            this.afk_cmbKickPerm.Size = new System.Drawing.Size(66, 21);
+            this.afk_cmbKickPerm.TabIndex = 46;
+            this.toolTip.SetToolTip(this.afk_cmbKickPerm, "Maximum rank that will be kicked by AFK kick.");
             // 
-            // label26
+            // afk_lblTimer
             // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(5, 47);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(48, 13);
-            this.label26.TabIndex = 11;
-            this.label26.Text = "AFK Kick:";
+            this.afk_lblTimer.AutoSize = true;
+            this.afk_lblTimer.Location = new System.Drawing.Point(5, 21);
+            this.afk_lblTimer.Name = "afk_lblTimer";
+            this.afk_lblTimer.Size = new System.Drawing.Size(54, 13);
+            this.afk_lblTimer.TabIndex = 12;
+            this.afk_lblTimer.Text = "AFK timer:";
             // 
-            // grpBackups
+            // afk_txtTimer
             // 
-            this.grpBackups.AutoSize = true;
-            this.grpBackups.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpBackups.Controls.Add(this.label32);
-            this.grpBackups.Controls.Add(this.txtBackupLocation);
-            this.grpBackups.Controls.Add(this.label9);
-            this.grpBackups.Controls.Add(this.txtBackup);
-            this.grpBackups.Location = new System.Drawing.Point(10, 13);
-            this.grpBackups.Name = "grpBackups";
-            this.grpBackups.Size = new System.Drawing.Size(332, 84);
-            this.grpBackups.TabIndex = 36;
-            this.grpBackups.TabStop = false;
-            this.grpBackups.Text = "Backups";
+            this.afk_txtTimer.Location = new System.Drawing.Point(61, 16);
+            this.afk_txtTimer.Name = "afk_txtTimer";
+            this.afk_txtTimer.Size = new System.Drawing.Size(66, 21);
+            this.afk_txtTimer.TabIndex = 10;
+            this.toolTip.SetToolTip(this.afk_txtTimer, "How many minutes a player can idle before server announces auto afk. (0 = disabled)");
             // 
-            // label32
+            // afk_lblKickTime
             // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(5, 21);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(44, 13);
-            this.label32.TabIndex = 3;
-            this.label32.Text = "Backup:";
+            this.afk_lblKickTime.AutoSize = true;
+            this.afk_lblKickTime.Location = new System.Drawing.Point(5, 47);
+            this.afk_lblKickTime.Name = "afk_lblKickTime";
+            this.afk_lblKickTime.Size = new System.Drawing.Size(48, 13);
+            this.afk_lblKickTime.TabIndex = 11;
+            this.afk_lblKickTime.Text = "AFK Kick:";
             // 
-            // txtBackupLocation
+            // afk_txtKickTime
             // 
-            this.txtBackupLocation.Location = new System.Drawing.Point(81, 17);
-            this.txtBackupLocation.Name = "txtBackupLocation";
-            this.txtBackupLocation.Size = new System.Drawing.Size(245, 21);
-            this.txtBackupLocation.TabIndex = 2;
+            this.afk_txtKickTime.Location = new System.Drawing.Point(61, 43);
+            this.afk_txtKickTime.Name = "afk_txtKickTime";
+            this.afk_txtKickTime.Size = new System.Drawing.Size(66, 21);
+            this.afk_txtKickTime.TabIndex = 9;
+            this.toolTip.SetToolTip(this.afk_txtKickTime, "How many minutes a player can be AFK before getting auto kicked. (0 = No kick)");
             // 
-            // label9
+            // bak_grp
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(5, 47);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(67, 13);
-            this.label9.TabIndex = 7;
-            this.label9.Text = "Backup time:";
+            this.bak_grp.AutoSize = true;
+            this.bak_grp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.bak_grp.Controls.Add(this.bak_lblLocation);
+            this.bak_grp.Controls.Add(this.bak_txtLocation);
+            this.bak_grp.Controls.Add(this.bak_lblTime);
+            this.bak_grp.Controls.Add(this.bak_txtTime);
+            this.bak_grp.Location = new System.Drawing.Point(10, 13);
+            this.bak_grp.Name = "bak_grp";
+            this.bak_grp.Size = new System.Drawing.Size(332, 84);
+            this.bak_grp.TabIndex = 36;
+            this.bak_grp.TabStop = false;
+            this.bak_grp.Text = "Backups";
+            // 
+            // bak_lblLocation
+            // 
+            this.bak_lblLocation.AutoSize = true;
+            this.bak_lblLocation.Location = new System.Drawing.Point(5, 21);
+            this.bak_lblLocation.Name = "bak_lblLocation";
+            this.bak_lblLocation.Size = new System.Drawing.Size(44, 13);
+            this.bak_lblLocation.TabIndex = 3;
+            this.bak_lblLocation.Text = "Backup:";
+            // 
+            // bak_txtLocation
+            // 
+            this.bak_txtLocation.Location = new System.Drawing.Point(81, 17);
+            this.bak_txtLocation.Name = "bak_txtLocation";
+            this.bak_txtLocation.Size = new System.Drawing.Size(245, 21);
+            this.bak_txtLocation.TabIndex = 2;
+            // 
+            // bak_lblTime
+            // 
+            this.bak_lblTime.AutoSize = true;
+            this.bak_lblTime.Location = new System.Drawing.Point(5, 47);
+            this.bak_lblTime.Name = "bak_lblTime";
+            this.bak_lblTime.Size = new System.Drawing.Size(67, 13);
+            this.bak_lblTime.TabIndex = 7;
+            this.bak_lblTime.Text = "Backup time:";
+            // 
+            // bak_txtTime
+            // 
+            this.bak_txtTime.Location = new System.Drawing.Point(81, 43);
+            this.bak_txtTime.Name = "bak_txtTime";
+            this.bak_txtTime.Size = new System.Drawing.Size(41, 21);
+            this.bak_txtTime.TabIndex = 5;
+            this.toolTip.SetToolTip(this.bak_txtTime, "How often should backups be taken, in seconds.\nDefault = 300");
             // 
             // chkProfanityFilter
             // 
@@ -2197,235 +2087,293 @@ namespace MCGalaxy.Gui
             // pageIRC
             // 
             this.pageIRC.BackColor = System.Drawing.SystemColors.Control;
-            this.pageIRC.Controls.Add(this.grpSQL);
-            this.pageIRC.Controls.Add(this.grpIRC);
+            this.pageIRC.Controls.Add(this.sql_grp);
+            this.pageIRC.Controls.Add(this.irc_grp);
             this.pageIRC.Location = new System.Drawing.Point(4, 22);
             this.pageIRC.Name = "pageIRC";
             this.pageIRC.Size = new System.Drawing.Size(498, 521);
             this.pageIRC.TabIndex = 6;
             this.pageIRC.Text = "IRC/SQL";
             // 
-            // grpSQL
+            // sql_grp
             // 
-            this.grpSQL.Controls.Add(this.txtSQLPort);
-            this.grpSQL.Controls.Add(this.chkUseSQL);
-            this.grpSQL.Controls.Add(this.label70);
-            this.grpSQL.Controls.Add(this.linkLabel1);
-            this.grpSQL.Controls.Add(this.txtSQLHost);
-            this.grpSQL.Controls.Add(this.label43);
-            this.grpSQL.Controls.Add(this.txtSQLDatabase);
-            this.grpSQL.Controls.Add(this.label42);
-            this.grpSQL.Controls.Add(this.label40);
-            this.grpSQL.Controls.Add(this.label41);
-            this.grpSQL.Controls.Add(this.txtSQLPassword);
-            this.grpSQL.Controls.Add(this.txtSQLUsername);
-            this.grpSQL.Location = new System.Drawing.Point(264, 3);
-            this.grpSQL.Name = "grpSQL";
-            this.grpSQL.Size = new System.Drawing.Size(227, 272);
-            this.grpSQL.TabIndex = 29;
-            this.grpSQL.TabStop = false;
-            this.grpSQL.Text = "MySQL";
+            this.sql_grp.Controls.Add(this.sql_chkUseSQL);
+            this.sql_grp.Controls.Add(this.sql_linkDownload);
+            this.sql_grp.Controls.Add(this.sql_lblUser);
+            this.sql_grp.Controls.Add(this.sql_txtUser);
+            this.sql_grp.Controls.Add(this.sql_lblPass);
+            this.sql_grp.Controls.Add(this.sql_txtPass);
+            this.sql_grp.Controls.Add(this.sql_lblDBName);
+            this.sql_grp.Controls.Add(this.sql_txtDBName);
+            this.sql_grp.Controls.Add(this.sql_lblHost);
+            this.sql_grp.Controls.Add(this.sql_txtHost);
+            this.sql_grp.Controls.Add(this.sql_lblPort);
+            this.sql_grp.Controls.Add(this.sql_txtPort);
+            this.sql_grp.Location = new System.Drawing.Point(264, 3);
+            this.sql_grp.Name = "sql_grp";
+            this.sql_grp.Size = new System.Drawing.Size(227, 272);
+            this.sql_grp.TabIndex = 29;
+            this.sql_grp.TabStop = false;
+            this.sql_grp.Text = "MySQL";
             // 
-            // txtSQLPort
+            // sql_chkUseSQL
             // 
-            this.txtSQLPort.Location = new System.Drawing.Point(111, 155);
-            this.txtSQLPort.Name = "txtSQLPort";
-            this.txtSQLPort.Size = new System.Drawing.Size(100, 21);
-            this.txtSQLPort.TabIndex = 32;
+            this.sql_chkUseSQL.AutoSize = true;
+            this.sql_chkUseSQL.Location = new System.Drawing.Point(12, 20);
+            this.sql_chkUseSQL.Name = "sql_chkUseSQL";
+            this.sql_chkUseSQL.Size = new System.Drawing.Size(77, 17);
+            this.sql_chkUseSQL.TabIndex = 28;
+            this.sql_chkUseSQL.Text = "Use MySQL";
+            this.toolTip.SetToolTip(this.sql_chkUseSQL, "Whether to use MySQL instead of SQLite for database storage. You will need to " +
+                                    "have installed it for this to work.");
+            this.sql_chkUseSQL.UseVisualStyleBackColor = true;
+            this.sql_chkUseSQL.CheckedChanged += new System.EventHandler(this.sql_chkUseSQL_CheckedChanged);
             // 
-            // label70
+            // sql_linkDownload
             // 
-            this.label70.AutoSize = true;
-            this.label70.Location = new System.Drawing.Point(9, 158);
-            this.label70.Name = "label70";
-            this.label70.Size = new System.Drawing.Size(30, 13);
-            this.label70.TabIndex = 31;
-            this.label70.Text = "Port:";
+            this.sql_linkDownload.AutoSize = true;
+            this.sql_linkDownload.Location = new System.Drawing.Point(108, 21);
+            this.sql_linkDownload.Name = "sql_linkDownload";
+            this.sql_linkDownload.Size = new System.Drawing.Size(113, 13);
+            this.sql_linkDownload.TabIndex = 30;
+            this.sql_linkDownload.TabStop = true;
+            this.sql_linkDownload.Tag = "Click here to go to the download page for MySQL.";
+            this.sql_linkDownload.Text = "MySQL Download Page";
+            this.sql_linkDownload.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.sql_linkDownload_LinkClicked);
             // 
-            // linkLabel1
+            // sql_lblUser
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(108, 21);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(113, 13);
-            this.linkLabel1.TabIndex = 30;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Tag = "Click here to go to the download page for MySQL.";
-            this.linkLabel1.Text = "MySQL Download Page";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.sql_lblUser.AutoSize = true;
+            this.sql_lblUser.Location = new System.Drawing.Point(9, 50);
+            this.sql_lblUser.Name = "sql_lblUser";
+            this.sql_lblUser.Size = new System.Drawing.Size(59, 13);
+            this.sql_lblUser.TabIndex = 3;
+            this.sql_lblUser.Text = "Username:";
             // 
-            // txtSQLHost
+            // sql_txtUser
             // 
-            this.txtSQLHost.Location = new System.Drawing.Point(111, 128);
-            this.txtSQLHost.Name = "txtSQLHost";
-            this.txtSQLHost.Size = new System.Drawing.Size(100, 21);
-            this.txtSQLHost.TabIndex = 8;
-            this.txtSQLHost.Tag = "The host name for the database. Leave this unless problems occur.";
+            this.sql_txtUser.Location = new System.Drawing.Point(111, 47);
+            this.sql_txtUser.Name = "sql_txtUser";
+            this.sql_txtUser.Size = new System.Drawing.Size(100, 21);
+            this.sql_txtUser.TabIndex = 1;
+            this.sql_txtUser.Tag = "The username set while installing MySQL";
             // 
-            // label43
+            // sql_lblPass
             // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(9, 131);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(32, 13);
-            this.label43.TabIndex = 7;
-            this.label43.Text = "Host:";
+            this.sql_lblPass.AutoSize = true;
+            this.sql_lblPass.Location = new System.Drawing.Point(9, 77);
+            this.sql_lblPass.Name = "sql_lblPass";
+            this.sql_lblPass.Size = new System.Drawing.Size(56, 13);
+            this.sql_lblPass.TabIndex = 4;
+            this.sql_lblPass.Text = "Password:";
             // 
-            // txtSQLDatabase
+            // sql_txtPass
             // 
-            this.txtSQLDatabase.Location = new System.Drawing.Point(111, 101);
-            this.txtSQLDatabase.Name = "txtSQLDatabase";
-            this.txtSQLDatabase.Size = new System.Drawing.Size(100, 21);
-            this.txtSQLDatabase.TabIndex = 6;
-            this.txtSQLDatabase.Tag = "The name of the database stored (Default = MCZall)";
+            this.sql_txtPass.Location = new System.Drawing.Point(111, 74);
+            this.sql_txtPass.Name = "sql_txtPass";
+            this.sql_txtPass.PasswordChar = '*';
+            this.sql_txtPass.Size = new System.Drawing.Size(100, 21);
+            this.sql_txtPass.TabIndex = 2;
+            this.sql_txtPass.Tag = "The password set while installing MySQL";
             // 
-            // label42
+            // sql_lblDBName
             // 
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(9, 104);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(86, 13);
-            this.label42.TabIndex = 5;
-            this.label42.Text = "Database Name:";
+            this.sql_txtDBName.Location = new System.Drawing.Point(111, 101);
+            this.sql_txtDBName.Name = "sql_lblDBName";
+            this.sql_txtDBName.Size = new System.Drawing.Size(100, 21);
+            this.sql_txtDBName.TabIndex = 6;
+            this.sql_txtDBName.Tag = "The name of the database stored (Default = MCZall)";
             // 
-            // label40
+            // sql_lblDBName
             // 
-            this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(9, 77);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(56, 13);
-            this.label40.TabIndex = 4;
-            this.label40.Text = "Password:";
+            this.sql_lblDBName.AutoSize = true;
+            this.sql_lblDBName.Location = new System.Drawing.Point(9, 104);
+            this.sql_lblDBName.Name = "sql_lblDBName";
+            this.sql_lblDBName.Size = new System.Drawing.Size(86, 13);
+            this.sql_lblDBName.TabIndex = 5;
+            this.sql_lblDBName.Text = "Database Name:";
             // 
-            // label41
+            // sql_lblHost
             // 
-            this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(9, 50);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(59, 13);
-            this.label41.TabIndex = 3;
-            this.label41.Text = "Username:";
+            this.sql_lblHost.AutoSize = true;
+            this.sql_lblHost.Location = new System.Drawing.Point(9, 131);
+            this.sql_lblHost.Name = "sql_lblHost";
+            this.sql_lblHost.Size = new System.Drawing.Size(32, 13);
+            this.sql_lblHost.TabIndex = 7;
+            this.sql_lblHost.Text = "Host:";
             // 
-            // txtSQLPassword
+            // sql_txtHost
             // 
-            this.txtSQLPassword.Location = new System.Drawing.Point(111, 74);
-            this.txtSQLPassword.Name = "txtSQLPassword";
-            this.txtSQLPassword.PasswordChar = '*';
-            this.txtSQLPassword.Size = new System.Drawing.Size(100, 21);
-            this.txtSQLPassword.TabIndex = 2;
-            this.txtSQLPassword.Tag = "The password set while installing MySQL";
+            this.sql_txtHost.Location = new System.Drawing.Point(111, 128);
+            this.sql_txtHost.Name = "sql_txtHost";
+            this.sql_txtHost.Size = new System.Drawing.Size(100, 21);
+            this.sql_txtHost.TabIndex = 8;
+            this.sql_txtHost.Tag = "The host name for the database. Leave this unless problems occur.";
             // 
-            // txtSQLUsername
+            // sql_lblPort
             // 
-            this.txtSQLUsername.Location = new System.Drawing.Point(111, 47);
-            this.txtSQLUsername.Name = "txtSQLUsername";
-            this.txtSQLUsername.Size = new System.Drawing.Size(100, 21);
-            this.txtSQLUsername.TabIndex = 1;
-            this.txtSQLUsername.Tag = "The username set while installing MySQL";
+            this.sql_lblPort.AutoSize = true;
+            this.sql_lblPort.Location = new System.Drawing.Point(9, 158);
+            this.sql_lblPort.Name = "sql_lblPort";
+            this.sql_lblPort.Size = new System.Drawing.Size(30, 13);
+            this.sql_lblPort.TabIndex = 31;
+            this.sql_lblPort.Text = "Port:";
             // 
-            // grpIRC
+            // sql_txtPort
             // 
-            this.grpIRC.Controls.Add(this.txtIRCPort);
-            this.grpIRC.Controls.Add(this.label50);
-            this.grpIRC.Controls.Add(this.label49);
-            this.grpIRC.Controls.Add(this.chkIRC);
-            this.grpIRC.Controls.Add(this.txtIrcId);
-            this.grpIRC.Controls.Add(this.chkIrcId);
-            this.grpIRC.Controls.Add(this.label6);
-            this.grpIRC.Controls.Add(this.txtOpChannel);
-            this.grpIRC.Controls.Add(this.txtIRCServer);
-            this.grpIRC.Controls.Add(this.label31);
-            this.grpIRC.Controls.Add(this.txtChannel);
-            this.grpIRC.Controls.Add(this.label4);
-            this.grpIRC.Controls.Add(this.txtNick);
-            this.grpIRC.Controls.Add(this.label5);
-            this.grpIRC.Controls.Add(this.irc_cbTitles);
-            this.grpIRC.Location = new System.Drawing.Point(8, 3);
-            this.grpIRC.Name = "grpIRC";
-            this.grpIRC.Size = new System.Drawing.Size(250, 272);
-            this.grpIRC.TabIndex = 27;
-            this.grpIRC.TabStop = false;
-            this.grpIRC.Text = "IRC";
+            this.sql_txtPort.Location = new System.Drawing.Point(111, 155);
+            this.sql_txtPort.Name = "sql_txtPort";
+            this.sql_txtPort.Size = new System.Drawing.Size(100, 21);
+            this.sql_txtPort.TabIndex = 32;
             // 
-            // txtIRCPort
+            // irc_grp
+            //
+            this.irc_grp.Controls.Add(this.irc_chkEnabled);
+            this.irc_grp.Controls.Add(this.irc_lblServer);
+            this.irc_grp.Controls.Add(this.irc_txtServer);
+            this.irc_grp.Controls.Add(this.irc_lblPort);
+            this.irc_grp.Controls.Add(this.irc_txtPort);
+            this.irc_grp.Controls.Add(this.irc_lblNick);
+            this.irc_grp.Controls.Add(this.irc_txtNick);
+            this.irc_grp.Controls.Add(this.irc_lblChannel);
+            this.irc_grp.Controls.Add(this.irc_txtChannel);
+            this.irc_grp.Controls.Add(this.irc_lblOpChannel);
+            this.irc_grp.Controls.Add(this.irc_chkPass);
+            this.irc_grp.Controls.Add(this.irc_lblPass);
+            this.irc_grp.Controls.Add(this.irc_txtPass);
+            this.irc_grp.Controls.Add(this.irc_txtOpChannel);
+            this.irc_grp.Controls.Add(this.irc_cbTitles);
+            this.irc_grp.Location = new System.Drawing.Point(8, 3);
+            this.irc_grp.Name = "irc_grp";
+            this.irc_grp.Size = new System.Drawing.Size(250, 272);
+            this.irc_grp.TabIndex = 27;
+            this.irc_grp.TabStop = false;
+            this.irc_grp.Text = "IRC";
             // 
-            this.txtIRCPort.Location = new System.Drawing.Point(82, 74);
-            this.txtIRCPort.Name = "txtIRCPort";
-            this.txtIRCPort.Size = new System.Drawing.Size(63, 21);
-            this.txtIRCPort.TabIndex = 31;
+            // irc_chkEnabled
             // 
-            // label50
+            this.irc_chkEnabled.AutoSize = true;
+            this.irc_chkEnabled.Location = new System.Drawing.Point(9, 20);
+            this.irc_chkEnabled.Name = "irc_chkEnabled";
+            this.irc_chkEnabled.Size = new System.Drawing.Size(61, 17);
+            this.irc_chkEnabled.TabIndex = 22;
+            this.irc_chkEnabled.Text = "Use IRC";
+            this.toolTip.SetToolTip(this.irc_chkEnabled, "Whether to use the IRC bot or not.\nIRC stands for Internet Relay Chat and allows " +
+                        "for communication with the server while outside Minecraft.");
+            this.irc_chkEnabled.UseVisualStyleBackColor = true;
+            this.irc_chkEnabled.CheckedChanged += new System.EventHandler(this.irc_ChkEnabled_CheckedChanged);
             // 
-            this.label50.AutoSize = true;
-            this.label50.Location = new System.Drawing.Point(6, 77);
-            this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(30, 13);
-            this.label50.TabIndex = 30;
-            this.label50.Text = "Port:";
+            // irc_lblServer
             // 
-            // label49
+            this.irc_lblServer.AutoSize = true;
+            this.irc_lblServer.Location = new System.Drawing.Point(6, 50);
+            this.irc_lblServer.Name = "irc_lblServer";
+            this.irc_lblServer.Size = new System.Drawing.Size(40, 13);
+            this.irc_lblServer.TabIndex = 19;
+            this.irc_lblServer.Text = "Server:";
             // 
-            this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(25, 213);
-            this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(56, 13);
-            this.label49.TabIndex = 29;
-            this.label49.Text = "Password:";
+            // irc_txtServer
             // 
-            // txtIrcId
+            this.irc_txtServer.Location = new System.Drawing.Point(82, 47);
+            this.irc_txtServer.Name = "irc_txtServer";
+            this.irc_txtServer.Size = new System.Drawing.Size(106, 21);
+            this.irc_txtServer.TabIndex = 15;
+            this.toolTip.SetToolTip(this.irc_txtServer, "IRC server hostname.\nDefault = irc.esper.net\nAnother choice = irc.geekshed.net");
             // 
-            this.txtIrcId.Location = new System.Drawing.Point(82, 210);
-            this.txtIrcId.Name = "txtIrcId";
-            this.txtIrcId.PasswordChar = '*';
-            this.txtIrcId.Size = new System.Drawing.Size(106, 21);
-            this.txtIrcId.TabIndex = 28;
-            this.txtIrcId.Tag = "The password used for NickServ";
+            // irc_lblPort
             // 
-            // chkIrcId
+            this.irc_lblPort.AutoSize = true;
+            this.irc_lblPort.Location = new System.Drawing.Point(6, 77);
+            this.irc_lblPort.Name = "irc_lblPort";
+            this.irc_lblPort.Size = new System.Drawing.Size(30, 13);
+            this.irc_lblPort.TabIndex = 30;
+            this.irc_lblPort.Text = "Port:";
             // 
-            this.chkIrcId.AutoSize = true;
-            this.chkIrcId.Location = new System.Drawing.Point(9, 187);
-            this.chkIrcId.Name = "chkIrcId";
-            this.chkIrcId.Size = new System.Drawing.Size(152, 17);
-            this.chkIrcId.TabIndex = 27;
-            this.chkIrcId.Text = "I have a NickServ password";
-            this.chkIrcId.UseVisualStyleBackColor = true;
+            // irc_txtPort
             // 
-            // label6
+            this.irc_txtPort.Location = new System.Drawing.Point(82, 74);
+            this.irc_txtPort.Name = "irc_txtPort";
+            this.irc_txtPort.Size = new System.Drawing.Size(63, 21);
+            this.irc_txtPort.TabIndex = 31;
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 50);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(40, 13);
-            this.label6.TabIndex = 19;
-            this.label6.Text = "Server:";
+            // irc_lblNick
             // 
-            // label31
+            this.irc_lblNick.AutoSize = true;
+            this.irc_lblNick.Location = new System.Drawing.Point(6, 104);
+            this.irc_lblNick.Name = "irc_lblNick";
+            this.irc_lblNick.Size = new System.Drawing.Size(30, 13);
+            this.irc_lblNick.TabIndex = 20;
+            this.irc_lblNick.Text = "Nick:";
             // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(6, 158);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(64, 13);
-            this.label31.TabIndex = 25;
-            this.label31.Text = "Op Channel:";
+            // irc_txtNick
             // 
-            // label4
+            this.irc_txtNick.Location = new System.Drawing.Point(82, 101);
+            this.irc_txtNick.Name = "irc_txtNick";
+            this.irc_txtNick.Size = new System.Drawing.Size(106, 21);
+            this.irc_txtNick.TabIndex = 16;
+            this.toolTip.SetToolTip(this.irc_txtNick, "The Nick that the IRC bot will try and use.");
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 104);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(30, 13);
-            this.label4.TabIndex = 20;
-            this.label4.Text = "Nick:";
+            // irc_lblChannel
             // 
-            // label5
+            this.irc_lblChannel.AutoSize = true;
+            this.irc_lblChannel.Location = new System.Drawing.Point(6, 131);
+            this.irc_lblChannel.Name = "irc_lblChannel";
+            this.irc_lblChannel.Size = new System.Drawing.Size(49, 13);
+            this.irc_lblChannel.TabIndex = 18;
+            this.irc_lblChannel.Text = "Channel:";
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 131);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(49, 13);
-            this.label5.TabIndex = 18;
-            this.label5.Text = "Channel:";
+            // irc_txtChannel
+            // 
+            this.irc_txtChannel.Location = new System.Drawing.Point(82, 128);
+            this.irc_txtChannel.Name = "irc_txtChannel";
+            this.irc_txtChannel.Size = new System.Drawing.Size(106, 21);
+            this.irc_txtChannel.TabIndex = 17;
+            this.toolTip.SetToolTip(this.irc_txtChannel, "The IRC channel to be used.");
+            // 
+            // irc_lblOpChannel
+            // 
+            this.irc_lblOpChannel.AutoSize = true;
+            this.irc_lblOpChannel.Location = new System.Drawing.Point(6, 158);
+            this.irc_lblOpChannel.Name = "irc_lblOpChannel";
+            this.irc_lblOpChannel.Size = new System.Drawing.Size(64, 13);
+            this.irc_lblOpChannel.TabIndex = 25;
+            this.irc_lblOpChannel.Text = "Op Channel:";
+            // 
+            // irc_txtOpChannel
+            // 
+            this.irc_txtOpChannel.Location = new System.Drawing.Point(82, 155);
+            this.irc_txtOpChannel.Name = "irc_txtOpChannel";
+            this.irc_txtOpChannel.Size = new System.Drawing.Size(106, 21);
+            this.irc_txtOpChannel.TabIndex = 26;
+            this.toolTip.SetToolTip(this.irc_txtOpChannel, "The IRC channel to be used.");
+            // 
+            // irc_chkPass
+            // 
+            this.irc_chkPass.AutoSize = true;
+            this.irc_chkPass.Location = new System.Drawing.Point(9, 187);
+            this.irc_chkPass.Name = "irc_chkPass";
+            this.irc_chkPass.Size = new System.Drawing.Size(152, 17);
+            this.irc_chkPass.TabIndex = 27;
+            this.irc_chkPass.Text = "I have a NickServ password";
+            this.irc_chkPass.UseVisualStyleBackColor = true;
+            // 
+            // irc_lblPass
+            // 
+            this.irc_lblPass.AutoSize = true;
+            this.irc_lblPass.Location = new System.Drawing.Point(25, 213);
+            this.irc_lblPass.Name = "irc_lblPass";
+            this.irc_lblPass.Size = new System.Drawing.Size(56, 13);
+            this.irc_lblPass.TabIndex = 29;
+            this.irc_lblPass.Text = "Password:";
+            // 
+            // irc_txtPass
+            // 
+            this.irc_txtPass.Location = new System.Drawing.Point(82, 210);
+            this.irc_txtPass.Name = "txtIrcId";
+            this.irc_txtPass.PasswordChar = '*';
+            this.irc_txtPass.Size = new System.Drawing.Size(106, 21);
+            this.irc_txtPass.TabIndex = 28;
+            this.irc_txtPass.Tag = "The password used for NickServ";
             // 
             // irc_cbTitles
             // 
@@ -2440,9 +2388,9 @@ namespace MCGalaxy.Gui
             // pageServer
             // 
             this.pageServer.BackColor = System.Drawing.SystemColors.Control;
-            this.pageServer.Controls.Add(this.grpLevels);
-            this.pageServer.Controls.Add(this.grpAdvanced);
-            this.pageServer.Controls.Add(this.grpGeneral);
+            this.pageServer.Controls.Add(this.lvl_grp);
+            this.pageServer.Controls.Add(this.adv_grp);
+            this.pageServer.Controls.Add(this.srv_grp);
             this.pageServer.Controls.Add(this.grpUpdate);
             this.pageServer.Controls.Add(this.grpPlayers);
             this.pageServer.Location = new System.Drawing.Point(4, 22);
@@ -2453,92 +2401,138 @@ namespace MCGalaxy.Gui
             this.pageServer.Text = "Server";
             this.pageServer.Click += new System.EventHandler(this.tabPage1_Click);
             // 
-            // grpLevels
+            // lvl_grp
             // 
-            this.grpLevels.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpLevels.Controls.Add(this.label27);
-            this.grpLevels.Controls.Add(this.txtMain);
-            this.grpLevels.Controls.Add(this.chkAutoload);
-            this.grpLevels.Controls.Add(this.chkWorld);
-            this.grpLevels.Location = new System.Drawing.Point(314, 160);
-            this.grpLevels.Name = "grpLevels";
-            this.grpLevels.Size = new System.Drawing.Size(177, 105);
-            this.grpLevels.TabIndex = 44;
-            this.grpLevels.TabStop = false;
-            this.grpLevels.Text = "Level Settings";
+            this.lvl_grp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.lvl_grp.Controls.Add(this.lvl_lblMain);
+            this.lvl_grp.Controls.Add(this.lvl_txtMain);
+            this.lvl_grp.Controls.Add(this.lvl_chkAutoload);
+            this.lvl_grp.Controls.Add(this.lvl_chkWorld);
+            this.lvl_grp.Location = new System.Drawing.Point(314, 160);
+            this.lvl_grp.Name = "lvl_grp";
+            this.lvl_grp.Size = new System.Drawing.Size(177, 105);
+            this.lvl_grp.TabIndex = 44;
+            this.lvl_grp.TabStop = false;
+            this.lvl_grp.Text = "Level Settings";
             // 
-            // label27
+            // lvl_lblMain
             // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(6, 22);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(63, 13);
-            this.label27.TabIndex = 3;
-            this.label27.Text = "Main name:";
+            this.lvl_lblMain.AutoSize = true;
+            this.lvl_lblMain.Location = new System.Drawing.Point(6, 22);
+            this.lvl_lblMain.Name = "lvl_lblMain";
+            this.lvl_lblMain.Size = new System.Drawing.Size(63, 13);
+            this.lvl_lblMain.TabIndex = 3;
+            this.lvl_lblMain.Text = "Main name:";
             // 
-            // txtMain
+            // lvl_txtMain
             // 
-            this.txtMain.Location = new System.Drawing.Point(75, 19);
-            this.txtMain.Name = "txtMain";
-            this.txtMain.Size = new System.Drawing.Size(87, 21);
-            this.txtMain.TabIndex = 2;
+            this.lvl_txtMain.Location = new System.Drawing.Point(75, 19);
+            this.lvl_txtMain.Name = "lvl_txtMain";
+            this.lvl_txtMain.Size = new System.Drawing.Size(87, 21);
+            this.lvl_txtMain.TabIndex = 2;
             // 
-            // grpAdvanced
+            // lvl_chkAutoload
             // 
-            this.grpAdvanced.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpAdvanced.Controls.Add(this.editTxtsBt);
-            this.grpAdvanced.Controls.Add(this.chkRestart);
-            this.grpAdvanced.Controls.Add(this.chkVerify);
-            this.grpAdvanced.Controls.Add(this.chkLogBeat);
-            this.grpAdvanced.Location = new System.Drawing.Point(8, 271);
-            this.grpAdvanced.Name = "grpAdvanced";
-            this.grpAdvanced.Size = new System.Drawing.Size(206, 120);
-            this.grpAdvanced.TabIndex = 42;
-            this.grpAdvanced.TabStop = false;
-            this.grpAdvanced.Text = "Advanced Configuration";
+            this.lvl_chkAutoload.AutoSize = true;
+            this.lvl_chkAutoload.Location = new System.Drawing.Point(9, 49);
+            this.lvl_chkAutoload.Name = "lvl_chkAutoload";
+            this.lvl_chkAutoload.Size = new System.Drawing.Size(90, 17);
+            this.lvl_chkAutoload.TabIndex = 4;
+            this.lvl_chkAutoload.Text = "Load on /goto";
+            this.toolTip.SetToolTip(this.lvl_chkAutoload, "Load a map when a user wishes to go to it, and unload empty maps");
+            this.lvl_chkAutoload.UseVisualStyleBackColor = true;
             // 
-            // editTxtsBt
+            // lvl_chkWorld
             // 
-            this.editTxtsBt.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.editTxtsBt.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.editTxtsBt.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.editTxtsBt.Location = new System.Drawing.Point(6, 91);
-            this.editTxtsBt.Name = "editTxtsBt";
-            this.editTxtsBt.Size = new System.Drawing.Size(80, 23);
-            this.editTxtsBt.TabIndex = 35;
-            this.editTxtsBt.Text = "Edit Text Files";
-            this.editTxtsBt.UseVisualStyleBackColor = true;
-            this.editTxtsBt.Click += new System.EventHandler(this.editTxtsBt_Click_1);
+            this.lvl_chkWorld.AutoSize = true;
+            this.lvl_chkWorld.Location = new System.Drawing.Point(9, 72);
+            this.lvl_chkWorld.Name = "lvl_chkWorld";
+            this.lvl_chkWorld.Size = new System.Drawing.Size(105, 17);
+            this.lvl_chkWorld.TabIndex = 4;
+            this.lvl_chkWorld.Text = "Server-wide chat";
+            this.toolTip.SetToolTip(this.lvl_chkWorld, "If disabled, every map has isolated chat.\nIf enabled, every map is able to commun" +
+                        "icate without special letters.");
+            this.lvl_chkWorld.UseVisualStyleBackColor = true;
             // 
-            // chkRestart
+            // adv_grp
             // 
-            this.chkRestart.AutoSize = true;
-            this.chkRestart.Location = new System.Drawing.Point(9, 43);
-            this.chkRestart.Name = "chkRestart";
-            this.chkRestart.Size = new System.Drawing.Size(101, 17);
-            this.chkRestart.TabIndex = 4;
-            this.chkRestart.Text = "Restart on error";
-            this.chkRestart.UseVisualStyleBackColor = true;
+            this.adv_grp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.adv_grp.Controls.Add(this.adv_chkVerify);
+            this.adv_grp.Controls.Add(this.adv_chkRestart);
+            this.adv_grp.Controls.Add(this.adv_chkLogBeat);
+            this.adv_grp.Controls.Add(this.adv_btnEditTexts);
+            this.adv_grp.Location = new System.Drawing.Point(8, 271);
+            this.adv_grp.Name = "adv_grp";
+            this.adv_grp.Size = new System.Drawing.Size(206, 120);
+            this.adv_grp.TabIndex = 42;
+            this.adv_grp.TabStop = false;
+            this.adv_grp.Text = "Advanced Configuration";
             // 
-            // grpGeneral
+            // adv_chkVerify
             // 
-            this.grpGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpGeneral.Controls.Add(this.srv_lblName);
-            this.grpGeneral.Controls.Add(this.srv_txtName);
-            this.grpGeneral.Controls.Add(this.srv_lblMotd);
-            this.grpGeneral.Controls.Add(this.srv_txtMOTD);
-            this.grpGeneral.Controls.Add(this.srv_lblPort);
-            this.grpGeneral.Controls.Add(this.srv_txtPort);
-            this.grpGeneral.Controls.Add(this.srv_btnPort);
-            this.grpGeneral.Controls.Add(this.srv_lblOwner);
-            this.grpGeneral.Controls.Add(this.srv_txtOwner);
-            this.grpGeneral.Controls.Add(this.srv_chkPublic);
-            this.grpGeneral.Location = new System.Drawing.Point(8, 6);
-            this.grpGeneral.Name = "grpGeneral";
-            this.grpGeneral.Size = new System.Drawing.Size(483, 148);
-            this.grpGeneral.TabIndex = 41;
-            this.grpGeneral.TabStop = false;
-            this.grpGeneral.Text = "General Configuration";
+            this.adv_chkVerify.AutoSize = true;
+            this.adv_chkVerify.Location = new System.Drawing.Point(9, 20);
+            this.adv_chkVerify.Name = "adv_chkVerify";
+            this.adv_chkVerify.Size = new System.Drawing.Size(87, 17);
+            this.adv_chkVerify.TabIndex = 4;
+            this.adv_chkVerify.Text = "Verify Names";
+            this.toolTip.SetToolTip(this.adv_chkVerify, "Make sure the user is who they claim to be.");
+            this.adv_chkVerify.UseVisualStyleBackColor = true;
+            // 
+            // adv_chkRestart
+            // 
+            this.adv_chkRestart.AutoSize = true;
+            this.adv_chkRestart.Location = new System.Drawing.Point(9, 43);
+            this.adv_chkRestart.Name = "adv_chkRestart";
+            this.adv_chkRestart.Size = new System.Drawing.Size(101, 17);
+            this.adv_chkRestart.TabIndex = 4;
+            this.adv_chkRestart.Text = "Restart on error";
+            this.adv_chkRestart.UseVisualStyleBackColor = true;
+            // 
+            // adv_chkLogBeat
+            // 
+            this.adv_chkLogBeat.AutoSize = true;
+            this.adv_chkLogBeat.Location = new System.Drawing.Point(9, 68);
+            this.adv_chkLogBeat.Name = "adv_chkLogBeat";
+            this.adv_chkLogBeat.Size = new System.Drawing.Size(98, 17);
+            this.adv_chkLogBeat.TabIndex = 24;
+            this.adv_chkLogBeat.Text = "Log Heartbeat?";
+            this.toolTip.SetToolTip(this.adv_chkLogBeat, "Debugging feature -- Toggles whether to log heartbeat activity.\r\nUseful when your" +
+                        " server gets a URL slowly or not at all.");
+            this.adv_chkLogBeat.UseVisualStyleBackColor = true;
+            // 
+            // adv_btnEditTexts
+            // 
+            this.adv_btnEditTexts.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.adv_btnEditTexts.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.adv_btnEditTexts.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.adv_btnEditTexts.Location = new System.Drawing.Point(6, 91);
+            this.adv_btnEditTexts.Name = "adv_btnEditTexts";
+            this.adv_btnEditTexts.Size = new System.Drawing.Size(80, 23);
+            this.adv_btnEditTexts.TabIndex = 35;
+            this.adv_btnEditTexts.Text = "Edit Text Files";
+            this.adv_btnEditTexts.UseVisualStyleBackColor = true;
+            this.adv_btnEditTexts.Click += new System.EventHandler(this.adv_btnEditTexts_Click);
+            // 
+            // srv_grp
+            // 
+            this.srv_grp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.srv_grp.Controls.Add(this.srv_lblName);
+            this.srv_grp.Controls.Add(this.srv_txtName);
+            this.srv_grp.Controls.Add(this.srv_lblMotd);
+            this.srv_grp.Controls.Add(this.srv_txtMOTD);
+            this.srv_grp.Controls.Add(this.srv_lblPort);
+            this.srv_grp.Controls.Add(this.srv_txtPort);
+            this.srv_grp.Controls.Add(this.srv_btnPort);
+            this.srv_grp.Controls.Add(this.srv_lblOwner);
+            this.srv_grp.Controls.Add(this.srv_txtOwner);
+            this.srv_grp.Controls.Add(this.srv_chkPublic);
+            this.srv_grp.Location = new System.Drawing.Point(8, 6);
+            this.srv_grp.Name = "srv_grp";
+            this.srv_grp.Size = new System.Drawing.Size(483, 148);
+            this.srv_grp.TabIndex = 41;
+            this.srv_grp.TabStop = false;
+            this.srv_grp.Text = "General Configuration";
             // 
             // srv_lblName
             // 
@@ -3549,11 +3543,11 @@ namespace MCGalaxy.Gui
             // pageSecurity
             // 
             this.pageSecurity.BackColor = System.Drawing.SystemColors.Control;
-            this.pageSecurity.Controls.Add(this.sec_gbIP);
-            this.pageSecurity.Controls.Add(this.sec_gbBlocks);
-            this.pageSecurity.Controls.Add(this.sec_gbCmd);
-            this.pageSecurity.Controls.Add(this.sec_gbOther);
-            this.pageSecurity.Controls.Add(this.sec_gbChat);
+            this.pageSecurity.Controls.Add(this.sec_grpIP);
+            this.pageSecurity.Controls.Add(this.sec_grpBlocks);
+            this.pageSecurity.Controls.Add(this.sec_grpCmd);
+            this.pageSecurity.Controls.Add(this.sec_grpOther);
+            this.pageSecurity.Controls.Add(this.sec_grpChat);
             this.pageSecurity.Location = new System.Drawing.Point(4, 22);
             this.pageSecurity.Name = "pageSecurity";
             this.pageSecurity.Padding = new System.Windows.Forms.Padding(3);
@@ -3561,23 +3555,23 @@ namespace MCGalaxy.Gui
             this.pageSecurity.TabIndex = 7;
             this.pageSecurity.Text = "Security";
             // 
-            // sec_gbIP
+            // sec_grpIP
             // 
-            this.sec_gbIP.Controls.Add(this.sec_cbIPAuto);
-            this.sec_gbIP.Controls.Add(this.sec_lblIPOnMute);
-            this.sec_gbIP.Controls.Add(this.sec_numIPMsgs);
-            this.sec_gbIP.Controls.Add(this.sec_lblIPOnMsgs);
-            this.sec_gbIP.Controls.Add(this.sec_numIPSecs);
-            this.sec_gbIP.Controls.Add(this.sec_lblIPOnSecs);
-            this.sec_gbIP.Controls.Add(this.sec_lblIPForMute);
-            this.sec_gbIP.Controls.Add(this.sec_numIPMute);
-            this.sec_gbIP.Controls.Add(this.sec_lblIPForSecs);
-            this.sec_gbIP.Location = new System.Drawing.Point(14, 240);
-            this.sec_gbIP.Name = "sec_gbIP";
-            this.sec_gbIP.Size = new System.Drawing.Size(238, 110);
-            this.sec_gbIP.TabIndex = 37;
-            this.sec_gbIP.TabStop = false;
-            this.sec_gbIP.Text = "Connection spam control";
+            this.sec_grpIP.Controls.Add(this.sec_cbIPAuto);
+            this.sec_grpIP.Controls.Add(this.sec_lblIPOnMute);
+            this.sec_grpIP.Controls.Add(this.sec_numIPMsgs);
+            this.sec_grpIP.Controls.Add(this.sec_lblIPOnMsgs);
+            this.sec_grpIP.Controls.Add(this.sec_numIPSecs);
+            this.sec_grpIP.Controls.Add(this.sec_lblIPOnSecs);
+            this.sec_grpIP.Controls.Add(this.sec_lblIPForMute);
+            this.sec_grpIP.Controls.Add(this.sec_numIPMute);
+            this.sec_grpIP.Controls.Add(this.sec_lblIPForSecs);
+            this.sec_grpIP.Location = new System.Drawing.Point(14, 240);
+            this.sec_grpIP.Name = "sec_grpIP";
+            this.sec_grpIP.Size = new System.Drawing.Size(238, 110);
+            this.sec_grpIP.TabIndex = 37;
+            this.sec_grpIP.TabStop = false;
+            this.sec_grpIP.Text = "Connection spam control";
             // 
             // sec_cbIPAuto
             // 
@@ -3686,20 +3680,20 @@ namespace MCGalaxy.Gui
             this.sec_lblIPForSecs.TabIndex = 33;
             this.sec_lblIPForSecs.Text = "seconds";
             // 
-            // sec_gbBlocks
+            // sec_grpBlocks
             // 
-            this.sec_gbBlocks.Controls.Add(this.sec_cbBlocksAuto);
-            this.sec_gbBlocks.Controls.Add(this.sec_lblBlocksOnMute);
-            this.sec_gbBlocks.Controls.Add(this.sec_numBlocksMsgs);
-            this.sec_gbBlocks.Controls.Add(this.sec_lblBlocksOnMsgs);
-            this.sec_gbBlocks.Controls.Add(this.sec_numBlocksSecs);
-            this.sec_gbBlocks.Controls.Add(this.sec_lblBlocksOnSecs);
-            this.sec_gbBlocks.Location = new System.Drawing.Point(264, 150);
-            this.sec_gbBlocks.Name = "sec_gbBlocks";
-            this.sec_gbBlocks.Size = new System.Drawing.Size(217, 83);
-            this.sec_gbBlocks.TabIndex = 36;
-            this.sec_gbBlocks.TabStop = false;
-            this.sec_gbBlocks.Text = "Block spam control";
+            this.sec_grpBlocks.Controls.Add(this.sec_cbBlocksAuto);
+            this.sec_grpBlocks.Controls.Add(this.sec_lblBlocksOnMute);
+            this.sec_grpBlocks.Controls.Add(this.sec_numBlocksMsgs);
+            this.sec_grpBlocks.Controls.Add(this.sec_lblBlocksOnMsgs);
+            this.sec_grpBlocks.Controls.Add(this.sec_numBlocksSecs);
+            this.sec_grpBlocks.Controls.Add(this.sec_lblBlocksOnSecs);
+            this.sec_grpBlocks.Location = new System.Drawing.Point(264, 150);
+            this.sec_grpBlocks.Name = "sec_grpBlocks";
+            this.sec_grpBlocks.Size = new System.Drawing.Size(217, 83);
+            this.sec_grpBlocks.TabIndex = 36;
+            this.sec_grpBlocks.TabStop = false;
+            this.sec_grpBlocks.Text = "Block spam control";
             // 
             // sec_cbBlocksAuto
             // 
@@ -3773,23 +3767,23 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
-            // sec_gbCmd
+            // sec_grpCmd
             // 
-            this.sec_gbCmd.Controls.Add(this.sec_cbCmdAuto);
-            this.sec_gbCmd.Controls.Add(this.sec_lblCmdOnMute);
-            this.sec_gbCmd.Controls.Add(this.sec_numCmdMsgs);
-            this.sec_gbCmd.Controls.Add(this.sec_lblCmdOnMsgs);
-            this.sec_gbCmd.Controls.Add(this.sec_numCmdSecs);
-            this.sec_gbCmd.Controls.Add(this.sec_lblCmdOnSecs);
-            this.sec_gbCmd.Controls.Add(this.sec_lblCmdForMute);
-            this.sec_gbCmd.Controls.Add(this.sec_numCmdMute);
-            this.sec_gbCmd.Controls.Add(this.sec_lblCmdForSecs);
-            this.sec_gbCmd.Location = new System.Drawing.Point(14, 123);
-            this.sec_gbCmd.Name = "sec_gbCmd";
-            this.sec_gbCmd.Size = new System.Drawing.Size(238, 110);
-            this.sec_gbCmd.TabIndex = 35;
-            this.sec_gbCmd.TabStop = false;
-            this.sec_gbCmd.Text = "Command spam control";
+            this.sec_grpCmd.Controls.Add(this.sec_cbCmdAuto);
+            this.sec_grpCmd.Controls.Add(this.sec_lblCmdOnMute);
+            this.sec_grpCmd.Controls.Add(this.sec_numCmdMsgs);
+            this.sec_grpCmd.Controls.Add(this.sec_lblCmdOnMsgs);
+            this.sec_grpCmd.Controls.Add(this.sec_numCmdSecs);
+            this.sec_grpCmd.Controls.Add(this.sec_lblCmdOnSecs);
+            this.sec_grpCmd.Controls.Add(this.sec_lblCmdForMute);
+            this.sec_grpCmd.Controls.Add(this.sec_numCmdMute);
+            this.sec_grpCmd.Controls.Add(this.sec_lblCmdForSecs);
+            this.sec_grpCmd.Location = new System.Drawing.Point(14, 123);
+            this.sec_grpCmd.Name = "sec_grpCmd";
+            this.sec_grpCmd.Size = new System.Drawing.Size(238, 110);
+            this.sec_grpCmd.TabIndex = 35;
+            this.sec_grpCmd.TabStop = false;
+            this.sec_grpCmd.Text = "Command spam control";
             // 
             // sec_cbCmdAuto
             // 
@@ -3898,19 +3892,19 @@ namespace MCGalaxy.Gui
             this.sec_lblCmdForSecs.TabIndex = 33;
             this.sec_lblCmdForSecs.Text = "seconds";
             // 
-            // sec_gbOther
+            // sec_grpOther
             // 
-            this.sec_gbOther.Controls.Add(this.sec_lblRank);
-            this.sec_gbOther.Controls.Add(this.sec_cbWhitelist);
-            this.sec_gbOther.Controls.Add(this.sec_cbLogNotes);
-            this.sec_gbOther.Controls.Add(this.sec_cbVerifyAdmins);
-            this.sec_gbOther.Controls.Add(this.sec_cmbVerifyRank);
-            this.sec_gbOther.Location = new System.Drawing.Point(264, 6);
-            this.sec_gbOther.Name = "sec_gbOther";
-            this.sec_gbOther.Size = new System.Drawing.Size(217, 138);
-            this.sec_gbOther.TabIndex = 2;
-            this.sec_gbOther.TabStop = false;
-            this.sec_gbOther.Text = "Other settings";
+            this.sec_grpOther.Controls.Add(this.sec_lblRank);
+            this.sec_grpOther.Controls.Add(this.sec_cbWhitelist);
+            this.sec_grpOther.Controls.Add(this.sec_cbLogNotes);
+            this.sec_grpOther.Controls.Add(this.sec_cbVerifyAdmins);
+            this.sec_grpOther.Controls.Add(this.sec_cmbVerifyRank);
+            this.sec_grpOther.Location = new System.Drawing.Point(264, 6);
+            this.sec_grpOther.Name = "sec_grpOther";
+            this.sec_grpOther.Size = new System.Drawing.Size(217, 138);
+            this.sec_grpOther.TabIndex = 2;
+            this.sec_grpOther.TabStop = false;
+            this.sec_grpOther.Text = "Other settings";
             // 
             // sec_lblRank
             // 
@@ -3921,23 +3915,23 @@ namespace MCGalaxy.Gui
             this.sec_lblRank.TabIndex = 24;
             this.sec_lblRank.Text = "Rank:";
             // 
-            // sec_gbChat
+            // sec_grpChat
             // 
-            this.sec_gbChat.Controls.Add(this.sec_cbChatAuto);
-            this.sec_gbChat.Controls.Add(this.sec_lblChatOnMute);
-            this.sec_gbChat.Controls.Add(this.sec_numChatMsgs);
-            this.sec_gbChat.Controls.Add(this.sec_lblChatOnMsgs);
-            this.sec_gbChat.Controls.Add(this.sec_numChatSecs);
-            this.sec_gbChat.Controls.Add(this.sec_lblChatOnSecs);
-            this.sec_gbChat.Controls.Add(this.sec_lblChatForMute);
-            this.sec_gbChat.Controls.Add(this.sec_numChatMute);
-            this.sec_gbChat.Controls.Add(this.sec_lblChatForSecs);
-            this.sec_gbChat.Location = new System.Drawing.Point(14, 6);
-            this.sec_gbChat.Name = "sec_gbChat";
-            this.sec_gbChat.Size = new System.Drawing.Size(238, 111);
-            this.sec_gbChat.TabIndex = 1;
-            this.sec_gbChat.TabStop = false;
-            this.sec_gbChat.Text = "Chat spam control";
+            this.sec_grpChat.Controls.Add(this.sec_cbChatAuto);
+            this.sec_grpChat.Controls.Add(this.sec_lblChatOnMute);
+            this.sec_grpChat.Controls.Add(this.sec_numChatMsgs);
+            this.sec_grpChat.Controls.Add(this.sec_lblChatOnMsgs);
+            this.sec_grpChat.Controls.Add(this.sec_numChatSecs);
+            this.sec_grpChat.Controls.Add(this.sec_lblChatOnSecs);
+            this.sec_grpChat.Controls.Add(this.sec_lblChatForMute);
+            this.sec_grpChat.Controls.Add(this.sec_numChatMute);
+            this.sec_grpChat.Controls.Add(this.sec_lblChatForSecs);
+            this.sec_grpChat.Location = new System.Drawing.Point(14, 6);
+            this.sec_grpChat.Name = "sec_grpChat";
+            this.sec_grpChat.Size = new System.Drawing.Size(238, 111);
+            this.sec_grpChat.TabIndex = 1;
+            this.sec_grpChat.TabStop = false;
+            this.sec_grpChat.Text = "Chat spam control";
             // 
             // sec_lblChatOnMute
             // 
@@ -4054,14 +4048,14 @@ namespace MCGalaxy.Gui
             this.Load += new System.EventHandler(this.PropertyWindow_Load);
             this.Disposed += new System.EventHandler(this.PropertyWindow_Unload);
             this.tabChat.ResumeLayout(false);
-            this.chat_gbTab.ResumeLayout(false);
-            this.chat_gbTab.PerformLayout();
-            this.chat_gbMessages.ResumeLayout(false);
-            this.chat_gbMessages.PerformLayout();
-            this.chat_gbOther.ResumeLayout(false);
-            this.chat_gbOther.PerformLayout();
-            this.chat_gbColors.ResumeLayout(false);
-            this.chat_gbColors.PerformLayout();
+            this.chat_grpTab.ResumeLayout(false);
+            this.chat_grpTab.PerformLayout();
+            this.chat_grpMessages.ResumeLayout(false);
+            this.chat_grpMessages.PerformLayout();
+            this.chat_grpOther.ResumeLayout(false);
+            this.chat_grpOther.PerformLayout();
+            this.chat_grpColors.ResumeLayout(false);
+            this.chat_grpColors.PerformLayout();
             this.pageCommands.ResumeLayout(false);
             this.pageCommandsList.ResumeLayout(false);
             this.tabPage6.ResumeLayout(false);
@@ -4093,22 +4087,22 @@ namespace MCGalaxy.Gui
             this.grpMessages.PerformLayout();
             this.grpPhysics.ResumeLayout(false);
             this.grpPhysics.PerformLayout();
-            this.grpAFK.ResumeLayout(false);
-            this.grpAFK.PerformLayout();
-            this.grpBackups.ResumeLayout(false);
-            this.grpBackups.PerformLayout();
+            this.afk_grp.ResumeLayout(false);
+            this.afk_grp.PerformLayout();
+            this.bak_grp.ResumeLayout(false);
+            this.bak_grp.PerformLayout();
             this.pageIRC.ResumeLayout(false);
-            this.grpSQL.ResumeLayout(false);
-            this.grpSQL.PerformLayout();
-            this.grpIRC.ResumeLayout(false);
-            this.grpIRC.PerformLayout();
+            this.sql_grp.ResumeLayout(false);
+            this.sql_grp.PerformLayout();
+            this.irc_grp.ResumeLayout(false);
+            this.irc_grp.PerformLayout();
             this.pageServer.ResumeLayout(false);
-            this.grpLevels.ResumeLayout(false);
-            this.grpLevels.PerformLayout();
-            this.grpAdvanced.ResumeLayout(false);
-            this.grpAdvanced.PerformLayout();
-            this.grpGeneral.ResumeLayout(false);
-            this.grpGeneral.PerformLayout();
+            this.lvl_grp.ResumeLayout(false);
+            this.lvl_grp.PerformLayout();
+            this.adv_grp.ResumeLayout(false);
+            this.adv_grp.PerformLayout();
+            this.srv_grp.ResumeLayout(false);
+            this.srv_grp.PerformLayout();
             this.grpUpdate.ResumeLayout(false);
             this.grpUpdate.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updateTimeNumeric)).EndInit();
@@ -4146,24 +4140,24 @@ namespace MCGalaxy.Gui
             this.groupBox30.ResumeLayout(false);
             this.tabPage11.ResumeLayout(false);
             this.pageSecurity.ResumeLayout(false);
-            this.sec_gbIP.ResumeLayout(false);
-            this.sec_gbIP.PerformLayout();
+            this.sec_grpIP.ResumeLayout(false);
+            this.sec_grpIP.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numIPMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numIPSecs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numIPMute)).EndInit();
-            this.sec_gbBlocks.ResumeLayout(false);
-            this.sec_gbBlocks.PerformLayout();
+            this.sec_grpBlocks.ResumeLayout(false);
+            this.sec_grpBlocks.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
-            this.sec_gbCmd.ResumeLayout(false);
-            this.sec_gbCmd.PerformLayout();
+            this.sec_grpCmd.ResumeLayout(false);
+            this.sec_grpCmd.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numCmdMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numCmdSecs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numCmdMute)).EndInit();
-            this.sec_gbOther.ResumeLayout(false);
-            this.sec_gbOther.PerformLayout();
-            this.sec_gbChat.ResumeLayout(false);
-            this.sec_gbChat.PerformLayout();
+            this.sec_grpOther.ResumeLayout(false);
+            this.sec_grpOther.PerformLayout();
+            this.sec_grpChat.ResumeLayout(false);
+            this.sec_grpChat.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numChatMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numChatSecs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numChatMute)).EndInit();
@@ -4178,7 +4172,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.NumericUpDown sec_numIPMsgs;
         private System.Windows.Forms.Label sec_lblIPOnMute;
         private System.Windows.Forms.CheckBox sec_cbIPAuto;
-        private System.Windows.Forms.GroupBox sec_gbIP;
+        private System.Windows.Forms.GroupBox sec_grpIP;
         private System.Windows.Forms.Label sec_lblCmdForSecs;
         private System.Windows.Forms.NumericUpDown sec_numCmdMute;
         private System.Windows.Forms.Label sec_lblCmdForMute;
@@ -4188,14 +4182,14 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.NumericUpDown sec_numCmdMsgs;
         private System.Windows.Forms.Label sec_lblCmdOnMute;
         private System.Windows.Forms.CheckBox sec_cbCmdAuto;
-        private System.Windows.Forms.GroupBox sec_gbCmd;
+        private System.Windows.Forms.GroupBox sec_grpCmd;
         private System.Windows.Forms.Label sec_lblBlocksOnSecs;
         private System.Windows.Forms.NumericUpDown sec_numBlocksSecs;
         private System.Windows.Forms.Label sec_lblBlocksOnMsgs;
         private System.Windows.Forms.NumericUpDown sec_numBlocksMsgs;
         private System.Windows.Forms.Label sec_lblBlocksOnMute;
         private System.Windows.Forms.CheckBox sec_cbBlocksAuto;
-        private System.Windows.Forms.GroupBox sec_gbBlocks;
+        private System.Windows.Forms.GroupBox sec_grpBlocks;
         private System.Windows.Forms.PropertyGrid pg_lavaMap;
         private System.Windows.Forms.PropertyGrid pg_lava;
         private System.Windows.Forms.CheckBox sec_cbWhitelist;
@@ -4203,11 +4197,11 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox chat_cbTabBots;
         private System.Windows.Forms.CheckBox chat_cbTabLevel;
         private System.Windows.Forms.CheckBox chat_cbTabRank;
-        private System.Windows.Forms.GroupBox chat_gbTab;
-        private System.Windows.Forms.ComboBox cmbOsMap;
+        private System.Windows.Forms.GroupBox chat_grpTab;
+        private System.Windows.Forms.ComboBox rank_cmbOsMap;
         private System.Windows.Forms.Label lblOsMap;
         private System.Windows.Forms.CheckBox sec_cbLogNotes;
-        private System.Windows.Forms.GroupBox sec_gbOther;
+        private System.Windows.Forms.GroupBox sec_grpOther;
         private System.Windows.Forms.TextBox txtPrefix;
         private System.Windows.Forms.TextBox txtOSMaps;
         private System.Windows.Forms.Label label10;
@@ -4265,10 +4259,10 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox chat_txtBan;
         private System.Windows.Forms.TextBox txtNormRp;
         private System.Windows.Forms.TextBox txtRP;
-        private System.Windows.Forms.TextBox txtAFKKick;
-        private System.Windows.Forms.TextBox txtafk;
-        private System.Windows.Forms.TextBox txtBackup;
-        private System.Windows.Forms.TextBox txtBackupLocation;
+        private System.Windows.Forms.TextBox afk_txtKickTime;
+        private System.Windows.Forms.TextBox afk_txtTimer;
+        private System.Windows.Forms.TextBox bak_txtTime;
+        private System.Windows.Forms.TextBox bak_txtLocation;
         private System.Windows.Forms.TextBox txtMoneys;
         private System.Windows.Forms.TextBox chat_txtCheap;
         private System.Windows.Forms.TextBox txtRestartTime;
@@ -4283,49 +4277,49 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Label afk_lblKickTime;
+        private System.Windows.Forms.Label afk_lblTimer;
+        private System.Windows.Forms.Label bak_lblTime;
+        private System.Windows.Forms.Label bak_lblLocation;
         private System.Windows.Forms.CheckBox chkRestartTime;
         private System.Windows.Forms.TabPage pageIRC;
-        private System.Windows.Forms.TextBox txtOpChannel;
-        private System.Windows.Forms.TextBox txtChannel;
-        private System.Windows.Forms.TextBox txtIRCServer;
-        private System.Windows.Forms.TextBox txtNick;
-        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.TextBox irc_txtOpChannel;
+        private System.Windows.Forms.TextBox irc_txtChannel;
+        private System.Windows.Forms.TextBox irc_txtServer;
+        private System.Windows.Forms.TextBox irc_txtNick;
+        private System.Windows.Forms.Label irc_lblOpChannel;
         private System.Windows.Forms.Label chat_colIRC;
         private System.Windows.Forms.ComboBox chat_cmbIRC;
-        private System.Windows.Forms.CheckBox chkIRC;
+        private System.Windows.Forms.CheckBox irc_chkEnabled;
         private System.Windows.Forms.Label chat_lblIRC;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label irc_lblChannel;
+        private System.Windows.Forms.Label irc_lblServer;
+        private System.Windows.Forms.Label irc_lblNick;
         private System.Windows.Forms.TabPage pageServer;
         private System.Windows.Forms.NumericUpDown numPlayers;
         private System.Windows.Forms.NumericUpDown numGuests;
         private System.Windows.Forms.Label label35;
-        private System.Windows.Forms.TextBox txtMain;
+        private System.Windows.Forms.TextBox lvl_txtMain;
         private System.Windows.Forms.TextBox chat_txtConsole;
         private System.Windows.Forms.TextBox srv_txtPort;
         private System.Windows.Forms.TextBox srv_txtMOTD;
         private System.Windows.Forms.TextBox srv_txtName;
         private System.Windows.Forms.Button srv_btnPort;
-        private System.Windows.Forms.CheckBox chkLogBeat;
-        private System.Windows.Forms.ComboBox cmbOpChat;
+        private System.Windows.Forms.CheckBox adv_chkLogBeat;
+        private System.Windows.Forms.ComboBox rank_cmbOpChat;
         private System.Windows.Forms.Label lblOpChat;
-        private System.Windows.Forms.ComboBox cmbDefaultRank;
+        private System.Windows.Forms.ComboBox rank_cmbDefault;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.Label chat_colDefault;
         private System.Windows.Forms.ComboBox chat_cmbDefault;
-        private System.Windows.Forms.CheckBox chkRestart;
+        private System.Windows.Forms.CheckBox adv_chkRestart;
         private System.Windows.Forms.CheckBox srv_chkPublic;
-        private System.Windows.Forms.CheckBox chkAutoload;
-        private System.Windows.Forms.CheckBox chkWorld;
+        private System.Windows.Forms.CheckBox lvl_chkAutoload;
+        private System.Windows.Forms.CheckBox lvl_chkWorld;
         private System.Windows.Forms.CheckBox chkUpdates;
-        private System.Windows.Forms.CheckBox chkVerify;
+        private System.Windows.Forms.CheckBox adv_chkVerify;
         private System.Windows.Forms.Label chat_lblDefault;
-        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label lvl_lblMain;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label chat_lblConsole;
         private System.Windows.Forms.Label srv_lblPort;
@@ -4333,22 +4327,22 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label srv_lblName;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.CheckBox chkAgreeToRules;
-        private System.Windows.Forms.ComboBox cmbAdminChat;
+        private System.Windows.Forms.ComboBox rank_cmbAdminChat;
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.CheckBox chkAdminsJoinSilent;
-        private System.Windows.Forms.Button editTxtsBt;
-        private System.Windows.Forms.CheckBox chkTpToHigherRanks;
-        private System.Windows.Forms.GroupBox grpIRC;
-        private System.Windows.Forms.GroupBox grpGeneral;
-        private System.Windows.Forms.GroupBox grpAdvanced;
+        private System.Windows.Forms.Button adv_btnEditTexts;
+        private System.Windows.Forms.CheckBox rank_chkTpToHigherRanks;
+        private System.Windows.Forms.GroupBox irc_grp;
+        private System.Windows.Forms.GroupBox srv_grp;
+        private System.Windows.Forms.GroupBox adv_grp;
         private System.Windows.Forms.GroupBox grpPlayers;
-        private System.Windows.Forms.GroupBox grpLevels;
+        private System.Windows.Forms.GroupBox lvl_grp;
         private System.Windows.Forms.TextBox srv_txtOwner;
         private System.Windows.Forms.GroupBox grpExtra;
         private System.Windows.Forms.GroupBox grpMessages;
         private System.Windows.Forms.GroupBox grpPhysics;
-        private System.Windows.Forms.GroupBox grpAFK;
-        private System.Windows.Forms.GroupBox grpBackups;
+        private System.Windows.Forms.GroupBox afk_grp;
+        private System.Windows.Forms.GroupBox bak_grp;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;
@@ -4357,19 +4351,19 @@ namespace MCGalaxy.Gui
         public System.Windows.Forms.Button btnCreate;
         public System.Windows.Forms.Label label33;
         public System.Windows.Forms.TextBox txtCommandName;
-        private System.Windows.Forms.GroupBox grpSQL;
-        private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.TextBox txtSQLHost;
-        private System.Windows.Forms.Label label43;
-        private System.Windows.Forms.TextBox txtSQLDatabase;
-        private System.Windows.Forms.Label label42;
-        private System.Windows.Forms.Label label40;
-        private System.Windows.Forms.Label label41;
-        private System.Windows.Forms.TextBox txtSQLPassword;
-        private System.Windows.Forms.TextBox txtSQLUsername;
-        private System.Windows.Forms.CheckBox chkUseSQL;
+        private System.Windows.Forms.GroupBox sql_grp;
+        private System.Windows.Forms.LinkLabel sql_linkDownload;
+        private System.Windows.Forms.TextBox sql_txtHost;
+        private System.Windows.Forms.Label sql_lblHost;
+        private System.Windows.Forms.TextBox sql_txtDBName;
+        private System.Windows.Forms.Label sql_lblDBName;
+        private System.Windows.Forms.Label sql_lblPass;
+        private System.Windows.Forms.Label sql_lblUser;
+        private System.Windows.Forms.TextBox sql_txtPass;
+        private System.Windows.Forms.TextBox sql_txtUser;
+        private System.Windows.Forms.CheckBox sql_chkUseSQL;
         private System.Windows.Forms.TabPage pageSecurity;
-        private System.Windows.Forms.GroupBox sec_gbChat;
+        private System.Windows.Forms.GroupBox sec_grpChat;
         private System.Windows.Forms.Label sec_lblChatForMute;
         private System.Windows.Forms.NumericUpDown sec_numChatMute;
         private System.Windows.Forms.Label sec_lblChatOnMsgs;
@@ -4382,12 +4376,12 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TabControl tabGames;
         private System.Windows.Forms.TabPage tabPage11;
         private System.Windows.Forms.TabPage tabPage10;
-        private System.Windows.Forms.Label label49;
-        private System.Windows.Forms.TextBox txtIrcId;
-        private System.Windows.Forms.CheckBox chkIrcId;
+        private System.Windows.Forms.Label irc_lblPass;
+        private System.Windows.Forms.TextBox irc_txtPass;
+        private System.Windows.Forms.CheckBox irc_chkPass;
         private System.Windows.Forms.CheckBox irc_cbTitles;
-        private System.Windows.Forms.Label label50;
-        private System.Windows.Forms.TextBox txtIRCPort;
+        private System.Windows.Forms.Label irc_lblPort;
+        private System.Windows.Forms.TextBox irc_txtPort;
         private System.Windows.Forms.CheckBox chkShowEmptyRanks;
         private System.Windows.Forms.TextBox txtMaxUndo;
         private System.Windows.Forms.Label label52;
@@ -4408,8 +4402,8 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.NumericUpDown sec_numChatSecs;
         private System.Windows.Forms.Label sec_lblChatOnSecs;
         private System.Windows.Forms.Label sec_lblChatForSecs;
-        private System.Windows.Forms.TextBox txtSQLPort;
-        private System.Windows.Forms.Label label70;
+        private System.Windows.Forms.TextBox sql_txtPort;
+        private System.Windows.Forms.Label sql_lblPort;
         private System.Windows.Forms.GroupBox grpUpdate;
         private System.Windows.Forms.CheckBox autoUpdate;
         private System.Windows.Forms.NumericUpDown updateTimeNumeric;
@@ -4425,8 +4419,8 @@ namespace MCGalaxy.Gui
         public System.Windows.Forms.TextBox extracmdpermdesc;
         public System.Windows.Forms.TextBox extracmdpermperm;
         private System.Windows.Forms.TextBox txtcmdranks2;
-        private System.Windows.Forms.Label label76;
-        private System.Windows.Forms.ComboBox cmbAFKKickPerm;
+        private System.Windows.Forms.Label afk_lblKickRank;
+        private System.Windows.Forms.ComboBox afk_cmbKickPerm;
         private System.Windows.Forms.CheckBox chkGuestLimitNotify;
         private System.Windows.Forms.NumericUpDown nudCooldownTime;
         private System.Windows.Forms.Label label84;
@@ -4477,9 +4471,9 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label lblLoadedCommands;
         private System.Windows.Forms.ListBox lstCommands;
         private System.Windows.Forms.GroupBox groupBox24;
-        private System.Windows.Forms.GroupBox chat_gbMessages;
-        private System.Windows.Forms.GroupBox chat_gbOther;
-        private System.Windows.Forms.GroupBox chat_gbColors;
+        private System.Windows.Forms.GroupBox chat_grpMessages;
+        private System.Windows.Forms.GroupBox chat_grpOther;
+        private System.Windows.Forms.GroupBox chat_grpColors;
         private System.Windows.Forms.TabPage tabChat;
         private System.Windows.Forms.ComboBox chat_cmbDesc;
         private System.Windows.Forms.Label chat_lblDesc;

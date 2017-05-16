@@ -34,13 +34,13 @@ namespace MCGalaxy.Gui {
             numGuests.Maximum = numPlayers.Value;
             chkAgreeToRules.Checked = Server.agreetorulesonentry;
             
-            txtMain.Text = Server.level;
-            chkAutoload.Checked = Server.AutoLoad;
-            chkWorld.Checked = Server.worldChat;
+            lvl_txtMain.Text = Server.level;
+            lvl_chkAutoload.Checked = Server.AutoLoad;
+            lvl_chkWorld.Checked = Server.worldChat;
             
-            chkVerify.Checked = Server.verify;
-            chkRestart.Checked = Server.restartOnError;
-            chkLogBeat.Checked = Server.logbeat;
+            adv_chkVerify.Checked = Server.verify;
+            adv_chkRestart.Checked = Server.restartOnError;
+            adv_chkLogBeat.Checked = Server.logbeat;
             
             chkUpdates.Checked = Server.checkUpdates;
             autoUpdate.Checked = Server.autoupdate;
@@ -59,14 +59,14 @@ namespace MCGalaxy.Gui {
             Server.maxGuests = (byte)numGuests.Value;
             Server.agreetorulesonentry = chkAgreeToRules.Checked;  
             
-            string main = Player.ValidName(txtMain.Text) ? txtMain.Text : "main";
+            string main = Player.ValidName(lvl_txtMain.Text) ? lvl_txtMain.Text : "main";
             Server.SetMainLevel(main);
-            Server.AutoLoad = chkAutoload.Checked;
-            Server.worldChat = chkWorld.Checked;
+            Server.AutoLoad = lvl_chkAutoload.Checked;
+            Server.worldChat = lvl_chkWorld.Checked;
             
-            Server.verify = chkVerify.Checked;
-            Server.restartOnError = chkRestart.Checked;
-            Server.logbeat = chkLogBeat.Checked;
+            Server.verify = adv_chkVerify.Checked;
+            Server.restartOnError = adv_chkRestart.Checked;
+            Server.logbeat = adv_chkLogBeat.Checked;
             
             Server.checkUpdates = chkUpdates.Checked;
             Server.autoupdate = autoUpdate.Checked;           
@@ -115,41 +115,41 @@ namespace MCGalaxy.Gui {
         
         
         void LoadIrcSqlProps() {
-            chkIRC.Checked = Server.irc;
-            txtIRCServer.Text = Server.ircServer;
-            txtIRCPort.Text = Server.ircPort.ToString();
-            txtNick.Text = Server.ircNick;
-            txtChannel.Text = Server.ircChannel;
-            txtOpChannel.Text = Server.ircOpChannel;
-            chkIrcId.Checked = Server.ircIdentify;
-            txtIrcId.Text = Server.ircPassword;
+            irc_chkEnabled.Checked = Server.irc;
+            irc_txtServer.Text = Server.ircServer;
+            irc_txtPort.Text = Server.ircPort.ToString();
+            irc_txtNick.Text = Server.ircNick;
+            irc_txtChannel.Text = Server.ircChannel;
+            irc_txtOpChannel.Text = Server.ircOpChannel;
+            irc_chkPass.Checked = Server.ircIdentify;
+            irc_txtPass.Text = Server.ircPassword;
             irc_cbTitles.Checked = Server.ircPlayerTitles;
             
-            chkUseSQL.Checked = Server.useMySQL;
-            txtSQLUsername.Text = Server.MySQLUsername;
-            txtSQLPassword.Text = Server.MySQLPassword;
-            txtSQLDatabase.Text = Server.MySQLDatabaseName;
-            txtSQLHost.Text = Server.MySQLHost;
-            txtSQLPort.Text = Server.MySQLPort;
+            sql_chkUseSQL.Checked = Server.useMySQL;
+            sql_txtUser.Text = Server.MySQLUsername;
+            sql_txtPass.Text = Server.MySQLPassword;
+            sql_txtDBName.Text = Server.MySQLDatabaseName;
+            sql_txtHost.Text = Server.MySQLHost;
+            sql_txtPort.Text = Server.MySQLPort;
         }
         
         void ApplyIrcSqlProps() {
-            Server.irc = chkIRC.Checked;
-            Server.ircServer = txtIRCServer.Text;
-            Server.ircPort = int.Parse(txtIRCPort.Text);
-            Server.ircNick = txtNick.Text;            
-            Server.ircChannel = txtChannel.Text;
-            Server.ircOpChannel = txtOpChannel.Text;            
-            Server.ircIdentify = chkIrcId.Checked;
-            Server.ircPassword = txtIrcId.Text;
+            Server.irc = irc_chkEnabled.Checked;
+            Server.ircServer = irc_txtServer.Text;
+            Server.ircPort = int.Parse(irc_txtPort.Text);
+            Server.ircNick = irc_txtNick.Text;            
+            Server.ircChannel = irc_txtChannel.Text;
+            Server.ircOpChannel = irc_txtOpChannel.Text;            
+            Server.ircIdentify = irc_chkPass.Checked;
+            Server.ircPassword = irc_txtPass.Text;
             Server.ircPlayerTitles = irc_cbTitles.Checked;
             
-            Server.useMySQL = chkUseSQL.Checked;
-            Server.MySQLUsername = txtSQLUsername.Text;
-            Server.MySQLPassword = txtSQLPassword.Text;
-            Server.MySQLDatabaseName = txtSQLDatabase.Text;
-            Server.MySQLHost = txtSQLHost.Text;
-            Server.MySQLPort = txtSQLPort.Text;
+            Server.useMySQL = sql_chkUseSQL.Checked;
+            Server.MySQLUsername = sql_txtUser.Text;
+            Server.MySQLPassword = sql_txtPass.Text;
+            Server.MySQLDatabaseName = sql_txtDBName.Text;
+            Server.MySQLHost = sql_txtHost.Text;
+            Server.MySQLPort = sql_txtPort.Text;
             
             Database.Backend = Server.useMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
             //Server.MySQLPooling = ; // No setting for this?            
@@ -157,13 +157,13 @@ namespace MCGalaxy.Gui {
         
         
         void LoadMiscProps() {
-            txtBackup.Text = Server.backupInterval.ToString();
-            txtBackupLocation.Text = Server.backupLocation;
+            bak_txtTime.Text = Server.backupInterval.ToString();
+            bak_txtLocation.Text = Server.backupLocation;
             hackrank_kick.Checked = Server.hackrank_kick;
             hackrank_kick_time.Text = Server.hackrank_kick_time.ToString();
             
-            txtafk.Text = Server.afkminutes.ToString();
-            txtAFKKick.Text = Server.afkkick.ToString();
+            afk_txtTimer.Text = Server.afkminutes.ToString();
+            afk_txtKickTime.Text = Server.afkkick.ToString();
             
             chkPhysicsRest.Checked = Server.physicsRestart;
             txtRP.Text = Server.rpLimit.ToString();
@@ -183,14 +183,14 @@ namespace MCGalaxy.Gui {
         }
         
         void ApplyMiscProps() {
-            Server.backupInterval = int.Parse(txtBackup.Text);
-            Server.backupLocation = txtBackupLocation.Text;
+            Server.backupInterval = int.Parse(bak_txtTime.Text);
+            Server.backupLocation = bak_txtLocation.Text;
             Server.hackrank_kick = hackrank_kick.Checked;
             Server.hackrank_kick_time = int.Parse(hackrank_kick_time.Text);
             
-            Server.afkminutes = int.Parse(txtafk.Text);
-            Server.afkkick = int.Parse(txtAFKKick.Text);
-            Server.afkkickperm = Program.GetPermission(cmbAFKKickPerm, LevelPermission.AdvBuilder);
+            Server.afkminutes = int.Parse(afk_txtTimer.Text);
+            Server.afkkick = int.Parse(afk_txtKickTime.Text);
+            Server.afkkickperm = Program.GetPermission(afk_cmbKickPerm, LevelPermission.AdvBuilder);
             
             Server.physicsRestart = chkPhysicsRest.Checked;
             Server.rpLimit = int.Parse(txtRP.Text);
@@ -212,22 +212,22 @@ namespace MCGalaxy.Gui {
         
         void LoadRankProps() {
             string defRank = Server.defaultRank.ToLower();
-            if (cmbDefaultRank.Items.IndexOf(defRank) != -1 )
-                cmbDefaultRank.SelectedIndex = cmbDefaultRank.Items.IndexOf(defRank);
-            chkTpToHigherRanks.Checked = Server.higherranktp;
+            if (rank_cmbDefault.Items.IndexOf(defRank) != -1 )
+                rank_cmbDefault.SelectedIndex = rank_cmbDefault.Items.IndexOf(defRank);
+            rank_chkTpToHigherRanks.Checked = Server.higherranktp;
             chkAdminsJoinSilent.Checked = Server.adminsjoinsilent;
         }
         
         void ApplyRankProps() {
-            Server.defaultRank = cmbDefaultRank.SelectedItem.ToString();
-            Server.higherranktp = chkTpToHigherRanks.Checked;
+            Server.defaultRank = rank_cmbDefault.SelectedItem.ToString();
+            Server.higherranktp = rank_chkTpToHigherRanks.Checked;
             Server.adminsjoinsilent = chkAdminsJoinSilent.Checked;
             
-            Server.osPerbuildDefault = Program.GetPermission(cmbOsMap, LevelPermission.Nobody);
+            Server.osPerbuildDefault = Program.GetPermission(rank_cmbOsMap, LevelPermission.Nobody);
             var perms = CommandExtraPerms.Find("opchat");
-            perms.MinRank = Program.GetPermission(cmbOpChat, LevelPermission.Operator);
+            perms.MinRank = Program.GetPermission(rank_cmbOpChat, LevelPermission.Operator);
             perms = CommandExtraPerms.Find("adminchat");
-            perms.MinRank = Program.GetPermission(cmbAdminChat, LevelPermission.Admin);
+            perms.MinRank = Program.GetPermission(rank_cmbAdminChat, LevelPermission.Admin);
         }
         
         
