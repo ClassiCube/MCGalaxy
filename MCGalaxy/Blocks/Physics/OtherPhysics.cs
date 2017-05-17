@@ -120,7 +120,7 @@ namespace MCGalaxy.Blocks.Physics {
             tree.Generate(x, y, z, (xT, yT, zT, bT) =>
                         {
                             if (bT == Block.leaf && lvl.GetTile(xT, yT, zT) != Block.air) return;
-                            lvl.Blockchange(xT, yT, zT, bT);
+                            lvl.Blockchange(xT, yT, zT, (ExtBlock)bT);
                         });
             
             C.data.Data = PhysicsArgs.RemoveFromChecks;
@@ -132,11 +132,8 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             if (C.data.Data > 20) {
-                byte block = lvl.GetTile(x, (ushort)(y + 1), z), extBlock = 0;
-                if (block == Block.custom_block)
-                    extBlock = lvl.GetExtTile(x, (ushort)(y + 1), z);
-                
-                if (lvl.LightPasses(block, extBlock))
+                ExtBlock above = lvl.GetExtBlock(x, (ushort)(y + 1), z);
+                if (lvl.LightPasses(above))
                     lvl.AddUpdate(C.b, Block.grass);
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
             } else {

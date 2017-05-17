@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, dArgs, DoSPlace);
         }
         
-        bool DoSPlace(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+        bool DoSPlace(Player p, Vec3S32[] m, object state, ExtBlock block) {
             DrawArgs dArgs = (DrawArgs)state;
             ushort distance = dArgs.distance, interval = dArgs.interval;
             if (m[0] == m[1]) { Player.Message(p, "No direction was selected"); return false; }
@@ -68,20 +68,19 @@ namespace MCGalaxy.Commands.Building {
             ushort endY = (ushort)(m[0].Y + dirY * distance);
             ushort endZ = (ushort)(m[0].Z + dirZ * distance);
             
-            byte heldExt = 0;
-            byte heldBlock = p.GetActualHeldBlock(out heldExt);
-            p.level.UpdateBlock(p, endX, endY, endZ, heldBlock, heldExt, BlockDBFlags.Drawn, true);
+            ExtBlock held = p.GetHeldBlock();
+            p.level.UpdateBlock(p, endX, endY, endZ, held, BlockDBFlags.Drawn, true);
             
             if (interval > 0) {
                 int x = m[0].X, y = m[0].Y, z = m[0].Z;
                 int delta = 0;
                 while (x >= 0 && y >= 0 && z >= 0 && x < p.level.Width && y < p.level.Height && z < p.level.Length && delta < distance) {
-                    p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, heldBlock, heldExt, BlockDBFlags.Drawn, true);
+                    p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, held, BlockDBFlags.Drawn, true);
                     x += dirX * interval; y += dirY * interval; z += dirZ * interval;
                     delta = Math.Abs(x - m[0].X) + Math.Abs(y - m[0].Y) + Math.Abs(z - m[0].Z);
                 }
             } else {
-                p.level.UpdateBlock(p, (ushort)m[0].X, (ushort)m[0].Y, (ushort)m[0].Z, heldBlock, heldExt, BlockDBFlags.Drawn, true);
+                p.level.UpdateBlock(p, (ushort)m[0].X, (ushort)m[0].Y, (ushort)m[0].Z, held, BlockDBFlags.Drawn, true);
             }
 
             Player.Message(p, "Placed stone blocks {0} apart.", interval > 0 ? interval : distance);

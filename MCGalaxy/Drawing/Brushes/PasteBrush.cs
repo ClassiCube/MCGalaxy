@@ -16,8 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
 
@@ -34,7 +32,7 @@ namespace MCGalaxy.Drawing.Brushes {
             op.Flags = BlockDBFlags.Pasted;
         }
         
-        public override byte NextBlock(DrawOp op) {
+        public override ExtBlock NextBlock(DrawOp op) {
             // Figure out local coords for this block
             int x = (op.Coords.X - op.Min.X) % state.Width;
             if (x < 0) x += state.Width;
@@ -44,11 +42,10 @@ namespace MCGalaxy.Drawing.Brushes {
             if (z < 0) z += state.Length;
             
             index = state.GetIndex(x, y, z);
-            return state.Blocks[index];
-        }
-        
-        public override byte NextExtBlock(DrawOp op) {
-            return state.ExtBlocks[index];
+            ExtBlock block;
+            block.BlockID = state.Blocks[index];
+            block.ExtID = state.ExtBlocks[index];
+            return block;
         }
     }
     
@@ -66,7 +63,7 @@ namespace MCGalaxy.Drawing.Brushes {
             op.Flags = BlockDBFlags.Pasted;
         }
         
-        public override byte NextBlock(DrawOp op) {
+        public override ExtBlock NextBlock(DrawOp op) {
             // Figure out local coords for this block
             int x = (op.Coords.X - op.Min.X) % state.Width;
             if (x < 0) x += state.Width;
@@ -76,28 +73,21 @@ namespace MCGalaxy.Drawing.Brushes {
             if (z < 0) z += state.Length;
             
             index = state.GetIndex(x, y, z);
-            byte b = state.Blocks[index], extB = state.ExtBlocks[index];
+            ExtBlock block;
+            block.BlockID = state.Blocks[index];
+            block.ExtID = state.ExtBlocks[index];
             
             if (Exclude != null) {
                 for (int i = 0; i < Exclude.Length; i++) {
-                    ExtBlock block = Exclude[i];
-                    if (b == block.Block && (b != Block.custom_block || extB == block.Ext))
-                        return Block.Invalid;
+                    if (block == Exclude[i]) return ExtBlock.Invalid;
                 }
-                return b;
+                return block;
             } else {
                 for (int i = 0; i < Include.Length; i++) {
-                    ExtBlock block = Include[i];
-                    if (b == block.Block && (b != Block.custom_block || extB == block.Ext)) {
-                        return b;
-                    }
+                    if (block == Include[i]) return block;
                 }
-                return Block.Invalid;
+                return ExtBlock.Invalid;
             }
-        }
-        
-        public override byte NextExtBlock(DrawOp op) {
-            return state.ExtBlocks[index];
         }
     }
 }

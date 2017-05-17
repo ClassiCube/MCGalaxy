@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Building {
             if (!p.allowTnt && block == Block.fire) {
                 Player.Message(p, "Tnt usage is not allowed at the moment, fire is a lighter for tnt and is also disabled"); return;
             }          
-            if (!CommandParser.IsBlockAllowed(p, "place ", block)) return;
+            if (!CommandParser.IsBlockAllowed(p, "place ", (ExtBlock)block)) return;
             
             string name = Block.Name(block).Capitalize();
             if (p.modeType == block) {

@@ -74,7 +74,7 @@ namespace MCGalaxy.Blocks.Physics {
                 byte physForm;
                 PhysicsArgs args = GetDoorArgs(block, ext, out physForm);
                 if (!instant) lvl.AddUpdate(index, physForm, false, args);
-                else lvl.Blockchange(index, physForm, false, args);
+                else lvl.Blockchange(index, (ExtBlock)physForm, false, args);
             } else if (props[block].IsTDoor) {
                 PhysicsArgs args = GetTDoorArgs(block, ext);
                 lvl.AddUpdate(index, Block.air, false, args);

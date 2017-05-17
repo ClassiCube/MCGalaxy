@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Games;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdTntWars : Command {
@@ -947,7 +948,7 @@ namespace MCGalaxy.Commands.Fun {
             string msg = noTntZone ? "no TNT" : "no blocks deleted on explosions";
             DeleteZone = false;
             CheckZone = false;
-            CatchPos cpos = default(CatchPos);
+            Vec3U16 cpos = default(Vec3U16);
             p.blockchangeObject = cpos;
             
             switch (text[3]) {
@@ -1156,10 +1157,12 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark1(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             RevertAndClearState(p, x, y, z);
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            bp.x = x; bp.y = y; bp.z = z; p.blockchangeObject = bp;
+            Vec3U16 bp = (Vec3U16)p.blockchangeObject;
+            bp.X = x; bp.Y = y; bp.Z = z; 
+            p.blockchangeObject = bp;
+            
             if (!DeleteZone && !CheckZone) {
                 Player.Message(p, "TNT Wars: Place another block to mark the other corner of the zone!");
                 p.Blockchange += PlacedMark2;
@@ -1192,17 +1195,17 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
 
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark2(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
+            Vec3U16 cpos = (Vec3U16)p.blockchangeObject;
             TntWarsGame.Zone Zn = new TntWarsGame.Zone();
 
-            Zn.smallX = Math.Min(cpos.x, x);
-            Zn.smallY = Math.Min(cpos.y, y);
-            Zn.smallZ = Math.Min(cpos.z, z);
-            Zn.bigX = Math.Max(cpos.x, x);
-            Zn.bigY = Math.Max(cpos.y, y);
-            Zn.bigZ = Math.Max(cpos.z, z);
+            Zn.smallX = Math.Min(cpos.X, x);
+            Zn.smallY = Math.Min(cpos.Y, y);
+            Zn.smallZ = Math.Min(cpos.Z, z);
+            Zn.bigX = Math.Max(cpos.X, x);
+            Zn.bigY = Math.Max(cpos.Y, y);
+            Zn.bigZ = Math.Max(cpos.Z, z);
 
             TntWarsGame it = TntWarsGame.GetTntWarsGame(p);
             if (it == null) {
@@ -1212,7 +1215,5 @@ namespace MCGalaxy.Commands.Fun {
             else it.NoBlockDeathZones.Add(Zn);
             Player.Message(p, "Added zone");
         }
-
-        struct CatchPos { public ushort x, y, z; }
     }
 }

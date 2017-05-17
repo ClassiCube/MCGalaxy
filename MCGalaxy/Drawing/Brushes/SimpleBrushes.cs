@@ -21,55 +21,42 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {    
     public sealed class SolidBrush : Brush {
-        readonly byte block, extBlock;
+        readonly ExtBlock block;
         
-        public SolidBrush(byte type, byte extType) {
-            this.block = type;
-            this.extBlock = extType;
+        public SolidBrush(ExtBlock block) {
+            this.block = block;
         }
         
         public override string Name { get { return "Normal"; } }
         
-        public override byte NextBlock(DrawOp op) { return block; }
-        
-        public override byte NextExtBlock(DrawOp op) { return extBlock; }
+        public override ExtBlock NextBlock(DrawOp op) { return block; }
     }
     
     public sealed class StripedBrush : Brush {
-        readonly byte block1, extBlock1, block2, extBlock2;
+        readonly ExtBlock b1, b2;
         
-        public StripedBrush(byte block1, byte extBlock1, byte block2, byte extBlock2) {
-            this.block1 = block1; this.extBlock1 = extBlock1;
-            this.block2 = block2; this.extBlock2 = extBlock2;
+        public StripedBrush(ExtBlock block1, ExtBlock block2) {
+           b1 = block1; b2 = block2;
         }
         
         public override string Name { get { return "Striped"; } }
         
-        public override byte NextBlock(DrawOp op) {
-            return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 3) <= 1 ? block1 : block2;
-        }
-        
-        public override byte NextExtBlock(DrawOp op) {
-            return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 3) <= 1 ? extBlock1 : extBlock2;
+        public override ExtBlock NextBlock(DrawOp op) {
+            return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 3) <= 1 ? b1 : b2;
         }
     }
     
     public sealed class CheckeredBrush : Brush {
-        readonly byte block1, extBlock1, block2, extBlock2;
+        readonly ExtBlock b1, b2;
         
-        public CheckeredBrush(byte block1, byte extBlock1, byte block2, byte extBlock2) {
-            this.block1 = block1; this.extBlock1 = extBlock1;
-            this.block2 = block2; this.extBlock2 = extBlock2;
+        public CheckeredBrush(ExtBlock block1, ExtBlock block2) {
+            b1 = block1; b2 = block2;
         }
         
         public override string Name { get { return "Checkered"; } }
         
-        public override byte NextBlock(DrawOp op) {
-            return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? block1 : block2;
-        }
-        
-        public override byte NextExtBlock(DrawOp op) {
-            return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? extBlock1 : extBlock2;
+        public override ExtBlock NextBlock(DrawOp op) {
+            return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? b1 : b2;
         }
     }
 }

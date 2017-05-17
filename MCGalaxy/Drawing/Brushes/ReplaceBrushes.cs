@@ -36,20 +36,15 @@ namespace MCGalaxy.Drawing.Brushes {
             op.Flags = BlockDBFlags.Replaced;
         }
         
-        public override byte NextBlock(DrawOp op) {
+        public override ExtBlock NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;
-            byte tile = op.Level.GetTile(x, y, z), extTile = 0;
-            if (tile == Block.custom_block) extTile = op.Level.GetExtTile(x, y, z);
+            ExtBlock block = op.Level.GetExtBlock(x, y, z);
             
             for (int i = 0; i < include.Length; i++) {
-                ExtBlock block = include[i];
-                if (tile == block.Block && (tile != Block.custom_block || extTile == block.Ext))
-                    return target.Block;
+                if (block == include[i]) return target;
             }
-            return Block.Invalid;
+            return ExtBlock.Invalid;
         }
-        
-        public override byte NextExtBlock(DrawOp op) { return target.Ext; }
     }
     
     public sealed class ReplaceNotBrush : Brush {
@@ -66,19 +61,14 @@ namespace MCGalaxy.Drawing.Brushes {
             op.Flags = BlockDBFlags.Replaced;
         }
         
-        public override byte NextBlock(DrawOp op) {
+        public override ExtBlock NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;
-            byte tile = op.Level.GetTile(x, y, z), extTile = 0;
-            if (tile == Block.custom_block) extTile = op.Level.GetExtTile(x, y, z);
+            ExtBlock block = op.Level.GetExtBlock(x, y, z);
             
             for (int i = 0; i < exclude.Length; i++) {
-                ExtBlock block = exclude[i];
-                if (tile == block.Block && (tile != Block.custom_block || extTile == block.Ext))
-                    return Block.Invalid;
+                if (block == exclude[i]) return ExtBlock.Invalid;
             }
-            return target.Block;
+            return target;
         }
-        
-        public override byte NextExtBlock(DrawOp op) { return target.Ext; }
     }
 }

@@ -94,7 +94,7 @@ namespace MCGalaxy.Drawing {
                 
                 if (Entries == null) return;
                 foreach (PaletteEntry e in Entries)
-                    w.WriteLine(e.Block + ":" + e.R + ":" + e.G + ":" + e.B);
+                    w.WriteLine(e.Raw + ":" + e.R + ":" + e.G + ":" + e.B);
             }
         }
         
@@ -156,10 +156,10 @@ namespace MCGalaxy.Drawing {
     }
     
     public struct PaletteEntry  {
-        public byte R, G, B, Block;
+        public byte R, G, B, Raw;
         
         public PaletteEntry(byte r, byte g, byte b, byte block) {
-            R = r; G = g; B = b; Block = block;
+            R = r; G = g; B = b; Raw = block;
         }
     }
 }

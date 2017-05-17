@@ -116,9 +116,9 @@ namespace MCGalaxy.Games
                 flagLocation[1] = (ushort)(flagLocation[1] - 1);
             }
 
-            mapOn.Blockchange(tfb.x, tfb.y, tfb.z, tfb.type);
-            mapOn.Blockchange(tfb.x, (ushort)(tfb.y + 1), tfb.z, Block.air);
-            mapOn.Blockchange(tfb.x, (ushort)(tfb.y + 2), tfb.z, Block.air);
+            mapOn.Blockchange(tfb.x, tfb.y, tfb.z, (ExtBlock)tfb.type);
+            mapOn.Blockchange(tfb.x, (ushort)(tfb.y + 1), tfb.z, ExtBlock.Air);
+            mapOn.Blockchange(tfb.x, (ushort)(tfb.y + 2), tfb.z, ExtBlock.Air);
 
             if (holdingFlag == null)
             {
@@ -126,9 +126,15 @@ namespace MCGalaxy.Games
 
                 tfb.type = mapOn.GetTile(x, y, z);
 
-                if (mapOn.GetTile(x, y, z) != Block.flagbase) { mapOn.Blockchange(x, y, z, Block.flagbase); }
-                if (mapOn.GetBlock(x, y + 1, z) != Block.mushroom) { mapOn.Blockchange(x, (ushort)(y + 1), z, Block.mushroom); }
-                if (mapOn.GetBlock(x, y + 2, z) != GetColorBlock(color)) { mapOn.Blockchange(x, (ushort)(y + 2), z, GetColorBlock(color)); }
+                if (mapOn.GetTile(x, y, z) != Block.flagbase) { 
+                    mapOn.Blockchange(x, y, z, (ExtBlock)Block.flagbase); 
+                }
+                if (mapOn.GetBlock(x, y + 1, z) != Block.mushroom) { 
+                    mapOn.Blockchange(x, (ushort)(y + 1), z, (ExtBlock)Block.mushroom); 
+                }
+                if (mapOn.GetBlock(x, y + 2, z) != GetColorBlock(color)) { 
+                    mapOn.Blockchange(x, (ushort)(y + 2), z, (ExtBlock)GetColorBlock(color)); 
+                }
 
                 tfb.x = x;
                 tfb.y = y;
@@ -145,11 +151,11 @@ namespace MCGalaxy.Games
                 if (tempFlagblock.x == x && tempFlagblock.y == y && tempFlagblock.z == z) { return; }
 
 
-                mapOn.Blockchange(tempFlagblock.x, tempFlagblock.y, tempFlagblock.z, tempFlagblock.type);
+                mapOn.Blockchange(tempFlagblock.x, tempFlagblock.y, tempFlagblock.z, (ExtBlock)tempFlagblock.type);
 
                 tempFlagblock.type = mapOn.GetTile(x, y, z);
 
-                mapOn.Blockchange(x, y, z, GetColorBlock(color));
+                mapOn.Blockchange(x, y, z, (ExtBlock)GetColorBlock(color));
 
                 tempFlagblock.x = x;
                 tempFlagblock.y = y;

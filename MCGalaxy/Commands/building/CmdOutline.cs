@@ -32,33 +32,32 @@ namespace MCGalaxy.Commands.Building {
             string[] args = message.SplitSpaces(2);
             DrawArgs dArgs = default(DrawArgs);
             
-            if (!CommandParser.GetBlockIfAllowed(p, args[0], out dArgs.block, out dArgs.extBlock)) return;
+            if (!CommandParser.GetBlockIfAllowed(p, args[0], out dArgs.target)) return;
             string brushArgs = args.Length > 1 ? args[1] : "";
             dArgs.brushArgs = brushArgs;
             
             BrushFactory factory = BrushFactory.Find(p.BrushName);
-            byte held, extHeld;
-            held = p.GetActualHeldBlock(out extHeld);
-            BrushArgs bArgs = new BrushArgs(p, brushArgs, held, extHeld);
+            ExtBlock held = p.GetHeldBlock();
+            BrushArgs bArgs = new BrushArgs(p, brushArgs, held);
             if (!factory.Validate(bArgs)) return;
             
             Player.Message(p, "Place or break two blocks to determine the edges.");
             p.MakeSelection(2, dArgs, DoOutline);
         }
         
-        bool DoOutline(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+        bool DoOutline(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             DrawArgs dArgs = (DrawArgs)state;
             OutlineDrawOp op = new OutlineDrawOp();
-            op.Block = dArgs.block; op.ExtBlock = dArgs.extBlock;
+            op.Target = dArgs.target;
             
             BrushFactory factory = BrushFactory.Find(p.BrushName);
-            BrushArgs bArgs = new BrushArgs(p, dArgs.brushArgs, type, extType);
+            BrushArgs bArgs = new BrushArgs(p, dArgs.brushArgs, block);
             Brush brush = factory.Construct(bArgs);
             if (brush == null) return false;
             
             return DrawOpPerformer.Do(op, brush, p, marks);
         }
-        struct DrawArgs { public byte block, extBlock; public string brushArgs; }
+        struct DrawArgs { public ExtBlock target; public string brushArgs; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/outline [block] <brush args>");

@@ -88,7 +88,7 @@ namespace MCGalaxy.Drawing.Ops {
         Brush airBrush;
         public PyramidReverseDrawOp() : base(new CuboidDrawOp(), -1) {
             wallOp = new CuboidWallsDrawOp();
-            airBrush = new SolidBrush(Block.air, 0);
+            airBrush = new SolidBrush(ExtBlock.Air);
         }
         
         public override string Name { get { return "Pyramid reverse"; } }

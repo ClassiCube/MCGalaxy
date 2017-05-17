@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing {
         public byte BestMatch(byte R, byte G, byte B) {
             int pos;
             MinDist(R, G, B, front, out pos);
-            return front[pos].Block;
+            return front[pos].Raw;
         }
         
         public byte BestMatch(byte R, byte G, byte B, out bool backLayer) {
@@ -53,7 +53,7 @@ namespace MCGalaxy.Drawing {
             int backDist  = MinDist(R, G, B, back, out backPos);
             
             backLayer = frontDist <= backDist;
-            return backLayer ? back[backPos].Block : front[frontPos].Block;
+            return backLayer ? back[backPos].Raw : front[frontPos].Raw;
         }
         
         
@@ -110,7 +110,7 @@ namespace MCGalaxy.Drawing {
         
         LabColor RgbToLab(PaletteEntry cur) {
             LabColor lab = RgbToLab(cur.R, cur.G, cur.B);
-            lab.Block = cur.Block;
+            lab.Block = cur.Raw;
             return lab;
         }
         

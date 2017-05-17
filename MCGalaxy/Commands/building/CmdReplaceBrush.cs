@@ -49,8 +49,8 @@ namespace MCGalaxy.Commands.Building {
         bool ValidateArgs(Player p, string[] args) {
             if (args.Length < 2) { Help(p); return false; }
             
-            byte block, extBlock;
-            if (!CommandParser.GetBlockIfAllowed(p, args[0], out block, out extBlock)) return false;
+            ExtBlock block;
+            if (!CommandParser.GetBlockIfAllowed(p, args[0], out block)) return false;
             
             BrushFactory factory = BrushFactory.Find(args[1]);
             if (factory == null) {
@@ -60,26 +60,24 @@ namespace MCGalaxy.Commands.Building {
             }
             
             string brushMessage = args.Length > 2 ? args[2] : "";
-            byte held, extHeld;
-            held = p.GetActualHeldBlock(out extHeld);
-            BrushArgs bArgs = new BrushArgs(p, brushMessage, held, extHeld);
+            BrushArgs bArgs = new BrushArgs(p, brushMessage, p.GetHeldBlock());
             return factory.Validate(bArgs);
         }
         
-        bool DoReplace(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+        bool DoReplace(Player p, Vec3S32[] marks, object state, ExtBlock held) {
             string[] args = ((string)state).SplitSpaces(3);
-            byte block, extBlock;
-            if (!CommandParser.GetBlockIfAllowed(p, args[0], out block, out extBlock)) return false;
+            ExtBlock target;
+            if (!CommandParser.GetBlockIfAllowed(p, args[0], out target)) return false;
             
             BrushFactory factory = BrushFactory.Find(args[1]);
             string brushMessage = args.Length > 2 ? args[2] : "";
-            BrushArgs bArgs = new BrushArgs(p, brushMessage, type, extType);
+            BrushArgs bArgs = new BrushArgs(p, brushMessage, held);
             Brush brush = factory.Construct(bArgs);
             if (brush == null) return false;
             
             DrawOp op = null;
-            if (ReplaceNot) op = new ReplaceNotDrawOp(block, extBlock);
-            else op = new ReplaceDrawOp(block, extBlock);
+            if (ReplaceNot) op = new ReplaceNotDrawOp(target);
+            else op = new ReplaceDrawOp(target);
             return DrawOpPerformer.Do(op, brush, p, marks);
         }
         

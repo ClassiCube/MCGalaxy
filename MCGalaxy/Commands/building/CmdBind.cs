@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Building {
                 if (src == Block.Invalid) { Player.Message(p, "There is no block \"{0}\".", args[0]); return; }
                 if (dst == Block.Invalid) { Player.Message(p, "There is no block \"{0}\".", args[1]); return; }
                 
-                if (!CommandParser.IsBlockAllowed(p, "bind a block to ", dst)) return;
+                if (!CommandParser.IsBlockAllowed(p, "bind a block to ", (ExtBlock)dst)) return;
                 if (src >= Block.CpeCount) { Player.Message(p, "Cannot bind anything to this block."); return; }
                 
                 p.bindings[src] = dst;

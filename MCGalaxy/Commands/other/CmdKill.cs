@@ -31,9 +31,10 @@ namespace MCGalaxy.Commands.Misc {
             
             string[] args = message.SplitSpaces(2);
             Player target = PlayerInfo.FindMatches(p, args[0]);
+            ExtBlock rock = (ExtBlock)Block.rock;
             
             if (target == null) {
-                if (p != null) p.HandleDeath(Block.rock, 0, " killed themselves in their confusion");
+                if (p != null) p.HandleDeath(rock, " killed themselves in their confusion");
                 return;
             }
             if (p != null && (target != p && target.Rank >= p.Rank)) {
@@ -43,7 +44,7 @@ namespace MCGalaxy.Commands.Misc {
             bool explode = false;
             string killer = p == null ? "(console)" : p.ColoredName;            
             string deathMsg = GetDeathMessage(args, killer, ref explode);
-            target.HandleDeath(Block.rock, 0, deathMsg, explode);
+            target.HandleDeath(rock, deathMsg, explode);
         }
         
         static string GetDeathMessage(string[] args, string killer, ref bool explode) {

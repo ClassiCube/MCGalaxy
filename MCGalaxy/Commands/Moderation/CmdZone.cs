@@ -110,14 +110,14 @@ namespace MCGalaxy.Commands.Moderation {
             return args[1] != null;
         }
         
-        bool CheckZone(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+        bool CheckZone(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             Vec3S32 P = marks[0];
             string zoneMsg = p.level.FindZoneOwners(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z);
             Player.Message(p, zoneMsg);
             return true;
         }
 
-        bool DeleteZone(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+        bool DeleteZone(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             Level lvl = p.level;
             bool foundDel = false;
             Vec3S32 P = marks[0];
@@ -145,7 +145,7 @@ namespace MCGalaxy.Commands.Moderation {
             return false;
         }
         
-        bool AddZone(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+        bool AddZone(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             Level.Zone Zn;
             Zn.smallX = (ushort)Math.Min(marks[0].X, marks[1].X);
             Zn.smallY = (ushort)Math.Min(marks[0].Y, marks[1].Y);

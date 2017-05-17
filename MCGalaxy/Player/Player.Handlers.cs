@@ -46,12 +46,12 @@ namespace MCGalaxy {
             }
         }
         
-        public void ManualChange(ushort x, ushort y, ushort z, byte action, byte block, byte extBlock = 0) {
-            ManualChange(x, y, z, action, block, extBlock, true);
+        public void ManualChange(ushort x, ushort y, ushort z, byte action, ExtBlock block) {
+            ManualChange(x, y, z, action, block, true);
         }
         
         public void ManualChange(ushort x, ushort y, ushort z, byte action,
-                                 byte block, byte extBlock, bool checkPlaceDist) {
+                                 ExtBlock block, bool checkPlaceDist) {
             byte oldB = level.GetTile(x, y, z);
             if (oldB == Block.Invalid) return;
             
@@ -69,7 +69,7 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            if (Server.zombie.Running && Server.zombie.HandlesManualChange(this, x, y, z, action, block, oldB))
+            if (Server.zombie.Running && Server.zombie.HandlesManualChange(this, x, y, z, action, block.BlockID, oldB))
                 return;
 
             if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) ) {
@@ -79,11 +79,11 @@ namespace MCGalaxy {
 
             lastClick.X = x; lastClick.Y = y; lastClick.Z = z;
             if (Blockchange != null) {
-                Blockchange(this, x, y, z, block, extBlock); return;
+                Blockchange(this, x, y, z, block); return;
             }
             if (PlayerBlockChange != null)
-                PlayerBlockChange(this, x, y, z, block, extBlock);
-            OnBlockChangeEvent.Call(this, x, y, z, block, extBlock);
+                PlayerBlockChange(this, x, y, z, block);
+            OnBlockChangeEvent.Call(this, x, y, z, block);
             if (cancelBlock) { cancelBlock = false; return; }
 
             if (oldB >= Block.air_flood && oldB <= Block.air_door_air) {
@@ -111,29 +111,29 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            byte blockRaw = block;
-            if (block < Block.CpeCount) block = bindings[block];
+            byte blockRaw = block.BlockID;
+            if (block.BlockID < Block.CpeCount) block = (ExtBlock)bindings[block.BlockID];
             
             //Ignores updating blocks that are the same and send block only to the player
-            byte newB = (painting || action == 1) ? block : Block.air;
-            if (oldB == newB && (painting || blockRaw != block)) {
-                if (oldB != Block.custom_block || extBlock == level.GetExtTile(x, y, z)) {
+            byte newB = (painting || action == 1) ? block.BlockID : Block.air;
+            if (oldB == newB && (painting || blockRaw != block.BlockID)) {
+                if (oldB != Block.custom_block || block.ExtID == level.GetExtTile(x, y, z)) {
                     RevertBlock(x, y, z); return;
                 }
             }
             
-            if (modeType != 0) block = modeType;
+            if (modeType != 0) block = (ExtBlock)modeType;
             if (doDelete) {
-                bool deleted = DeleteBlock(oldB, x, y, z, block, extBlock);
+                bool deleted = DeleteBlock(oldB, x, y, z, block);
             } else {
-                bool placed = PlaceBlock(oldB, x, y, z, block, extBlock);
+                bool placed = PlaceBlock(oldB, x, y, z, block);
                 // Client always assumes delete succeeds, so we need to echo back the painted over block
                 // if the block was not changed visually (e.g. they paint white with door_white)
                 if (!placed && painting) RevertBlock(x, y, z);
             }
         }
         
-        internal bool CheckManualChange(byte old, byte block, bool replaceMode) {
+        internal bool CheckManualChange(byte old, ExtBlock block, bool replaceMode) {
             if (!BlockPerms.CanModify(this, old) && !Block.BuildIn(old) && !Block.AllowBreak(old)) {
                 Formatter.MessageBlock(this, replaceMode ? "replace " : "delete ", old);
                 return false;
@@ -141,50 +141,48 @@ namespace MCGalaxy {
             return CommandParser.IsBlockAllowed(this, "place ", block);
         }
         
-        bool DeleteBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
-            if (deleteMode) { return ChangeBlock(x, y, z, Block.air, 0) == 2; }
+        bool DeleteBlock(byte old, ushort x, ushort y, ushort z, ExtBlock block) {
+            if (deleteMode) { return ChangeBlock(x, y, z, ExtBlock.Air) == 2; }
 
             HandleDelete handler = BlockBehaviour.deleteHandlers[old];
             if (handler != null) {
                 handler(this, old, x, y, z);
                 return true;
             }
-            return ChangeBlock(x, y, z, Block.air, 0) == 2;
+            return ChangeBlock(x, y, z, ExtBlock.Air) == 2;
         }
 
-        bool PlaceBlock(byte old, ushort x, ushort y, ushort z, byte block, byte extBlock) {
-            HandlePlace handler = BlockBehaviour.placeHandlers[block];
+        bool PlaceBlock(byte old, ushort x, ushort y, ushort z, ExtBlock block) {
+            HandlePlace handler = BlockBehaviour.placeHandlers[block.BlockID];
             if (handler != null) {
                 handler(this, old, x, y, z);
                 return true;
             }
-            return ChangeBlock(x, y, z, block, extBlock) == 2;
+            return ChangeBlock(x, y, z, block) == 2;
         }
         
         /// <summary> Updates the block at the given position, mainly intended for manual changes by the player. </summary>
         /// <remarks> Adds to the BlockDB. Also turns block below to grass/dirt depending on light. </remarks>
         /// <returns> Return code from DoBlockchange </returns>
-        public int ChangeBlock(ushort x, ushort y, ushort z, byte block, byte extBlock) {
-            byte old = level.GetTile(x, y, z), extOld = 0;
-            if (old == Block.custom_block) extOld = level.GetExtTile(x, y, z);
-            
-            int type = level.DoBlockchange(this, x, y, z, block, extBlock);
-            if (type == 0) return type;                                               // no change performed
-            if (type == 2) Player.GlobalBlockchange(level, x, y, z, block, extBlock); // different visually
+        public int ChangeBlock(ushort x, ushort y, ushort z, ExtBlock block) {
+            ExtBlock old = level.GetExtBlock(x, y, z);            
+            int type = level.DoBlockchange(this, x, y, z, block);
+            if (type == 0) return type;                                     // no change performed
+            if (type == 2) Player.GlobalBlockchange(level, x, y, z, block); // different visually
             
             ushort flags = BlockDBFlags.ManualPlace;
-            if (painting && Replacable(old)) flags = BlockDBFlags.Painted;
-            level.BlockDB.Cache.Add(this, x, y, z, flags, old, extOld, block, extBlock);           
+            if (painting && Replacable(old.BlockID)) flags = BlockDBFlags.Painted;
+            level.BlockDB.Cache.Add(this, x, y, z, flags, old, block);           
             
             bool autoGrass = level.GrassGrow && (level.physics == 0 || level.physics == 5);
             if (!autoGrass) return type;
             
             byte below = level.GetTile(x, (ushort)(y - 1), z);
-            if (below == Block.dirt && block == Block.air) {
-                level.Blockchange(this, x, (ushort)(y - 1), z, Block.grass);
+            if (below == Block.dirt && block.BlockID == Block.air) {
+            	level.Blockchange(this, x, (ushort)(y - 1), z, (ExtBlock)Block.grass);
             }
-            if (below == Block.grass && !level.LightPasses(block, extBlock)) {
-                level.Blockchange(this, x, (ushort)(y - 1), z, Block.dirt);
+            if (below == Block.grass && !level.LightPasses(block)) {
+                level.Blockchange(this, x, (ushort)(y - 1), z, (ExtBlock)Block.dirt);
             }
             return type;
         }
@@ -275,11 +273,11 @@ namespace MCGalaxy {
                 ushort z = NetUtils.ReadU16(packet, 5);
                 if (frozen) { RevertBlock(x, y, z); return; }
                 
-                byte action = packet[7], block = packet[8];
-                byte extBlock = block;
-                RawHeldBlock = block;
+                byte action = packet[7];
+                ExtBlock held = ExtBlock.FromRaw(packet[8]);
+                RawHeldBlock = held;
                 
-                if ((action == 0 || block == 0) && !level.Deletable) {
+                if ((action == 0 || held.BlockID == Block.air) && !level.Deletable) {
                     SendMessage("Deleting blocks is disabled in this level.");
                     RevertBlock(x, y, z); return;
                 } else if (action == 1 && !level.Buildable) {
@@ -287,15 +285,13 @@ namespace MCGalaxy {
                     RevertBlock(x, y, z); return;
                 }
                 
-                if (block >= Block.CpeCount) {
-                    if (!hasBlockDefs || level.CustomBlockDefs[block] == null) {
-                        SendMessage("Invalid block type: " + block);
+                if (held.BlockID == Block.custom_block) {
+                    if (!hasBlockDefs || level.CustomBlockDefs[held.ExtID] == null) {
+                        SendMessage("Invalid block type: " + held.ExtID);
                         RevertBlock(x, y, z); return;
                     }
-                    extBlock = block;
-                    block = Block.custom_block;
                 }
-                ManualChange(x, y, z, action, block, extBlock);
+                ManualChange(x, y, z, action, held);
             } catch ( Exception e ) {
                 // Don't ya just love it when the server tattles?
                 Chat.MessageOps(DisplayName + " has triggered a block change error");
@@ -306,9 +302,9 @@ namespace MCGalaxy {
         
         void HandleMovement(byte[] packet) {
             if (!loggedIn || trainGrab || following != "") return;
-            byte heldBlock = packet[1];
-            if (HasCpeExt(CpeExt.HeldBlock))
-                RawHeldBlock = heldBlock;
+            if (HasCpeExt(CpeExt.HeldBlock)) {
+                RawHeldBlock = ExtBlock.FromRaw(packet[1]);
+            }
             
             int x, y, z;
             if (hasExtPositions) {
@@ -365,7 +361,7 @@ namespace MCGalaxy {
                 } else if (!(bFeet == Block.water || bFeet == Block.waterstill ||
                              bFeet == Block.lava || bFeet == Block.lavastill)) {
                     if (fallCount > level.fall)
-                        HandleDeath(Block.air, 0, null, false, true);
+                        HandleDeath(ExtBlock.Air, null, false, true);
                     fallCount = 0;
                     drownCount = 0;
                     return;
@@ -382,7 +378,7 @@ namespace MCGalaxy {
                     
                     // level drown is in 10ths of a second, and there are 100 ticks/second
                     if (drownCount > level.drown * 10) {
-                        HandleDeath(Block.water, 0);
+                    	HandleDeath((ExtBlock)Block.water);
                         drownCount = 0;
                     }
                     break;
@@ -412,31 +408,28 @@ namespace MCGalaxy {
                     for (int x = min.X; x <= max.X; x++)
             {
                 ushort xP = (ushort)x, yP = (ushort)y, zP = (ushort)z;
-                byte block = level.GetTile(xP, yP, zP), extBlock = 0;
-                if (block == Block.Invalid) continue;
-                if (block == Block.custom_block)
-                    extBlock = level.GetExtTileNoCheck(xP, yP, zP);
-                
-                AABB blockBB = Block.BlockAABB(block, extBlock, level)
-                    .Offset(x * 32, y * 32, z * 32);
+                ExtBlock block = level.GetExtBlock(xP, yP, zP);
+                if (block.BlockID == Block.Invalid) continue;
+                AABB blockBB = Block.BlockAABB(block, level).Offset(x * 32, y * 32, z * 32);
                 if (!bb.Intersects(blockBB)) continue;
+                byte coreID = block.BlockID;
                 
                 // We can activate only one walkthrough block per movement
                 if (!hitWalkthrough) {
-                    HandleWalkthrough handler = BlockBehaviour.walkthroughHandlers[block];
-                    if (handler != null && handler(this, block, xP, yP, zP)) {
+                    HandleWalkthrough handler = BlockBehaviour.walkthroughHandlers[coreID];
+                    if (handler != null && handler(this, coreID, xP, yP, zP)) {
                         lastWalkthrough = level.PosToInt(xP, yP, zP);
                         hitWalkthrough = true;
                     }
                 }
                 
                 // Some blocks will cause death of players
-                if (block != Block.custom_block && !Block.Props[block].KillerBlock) continue;
-                if (block == Block.custom_block && !level.CustomBlockProps[extBlock].KillerBlock) continue;
+                if (coreID != Block.custom_block && !Block.Props[coreID].KillerBlock) continue;
+                if (coreID == Block.custom_block && !level.CustomBlockProps[block.ExtID].KillerBlock) continue;
                 
-                if (block == Block.tntexplosion && PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
-                if (block == Block.train && trainInvincible) continue;
-                HandleDeath(block, extBlock);
+                if (coreID == Block.tntexplosion && PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
+                if (coreID == Block.train && trainInvincible) continue;
+                HandleDeath(block);
             }
             
             if (!hitWalkthrough) lastWalkthrough = -1;
@@ -444,11 +437,10 @@ namespace MCGalaxy {
 
         [Obsolete("Use HandleDeath with ExtBlock attribute")]
         public void HandleDeath(byte b, string customMessage = "", bool explode = false, bool immediate = false) {
-            HandleDeath(b, 0, customMessage, explode, immediate);
+            HandleDeath((ExtBlock)b, customMessage, explode, immediate);
         }
         
-        public void HandleDeath(byte block, byte extBlock, string customMessage = "",
-                                bool explode = false, bool immediate = false) {
+        public void HandleDeath(ExtBlock block, string customMessage = "", bool explode = false, bool immediate = false) {
             if (OnDeath != null) OnDeath(this, block);
             if (PlayerDeath != null) PlayerDeath(this, block);
             OnPlayerDeathEvent.Call(this, block);
@@ -461,20 +453,20 @@ namespace MCGalaxy {
             ushort x = (ushort)Pos.BlockX, y = (ushort)Pos.BlockY, z = (ushort)Pos.BlockZ;
             
             string deathMsg = null;
-            if (block != Block.custom_block) {
-                deathMsg = Block.Props[block].DeathMessage;
+            if (block.BlockID != Block.custom_block) {
+                deathMsg = Block.Props[block.BlockID].DeathMessage;
             } else {
-                deathMsg = level.CustomBlockProps[extBlock].DeathMessage;
+                deathMsg = level.CustomBlockProps[block.ExtID].DeathMessage;
             }
             if (deathMsg != null) {
                 Chat.MessageLevel(this, deathMsg.Replace("@p", ColoredName), false, level);
             }
             
-            if (block == Block.rockethead) level.MakeExplosion(x, y, z, 0);
-            if (block == Block.creeper) level.MakeExplosion(x, y, z, 1);
-            if (block == Block.rock || block == Block.stone) {
+            if (block.BlockID == Block.rockethead) level.MakeExplosion(x, y, z, 0);
+            if (block.BlockID == Block.creeper) level.MakeExplosion(x, y, z, 1);
+            if (block.BlockID == Block.rock || block.BlockID == Block.stone) {
                 if (explode) level.MakeExplosion(x, y, z, 1);
-                if (block == Block.rock) {
+                if (block.BlockID == Block.rock) {
                     Chat.MessageGlobal(this, ColoredName + "%S" + customMessage, false);
                 } else {
                     Chat.MessageLevel(this, ColoredName + "%S" + customMessage, false, level);

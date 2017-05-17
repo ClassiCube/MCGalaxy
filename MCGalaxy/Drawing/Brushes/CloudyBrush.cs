@@ -99,7 +99,7 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         int next;
-        public override byte NextBlock(DrawOp op) {
+        public override ExtBlock NextBlock(DrawOp op) {
             float N = noise.NormalisedNoise(op.Coords.X, op.Coords.Y, op.Coords.Z);
             N = (N + 1) * 0.5f; // rescale to [0, 1];
             N = N < 0 ? 0 : N;
@@ -109,9 +109,7 @@ namespace MCGalaxy.Drawing.Brushes {
             for (int i = 0; i < thresholds.Length; i++) {
                 if (N <= thresholds[i]) { next = i; break; }
             }
-            return blocks[next].Block;
+            return blocks[next];
         }
-        
-        public override byte NextExtBlock(DrawOp op) { return blocks[next].Ext; }
     }
 }

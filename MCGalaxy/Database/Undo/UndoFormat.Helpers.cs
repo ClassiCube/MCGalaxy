@@ -101,10 +101,10 @@ namespace MCGalaxy.Undo {
             Level lvl = args.Player.level;
             
             foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
-                byte block = P.Block, newBlock = P.NewBlock;
-                byte highlight = (newBlock == Block.air
-                                  || Block.Convert(block) == Block.water || block == Block.waterstill
-                                  || Block.Convert(block) == Block.lava || block == Block.lavastill)
+                ExtBlock block = P.Block, newBlock = P.NewBlock;
+                byte highlight = (newBlock.BlockID == Block.air
+                                  || Block.Convert(block.BlockID) == Block.water || block.BlockID == Block.waterstill
+                                  || Block.Convert(block.BlockID) == Block.lava || block.BlockID == Block.lavastill)
                     ? Block.red : Block.green;
                 
                 buffer.Add(lvl.PosToInt(P.X, P.Y, P.Z), highlight, 0);
@@ -114,19 +114,19 @@ namespace MCGalaxy.Undo {
         
         static void UndoBlock(UndoFormatArgs args, Level lvl, UndoFormatEntry P) {
             byte lvlBlock = lvl.GetTile(P.X, P.Y, P.Z);
-            if (lvlBlock == P.NewBlock || Block.Convert(lvlBlock) == Block.water
+            if (lvlBlock == P.NewBlock.BlockID || Block.Convert(lvlBlock) == Block.water
                 || Block.Convert(lvlBlock) == Block.lava || lvlBlock == Block.grass) {
                 
                 if (args.Player != null) {
                     DrawOpBlock block;
                     block.X = P.X; block.Y = P.Y; block.Z = P.Z;
-                    block.Block = P.Block; block.ExtBlock = P.ExtBlock;
+                    block.Block = P.Block;
                     args.Output(block);
                 } else {
-                    Player.GlobalBlockchange(lvl, P.X, P.Y, P.Z, P.Block, P.ExtBlock); // TODO: rewrite this :/
-                    lvl.SetTile(P.X, P.Y, P.Z, P.Block);
-                    if (P.Block != Block.custom_block) return;
-                    lvl.SetExtTile(P.X, P.Y, P.Z, P.ExtBlock);
+                    Player.GlobalBlockchange(lvl, P.X, P.Y, P.Z, P.Block); // TODO: rewrite this :/
+                    lvl.SetTile(P.X, P.Y, P.Z, P.Block.BlockID);
+                    if (P.Block.BlockID != Block.custom_block) return;
+                    lvl.SetExtTile(P.X, P.Y, P.Z, P.Block.ExtID);
                 }
             }
         }

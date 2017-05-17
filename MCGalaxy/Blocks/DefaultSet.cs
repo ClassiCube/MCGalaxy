@@ -132,7 +132,7 @@ namespace MCGalaxy.Blocks {
         }
         
         
-        static byte Draw(byte b) {
+        internal static byte Draw(byte b) {
             if (b == Block.air || b == Block.Invalid) return DrawType.Gas;
             if (b == Block.leaf) return DrawType.TransparentThick;
 

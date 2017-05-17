@@ -40,8 +40,8 @@ namespace MCGalaxy.Blocks {
             byte b2 = p.level.GetBlock(x + dx    , y + dy,     z + dz);
             if ( b1 == Block.air && b2 == Block.air && p.level.CheckClear((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ))
                 && p.level.CheckClear((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz )) ) {
-                p.level.Blockchange((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ), Block.rockethead);
-                p.level.Blockchange((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz ), Block.lava_fire);
+            	p.level.Blockchange((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ), (ExtBlock)Block.rockethead);
+                p.level.Blockchange((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz ), (ExtBlock)Block.lava_fire);
             }
         }
         
@@ -56,11 +56,12 @@ namespace MCGalaxy.Blocks {
             
             if (b1 == Block.air && b2 == Block.air && p.level.CheckClear(x2, (ushort)(y + 1), z2)
                 && p.level.CheckClear(x2, (ushort)(y + 2), z2)) {
-                p.level.Blockchange(x2, (ushort)(y + 2), z2, Block.firework);
+                p.level.Blockchange(x2, (ushort)(y + 2), z2, (ExtBlock)Block.firework);
+                
                 PhysicsArgs args = default(PhysicsArgs);
                 args.Type1 = PhysicsArgs.Wait; args.Value1 = 1;
                 args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 100;
-                p.level.Blockchange(x2, (ushort)(y + 1), z2, Block.lavastill, false, args);
+                p.level.Blockchange(x2, (ushort)(y + 1), z2, (ExtBlock)Block.lavastill, false, args);
             }
             p.RevertBlock(x, y, z);
         }
@@ -68,7 +69,7 @@ namespace MCGalaxy.Blocks {
         internal static void C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
             int index = p.level.PosToInt(x, y, z);
             C4Physics.BlowUp(index, p.level);
-            p.ChangeBlock(x, y, z, Block.air, 0);
+            p.ChangeBlock(x, y, z, ExtBlock.Air);
         }
         
         internal static void RevertDoor(Player p, byte block, ushort x, ushort y, ushort z) {
@@ -85,7 +86,7 @@ namespace MCGalaxy.Blocks {
                 
                 byte physForm;
                 PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, isExt, out physForm);
-                p.level.Blockchange(x, y, z, physForm, false, args);
+                p.level.Blockchange(x, y, z, (ExtBlock)physForm, false, args);
             } else {
                 p.RevertBlock(x, y, z);
             }
@@ -93,7 +94,7 @@ namespace MCGalaxy.Blocks {
         
         internal static void ODoor(Player p, byte block, ushort x, ushort y, ushort z) {
             if (block == Block.odoor8 || block == Block.odoor8_air) {
-                p.level.Blockchange(x, y, z, Block.Props[block].ODoorId, 0);
+                p.level.Blockchange(x, y, z, (ExtBlock)Block.Props[block].ODoorId);
             } else {
                 p.RevertBlock(x, y, z);
             }
@@ -103,7 +104,7 @@ namespace MCGalaxy.Blocks {
             if (Portal.Handle(p, x, y, z)) {
                 p.RevertBlock(x, y, z);
             } else {
-                p.ChangeBlock(x, y, z, Block.air, 0);
+                p.ChangeBlock(x, y, z, ExtBlock.Air);
             }
         }
         
@@ -111,7 +112,7 @@ namespace MCGalaxy.Blocks {
             if (MessageBlock.Handle(p, x, y, z, true)) {
                 p.RevertBlock(x, y, z);
             } else {
-                p.ChangeBlock(x, y, z, Block.air, 0);
+                p.ChangeBlock(x, y, z, ExtBlock.Air);
             }
         }
         
@@ -126,7 +127,7 @@ namespace MCGalaxy.Blocks {
             } else if (p.level.CustomBlockProps[extBlock].IsDoor) {
                 Door(p, block, x, y, z);
             } else {
-                p.ChangeBlock(x, y, z, Block.air, 0);
+                p.ChangeBlock(x, y, z, ExtBlock.Air);
             }
         }
     }

@@ -202,9 +202,9 @@ namespace MCGalaxy.Games
                 }
                 else
                 {
-                    map.Blockchange((ushort)mapSettings.blockFlood.X, (ushort)mapSettings.blockFlood.Y, (ushort)mapSettings.blockFlood.Z, mapData.block, true);
+                    map.Blockchange(mapSettings.blockFlood.X, mapSettings.blockFlood.Y, mapSettings.blockFlood.Z, mapData.block, true);
                     if (OnLavaFlood != null)
-                        OnLavaFlood((ushort)mapSettings.blockFlood.X, (ushort)mapSettings.blockFlood.Y, (ushort)mapSettings.blockFlood.Z);
+                        OnLavaFlood(mapSettings.blockFlood.X, mapSettings.blockFlood.Y, mapSettings.blockFlood.Z);
                 }
             }
             catch (Exception e) { Server.ErrorLog(e); }
@@ -214,9 +214,9 @@ namespace MCGalaxy.Games
         {
             map.ChatLevel("&4Layer " + mapData.currentLayer + " flooding...");
             Server.s.Log("[Lava Survival] Layer " + mapData.currentLayer + " flooding.");
-            map.Blockchange((ushort)mapSettings.blockLayer.X, (ushort)(mapSettings.blockLayer.Y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), (ushort)mapSettings.blockLayer.Z, mapData.block, true);
+            map.Blockchange(mapSettings.blockLayer.X, (ushort)(mapSettings.blockLayer.Y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), mapSettings.blockLayer.Z, mapData.block, true);
             if (OnLayerFlood != null)
-                OnLayerFlood((ushort)mapSettings.blockLayer.X, (ushort)(mapSettings.blockLayer.Y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), (ushort)mapSettings.blockLayer.Z);
+                OnLayerFlood(mapSettings.blockLayer.X, (ushort)(mapSettings.blockLayer.Y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), mapSettings.blockLayer.Z);
             mapData.currentLayer++;
         }
 

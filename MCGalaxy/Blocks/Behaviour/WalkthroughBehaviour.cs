@@ -35,12 +35,12 @@ namespace MCGalaxy.Blocks {
             
             byte physForm;
             PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, isExt, out physForm);
-            p.level.Blockchange(x, y, z, physForm, false, args);
+            p.level.Blockchange(x, y, z, (ExtBlock)physForm, false, args);
             return true;
         }
         
         internal static bool Train(Player p, byte block, ushort x, ushort y, ushort z) {
-            if (!p.trainInvincible) p.HandleDeath(Block.train, 0);
+            if (!p.trainInvincible) p.HandleDeath((ExtBlock)Block.train);
             return true;
         }
         

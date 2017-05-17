@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Moderation {
             p.MakeSelection(2, args, DoUndo);
         }
         
-        bool DoUndo(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+        bool DoUndo(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             UndoAreaArgs args = (UndoAreaArgs)state;       
             UndoPlayer(p, args.delta, args.names, args.ids, marks);
             return false;

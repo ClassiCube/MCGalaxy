@@ -24,38 +24,33 @@ namespace MCGalaxy.DB {
     /// <summary> Outputs information about a block and its changes to the user. </summary>
     public static class BlockDBChange {
         
-        public static void Output(Player p, string name, BlockDBEntry entry) {
-            byte oldBlock = entry.OldRaw, oldExt = 0, newBlock = entry.NewRaw, newExt = 0;
-            if ((entry.Flags & BlockDBFlags.OldCustom) != 0) {
-                oldExt = oldBlock; oldBlock = Block.custom_block;
-            }
-            if ((entry.Flags & BlockDBFlags.NewCustom) != 0) {
-                newExt = newBlock; newBlock = Block.custom_block;
-            }
+        public static void Output(Player p, string name, BlockDBEntry e) {
+            ExtBlock oldBlock = ExtBlock.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
+            ExtBlock newBlock = ExtBlock.FromRaw(e.NewRaw, (e.Flags & BlockDBFlags.NewCustom) != 0);
             
-            DateTime time = BlockDB.Epoch.AddSeconds(entry.TimeDelta);
+            DateTime time = BlockDB.Epoch.AddSeconds(e.TimeDelta);
             TimeSpan delta = DateTime.UtcNow.Subtract(time);
             name = PlayerInfo.GetColoredName(p, name);
             
-            if (newBlock == Block.air) {
+            if (newBlock.BlockID == Block.air) {
                 Player.Message(p, "{0} ago {1} &4deleted %S{2}{3}",
                                delta.Shorten(true, false), name,
-                               p.level.BlockName(oldBlock, oldExt),
-                               FormatReason(entry.Flags));
+                               p.level.BlockName(oldBlock),
+                               FormatReason(e.Flags));
             } else {
                 Player.Message(p, "{0} ago {1} &3placed %S{2}{3}",
                                delta.Shorten(true, false), name,
-                               p.level.BlockName(newBlock, newExt),
-                               FormatReason(entry.Flags));
+                               p.level.BlockName(newBlock),
+                               FormatReason(e.Flags));
             }
         }
         
-        public static void OutputMessageBlock(Player p, byte block, byte extBlock,
+        public static void OutputMessageBlock(Player p, ExtBlock block,
                                               ushort x, ushort y, ushort z) {
-            if (block == Block.custom_block) {
-                if (!p.level.CustomBlockProps[extBlock].IsMessageBlock) return;
+            if (block.BlockID == Block.custom_block) {
+                if (!p.level.CustomBlockProps[block.ExtID].IsMessageBlock) return;
             } else {
-                if (!Block.Props[block].IsMessageBlock) return;
+                if (!Block.Props[block.BlockID].IsMessageBlock) return;
             }
 
             try {
@@ -72,12 +67,12 @@ namespace MCGalaxy.DB {
             }
         }
         
-        public static void OutputPortal(Player p, byte block, byte extBlock,
+        public static void OutputPortal(Player p, ExtBlock block,
                                         ushort x, ushort y, ushort z) {
-            if (block == Block.custom_block) {
-                if (!p.level.CustomBlockProps[extBlock].IsPortal) return;
+            if (block.BlockID == Block.custom_block) {
+                if (!p.level.CustomBlockProps[block.ExtID].IsPortal) return;
             } else {
-                if (!Block.Props[block].IsPortal) return;
+                if (!Block.Props[block.BlockID].IsPortal) return;
             }
 
             try {

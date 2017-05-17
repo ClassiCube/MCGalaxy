@@ -33,7 +33,7 @@ namespace MCGalaxy.Drawing.Brushes {
             GetRaw(parts, filter, args, out blocks, out count);
             
             // check if we're allowed to place the held block
-            if (blocks[0].Block != Block.Invalid && !CommandParser.IsBlockAllowed(p, "draw with ", blocks[0].Block)) return null;
+            if (blocks[0].IsInvalidType && !CommandParser.IsBlockAllowed(p, "draw with ", blocks[0])) return null;
             
             for (int i = 0, j = 0; i < parts.Length; i++ ) {
                 if (parts[i] == "") continue;
@@ -44,12 +44,12 @@ namespace MCGalaxy.Drawing.Brushes {
                     continue;
                 }
                 
-                byte block, extBlock;
+                ExtBlock block;
                 int sepIndex = parts[i].IndexOf('/');
                 string name = sepIndex >= 0 ? parts[i].Substring(0, sepIndex) : parts[i];
-                if (!CommandParser.GetBlockIfAllowed(p, name, out block, out extBlock, true)) return null;
+                if (!CommandParser.GetBlockIfAllowed(p, name, out block, true)) return null;
                 
-                blocks[j].Block = block; blocks[j].Ext = extBlock;
+                blocks[j] = block;
                 if (sepIndex < 0) { j++; continue; }
                 
                 int chance = 0;
@@ -74,12 +74,11 @@ namespace MCGalaxy.Drawing.Brushes {
             count = new int[blocks.Length];
             for (int i = 0; i < count.Length; i++) {
                 count[i] = 1;
-                blocks[i] = new ExtBlock(Block.Invalid, 0);
+                blocks[i] = ExtBlock.Invalid;
             }
             
             // No blocks given, assume first is held block
-            if (bCount == 0)
-                blocks[0] = new ExtBlock(args.Block, args.ExtBlock);
+            if (bCount == 0) blocks[0] = args.Block;
         }
         
         public static ExtBlock[] Combine(ExtBlock[] toAffect, int[] count) {

@@ -19,6 +19,7 @@ using System;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.Building;
 using MCGalaxy.Network;
+using MCGalaxy.Blocks;
 
 namespace MCGalaxy {
     public static class LevelEnv {
@@ -113,23 +114,17 @@ namespace MCGalaxy {
         
         
         static bool CheckBlock(Player p, string value, string variable, ref int modify) {
-            byte block, extBlock;
-            if (!CommandParser.GetBlock(p, value, out block, out extBlock)) return false;
+            ExtBlock block;
+            if (!CommandParser.GetBlock(p, value, out block)) return false;
             
-            if (block >= Block.CpeCount && block != Block.custom_block) {
+            if (block.IsPhysicsType) {
                 Player.Message(p, "Cannot use physics block ids for /env."); return false;
             }
             
-            string name = p.level.BlockName(block, extBlock);
-            if (block == Block.shrub || block == Block.yellowflower || block == Block.redflower ||
-                block == Block.mushroom || block == Block.redmushroom || block == Block.rope || block == Block.fire) {
-                Player.Message(p, "Env: Cannot use {0} for {1}.", name, variable);
-            } else {
-                modify = block == Block.custom_block ? extBlock : block;
-                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.ColoredName, name);
-                return true;
-            }
-            return false;
+            string name = p.level.BlockName(block);
+            modify = block.RawID;
+            Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.ColoredName, name);
+            return true;
         }
         
         static bool CheckShort(Player p, string raw, string variable, ref int modify) {

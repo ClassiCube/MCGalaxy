@@ -40,15 +40,12 @@ namespace MCGalaxy.Commands.Info {
             p.Blockchange += PlacedBlock;
         }
 
-        void PlacedBlock(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedBlock(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             if (!p.staticCommands) p.ClearBlockchange();
-            byte b = p.level.GetTile(x, y, z);
-            if (b == Block.Invalid) return;
+            block = p.level.GetExtBlock(x, y, z);
+            if (block.IsInvalidType) return;
             p.RevertBlock(x, y, z);
             
-            byte id = b;
-            if (b == Block.custom_block)
-                id = p.level.GetExtTile(x, y, z);
             Dictionary<int, string> names = new Dictionary<int, string>();
 
             Player.Message(p, "Retrieving block change records..");
@@ -66,11 +63,12 @@ namespace MCGalaxy.Commands.Info {
             
             if (!foundAny) Player.Message(p, "No block change records found for this block.");
             
-            string blockName = p.level.BlockName(b, id);
-            Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.", x, y, z, id, blockName);
+            string blockName = p.level.BlockName(block);
+            Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.", 
+                           x, y, z, block.RawID, blockName);
             
-            BlockDBChange.OutputMessageBlock(p, b, id, x, y, z);
-            BlockDBChange.OutputPortal(p, b, id, x, y, z);           
+            BlockDBChange.OutputMessageBlock(p, block, x, y, z);
+            BlockDBChange.OutputPortal(p, block, x, y, z);           
             Server.DoGC();
         }
         

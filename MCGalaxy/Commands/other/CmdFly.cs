@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Misc {
                 DoFly(p, ref oldpos, last, next);
 
             foreach (Vec3U16 cP in last)
-                p.SendBlockchange(cP.X, cP.Y, cP.Z, Block.air, 0);
+                p.SendBlockchange(cP.X, cP.Y, cP.Z, ExtBlock.Air);
             Player.Message(p, "Stopped flying");
         }
         
@@ -62,6 +62,7 @@ namespace MCGalaxy.Commands.Misc {
             try {
                 int x = p.Pos.BlockX, z = p.Pos.BlockZ;
                 int y = (p.Pos.Y - 60) / 32;
+                ExtBlock glass = (ExtBlock)Block.glass;
 
                 for (int yy = y - 1; yy <= y; yy++)
                     for (int zz = z - 2; zz <= z + 2; zz++)
@@ -78,14 +79,14 @@ namespace MCGalaxy.Commands.Misc {
                 foreach (Vec3U16 P in next) {
                     if (last.Contains(P)) continue;
                     last.Add(P);
-                    p.SendBlockchange(P.X, P.Y, P.Z, Block.glass, 0);
+                    p.SendBlockchange(P.X, P.Y, P.Z, glass);
                 }
                 
                 for (int i = 0; i < last.Count; i++) {
                     Vec3U16 P = last[i];
                     if (next.Contains(P)) continue;
                     
-                    p.SendBlockchange(P.X, P.Y, P.Z, Block.air, 0);
+                    p.SendBlockchange(P.X, P.Y, P.Z, ExtBlock.Air);
                     last.RemoveAt(i); i--;
                 }
                 next.Clear();

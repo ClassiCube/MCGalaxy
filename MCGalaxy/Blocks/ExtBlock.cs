@@ -40,19 +40,20 @@ namespace MCGalaxy {
         /// <summary> Returns whether the type of this extended block is an invalid block. </summary>
         public bool IsInvalidType { get { return BlockID == Block.Invalid; } }
         
+        
         /// <summary> Returns the raw (for client side) block ID of this block. </summary>
         public byte RawID {
             get { return BlockID == Block.custom_block ? ExtID : BlockID; }
         }
         
-         public static ExtBlock FromRaw(byte raw) {
-        	ExtBlock block = default(ExtBlock);
-            block.BlockID = raw;
-            if (raw < Block.CpeCount) return block;
-            
-            block.BlockID = Block.custom_block;
-            block.ExtID = raw;
-            return block;
+        public static ExtBlock FromRaw(byte raw) {
+            if (raw < Block.CpeCount) return (ExtBlock)raw;
+            return new ExtBlock(Block.custom_block, raw);
+        }
+        
+        public static ExtBlock FromRaw(byte raw, bool customBit) {
+            if (!customBit) return (ExtBlock)raw;          	
+            return new ExtBlock(Block.custom_block, raw);
         }
         
         /// <summary> Constructs an extended block. </summary>
@@ -65,8 +66,15 @@ namespace MCGalaxy {
         
         public override int GetHashCode() {
             return BlockID | (ExtID << 8);
+        }
+
+        /// <summary> Returns whether the two extended blocks visually appear the same to clients. </summary>
+        public bool VisuallyEquals(ExtBlock other) {
+            return (BlockID == Block.custom_block && other.BlockID == Block.custom_block) 
+                ? ExtID == other.ExtID : Block.Convert(BlockID) == Block.Convert(other.BlockID);
         }        
         
+        /// <summary> Returns whether the two extended blocks are the same extended block. </summary>
         public bool Equals(ExtBlock other) {
             return (BlockID == Block.custom_block && other.BlockID == Block.custom_block) 
                 ? ExtID == other.ExtID : BlockID == other.BlockID;

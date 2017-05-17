@@ -113,10 +113,8 @@ namespace MCGalaxy.Maths {
             AABB baseBB;
             byte raw;
             if (byte.TryParse(model, out raw)) {
-                byte block, extBlock;
-                Block.Unpack(raw, out block, out extBlock);
-                
-                baseBB = Block.BlockAABB(block, extBlock, lvl);
+                ExtBlock block = ExtBlock.FromRaw(raw);                
+                baseBB = Block.BlockAABB(block, lvl);
                 baseBB = baseBB.Offset(-16, 0, -16); // centre around [-16, 16] instead of [0, 32]
             } else {
                 baseBB = AABB.Make(new Vec3S32(0, 0, 0), BaseSize(model));
@@ -153,19 +151,16 @@ namespace MCGalaxy.Maths {
                     for (int x = min.X; x <= max.X; x++)
             {
                 ushort xP = (ushort)x, yP = (ushort)y, zP = (ushort)z;
-                byte block = lvl.GetTile(xP, yP, zP), extBlock = 0;
-                if (block == Block.custom_block)
-                    extBlock = lvl.GetExtTileNoCheck(xP, yP, zP);
+                ExtBlock block = lvl.GetExtBlock(xP, yP, zP);
                 
-                AABB blockBB = Block.BlockAABB(block, extBlock, lvl)
-                    .Offset(x * 32, y * 32, z * 32);
+                AABB blockBB = Block.BlockAABB(block, lvl).Offset(x * 32, y * 32, z * 32);
                 if (!bb.Intersects(blockBB)) continue;
                 
-                BlockDefinition def = lvl.GetBlockDef(block, extBlock);
+                BlockDefinition def = lvl.GetBlockDef(block);
                 if (def != null) {
                     if (def.CollideType == CollideType.Solid) return true;
                 } else {
-                    if (block == Block.Invalid || !Block.Walkthrough(Block.Convert(block))) return true;
+                    if (block.BlockID == Block.Invalid || !Block.Walkthrough(Block.Convert(block.BlockID))) return true;
                 }
             }
             return false;

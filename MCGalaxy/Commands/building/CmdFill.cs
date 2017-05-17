@@ -54,20 +54,14 @@ namespace MCGalaxy.Commands.Building {
             return p.BrushName;
         }
         
-        protected override bool DoDraw(Player p, Vec3S32[] marks,
-                                       object state, byte block, byte extBlock) {
+        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             DrawArgs dArgs = (DrawArgs)state;
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
-            byte oldBlock = p.level.GetTile(x, y, z), oldExtBlock = 0;
-            if (oldBlock == Block.custom_block)
-                oldExtBlock = p.level.GetExtTile(x, y, z);
-
-            if (!BlockPerms.CanModify(p, oldBlock)) {
-                Formatter.MessageBlock(p, "fill over ", oldBlock); return false;
-            }
+            ExtBlock old = p.level.GetExtBlock(x, y, z);
+            if (!CommandParser.IsBlockAllowed(p, "fill over", old)) return false;
             
             FillDrawOp op = (FillDrawOp)dArgs.Op;
-            op.Positions = FillDrawOp.FloodFill(p, p.level.PosToInt(x, y, z), oldBlock, oldExtBlock, dArgs.Mode);
+            op.Positions = FillDrawOp.FloodFill(p, p.level.PosToInt(x, y, z), old, dArgs.Mode);
             int count = op.Positions.Count;
             
             bool confirmed = IsConfirmed(dArgs.Message), success = true;
@@ -75,7 +69,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "This fill would affect {0} blocks.", count);
                 Player.Message(p, "If you still want to fill, type %T/fill {0} confirm", dArgs.Message);
             } else {
-                success = base.DoDraw(p, marks, state, block, extBlock);
+                success = base.DoDraw(p, marks, state, block);
             }            
   
             op.Positions = null;

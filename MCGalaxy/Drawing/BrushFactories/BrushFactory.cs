@@ -61,16 +61,11 @@ namespace MCGalaxy.Drawing.Brushes {
         /// <summary> Raw message provided for arguments, including spaces. </summary>
         public string Message;
         
-        /// <summary> Raw block the player is currently holding. </summary>
-        /// <remarks> If the player is holding a custom block, 
-        /// this value is Block.custom_block and ExtBlock is the actual block.</remarks>
-        public byte Block;
+        /// <summary> Block the player is currently holding. </summary>
+        public ExtBlock Block;
         
-        /// <summary> Custom block the player is currently holding. </summary>
-        public byte ExtBlock;
-        
-        public BrushArgs(Player p, string message, byte block, byte extBlock) {
-            Player = p; Message = message; Block = block; ExtBlock = extBlock;
+        public BrushArgs(Player p, string message, ExtBlock block) {
+            Player = p; Message = message; Block = block;
         }
     }
 }

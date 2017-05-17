@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, cArgs, DoCopy);
         }
 
-        bool DoCopy(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+        bool DoCopy(Player p, Vec3S32[] m, object state, ExtBlock block) {
             CopyArgs cArgs = (CopyArgs)state;
             ushort minX = (ushort)Math.Min(m[0].X, m[1].X), maxX = (ushort)Math.Max(m[0].X, m[1].X);
             ushort minY = (ushort)Math.Min(m[0].Y, m[1].Y), maxY = (ushort)Math.Max(m[0].Y, m[1].Y);
@@ -133,7 +133,7 @@ namespace MCGalaxy.Commands.Building {
             if (cArgs.type == 1) {
                 DrawOp op = new CuboidDrawOp();
                 op.Flags = BlockDBFlags.Cut;
-                Brush brush = new SolidBrush(Block.air, 0);
+                Brush brush = new SolidBrush(ExtBlock.Air);
                 
                 Vec3S32[] marks = new Vec3S32[] { 
                     new Vec3S32(minX, minY, minZ),
@@ -152,7 +152,7 @@ namespace MCGalaxy.Commands.Building {
             return false;
         }
 
-        void BlockchangeOffset(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void BlockchangeOffset(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             RevertAndClearState(p, x, y, z);
             CopyState state = p.CopyBuffer;
             

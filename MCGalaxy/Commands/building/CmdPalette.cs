@@ -121,7 +121,7 @@ namespace MCGalaxy.Commands.Building {
             
             List<PaletteEntry> newEntries = new List<PaletteEntry>();
             foreach (PaletteEntry entry in entries) {
-                if (entry.Block == block) continue;
+                if (entry.Raw == block) continue;
                 newEntries.Add(entry);
             }
             
@@ -135,14 +135,14 @@ namespace MCGalaxy.Commands.Building {
         }
 
         static byte GetBlock(Player p, string name) {
-            byte block, extBlock;
-            if (!CommandParser.GetBlock(p, name, out block, out extBlock)) return Block.Invalid;
+            ExtBlock block;
+            if (!CommandParser.GetBlock(p, name, out block)) return Block.Invalid;
             
-            if (block >= Block.CpeCount && block != Block.custom_block) {
+            if (block.IsPhysicsType) {
                 Player.Message(p, "Physics blocks may not be used for palettes."); return Block.Invalid;
             }
             
-            return block == Block.custom_block ? extBlock : (byte)block;
+            return block.RawID;
         }
         
         void HandleEntries(Player p, string[] args) {
@@ -159,9 +159,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static string FormatEntry(PaletteEntry e, Level lvl) {
-            byte block, extBlock;
-            Block.Unpack(e.Block, out block, out extBlock);
-            return lvl.BlockName(block, extBlock) + " - " + Utils.Hex(e.R, e.G, e.B);
+            ExtBlock block = ExtBlock.FromRaw(e.Raw);
+            return lvl.BlockName(block) + " - " + Utils.Hex(e.R, e.G, e.B);
         }
 
         public override void Help(Player p) {

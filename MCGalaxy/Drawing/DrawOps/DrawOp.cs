@@ -23,17 +23,9 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy {
     
-    public struct ExtBlock {
-        public byte Block, Ext;
-
-        public ExtBlock(byte block, byte extBlock) {
-            Block = block; Ext = extBlock;
-        }
-    }
-    
     public struct DrawOpBlock {
         public ushort X, Y, Z;
-        public byte Block, ExtBlock;
+        public ExtBlock Block;
     }
 }
 
@@ -110,15 +102,12 @@ namespace MCGalaxy.Drawing.Ops {
         protected DrawOpBlock Place(ushort x, ushort y, ushort z, Brush brush) {
             Coords.X = x; Coords.Y = y; Coords.Z = z;
             Coords.Block = brush.NextBlock(this);
-            
-            Coords.ExtBlock = Coords.Block == Block.custom_block 
-                ? brush.NextExtBlock(this) : Block.air;
             return Coords;
         }
         
-        protected DrawOpBlock Place(ushort x, ushort y, ushort z, byte type, byte extType) {
+        protected DrawOpBlock Place(ushort x, ushort y, ushort z, ExtBlock block) {
             Coords.X = x; Coords.Y = y; Coords.Z = z;
-            Coords.Block = type; Coords.ExtBlock = extType;
+            Coords.Block = block;
             return Coords;
         }
         

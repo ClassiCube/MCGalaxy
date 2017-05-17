@@ -31,7 +31,6 @@ namespace MCGalaxy.Undo {
         protected override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
             List<ChunkHeader> list = new List<ChunkHeader>();
             UndoFormatEntry pos;
-            UndoCacheItem item = default(UndoCacheItem);
             bool super = Player.IsSuper(args.Player);
             DateTime start = args.Start;
 
@@ -52,8 +51,13 @@ namespace MCGalaxy.Undo {
                 
                 for (int j = chunk.Entries - 1; j >= 0; j-- ) {
                     int offset = j * entrySize;
-                    item.Flags = U16(temp, offset + 0);
-                    pos.Time = chunk.BaseTime.AddTicks((item.Flags & 0x3FFF) * TimeSpan.TicksPerSecond);
+                    ushort flags = U16(temp, offset + 0);
+                    // upper 2 bits for 'ext' or 'physics' type, lower 14 bits for time delta.
+                    
+                    // TODO: should this be instead:
+                    // int delta = Flags & 0x3FFF;
+                    // timeDeltaSeconds = delta >= 0x2000 ? (short)(delta - 16384) : (short)delta;
+                    pos.Time = chunk.BaseTime.AddTicks((flags & 0x3FFF) * TimeSpan.TicksPerSecond);
                     if (pos.Time < start) { args.Stop = true; yield break; }
                     
                     int index = I32(temp, offset + 2);
@@ -61,10 +65,8 @@ namespace MCGalaxy.Undo {
                     pos.Y = (ushort)((index / chunk.Width) / chunk.Length);
                     pos.Z = (ushort)((index / chunk.Width) % chunk.Length);
                     
-                    item.Type = temp[offset + 6];
-                    item.NewType = temp[offset + 7];
-                    item.GetBlock(out pos.Block, out pos.ExtBlock);
-                    item.GetNewBlock(out pos.NewBlock, out pos.NewExtBlock);
+                    pos.Block = ExtBlock.FromRaw(temp[offset + 6],    (flags & (1 << 14)) != 0);
+                    pos.NewBlock = ExtBlock.FromRaw(temp[offset + 7], (flags & (1 << 15)) != 0);
                     yield return pos;
                 }
             }
@@ -109,34 +111,6 @@ namespace MCGalaxy.Undo {
             header.Length = r.ReadUInt16();
             header.DataPosition = s.Position;
             return header;
-        }
-        
-        struct UndoCacheItem {
-            public byte Type, NewType;
-            public ushort Flags; // upper 2 bits for 'ext' or 'physics' type, lower 14 bits for time delta.
-            
-            public short TimeDelta {
-                get {
-                    int delta = Flags & 0x3FFF;
-                    return delta >= 0x2000 ? (short)(delta - 16384) : (short)delta;
-                }
-            }
-            
-            public void GetBlock(out byte type, out byte extType) {
-                if ((Flags & (1 << 14)) != 0) {
-                    type = Block.custom_block; extType = Type;
-                } else {
-                    type = Type; extType = 0;
-                }
-            }
-            
-            public void GetNewBlock(out byte type, out byte extType) {
-                if ((Flags & (1 << 15)) != 0) {
-                    type = Block.custom_block; extType = NewType;
-                } else {
-                    type = NewType; extType = 0;
-                }
-            }
         }
     }
 }

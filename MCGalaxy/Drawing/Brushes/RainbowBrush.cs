@@ -16,42 +16,44 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Commands;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class RainbowBrush : Brush {
         
+		ExtBlock block = default(ExtBlock);
         public override string Name { get { return "Rainbow"; } }
         
-        public override byte NextBlock(DrawOp op) {
+        public override ExtBlock NextBlock(DrawOp op) {
             int offset = (op.Coords.X + op.Coords.Y + op.Coords.Z) % 13;
             if (offset < 0) offset += 13;
-            return (byte)(Block.red + offset);
+            
+            block.BlockID = (byte)(Block.red + offset);
+            return block;
         }
-        
-        public override byte NextExtBlock(DrawOp op) { return 0; }
     }
     
     public sealed class BWRainbowBrush : Brush {
         
+		ExtBlock block = default(ExtBlock);
         public override string Name { get { return "BWRainbow"; } }
         
         static byte[] blocks = new byte[] { Block.iron, Block.white, Block.lightgrey,
             Block.darkgrey, Block.obsidian, Block.darkgrey, Block.lightgrey, Block.white };
-        public override byte NextBlock(DrawOp op) {
+        
+        public override ExtBlock NextBlock(DrawOp op) {
             int offset = (op.Coords.X + op.Coords.Y + op.Coords.Z) % 8;
             if (offset < 0) offset += 8;
-            return blocks[offset];
+            
+            block.BlockID = blocks[offset];
+            return block;
         }
-        
-        public override byte NextExtBlock(DrawOp op) { return 0; }
     }
     
     internal sealed class RandomRainbowBrush : Brush {
         readonly Random rnd;
+        ExtBlock block = default(ExtBlock);
         
         public override string Name { get { return "RandomRainbow"; } }
         
@@ -59,10 +61,9 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public RandomRainbowBrush(int seed) { rnd = new Random(seed); }
         
-        public override byte NextBlock(DrawOp op) {
-            return (byte)rnd.Next(Block.red, Block.darkgrey);
+        public override ExtBlock NextBlock(DrawOp op) {
+            block.BlockID = (byte)rnd.Next(Block.red, Block.darkgrey);
+            return block;
         }
-        
-        public override byte NextExtBlock(DrawOp op) { return 0; }
     }
 }

@@ -470,18 +470,18 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static byte GetFallback(Player p, string value) {
-            byte block, extBlock;
-            if (!CommandParser.GetBlock(p, value, out block, out extBlock)) return Block.Invalid;
+            ExtBlock block;
+            if (!CommandParser.GetBlock(p, value, out block)) return Block.Invalid;
             
-            if (block == Block.custom_block) {
+            if (block.BlockID == Block.custom_block) {
                 Player.Message(p, "&cCustom blocks cannot be used as fallback blocks.");
                 return Block.Invalid;
             }
-            if (block >= Block.CpeCount) {
+            if (block.IsPhysicsType) {
                 Player.Message(p, "&cPhysics block cannot be used as fallback blocks.");
                 return Block.Invalid;
             }
-            return block;
+            return block.BlockID;
         }
         
         

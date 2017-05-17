@@ -52,15 +52,16 @@ namespace MCGalaxy.Drawing.Ops {
             selector = null;
             
             // Put all the blocks in shadow
+            ExtBlock rock = (ExtBlock)Block.rock;
             if (DualLayer) {
                 ushort y = (ushort)(Origin.Y + Source.Height);
                 for (int i = 0; i < Source.Width; i++) {
                     ushort x = (ushort)(Origin.X + dx.X * i);
                     ushort z = (ushort)(Origin.Z + dx.Z * i);
-                    output(Place(x, y, z, Block.rock, 0));
+                    output(Place(x, y, z, rock));
                     
                     x = (ushort)(x + adj.X); z = (ushort)(z + adj.Z);
-                    output(Place(x, y, z, Block.rock, 0));
+                    output(Place(x, y, z, rock));
                 }
             }
             
@@ -86,9 +87,8 @@ namespace MCGalaxy.Drawing.Ops {
             
             for (int i = 0; i < Palette.Entries.Length; i++) {
                 PaletteEntry entry = Palette.Entries[i];
-                byte block, extBlock;
-                Block.Unpack(entry.Block, out block, out extBlock);
-                BlockDefinition def = Level.GetBlockDef(block, extBlock);
+                ExtBlock block = ExtBlock.FromRaw(entry.Raw);
+                BlockDefinition def = Level.GetBlockDef(block);
                 
                 if (def != null && def.FullBright) {
                     front[i] = Multiply(entry, Colors.ParseHex("FFFFFF"));
@@ -112,23 +112,22 @@ namespace MCGalaxy.Drawing.Ops {
             ushort x = (ushort)(Origin.X + dx.X * P.X + dy.X * P.Y);
             ushort y = (ushort)(Origin.Y + dx.Y * P.X + dy.Y * P.Y);
             ushort z = (ushort)(Origin.Z + dx.Z * P.X + dy.Z * P.Y);
-            if (P.A < 20) { output(Place(x, y, z, Block.air, 0)); return; }
+            if (P.A < 20) { output(Place(x, y, z, ExtBlock.Air)); return; }
             
-            byte block = 0, extBlock = 0;
+            byte raw = 0;
             if (!DualLayer) {
-                block = selector.BestMatch(P.R, P.G, P.B);
+                raw = selector.BestMatch(P.R, P.G, P.B);
             } else {
                 bool backLayer;
-                block = selector.BestMatch(P.R, P.G, P.B, out backLayer);
+                raw = selector.BestMatch(P.R, P.G, P.B, out backLayer);
                 
                 if (backLayer) {
                     x = (ushort)(x + adj.X);
                     z = (ushort)(z + adj.Z);
                 }
             }
-            
-            if (block >= Block.CpeCount) { extBlock = block; block = Block.custom_block; }
-            output(Place(x, y, z, block, extBlock));
+
+            output(Place(x, y, z, ExtBlock.FromRaw(raw)));
         }
         
         void CalcState(int dir) {

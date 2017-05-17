@@ -34,11 +34,9 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(1, dist, DoDrill);
         }
         
-        bool DoDrill(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+        bool DoDrill(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
-            type = p.level.GetTile(x, y, z); extType = 0;
-            if (type == Block.custom_block)
-                extType = p.level.GetExtTile(x, y, z);
+            block = p.level.GetExtBlock(x, y, z);
             int dist = (ushort)state, numBlocks = (3 * 3) * dist;
             
             if (numBlocks > p.group.maxBlocks) {
@@ -58,7 +56,7 @@ namespace MCGalaxy.Commands.Building {
                     for (ushort yy = (ushort)(y - 1); yy <= (ushort)(y + 1); yy++)
                         for (ushort zz = (ushort)(z - 1); zz <= (ushort)(z + 1); zz++)
                     {
-                        DoBlock(p, lvl, type, extType, x, yy, zz);
+                        DoBlock(p, lvl, block, x, yy, zz);
                     }
                 }
             } else {
@@ -68,7 +66,7 @@ namespace MCGalaxy.Commands.Building {
                     for (ushort yy = (ushort)(y - 1); yy <= (ushort)(y + 1); yy++)
                         for (ushort xx = (ushort)(x - 1); xx <= (ushort)(x + 1); xx++)
                     {
-                        DoBlock(p, lvl, type, extType, xx, yy, z);
+                        DoBlock(p, lvl, block, xx, yy, z);
                     }
                 }
             }
@@ -77,15 +75,11 @@ namespace MCGalaxy.Commands.Building {
             return true;
         }
         
-        void DoBlock(Player p, Level lvl, byte block, byte ext,
-                     ushort x, ushort y, ushort z) {
-            int index = lvl.PosToInt(x, y, z);
-            if (index == -1) return;
-            byte cur = lvl.blocks[index], extCur = 0;
-            if (cur == Block.custom_block) extCur = lvl.GetExtTile(x, y, z);
-            
-            bool same = block == Block.custom_block ? ext == extCur : block == cur;
-            if (same) p.level.UpdateBlock(p, x, y, z, Block.air, 0, BlockDBFlags.Drawn, true);
+        void DoBlock(Player p, Level lvl, ExtBlock block, ushort x, ushort y, ushort z) {
+            ExtBlock cur = lvl.GetExtBlock(x, y, z);
+            if (cur == block) {
+                p.level.UpdateBlock(p, x, y, z, ExtBlock.Air, BlockDBFlags.Drawn, true);
+            }
         }
         
         public override void Help(Player p) {

@@ -25,16 +25,16 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "gun"; } }
         protected override string Weapon { get { return "Gun"; } }
         
-        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             p.RevertBlock(x, y, z);
-            if (!CommandParser.IsBlockAllowed(p, "place ", type)) return;
+            if (!CommandParser.IsBlockAllowed(p, "place ", block)) return;
 
-            Thread gunThread = new Thread(() => DoShoot(p, type, extType));
+            Thread gunThread = new Thread(() => DoShoot(p, block));
             gunThread.Name = "MCG_Gun";
             gunThread.Start();
         }
         
-        void DoShoot(Player p, byte type, byte extType) {
+        void DoShoot(Player p, ExtBlock block) {
             CatchPos bp = (CatchPos)p.blockchangeObject;
             Vec3F32 dir = DirUtils.GetFlatDirVector(p.Rot.RotY, p.Rot.HeadX);
 
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Fun {
                 if (by != Block.air && !allBlocks.Contains(pos) && HandlesHitBlock(p, by, bp, pos, true))
                     break;
 
-                p.level.Blockchange(pos.X, pos.Y, pos.Z, type, extType);
+                p.level.Blockchange(pos.X, pos.Y, pos.Z, block);
                 previous.Add(pos);
                 allBlocks.Add(pos);
 
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.Fun {
 
                 if (t > 12 && bp.ending != EndType.Laser) {
                     pos = previous[0];
-                    p.level.Blockchange(pos.X, pos.Y, pos.Z, Block.air, true);
+                    p.level.Blockchange(pos.X, pos.Y, pos.Z, ExtBlock.Air, true);
                     previous.RemoveAt(0);
                 }
                 
@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands.Fun {
             if (bp.ending == EndType.Laser) Thread.Sleep(400);
 
             foreach (Vec3U16 pos1 in previous) {
-                p.level.Blockchange(pos1.X, pos1.Y, pos1.Z, Block.air, true);
+                p.level.Blockchange(pos1.X, pos1.Y, pos1.Z, ExtBlock.Air, true);
                 if (bp.ending != EndType.Laser) Thread.Sleep(20);
             }
         }
@@ -91,10 +91,11 @@ namespace MCGalaxy.Commands.Fun {
             Player pl = GetPlayer(p, pos, true);
             if (pl == null) return false;
             
+            ExtBlock stone = (ExtBlock)Block.stone;
             if (p.level.physics >= 3 && bp.ending >= EndType.Explode) {
-                pl.HandleDeath(Block.stone, 0, " was blown up by " + p.ColoredName, true);
+                pl.HandleDeath(stone, " was blown up by " + p.ColoredName, true);
             } else {
-                pl.HandleDeath(Block.stone, 0, " was shot by " + p.ColoredName);
+                pl.HandleDeath(stone, " was shot by " + p.ColoredName);
             }
             return true;
         }

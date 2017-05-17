@@ -38,24 +38,23 @@ namespace MCGalaxy.DB {
         /// <remarks> May be different from actual level's dimensions, such as when the level has been resized. </remarks>        
         public Vec3U16 Dims;
         
-        public void Add(Player p, ushort x, ushort y, ushort z, ushort flags,
-                        byte oldBlock, byte oldExt, byte block, byte ext) {
+        public void Add(Player p, ushort x, ushort y, ushort z, ushort flags, ExtBlock old, ExtBlock block) {
             if (!Enabled) return;
             BlockDBCacheEntry entry;
             entry.Packed1 = (uint)p.UserID;
             int timeDelta = (int)DateTime.UtcNow.Subtract(BlockDB.Epoch).TotalSeconds;
             entry.Index = x + Dims.X * (z + Dims.Z * y);
             
-            entry.OldRaw = oldBlock; entry.NewRaw = block;
+            entry.OldRaw = old.BlockID; entry.NewRaw = block.BlockID;
             entry.Flags = flags;
             
-            if (block == Block.custom_block) {
+            if (block.BlockID == Block.custom_block) {
                 entry.Flags |= BlockDBFlags.NewCustom;
-                entry.NewRaw = ext;
+                entry.NewRaw = block.ExtID;
             }
-            if (oldBlock == Block.custom_block) {
+            if (old.BlockID == Block.custom_block) {
                 entry.Flags |= BlockDBFlags.OldCustom;
-                entry.OldRaw = oldExt;
+                entry.OldRaw = old.ExtID;
             }
 
             lock (Locker) {

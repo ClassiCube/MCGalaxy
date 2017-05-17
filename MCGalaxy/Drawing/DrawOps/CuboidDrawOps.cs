@@ -28,6 +28,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            ExtBlock air = ExtBlock.Air;
             
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
@@ -45,8 +46,8 @@ namespace MCGalaxy.Drawing.Ops {
                 } else {
                     hollow = false;
                 }
-                if (hollow)
-                    output(Place(x, y, z, Block.air, 0));
+                
+                if (hollow) output(Place(x, y, z, air));
             }
         }
         
@@ -59,7 +60,7 @@ namespace MCGalaxy.Drawing.Ops {
     
     public class OutlineDrawOp : CuboidDrawOp {        
         public override string Name { get { return "Outline"; } }
-        public byte Block, ExtBlock;
+        public ExtBlock Target;
         
         public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
@@ -81,9 +82,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         bool Check(ushort x, ushort y, ushort z) {
-            byte block = Level.GetTile(x, y, z);
-            if (block != Block) return false;
-            return block != MCGalaxy.Block.custom_block || Level.GetExtTile(x, y, z) == ExtBlock;
+            return Level.GetExtBlock(x, y, z) == Target;
         }
     }
     
@@ -105,6 +104,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
             
             int i = 12;
+            ExtBlock block = default(ExtBlock);
             for (ushort y = p1.Y; y <= p2.Y; y++) {
                 i = (i + stepY) % 13;
                 int startZ = i;
@@ -113,8 +113,10 @@ namespace MCGalaxy.Drawing.Ops {
                     int startX = i;
                     for (ushort x = p1.X; x <= p2.X; x++) {
                         i = (i + stepX) % 13;
-                        if (Level.GetTile(x, y, z) != Block.air)
-                            output(Place(x, y, z, (byte)(Block.red + i), 0));
+                        if (Level.GetTile(x, y, z) != Block.air) {
+                            block.BlockID = (byte)(Block.red + i);
+                        	output(Place(x, y, z, block));
+                        }
                     }
                     i = startX;
                 }

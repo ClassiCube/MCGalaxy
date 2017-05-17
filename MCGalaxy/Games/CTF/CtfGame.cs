@@ -191,7 +191,7 @@ namespace MCGalaxy.Games {
                     if (GetPlayer(other).hasflag) {
                         Chat.MessageLevel(mainlevel, redteam.color + p.name + " DROPPED THE FLAG!");
                         GetPlayer(other).points -= caplose;
-                        mainlevel.Blockchange(b.x, b.y, b.z, b.block);
+                        mainlevel.Blockchange(b.x, b.y, b.z, (ExtBlock)b.block);
                         GetPlayer(other).hasflag = false;
                     }
                     
@@ -359,7 +359,7 @@ namespace MCGalaxy.Games {
             LoadMap(nextmap);
         }
         
-        void HandlePlayerBlockChange(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void HandlePlayerBlockChange(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             if (!started || p.level != mainlevel) return;
             if (!blueteam.members.Contains(p) && !redteam.members.Contains(p)) {
                 p.RevertBlock(x, y, z);
@@ -387,7 +387,8 @@ namespace MCGalaxy.Games {
                     GetPlayer(p).cap++;
                     GetPlayer(p).points += cappoint;
                     blueteam.points++;
-                    mainlevel.Blockchange(redbase.x, redbase.y, redbase.z, Block.red);
+                    
+                    mainlevel.Blockchange(redbase.x, redbase.y, redbase.z, (ExtBlock)Block.red);
                     p.RevertBlock(x, y, z);
                     Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
                     if (blueteam.points >= maxpoints) { End(); return; }
@@ -406,7 +407,8 @@ namespace MCGalaxy.Games {
                     GetPlayer(p).points += cappoint;
                     GetPlayer(p).cap++;
                     redteam.points++;
-                    mainlevel.Blockchange(bluebase.x, bluebase.y, bluebase.z, Block.blue);
+                    
+                    mainlevel.Blockchange(bluebase.x, bluebase.y, bluebase.z, (ExtBlock)Block.blue);
                     p.RevertBlock(x, y, z);
                     Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
                     if (redteam.points >= maxpoints) { End(); return; }
@@ -533,18 +535,18 @@ namespace MCGalaxy.Games {
             }
         }
         
-        void HandlePlayerDeath(Player p, byte deathblock) {
+        void HandlePlayerDeath(Player p, ExtBlock deathblock) {
             if (!started || p.level != mainlevel) return;
             if (!GetPlayer(p).hasflag) return;
 
             if (redteam.members.Contains(p)) {
                 Chat.MessageLevel(mainlevel, redteam.color + p.name + " DROPPED THE FLAG!");
                 GetPlayer(p).points -= caplose;
-                mainlevel.Blockchange(redbase.x, redbase.y, redbase.z, Block.red);
+                mainlevel.Blockchange(redbase.x, redbase.y, redbase.z, (ExtBlock)Block.red);
             } else if (blueteam.members.Contains(p)) {
                 Chat.MessageLevel(mainlevel, blueteam.color + p.name + " DROPPED THE FLAG!");
                 GetPlayer(p).points -= caplose;
-                mainlevel.Blockchange(bluebase.x, bluebase.y, bluebase.z, Block.blue);
+                mainlevel.Blockchange(bluebase.x, bluebase.y, bluebase.z, (ExtBlock)Block.blue);
             }
             GetPlayer(p).hasflag = false;
         }

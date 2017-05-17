@@ -33,17 +33,13 @@ namespace MCGalaxy.Drawing.Brushes {
         
         int next;
         const int mask = 0x7fffffff;
-        public override byte NextBlock(DrawOp op) {
+        public override ExtBlock NextBlock(DrawOp op) {
             // Sourced from http://freespace.virgin.net/hugo.elias/models/m_perlin.htm
             int n = (op.Coords.X + 1217 * op.Coords.Y + 4751 * op.Coords.Z + 673 * seed) & mask;
             n = (n >> 13) ^ n;
             int raw = (n * (n * n * 60493 + 19990303) + 1376312589) & mask;
             next = (int)Math.Floor((raw / (double)mask) * blocks.Length);
-            return blocks[next].Block;
-        }
-        
-        public override byte NextExtBlock(DrawOp op) {
-            return blocks[next].Ext;
+            return blocks[next];
         }
     }
 }

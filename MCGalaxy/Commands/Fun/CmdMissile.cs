@@ -27,20 +27,20 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "missile"; } }
         protected override string Weapon { get { return "Missile"; } }
 
-        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             if (!p.staticCommands) {
                 p.ClearBlockchange();
                 p.aiming = false;
             }
             p.RevertBlock(x, y, z);
-            if (!CommandParser.IsBlockAllowed(p, "place ", type)) return;
+            if (!CommandParser.IsBlockAllowed(p, "place ", block)) return;
 
-            Thread gunThread = new Thread(() => DoShoot(p, type, extType));
+            Thread gunThread = new Thread(() => DoShoot(p, block));
             gunThread.Name = "MCG_Missile";
             gunThread.Start();
         }
 
-        void DoShoot(Player p, byte type, byte extType) {
+        void DoShoot(Player p, ExtBlock block) {
             CatchPos bp = (CatchPos)p.blockchangeObject;
             List<Vec3U16> previous = new List<Vec3U16>(), allBlocks = new List<Vec3U16>();
             Vec3U16 pos = MakePos(p);
@@ -81,16 +81,16 @@ namespace MCGalaxy.Commands.Fun {
                     if (by != Block.air && !allBlocks.Contains(pos) && HandlesHitBlock(p, by, bp, pos, true))
                         break;
 
-                    p.level.Blockchange(pos.X, pos.Y, pos.Z, type, extType);
+                    p.level.Blockchange(pos.X, pos.Y, pos.Z, block);
                     previous.Add(pos);
                     allBlocks.Add(pos);
 
                     Player hitP = GetPlayer(p, pos, true);
                     if (hitP != null) {
                         if (p.level.physics >= 3 && bp.ending >= EndType.Explode) {
-                            hitP.HandleDeath(Block.stone, 0, " was blown up by " + p.ColoredName, true);
+                    	    hitP.HandleDeath((ExtBlock)Block.stone, " was blown up by " + p.ColoredName, true);
                         } else {
-                            hitP.HandleDeath(Block.stone, 0, " was hit a missile from " + p.ColoredName);
+                            hitP.HandleDeath((ExtBlock)Block.stone, " was hit a missile from " + p.ColoredName);
                         }
                         break;
                     }
@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.Fun {
                     }
 
                     if (previous.Count > 12) {
-                        p.level.Blockchange(previous[0].X, previous[0].Y, previous[0].Z, Block.air, true);
+                        p.level.Blockchange(previous[0].X, previous[0].Y, previous[0].Z, ExtBlock.Air, true);
                         previous.RemoveAt(0);
                     }
                     Thread.Sleep(100);
@@ -116,7 +116,7 @@ namespace MCGalaxy.Commands.Fun {
                     DoTeleport(p, previous[index]);
             }
             foreach (Vec3U16 pos1 in previous) {
-                p.level.Blockchange(pos1.X, pos1.Y, pos1.Z, Block.air, true);
+                p.level.Blockchange(pos1.X, pos1.Y, pos1.Z, ExtBlock.Air, true);
                 Thread.Sleep(100);
             }
         }

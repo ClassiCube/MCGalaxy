@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, null, DoRainbow);
         }
         
-        bool DoRainbow(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+        bool DoRainbow(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             return DrawOpPerformer.Do(new RainbowDrawOp(), null, p, marks);
         }
         

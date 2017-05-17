@@ -27,8 +27,7 @@ namespace MCGalaxy.Commands.Building {
         public CmdPlace() { }
 
         public override void Use(Player p, string message) {
-            byte block, ext = 0;
-            block = p.GetActualHeldBlock(out ext);
+            ExtBlock block = p.GetHeldBlock();
             int x = p.Pos.BlockX, y = (p.Pos.Y - 32) / 32, z = p.Pos.BlockZ;
 
             try {
@@ -37,7 +36,7 @@ namespace MCGalaxy.Commands.Building {
                     case 1:
                         if (message == "") break;
                         
-                        if (!CommandParser.GetBlock(p, parts[0], out block, out ext)) return;
+                        if (!CommandParser.GetBlock(p, parts[0], out block)) return;
                         break;
                     case 3:
                         x = int.Parse(parts[0]);
@@ -45,7 +44,7 @@ namespace MCGalaxy.Commands.Building {
                         z = int.Parse(parts[2]);
                         break;
                     case 4:
-                        if (!CommandParser.GetBlock(p, parts[0], out block, out ext)) return;
+                        if (!CommandParser.GetBlock(p, parts[0], out block)) return;
                         
                         x = int.Parse(parts[1]);
                         y = int.Parse(parts[2]);
@@ -63,8 +62,8 @@ namespace MCGalaxy.Commands.Building {
             y = Clamp(y, p.level.Height);
             z = Clamp(z, p.level.Length);
             
-            p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, block, ext);
-            string blockName = p.level.BlockName(block, ext);
+            p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, block);
+            string blockName = p.level.BlockName(block);
             Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", x, y, z, blockName);
         }
         

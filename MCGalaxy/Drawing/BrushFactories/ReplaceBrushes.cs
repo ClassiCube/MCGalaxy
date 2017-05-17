@@ -52,12 +52,13 @@ namespace MCGalaxy.Drawing.Brushes {
         internal static ExtBlock[] GetBlocks(Player p, int start, int max, string[] parts) {
             ExtBlock[] blocks = new ExtBlock[max - start];
             for (int i = 0; i < blocks.Length; i++)
-                blocks[i].Block = Block.Invalid;
+                blocks[i] = ExtBlock.Invalid;
+            
             for (int i = 0; start < max; start++, i++ ) {
-                byte block, extBlock;
-                if (!CommandParser.GetBlockIfAllowed(p, parts[start], out block, out extBlock)) return null;
+                ExtBlock block;
+                if (!CommandParser.GetBlockIfAllowed(p, parts[start], out block)) return null;
 
-                blocks[i].Block = block; blocks[i].Ext = extBlock;
+                blocks[i] = block;
             }
             return blocks;
         }
@@ -67,12 +68,9 @@ namespace MCGalaxy.Drawing.Brushes {
             if (parts.Length == 1) {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with ", args.Block)) return false;
                 
-                target = new ExtBlock(args.Block, args.ExtBlock);
-                return true;
-            }
-            
-            return CommandParser.GetBlockIfAllowed(args.Player, parts[parts.Length - 1], 
-                                                   out target.Block, out target.Ext);
+                target = args.Block; return true;
+            }            
+            return CommandParser.GetBlockIfAllowed(args.Player, parts[parts.Length - 1], out target);
         }
     }
     

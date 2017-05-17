@@ -27,8 +27,8 @@ namespace MCGalaxy.Drawing.Ops {
         
         public ExtBlock Include;
         
-        public ReplaceDrawOp(byte type, byte extType) {
-            Include = new ExtBlock(type, extType);
+        public ReplaceDrawOp(ExtBlock include) {
+            Include = include;
             Flags = BlockDBFlags.Replaced;
         }
         
@@ -45,11 +45,8 @@ namespace MCGalaxy.Drawing.Ops {
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                byte block = Level.GetTile(x, y, z), ext = 0;
-                if (block == Block.custom_block) ext = Level.GetExtTile(x, y, z);
-                
-                if (block == Include.Block && (block != Block.custom_block || ext == Include.Ext))
-                    output(Place(x, y, z, brush));
+            	ExtBlock block = Level.GetExtBlock(x, y, z);
+                if (block == Include) output(Place(x, y, z, brush));
             }
         }
     }
@@ -58,8 +55,8 @@ namespace MCGalaxy.Drawing.Ops {
         
         public ExtBlock Exclude;
         
-        public ReplaceNotDrawOp(byte type, byte extType) {
-            Exclude = new ExtBlock(type, extType);
+        public ReplaceNotDrawOp(ExtBlock exclude) {
+            Exclude = exclude;
             Flags = BlockDBFlags.Replaced;
         }
         
@@ -76,11 +73,8 @@ namespace MCGalaxy.Drawing.Ops {
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                byte block = Level.GetTile(x, y, z), ext = 0;
-                if (block == Block.custom_block) ext = Level.GetExtTile(x, y, z);
-                
-                if (block != Exclude.Block || (block == Block.custom_block && ext != Exclude.Ext))
-                    output(Place(x, y, z, brush));
+            	ExtBlock block = Level.GetExtBlock(x, y, z);
+                if (block != Exclude) output(Place(x, y, z, brush));
             }
         }
     }

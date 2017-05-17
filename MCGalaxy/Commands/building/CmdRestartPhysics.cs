@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Building {
             return false;
         }
         
-        bool DoRestart(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+        bool DoRestart(Player p, Vec3S32[] m, object state, ExtBlock block) {
             PhysicsArgs extraInfo = (PhysicsArgs)state;
             List<int> buffer = new List<int>();
             

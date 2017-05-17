@@ -31,10 +31,9 @@ namespace MCGalaxy.Commands.Building {
         
         public override void Use(Player p, string message) {
             string brushMsg = message.ToLower();
-            byte block, extBlock;
-            block = p.GetActualHeldBlock(out extBlock);
+            ExtBlock held = p.GetHeldBlock();
             
-            BrushArgs args = new BrushArgs(p, brushMsg, block, extBlock);
+            BrushArgs args = new BrushArgs(p, brushMsg, held);
             string name = ReplaceNot ? "replacenot" : "replace";
             if (!BrushFactory.Find(name).Validate(args)) return;
             
@@ -42,8 +41,8 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, message.ToLower(), DoReplace);
         }
         
-        bool DoReplace(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
-            BrushArgs args = new BrushArgs(p, (string)state, type, extType);
+        bool DoReplace(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+            BrushArgs args = new BrushArgs(p, (string)state, block);
             string name = ReplaceNot ? "replacenot" : "replace";
             Brush brush = BrushFactory.Find(name).Construct(args);
             if (brush == null) return false;
@@ -85,7 +84,7 @@ namespace MCGalaxy.Commands.Building {
             ushort y2 = (ushort)(p.level.Height - 1);
             ushort z2 = (ushort)(p.level.Length - 1);
 
-            BrushArgs args = new BrushArgs(p, message.ToLower(), 0, 0);
+            BrushArgs args = new BrushArgs(p, message.ToLower(), ExtBlock.Air);
             Brush brush = BrushFactory.Find("replace").Construct(args);
             if (brush == null) return;
             

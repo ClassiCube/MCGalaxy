@@ -43,7 +43,7 @@ namespace MCGalaxy.Games {
         
         void OnDisconnect(Player p, string reason) { cache.Remove(p); }
         
-        void OnBlock(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock) {
+        void OnBlock(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             if (!cache.ContainsKey(p)) return;
             
             switch (cache[p].s) {

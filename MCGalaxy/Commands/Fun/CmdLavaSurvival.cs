@@ -331,7 +331,7 @@ namespace MCGalaxy.Commands.Fun
             p.Blockchange += PlacedMark1;
         }
 
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark1(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             if (cpos.mode == 2) {
@@ -349,7 +349,7 @@ namespace MCGalaxy.Commands.Fun
             Player.Message(p, "Position set! &b({0}, {1}, {2})", x, y, z);
         }
 
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark2(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             RevertAndClearState(p, x, y, z);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
 

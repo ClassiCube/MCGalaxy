@@ -80,23 +80,21 @@ namespace MCGalaxy.Drawing.Ops {
         
         Action<DrawOpBlock> output;
         Vec3U16 dims;
-        void UndoBlock(BlockDBEntry entry) {
-            byte block = entry.OldRaw, ext = 0;
-            if ((entry.Flags & BlockDBFlags.OldCustom) != 0) {
-                ext = block; block = Block.custom_block;
-            }
-            if (block == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
+        
+        void UndoBlock(BlockDBEntry e) {
+            ExtBlock block = ExtBlock.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
+            if (block.BlockID == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
             
-            int x = entry.Index % dims.X;
-            int y = (entry.Index / dims.X) / dims.Z;
-            int z = (entry.Index / dims.X) % dims.Z;
+            int x = e.Index % dims.X;
+            int y = (e.Index / dims.X) / dims.Z;
+            int z = (e.Index / dims.X) % dims.Z;
             
             // Undo area
             if (Min.X != ushort.MaxValue) {
                 if (x < Min.X || y < Min.Y || z < Min.Z) return;
                 if (x > Max.X || y > Max.Y || z > Max.Z) return;
             }
-            output(Place((ushort)x, (ushort)y, (ushort)z, block, ext));
+            output(Place((ushort)x, (ushort)y, (ushort)z, block));
             found = true;
         }
     }
@@ -138,16 +136,16 @@ namespace MCGalaxy.Drawing.Ops {
             DateTime time = Server.StartTime.AddTicks((undo.flags >> 2) * TimeSpan.TicksPerSecond);
             if (time < Start) return false;
             
-            byte newType = (undo.flags & 2) != 0 ? Block.custom_block : undo.newRawType;
+            byte newType = (undo.flags & 2) != 0 ? Block.custom_block : undo.newRaw;
             if (b == newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
                 ushort x, y, z;
                 lvl.IntToPos(undo.index, out x, out y, out z);
                 int undoIndex = lvl.currentUndo;
                 lvl.currentUndo = i;
                 lvl.currentUndo = undoIndex;
-                byte oldType = (undo.flags & 1) != 0 ? Block.custom_block : undo.oldRawType;
-                byte oldExtType = (undo.flags & 1) != 0 ? undo.oldRawType : (byte)0;
-                lvl.Blockchange(x, y, z, oldType, true, default(PhysicsArgs), oldExtType, false);
+                
+                ExtBlock oldBlock = ExtBlock.FromRaw(undo.oldRaw, (undo.flags & 1) != 0);
+                lvl.Blockchange(x, y, z, oldBlock, true, default(PhysicsArgs), false);
             }
             return true;
         }

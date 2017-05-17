@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, wArgs, DoWrite);
         }
 
-        bool DoWrite(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+        bool DoWrite(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             WriteArgs wArgs = (WriteArgs)state;
             if (marks[0].X == marks[1].X && marks[0].Z == marks[1].Z) { 
                 Player.Message(p, "No direction was selected"); return false; 
@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Building {
             WriteDrawOp op = new WriteDrawOp();
             op.Text = wArgs.message;
             op.Scale = wArgs.scale; op.Spacing = wArgs.spacing;
-            Brush brush = new SolidBrush(type, extType);
+            Brush brush = new SolidBrush(block);
             return DrawOpPerformer.Do(op, brush, p, marks);
         }
         

@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             if (p.CopyBuffer == null) { Player.Message(p, "You haven't copied anything yet"); return; }
             
-            BrushArgs args = new BrushArgs(p, message, 0, 0);
+            BrushArgs args = new BrushArgs(p, message, ExtBlock.Air);
             Brush brush = BrushFactory.Find("paste").Construct(args);
             if (brush == null) return;
             
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(1, brush, DoPaste);
         }
 
-        bool DoPaste(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+        bool DoPaste(Player p, Vec3S32[] m, object state, ExtBlock block) {
             CopyState cState = p.CopyBuffer;
             m[0] += cState.Offset;
 

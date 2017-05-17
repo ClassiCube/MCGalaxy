@@ -65,9 +65,9 @@ namespace MCGalaxy {
         
         /// <summary> Called when a player removes or places a block. However, this event will due normal 
         /// permission checking and normal block placing unless the event you cancel the event </summary>
-        public delegate void BlockchangeEventHandler2(Player p, ushort x, ushort y, ushort z, byte type, byte extType);        
+        public delegate void BlockchangeEventHandler2(Player p, ushort x, ushort y, ushort z, ExtBlock block);        
         /// <summary> Called when a player removes, or places a block. </summary>
-        public delegate void BlockchangeEventHandler(Player p, ushort x, ushort y, ushort z, byte type, byte extType);
+        public delegate void BlockchangeEventHandler(Player p, ushort x, ushort y, ushort z, ExtBlock block);
         /// <summary> Called when a player removes or places a block </summary>
         public event BlockchangeEventHandler Blockchange;
         /// <summary> Called when a player places a block. </summary>
@@ -119,7 +119,7 @@ namespace MCGalaxy {
         public void ClearPlayerChat() { OnChat = null; }
         
         /// <summary> Called when a player dies. </summary>
-        public delegate void OnPlayerDeath(Player p, byte deathblock);     
+        public delegate void OnPlayerDeath(Player p, ExtBlock deathblock);     
         /// <summary> Called when the player dies. </summary>
         public event OnPlayerDeath OnDeath;
         /// <summary> Called when a player dies. </summary>
@@ -145,6 +145,6 @@ namespace MCGalaxy {
         }
         
         /// <summary> Called when the player has finished providing all the marks for a selection. </summary>
-        public delegate bool SelectionHandler(Player p, Vec3S32[] marks, object state, byte type, byte extType);
+        public delegate bool SelectionHandler(Player p, Vec3S32[] marks, object state, ExtBlock block);
     }
 }

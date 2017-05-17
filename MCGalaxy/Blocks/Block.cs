@@ -22,14 +22,6 @@ using MCGalaxy.Maths;
 namespace MCGalaxy {
     public sealed partial class Block {
 
-        public static bool IsPhysicsId(byte block) { return block >= CpeCount && block != custom_block; }
-        
-        public static void Unpack(byte raw, out byte block, out byte extBlock) {
-            block = raw; extBlock = 0;
-            if (raw < Block.CpeCount) return;           
-            extBlock = raw; block = custom_block;
-        }
-        
         public static bool Walkthrough(byte block) {
             return block == air || block == shrub || block == Block.snow
                 || block == fire || block == rope
@@ -233,17 +225,18 @@ namespace MCGalaxy {
         [Obsolete]
         public static byte odoor(byte block) { return Props[block].ODoorId; }
         
-        public static AABB BlockAABB(byte block, byte extBlock, Level lvl) {
-            BlockDefinition def = lvl.GetBlockDef(block, extBlock);
+        public static AABB BlockAABB(ExtBlock block, Level lvl) {
+            BlockDefinition def = lvl.GetBlockDef(block);
             if (def != null) {
                 return new AABB(def.MinX * 2, def.MinZ * 2, def.MinY * 2,
                                 def.MaxX * 2, def.MaxZ * 2, def.MaxY * 2);
             }
             
-            if (block == Block.custom_block)
-                return new AABB(0, 0, 0, 32, 32, 32);            
-            block = Block.Convert(block);
-            return new AABB(0, 0, 0, 32, DefaultSet.Height(block) * 2, 32);
+            if (block.BlockID == Block.custom_block)
+                return new AABB(0, 0, 0, 32, 32, 32);
+            
+            byte core = Block.Convert(block.BlockID);
+            return new AABB(0, 0, 0, 32, DefaultSet.Height(core) * 2, 32);
         }
         
         public static void SetBlocks() {

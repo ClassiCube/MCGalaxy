@@ -102,7 +102,7 @@ namespace MCGalaxy.Events {
         internal OnPlayerDeathEvent(Player.OnPlayerDeath method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
-        public static void Call(Player p, byte block) {
+        public static void Call(Player p, ExtBlock block) {
             if (handlers.Count == 0) return;
             CallImpl(pl => pl(p, block));
         }
@@ -124,9 +124,9 @@ namespace MCGalaxy.Events {
         internal OnBlockChangeEvent(Player.BlockchangeEventHandler method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
-        public static void Call(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock) {
+        public static void Call(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, x, y, z, block, extBlock));
+            CallImpl(pl => pl(p, x, y, z, block));
         }
     }
 

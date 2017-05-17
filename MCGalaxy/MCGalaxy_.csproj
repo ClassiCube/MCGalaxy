@@ -97,6 +97,7 @@
     <Compile Include="Blocks\BlockPerms.cs" />
     <Compile Include="Blocks\BlockProperties.cs" />
     <Compile Include="Blocks\DefaultSet.cs" />
+    <Compile Include="Blocks\ExtBlock.cs" />
     <Compile Include="Blocks\Extended\MessageBlock.cs" />
     <Compile Include="Blocks\Extended\Portal.cs" />
     <Compile Include="Bots\BotsFile.cs" />

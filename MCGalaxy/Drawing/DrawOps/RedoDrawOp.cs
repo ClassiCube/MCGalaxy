@@ -56,18 +56,16 @@ namespace MCGalaxy.Drawing.Ops {
         
         Action<DrawOpBlock> output;
         Vec3U16 dims;
-        void RedoBlock(BlockDBEntry entry) {
-            byte block = entry.OldRaw, ext = 0;
-            if ((entry.Flags & BlockDBFlags.OldCustom) != 0) {
-                ext = block; block = Block.custom_block;
-            }
-            if (block == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
-            if ((entry.Flags & BlockDBFlags.UndoSelf) == 0) return; // not an undo
+        
+        void RedoBlock(BlockDBEntry e) {
+            ExtBlock block = ExtBlock.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
+            if (block.BlockID == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
+            if ((e.Flags & BlockDBFlags.UndoSelf) == 0) return; // not an undo
             
-            int x = entry.Index % dims.X;
-            int y = (entry.Index / dims.X) / dims.Z;
-            int z = (entry.Index / dims.X) % dims.Z;
-            output(Place((ushort)x, (ushort)y, (ushort)z, block, ext));
+            int x = e.Index % dims.X;
+            int y = (e.Index / dims.X) / dims.Z;
+            int z = (e.Index / dims.X) % dims.Z;
+            output(Place((ushort)x, (ushort)y, (ushort)z, block));
         }
     }
 }

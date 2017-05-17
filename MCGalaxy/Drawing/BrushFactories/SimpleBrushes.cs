@@ -33,19 +33,18 @@ namespace MCGalaxy.Drawing.Brushes {
         public override Brush Construct(BrushArgs args) {
             if (args.Message == "") {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with ", args.Block)) return null;
-                return new SolidBrush(args.Block, args.ExtBlock);
+                return new SolidBrush(args.Block);
             }
             
-            byte block, extBlock;
-            if (!CommandParser.GetBlockIfAllowed(args.Player, args.Message, 
-                                                 out block, out extBlock)) return null;
-            return new SolidBrush(block, extBlock);
+            ExtBlock block;
+            if (!CommandParser.GetBlockIfAllowed(args.Player, args.Message, out block)) return null;
+            return new SolidBrush(block);
         }
         
         public override bool Validate(BrushArgs args) {
             if (args.Message == "") return true;
-            byte block, extBlock;
-            return CommandParser.GetBlockIfAllowed(args.Player, args.Message, out block, out extBlock);
+            ExtBlock block;
+            return CommandParser.GetBlockIfAllowed(args.Player, args.Message, out block);
         }
     }
     
@@ -63,18 +62,18 @@ namespace MCGalaxy.Drawing.Brushes {
         public override Brush Construct(BrushArgs args) {
             if (args.Message == "") {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with ", args.Block)) return null;
-                return new CheckeredBrush(args.Block, args.ExtBlock, 0, 0);
+                return new CheckeredBrush(args.Block, ExtBlock.Air);
             }
             string[] parts = args.Message.SplitSpaces();
             
-            byte block1, ext1;
-            if (!CommandParser.GetBlockIfAllowed(args.Player, parts[0], out block1, out ext1, true)) return null;
+            ExtBlock block1;
+            if (!CommandParser.GetBlockIfAllowed(args.Player, parts[0], out block1, true)) return null;
             if (parts.Length == 1)
-                return new CheckeredBrush(block1, ext1, Block.Invalid, 0);
+                return new CheckeredBrush(block1, ExtBlock.Invalid);
             
-            byte block2, ext2;
-            if (!CommandParser.GetBlockIfAllowed(args.Player, parts[1], out block2, out ext2, true)) return null;
-            return new CheckeredBrush(block1, ext1, block2, ext2);
+            ExtBlock block2;
+            if (!CommandParser.GetBlockIfAllowed(args.Player, parts[1], out block2, true)) return null;
+            return new CheckeredBrush(block1, block2);
         }
     }
     
@@ -127,18 +126,18 @@ namespace MCGalaxy.Drawing.Brushes {
         public override Brush Construct(BrushArgs args) {
             if (args.Message == "") {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with ", args.Block)) return null;
-                return new StripedBrush(args.Block, args.ExtBlock, 0, 0);
+                return new StripedBrush(args.Block, ExtBlock.Air);
             }
             string[] parts = args.Message.SplitSpaces();
             
-            byte block1, ext1;
-            if (!CommandParser.GetBlockIfAllowed(args.Player, parts[0], out block1, out ext1, true)) return null;
+            ExtBlock block1;
+            if (!CommandParser.GetBlockIfAllowed(args.Player, parts[0], out block1, true)) return null;
             if (parts.Length == 1)
-                return new StripedBrush(block1, ext1, 0, 0);
+                return new StripedBrush(block1, ExtBlock.Air);
             
-            byte block2, ext2;
-            if (!CommandParser.GetBlockIfAllowed(args.Player, parts[1], out block2, out ext2, true)) return null;
-            return new StripedBrush(block1, ext1, block2, ext2);
+            ExtBlock block2;
+            if (!CommandParser.GetBlockIfAllowed(args.Player, parts[1], out block2, true)) return null;
+            return new StripedBrush(block1, block2);
         }
     }
     

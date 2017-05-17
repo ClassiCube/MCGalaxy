@@ -484,21 +484,22 @@ namespace MCGalaxy {
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct UndoPos {
             public int flags, index; // bit 0 = is old ext, bit 1 = is new ext, rest bits = time delta
-            public byte oldRawType, newRawType;
+            public byte oldRaw, newRaw;
             
-            public void SetData(byte oldType, byte oldExtType, byte newType, byte newExtType) {
+            public void SetData(ExtBlock oldBlock, ExtBlock newBlock) {
                 TimeSpan delta = DateTime.UtcNow.Subtract(Server.StartTime);
                 flags = (int)delta.TotalSeconds << 2;
                 
-                if (oldType == Block.custom_block) {
-                    oldRawType = oldExtType; flags |= 1;
+                if (oldBlock.BlockID == Block.custom_block) {
+                    oldRaw = oldBlock.ExtID; flags |= 1;
                 } else {
-                    oldRawType = oldType;
+                    oldRaw = oldBlock.BlockID;
                 }
-                if (newType == Block.custom_block) {
-                    newRawType = newExtType; flags |= 2;
+                
+                if (newBlock.BlockID == Block.custom_block) {
+                    newRaw = newBlock.ExtID; flags |= 2;
                 } else {
-                    newRawType = newType;
+                    newRaw = newBlock.BlockID;
                 }
             }
         }

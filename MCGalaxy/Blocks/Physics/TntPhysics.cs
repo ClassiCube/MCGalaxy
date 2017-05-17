@@ -23,13 +23,12 @@ namespace MCGalaxy.Blocks.Physics {
     
     public static class TntPhysics {
         
-        static void ShowWarningFuse(Level lvl, ushort x, ushort y, ushort z) {
-            lvl.Blockchange(x, (ushort)(y + 1), z, lvl.GetTile(x, (ushort)(y + 1), z) == Block.lavastill ? Block.air : Block.lavastill);
-            lvl.Blockchange(x, (ushort)(y - 1), z, lvl.GetTile(x, (ushort)(y - 1), z) == Block.lavastill ? Block.air : Block.lavastill);
-            lvl.Blockchange((ushort)(x + 1), y, z, lvl.GetTile((ushort)(x + 1), y, z) == Block.lavastill ? Block.air : Block.lavastill);
-            lvl.Blockchange((ushort)(x - 1), y, z, lvl.GetTile((ushort)(x - 1), y, z) == Block.lavastill ? Block.air : Block.lavastill);
-            lvl.Blockchange(x, y, (ushort)(z + 1), lvl.GetTile(x, y, (ushort)(z + 1)) == Block.lavastill ? Block.air : Block.lavastill);
-            lvl.Blockchange(x, y, (ushort)(z - 1), lvl.GetTile(x, y, (ushort)(z - 1)) == Block.lavastill ? Block.air : Block.lavastill);
+        static void ToggleFuse(Level lvl, ushort x, ushort y, ushort z) {
+            if (lvl.GetTile(x, y, z) == Block.lavastill) {
+                lvl.Blockchange(x, y, z, ExtBlock.Air);
+            } else {
+                lvl.Blockchange(x, y, z, (ExtBlock)Block.lavastill);
+            }
         }
         
         public static void DoTntExplosion(Level lvl, ref Check C) {
@@ -43,11 +42,17 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             if (lvl.physics < 3) {
-                lvl.Blockchange(x, y, z, Block.air);
+                lvl.Blockchange(x, y, z, ExtBlock.Air);
             } else {
                 if (C.data.Data < 5 && lvl.physics == 3) {
                     C.data.Data++;
-                    ShowWarningFuse(lvl, x, y, z);
+                    
+                    ToggleFuse(lvl, x, (ushort)(y + 1), z);
+                    ToggleFuse(lvl, x, (ushort)(y - 1), z);
+                    ToggleFuse(lvl, (ushort)(x + 1), y, z);
+                    ToggleFuse(lvl, (ushort)(x - 1), y, z);
+                    ToggleFuse(lvl, x, y, (ushort)(z + 1));
+                    ToggleFuse(lvl, x, y, (ushort)(z - 1));
                     return;
                 }
                 MakeExplosion(lvl, x, y, z, power);
@@ -73,8 +78,7 @@ namespace MCGalaxy.Blocks.Physics {
                 
                 if ((C.data.Data >> 4) < threshold) {
                     C.data.Data += (1 << 4);
-                    lvl.Blockchange(x, (ushort)(y + 1), z, lvl.GetTile(x, (ushort)(y + 1), z) == Block.lavastill
-                                    ? Block.air : Block.lavastill);
+                    ToggleFuse(lvl, x, (ushort)(y + 1), z);
                     return;
                 }
                 if (p.TntWarsKillStreak >= TntWarsGame.Properties.DefaultStreakTwoAmount && game.Streaks)
@@ -91,12 +95,11 @@ namespace MCGalaxy.Blocks.Physics {
                 }
                 game.HandleKill(p, Killed);
             } else if (lvl.physics < 3) {
-                lvl.Blockchange(x, y, z, Block.air);
+                lvl.Blockchange(x, y, z, ExtBlock.Air);
             } else {
                 if (C.data.Data < 5 && lvl.physics == 3) {
                     C.data.Data++;
-                    lvl.Blockchange(x, (ushort)(y + 1), z, lvl.GetTile(x, (ushort)(y + 1), z) == Block.lavastill
-                                    ? Block.air : Block.lavastill);
+                    ToggleFuse(lvl, x, (ushort)(y + 1), z);
                     return;
                 }
                 MakeExplosion(lvl, x, y, z, 0);

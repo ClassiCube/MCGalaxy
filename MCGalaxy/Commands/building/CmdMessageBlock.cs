@@ -41,8 +41,8 @@ namespace MCGalaxy.Commands.Building {
             MBData data;
             string[] args = message.SplitSpaces(2);
             string block = args[0].ToLower();
-            data.Block = GetBlock(p, block, out data.ExtBlock, ref allMessage);
-            if (data.Block == Block.Invalid) return;
+            data.Block = GetBlock(p, block, ref allMessage);
+            if (data.Block.IsInvalidType) return;
             if (!CommandParser.IsBlockAllowed(p, "place a message block of ", data.Block)) return;
             
             if (allMessage) {
@@ -65,17 +65,14 @@ namespace MCGalaxy.Commands.Building {
             p.Blockchange += PlacedMark;
         }
         
-        byte GetBlock(Player p, string name, out byte extBlock, 
-                      ref bool allMessage) {
-            extBlock = 0;
+        ExtBlock GetBlock(Player p, string name, ref bool allMessage) {
             byte block = Block.Byte(name);
-            if (Block.Props[block].IsMessageBlock) return block;
-            if (name == "show") { ShowMessageBlocks(p); return Block.Invalid; }
+            if (Block.Props[block].IsMessageBlock) return (ExtBlock)block;
+            if (name == "show") { ShowMessageBlocks(p); return ExtBlock.Invalid; }
             
             block = BlockDefinition.GetBlock(name, p);
-            if (p.level.CustomBlockProps[block].IsMessageBlock) {
-                extBlock = block; return Block.custom_block;
-            }
+            if (p.level.CustomBlockProps[block].IsMessageBlock)
+                return ExtBlock.FromRaw(block);
             
             // Hardcoded aliases for backwards compatibility
             block = Block.MsgWhite;
@@ -86,8 +83,8 @@ namespace MCGalaxy.Commands.Building {
             if (name == "lava") block = Block.MsgLava;
             
             allMessage = block == Block.MsgWhite && name != "white";
-            if (!Block.Props[block].IsMessageBlock) { Help(p); return Block.Invalid; }
-            return block;
+            if (!Block.Props[block].IsMessageBlock) { Help(p); return ExtBlock.Invalid; }
+            return (ExtBlock)block;
         }
         
         bool CheckCommand(Player p, string message) {
@@ -113,13 +110,13 @@ namespace MCGalaxy.Commands.Building {
             return message.CaselessEq(cmd) || message.CaselessStarts(cmd + " ");
         }
 
-        void PlacedMark(Player p, ushort x, ushort y, ushort z, byte type, byte extType) {
+        void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             p.ClearBlockchange();
             MBData data = (MBData)p.blockchangeObject;
             
-            byte old = p.level.GetTile(x, y, z);
-            if (p.level.CheckAffectPermissions(p, x, y, z, old, data.Block, data.ExtBlock)) {
-                p.level.UpdateBlock(p, x, y, z, data.Block, data.ExtBlock);
+            ExtBlock old = p.level.GetExtBlock(x, y, z);
+            if (p.level.CheckAffectPermissions(p, x, y, z, old, data.Block)) {
+                p.level.UpdateBlock(p, x, y, z, data.Block);
                 UpdateDatabase(p, data, x, y, z);
                 Player.Message(p, "Message block created.");
             } else {                
@@ -157,7 +154,7 @@ namespace MCGalaxy.Commands.Building {
             }
         }
 
-        struct MBData { public string Message; public byte Block, ExtBlock; }
+        struct MBData { public string Message; public ExtBlock Block; }
 
         
         void ShowMessageBlocks(Player p) {
@@ -173,7 +170,7 @@ namespace MCGalaxy.Commands.Building {
         
         static void ShowMessageBlocks(Player p, DataTable table) {
             foreach (DataRow row in table.Rows) {
-                p.SendBlockchange(U16(row["X"]), U16(row["Y"]), U16(row["Z"]), Block.green, 0);
+        		p.SendBlockchange(U16(row["X"]), U16(row["Y"]), U16(row["Z"]), (ExtBlock)Block.green);
             }
             Player.Message(p, "Now showing &a" + table.Rows.Count + " %SMBs.");
         }

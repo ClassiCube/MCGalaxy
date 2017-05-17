@@ -133,7 +133,7 @@ namespace MCGalaxy.Undo {
         public DateTime Time;
         
         public ushort X, Y, Z;
-        public byte Block, ExtBlock;
-        public byte NewBlock, NewExtBlock;
+        public ExtBlock Block;
+        public ExtBlock NewBlock;
     }
 }

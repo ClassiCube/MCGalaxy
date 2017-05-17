@@ -68,22 +68,22 @@ namespace MCGalaxy.Commands.Building {
             if (!p.group.CanExecute("brush")) {
                 Player.Message(p, "You cannot use %T/brush%S, so therefore cannot use %T/tree%S with a brush."); return false;
             }        
-            return ParseBrush(brushMsg, p, 0, 0) != null;
+            return ParseBrush(brushMsg, p, ExtBlock.Air) != null;
         }
 
-        bool DoTree(Player p, Vec3S32[] marks, object state, byte type, byte extType) {
+        bool DoTree(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             DrawArgs dArgs = (DrawArgs)state;
             TreeDrawOp op = new TreeDrawOp();
             op.Tree = dArgs.tree;
             op.Size = dArgs.size;
             
             Brush brush = null;
-            if (dArgs.brushMsg != "") brush = ParseBrush(dArgs.brushMsg, p, type, extType);
+            if (dArgs.brushMsg != "") brush = ParseBrush(dArgs.brushMsg, p, block);
             return DrawOpPerformer.Do(op, brush, p, marks);
         }
         
         
-        static Brush ParseBrush(string raw, Player p, byte block, byte extBlock) {
+        static Brush ParseBrush(string raw, Player p, ExtBlock block) {
             string[] parts = raw.SplitSpaces(2);
             BrushFactory brush = BrushFactory.Find(parts[0]);
             if (brush == null) {
@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands.Building {
             }
 
             string brushArgs = parts.Length >= 2 ? parts[1].ToLower() : "";
-            BrushArgs args = new BrushArgs(p, brushArgs, block, extBlock);
+            BrushArgs args = new BrushArgs(p, brushArgs, block);
             return brush.Construct(args);
         }
         

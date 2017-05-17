@@ -58,8 +58,10 @@ namespace MCGalaxy.Undo {
                     pos.Y = U16(temp, offset + 4);
                     pos.Z = U16(temp, offset + 6);
                     
-                    pos.Block = temp[offset + 8]; pos.ExtBlock = temp[offset + 9];
-                    pos.NewBlock = temp[offset + 10]; pos.NewExtBlock = temp[offset + 11];
+                    pos.Block.BlockID = temp[offset + 8]; 
+                    pos.Block.ExtID = temp[offset + 9];
+                    pos.NewBlock.BlockID = temp[offset + 10]; 
+                    pos.NewBlock.ExtID = temp[offset + 11];
                     yield return pos;
                 }
             }

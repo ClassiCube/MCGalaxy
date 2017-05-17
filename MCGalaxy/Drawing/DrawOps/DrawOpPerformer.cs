@@ -101,9 +101,8 @@ namespace MCGalaxy.Drawing.Ops {
         
         static void ConsoleOutputBlock(DrawOpBlock b, Level lvl, BufferedBlockSender buffer) {
             int index = lvl.PosToInt(b.X, b.Y, b.Z);
-            if (!lvl.DoPhysicsBlockchange(index, b.Block, false,
-                                          default(PhysicsArgs), b.ExtBlock)) return;
-            buffer.Add(index, b.Block, b.ExtBlock);
+            if (!lvl.DoPhysicsBlockchange(index, b.Block, false, default(PhysicsArgs))) return;
+            buffer.Add(index, b.Block.BlockID, b.Block.ExtID);
         }
         
         static void ProcessDrawOps(Player p) {
@@ -172,40 +171,34 @@ namespace MCGalaxy.Drawing.Ops {
             public DrawOpOutputter(DrawOp op) { this.op = op; }
             
             public void Output(DrawOpBlock b) {
-                if (b.Block == Block.Invalid) return;
+                if (b.Block.BlockID == Block.Invalid) return;
                 Level lvl = op.Level;
                 Player p = op.Player;
                 if (b.X >= lvl.Width || b.Y >= lvl.Height || b.Z >= lvl.Length) return;
                 
                 int index = b.X + lvl.Width * (b.Z + b.Y * lvl.Length);
-                byte old = lvl.blocks[index], oldExt = 0;
-                if (old == Block.custom_block) oldExt = lvl.GetExtTileNoCheck(b.X, b.Y, b.Z);
-                if (old == Block.Invalid) return;
+                ExtBlock old;
+                old.BlockID = lvl.blocks[index]; old.ExtID = 0;                
+                if (old.BlockID == Block.custom_block) old.ExtID = lvl.GetExtTileNoCheck(b.X, b.Y, b.Z);
+                if (old.BlockID == Block.Invalid) return;
                 
                 // Check to make sure the block is actually different and that we can change it
-                bool same = old == b.Block;
-                if (same && b.Block == Block.custom_block) {
-                    same = oldExt == b.ExtBlock;
-                }
-                if (same || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block, b.ExtBlock)) {
-                    return;
-                }
-                
+                if (old == b.Block || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block)) return;               
                 
                 // Set the block (inlined)
-                lvl.blocks[index] = b.Block;
+                lvl.blocks[index] = b.Block.BlockID;
                 lvl.changed = true;
-                if (old == Block.custom_block && b.Block != Block.custom_block) {
+                if (old.BlockID == Block.custom_block && b.Block.BlockID != Block.custom_block) {
                     lvl.RevertExtTileNoCheck(b.X, b.Y, b.Z);
                 }
-                if (b.Block == Block.custom_block) {
-                    lvl.SetExtTileNoCheck(b.X, b.Y, b.Z, b.ExtBlock);
+                if (b.Block.BlockID == Block.custom_block) {
+                    lvl.SetExtTileNoCheck(b.X, b.Y, b.Z, b.Block.ExtID);
                 }
-                if (p != null) {
-                    lvl.BlockDB.Cache.Add(p, b.X, b.Y, b.Z, op.Flags, old, oldExt, b.Block, b.ExtBlock);
-                }
-                p.loginBlocks++; p.overallBlocks++; p.TotalDrawn++; // increment block stats inline
                 
+                if (p != null) {
+                    lvl.BlockDB.Cache.Add(p, b.X, b.Y, b.Z, op.Flags, old, b.Block);
+                    p.loginBlocks++; p.overallBlocks++; p.TotalDrawn++; // increment block stats inline
+                }                
                 
                 // Potentially buffer the block change
                 if (op.TotalModified == Server.DrawReloadLimit) {
@@ -213,17 +206,15 @@ namespace MCGalaxy.Drawing.Ops {
                     lock (lvl.queueLock)
                         lvl.blockqueue.Clear();
                 } else if (op.TotalModified < Server.DrawReloadLimit) {
-                    same = old == Block.custom_block
-                        ? oldExt == b.ExtBlock : Block.Convert(old) == Block.Convert(b.Block);
-                    if (!same) BlockQueue.Addblock(p, index, b.Block, b.ExtBlock);
-                    
+                    if (!old.VisuallyEquals(b.Block)) BlockQueue.Addblock(p, index, b.Block);
+
                     if (lvl.physics > 0) {
-                        if (old == Block.sponge && b.Block != Block.sponge)
+                        if (old.BlockID == Block.sponge && b.Block.BlockID != Block.sponge)
                             OtherPhysics.DoSpongeRemoved(lvl, index, false);
-                        if (old == Block.lava_sponge && b.Block != Block.lava_sponge)
+                        if (old.BlockID == Block.lava_sponge && b.Block.BlockID != Block.lava_sponge)
                             OtherPhysics.DoSpongeRemoved(lvl, index, true);
 
-                        if (lvl.ActivatesPhysics(b.Block, b.ExtBlock)) lvl.AddCheck(index);
+                        if (lvl.ActivatesPhysics(b.Block)) lvl.AddCheck(index);
                     }
                 }
                 op.TotalModified++;

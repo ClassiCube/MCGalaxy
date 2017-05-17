@@ -173,19 +173,22 @@ namespace MCGalaxy {
             if (ListUpdate.Count > 0 && bulkSender == null)
                 bulkSender = new BufferedBlockSender(this);
             
+            ExtBlock block;
             for (int i = 0; i < ListUpdate.Count; i++) {
                 Update C = ListUpdate.Items[i];
                 try {
-                    byte block = C.data.Data, extBlock = 0;
+                    block.BlockID = C.data.Data;
+                    block.ExtID = 0;
                     C.data.Data = 0;
                     // Is the Ext flag just an indicator for the block update?
                     if (C.data.ExtBlock && (C.data.Raw & PhysicsArgs.TypeMask) == 0) {
-                        extBlock = block; block = Block.custom_block;
+                        block.ExtID = block.BlockID;
+                        block.BlockID = Block.custom_block;
                         C.data.ExtBlock = false;
                     }
                     
-                    if (DoPhysicsBlockchange(C.b, block, false, C.data, extBlock, true))
-                        bulkSender.Add(C.b, block, extBlock);
+                    if (DoPhysicsBlockchange(C.b, block, false, C.data, true))
+                        bulkSender.Add(C.b, block.BlockID, block.ExtID);
                 } catch {
                     Server.s.Log("Phys update issue");
                 }
@@ -240,14 +243,18 @@ namespace MCGalaxy {
                 if (x >= Width || y >= Height || z >= Length) return false;
                 
                 if (overRide) {
-                    byte block = (byte)type, extBlock = 0;
+                    ExtBlock block;
+                	block.BlockID = (byte)type;
+                	block.ExtID = 0;
+                	
                     // Is the Ext flag just an indicator for the block update?
                     if (data.ExtBlock && (data.Raw & PhysicsArgs.TypeMask) == 0) {
-                        extBlock = block; block = Block.custom_block;
+                        block.ExtID = block.BlockID;
+                        block.BlockID = Block.custom_block;
                         data.ExtBlock = false;
                     }
                     AddCheck(b, true, data); //Dont need to check physics here....AddCheck will do that
-                    Blockchange((ushort)x, (ushort)y, (ushort)z, block, true, data, extBlock);
+                    Blockchange((ushort)x, (ushort)y, (ushort)z, block, true, data);
                     return true;
                 }
 
@@ -319,32 +326,32 @@ namespace MCGalaxy {
 
             try {
                 PhysicsArgs args = C.data;
+                // Copy paste here because it's worthwhile inlining
                 if (args.Type1 == PhysicsArgs.Revert) {
-                    RevertBlock(C.b, args.Value1, args.ExtBlock);
+                    ushort x, y, z;
+                    IntToPos(C.b, out x, out y, out z);
+                    
+                    ExtBlock block = ExtBlock.FromRaw(args.Value1, args.ExtBlock);
+                    Blockchange(C.b, block, true, default(PhysicsArgs));
                 } else if (args.Type2 == PhysicsArgs.Revert) {
-                    RevertBlock(C.b, args.Value2, args.ExtBlock);
+                    ushort x, y, z;
+                    IntToPos(C.b, out x, out y, out z);
+                    
+                    ExtBlock block = ExtBlock.FromRaw(args.Value2, args.ExtBlock);
+                    Blockchange(C.b, block, true, default(PhysicsArgs));
                 }
             } catch (Exception e) {
                 Server.ErrorLog(e);
             }
         }
         
-        void RevertBlock(int index, byte raw, bool ext) {
-            ushort x, y, z;
-            IntToPos(index, out x, out y, out z);
-            
-            byte block = ext ? Block.custom_block : raw;
-            byte extBlock = ext ? raw : Block.air;
-            Blockchange(x, y, z, block, true,
-                        default(PhysicsArgs), extBlock);
-        }
         
-        
-        internal bool ActivatesPhysics(byte block, byte extBlock) {
-            if (block != Block.custom_block)
-                return Block.Physics(block);
+        internal bool ActivatesPhysics(ExtBlock block) {
+            if (block.BlockID != Block.custom_block)
+                return Block.Physics(block.BlockID);
             
             BlockProps[] props = CustomBlockProps;
+            byte extBlock = block.ExtID;
             if (props[extBlock].IsMessageBlock || props[extBlock].IsPortal) return false;
             if (props[extBlock].IsDoor || props[extBlock].IsTDoor) return false;
             if (props[extBlock].OPBlock) return false;

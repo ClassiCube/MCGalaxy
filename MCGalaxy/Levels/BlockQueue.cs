@@ -38,7 +38,7 @@ namespace MCGalaxy {
             task.Delay = TimeSpan.FromMilliseconds(time);
         }
 
-        public static void Addblock(Player p, int index, byte type, byte extType = 0) {
+        public static void Addblock(Player p, int index, ExtBlock block) {
             if (index == -1) return;
             // Bit packing format
             // 32-63: index
@@ -47,8 +47,8 @@ namespace MCGalaxy {
             // 0-7: raw type
             ulong flags = (ulong)index << 32;
             flags |= (ulong)p.SessionID << 9;
-            flags |= (type == Block.custom_block ? 0x100UL : 0x000UL);
-            flags |= (type == Block.custom_block ? extType : type);
+            flags |= (block.BlockID == Block.custom_block ? 0x100UL : 0x000UL);
+            flags |= (block.BlockID == Block.custom_block ? block.ExtID : block.BlockID);
             
             lock (p.level.queueLock)
                 p.level.blockqueue.Add(flags);

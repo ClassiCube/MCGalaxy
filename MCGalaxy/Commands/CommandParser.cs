@@ -125,46 +125,40 @@ namespace MCGalaxy.Commands {
         
         
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
-        public static bool GetBlock(Player p, string input, out byte block,
-                                    out byte extBlock, bool allowSkip = false) {
-            block = 0; extBlock = 0;
+        public static bool GetBlock(Player p, string input, out ExtBlock block, bool allowSkip = false) {
+            block = default(ExtBlock);
             // Skip/None block for draw operations
             if (allowSkip && (input.CaselessEq("skip") || input.CaselessEq("none"))) {
-                block = Block.Invalid; return true;
+                block = ExtBlock.Invalid; return true;
             }
             
-            byte match = Block.Byte(input);
-            if (match != Block.Invalid) { block = match; return true; }
+            block.BlockID = Block.Byte(input);
+            if (block.BlockID != Block.Invalid) return true;
             
             // find custom block
-            match = BlockDefinition.GetBlock(input, p);
-            if (match == Block.Invalid) {
+            byte raw = BlockDefinition.GetBlock(input, p);
+            if (raw == Block.Invalid) {
                 Player.Message(p, "&cThere is no block \"{0}\".", input);
                 return false;
+            } else {
+                block = ExtBlock.FromRaw(raw);
+                return true;
             }
-            
-            // custom block overriding a core block
-            if (match < Block.CpeCount) { block = match; return true; }
-            
-            // Normal custom block
-            block = Block.custom_block; extBlock = match;
-            return true;
         }
 
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
         /// <remarks> Also ensures the player is allowed to place the given block. </remarks>
-        public static bool GetBlockIfAllowed(Player p, string input, out byte block,
-                                             out byte extBlock, bool allowSkip = false) {
-            if (!GetBlock(p, input, out block, out extBlock, allowSkip)) return false;
-            if (allowSkip && block == Block.Invalid) return true;
+        public static bool GetBlockIfAllowed(Player p, string input, out ExtBlock block, bool allowSkip = false) {
+            if (!GetBlock(p, input, out block, allowSkip)) return false;
+            if (allowSkip && block == ExtBlock.Invalid) return true;
             return IsBlockAllowed(p, "draw with ", block);
         }
         
         /// <summary> Returns whether the player is allowed to place/modify/delete the given block. </summary>
         /// <remarks> Outputs information of which ranks can modify the block if not. </remarks>
-        public static bool IsBlockAllowed(Player p, string action, byte block) {
-            if (p == null || BlockPerms.CanModify(p, block)) return true;
-            Formatter.MessageBlock(p, action, block);
+        public static bool IsBlockAllowed(Player p, string action, ExtBlock block) {
+            if (p == null || BlockPerms.CanModify(p, block.BlockID)) return true;
+            Formatter.MessageBlock(p, action, block.BlockID);
             return false;
         }
     }

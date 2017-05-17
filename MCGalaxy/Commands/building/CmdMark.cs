@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Building {
             } else {
                 // We only want to activate blocks in the world
                 byte old = p.level.GetTile(P.X, P.Y, P.Z);
-                if (!p.CheckManualChange(old, Block.air, false)) return;
+                if (!p.CheckManualChange(old, ExtBlock.Air, false)) return;
                 
                 HandleDelete handler = BlockBehaviour.deleteHandlers[old];
                 if (handler != null) {
@@ -102,9 +102,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static void PlaceMark(Player p, int x, int y, int z) {
-            byte extBlock = 0;
-            byte block = p.GetActualHeldBlock(out extBlock);
-            p.ManualChange((ushort)x, (ushort)y, (ushort)z, 0, block, extBlock, false);
+            ExtBlock block = p.GetHeldBlock();
+            p.ManualChange((ushort)x, (ushort)y, (ushort)z, 0, block, false);
             Player.Message(p, "Mark placed at &b({0}, {1}, {2})", x, y, z);
         }
         

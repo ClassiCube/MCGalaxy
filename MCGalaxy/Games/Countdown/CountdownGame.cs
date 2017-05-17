@@ -187,45 +187,45 @@ namespace MCGalaxy.Games {
             //directly next to
             if (mapon.GetBlock(x1, y, z2 + 2) == Block.air) //right
             {
-                mapon.Blockchange(x1, y, (ushort)(z2 + 1), Block.air);
-                mapon.Blockchange(x2, y, (ushort)(z2 + 1), Block.air);
+                mapon.Blockchange(x1, y, (ushort)(z2 + 1), ExtBlock.Air);
+                mapon.Blockchange(x2, y, (ushort)(z2 + 1), ExtBlock.Air);
                 right = true;
             }
             if (mapon.GetBlock(x1, y, z1 - 2) == Block.air) //left
             {
-                mapon.Blockchange(x1, y, (ushort)(z1 - 1), Block.air);
-                mapon.Blockchange(x2, y, (ushort)(z1 - 1), Block.air);
+                mapon.Blockchange(x1, y, (ushort)(z1 - 1), ExtBlock.Air);
+                mapon.Blockchange(x2, y, (ushort)(z1 - 1), ExtBlock.Air);
                 left = true;
             }
             if (mapon.GetBlock(x2 + 2, y, z1) == Block.air) //up
             {
-                mapon.Blockchange((ushort)(x2 + 1), y, z1, Block.air);
-                mapon.Blockchange((ushort)(x2 + 1), y, z2, Block.air);
+                mapon.Blockchange((ushort)(x2 + 1), y, z1, ExtBlock.Air);
+                mapon.Blockchange((ushort)(x2 + 1), y, z2, ExtBlock.Air);
                 up = true;
             }
             if (mapon.GetBlock(x1 - 2, y, z1) == Block.air) //down
             {
-                mapon.Blockchange((ushort)(x1 - 1), y, z1, Block.air);
-                mapon.Blockchange((ushort)(x1 - 1), y, z2, Block.air);
+                mapon.Blockchange((ushort)(x1 - 1), y, z1, ExtBlock.Air);
+                mapon.Blockchange((ushort)(x1 - 1), y, z2, ExtBlock.Air);
                 down = true;
             }
             
             //diagonal >:(
             if ((mapon.GetBlock(x1 - 2, y, z1 - 2) == Block.air) && left && down) //bottom left
             {
-                mapon.Blockchange((ushort)(x1 - 1), y, (ushort)(z1 - 1), Block.air);
+                mapon.Blockchange((ushort)(x1 - 1), y, (ushort)(z1 - 1), ExtBlock.Air);
             }
             if ((mapon.GetBlock(x1 - 2, y, z2 + 2) == Block.air) && right && down) //bottom right
             {
-                mapon.Blockchange((ushort)(x1 - 1), y, (ushort)(z2 + 1), Block.air);
+                mapon.Blockchange((ushort)(x1 - 1), y, (ushort)(z2 + 1), ExtBlock.Air);
             }
             if ((mapon.GetBlock(x2 + 2, y, z1 - 2) == Block.air) && left && up) //top left
             {
-                mapon.Blockchange((ushort)(x2 + 1), y, (ushort)(z1 - 1), Block.air);
+                mapon.Blockchange((ushort)(x2 + 1), y, (ushort)(z1 - 1), ExtBlock.Air);
             }
             if ((mapon.GetBlock(x2 + 2, y, z2 + 2) == Block.air) && right && up) //top right
             {
-                mapon.Blockchange((ushort)(x2 + 1), y, (ushort)(z2 + 1), Block.air);
+                mapon.Blockchange((ushort)(x2 + 1), y, (ushort)(z2 + 1), ExtBlock.Air);
             }
         }
 
@@ -367,7 +367,8 @@ namespace MCGalaxy.Games {
             }
         }
         
-        static void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, byte block, Level lvl) {
+        static void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, byte raw, Level lvl) {
+            ExtBlock block = (ExtBlock)raw;
             for (int y = y1; y <= y2; y++)
                 for (int z = z1; z <= z2; z++)
                     for (int x = x1; x <= x2; x++)

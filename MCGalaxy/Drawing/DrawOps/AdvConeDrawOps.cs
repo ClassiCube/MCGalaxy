@@ -107,6 +107,7 @@ namespace MCGalaxy.Drawing.Ops {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
+            ExtBlock block = default(ExtBlock);
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
@@ -124,8 +125,8 @@ namespace MCGalaxy.Drawing.Ops {
                 if (ctile != 0) continue;
                 
                 bool layer = dist >= (curRadius - 1) * (curRadius - 1);
-                byte block = layer ? Block.grass : Block.lavastill;
-                output(Place(x, y, z, block, 0));
+                block.BlockID = layer ? Block.grass : Block.lavastill;
+                output(Place(x, y, z, block));
             }
         }
     }

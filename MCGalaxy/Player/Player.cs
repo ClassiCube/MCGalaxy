@@ -92,14 +92,11 @@ namespace MCGalaxy {
         }
         
         
-        public byte GetActualHeldBlock(out byte extBlock) {
-            byte block = RawHeldBlock;
-            extBlock = 0;
-            if (modeType != 0) return modeType;
-            
-            if (block < Block.CpeCount) return bindings[block];
-            extBlock = block;
-            return Block.custom_block;            
+        public ExtBlock GetHeldBlock() {
+        	if (modeType != 0) return (ExtBlock)modeType;
+            byte raw = RawHeldBlock.BlockID;
+            if (raw < Block.CpeCount) return (ExtBlock)bindings[raw];
+            return RawHeldBlock;
         }
         
         public static string CheckPlayerStatus(Player p) {
@@ -151,17 +148,16 @@ namespace MCGalaxy {
 
         #region == GLOBAL MESSAGES ==
         
-        public static void GlobalBlockchange(Level level, int b, byte block, byte extBlock) {
+        public static void GlobalBlockchange(Level level, int b, ExtBlock block) {
             ushort x, y, z;
             level.IntToPos(b, out x, out y, out z);
-            GlobalBlockchange(level, x, y, z, block, extBlock);
+            GlobalBlockchange(level, x, y, z, block);
         }
         
-        public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, 
-                                             byte block, byte extBlock) {
+        public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, ExtBlock block) {
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) { 
-                if (p.level == level) p.SendBlockchange(x, y, z, block, extBlock);
+                if (p.level == level) p.SendBlockchange(x, y, z, block);
             }
         }
 
@@ -447,9 +443,7 @@ namespace MCGalaxy {
         /// <remarks> Vanilla client always assumes block place/delete succeeds, so this method is usually used to echo back the
         /// old block. (e.g. due to insufficient permission to change that block, used as mark for draw operations) </remarks>
         public void RevertBlock(ushort x, ushort y, ushort z) {
-            byte b = level.GetTile(x, y, z), extB = 0;
-            if (b == Block.custom_block) extB = level.GetExtTile(x, y, z);
-            SendBlockchange(x, y, z, b, extB);
+            SendBlockchange(x, y, z, level.GetExtBlock(x, y, z));
         }
 
         public static bool IPInPrivateRange(string ip) {
@@ -552,7 +546,7 @@ namespace MCGalaxy {
             }
         }
         
-        void SelectionBlockChange(Player p, ushort x, ushort y, ushort z, byte block, byte extBlock) {
+        void SelectionBlockChange(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             lock (selLock) {
                 Blockchange = SelectionBlockChange;
                 RevertBlock(x, y, z);
@@ -562,8 +556,8 @@ namespace MCGalaxy {
                 if (selIndex != selMarks.Length) return;
                 
                 Blockchange = null;
-                block = block < Block.CpeCount ? p.bindings[block] : block;
-                bool canRepeat = selCallback(this, selMarks, selState, block, extBlock);
+                block.BlockID = block.BlockID < Block.CpeCount ? p.bindings[block.BlockID] : block.BlockID;
+                bool canRepeat = selCallback(this, selMarks, selState, block);
                 
                 if (canRepeat && staticCommands) {
                     MakeSelection(selIndex, selState, selCallback);

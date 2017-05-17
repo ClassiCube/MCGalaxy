@@ -47,6 +47,17 @@ namespace MCGalaxy {
             return blocks[index];
         }
         
+        public ExtBlock GetExtBlock(ushort x, ushort y, ushort z) {
+            int index = PosToInt(x, y, z);
+            if (index < 0 || blocks == null) return ExtBlock.Invalid;
+            
+            ExtBlock block;
+            block.BlockID = blocks[index];
+            block.ExtID = block.BlockID == Block.custom_block 
+                ? GetExtTileNoCheck(x, y, z) : Block.air;
+            return block;
+        }
+        
         /// <summary> Gets the block at the given coordinates. </summary>
         /// <returns> Block.Invalid if coordinates outside map. </returns>
         public byte GetBlock(int x, int y, int z) {
@@ -146,28 +157,6 @@ namespace MCGalaxy {
             if (chunk == null) return;
             chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = 0;
         }
-        
-        public void SetTile(ushort x, ushort y, ushort z, byte block, Player p, 
-                            byte ext = 0, ushort flags = BlockDBFlags.ManualPlace) {
-            int index = PosToInt(x, y, z);
-            if (blocks == null || index < 0) return;
-            
-            byte oldBlock = blocks[index], oldExtBlock = 0;
-            blocks[index] = block;
-            changed = true;
-            
-            if (oldBlock == Block.custom_block) {
-                oldExtBlock = GetExtTile(x, y, z);
-                if (block != Block.custom_block)
-                    RevertExtTileNoCheck(x, y, z);
-            }
-            if (block == Block.custom_block)
-                SetExtTileNoCheck(x, y, z, ext);
-            if (p == null) return;    
-            
-            BlockDB.Cache.Add(p, x, y, z, flags,
-                              oldBlock, oldExtBlock, block, ext);
-        }
 
         bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref byte block) {
             if (!(block == Block.tnt || block == Block.bigtnt || block == Block.nuketnt || block == Block.smalltnt))
@@ -252,20 +241,18 @@ namespace MCGalaxy {
                 || access == AccessResult.Allowed;
         }
         
-        public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, 
-                                           byte old, byte block, byte extBlock = 0) {
-            if (!p.group.CanModify[old] && !Block.AllowBreak(old) && !Block.BuildIn(old)) return false;
-            if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref block)) return false;
+        public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, ExtBlock old, ExtBlock block) {
+            if (!p.group.CanModify[old.BlockID] && !Block.AllowBreak(old.BlockID) && !Block.BuildIn(old.BlockID)) return false;
+            if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref block.BlockID)) return false;
             
             bool inZone = false;
             if (!CheckZonePerms(p, x, y, z, ref inZone)) return false;
             return inZone || CheckRank(p);
         }
         
-        public void Blockchange(Player p, ushort x, ushort y, ushort z, 
-                                byte block, byte extBlock = 0) {
-            if (DoBlockchange(p, x, y, z, block, extBlock) == 2)
-                Player.GlobalBlockchange(this, x, y, z, block, extBlock);
+        public void Blockchange(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
+            if (DoBlockchange(p, x, y, z, block) == 2)
+                Player.GlobalBlockchange(this, x, y, z, block);
         }
         
         /// <summary> Returns: <br/> 
@@ -273,58 +260,46 @@ namespace MCGalaxy {
         /// 1 - old block was same as new block visually (e.g. white to door_white)<br/>
         /// 2 - old block was different to new block visually </summary>
         /// <remarks> The return code can be used to avoid sending redundant block changes. </remarks>
-        public int DoBlockchange(Player p, ushort x, ushort y, ushort z, 
-                                  byte block, byte extBlock = 0, bool drawn = false) {
+        public int DoBlockchange(Player p, ushort x, ushort y, ushort z, ExtBlock block, bool drawn = false) {
             string errorLocation = "start";
             try
             {
-                //if (x < 0 || y < 0 || z < 0) return;
                 if (x >= Width || y >= Height || z >= Length) return 0;
-                byte old = GetTile(x, y, z), extOld = 0;
-                if (old == Block.custom_block) extOld = GetExtTile(x, y, z);
+                ExtBlock old = GetExtBlock(x, y, z);
 
                 errorLocation = "Permission checking";
-                if (!CheckAffectPermissions(p, x, y, z, old, block, extBlock)) {
+                if (!CheckAffectPermissions(p, x, y, z, old, block)) {
                     p.RevertBlock(x, y, z); return 0;
                 }
-                
-                // Test for exact same block ID
-                if (old == Block.custom_block) {
-                    if (extOld == extBlock) return 0;
-                } else {
-                    if (old == block) return 0;
-                }
+                if (old == block) return 0;
 
-                if (old == Block.sponge && physics > 0 && block != Block.sponge)
+                if (old.BlockID == Block.sponge && physics > 0 && block.BlockID != Block.sponge)
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z));
-                if (old == Block.lava_sponge && physics > 0 && block != Block.lava_sponge)
+                if (old.BlockID == Block.lava_sponge && physics > 0 && block.BlockID != Block.lava_sponge)
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), true);
 
                 p.loginBlocks++;
                 p.overallBlocks++;
             
                 if (drawn) p.TotalDrawn++;
-                else if (block == 0) p.TotalDeleted++;
+                else if (block.BlockID == Block.air) p.TotalDeleted++;
                 else p.TotalPlaced++;
             
                 errorLocation = "Setting tile";
-                SetTile(x, y, z, block);
-                if (old == Block.custom_block && block != Block.custom_block)
+                SetTile(x, y, z, block.BlockID);
+                if (old.BlockID == Block.custom_block && block.BlockID != Block.custom_block)
                     RevertExtTileNoCheck(x, y, z);
-                if (block == Block.custom_block)
-                    SetExtTileNoCheck(x, y, z, extBlock);
+                if (block.BlockID == Block.custom_block)
+                    SetExtTileNoCheck(x, y, z, block.ExtID);
 
                 errorLocation = "Adding physics";
-                if (p.PlayingTntWars && block == Block.smalltnt) AddTntCheck(PosToInt(x, y, z), p);
-                if (physics > 0 && ActivatesPhysics(block, extBlock)) AddCheck(PosToInt(x, y, z));
+                if (p.PlayingTntWars && block.BlockID == Block.smalltnt) AddTntCheck(PosToInt(x, y, z), p);
+                if (physics > 0 && ActivatesPhysics(block)) AddCheck(PosToInt(x, y, z));
 
                 changed = true;
                 backedup = false;
                 
-                if (old != Block.custom_block) {
-                    if (Block.Convert(old) == Block.Convert(block)) return 1; // same visually               
-                }
-                return 2;
+                return old.VisuallyEquals(block) ? 1 : 2;
             } catch (Exception e) {
                 Server.ErrorLog(e);
                 Chat.MessageOps(p.name + " triggered a non-fatal error on " + ColoredName + ", %Sat location: " + errorLocation);
@@ -342,45 +317,44 @@ namespace MCGalaxy {
             AddCheck(b, false, args);
         }
         
-        public void Blockchange(int b, byte block, bool overRide = false, 
-                                PhysicsArgs data = default(PhysicsArgs),
-                                byte extBlock = 0, bool addUndo = true) { //Block change made by physics
-            if (DoPhysicsBlockchange(b, block, overRide, data, extBlock, addUndo))
-                Player.GlobalBlockchange(this, b, block, extBlock);
+        public void Blockchange(int b, ExtBlock block, bool overRide = false, 
+                                PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) { //Block change made by physics
+            if (DoPhysicsBlockchange(b, block, overRide, data, addUndo))
+                Player.GlobalBlockchange(this, b, block);
         }
         
-        public void Blockchange(ushort x, ushort y, ushort z, byte block, bool overRide = false, 
-                                PhysicsArgs data = default(PhysicsArgs),
-                                byte extBlock = 0, bool addUndo = true) {
-            Blockchange(PosToInt(x, y, z), block, overRide, data, extBlock, addUndo); //Block change made by physics
+        public void Blockchange(ushort x, ushort y, ushort z, ExtBlock block, bool overRide = false, 
+                                PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) {
+            Blockchange(PosToInt(x, y, z), block, overRide, data, addUndo); //Block change made by physics
         }
         
-        public void Blockchange(ushort x, ushort y, ushort z, byte block, byte extBlock) {
-            Blockchange(PosToInt(x, y, z), block, false, default(PhysicsArgs), extBlock); //Block change made by physics
+        public void Blockchange(ushort x, ushort y, ushort z, ExtBlock block) {
+            Blockchange(PosToInt(x, y, z), block, false, default(PhysicsArgs)); //Block change made by physics
         }
         
-        internal bool DoPhysicsBlockchange(int b, byte block, bool overRide = false, 
-                                           PhysicsArgs data = default(PhysicsArgs), 
-                                           byte extBlock = 0, bool addUndo = true) {
+        internal bool DoPhysicsBlockchange(int b, ExtBlock block, bool overRide = false, 
+                                           PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) {
             if (b < 0 || b >= blocks.Length || blocks == null) return false;
-            byte old = blocks[b];
-            byte oldExt = old == Block.custom_block ? GetExtTile(b) : Block.air;
+            ExtBlock old;
+            old.BlockID = blocks[b];
+            old.ExtID = old.BlockID == Block.custom_block ? GetExtTile(b) : Block.air;
+            
             try
             {
                 if (!overRide)
-                    if (Block.Props[old].OPBlock || (Block.Props[block].OPBlock && data.Raw != 0)) 
+                    if (Block.Props[old.BlockID].OPBlock || (Block.Props[block.BlockID].OPBlock && data.Raw != 0)) 
                         return false;
 
-                if (old == Block.sponge && physics > 0 && block != Block.sponge)
+                if (old.BlockID == Block.sponge && physics > 0 && block.BlockID != Block.sponge)
                     OtherPhysics.DoSpongeRemoved(this, b, false);
 
-                if (old == Block.lava_sponge && physics > 0 && block != Block.lava_sponge)
+                if (old.BlockID == Block.lava_sponge && physics > 0 && block.BlockID != Block.lava_sponge)
                     OtherPhysics.DoSpongeRemoved(this, b, true);
 
                 if (addUndo) {
                     UndoPos uP = default(UndoPos);
                     uP.index = b;
-                    uP.SetData(old, oldExt, block, extBlock);
+                    uP.SetData(old, block);
 
                     if (UndoBuffer.Count < Server.physUndo) {
                         UndoBuffer.Add(uP);
@@ -392,27 +366,24 @@ namespace MCGalaxy {
                     currentUndo++;
                 }
 
-                blocks[b] = block;
+                blocks[b] = block.BlockID;
                 changed = true;
-                if (block == Block.custom_block) {
+                if (block.BlockID == Block.custom_block) {
                     ushort x, y, z;
                     IntToPos(b, out x, out y, out z);
-                    SetExtTileNoCheck(x, y, z, extBlock);
-                } else if (old == Block.custom_block) {
+                    SetExtTileNoCheck(x, y, z, block.ExtID);
+                } else if (old.BlockID == Block.custom_block) {
                     ushort x, y, z;
                     IntToPos(b, out x, out y, out z);
                     RevertExtTileNoCheck(x, y, z);
                 }                
-                if (physics > 0 && (ActivatesPhysics(block, extBlock) || data.Raw != 0))
+                if (physics > 0 && (ActivatesPhysics(block) || data.Raw != 0))
                     AddCheck(b, false, data);
                 
                 // Save bandwidth sending identical looking blocks, like air/op_air changes.
-                bool diffBlock = Block.Convert(old) != Block.Convert(block);
-                if (!diffBlock && old == Block.custom_block)
-                    diffBlock = oldExt != extBlock;
-                return diffBlock;
+                return !old.VisuallyEquals(block);
             } catch {
-                blocks[b] = block;
+                blocks[b] = block.BlockID;
                 return false;
             }
         }
@@ -444,44 +415,39 @@ namespace MCGalaxy {
             return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
         }
         
-        public void UpdateBlock(Player p, ushort x, ushort y, ushort z, byte block, byte ext, 
+        public void UpdateBlock(Player p, ushort x, ushort y, ushort z, ExtBlock block,
                                 ushort flags = BlockDBFlags.ManualPlace, bool buffered = false) {
-            byte old = GetTile(x, y, z), oldExt = 0;
-            if (old == Block.custom_block) oldExt = GetExtTile(x, y, z);
-            
+            ExtBlock old = GetExtBlock(x, y, z);
             bool drawn = (flags & BlockDBFlags.ManualPlace) != 0;
-            int type = DoBlockchange(p, x, y, z, block, ext, drawn);
+            int type = DoBlockchange(p, x, y, z, block, drawn);
             if (type == 0) return; // no block change performed
             
-            BlockDB.Cache.Add(p, x, y, z, flags, 
-                              old, oldExt, block, ext);            
+            BlockDB.Cache.Add(p, x, y, z, flags, old, block);
             if (type == 1) return; // not different visually
             
             int index = PosToInt(x, y, z);
-            if (buffered) 
-                BlockQueue.Addblock(p, index, block, ext);
-            else 
-                Player.GlobalBlockchange(this, x, y, z, block, ext);
+            if (buffered) BlockQueue.Addblock(p, index, block);
+            else Player.GlobalBlockchange(this, x, y, z, block);
         }
                 
         
-        public BlockDefinition GetBlockDef(byte block, byte extBlock) {
-            if (block == Block.custom_block) return CustomBlockDefs[extBlock];
-            if (block >= Block.CpeCount || block == Block.air) return null;
-            return CustomBlockDefs[block];
+        public BlockDefinition GetBlockDef(ExtBlock block) {
+            if (block.BlockID == Block.custom_block) return CustomBlockDefs[block.ExtID];
+            if (block.BlockID >= Block.CpeCount || block.BlockID == Block.air) return null;
+            return CustomBlockDefs[block.BlockID];
         }
         
-        public string BlockName(byte block, byte extBlock) {
-            BlockDefinition def = GetBlockDef(block, extBlock);
+        public string BlockName(ExtBlock block) {
+            BlockDefinition def = GetBlockDef(block);
             if (def != null) return def.Name.Replace(" ", "");
             
-            return block != Block.custom_block ? Block.Name(block) : extBlock.ToString();
+            return block.BlockID != Block.custom_block ? Block.Name(block.BlockID) : block.ExtID.ToString();
         }
         
-        public bool LightPasses(byte block, byte extBlock) {
-            BlockDefinition def = GetBlockDef(block, extBlock);
+        public bool LightPasses(ExtBlock block) {
+            BlockDefinition def = GetBlockDef(block);
             if (def != null) return !def.BlocksLight || def.BlockDraw != DrawType.Opaque;
-            return Block.LightPass(block);
+            return Block.LightPass(block.BlockID);
         }
     }
 }

@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, toIgnore, DoMeasure);
         }
         
-        bool DoMeasure(Player p, Vec3S32[] m, object state, byte type, byte extType) {
+        bool DoMeasure(Player p, Vec3S32[] m, object state, ExtBlock block) {
             byte toIgnore = (byte)state;
             int minX = Math.Min(m[0].X, m[1].X), maxX = Math.Max(m[0].X, m[1].X);
             int minY = Math.Min(m[0].Y, m[1].Y), maxY = Math.Max(m[0].Y, m[1].Y);

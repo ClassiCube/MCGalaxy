@@ -28,8 +28,7 @@ namespace MCGalaxy.Undo {
         protected override string Ext { get { return ".undo"; } }
         
         protected override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
-            UndoFormatEntry pos;
-            pos.NewExtBlock = 0; pos.ExtBlock = 0;
+            UndoFormatEntry pos = default(UndoFormatEntry);
             string[] lines = new StreamReader(s).ReadToEnd().SplitSpaces();
             Player p = args.Player;
             bool super = Player.IsSuper(p);
@@ -51,8 +50,8 @@ namespace MCGalaxy.Undo {
                 pos.Y = ushort.Parse(lines[(i * items) - 5]);
                 pos.Z = ushort.Parse(lines[(i * items) - 4]);
                                 
-                pos.Block = byte.Parse(lines[(i * items) - 2]);
-                pos.NewBlock = byte.Parse(lines[(i * items) - 1]);
+                pos.Block.BlockID = byte.Parse(lines[(i * items) - 2]);
+                pos.NewBlock.BlockID = byte.Parse(lines[(i * items) - 1]);
                 yield return pos;
             }
         }

@@ -254,14 +254,19 @@ namespace MCGalaxy {
             Send(Packet.Teleport(id, pos, rot, hasExtPositions));
         }
         
-        [Obsolete("Prefer SendBlockChange(x, y, z, block, extBlock)")]
+        [Obsolete("Prefer SendBlockChange with ExtBlock")]
         public void SendBlockchange(ushort x, ushort y, ushort z, byte block) {
             byte extBlock = 0;
-            if (block == Block.custom_block) extBlock = level.GetExtTile(x, y, z);
-            SendBlockchange(x, y, z, block, extBlock);
+            if (block == Block.custom_block) extBlock = level.GetExtTile(x, y, z);            
+            SendBlockchange(x, y, z, new ExtBlock(block, extBlock));
         }
         
+        [Obsolete("Prefer SendBlockChange with ExtBlock")]
         public void SendBlockchange(ushort x, ushort y, ushort z, byte block, byte extBlock) {
+            SendBlockchange(x, y, z, new ExtBlock(block, extBlock));
+        }
+        
+        public void SendBlockchange(ushort x, ushort y, ushort z, ExtBlock block) {
             //if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
 
@@ -271,20 +276,21 @@ namespace MCGalaxy {
             NetUtils.WriteU16(y, buffer, 3);
             NetUtils.WriteU16(z, buffer, 5);
             
-            if (block == Block.custom_block) {
-                block = hasBlockDefs ? extBlock : level.RawFallback(extBlock);
+            byte raw;
+            if (block.BlockID == Block.custom_block) {
+                raw = hasBlockDefs ? block.ExtID : level.RawFallback(block.ExtID);
             } else {
-                block = Block.Convert(block);
+                raw = Block.Convert(block.BlockID);
             }
-            if (!hasCustomBlocks) block = Block.ConvertCPE(block); // client doesn't support CPE
+            if (!hasCustomBlocks) raw = Block.ConvertCPE(raw); // client doesn't support CPE
             
             // Custom block replaced a core block
-            if (!hasBlockDefs && block < Block.CpeCount) {
-                BlockDefinition def = level.CustomBlockDefs[block];
-                if (def != null) block = def.FallBack;
+            if (!hasBlockDefs && raw < Block.CpeCount) {
+                BlockDefinition def = level.CustomBlockDefs[raw];
+                if (def != null) raw = def.FallBack;
             }
             
-            buffer[7] = block;
+            buffer[7] = raw;
             Send(buffer);
         }
         

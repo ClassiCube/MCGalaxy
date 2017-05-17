@@ -49,10 +49,9 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(MarksCount, dArgs, DoDraw);
         }
         
-        protected virtual bool DoDraw(Player p, Vec3S32[] marks,
-                                      object state, byte block, byte extBlock) {
+        protected virtual bool DoDraw(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             DrawArgs dArgs = (DrawArgs)state;
-            dArgs.Block = block; dArgs.ExtBlock = extBlock;
+            dArgs.Block = block;
             GetMarks(dArgs, ref marks);
             if (marks == null) return false;
             
@@ -89,12 +88,12 @@ namespace MCGalaxy.Commands.Building {
             
             if (end >= 0) brushMsg = dArgs.Message.Substring(0, end);
             if (brushMsg == "") brushMsg = dArgs.Player.DefaultBrushArgs;
-            return new BrushArgs(dArgs.Player, brushMsg, dArgs.Block, dArgs.ExtBlock);
+            return new BrushArgs(dArgs.Player, brushMsg, dArgs.Block);
         }
         
         protected struct DrawArgs {
             public DrawMode Mode;
-            public byte Block, ExtBlock;
+            public ExtBlock Block;
             public string Message;
             
             public DrawOp Op;

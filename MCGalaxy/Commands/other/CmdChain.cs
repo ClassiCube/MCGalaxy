@@ -63,40 +63,32 @@ namespace MCGalaxy.Commands.Misc
                 if (next.X >= p.level.Width || next.Z >= p.level.Length) {
                     if (i == 0) return;
                     PullBack(p, cur, target, dirX, dirZ);
-                    p.level.Blockchange(p, x, y, z, 0); return;
+                    p.level.Blockchange(p, x, y, z, ExtBlock.Air); return;
                 }
 
                 Thread.Sleep(250);
-                p.level.Blockchange(p, cur.X, cur.Y, cur.Z, Block.mushroom);
+                p.level.Blockchange(p, cur.X, cur.Y, cur.Z, (ExtBlock)Block.mushroom);
                 if (p.level.GetTile(next.X, next.Y, next.Z) != 0) {
                     PullBack(p, next, target, dirX, dirZ); 
-                    p.level.Blockchange(p, x, y, z, 0); return;
+                    p.level.Blockchange(p, x, y, z, ExtBlock.Air); return;
                 }
             }
         }
         
         void PullBack(Player p, Vec3U16 cur, Vec3U16 target, int dirX, int dirZ) {
-            byte type = p.level.GetTile(cur.X, cur.Y, cur.Z), extType = 0;
-            if (type == Block.custom_block)
-                extType = p.level.GetExtTile(cur.X, cur.Y, cur.Z);
-            p.level.Blockchange(p, cur.X, cur.Y, cur.Z, type);
+            ExtBlock block = p.level.GetExtBlock(cur.X, cur.Y, cur.Z);
+            p.level.Blockchange(p, cur.X, cur.Y, cur.Z, block);
             
             while (cur.X != target.X || cur.Z != target.Z) {
-                byte tile = p.level.GetTile(cur.X, cur.Y, cur.Z), extTile = 0;
-                if (tile == Block.custom_block)
-                    extTile = p.level.GetExtTile(cur.X, cur.Y, cur.Z);
-                
-                if (tile == type) {
-                    if (tile != Block.custom_block || (tile == Block.custom_block && extTile == extType))
-                        p.level.Blockchange(p, cur.X, cur.Y, cur.Z, 0);
-                }
+                ExtBlock curBlock = p.level.GetExtBlock(cur.X, cur.Y, cur.Z);                
+                if (curBlock == block) p.level.Blockchange(p, cur.X, cur.Y, cur.Z, ExtBlock.Air);
 
                 cur.X = (ushort)(cur.X - dirX); cur.Z = (ushort)(cur.Z - dirZ);
                 if (cur.X >= p.level.Width || cur.Z >= p.level.Length) return;
                 
-                tile = p.level.GetTile(cur.X, cur.Y, cur.Z);
-                if (tile == Block.mushroom)
-                    p.level.Blockchange(p, cur.X, cur.Y, cur.Z, type, extType);
+                curBlock.BlockID = p.level.GetTile(cur.X, cur.Y, cur.Z);
+                if (curBlock.BlockID == Block.mushroom)
+                    p.level.Blockchange(p, cur.X, cur.Y, cur.Z, block);
                 Thread.Sleep(250);
             }
         }
