@@ -50,7 +50,7 @@ namespace MCGalaxy {
         public Player(Socket s) {
             spamChecker = new SpamChecker(this);
             try {
-            	socket = new TcpSocket(this, s);
+                socket = new TcpSocket(this, s);
                 ip = socket.RemoteIP;
                 SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
                 Server.s.Log(ip + " connected to the server.");
@@ -93,7 +93,7 @@ namespace MCGalaxy {
         
         
         public ExtBlock GetHeldBlock() {
-        	if (modeType != 0) return (ExtBlock)modeType;
+            if (modeType != 0) return (ExtBlock)modeType;
             byte raw = RawHeldBlock.BlockID;
             if (raw < Block.CpeCount) return (ExtBlock)bindings[raw];
             return RawHeldBlock;

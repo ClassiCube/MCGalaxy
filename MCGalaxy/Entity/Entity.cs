@@ -46,8 +46,8 @@ namespace MCGalaxy {
         
         /// <summary> Gets or sets the orientation of this entity. </summary>
         public Orientation Rot {
-        	get { return Orientation.Unpack(Thread.VolatileRead(ref _rot)); }
-        	set { Thread.VolatileWrite(ref _rot, value.Pack()); OnSetRot(); }
+            get { return Orientation.Unpack(Thread.VolatileRead(ref _rot)); }
+            set { Thread.VolatileWrite(ref _rot, value.Pack()); OnSetRot(); }
         }
         
         /// <summary> Gets or sets the position of this entity. </summary>

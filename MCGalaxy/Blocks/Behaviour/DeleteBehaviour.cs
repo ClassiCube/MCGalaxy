@@ -40,7 +40,7 @@ namespace MCGalaxy.Blocks {
             byte b2 = p.level.GetBlock(x + dx    , y + dy,     z + dz);
             if ( b1 == Block.air && b2 == Block.air && p.level.CheckClear((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ))
                 && p.level.CheckClear((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz )) ) {
-            	p.level.Blockchange((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ), (ExtBlock)Block.rockethead);
+                p.level.Blockchange((ushort)( x + dx * 2 ), (ushort)( y + dy * 2 ), (ushort)( z + dz * 2 ), (ExtBlock)Block.rockethead);
                 p.level.Blockchange((ushort)( x + dx ), (ushort)( y + dy ), (ushort)( z + dz ), (ExtBlock)Block.lava_fire);
             }
         }

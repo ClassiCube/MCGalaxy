@@ -20,7 +20,7 @@ using MCGalaxy.Eco;
 
 namespace MCGalaxy.Events {
     
-	/// <summary> Raised whenever a player's online money changes. </summary>
+    /// <summary> Raised whenever a player's online money changes. </summary>
     public sealed class OnMoneyChangedEvent : IPluginEvent<Economy.OnMoneyChanged> {
         internal OnMoneyChangedEvent(Economy.OnMoneyChanged method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
@@ -31,7 +31,7 @@ namespace MCGalaxy.Events {
         }
     }
     
-	/// <summary> Raised whenever an economic transaction occurs. </summary>
+    /// <summary> Raised whenever an economic transaction occurs. </summary>
     public sealed class OnEcoTransactionEvent : IPluginEvent<Economy.OnEcoTransaction> {        
         internal OnEcoTransactionEvent(Economy.OnEcoTransaction method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }

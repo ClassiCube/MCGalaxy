@@ -170,7 +170,7 @@ namespace MCGalaxy.Commands.Building {
         
         static void ShowMessageBlocks(Player p, DataTable table) {
             foreach (DataRow row in table.Rows) {
-        		p.SendBlockchange(U16(row["X"]), U16(row["Y"]), U16(row["Z"]), (ExtBlock)Block.green);
+                p.SendBlockchange(U16(row["X"]), U16(row["Y"]), U16(row["Z"]), (ExtBlock)Block.green);
             }
             Player.Message(p, "Now showing &a" + table.Rows.Count + " %SMBs.");
         }

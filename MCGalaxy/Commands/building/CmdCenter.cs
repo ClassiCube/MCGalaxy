@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Building {
         
         static void Place(Player p, int x, int y, int z) {
             p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, 
-        	                    (ExtBlock)Block.goldsolid, BlockDBFlags.Drawn);
+                                (ExtBlock)Block.goldsolid, BlockDBFlags.Drawn);
         }
         
         public override void Help(Player p) {

@@ -223,7 +223,7 @@ namespace MCGalaxy.Network {
             
             string error;
             if (!CheckIRCCommand(user, cmdName, channel, out error)) {
-            	if (error != null) bot.Message(error, channel);
+                if (error != null) bot.Message(error, channel);
                 return false;
             }
             

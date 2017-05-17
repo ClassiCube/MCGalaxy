@@ -244,8 +244,8 @@ namespace MCGalaxy {
                 
                 if (overRide) {
                     ExtBlock block;
-                	block.BlockID = (byte)type;
-                	block.ExtID = 0;
+                    block.BlockID = (byte)type;
+                    block.ExtID = 0;
                 	
                     // Is the Ext flag just an indicator for the block update?
                     if (data.ExtBlock && (data.Raw & PhysicsArgs.TypeMask) == 0) {

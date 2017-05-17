@@ -52,7 +52,7 @@ namespace MCGalaxy {
         }
         
         public static ExtBlock FromRaw(byte raw, bool customBit) {
-            if (!customBit) return (ExtBlock)raw;          	
+            if (!customBit) return (ExtBlock)raw;
             return new ExtBlock(Block.custom_block, raw);
         }
         

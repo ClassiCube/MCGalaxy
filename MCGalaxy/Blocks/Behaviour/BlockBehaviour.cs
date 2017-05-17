@@ -159,7 +159,7 @@ namespace MCGalaxy.Blocks {
             physicsHandlers[Block.train] = TrainPhysics.Do;
             
             for (int i = 0; i < Block.Count; i++) {
-            	HandlePhysics animalAI = AnimalAIHandler(Block.Props[i].AnimalAI);
+                HandlePhysics animalAI = AnimalAIHandler(Block.Props[i].AnimalAI);
                 if (animalAI != null) { physicsHandlers[i] = animalAI; continue; }
                 
                 //Adv physics updating anything placed next to water or lava

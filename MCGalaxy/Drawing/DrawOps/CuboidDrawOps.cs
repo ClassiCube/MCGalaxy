@@ -115,7 +115,7 @@ namespace MCGalaxy.Drawing.Ops {
                         i = (i + stepX) % 13;
                         if (Level.GetTile(x, y, z) != Block.air) {
                             block.BlockID = (byte)(Block.red + i);
-                        	output(Place(x, y, z, block));
+                            output(Place(x, y, z, block));
                         }
                     }
                     i = startX;

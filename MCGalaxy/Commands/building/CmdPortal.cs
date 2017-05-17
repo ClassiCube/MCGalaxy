@@ -165,7 +165,7 @@ namespace MCGalaxy.Commands.Building {
                 if (row["ExitMap"].ToString() == p.level.name) {
                     p.SendBlockchange(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]), (ExtBlock)Block.red);
                 }
-        		p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), (ExtBlock)Block.green);
+                p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), (ExtBlock)Block.green);
             }
 
             Player.Message(p, "Now showing &a" + table.Rows.Count + " %Sportals.");
@@ -173,7 +173,7 @@ namespace MCGalaxy.Commands.Building {
         
         static void HidePortals(Player p, DataTable table) {
             foreach (DataRow row in table.Rows) {
-        		if (row["ExitMap"].ToString() == p.level.name) {
+                if (row["ExitMap"].ToString() == p.level.name) {
                     p.RevertBlock(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]));
                 }
                 p.RevertBlock(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]));

@@ -179,7 +179,7 @@ namespace MCGalaxy {
             
             byte below = level.GetTile(x, (ushort)(y - 1), z);
             if (below == Block.dirt && block.BlockID == Block.air) {
-            	level.Blockchange(this, x, (ushort)(y - 1), z, (ExtBlock)Block.grass);
+                level.Blockchange(this, x, (ushort)(y - 1), z, (ExtBlock)Block.grass);
             }
             if (below == Block.grass && !level.LightPasses(block)) {
                 level.Blockchange(this, x, (ushort)(y - 1), z, (ExtBlock)Block.dirt);
@@ -378,7 +378,7 @@ namespace MCGalaxy {
                     
                     // level drown is in 10ths of a second, and there are 100 ticks/second
                     if (drownCount > level.drown * 10) {
-                    	HandleDeath((ExtBlock)Block.water);
+                        HandleDeath((ExtBlock)Block.water);
                         drownCount = 0;
                     }
                     break;

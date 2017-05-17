@@ -68,7 +68,7 @@ namespace MCGalaxy {
         }
         
         public bool CheckCommandSpam() {
-        	if (!Server.CmdSpamCheck || Player.IsSuper(p)) return false;
+            if (!Server.CmdSpamCheck || Player.IsSuper(p)) return false;
             
             lock (cmdLock) {
                 if (cmdLog.AddSpamEntry(Server.CmdSpamCount, Server.CmdSpamInterval)) 

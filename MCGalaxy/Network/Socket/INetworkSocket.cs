@@ -22,12 +22,12 @@ namespace MCGalaxy.Network {
     /// <summary> Abstracts sending to/receiving from a network socket. </summary>
     public interface INetworkSocket {
         
-    	/// <summary> Gets the remote IP of this socket. </summary>
-    	string RemoteIP { get; }
-    	
-    	/// <summary> Receives next block of received data, asynchronously. </summary>
-    	void ReceiveNextAsync();
-    	
+        /// <summary> Gets the remote IP of this socket. </summary>
+         string RemoteIP { get; }
+        
+        /// <summary> Receives next block of received data, asynchronously. </summary>
+        void ReceiveNextAsync();
+        
         /// <summary> Sends a block of data, either synchronously or asynchronously. </summary>
         void Send(byte[] buffer, bool sync = false);
         

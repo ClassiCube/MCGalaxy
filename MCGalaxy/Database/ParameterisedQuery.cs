@@ -22,7 +22,7 @@ using System.Data.Common;
 
 namespace MCGalaxy.SQL {
 
-	/// <summary> Callback function invoked on a row returned from an SQL query. </summary>
+    /// <summary> Callback function invoked on a row returned from an SQL query. </summary>
     public delegate void ReaderCallback(IDataReader reader);
     
     /// <summary> Represents an SQL command or query, that takes named parameters/arguments. </summary>

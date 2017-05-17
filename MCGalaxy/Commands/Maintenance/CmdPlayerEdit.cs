@@ -49,10 +49,10 @@ namespace MCGalaxy.Commands.Maintenance {
             switch (args[1].ToLower()) {
                 case "firstlogin":
                     SetDate(p, args, PlayerData.ColumnFirstLogin, who, 
-            		        v => who.firstLogin = v); break;
+                            v => who.firstLogin = v); break;
                 case "lastlogin":
                     SetDate(p, args, PlayerData.ColumnLastLogin, who, 
-            		        v => who.timeLogged = v); break;
+                            v => who.timeLogged = v); break;
                     
                 case "logins":
                 case "totallogin":
@@ -165,7 +165,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 setter(span);
             } else {
                 long secs = (long)span.TotalSeconds;
-            	UpdateDB(args[0], secs.ToString(), column);
+                UpdateDB(args[0], secs.ToString(), column);
             }
             MessageDataChanged(p, args[0], args[1], span.Shorten(true));
         }
@@ -197,10 +197,10 @@ namespace MCGalaxy.Commands.Maintenance {
             long loValue = long.Parse(value);
             // OR with existing high bits of value in DB
             using (DataTable results = Database.Backend.GetRows("Players", column, "WHERE Name = @0", name)) {
-            	if (results.Rows.Count > 0) {
-            		long curValue = PlayerData.ParseLong(results.Rows[0][column].ToString());
-            		loValue |= (curValue & ~PlayerData.LowerBitsMask);
-            	}                
+                if (results.Rows.Count > 0) {
+                    long curValue = PlayerData.ParseLong(results.Rows[0][column].ToString());
+                    loValue |= (curValue & ~PlayerData.LowerBitsMask);
+                }
             }
             Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, loValue);
         }
@@ -209,10 +209,10 @@ namespace MCGalaxy.Commands.Maintenance {
             long hiValue = long.Parse(value) << PlayerData.LowerBits;
             // OR with existing low bits of value in DB
             using (DataTable results = Database.Backend.GetRows("Players", column, "WHERE Name = @0", name)) {
-            	if (results.Rows.Count > 0) {
-            		long curValue = PlayerData.ParseLong(results.Rows[0][column].ToString());
-            		hiValue |= (curValue & PlayerData.LowerBitsMask);
-            	}              
+                if (results.Rows.Count > 0) {
+                    long curValue = PlayerData.ParseLong(results.Rows[0][column].ToString());
+                    hiValue |= (curValue & PlayerData.LowerBitsMask);
+                }
             }            
             Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, hiValue);
         }

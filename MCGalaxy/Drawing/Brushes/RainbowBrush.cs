@@ -22,7 +22,7 @@ namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class RainbowBrush : Brush {
         
-		ExtBlock block = default(ExtBlock);
+        ExtBlock block = default(ExtBlock);
         public override string Name { get { return "Rainbow"; } }
         
         public override ExtBlock NextBlock(DrawOp op) {
@@ -36,7 +36,7 @@ namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class BWRainbowBrush : Brush {
         
-		ExtBlock block = default(ExtBlock);
+        ExtBlock block = default(ExtBlock);
         public override string Name { get { return "BWRainbow"; } }
         
         static byte[] blocks = new byte[] { Block.iron, Block.white, Block.lightgrey,

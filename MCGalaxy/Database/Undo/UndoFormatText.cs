@@ -22,7 +22,7 @@ using System.IO;
 
 namespace MCGalaxy.Undo {
 
-	/// <summary> Reads undo entries in the old MCForge undo text format. </summary>
+    /// <summary> Reads undo entries in the old MCForge undo text format. </summary>
     public sealed class UndoFormatText : UndoFormat {
         
         protected override string Ext { get { return ".undo"; } }

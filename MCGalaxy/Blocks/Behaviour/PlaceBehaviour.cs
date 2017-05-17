@@ -27,7 +27,7 @@ namespace MCGalaxy.Blocks {
         }
         
         internal static void Dirt(Player p, byte block, ushort x, ushort y, ushort z) {
-			DirtGrass(p, (ExtBlock)Block.dirt, x, y, z);
+            DirtGrass(p, (ExtBlock)Block.dirt, x, y, z);
         }
         
         static void DirtGrass(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
@@ -48,7 +48,7 @@ namespace MCGalaxy.Blocks {
         internal static void Stairs(Player p, byte block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)
                 || p.level.GetBlock(x, y - 1, z) != Block.staircasestep) {
-				p.ChangeBlock(x, y, z, (ExtBlock)Block.staircasestep); return;
+                p.ChangeBlock(x, y, z, (ExtBlock)Block.staircasestep); return;
             }
             
             p.SendBlockchange(x, y, z, ExtBlock.Air); // send the air block back only to the user

@@ -34,8 +34,8 @@ namespace MCGalaxy.Games {
             }
             return false;
         }
+
 		
-		        
         public override void PlayerJoinedServer(Player p) {
             if (!active) return;
             Player.Message(p, "There is a &aLava Survival %Sgame active! Join it by typing /ls go");

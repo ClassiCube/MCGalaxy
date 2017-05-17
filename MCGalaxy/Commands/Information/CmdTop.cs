@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Info {
             
             Player.Message(p, "&a{0}:", stat.Title());
             for (int i = 0; i < db.Rows.Count; i++) {
-            	string player = PlayerInfo.GetColoredName(p, db.Rows[i]["Name"].ToString());
+                string player = PlayerInfo.GetColoredName(p, db.Rows[i]["Name"].ToString());
                 string item = db.Rows[i][stat.Column].ToString();
                 Player.Message(p, "{0}) {1} %S- {2}", offset + (i + 1), player, stat.Formatter(item));
             }

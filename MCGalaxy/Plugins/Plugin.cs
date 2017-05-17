@@ -18,8 +18,8 @@
 using System;
 
 namespace MCGalaxy {
-	
-	/// <summary> Importance. Higher priority plugins have their handlers called before lower priority plugins. </summary>
+
+    /// <summary> Importance. Higher priority plugins have their handlers called before lower priority plugins. </summary>
     public enum Priority : byte {
         Low = 0,
         Normal = 1,
@@ -27,7 +27,7 @@ namespace MCGalaxy {
         Critical = 3,
         System_Level = 4
     }
-	    
+  
     /// <summary> This class provides for more advanced modification to MCGalaxy </summary>
     public abstract partial class Plugin {
 

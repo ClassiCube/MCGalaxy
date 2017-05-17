@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.Fun {
                     Player hitP = GetPlayer(p, pos, true);
                     if (hitP != null) {
                         if (p.level.physics >= 3 && bp.ending >= EndType.Explode) {
-                    	    hitP.HandleDeath((ExtBlock)Block.stone, " was blown up by " + p.ColoredName, true);
+                            hitP.HandleDeath((ExtBlock)Block.stone, " was blown up by " + p.ColoredName, true);
                         } else {
                             hitP.HandleDeath((ExtBlock)Block.stone, " was hit a missile from " + p.ColoredName);
                         }

@@ -96,7 +96,7 @@ namespace MCGalaxy {
         
         void InitHeartbeat() {
             try {
-				Heartbeat.InitHeartbeats();
+                Heartbeat.InitHeartbeats();
             } catch (Exception e) {
                 Server.ErrorLog(e);
             }
@@ -145,8 +145,8 @@ namespace MCGalaxy {
                     oldMain.Unload(true, false);
             } catch (Exception e) { Server.ErrorLog(e); }
         }
-		
-		void InitLavaSurvival() {
+
+        void InitLavaSurvival() {
             if (!Server.lava.startOnStartup) return;
             try {
                 Server.lava.Start();

@@ -45,7 +45,7 @@ namespace MCGalaxy.Drawing.Ops {
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-            	ExtBlock block = Level.GetExtBlock(x, y, z);
+                ExtBlock block = Level.GetExtBlock(x, y, z);
                 if (block == Include) output(Place(x, y, z, brush));
             }
         }
@@ -73,7 +73,7 @@ namespace MCGalaxy.Drawing.Ops {
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-            	ExtBlock block = Level.GetExtBlock(x, y, z);
+                ExtBlock block = Level.GetExtBlock(x, y, z);
                 if (block != Exclude) output(Place(x, y, z, brush));
             }
         }

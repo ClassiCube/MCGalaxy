@@ -52,7 +52,7 @@ namespace MCGalaxy.Drawing.Ops {
                             if (bT == Block.leaf && lvl.GetTile(xT, yT, zT) != Block.air) return;
                             
                             if (bT != Block.leaf) {
-                            	output(Place(xT, yT, zT, (ExtBlock)bT));
+                                output(Place(xT, yT, zT, (ExtBlock)bT));
                             } else {
                                 output(Place(xT, yT, zT, brush));
                             }

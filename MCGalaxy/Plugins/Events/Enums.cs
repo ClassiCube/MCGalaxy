@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Events {
-	
+
     /// <summary> These are server event that can be canceled </summary>
     public enum ServerEvents {
         //TODO

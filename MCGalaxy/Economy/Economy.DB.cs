@@ -53,8 +53,8 @@ namespace MCGalaxy.Eco {
                 UpdateStats(stats);
             }
         }
-        
-		
+
+
         public struct EcoStats {
             public string Player, Purchase, Payment, Salary, Fine;
             public int TotalSpent;

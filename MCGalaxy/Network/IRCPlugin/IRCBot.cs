@@ -64,7 +64,7 @@ namespace MCGalaxy {
         
         /// <summary> Sends an IRC message to the given channel. </summary>
         public void Message(string channel, string message, bool color = true) {
-        	if (!Enabled) return;
+            if (!Enabled) return;
             message = ConvertMessage(message, color);
             connection.Sender.PublicMessage(channel, message);
         }
