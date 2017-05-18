@@ -62,16 +62,10 @@ namespace MCGalaxy.Commands.Fun {
         EndType GetEnd(Player p, string mode) {
             if (mode == "") return EndType.Normal;
             if (mode.CaselessEq("destroy")) return EndType.Destroy;
-            if (mode.CaselessEq("tp") || mode.CaselessEq("teleport")) return EndType.Teleport;
+            if (mode.CaselessEq("tp") || mode.CaselessEq("teleport")) return EndType.Teleport;         
+            if (mode.CaselessEq("explode")) return EndType.Explode;
+            if (mode.CaselessEq("laser")) return EndType.Laser;
             
-            if (mode.CaselessEq("explode")) {
-                if (!p.allowTnt) Player.Message(p, "Tnt usage is currently disallowed, switching to normal gun.");
-                return p.allowTnt ? EndType.Explode : EndType.Destroy;
-            }
-            if (mode.CaselessEq("laser")) {
-                if (!p.allowTnt) Player.Message(p, "Tnt usage is currently disallowed, switching to normal gun.");
-                return p.allowTnt ? EndType.Laser : EndType.Destroy;
-            }
             Help(p);
             return EndType.Invalid;
         }
@@ -166,9 +160,8 @@ namespace MCGalaxy.Commands.Fun {
                     return true;
                 }
             } else if (p.level.physics >= 3) {
-                if (type != Block.glass && p.allowTnt) {
-                    if (doExplode)
-                        p.level.MakeExplosion(pos.X, pos.Y, pos.Z, 1);
+        		if (type != Block.glass && doExplode) {
+                    p.level.MakeExplosion(pos.X, pos.Y, pos.Z, 1);
                     return true;
                 }
             } else {

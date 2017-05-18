@@ -95,7 +95,7 @@ namespace MCGalaxy {
         
         
         public ExtBlock GetHeldBlock() {
-            if (modeType != 0) return (ExtBlock)modeType;
+            if (!ModeBlock.IsAir) return ModeBlock;
             return BlockBindings[RawHeldBlock.RawID];
         }
         

@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Info {
         void PlacedBlock(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             if (!p.staticCommands) p.ClearBlockchange();
             block = p.level.GetExtBlock(x, y, z);
-            if (block.IsInvalidType) return;
+            if (block.IsInvalid) return;
             p.RevertBlock(x, y, z);
             
             Dictionary<int, string> names = new Dictionary<int, string>();

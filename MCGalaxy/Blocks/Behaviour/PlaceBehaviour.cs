@@ -35,7 +35,7 @@ namespace MCGalaxy.Blocks {
             if (!lvl.GrassGrow || !(lvl.physics == 0 || lvl.physics == 5)) {
                 p.ChangeBlock(x, y, z, block); return;
             }
-            if (p.modeType == Block.dirt || p.modeType == Block.grass) {
+            if (p.ModeBlock.BlockID == Block.dirt || p.ModeBlock.BlockID == Block.grass) {
                 p.ChangeBlock(x, y, z, block); return;
             }
             

@@ -42,35 +42,26 @@ namespace MCGalaxy.Commands.Building {
             }
             
             if (message == "") {
-                if (p.modeType != 0) {
-                    Player.Message(p, "&b{0} %Smode: &cOFF", Block.Name(p.modeType).Capitalize());
-                    p.modeType = 0;
+                if (p.ModeBlock != ExtBlock.Air) {
+                    Player.Message(p, "&b{0} %Smode: &cOFF", p.level.BlockName(p.ModeBlock));
+                    p.ModeBlock = ExtBlock.Air;
                 } else {
                     Help(p);
                 }
                 return;
             }
             
-            byte block = Block.Byte(message);
-            if (block == Block.Invalid) { Player.Message(p, "Could not find block given."); return; }
-            if (block == Block.air) { Player.Message(p, "Cannot use Air Mode."); return; }
-
-            if (!p.allowTnt && (block == Block.tnt || block == Block.bigtnt || block == Block.smalltnt
-                                || block == Block.nuketnt || block == Block.tntexplosion)) {
-                Player.Message(p, "Tnt usage is not allowed at the moment"); return;
-            }
-            if (!p.allowTnt && block == Block.fire) {
-                Player.Message(p, "Tnt usage is not allowed at the moment, fire is a lighter for tnt and is also disabled"); return;
-            }          
+            ExtBlock block;
+            if (!CommandParser.GetBlock(p, message, out block)) return;
+            if (block == ExtBlock.Air) { Player.Message(p, "Cannot use Air Mode."); return; }
             if (!CommandParser.IsBlockAllowed(p, "place ", (ExtBlock)block)) return;
             
-            string name = Block.Name(block).Capitalize();
-            if (p.modeType == block) {
-                Player.Message(p, "&b{0} %Smode: &cOFF", name);
-                p.modeType = 0;
+            if (p.ModeBlock == block) {
+                Player.Message(p, "&b{0} %Smode: &cOFF", p.level.BlockName(p.ModeBlock));
+                p.ModeBlock = ExtBlock.Air;
             } else {
-                p.modeType = block;
-                Player.Message(p, "&b{0} %Smode: &aON", name);
+                p.ModeBlock = block;
+                Player.Message(p, "&b{0} %Smode: &aON", p.level.BlockName(p.ModeBlock));
             }
         }
         

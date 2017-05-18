@@ -215,7 +215,7 @@ namespace MCGalaxy {
         //Games
         public DateTime lastDeath = DateTime.UtcNow;
 
-        public byte modeType;
+        public ExtBlock ModeBlock;
         public ExtBlock RawHeldBlock = (ExtBlock)Block.rock;
         public ExtBlock[] BlockBindings = new ExtBlock[Block.Count];        
         public string[] CmdBindings = new string[10];

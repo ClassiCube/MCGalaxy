@@ -122,7 +122,7 @@ namespace MCGalaxy {
                 }
             }
             
-            if (modeType != 0) block = (ExtBlock)modeType;
+            if (!ModeBlock.IsAir) block = ModeBlock;
             if (doDelete) {
                 bool deleted = DeleteBlock(oldB, x, y, z, block);
             } else {

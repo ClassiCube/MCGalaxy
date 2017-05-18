@@ -33,7 +33,7 @@ namespace MCGalaxy.Drawing.Brushes {
             GetRaw(parts, filter, args, out blocks, out count);
             
             // check if we're allowed to place the held block
-            if (blocks[0].IsInvalidType && !CommandParser.IsBlockAllowed(p, "draw with ", blocks[0])) return null;
+            if (blocks[0].IsInvalid && !CommandParser.IsBlockAllowed(p, "draw with ", blocks[0])) return null;
             
             for (int i = 0, j = 0; i < parts.Length; i++ ) {
                 if (parts[i] == "") continue;

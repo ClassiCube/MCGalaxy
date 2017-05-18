@@ -39,12 +39,13 @@ namespace MCGalaxy {
         
         /// <summary> Returns whether the type of this extended block is a fully custom block. </summary>
         /// <remarks> Note that core/original/vanilla blocks can be replaced with custom blocks. </remarks>
-        public bool IsCustomType {
-            get { return BlockID == Block.custom_block; } 
-        }
+        public bool IsCustomType { get { return BlockID == Block.custom_block; } }
         
-        /// <summary> Returns whether the type of this extended block is an invalid block. </summary>
-        public bool IsInvalidType { get { return BlockID == Block.Invalid; } }
+        /// <summary> Returns whether the type of this extended block is the invald block. </summary>
+        public bool IsInvalid { get { return BlockID == Block.Invalid; } }
+        
+        /// <summary> Returns whether the type of this extended block is the air block. </summary>
+        public bool IsAir { get { return BlockID == Block.air; } }
         
         
         /// <summary> Returns the raw (for client side) block ID of this block. </summary>
