@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using MCGalaxy.Commands.Building;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
-using MCGalaxy.Undo;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Moderation {
@@ -32,10 +31,14 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("xundo", null, "all") }; }
+            get { return new[] { new CommandAlias("xundo", null, "all"), 
+                    new CommandAlias("undoarea", "area"), new CommandAlias("ua", "area") }; }
         }
 
         public override void Use(Player p, string message) {
+            bool area = message.CaselessStarts("area ");
+            if (area) message = message.Substring("area ".Length);
+            
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; } // TODO: fix this to work from IRC and Console
             if (CheckSuper(p, message, "player name")) return;
             if (message == "") { Player.Message(p, "You need to provide a player name."); return; }
@@ -47,11 +50,27 @@ namespace MCGalaxy.Commands.Moderation {
             TimeSpan delta = CmdUndo.GetDelta(p, parts[0], parts, 1);
             if (delta == TimeSpan.MinValue) return;
 
-            Vec3S32[] marks = new Vec3S32[] { Vec3U16.MinVal, Vec3U16.MaxVal };
-            UndoPlayer(p, delta, names, ids, marks);
+            if (!area) {
+                Vec3S32[] marks = new Vec3S32[] { Vec3U16.MinVal, Vec3U16.MaxVal };
+                UndoPlayer(p, delta, names, ids, marks);
+            } else {
+                Player.Message(p, "Place or break two blocks to determine the edges.");
+                UndoAreaArgs args = new UndoAreaArgs();
+                args.ids = ids; args.names = names; args.delta = delta;
+                p.MakeSelection(2, args, DoUndoArea);
+            }
+        }
+        
+        bool DoUndoArea(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+            UndoAreaArgs args = (UndoAreaArgs)state;
+            UndoPlayer(p, args.delta, args.names, args.ids, marks);
+            return false;
         }
 
-        protected void UndoPlayer(Player p, TimeSpan delta, string[] names, int[] ids, Vec3S32[] marks) {
+        struct UndoAreaArgs { public string[] names; public int[] ids; public TimeSpan delta; }
+        
+
+        static void UndoPlayer(Player p, TimeSpan delta, string[] names, int[] ids, Vec3S32[] marks) {
             UndoDrawOp op = new UndoDrawOp();
             op.Start = DateTime.UtcNow.Subtract(delta);
             op.who = names[0]; op.ids = ids;
@@ -66,7 +85,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        protected int[] GetIds(Player p, string[] parts, out string[] names) {
+        int[] GetIds(Player p, string[] parts, out string[] names) {
             int count = Math.Max(1, parts.Length - 1);
             List<int> ids = new List<int>();
             names = new string[count];
@@ -76,7 +95,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (names[i] == null) return null;
                 
                 Group grp = Group.findPlayerGroup(names[i]);
-                if (p != null && grp.Permission >= p.Rank) { 
+                if (p != null && grp.Permission >= p.Rank) {
                     MessageTooHighRank(p, "undo", false); return null;
                 }
 
@@ -88,6 +107,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Help(Player p) {
             Player.Message(p, "%T/undoplayer [player1] <player2..> <timespan>");
             Player.Message(p, "%HUndoes the block changes of [players] in the past <timespan>");
+            Player.Message(p, "%T/undoplayer area [player1] <player2..> <timespan>");
+            Player.Message(p, "%HOnly undoes block changes in the specified region.");
             Player.Message(p, "%H  If <timespan> is not given, undoes 30 minutes.");
             if (p == null || p.group.maxUndo == -1 || p.group.maxUndo == int.MaxValue)
                 Player.Message(p, "%H  if <timespan> is all, &cundoes for 68 years");

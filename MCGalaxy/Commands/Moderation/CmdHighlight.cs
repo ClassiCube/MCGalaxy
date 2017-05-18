@@ -17,16 +17,9 @@
  */
 using System;
 using MCGalaxy.DB;
-using MCGalaxy.Network;
-using MCGalaxy.Undo;
-using MCGalaxy.Maths;
-using System;
-using System.Collections.Generic;
-using MCGalaxy.Commands.Building;
-using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
-using MCGalaxy.Undo;
 using MCGalaxy.Maths;
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdHighlight : Command {
@@ -35,6 +28,10 @@ namespace MCGalaxy.Commands.Moderation {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public CmdHighlight() { }
+        
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("highlightarea", "area") }; }
+        }
 
         public override void Use(Player p, string message) {
             TimeSpan delta = TimeSpan.Zero;
@@ -43,23 +40,44 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") message = p.name + " 1800";
-            string[] args = message.SplitSpaces();
+            string[] parts = message.SplitSpaces();
 
-            if (args.Length >= 2) {
-                if (!CommandParser.GetTimespan(p, args[1], ref delta, "highlight the past", 's')) return;
-            } else if (ParseTimespan(args[0], out delta)) {
-                args[0] = p.name;
+            if (parts.Length >= 2) {
+                if (!CommandParser.GetTimespan(p, parts[1], ref delta, "highlight the past", 's')) return;
+            } else if (ParseTimespan(parts[0], out delta)) {
+                parts[0] = p.name;
             } else {
                 delta = TimeSpan.FromMinutes(30);
             }
-            args[0] = PlayerInfo.FindOfflineNameMatches(p, args[0]);
-            if (args[0] == null) return;
             
+            parts[0] = PlayerInfo.FindOfflineNameMatches(p, parts[0]);
+            if (parts[0] == null) return;
+            int[] ids = NameConverter.FindIds(parts[0]);
+            
+            if (!area) {
+                Vec3S32[] marks = new Vec3S32[] { Vec3U16.MinVal, Vec3U16.MaxVal };
+                HighlightPlayer(p, delta, parts[0], ids, marks);
+            } else {
+                Player.Message(p, "Place or break two blocks to determine the edges.");
+                HighlightAreaArgs args = new HighlightAreaArgs();
+                args.ids = ids; args.who = parts[0]; args.delta = delta;
+                p.MakeSelection(2, args, DoHighlightArea);
+            }
+        }
+        
+        bool DoHighlightArea(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+            HighlightAreaArgs args = (HighlightAreaArgs)state;
+            HighlightPlayer(p, args.delta, args.who, args.ids, marks);
+            return false;
+        }
+
+        struct HighlightAreaArgs { public string who; public int[] ids; public TimeSpan delta; }
+        
+        
+        static void HighlightPlayer(Player p, TimeSpan delta, string who, int[] ids, Vec3S32[] marks) {
             HighlightDrawOp op = new HighlightDrawOp();
             op.Start = DateTime.UtcNow.Subtract(delta);
-            op.who = args[0]; op.ids = NameConverter.FindIds(args[0]);
-            
-            Vec3S32[] marks = new Vec3S32[] { Vec3U16.MinVal, Vec3U16.MaxVal };
+            op.who = who; op.ids = ids;
             DrawOpPerformer.Setup(op, p, marks);
             
             BufferedBlockSender buffer = new BufferedBlockSender(p);
@@ -72,11 +90,11 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (op.found) {
                 Player.Message(p, "Now highlighting past &b{0} %Sfor {1}",
-                               delta.Shorten(true), PlayerInfo.GetColoredName(p, args[0]));
+                               delta.Shorten(true), PlayerInfo.GetColoredName(p, who));
                 Player.Message(p, "&cUse /reload to un-highlight");
             } else {
                 Player.Message(p, "No changes found by {1} %Sin the past &b{0}",
-                               delta.Shorten(true), PlayerInfo.GetColoredName(p, args[0]));
+                               delta.Shorten(true), PlayerInfo.GetColoredName(p, who));
             }
         }
         
@@ -92,7 +110,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "%T/highlight [player] <timespan>");
             Player.Message(p, "%HHighlights blocks changed by [player] in the past <timespan>");
             Player.Message(p, "%T/highlight area [player] <timespan>");
-            Player.Message(p, "%HHighlights only in a specified area.");
+            Player.Message(p, "%HOnly highlights in the specified region.");
             Player.Message(p, "%H If <timespan> is not given, highlights for last 30 minutes");
             Player.Message(p, "&c/highlight cannot be disabled, use /reload to un-highlight");
         }
