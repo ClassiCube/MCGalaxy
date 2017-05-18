@@ -170,7 +170,7 @@ namespace MCGalaxy.Blocks.Physics {
                     if (block != Block.custom_block) {
                         if (!Block.Props[block].WaterKills) return true;
                     } else {
-                        block = lvl.GetExtTile(b);
+                        block = lvl.GetExtTile(x, y, z);
                         if (!lvl.CustomBlockProps[block].WaterKills) return true;
                     }
                     
@@ -283,7 +283,7 @@ namespace MCGalaxy.Blocks.Physics {
                     if (block != Block.custom_block) {
                         if (!Block.Props[block].LavaKills) return true;
                     } else {
-                        block = lvl.GetExtTile(b);
+                        block = lvl.GetExtTile(x, y, z);
                         if (!lvl.CustomBlockProps[block].LavaKills) return true;
                     }
 

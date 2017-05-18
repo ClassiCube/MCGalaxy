@@ -49,7 +49,7 @@ namespace MCGalaxy.Blocks.Physics {
                     if (block != Block.custom_block) {
                         if (!Block.Props[block].WaterKills) break;
                     } else {
-                        block = lvl.GetExtTile(b);
+                        block = lvl.GetExtTile(x, y, z);
                         if (!lvl.CustomBlockProps[block].WaterKills) break;
                     }
                     
@@ -91,7 +91,7 @@ namespace MCGalaxy.Blocks.Physics {
                     if (block != Block.custom_block) {
                         if (!Block.Props[block].LavaKills) break;
                     } else {
-                        block = lvl.GetExtTile(b);
+                        block = lvl.GetExtTile(x, y, z);
                         if (!lvl.CustomBlockProps[block].LavaKills) break;
                     }
                     

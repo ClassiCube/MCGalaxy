@@ -31,9 +31,9 @@ namespace MCGalaxy.Commands.Building {
 
             if (message == "") {
                 bool anyBinds = false;
-                for (int i = 0; i < p.cmdBind.Length; i++)  {
-                    if (p.cmdBind[i] != null) {
-                        Player.Message(p, "%T/{0} %Sbound to %T/{1} {2}", i, p.cmdBind[i], p.messageBind[i]);
+                for (int i = 0; i < p.CmdBindings.Length; i++)  {
+                    if (p.CmdBindings[i] != null) {
+                        Player.Message(p, "%T/{0} %Sbound to %T/{1} {2}", i, p.CmdBindings[i], p.CmdArgsBindings[i]);
                         anyBinds = true;
                     }
                 }
@@ -44,19 +44,19 @@ namespace MCGalaxy.Commands.Building {
             
             string[] parts = message.SplitSpaces(3);
             int j = 0;
-            if (!CommandParser.GetInt(p, parts[0], "index", ref j, 0, p.cmdBind.Length - 1)) return;
+            if (!CommandParser.GetInt(p, parts[0], "index", ref j, 0, p.CmdBindings.Length - 1)) return;
             
             if (parts.Length == 1) {
-                if (p.cmdBind[j] == null) {
+                if (p.CmdBindings[j] == null) {
                     Player.Message(p, "No command bound for %T/{0}", j);
                 } else {
-                    Player.Message(p, "%T/{0} %Sbound to %T/{1} {2}", j, p.cmdBind[j], p.messageBind[j]);
+                    Player.Message(p, "%T/{0} %Sbound to %T/{1} {2}", j, p.CmdBindings[j], p.CmdArgsBindings[j]);
                 }
             } else {
-                p.cmdBind[j] = parts[1];
-                p.messageBind[j] = parts.Length > 2 ? parts[2] : "";
+                p.CmdBindings[j] = parts[1];
+                p.CmdArgsBindings[j] = parts.Length > 2 ? parts[2] : "";
 
-                Player.Message(p, "Bound %T/{0} {1}%Sto %T/" + j, p.cmdBind[j], p.messageBind[j], j);
+                Player.Message(p, "Bound %T/{0} {1}%Sto %T/" + j, p.CmdBindings[j], p.CmdArgsBindings[j], j);
             }
         }
         

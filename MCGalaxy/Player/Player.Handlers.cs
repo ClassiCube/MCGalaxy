@@ -112,7 +112,7 @@ namespace MCGalaxy {
             }
 
             byte blockRaw = block.BlockID;
-            if (block.BlockID < Block.CpeCount) block = (ExtBlock)bindings[block.BlockID];
+            block = BlockBindings[block.RawID];
             
             //Ignores updating blocks that are the same and send block only to the player
             byte newB = (painting || action == 1) ? block.BlockID : Block.air;
@@ -751,10 +751,10 @@ namespace MCGalaxy {
             Command.Search(ref cmd, ref cmdArgs);
             
             byte bindIndex;
-            if (byte.TryParse(cmd, out bindIndex) && bindIndex < cmdBind.Length) {
-                if (messageBind[bindIndex] == null) { SendMessage("No command is bound to: /" + cmd); return null; }
-                cmd = cmdBind[bindIndex];
-                cmdArgs = messageBind[bindIndex] + " " + cmdArgs;
+            if (byte.TryParse(cmd, out bindIndex) && bindIndex < CmdBindings.Length) {
+                if (CmdArgsBindings[bindIndex] == null) { SendMessage("No command is bound to: /" + cmd); return null; }
+                cmd = CmdBindings[bindIndex];
+                cmdArgs = CmdArgsBindings[bindIndex] + " " + cmdArgs;
                 cmdArgs = cmdArgs.TrimEnd(' ');
             }
             

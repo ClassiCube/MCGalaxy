@@ -55,7 +55,9 @@ namespace MCGalaxy {
                 SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
                 Server.s.Log(ip + " connected to the server.");
 
-                for (byte i = 0; i < Block.CpeCount; i++) bindings[i] = i;
+                for (int i = 0; i < BlockBindings.Length; i++) {
+                    BlockBindings[i] = ExtBlock.FromRaw((byte)i);
+                }
 
                 socket.ReceiveNextAsync();
                 connections.Add(this);
@@ -94,9 +96,7 @@ namespace MCGalaxy {
         
         public ExtBlock GetHeldBlock() {
             if (modeType != 0) return (ExtBlock)modeType;
-            byte raw = RawHeldBlock.BlockID;
-            if (raw < Block.CpeCount) return (ExtBlock)bindings[raw];
-            return RawHeldBlock;
+            return BlockBindings[RawHeldBlock.RawID];
         }
         
         public static string CheckPlayerStatus(Player p) {
@@ -556,7 +556,7 @@ namespace MCGalaxy {
                 if (selIndex != selMarks.Length) return;
                 
                 Blockchange = null;
-                block.BlockID = block.BlockID < Block.CpeCount ? p.bindings[block.BlockID] : block.BlockID;
+                if (!block.IsPhysicsType) block = p.BlockBindings[block.RawID];
                 bool canRepeat = selCallback(this, selMarks, selState, block);
                 
                 if (canRepeat && staticCommands) {

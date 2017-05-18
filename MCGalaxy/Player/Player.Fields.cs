@@ -217,9 +217,10 @@ namespace MCGalaxy {
 
         public byte modeType;
         public ExtBlock RawHeldBlock = (ExtBlock)Block.rock;
-        public byte[] bindings = new byte[Block.CpeCount];
-        public string[] cmdBind = new string[10];
-        public string[] messageBind = new string[10];
+        public ExtBlock[] BlockBindings = new ExtBlock[Block.Count];        
+        public string[] CmdBindings = new string[10];
+        public string[] CmdArgsBindings = new string[10];
+        
         public string lastCMD = "";
         public DateTime lastCmdTime;
         public sbyte c4circuitNumber = -1;
