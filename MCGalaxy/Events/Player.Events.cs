@@ -145,6 +145,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Called when the player has finished providing all the marks for a selection. </summary>
+        /// <returns> Whether to repeat this selection, if /static mode is enabled. </returns>
         public delegate bool SelectionHandler(Player p, Vec3S32[] marks, object state, ExtBlock block);
     }
 }

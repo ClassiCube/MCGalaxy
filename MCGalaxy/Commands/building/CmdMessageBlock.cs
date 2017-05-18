@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.Blocks;
 using MCGalaxy.Blocks.Extended;
+using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
 
@@ -59,10 +60,8 @@ namespace MCGalaxy.Commands.Building {
                 if (!CheckCommand(p, cmd)) return;
             }
 
-            p.blockchangeObject = data;
             Player.Message(p, "Place where you wish the message block to go."); 
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark;
+            p.MakeSelection(1, data, PlacedMark);
         }
         
         ExtBlock GetBlock(Player p, string name, ref bool allMessage) {
@@ -110,9 +109,9 @@ namespace MCGalaxy.Commands.Building {
             return message.CaselessEq(cmd) || message.CaselessStarts(cmd + " ");
         }
 
-        void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
-            p.ClearBlockchange();
-            MBData data = (MBData)p.blockchangeObject;
+        bool PlacedMark(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+            ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
+            MBData data = (MBData)state;
             
             ExtBlock old = p.level.GetExtBlock(x, y, z);
             if (p.level.CheckAffectPermissions(p, x, y, z, old, data.Block)) {
@@ -121,10 +120,8 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "Message block created.");
             } else {                
                 Player.Message(p, "Failed to create a message block.");
-            }
-            p.RevertBlock(x, y, z);
-
-            if (p.staticCommands) p.Blockchange += PlacedMark;
+            }           
+            return true;
         }
         
         void UpdateDatabase(Player p, MBData data, ushort x, ushort y, ushort z) {

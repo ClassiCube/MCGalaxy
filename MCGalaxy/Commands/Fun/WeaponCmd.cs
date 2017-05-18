@@ -170,7 +170,7 @@ namespace MCGalaxy.Commands.Fun {
             return false;
         }
 
-        protected struct CatchPos { public ushort x, y, z; public EndType ending; }
+        protected struct CatchPos { public EndType ending; }
         protected enum EndType { Invalid, Normal, Destroy, Teleport, Explode, Laser };
     }
 }

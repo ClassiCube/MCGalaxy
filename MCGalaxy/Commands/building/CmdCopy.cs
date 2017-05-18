@@ -147,18 +147,17 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, format, cState.UsedBlocks);
             if (cArgs.offsetIndex != -1) {
                 Player.Message(p, "Place a block to determine where to paste from");
-                p.Blockchange += BlockchangeOffset;
+                p.MakeSelection(1, null, PlacedOffsetMark);
             }
             return false;
         }
 
-        void BlockchangeOffset(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
-            RevertAndClearState(p, x, y, z);
-            CopyState state = p.CopyBuffer;
-            
-            state.Offset.X = state.OriginX - x;
-            state.Offset.Y = state.OriginY - y;
-            state.Offset.Z = state.OriginZ - z;
+        bool PlacedOffsetMark(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+            CopyState copy = p.CopyBuffer;          
+            copy.Offset.X = copy.OriginX - marks[0].X;
+            copy.Offset.Y = copy.OriginY - marks[0].Y;
+            copy.Offset.Z = copy.OriginZ - marks[0].Z;
+            return false;
         }
 
         struct CopyArgs { public int type, offsetIndex; }

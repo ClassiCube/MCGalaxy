@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdAbout : Command {
@@ -36,16 +37,13 @@ namespace MCGalaxy.Commands.Info {
         public override void Use(Player p, string message) {
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             Player.Message(p, "Break/build a block to display information.");
-            p.ClearBlockchange();
-            p.Blockchange += PlacedBlock;
+            p.MakeSelection(1, null, PlacedMark);
         }
 
-        void PlacedBlock(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
-            if (!p.staticCommands) p.ClearBlockchange();
+        bool PlacedMark(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+            ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             block = p.level.GetExtBlock(x, y, z);
-            if (block.IsInvalid) return;
-            p.RevertBlock(x, y, z);
-            
+            p.RevertBlock(x, y, z);            
             Dictionary<int, string> names = new Dictionary<int, string>();
 
             Player.Message(p, "Retrieving block change records..");
@@ -57,7 +55,7 @@ namespace MCGalaxy.Commands.Info {
                                                   entry => OutputEntry(p, ref foundAny, names, entry));
                 } else {
                     Player.Message(p, "&cUnable to accquire read lock on BlockDB after 30 seconds, aborting.");
-                    return;
+                    return false;
                 }
             }
             
@@ -70,6 +68,7 @@ namespace MCGalaxy.Commands.Info {
             BlockDBChange.OutputMessageBlock(p, block, x, y, z);
             BlockDBChange.OutputPortal(p, block, x, y, z);           
             Server.DoGC();
+            return true;
         }
         
         static void ListFromDatabase(Player p, ref bool foundAny, Dictionary<int, string> names,

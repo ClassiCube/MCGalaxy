@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can use admin commands for tntwars") }; }
         }
-        bool DeleteZone = false, CheckZone = false, NoTntZone = false;
+        bool NoTntZone = false;
 
         public override void Use(Player p, string message) {
             string[] text = new string[] { "", "", "", "", "" };
@@ -498,7 +498,7 @@ namespace MCGalaxy.Commands.Fun {
                     int number = 1;
                     if (!CommandParser.GetInt(p, text[2], "TNT at a time", ref number, 0)) return;
                     
-                    Player.Message(p, "TNT Wars: Number of TNTs placeable by a player at a time is now {0}", 
+                    Player.Message(p, "TNT Wars: Number of TNTs placeable by a player at a time is now {0}",
                                    number == 0 ? "unlimited" : number.ToString());
                     it.CheckAllSetUp(p);
                     break;
@@ -946,20 +946,13 @@ namespace MCGalaxy.Commands.Fun {
         void HandleZone(Player p, TntWarsGame it, bool noTntZone, string[] text) {
             NoTntZone = noTntZone;
             string msg = noTntZone ? "no TNT" : "no blocks deleted on explosions";
-            DeleteZone = false;
-            CheckZone = false;
-            Vec3U16 cpos = default(Vec3U16);
-            p.blockchangeObject = cpos;
             
             switch (text[3]) {
                 case "add":
                 case "a":
                 case "new":
-                    DeleteZone = false;
-                    CheckZone = false;
                     Player.Message(p, "TNT Wars: Place 2 blocks to create the zone for {0}!", msg);
-                    //p.ClearBlockchange();
-                    p.Blockchange += PlacedMark1;
+                    p.MakeSelection(2, null, AddZoneCallback);
                     break;
 
                 case "delete":
@@ -972,20 +965,15 @@ namespace MCGalaxy.Commands.Fun {
                         Player.Message(p, "TNT Wars: Deleted all zones for {0}!", msg);
                         return;
                     }
-                    DeleteZone = true;
-                    CheckZone = false;
+
                     Player.Message(p, "TNT Wars: Place a block to delete the zone for {0}!", msg);
-                    p.ClearBlockchange();
-                    p.Blockchange += PlacedMark1;
+                    p.MakeSelection(1, null, DeleteZoneCallback);
                     break;
 
                 case "check":
                 case "c":
-                    DeleteZone = false;
-                    CheckZone = true;
                     Player.Message(p, "TNT Wars: Place a block to check for no {0}!", msg);
-                    p.ClearBlockchange();
-                    p.Blockchange += PlacedMark1;
+                    p.MakeSelection(1, null, CheckZoneCallback);
                     break;
             }
         }
@@ -1157,63 +1145,62 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
-            RevertAndClearState(p, x, y, z);
-            Vec3U16 bp = (Vec3U16)p.blockchangeObject;
-            bp.X = x; bp.Y = y; bp.Z = z; 
-            p.blockchangeObject = bp;
-            
-            if (!DeleteZone && !CheckZone) {
-                Player.Message(p, "TNT Wars: Place another block to mark the other corner of the zone!");
-                p.Blockchange += PlacedMark2;
-                return;
-            }
-            
+        bool DeleteZoneCallback(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+            ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             TntWarsGame it = TntWarsGame.GetTntWarsGame(p);
-            if (DeleteZone) {
-                if (it == null) {
-                    Player.Message(p, "TNT Wars Error: Couldn't find your game!");
-                } else if (it.InZone(x, y, z, NoTntZone)) {
-                    it.DeleteZone(x, y, z, NoTntZone, p);
-                }
-            } else if (CheckZone && NoTntZone) {
-                if (it == null) {
-                    Player.Message(p, "TNT Wars Error: Couldn't find your game!");
-                } else if (it.InZone(x, y, z, true)) {
+            
+            if (it == null) {
+                Player.Message(p, "TNT Wars Error: Couldn't find your game!");
+            } else if (it.InZone(x, y, z, NoTntZone)) {
+                it.DeleteZone(x, y, z, NoTntZone, p);
+            }
+            return false;
+        }
+        
+        bool CheckZoneCallback(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+            ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
+            TntWarsGame it = TntWarsGame.GetTntWarsGame(p);
+            
+            if (it == null) {
+                Player.Message(p, "TNT Wars Error: Couldn't find your game!");
+            } else if (NoTntZone) {
+                if (it.InZone(x, y, z, NoTntZone)) {
                     Player.Message(p, "TNT Wars: You are currently in a no TNT zone!");
                 } else {
                     Player.Message(p, "TNT Wars: You are not currently in a no TNT zone!");
                 }
-            } else if (CheckZone && !NoTntZone) {
-                if (it == null) {
-                    Player.Message(p, "TNT Wars Error: Couldn't find your game!");
-                } else if (it.InZone(x, y, z, true)) {
+            } else {
+                if (it.InZone(x, y, z, NoTntZone)) {
                     Player.Message(p, "TNT Wars: You are currently in a no TNT block explosion zone (explosions won't destroy blocks)!");
                 } else {
                     Player.Message(p, "TNT Wars: You are currently in a TNT block explosion zone (explosions will destroy blocks)!");
                 }
             }
+            return false;
         }
-
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
-            RevertAndClearState(p, x, y, z);
-            Vec3U16 cpos = (Vec3U16)p.blockchangeObject;
+        
+        bool AddZoneCallback(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+            Vec3U16 p1 = (Vec3U16)marks[0], p2 = (Vec3U16)marks[1];
             TntWarsGame.Zone Zn = new TntWarsGame.Zone();
-
-            Zn.smallX = Math.Min(cpos.X, x);
-            Zn.smallY = Math.Min(cpos.Y, y);
-            Zn.smallZ = Math.Min(cpos.Z, z);
-            Zn.bigX = Math.Max(cpos.X, x);
-            Zn.bigY = Math.Max(cpos.Y, y);
-            Zn.bigZ = Math.Max(cpos.Z, z);
+            
+            Zn.smallX = Math.Min(p1.X, p2.X);
+            Zn.smallY = Math.Min(p1.Y, p2.Y);
+            Zn.smallZ = Math.Min(p1.Z, p2.Z);
+            Zn.bigX = Math.Max(p1.X, p2.X);
+            Zn.bigY = Math.Max(p1.Y, p2.Y);
+            Zn.bigZ = Math.Max(p1.Z, p2.Z);
 
             TntWarsGame it = TntWarsGame.GetTntWarsGame(p);
             if (it == null) {
-                Player.Message(p, "TNT Wars Error: Couldn't find your game!"); return;
+                Player.Message(p, "TNT Wars Error: Couldn't find your game!");
+            } else if (NoTntZone) {
+                it.NoTNTplacableZones.Add(Zn);
+            } else {
+                it.NoBlockDeathZones.Add(Zn);
             }
-            if (NoTntZone) it.NoTNTplacableZones.Add(Zn);
-            else it.NoBlockDeathZones.Add(Zn);
+            
             Player.Message(p, "Added zone");
+            return false;
         }
     }
 }
