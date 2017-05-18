@@ -82,23 +82,27 @@ namespace MCGalaxy {
             if (!useMySQL) return;
             // Check if the color column exists.
             DataTable colorExists = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='color'");
-            if (colorExists.Rows.Count == 0)
-                Database.Backend.AddColumn("Players", "color", "VARCHAR(6)", "totalKicked");
+            if (colorExists.Rows.Count == 0) {
+                Database.Backend.AddColumn("Players", new ColumnDesc("color", ColumnType.VarChar, 6), "totalKicked");
+            }
             colorExists.Dispose();
 
             DataTable tcolorExists = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='title_color'");
-            if (tcolorExists.Rows.Count == 0)
-                Database.Backend.AddColumn("Players", "title_color", "VARCHAR(6)", "color");
+            if (tcolorExists.Rows.Count == 0) {
+                Database.Backend.AddColumn("Players", new ColumnDesc("title_color", ColumnType.VarChar, 6), "color");
+            }
             tcolorExists.Dispose();
 
             DataTable timespent = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='TimeSpent'");
-            if (timespent.Rows.Count == 0)
-                Database.Backend.AddColumn("Players", "TimeSpent", "VARCHAR(20)", "totalKicked");
+            if (timespent.Rows.Count == 0) {
+                Database.Backend.AddColumn("Players", new ColumnDesc("TimeSpent", ColumnType.VarChar, 20), "totalKicked");
+            }
             timespent.Dispose();
 
             DataTable totalCuboided = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='totalCuboided'");
-            if (totalCuboided.Rows.Count == 0)
-                Database.Backend.AddColumn("Players", "totalCuboided", "BIGINT", "totalBlocks");
+            if (totalCuboided.Rows.Count == 0) {
+                Database.Backend.AddColumn("Players", new ColumnDesc("totalCuboided", ColumnType.Int64), "totalBlocks");
+            }
             totalCuboided.Dispose();
         }
     }

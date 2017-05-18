@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdKick : Command {
@@ -49,9 +50,9 @@ namespace MCGalaxy.Commands.Moderation {
                 return;
             }
             
+            ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Kicked, reason);
+            OnModerationActionEvent.Call(action);
             who.Kick(kickMsg, "Kicked " + kickMsg);
-            if (reason == null) Player.AddNote(who.name, p, "K");
-            else Player.AddNote(who.name, p, "K", reason);
         }
         
         public override void Help(Player p) {

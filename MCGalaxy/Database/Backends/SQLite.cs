@@ -75,14 +75,6 @@ namespace MCGalaxy.SQL {
             }
         }
         
-        public override void AddColumn(string table, string column, 
-                                       string colType, string colAfter) {
-            ValidateTable(table);
-            string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " 
-                + column + " " + colType;
-            Database.Execute(syntax);
-        }
-        
         public override void RenameTable(string srcTable, string dstTable) {
             ValidateTable(srcTable);
             ValidateTable(dstTable);
@@ -126,6 +118,13 @@ namespace MCGalaxy.SQL {
                 }
                 sql.AppendLine();
             }
+        }        
+                
+        public override void AddColumn(string table, ColumnDesc col, string colAfter) {
+            ValidateTable(table);
+            string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " 
+                + col.Column + " " + col.FormatType();
+            Database.Execute(syntax);
         }
         
         public override void AddOrReplaceRow(string table, string columns, params object[] args) {

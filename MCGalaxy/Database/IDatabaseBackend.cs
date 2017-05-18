@@ -62,11 +62,6 @@ namespace MCGalaxy.SQL {
 
         /// <summary> Returns a list of all tables in this database. </summary>
         public abstract List<string> AllTables();
-
-        /// <summary> Adds a new coloumn to the given table. </summary>
-        /// <remarks> Note colAfter is only a hint - some database backends ignore this. </remarks>
-        public abstract void AddColumn(string table, string column,
-                                       string colType, string colAfter);
         
         /// <summary> Renames the source table to the given name. </summary>
         public abstract void RenameTable(string srcTable, string dstTable);
@@ -92,6 +87,13 @@ namespace MCGalaxy.SQL {
             string syntax = "DROP TABLE `" + table + "`";
             Database.Execute(syntax);
         }
+        
+        
+        // == Higher level column functions ==
+        
+        /// <summary> Adds a new coloumn to the given table. </summary>
+        /// <remarks> Note colAfter is only a hint - some database backends ignore this. </remarks>
+        public abstract void AddColumn(string table, ColumnDesc col, string colAfter);
 
         
         // == Higher level functions ==

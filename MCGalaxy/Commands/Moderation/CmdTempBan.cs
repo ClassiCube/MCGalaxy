@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdTempBan : Command {       
@@ -59,8 +60,8 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             Player.Message(p, "Temp banned " + target + " for " + time.Shorten(true) + ".");
-            if (args.Length <= 2) Player.AddNote(target, p, "T");
-            else Player.AddNote(target, p, "T", reason);
+            ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Ban, reason, time);
+            OnModerationActionEvent.Call(action);
         }
         
         public override void Help(Player p) {

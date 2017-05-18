@@ -17,6 +17,7 @@
 */
 using System;
 using System.IO;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdMute : Command {
@@ -50,7 +51,9 @@ namespace MCGalaxy.Commands.Moderation {
                 who.muted = true;
                 Chat.MessageGlobal(who, who.ColoredName + " %Swas &8muted", false);
                 Server.muted.AddIfNotExists(who.name);
-                Player.AddNote(who.name, p, "M");
+                
+                ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Muted);
+                OnModerationActionEvent.Call(action);
             }
             Server.muted.Save();
         }

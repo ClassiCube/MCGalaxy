@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System.IO;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdJail : Command {
@@ -49,13 +50,18 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 Server.jailed.AddOrReplace(who.name, who.level.name);
                 Chat.MessageGlobal(who, who.ColoredName + " %Swas &8jailed", false);
-                Player.AddNote(who.name, p, "J");                
+                
+                ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Jailed);
+                OnModerationActionEvent.Call(action);
             } else {
                 Server.jailed.Remove(who.name);
                 who.jailed = false;
                 Command.all.Find("spawn").Use(who, "");
                 Player.Message(p, "You freed " + who.name + " from jail");
                 Chat.MessageGlobal(who, who.ColoredName + " %Swas &afreed %Sfrom jail", false);
+                
+                ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Unjailed);
+                OnModerationActionEvent.Call(action);
             }
             Server.jailed.Save(true);
         }

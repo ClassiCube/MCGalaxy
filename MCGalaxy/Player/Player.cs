@@ -513,23 +513,6 @@ namespace MCGalaxy {
             return false;
         }
         
-        internal static void AddNote(string target, Player who, string type) {
-             if (!Server.LogNotes) return;
-             string src = who == null ? "(console)" : who.name;
-             
-             string time = DateTime.UtcNow.ToString("dd/MM/yyyy");
-             Server.Notes.Append(target + " " + type + " " + src + " " + time);
-        }
-        
-        internal static void AddNote(string target, Player who, string type, string reason) {
-             if (!Server.LogNotes) return;
-             string src = who == null ? "(console)" : who.name;
-             
-             string time = DateTime.UtcNow.ToString("dd/MM/yyyy");
-             reason = reason.Replace(" ", "%20");
-             Server.Notes.Append(target + " " + type + " " + src + " " + time + " " + reason);
-        }
-        
         readonly object selLock = new object();
         Vec3S32[] selMarks;
         object selState;

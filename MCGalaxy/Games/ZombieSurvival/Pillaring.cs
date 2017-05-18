@@ -17,6 +17,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Games.ZS {
     
@@ -71,9 +72,11 @@ namespace MCGalaxy.Games.ZS {
                     Chat.MessageOps("  &cWarning: " + p.ColoredName + " %Sis pillaring!");
                     Command.all.Find("take").Use(null, p.name + " 10 Auto fine for pillaring");
                     Player.Message(p, "  &cThe next time you pillar, you will be &4kicked&c.");
-                } else {
+                } else {                   
+                    ModerationAction action = new ModerationAction(p.name, null, 
+					                                               ModerationActionType.Kicked, "Auto kick for pillaring");
+                    OnModerationActionEvent.Call(action);
                     p.Kick("No pillaring allowed!");
-                    Player.AddNote(p.name, null, "K", "Auto kick for pillaring");
                 }
                 
                 p.RevertBlock(x, y, z);

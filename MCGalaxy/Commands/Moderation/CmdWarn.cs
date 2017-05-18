@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using MCGalaxy.Events;
+
 namespace MCGalaxy.Commands.Moderation {    
     public sealed class CmdWarn : Command {        
         public override string name { get { return "warn"; } }
@@ -41,6 +43,9 @@ namespace MCGalaxy.Commands.Moderation {
             Chat.MessageGlobal("&c" + reason);
             Server.IRC.Say(warnedby + " %ewarned " + who.ColoredName + " %efor: %c" + reason);
             Server.s.Log(warnedby + " warned " + who.name);
+            
+            ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Warned, reason);
+            OnModerationActionEvent.Call(action);
 
             if (who.warn == 0) {
                 Player.Message(who, "Do it again twice and you will get kicked!");
@@ -51,11 +56,8 @@ namespace MCGalaxy.Commands.Moderation {
                 string chatMsg = "by " + warnedby + "%S: " + reason;
                 string kickMsg = "Kicked by " + warnedby + "&f: " + reason;
                 who.Kick(chatMsg, kickMsg);
-            }
-            
+            }           
             who.warn++;
-            if (args.Length == 1) Player.AddNote(who.name, p, "W");
-            else Player.AddNote(who.name, p, "W", reason);
         }
         
         static void WarnOffline(Player p, string[] args, string reason) {
@@ -65,10 +67,10 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "Searching PlayerDB..");
             string offName = PlayerInfo.FindOfflineNameMatches(p, args[0]);
             if (offName == null) return;
-            
-            if (args.Length == 1) Player.AddNote(offName, p, "W");
-            else Player.AddNote(offName, p, "W", reason);
             reason = args.Length > 1 ? " for: " + reason : "";
+            
+            ModerationAction action = new ModerationAction(offName, p, ModerationActionType.Warned, reason);
+            OnModerationActionEvent.Call(action);
             Player.Message(p, "Warned {0}{1}.", offName, reason);
         }
         

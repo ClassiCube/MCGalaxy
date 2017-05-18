@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using MCGalaxy.Events;
+
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdFreeze : Command {
         public override string name { get { return "freeze"; } }
@@ -37,12 +39,17 @@ namespace MCGalaxy.Commands.Moderation {
             if (!who.frozen) {
                 Chat.MessageGlobal(who, who.ColoredName + " %Swas &bfrozen %Sby " + frozenby + "%S.", false);
                 Server.s.Log(who.name + " was frozen by " + frozenby);
-                Player.AddNote(who.name, p, "F");
                 Server.frozen.AddIfNotExists(who.name);
+                
+                ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Frozen);
+                OnModerationActionEvent.Call(action);
             } else {
                 Chat.MessageGlobal(who, who.ColoredName + " %Swas &adefrosted %Sby " + frozenby + "%S.", false);
                 Server.s.Log(who.name + " was defrosted by " + frozenby);
                 Server.frozen.Remove(who.name);
+                
+                ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Unfrozen);
+                OnModerationActionEvent.Call(action);
             }
             Server.frozen.Save();
             who.frozen = !who.frozen;

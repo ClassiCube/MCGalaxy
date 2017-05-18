@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {    
     public sealed class CmdBan : Command {
@@ -69,8 +70,9 @@ namespace MCGalaxy.Commands.Moderation {
             Ban.BanPlayer(p, target, reason, stealth, group.name);
             ModActionCmd.ChangeRank(target, group, Group.BannedRank, who);
             
-            if (args.Length == 1) Player.AddNote(target, p, "B");
-            else Player.AddNote(target, p, "B", reason);
+            ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Ban, reason);
+            action.Metadata = stealth;
+            OnModerationActionEvent.Call(action);
             Server.IRC.Say(banMsg);
             Server.s.Log("BANNED: " + target.ToLower() + " by " + banner);
         }
