@@ -100,10 +100,12 @@ namespace MCGalaxy.SQL {
             string priKey = null;            
             for (int i = 0; i < columns.Length; i++) {
                 ColumnDesc col = columns[i];
+                sql.Append(col.Column).Append(' ');
+                
                 if (col.Type == ColumnType.Bool) {
-                    sql.Append(col.Column).Append(' ').Append("TINYINT");
+                    sql.Append("TINYINT");
                 } else {
-                    sql.Append(col.Column).Append(' ').Append(col.FormatType());
+                    sql.Append(col.FormatType());
                 }
                 
                 // When the primary key isn't autoincrement, we use the same form as mysql
