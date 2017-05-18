@@ -43,12 +43,17 @@ namespace MCGalaxy.Drawing.Ops {
             return Do(op, brush, p, marks);
         }
         
-        public static bool Do(DrawOp op, Brush brush, Player p,
-                              Vec3S32[] marks, bool checkLimit = true) {
+        public static Level Setup(DrawOp op, Player p, Vec3S32[] marks) {
             op.SetMarks(marks);
             Level lvl = p == null ? null : p.level;
             op.SetLevel(lvl);
             op.Player = p;
+            return lvl;
+        }
+        
+        public static bool Do(DrawOp op, Brush brush, Player p,
+                              Vec3S32[] marks, bool checkLimit = true) {
+            Level lvl = Setup(op, p, marks);
             
             if (lvl != null && !lvl.DrawingAllowed) {
                 Player.Message(p, "Drawing commands are turned off on this map.");
@@ -134,9 +139,8 @@ namespace MCGalaxy.Drawing.Ops {
                 timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds + 1;
                 entry.End = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
                 
-                p.DrawOps.Add(entry);
-                if (p.DrawOps.Count > 200)
-                    p.DrawOps.RemoveFirst();  
+                if (item.Op.Undoable) p.DrawOps.Add(entry);
+                if (p.DrawOps.Count > 200) p.DrawOps.RemoveFirst();
                 
                 if (item.Op.TotalModified > Server.DrawReloadLimit)
                     DoReload(p, item.Op.Level);
@@ -178,12 +182,12 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 int index = b.X + lvl.Width * (b.Z + b.Y * lvl.Length);
                 ExtBlock old;
-                old.BlockID = lvl.blocks[index]; old.ExtID = 0;                
+                old.BlockID = lvl.blocks[index]; old.ExtID = 0;
                 if (old.BlockID == Block.custom_block) old.ExtID = lvl.GetExtTileNoCheck(b.X, b.Y, b.Z);
                 if (old.BlockID == Block.Invalid) return;
                 
                 // Check to make sure the block is actually different and that we can change it
-                if (old == b.Block || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block)) return;               
+                if (old == b.Block || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block)) return;
                 
                 // Set the block (inlined)
                 lvl.blocks[index] = b.Block.BlockID;
@@ -198,7 +202,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (p != null) {
                     lvl.BlockDB.Cache.Add(p, b.X, b.Y, b.Z, op.Flags, old, b.Block);
                     p.loginBlocks++; p.overallBlocks++; p.TotalDrawn++; // increment block stats inline
-                }                
+                }
                 
                 // Potentially buffer the block change
                 if (op.TotalModified == Server.DrawReloadLimit) {

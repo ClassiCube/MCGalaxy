@@ -20,9 +20,16 @@ using MCGalaxy.DB;
 using MCGalaxy.Network;
 using MCGalaxy.Undo;
 using MCGalaxy.Maths;
+using System;
+using System.Collections.Generic;
+using MCGalaxy.Commands.Building;
+using MCGalaxy.DB;
+using MCGalaxy.Drawing.Ops;
+using MCGalaxy.Undo;
+using MCGalaxy.Maths;
 
-namespace MCGalaxy.Commands.Moderation { 
-    public sealed class CmdHighlight : Command {        
+namespace MCGalaxy.Commands.Moderation {
+    public sealed class CmdHighlight : Command {
         public override string name { get { return "highlight"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
@@ -31,6 +38,9 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message) {
             TimeSpan delta = TimeSpan.Zero;
+            bool area = message.CaselessStarts("area ");
+            if (area) message = message.Substring("area ".Length);
+            
             if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") message = p.name + " 1800";
             string[] args = message.SplitSpaces();
@@ -45,22 +55,22 @@ namespace MCGalaxy.Commands.Moderation {
             args[0] = PlayerInfo.FindOfflineNameMatches(p, args[0]);
             if (args[0] == null) return;
             
+            HighlightDrawOp op = new HighlightDrawOp();
+            op.Start = DateTime.UtcNow.Subtract(delta);
+            op.who = args[0]; op.ids = NameConverter.FindIds(args[0]);
             
-            DateTime start = DateTime.UtcNow.Subtract(delta);
-            int[] ids = NameConverter.FindIds(args[0]);
-            bool found = false, done = false;
-            if (ids.Length > 0) {
-                HighlightHelper helper = new HighlightHelper();
-                done = helper.DoHighlight(ids, start, p);
-                found = helper.found;
-            }
+            Vec3S32[] marks = new Vec3S32[] { Vec3U16.MinVal, Vec3U16.MaxVal };
+            DrawOpPerformer.Setup(op, p, marks);
             
-            if (!done) {
-                UndoFormatArgs undoArgs = new UndoFormatArgs(p, start, DateTime.MaxValue, null);
-                UndoFormat.DoHighlight(args[0].ToLower(), ref found, undoArgs);
-            }
+            BufferedBlockSender buffer = new BufferedBlockSender(p);
+            op.Perform(marks, null,
+                       P => {
+                           int index = p.level.PosToInt(P.X, P.Y, P.Z);
+                           buffer.Add(index, P.Block.BlockID, P.Block.ExtID);
+                       });
+            buffer.Send(true);
             
-            if (found) {
+            if (op.found) {
                 Player.Message(p, "Now highlighting past &b{0} %Sfor {1}",
                                delta.Shorten(true), PlayerInfo.GetColoredName(p, args[0]));
                 Player.Message(p, "&cUse /reload to un-highlight");
@@ -77,54 +87,12 @@ namespace MCGalaxy.Commands.Moderation {
             } catch (FormatException) { return false;
             }
         }
-        
-        class HighlightHelper {
-            Player p;
-            BufferedBlockSender buffer;
-            Vec3U16 dims;
-            public bool found;
-            
-            public bool DoHighlight(int[] ids, DateTime start, Player p) {
-                buffer = new BufferedBlockSender(p);
-                this.p = p;
-                bool reachedStart = false;
-                
-                using (IDisposable rLock = p.level.BlockDB.Locker.AccquireRead()) {
-                    reachedStart = p.level.BlockDB.FindChangesBy(ids, start, DateTime.MaxValue,
-                                                                 out dims, HighlightBlock);
-                }
-                buffer.Send(true);
-                
-                buffer.player = null;
-                buffer.level = null;
-                buffer = null;
-                this.p = null;
-                return reachedStart;
-            }
-            
-            void HighlightBlock(BlockDBEntry entry) {
-                byte oldBlock = entry.OldRaw, newBlock = entry.NewRaw;
-                if ((entry.Flags & BlockDBFlags.OldCustom) != 0) oldBlock = Block.custom_block;
-                if ((entry.Flags & BlockDBFlags.NewCustom) != 0) newBlock = Block.custom_block;
-                if (oldBlock == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
-                found = true;
-                
-                byte highlight = (newBlock == Block.air
-                                  || Block.Convert(oldBlock) == Block.water || oldBlock == Block.waterstill
-                                  || Block.Convert(oldBlock) == Block.lava || oldBlock == Block.lavastill)
-                    ? Block.red : Block.green;
-                
-                int x = entry.Index % dims.X;
-                int y = (entry.Index / dims.X) / dims.Z;
-                int z = (entry.Index / dims.X) % dims.Z;
-                int index = p.level.PosToInt((ushort)x, (ushort)y, (ushort)z);
-                buffer.Add(index, highlight, 0);
-            }
-        }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/highlight [player] <timespan>");
             Player.Message(p, "%HHighlights blocks changed by [player] in the past <timespan>");
+            Player.Message(p, "%T/highlight area [player] <timespan>");
+            Player.Message(p, "%HHighlights only in a specified area.");
             Player.Message(p, "%H If <timespan> is not given, highlights for last 30 minutes");
             Player.Message(p, "&c/highlight cannot be disabled, use /reload to un-highlight");
         }

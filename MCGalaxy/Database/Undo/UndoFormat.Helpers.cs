@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using MCGalaxy.Network;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Undo {
@@ -40,45 +39,26 @@ namespace MCGalaxy.Undo {
             }
         }
         
-        public static void DoUndo(Stream s, UndoFormat format, UndoFormatArgs args) {
+        static void DoUndo(Stream s, UndoFormat format, UndoFormatArgs args) {
             Level lvl = args.Player == null ? null : args.Player.level;
             string lastMap = null;
+            Vec3S32 min = args.Min, max = args.Max;
+            DrawOpBlock block;
             
             foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
                 if (P.LevelName != lastMap) lvl = LevelInfo.FindExact(P.LevelName);
                 if (lvl == null || P.Time > args.End) continue;
-                
-                UndoBlock(args, lvl, P);
-            }
-        }
-        
-        
-        public static void DoUndoArea(string target, Vec3S32 min, Vec3S32 max,
-                                      ref bool found, UndoFormatArgs args) {
-            List<string> files = GetUndoFiles(target);
-            if (files.Count == 0) return;
-            found = true;
-            
-            foreach (string file in files) {
-                using (Stream s = File.OpenRead(file)) {
-                    DoUndoArea(s, min, max, GetFormat(file), args);
-                    if (args.Stop) break;
-                }
-            }
-        }
-        
-        public static void DoUndoArea(Stream s, Vec3S32 min, Vec3S32 max,
-                                      UndoFormat format, UndoFormatArgs args) {
-            Level lvl = args.Player == null ? null : args.Player.level;
-            string lastMap = null;
-            
-            foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
-                if (P.LevelName != lastMap) lvl = LevelInfo.FindExact(P.LevelName);
-                if (lvl == null || P.Time > args.End) continue;
-                
                 if (P.X < min.X || P.Y < min.Y || P.Z < min.Z) continue;
                 if (P.X > max.X || P.Y > max.Y || P.Z > max.Z) continue;
-                UndoBlock(args, lvl, P);
+                
+                byte lvlBlock = lvl.GetTile(P.X, P.Y, P.Z);
+                if (lvlBlock == P.NewBlock.BlockID || Block.Convert(lvlBlock) == Block.water
+                    || Block.Convert(lvlBlock) == Block.lava || lvlBlock == Block.grass) {
+                    
+                    block.X = P.X; block.Y = P.Y; block.Z = P.Z;
+                    block.Block = P.Block;
+                    args.Output(block);
+                }
             }
         }
         
@@ -96,38 +76,23 @@ namespace MCGalaxy.Undo {
             }
         }
         
-        public static void DoHighlight(Stream s, UndoFormat format, UndoFormatArgs args) {
-            BufferedBlockSender buffer = new BufferedBlockSender(args.Player);
+        static void DoHighlight(Stream s, UndoFormat format, UndoFormatArgs args) {
             Level lvl = args.Player.level;
+            Vec3S32 min = args.Min, max = args.Max;
+            DrawOpBlock block;
             
             foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
-                ExtBlock block = P.Block, newBlock = P.NewBlock;
-                byte highlight = (newBlock.BlockID == Block.air
-                                  || Block.Convert(block.BlockID) == Block.water || block.BlockID == Block.waterstill
-                                  || Block.Convert(block.BlockID) == Block.lava || block.BlockID == Block.lavastill)
-                    ? Block.red : Block.green;
+                ExtBlock old = P.Block, newBlock = P.NewBlock;
+                if (P.X < min.X || P.Y < min.Y || P.Z < min.Z) continue;
+                if (P.X > max.X || P.Y > max.Y || P.Z > max.Z) continue;
                 
-                buffer.Add(lvl.PosToInt(P.X, P.Y, P.Z), highlight, 0);
-            }
-            buffer.Send(true);
-        }
-        
-        static void UndoBlock(UndoFormatArgs args, Level lvl, UndoFormatEntry P) {
-            byte lvlBlock = lvl.GetTile(P.X, P.Y, P.Z);
-            if (lvlBlock == P.NewBlock.BlockID || Block.Convert(lvlBlock) == Block.water
-                || Block.Convert(lvlBlock) == Block.lava || lvlBlock == Block.grass) {
+                block.Block = (newBlock.BlockID == Block.air
+                                       || Block.Convert(old.BlockID) == Block.water || old.BlockID == Block.waterstill
+                                       || Block.Convert(old.BlockID) == Block.lava || old.BlockID == Block.lavastill)
+                    ? args.DeleteHighlight : args.PlaceHighlight;
                 
-                if (args.Player != null) {
-                    DrawOpBlock block;
-                    block.X = P.X; block.Y = P.Y; block.Z = P.Z;
-                    block.Block = P.Block;
-                    args.Output(block);
-                } else {
-                    Player.GlobalBlockchange(lvl, P.X, P.Y, P.Z, P.Block); // TODO: rewrite this :/
-                    lvl.SetTile(P.X, P.Y, P.Z, P.Block.BlockID);
-                    if (P.Block.BlockID != Block.custom_block) return;
-                    lvl.SetExtTile(P.X, P.Y, P.Z, P.Block.ExtID);
-                }
+                block.X = P.X; block.Y = P.Y; block.Z = P.Z;
+                args.Output(block);
             }
         }
     }

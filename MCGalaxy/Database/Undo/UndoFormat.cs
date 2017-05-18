@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Undo {
     
@@ -40,7 +41,7 @@ namespace MCGalaxy.Undo {
         protected abstract IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args);
         
         /// <summary> File extension of undo files in this format. </summary>
-        protected abstract string Ext { get; }    
+        protected abstract string Ext { get; }
         
         
         /// <summary> Gets a list of all undo file names for the given player. </summary>
@@ -110,20 +111,34 @@ namespace MCGalaxy.Undo {
         /// <summary> Whether the format has finished retrieving undo data,
         /// due to finding an entry before the start range. </summary>
         public bool Stop;
+        
+        /// <summary> Block to highlight placements with. </summary>
+        public ExtBlock PlaceHighlight = (ExtBlock)Block.green;
+        
+        /// <summary> Block to highlight deletions with. </summary>
+        public ExtBlock DeleteHighlight = (ExtBlock)Block.red;
+        
 
         /// <summary> First instance in time that undo data should be retrieved back to. </summary>
-        internal readonly DateTime Start;       
+        internal readonly DateTime Start;
 
         /// <summary> Last instance in time that undo data should be retrieved up to. </summary>
         internal readonly DateTime End;
         
+        /// <summary> Minimum coordinate of region to process blocks within. </summary>
+        internal readonly Vec3S32 Min;
+        
+        /// <summary> Minimum coordinate of region to process blocks within. </summary>
+        internal readonly Vec3S32 Max;
+        
         /// <summary> Action invoked for each block processed. </summary>
         internal Action<DrawOpBlock> Output;
 
-        public UndoFormatArgs(Player p, DateTime start, DateTime end, Action<DrawOpBlock> output) {
+        public UndoFormatArgs(Player p, DateTime start, DateTime end,
+                              Vec3S32 min, Vec3S32 max, Action<DrawOpBlock> output) {
             Player = p;
-            Start = start;
-            End = end;
+            Start = start; End = end;
+            Min = min; Max = max;
             Output = output;
         }
     }

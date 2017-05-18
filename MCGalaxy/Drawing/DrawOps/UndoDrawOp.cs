@@ -69,13 +69,9 @@ namespace MCGalaxy.Drawing.Ops {
                     if (BlockDBReadLock != null) BlockDBReadLock.Dispose();
                 }
             }
-            UndoFormatArgs args = new UndoFormatArgs(Player, Start, End, output);
-            
-            if (Min.X != ushort.MaxValue) {
-                UndoFormat.DoUndoArea(who.ToLower(), Min, Max, ref found, args);
-            } else {
-                UndoFormat.DoUndo(who.ToLower(), ref found, args);
-            }
+        	
+            UndoFormatArgs args = new UndoFormatArgs(Player, Start, End, Min, Max, output);           
+            UndoFormat.DoUndo(who.ToLower(), ref found, args);
         }
         
         Action<DrawOpBlock> output;
@@ -89,11 +85,8 @@ namespace MCGalaxy.Drawing.Ops {
             int y = (e.Index / dims.X) / dims.Z;
             int z = (e.Index / dims.X) % dims.Z;
             
-            // Undo area
-            if (Min.X != ushort.MaxValue) {
-                if (x < Min.X || y < Min.Y || z < Min.Z) return;
-                if (x > Max.X || y > Max.Y || z > Max.Z) return;
-            }
+            if (x < Min.X || y < Min.Y || z < Min.Z) return;
+            if (x > Max.X || y > Max.Y || z > Max.Z) return;
             output(Place((ushort)x, (ushort)y, (ushort)z, block));
             found = true;
         }

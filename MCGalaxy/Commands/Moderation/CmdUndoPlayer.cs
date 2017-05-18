@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Moderation {
             TimeSpan delta = CmdUndo.GetDelta(p, parts[0], parts, 1);
             if (delta == TimeSpan.MinValue) return;
 
-            Vec3S32[] marks = new Vec3S32[] { Vec3U16.MaxVal, Vec3U16.MaxVal };
+            Vec3S32[] marks = new Vec3S32[] { Vec3U16.MinVal, Vec3U16.MaxVal };
             UndoPlayer(p, delta, names, ids, marks);
         }
 

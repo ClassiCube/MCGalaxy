@@ -63,6 +63,9 @@ namespace MCGalaxy.Drawing.Ops {
         /// <summary> Lock held on the associated level's BlockDB. Can be null. </summary>
         public IDisposable BlockDBReadLock;
         
+        /// <summary> Whether this draw operation can be undone. </summary>
+        public bool Undoable = true;
+        
         
         /// <summary> Human friendly name of the draw operation. </summary>
         public abstract string Name { get; }
