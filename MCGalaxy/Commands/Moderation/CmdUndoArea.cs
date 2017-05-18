@@ -56,11 +56,10 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Help(Player p) {
             Player.Message(p, "%T/undoarea [player1] <player2..> <timespan>");
-            Player.Message(p, "%HUndoes the blockchanges made by [players] in the past <timespan> in a specific area");
+            Player.Message(p, "%HUndoes the blockchanges of [players] in the past <timespan> in a specific area");
             Player.Message(p, "%H  If <timespan> is not given, undoes 30 minutes.");
             if (p == null || p.group.maxUndo == -1 || p.group.maxUndo == int.MaxValue)
                 Player.Message(p, "%H  if <timespan> is all, &cundoes for 68 years");
-            Player.Message(p, "%H  e.g. to undo 90 minutes, <timespan> would be %S1h30m");
         }
     }
 }

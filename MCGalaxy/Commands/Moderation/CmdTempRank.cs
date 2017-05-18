@@ -161,7 +161,6 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Help(Player p) {
             Player.Message(p, "%T/temprank [player] [rank] [timespan]");
             Player.Message(p, "%HSets a temporary rank for the specified player.");
-            Player.Message(p, "%H e.g. to temprank for 90 minutes, [timespan] would be %S1h30m");
             Player.Message(p, "%T/temprank [player] info");
             Player.Message(p, "%HLists information about the temp rank for the given player.");
             Player.Message(p, "%T/temprank [player] delete %H- Removes player's temp rank.");

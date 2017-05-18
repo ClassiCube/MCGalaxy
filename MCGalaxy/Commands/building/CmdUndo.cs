@@ -132,7 +132,6 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%T/undo %H- Undoes your last draw operation");
             Player.Message(p, "%T/undo [timespan]");
             Player.Message(p, "%HUndoes your blockchanges in the past [timespan]");
-            Player.Message(p, "%H  e.g. to undo 90 minutes, <timespan> would be %S1h30m");
             if (p == null || p.group.maxUndo == -1 || p.group.maxUndo == int.MaxValue)
                 Player.Message(p, "%H  if <timespan> is all, &cundoes for 68 years");
             Player.Message(p, "%T/undo physics [seconds] %H- Undoes physics on current map");
