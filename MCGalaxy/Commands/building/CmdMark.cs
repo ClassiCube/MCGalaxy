@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Building {
             
             if (message.CaselessEq("all")) {
                 if (!p.HasBlockchange) {
-                    Player.Message(p, "Cannot mark, no selection or cuboid in progress."); return;
+                    Player.Message(p, "Cannot mark, no selection in progress."); return;
                 }
                 
                 Level lvl = p.level;
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Building {
                 if (handler != null) {
                     handler(p, old, P.X, P.Y, P.Z);
                 } else {
-                    Player.Message(p, "Cannot mark, no selection or cuboid in progress, " +
+                    Player.Message(p, "Cannot mark, no selection in progress, " +
                                    "nor could the existing block at the coordinates be activated."); return;
                 }
             }
@@ -108,7 +108,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/mark [x y z] %H- Places a marker for selections or cuboids");
+            Player.Message(p, "%T/mark [x y z] %H- Places a marker for selections. (such as /cuboid)");
             Player.Message(p, "  %HIf no xyz is given, marks at where you are standing");
             Player.Message(p, "    %He.g. /mark 30 y 20 will mark at (30, last y, 20)");
             Player.Message(p, "  %HNote: If no selection is in progress, activates (e.g. doors) the existing block at those coordinates.");

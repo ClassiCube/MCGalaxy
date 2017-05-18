@@ -25,7 +25,7 @@ namespace MCGalaxy {
         
         static ColumnDesc[] createPlayers = new ColumnDesc[] {
             new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
-            new ColumnDesc("Name", ColumnType.Text),
+            new ColumnDesc("Name", ColumnType.VarChar, 17),
             new ColumnDesc("IP", ColumnType.Char, 15),
             new ColumnDesc("FirstLogin", ColumnType.DateTime),
             new ColumnDesc("LastLogin", ColumnType.DateTime),
@@ -44,7 +44,7 @@ namespace MCGalaxy {
         static ColumnDesc[] createOpstats = new ColumnDesc[] {
             new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
             new ColumnDesc("Time", ColumnType.DateTime),
-            new ColumnDesc("Name", ColumnType.Text),
+            new ColumnDesc("Name", ColumnType.VarChar, 17),
             new ColumnDesc("Cmd", ColumnType.VarChar, 40),
             new ColumnDesc("Cmdmsg", ColumnType.VarChar, 40),
         };

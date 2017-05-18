@@ -27,7 +27,9 @@ namespace MCGalaxy.Network {
     public sealed class ClassiCubeBeat : Heartbeat {
         
         string url = "http://www.classicube.net/heartbeat.jsp";
+        #if NET_20
         string proxyUrl;
+        #endif
         public override string URL { get { return url; } }
         
         public override void Init() {

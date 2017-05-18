@@ -596,6 +596,7 @@
     <Compile Include="Plugins\Events\GroupEvents.cs" />
     <Compile Include="Plugins\Events\IPluginEvent.cs" />
     <Compile Include="Plugins\Events\LevelEvents.cs" />
+    <Compile Include="Plugins\Events\ModerationActionEvent.cs" />
     <Compile Include="Plugins\Events\PlayerEvents.cs" />
     <Compile Include="Plugins\Events\ServerEvents.cs" />
     <Compile Include="Network\Player.Networking.cs" />

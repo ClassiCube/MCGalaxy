@@ -94,6 +94,8 @@ namespace MCGalaxy.Tasks {
         
         internal static void BlockUpdates(SchedulerTask task) {
             Level[] loaded = LevelInfo.Loaded.Items;
+            task.Delay = TimeSpan.FromSeconds(Server.blockInterval);
+            
             foreach (Level lvl in loaded) {
                 try {
                     lvl.saveChanges();
@@ -127,6 +129,7 @@ namespace MCGalaxy.Tasks {
 
             if (count <= 0) count = 15;
             task.State = count;
+            task.Delay = TimeSpan.FromSeconds(Server.backupInterval);
 
             Player[] players = PlayerInfo.Online.Items;
             try {
