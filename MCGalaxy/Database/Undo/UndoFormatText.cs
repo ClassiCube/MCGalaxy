@@ -27,7 +27,7 @@ namespace MCGalaxy.Undo {
         
         protected override string Ext { get { return ".undo"; } }
         
-        protected override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
+        public override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
             UndoFormatEntry pos = default(UndoFormatEntry);
             string[] lines = new StreamReader(s).ReadToEnd().SplitSpaces();
             Player p = args.Player;

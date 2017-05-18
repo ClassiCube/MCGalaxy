@@ -38,7 +38,7 @@ namespace MCGalaxy.Undo {
         public static UndoFormat NewFormat = new UndoFormatCBin();
         
         /// <summary> Enumerates through all the entries in the undo file. </summary>
-        protected abstract IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args);
+        public abstract IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args);
         
         /// <summary> File extension of undo files in this format. </summary>
         protected abstract string Ext { get; }
@@ -81,7 +81,7 @@ namespace MCGalaxy.Undo {
             return files;
         }
         
-        static UndoFormat GetFormat(string file) {
+        public static UndoFormat GetFormat(string file) {
             if (file.EndsWith(TxtFormat.Ext)) return TxtFormat;
             if (file.EndsWith(BinFormat.Ext)) return BinFormat;
             if (file.EndsWith(NewFormat.Ext)) return NewFormat;
@@ -110,36 +110,13 @@ namespace MCGalaxy.Undo {
 
         /// <summary> Whether the format has finished retrieving undo data,
         /// due to finding an entry before the start range. </summary>
-        public bool Stop;
-        
-        /// <summary> Block to highlight placements with. </summary>
-        public ExtBlock PlaceHighlight = (ExtBlock)Block.green;
-        
-        /// <summary> Block to highlight deletions with. </summary>
-        public ExtBlock DeleteHighlight = (ExtBlock)Block.red;
-        
+        public bool Stop;        
 
         /// <summary> First instance in time that undo data should be retrieved back to. </summary>
         internal readonly DateTime Start;
 
-        /// <summary> Last instance in time that undo data should be retrieved up to. </summary>
-        internal readonly DateTime End;
-        
-        /// <summary> Minimum coordinate of region to process blocks within. </summary>
-        internal readonly Vec3S32 Min;
-        
-        /// <summary> Minimum coordinate of region to process blocks within. </summary>
-        internal readonly Vec3S32 Max;
-        
-        /// <summary> Action invoked for each block processed. </summary>
-        internal Action<DrawOpBlock> Output;
-
-        public UndoFormatArgs(Player p, DateTime start, DateTime end,
-                              Vec3S32 min, Vec3S32 max, Action<DrawOpBlock> output) {
-            Player = p;
-            Start = start; End = end;
-            Min = min; Max = max;
-            Output = output;
+        public UndoFormatArgs(Player p, DateTime start) {
+            Player = p; Start = start;
         }
     }
 

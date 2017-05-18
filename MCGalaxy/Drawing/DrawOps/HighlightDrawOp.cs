@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
+using System.IO;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
@@ -65,10 +67,8 @@ namespace MCGalaxy.Drawing.Ops {
                 }
             }
             
-            UndoFormatArgs args = new UndoFormatArgs(Player, Start, DateTime.MaxValue, Min, Max, output);
-            args.PlaceHighlight = PlaceHighlight;
-            args.DeleteHighlight = DeleteHighlight;
-            UndoFormat.DoHighlight(who.ToLower(), ref found, args);
+            UndoFormatArgs args = new UndoFormatArgs(Player, Start);
+            DoOldHighlight(args);
         }
         
         Action<DrawOpBlock> output;
@@ -92,6 +92,38 @@ namespace MCGalaxy.Drawing.Ops {
             if (x > Max.X || y > Max.Y || z > Max.Z) return;
             output(Place((ushort)x, (ushort)y, (ushort)z, highlight));
             found = true;
+        }
+        
+        
+        void DoOldHighlight(UndoFormatArgs args) {
+        	List<string> files = UndoFormat.GetUndoFiles(who.ToLower());
+            if (files.Count == 0) return;
+            found = true;
+            
+            foreach (string file in files) {
+                using (Stream s = File.OpenRead(file)) {
+                    DoOldHighlight(s, UndoFormat.GetFormat(file), args);
+                    if (args.Stop) break;
+                }
+            }
+        }
+        
+        void DoOldHighlight(Stream s, UndoFormat format, UndoFormatArgs args) {
+            DrawOpBlock block;
+            
+            foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
+                ExtBlock old = P.Block, newBlock = P.NewBlock;
+                if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) continue;
+                if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) continue;
+                
+                block.Block = (newBlock.BlockID == Block.air
+                                       || Block.Convert(old.BlockID) == Block.water || old.BlockID == Block.waterstill
+                                       || Block.Convert(old.BlockID) == Block.lava || old.BlockID == Block.lavastill)
+                    ? DeleteHighlight : PlaceHighlight;
+                
+                block.X = P.X; block.Y = P.Y; block.Z = P.Z;
+                output(block);
+            }
         }
     }
 }

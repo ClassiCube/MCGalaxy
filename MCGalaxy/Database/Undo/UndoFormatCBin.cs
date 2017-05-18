@@ -28,7 +28,7 @@ namespace MCGalaxy.Undo {
         protected override string Ext { get { return ".uncbin"; } }
         const int entrySize = 8;
 
-        protected override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
+        public override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
             List<ChunkHeader> list = new List<ChunkHeader>();
             UndoFormatEntry pos;
             bool super = Player.IsSuper(args.Player);

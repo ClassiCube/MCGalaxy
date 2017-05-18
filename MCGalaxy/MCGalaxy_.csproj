@@ -451,6 +451,7 @@
     <Compile Include="Drawing\DrawOps\TreeDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\TriangleDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\UndoDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\UndoPhysicsDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\WriteDrawOp.cs" />
     <Compile Include="Drawing\Flip.cs" />
     <Compile Include="Drawing\Image\ImagePalette.cs" />
@@ -586,7 +587,6 @@
     <Compile Include="Player\PlayerInfo.cs" />
     <Compile Include="Player\SpamChecker.cs" />
     <Compile Include="Player\TabList.cs" />
-    <Compile Include="Database\Undo\UndoFormat.Helpers.cs" />
     <Compile Include="Database\Undo\UndoFormatCBin.cs" />
     <Compile Include="Player\Warp.cs" />
     <Compile Include="Database\Undo\UndoFormat.cs" />
@@ -652,7 +652,6 @@
     <Compile Include="sharkbite.thresher\ConnectionArgs.cs" />
     <Compile Include="sharkbite.thresher\Delegates.cs" />
     <Compile Include="sharkbite.thresher\Enums.cs" />
-    <Compile Include="sharkbite.thresher\Identd.cs" />
     <Compile Include="sharkbite.thresher\Listener.cs" />
     <Compile Include="sharkbite.thresher\NameGenerator.cs" />
     <Compile Include="sharkbite.thresher\ReplyCode.cs" />

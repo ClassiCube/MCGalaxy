@@ -16,11 +16,12 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Blocks.Physics;
+using System.Collections.Generic;
+using System.IO;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
-using MCGalaxy.Undo;
 using MCGalaxy.Maths;
+using MCGalaxy.Undo;
 
 namespace MCGalaxy.Drawing.Ops {
 
@@ -69,9 +70,9 @@ namespace MCGalaxy.Drawing.Ops {
                     if (BlockDBReadLock != null) BlockDBReadLock.Dispose();
                 }
             }
-        	
-            UndoFormatArgs args = new UndoFormatArgs(Player, Start, End, Min, Max, output);           
-            UndoFormat.DoUndo(who.ToLower(), ref found, args);
+            
+            UndoFormatArgs args = new UndoFormatArgs(Player, Start);
+            DoOldUndo(args);
         }
         
         Action<DrawOpBlock> output;
@@ -90,57 +91,41 @@ namespace MCGalaxy.Drawing.Ops {
             output(Place((ushort)x, (ushort)y, (ushort)z, block));
             found = true;
         }
-    }
-
-    public class UndoPhysicsDrawOp : DrawOp {
-        public override string Name { get { return "UndoPhysics"; } }
-        public override bool AffectedByTransform { get { return false; } }
         
-        internal DateTime Start;
         
-        public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
-        
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
-            if (Level.UndoBuffer.Count != Server.physUndo) {
-                int count = Level.currentUndo;
-                for (int i = count; i >= 0; i--) {
-                    try {
-                        if (!CheckBlockPhysics(Player, Level, i)) break;
-                    } catch { }
-                }
-            } else {
-                int count = Level.currentUndo;
-                for (int i = count; i >= 0; i--) {
-                    try {
-                        if (!CheckBlockPhysics(Player, Level, i)) break;
-                    } catch { }
-                }
-                for (int i = Level.UndoBuffer.Count - 1; i > count; i--) {
-                    try {
-                        if (!CheckBlockPhysics(Player, Level, i)) break;
-                    } catch { }
+        void DoOldUndo(UndoFormatArgs args) {
+            List<string> files = UndoFormat.GetUndoFiles(who.ToLower());
+            if (files.Count == 0) return;
+            found = true;
+            
+            foreach (string file in files) {
+                using (Stream s = File.OpenRead(file)) {
+                    DoOldUndo(s, UndoFormat.GetFormat(file), args);
+                    if (args.Stop) break;
                 }
             }
         }
         
-        bool CheckBlockPhysics(Player p, Level lvl, int i) {
-            Level.UndoPos undo = lvl.UndoBuffer[i];
-            byte b = lvl.GetTile(undo.index);
-            DateTime time = Server.StartTime.AddTicks((undo.flags >> 2) * TimeSpan.TicksPerSecond);
-            if (time < Start) return false;
+        void DoOldUndo(Stream s, UndoFormat format, UndoFormatArgs args) {
+            Level lvl = args.Player == null ? null : args.Player.level;
+            string lastMap = null;
+            DrawOpBlock block;
             
-            byte newType = (undo.flags & 2) != 0 ? Block.custom_block : undo.newRaw;
-            if (b == newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
-                ushort x, y, z;
-                lvl.IntToPos(undo.index, out x, out y, out z);
-                int undoIndex = lvl.currentUndo;
-                lvl.currentUndo = i;
-                lvl.currentUndo = undoIndex;
+            foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
+                if (P.LevelName != lastMap) lvl = LevelInfo.FindExact(P.LevelName);
+                if (lvl == null || P.Time > End) continue;
+                if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) continue;
+                if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) continue;
                 
-                ExtBlock oldBlock = ExtBlock.FromRaw(undo.oldRaw, (undo.flags & 1) != 0);
-                lvl.Blockchange(x, y, z, oldBlock, true, default(PhysicsArgs), false);
+                byte lvlBlock = lvl.GetTile(P.X, P.Y, P.Z);
+                if (lvlBlock == P.NewBlock.BlockID || Block.Convert(lvlBlock) == Block.water
+                    || Block.Convert(lvlBlock) == Block.lava || lvlBlock == Block.grass) {
+                    
+                    block.X = P.X; block.Y = P.Y; block.Z = P.Z;
+                    block.Block = P.Block;
+                    output(block);
+                }
             }
-            return true;
         }
     }
 }
