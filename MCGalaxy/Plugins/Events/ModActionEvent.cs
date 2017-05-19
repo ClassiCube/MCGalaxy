@@ -97,7 +97,6 @@ namespace MCGalaxy.Events {
     public enum ModActionType {
         
         /// <summary> Player is banned. </summary>
-        /// <remarks> Metadata is a boolean, true if the ban is a stealth ban. </remarks>
         Ban,
         /// <summary> Player is unbanned. </summary>
         Unban,

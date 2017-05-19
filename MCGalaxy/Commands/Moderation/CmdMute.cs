@@ -37,8 +37,8 @@ namespace MCGalaxy.Commands.Moderation {
             
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) {
-                if (Server.muted.Contains(message)) {
-                    ModAction action = new ModAction(who.name, p, ModActionType.Unmuted, reason);
+                if (Server.muted.Contains(args[0])) {
+                    ModAction action = new ModAction(args[0], p, ModActionType.Unmuted, reason);
                     OnModActionEvent.Call(action);
                 }
                 return;

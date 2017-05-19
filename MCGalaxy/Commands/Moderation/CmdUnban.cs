@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using MCGalaxy.Events;
+
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdUnban : Command {
         public override string name { get { return "unban"; } }
@@ -26,52 +28,25 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces(2);
-            string reason = args.Length > 1 ? args[1] : "(none given)";
-            Unban(p, args[0], reason);
-        }
-        
-        void Unban(Player p, string name, string reason) {
-            string srcFull = p == null ? "(console)" : p.ColoredName + "%S";
-            string src = p == null ? "(console)" : p.name;
-            Group banned = Group.BannedRank;
-
-            // Check tempbans first
-            if (Server.tempBans.Remove(name)) {
-                Server.tempBans.Save();
-                
-                Chat.MessageGlobal("{0} had their temporary ban lifted by {1}.", name, srcFull);
-                Server.s.Log("UNBANNED: " + name + " by " + src);
-                Server.IRC.Say(name + " was unbanned by " + src + ".");
-                
-                if (banned.playerList.Contains(name))
-                    UnbanPlayer(p, name, src, srcFull, reason);
-                return;
-            }            
             
-            int matches = 0;
-            name = banned.playerList.FindMatches(p, name, "banned players", out matches);
-            if (name == null) return;
-            UnbanPlayer(p, name, src, srcFull, reason);
-        }
-        
-        static void UnbanPlayer(Player p, string name, string src, string srcFull, string reason) {
-            Chat.MessageGlobal("{0} was &8(unbanned) %Sby {1}.", name, srcFull);
-            Server.s.Log("UNBANNED: " + name + " by " + src);
-            Server.IRC.Say(name + " was unbanned by " + src + ".");
-
-            Ban.DeleteUnban(name);
-            Ban.UnbanPlayer(p, name, reason);
-            Player who = PlayerInfo.FindExact(name);
-            ModActionCmd.ChangeRank(name, Group.BannedRank, Group.standard, who, false);
+            string reason = args.Length > 1 ? args[1] : "";
+            reason = ModActionCmd.ExpandReason(p, reason);
+            if (reason == null) return;
             
-            string ip = PlayerInfo.FindIP(name);
-            if (ip != null && Server.bannedIP.Contains(ip))
-                Player.Message(p, "NOTE: Their IP is still banned.");
+            if (!Server.tempBans.Contains(args[0])) {
+                int matches;
+                args[0] = Group.BannedRank.playerList.FindMatches(p, args[0], "banned players", out matches);
+                if (args[0] == null) return;
+            }
+            
+            ModAction action = new ModAction(args[0], p, ModActionType.Unban, reason);
+            OnModActionEvent.Call(action);
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/unban [player] <reason>");
             Player.Message(p, "%HUnbans a player. This includes temporary bans.");
+            Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

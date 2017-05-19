@@ -33,6 +33,7 @@ namespace MCGalaxy.Core {
                     case ModActionType.Muted: DoMute(action); break;
                     case ModActionType.Unmuted: DoUnmute(action); break;
                     case ModActionType.Ban: DoBan(action); break;
+                    case ModActionType.Unban: DoUnban(action); break;
                     case ModActionType.BanIP: DoBanIP(action); break;
                     case ModActionType.UnbanIP: DoUnbanIP(action); break;
                     case ModActionType.Warned: DoWarn(action); break;
@@ -136,6 +137,24 @@ namespace MCGalaxy.Core {
                 Ban.BanPlayer(e.Actor, e.Target, e.Reason, false, e.TargetGroup.name);
                 ModActionCmd.ChangeRank(e.Target, e.targetGroup, Group.BannedRank, who);
             }
+        }
+        
+        static void DoUnban(ModAction e) {
+            Player who = PlayerInfo.FindExact(e.Target);
+            LogAction(e, who, "&8unbanned");
+            
+            if (Server.tempBans.Remove(e.Target)) {
+                Server.tempBans.Save();
+            }
+            if (!Group.BannedRank.playerList.Contains(e.Target)) return;
+            
+            Ban.DeleteUnban(e.Target);
+            Ban.UnbanPlayer(e.Actor, e.Target, e.Reason);
+            ModActionCmd.ChangeRank(e.Target, Group.BannedRank, Group.standard, who, false);
+            
+            string ip = PlayerInfo.FindIP(e.Target);
+            if (ip != null && Server.bannedIP.Contains(ip))
+                Player.Message(e.Actor, "NOTE: Their IP is still banned.");
         }
         
         

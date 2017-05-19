@@ -50,6 +50,8 @@ namespace MCGalaxy.Network {
                     Bot.Say(e.FormatMessage(e.TargetName, "&ewarned")); break;
                 case ModActionType.Ban:
                     Bot.Say(e.FormatMessage(e.TargetName, "&8banned")); break;
+                case ModActionType.Unban:
+                    Bot.Say(e.FormatMessage(e.TargetName, "&8unbanned")); break;
                 case ModActionType.BanIP:
                     Bot.Say(e.FormatMessage(e.TargetName, "&8IP banned"), true);
                     Bot.Say(e.FormatMessage("An IP", "&8IP banned")); break;
