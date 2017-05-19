@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -182,6 +183,13 @@ namespace MCGalaxy {
         }
         
         public static void LoadAllSettings() {
+            // Unload custom plugins
+            List<Plugin> plugins = Plugin.all;
+            foreach (Plugin plugin in plugins) {
+                if (Plugin.core.Contains(plugin)) continue;
+                plugin.Unload(false);
+            }
+            
             zombie.LoadInfectMessages();
             Colors.LoadExtColors();
             Alias.Load();
@@ -202,6 +210,12 @@ namespace MCGalaxy {
             Team.LoadList();
             ChatTokens.LoadCustom();
             FixupOldPerms();
+            
+            // Reload custom plugins
+            foreach (Plugin plugin in plugins) {
+                if (Plugin.core.Contains(plugin)) continue;
+                plugin.Load(false);
+            }
         }
         
         static void FixupOldPerms() {
