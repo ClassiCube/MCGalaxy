@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdBanip : Command {
@@ -32,32 +33,25 @@ namespace MCGalaxy.Commands.Moderation {
         public CmdBanip() { }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-            message = ModActionCmd.FindIP(p, message, "IP ban", "banip");
-            if (message == null) return;
+            if (message == "") { Help(p); return; }            
+            string[] args = message.SplitSpaces(2);
+            args[0] = ModActionCmd.FindIP(p, args[0], "IP ban", "banip");
+            if (args[0] == null) return;
 
             IPAddress ip;
-            if (!IPAddress.TryParse(message, out ip)) { Player.Message(p, "\"{0}\" is not a valid IP.", message); return; }
+            if (!IPAddress.TryParse(args[0], out ip)) { Player.Message(p, "\"{0}\" is not a valid IP.", args[0]); return; }
             if (IPAddress.IsLoopback(ip)) { Player.Message(p, "You cannot IP ban the server."); return; }
-            if (p != null && p.ip == message) { Player.Message(p, "You cannot IP ban yourself."); return; }
-            if (Server.bannedIP.Contains(message)) { Player.Message(p, "{0} is already IP banned.", message); return; }
+            if (p != null && p.ip == args[0]) { Player.Message(p, "You cannot IP ban yourself."); return; }
+            if (Server.bannedIP.Contains(args[0])) { Player.Message(p, "{0} is already IP banned.", args[0]); return; }
             // Check if IP is shared by any other higher ranked accounts
-            if (!CheckIP(p, message)) return;
-
-            string banner = p == null ? "(console)" : p.ColoredName;
-            string normMsg = String.Format("An IP was &8banned %Sby {0}%S.", banner);
-            string opsMsg = String.Format("{1} was &8IP banned %Sby {0}%S.", banner, message);
+            if (!CheckIP(p, args[0])) return;
             
-            Server.IRC.Say(normMsg, false);
-            Server.IRC.Say(opsMsg, true);
+            string reason = args.Length > 1 ? args[1] : "";
+            reason = ModActionCmd.ExpandReason(p, reason);
+            if (reason == null) return;
             
-            LevelPermission seeIPperm = CommandExtraPerms.MinPerm("whois");
-            Chat.MessageWhere(normMsg, pl => pl.Rank < seeIPperm);
-            Chat.MessageWhere(opsMsg, pl  => pl.Rank >= seeIPperm);
-            Server.s.Log("IP-BANNED: " + message.ToLower() + " by " + banner + ".");
-            
-            Server.bannedIP.Add(message);
-            Server.bannedIP.Save();
+            ModAction action = new ModAction(args[0], p, ModActionType.BanIP, reason);
+            OnModActionEvent.Call(action);
         }
         
         static bool CheckIP(Player p, string ip) {
@@ -78,8 +72,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/banip [ip/player]");
+            Player.Message(p, "%T/banip [ip/player] <reason>");
             Player.Message(p, "%HBans an IP, or the IP the given player is on.");
+            Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

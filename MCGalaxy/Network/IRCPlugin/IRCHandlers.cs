@@ -39,6 +39,7 @@ namespace MCGalaxy.Network {
         public void Hook() {
             if (hookedEvents) return;
             hookedEvents = true;
+            plugin.Bot = bot;
             plugin.Load(false);
 
             // Regster events for incoming

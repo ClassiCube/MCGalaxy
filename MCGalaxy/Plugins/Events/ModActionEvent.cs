@@ -30,6 +30,18 @@ namespace MCGalaxy.Events {
             get { return PlayerInfo.GetColoredName(Actor, Target); }
         }
         
+        internal Group targetGroup;
+        /// <summary> Gets the rank/group target is in. </summary>
+        public Group TargetGroup {
+            get {
+                if (targetGroup != null) return targetGroup;
+                Player who = PlayerInfo.FindExact(Target);
+                targetGroup = who != null ? who.group : Group.findPlayerGroup(Target);
+                return targetGroup;
+            }
+        }
+        
+        
         /// <summary> Player performing the action (e.g. person who is banning). </summary>
         public Player Actor;
         
@@ -42,12 +54,12 @@ namespace MCGalaxy.Events {
         /// <summary> Type of this action. </summary>
         public ModActionType Type;
         
-        /// <summary> Reason provided for the action, can be null. </summary>
+        /// <summary> Reason provided for the action, can be empty string. Never null. </summary>
         public string Reason;
         
         /// <summary> Returns " (reason)" if reason is given, "" if not. </summary>
         public string ReasonSuffixed {
-            get { return Reason == null ? "" : " (" + Reason + ")"; }
+            get { return Reason == "" ? "" : " (" + Reason + ")"; }
         }
         
         
@@ -64,7 +76,7 @@ namespace MCGalaxy.Events {
             Actor = actor;
             Type = type;
             
-            if (reason != null && reason == "") reason = null;
+            if (reason == null) reason = "";
             Reason = reason;
             Duration = duration;
         }

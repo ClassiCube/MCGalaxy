@@ -17,6 +17,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands;
 using MCGalaxy.Commands.Moderation;
 using MCGalaxy.Events;
 
@@ -29,31 +30,41 @@ namespace MCGalaxy.Core {
                     case ModActionType.Unfrozen: DoUnfreeze(action); break;
                     case ModActionType.Jailed: DoJail(action); break;
                     case ModActionType.Unjailed: DoUnjail(action); break;
+                    case ModActionType.Muted: DoMute(action); break;
+                    case ModActionType.Unmuted: DoUnmute(action); break;
                     case ModActionType.Ban: DoBan(action); break;
+                    case ModActionType.BanIP: DoBanIP(action); break;
+                    case ModActionType.UnbanIP: DoUnbanIP(action); break;
                     case ModActionType.Warned: DoWarn(action); break;
             }
         }
         
-        static void DoFreeze(ModAction e) {
-            Player who = PlayerInfo.FindExact(e.Target);
+        static void LogAction(ModAction e, Player who, string action) {
             if (who != null) {
-                Chat.MessageGlobal(who, who.ColoredName + " %Swas &bfrozen %Sby " + e.ActorName + "%S.", false);
-                who.frozen = true;
+                Chat.MessageGlobal(who, e.TargetName + action + " %Sby " + e.ActorName + "%S." + e.ReasonSuffixed, false);
+            } else {
+                Chat.MessageGlobal(e.TargetName + action + " %Sby " + e.ActorName + "%S." + e.ReasonSuffixed);
             }
             
-            Server.s.Log(e.Target + " was frozen by " + e.ActorName);
+            action = Colors.StripColors(action);
+            Server.s.Log(e.Target + action + " by " + e.ActorName);
+        }
+
+        
+        static void DoFreeze(ModAction e) {
+            Player who = PlayerInfo.FindExact(e.Target);
+            if (who != null) who.frozen = true;
+            LogAction(e, who, " %Swas &bfrozen");
+
             Server.frozen.AddIfNotExists(e.Target);
             Server.frozen.Save();
         }
         
         static void DoUnfreeze(ModAction e) {
             Player who = PlayerInfo.FindExact(e.Target);
-            if (who != null) {
-                Chat.MessageGlobal(who, who.ColoredName + " %Swas &adefrosted %Sby " + e.ActorName + "%S.", false);
-                who.frozen = false;
-            }
+            if (who != null) who.frozen = false;
+            LogAction(e, who, " %Swas &adefrosted");
             
-            Server.s.Log(e.Target + "  was defrosted by " + e.ActorName);
             Server.frozen.Remove(e.Target);
             Server.frozen.Save();
         }
@@ -63,10 +74,9 @@ namespace MCGalaxy.Core {
             Player who = PlayerInfo.FindExact(e.Target);
             if (who == null) return;
             
-            Player.Message(e.Actor, "You jailed " + who.ColoredName);
             who.jailed = true;
             Server.jailed.AddOrReplace(who.name, who.level.name);
-            Chat.MessageGlobal(who, who.ColoredName + " %Swas &8jailed", false);
+            LogAction(e, who, " %Swas &8jailed");
             
             Entities.GlobalDespawn(who, false);
             Position pos = new Position(who.level.jailx, who.level.jaily, who.level.jailz);
@@ -79,18 +89,36 @@ namespace MCGalaxy.Core {
             Player who = PlayerInfo.FindExact(e.Target);
             if (who == null) return;
             
-            Player.Message(e.Actor, "You freed " + who.ColoredName + " %Sfrom jail");
             who.jailed = false;
             Server.jailed.Remove(who.name);
-            Chat.MessageGlobal(who, who.ColoredName + " %Swas &afreed %Sfrom jail", false);
+            LogAction(e, who, " %Swas &afreed from jail");
             
             Command.all.Find("spawn").Use(who, "");
             Server.jailed.Save(true);
         }
         
         
+        static void DoMute(ModAction e) {
+            Player who = PlayerInfo.FindExact(e.Target);
+            Server.muted.AddIfNotExists(e.Target);
+            Server.muted.Save();
+            
+            if (who != null) who.muted = true;
+            LogAction(e, who, " %Swas &8muted");
+        }
+        
+        static void DoUnmute(ModAction e) {
+            Player who = PlayerInfo.FindExact(e.Target);
+            Server.muted.Remove(e.Target);
+            Server.muted.Save();
+            
+            if (who != null) who.muted = false;
+            LogAction(e, who, " %Swas &aun-muted");
+        }
+        
+        
         static void DoBan(ModAction e) {
-            bool banSealth = e.Metadata != null && (bool)e.Metadata;            
+            bool banSealth = e.Metadata != null && (bool)e.Metadata;
             if (banSealth) {
                 string msg = e.TargetName + " %Swas STEALTH &8banned %Sby " + e.ActorName + "%S." + e.ReasonSuffixed;
                 Chat.MessageOps(msg);
@@ -104,18 +132,41 @@ namespace MCGalaxy.Core {
             Group group = who != null ? who.group : Group.findPlayerGroup(e.Target); // TODO: pass this in ??
             
             Ban.DeleteBan(e.Target);
-            Ban.BanPlayer(e.Actor, e.Target, e.Reason, banSealth, group.name);
-            ModActionCmd.ChangeRank(e.Target, group, Group.BannedRank, who);
+            Ban.BanPlayer(e.Actor, e.Target, e.Reason, banSealth, e.TargetGroup.name);
+            ModActionCmd.ChangeRank(e.Target, e.targetGroup, Group.BannedRank, who);
             Server.s.Log("BANNED: " + e.Target + " by " + e.ActorName);
         }
         
         
+        static void DoBanIP(ModAction e) {
+            LevelPermission seeIPperm = CommandExtraPerms.MinPerm("whois");
+            Chat.MessageWhere("An IP was &8banned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed,
+                              pl => pl.Rank < seeIPperm);
+            Chat.MessageWhere(e.Target + " was &8IP banned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed,
+                              pl  => pl.Rank >= seeIPperm);
+            
+            Server.s.Log("IP-BANNED: " + e.Target + " by " + e.ActorName + ".");
+            Server.bannedIP.Add(e.Target);
+            Server.bannedIP.Save();
+        }
+        
+        static void DoUnbanIP(ModAction e) {
+            LevelPermission seeIPperm = CommandExtraPerms.MinPerm("whois");
+            Chat.MessageWhere("An IP was &8unbanned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed,
+                              pl => pl.Rank < seeIPperm);
+            Chat.MessageWhere(e.Target + " was &8IP unbanned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed,
+                              pl  => pl.Rank >= seeIPperm);
+            
+            Server.s.Log("IP-UNBANNED: " + e.Target + " by " + e.ActorName + ".");
+            Server.bannedIP.Remove(e.Target);
+            Server.bannedIP.Save();
+        }
+
+        
         static void DoWarn(ModAction e) {
             Player who = PlayerInfo.FindExact(e.Target);
             if (who != null) {
-                Chat.MessageGlobal("{0} &ewarned {1} &efor: &c{2}", e.ActorName, who.ColoredName, e.Reason);
-                Server.s.Log(e.ActorName + " warned " + who.name);
-
+                LogAction(e, who, " %Swas &ewarned");
                 if (who.warn == 0) {
                     Player.Message(who, "Do it again twice and you will get kicked!");
                 } else if (who.warn == 1) {
@@ -131,9 +182,7 @@ namespace MCGalaxy.Core {
                 if (!Server.LogNotes) {
                     Player.Message(e.Actor, "Notes logging must be enabled to warn offline players."); return;
                 }
-                
-                string reason = e.Reason != null ? " for: " + e.Reason : "";
-                Player.Message(e.Actor, "Warned {0}{1}.", e.TargetName, reason);
+                LogAction(e, who, " %Swas &ewarned");
             }
         }
     }

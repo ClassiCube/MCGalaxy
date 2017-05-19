@@ -27,30 +27,39 @@ namespace MCGalaxy.Commands.Moderation {
         public CmdJail() { }
 
         public override void Use(Player p, string message) {
+            if (message == "") { Help(p); return; }
+            string[] args = message.SplitSpaces(2);
+            
+            string reason = args.Length > 1 ? args[1] : "";
+            reason = ModActionCmd.ExpandReason(p, reason);
+            if (reason == null) return;
+            
             if (message.CaselessEq("set") && p != null) {
                 p.level.jailx = p.Pos.X; p.level.jaily = p.Pos.Y; p.level.jailz = p.Pos.Z;
                 p.level.jailrotx = p.Rot.RotY; p.level.jailroty = p.Rot.HeadX;
                 Player.Message(p, "Set Jail point.");
                 return;
             }
-            Player who = PlayerInfo.FindMatches(p, message);
+            
+            Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             
             if (!who.jailed) {
                 if (p != null && who.Rank >= p.Rank) { 
                     MessageTooHighRank(p, "jail", false); return;
                 }
-                ModAction action = new ModAction(who.name, p, ModActionType.Jailed);
+            	ModAction action = new ModAction(who.name, p, ModActionType.Jailed, reason);
                 OnModActionEvent.Call(action);
             } else {
-                ModAction action = new ModAction(who.name, p, ModActionType.Unjailed);
+                ModAction action = new ModAction(who.name, p, ModActionType.Unjailed, reason);
                 OnModActionEvent.Call(action);
             }
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/jail [user]");
+            Player.Message(p, "%T/jail [user] <reason>");
             Player.Message(p, "%HPlaces [user] in jail unable to use commands.");
+            Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
             Player.Message(p, "%T/jail set");
             Player.Message(p, "%HCreates the jail point for the map.");
             Player.Message(p, "%H  This has been deprecated in favor of /xjail.");

@@ -17,6 +17,7 @@
  */
 using System;
 using System.Net;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdUnbanip : Command {
@@ -31,28 +32,21 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            message = ModActionCmd.FindIP(p, message, "un-IP ban", "unbanip");
-            if (message == null) return;
+            string[] args = message.SplitSpaces(2);
+            args[0] = ModActionCmd.FindIP(p, args[0], "un-IP ban", "unbanip");
+            if (args[0] == null) return;
 
             IPAddress ip;
-            if (!IPAddress.TryParse(message, out ip)) { Player.Message(p, "\"{0}\" is not a valid IP.", message); return; }
-            if (p != null && p.ip == message) { Player.Message(p, "You cannot un-IP ban yourself."); return; }
-            if (!Server.bannedIP.Contains(message)) { Player.Message(p, message + " is not a banned IP."); return; }
+            if (!IPAddress.TryParse(args[0], out ip)) { Player.Message(p, "\"{0}\" is not a valid IP.", args[0]); return; }
+            if (p != null && p.ip == args[0]) { Player.Message(p, "You cannot un-IP ban yourself."); return; }
+            if (!Server.bannedIP.Contains(args[0])) { Player.Message(p, args[0] + " is not a banned IP."); return; }
             
-            string unbanner = p == null ? "(console)" : p.ColoredName;
-            string normMsg = String.Format("An IP was &8unbanned %Sby {0}%S.", unbanner);
-            string opsMsg = String.Format("{1} was &8un-IP banned %Sby {0}%S.", unbanner, message);
+            string reason = args.Length > 1 ? args[1] : "";
+            reason = ModActionCmd.ExpandReason(p, reason);
+            if (reason == null) return;
             
-            Server.IRC.Say(normMsg, false);
-            Server.IRC.Say(opsMsg, true);
-            
-            LevelPermission seeIPperm = CommandExtraPerms.MinPerm("whois");
-            Chat.MessageWhere(normMsg, pl => pl.Rank < seeIPperm);
-            Chat.MessageWhere(opsMsg, pl  => pl.Rank >= seeIPperm);
-            Server.s.Log("IP-UNBANNED: " + message.ToLower() + " by " + unbanner + ".");
-            
-            Server.bannedIP.Remove(message);
-            Server.bannedIP.Save();
+            ModAction action = new ModAction(args[0], p, ModActionType.UnbanIP, reason);
+            OnModActionEvent.Call(action);
         }
         
         public override void Help(Player p)  {

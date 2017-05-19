@@ -24,6 +24,7 @@ namespace MCGalaxy.Network {
         public override string creator { get { return Server.SoftwareName + " team"; } }
         public override string MCGalaxy_Version { get { return Server.VersionString; } }
         public override string name { get { return "Core_IRCPlugin"; } }
+        public IRCBot Bot;
 
         public override void Load(bool startup) {
             OnPlayerConnectEvent.Register(HandleConnect, Priority.Low, this);
@@ -42,28 +43,40 @@ namespace MCGalaxy.Network {
         }
         
         
-        static void HandleModerationAction(ModAction e) {
+        void HandleModerationAction(ModAction e) {
             if (!Server.IRC.Enabled) return;
             switch (e.Type) {
                     case ModActionType.Warned: LogWarn(e); break;
                     case ModActionType.Ban: LogBan(e); break;
+                    case ModActionType.BanIP: LogBanIP(e); break;
+                    case ModActionType.UnbanIP: LogUnbanIP(e); break;
             }
         }
         
-        static void LogWarn(ModAction e) {
-            Server.IRC.Say(e.ActorName + " &ewarned " + e.TargetName + " &efor: &c" + e.Reason);
+        void LogWarn(ModAction e) {
+            Bot.Say(e.ActorName + " &ewarned " + e.TargetName + "&e" + e.ReasonSuffixed);
         }
         
-        static void LogBan(ModAction e) {
+        void LogBan(ModAction e) {
             string reason = e.ReasonSuffixed;
             if (e.Duration.Ticks != 0) reason = " " + e.Duration.Shorten() + " " + reason;
             
             bool banSealth = e.Metadata != null && (bool)e.Metadata;
-            Server.IRC.Say(e.ActorName + " &8banned " + e.TargetName + reason);
+            Bot.Say(e.ActorName + " &8banned " + e.TargetName + reason);
+        }
+        
+        void LogBanIP(ModAction e) {
+            Bot.Say("An IP was &8banned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed);
+            Bot.Say(e.Target + " was &8IP banned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed, true);
+        }
+        
+        void LogUnbanIP(ModAction e) {
+            Bot.Say("An IP was &8unbanned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed);
+            Bot.Say(e.Target + " was &8IP unbanned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed, true);
         }
         
         
-        static void Player_PlayerAction(Player p, PlayerAction action,
+        void Player_PlayerAction(Player p, PlayerAction action,
                                         string message, bool stealth) {
             if (!Server.IRC.Enabled) return;
             string msg = null;
@@ -83,33 +96,33 @@ namespace MCGalaxy.Network {
             else if (action == PlayerAction.JoinWorld && Server.ircShowWorldChanges && !p.hidden)
                 msg = p.ColoredName + " %Swent to &8" + message;
             
-            if (msg != null) Server.IRC.Say(msg, stealth);
+            if (msg != null) Bot.Say(msg, stealth);
         }
         
         
-        static void HandleDisconnect(Player p, string reason) {
+        void HandleDisconnect(Player p, string reason) {
             if (!Server.IRC.Enabled || p.hidden) return;
             if (!Server.guestLeaveNotify && p.Rank <= LevelPermission.Guest) return;
             
-            Server.IRC.Say(p.ColoredName + " %Sleft the game (" + reason + "%S)", false);
+            Bot.Say(p.ColoredName + " %Sleft the game (" + reason + "%S)", false);
         }
 
-        static void HandleConnect(Player p) {
+        void HandleConnect(Player p) {
             if (!Server.IRC.Enabled || p.hidden) return;
             if (!Server.guestJoinNotify && p.Rank <= LevelPermission.Guest) return;
             if (Plugin.IsPlayerEventCanceled(PlayerEvents.PlayerLogin, p)) return;
             
-            Server.IRC.Say(p.ColoredName + " %Sjoined the game", false);
+            Bot.Say(p.ColoredName + " %Sjoined the game", false);
         }
 
         static char[] trimChars = new char[] { ' ' };
-        static void HandleChat(Player p, string message) {
+        void HandleChat(Player p, string message) {
             if (!Server.IRC.Enabled) return;
             if (message.Trim(trimChars) == "") return;
             if (Plugin.IsPlayerEventCanceled(PlayerEvents.PlayerChat, p)) return;
             
             string name = Server.ircPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;
-            Server.IRC.Say(name + "%S: " + message, p.opchat);
+             Bot.Say(name + "%S: " + message, p.opchat);
         }
     }
 }

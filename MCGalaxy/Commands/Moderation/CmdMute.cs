@@ -28,39 +28,40 @@ namespace MCGalaxy.Commands.Moderation {
         public CmdMute() { }
 
         public override void Use(Player p, string message) {
-            if (message == "" || message.SplitSpaces().Length > 2) { Help(p); return; }
-            Player who = PlayerInfo.FindMatches(p, message);
+            if (message == "") { Help(p); return; }
+            string[] args = message.SplitSpaces(2);
+            
+            string reason = args.Length > 1 ? args[1] : "";
+            reason = ModActionCmd.ExpandReason(p, reason);
+            if (reason == null) return;
+            
+            Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) {
                 if (Server.muted.Contains(message)) {
-                    Server.muted.Remove(message);
-                    Server.muted.Save();
-                    Chat.MessageGlobal("{0} %Sis not online but is now &bun-muted", message);
+                    ModAction action = new ModAction(who.name, p, ModActionType.Unmuted, reason);
+                    OnModActionEvent.Call(action);
                 }
                 return;
             }
-            if (who == p) { Player.Message(p, "You cannot mute or unmute yourself."); return; }
+            if (p != null && p == who) { Player.Message(p, "You cannot mute or unmute yourself."); return; }
 
             if (who.muted) {
-                who.muted = false;
-                Chat.MessageGlobal(who, who.ColoredName + " %Swas &bun-muted", false);
-                Server.muted.Remove(who.name);
+                ModAction action = new ModAction(who.name, p, ModActionType.Unmuted, reason);
+                OnModActionEvent.Call(action);
             } else  {
                 if (p != null && who.Rank >= p.Rank) { 
                     MessageTooHighRank(p, "mute", false); return;
                 }
-                who.muted = true;
-                Chat.MessageGlobal(who, who.ColoredName + " %Swas &8muted", false);
-                Server.muted.AddIfNotExists(who.name);
                 
-                ModAction action = new ModAction(who.name, p, ModActionType.Muted);
+                ModAction action = new ModAction(who.name, p, ModActionType.Muted, reason);
                 OnModActionEvent.Call(action);
             }
-            Server.muted.Save();
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/mute [player]");
+            Player.Message(p, "%T/mute [player] <reason>");
             Player.Message(p, "%HMutes or unmutes that player.");
+            Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }
