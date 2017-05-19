@@ -28,12 +28,7 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            
-            bool stealth = message[0] == '#';
-            if (stealth) {
-                message = message.Remove(0, 1);
-                Server.s.Log("Stealth ban Attempted by " + (p == null ? "Console" : p.ColoredName));
-            }
+
             string[] args = message.SplitSpaces(2);
             string reason = args.Length > 1 ? args[1] : "";            
             string target = ModActionCmd.FindName(p, "ban", "ban", "", args[0], ref reason);
@@ -49,7 +44,6 @@ namespace MCGalaxy.Commands.Moderation {
 
             ModAction action = new ModAction(who.name, p, ModActionType.Ban, reason);
             action.targetGroup = group;
-            action.Metadata = stealth && who != null;
             OnModActionEvent.Call(action);
         }
         
@@ -66,7 +60,6 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Help(Player p) {
             Player.Message(p, "%T/ban [player] <reason>");
             Player.Message(p, "%HBans a player without kicking them.");
-            Player.Message(p, "%HAdd # before name to stealth ban.");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }

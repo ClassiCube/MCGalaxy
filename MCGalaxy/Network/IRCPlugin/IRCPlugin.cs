@@ -46,28 +46,18 @@ namespace MCGalaxy.Network {
         void HandleModerationAction(ModAction e) {
             if (!Server.IRC.Enabled) return;
             switch (e.Type) {
-            		case ModActionType.Warned: Bot.Say(e.FormatMessage("&ewarned")); break;
-                    case ModActionType.Ban: LogBan(e); break;
-                    case ModActionType.BanIP: LogBanIP(e); break;
-                    case ModActionType.UnbanIP: LogUnbanIP(e); break;
+                case ModActionType.Warned:
+                    Bot.Say(e.FormatMessage(e.TargetName, "&ewarned")); break;
+                case ModActionType.Ban:
+                    Bot.Say(e.FormatMessage(e.TargetName, "&8banned")); break;
+                case ModActionType.BanIP:
+                    Bot.Say(e.FormatMessage(e.TargetName, "&8IP banned"), true);
+                    Bot.Say(e.FormatMessage("An IP", "&8IP banned")); break;
+                case ModActionType.UnbanIP:
+                    Bot.Say(e.FormatMessage(e.TargetName, "&8IP unbanned"), true);
+                    Bot.Say(e.FormatMessage("An IP", "&8IP unbanned")); break;
             }
         }
-        
-        void LogBan(ModAction e) {
-            bool banSealth = e.Metadata != null && (bool)e.Metadata;
-            Bot.Say(e.FormatMessage("&8banned"), banSealth);
-        }
-        
-        void LogBanIP(ModAction e) {
-            Bot.Say("An IP was &8banned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed);
-            Bot.Say(e.Target + " was &8IP banned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed, true);
-        }
-        
-        void LogUnbanIP(ModAction e) {
-            Bot.Say("An IP was &8unbanned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed);
-            Bot.Say(e.Target + " was &8IP unbanned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed, true);
-        }
-        
         
         void Player_PlayerAction(Player p, PlayerAction action,
                                  string message, bool stealth) {

@@ -41,9 +41,9 @@ namespace MCGalaxy.Core {
         
         static void LogAction(ModAction e, Player who, string action) {
             if (who != null) {
-                Chat.MessageGlobal(who, e.FormatMessage(action), false);
+                Chat.MessageGlobal(who, e.FormatMessage(e.TargetName, action), false);
             } else {
-            	Chat.MessageGlobal(e.FormatMessage(action));
+                Chat.MessageGlobal(e.FormatMessage(e.TargetName, action));
             }
             
             action = Colors.StripColors(action);
@@ -121,39 +121,28 @@ namespace MCGalaxy.Core {
         
         static void DoBan(ModAction e) {
             Player who = PlayerInfo.FindExact(e.Target);
+            LogAction(e, who, "&8banned");
+            
             if (e.Duration.Ticks != 0) {
                 string banner = e.Actor == null ? "(console)" : e.Actor.truename;
                 DateTime end =  DateTime.UtcNow.Add(e.Duration);
                 Server.tempBans.AddOrReplace(e.Target, Ban.PackTempBanData(e.Reason, banner, end));
                 Server.tempBans.Save();
-                
-                LogAction(e, who, "&8banned");
+
                 if (who != null) who.Kick("Banned for " + e.Duration.Shorten(true) + "." + e.ReasonSuffixed);
-                return;
-            }
-            
-            bool banSealth = e.Metadata != null && (bool)e.Metadata;
-            if (banSealth) {
-                string msg = e.TargetName + " %Swas STEALTH &8banned %Sby " + e.ActorName + "%S." + e.ReasonSuffixed;
-                Chat.MessageOps(msg);
             } else {
-                LogAction(e, who, "&8banned");
+                if (who != null) who.color = "";
+                Ban.DeleteBan(e.Target);
+                Ban.BanPlayer(e.Actor, e.Target, e.Reason, false, e.TargetGroup.name);
+                ModActionCmd.ChangeRank(e.Target, e.targetGroup, Group.BannedRank, who);
             }
-            
-            if (who != null) who.color = "";
-            Ban.DeleteBan(e.Target);
-            Ban.BanPlayer(e.Actor, e.Target, e.Reason, banSealth, e.TargetGroup.name);
-            ModActionCmd.ChangeRank(e.Target, e.targetGroup, Group.BannedRank, who);
-            Server.s.Log("BANNED: " + e.Target + " by " + e.ActorName);
         }
         
         
         static void DoBanIP(ModAction e) {
-            LevelPermission seeIPperm = CommandExtraPerms.MinPerm("whois");
-            Chat.MessageWhere("An IP was &8banned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed,
-                              pl => pl.Rank < seeIPperm);
-            Chat.MessageWhere(e.Target + " was &8IP banned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed,
-                              pl  => pl.Rank >= seeIPperm);
+            LevelPermission perm = CommandExtraPerms.MinPerm("whois");
+            Chat.MessageWhere(e.FormatMessage("An IP", "&8IP banned"), pl => pl.Rank < perm);
+            Chat.MessageWhere(e.FormatMessage(e.TargetName, "&8IP banned"), pl => pl.Rank >= perm);
             
             Server.s.Log("IP-BANNED: " + e.Target + " by " + e.ActorName + ".");
             Server.bannedIP.Add(e.Target);
@@ -161,11 +150,9 @@ namespace MCGalaxy.Core {
         }
         
         static void DoUnbanIP(ModAction e) {
-            LevelPermission seeIPperm = CommandExtraPerms.MinPerm("whois");
-            Chat.MessageWhere("An IP was &8unbanned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed,
-                              pl => pl.Rank < seeIPperm);
-            Chat.MessageWhere(e.Target + " was &8IP unbanned %Sby " + e.ActorName + "%S. " + e.ReasonSuffixed,
-                              pl  => pl.Rank >= seeIPperm);
+            LevelPermission perm = CommandExtraPerms.MinPerm("whois");
+            Chat.MessageWhere(e.FormatMessage("An IP", "&8IP unbanned"), pl => pl.Rank < perm);
+            Chat.MessageWhere(e.FormatMessage(e.TargetName, "&8IP unbanned"), pl => pl.Rank >= perm);
             
             Server.s.Log("IP-UNBANNED: " + e.Target + " by " + e.ActorName + ".");
             Server.bannedIP.Remove(e.Target);

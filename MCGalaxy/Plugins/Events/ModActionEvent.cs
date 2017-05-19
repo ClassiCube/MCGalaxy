@@ -63,12 +63,12 @@ namespace MCGalaxy.Events {
         }
         
         /// <summary> Returns a formatted moderation action message. </summary>
-        public string FormatMessage(string action) {
+        public string FormatMessage(string target, string action) {
             string suffix = "%S";
             if (Duration.Ticks != 0) suffix += " for " + Duration.Shorten();
             
             suffix += "." + ReasonSuffixed;
-            return e.TargetName + " %Swas " + action + " %Sby " + e.ActorName + suffix;
+            return target + " %Swas " + action + " %Sby " + ActorName + suffix;
         }
         
         
