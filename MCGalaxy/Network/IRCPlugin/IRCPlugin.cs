@@ -23,13 +23,14 @@ namespace MCGalaxy.Network {
     public sealed class IRCPlugin : Plugin_Simple {
         public override string creator { get { return Server.SoftwareName + " team"; } }
         public override string MCGalaxy_Version { get { return Server.VersionString; } }
-        public override string name { get { return "IRC_CorePlugin"; } }
+        public override string name { get { return "Core_IRCPlugin"; } }
 
         public override void Load(bool startup) {
             OnPlayerConnectEvent.Register(HandleConnect, Priority.Low, this);
             OnPlayerDisconnectEvent.Register(HandleDisconnect, Priority.Low, this);
             OnPlayerChatEvent.Register(HandleChat, Priority.Low, this);
             Player.DoPlayerAction += Player_PlayerAction;
+            OnModActionEvent.Register(HandleModerationAction, Priority.Low, this);
         }
         
         public override void Unload(bool shutdown) {
@@ -37,10 +38,33 @@ namespace MCGalaxy.Network {
             OnPlayerDisconnectEvent.UnRegister(this);
             OnPlayerChatEvent.UnRegister(this);
             Player.DoPlayerAction -= Player_PlayerAction;
+            OnModActionEvent.UnRegister(this);
         }
         
+        
+        static void HandleModerationAction(ModAction e) {
+            if (!Server.IRC.Enabled) return;
+            switch (e.Type) {
+                    case ModActionType.Warned: LogWarn(e); break;
+                    case ModActionType.Ban: LogBan(e); break;
+            }
+        }
+        
+        static void LogWarn(ModAction e) {
+            Server.IRC.Say(e.ActorName + " &ewarned " + e.TargetName + " &efor: &c" + e.Reason);
+        }
+        
+        static void LogBan(ModAction e) {
+            string reason = e.ReasonSuffixed;
+            if (e.Duration.Ticks != 0) reason = " " + e.Duration.Shorten() + " " + reason;
+            
+            bool banSealth = e.Metadata != null && (bool)e.Metadata;
+            Server.IRC.Say(e.ActorName + " &8banned " + e.TargetName + reason);
+        }
+        
+        
         static void Player_PlayerAction(Player p, PlayerAction action,
-                                 string message, bool stealth) {
+                                        string message, bool stealth) {
             if (!Server.IRC.Enabled) return;
             string msg = null;
             
@@ -62,6 +86,7 @@ namespace MCGalaxy.Network {
             if (msg != null) Server.IRC.Say(msg, stealth);
         }
         
+        
         static void HandleDisconnect(Player p, string reason) {
             if (!Server.IRC.Enabled || p.hidden) return;
             if (!Server.guestLeaveNotify && p.Rank <= LevelPermission.Guest) return;
@@ -77,7 +102,7 @@ namespace MCGalaxy.Network {
             Server.IRC.Say(p.ColoredName + " %Sjoined the game", false);
         }
 
-        static char[] trimChars = new char[] { ' ' };        
+        static char[] trimChars = new char[] { ' ' };
         static void HandleChat(Player p, string message) {
             if (!Server.IRC.Enabled) return;
             if (message.Trim(trimChars) == "") return;

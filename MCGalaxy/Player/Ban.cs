@@ -51,14 +51,18 @@ namespace MCGalaxy {
         
         /// <summary> Adds a ban entry for the given user, and who banned them and why they were banned. </summary>
         public static void BanPlayer(Player banner, string target, string reason, bool stealth, string oldrank) {
+            if (reason == null) reason = "-";
             reason = reason.Replace(" ", "%20");
+            
             string player = banner == null ? "(console)" : banner.truename;
             AddBanEntry(player, target.ToLower(), reason, stealth.ToString(), FormatDate(), oldrank);
         }
         
         /// <summary> Adds a ban entry for the given user, and who banned them and why they were banned. </summary>
         public static void UnbanPlayer(Player unbanner, string target, string reason) {
+            if (reason == null) reason = "-";
             reason = reason.Replace(" ", "%20");
+            
             string player = unbanner == null ? "(console)" : unbanner.truename;
             AddUnbanEntry(player, target.ToLower(), reason, FormatDate());
         }

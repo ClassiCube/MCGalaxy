@@ -28,6 +28,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces(2);
             Player who = PlayerInfo.FindMatches(p, args[0]);
+            
             string reason = args.Length == 1 ? "you know why." : args[1];
             reason = ModActionCmd.ExpandReason(p, reason);
             if (reason == null) return;
@@ -37,41 +38,18 @@ namespace MCGalaxy.Commands.Moderation {
             if (p != null && p.Rank <= who.Rank) {
                 MessageTooHighRank(p, "warn", false); return;
             }           
-            
-            string warnedby = (p == null) ? "(console)" : p.ColoredName;
-            Chat.MessageGlobal("{0} %ewarned {1} %ebecause:", warnedby, who.ColoredName);
-            Chat.MessageGlobal("&c" + reason);
-            Server.IRC.Say(warnedby + " %ewarned " + who.ColoredName + " %efor: %c" + reason);
-            Server.s.Log(warnedby + " warned " + who.name);
-            
-            ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Warned, reason);
-            OnModerationActionEvent.Call(action);
-
-            if (who.warn == 0) {
-                Player.Message(who, "Do it again twice and you will get kicked!");
-            } else if (who.warn == 1) {
-                Player.Message(who, "Do it one more time and you will get kicked!");
-            } else if (who.warn == 2) {
-                Chat.MessageGlobal("{0} %Swas warn-kicked by {1}", who.ColoredName, warnedby);
-                string chatMsg = "by " + warnedby + "%S: " + reason;
-                string kickMsg = "Kicked by " + warnedby + "&f: " + reason;
-                who.Kick(chatMsg, kickMsg);
-            }           
-            who.warn++;
+                        
+            ModAction action = new ModAction(who.name, p, ModActionType.Warned, reason);
+            OnModActionEvent.Call(action);
         }
         
         static void WarnOffline(Player p, string[] args, string reason) {
-            if (!Server.LogNotes) { 
-                Player.Message(p, "Notes logging must be enabled to warn offline players."); return;
-            }
             Player.Message(p, "Searching PlayerDB..");
             string offName = PlayerInfo.FindOfflineNameMatches(p, args[0]);
             if (offName == null) return;
-            reason = args.Length > 1 ? " for: " + reason : "";
-            
-            ModerationAction action = new ModerationAction(offName, p, ModerationActionType.Warned, reason);
-            OnModerationActionEvent.Call(action);
-            Player.Message(p, "Warned {0}{1}.", offName, reason);
+      
+            ModAction action = new ModAction(offName, p, ModActionType.Warned, reason);
+            OnModActionEvent.Call(action);
         }
         
         public override void Help(Player p) {

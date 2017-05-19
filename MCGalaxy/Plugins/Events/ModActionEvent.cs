@@ -20,19 +20,36 @@ using System;
 namespace MCGalaxy.Events {
     
     /// <summary> Represents a moderation action. </summary>
-    public sealed class ModerationAction {
+    public sealed class ModAction {
         
         /// <summary> Target player name or IP. </summary>
         public string Target;
+
+        /// <summary> Gets the colored name of the target. (Not nickname) </summary>
+        public string TargetName {
+            get { return PlayerInfo.GetColoredName(Actor, Target); }
+        }
         
         /// <summary> Player performing the action (e.g. person who is banning). </summary>
         public Player Actor;
+        
+        /// <summary> Gets the colored name of the actor. (Not nickname) </summary>
+        public string ActorName {
+            get { return Actor == null ? "(console)" : Actor.ColoredName; }
+        }
+        
 
         /// <summary> Type of this action. </summary>
-        public ModerationActionType Type;
+        public ModActionType Type;
         
         /// <summary> Reason provided for the action, can be null. </summary>
         public string Reason;
+        
+        /// <summary> Returns " (reason)" if reason is given, "" if not. </summary>
+        public string ReasonSuffixed {
+            get { return Reason == null ? "" : " (" + Reason + ")"; }
+        }
+        
         
         /// <summary> How long the action lasts for (e.g. duration of a tempban), before reverting. </summary>
         /// <remarks> Duration of 0 means the action is permanent. (e.g. regular /ban) </remarks>
@@ -41,7 +58,7 @@ namespace MCGalaxy.Events {
         /// <summary> Action-specific metadata, see remarks in ModerationActionType for what is in this. </summary>
         public object Metadata;
         
-        public ModerationAction(string target, Player actor, ModerationActionType type,
+        public ModAction(string target, Player actor, ModActionType type,
                                 string reason = null, TimeSpan duration = default(TimeSpan)) {
             Target = target;
             Actor = actor;
@@ -53,10 +70,10 @@ namespace MCGalaxy.Events {
         }
     }
     
-    public delegate void OnModerationAction(ModerationAction action);
+    public delegate void OnModAction(ModAction action);
     
     /// <summary> Types of moderation actions that can occur. </summary>
-    public enum ModerationActionType {
+    public enum ModActionType {
         
         /// <summary> Player is banned. </summary>
         /// <remarks> Metadata is a boolean, true if the ban is a stealth ban. </remarks>
@@ -88,11 +105,11 @@ namespace MCGalaxy.Events {
     }
     
     /// <summary> Raised when a moderation action occurs. </summary>
-    public sealed class OnModerationActionEvent : IPluginEvent<OnModerationAction> {
-        internal OnModerationActionEvent(OnModerationAction method, Priority priority, Plugin plugin)
+    public sealed class OnModActionEvent : IPluginEvent<OnModAction> {
+        internal OnModActionEvent(OnModAction method, Priority priority, Plugin plugin)
             : base(method, priority, plugin) { }
         
-        public static void Call(ModerationAction e) {
+        public static void Call(ModAction e) {
             if (handlers.Count == 0) return;
             CallImpl(pl => pl(e));
         }

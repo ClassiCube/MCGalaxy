@@ -50,8 +50,8 @@ namespace MCGalaxy.Commands.Moderation {
                 return;
             }
             
-            ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Kicked, reason);
-            OnModerationActionEvent.Call(action);
+            ModAction action = new ModAction(who.name, p, ModActionType.Kicked, reason);
+            OnModActionEvent.Call(action);
             who.Kick(kickMsg, "Kicked " + kickMsg);
         }
         

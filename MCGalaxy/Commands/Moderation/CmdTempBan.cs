@@ -60,8 +60,8 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             Player.Message(p, "Temp banned " + target + " for " + time.Shorten(true) + ".");
-            ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Ban, reason, time);
-            OnModerationActionEvent.Call(action);
+            ModAction action = new ModAction(who.name, p, ModActionType.Ban, reason, time);
+            OnModActionEvent.Call(action);
         }
         
         public override void Help(Player p) {

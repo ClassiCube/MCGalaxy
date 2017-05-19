@@ -49,32 +49,9 @@ namespace MCGalaxy.Commands.Moderation {
             Group group = who == null ? Group.findPlayerGroup(args[0]) : who.group;
             if (!CheckPerms(target, group, p)) return;
 
-            string banReason = reason == "-" ? "" : " (" + reason + ")";
-            string banner = p == null ? "(console)" : p.ColoredName;
-            string banMsg = null;
-            if (who == null) {
-                banMsg = target + " &f(offline) %Swas &8banned %Sby " + banner + "%S." + banReason;
-                Chat.MessageGlobal(banMsg);
-            } else {
-                if (stealth) {
-                    banMsg = who.ColoredName + " %Swas STEALTH &8banned %Sby " + banner + "%S." + banReason;
-                    Chat.MessageOps(banMsg);
-                } else {
-                    banMsg = who.ColoredName + " %Swas &8banned %Sby " + banner + "%S." + banReason;
-                    Chat.MessageGlobal(banMsg);
-                }
-                who.color = "";
-            }
-            
-            Ban.DeleteBan(target);
-            Ban.BanPlayer(p, target, reason, stealth, group.name);
-            ModActionCmd.ChangeRank(target, group, Group.BannedRank, who);
-            
-            ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Ban, reason);
-            action.Metadata = stealth;
-            OnModerationActionEvent.Call(action);
-            Server.IRC.Say(banMsg);
-            Server.s.Log("BANNED: " + target.ToLower() + " by " + banner);
+            ModAction action = new ModAction(who.name, p, ModActionType.Ban, reason);
+            action.Metadata = stealth && who != null;
+            OnModActionEvent.Call(action);
         }
         
         bool CheckPerms(string name, Group group, Player p) {

@@ -398,6 +398,7 @@
     <Compile Include="CorePlugin\EcoHandlers.cs" />
     <Compile Include="CorePlugin\IPThrottler.cs" />
     <Compile Include="CorePlugin\MiscHandlers.cs" />
+    <Compile Include="CorePlugin\ModActionHandler.cs" />
     <Compile Include="CorePlugin\NotesPlugin.cs" />
     <Compile Include="Database\Backends\SQLite.cs" />
     <Compile Include="Database\BlockDB\BlockDB.cs" />
@@ -597,7 +598,7 @@
     <Compile Include="Plugins\Events\GroupEvents.cs" />
     <Compile Include="Plugins\Events\IPluginEvent.cs" />
     <Compile Include="Plugins\Events\LevelEvents.cs" />
-    <Compile Include="Plugins\Events\ModerationActionEvent.cs" />
+    <Compile Include="Plugins\Events\ModActionEvent.cs" />
     <Compile Include="Plugins\Events\PlayerEvents.cs" />
     <Compile Include="Plugins\Events\ServerEvents.cs" />
     <Compile Include="Network\Player.Networking.cs" />

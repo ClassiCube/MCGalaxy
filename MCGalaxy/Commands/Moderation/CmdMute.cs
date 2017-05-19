@@ -52,8 +52,8 @@ namespace MCGalaxy.Commands.Moderation {
                 Chat.MessageGlobal(who, who.ColoredName + " %Swas &8muted", false);
                 Server.muted.AddIfNotExists(who.name);
                 
-                ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Muted);
-                OnModerationActionEvent.Call(action);
+                ModAction action = new ModAction(who.name, p, ModActionType.Muted);
+                OnModActionEvent.Call(action);
             }
             Server.muted.Save();
         }

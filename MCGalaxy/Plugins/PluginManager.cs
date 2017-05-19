@@ -141,6 +141,7 @@ namespace MCGalaxy {
             ctf.Load(true);
             Plugin.all.Add(ctf);
             LoadCorePlugin(new CorePlugin());
+            LoadCorePlugin(new NotesPlugin());
         }
         
         internal static void LoadCorePlugin(Plugin plugin) {

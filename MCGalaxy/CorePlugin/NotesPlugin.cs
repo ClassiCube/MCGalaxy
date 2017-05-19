@@ -23,36 +23,35 @@ namespace MCGalaxy.Core {
     public sealed class NotesPlugin : Plugin_Simple {
         public override string creator { get { return Server.SoftwareName + " team"; } }
         public override string MCGalaxy_Version { get { return Server.VersionString; } }
-        public override string name { get { return "NotesPlugin"; } }
+        public override string name { get { return "Core_NotesPlugin"; } }
 
         public override void Load(bool startup) {
-            OnModerationActionEvent.Register(HandleModerationAction, Priority.Low, this);
+            OnModActionEvent.Register(HandleModerationAction, Priority.Low, this);
         }
         
         public override void Unload(bool shutdown) {
-            OnModerationActionEvent.UnRegister(this);
+            OnModActionEvent.UnRegister(this);
         }
         
-        void HandleModerationAction(ModerationAction action) {
+        static void HandleModerationAction(ModAction action) {
             switch (action.Type) {
-                case ModerationActionType.Frozen:
+                case ModActionType.Frozen:
                     AddNote(action, "F"); break;
-                case ModerationActionType.Jailed:
+                case ModActionType.Jailed:
                     AddNote(action, "J"); break;
-                case ModerationActionType.Kicked:
+                case ModActionType.Kicked:
                     AddNote(action, "K"); break;
-                case ModerationActionType.Muted:
+                case ModActionType.Muted:
                     AddNote(action, "M"); break; 
-                case ModerationActionType.Warned:
+                case ModActionType.Warned:
                     AddNote(action, "W"); break;                    
-                case ModerationActionType.Ban:
+                case ModActionType.Ban:
                     string banType = action.Duration.Ticks == 0 ? "B" : "T";
                     AddNote(action, banType); break;
-
             }
         }
         
-        static void AddNote(ModerationAction action, string type) {
+        static void AddNote(ModAction action, string type) {
              if (!Server.LogNotes) return;
              string src = action.Actor == null ? "(console)" : action.Actor.name;
              

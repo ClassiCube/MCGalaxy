@@ -30,29 +30,15 @@ namespace MCGalaxy.Commands.Moderation {
             if (message == "") { Help(p); return; }
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
+            
             if (p == who) { Player.Message(p, "Cannot freeze yourself."); return; }
             if (p != null && who.Rank >= p.Rank) { 
                 MessageTooHighRank(p, "freeze", false); return; 
             }
             
-            string frozenby = (p == null) ? "(console)" : p.ColoredName;
-            if (!who.frozen) {
-                Chat.MessageGlobal(who, who.ColoredName + " %Swas &bfrozen %Sby " + frozenby + "%S.", false);
-                Server.s.Log(who.name + " was frozen by " + frozenby);
-                Server.frozen.AddIfNotExists(who.name);
-                
-                ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Frozen);
-                OnModerationActionEvent.Call(action);
-            } else {
-                Chat.MessageGlobal(who, who.ColoredName + " %Swas &adefrosted %Sby " + frozenby + "%S.", false);
-                Server.s.Log(who.name + " was defrosted by " + frozenby);
-                Server.frozen.Remove(who.name);
-                
-                ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Unfrozen);
-                OnModerationActionEvent.Call(action);
-            }
-            Server.frozen.Save();
-            who.frozen = !who.frozen;
+            ModActionType actionType = who.frozen ? ModActionType.Unfrozen : ModActionType.Frozen;
+            ModAction action = new ModAction(who.name, p, actionType);
+            OnModActionEvent.Call(action);
         }
         
         public override void Help(Player p) {

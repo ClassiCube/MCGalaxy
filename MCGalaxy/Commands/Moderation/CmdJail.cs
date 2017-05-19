@@ -40,30 +40,12 @@ namespace MCGalaxy.Commands.Moderation {
                 if (p != null && who.Rank >= p.Rank) { 
                     MessageTooHighRank(p, "jail", false); return;
                 }
-                Player.Message(p, "You jailed " + who.DisplayName);
-                Entities.GlobalDespawn(who, false);
-                who.jailed = true;
-                
-                Position pos = new Position(who.level.jailx, who.level.jaily, who.level.jailz);
-                Orientation rot = new Orientation(who.level.jailrotx, who.level.jailroty);
-                Entities.GlobalSpawn(who, pos, rot, true);
-                
-                Server.jailed.AddOrReplace(who.name, who.level.name);
-                Chat.MessageGlobal(who, who.ColoredName + " %Swas &8jailed", false);
-                
-                ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Jailed);
-                OnModerationActionEvent.Call(action);
+                ModAction action = new ModAction(who.name, p, ModActionType.Jailed);
+                OnModActionEvent.Call(action);
             } else {
-                Server.jailed.Remove(who.name);
-                who.jailed = false;
-                Command.all.Find("spawn").Use(who, "");
-                Player.Message(p, "You freed " + who.name + " from jail");
-                Chat.MessageGlobal(who, who.ColoredName + " %Swas &afreed %Sfrom jail", false);
-                
-                ModerationAction action = new ModerationAction(who.name, p, ModerationActionType.Unjailed);
-                OnModerationActionEvent.Call(action);
+                ModAction action = new ModAction(who.name, p, ModActionType.Unjailed);
+                OnModActionEvent.Call(action);
             }
-            Server.jailed.Save(true);
         }
 
         public override void Help(Player p) {
