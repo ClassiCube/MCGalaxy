@@ -46,23 +46,16 @@ namespace MCGalaxy.Network {
         void HandleModerationAction(ModAction e) {
             if (!Server.IRC.Enabled) return;
             switch (e.Type) {
-                    case ModActionType.Warned: LogWarn(e); break;
+            		case ModActionType.Warned: Bot.Say(e.FormatMessage("&ewarned")); break;
                     case ModActionType.Ban: LogBan(e); break;
                     case ModActionType.BanIP: LogBanIP(e); break;
                     case ModActionType.UnbanIP: LogUnbanIP(e); break;
             }
         }
         
-        void LogWarn(ModAction e) {
-            Bot.Say(e.ActorName + " &ewarned " + e.TargetName + "&e" + e.ReasonSuffixed);
-        }
-        
         void LogBan(ModAction e) {
-            string reason = e.ReasonSuffixed;
-            if (e.Duration.Ticks != 0) reason = " " + e.Duration.Shorten() + " " + reason;
-            
             bool banSealth = e.Metadata != null && (bool)e.Metadata;
-            Bot.Say(e.ActorName + " &8banned " + e.TargetName + reason);
+            Bot.Say(e.FormatMessage("&8banned"), banSealth);
         }
         
         void LogBanIP(ModAction e) {
@@ -77,7 +70,7 @@ namespace MCGalaxy.Network {
         
         
         void Player_PlayerAction(Player p, PlayerAction action,
-                                        string message, bool stealth) {
+                                 string message, bool stealth) {
             if (!Server.IRC.Enabled) return;
             string msg = null;
             
@@ -122,7 +115,7 @@ namespace MCGalaxy.Network {
             if (Plugin.IsPlayerEventCanceled(PlayerEvents.PlayerChat, p)) return;
             
             string name = Server.ircPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;
-             Bot.Say(name + "%S: " + message, p.opchat);
+            Bot.Say(name + "%S: " + message, p.opchat);
         }
     }
 }

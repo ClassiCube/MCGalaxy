@@ -62,6 +62,15 @@ namespace MCGalaxy.Events {
             get { return Reason == "" ? "" : " (" + Reason + ")"; }
         }
         
+        /// <summary> Returns a formatted moderation action message. </summary>
+        public string FormatMessage(string action) {
+            string suffix = "%S";
+            if (Duration.Ticks != 0) suffix += " for " + Duration.Shorten();
+            
+            suffix += "." + ReasonSuffixed;
+            return e.TargetName + " %Swas " + action + " %Sby " + e.ActorName + suffix;
+        }
+        
         
         /// <summary> How long the action lasts for (e.g. duration of a tempban), before reverting. </summary>
         /// <remarks> Duration of 0 means the action is permanent. (e.g. regular /ban) </remarks>

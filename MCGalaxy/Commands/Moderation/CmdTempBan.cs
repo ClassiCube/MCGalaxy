@@ -41,26 +41,20 @@ namespace MCGalaxy.Commands.Moderation {
             if (p != null && grp.Permission >= p.Rank) {
                 MessageTooHighRank(p, "temp ban", false); return;
             }
-            
-            TimeSpan time = TimeSpan.FromHours(1);
-            if (args.Length > 1 && !CommandParser.GetTimespan(p, args[1], ref time, "temp ban for", 'm')) return;
-            if (time.TotalSeconds < 1) { Player.Message(p, "Cannot temp ban someone for less than a second."); return; }
-            
-            reason = ModActionCmd.ExpandReason(p, reason);
-            if (reason == null) return;            
-            string banner = p == null ? "(console)" : p.truename;
-            
-            Server.tempBans.AddOrReplace(target,
-                                         Ban.PackTempBanData(reason, banner, DateTime.UtcNow.Add(time)));
-            Server.tempBans.Save();
-                                                                     
-            if (who != null) {
-                string kickReason = reason == "" ? "" : " - (" + reason + ")";
-                who.Kick("Banned for " + time.Shorten(true) + "." + kickReason);
+            if (Server.tempBans.Contains(target)) {
+                Player.Message(p, "{0} %Sis already temp-banned.", PlayerInfo.GetColoredName(p, target));
+                return;
             }
             
-            Player.Message(p, "Temp banned " + target + " for " + time.Shorten(true) + ".");
-            ModAction action = new ModAction(who.name, p, ModActionType.Ban, reason, time);
+            TimeSpan span = TimeSpan.FromHours(1);
+            if (args.Length > 1 && !CommandParser.GetTimespan(p, args[1], ref span, "temp ban for", 'm')) return;
+            if (span.TotalSeconds < 1) { Player.Message(p, "Cannot temp ban someone for less than a second."); return; }
+            
+            reason = ModActionCmd.ExpandReason(p, reason);
+            if (reason == null) return;
+
+            ModAction action = new ModAction(target, p, ModActionType.Ban, reason, span);
+            action.targetGroup = grp;
             OnModActionEvent.Call(action);
         }
         

@@ -38,6 +38,7 @@ namespace MCGalaxy {
         }        
         
         public static string PackTempBanData(string reason, string banner, DateTime expiry) {
+            if (reason == null) reason = "-";
             return banner + " " + expiry.Ticks + " " + reason;
         }
         
