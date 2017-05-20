@@ -21,10 +21,6 @@ using System.Collections.Generic;
 namespace MCGalaxy.Events {
     
     public sealed class OnGroupLoadedEvent : IPluginEvent<Group.GroupLoaded> {
-        
-        internal OnGroupLoadedEvent(Group.GroupLoaded method, Priority priority, Plugin plugin)
-            : base(method, priority, plugin) { }
-        
         public static void Call(Group g) {
             if (handlers.Count == 0) return;
             CallImpl(pl => pl(g));
@@ -32,10 +28,6 @@ namespace MCGalaxy.Events {
     }
     
     public sealed class OnGroupLoadEvent : IPluginEvent<Group.GroupLoad> {
-        
-        internal OnGroupLoadEvent(Group.GroupLoad method, Priority priority, Plugin plugin)
-            : base(method, priority, plugin) { }
-        
         public static void Call() {
             if (handlers.Count == 0) return;
             CallImpl(pl => pl());
@@ -43,10 +35,6 @@ namespace MCGalaxy.Events {
     }
     
     public sealed class OnGroupSaveEvent : IPluginEvent<Group.GroupSave> {
-        
-        internal OnGroupSaveEvent(Group.GroupSave method, Priority priority, Plugin plugin)
-            : base(method, priority, plugin) { }
-        
         public static void Call() {
             if (handlers.Count == 0) return;
             CallImpl(pl => pl());
@@ -54,10 +42,6 @@ namespace MCGalaxy.Events {
     }
     
     public sealed class OnPlayerRankSetEvent : IPluginEvent<Group.RankSet> {
-        
-        internal OnPlayerRankSetEvent(Group.RankSet method, Priority priority, Plugin plugin)
-            : base(method, priority, plugin) { }
-        
         public static void Call(Player p, Group newRank) {
             if (handlers.Count == 0) return;
             CallImpl(pl => pl(p, newRank));

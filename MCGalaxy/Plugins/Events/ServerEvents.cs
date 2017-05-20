@@ -20,20 +20,14 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Events {
     
-    public sealed class OnConsoleCommandEvent : IPluginEvent<Server.OnConsoleCommand> {       
-        internal OnConsoleCommandEvent(Server.OnConsoleCommand method, Priority priority, Plugin plugin)
-            : base(method, priority, plugin) { }
-        
+    public sealed class OnConsoleCommandEvent : IPluginEvent<Server.OnConsoleCommand> {
         public static void Call(string cmd, string message) {
             if (handlers.Count == 0) return;
             CallImpl(pl => pl(cmd, message));
         }
     }
     
-    public sealed class OnServerErrorEvent : IPluginEvent<Server.OnServerError> {        
-        internal OnServerErrorEvent(Server.OnServerError method, Priority priority, Plugin plugin)
-            : base(method, priority, plugin) { }
-        
+    public sealed class OnServerErrorEvent : IPluginEvent<Server.OnServerError> {
         public static void Call(Exception ex) {
             if (handlers.Count == 0) return;
             CallImpl(pl => pl(ex));
@@ -41,9 +35,6 @@ namespace MCGalaxy.Events {
     }
     
     public sealed class OnServerLogEvent : IPluginEvent<Server.OnServerLog> {
-        internal OnServerLogEvent(Server.OnServerLog method, Priority priority, Plugin plugin)
-            : base(method, priority, plugin) { }
-        
         public static void Call(string message) {
             if (handlers.Count == 0) return;
             CallImpl(pl => pl(message));

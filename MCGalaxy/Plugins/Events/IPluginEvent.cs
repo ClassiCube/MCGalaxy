@@ -23,15 +23,9 @@ namespace MCGalaxy.Events {
     // This is because the static events are unique to each generic instantiation, not each subclass.
     public class IPluginEvent<IMethod> {
         protected internal static List<IPluginEvent<IMethod>> handlers = new List<IPluginEvent<IMethod>>();
-        protected internal Plugin plugin;
-        protected internal IMethod method;
-        protected internal Priority priority;
-        
-        internal IPluginEvent(IMethod method, Priority priority, Plugin plugin) { 
-            this.plugin = plugin; 
-            this.priority = priority; 
-            this.method = method; 
-        }
+        protected Plugin plugin;
+        protected IMethod method;
+        protected Priority priority;
         
         /// <summary> Register this event </summary>
         /// <param name="method">This is the delegate that will get called when this event occurs</param>
@@ -41,8 +35,11 @@ namespace MCGalaxy.Events {
         public static void Register(IMethod method, Priority priority, Plugin plugin, bool bypass = false) {
             if (Find(plugin) != null && !bypass)
                 throw new ArgumentException("The user tried to register 2 of the same event!");
-            handlers.Add(new IPluginEvent<IMethod>(method, priority, plugin));
-            Organize();
+            
+            IPluginEvent<IMethod> handler = new IPluginEvent<IMethod>();
+            handler.plugin = plugin; handler.method = method; handler.priority = priority;
+            handlers.Add(handler);
+            SortHandlers();
         }
         
         /// <summary> UnRegister this event </summary>
@@ -50,8 +47,8 @@ namespace MCGalaxy.Events {
         public static void UnRegister(Plugin plugin) {
             if (Find(plugin) == null)
                 throw new ArgumentException("This plugin doesnt have this event registered!");
-            else
-                handlers.Remove(Find(plugin));
+           
+            handlers.Remove(Find(plugin));
         }
         
         public static IPluginEvent<IMethod> Find(Plugin plugin) {
@@ -62,7 +59,7 @@ namespace MCGalaxy.Events {
         }
         
         
-        protected static void Organize() {
+        protected static void SortHandlers() {
             handlers.Sort((a, b) => b.priority.CompareTo(a.priority));
         }
         
