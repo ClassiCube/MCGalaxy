@@ -24,12 +24,12 @@ namespace MCGalaxy.Commands.Fun {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+        public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "+ can create teams") }; }
         }
         
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
             if (message == "") { Help(p); return; }
             string[] args = message.SplitSpaces(2);
 

@@ -17,8 +17,7 @@
 */
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands.Fun {
-    
+namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdAlive : Command {
         public override string name { get { return "alive"; } }
         public override string shortcut { get { return "alive"; } }
@@ -26,7 +25,6 @@ namespace MCGalaxy.Commands.Fun {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
-        public CmdAlive() { }
         
          public override void Use(Player p, string message) {
             Player[] alive = Server.zombie.Alive.Items;

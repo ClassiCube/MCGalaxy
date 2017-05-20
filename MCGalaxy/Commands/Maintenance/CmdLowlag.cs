@@ -15,15 +15,12 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands.Maintenance
-{
-    public sealed class CmdLowlag : Command
-    {
+namespace MCGalaxy.Commands.Maintenance {
+    public sealed class CmdLowlag : Command {
         public override string name { get { return "lowlag"; } }
-       public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdLowlag() { }
 
         public override void Use(Player p, string message) {
             if (message == "" && Server.updateTimer.Interval > 1000) {

@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Chatting {
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can read opchat messages") }; }
         }
-        public CmdOpChat() { }
 
         public override void Use(Player p, string message) {
             if (message != "") { ChatModes.MessageOps(p, message); return; }

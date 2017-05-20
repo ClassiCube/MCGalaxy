@@ -27,7 +27,6 @@ namespace MCGalaxy.Commands.Info {
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdTop() { }
         public override CommandAlias[] Aliases {
             get { return new [] { new CommandAlias("topten", null, "10"), new CommandAlias("topfive", null, "5"),
                     new CommandAlias("top10", null, "10"), }; }

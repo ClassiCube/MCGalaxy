@@ -24,10 +24,8 @@ namespace MCGalaxy.Commands.Misc {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdTimer() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (p.cmdTimer) { Player.Message(p, "Can only have one timer at a time. Use /abort to cancel your previous timer."); return; }
             if (message == "") { Help(p); return; }
 

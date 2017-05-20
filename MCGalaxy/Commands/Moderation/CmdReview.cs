@@ -34,7 +34,6 @@ namespace MCGalaxy.Commands.Moderation {
                     new CommandPerm(LevelPermission.Operator, "+ can clear the review queue"),
                 }; }
         }
-        public CmdReview() { }
 
         public override void Use(Player p, string message) {
             if (p != null && message == "") message = "enter";

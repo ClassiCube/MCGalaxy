@@ -25,14 +25,13 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+        public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("m"), new CommandAlias("x"),
                     new CommandAlias("markall", "all"), new CommandAlias("ma", "all") }; }
         }
 
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            
             if (message.CaselessEq("all")) {
                 if (!p.HasBlockchange) {
                     Player.Message(p, "Cannot mark, no selection in progress."); return;

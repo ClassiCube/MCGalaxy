@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdPlace() { }
 
         public override void Use(Player p, string message) {
             ExtBlock block = p.GetHeldBlock();

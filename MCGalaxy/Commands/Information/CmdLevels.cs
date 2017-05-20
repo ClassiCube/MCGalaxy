@@ -27,7 +27,6 @@ namespace MCGalaxy.Commands.Info {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("worlds") }; }
         }
-        public CmdLevels() { }
 
         public override void Use(Player p, string message) {
             Level[] loaded = LevelInfo.Loaded.Items;

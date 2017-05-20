@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public CmdHollow() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
             byte skip = Block.Invalid;

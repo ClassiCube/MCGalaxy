@@ -26,10 +26,9 @@ namespace MCGalaxy.Commands.Fun {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
-        public CmdHuman() { }
+        public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (p.Game.PledgeSurvive) {
                 Player.Message(p, "You cannot un-pledge that you will be infected."); return;
             }

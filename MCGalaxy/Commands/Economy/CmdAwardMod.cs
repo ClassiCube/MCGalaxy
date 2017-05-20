@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Eco {
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public CmdAwardMod() { }
         static char[] awardArgs = new char[] { ':' };
 
         public override void Use(Player p, string message) {

@@ -28,7 +28,6 @@ namespace MCGalaxy.Commands.Info {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("materials") }; }
         }
-        public CmdBlocks() { }
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();

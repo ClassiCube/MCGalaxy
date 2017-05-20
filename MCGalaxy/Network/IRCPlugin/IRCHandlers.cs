@@ -204,7 +204,7 @@ namespace MCGalaxy.Network {
             string ircCmd = parts[0].ToLower();
             if (HandleWhoCommand(user, channel, ircCmd, opchat)) return;
             
-            if (ircCmd == Server.ircCommandPrefix && !HandleChannelcommand(user, channel, message, parts)) return;
+            if (ircCmd == Server.ircCommandPrefix && !HandleChannelCommand(user, channel, message, parts)) return;
 
             if (channel.CaselessEq(bot.opchannel)) {
                 Server.s.Log(String.Format("(OPs): (IRC) {0}: {1}", user.Nick, message));
@@ -217,7 +217,7 @@ namespace MCGalaxy.Network {
             }
         }
         
-        bool HandleChannelcommand(UserInfo user, string channel, string message, string[] parts) {
+        bool HandleChannelCommand(UserInfo user, string channel, string message, string[] parts) {
             string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
             string cmdArgs = parts.Length > 2 ? parts[2] : "";
             Command.Search(ref cmdName, ref cmdArgs);
@@ -259,6 +259,7 @@ namespace MCGalaxy.Network {
             
             try {
                 if (!p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return false; }
+                if (!cmd.SuperUseable) { Player.Message(p, "This command can only be used in-game."); return false; }
                 cmd.Use(p, cmdArgs);
             } catch (Exception ex) {
                 Player.Message(p, "CMD Error: " + ex);

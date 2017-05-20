@@ -24,10 +24,9 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public CmdPossess() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] args = message.SplitSpaces();
             if (args.Length > 2) { Help(p); return; }
 

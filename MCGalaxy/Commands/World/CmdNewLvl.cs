@@ -29,7 +29,6 @@ namespace MCGalaxy.Commands.World {
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can generate maps with advanced themes") }; }
         }
-        public CmdNewLvl() { }
 
         public override void Use(Player p, string message) { GenerateMap(p, message); }
         

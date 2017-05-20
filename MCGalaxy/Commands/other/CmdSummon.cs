@@ -25,18 +25,16 @@ namespace MCGalaxy.Commands.Misc {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        public override bool SuperUseable { get { return false; } }        
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("fetch"), new CommandAlias("bring"), new CommandAlias("bringall", "all") }; }
         }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can summon all players") }; }
         }
-        public CmdSummon() { }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            
+            if (message == "") { Help(p); return; }            
             if (message.CaselessEq("all")) {
                 if (CheckExtraPerm(p)) SummonAll(p);
             } else {

@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Eco {
         public override string name { get { return "take"; } }
         public override string shortcut { get { return ""; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }     
-        public CmdTake() { }
 
         public override void Use(Player p, string message) {
             EcoTransaction data;

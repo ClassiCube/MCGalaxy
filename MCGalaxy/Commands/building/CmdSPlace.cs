@@ -26,12 +26,11 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public CmdSPlace() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
             ushort distance = 0, interval = 0;
             if (message == "") { Help(p); return; }
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             
             string[] parts = message.SplitSpaces();
             if (!CommandParser.GetUShort(p, parts[0], "Distance", ref distance)) return;

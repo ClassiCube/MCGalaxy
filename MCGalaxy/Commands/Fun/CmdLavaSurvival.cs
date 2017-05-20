@@ -20,16 +20,13 @@ using System;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Commands.Fun
-{
-    public sealed class CmdLavaSurvival : Command
-    {
+namespace MCGalaxy.Commands.Fun {
+    public sealed class CmdLavaSurvival : Command {
         public override string name { get { return "lavasurvival"; } }
         public override string shortcut { get { return "ls"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdLavaSurvival() { }
 
         public override void Use(Player p, string message)  {
             if (message == "") { Help(p); return; }

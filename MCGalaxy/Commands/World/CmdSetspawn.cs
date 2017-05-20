@@ -16,13 +16,12 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.World {    
-    public sealed class CmdSetspawn : Command {
-        
+    public sealed class CmdSetspawn : Command {        
         public override string name { get { return "setspawn"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdSetspawn() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return;  }

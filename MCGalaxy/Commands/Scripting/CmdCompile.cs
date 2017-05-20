@@ -20,13 +20,11 @@ using System.IO;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Commands.Scripting {
-    public sealed class CmdCompile : Command {
-        
+    public sealed class CmdCompile : Command {        
         public override string name { get { return "compile"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
-        public CmdCompile() { }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }

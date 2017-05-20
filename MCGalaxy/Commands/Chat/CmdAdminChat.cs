@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Chatting {
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can read adminchat messages") }; }
         }
-        public CmdAdminChat() { }
 
         public override void Use(Player p, string message) {
             if (message != "") { ChatModes.MessageAdmins(p, message); return; }

@@ -26,7 +26,6 @@ namespace MCGalaxy.Commands.Misc {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("godmode") }; }
         }
-        public CmdInvincible() { }
 
         public override void Use(Player p, string message) {
             Player who = message == "" ? p : PlayerInfo.FindMatches(p, message);

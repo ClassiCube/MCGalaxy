@@ -29,7 +29,6 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("zs"), new CommandAlias("zombiesurvival") }; }
         }
-        public CmdZombieGame() { }
         
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }

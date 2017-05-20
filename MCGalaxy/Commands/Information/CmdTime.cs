@@ -25,7 +25,6 @@ namespace MCGalaxy.Commands.Info {
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public CmdTime() { }
 
         public override void Use(Player p, string message) {
             Player.Message(p, "Server time: {0:HH:mm:ss} on {0:d}", DateTime.Now);

@@ -15,15 +15,12 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands.Misc {
-    
-    public sealed class CmdRepeat : Command {
-        
+namespace MCGalaxy.Commands.Misc {    
+    public sealed class CmdRepeat : Command {        
         public override string name { get { return "repeat"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdRepeat() { }
 
         public override void Use(Player p, string message) {
             if (p.lastCMD == "") { Player.Message(p, "No commands used yet."); return; }

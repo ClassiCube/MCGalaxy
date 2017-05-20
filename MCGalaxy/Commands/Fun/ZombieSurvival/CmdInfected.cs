@@ -17,8 +17,7 @@
  */
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands.Fun {
-    
+namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdInfected : Command {
         public override string name { get { return "infected"; } }
         public override string shortcut { get { return "dead"; } }
@@ -26,8 +25,7 @@ namespace MCGalaxy.Commands.Fun {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
-        public CmdInfected() { }
-        
+
         public override void Use(Player p, string message) {
             Player[] infected = Server.zombie.Infected.Items;
             if (infected.Length == 0) { Player.Message(p, "No one is infected"); return; }

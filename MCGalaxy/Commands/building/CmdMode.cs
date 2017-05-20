@@ -23,10 +23,10 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+        public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("tnt", "tnt") }; }
-        }   
-        public CmdMode() { }
+        }
 
         public override void Use(Player p, string message) {
             // Special handling for the old TNT command

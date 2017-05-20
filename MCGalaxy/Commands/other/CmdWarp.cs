@@ -24,6 +24,7 @@ namespace MCGalaxy.Commands.Misc {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+        public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] {
                     new CommandPerm(LevelPermission.Operator, "+ can create warps"),
@@ -33,7 +34,6 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             WarpList warps = WarpList.Global;
             string[] args = message.ToLower().SplitSpaces();
             string cmd = args[0];

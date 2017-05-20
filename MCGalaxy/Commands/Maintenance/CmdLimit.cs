@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Maintenance {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public CmdLimit() { }
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();

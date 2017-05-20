@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Bots{
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        public CmdBotAI() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
@@ -37,7 +37,6 @@ namespace MCGalaxy.Commands.Bots{
                 return;
             }
             
-            if (p == null) { MessageInGameOnly(p); return; }
             if (args.Length < 2) { Help(p); return; }
             string ai = args[1].ToLower();
 

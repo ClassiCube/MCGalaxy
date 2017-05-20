@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdWhisper() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
             if (message == "") {
@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Chatting {
 
                 p.whisper = true;
                 p.whisperTo = who.name;
-                Player.Message(p, "Auto-whisper enabled.  All messages will now be sent to " + who.DisplayName + ".");
+                Player.Message(p, "Auto-whisper enabled. All messages will now be sent to " + who.DisplayName + ".");
             }
         }
 

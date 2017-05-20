@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Bots {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public CmdBots() { }
 
         public override void Use(Player p, string message) { 
             Level lvl = p.level;

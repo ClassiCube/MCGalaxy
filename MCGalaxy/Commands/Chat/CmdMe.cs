@@ -22,11 +22,10 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public CmdMe() { }
+        public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
             if (message == "") { Player.Message(p, "You"); return; }
-            if (p == null) { MessageInGameOnly(p); return; }
             if (p.joker) { Player.Message(p, "Cannot use /me while jokered."); return; }
             
             string msg = p.color + "*" + Colors.StripColors(p.DisplayName) + " " + message;

@@ -29,13 +29,12 @@ namespace MCGalaxy.Commands.Info {
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdAbout() { }
+        public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
             get { return new [] { new CommandAlias("binfo"), new CommandAlias("whodid") }; }
         }
             
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             Player.Message(p, "Break/build a block to display information.");
             p.MakeSelection(1, null, PlacedMark);
         }

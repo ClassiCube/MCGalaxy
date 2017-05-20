@@ -28,7 +28,6 @@ namespace MCGalaxy.Commands.Moderation {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("unipban") }; }
         }
-        public CmdUnbanip() { }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }

@@ -26,7 +26,6 @@ namespace MCGalaxy.Commands.Fun {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }      
-        public CmdShowQueue() { }
 
         public override void Use(Player p, string message) {
             ShowQueued(p, Server.zombie.QueuedLevel, "level");

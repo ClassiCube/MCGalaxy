@@ -26,12 +26,12 @@ namespace MCGalaxy.Commands.Fun {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
+        public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("roundtime", null, "roundtime") }; }
         }
         
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
             if (message == "") {
                 Player.Message(p, "Map authors: " + p.level.Authors);
                 Player.Message(p, "Pillaring allowed: " + p.level.Pillaring);

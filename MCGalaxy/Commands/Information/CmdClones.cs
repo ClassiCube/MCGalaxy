@@ -28,7 +28,6 @@ namespace MCGalaxy.Commands.Info {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("whoip") }; }
         }
-        public CmdClones() { }
 
         public override void Use(Player p, string message) {
             if (message == "" && p != null) {

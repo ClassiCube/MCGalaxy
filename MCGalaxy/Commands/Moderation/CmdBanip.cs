@@ -30,7 +30,6 @@ namespace MCGalaxy.Commands.Moderation {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ipban") }; }
         }
-        public CmdBanip() { }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }            

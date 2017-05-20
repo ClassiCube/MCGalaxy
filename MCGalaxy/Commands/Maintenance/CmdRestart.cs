@@ -21,15 +21,13 @@ namespace MCGalaxy.Commands.Maintenance {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public CmdRestart() { }
 
-        public override void Use(Player p, string message)
-        {
+        public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
             MCGalaxy.Gui.App.ExitProgram(true);
         }
-        public override void Help(Player p)
-        {
+        
+        public override void Help(Player p) {
             Player.Message(p, "%T/restart");
             Player.Message(p, "%HRestarts the server! Use carefully!");
         }

@@ -26,10 +26,9 @@ namespace MCGalaxy.Commands.Misc {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdFly() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (!Hacks.CanUseHacks(p, p.level)) {
                 Player.Message(p, "You cannot use /fly on this map.");
                 p.isFlying = false; return;

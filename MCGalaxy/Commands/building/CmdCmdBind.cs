@@ -24,11 +24,9 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public CmdCmdBind() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-
             if (message == "") {
                 bool anyBinds = false;
                 for (int i = 0; i < p.CmdBindings.Length; i++)  {

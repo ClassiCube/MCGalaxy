@@ -25,11 +25,9 @@ namespace MCGalaxy.Commands.Fun {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }   
-        public CmdReferee() { }
+        public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-
             if (p.Game.Referee) {
                 Chat.MessageGlobal(p, p.ColoredName + " %Sis no longer a referee", false);
                 p.Game.Referee = !p.Game.Referee;

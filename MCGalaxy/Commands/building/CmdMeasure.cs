@@ -20,13 +20,14 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {    
     public sealed class CmdMeasure : Command {
-        
+       
         public override string name { get { return "measure"; } }
         public override string shortcut { get { return "ms"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-
+        public override bool SuperUseable { get { return false; } }
+        
         public override void Use(Player p, string message) {
             if (message.IndexOf(' ') != -1) { Help(p); return; }
             byte toIgnore = Block.air;

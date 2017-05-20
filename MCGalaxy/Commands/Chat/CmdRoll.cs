@@ -19,7 +19,6 @@ using System;
 namespace MCGalaxy.Commands.Chatting {    
     public sealed class CmdRoll : MessageCmd {
         public override string name { get { return "roll"; } }
-        public CmdRoll() { }
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();

@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdSay() { }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }

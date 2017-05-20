@@ -82,11 +82,9 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+        public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            base.Use(p, p.name);
-        }
+        public override void Use(Player p, string message) { base.Use(p, p.name); }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/mynotes %H- views your own notes.");

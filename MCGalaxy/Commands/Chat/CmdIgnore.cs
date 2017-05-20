@@ -26,12 +26,12 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+        public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
             get { return new [] { new CommandAlias("deafen", "all") }; }
         }
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
             string[] args = message.SplitSpaces();
             string action = args[0].ToLower();
             

@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Info {
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public CmdOpRules() { }
 
         public override void Use(Player p, string message) {
             if (!File.Exists(Paths.OprulesFile)) {

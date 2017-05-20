@@ -27,7 +27,6 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandAlias("cmdhelp"), new CommandAlias("ranks", "ranks"),
                     new CommandAlias("colors", "colors") }; }
         }
-        public CmdHelp() { }
 
         public override void Use(Player p, string message) {
             switch (message.ToLower()) {

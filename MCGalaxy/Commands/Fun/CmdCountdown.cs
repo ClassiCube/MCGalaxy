@@ -33,6 +33,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] {
                     new CommandPerm(LevelPermission.Operator, "+ can send the countdown rules to everybody"),
@@ -42,7 +43,6 @@ namespace MCGalaxy.Commands.Fun {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            if (p == null) { MessageInGameOnly(p); return; }
 
             string[] args = message.ToLower().SplitSpaces();
             string cmd = args[0], arg1 = "", arg2 = "", arg3 = "";

@@ -26,15 +26,14 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public Cmd8Ball() { }
+        public override bool SuperUseable { get { return false; } }
         
         static string[] messages = new string[] { "Not likely." , "Very likely." , "Impossible!" , 
             "No." , "Yes." , "Definitely!" , "Do some more thinking." };
         DateTime nextUse;
         static TimeSpan delay = TimeSpan.FromSeconds(2);
         
-        public override void Use(Player p, string message) {            
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
+        public override void Use(Player p, string message) {
             if (!MessageCmd.CanSpeak(p, name)) return;
             if (message == "") { Help(p); return; }
             

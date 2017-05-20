@@ -46,10 +46,6 @@ namespace MCGalaxy {
             p.RevertBlock(x, y, z);
         }
         
-        protected void MessageInGameOnly(Player p) {
-            Player.Message(p, "/{0} can only be used in-game.", name);
-        }
-        
         protected bool CheckSuper(Player p, string message, string type) {
             if (message != "" || !Player.IsSuper(p)) return false;
             SuperRequiresArgs(name, p, type); 

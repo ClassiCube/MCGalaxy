@@ -24,16 +24,15 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can hide/unhide without showing a message to ops") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("xhide", "silent") }; }
         }
-        public CmdHide() { }
 
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "check") {
                 string state = p.hidden ? "" : "not ";
                 Player.Message(p, "You are " + state + "currently hidden!"); return;

@@ -29,11 +29,10 @@ namespace MCGalaxy.Commands.Misc {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdHackRank() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            if (p == null) { MessageInGameOnly(p); return; }
             
             if (p.hackrank) {
                 Player.Message(p, Colors.red + "You have already hacked a rank!"); return;

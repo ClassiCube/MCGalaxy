@@ -17,13 +17,13 @@
  */
 using System;
 namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdChatRoom : Command {
-        
+    public sealed class CmdChatRoom : Command {        
         public override string name { get { return "chatroom"; } }
         public override string shortcut { get { return "cr"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { 
                     new CommandPerm(LevelPermission.AdvBuilder, "+ can create chatrooms"),
@@ -37,7 +37,6 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             string[] parts = message.ToLower().SplitSpaces();
             
             if (message == "") {

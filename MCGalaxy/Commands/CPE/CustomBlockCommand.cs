@@ -690,14 +690,12 @@ namespace MCGalaxy.Commands.CPE {
         }
     }
     
-    public sealed class CmdGlobalBlock : Command {
-        
+    public sealed class CmdGlobalBlock : Command {        
         public override string name { get { return "globalblock"; } }
         public override string shortcut { get { return "gb"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public CmdGlobalBlock() { }
 
         public override void Use(Player p, string message) {
             CustomBlockCommand.Execute(p, message, true, "/gb");
@@ -708,17 +706,15 @@ namespace MCGalaxy.Commands.CPE {
         }
     }
     
-    public sealed class CmdLevelBlock : Command {
-        
+    public sealed class CmdLevelBlock : Command {        
         public override string name { get { return "levelblock"; } }
         public override string shortcut { get { return "lb"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public CmdLevelBlock() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
             CustomBlockCommand.Execute(p, message, false, "/lb");
         }
         

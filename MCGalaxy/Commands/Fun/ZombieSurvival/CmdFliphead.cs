@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Fun {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
-        public CmdFlipHead() { }
 
         public override void Use(Player p, string message) {
             p.flipHead = !p.flipHead;

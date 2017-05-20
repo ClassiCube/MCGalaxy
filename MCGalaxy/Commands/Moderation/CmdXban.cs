@@ -25,7 +25,6 @@ namespace MCGalaxy.Commands.Moderation {
         public override CommandAlias[] Aliases {
             get { return new [] { new CommandAlias("uban", "-noip") }; }
         }
-        public CmdXban() { }
         
         public override void Use(Player p, string message) {
             bool banIP = true;

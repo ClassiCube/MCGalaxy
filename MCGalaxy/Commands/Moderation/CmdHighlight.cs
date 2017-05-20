@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        public CmdHighlight() { }
+        public override bool SuperUseable { get { return false; } }
         
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("highlightarea", "area") }; }
@@ -38,7 +38,6 @@ namespace MCGalaxy.Commands.Moderation {
             bool area = message.CaselessStarts("area ");
             if (area) message = message.Substring("area ".Length);
             
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "") message = p.name + " 1800";
             string[] parts = message.SplitSpaces();
 

@@ -27,15 +27,27 @@ namespace MCGalaxy {
         
         public abstract string name { get; }
         public virtual string shortcut { get { return ""; } }
+        /// <summary> The type/category/group this command falls under.</summary>
         public abstract string type { get; }
+        /// <summary> Whether this command can be used in museum maps. </summary>
         public abstract bool museumUsable { get; }
+        /// <summary> The default minimum rank that is able to use this command. </summary>
         public abstract LevelPermission defaultRank { get; }
+        /// <summary> Executes this command. </summary>
         public abstract void Use(Player p, string message);
+        /// <summary> Outputs usage information about this command, for when a user does /help [command]. </summary>
         public abstract void Help(Player p);
+        
+        /// <summary> Outputs further usage information about this command, for when a user does /help [command] [message]. </summary>
+        /// <remarks> Defaults to just calling Help(p). </remarks>
         public virtual void Help(Player p, string message) { Help(p); Formatter.PrintCommandInfo(p, this); }
+        /// <summary> Extra permissions required to use certain aspects of this command. </summary>
         public virtual CommandPerm[] ExtraPerms { get { return null; } }
         public virtual CommandEnable Enabled { get { return CommandEnable.Always; } }
+        /// <summary>  Aliases for this command. </summary>
         public virtual CommandAlias[] Aliases { get { return null; } }
+        /// <summary> Whether this command can be used by 'super' players. (Console and IRC controllers). </summary>
+        public virtual bool SuperUseable { get { return true; } }      
 
         public static CommandList all = new CommandList();
         public static CommandList core = new CommandList();

@@ -27,7 +27,6 @@ namespace MCGalaxy.Commands.World {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("mapload"), new CommandAlias("wload") }; }
         }
-        public CmdLoad() { }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }

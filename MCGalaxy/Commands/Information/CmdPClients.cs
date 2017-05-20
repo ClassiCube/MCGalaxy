@@ -19,16 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MCGalaxy.Commands.Info {
-    
-    public sealed class CmdPClients : Command {
-        
+namespace MCGalaxy.Commands.Info {  
+    public sealed class CmdPClients : Command {        
         public override string name { get { return "pclients"; } }
         public override string shortcut { get { return "clients"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public CmdPClients() { }
 
         public override void Use(Player p, string message) {
             Dictionary<string, List<Player>> clients = new Dictionary<string, List<Player>>();

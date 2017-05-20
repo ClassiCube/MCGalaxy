@@ -22,10 +22,9 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public CmdEmote() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); }
             p.parseEmotes = !p.parseEmotes;
             
             bool addToList = p.parseEmotes != Server.parseSmiley;

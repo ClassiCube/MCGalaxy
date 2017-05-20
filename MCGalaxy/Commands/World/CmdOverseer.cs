@@ -25,10 +25,10 @@ namespace MCGalaxy.Commands.World {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
+        public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("realm"), new CommandAlias("myrealm") }; }
         }
-        public CmdOverseer() { }
         
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }

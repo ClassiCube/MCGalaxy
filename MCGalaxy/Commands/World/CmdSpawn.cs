@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.World {
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
-        public CmdSpawn() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }

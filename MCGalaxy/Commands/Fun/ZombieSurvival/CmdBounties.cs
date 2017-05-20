@@ -18,16 +18,13 @@
 using System.Collections.Generic;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands.Fun {
-    
-    public sealed class CmdBounties : Command {
-        
+namespace MCGalaxy.Commands.Fun {    
+    public sealed class CmdBounties : Command {       
         public override string name { get { return "bounties"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
-        public CmdBounties() { }
         
         public override void Use(Player p, string message) {
             BountyData[] bounties = Server.zombie.Bounties.Items;

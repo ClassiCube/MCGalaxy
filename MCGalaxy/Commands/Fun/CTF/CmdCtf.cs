@@ -18,19 +18,15 @@
 using System;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands.Fun
-{
-    public sealed class CmdCTF : Command
-    {
+namespace MCGalaxy.Commands.Fun {
+    public sealed class CmdCTF : Command {
         public override string name { get { return "ctf"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdCTF() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
-            
             if (message.CaselessEq("start")) {
                 if (Server.ctf == null)  {
                     Player.Message(p, "Initialising CTF..");

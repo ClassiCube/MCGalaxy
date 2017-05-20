@@ -19,18 +19,15 @@ using System;
 using System.Threading;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Commands.Misc
-{
-    public sealed class CmdChain : Command
-    {
+namespace MCGalaxy.Commands.Misc {
+	public sealed class CmdChain : Command {
         public override string name { get { return "chain"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdChain() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (p.level.permissionbuild > p.Rank) {
                 Player.Message(p, "You cannot build on this map!"); return;
             }

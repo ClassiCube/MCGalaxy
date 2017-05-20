@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-
+        public override bool SuperUseable { get { return false; } } // TODO: fix this to work from IRC and Console
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("xundo", null, "all"), 
                     new CommandAlias("undoarea", "area"), new CommandAlias("ua", "area") }; }
@@ -38,8 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) {
             bool area = message.CaselessStarts("area ");
             if (area) message = message.Substring("area ".Length);
-            
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; } // TODO: fix this to work from IRC and Console
+
             if (CheckSuper(p, message, "player name")) return;
             if (message == "") { Player.Message(p, "You need to provide a player name."); return; }
             

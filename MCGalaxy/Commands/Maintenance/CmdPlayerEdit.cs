@@ -30,7 +30,6 @@ namespace MCGalaxy.Commands.Maintenance {
         public override CommandAlias[] Aliases {
             get { return new [] { new CommandAlias("setinfo") }; }
         }
-        public CmdPlayerEdit() { }
 
         delegate void DBSetter(string name, string column, string data);
 

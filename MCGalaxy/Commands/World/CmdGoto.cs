@@ -29,10 +29,9 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("j"), new CommandAlias("join"),
                     new CommandAlias("gr", "-random"), new CommandAlias("gotorandom", "-random") }; }
         }
-        public CmdGoto() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
             if (message == "") { Help(p); return; }
             
             if (message.CaselessEq("-random")) {

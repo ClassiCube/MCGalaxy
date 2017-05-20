@@ -27,9 +27,9 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (!p.group.CanExecute("write")) {
                 Player.Message(p, "You must be able to use /write to use /writetext."); return;
             }

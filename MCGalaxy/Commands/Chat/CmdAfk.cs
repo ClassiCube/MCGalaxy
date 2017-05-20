@@ -22,10 +22,9 @@ namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdAfk : MessageCmd {
         public override string name { get { return "afk"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public CmdAfk() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (message == "list") {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {

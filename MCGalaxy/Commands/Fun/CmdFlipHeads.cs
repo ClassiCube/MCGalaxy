@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Fun {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdFlipHeads() { }
 
         public override void Use(Player p, string message) {
             Server.flipHead = !Server.flipHead;

@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Eco {
     public sealed class CmdPay : MoneyCmd {
         public override string name { get { return "pay"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdPay() { }
 
         public override void Use(Player p, string message) {
             EcoTransaction data;

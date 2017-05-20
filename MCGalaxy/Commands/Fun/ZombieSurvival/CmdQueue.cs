@@ -23,8 +23,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }      
-        public CmdQueue() { }
+        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();

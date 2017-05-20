@@ -25,7 +25,6 @@ namespace MCGalaxy.Commands.Info {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("cmdlist") }; }
         }
-        public CmdCommands() { }
 
         public override void Use(Player p, string message) {
             if (!DoCommand(p, message)) Help(p);

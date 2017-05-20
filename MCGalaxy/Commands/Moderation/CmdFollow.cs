@@ -23,10 +23,9 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdFollow() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); return; }
             if (!p.canBuild) { Player.Message(p, "You're currently being &4possessed%S!"); return; }
             string[] args = message.SplitSpaces(2);
             string name = args[0];

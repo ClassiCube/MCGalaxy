@@ -25,10 +25,9 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public CmdInbox() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (Player.IsSuper(p)) { MessageInGameOnly(p); }
             string[] parts = message.ToLower().SplitSpaces(2);
             if (!Database.TableExists("Inbox" + p.name)) {
                 Player.Message(p, "Your inbox is empty."); return;

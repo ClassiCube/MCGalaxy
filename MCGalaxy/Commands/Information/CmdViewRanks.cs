@@ -29,7 +29,6 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandAlias("ops", "operator"), new CommandAlias("admins", "superop"),
                     new CommandAlias("banned", "banned"), new CommandAlias("banlist", "banned") }; }
         }
-        public CmdViewRanks() { }
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces(2);

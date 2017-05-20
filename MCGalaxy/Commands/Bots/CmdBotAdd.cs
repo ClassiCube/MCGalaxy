@@ -21,11 +21,10 @@ namespace MCGalaxy.Commands.Bots {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        public CmdBotAdd() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-            if (p == null) { MessageInGameOnly(p); return; }            
+            if (message == "") { Help(p); return; }        
                         
             if (!p.level.BuildAccess.CheckDetailed(p)) {
                 Player.Message(p, "Hence, you cannot add bots to this map.");

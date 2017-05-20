@@ -23,10 +23,9 @@ using MCGalaxy.Eco;
 namespace MCGalaxy.Commands.Chatting {  
     public sealed class CmdEat : MessageCmd {
         public override string name { get { return "eat"; } }
+        public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
-            if (p == null) { MessageInGameOnly(p); return; }
-            
             if (DateTime.UtcNow < p.NextEat) {
                 Player.Message(p, "You're still full - you need to wait at least " +
                                    "10 seconds between snacks."); return;

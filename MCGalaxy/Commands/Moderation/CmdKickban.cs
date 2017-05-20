@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public CmdKickban() { }
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }

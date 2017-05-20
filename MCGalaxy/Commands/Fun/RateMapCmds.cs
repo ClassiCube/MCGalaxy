@@ -25,12 +25,12 @@ namespace MCGalaxy.Commands.Fun {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
+        public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) { RateMap(p, true); }
         
         protected bool RateMap(Player p, bool like) {
             string prefix = like ? "" : "dis";
-            if (p == null) { MessageInGameOnly(p); return false; }
             
             if (p.Game.RatedMap) {
                 prefix = p.Game.LikedMap ? "" : "dis";

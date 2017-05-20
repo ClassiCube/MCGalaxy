@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        public CmdRainbow() { }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
             Player.Message(p, "Place or break two blocks to determine the edges.");
