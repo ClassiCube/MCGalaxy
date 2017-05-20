@@ -44,13 +44,9 @@ namespace MCGalaxy {
 
         public bool Remove(Command cmd) { return commands.Remove(cmd); }
         public bool Contains(Command cmd) { return commands.Contains(cmd); }
-        public bool Contains(string name) {
-            foreach (Command cmd in commands) {
-                if (cmd.name.CaselessEq(name)) return true;
-            }
-            return false;
-        }
+        public bool Contains(string name) { return FindByName(name) != null; }
         
+        /// <summary> Finds the command which has the given name or shortcut, or null if not found. </summary>        
         public Command Find(string name) {
             name = name.ToLower();
             foreach (Command cmd in commands) {
@@ -58,14 +54,22 @@ namespace MCGalaxy {
             }
             return null;
         }
-
-        public string FindShort(string shortcut) {
-            if (shortcut == "") return "";
-
+        
+        /// <summary> Finds the command which has the given name, or null if not found. </summary>
+        public Command FindByName(string name) {
             foreach (Command cmd in commands) {
-                if (cmd.shortcut.CaselessEq(shortcut)) return cmd.name;
+                if (cmd.name.CaselessEq(name)) return cmd;
             }
-            return "";
+            return null;
+        }
+
+        /// <summary> Finds the command which has the given shortcut, or null if not found. </summary>
+        public Command FindByShortcut(string shortcut) {
+            if (shortcut == "") return null;
+            foreach (Command cmd in commands) {
+                if (cmd.shortcut.CaselessEq(shortcut)) return cmd;
+            }
+            return null;
         }
 
         public List<Command> All() { return new List<Command>(commands); }

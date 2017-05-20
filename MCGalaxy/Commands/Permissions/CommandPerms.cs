@@ -114,7 +114,7 @@ namespace MCGalaxy.Commands {
             foreach (CommandPerms perms in list) {
                 bool canUse = perms.MinRank <= perm && !perms.Disallowed.Contains(perm);
                 if (canUse || perms.Allowed.Contains(perm)) {
-                    Command cmd = Command.all.Find(perms.CmdName);
+                    Command cmd = Command.all.FindByName(perms.CmdName);
                     if (cmd != null) commands.Add(cmd);
                 }
             }

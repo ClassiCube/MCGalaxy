@@ -80,8 +80,8 @@ namespace MCGalaxy {
             Alias alias = Alias.Find(cmd);
             // Aliases should be able to override built in shortcuts
             if (alias == null) {
-                string shortcut = all.FindShort(cmd);
-                if (shortcut != "") cmd = shortcut;
+                Command shortcut = all.FindByShortcut(cmd);
+                if (shortcut != null) cmd = shortcut.name;
                 return;
             }
             
