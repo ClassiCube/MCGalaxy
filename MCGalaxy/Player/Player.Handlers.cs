@@ -165,14 +165,14 @@ namespace MCGalaxy {
         /// <remarks> Adds to the BlockDB. Also turns block below to grass/dirt depending on light. </remarks>
         /// <returns> Return code from DoBlockchange </returns>
         public int ChangeBlock(ushort x, ushort y, ushort z, ExtBlock block) {
-            ExtBlock old = level.GetExtBlock(x, y, z);            
+            ExtBlock old = level.GetExtBlock(x, y, z);
             int type = level.DoBlockchange(this, x, y, z, block);
             if (type == 0) return type;                                     // no change performed
             if (type == 2) Player.GlobalBlockchange(level, x, y, z, block); // different visually
             
             ushort flags = BlockDBFlags.ManualPlace;
             if (painting && Replacable(old.BlockID)) flags = BlockDBFlags.Painted;
-            level.BlockDB.Cache.Add(this, x, y, z, flags, old, block);           
+            level.BlockDB.Cache.Add(this, x, y, z, flags, old, block);
             
             bool autoGrass = level.GrassGrow && (level.physics == 0 || level.physics == 5);
             if (!autoGrass) return type;
@@ -214,8 +214,8 @@ namespace MCGalaxy {
         
         int PacketSize(byte[] buffer) {
             switch (buffer[0]) {
-                case (byte)'G': return -2; //For wom
-                case Opcode.Handshake: return 131;
+                    case (byte)'G': return -2; //For wom
+                    case Opcode.Handshake: return 131;
                 case Opcode.SetBlockClient:
                     if (!loggedIn) goto default;
                     return 9;
@@ -242,7 +242,7 @@ namespace MCGalaxy {
         
         void HandlePacket(byte[] buffer) {
             switch (buffer[0]) {
-                case Opcode.Ping: break;
+                    case Opcode.Ping: break;
                 case Opcode.Handshake:
                     HandleLogin(buffer); break;
                 case Opcode.SetBlockClient:
@@ -626,22 +626,29 @@ namespace MCGalaxy {
         }
         
         bool DoCommand(string text) {
-            // Typing / will act as /repeat
+            // Typing / repeats last command executed
             if (text == "/") {
-                HandleCommand("repeat", ""); return true;
+                if (lastCMD == "") {
+                    Player.Message(this, "Cannot repeat command: You haven't used any commands yet.");
+                    return true;
+                }                
+                text = lastCMD;
+                Player.Message(this, "Repeating %T/" + lastCMD);
             } else if (text[0] == '/' || text[0] == '!') {
                 text = text.Remove(0, 1);
-                int sep = text.IndexOf(' ');
-                if (sep == -1) {
-                    HandleCommand(text.ToLower(), "");
-                } else {
-                    string cmd = text.Substring(0, sep).ToLower();
-                    string msg = text.Substring(sep + 1);
-                    HandleCommand(cmd, msg);
-                }
-                return true;
+            } else {
+                return false;
             }
-            return false;
+            
+            int sep = text.IndexOf(' ');
+            if (sep == -1) {
+                HandleCommand(text.ToLower(), "");
+            } else {
+                string cmd = text.Substring(0, sep).ToLower();
+                string msg = text.Substring(sep + 1);
+                HandleCommand(cmd, msg);
+            }
+            return true;
         }
         
         string HandleJoker(string text) {
