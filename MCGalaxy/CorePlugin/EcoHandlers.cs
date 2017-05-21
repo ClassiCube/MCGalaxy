@@ -69,9 +69,11 @@ namespace MCGalaxy.Core {
             Economy.UpdateStats(stats);
             
             if (Player.IsSuper(data.SourcePlayer)) return;
+            
             stats = Economy.RetrieveStats(data.SourceName);
             stats.Payment = Format(" to " + data.TargetName, data);
             Economy.UpdateStats(stats);
+            data.SourcePlayer.SetMoney(data.SourcePlayer.money - data.Amount);
         }        
         
         
