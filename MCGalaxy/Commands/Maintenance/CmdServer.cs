@@ -171,7 +171,7 @@ namespace MCGalaxy.Commands.Maintenance {
             Server.voteKickVotesNeeded = 0;
 
             Server.zombie.ResetState();
-            Server.salt = "";
+            SrvProperties.GenerateSalt();
 
             Server.restarttime = DateTime.Now;
             Server.level = "main";

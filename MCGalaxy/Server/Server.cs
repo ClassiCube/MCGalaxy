@@ -269,7 +269,6 @@ namespace MCGalaxy {
                 if (p != null) p.Disconnect();
                 if (!begin) listen.BeginAccept(Accept, null);
             }
-
         }
 
         public static void Exit(bool restarting, string msg) {
