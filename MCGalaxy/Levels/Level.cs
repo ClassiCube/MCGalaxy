@@ -448,15 +448,6 @@ namespace MCGalaxy {
                 p.SendCurrentBlockPermissions();
             }
         }
-
-        [Obsolete("Use Group.Find()")]
-        public static LevelPermission PermissionFromName(string name) {
-            Group grp = Group.Find(name);
-            return grp != null ? grp.Permission : LevelPermission.Null;
-        }
-
-        [Obsolete("Use Group.GetName()")]
-        public static string PermissionToName(LevelPermission perm) { return Group.GetName(perm); }
         
         public bool HasPlayers() {
             Player[] players = PlayerInfo.Online.Items;
