@@ -71,7 +71,7 @@ namespace MCGalaxy {
                     
                 default:
                     if (!ConfigElement.Parse(Server.serverConfig, key, value, null))
-                        Server.s.Log("\"" + key + "\" was not a recognised level property key.");
+                        Server.s.Log("\"" + key + "\" was not a recognised server property key.");
                     break;
             }
         }        
