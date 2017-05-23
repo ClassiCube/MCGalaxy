@@ -90,6 +90,8 @@ namespace MCGalaxy.Network {
             if (!Server.guestLeaveNotify && p.Rank <= LevelPermission.Guest) return;
             
             Bot.Say(p.ColoredName + " %Sleft the game (" + reason + "%S)", false);
+            Bot.Say2(p.ColoredName + " %Sleft the game (" + reason + "%S)", false);
+            Bot.Say3(p.ColoredName + " %Sleft the game (" + reason + "%S)", false);
         }
 
         void HandleConnect(Player p) {
@@ -98,6 +100,8 @@ namespace MCGalaxy.Network {
             if (Plugin.IsPlayerEventCanceled(PlayerEvents.PlayerLogin, p)) return;
             
             Bot.Say(p.ColoredName + " %Sjoined the game", false);
+            Bot.Say2(p.ColoredName + " %Sjoined the game", false);
+            Bot.Say3(p.ColoredName + " %Sjoined the game", false);
         }
 
         static char[] trimChars = new char[] { ' ' };
@@ -108,6 +112,8 @@ namespace MCGalaxy.Network {
             
             string name = Server.ircPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;
             Bot.Say(name + "%S: " + message, p.opchat);
+            Bot.Say2(name + "%S: " + message, p.opchat);
+            Bot.Say3(name + "%S: " + message, p.opchat);
         }
     }
 }

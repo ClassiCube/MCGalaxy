@@ -28,6 +28,8 @@ namespace MCGalaxy.Gui {
             
             Chat.MessageGlobal("Console [&a{0}%S]:&f {1}", Server.ZallState, text);
             Server.IRC.Say("Console [&a" + Server.ZallState + "%S]: " + text);
+            Server.IRC.Say2("Console [&a" + Server.ZallState + "%S]: " + text);
+            Server.IRC.Say3("Console [&a" + Server.ZallState + "%S]: " + text);
             Server.s.Log("(Console): " + text, true);
             output("<CONSOLE>: " + text);
         }

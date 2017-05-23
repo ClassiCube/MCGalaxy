@@ -26,15 +26,47 @@ namespace MCGalaxy.Commands.Maintenance {
         }
 
         public override void Use(Player p, string message) {
-            if (message.CaselessEq("reset") || message.CaselessEq("reconnect")) {
-                if (!Server.irc) { Player.Message(p, "The server does not have IRC enabled."); }
+            if (message.CaselessEq("reset") || message.CaselessEq("reconnect"))
+            {
+              if (!Server.irc) { Player.Message(p, "The server does not have IRC enabled."); }
                 Server.IRC.Reset();
-            } else if (message.CaselessEq("connect")) {
+            } else if (message.CaselessEq("connect")){
                 if (!Server.irc) { Player.Message(p, "The server does not have IRC enabled."); }
                 Server.IRC.Connect();
-            } else if (message.CaselessEq("disconnect")) {
+                Server.IRC.Join(Server.ircChannel);
+                Server.IRC.Join(Server.ircChannel2);
+                Server.IRC.Join(Server.ircChannel3);
+            }
+            else if (message.CaselessEq("connect1"))
+            {
+                Server.IRC.Join(Server.ircChannel);
+            }
+            else if (message.CaselessEq("connect2"))
+            {
+                Server.IRC.Join(Server.ircChannel2);
+            }
+            else if (message.CaselessEq("connect3"))
+            {
+                Server.IRC.Join(Server.ircChannel3);
+            }
+            else if (message.CaselessEq("leave1"))
+            {
+                Server.IRC.Leave(Server.ircChannel);
+            }
+            else if (message.CaselessEq("leave2"))
+            {
+                Server.IRC.Leave(Server.ircChannel2);
+            }
+            else if (message.CaselessEq("leave3"))
+            {
+                Server.IRC.Leave(Server.ircChannel3);
+            }
+            else if (message.CaselessEq("disconnect"))
+            {
                 Server.IRC.Disconnect("Disconnecting IRC bot");
-            } else {
+            }
+            else
+            {
                 Help(p);
             }
         }
