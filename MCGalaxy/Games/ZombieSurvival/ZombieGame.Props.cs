@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using MCGalaxy.Config;
 
@@ -82,7 +83,7 @@ namespace MCGalaxy.Games {
         /// <summary> Name of the level queued to be used for the next round. </summary>
         public string QueuedLevel;
         
-        List<string> infectMessages = new List<string>();      
+        List<string> infectMessages = new List<string>();
         
         internal string Candidate1 = "", Candidate2 = "", Candidate3 = "";
         internal int Votes1 = 0, Votes2 = 0, Votes3 = 0;
@@ -145,16 +146,16 @@ namespace MCGalaxy.Games {
         [ConfigInt("zombie-zinvisibility-potions", "Zombie", null, 4, 1)]
         public static int ZombieInvisibilityPotions = 4;
         [ConfigBool("enable-changing-levels", "Zombie", null, true)]
-        public static bool ChangeLevels = true;       
+        public static bool ChangeLevels = true;
         
-        [ConfigString("revive-notime-msg", "Revive", null, 
+        [ConfigString("revive-notime-msg", "Revive", null,
                       "It's too late. The humans do not have enough time left to make more revive potions.")]
         public static string ReviveNoTimeMessage = "It's too late. The humans do not have enough time left to produce more revive potions.";
         
         [ConfigInt("revive-no-time", "Revive", null, 120, 0)]
         public static int ReviveNoTime = 120;
         
-        [ConfigString("revive-fewzombies-msg", "Revive", null, 
+        [ConfigString("revive-fewzombies-msg", "Revive", null,
                       "There aren't enough zombies for it to be worthwhile to produce revive potions.")]
         public static string ReviveFewZombiesMessage = "There aren't enough zombies for it to be worthwhile to produce revive potions.";
         
@@ -174,9 +175,9 @@ namespace MCGalaxy.Games {
         public static string ReviveSuccessMessage = "used a revive potion. &aIt was super effective!";
 
         [ConfigString("revive-failure", "Revive", null, "tried using a revive potion. &cIt was not very effective..")]
-        public static string ReviveFailureMessage = "tried using a revive potion. &cIt was not very effective..";        
-                
-        /// <summary> List of levels that are randomly picked for zombie survival. 
+        public static string ReviveFailureMessage = "tried using a revive potion. &cIt was not very effective..";
+        
+        /// <summary> List of levels that are randomly picked for zombie survival.
         /// If this left blank, then all level files are picked from instead. </summary>
         [ConfigStringList("zombie-levels-list", "Zombie", null)]
         public static List<string> LevelList = new List<string>();
@@ -184,5 +185,20 @@ namespace MCGalaxy.Games {
         /// <summary> List of levels that are never picked for zombie survival. </summary>
         [ConfigStringList("zombie-ignores-list", "Zombie", null)]
         public static List<string> IgnoredLevelList = new List<string>();
-    }    
+        
+        public static void SaveSettings() {
+            using (StreamWriter w = new StreamWriter("properties/zombiesurvival.properties")) {
+                w.WriteLine("#   zombie-on-server-start        = Starts Zombie Survival when server is started.");
+                w.WriteLine("#   no-respawning-during-zombie   = Disables respawning (Pressing R) while Zombie is on.");
+                w.WriteLine("#   no-pillaring-during-zombie    = Disables pillaring while Zombie Survival is activated.");
+                w.WriteLine("#   zombie-name-while-infected    = Sets the zombies name while actived if there is a value.");
+                w.WriteLine("#   enable-changing-levels        = After a Zombie Survival round has finished, will change the level it is running on.");
+                w.WriteLine("#   zombie-survival-only-server   = EXPERIMENTAL! Makes the server only for Zombie Survival (etc. changes main level)");
+                w.WriteLine("#   use-level-list                = Only gets levels for changing levels in Zombie Survival from zombie-level-list.");
+                w.WriteLine("#   zombie-level-list             = List of levels for changing levels (Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
+                w.WriteLine();                
+                ConfigElement.Serialise(Server.zombieConfig, " options", w, null);
+            }
+        }
+    }
 }

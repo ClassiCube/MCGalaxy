@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands.Fun {
             
             ZombieGameProps.HitboxPrecision = precision;
             Player.Message(p, "Hitbox detection set to &a" + precision + " %Sunits apart.");
-            SrvProperties.Save();
+            ZombieGameProps.SaveSettings();
         }
         
         static void HandleMaxMove(Player p, string message, string[] args) {
@@ -131,7 +131,7 @@ namespace MCGalaxy.Commands.Fun {
             
             ZombieGameProps.MaxMoveDistance = distance;
             Player.Message(p, "Maximum move distance set to &a" + distance + " %Sunits apart.");
-            SrvProperties.Save();
+            ZombieGameProps.SaveSettings();
         }
         
         public override void Help(Player p) {

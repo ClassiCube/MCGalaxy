@@ -149,7 +149,7 @@ namespace MCGalaxy.Gui {
             if (main_txtLog.InvokeRequired) {
                 Invoke(new VoidDelegate(SettingsUpdate));
             } else {
-                Text = Server.name + " -" + Server.SoftwareNameVersioned;
+                Text = Server.name + " - " + Server.SoftwareNameVersioned;
                 notifyIcon1.Text = Server.name.Truncate(63);
             }
         }

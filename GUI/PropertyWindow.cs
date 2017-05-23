@@ -291,6 +291,8 @@ namespace MCGalaxy.Gui {
             SaveBlocks();
             try { SaveLavaSettings(); }
             catch { Server.s.Log("Error saving Lava Survival settings!"); }
+            try { ZombieGameProps.SaveSettings(); }
+            catch { Server.s.Log("Error saving Zombie Survival settings!"); }
 
             SrvProperties.Load("properties/server.properties"); // loads when saving?
             CommandPerms.Load();
