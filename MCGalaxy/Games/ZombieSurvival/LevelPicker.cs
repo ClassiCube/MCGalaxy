@@ -140,10 +140,17 @@ namespace MCGalaxy.Games.ZS {
                 maps.Remove(ignore);
             
             bool useLevelList = ZombieGameProps.LevelList.Count > 0;
-            if (maps.Count <= 3 && !useLevelList) {
-                Server.s.Log("You must have more than 3 levels to change levels in Zombie Survival"); return null; }
-            if (maps.Count <= 3 && useLevelList) {
-                Server.s.Log("You must have more than 3 levels in your level list to change levels in Zombie Survival"); return null; }
+            if (ZombieGameProps.ChangeLevels) {
+                if (maps.Count <= 3 && !useLevelList) {
+                    Server.s.Log("You must have more than 3 levels to change levels in Zombie Survival"); return null; }
+                if (maps.Count <= 3 && useLevelList) {
+                    Server.s.Log("You must have more than 3 levels in your level list to change levels in Zombie Survival"); return null; }
+            } else {
+                if (maps.Count == 0 && !useLevelList) {
+                    Server.s.Log("You must have at least 1 level to play Zombie Survival"); return null; }
+                if (maps.Count == 0 && useLevelList) {
+                    Server.s.Log("You must have at least 1 levels in your level list to play Zombie Survival"); return null; }                
+            }
             return maps;
         }
         
