@@ -259,7 +259,7 @@ namespace MCGalaxy.Network {
             
             try {
                 if (!p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return false; }
-                if (!cmd.SuperUseable) { Player.Message(p, "This command can only be used in-game."); return false; }
+                if (!cmd.SuperUseable) { Player.Message(p, cmd.name + " can only be used in-game."); return false; }
                 cmd.Use(p, cmdArgs);
             } catch (Exception ex) {
                 Player.Message(p, "CMD Error: " + ex);

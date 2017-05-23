@@ -53,7 +53,7 @@ namespace MCGalaxy.Gui {
             
             Command cmd = Command.all.Find(name);
             if (cmd == null) { output("CONSOLE: No such command."); return null; }
-            if (!cmd.SuperUseable) { output("CONSOLE: /" + cmd + " can only be used in-game."); return null; }
+            if (!cmd.SuperUseable) { output("CONSOLE: /" + cmd.name + " can only be used in-game."); return null; }
             
             Thread thread = new Thread(
                 () =>
