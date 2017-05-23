@@ -55,6 +55,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="PropertyWindow.Adapter.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Settings\LavaMapProperties.cs" />
     <Compile Include="Settings\LevelProperties.cs" />

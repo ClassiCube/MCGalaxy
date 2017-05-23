@@ -258,6 +258,10 @@ namespace MCGalaxy {
         public static string ircServer = "irc.esper.net";
         [ConfigString("irc-channel", "IRC bot", null, "#changethis", true)]
         public static string ircChannel = "#changethis";
+        [ConfigString("irc-channel2", "IRC bot", null, "#changethis", true)]
+        public static string ircChannel2 = "#changethis";
+        [ConfigString("irc-channel3", "IRC bot", null, "#changethis", true)]
+        public static string ircChannel3 = "#changethis";
         [ConfigString("irc-opchannel", "IRC bot", null, "#changethistoo", true)]
         public static string ircOpChannel = "#changethistoo";
         [ConfigString("irc-command-prefix", "IRC bot", null, ".x", true)]

@@ -28,6 +28,8 @@ namespace MCGalaxy.Commands.Chatting {
             message = Colors.EscapeColors(message);
             Chat.MessageGlobal(message);
             Server.IRC.Say(message);
+            Server.IRC.Say2(message);
+            Server.IRC.Say3(message);
         }
         
         public override void Help(Player p) {

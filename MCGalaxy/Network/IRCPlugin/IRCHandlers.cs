@@ -116,6 +116,8 @@ namespace MCGalaxy.Network {
             if (!Server.guestLeaveNotify && p.Rank <= LevelPermission.Guest) return;
             
             bot.Say(p.DisplayName + " %Sleft the game (" + reason + "%S)", false);
+            bot.Say2(p.DisplayName + " %Sleft the game (" + reason + "%S)", false);
+            bot.Say3(p.DisplayName + " %Sleft the game (" + reason + "%S)", false);
         }
 
         void Player_PlayerConnect(Player p) {
@@ -123,6 +125,8 @@ namespace MCGalaxy.Network {
             if (!Server.guestJoinNotify && p.Rank <= LevelPermission.Guest) return;
             
             bot.Say(p.DisplayName + " %Sjoined the game", false);
+            bot.Say2(p.DisplayName + " %Sjoined the game", false);
+            bot.Say3(p.DisplayName + " %Sjoined the game", false);
         }
         
         void Player_PlayerChat(Player p, string message) {
@@ -131,10 +135,12 @@ namespace MCGalaxy.Network {
             
             string name = Server.ircPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;
             bot.Say(name + "%S: " + message, p.opchat);
+            bot.Say2(name + "%S: " + message, p.opchat);
+            bot.Say3(name + "%S: " + message, p.opchat);
         }
         #endregion
-        
-        
+
+
         void Listener_OnAction(UserInfo user, string channel, string description) {
             Player.GlobalIRCMessage(String.Format("%I(IRC) * {0} {1}", user.Nick, description));
         }

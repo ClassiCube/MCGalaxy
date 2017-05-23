@@ -30,7 +30,7 @@ namespace MCGalaxy {
     public sealed class IRCBot {
         public const string ResetSignal = "\x0F\x03";
         internal Connection connection;
-        internal string channel, opchannel;
+        internal string channel, channel2, channel3, opchannel;
         internal string nick, server;
         internal bool reset = false;
         internal byte retries = 0;
@@ -52,9 +52,21 @@ namespace MCGalaxy {
         /// <summary> Sends an IRC message to either the normal or operator IRC channel. </summary>
         public void Say(string message, bool opchat = false, bool color = true) {
             string chan = opchat ? opchannel : channel;
-            if (!String.IsNullOrEmpty(chan)) Message(chan, message, color);
+            if (!String.IsNullOrEmpty(chan)) Message(chan, message, color);       
         }
-        
+        /// <summary> Sends an IRC message to either the normal or operator IRC channel. </summary>
+        public void Say2(string message, bool opchat = false, bool color = true) {
+            string chan2 = channel2;
+            if (!String.IsNullOrEmpty(chan2)) Message(chan2, message, color);     
+        }
+
+        /// <summary> Sends an IRC message to either the normal or operator IRC channel. </summary>
+        public void Say3(string message, bool opchat = false, bool color = true)
+        {     
+            string chan3 = channel3;
+            if (!String.IsNullOrEmpty(chan3)) Message(chan3, message, color);
+        }
+
         /// <summary> Sends an IRC private message to the given user. </summary>
         public void Pm(string user, string message, bool color = true) {
             if (!Enabled) return;
@@ -75,7 +87,14 @@ namespace MCGalaxy {
             connection.Sender.Join(channel);
         }
         
-        
+        /// <summary> Attempts to leave the given IRC channel. </summary>        
+        public void Leave(string channel)
+        {
+            if (String.IsNullOrEmpty(channel)) return;
+            connection.Sender.Part(channel);
+        }
+
+
         /// <summary> Disconnects this bot from IRC, then reconnects to IRC if IRC is enabled. </summary>
         public void Reset() {
             reset = true;
@@ -139,6 +158,8 @@ namespace MCGalaxy {
         
         void UpdateState() {
             channel = Server.ircChannel.Trim();
+            channel2 = Server.ircChannel2.Trim();
+            channel3 = Server.ircChannel3.Trim();
             opchannel = Server.ircOpChannel.Trim();
             nick = Server.ircNick.Replace(" ", "");
             server = Server.ircServer;

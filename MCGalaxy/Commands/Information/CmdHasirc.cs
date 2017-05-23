@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Info {
 
             if (Server.irc) {
                 Player.Message(p, "IRC is &aEnabled%S.");
-                Player.Message(p, "Location: " + Server.ircServer + " > " + Server.ircChannel);
+                Player.Message(p, "Location: " + Server.ircServer + " > " + "IRC Channel 1: " + Server.ircChannel + " IRC Channel 2:  " + Server.ircChannel2 + " IRCBot Chanel 3: " + Server.ircChannel3);
             } else {
                 Player.Message(p, "IRC is &cDisabled%S.");
             }
