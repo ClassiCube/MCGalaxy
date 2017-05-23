@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {
@@ -42,8 +43,11 @@ namespace MCGalaxy {
             oldPerms = new OldPerms();
             if (PropertiesFile.Read(givenPath, ref oldPerms, LineProcessor))
                 Server.s.SettingsUpdate();
+            if (oldPerms.saveZS)
+                ZombieGameProps.SaveSettings();
+            ZombieGameProps.LoadSettings();
             
-            Database.Backend = Server.useMySQL ? 
+            Database.Backend = Server.useMySQL ?
                 MySQLBackend.Instance : SQLiteBackend.Instance;
             
             if (!Directory.Exists(Server.backupLocation))
@@ -54,7 +58,7 @@ namespace MCGalaxy {
         
         static void LineProcessor(string key, string value, ref OldPerms perms) {
             switch (key.ToLower()) {
-                // Backwards compatibility with old config, where review permissions where global
+                    // Backwards compatibility with old config, where review permissions where global
                 case "review-enter-perm":
                 case "review-leave-perm":
                     break;
@@ -70,14 +74,20 @@ namespace MCGalaxy {
                     perms.adminchatPerm = int.Parse(value); break;
                     
                 default:
-                    if (!ConfigElement.Parse(Server.serverConfig, key, value, null))
-                        Server.s.Log("\"" + key + "\" was not a recognised server property key.");
+                    if (!ConfigElement.Parse(Server.serverConfig, key, value, null)) {
+                        // ZS used to be part of server.properties
+                        if (ConfigElement.Parse(Server.zombieConfig, key, value, null)) {
+                            perms.saveZS = true;
+                        } else {
+                            Server.s.Log("\"" + key + "\" was not a recognised server property key.");
+                        }
+                    }
                     break;
             }
-        }        
+        }
         internal static OldPerms oldPerms;
-        internal class OldPerms { public int viewPerm = -1, nextPerm = -1, 
-            clearPerm = -1, opchatPerm = -1, adminchatPerm = -1; }
+        internal class OldPerms { public int viewPerm = -1, nextPerm = -1,
+            clearPerm = -1, opchatPerm = -1, adminchatPerm = -1; public bool saveZS; }
         
         public static void Save() { Save(Paths.ServerPropsFile); }
         static readonly object saveLock = new object();
@@ -127,14 +137,6 @@ namespace MCGalaxy {
             w.WriteLine("#   adminchat-perm                = The rank required to view adminchat. Default rank is superop.");
             w.WriteLine("#   admins-join-silent            = Players who have adminchat permission join the game silently. Default true");
             w.WriteLine("#   server-owner                  = The minecraft name, of the owner of the server.");
-            w.WriteLine("#   zombie-on-server-start        = Starts Zombie Survival when server is started.");
-            w.WriteLine("#   no-respawning-during-zombie   = Disables respawning (Pressing R) while Zombie is on.");
-            w.WriteLine("#   no-pillaring-during-zombie    = Disables pillaring while Zombie Survival is activated.");
-            w.WriteLine("#   zombie-name-while-infected    = Sets the zombies name while actived if there is a value.");
-            w.WriteLine("#   enable-changing-levels        = After a Zombie Survival round has finished, will change the level it is running on.");
-            w.WriteLine("#   zombie-survival-only-server   = EXPERIMENTAL! Makes the server only for Zombie Survival (etc. changes main level)");
-            w.WriteLine("#   use-level-list                = Only gets levels for changing levels in Zombie Survival from zombie-level-list.");
-            w.WriteLine("#   zombie-level-list             = List of levels for changing levels (Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
             w.WriteLine("#   total-undo                    = Track changes made by the last X people logged on for undo purposes. Folder is rotated when full, so when set to 200, will actually track around 400.");
             w.WriteLine("#   guest-limit-notify            = Show -Too Many Guests- message in chat when maxGuests has been reached. Default false");
             w.WriteLine("#   guest-join-notify             = Shows when guests and lower ranks join server in chat and IRC. Default true");

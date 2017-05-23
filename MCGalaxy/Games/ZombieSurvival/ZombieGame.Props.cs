@@ -196,9 +196,18 @@ namespace MCGalaxy.Games {
                 w.WriteLine("#   zombie-survival-only-server   = EXPERIMENTAL! Makes the server only for Zombie Survival (etc. changes main level)");
                 w.WriteLine("#   use-level-list                = Only gets levels for changing levels in Zombie Survival from zombie-level-list.");
                 w.WriteLine("#   zombie-level-list             = List of levels for changing levels (Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
-                w.WriteLine();                
+                w.WriteLine();
                 ConfigElement.Serialise(Server.zombieConfig, " options", w, null);
             }
+        }
+        
+        public static void LoadSettings() {
+            PropertiesFile.Read("properties/zombiesurvival.properties", ZSLineProcessor);
+        }
+        
+        static void ZSLineProcessor(string key, string value) {
+            if (!ConfigElement.Parse(Server.zombieConfig, key, value, null))
+                Server.s.Log("\"" + key + "\" was not a recognised zombie survival property key.");
         }
     }
 }
