@@ -30,7 +30,7 @@ namespace MCGalaxy {
     public sealed class IRCBot {
         public const string ResetSignal = "\x0F\x03";
         internal Connection connection;
-        internal string channel, opchannel;
+        internal string[] channels, opchannels;
         internal string nick, server;
         internal bool reset = false;
         internal byte retries = 0;
@@ -51,8 +51,10 @@ namespace MCGalaxy {
 
         /// <summary> Sends an IRC message to either the normal or operator IRC channel. </summary>
         public void Say(string message, bool opchat = false, bool color = true) {
-            string chan = opchat ? opchannel : channel;
-            if (!String.IsNullOrEmpty(chan)) Message(chan, message, color);
+            string[] chans = opchat ? opchannels : channels;
+            foreach (string chan in channels) {
+                Message(chan, message, color);
+            }
         }
         
         /// <summary> Sends an IRC private message to the given user. </summary>
@@ -138,8 +140,8 @@ namespace MCGalaxy {
         }
         
         void UpdateState() {
-            channel = Server.ircChannel.Trim();
-            opchannel = Server.ircOpChannel.Trim();
+            channels = GetChannels(Server.ircChannel);
+            opchannels = GetChannels(Server.ircOpChannel);
             nick = Server.ircNick.Replace(" ", "");
             server = Server.ircServer;
             
@@ -147,6 +149,12 @@ namespace MCGalaxy {
             args.RealName = Server.SoftwareNameVersioned;
             args.Port = Server.ircPort;
             args.ServerPassword = Server.ircIdentify && Server.ircPassword != "" ? Server.ircPassword : "*";
+        }
+        
+        static string[] GetChannels(string names) {
+            names = names.Trim().Replace(" ", "");
+            if (names.Length == 0) return new string[0];
+            return names.Split(',');
         }
         
         void SetDefaultBannedCommands() {
@@ -170,7 +178,7 @@ namespace MCGalaxy {
                                            "#Here you can put commands that cannot be used from the IRC bot.",
                                            "#Lines starting with \"#\" are ignored." });
                 foreach (string line in File.ReadAllLines("text/irccmdblacklist.txt")) {
-                    if (line[0] != '#') BannedCommands.Add(line);
+                    if (line.Length > 0 && line[0] != '#') BannedCommands.Add(line);
                 }
             }
         }

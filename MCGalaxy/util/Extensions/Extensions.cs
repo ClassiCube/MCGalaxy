@@ -115,6 +115,13 @@ namespace MCGalaxy {
             return false;
         }
         
+        public static bool CaselessContains(this string[] items, string value) {
+            for (int i = 0; i < items.Length; i++) {
+                if (items[i].Equals(value, comp)) return true;
+            }
+            return false;
+        }
+        
         public static bool CaselessRemove(this List<string> items, string value) {
             for (int i = 0; i < items.Count; i++) {
                 if (!items[i].Equals(value, comp)) continue;

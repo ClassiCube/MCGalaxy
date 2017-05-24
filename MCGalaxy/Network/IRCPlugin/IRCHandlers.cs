@@ -153,7 +153,7 @@ namespace MCGalaxy.Network {
 
         void DoJoinLeaveMessage(string who, string verb, string channel) {
             Server.s.Log(String.Format("{0} {1} channel {2}", who, verb, channel));
-            string which = channel.CaselessEq(bot.opchannel) ? " operator" : "";
+            string which = bot.opchannels.CaselessContains(channel) ? " operator" : "";
             Player.GlobalIRCMessage(String.Format("%I(IRC) {0} {1} the{2} channel", who, verb, which));
         }
 
@@ -184,8 +184,7 @@ namespace MCGalaxy.Network {
             Command.Search(ref cmdName, ref cmdArgs);
             
             string error;
-            string chan = String.IsNullOrEmpty(bot.channel) ? bot.opchannel : bot.channel;
-            if (!CheckIRCCommand(user, cmdName, chan, out error)) {
+            if (!CheckIRCCommand(user, cmdName, out error)) {
                 if (error != null) bot.Pm(user.Nick, error);
                 return;
             }
@@ -197,7 +196,7 @@ namespace MCGalaxy.Network {
         void Listener_OnPublic(UserInfo user, string channel, string message) {
             message = message.TrimEnd();
             if (message.Length == 0) return;
-            bool opchat = channel.CaselessEq(bot.opchannel);
+            bool opchat = bot.opchannels.CaselessContains(channel);
             
             message = Colors.IrcToMinecraftColors(message);
             string[] parts = message.SplitSpaces(3);
@@ -206,7 +205,7 @@ namespace MCGalaxy.Network {
             
             if (ircCmd == Server.ircCommandPrefix && !HandleChannelCommand(user, channel, message, parts)) return;
 
-            if (channel.CaselessEq(bot.opchannel)) {
+            if (opchat) {
                 Server.s.Log(String.Format("(OPs): (IRC) {0}: {1}", user.Nick, message));
                 Chat.MessageOps(String.Format("To Ops &f-%I(IRC) {0}&f- {1}", user.Nick,
                                               Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
@@ -223,8 +222,8 @@ namespace MCGalaxy.Network {
             Command.Search(ref cmdName, ref cmdArgs);
             
             string error;
-            if (!CheckIRCCommand(user, cmdName, channel, out error)) {
-                if (error != null) bot.Message(error, channel);
+            if (!CheckIRCCommand(user, cmdName, out error)) {
+                if (error != null) bot.Message(channel, error);
                 return false;
             }
             
@@ -267,24 +266,25 @@ namespace MCGalaxy.Network {
             return true;
         }
 
-        bool CheckIRCCommand(UserInfo user, string cmdName, string channel, out string error) {
-            List<string> chanNicks;
+        bool CheckIRCCommand(UserInfo user, string cmdName, out string error) {
             error = null;
-            if (!Server.ircControllers.Contains(user.Nick))
-                return false;
-            if (!userMap.TryGetValue(channel, out chanNicks))
-                return false;
+            if (!Server.ircControllers.Contains(user.Nick)) return false;
             
-            int index = GetNickIndex(user.Nick, chanNicks);
-            if (index < 0) {
+            bool foundAtAll = false;
+            foreach (string chan in bot.channels) {
+                if (VerifyNick(chan, user.Nick, ref error, ref foundAtAll)) return true;
+            }
+            foreach (string chan in bot.opchannels) {
+                if (VerifyNick(chan, user.Nick, ref error, ref foundAtAll)) return true;
+            }
+            
+            if (!foundAtAll) {
                 error = "You are not on the bot's list of users for some reason, please leave and rejoin."; return false;
-            }
-            if (!VerifyNick(chanNicks[index], ref error)) return false;
-            
+            }           
             if (bot.BannedCommands.Contains(cmdName)) {
-                error = "You are not allowed to use this command from IRC."; return false;
+                error = "You are not allowed to use this command from IRC.";
             }
-            return true;
+            return false;
         }
         
         
@@ -313,8 +313,12 @@ namespace MCGalaxy.Network {
         }
         
         void JoinChannels() {
-            bot.Join(bot.channel);
-            bot.Join(bot.opchannel);
+            foreach (string chan in bot.channels) {
+                bot.Join(chan);
+            }
+            foreach (string chan in bot.opchannels) {
+                bot.Join(chan);
+            }
         }
         
         void Listener_OnPrivateNotice(UserInfo user, string notice) {
@@ -438,24 +442,31 @@ namespace MCGalaxy.Network {
                 c == '[' || c == ']' || c == '{' || c == '}' || c == '^' || c == '`' || c == '_' || c == '|';
         }
         
-        bool VerifyNick(string nick, ref string error) {
+        bool VerifyNick(string channel, string userNick, ref string error, ref bool foundAtAll) {
+            List<string> chanNicks = null;
+            if (!userMap.TryGetValue(channel, out chanNicks)) return false;
+            
+            int index = GetNickIndex(userNick, chanNicks);
+            if (index == -1) return false;
+            foundAtAll = true;
+            
             IRCControllerVerify verify = Server.IRCVerify;
             if (verify == IRCControllerVerify.None) return true;
             
             if (verify == IRCControllerVerify.HalfOp) {
-                string prefix = GetPrefix(nick);
+            	string prefix = GetPrefix(chanNicks[index]);
                 if (prefix == "" || prefix == "+") {
                     error = "You must be at least a half-op on the channel to use commands from IRC."; return false;
                 }
                 return true;
             } else {
-                List<string> chanNicks = null;
-                userMap.TryGetValue(bot.opchannel, out chanNicks);
-                int index = GetNickIndex(nick, chanNicks);
-                if (index == -1) {
-                    error = "You must have joined the opchannel to use commands from IRC."; return false;
+                foreach (string chan in bot.opchannels) {
+                    if (!userMap.TryGetValue(chan, out chanNicks)) continue;
+                    
+                    index = GetNickIndex(userNick, chanNicks);
+                    if (index != -1) return true;
                 }
-                return true;
+                error = "You must have joined the opchannel to use commands from IRC."; return false;
             }
         }
     }
