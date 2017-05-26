@@ -162,8 +162,6 @@ namespace MCGalaxy {
             Ban.EnsureExists();
 
             if (!Directory.Exists("extra")) Directory.CreateDirectory("extra");
-            if (!Directory.Exists("extra/copy/")) Directory.CreateDirectory("extra/copy/");
-            if (!Directory.Exists("extra/copyBackup/")) Directory.CreateDirectory("extra/copyBackup/");
             if (!Directory.Exists("extra/Waypoints")) Directory.CreateDirectory("extra/Waypoints");
             if (!Directory.Exists("blockdefs")) Directory.CreateDirectory("blockdefs");
         }

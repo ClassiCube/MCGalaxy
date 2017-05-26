@@ -22,6 +22,7 @@ using System.Net;
 using System.Net.Cache;
 using System.Text;
 using System.Threading;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Network {
 
@@ -60,12 +61,23 @@ namespace MCGalaxy.Network {
                 using (File.Create("heartbeat.log")) { }
             }
 
-            canBeat = true;
-            for (int i = 0; i < Beats.Length; i++) {
-                Beats[i].Init();
-                Pump(Beats[i]);
+            foreach (Heartbeat beat in Heartbeats) {
+                beat.Init();
+                Pump(beat);
+            }
+            
+            if (heartbeatTask != null) return;
+            heartbeatTask = Server.Background.QueueRepeat(OnBeat, null, 
+                                                          TimeSpan.FromSeconds(30));
+        }
+        
+        static SchedulerTask heartbeatTask;
+        static void OnBeat(SchedulerTask task) {
+            foreach (Heartbeat beat in Heartbeats) {
+                if (beat.Persistent) Pump(beat);
             }
         }
+        
 
         /// <summary> Pumps the specified heartbeat. </summary>
         public static void Pump(Heartbeat beat) {
@@ -104,22 +116,6 @@ namespace MCGalaxy.Network {
             }
             
             if (Server.logbeat) Server.s.Log("Beat: " + beat + " failed.");
-        }
-        
-        
-        static Timer timer;
-        static bool canBeat = false;
-        readonly static Heartbeat[] Beats = new Heartbeat[] { new ClassiCubeBeat() };
-
-        static Heartbeat() {
-            timer = new Timer(OnBeat, null, 30000, 30000);
-        }
-
-        static void OnBeat(object state) {
-            if (!canBeat) return;
-            for (int i = 0; i < Beats.Length; i++) {
-                if (Beats[i].Persistent) Pump(Beats[i]);
-            }
         }
     }
 }
