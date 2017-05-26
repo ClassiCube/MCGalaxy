@@ -722,7 +722,7 @@ namespace MCGalaxy.Gui {
             }
 
             try {
-                Command.core.Find("undo").Use(null, curPlayer.name + " " + pl_txtUndo.Text);
+                Command.all.Find("undoplayer").Use(null, curPlayer.name + " " + pl_txtUndo.Text);
                 AppendPlayerStatus("Undid player for " + pl_txtUndo.Text + " seconds");
             } catch {
                 AppendPlayerStatus("Something went wrong!!");

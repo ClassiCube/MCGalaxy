@@ -334,7 +334,7 @@ namespace MCGalaxy {
         
         internal bool DoPhysicsBlockchange(int b, ExtBlock block, bool overRide = false, 
                                            PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) {
-            if (b < 0 || b >= blocks.Length || blocks == null) return false;
+            if (blocks == null || b < 0 || b >= blocks.Length) return false;
             ExtBlock old;
             old.BlockID = blocks[b];
             old.ExtID = old.BlockID == Block.custom_block ? GetExtTile(b) : Block.air;
