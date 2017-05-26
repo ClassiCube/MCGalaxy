@@ -46,12 +46,12 @@ namespace MCGalaxy {
             isDev = Server.Devs.CaselessContains(truename);
             isMod = Server.Mods.CaselessContains(truename);
             
-            byte type = packet[130];
+            byte protocolType = packet[130];
             Loading = true;
             if (disconnected) return;
             
-            if (type == 0x42) { hasCpe = true; SendCpeExtensions(); }
-            if (type != 0x42) CompleteLoginProcess();
+            if (protocolType == 0x42) { hasCpe = true; SendCpeExtensions(); }
+            if (protocolType != 0x42) CompleteLoginProcess();
         }
         
         void SendCpeExtensions() {

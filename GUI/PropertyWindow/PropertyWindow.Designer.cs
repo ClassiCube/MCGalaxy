@@ -635,7 +635,6 @@ namespace MCGalaxy.Gui
             this.chat_txtConsole.Name = "chat_txtConsole";
             this.chat_txtConsole.Size = new System.Drawing.Size(145, 21);
             this.chat_txtConsole.TabIndex = 3;
-            this.chat_txtConsole.TextChanged += new System.EventHandler(this.txtPort_TextChanged);
             // 
             // chat_grpColors
             // 
@@ -807,7 +806,6 @@ namespace MCGalaxy.Gui
             this.toolTip.ReshowDelay = 100;
             this.toolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip.ToolTipTitle = "Information";
-            this.toolTip.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip_Popup);
             // 
             // pageCommands
             // 
@@ -2399,7 +2397,6 @@ namespace MCGalaxy.Gui
             this.pageServer.Size = new System.Drawing.Size(498, 521);
             this.pageServer.TabIndex = 0;
             this.pageServer.Text = "Server";
-            this.pageServer.Click += new System.EventHandler(this.tabPage1_Click);
             // 
             // lvl_grp
             // 
