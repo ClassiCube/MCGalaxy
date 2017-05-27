@@ -78,9 +78,9 @@ namespace MCGalaxy.Gui
             this.chat_colDefault = new System.Windows.Forms.Label();
             this.chat_cmbDefault = new System.Windows.Forms.ComboBox();
             this.chat_lblDefault = new System.Windows.Forms.Label();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.btnDiscard = new System.Windows.Forms.Button();
-            this.btnApply = new System.Windows.Forms.Button();
+            this.main_btnSave = new System.Windows.Forms.Button();
+            this.main_btnDiscard = new System.Windows.Forms.Button();
+            this.main_btnApply = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.pageCommands = new System.Windows.Forms.TabPage();
             this.pageCommandsList = new System.Windows.Forms.TabControl();
@@ -448,6 +448,39 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.sec_numChatMute)).BeginInit();
             this.SuspendLayout();
             // 
+            // main_btnSave
+            // 
+            this.main_btnSave.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main_btnSave.Location = new System.Drawing.Point(346, 553);
+            this.main_btnSave.Name = "main_btnSave";
+            this.main_btnSave.Size = new System.Drawing.Size(75, 23);
+            this.main_btnSave.TabIndex = 1;
+            this.main_btnSave.Text = "Save";
+            this.main_btnSave.UseVisualStyleBackColor = true;
+            this.main_btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // main_btnDiscard
+            // 
+            this.main_btnDiscard.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main_btnDiscard.Location = new System.Drawing.Point(4, 553);
+            this.main_btnDiscard.Name = "main_btnDiscard";
+            this.main_btnDiscard.Size = new System.Drawing.Size(75, 23);
+            this.main_btnDiscard.TabIndex = 1;
+            this.main_btnDiscard.Text = "Discard";
+            this.main_btnDiscard.UseVisualStyleBackColor = true;
+            this.main_btnDiscard.Click += new System.EventHandler(this.btnDiscard_Click);
+            // 
+            // main_btnApply
+            // 
+            this.main_btnApply.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main_btnApply.Location = new System.Drawing.Point(427, 553);
+            this.main_btnApply.Name = "main_btnApply";
+            this.main_btnApply.Size = new System.Drawing.Size(75, 23);
+            this.main_btnApply.TabIndex = 1;
+            this.main_btnApply.Text = "Apply";
+            this.main_btnApply.UseVisualStyleBackColor = true;
+            this.main_btnApply.Click += new System.EventHandler(this.btnApply_Click);
+            // 
             // tabChat
             // 
             this.tabChat.BackColor = System.Drawing.SystemColors.Control;
@@ -506,65 +539,22 @@ namespace MCGalaxy.Gui
             // 
             // chat_grpMessages
             // 
-            this.chat_grpMessages.Controls.Add(this.chat_lblDemote);
-            this.chat_grpMessages.Controls.Add(this.chat_lblPromote);
-            this.chat_grpMessages.Controls.Add(this.chat_lblBan);
-            this.chat_grpMessages.Controls.Add(this.chat_txtDemote);
-            this.chat_grpMessages.Controls.Add(this.chat_txtPromote);
             this.chat_grpMessages.Controls.Add(this.chat_lblShutdown);
-            this.chat_grpMessages.Controls.Add(this.chat_txtBan);
-            this.chat_grpMessages.Controls.Add(this.chat_txtCheap);
-            this.chat_grpMessages.Controls.Add(this.chat_chkCheap);
             this.chat_grpMessages.Controls.Add(this.chat_txtShutdown);
+            this.chat_grpMessages.Controls.Add(this.chat_chkCheap);
+            this.chat_grpMessages.Controls.Add(this.chat_txtCheap);
+            this.chat_grpMessages.Controls.Add(this.chat_lblBan);
+            this.chat_grpMessages.Controls.Add(this.chat_txtBan);
+            this.chat_grpMessages.Controls.Add(this.chat_lblPromote);
+            this.chat_grpMessages.Controls.Add(this.chat_txtPromote);
+            this.chat_grpMessages.Controls.Add(this.chat_lblDemote);
+            this.chat_grpMessages.Controls.Add(this.chat_txtDemote);
             this.chat_grpMessages.Location = new System.Drawing.Point(8, 157);
             this.chat_grpMessages.Name = "chat_grpMessages";
             this.chat_grpMessages.Size = new System.Drawing.Size(483, 180);
             this.chat_grpMessages.TabIndex = 2;
             this.chat_grpMessages.TabStop = false;
             this.chat_grpMessages.Text = "Messages";
-            // 
-            // chat_lblDemote
-            // 
-            this.chat_lblDemote.AutoSize = true;
-            this.chat_lblDemote.Location = new System.Drawing.Point(6, 147);
-            this.chat_lblDemote.Name = "chat_lblDemote";
-            this.chat_lblDemote.Size = new System.Drawing.Size(119, 13);
-            this.chat_lblDemote.TabIndex = 41;
-            this.chat_lblDemote.Text = "Default demote reason:";
-            // 
-            // chat_lblPromote
-            // 
-            this.chat_lblPromote.AutoSize = true;
-            this.chat_lblPromote.Location = new System.Drawing.Point(6, 113);
-            this.chat_lblPromote.Name = "chat_lblPromote";
-            this.chat_lblPromote.Size = new System.Drawing.Size(123, 13);
-            this.chat_lblPromote.TabIndex = 40;
-            this.chat_lblPromote.Text = "Default promote reason:";
-            // 
-            // chat_lblBan
-            // 
-            this.chat_lblBan.AutoSize = true;
-            this.chat_lblBan.Location = new System.Drawing.Point(6, 83);
-            this.chat_lblBan.Name = "chat_lblBan";
-            this.chat_lblBan.Size = new System.Drawing.Size(100, 13);
-            this.chat_lblBan.TabIndex = 39;
-            this.chat_lblBan.Text = "Default ban reason:";
-            // 
-            // chat_txtDemote
-            // 
-            this.chat_txtDemote.Location = new System.Drawing.Point(134, 144);
-            this.chat_txtDemote.MaxLength = 64;
-            this.chat_txtDemote.Name = "chat_txtDemote";
-            this.chat_txtDemote.Size = new System.Drawing.Size(343, 21);
-            this.chat_txtDemote.TabIndex = 38;
-            // 
-            // chat_txtPromote
-            // 
-            this.chat_txtPromote.Location = new System.Drawing.Point(134, 110);
-            this.chat_txtPromote.MaxLength = 64;
-            this.chat_txtPromote.Name = "chat_txtPromote";
-            this.chat_txtPromote.Size = new System.Drawing.Size(343, 21);
-            this.chat_txtPromote.TabIndex = 36;
             // 
             // chat_lblShutdown
             // 
@@ -575,20 +565,13 @@ namespace MCGalaxy.Gui
             this.chat_lblShutdown.TabIndex = 34;
             this.chat_lblShutdown.Text = "Shutdown message:";
             // 
-            // chat_txtBan
+            // chat_txtShutdown
             // 
-            this.chat_txtBan.Location = new System.Drawing.Point(134, 80);
-            this.chat_txtBan.MaxLength = 64;
-            this.chat_txtBan.Name = "chat_txtBan";
-            this.chat_txtBan.Size = new System.Drawing.Size(343, 21);
-            this.chat_txtBan.TabIndex = 33;
-            // 
-            // chat_txtCheap
-            // 
-            this.chat_txtCheap.Location = new System.Drawing.Point(134, 50);
-            this.chat_txtCheap.Name = "chat_txtCheap";
-            this.chat_txtCheap.Size = new System.Drawing.Size(343, 21);
-            this.chat_txtCheap.TabIndex = 31;
+            this.chat_txtShutdown.Location = new System.Drawing.Point(134, 20);
+            this.chat_txtShutdown.MaxLength = 128;
+            this.chat_txtShutdown.Name = "chat_txtShutdown";
+            this.chat_txtShutdown.Size = new System.Drawing.Size(343, 21);
+            this.chat_txtShutdown.TabIndex = 29;
             // 
             // chat_chkCheap
             // 
@@ -601,13 +584,63 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.chat_chkCheap, "Is immortality cheap and unfair?");
             this.chat_chkCheap.UseVisualStyleBackColor = true;
             // 
-            // chat_txtShutdown
+            // chat_txtCheap
             // 
-            this.chat_txtShutdown.Location = new System.Drawing.Point(134, 20);
-            this.chat_txtShutdown.MaxLength = 128;
-            this.chat_txtShutdown.Name = "chat_txtShutdown";
-            this.chat_txtShutdown.Size = new System.Drawing.Size(343, 21);
-            this.chat_txtShutdown.TabIndex = 29;
+            this.chat_txtCheap.Location = new System.Drawing.Point(134, 50);
+            this.chat_txtCheap.Name = "chat_txtCheap";
+            this.chat_txtCheap.Size = new System.Drawing.Size(343, 21);
+            this.chat_txtCheap.TabIndex = 31;
+            // 
+            // chat_lblBan
+            // 
+            this.chat_lblBan.AutoSize = true;
+            this.chat_lblBan.Location = new System.Drawing.Point(6, 83);
+            this.chat_lblBan.Name = "chat_lblBan";
+            this.chat_lblBan.Size = new System.Drawing.Size(100, 13);
+            this.chat_lblBan.TabIndex = 39;
+            this.chat_lblBan.Text = "Default ban reason:";
+            // 
+            // chat_txtBan
+            // 
+            this.chat_txtBan.Location = new System.Drawing.Point(134, 80);
+            this.chat_txtBan.MaxLength = 64;
+            this.chat_txtBan.Name = "chat_txtBan";
+            this.chat_txtBan.Size = new System.Drawing.Size(343, 21);
+            this.chat_txtBan.TabIndex = 33;
+            // 
+            // chat_lblPromote
+            // 
+            this.chat_lblPromote.AutoSize = true;
+            this.chat_lblPromote.Location = new System.Drawing.Point(6, 113);
+            this.chat_lblPromote.Name = "chat_lblPromote";
+            this.chat_lblPromote.Size = new System.Drawing.Size(123, 13);
+            this.chat_lblPromote.TabIndex = 40;
+            this.chat_lblPromote.Text = "Default promote reason:";
+            // 
+            // chat_txtPromote
+            // 
+            this.chat_txtPromote.Location = new System.Drawing.Point(134, 110);
+            this.chat_txtPromote.MaxLength = 64;
+            this.chat_txtPromote.Name = "chat_txtPromote";
+            this.chat_txtPromote.Size = new System.Drawing.Size(343, 21);
+            this.chat_txtPromote.TabIndex = 36;
+            // 
+            // chat_lblDemote
+            // 
+            this.chat_lblDemote.AutoSize = true;
+            this.chat_lblDemote.Location = new System.Drawing.Point(6, 147);
+            this.chat_lblDemote.Name = "chat_lblDemote";
+            this.chat_lblDemote.Size = new System.Drawing.Size(119, 13);
+            this.chat_lblDemote.TabIndex = 41;
+            this.chat_lblDemote.Text = "Default demote reason:";
+            // 
+            // chat_txtDemote
+            // 
+            this.chat_txtDemote.Location = new System.Drawing.Point(134, 144);
+            this.chat_txtDemote.MaxLength = 64;
+            this.chat_txtDemote.Name = "chat_txtDemote";
+            this.chat_txtDemote.Size = new System.Drawing.Size(343, 21);
+            this.chat_txtDemote.TabIndex = 38;
             // 
             // chat_grpOther
             // 
@@ -638,18 +671,18 @@ namespace MCGalaxy.Gui
             // 
             // chat_grpColors
             // 
-            this.chat_grpColors.Controls.Add(this.chat_colDesc);
-            this.chat_grpColors.Controls.Add(this.chat_cmbDesc);
-            this.chat_grpColors.Controls.Add(this.chat_lblDesc);
-            this.chat_grpColors.Controls.Add(this.chat_colSyntax);
-            this.chat_grpColors.Controls.Add(this.chat_cmbSyntax);
-            this.chat_grpColors.Controls.Add(this.chat_lblSyntax);
-            this.chat_grpColors.Controls.Add(this.chat_colIRC);
-            this.chat_grpColors.Controls.Add(this.chat_cmbIRC);
-            this.chat_grpColors.Controls.Add(this.chat_lblIRC);
+            this.chat_grpColors.Controls.Add(this.chat_lblDefault);
             this.chat_grpColors.Controls.Add(this.chat_colDefault);
             this.chat_grpColors.Controls.Add(this.chat_cmbDefault);
-            this.chat_grpColors.Controls.Add(this.chat_lblDefault);
+            this.chat_grpColors.Controls.Add(this.chat_lblIRC);
+            this.chat_grpColors.Controls.Add(this.chat_colIRC);
+            this.chat_grpColors.Controls.Add(this.chat_cmbIRC);
+            this.chat_grpColors.Controls.Add(this.chat_lblSyntax);
+            this.chat_grpColors.Controls.Add(this.chat_colSyntax);
+            this.chat_grpColors.Controls.Add(this.chat_cmbSyntax);
+            this.chat_grpColors.Controls.Add(this.chat_lblDesc);
+            this.chat_grpColors.Controls.Add(this.chat_colDesc);
+            this.chat_grpColors.Controls.Add(this.chat_cmbDesc);
             this.chat_grpColors.Location = new System.Drawing.Point(8, 6);
             this.chat_grpColors.Name = "chat_grpColors";
             this.chat_grpColors.Size = new System.Drawing.Size(221, 145);
@@ -657,85 +690,14 @@ namespace MCGalaxy.Gui
             this.chat_grpColors.TabStop = false;
             this.chat_grpColors.Text = "Colors";
             // 
-            // chat_colDesc
+            // chat_lblDefault
             // 
-            this.chat_colDesc.Location = new System.Drawing.Point(99, 98);
-            this.chat_colDesc.Name = "chat_colDesc";
-            this.chat_colDesc.Size = new System.Drawing.Size(18, 18);
-            this.chat_colDesc.TabIndex = 34;
-            // 
-            // chat_cmbDesc
-            // 
-            this.chat_cmbDesc.FormattingEnabled = true;
-            this.chat_cmbDesc.Location = new System.Drawing.Point(120, 98);
-            this.chat_cmbDesc.Name = "chat_cmbDesc";
-            this.chat_cmbDesc.Size = new System.Drawing.Size(95, 21);
-            this.chat_cmbDesc.TabIndex = 33;
-            this.toolTip.SetToolTip(this.chat_cmbDesc, "The colour of the /cmdname [args] in /help.");
-            this.chat_cmbDesc.SelectedIndexChanged += new System.EventHandler(this.chat_cmbDesc_SelectedIndexChanged);
-            // 
-            // chat_lblDesc
-            // 
-            this.chat_lblDesc.AutoSize = true;
-            this.chat_lblDesc.Location = new System.Drawing.Point(6, 101);
-            this.chat_lblDesc.Name = "chat_lblDesc";
-            this.chat_lblDesc.Size = new System.Drawing.Size(90, 13);
-            this.chat_lblDesc.TabIndex = 32;
-            this.chat_lblDesc.Text = "/help description:";
-            // 
-            // chat_colSyntax
-            // 
-            this.chat_colSyntax.Location = new System.Drawing.Point(99, 71);
-            this.chat_colSyntax.Name = "chat_colSyntax";
-            this.chat_colSyntax.Size = new System.Drawing.Size(18, 18);
-            this.chat_colSyntax.TabIndex = 35;
-            // 
-            // chat_cmbSyntax
-            // 
-            this.chat_cmbSyntax.FormattingEnabled = true;
-            this.chat_cmbSyntax.Location = new System.Drawing.Point(120, 71);
-            this.chat_cmbSyntax.Name = "chat_cmbSyntax";
-            this.chat_cmbSyntax.Size = new System.Drawing.Size(95, 21);
-            this.chat_cmbSyntax.TabIndex = 30;
-            this.toolTip.SetToolTip(this.chat_cmbSyntax, "The colour for the description of a command in /help.");
-            this.chat_cmbSyntax.SelectedIndexChanged += new System.EventHandler(this.chat_cmbSyntax_SelectedIndexChanged);
-            // 
-            // chat_lblSyntax
-            // 
-            this.chat_lblSyntax.AutoSize = true;
-            this.chat_lblSyntax.Location = new System.Drawing.Point(6, 74);
-            this.chat_lblSyntax.Name = "chat_lblSyntax";
-            this.chat_lblSyntax.Size = new System.Drawing.Size(68, 13);
-            this.chat_lblSyntax.TabIndex = 31;
-            this.chat_lblSyntax.Text = "/help syntax:";
-            // 
-            // chat_colIRC
-            // 
-            this.chat_colIRC.BackColor = System.Drawing.Color.Black;
-            this.chat_colIRC.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.chat_colIRC.Location = new System.Drawing.Point(99, 44);
-            this.chat_colIRC.Name = "chat_colIRC";
-            this.chat_colIRC.Size = new System.Drawing.Size(18, 18);
-            this.chat_colIRC.TabIndex = 25;
-            // 
-            // chat_cmbIRC
-            // 
-            this.chat_cmbIRC.FormattingEnabled = true;
-            this.chat_cmbIRC.Location = new System.Drawing.Point(120, 44);
-            this.chat_cmbIRC.Name = "chat_cmbIRC";
-            this.chat_cmbIRC.Size = new System.Drawing.Size(95, 21);
-            this.chat_cmbIRC.TabIndex = 24;
-            this.toolTip.SetToolTip(this.chat_cmbIRC, "The colour of the IRC nicks used in the IRC.");
-            this.chat_cmbIRC.SelectedIndexChanged += new System.EventHandler(this.chat_cmbIRC_SelectedIndexChanged);
-            // 
-            // chat_lblIRC
-            // 
-            this.chat_lblIRC.AutoSize = true;
-            this.chat_lblIRC.Location = new System.Drawing.Point(6, 47);
-            this.chat_lblIRC.Name = "chat_lblIRC";
-            this.chat_lblIRC.Size = new System.Drawing.Size(74, 13);
-            this.chat_lblIRC.TabIndex = 22;
-            this.chat_lblIRC.Text = "IRC messages:";
+            this.chat_lblDefault.AutoSize = true;
+            this.chat_lblDefault.Location = new System.Drawing.Point(6, 18);
+            this.chat_lblDefault.Name = "chat_lblDefault";
+            this.chat_lblDefault.Size = new System.Drawing.Size(71, 13);
+            this.chat_lblDefault.TabIndex = 11;
+            this.chat_lblDefault.Text = "Default color:";
             // 
             // chat_colDefault
             // 
@@ -756,47 +718,85 @@ namespace MCGalaxy.Gui
                         "d to select two corners in a cuboid.");
             this.chat_cmbDefault.SelectedIndexChanged += new System.EventHandler(this.chat_cmbDefault_SelectedIndexChanged);
             // 
-            // chat_lblDefault
+            // chat_lblIRC
             // 
-            this.chat_lblDefault.AutoSize = true;
-            this.chat_lblDefault.Location = new System.Drawing.Point(6, 18);
-            this.chat_lblDefault.Name = "chat_lblDefault";
-            this.chat_lblDefault.Size = new System.Drawing.Size(71, 13);
-            this.chat_lblDefault.TabIndex = 11;
-            this.chat_lblDefault.Text = "Default color:";
+            this.chat_lblIRC.AutoSize = true;
+            this.chat_lblIRC.Location = new System.Drawing.Point(6, 47);
+            this.chat_lblIRC.Name = "chat_lblIRC";
+            this.chat_lblIRC.Size = new System.Drawing.Size(74, 13);
+            this.chat_lblIRC.TabIndex = 22;
+            this.chat_lblIRC.Text = "IRC messages:";            
             // 
-            // btnSave
+            // chat_colIRC
             // 
-            this.btnSave.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSave.Location = new System.Drawing.Point(346, 553);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 1;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.chat_colIRC.BackColor = System.Drawing.Color.Black;
+            this.chat_colIRC.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.chat_colIRC.Location = new System.Drawing.Point(99, 44);
+            this.chat_colIRC.Name = "chat_colIRC";
+            this.chat_colIRC.Size = new System.Drawing.Size(18, 18);
+            this.chat_colIRC.TabIndex = 25;
             // 
-            // btnDiscard
+            // chat_cmbIRC
             // 
-            this.btnDiscard.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDiscard.Location = new System.Drawing.Point(4, 553);
-            this.btnDiscard.Name = "btnDiscard";
-            this.btnDiscard.Size = new System.Drawing.Size(75, 23);
-            this.btnDiscard.TabIndex = 1;
-            this.btnDiscard.Text = "Discard";
-            this.btnDiscard.UseVisualStyleBackColor = true;
-            this.btnDiscard.Click += new System.EventHandler(this.btnDiscard_Click);
+            this.chat_cmbIRC.FormattingEnabled = true;
+            this.chat_cmbIRC.Location = new System.Drawing.Point(120, 44);
+            this.chat_cmbIRC.Name = "chat_cmbIRC";
+            this.chat_cmbIRC.Size = new System.Drawing.Size(95, 21);
+            this.chat_cmbIRC.TabIndex = 24;
+            this.toolTip.SetToolTip(this.chat_cmbIRC, "The colour of the IRC nicks used in the IRC.");
+            this.chat_cmbIRC.SelectedIndexChanged += new System.EventHandler(this.chat_cmbIRC_SelectedIndexChanged);
             // 
-            // btnApply
+            // chat_lblDesc
             // 
-            this.btnApply.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnApply.Location = new System.Drawing.Point(427, 553);
-            this.btnApply.Name = "btnApply";
-            this.btnApply.Size = new System.Drawing.Size(75, 23);
-            this.btnApply.TabIndex = 1;
-            this.btnApply.Text = "Apply";
-            this.btnApply.UseVisualStyleBackColor = true;
-            this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
+            this.chat_lblDesc.AutoSize = true;
+            this.chat_lblDesc.Location = new System.Drawing.Point(6, 101);
+            this.chat_lblDesc.Name = "chat_lblDesc";
+            this.chat_lblDesc.Size = new System.Drawing.Size(90, 13);
+            this.chat_lblDesc.TabIndex = 32;
+            this.chat_lblDesc.Text = "/help description:";
+            // 
+            // chat_colDesc
+            // 
+            this.chat_colDesc.Location = new System.Drawing.Point(99, 98);
+            this.chat_colDesc.Name = "chat_colDesc";
+            this.chat_colDesc.Size = new System.Drawing.Size(18, 18);
+            this.chat_colDesc.TabIndex = 34;
+            // 
+            // chat_cmbDesc
+            // 
+            this.chat_cmbDesc.FormattingEnabled = true;
+            this.chat_cmbDesc.Location = new System.Drawing.Point(120, 98);
+            this.chat_cmbDesc.Name = "chat_cmbDesc";
+            this.chat_cmbDesc.Size = new System.Drawing.Size(95, 21);
+            this.chat_cmbDesc.TabIndex = 33;
+            this.toolTip.SetToolTip(this.chat_cmbDesc, "The colour of the /cmdname [args] in /help.");
+            this.chat_cmbDesc.SelectedIndexChanged += new System.EventHandler(this.chat_cmbDesc_SelectedIndexChanged);
+            // 
+            // chat_lblSyntax
+            // 
+            this.chat_lblSyntax.AutoSize = true;
+            this.chat_lblSyntax.Location = new System.Drawing.Point(6, 74);
+            this.chat_lblSyntax.Name = "chat_lblSyntax";
+            this.chat_lblSyntax.Size = new System.Drawing.Size(68, 13);
+            this.chat_lblSyntax.TabIndex = 31;
+            this.chat_lblSyntax.Text = "/help syntax:";
+            // 
+            // chat_colSyntax
+            // 
+            this.chat_colSyntax.Location = new System.Drawing.Point(99, 71);
+            this.chat_colSyntax.Name = "chat_colSyntax";
+            this.chat_colSyntax.Size = new System.Drawing.Size(18, 18);
+            this.chat_colSyntax.TabIndex = 35;
+            // 
+            // chat_cmbSyntax
+            // 
+            this.chat_cmbSyntax.FormattingEnabled = true;
+            this.chat_cmbSyntax.Location = new System.Drawing.Point(120, 71);
+            this.chat_cmbSyntax.Name = "chat_cmbSyntax";
+            this.chat_cmbSyntax.Size = new System.Drawing.Size(95, 21);
+            this.chat_cmbSyntax.TabIndex = 30;
+            this.toolTip.SetToolTip(this.chat_cmbSyntax, "The colour for the description of a command in /help.");
+            this.chat_cmbSyntax.SelectedIndexChanged += new System.EventHandler(this.chat_cmbSyntax_SelectedIndexChanged);
             // 
             // toolTip
             // 
@@ -3540,11 +3540,11 @@ namespace MCGalaxy.Gui
             // pageSecurity
             // 
             this.pageSecurity.BackColor = System.Drawing.SystemColors.Control;
-            this.pageSecurity.Controls.Add(this.sec_grpIP);
-            this.pageSecurity.Controls.Add(this.sec_grpBlocks);
-            this.pageSecurity.Controls.Add(this.sec_grpCmd);
-            this.pageSecurity.Controls.Add(this.sec_grpOther);
             this.pageSecurity.Controls.Add(this.sec_grpChat);
+            this.pageSecurity.Controls.Add(this.sec_grpCmd);
+            this.pageSecurity.Controls.Add(this.sec_grpIP);
+            this.pageSecurity.Controls.Add(this.sec_grpOther);
+            this.pageSecurity.Controls.Add(this.sec_grpBlocks);
             this.pageSecurity.Location = new System.Drawing.Point(4, 22);
             this.pageSecurity.Name = "pageSecurity";
             this.pageSecurity.Padding = new System.Windows.Forms.Padding(3);
@@ -4033,9 +4033,9 @@ namespace MCGalaxy.Gui
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(507, 585);
-            this.Controls.Add(this.btnApply);
-            this.Controls.Add(this.btnDiscard);
-            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.main_btnApply);
+            this.Controls.Add(this.main_btnDiscard);
+            this.Controls.Add(this.main_btnSave);
             this.Controls.Add(this.tabControl);
             this.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -4160,16 +4160,71 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.sec_numChatMute)).EndInit();
             this.ResumeLayout(false);
         }
-        private System.Windows.Forms.Label sec_lblIPForSecs;
-        private System.Windows.Forms.NumericUpDown sec_numIPMute;
-        private System.Windows.Forms.Label sec_lblIPForMute;
-        private System.Windows.Forms.Label sec_lblIPOnSecs;
-        private System.Windows.Forms.NumericUpDown sec_numIPSecs;
-        private System.Windows.Forms.Label sec_lblIPOnMsgs;
-        private System.Windows.Forms.NumericUpDown sec_numIPMsgs;
-        private System.Windows.Forms.Label sec_lblIPOnMute;
-        private System.Windows.Forms.CheckBox sec_cbIPAuto;
-        private System.Windows.Forms.GroupBox sec_grpIP;
+        #endregion
+        
+        private System.Windows.Forms.ComboBox rank_cmbOsMap;
+        private System.Windows.Forms.Label lblOsMap;
+        private System.Windows.Forms.PropertyGrid pg_lavaMap;
+        private System.Windows.Forms.PropertyGrid pg_lava;
+        private System.Windows.Forms.TextBox txtPrefix;
+        private System.Windows.Forms.TextBox txtOSMaps;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label srv_lblOwner;
+        private System.Windows.Forms.GroupBox gbRankSettings;
+        private System.Windows.Forms.GroupBox gbRankGeneral;
+        
+        private System.Windows.Forms.TabPage tabChat;
+        private System.Windows.Forms.GroupBox chat_grpTab;
+        private System.Windows.Forms.CheckBox chat_cbTabRank;
+        private System.Windows.Forms.CheckBox chat_cbTabLevel;
+        private System.Windows.Forms.CheckBox chat_cbTabBots;
+        
+        private System.Windows.Forms.GroupBox chat_grpMessages;
+        private System.Windows.Forms.Label chat_lblShutdown;
+        private System.Windows.Forms.TextBox chat_txtShutdown;
+        private System.Windows.Forms.CheckBox chat_chkCheap;
+        private System.Windows.Forms.TextBox chat_txtCheap;
+        private System.Windows.Forms.Label chat_lblBan;
+        private System.Windows.Forms.TextBox chat_txtBan;
+        private System.Windows.Forms.Label chat_lblPromote;
+        private System.Windows.Forms.TextBox chat_txtPromote;
+        private System.Windows.Forms.Label chat_lblDemote;
+        private System.Windows.Forms.TextBox chat_txtDemote;
+        
+        private System.Windows.Forms.GroupBox chat_grpColors;
+        private System.Windows.Forms.Label chat_lblDefault;
+        private System.Windows.Forms.Label chat_colDefault;
+        private System.Windows.Forms.ComboBox chat_cmbDefault;
+        private System.Windows.Forms.Label chat_lblIRC;
+        private System.Windows.Forms.Label chat_colIRC;
+        private System.Windows.Forms.ComboBox chat_cmbIRC;
+        private System.Windows.Forms.Label chat_lblSyntax;
+        private System.Windows.Forms.Label chat_colSyntax;
+        private System.Windows.Forms.ComboBox chat_cmbSyntax;
+        private System.Windows.Forms.Label chat_lblDesc;
+        private System.Windows.Forms.Label chat_colDesc;
+        private System.Windows.Forms.ComboBox chat_cmbDesc;
+        
+        private System.Windows.Forms.GroupBox chat_grpOther;
+        private System.Windows.Forms.Label chat_lblConsole;
+        private System.Windows.Forms.TextBox chat_txtConsole;
+        
+        
+        private System.Windows.Forms.TabPage pageSecurity;
+        private System.Windows.Forms.GroupBox sec_grpChat;
+        private System.Windows.Forms.CheckBox sec_cbChatAuto;
+        private System.Windows.Forms.Label sec_lblChatForMute;
+        private System.Windows.Forms.NumericUpDown sec_numChatMute;
+        private System.Windows.Forms.Label sec_lblChatOnMsgs;
+        private System.Windows.Forms.NumericUpDown sec_numChatMsgs;
+        private System.Windows.Forms.Label sec_lblChatOnMute;
+        private System.Windows.Forms.NumericUpDown sec_numChatSecs;
+        private System.Windows.Forms.Label sec_lblChatOnSecs;
+        private System.Windows.Forms.Label sec_lblChatForSecs;
+        
+        private System.Windows.Forms.GroupBox sec_grpCmd;
+        private System.Windows.Forms.CheckBox sec_cbCmdAuto;
         private System.Windows.Forms.Label sec_lblCmdForSecs;
         private System.Windows.Forms.NumericUpDown sec_numCmdMute;
         private System.Windows.Forms.Label sec_lblCmdForMute;
@@ -4178,40 +4233,36 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label sec_lblCmdOnMsgs;
         private System.Windows.Forms.NumericUpDown sec_numCmdMsgs;
         private System.Windows.Forms.Label sec_lblCmdOnMute;
-        private System.Windows.Forms.CheckBox sec_cbCmdAuto;
-        private System.Windows.Forms.GroupBox sec_grpCmd;
+        
+        private System.Windows.Forms.GroupBox sec_grpIP;
+        private System.Windows.Forms.CheckBox sec_cbIPAuto;
+        private System.Windows.Forms.Label sec_lblIPForSecs;
+        private System.Windows.Forms.NumericUpDown sec_numIPMute;
+        private System.Windows.Forms.Label sec_lblIPForMute;
+        private System.Windows.Forms.Label sec_lblIPOnSecs;
+        private System.Windows.Forms.NumericUpDown sec_numIPSecs;
+        private System.Windows.Forms.Label sec_lblIPOnMsgs;
+        private System.Windows.Forms.NumericUpDown sec_numIPMsgs;
+        private System.Windows.Forms.Label sec_lblIPOnMute;
+        
+        private System.Windows.Forms.GroupBox sec_grpOther;
+        private System.Windows.Forms.CheckBox sec_cbLogNotes;
+        private System.Windows.Forms.CheckBox sec_cbWhitelist;
+        private System.Windows.Forms.CheckBox sec_cbVerifyAdmins;
+        private System.Windows.Forms.Label sec_lblRank;
+        private System.Windows.Forms.ComboBox sec_cmbVerifyRank;
+        
+        private System.Windows.Forms.GroupBox sec_grpBlocks;
+        private System.Windows.Forms.CheckBox sec_cbBlocksAuto;
         private System.Windows.Forms.Label sec_lblBlocksOnSecs;
         private System.Windows.Forms.NumericUpDown sec_numBlocksSecs;
         private System.Windows.Forms.Label sec_lblBlocksOnMsgs;
         private System.Windows.Forms.NumericUpDown sec_numBlocksMsgs;
         private System.Windows.Forms.Label sec_lblBlocksOnMute;
-        private System.Windows.Forms.CheckBox sec_cbBlocksAuto;
-        private System.Windows.Forms.GroupBox sec_grpBlocks;
-        private System.Windows.Forms.PropertyGrid pg_lavaMap;
-        private System.Windows.Forms.PropertyGrid pg_lava;
-        private System.Windows.Forms.CheckBox sec_cbWhitelist;
-        private System.Windows.Forms.Label sec_lblRank;
-        private System.Windows.Forms.CheckBox chat_cbTabBots;
-        private System.Windows.Forms.CheckBox chat_cbTabLevel;
-        private System.Windows.Forms.CheckBox chat_cbTabRank;
-        private System.Windows.Forms.GroupBox chat_grpTab;
-        private System.Windows.Forms.ComboBox rank_cmbOsMap;
-        private System.Windows.Forms.Label lblOsMap;
-        private System.Windows.Forms.CheckBox sec_cbLogNotes;
-        private System.Windows.Forms.GroupBox sec_grpOther;
-        private System.Windows.Forms.TextBox txtPrefix;
-        private System.Windows.Forms.TextBox txtOSMaps;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Label srv_lblOwner;
-        private System.Windows.Forms.GroupBox gbRankSettings;
-        private System.Windows.Forms.GroupBox gbRankGeneral;
-
-        #endregion
-
-        private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.Button btnDiscard;
-        private System.Windows.Forms.Button btnApply;
+        
+        private System.Windows.Forms.Button main_btnSave;
+        private System.Windows.Forms.Button main_btnDiscard;
+        private System.Windows.Forms.Button main_btnApply;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.TabPage pageBlocks;
         private System.Windows.Forms.Button btnBlHelp;
@@ -4252,8 +4303,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TabPage pageMisc;
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.TextBox hackrank_kick_time;
-        private System.Windows.Forms.TextBox chat_txtShutdown;
-        private System.Windows.Forms.TextBox chat_txtBan;
         private System.Windows.Forms.TextBox txtNormRp;
         private System.Windows.Forms.TextBox txtRP;
         private System.Windows.Forms.TextBox afk_txtKickTime;
@@ -4261,12 +4310,10 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox bak_txtTime;
         private System.Windows.Forms.TextBox bak_txtLocation;
         private System.Windows.Forms.TextBox txtMoneys;
-        private System.Windows.Forms.TextBox chat_txtCheap;
         private System.Windows.Forms.TextBox txtRestartTime;
         private System.Windows.Forms.CheckBox hackrank_kick;
         private System.Windows.Forms.CheckBox chkProfanityFilter;
         private System.Windows.Forms.CheckBox chkRepeatMessages;
-        private System.Windows.Forms.CheckBox chat_chkCheap;
         private System.Windows.Forms.CheckBox chkDeath;
         private System.Windows.Forms.CheckBox chk17Dollar;
         private System.Windows.Forms.CheckBox chkPhysicsRest;
@@ -4285,10 +4332,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox irc_txtServer;
         private System.Windows.Forms.TextBox irc_txtNick;
         private System.Windows.Forms.Label irc_lblOpChannel;
-        private System.Windows.Forms.Label chat_colIRC;
-        private System.Windows.Forms.ComboBox chat_cmbIRC;
         private System.Windows.Forms.CheckBox irc_chkEnabled;
-        private System.Windows.Forms.Label chat_lblIRC;
         private System.Windows.Forms.Label irc_lblChannel;
         private System.Windows.Forms.Label irc_lblServer;
         private System.Windows.Forms.Label irc_lblNick;
@@ -4297,7 +4341,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.NumericUpDown numGuests;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.TextBox lvl_txtMain;
-        private System.Windows.Forms.TextBox chat_txtConsole;
         private System.Windows.Forms.TextBox srv_txtPort;
         private System.Windows.Forms.TextBox srv_txtMOTD;
         private System.Windows.Forms.TextBox srv_txtName;
@@ -4307,18 +4350,14 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label lblOpChat;
         private System.Windows.Forms.ComboBox rank_cmbDefault;
         private System.Windows.Forms.Label label29;
-        private System.Windows.Forms.Label chat_colDefault;
-        private System.Windows.Forms.ComboBox chat_cmbDefault;
         private System.Windows.Forms.CheckBox adv_chkRestart;
         private System.Windows.Forms.CheckBox srv_chkPublic;
         private System.Windows.Forms.CheckBox lvl_chkAutoload;
         private System.Windows.Forms.CheckBox lvl_chkWorld;
         private System.Windows.Forms.CheckBox chkUpdates;
         private System.Windows.Forms.CheckBox adv_chkVerify;
-        private System.Windows.Forms.Label chat_lblDefault;
         private System.Windows.Forms.Label lvl_lblMain;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.Label chat_lblConsole;
         private System.Windows.Forms.Label srv_lblPort;
         private System.Windows.Forms.Label srv_lblMotd;
         private System.Windows.Forms.Label srv_lblName;
@@ -4359,16 +4398,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox sql_txtPass;
         private System.Windows.Forms.TextBox sql_txtUser;
         private System.Windows.Forms.CheckBox sql_chkUseSQL;
-        private System.Windows.Forms.TabPage pageSecurity;
-        private System.Windows.Forms.GroupBox sec_grpChat;
-        private System.Windows.Forms.Label sec_lblChatForMute;
-        private System.Windows.Forms.NumericUpDown sec_numChatMute;
-        private System.Windows.Forms.Label sec_lblChatOnMsgs;
-        private System.Windows.Forms.NumericUpDown sec_numChatMsgs;
-        private System.Windows.Forms.Label sec_lblChatOnMute;
-        private System.Windows.Forms.CheckBox sec_cbChatAuto;
-        private System.Windows.Forms.CheckBox sec_cbVerifyAdmins;
-        private System.Windows.Forms.ComboBox sec_cmbVerifyRank;
         private System.Windows.Forms.TabPage pageGames;
         private System.Windows.Forms.TabControl tabGames;
         private System.Windows.Forms.TabPage tabPage11;
@@ -4396,9 +4425,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Button lsBtnStopGame;
         private System.Windows.Forms.Button lsBtnStartGame;
         private System.Windows.Forms.Button lsBtnEndVote;
-        private System.Windows.Forms.NumericUpDown sec_numChatSecs;
-        private System.Windows.Forms.Label sec_lblChatOnSecs;
-        private System.Windows.Forms.Label sec_lblChatForSecs;
         private System.Windows.Forms.TextBox sql_txtPort;
         private System.Windows.Forms.Label sql_lblPort;
         private System.Windows.Forms.GroupBox grpUpdate;
@@ -4468,22 +4494,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label lblLoadedCommands;
         private System.Windows.Forms.ListBox lstCommands;
         private System.Windows.Forms.GroupBox groupBox24;
-        private System.Windows.Forms.GroupBox chat_grpMessages;
-        private System.Windows.Forms.GroupBox chat_grpOther;
-        private System.Windows.Forms.GroupBox chat_grpColors;
-        private System.Windows.Forms.TabPage tabChat;
-        private System.Windows.Forms.ComboBox chat_cmbDesc;
-        private System.Windows.Forms.Label chat_lblDesc;
-        private System.Windows.Forms.Label chat_lblSyntax;
-        private System.Windows.Forms.ComboBox chat_cmbSyntax;
-        private System.Windows.Forms.TextBox chat_txtDemote;
-        private System.Windows.Forms.TextBox chat_txtPromote;
-        private System.Windows.Forms.Label chat_lblShutdown;
-        private System.Windows.Forms.Label chat_colSyntax;
-        private System.Windows.Forms.Label chat_colDesc;
-        private System.Windows.Forms.Label chat_lblDemote;
-        private System.Windows.Forms.Label chat_lblPromote;
-        private System.Windows.Forms.Label chat_lblBan;
         private System.Windows.Forms.PropertyGrid propsZG;
         private System.Windows.Forms.GroupBox economyGroupBox;
     }
