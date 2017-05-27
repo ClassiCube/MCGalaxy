@@ -29,6 +29,20 @@ namespace MCGalaxy.Gui {
             blockPerms = storedBlocks.Find(bS => bS.BlockID == b);
             BlockInitSpecificArrays();
             
+            // TODO: actually save & set these
+            BlockProps props = Block.Props[b];
+            blk_cbMsgBlock.Checked = props.IsMessageBlock;
+            blk_cbPortal.Checked = props.IsPortal;
+            blk_cbDeath.Checked = props.KillerBlock;
+            blk_txtDeath.Text = props.DeathMessage;
+            blk_txtDeath.Enabled = blk_cbDeath.Checked;
+            
+            blk_cbDoor.Checked = props.IsDoor;
+            blk_cbTdoor.Checked = props.IsTDoor;
+            blk_cbRails.Checked = props.IsRails;
+            blk_cbLava.Checked = props.LavaKills;
+            blk_cbWater.Checked = props.WaterKills;
+            
             blockSupressEvents = true;
             GuiPerms.SetDefaultIndex(blk_cmbMin, blockPerms.MinRank);
             BlockSetSpecificPerms(blockPerms.Allowed, blockAllowBoxes);
@@ -127,7 +141,7 @@ namespace MCGalaxy.Gui {
             }
         }
 
-        void btnBlHelp_Click(object sender, EventArgs e) {
+        void blk_btnHelp_Click(object sender, EventArgs e) {
             getHelp(blk_list.SelectedItem.ToString());
         }
     }

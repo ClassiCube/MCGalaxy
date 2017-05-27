@@ -119,7 +119,6 @@ namespace MCGalaxy.Gui {
                 txtcmdranks2.Text += "    " + grp.name + " (" + (int)grp.Permission + ")\r\n";
                 listRanks.Items.Add(grp.trueName + " = " + (int)grp.Permission);
             }
-            //txtBlRanks.Text = txtCmdRanks.Text;
             listRanks.SelectedIndex = 0;
         }
         public void SaveRanks() {

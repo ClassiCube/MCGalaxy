@@ -160,7 +160,7 @@ namespace MCGalaxy.Gui
             this.blk_lblMin = new System.Windows.Forms.Label();
             this.blk_lblAllow = new System.Windows.Forms.Label();
             this.blk_lblDisallow = new System.Windows.Forms.Label();
-            this.btnBlHelp = new System.Windows.Forms.Button();
+            this.blk_btnHelp = new System.Windows.Forms.Button();
             this.blk_list = new System.Windows.Forms.ListBox();
             this.pageRanks = new System.Windows.Forms.TabPage();
             this.gbRankGeneral = new System.Windows.Forms.GroupBox();
@@ -373,6 +373,17 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
+            this.blk_grpBehaviour = new System.Windows.Forms.GroupBox();
+            this.blk_grpPhysics = new System.Windows.Forms.GroupBox();
+            this.blk_cbMsgBlock = new System.Windows.Forms.CheckBox();
+            this.blk_cbPortal = new System.Windows.Forms.CheckBox();
+            this.blk_cbDeath = new System.Windows.Forms.CheckBox();
+            this.blk_txtDeath = new System.Windows.Forms.TextBox();
+            this.blk_cbRails = new System.Windows.Forms.CheckBox();
+            this.blk_cbTdoor = new System.Windows.Forms.CheckBox();
+            this.blk_cbDoor = new System.Windows.Forms.CheckBox();
+            this.blk_cbWater = new System.Windows.Forms.CheckBox();
+            this.blk_cbLava = new System.Windows.Forms.CheckBox();
             this.tabChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
@@ -451,6 +462,8 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).BeginInit();
+            this.blk_grpBehaviour.SuspendLayout();
+            this.blk_grpPhysics.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabChat
@@ -1516,8 +1529,10 @@ namespace MCGalaxy.Gui
             // tabBlocks
             // 
             this.tabBlocks.BackColor = System.Drawing.SystemColors.Control;
+            this.tabBlocks.Controls.Add(this.blk_grpPhysics);
+            this.tabBlocks.Controls.Add(this.blk_grpBehaviour);
             this.tabBlocks.Controls.Add(this.blk_grpPermissions);
-            this.tabBlocks.Controls.Add(this.btnBlHelp);
+            this.tabBlocks.Controls.Add(this.blk_btnHelp);
             this.tabBlocks.Controls.Add(this.blk_list);
             this.tabBlocks.Location = new System.Drawing.Point(4, 22);
             this.tabBlocks.Name = "tabBlocks";
@@ -1635,15 +1650,15 @@ namespace MCGalaxy.Gui
             this.blk_lblDisallow.TabIndex = 17;
             this.blk_lblDisallow.Text = "But don\'t allow:";
             // 
-            // btnBlHelp
+            // blk_btnHelp
             // 
-            this.btnBlHelp.Location = new System.Drawing.Point(6, 486);
-            this.btnBlHelp.Name = "btnBlHelp";
-            this.btnBlHelp.Size = new System.Drawing.Size(121, 29);
-            this.btnBlHelp.TabIndex = 23;
-            this.btnBlHelp.Text = "Help information";
-            this.btnBlHelp.UseVisualStyleBackColor = true;
-            this.btnBlHelp.Click += new System.EventHandler(this.btnBlHelp_Click);
+            this.blk_btnHelp.Location = new System.Drawing.Point(6, 486);
+            this.blk_btnHelp.Name = "blk_btnHelp";
+            this.blk_btnHelp.Size = new System.Drawing.Size(121, 29);
+            this.blk_btnHelp.TabIndex = 23;
+            this.blk_btnHelp.Text = "Help information";
+            this.blk_btnHelp.UseVisualStyleBackColor = true;
+            this.blk_btnHelp.Click += new System.EventHandler(this.blk_btnHelp_Click);
             // 
             // blk_list
             // 
@@ -4075,6 +4090,112 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
+            // blk_grpBehaviour
+            // 
+            this.blk_grpBehaviour.Controls.Add(this.blk_txtDeath);
+            this.blk_grpBehaviour.Controls.Add(this.blk_cbDeath);
+            this.blk_grpBehaviour.Controls.Add(this.blk_cbPortal);
+            this.blk_grpBehaviour.Controls.Add(this.blk_cbMsgBlock);
+            this.blk_grpBehaviour.Location = new System.Drawing.Point(133, 105);
+            this.blk_grpBehaviour.Name = "blk_grpBehaviour";
+            this.blk_grpBehaviour.Size = new System.Drawing.Size(360, 70);
+            this.blk_grpBehaviour.TabIndex = 25;
+            this.blk_grpBehaviour.TabStop = false;
+            this.blk_grpBehaviour.Text = "Behaviour";
+            // 
+            // blk_grpPhysics
+            // 
+            this.blk_grpPhysics.Controls.Add(this.blk_cbWater);
+            this.blk_grpPhysics.Controls.Add(this.blk_cbLava);
+            this.blk_grpPhysics.Controls.Add(this.blk_cbRails);
+            this.blk_grpPhysics.Controls.Add(this.blk_cbTdoor);
+            this.blk_grpPhysics.Controls.Add(this.blk_cbDoor);
+            this.blk_grpPhysics.Location = new System.Drawing.Point(134, 180);
+            this.blk_grpPhysics.Name = "blk_grpPhysics";
+            this.blk_grpPhysics.Size = new System.Drawing.Size(360, 90);
+            this.blk_grpPhysics.TabIndex = 26;
+            this.blk_grpPhysics.TabStop = false;
+            this.blk_grpPhysics.Text = "Physics behaviour";
+            // 
+            // blk_cbMsgBlock
+            // 
+            this.blk_cbMsgBlock.Location = new System.Drawing.Point(10, 15);
+            this.blk_cbMsgBlock.Name = "blk_cbMsgBlock";
+            this.blk_cbMsgBlock.Size = new System.Drawing.Size(116, 24);
+            this.blk_cbMsgBlock.TabIndex = 0;
+            this.blk_cbMsgBlock.Text = "Is a message block";
+            this.blk_cbMsgBlock.UseVisualStyleBackColor = true;
+            // 
+            // blk_cbPortal
+            // 
+            this.blk_cbPortal.Location = new System.Drawing.Point(187, 15);
+            this.blk_cbPortal.Name = "blk_cbPortal";
+            this.blk_cbPortal.Size = new System.Drawing.Size(104, 24);
+            this.blk_cbPortal.TabIndex = 1;
+            this.blk_cbPortal.Text = "Is a portal";
+            this.blk_cbPortal.UseVisualStyleBackColor = true;
+            // 
+            // blk_cbDeath
+            // 
+            this.blk_cbDeath.Location = new System.Drawing.Point(10, 39);
+            this.blk_cbDeath.Name = "blk_cbDeath";
+            this.blk_cbDeath.Size = new System.Drawing.Size(89, 24);
+            this.blk_cbDeath.TabIndex = 2;
+            this.blk_cbDeath.Text = "Kills players";
+            this.blk_cbDeath.UseVisualStyleBackColor = true;
+            // 
+            // blk_txtDeath
+            // 
+            this.blk_txtDeath.Location = new System.Drawing.Point(100, 41);
+            this.blk_txtDeath.Name = "blk_txtDeath";
+            this.blk_txtDeath.Size = new System.Drawing.Size(254, 21);
+            this.blk_txtDeath.TabIndex = 3;
+            // 
+            // blk_cbRails
+            // 
+            this.blk_cbRails.Location = new System.Drawing.Point(10, 39);
+            this.blk_cbRails.Name = "blk_cbRails";
+            this.blk_cbRails.Size = new System.Drawing.Size(89, 24);
+            this.blk_cbRails.TabIndex = 5;
+            this.blk_cbRails.Text = "Is train rails";
+            this.blk_cbRails.UseVisualStyleBackColor = true;
+            // 
+            // blk_cbTdoor
+            // 
+            this.blk_cbTdoor.Location = new System.Drawing.Point(187, 15);
+            this.blk_cbTdoor.Name = "blk_cbTdoor";
+            this.blk_cbTdoor.Size = new System.Drawing.Size(104, 24);
+            this.blk_cbTdoor.TabIndex = 4;
+            this.blk_cbTdoor.Text = "Is a tDoor";
+            this.blk_cbTdoor.UseVisualStyleBackColor = true;
+            // 
+            // blk_cbDoor
+            // 
+            this.blk_cbDoor.Location = new System.Drawing.Point(10, 15);
+            this.blk_cbDoor.Name = "blk_cbDoor";
+            this.blk_cbDoor.Size = new System.Drawing.Size(116, 24);
+            this.blk_cbDoor.TabIndex = 3;
+            this.blk_cbDoor.Text = "Is a door";
+            this.blk_cbDoor.UseVisualStyleBackColor = true;
+            // 
+            // blk_cbWater
+            // 
+            this.blk_cbWater.Location = new System.Drawing.Point(186, 63);
+            this.blk_cbWater.Name = "blk_cbWater";
+            this.blk_cbWater.Size = new System.Drawing.Size(104, 24);
+            this.blk_cbWater.TabIndex = 7;
+            this.blk_cbWater.Text = "Killed by water";
+            this.blk_cbWater.UseVisualStyleBackColor = true;
+            // 
+            // blk_cbLava
+            // 
+            this.blk_cbLava.Location = new System.Drawing.Point(10, 63);
+            this.blk_cbLava.Name = "blk_cbLava";
+            this.blk_cbLava.Size = new System.Drawing.Size(116, 24);
+            this.blk_cbLava.TabIndex = 6;
+            this.blk_cbLava.Text = "Killed by lava";
+            this.blk_cbLava.UseVisualStyleBackColor = true;
+            // 
             // PropertyWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4208,8 +4329,22 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
+            this.blk_grpBehaviour.ResumeLayout(false);
+            this.blk_grpBehaviour.PerformLayout();
+            this.blk_grpPhysics.ResumeLayout(false);
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.CheckBox blk_cbLava;
+        private System.Windows.Forms.CheckBox blk_cbWater;
+        private System.Windows.Forms.CheckBox blk_cbDoor;
+        private System.Windows.Forms.CheckBox blk_cbTdoor;
+        private System.Windows.Forms.CheckBox blk_cbRails;
+        private System.Windows.Forms.CheckBox blk_cbMsgBlock;
+        private System.Windows.Forms.CheckBox blk_cbPortal;
+        private System.Windows.Forms.CheckBox blk_cbDeath;
+        private System.Windows.Forms.TextBox blk_txtDeath;
+        private System.Windows.Forms.GroupBox blk_grpBehaviour;
+        private System.Windows.Forms.GroupBox blk_grpPhysics;
         private System.Windows.Forms.ComboBox blk_cmbMin;
         private System.Windows.Forms.ComboBox blk_cmbDis1;
         private System.Windows.Forms.ComboBox blk_cmbAlw1;
@@ -4323,7 +4458,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Button main_btnApply;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.TabPage tabBlocks;
-        private System.Windows.Forms.Button btnBlHelp;
+        private System.Windows.Forms.Button blk_btnHelp;
         private System.Windows.Forms.Label blk_lblAllow;
         private System.Windows.Forms.Label blk_lblDisallow;
         private System.Windows.Forms.Label blk_lblMin;
