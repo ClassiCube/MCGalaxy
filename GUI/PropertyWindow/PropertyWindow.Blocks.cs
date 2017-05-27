@@ -20,48 +20,98 @@ using MCGalaxy.Blocks;
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
 
+        bool blockSupressEvents = true;
+        ComboBox[] blockAllowBoxes, blockDisallowBoxes;
+        BlockPerms blockPerms;
+        
         void listBlocks_SelectedIndexChanged(object sender, EventArgs e) {
-            byte b = Block.Byte(listBlocks.SelectedItem.ToString());
-            BlockPerms bs = storedBlocks.Find(bS => bS.BlockID == b);
-
-            txtBlLowest.Text = (int)bs.MinRank + "";
-
-            bool foundOne = false;
-            txtBlDisallow.Text = "";
-            if (bs.Disallowed != null) {
-                foreach ( LevelPermission perm in bs.Disallowed ) {
-                    foundOne = true;
-                    txtBlDisallow.Text += "," + (int)perm;
+            byte b = Block.Byte(blk_list.SelectedItem.ToString());
+            blockPerms = storedBlocks.Find(bS => bS.BlockID == b);
+            BlockInitSpecificArrays();
+            
+            blockSupressEvents = true;
+            GuiPerms.SetDefaultIndex(blk_cmbMin, blockPerms.MinRank);
+            BlockSetSpecificPerms(blockPerms.Allowed, blockAllowBoxes);
+            BlockSetSpecificPerms(blockPerms.Disallowed, blockDisallowBoxes);
+            blockSupressEvents = false;
+        }
+        
+        void BlockInitSpecificArrays() {
+            if (blockAllowBoxes != null) return;
+            blockAllowBoxes = new ComboBox[] { blk_cmbAlw1, blk_cmbAlw2, blk_cmbAlw3 };
+            blockDisallowBoxes = new ComboBox[] { blk_cmbDis1, blk_cmbDis2, blk_cmbDis3 };
+            
+            for (int i = 0; i < blockAllowBoxes.Length; i++) {
+                blockAllowBoxes[i].Items.Add("(add rank)");
+                blockDisallowBoxes[i].Items.Add("(add rank)");
+            }
+        }
+        
+        void BlockSetSpecificPerms(List<LevelPermission> perms, ComboBox[] boxes) {
+            ComboBox box = null;
+            for (int i = 0; i < boxes.Length; i++) {
+                box = boxes[i];
+                // Hide the non-visible specific permissions
+                box.Text = "";
+                box.Enabled = false;
+                box.Visible = false;
+                
+                // Show the non-visible specific permissions previously set
+                if (perms.Count > i) {
+                    box.Visible = true;
+                    box.Enabled = true;
+                    GuiPerms.SetDefaultIndex(box, perms[i]);
                 }
             }
-            if ( foundOne ) txtBlDisallow.Text = txtBlDisallow.Text.Remove(0, 1);
-
-            foundOne = false;
-            txtBlAllow.Text = "";
-            if (bs.Allowed != null) {
-                foreach ( LevelPermission perm in bs.Allowed ) {
-                    foundOne = true;
-                    txtBlAllow.Text += "," + (int)perm;
-                }
+            
+            // Show (add rank) for the last item
+            if (perms.Count >= boxes.Length) return;
+            BlockSetAddRank(boxes[perms.Count]);
+        }
+        
+        void BlockSetAddRank(ComboBox box) {
+            box.Visible = true;
+            box.Enabled = true;
+            box.SelectedIndex = box.Items.Count - 1;
+        }       
+        
+        
+        void blk_cmbMin_SelectedIndexChanged(object sender, EventArgs e) {
+            int idx = blk_cmbMin.SelectedIndex;
+            if (idx == -1 || blockSupressEvents) return;
+            
+            blockPerms.MinRank = GuiPerms.RankPerms[idx];
+        }
+        
+        void blk_cmbSpecific_SelectedIndexChanged(object sender, EventArgs e) {
+            ComboBox box = (ComboBox)sender;
+            if (blockSupressEvents) return;
+            int idx = box.SelectedIndex;
+            if (idx == box.Items.Count - 1) return;
+            
+            List<LevelPermission> perms = blockPerms.Allowed;
+            ComboBox[] boxes = blockAllowBoxes;
+            int boxIdx = Array.IndexOf<ComboBox>(boxes, box);
+            if (boxIdx == -1) {
+                perms = blockPerms.Disallowed;
+                boxes = blockDisallowBoxes;
+                boxIdx = Array.IndexOf<ComboBox>(boxes, box);
             }
-            if ( foundOne ) txtBlAllow.Text = txtBlAllow.Text.Remove(0, 1);
-        }
-        void txtBlLowest_TextChanged(object sender, EventArgs e) {
-        	fillLowest(ref txtBlLowest, ref storedBlocks[Block.Byte(listBlocks.SelectedItem.ToString())].MinRank);
-        }
-        void txtBlDisallow_TextChanged(object sender, EventArgs e) {
-            if (storedBlocks[listBlocks.SelectedIndex].Disallowed == null)
-                storedBlocks[listBlocks.SelectedIndex].Disallowed = new List<LevelPermission>();
-            fillAllowance(ref txtBlDisallow, ref storedBlocks[listBlocks.SelectedIndex].Disallowed);
-        }
-        void txtBlAllow_TextChanged(object sender, EventArgs e) {
-            if (storedBlocks[listBlocks.SelectedIndex].Allowed == null)
-                storedBlocks[listBlocks.SelectedIndex].Allowed = new List<LevelPermission>();
-            fillAllowance(ref txtBlAllow, ref storedBlocks[listBlocks.SelectedIndex].Allowed);
+            
+            if (boxIdx < perms.Count) {
+                perms[boxIdx] = GuiPerms.RankPerms[idx];
+            } else {
+                perms.Add(GuiPerms.RankPerms[idx]);
+            }
+            
+            // Activate next box
+            if (boxIdx < boxes.Length - 1 && !boxes[boxIdx + 1].Visible) {
+                BlockSetAddRank(boxes[boxIdx + 1]);
+            }
         }
 
         void btnBlHelp_Click(object sender, EventArgs e) {
-            getHelp(listBlocks.SelectedItem.ToString());
+            getHelp(blk_list.SelectedItem.ToString());
         }
     }
 }

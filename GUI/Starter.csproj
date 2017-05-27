@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Descriptors.cs" />
+    <Compile Include="GuiPerms.cs" />
     <Compile Include="LineFormatter.cs" />
     <Compile Include="Handlers.cs" />
     <Compile Include="Program.cs" />

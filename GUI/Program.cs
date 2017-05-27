@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -32,11 +31,6 @@ namespace MCGalaxy.Gui {
         
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-        
-        internal static LevelPermission GetPermission(ComboBox box, LevelPermission defPerm) {
-            Group grp = Group.Find(box.SelectedItem.ToString());
-            return grp == null ? defPerm : grp.Permission;
-        }
 
         // NOTE: //Console.ReadLine() is ignored while Starter is set as Windows Application in properties. (At least on Windows)
         static bool useConsole, useHighQualityGui, isWindows;

@@ -21,9 +21,16 @@ namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {  
         
         void LoadRankProps() {
-            string defRank = Server.defaultRank.ToLower();
-            if (rank_cmbDefault.Items.IndexOf(defRank) != -1 )
-                rank_cmbDefault.SelectedIndex = rank_cmbDefault.Items.IndexOf(defRank);
+            GuiPerms.SetDefaultIndex(rank_cmbDefault, Group.standard.Permission);
+            GuiPerms.SetDefaultIndex(rank_cmbOsMap, Server.osPerbuildDefault);
+            
+            LevelPermission adminChatRank =
+                CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
+            LevelPermission opChatRank =
+                CommandExtraPerms.MinPerm("opchat", LevelPermission.Operator);
+            GuiPerms.SetDefaultIndex(rank_cmbOpChat, opChatRank);
+            GuiPerms.SetDefaultIndex(rank_cmbAdminChat, adminChatRank);            
+
             rank_chkTpToHigherRanks.Checked = Server.higherranktp;
             chkAdminsJoinSilent.Checked = Server.adminsjoinsilent;
         }
@@ -33,11 +40,11 @@ namespace MCGalaxy.Gui {
             Server.higherranktp = rank_chkTpToHigherRanks.Checked;
             Server.adminsjoinsilent = chkAdminsJoinSilent.Checked;
             
-            Server.osPerbuildDefault = Program.GetPermission(rank_cmbOsMap, LevelPermission.Nobody);
+            Server.osPerbuildDefault = GuiPerms.GetPermission(rank_cmbOsMap, LevelPermission.Nobody);
             var perms = CommandExtraPerms.Find("opchat");
-            perms.MinRank = Program.GetPermission(rank_cmbOpChat, LevelPermission.Operator);
+            perms.MinRank = GuiPerms.GetPermission(rank_cmbOpChat, LevelPermission.Operator);
             perms = CommandExtraPerms.Find("adminchat");
-            perms.MinRank = Program.GetPermission(rank_cmbAdminChat, LevelPermission.Admin);
+            perms.MinRank = GuiPerms.GetPermission(rank_cmbAdminChat, LevelPermission.Admin);
         }
 		
 		

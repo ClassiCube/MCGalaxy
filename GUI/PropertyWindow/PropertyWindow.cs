@@ -40,47 +40,28 @@ namespace MCGalaxy.Gui {
             chat_cmbSyntax.Items.AddRange(colors);
             chat_cmbDesc.Items.AddRange(colors);
             cmbColor.Items.AddRange(colors);
-
-            sec_cmbVerifyRank.Enabled = Server.verifyadmins;
+            
             ToggleIrcSettings(Server.irc);
             ToggleMySQLSettings(Server.useMySQL);
             ToggleChatSpamSettings(Server.checkspam);
             ToggleCmdSpamSettings(Server.CmdSpamCheck);
             ToggleBlocksSpamSettings(Server.BlockSpamCheck);
 
-            string opchatperm = "", adminchatperm = "";
-            string verifyadminsperm = "", afkkickrank = "", osmaprank = "";
-            LevelPermission adminChatRank =
-                CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
-            LevelPermission opChatRank =
-                CommandExtraPerms.MinPerm("opchat", LevelPermission.Operator);
-
-            foreach (Group grp in Group.GroupList) {
-                rank_cmbDefault.Items.Add(grp.name);
-                rank_cmbOpChat.Items.Add(grp.name);
-                rank_cmbAdminChat.Items.Add(grp.name);
-                sec_cmbVerifyRank.Items.Add(grp.name);
-                afk_cmbKickPerm.Items.Add(grp.name);
-                rank_cmbOsMap.Items.Add(grp.name);
-
-                if (grp.Permission == opChatRank)
-                    opchatperm = grp.name;
-                if (grp.Permission == adminChatRank)
-                    adminchatperm = grp.name;
-                if (grp.Permission == Server.verifyadminsrank)
-                    verifyadminsperm = grp.name;
-                if (grp.Permission == Server.afkkickperm)
-                    afkkickrank = grp.name;
-                if (grp.Permission == Server.osPerbuildDefault)
-                    osmaprank = grp.name;
-            }
+            GuiPerms.UpdateRankNames();
+            rank_cmbDefault.Items.AddRange(GuiPerms.RankNames);
+            rank_cmbOpChat.Items.AddRange(GuiPerms.RankNames);
+            rank_cmbAdminChat.Items.AddRange(GuiPerms.RankNames);
+            rank_cmbOsMap.Items.AddRange(GuiPerms.RankNames);
+            sec_cmbVerifyRank.Items.AddRange(GuiPerms.RankNames);
+            afk_cmbKickPerm.Items.AddRange(GuiPerms.RankNames);
             
-            rank_cmbDefault.SelectedIndex = 1;
-            rank_cmbOpChat.SelectedIndex = ( opchatperm != String.Empty ? rank_cmbOpChat.Items.IndexOf(opchatperm) : 1 );
-            rank_cmbAdminChat.SelectedIndex = ( adminchatperm != String.Empty ? rank_cmbAdminChat.Items.IndexOf(adminchatperm) : 1 );
-            sec_cmbVerifyRank.SelectedIndex = ( verifyadminsperm != String.Empty ? sec_cmbVerifyRank.Items.IndexOf(verifyadminsperm) : 1 );
-            afk_cmbKickPerm.SelectedIndex = ( afkkickrank != String.Empty ? afk_cmbKickPerm.Items.IndexOf(afkkickrank) : 1 );
-            rank_cmbOsMap.SelectedIndex = ( osmaprank != String.Empty ? rank_cmbOsMap.Items.IndexOf(osmaprank) : 1 );
+            blk_cmbMin.Items.AddRange(GuiPerms.RankNames);
+            blk_cmbAlw1.Items.AddRange(GuiPerms.RankNames);
+            blk_cmbAlw2.Items.AddRange(GuiPerms.RankNames);
+            blk_cmbAlw3.Items.AddRange(GuiPerms.RankNames);
+            blk_cmbDis1.Items.AddRange(GuiPerms.RankNames);
+            blk_cmbDis2.Items.AddRange(GuiPerms.RankNames);
+            blk_cmbDis3.Items.AddRange(GuiPerms.RankNames);            
 
             //Load server stuff
             LoadProp("properties/server.properties");
@@ -145,7 +126,7 @@ namespace MCGalaxy.Gui {
                 txtcmdranks2.Text += "    " + grp.name + " (" + (int)grp.Permission + ")\r\n";
                 listRanks.Items.Add(grp.trueName + " = " + (int)grp.Permission);
             }
-            txtBlRanks.Text = txtCmdRanks.Text;
+            //txtBlRanks.Text = txtCmdRanks.Text;
             listRanks.SelectedIndex = 0;
         }
         public void SaveRanks() {
@@ -174,15 +155,15 @@ namespace MCGalaxy.Gui {
         }
 
         public void LoadBlocks() {
-            listBlocks.Items.Clear();
+            blk_list.Items.Clear();
             storedBlocks.Clear();
             storedBlocks.AddRange(BlockPerms.List);
             foreach ( BlockPerms bs in storedBlocks ) {
                 if ( Block.Name(bs.BlockID) != "unknown" )
-                    listBlocks.Items.Add(Block.Name(bs.BlockID));
+                    blk_list.Items.Add(Block.Name(bs.BlockID));
             }
-            if ( listBlocks.SelectedIndex == -1 )
-                listBlocks.SelectedIndex = 0;
+            if ( blk_list.SelectedIndex == -1 )
+                blk_list.SelectedIndex = 0;
         }
 
         public void SaveBlocks() {
@@ -251,7 +232,7 @@ namespace MCGalaxy.Gui {
 
         void saveStuff() {
             foreach ( Control tP in tabControl.Controls )
-                if ( tP is TabPage && tP != pageCommands && tP != pageBlocks )
+                if ( tP is TabPage && tP != pageCommands && tP != tabBlocks )
                     foreach ( Control ctrl in tP.Controls )
                         if ( ctrl is TextBox && ctrl.Name.ToLower() != "txtgrpmotd" )
                             if ( ctrl.Text == "" ) {

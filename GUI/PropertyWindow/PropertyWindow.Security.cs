@@ -23,6 +23,8 @@ namespace MCGalaxy.Gui {
             sec_cbLogNotes.Checked = Server.LogNotes;            
             sec_cbVerifyAdmins.Checked = Server.verifyadmins;
             sec_cbWhitelist.Checked = Server.useWhitelist;
+            GuiPerms.SetDefaultIndex(sec_cmbVerifyRank, Server.verifyadminsrank);
+            sec_cmbVerifyRank.Enabled = Server.verifyadmins;
             
             sec_cbChatAuto.Checked = Server.checkspam;
             sec_numChatMsgs.Value = Server.spamcounter;
@@ -47,7 +49,7 @@ namespace MCGalaxy.Gui {
         void ApplySecurityProps() {
             Server.LogNotes = sec_cbLogNotes.Checked;
             Server.verifyadmins = sec_cbVerifyAdmins.Checked;
-            Server.verifyadminsrank = Program.GetPermission(sec_cmbVerifyRank, LevelPermission.Operator);
+            Server.verifyadminsrank = GuiPerms.GetPermission(sec_cmbVerifyRank, LevelPermission.Operator);
             Server.useWhitelist = sec_cbWhitelist.Checked;
             if (Server.useWhitelist && Server.whiteList == null)
                 Server.whiteList = PlayerList.Load("whitelist.txt");

@@ -27,6 +27,7 @@ namespace MCGalaxy.Gui {
             
             afk_txtTimer.Text = Server.afkminutes.ToString();
             afk_txtKickTime.Text = Server.afkkick.ToString();
+            GuiPerms.SetDefaultIndex(afk_cmbKickPerm, Server.afkkickperm);
             
             chkPhysicsRest.Checked = Server.physicsRestart;
             txtRP.Text = Server.rpLimit.ToString();
@@ -53,7 +54,7 @@ namespace MCGalaxy.Gui {
             
             Server.afkminutes = int.Parse(afk_txtTimer.Text);
             Server.afkkick = int.Parse(afk_txtKickTime.Text);
-            Server.afkkickperm = Program.GetPermission(afk_cmbKickPerm, LevelPermission.AdvBuilder);
+            Server.afkkickperm = GuiPerms.GetPermission(afk_cmbKickPerm, LevelPermission.AdvBuilder);
             
             Server.physicsRestart = chkPhysicsRest.Checked;
             Server.rpLimit = int.Parse(txtRP.Text);
