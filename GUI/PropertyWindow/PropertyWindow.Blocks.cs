@@ -42,8 +42,10 @@ namespace MCGalaxy.Gui {
             blockDisallowBoxes = new ComboBox[] { blk_cmbDis1, blk_cmbDis2, blk_cmbDis3 };
             
             for (int i = 0; i < blockAllowBoxes.Length; i++) {
-                blockAllowBoxes[i].Items.Add("(add rank)");
-                blockDisallowBoxes[i].Items.Add("(add rank)");
+                blockAllowBoxes[i].Items.AddRange(GuiPerms.RankNames);
+                blockAllowBoxes[i].Items.Add("(remove rank)");
+                blockDisallowBoxes[i].Items.AddRange(GuiPerms.RankNames);
+                blockDisallowBoxes[i].Items.Add("(remove rank)");
             }
         }
         
@@ -55,6 +57,7 @@ namespace MCGalaxy.Gui {
                 box.Text = "";
                 box.Enabled = false;
                 box.Visible = false;
+                box.SelectedIndex = -1;
                 
                 // Show the non-visible specific permissions previously set
                 if (perms.Count > i) {
@@ -72,8 +75,8 @@ namespace MCGalaxy.Gui {
         void BlockSetAddRank(ComboBox box) {
             box.Visible = true;
             box.Enabled = true;
-            box.SelectedIndex = box.Items.Count - 1;
-        }       
+            box.Text = "(add rank)";
+        }
         
         
         void blk_cmbMin_SelectedIndexChanged(object sender, EventArgs e) {
@@ -87,7 +90,7 @@ namespace MCGalaxy.Gui {
             ComboBox box = (ComboBox)sender;
             if (blockSupressEvents) return;
             int idx = box.SelectedIndex;
-            if (idx == box.Items.Count - 1) return;
+            if (idx == -1) return;
             
             List<LevelPermission> perms = blockPerms.Allowed;
             ComboBox[] boxes = blockAllowBoxes;
@@ -98,6 +101,20 @@ namespace MCGalaxy.Gui {
                 boxIdx = Array.IndexOf<ComboBox>(boxes, box);
             }
             
+            if (idx == box.Items.Count - 1) {
+                if (boxIdx >= perms.Count) return;
+                perms.RemoveAt(boxIdx);
+                
+                blockSupressEvents = true;
+                BlockSetSpecificPerms(perms, boxes);
+                blockSupressEvents = false;
+            } else {
+                BlockSetSpecific(boxes, boxIdx, perms, idx);
+            }
+        }
+        
+        void BlockSetSpecific(ComboBox[] boxes, int boxIdx, 
+                              List<LevelPermission> perms, int idx) {
             if (boxIdx < perms.Count) {
                 perms[boxIdx] = GuiPerms.RankPerms[idx];
             } else {

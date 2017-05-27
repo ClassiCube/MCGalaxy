@@ -53,15 +53,8 @@ namespace MCGalaxy.Gui {
             rank_cmbAdminChat.Items.AddRange(GuiPerms.RankNames);
             rank_cmbOsMap.Items.AddRange(GuiPerms.RankNames);
             sec_cmbVerifyRank.Items.AddRange(GuiPerms.RankNames);
-            afk_cmbKickPerm.Items.AddRange(GuiPerms.RankNames);
-            
-            blk_cmbMin.Items.AddRange(GuiPerms.RankNames);
-            blk_cmbAlw1.Items.AddRange(GuiPerms.RankNames);
-            blk_cmbAlw2.Items.AddRange(GuiPerms.RankNames);
-            blk_cmbAlw3.Items.AddRange(GuiPerms.RankNames);
-            blk_cmbDis1.Items.AddRange(GuiPerms.RankNames);
-            blk_cmbDis2.Items.AddRange(GuiPerms.RankNames);
-            blk_cmbDis3.Items.AddRange(GuiPerms.RankNames);            
+            afk_cmbKickPerm.Items.AddRange(GuiPerms.RankNames);            
+            blk_cmbMin.Items.AddRange(GuiPerms.RankNames);        
 
             //Load server stuff
             LoadProp("properties/server.properties");
