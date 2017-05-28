@@ -18,13 +18,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Threading;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
-using MCGalaxy.Tasks;
 using MCGalaxy.Network;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
     

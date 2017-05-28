@@ -26,7 +26,7 @@ namespace MCGalaxy.Core {
         
         internal static void HandleConnect(Player p) {
             CheckReviewList(p);
-            if (p.group.commands.Contains("reachdistance"))
+            if (p.group.CanExecute("reachdistance"))
                 LoadReach(p);
             
             LoadWaypoints(p);

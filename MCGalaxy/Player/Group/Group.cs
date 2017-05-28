@@ -107,14 +107,14 @@ namespace MCGalaxy {
             for (int i = 0; i < CanModify.Length; i++)
                 CanModify[i] = BlockPerms.CanModify(Permission, (byte)i);
         }
-        
+
+        /// <summary> Returns true if players in this group can use the given command. </summary>        
         public bool CanExecute(string cmdName) {
-            return commands.Contains(Command.all.Find(cmdName));
+            Command cmd = Command.all.Find(cmdName);
+            return cmd != null && commands.Contains(cmd);
         }
         
-        /// <summary> Check to see if this group can excute cmd </summary>
-        /// <param name="cmd">The command object to check</param>
-        /// <returns>True if this group can use it, false if they cant</returns>
+        /// <summary> Returns true if players in this group can use the given command. </summary>
         public bool CanExecute(Command cmd) { return commands.Contains(cmd); }
 
         public static List<Group> GroupList = new List<Group>();

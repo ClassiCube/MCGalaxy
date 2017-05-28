@@ -168,7 +168,7 @@ namespace MCGalaxy {
             }
             
            try {
-                if (group.commands.Contains("inbox") && Database.TableExists("Inbox" + name) ) {
+                if (group.CanExecute("inbox") && Database.TableExists("Inbox" + name) ) {
                     using (DataTable table = Database.Backend.GetRows("Inbox" + name, "*")) {
                         if (table.Rows.Count > 0)
                             SendMessage("You have &a" + table.Rows.Count + " %Smessages in /inbox");
