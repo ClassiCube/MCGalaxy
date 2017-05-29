@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can change the main level") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("wmain", "worldmain") }; }
+            get { return new[] { new CommandAlias("wmain"), new CommandAlias("worldmain") }; }
         }
 
         public override void Use(Player p, string message) {
