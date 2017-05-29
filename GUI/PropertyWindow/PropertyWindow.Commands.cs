@@ -13,114 +13,125 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
-using System.CodeDom.Compiler;
-using System.IO;
-using System.Reflection;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using MCGalaxy.Commands;
-using MCGalaxy.Scripting;
 using MCGalaxy.Gui.Popups;
 
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
         
-        void listCommands_SelectedIndexChanged(object sender, EventArgs e) {
-            string cmdName = listCommands.SelectedItem.ToString();
-            CommandPerms perms = CommandPerms.Find(cmdName);
-            txtCmdLowest.Text = (int)perms.MinRank + "";
-
-            bool foundOne = false;
-            txtCmdDisallow.Text = "";
-            foreach ( LevelPermission perm in perms.Disallowed ) {
-                foundOne = true;
-                txtCmdDisallow.Text += "," + (int)perm;
+        bool commandSupressEvents = true;
+        ComboBox[] commandAllowBoxes, commandDisallowBoxes;
+        // need to keep a list of changed command perms, because we don't want
+        // to modify the server's live permissions if user clicks 'discard'
+        CommandPerms commandPermsOrig, commandPerms;
+        List<CommandPerms> commandPermsChanged = new List<CommandPerms>();
+        List<CommandExtraPerms> commandExtraPermsChanged = new List<CommandExtraPerms>();
+        string commandName;
+        
+        void LoadCommands() {
+            cmd_list.Items.Clear();
+            List<CommandPerms> temp = CommandPerms.CopyAll();
+            temp.Sort((a, b) => a.CmdName.CompareTo(b.CmdName));
+            
+            foreach (CommandPerms perms in temp) {
+                cmd_list.Items.Add(perms.CmdName);
             }
-            if ( foundOne ) txtCmdDisallow.Text = txtCmdDisallow.Text.Remove(0, 1);
 
-            foundOne = false;
-            txtCmdAllow.Text = "";
-            foreach ( LevelPermission perm in perms.Allowed ) {
-                foundOne = true;
-                txtCmdAllow.Text += "," + (int)perm;
-            }
-            if ( foundOne ) txtCmdAllow.Text = txtCmdAllow.Text.Remove(0, 1);
+            if (cmd_list.SelectedIndex == -1)
+                cmd_list.SelectedIndex = 0;
         }
         
-        void txtCmdLowest_TextChanged(object sender, EventArgs e) {
-            fillLowest(ref txtCmdLowest, ref storedCommands[listCommands.SelectedIndex].MinRank);
+        void SaveCommands() {
+            if (!CommandsChanged()) { LoadCommands(); return; }
+            
+            foreach (CommandPerms changed in commandPermsChanged) {
+                CommandPerms.Set(changed.CmdName, changed.MinRank,
+                                 changed.Allowed, changed.Disallowed);
+            }
+            CommandPerms.Save();
+            CommandPerms.Load();
+            LoadCommands();
         }
-        void txtCmdDisallow_TextChanged(object sender, EventArgs e) {
-            fillAllowance(ref txtCmdDisallow, ref storedCommands[listCommands.SelectedIndex].Disallowed);
+        
+        bool CommandsChanged() {
+            return commandPermsChanged.Count > 0;
         }
-        void txtCmdAllow_TextChanged(object sender, EventArgs e) {
-            fillAllowance(ref txtCmdAllow, ref storedCommands[listCommands.SelectedIndex].Allowed);
-        }
+        
+        
+        void cmd_list_SelectedIndexChanged(object sender, EventArgs e) {
+            commandName = cmd_list.SelectedItem.ToString();
+            commandPermsOrig = CommandPerms.Find(commandName);
+            commandPerms = commandPermsChanged.Find(p => p.CmdName == commandName);
+            CommandInitSpecificArrays();
 
-        void btnCmdHelp_Click(object sender, EventArgs e) {
-            getHelp(listCommands.SelectedItem.ToString());
+            commandSupressEvents = true;
+            GuiPerms.SetDefaultIndex(cmd_cmbMin, commandPermsOrig.MinRank);
+            GuiPerms.SetSpecificPerms(commandPermsOrig.Allowed, commandAllowBoxes);
+            GuiPerms.SetSpecificPerms(commandPermsOrig.Disallowed, commandDisallowBoxes);
+            commandSupressEvents = false;
+        }
+        
+        void CommandInitSpecificArrays() {
+            if (commandAllowBoxes != null) return;
+            commandAllowBoxes = new ComboBox[] { cmd_cmbAlw1, cmd_cmbAlw2, cmd_cmbAlw3 };
+            commandDisallowBoxes = new ComboBox[] { cmd_cmbDis1, cmd_cmbDis2, cmd_cmbDis3 };
+            GuiPerms.FillRanks(commandAllowBoxes);
+            GuiPerms.FillRanks(commandDisallowBoxes);
+        }
+        
+        void CommandGetOrAddPermsChanged() {
+            if (commandPerms != null) return;
+            commandPerms = commandPermsOrig.Copy();
+            commandPermsChanged.Add(commandPerms);
+        }
+        
+        
+        void cmd_cmbMin_SelectedIndexChanged(object sender, EventArgs e) {
+            int idx = cmd_cmbMin.SelectedIndex;
+            if (idx == -1 || commandSupressEvents) return;
+            CommandGetOrAddPermsChanged();
+            
+            commandPerms.MinRank = GuiPerms.RankPerms[idx];
+        }
+        
+        void cmd_cmbSpecific_SelectedIndexChanged(object sender, EventArgs e) {
+            ComboBox box = (ComboBox)sender;
+            if (commandSupressEvents) return;
+            int idx = box.SelectedIndex;
+            if (idx == -1) return;
+            CommandGetOrAddPermsChanged();
+            
+            List<LevelPermission> perms = commandPerms.Allowed;
+            ComboBox[] boxes = commandAllowBoxes;
+            int boxIdx = Array.IndexOf<ComboBox>(boxes, box);
+            if (boxIdx == -1) {
+                perms = commandPerms.Disallowed;
+                boxes = commandDisallowBoxes;
+                boxIdx = Array.IndexOf<ComboBox>(boxes, box);
+            }
+            
+            if (idx == box.Items.Count - 1) {
+                if (boxIdx >= perms.Count) return;
+                perms.RemoveAt(boxIdx);
+                
+                commandSupressEvents = true;
+                GuiPerms.SetSpecificPerms(perms, boxes);
+                commandSupressEvents = false;
+            } else {
+                GuiPerms.SetSpecific(boxes, boxIdx, perms, idx);
+            }
+        }
+        
+        void cmd_btnHelp_Click(object sender, EventArgs e) {
+            getHelp(cmd_list.SelectedItem.ToString());
         }
         
         void cmd_btnCustom_Click(object sender, EventArgs e) {
             using (CustomCommands form = new CustomCommands()) {
                 form.ShowDialog();
             }
-        }	
-
-        bool skipExtraPermChanges;
-        int oldnumber;
-        Command oldcmd;
-        void listCommandsExtraCmdPerms_SelectedIndexChanged(object sender, EventArgs e) {
-            SaveOldExtraCustomCmdChanges();
-            Command cmd = Command.all.Find(listCommandsExtraCmdPerms.SelectedItem.ToString());
-            oldcmd = cmd;
-            skipExtraPermChanges = true;
-            extracmdpermnumber.Maximum = MaxExtraPermissionNumber(cmd);
-            extracmdpermnumber.ReadOnly = extracmdpermnumber.Maximum == 1;
-            extracmdpermnumber.Value = 1;
-            skipExtraPermChanges = false;
-            
-            ExtraPermSetDescriptions(cmd, 1);
-            oldnumber = (int)extracmdpermnumber.Value;
-        }
-        
-        int MaxExtraPermissionNumber(Command cmd) {
-            var all = CommandExtraPerms.FindAll(cmd.name);
-            int maxNum = 0;
-            
-            foreach (CommandExtraPerms perms in all) {
-                maxNum = Math.Max(maxNum, perms.Number);
-            }
-            return maxNum;
-        }
-
-        void SaveOldExtraCustomCmdChanges() {
-            if (oldcmd == null || skipExtraPermChanges) return;
-            
-            CommandExtraPerms.Find(oldcmd.name, oldnumber).MinRank = (LevelPermission)int.Parse(extracmdpermperm.Text);
-            CommandExtraPerms.Save();
-        }
-
-        void extracmdpermnumber_ValueChanged(object sender, EventArgs e) {
-            SaveOldExtraCustomCmdChanges();
-            oldnumber = (int)extracmdpermnumber.Value;
-            ExtraPermSetDescriptions(oldcmd, (int)extracmdpermnumber.Value);
-        }
-        
-        void ExtraPermSetDescriptions(Command cmd, int number) {
-            CommandExtraPerms perms =  CommandExtraPerms.Find(cmd.name, number);
-            extracmdpermdesc.Text = perms.Description;
-            extracmdpermperm.Text = ((int)perms.MinRank).ToString();
-        }
-        
-        void LoadExtraCmdCmds() {
-            listCommandsExtraCmdPerms.Items.Clear();
-            foreach ( Command cmd in Command.all.commands ) {
-                if ( CommandExtraPerms.Find(cmd.name) != null ) {
-                    listCommandsExtraCmdPerms.Items.Add(cmd.name);
-                }
-            }
-            listCommandsExtraCmdPerms.Sorted = true;
-            listCommandsExtraCmdPerms.Sorted = false;
         }
     }
 }

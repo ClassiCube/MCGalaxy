@@ -46,6 +46,16 @@ namespace MCGalaxy.Commands {
         /// <summary> Ranks specifically prevented from using the command. </summary>
         public List<LevelPermission> Disallowed = new List<LevelPermission>();
         
+        /// <summary> Creates a copy of this instance. </summary>
+        public CommandPerms Copy() {
+            CommandPerms perms = new CommandPerms();
+            perms.CmdName = CmdName;
+            perms.MinRank = MinRank;
+            perms.Allowed = new List<LevelPermission>(Allowed);
+            perms.Disallowed = new List<LevelPermission>(Disallowed);
+            return perms;
+        }
+        
         static List<CommandPerms> list = new List<CommandPerms>();
         
         

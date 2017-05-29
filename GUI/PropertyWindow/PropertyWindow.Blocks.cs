@@ -98,8 +98,8 @@ namespace MCGalaxy.Gui {
             
             blockSupressEvents = true;
             GuiPerms.SetDefaultIndex(blk_cmbMin, blockPermsOrig.MinRank);
-            BlockSetSpecificPerms(blockPermsOrig.Allowed, blockAllowBoxes);
-            BlockSetSpecificPerms(blockPermsOrig.Disallowed, blockDisallowBoxes);
+            GuiPerms.SetSpecificPerms(blockPermsOrig.Allowed, blockAllowBoxes);
+            GuiPerms.SetSpecificPerms(blockPermsOrig.Disallowed, blockDisallowBoxes);
             blockSupressEvents = false;
         }
         
@@ -107,42 +107,8 @@ namespace MCGalaxy.Gui {
             if (blockAllowBoxes != null) return;
             blockAllowBoxes = new ComboBox[] { blk_cmbAlw1, blk_cmbAlw2, blk_cmbAlw3 };
             blockDisallowBoxes = new ComboBox[] { blk_cmbDis1, blk_cmbDis2, blk_cmbDis3 };
-            
-            for (int i = 0; i < blockAllowBoxes.Length; i++) {
-                blockAllowBoxes[i].Items.AddRange(GuiPerms.RankNames);
-                blockAllowBoxes[i].Items.Add("(remove rank)");
-                blockDisallowBoxes[i].Items.AddRange(GuiPerms.RankNames);
-                blockDisallowBoxes[i].Items.Add("(remove rank)");
-            }
-        }
-        
-        void BlockSetSpecificPerms(List<LevelPermission> perms, ComboBox[] boxes) {
-            ComboBox box = null;
-            for (int i = 0; i < boxes.Length; i++) {
-                box = boxes[i];
-                // Hide the non-visible specific permissions
-                box.Text = "";
-                box.Enabled = false;
-                box.Visible = false;
-                box.SelectedIndex = -1;
-                
-                // Show the non-visible specific permissions previously set
-                if (perms.Count > i) {
-                    box.Visible = true;
-                    box.Enabled = true;
-                    GuiPerms.SetDefaultIndex(box, perms[i]);
-                }
-            }
-            
-            // Show (add rank) for the last item
-            if (perms.Count >= boxes.Length) return;
-            BlockSetAddRank(boxes[perms.Count]);
-        }
-        
-        void BlockSetAddRank(ComboBox box) {
-            box.Visible = true;
-            box.Enabled = true;
-            box.Text = "(add rank)";
+            GuiPerms.FillRanks(blockAllowBoxes);
+            GuiPerms.FillRanks(blockDisallowBoxes);
         }
         
         void BlockGetOrAddPermsChanged() {
@@ -181,24 +147,10 @@ namespace MCGalaxy.Gui {
                 perms.RemoveAt(boxIdx);
                 
                 blockSupressEvents = true;
-                BlockSetSpecificPerms(perms, boxes);
+                GuiPerms.SetSpecificPerms(perms, boxes);
                 blockSupressEvents = false;
             } else {
-                BlockSetSpecific(boxes, boxIdx, perms, idx);
-            }
-        }
-        
-        void BlockSetSpecific(ComboBox[] boxes, int boxIdx,
-                              List<LevelPermission> perms, int idx) {
-            if (boxIdx < perms.Count) {
-                perms[boxIdx] = GuiPerms.RankPerms[idx];
-            } else {
-                perms.Add(GuiPerms.RankPerms[idx]);
-            }
-            
-            // Activate next box
-            if (boxIdx < boxes.Length - 1 && !boxes[boxIdx + 1].Visible) {
-                BlockSetAddRank(boxes[boxIdx + 1]);
+                GuiPerms.SetSpecific(boxes, boxIdx, perms, idx);
             }
         }
 

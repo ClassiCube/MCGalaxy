@@ -82,27 +82,6 @@ namespace MCGalaxy.Gui
             this.main_btnDiscard = new System.Windows.Forms.Button();
             this.main_btnApply = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.pageCommands = new System.Windows.Forms.TabPage();
-            this.pageCommandsList = new System.Windows.Forms.TabControl();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.txtCmdRanks = new System.Windows.Forms.TextBox();
-            this.btnCmdHelp = new System.Windows.Forms.Button();
-            this.txtCmdAllow = new System.Windows.Forms.TextBox();
-            this.txtCmdLowest = new System.Windows.Forms.TextBox();
-            this.txtCmdDisallow = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.listCommands = new System.Windows.Forms.ListBox();
-            this.pageCommandPerms = new System.Windows.Forms.TabPage();
-            this.txtcmdranks2 = new System.Windows.Forms.TextBox();
-            this.label74 = new System.Windows.Forms.Label();
-            this.label73 = new System.Windows.Forms.Label();
-            this.extracmdpermnumber = new System.Windows.Forms.NumericUpDown();
-            this.label72 = new System.Windows.Forms.Label();
-            this.extracmdpermdesc = new System.Windows.Forms.TextBox();
-            this.extracmdpermperm = new System.Windows.Forms.TextBox();
-            this.listCommandsExtraCmdPerms = new System.Windows.Forms.ListBox();
             this.label24 = new System.Windows.Forms.Label();
             this.chkPhysicsRest = new System.Windows.Forms.CheckBox();
             this.chkDeath = new System.Windows.Forms.CheckBox();
@@ -372,17 +351,27 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
+            this.pageCommands = new System.Windows.Forms.TabPage();
+            this.cmd_btnHelp = new System.Windows.Forms.Button();
+            this.cmd_list = new System.Windows.Forms.ListBox();
             this.cmd_btnCustom = new System.Windows.Forms.Button();
+            this.cmd_grpPermissions = new System.Windows.Forms.GroupBox();
+            this.cmd_cmbAlw3 = new System.Windows.Forms.ComboBox();
+            this.cmd_cmbAlw2 = new System.Windows.Forms.ComboBox();
+            this.cmd_cmbDis3 = new System.Windows.Forms.ComboBox();
+            this.cmd_cmbDis2 = new System.Windows.Forms.ComboBox();
+            this.cmd_cmbAlw1 = new System.Windows.Forms.ComboBox();
+            this.cmd_cmbDis1 = new System.Windows.Forms.ComboBox();
+            this.cmd_cmbMin = new System.Windows.Forms.ComboBox();
+            this.cmd_lblMin = new System.Windows.Forms.Label();
+            this.cmd_lblDisallow = new System.Windows.Forms.Label();
+            this.cmd_lblAllow = new System.Windows.Forms.Label();
+            this.cmd_grpExtra = new System.Windows.Forms.GroupBox();
             this.tabChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
             this.chat_grpOther.SuspendLayout();
             this.chat_grpColors.SuspendLayout();
-            this.pageCommands.SuspendLayout();
-            this.pageCommandsList.SuspendLayout();
-            this.tabPage6.SuspendLayout();
-            this.pageCommandPerms.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.extracmdpermnumber)).BeginInit();
             this.tabBlocks.SuspendLayout();
             this.blk_grpPhysics.SuspendLayout();
             this.blk_grpBehaviour.SuspendLayout();
@@ -450,6 +439,8 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).BeginInit();
+            this.pageCommands.SuspendLayout();
+            this.cmd_grpPermissions.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabChat
@@ -810,228 +801,6 @@ namespace MCGalaxy.Gui
             this.toolTip.ReshowDelay = 100;
             this.toolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip.ToolTipTitle = "Information";
-            // 
-            // pageCommands
-            // 
-            this.pageCommands.AutoScroll = true;
-            this.pageCommands.Controls.Add(this.pageCommandsList);
-            this.pageCommands.Location = new System.Drawing.Point(4, 22);
-            this.pageCommands.Name = "pageCommands";
-            this.pageCommands.Size = new System.Drawing.Size(498, 521);
-            this.pageCommands.TabIndex = 2;
-            this.pageCommands.Text = "Commands";
-            this.toolTip.SetToolTip(this.pageCommands, "Which ranks can use which commands.");
-            // 
-            // pageCommandsList
-            // 
-            this.pageCommandsList.Controls.Add(this.tabPage6);
-            this.pageCommandsList.Controls.Add(this.pageCommandPerms);
-            this.pageCommandsList.Location = new System.Drawing.Point(9, 4);
-            this.pageCommandsList.Name = "pageCommandsList";
-            this.pageCommandsList.SelectedIndex = 0;
-            this.pageCommandsList.Size = new System.Drawing.Size(476, 502);
-            this.pageCommandsList.TabIndex = 0;
-            // 
-            // tabPage6
-            // 
-            this.tabPage6.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage6.Controls.Add(this.cmd_btnCustom);
-            this.tabPage6.Controls.Add(this.txtCmdRanks);
-            this.tabPage6.Controls.Add(this.btnCmdHelp);
-            this.tabPage6.Controls.Add(this.txtCmdAllow);
-            this.tabPage6.Controls.Add(this.txtCmdLowest);
-            this.tabPage6.Controls.Add(this.txtCmdDisallow);
-            this.tabPage6.Controls.Add(this.label17);
-            this.tabPage6.Controls.Add(this.label15);
-            this.tabPage6.Controls.Add(this.label8);
-            this.tabPage6.Controls.Add(this.listCommands);
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(468, 476);
-            this.tabPage6.TabIndex = 0;
-            this.tabPage6.Text = "Commands";
-            // 
-            // txtCmdRanks
-            // 
-            this.txtCmdRanks.Location = new System.Drawing.Point(9, 109);
-            this.txtCmdRanks.Multiline = true;
-            this.txtCmdRanks.Name = "txtCmdRanks";
-            this.txtCmdRanks.ReadOnly = true;
-            this.txtCmdRanks.Size = new System.Drawing.Size(225, 339);
-            this.txtCmdRanks.TabIndex = 33;
-            // 
-            // btnCmdHelp
-            // 
-            this.btnCmdHelp.Location = new System.Drawing.Point(253, 402);
-            this.btnCmdHelp.Name = "btnCmdHelp";
-            this.btnCmdHelp.Size = new System.Drawing.Size(141, 29);
-            this.btnCmdHelp.TabIndex = 34;
-            this.btnCmdHelp.Text = "Help information";
-            this.btnCmdHelp.UseVisualStyleBackColor = true;
-            this.btnCmdHelp.Click += new System.EventHandler(this.btnCmdHelp_Click);
-            // 
-            // txtCmdAllow
-            // 
-            this.txtCmdAllow.Location = new System.Drawing.Point(108, 82);
-            this.txtCmdAllow.Name = "txtCmdAllow";
-            this.txtCmdAllow.Size = new System.Drawing.Size(86, 21);
-            this.txtCmdAllow.TabIndex = 31;
-            this.txtCmdAllow.LostFocus += new System.EventHandler(this.txtCmdAllow_TextChanged);
-            // 
-            // txtCmdLowest
-            // 
-            this.txtCmdLowest.Location = new System.Drawing.Point(108, 28);
-            this.txtCmdLowest.Name = "txtCmdLowest";
-            this.txtCmdLowest.Size = new System.Drawing.Size(86, 21);
-            this.txtCmdLowest.TabIndex = 32;
-            this.txtCmdLowest.LostFocus += new System.EventHandler(this.txtCmdLowest_TextChanged);
-            // 
-            // txtCmdDisallow
-            // 
-            this.txtCmdDisallow.Location = new System.Drawing.Point(108, 55);
-            this.txtCmdDisallow.Name = "txtCmdDisallow";
-            this.txtCmdDisallow.Size = new System.Drawing.Size(86, 21);
-            this.txtCmdDisallow.TabIndex = 30;
-            this.txtCmdDisallow.LostFocus += new System.EventHandler(this.txtCmdDisallow_TextChanged);
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(52, 85);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(56, 13);
-            this.label17.TabIndex = 29;
-            this.label17.Text = "And allow:";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(28, 58);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(80, 13);
-            this.label15.TabIndex = 28;
-            this.label15.Text = "But don\'t allow:";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 31);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(105, 13);
-            this.label8.TabIndex = 27;
-            this.label8.Text = "Lowest rank needed:";
-            // 
-            // listCommands
-            // 
-            this.listCommands.FormattingEnabled = true;
-            this.listCommands.Location = new System.Drawing.Point(253, 19);
-            this.listCommands.Name = "listCommands";
-            this.listCommands.Size = new System.Drawing.Size(141, 368);
-            this.listCommands.TabIndex = 26;
-            this.listCommands.SelectedIndexChanged += new System.EventHandler(this.listCommands_SelectedIndexChanged);
-            // 
-            // pageCommandPerms
-            // 
-            this.pageCommandPerms.BackColor = System.Drawing.SystemColors.Control;
-            this.pageCommandPerms.Controls.Add(this.txtcmdranks2);
-            this.pageCommandPerms.Controls.Add(this.label74);
-            this.pageCommandPerms.Controls.Add(this.label73);
-            this.pageCommandPerms.Controls.Add(this.extracmdpermnumber);
-            this.pageCommandPerms.Controls.Add(this.label72);
-            this.pageCommandPerms.Controls.Add(this.extracmdpermdesc);
-            this.pageCommandPerms.Controls.Add(this.extracmdpermperm);
-            this.pageCommandPerms.Controls.Add(this.listCommandsExtraCmdPerms);
-            this.pageCommandPerms.Location = new System.Drawing.Point(4, 22);
-            this.pageCommandPerms.Name = "pageCommandPerms";
-            this.pageCommandPerms.Size = new System.Drawing.Size(468, 476);
-            this.pageCommandPerms.TabIndex = 2;
-            this.pageCommandPerms.Text = "Extra command permissions";
-            // 
-            // txtcmdranks2
-            // 
-            this.txtcmdranks2.Location = new System.Drawing.Point(72, 189);
-            this.txtcmdranks2.Multiline = true;
-            this.txtcmdranks2.Name = "txtcmdranks2";
-            this.txtcmdranks2.ReadOnly = true;
-            this.txtcmdranks2.Size = new System.Drawing.Size(241, 273);
-            this.txtcmdranks2.TabIndex = 46;
-            // 
-            // label74
-            // 
-            this.label74.AutoSize = true;
-            this.label74.Location = new System.Drawing.Point(6, 70);
-            this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(64, 13);
-            this.label74.TabIndex = 45;
-            this.label74.Text = "Description:";
-            // 
-            // label73
-            // 
-            this.label73.AutoSize = true;
-            this.label73.Location = new System.Drawing.Point(3, 18);
-            this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(128, 13);
-            this.label73.TabIndex = 44;
-            this.label73.Text = "Extra permission number:";
-            // 
-            // extracmdpermnumber
-            // 
-            this.extracmdpermnumber.Location = new System.Drawing.Point(188, 16);
-            this.extracmdpermnumber.Maximum = new decimal(new int[] {
-                                    1,
-                                    0,
-                                    0,
-                                    0});
-            this.extracmdpermnumber.Minimum = new decimal(new int[] {
-                                    1,
-                                    0,
-                                    0,
-                                    0});
-            this.extracmdpermnumber.Name = "extracmdpermnumber";
-            this.extracmdpermnumber.Size = new System.Drawing.Size(120, 21);
-            this.extracmdpermnumber.TabIndex = 43;
-            this.extracmdpermnumber.Value = new decimal(new int[] {
-                                    1,
-                                    0,
-                                    0,
-                                    0});
-            this.extracmdpermnumber.ValueChanged += new System.EventHandler(this.extracmdpermnumber_ValueChanged);
-            // 
-            // label72
-            // 
-            this.label72.AutoSize = true;
-            this.label72.Location = new System.Drawing.Point(7, 46);
-            this.label72.Name = "label72";
-            this.label72.Size = new System.Drawing.Size(63, 13);
-            this.label72.TabIndex = 42;
-            this.label72.Text = "Permission:";
-            // 
-            // extracmdpermdesc
-            // 
-            this.extracmdpermdesc.Location = new System.Drawing.Point(72, 70);
-            this.extracmdpermdesc.Multiline = true;
-            this.extracmdpermdesc.Name = "extracmdpermdesc";
-            this.extracmdpermdesc.ReadOnly = true;
-            this.extracmdpermdesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.extracmdpermdesc.Size = new System.Drawing.Size(241, 113);
-            this.extracmdpermdesc.TabIndex = 41;
-            // 
-            // extracmdpermperm
-            // 
-            this.extracmdpermperm.Location = new System.Drawing.Point(72, 43);
-            this.extracmdpermperm.Name = "extracmdpermperm";
-            this.extracmdpermperm.Size = new System.Drawing.Size(116, 21);
-            this.extracmdpermperm.TabIndex = 40;
-            // 
-            // listCommandsExtraCmdPerms
-            // 
-            this.listCommandsExtraCmdPerms.FormattingEnabled = true;
-            this.listCommandsExtraCmdPerms.Location = new System.Drawing.Point(319, 16);
-            this.listCommandsExtraCmdPerms.Name = "listCommandsExtraCmdPerms";
-            this.listCommandsExtraCmdPerms.Size = new System.Drawing.Size(141, 446);
-            this.listCommandsExtraCmdPerms.TabIndex = 27;
-            this.listCommandsExtraCmdPerms.SelectedIndexChanged += new System.EventHandler(this.listCommandsExtraCmdPerms_SelectedIndexChanged);
             // 
             // label24
             // 
@@ -4051,15 +3820,167 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
+            // pageCommands
+            // 
+            this.pageCommands.AutoScroll = true;
+            this.pageCommands.Controls.Add(this.cmd_grpExtra);
+            this.pageCommands.Controls.Add(this.cmd_grpPermissions);
+            this.pageCommands.Controls.Add(this.cmd_btnCustom);
+            this.pageCommands.Controls.Add(this.cmd_btnHelp);
+            this.pageCommands.Controls.Add(this.cmd_list);
+            this.pageCommands.Location = new System.Drawing.Point(4, 22);
+            this.pageCommands.Name = "pageCommands";
+            this.pageCommands.Size = new System.Drawing.Size(498, 521);
+            this.pageCommands.TabIndex = 2;
+            this.pageCommands.Text = "Commands";
+            this.toolTip.SetToolTip(this.pageCommands, "Which ranks can use which commands.");
+            // 
+            // cmd_btnHelp
+            // 
+            this.cmd_btnHelp.Location = new System.Drawing.Point(6, 485);
+            this.cmd_btnHelp.Name = "cmd_btnHelp";
+            this.cmd_btnHelp.Size = new System.Drawing.Size(121, 29);
+            this.cmd_btnHelp.TabIndex = 25;
+            this.cmd_btnHelp.Text = "Help information";
+            this.cmd_btnHelp.UseVisualStyleBackColor = true;
+            this.cmd_btnHelp.Click += new System.EventHandler(this.cmd_btnHelp_Click);
+            // 
+            // cmd_list
+            // 
+            this.cmd_list.FormattingEnabled = true;
+            this.cmd_list.Location = new System.Drawing.Point(6, 6);
+            this.cmd_list.Name = "cmd_list";
+            this.cmd_list.Size = new System.Drawing.Size(121, 472);
+            this.cmd_list.TabIndex = 24;
+            this.cmd_list.SelectedIndexChanged += new System.EventHandler(this.cmd_list_SelectedIndexChanged);
+            // 
             // cmd_btnCustom
             // 
-            this.cmd_btnCustom.Location = new System.Drawing.Point(253, 437);
+            this.cmd_btnCustom.Location = new System.Drawing.Point(370, 485);
             this.cmd_btnCustom.Name = "cmd_btnCustom";
-            this.cmd_btnCustom.Size = new System.Drawing.Size(141, 29);
-            this.cmd_btnCustom.TabIndex = 35;
+            this.cmd_btnCustom.Size = new System.Drawing.Size(121, 29);
+            this.cmd_btnCustom.TabIndex = 26;
             this.cmd_btnCustom.Text = "Custom commands";
             this.cmd_btnCustom.UseVisualStyleBackColor = true;
             this.cmd_btnCustom.Click += new System.EventHandler(this.cmd_btnCustom_Click);
+            // 
+            // cmd_grpPermissions
+            // 
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbAlw3);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbAlw2);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbDis3);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbDis2);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbAlw1);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbDis1);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbMin);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_lblMin);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_lblDisallow);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_lblAllow);
+            this.cmd_grpPermissions.Location = new System.Drawing.Point(133, 6);
+            this.cmd_grpPermissions.Name = "cmd_grpPermissions";
+            this.cmd_grpPermissions.Size = new System.Drawing.Size(360, 94);
+            this.cmd_grpPermissions.TabIndex = 27;
+            this.cmd_grpPermissions.TabStop = false;
+            this.cmd_grpPermissions.Text = "Permissions";
+            // 
+            // cmd_cmbAlw3
+            // 
+            this.cmd_cmbAlw3.FormattingEnabled = true;
+            this.cmd_cmbAlw3.Location = new System.Drawing.Point(274, 67);
+            this.cmd_cmbAlw3.Name = "cmd_cmbAlw3";
+            this.cmd_cmbAlw3.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbAlw3.TabIndex = 28;
+            this.cmd_cmbAlw3.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
+            // 
+            // cmd_cmbAlw2
+            // 
+            this.cmd_cmbAlw2.FormattingEnabled = true;
+            this.cmd_cmbAlw2.Location = new System.Drawing.Point(187, 67);
+            this.cmd_cmbAlw2.Name = "cmd_cmbAlw2";
+            this.cmd_cmbAlw2.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbAlw2.TabIndex = 27;
+            this.cmd_cmbAlw2.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
+            // 
+            // cmd_cmbDis3
+            // 
+            this.cmd_cmbDis3.FormattingEnabled = true;
+            this.cmd_cmbDis3.Location = new System.Drawing.Point(274, 41);
+            this.cmd_cmbDis3.Name = "cmd_cmbDis3";
+            this.cmd_cmbDis3.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbDis3.TabIndex = 26;
+            this.cmd_cmbDis3.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
+            // 
+            // cmd_cmbDis2
+            // 
+            this.cmd_cmbDis2.FormattingEnabled = true;
+            this.cmd_cmbDis2.Location = new System.Drawing.Point(187, 41);
+            this.cmd_cmbDis2.Name = "cmd_cmbDis2";
+            this.cmd_cmbDis2.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbDis2.TabIndex = 25;
+            this.cmd_cmbDis2.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
+            // 
+            // cmd_cmbAlw1
+            // 
+            this.cmd_cmbAlw1.FormattingEnabled = true;
+            this.cmd_cmbAlw1.Location = new System.Drawing.Point(100, 67);
+            this.cmd_cmbAlw1.Name = "cmd_cmbAlw1";
+            this.cmd_cmbAlw1.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbAlw1.TabIndex = 24;
+            this.cmd_cmbAlw1.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
+            // 
+            // cmd_cmbDis1
+            // 
+            this.cmd_cmbDis1.FormattingEnabled = true;
+            this.cmd_cmbDis1.Location = new System.Drawing.Point(100, 41);
+            this.cmd_cmbDis1.Name = "cmd_cmbDis1";
+            this.cmd_cmbDis1.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbDis1.TabIndex = 23;
+            this.cmd_cmbDis1.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
+            // 
+            // cmd_cmbMin
+            // 
+            this.cmd_cmbMin.FormattingEnabled = true;
+            this.cmd_cmbMin.Location = new System.Drawing.Point(100, 14);
+            this.cmd_cmbMin.Name = "cmd_cmbMin";
+            this.cmd_cmbMin.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbMin.TabIndex = 22;
+            this.cmd_cmbMin.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbMin_SelectedIndexChanged);
+            // 
+            // cmd_lblMin
+            // 
+            this.cmd_lblMin.AutoSize = true;
+            this.cmd_lblMin.Location = new System.Drawing.Point(10, 17);
+            this.cmd_lblMin.Name = "cmd_lblMin";
+            this.cmd_lblMin.Size = new System.Drawing.Size(89, 13);
+            this.cmd_lblMin.TabIndex = 16;
+            this.cmd_lblMin.Text = "Min rank needed:";
+            // 
+            // cmd_lblDisallow
+            // 
+            this.cmd_lblDisallow.AutoSize = true;
+            this.cmd_lblDisallow.Location = new System.Drawing.Point(10, 71);
+            this.cmd_lblDisallow.Name = "cmd_lblDisallow";
+            this.cmd_lblDisallow.Size = new System.Drawing.Size(91, 13);
+            this.cmd_lblDisallow.TabIndex = 18;
+            this.cmd_lblDisallow.Text = "Specifically allow:";
+            // 
+            // cmd_lblAllow
+            // 
+            this.cmd_lblAllow.AutoSize = true;
+            this.cmd_lblAllow.Location = new System.Drawing.Point(10, 44);
+            this.cmd_lblAllow.Name = "cmd_lblAllow";
+            this.cmd_lblAllow.Size = new System.Drawing.Size(80, 13);
+            this.cmd_lblAllow.TabIndex = 17;
+            this.cmd_lblAllow.Text = "But don\'t allow:";
+            // 
+            // cmd_grpExtra
+            // 
+            this.cmd_grpExtra.Location = new System.Drawing.Point(133, 106);
+            this.cmd_grpExtra.Name = "cmd_grpExtra";
+            this.cmd_grpExtra.Size = new System.Drawing.Size(360, 258);
+            this.cmd_grpExtra.TabIndex = 28;
+            this.cmd_grpExtra.TabStop = false;
+            this.cmd_grpExtra.Text = "Extra permissions";
             // 
             // PropertyWindow
             // 
@@ -4088,13 +4009,6 @@ namespace MCGalaxy.Gui
             this.chat_grpOther.PerformLayout();
             this.chat_grpColors.ResumeLayout(false);
             this.chat_grpColors.PerformLayout();
-            this.pageCommands.ResumeLayout(false);
-            this.pageCommandsList.ResumeLayout(false);
-            this.tabPage6.ResumeLayout(false);
-            this.tabPage6.PerformLayout();
-            this.pageCommandPerms.ResumeLayout(false);
-            this.pageCommandPerms.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.extracmdpermnumber)).EndInit();
             this.tabBlocks.ResumeLayout(false);
             this.blk_grpPhysics.ResumeLayout(false);
             this.blk_grpBehaviour.ResumeLayout(false);
@@ -4191,8 +4105,25 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
+            this.pageCommands.ResumeLayout(false);
+            this.cmd_grpPermissions.ResumeLayout(false);
+            this.cmd_grpPermissions.PerformLayout();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.GroupBox cmd_grpExtra;
+        private System.Windows.Forms.ListBox cmd_list;
+        private System.Windows.Forms.Button cmd_btnHelp;
+        private System.Windows.Forms.Label cmd_lblAllow;
+        private System.Windows.Forms.Label cmd_lblDisallow;
+        private System.Windows.Forms.Label cmd_lblMin;
+        private System.Windows.Forms.ComboBox cmd_cmbMin;
+        private System.Windows.Forms.ComboBox cmd_cmbDis1;
+        private System.Windows.Forms.ComboBox cmd_cmbAlw1;
+        private System.Windows.Forms.ComboBox cmd_cmbDis2;
+        private System.Windows.Forms.ComboBox cmd_cmbDis3;
+        private System.Windows.Forms.ComboBox cmd_cmbAlw2;
+        private System.Windows.Forms.ComboBox cmd_cmbAlw3;
+        private System.Windows.Forms.GroupBox cmd_grpPermissions;
         private System.Windows.Forms.Button cmd_btnCustom;
         private System.Windows.Forms.CheckBox blk_cbLava;
         private System.Windows.Forms.CheckBox blk_cbWater;
@@ -4324,17 +4255,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label blk_lblMin;
         private System.Windows.Forms.ListBox blk_list;
         private System.Windows.Forms.TabPage pageCommands;
-        private System.Windows.Forms.TabControl pageCommandsList;
-        private System.Windows.Forms.TabPage tabPage6;
-        private System.Windows.Forms.Button btnCmdHelp;
-        private System.Windows.Forms.TextBox txtCmdRanks;
-        private System.Windows.Forms.TextBox txtCmdAllow;
-        private System.Windows.Forms.TextBox txtCmdLowest;
-        private System.Windows.Forms.TextBox txtCmdDisallow;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ListBox listCommands;
         private System.Windows.Forms.TabPage pageRanks;
         private System.Windows.Forms.Label lblColor;
         private System.Windows.Forms.ComboBox cmbColor;
@@ -4473,15 +4393,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label lblUpdateSeconds;
         private System.Windows.Forms.CheckBox notifyInGameUpdate;
         private System.Windows.Forms.Button forceUpdateBtn;
-        private System.Windows.Forms.TabPage pageCommandPerms;
-        private System.Windows.Forms.ListBox listCommandsExtraCmdPerms;
-        private System.Windows.Forms.Label label74;
-        private System.Windows.Forms.Label label73;
-        private System.Windows.Forms.Label label72;
-        public System.Windows.Forms.NumericUpDown extracmdpermnumber;
-        public System.Windows.Forms.TextBox extracmdpermdesc;
-        public System.Windows.Forms.TextBox extracmdpermperm;
-        private System.Windows.Forms.TextBox txtcmdranks2;
         private System.Windows.Forms.Label afk_lblKickRank;
         private System.Windows.Forms.ComboBox afk_cmbKickPerm;
         private System.Windows.Forms.CheckBox chkGuestLimitNotify;

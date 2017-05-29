@@ -55,6 +55,7 @@ namespace MCGalaxy.Gui {
             sec_cmbVerifyRank.Items.AddRange(GuiPerms.RankNames);
             afk_cmbKickPerm.Items.AddRange(GuiPerms.RankNames);
             blk_cmbMin.Items.AddRange(GuiPerms.RankNames);
+            cmd_cmbMin.Items.AddRange(GuiPerms.RankNames);
 
             //Load server stuff
             LoadProp("properties/server.properties");
@@ -62,7 +63,6 @@ namespace MCGalaxy.Gui {
             try {
                 LoadCommands();
                 LoadBlocks();
-                LoadExtraCmdCmds();
             } catch (Exception ex) {
                 Server.ErrorLog(ex);
                 Server.s.Log("Failed to load commands and blocks!");
@@ -97,17 +97,11 @@ namespace MCGalaxy.Gui {
         }
 
         List<Group> storedRanks = new List<Group>();
-        List<CommandPerms> storedCommands = new List<CommandPerms>();
-
         public void LoadRanks() {
-            txtCmdRanks.Text = "The following ranks are available: \r\n\r\n";
-            txtcmdranks2.Text = "The following ranks are available: \r\n\r\n";
             listRanks.Items.Clear();
             storedRanks.Clear();
             storedRanks.AddRange(Group.GroupList);
             foreach ( Group grp in storedRanks ) {
-                txtCmdRanks.Text += "    " + grp.name + " (" + (int)grp.Permission + ")\r\n";
-                txtcmdranks2.Text += "    " + grp.name + " (" + (int)grp.Permission + ")\r\n";
                 listRanks.Items.Add(grp.trueName + " = " + (int)grp.Permission);
             }
             listRanks.SelectedIndex = 0;
@@ -116,25 +110,6 @@ namespace MCGalaxy.Gui {
             Group.saveGroups(storedRanks);
             Group.InitAll();
             LoadRanks();
-        }
-
-        public void LoadCommands() {
-            listCommands.Items.Clear();
-            storedCommands = CommandPerms.CopyAll();
-            foreach (CommandPerms perms in storedCommands) {
-                listCommands.Items.Add(perms.CmdName);
-            }
-            
-            if ( listCommands.SelectedIndex == -1 )
-                listCommands.SelectedIndex = 0;
-            // Sort the commands list
-            listCommands.Sorted = true;
-            listCommands.Sorted = false;
-        }
-        public void SaveCommands() {
-            CommandPerms.Save();
-            CommandPerms.Load();
-            LoadCommands();
         }
 
         public void LoadProp(string givenPath) {
@@ -208,7 +183,6 @@ namespace MCGalaxy.Gui {
             SaveProperties();
             SaveRanks();
             SaveCommands();
-            SaveOldExtraCustomCmdChanges();
             SaveBlocks();
             try { SaveLavaSettings(); }
             catch { Server.s.Log("Error saving Lava Survival settings!"); }
