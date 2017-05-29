@@ -53,8 +53,8 @@ namespace MCGalaxy.Gui {
             rank_cmbAdminChat.Items.AddRange(GuiPerms.RankNames);
             rank_cmbOsMap.Items.AddRange(GuiPerms.RankNames);
             sec_cmbVerifyRank.Items.AddRange(GuiPerms.RankNames);
-            afk_cmbKickPerm.Items.AddRange(GuiPerms.RankNames);            
-            blk_cmbMin.Items.AddRange(GuiPerms.RankNames);        
+            afk_cmbKickPerm.Items.AddRange(GuiPerms.RankNames);
+            blk_cmbMin.Items.AddRange(GuiPerms.RankNames);
 
             //Load server stuff
             LoadProp("properties/server.properties");
@@ -106,7 +106,6 @@ namespace MCGalaxy.Gui {
 
         List<Group> storedRanks = new List<Group>();
         List<CommandPerms> storedCommands = new List<CommandPerms>();
-        List<BlockPerms> storedBlocks = new List<BlockPerms>();
 
         public void LoadRanks() {
             txtCmdRanks.Text = "The following ranks are available: \r\n\r\n";
@@ -148,18 +147,30 @@ namespace MCGalaxy.Gui {
 
         public void LoadBlocks() {
             blk_list.Items.Clear();
-            storedBlocks.Clear();
-            storedBlocks.AddRange(BlockPerms.List);
-            foreach ( BlockPerms bs in storedBlocks ) {
-                if ( Block.Name(bs.BlockID) != "unknown" )
-                    blk_list.Items.Add(Block.Name(bs.BlockID));
+            blockPermsChanged.Clear();
+            
+            foreach (BlockPerms perms in BlockPerms.List) {
+                if (Block.Name(perms.BlockID) != "unknown") {
+                    blk_list.Items.Add(Block.Name(perms.BlockID));
+                }
             }
-            if ( blk_list.SelectedIndex == -1 )
+            
+            if (blk_list.SelectedIndex == -1)
                 blk_list.SelectedIndex = 0;
         }
 
         public void SaveBlocks() {
-            BlockPerms.Save(storedBlocks);
+            if (blockPermsChanged.Count == 0) {
+                LoadBlocks(); return;
+            }
+            
+            foreach (BlockPerms changed in blockPermsChanged) {
+                BlockPerms.List[changed.BlockID] = changed;
+                if (changed.BlockID < Block.CpeCount) {
+                    BlockPerms.ResendBlockPermissions(changed.BlockID);
+                }
+            }
+            BlockPerms.Save();
             Block.SetBlocks();
             LoadBlocks();
         }
@@ -185,7 +196,7 @@ namespace MCGalaxy.Gui {
                 ApplyChatProps();
                 ApplyIrcSqlProps();
                 ApplyMiscProps();
-                ApplyRankProps(); 
+                ApplyRankProps();
                 ApplySecurityProps();
                 zsSettings.ApplyToServer();
                 lsSettings.ApplyToServer();

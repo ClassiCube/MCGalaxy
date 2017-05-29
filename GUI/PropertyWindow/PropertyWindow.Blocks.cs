@@ -22,11 +22,15 @@ namespace MCGalaxy.Gui {
 
         bool blockSupressEvents = true;
         ComboBox[] blockAllowBoxes, blockDisallowBoxes;
-        BlockPerms blockPerms;
+        // need to keep a list of changed block perms, because we don't want
+        // to modify the server's live permissions if user clicks 'discard'
+        BlockPerms blockPermsOrig, blockPerms;
+        List<BlockPerms> blockPermsChanged = new List<BlockPerms>();
         
         void listBlocks_SelectedIndexChanged(object sender, EventArgs e) {
             byte b = Block.Byte(blk_list.SelectedItem.ToString());
-            blockPerms = storedBlocks.Find(bS => bS.BlockID == b);
+            blockPermsOrig = BlockPerms.List[b];
+            blockPerms = blockPermsChanged.Find(p => p.BlockID == b);
             BlockInitSpecificArrays();
             
             // TODO: actually save & set these
@@ -44,9 +48,9 @@ namespace MCGalaxy.Gui {
             blk_cbWater.Checked = props.WaterKills;
             
             blockSupressEvents = true;
-            GuiPerms.SetDefaultIndex(blk_cmbMin, blockPerms.MinRank);
-            BlockSetSpecificPerms(blockPerms.Allowed, blockAllowBoxes);
-            BlockSetSpecificPerms(blockPerms.Disallowed, blockDisallowBoxes);
+            GuiPerms.SetDefaultIndex(blk_cmbMin, blockPermsOrig.MinRank);
+            BlockSetSpecificPerms(blockPermsOrig.Allowed, blockAllowBoxes);
+            BlockSetSpecificPerms(blockPermsOrig.Disallowed, blockDisallowBoxes);
             blockSupressEvents = false;
         }
         
@@ -92,10 +96,17 @@ namespace MCGalaxy.Gui {
             box.Text = "(add rank)";
         }
         
+        void BlockGetOrAddPermsChanged() {
+            if (blockPerms != null) return;
+            blockPerms = blockPermsOrig.Copy();
+            blockPermsChanged.Add(blockPerms);
+        }
+        
         
         void blk_cmbMin_SelectedIndexChanged(object sender, EventArgs e) {
             int idx = blk_cmbMin.SelectedIndex;
             if (idx == -1 || blockSupressEvents) return;
+            BlockGetOrAddPermsChanged();
             
             blockPerms.MinRank = GuiPerms.RankPerms[idx];
         }
@@ -105,6 +116,7 @@ namespace MCGalaxy.Gui {
             if (blockSupressEvents) return;
             int idx = box.SelectedIndex;
             if (idx == -1) return;
+            BlockGetOrAddPermsChanged();
             
             List<LevelPermission> perms = blockPerms.Allowed;
             ComboBox[] boxes = blockAllowBoxes;

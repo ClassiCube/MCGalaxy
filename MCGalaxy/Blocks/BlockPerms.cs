@@ -38,6 +38,16 @@ namespace MCGalaxy.Blocks {
         /// <summary> Ranks specifically prevented from using the block. </summary>
         public List<LevelPermission> Disallowed = new List<LevelPermission>();
         
+        /// <summary> Creates a copy of this instance. </summary>
+        public BlockPerms Copy() {
+            BlockPerms perms = new BlockPerms();
+            perms.BlockID = BlockID;
+            perms.MinRank = MinRank;
+            perms.Allowed = new List<LevelPermission>(Allowed);
+            perms.Disallowed = new List<LevelPermission>(Disallowed);
+            return perms;
+        }
+        
         public static BlockPerms[] List = new BlockPerms[256];
 
 
@@ -74,10 +84,10 @@ namespace MCGalaxy.Blocks {
         static readonly object saveLock = new object();
         
         /// <summary> Saves the list of all block permissions. </summary>
-        public static void Save(IEnumerable<BlockPerms> list) {
+        public static void Save() {
             try {
                 lock (saveLock)
-                    SaveCore(list);
+                    SaveCore(List);
             } catch (Exception e) {
                 Server.ErrorLog(e);
             }
@@ -118,7 +128,7 @@ namespace MCGalaxy.Blocks {
                     LoadVersion1(lines);
                 }
             } else {
-                Save(List);
+                Save();
             }
             
             foreach (Group grp in Group.GroupList) {

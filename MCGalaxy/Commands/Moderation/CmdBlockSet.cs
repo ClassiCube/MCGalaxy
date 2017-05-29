@@ -82,9 +82,11 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void UpdatePermissions(byte block, Player p, string message) {
-            BlockPerms.Save(BlockPerms.List);
+            BlockPerms.Save();
             BlockPerms.Load();
-            BlockPerms.ResendBlockPermissions(block);
+            if (block < Block.CpeCount) {
+                BlockPerms.ResendBlockPermissions(block);
+            }
             
             Chat.MessageGlobal("&d{0}%S{1}", Block.Name(block), message);
             if (Player.IsSuper(p))

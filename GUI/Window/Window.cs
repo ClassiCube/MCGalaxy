@@ -304,7 +304,7 @@ namespace MCGalaxy.Gui {
                 notifyIcon.Dispose();
             }
         	
-            if (Server.shuttingDown || MessageBox.Show("Really Shutdown the Server? All Connections will break!", "Exit", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+            if (Server.shuttingDown || MessageBox.Show("Really shutdown the server? All players will be disconnected!", "Exit", MessageBoxButtons.OKCancel) == DialogResult.OK) {
                 if (!Server.shuttingDown) MCGalaxy.Gui.App.ExitProgram(false);
                 notifyIcon.Dispose();
             } else {
