@@ -53,16 +53,20 @@
     <Compile Include="GuiPerms.cs" />
     <Compile Include="LineFormatter.cs" />
     <Compile Include="Handlers.cs" />
+    <Compile Include="Popups\CustomCommands.cs" />
+    <Compile Include="Popups\CustomCommands.Designer.cs">
+      <DependentUpon>CustomCommands.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\PortTools.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Popups\PortTools.Designer.cs">
+      <DependentUpon>PortTools.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="PropertyWindow\PropertyWindow.Blocks.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyWindow\PropertyWindow.Chat.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyWindow\PropertyWindow.Commands.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-    </Compile>
+    <Compile Include="PropertyWindow\PropertyWindow.Blocks.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.Chat.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.Commands.cs" />
     <Compile Include="PropertyWindow\PropertyWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,24 +74,13 @@
       <DependentUpon>PropertyWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="PropertyWindow\PropertyWindow.Games.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PropertyWindow\PropertyWindow.General.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyWindow\PropertyWindow.IRCSql.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyWindow\PropertyWindow.Misc.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyWindow\PropertyWindow.Ranks.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyWindow\PropertyWindow.Security.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-    </Compile>
+    <Compile Include="PropertyWindow\PropertyWindow.General.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.IRCSql.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.Misc.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.Ranks.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.Security.cs" />
     <Compile Include="Settings\LavaMapProperties.cs" />
     <Compile Include="Settings\LevelProperties.cs" />
     <Compile Include="Settings\LavaProperties.cs" />
@@ -109,12 +102,6 @@
     <Compile Include="Eco\EconomyWindow.Designer.cs">
       <DependentUpon>EconomyWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="PortTools.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PortTools.Designer.cs">
-      <DependentUpon>PortTools.cs</DependentUpon>
-    </Compile>
     <Compile Include="EditText.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,22 +115,14 @@
     <Compile Include="Window\Window.Designer.cs">
       <DependentUpon>Window.cs</DependentUpon>
     </Compile>
-    <Compile Include="Window\Window.Log.cs">
-      <DependentUpon>Window.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Window\Window.Main.cs">
-      <DependentUpon>Window.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Window\Window.Map.cs">
-      <DependentUpon>Window.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Window\Window.Players.cs">
-      <DependentUpon>Window.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Window\Window.Log.cs" />
+    <Compile Include="Window\Window.Main.cs" />
+    <Compile Include="Window\Window.Map.cs" />
+    <Compile Include="Window\Window.Players.cs" />
     <EmbeddedResource Include="Eco\EconomyWindow.resx">
       <DependentUpon>EconomyWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PortTools.resx">
+    <EmbeddedResource Include="Popups\PortTools.resx">
       <DependentUpon>PortTools.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Window\Window.resx">
@@ -165,6 +144,7 @@
     <Content Include="Galaxy.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Popups" />
     <Folder Include="PropertyWindow" />
     <Folder Include="Window" />
   </ItemGroup>

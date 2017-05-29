@@ -1,16 +1,19 @@
 ﻿/*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
-Dual-licensed under the Educational Community License, Version 2.0 and
-the GNU General Public License, Version 3 (the "Licenses"); you may
-not use this file except in compliance with the Licenses. You may
-obtain a copy of the Licenses at
-http://www.opensource.org/licenses/ecl2.php
-http://www.gnu.org/licenses/gpl-3.0.html
-Unless required by applicable law or agreed to in writing,
-software distributed under the Licenses are distributed on an "AS IS"
-BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-or implied. See the Licenses for the specific language governing
-permissions and limitations under the Licenses.
+    Copyright 2015 MCGalaxy
+        
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
@@ -30,17 +33,15 @@ namespace MCGalaxy.Gui {
         byte blockID;
         
         
-        public void LoadBlocks() {
+        void LoadBlocks() {
             blk_list.Items.Clear();
             blockPermsChanged.Clear();
             for (int i = 0; i < Block.Props.Length; i++) {
                 blockPropsChanged[i] = Block.Props[i];
                 blockPropsChanged[i].Changed = false;
-            }
-            
-            foreach (BlockPerms perms in BlockPerms.List) {
-                if (Block.Name(perms.BlockID) != "unknown") {
-                    blk_list.Items.Add(Block.Name(perms.BlockID));
+                
+                if (Block.Props[i].Name != "unknown") {
+                    blk_list.Items.Add(Block.Props[i].Name);
                 }
             }
             
@@ -48,7 +49,7 @@ namespace MCGalaxy.Gui {
                 blk_list.SelectedIndex = 0;
         }
 
-        public void SaveBlocks() {
+       void SaveBlocks() {
             if (!BlocksChanged()) { LoadBlocks(); return; }
             
             for (int i = 0; i < blockPropsChanged.Length; i++) {
@@ -70,8 +71,7 @@ namespace MCGalaxy.Gui {
         
         bool BlocksChanged() {
             for (int i = 0; i < blockPropsChanged.Length; i++) {
-                if (!blockPropsChanged[i].Changed) continue;
-                return true;
+                if (blockPropsChanged[i].Changed) return true;
             }
             return blockPermsChanged.Count > 0;
         }
@@ -82,8 +82,7 @@ namespace MCGalaxy.Gui {
             blockPermsOrig = BlockPerms.List[blockID];
             blockPerms = blockPermsChanged.Find(p => p.BlockID == blockID);
             BlockInitSpecificArrays();
-            
-            // TODO: actually save & set these
+
             BlockProps props = blockPropsChanged[blockID];
             blk_cbMsgBlock.Checked = props.IsMessageBlock;
             blk_cbPortal.Checked = props.IsPortal;
