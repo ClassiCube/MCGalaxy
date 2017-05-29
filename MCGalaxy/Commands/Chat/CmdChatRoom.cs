@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Chatting {
                     new CommandPerm(LevelPermission.Operator, "+ can spy on a chatroom"),
                     new CommandPerm(LevelPermission.Operator, "+ can force a player to join a chatroom"),
                     new CommandPerm(LevelPermission.Operator, "+ can kick a player from a chatroom"),
-                    new CommandPerm(LevelPermission.Operator, "+ can send a global message to a chatroom (without any delay)"),
+                    new CommandPerm(LevelPermission.Operator, "+ can send a global message to a chatroom (with no delay)"),
                 }; }
         }
         

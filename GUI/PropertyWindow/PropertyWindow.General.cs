@@ -90,5 +90,20 @@ namespace MCGalaxy.Gui {
                 form.ShowDialog();
             }
         }
+		
+		void txtPort_TextChanged(object sender, EventArgs e) { OnlyAddDigit(srv_txtPort); }
+
+        void forceUpdateBtn_Click(object sender, EventArgs e) {
+            forceUpdateBtn.Enabled = false;
+            DialogResult result = MessageBox.Show("Would you like to force update " + Server.SoftwareName + " now?", "Force Update",
+                                                  MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            if (result == DialogResult.OK) {
+                SaveChanges();
+                Updater.PerformUpdate();
+                Dispose();
+            } else {
+                forceUpdateBtn.Enabled = true;
+            }
+        }
     }
 }

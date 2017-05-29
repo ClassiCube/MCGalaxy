@@ -156,7 +156,7 @@ namespace MCGalaxy.Gui {
         }
 
         void blk_btnHelp_Click(object sender, EventArgs e) {
-            getHelp(blk_list.SelectedItem.ToString());
+            GetHelp(blk_list.SelectedItem.ToString());
         }
         
         

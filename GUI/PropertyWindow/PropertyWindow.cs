@@ -58,7 +58,7 @@ namespace MCGalaxy.Gui {
             cmd_cmbMin.Items.AddRange(GuiPerms.RankNames);
 
             //Load server stuff
-            LoadProp("properties/server.properties");
+            LoadProperties("properties/server.properties");
             LoadRanks();
             try {
                 LoadCommands();
@@ -90,29 +90,13 @@ namespace MCGalaxy.Gui {
             }
         }
 
-        private void PropertyWindow_Unload(object sender, EventArgs e) {
+        void PropertyWindow_Unload(object sender, EventArgs e) {
             lavaUpdateTimer.Dispose();
             Window.prevLoaded = false;
             TntWarsGame.GuiLoaded = null;
         }
 
-        List<Group> storedRanks = new List<Group>();
-        public void LoadRanks() {
-            listRanks.Items.Clear();
-            storedRanks.Clear();
-            storedRanks.AddRange(Group.GroupList);
-            foreach ( Group grp in storedRanks ) {
-                listRanks.Items.Add(grp.trueName + " = " + (int)grp.Permission);
-            }
-            listRanks.SelectedIndex = 0;
-        }
-        public void SaveRanks() {
-            Group.saveGroups(storedRanks);
-            Group.InitAll();
-            LoadRanks();
-        }
-
-        public void LoadProp(string givenPath) {
+        void LoadProperties(string givenPath) {
             SrvProperties.Load(givenPath);
             LoadGeneralProps();
             LoadChatProps();
@@ -145,7 +129,6 @@ namespace MCGalaxy.Gui {
                 Server.s.Log("SAVE FAILED! properties/server.properties");
             }
         }
-
         
         Color GetColor(string name) {
             string code = Colors.Parse(name);
@@ -156,30 +139,20 @@ namespace MCGalaxy.Gui {
             return Color.FromArgb(col.R, col.G, col.B);
         }
 
-        void removeDigit(TextBox foundTxt) {
-            try {
-                int lastChar = int.Parse(foundTxt.Text[foundTxt.Text.Length - 1].ToString());
-            } catch {
-                foundTxt.Text = "";
-            }
+        void OnlyAddDigit(TextBox box) {
+        	if (box.TextLength == 0) return;
+        	
+        	string lastChar = box.Text[box.TextLength - 1].ToString();
+        	byte ignored;
+        	if (byte.TryParse(lastChar, out ignored)) return;
+        	
+        	box.Text = box.Text.Substring(0, box.TextLength - 1);
         }
 
-        private void txtPort_TextChanged(object sender, EventArgs e) { removeDigit(srv_txtPort); }
-        private void txtBackup_TextChanged(object sender, EventArgs e) { removeDigit(bak_txtTime); }
+        void btnSave_Click(object sender, EventArgs e) { SaveChanges(); Dispose(); }
+        void btnApply_Click(object sender, EventArgs e) { SaveChanges(); }
 
-        private void btnSave_Click(object sender, EventArgs e) { saveStuff(); Dispose(); }
-        private void btnApply_Click(object sender, EventArgs e) { saveStuff(); }
-
-        void saveStuff() {
-            foreach ( Control tP in tabControl.Controls )
-                if ( tP is TabPage && tP != pageCommands && tP != tabBlocks )
-                    foreach ( Control ctrl in tP.Controls )
-                        if ( ctrl is TextBox && ctrl.Name.ToLower() != "txtgrpmotd" )
-                            if ( ctrl.Text == "" ) {
-                MessageBox.Show("A textbox has been left empty. It must be filled.\n" + ctrl.Name);
-                return;
-            }
-
+        void SaveChanges() {
             SaveProperties();
             SaveRanks();
             SaveCommands();
@@ -197,57 +170,9 @@ namespace MCGalaxy.Gui {
             ProfanityFilter.Init();
         }
 
-        private void btnDiscard_Click(object sender, EventArgs e) {
-            this.Dispose();
-        }
+        void btnDiscard_Click(object sender, EventArgs e) { Dispose(); }
 
-        private void fillAllowance(ref TextBox txtBox, ref List<LevelPermission> addTo) {
-            addTo.Clear();
-            if ( txtBox.Text != "" ) {
-                string[] perms = txtBox.Text.Split(',');
-                for ( int i = 0; i < perms.Length; i++ ) {
-                    perms[i] = perms[i].Trim().ToLower();
-                    int foundPerm;
-                    try {
-                        foundPerm = int.Parse(perms[i]);
-                    }
-                    catch {
-                        Group foundGroup = Group.Find(perms[i]);
-                        if ( foundGroup != null ) foundPerm = (int)foundGroup.Permission;
-                        else { Server.s.Log("Could not find " + perms[i]); continue; }
-                    }
-                    addTo.Add((LevelPermission)foundPerm);
-                }
-
-                txtBox.Text = "";
-                foreach ( LevelPermission p in addTo ) {
-                    txtBox.Text += "," + (int)p;
-                }
-                if ( txtBox.Text != "" ) txtBox.Text = txtBox.Text.Remove(0, 1);
-            }
-        }
-        private void fillLowest(ref TextBox txtBox, ref LevelPermission toChange) {
-            if ( txtBox.Text != "" ) {
-                txtBox.Text = txtBox.Text.Trim().ToLower();
-                int foundPerm = -100;
-                try {
-                    foundPerm = int.Parse(txtBox.Text);
-                }
-                catch {
-                    Group foundGroup = Group.Find(txtBox.Text);
-                    if ( foundGroup != null ) foundPerm = (int)foundGroup.Permission;
-                    else { Server.s.Log("Could not find " + txtBox.Text); }
-                }
-
-                txtBox.Text = "";
-                if ( foundPerm < -99 ) txtBox.Text = (int)toChange + "";
-                else txtBox.Text = foundPerm + "";
-
-                toChange = (LevelPermission)Convert.ToInt16(txtBox.Text);
-            }
-        }
-
-        private void getHelp(string toHelp) {
+       void GetHelp(string toHelp) {
             Player.storedHelp = "";
             Player.storeHelp = true;
             Command.all.Find("help").Use(null, toHelp);
@@ -255,23 +180,6 @@ namespace MCGalaxy.Gui {
             
             MessageBox.Show(Colors.StripColors(Player.storedHelp),
                             "Help information for " + toHelp);
-        }
-
-        private void forceUpdateBtn_Click(object sender, EventArgs e) {
-            forceUpdateBtn.Enabled = false;
-            DialogResult result = MessageBox.Show("Would you like to force update " + Server.SoftwareName + " now?", "Force Update",
-                                                  MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-            if (result == DialogResult.OK) {
-                saveStuff();
-                Updater.PerformUpdate();
-                Dispose();
-            } else {
-                forceUpdateBtn.Enabled = true;
-            }
-        }
-        
-        private void txtGrpMOTD_TextChanged(object sender, EventArgs e) {
-            if ( txtGrpMOTD.Text != null ) storedRanks[listRanks.SelectedIndex].MOTD = txtGrpMOTD.Text;
         }
     }
 }

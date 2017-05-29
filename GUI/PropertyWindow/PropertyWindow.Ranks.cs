@@ -13,6 +13,7 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using MCGalaxy.Commands;
 
@@ -47,7 +48,24 @@ namespace MCGalaxy.Gui {
             perms.MinRank = GuiPerms.GetPermission(rank_cmbAdminChat, LevelPermission.Admin);
         }
 		
-		
+				
+        List<Group> storedRanks = new List<Group>();
+        void LoadRanks() {
+            listRanks.Items.Clear();
+            storedRanks.Clear();
+            storedRanks.AddRange(Group.GroupList);
+            foreach ( Group grp in storedRanks ) {
+                listRanks.Items.Add(grp.trueName + " = " + (int)grp.Permission);
+            }
+            listRanks.SelectedIndex = 0;
+        }
+        
+        void SaveRanks() {
+            Group.saveGroups(storedRanks);
+            Group.InitAll();
+            LoadRanks();
+        }
+        
 		
 		private void cmbColor_SelectedIndexChanged(object sender, EventArgs e) {
             lblColor.BackColor = GetColor(cmbColor.Items[cmbColor.SelectedIndex].ToString());
@@ -139,6 +157,10 @@ namespace MCGalaxy.Gui {
         
         private void txtPrefix_TextChanged(object sender, EventArgs e) {
             storedRanks[listRanks.SelectedIndex].prefix = txtPrefix.Text;
+        }        
+                
+        private void txtGrpMOTD_TextChanged(object sender, EventArgs e) {
+            if ( txtGrpMOTD.Text != null ) storedRanks[listRanks.SelectedIndex].MOTD = txtGrpMOTD.Text;
         }
 
         private void btnAddRank_Click(object sender, EventArgs e) {

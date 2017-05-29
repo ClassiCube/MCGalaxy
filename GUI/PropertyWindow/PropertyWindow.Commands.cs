@@ -142,7 +142,7 @@ namespace MCGalaxy.Gui {
         }
         
         void cmd_btnHelp_Click(object sender, EventArgs e) {
-            getHelp(cmd_list.SelectedItem.ToString());
+            GetHelp(cmd_list.SelectedItem.ToString());
         }
         
         void cmd_btnCustom_Click(object sender, EventArgs e) {

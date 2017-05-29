@@ -987,6 +987,7 @@ namespace MCGalaxy.Gui
             this.bak_txtTime.Name = "bak_txtTime";
             this.bak_txtTime.Size = new System.Drawing.Size(41, 21);
             this.bak_txtTime.TabIndex = 5;
+            this.bak_txtTime.TextChanged += new System.EventHandler(this.txtBackup_TextChanged);
             this.toolTip.SetToolTip(this.bak_txtTime, "How often should backups be taken, in seconds.\nDefault = 300");
             // 
             // sql_chkUseSQL
