@@ -88,14 +88,6 @@ namespace MCGalaxy.Gui {
             catch {
                 Server.s.Log("Failed to start lava control update timer!");
             }
-
-            //Sigh. I wish there were SOME event to help me.
-            foreach(var command in Command.all.commands) {
-                if ( Command.core.commands.Contains( command ) )
-                    continue;
-
-                lstCommands.Items.Add ( command.name );
-            }
         }
 
         private void PropertyWindow_Unload(object sender, EventArgs e) {

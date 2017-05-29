@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Scripting {
                 Help(p); return;
             }
             
-            if (File.Exists(IScripting.SourceDir + args[0] + engine.Ext)) {
+            if (engine.SourceFileExists(args[0])) {
                 Player.Message(p, "File Cmd" + args[0] + engine.Ext + " already exists. Choose another name."); return;
             }
             

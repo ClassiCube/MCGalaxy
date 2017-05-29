@@ -19,10 +19,11 @@ using System.Reflection;
 using System.Windows.Forms;
 using MCGalaxy.Commands;
 using MCGalaxy.Scripting;
+using MCGalaxy.Gui.Popups;
 
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
-		
+        
         void listCommands_SelectedIndexChanged(object sender, EventArgs e) {
             string cmdName = listCommands.SelectedItem.ToString();
             CommandPerms perms = CommandPerms.Find(cmdName);
@@ -44,7 +45,7 @@ namespace MCGalaxy.Gui {
             }
             if ( foundOne ) txtCmdAllow.Text = txtCmdAllow.Text.Remove(0, 1);
         }
-		
+        
         void txtCmdLowest_TextChanged(object sender, EventArgs e) {
             fillLowest(ref txtCmdLowest, ref storedCommands[listCommands.SelectedIndex].MinRank);
         }
@@ -58,150 +59,12 @@ namespace MCGalaxy.Gui {
         void btnCmdHelp_Click(object sender, EventArgs e) {
             getHelp(listCommands.SelectedItem.ToString());
         }
-		
-		
-
-        void CrtCustCmd_Click(object sender, EventArgs e) {
-            if ( txtCommandName.Text != null ) {
-                if ( File.Exists("extra/commands/source/Cmd" + txtCommandName.Text + ".cs") ) {
-                    MessageBox.Show("Sorry, That command already exists!!");
-                }
-                else {
-                    Command.all.Find("cmdcreate").Use(null, txtCommandName.Text);
-                    MessageBox.Show("Command Created!!");
-                }
+        
+        void cmd_btnCustom_Click(object sender, EventArgs e) {
+            using (CustomCommands form = new CustomCommands()) {
+                form.ShowDialog();
             }
-            else {
-                MessageBox.Show("You didnt specify a name for the command!!");
-            }
-        }
-
-        void CompileCustCmd_Click(object sender, EventArgs e) {
-            if ( txtCommandName.Text != null ) {
-                if ( File.Exists("extra/commands/dll/Cmd" + txtCommandName.Text + ".dll") ) {
-                    MessageBox.Show("Sorry, That command already exists!!");
-                }
-                else {
-                    Command.all.Find("compile").Use(null, txtCommandName.Text);
-                    MessageBox.Show("Command Compiled!!");
-                }
-            }
-            else {
-                MessageBox.Show("You didnt specify a name for the command!!");
-            }
-        }
-
-        void btnCreate_Click(object sender, EventArgs e) {
-            if(String.IsNullOrEmpty(txtCommandName.Text.Trim())) {
-                MessageBox.Show ( "Command must have a name" );
-                return;
-            }
-
-            if ( radioButton1.Checked ) {
-                if ( File.Exists("extra/commands/source/Cmd" + txtCommandName.Text + ".vb") || File.Exists("extra/commands/source/Cmd" + txtCommandName.Text + ".cs") ) {
-                    MessageBox.Show("Command already exists", "", MessageBoxButtons.OK);
-                }
-                else {
-                    Command.all.Find("cmdcreate").Use(null, txtCommandName.Text.ToLower() + " vb");
-                    MessageBox.Show("New Command Created: " + txtCommandName.Text.ToLower() + " Created.");
-                }
-            } else {
-                if ( File.Exists("extra/commands/source/Cmd" + txtCommandName.Text + ".cs") || File.Exists("extra/commands/source/Cmd" + txtCommandName.Text + ".vb") ) {
-                    MessageBox.Show("Command already exists", "", MessageBoxButtons.OK);
-                }
-                else {
-                    Command.all.Find("cmdcreate").Use(null, txtCommandName.Text.ToLower());
-                    MessageBox.Show("New Command Created: " + txtCommandName.Text.ToLower() + " Created.");
-                }
-            }
-        }
-
-        void btnLoad_Click(object sender, EventArgs e) {
-            Command[] commands = null;
-            using (FileDialog dialog = new OpenFileDialog()) {
-                dialog.RestoreDirectory = true;
-                dialog.Filter = "Accepted File Types (*.cs, *.vb, *.dll)|*.cs;*.vb;*.dll|C# Source (*.cs)|*.cs|Visual Basic Source (*.vb)|*.vb|.NET Assemblies (*.dll)|*.dll";
-                if (dialog.ShowDialog() != DialogResult.OK) return;
-
-                string fileName = dialog.FileName;
-                if (fileName.EndsWith(".dll")) {
-                    Assembly lib = Assembly.LoadFile(fileName);
-                    commands = IScripting.LoadFrom(lib).ToArray();
-                } else {
-                    IScripting engine = fileName.EndsWith(".cs") ? IScripting.CS : IScripting.VB;
-                    if (!File.Exists(fileName)) return;
-                    
-                    CompilerParameters args = new CompilerParameters();
-                    args.GenerateInMemory = true;
-                    var result = engine.CompileSource(File.ReadAllText(fileName), args);
-                    if (result == null) { MessageBox.Show ( "Error compiling files" ); return; }
-
-                    if (result.Errors.HasErrors) {
-                    	foreach (CompilerError err in result.Errors) {
-                            Server.s.ErrorCase("Error #" + err.ErrorNumber);
-                            Server.s.ErrorCase("Message: " + err.ErrorText);
-                            Server.s.ErrorCase("Line: " + err.Line);
-                            Server.s.ErrorCase( "=================================" );
-                        }
-                        MessageBox.Show("Error compiling from source. Check logs for error");
-                        return;
-                    }
-                    commands = IScripting.LoadFrom(result.CompiledAssembly).ToArray();
-                }
-            }
-
-            if (commands == null) { MessageBox.Show("Error compiling files"); return; }
-            for (int i = 0; i < commands.Length; i++) {
-                Command cmd = commands[i];
-
-                if (lstCommands.Items.Contains(cmd.name)) {
-                    MessageBox.Show("Command " + cmd.name + " already exists. As a result, it was not loaded");
-                    continue;
-                }
-
-                lstCommands.Items.Add(cmd.name);
-                Command.all.Add(cmd);
-                Server.s.Log("Added " + cmd.name + " to commands");
-            }
-            CommandPerms.Load();
-        }
-
-        void btnUnload_Click(object sender, EventArgs e) {
-            Command cmd = Command.all.Find(lstCommands.SelectedItem.ToString());
-            if (cmd == null) {
-                MessageBox.Show(txtCommandName.Text + " is not a valid or loaded command.", ""); return;
-            }
-
-            lstCommands.Items.Remove( cmd.name );
-            Command.all.Remove(cmd);
-            CommandPerms.Load();
-            MessageBox.Show("Command was successfully unloaded.", "");
-        }
-
-        void btnDiscardcmd_Click(object sender, EventArgs e) {
-            switch ( MessageBox.Show("Are you sure you want to discard this whole file?", "Discard?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ) {
-                case DialogResult.Yes:
-                    if ( radioButton1.Checked ) {
-                        if ( File.Exists("extra/commands/source/Cmd" + txtCommandName.Text + ".vb") ) {
-                            File.Delete("extra/commands/source/Cmd" + txtCommandName.Text + ".vb");
-                        }
-                        else { MessageBox.Show("File: " + txtCommandName.Text + ".vb Doesnt Exist."); }
-                    } else {
-                        if ( File.Exists("extra/commands/source/Cmd" + txtCommandName.Text + ".cs") ) {
-                            File.Delete("extra/commands/source/Cmd" + txtCommandName.Text + ".cs");
-                        }
-                        else { MessageBox.Show("File: " + txtCommandName.Text + ".cs Doesnt Exist."); }
-                    }
-                    break;
-
-            }
-        }
-		
-		void lstCommands_SelectedIndexChanged ( object sender, EventArgs e ) {
-            btnUnload.Enabled = lstCommands.SelectedIndex != -1;
-        }
-		
-		
+        }	
 
         bool skipExtraPermChanges;
         int oldnumber;

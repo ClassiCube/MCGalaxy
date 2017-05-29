@@ -94,18 +94,6 @@ namespace MCGalaxy.Gui
             this.label15 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.listCommands = new System.Windows.Forms.ListBox();
-            this.pageCommandsCustom = new System.Windows.Forms.TabPage();
-            this.lblLoadedCommands = new System.Windows.Forms.Label();
-            this.lstCommands = new System.Windows.Forms.ListBox();
-            this.groupBox24 = new System.Windows.Forms.GroupBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.btnCreate = new System.Windows.Forms.Button();
-            this.txtCommandName = new System.Windows.Forms.TextBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.btnUnload = new System.Windows.Forms.Button();
-            this.btnLoad = new System.Windows.Forms.Button();
             this.pageCommandPerms = new System.Windows.Forms.TabPage();
             this.txtcmdranks2 = new System.Windows.Forms.TextBox();
             this.label74 = new System.Windows.Forms.Label();
@@ -149,6 +137,17 @@ namespace MCGalaxy.Gui
             this.sec_cbLogNotes = new System.Windows.Forms.CheckBox();
             this.sec_cbChatAuto = new System.Windows.Forms.CheckBox();
             this.tabBlocks = new System.Windows.Forms.TabPage();
+            this.blk_grpPhysics = new System.Windows.Forms.GroupBox();
+            this.blk_cbWater = new System.Windows.Forms.CheckBox();
+            this.blk_cbLava = new System.Windows.Forms.CheckBox();
+            this.blk_cbRails = new System.Windows.Forms.CheckBox();
+            this.blk_cbTdoor = new System.Windows.Forms.CheckBox();
+            this.blk_cbDoor = new System.Windows.Forms.CheckBox();
+            this.blk_grpBehaviour = new System.Windows.Forms.GroupBox();
+            this.blk_txtDeath = new System.Windows.Forms.TextBox();
+            this.blk_cbDeath = new System.Windows.Forms.CheckBox();
+            this.blk_cbPortal = new System.Windows.Forms.CheckBox();
+            this.blk_cbMsgBlock = new System.Windows.Forms.CheckBox();
             this.blk_grpPermissions = new System.Windows.Forms.GroupBox();
             this.blk_cmbAlw3 = new System.Windows.Forms.ComboBox();
             this.blk_cmbAlw2 = new System.Windows.Forms.ComboBox();
@@ -373,17 +372,7 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
-            this.blk_grpBehaviour = new System.Windows.Forms.GroupBox();
-            this.blk_grpPhysics = new System.Windows.Forms.GroupBox();
-            this.blk_cbMsgBlock = new System.Windows.Forms.CheckBox();
-            this.blk_cbPortal = new System.Windows.Forms.CheckBox();
-            this.blk_cbDeath = new System.Windows.Forms.CheckBox();
-            this.blk_txtDeath = new System.Windows.Forms.TextBox();
-            this.blk_cbRails = new System.Windows.Forms.CheckBox();
-            this.blk_cbTdoor = new System.Windows.Forms.CheckBox();
-            this.blk_cbDoor = new System.Windows.Forms.CheckBox();
-            this.blk_cbWater = new System.Windows.Forms.CheckBox();
-            this.blk_cbLava = new System.Windows.Forms.CheckBox();
+            this.cmd_btnCustom = new System.Windows.Forms.Button();
             this.tabChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
@@ -392,12 +381,11 @@ namespace MCGalaxy.Gui
             this.pageCommands.SuspendLayout();
             this.pageCommandsList.SuspendLayout();
             this.tabPage6.SuspendLayout();
-            this.pageCommandsCustom.SuspendLayout();
-            this.groupBox24.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.pageCommandPerms.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.extracmdpermnumber)).BeginInit();
             this.tabBlocks.SuspendLayout();
+            this.blk_grpPhysics.SuspendLayout();
+            this.blk_grpBehaviour.SuspendLayout();
             this.blk_grpPermissions.SuspendLayout();
             this.pageRanks.SuspendLayout();
             this.gbRankGeneral.SuspendLayout();
@@ -462,8 +450,6 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).BeginInit();
-            this.blk_grpBehaviour.SuspendLayout();
-            this.blk_grpPhysics.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabChat
@@ -839,7 +825,6 @@ namespace MCGalaxy.Gui
             // pageCommandsList
             // 
             this.pageCommandsList.Controls.Add(this.tabPage6);
-            this.pageCommandsList.Controls.Add(this.pageCommandsCustom);
             this.pageCommandsList.Controls.Add(this.pageCommandPerms);
             this.pageCommandsList.Location = new System.Drawing.Point(9, 4);
             this.pageCommandsList.Name = "pageCommandsList";
@@ -850,6 +835,7 @@ namespace MCGalaxy.Gui
             // tabPage6
             // 
             this.tabPage6.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage6.Controls.Add(this.cmd_btnCustom);
             this.tabPage6.Controls.Add(this.txtCmdRanks);
             this.tabPage6.Controls.Add(this.btnCmdHelp);
             this.tabPage6.Controls.Add(this.txtCmdAllow);
@@ -877,7 +863,7 @@ namespace MCGalaxy.Gui
             // 
             // btnCmdHelp
             // 
-            this.btnCmdHelp.Location = new System.Drawing.Point(253, 419);
+            this.btnCmdHelp.Location = new System.Drawing.Point(253, 402);
             this.btnCmdHelp.Name = "btnCmdHelp";
             this.btnCmdHelp.Size = new System.Drawing.Size(141, 29);
             this.btnCmdHelp.TabIndex = 34;
@@ -944,146 +930,6 @@ namespace MCGalaxy.Gui
             this.listCommands.Size = new System.Drawing.Size(141, 368);
             this.listCommands.TabIndex = 26;
             this.listCommands.SelectedIndexChanged += new System.EventHandler(this.listCommands_SelectedIndexChanged);
-            // 
-            // pageCommandsCustom
-            // 
-            this.pageCommandsCustom.BackColor = System.Drawing.SystemColors.Control;
-            this.pageCommandsCustom.Controls.Add(this.lblLoadedCommands);
-            this.pageCommandsCustom.Controls.Add(this.lstCommands);
-            this.pageCommandsCustom.Controls.Add(this.groupBox24);
-            this.pageCommandsCustom.Controls.Add(this.btnUnload);
-            this.pageCommandsCustom.Controls.Add(this.btnLoad);
-            this.pageCommandsCustom.Location = new System.Drawing.Point(4, 22);
-            this.pageCommandsCustom.Name = "pageCommandsCustom";
-            this.pageCommandsCustom.Padding = new System.Windows.Forms.Padding(3);
-            this.pageCommandsCustom.Size = new System.Drawing.Size(468, 476);
-            this.pageCommandsCustom.TabIndex = 1;
-            this.pageCommandsCustom.Text = "Custom commands";
-            // 
-            // lblLoadedCommands
-            // 
-            this.lblLoadedCommands.AutoSize = true;
-            this.lblLoadedCommands.Location = new System.Drawing.Point(7, 120);
-            this.lblLoadedCommands.Name = "lblLoadedCommands";
-            this.lblLoadedCommands.Size = new System.Drawing.Size(96, 13);
-            this.lblLoadedCommands.TabIndex = 40;
-            this.lblLoadedCommands.Text = "Loaded commands";
-            // 
-            // lstCommands
-            // 
-            this.lstCommands.FormattingEnabled = true;
-            this.lstCommands.Location = new System.Drawing.Point(7, 139);
-            this.lstCommands.Name = "lstCommands";
-            this.lstCommands.Size = new System.Drawing.Size(450, 303);
-            this.lstCommands.TabIndex = 39;
-            this.lstCommands.SelectedIndexChanged += new System.EventHandler(this.lstCommands_SelectedIndexChanged);
-            // 
-            // groupBox24
-            // 
-            this.groupBox24.Controls.Add(this.panel1);
-            this.groupBox24.Controls.Add(this.btnCreate);
-            this.groupBox24.Controls.Add(this.txtCommandName);
-            this.groupBox24.Controls.Add(this.label33);
-            this.groupBox24.Location = new System.Drawing.Point(6, 6);
-            this.groupBox24.Name = "groupBox24";
-            this.groupBox24.Size = new System.Drawing.Size(459, 100);
-            this.groupBox24.TabIndex = 38;
-            this.groupBox24.TabStop = false;
-            this.groupBox24.Text = "Quick command";
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.radioButton1);
-            this.panel1.Controls.Add(this.radioButton2);
-            this.panel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.panel1.Location = new System.Drawing.Point(13, 58);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(84, 29);
-            this.panel1.TabIndex = 37;
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton1.Location = new System.Drawing.Point(41, 6);
-            this.radioButton1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(36, 16);
-            this.radioButton1.TabIndex = 27;
-            this.radioButton1.Text = "VB";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Checked = true;
-            this.radioButton2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton2.Location = new System.Drawing.Point(2, 6);
-            this.radioButton2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(35, 16);
-            this.radioButton2.TabIndex = 0;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "C#";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // btnCreate
-            // 
-            this.btnCreate.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCreate.Location = new System.Drawing.Point(299, 64);
-            this.btnCreate.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.btnCreate.Name = "btnCreate";
-            this.btnCreate.Size = new System.Drawing.Size(149, 23);
-            this.btnCreate.TabIndex = 29;
-            this.btnCreate.Text = "Create command";
-            this.btnCreate.UseVisualStyleBackColor = true;
-            this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
-            // 
-            // txtCommandName
-            // 
-            this.txtCommandName.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCommandName.Location = new System.Drawing.Point(93, 20);
-            this.txtCommandName.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.txtCommandName.Name = "txtCommandName";
-            this.txtCommandName.Size = new System.Drawing.Size(355, 18);
-            this.txtCommandName.TabIndex = 27;
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label33.Location = new System.Drawing.Point(11, 23);
-            this.label33.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(78, 12);
-            this.label33.TabIndex = 28;
-            this.label33.Text = "Command Name:";
-            // 
-            // btnUnload
-            // 
-            this.btnUnload.Enabled = false;
-            this.btnUnload.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUnload.Location = new System.Drawing.Point(374, 447);
-            this.btnUnload.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.btnUnload.Name = "btnUnload";
-            this.btnUnload.Size = new System.Drawing.Size(83, 23);
-            this.btnUnload.TabIndex = 32;
-            this.btnUnload.Text = "Unload";
-            this.btnUnload.UseVisualStyleBackColor = true;
-            this.btnUnload.Click += new System.EventHandler(this.btnUnload_Click);
-            // 
-            // btnLoad
-            // 
-            this.btnLoad.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLoad.Location = new System.Drawing.Point(254, 447);
-            this.btnLoad.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(116, 23);
-            this.btnLoad.TabIndex = 31;
-            this.btnLoad.Text = "Load";
-            this.btnLoad.UseVisualStyleBackColor = true;
-            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // pageCommandPerms
             // 
@@ -1540,6 +1386,121 @@ namespace MCGalaxy.Gui
             this.tabBlocks.Size = new System.Drawing.Size(498, 521);
             this.tabBlocks.TabIndex = 5;
             this.tabBlocks.Text = "Blocks";
+            // 
+            // blk_grpPhysics
+            // 
+            this.blk_grpPhysics.Controls.Add(this.blk_cbWater);
+            this.blk_grpPhysics.Controls.Add(this.blk_cbLava);
+            this.blk_grpPhysics.Controls.Add(this.blk_cbRails);
+            this.blk_grpPhysics.Controls.Add(this.blk_cbTdoor);
+            this.blk_grpPhysics.Controls.Add(this.blk_cbDoor);
+            this.blk_grpPhysics.Location = new System.Drawing.Point(134, 180);
+            this.blk_grpPhysics.Name = "blk_grpPhysics";
+            this.blk_grpPhysics.Size = new System.Drawing.Size(360, 90);
+            this.blk_grpPhysics.TabIndex = 26;
+            this.blk_grpPhysics.TabStop = false;
+            this.blk_grpPhysics.Text = "Physics behaviour";
+            // 
+            // blk_cbWater
+            // 
+            this.blk_cbWater.Location = new System.Drawing.Point(186, 63);
+            this.blk_cbWater.Name = "blk_cbWater";
+            this.blk_cbWater.Size = new System.Drawing.Size(104, 24);
+            this.blk_cbWater.TabIndex = 7;
+            this.blk_cbWater.Text = "Killed by water";
+            this.blk_cbWater.UseVisualStyleBackColor = true;
+            this.blk_cbWater.CheckedChanged += new System.EventHandler(this.blk_cbWater_CheckedChanged);
+            // 
+            // blk_cbLava
+            // 
+            this.blk_cbLava.Location = new System.Drawing.Point(10, 63);
+            this.blk_cbLava.Name = "blk_cbLava";
+            this.blk_cbLava.Size = new System.Drawing.Size(116, 24);
+            this.blk_cbLava.TabIndex = 6;
+            this.blk_cbLava.Text = "Killed by lava";
+            this.blk_cbLava.UseVisualStyleBackColor = true;
+            this.blk_cbLava.CheckedChanged += new System.EventHandler(this.blk_cbLava_CheckedChanged);
+            // 
+            // blk_cbRails
+            // 
+            this.blk_cbRails.Location = new System.Drawing.Point(10, 39);
+            this.blk_cbRails.Name = "blk_cbRails";
+            this.blk_cbRails.Size = new System.Drawing.Size(89, 24);
+            this.blk_cbRails.TabIndex = 5;
+            this.blk_cbRails.Text = "Is train rails";
+            this.blk_cbRails.UseVisualStyleBackColor = true;
+            this.blk_cbRails.CheckedChanged += new System.EventHandler(this.blk_cbRails_CheckedChanged);
+            // 
+            // blk_cbTdoor
+            // 
+            this.blk_cbTdoor.Location = new System.Drawing.Point(187, 15);
+            this.blk_cbTdoor.Name = "blk_cbTdoor";
+            this.blk_cbTdoor.Size = new System.Drawing.Size(104, 24);
+            this.blk_cbTdoor.TabIndex = 4;
+            this.blk_cbTdoor.Text = "Is a tDoor";
+            this.blk_cbTdoor.UseVisualStyleBackColor = true;
+            this.blk_cbTdoor.CheckedChanged += new System.EventHandler(this.blk_cbTdoor_CheckedChanged);
+            // 
+            // blk_cbDoor
+            // 
+            this.blk_cbDoor.Location = new System.Drawing.Point(10, 15);
+            this.blk_cbDoor.Name = "blk_cbDoor";
+            this.blk_cbDoor.Size = new System.Drawing.Size(116, 24);
+            this.blk_cbDoor.TabIndex = 3;
+            this.blk_cbDoor.Text = "Is a door";
+            this.blk_cbDoor.UseVisualStyleBackColor = true;
+            this.blk_cbDoor.CheckedChanged += new System.EventHandler(this.blk_cbDoor_CheckedChanged);
+            // 
+            // blk_grpBehaviour
+            // 
+            this.blk_grpBehaviour.Controls.Add(this.blk_txtDeath);
+            this.blk_grpBehaviour.Controls.Add(this.blk_cbDeath);
+            this.blk_grpBehaviour.Controls.Add(this.blk_cbPortal);
+            this.blk_grpBehaviour.Controls.Add(this.blk_cbMsgBlock);
+            this.blk_grpBehaviour.Location = new System.Drawing.Point(133, 105);
+            this.blk_grpBehaviour.Name = "blk_grpBehaviour";
+            this.blk_grpBehaviour.Size = new System.Drawing.Size(360, 70);
+            this.blk_grpBehaviour.TabIndex = 25;
+            this.blk_grpBehaviour.TabStop = false;
+            this.blk_grpBehaviour.Text = "Behaviour";
+            // 
+            // blk_txtDeath
+            // 
+            this.blk_txtDeath.Location = new System.Drawing.Point(100, 41);
+            this.blk_txtDeath.Name = "blk_txtDeath";
+            this.blk_txtDeath.Size = new System.Drawing.Size(254, 21);
+            this.blk_txtDeath.TabIndex = 3;
+            this.blk_txtDeath.TextChanged += new System.EventHandler(this.blk_txtDeath_TextChanged);
+            // 
+            // blk_cbDeath
+            // 
+            this.blk_cbDeath.Location = new System.Drawing.Point(10, 39);
+            this.blk_cbDeath.Name = "blk_cbDeath";
+            this.blk_cbDeath.Size = new System.Drawing.Size(89, 24);
+            this.blk_cbDeath.TabIndex = 2;
+            this.blk_cbDeath.Text = "Kills players";
+            this.blk_cbDeath.UseVisualStyleBackColor = true;
+            this.blk_cbDeath.CheckedChanged += new System.EventHandler(this.blk_cbDeath_CheckedChanged);
+            // 
+            // blk_cbPortal
+            // 
+            this.blk_cbPortal.Location = new System.Drawing.Point(187, 15);
+            this.blk_cbPortal.Name = "blk_cbPortal";
+            this.blk_cbPortal.Size = new System.Drawing.Size(104, 24);
+            this.blk_cbPortal.TabIndex = 1;
+            this.blk_cbPortal.Text = "Is a portal";
+            this.blk_cbPortal.UseVisualStyleBackColor = true;
+            this.blk_cbPortal.CheckedChanged += new System.EventHandler(this.blk_cbPortal_CheckedChanged);
+            // 
+            // blk_cbMsgBlock
+            // 
+            this.blk_cbMsgBlock.Location = new System.Drawing.Point(10, 15);
+            this.blk_cbMsgBlock.Name = "blk_cbMsgBlock";
+            this.blk_cbMsgBlock.Size = new System.Drawing.Size(116, 24);
+            this.blk_cbMsgBlock.TabIndex = 0;
+            this.blk_cbMsgBlock.Text = "Is a message block";
+            this.blk_cbMsgBlock.UseVisualStyleBackColor = true;
+            this.blk_cbMsgBlock.CheckedChanged += new System.EventHandler(this.blk_cbMsgBlock_CheckedChanged);
             // 
             // blk_grpPermissions
             // 
@@ -4090,120 +4051,15 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
-            // blk_grpBehaviour
+            // cmd_btnCustom
             // 
-            this.blk_grpBehaviour.Controls.Add(this.blk_txtDeath);
-            this.blk_grpBehaviour.Controls.Add(this.blk_cbDeath);
-            this.blk_grpBehaviour.Controls.Add(this.blk_cbPortal);
-            this.blk_grpBehaviour.Controls.Add(this.blk_cbMsgBlock);
-            this.blk_grpBehaviour.Location = new System.Drawing.Point(133, 105);
-            this.blk_grpBehaviour.Name = "blk_grpBehaviour";
-            this.blk_grpBehaviour.Size = new System.Drawing.Size(360, 70);
-            this.blk_grpBehaviour.TabIndex = 25;
-            this.blk_grpBehaviour.TabStop = false;
-            this.blk_grpBehaviour.Text = "Behaviour";
-            // 
-            // blk_grpPhysics
-            // 
-            this.blk_grpPhysics.Controls.Add(this.blk_cbWater);
-            this.blk_grpPhysics.Controls.Add(this.blk_cbLava);
-            this.blk_grpPhysics.Controls.Add(this.blk_cbRails);
-            this.blk_grpPhysics.Controls.Add(this.blk_cbTdoor);
-            this.blk_grpPhysics.Controls.Add(this.blk_cbDoor);
-            this.blk_grpPhysics.Location = new System.Drawing.Point(134, 180);
-            this.blk_grpPhysics.Name = "blk_grpPhysics";
-            this.blk_grpPhysics.Size = new System.Drawing.Size(360, 90);
-            this.blk_grpPhysics.TabIndex = 26;
-            this.blk_grpPhysics.TabStop = false;
-            this.blk_grpPhysics.Text = "Physics behaviour";
-            // 
-            // blk_cbMsgBlock
-            // 
-            this.blk_cbMsgBlock.Location = new System.Drawing.Point(10, 15);
-            this.blk_cbMsgBlock.Name = "blk_cbMsgBlock";
-            this.blk_cbMsgBlock.Size = new System.Drawing.Size(116, 24);
-            this.blk_cbMsgBlock.TabIndex = 0;
-            this.blk_cbMsgBlock.Text = "Is a message block";
-            this.blk_cbMsgBlock.UseVisualStyleBackColor = true;
-            this.blk_cbMsgBlock.CheckedChanged += new System.EventHandler(this.blk_cbMsgBlock_CheckedChanged);
-            // 
-            // blk_cbPortal
-            // 
-            this.blk_cbPortal.Location = new System.Drawing.Point(187, 15);
-            this.blk_cbPortal.Name = "blk_cbPortal";
-            this.blk_cbPortal.Size = new System.Drawing.Size(104, 24);
-            this.blk_cbPortal.TabIndex = 1;
-            this.blk_cbPortal.Text = "Is a portal";
-            this.blk_cbPortal.UseVisualStyleBackColor = true;
-            this.blk_cbPortal.CheckedChanged += new System.EventHandler(this.blk_cbPortal_CheckedChanged);
-            // 
-            // blk_cbDeath
-            // 
-            this.blk_cbDeath.Location = new System.Drawing.Point(10, 39);
-            this.blk_cbDeath.Name = "blk_cbDeath";
-            this.blk_cbDeath.Size = new System.Drawing.Size(89, 24);
-            this.blk_cbDeath.TabIndex = 2;
-            this.blk_cbDeath.Text = "Kills players";
-            this.blk_cbDeath.UseVisualStyleBackColor = true;
-            this.blk_cbDeath.CheckedChanged += new System.EventHandler(this.blk_cbDeath_CheckedChanged);
-            // 
-            // blk_txtDeath
-            // 
-            this.blk_txtDeath.Location = new System.Drawing.Point(100, 41);
-            this.blk_txtDeath.Name = "blk_txtDeath";
-            this.blk_txtDeath.Size = new System.Drawing.Size(254, 21);
-            this.blk_txtDeath.TabIndex = 3;
-            this.blk_txtDeath.TextChanged += new System.EventHandler(this.blk_txtDeath_TextChanged);
-            // 
-            // blk_cbRails
-            // 
-            this.blk_cbRails.Location = new System.Drawing.Point(10, 39);
-            this.blk_cbRails.Name = "blk_cbRails";
-            this.blk_cbRails.Size = new System.Drawing.Size(89, 24);
-            this.blk_cbRails.TabIndex = 5;
-            this.blk_cbRails.Text = "Is train rails";
-            this.blk_cbRails.UseVisualStyleBackColor = true;
-            this.blk_cbRails.CheckedChanged += new System.EventHandler(this.blk_cbRails_CheckedChanged);
-            // 
-            // blk_cbTdoor
-            // 
-            this.blk_cbTdoor.Location = new System.Drawing.Point(187, 15);
-            this.blk_cbTdoor.Name = "blk_cbTdoor";
-            this.blk_cbTdoor.Size = new System.Drawing.Size(104, 24);
-            this.blk_cbTdoor.TabIndex = 4;
-            this.blk_cbTdoor.Text = "Is a tDoor";
-            this.blk_cbTdoor.UseVisualStyleBackColor = true;
-            this.blk_cbTdoor.CheckedChanged += new System.EventHandler(this.blk_cbTdoor_CheckedChanged);
-            // 
-            // blk_cbDoor
-            // 
-            this.blk_cbDoor.Location = new System.Drawing.Point(10, 15);
-            this.blk_cbDoor.Name = "blk_cbDoor";
-            this.blk_cbDoor.Size = new System.Drawing.Size(116, 24);
-            this.blk_cbDoor.TabIndex = 3;
-            this.blk_cbDoor.Text = "Is a door";
-            this.blk_cbDoor.UseVisualStyleBackColor = true;
-            this.blk_cbDoor.CheckedChanged += new System.EventHandler(this.blk_cbDoor_CheckedChanged);
-            // 
-            // blk_cbWater
-            // 
-            this.blk_cbWater.Location = new System.Drawing.Point(186, 63);
-            this.blk_cbWater.Name = "blk_cbWater";
-            this.blk_cbWater.Size = new System.Drawing.Size(104, 24);
-            this.blk_cbWater.TabIndex = 7;
-            this.blk_cbWater.Text = "Killed by water";
-            this.blk_cbWater.UseVisualStyleBackColor = true;
-            this.blk_cbWater.CheckedChanged += new System.EventHandler(this.blk_cbWater_CheckedChanged);
-            // 
-            // blk_cbLava
-            // 
-            this.blk_cbLava.Location = new System.Drawing.Point(10, 63);
-            this.blk_cbLava.Name = "blk_cbLava";
-            this.blk_cbLava.Size = new System.Drawing.Size(116, 24);
-            this.blk_cbLava.TabIndex = 6;
-            this.blk_cbLava.Text = "Killed by lava";
-            this.blk_cbLava.UseVisualStyleBackColor = true;
-            this.blk_cbLava.CheckedChanged += new System.EventHandler(this.blk_cbLava_CheckedChanged);
+            this.cmd_btnCustom.Location = new System.Drawing.Point(253, 437);
+            this.cmd_btnCustom.Name = "cmd_btnCustom";
+            this.cmd_btnCustom.Size = new System.Drawing.Size(141, 29);
+            this.cmd_btnCustom.TabIndex = 35;
+            this.cmd_btnCustom.Text = "Custom commands";
+            this.cmd_btnCustom.UseVisualStyleBackColor = true;
+            this.cmd_btnCustom.Click += new System.EventHandler(this.cmd_btnCustom_Click);
             // 
             // PropertyWindow
             // 
@@ -4236,16 +4092,13 @@ namespace MCGalaxy.Gui
             this.pageCommandsList.ResumeLayout(false);
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
-            this.pageCommandsCustom.ResumeLayout(false);
-            this.pageCommandsCustom.PerformLayout();
-            this.groupBox24.ResumeLayout(false);
-            this.groupBox24.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.pageCommandPerms.ResumeLayout(false);
             this.pageCommandPerms.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.extracmdpermnumber)).EndInit();
             this.tabBlocks.ResumeLayout(false);
+            this.blk_grpPhysics.ResumeLayout(false);
+            this.blk_grpBehaviour.ResumeLayout(false);
+            this.blk_grpBehaviour.PerformLayout();
             this.blk_grpPermissions.ResumeLayout(false);
             this.blk_grpPermissions.PerformLayout();
             this.pageRanks.ResumeLayout(false);
@@ -4338,11 +4191,9 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
-            this.blk_grpBehaviour.ResumeLayout(false);
-            this.blk_grpBehaviour.PerformLayout();
-            this.blk_grpPhysics.ResumeLayout(false);
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.Button cmd_btnCustom;
         private System.Windows.Forms.CheckBox blk_cbLava;
         private System.Windows.Forms.CheckBox blk_cbWater;
         private System.Windows.Forms.CheckBox blk_cbDoor;
@@ -4484,7 +4335,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ListBox listCommands;
-        private System.Windows.Forms.TabPage pageCommandsCustom;
         private System.Windows.Forms.TabPage pageRanks;
         private System.Windows.Forms.Label lblColor;
         private System.Windows.Forms.ComboBox cmbColor;
@@ -4577,14 +4427,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox grpPhysics;
         private System.Windows.Forms.GroupBox afk_grp;
         private System.Windows.Forms.GroupBox bak_grp;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.RadioButton radioButton2;
-        public System.Windows.Forms.Button btnUnload;
-        public System.Windows.Forms.Button btnLoad;
-        public System.Windows.Forms.Button btnCreate;
-        public System.Windows.Forms.Label label33;
-        public System.Windows.Forms.TextBox txtCommandName;
         private System.Windows.Forms.GroupBox sql_grp;
         private System.Windows.Forms.LinkLabel sql_linkDownload;
         private System.Windows.Forms.TextBox sql_txtHost;
@@ -4689,9 +4531,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Button TntWrsDiffSlctBt;
         private System.Windows.Forms.CheckBox TntWrsStreaksChck;
         private System.Windows.Forms.Button buttonEco;
-        private System.Windows.Forms.Label lblLoadedCommands;
-        private System.Windows.Forms.ListBox lstCommands;
-        private System.Windows.Forms.GroupBox groupBox24;
         private System.Windows.Forms.PropertyGrid propsZG;
         private System.Windows.Forms.GroupBox economyGroupBox;
     }

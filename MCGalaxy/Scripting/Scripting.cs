@@ -55,6 +55,10 @@ namespace MCGalaxy.Scripting {
             }
         }
         
+        public bool SourceFileExists(string cmdName) {
+            return File.Exists(SourceDir + "Cmd" + cmdName + Ext);
+        }
+        
         public void CreateNew(string cmdName) {
             if (!Directory.Exists(SourceDir))
                 Directory.CreateDirectory(SourceDir);
