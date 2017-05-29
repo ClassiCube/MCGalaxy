@@ -367,6 +367,20 @@ namespace MCGalaxy.Gui
             this.cmd_lblDisallow = new System.Windows.Forms.Label();
             this.cmd_lblAllow = new System.Windows.Forms.Label();
             this.cmd_grpExtra = new System.Windows.Forms.GroupBox();
+            this.cmd_cmbExtra1 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra1 = new System.Windows.Forms.Label();
+            this.cmd_cmbExtra2 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra2 = new System.Windows.Forms.Label();
+            this.cmd_cmbExtra3 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra3 = new System.Windows.Forms.Label();
+            this.cmd_cmbExtra4 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra4 = new System.Windows.Forms.Label();
+            this.cmd_cmbExtra5 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra5 = new System.Windows.Forms.Label();
+            this.cmd_cmbExtra6 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra6 = new System.Windows.Forms.Label();
+            this.cmd_cmbExtra7 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra7 = new System.Windows.Forms.Label();
             this.tabChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
@@ -3833,7 +3847,6 @@ namespace MCGalaxy.Gui
             this.pageCommands.Size = new System.Drawing.Size(498, 521);
             this.pageCommands.TabIndex = 2;
             this.pageCommands.Text = "Commands";
-            this.toolTip.SetToolTip(this.pageCommands, "Which ranks can use which commands.");
             // 
             // cmd_btnHelp
             // 
@@ -3975,12 +3988,152 @@ namespace MCGalaxy.Gui
             // 
             // cmd_grpExtra
             // 
-            this.cmd_grpExtra.Location = new System.Drawing.Point(133, 106);
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra7);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra7);
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra6);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra6);
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra5);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra5);
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra4);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra4);
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra3);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra3);
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra2);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra2);
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra1);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra1);
+            this.cmd_grpExtra.Location = new System.Drawing.Point(133, 105);
             this.cmd_grpExtra.Name = "cmd_grpExtra";
-            this.cmd_grpExtra.Size = new System.Drawing.Size(360, 258);
+            this.cmd_grpExtra.Size = new System.Drawing.Size(360, 205);
             this.cmd_grpExtra.TabIndex = 28;
             this.cmd_grpExtra.TabStop = false;
             this.cmd_grpExtra.Text = "Extra permissions";
+            // 
+            // cmd_cmbExtra1
+            // 
+            this.cmd_cmbExtra1.FormattingEnabled = true;
+            this.cmd_cmbExtra1.Location = new System.Drawing.Point(10, 17);
+            this.cmd_cmbExtra1.Name = "cmd_cmbExtra1";
+            this.cmd_cmbExtra1.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra1.TabIndex = 30;
+            this.cmd_cmbExtra1.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra1
+            // 
+            this.cmd_lblExtra1.AutoSize = true;
+            this.cmd_lblExtra1.Location = new System.Drawing.Point(91, 20);
+            this.cmd_lblExtra1.Name = "cmd_lblExtra1";
+            this.cmd_lblExtra1.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra1.TabIndex = 29;
+            this.cmd_lblExtra1.Text = "+";
+            // 
+            // cmd_cmbExtra2
+            // 
+            this.cmd_cmbExtra2.FormattingEnabled = true;
+            this.cmd_cmbExtra2.Location = new System.Drawing.Point(10, 43);
+            this.cmd_cmbExtra2.Name = "cmd_cmbExtra2";
+            this.cmd_cmbExtra2.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra2.TabIndex = 32;
+            this.cmd_cmbExtra2.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra2
+            // 
+            this.cmd_lblExtra2.AutoSize = true;
+            this.cmd_lblExtra2.Location = new System.Drawing.Point(91, 46);
+            this.cmd_lblExtra2.Name = "cmd_lblExtra2";
+            this.cmd_lblExtra2.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra2.TabIndex = 31;
+            this.cmd_lblExtra2.Text = "+";
+            // 
+            // cmd_cmbExtra3
+            // 
+            this.cmd_cmbExtra3.FormattingEnabled = true;
+            this.cmd_cmbExtra3.Location = new System.Drawing.Point(10, 69);
+            this.cmd_cmbExtra3.Name = "cmd_cmbExtra3";
+            this.cmd_cmbExtra3.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra3.TabIndex = 34;
+            this.cmd_cmbExtra3.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra3
+            // 
+            this.cmd_lblExtra3.AutoSize = true;
+            this.cmd_lblExtra3.Location = new System.Drawing.Point(91, 72);
+            this.cmd_lblExtra3.Name = "cmd_lblExtra3";
+            this.cmd_lblExtra3.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra3.TabIndex = 33;
+            this.cmd_lblExtra3.Text = "+";
+            // 
+            // cmd_cmbExtra4
+            // 
+            this.cmd_cmbExtra4.FormattingEnabled = true;
+            this.cmd_cmbExtra4.Location = new System.Drawing.Point(10, 95);
+            this.cmd_cmbExtra4.Name = "cmd_cmbExtra4";
+            this.cmd_cmbExtra4.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra4.TabIndex = 36;
+            this.cmd_cmbExtra4.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra4
+            // 
+            this.cmd_lblExtra4.AutoSize = true;
+            this.cmd_lblExtra4.Location = new System.Drawing.Point(91, 98);
+            this.cmd_lblExtra4.Name = "cmd_lblExtra4";
+            this.cmd_lblExtra4.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra4.TabIndex = 35;
+            this.cmd_lblExtra4.Text = "+";
+            // 
+            // cmd_cmbExtra5
+            // 
+            this.cmd_cmbExtra5.FormattingEnabled = true;
+            this.cmd_cmbExtra5.Location = new System.Drawing.Point(10, 121);
+            this.cmd_cmbExtra5.Name = "cmd_cmbExtra5";
+            this.cmd_cmbExtra5.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra5.TabIndex = 38;
+            this.cmd_cmbExtra5.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra5
+            // 
+            this.cmd_lblExtra5.AutoSize = true;
+            this.cmd_lblExtra5.Location = new System.Drawing.Point(91, 124);
+            this.cmd_lblExtra5.Name = "cmd_lblExtra5";
+            this.cmd_lblExtra5.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra5.TabIndex = 37;
+            this.cmd_lblExtra5.Text = "+";
+            // 
+            // cmd_cmbExtra6
+            // 
+            this.cmd_cmbExtra6.FormattingEnabled = true;
+            this.cmd_cmbExtra6.Location = new System.Drawing.Point(10, 147);
+            this.cmd_cmbExtra6.Name = "cmd_cmbExtra6";
+            this.cmd_cmbExtra6.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra6.TabIndex = 40;
+            this.cmd_cmbExtra6.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra6
+            // 
+            this.cmd_lblExtra6.AutoSize = true;
+            this.cmd_lblExtra6.Location = new System.Drawing.Point(91, 150);
+            this.cmd_lblExtra6.Name = "cmd_lblExtra6";
+            this.cmd_lblExtra6.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra6.TabIndex = 39;
+            this.cmd_lblExtra6.Text = "+";
+            // 
+            // cmd_cmbExtra7
+            // 
+            this.cmd_cmbExtra7.FormattingEnabled = true;
+            this.cmd_cmbExtra7.Location = new System.Drawing.Point(10, 173);
+            this.cmd_cmbExtra7.Name = "cmd_cmbExtra7";
+            this.cmd_cmbExtra7.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra7.TabIndex = 42;
+            this.cmd_cmbExtra7.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra7
+            // 
+            this.cmd_lblExtra7.AutoSize = true;
+            this.cmd_lblExtra7.Location = new System.Drawing.Point(91, 176);
+            this.cmd_lblExtra7.Name = "cmd_lblExtra7";
+            this.cmd_lblExtra7.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra7.TabIndex = 41;
+            this.cmd_lblExtra7.Text = "+";
             // 
             // PropertyWindow
             // 
@@ -4110,6 +4263,20 @@ namespace MCGalaxy.Gui
             this.cmd_grpPermissions.PerformLayout();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.Label cmd_lblExtra1;
+        private System.Windows.Forms.ComboBox cmd_cmbExtra1;
+        private System.Windows.Forms.Label cmd_lblExtra2;
+        private System.Windows.Forms.ComboBox cmd_cmbExtra2;
+        private System.Windows.Forms.Label cmd_lblExtra3;
+        private System.Windows.Forms.ComboBox cmd_cmbExtra3;
+        private System.Windows.Forms.Label cmd_lblExtra4;
+        private System.Windows.Forms.ComboBox cmd_cmbExtra4;
+        private System.Windows.Forms.Label cmd_lblExtra5;
+        private System.Windows.Forms.ComboBox cmd_cmbExtra5;
+        private System.Windows.Forms.Label cmd_lblExtra6;
+        private System.Windows.Forms.ComboBox cmd_cmbExtra6;
+        private System.Windows.Forms.Label cmd_lblExtra7;
+        private System.Windows.Forms.ComboBox cmd_cmbExtra7;
         private System.Windows.Forms.GroupBox cmd_grpExtra;
         private System.Windows.Forms.ListBox cmd_list;
         private System.Windows.Forms.Button cmd_btnHelp;

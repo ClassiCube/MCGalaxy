@@ -96,9 +96,10 @@ namespace MCGalaxy.Gui {
             }
         }
         
-        internal static void FillRanks(ComboBox[] boxes) {
+        internal static void FillRanks(ComboBox[] boxes, bool removeRank = true) {
             for (int i = 0; i < boxes.Length; i++) {
                 boxes[i].Items.AddRange(RankNames);
+                if (!removeRank) continue;
                 boxes[i].Items.Add("(remove rank)");
             }
         }

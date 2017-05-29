@@ -35,7 +35,18 @@ namespace MCGalaxy.Commands {
         public string Description = "";
         
         /// <summary> The number / identifier of this extra permission. </summary>
-        public int Number;        
+        public int Number;
+        
+        
+        /// <summary> Creates a copy of this instance. </summary>
+        public CommandExtraPerms Copy() {
+            CommandExtraPerms perms = new CommandExtraPerms();
+            perms.CmdName = CmdName;
+            perms.MinRank = MinRank;
+            perms.Description = Description;
+            perms.Number = Number;
+            return perms;
+        }
         
         static List<CommandExtraPerms> list = new List<CommandExtraPerms>();
         

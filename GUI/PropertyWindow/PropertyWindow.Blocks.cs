@@ -25,13 +25,13 @@ namespace MCGalaxy.Gui {
 
         bool blockSupressEvents = true;
         ComboBox[] blockAllowBoxes, blockDisallowBoxes;
+        byte blockID;
+        
         // need to keep a list of changed block perms, because we don't want
         // to modify the server's live permissions if user clicks 'discard'
         BlockPerms blockPermsOrig, blockPerms;
         List<BlockPerms> blockPermsChanged = new List<BlockPerms>();
-        BlockProps[] blockPropsChanged = new BlockProps[256];
-        byte blockID;
-        
+        BlockProps[] blockPropsChanged = new BlockProps[256];        
         
         void LoadBlocks() {
             blk_list.Items.Clear();
@@ -97,9 +97,10 @@ namespace MCGalaxy.Gui {
             blk_cbWater.Checked = props.WaterKills;
             
             blockSupressEvents = true;
-            GuiPerms.SetDefaultIndex(blk_cmbMin, blockPermsOrig.MinRank);
-            GuiPerms.SetSpecificPerms(blockPermsOrig.Allowed, blockAllowBoxes);
-            GuiPerms.SetSpecificPerms(blockPermsOrig.Disallowed, blockDisallowBoxes);
+            BlockPerms perms = blockPerms != null ? blockPerms : blockPermsOrig;
+            GuiPerms.SetDefaultIndex(blk_cmbMin, perms.MinRank);
+            GuiPerms.SetSpecificPerms(perms.Allowed, blockAllowBoxes);
+            GuiPerms.SetSpecificPerms(perms.Disallowed, blockDisallowBoxes);
             blockSupressEvents = false;
         }
         
