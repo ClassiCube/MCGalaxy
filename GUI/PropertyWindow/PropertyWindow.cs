@@ -145,36 +145,6 @@ namespace MCGalaxy.Gui {
             LoadCommands();
         }
 
-        public void LoadBlocks() {
-            blk_list.Items.Clear();
-            blockPermsChanged.Clear();
-            
-            foreach (BlockPerms perms in BlockPerms.List) {
-                if (Block.Name(perms.BlockID) != "unknown") {
-                    blk_list.Items.Add(Block.Name(perms.BlockID));
-                }
-            }
-            
-            if (blk_list.SelectedIndex == -1)
-                blk_list.SelectedIndex = 0;
-        }
-
-        public void SaveBlocks() {
-            if (blockPermsChanged.Count == 0) {
-                LoadBlocks(); return;
-            }
-            
-            foreach (BlockPerms changed in blockPermsChanged) {
-                BlockPerms.List[changed.BlockID] = changed;
-                if (changed.BlockID < Block.CpeCount) {
-                    BlockPerms.ResendBlockPermissions(changed.BlockID);
-                }
-            }
-            BlockPerms.Save();
-            Block.SetBlocks();
-            LoadBlocks();
-        }
-
         public void LoadProp(string givenPath) {
             SrvProperties.Load(givenPath);
             LoadGeneralProps();
@@ -316,9 +286,9 @@ namespace MCGalaxy.Gui {
             Player.storeHelp = true;
             Command.all.Find("help").Use(null, toHelp);
             Player.storeHelp = false;
-            string messageInfo = "Help information for " + toHelp + ":\r\n\r\n";
-            messageInfo += Player.storedHelp;
-            MessageBox.Show(messageInfo);
+            
+            MessageBox.Show(Colors.StripColors(Player.storedHelp),
+                            "Help information for " + toHelp);
         }
 
         private void forceUpdateBtn_Click(object sender, EventArgs e) {

@@ -26,15 +26,65 @@ namespace MCGalaxy.Gui {
         // to modify the server's live permissions if user clicks 'discard'
         BlockPerms blockPermsOrig, blockPerms;
         List<BlockPerms> blockPermsChanged = new List<BlockPerms>();
+        BlockProps[] blockPropsChanged = new BlockProps[256];
+        byte blockID;
         
-        void listBlocks_SelectedIndexChanged(object sender, EventArgs e) {
-            byte b = Block.Byte(blk_list.SelectedItem.ToString());
-            blockPermsOrig = BlockPerms.List[b];
-            blockPerms = blockPermsChanged.Find(p => p.BlockID == b);
+        
+        public void LoadBlocks() {
+            blk_list.Items.Clear();
+            blockPermsChanged.Clear();
+            for (int i = 0; i < Block.Props.Length; i++) {
+                blockPropsChanged[i] = Block.Props[i];
+                blockPropsChanged[i].Changed = false;
+            }
+            
+            foreach (BlockPerms perms in BlockPerms.List) {
+                if (Block.Name(perms.BlockID) != "unknown") {
+                    blk_list.Items.Add(Block.Name(perms.BlockID));
+                }
+            }
+            
+            if (blk_list.SelectedIndex == -1)
+                blk_list.SelectedIndex = 0;
+        }
+
+        public void SaveBlocks() {
+            if (!BlocksChanged()) { LoadBlocks(); return; }
+            
+            for (int i = 0; i < blockPropsChanged.Length; i++) {
+                if (!blockPropsChanged[i].Changed) continue;
+                Block.Props[i] = blockPropsChanged[i];
+            }
+            foreach (BlockPerms perms in blockPermsChanged) {
+                BlockPerms.List[perms.BlockID] = perms;
+                if (perms.BlockID < Block.CpeCount) {
+                    BlockPerms.ResendBlockPermissions(perms.BlockID);
+                }
+            }
+            
+            BlockProps.Save("core", Block.Props);
+            BlockPerms.Save();
+            Block.SetBlocks();
+            LoadBlocks();
+        }
+        
+        bool BlocksChanged() {
+            for (int i = 0; i < blockPropsChanged.Length; i++) {
+                if (!blockPropsChanged[i].Changed) continue;
+                return true;
+            }
+            return blockPermsChanged.Count > 0;
+        }
+        
+        
+        void blk_list_SelectedIndexChanged(object sender, EventArgs e) {
+            blockID = Block.Byte(blk_list.SelectedItem.ToString());
+            blockPermsOrig = BlockPerms.List[blockID];
+            blockPerms = blockPermsChanged.Find(p => p.BlockID == blockID);
             BlockInitSpecificArrays();
             
             // TODO: actually save & set these
-            BlockProps props = Block.Props[b];
+            BlockProps props = blockPropsChanged[blockID];
             blk_cbMsgBlock.Checked = props.IsMessageBlock;
             blk_cbPortal.Checked = props.IsPortal;
             blk_cbDeath.Checked = props.KillerBlock;
@@ -139,7 +189,7 @@ namespace MCGalaxy.Gui {
             }
         }
         
-        void BlockSetSpecific(ComboBox[] boxes, int boxIdx, 
+        void BlockSetSpecific(ComboBox[] boxes, int boxIdx,
                               List<LevelPermission> perms, int idx) {
             if (boxIdx < perms.Count) {
                 perms[boxIdx] = GuiPerms.RankPerms[idx];
@@ -155,6 +205,53 @@ namespace MCGalaxy.Gui {
 
         void blk_btnHelp_Click(object sender, EventArgs e) {
             getHelp(blk_list.SelectedItem.ToString());
+        }
+        
+        
+        void blk_cbMsgBlock_CheckedChanged(object sender, EventArgs e) {
+            blockPropsChanged[blockID].IsMessageBlock = blk_cbMsgBlock.Checked;
+            blockPropsChanged[blockID].Changed = true;
+        }
+        
+        void blk_cbPortal_CheckedChanged(object sender, EventArgs e) {
+            blockPropsChanged[blockID].IsPortal = blk_cbPortal.Checked;
+            blockPropsChanged[blockID].Changed = true;
+        }
+        
+        void blk_cbDeath_CheckedChanged(object sender, EventArgs e) {
+            blockPropsChanged[blockID].KillerBlock = blk_cbDeath.Checked;
+            blk_txtDeath.Enabled = blk_cbDeath.Checked;
+            blockPropsChanged[blockID].Changed = true;
+        }
+        
+        void blk_txtDeath_TextChanged(object sender, EventArgs e) {
+            blockPropsChanged[blockID].DeathMessage = blk_txtDeath.Text;
+            blockPropsChanged[blockID].Changed = true;
+        }
+        
+        void blk_cbDoor_CheckedChanged(object sender, EventArgs e) {
+            blockPropsChanged[blockID].IsDoor = blk_cbDoor.Checked;
+            blockPropsChanged[blockID].Changed = true;
+        }
+        
+        void blk_cbTdoor_CheckedChanged(object sender, EventArgs e) {
+            blockPropsChanged[blockID].IsTDoor = blk_cbTdoor.Checked;
+            blockPropsChanged[blockID].Changed = true;
+        }
+        
+        void blk_cbRails_CheckedChanged(object sender, EventArgs e) {
+            blockPropsChanged[blockID].IsRails = blk_cbRails.Checked;
+            blockPropsChanged[blockID].Changed = true;
+        }
+        
+        void blk_cbLava_CheckedChanged(object sender, EventArgs e) {
+            blockPropsChanged[blockID].LavaKills = blk_cbLava.Checked;
+            blockPropsChanged[blockID].Changed = true;
+        }
+        
+        void blk_cbWater_CheckedChanged(object sender, EventArgs e) {
+            blockPropsChanged[blockID].WaterKills = blk_cbWater.Checked;
+            blockPropsChanged[blockID].Changed = true;
         }
     }
 }

@@ -1652,7 +1652,7 @@ namespace MCGalaxy.Gui
             // 
             // blk_btnHelp
             // 
-            this.blk_btnHelp.Location = new System.Drawing.Point(6, 486);
+            this.blk_btnHelp.Location = new System.Drawing.Point(6, 485);
             this.blk_btnHelp.Name = "blk_btnHelp";
             this.blk_btnHelp.Size = new System.Drawing.Size(121, 29);
             this.blk_btnHelp.TabIndex = 23;
@@ -1667,7 +1667,7 @@ namespace MCGalaxy.Gui
             this.blk_list.Name = "blk_list";
             this.blk_list.Size = new System.Drawing.Size(121, 472);
             this.blk_list.TabIndex = 15;
-            this.blk_list.SelectedIndexChanged += new System.EventHandler(this.listBlocks_SelectedIndexChanged);
+            this.blk_list.SelectedIndexChanged += new System.EventHandler(this.blk_list_SelectedIndexChanged);
             // 
             // pageRanks
             // 
@@ -4125,6 +4125,7 @@ namespace MCGalaxy.Gui
             this.blk_cbMsgBlock.TabIndex = 0;
             this.blk_cbMsgBlock.Text = "Is a message block";
             this.blk_cbMsgBlock.UseVisualStyleBackColor = true;
+            this.blk_cbMsgBlock.CheckedChanged += new System.EventHandler(this.blk_cbMsgBlock_CheckedChanged);
             // 
             // blk_cbPortal
             // 
@@ -4134,6 +4135,7 @@ namespace MCGalaxy.Gui
             this.blk_cbPortal.TabIndex = 1;
             this.blk_cbPortal.Text = "Is a portal";
             this.blk_cbPortal.UseVisualStyleBackColor = true;
+            this.blk_cbPortal.CheckedChanged += new System.EventHandler(this.blk_cbPortal_CheckedChanged);
             // 
             // blk_cbDeath
             // 
@@ -4143,6 +4145,7 @@ namespace MCGalaxy.Gui
             this.blk_cbDeath.TabIndex = 2;
             this.blk_cbDeath.Text = "Kills players";
             this.blk_cbDeath.UseVisualStyleBackColor = true;
+            this.blk_cbDeath.CheckedChanged += new System.EventHandler(this.blk_cbDeath_CheckedChanged);
             // 
             // blk_txtDeath
             // 
@@ -4150,6 +4153,7 @@ namespace MCGalaxy.Gui
             this.blk_txtDeath.Name = "blk_txtDeath";
             this.blk_txtDeath.Size = new System.Drawing.Size(254, 21);
             this.blk_txtDeath.TabIndex = 3;
+            this.blk_txtDeath.TextChanged += new System.EventHandler(this.blk_txtDeath_TextChanged);
             // 
             // blk_cbRails
             // 
@@ -4159,6 +4163,7 @@ namespace MCGalaxy.Gui
             this.blk_cbRails.TabIndex = 5;
             this.blk_cbRails.Text = "Is train rails";
             this.blk_cbRails.UseVisualStyleBackColor = true;
+            this.blk_cbRails.CheckedChanged += new System.EventHandler(this.blk_cbRails_CheckedChanged);
             // 
             // blk_cbTdoor
             // 
@@ -4168,6 +4173,7 @@ namespace MCGalaxy.Gui
             this.blk_cbTdoor.TabIndex = 4;
             this.blk_cbTdoor.Text = "Is a tDoor";
             this.blk_cbTdoor.UseVisualStyleBackColor = true;
+            this.blk_cbTdoor.CheckedChanged += new System.EventHandler(this.blk_cbTdoor_CheckedChanged);
             // 
             // blk_cbDoor
             // 
@@ -4177,6 +4183,7 @@ namespace MCGalaxy.Gui
             this.blk_cbDoor.TabIndex = 3;
             this.blk_cbDoor.Text = "Is a door";
             this.blk_cbDoor.UseVisualStyleBackColor = true;
+            this.blk_cbDoor.CheckedChanged += new System.EventHandler(this.blk_cbDoor_CheckedChanged);
             // 
             // blk_cbWater
             // 
@@ -4186,6 +4193,7 @@ namespace MCGalaxy.Gui
             this.blk_cbWater.TabIndex = 7;
             this.blk_cbWater.Text = "Killed by water";
             this.blk_cbWater.UseVisualStyleBackColor = true;
+            this.blk_cbWater.CheckedChanged += new System.EventHandler(this.blk_cbWater_CheckedChanged);
             // 
             // blk_cbLava
             // 
@@ -4195,6 +4203,7 @@ namespace MCGalaxy.Gui
             this.blk_cbLava.TabIndex = 6;
             this.blk_cbLava.Text = "Killed by lava";
             this.blk_cbLava.UseVisualStyleBackColor = true;
+            this.blk_cbLava.CheckedChanged += new System.EventHandler(this.blk_cbLava_CheckedChanged);
             // 
             // PropertyWindow
             // 
