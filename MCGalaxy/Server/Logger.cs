@@ -105,8 +105,11 @@ namespace MCGalaxy {
         static void FlushCache(string path, Queue<string> cache) {
             //TODO: not happy about constantly opening and closing a stream like this but I suppose its ok (Pidgeon)
             using (StreamWriter w = new StreamWriter(path, true)) {
-                while (cache.Count > 0)
-                    w.Write(cache.Dequeue());
+                while (cache.Count > 0) {
+                    string item = cache.Dequeue();
+                    item = Colors.StripColors(item);
+                    w.Write(item);
+                }
             }
         }
         
