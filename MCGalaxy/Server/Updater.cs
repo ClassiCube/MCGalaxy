@@ -70,8 +70,8 @@ namespace MCGalaxy {
                     ConsoleColor prevColor = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("An update was found!");
-                    Console.WriteLine("Update using the file at " + DLLLocation + " and placing it over the top of your current MCGalaxy_.dll!");
-                    Console.WriteLine("Also update using the file at " + EXELocation + " and placing it over the top of your current MCGalaxy.exe");
+                    Console.WriteLine("Update using the file at " + DLLLocation + ", and replace MCGalaxy_.dll");
+                    Console.WriteLine("Also update using the file at " + EXELocation + ", and replace MCGalaxy.exe");
                     Console.ForegroundColor = prevColor;
                 }
             } catch(Exception e) {

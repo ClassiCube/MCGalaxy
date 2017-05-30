@@ -46,7 +46,7 @@ namespace MCGalaxy.Gui
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.tabChat = new System.Windows.Forms.TabPage();
+            this.pageChat = new System.Windows.Forms.TabPage();
             this.chat_grpTab = new System.Windows.Forms.GroupBox();
             this.chat_cbTabRank = new System.Windows.Forms.CheckBox();
             this.chat_cbTabLevel = new System.Windows.Forms.CheckBox();
@@ -115,7 +115,7 @@ namespace MCGalaxy.Gui
             this.srv_chkPublic = new System.Windows.Forms.CheckBox();
             this.sec_cbLogNotes = new System.Windows.Forms.CheckBox();
             this.sec_cbChatAuto = new System.Windows.Forms.CheckBox();
-            this.tabBlocks = new System.Windows.Forms.TabPage();
+            this.pageBlocks = new System.Windows.Forms.TabPage();
             this.blk_grpPhysics = new System.Windows.Forms.GroupBox();
             this.blk_cbWater = new System.Windows.Forms.CheckBox();
             this.blk_cbLava = new System.Windows.Forms.CheckBox();
@@ -237,19 +237,19 @@ namespace MCGalaxy.Gui
             this.srv_btnPort = new System.Windows.Forms.Button();
             this.srv_lblOwner = new System.Windows.Forms.Label();
             this.srv_txtOwner = new System.Windows.Forms.TextBox();
-            this.grpUpdate = new System.Windows.Forms.GroupBox();
-            this.forceUpdateBtn = new System.Windows.Forms.Button();
+            this.srv_grpUpdate = new System.Windows.Forms.GroupBox();
+            this.srv_btnForceUpdate = new System.Windows.Forms.Button();
             this.updateTimeNumeric = new System.Windows.Forms.NumericUpDown();
             this.lblUpdateSeconds = new System.Windows.Forms.Label();
             this.notifyInGameUpdate = new System.Windows.Forms.CheckBox();
             this.autoUpdate = new System.Windows.Forms.CheckBox();
             this.chkUpdates = new System.Windows.Forms.CheckBox();
             this.grpPlayers = new System.Windows.Forms.GroupBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.numPlayers = new System.Windows.Forms.NumericUpDown();
-            this.chkAgreeToRules = new System.Windows.Forms.CheckBox();
-            this.label35 = new System.Windows.Forms.Label();
-            this.numGuests = new System.Windows.Forms.NumericUpDown();
+            this.srv_lblPlayers = new System.Windows.Forms.Label();
+            this.srv_numPlayers = new System.Windows.Forms.NumericUpDown();
+            this.srv_cbMustAgree = new System.Windows.Forms.CheckBox();
+            this.srv_lblGuests = new System.Windows.Forms.Label();
+            this.srv_numGuests = new System.Windows.Forms.NumericUpDown();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.pageGames = new System.Windows.Forms.TabPage();
             this.tabGames = new System.Windows.Forms.TabControl();
@@ -381,12 +381,12 @@ namespace MCGalaxy.Gui
             this.cmd_lblExtra6 = new System.Windows.Forms.Label();
             this.cmd_cmbExtra7 = new System.Windows.Forms.ComboBox();
             this.cmd_lblExtra7 = new System.Windows.Forms.Label();
-            this.tabChat.SuspendLayout();
+            this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
             this.chat_grpOther.SuspendLayout();
             this.chat_grpColors.SuspendLayout();
-            this.tabBlocks.SuspendLayout();
+            this.pageBlocks.SuspendLayout();
             this.blk_grpPhysics.SuspendLayout();
             this.blk_grpBehaviour.SuspendLayout();
             this.blk_grpPermissions.SuspendLayout();
@@ -408,11 +408,11 @@ namespace MCGalaxy.Gui
             this.lvl_grp.SuspendLayout();
             this.adv_grp.SuspendLayout();
             this.srv_grp.SuspendLayout();
-            this.grpUpdate.SuspendLayout();
+            this.srv_grpUpdate.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updateTimeNumeric)).BeginInit();
             this.grpPlayers.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numPlayers)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numGuests)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.srv_numPlayers)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.srv_numGuests)).BeginInit();
             this.tabControl.SuspendLayout();
             this.pageGames.SuspendLayout();
             this.tabGames.SuspendLayout();
@@ -457,19 +457,19 @@ namespace MCGalaxy.Gui
             this.cmd_grpPermissions.SuspendLayout();
             this.SuspendLayout();
             // 
-            // tabChat
+            // pageChat
             // 
-            this.tabChat.BackColor = System.Drawing.SystemColors.Control;
-            this.tabChat.Controls.Add(this.chat_grpTab);
-            this.tabChat.Controls.Add(this.chat_grpMessages);
-            this.tabChat.Controls.Add(this.chat_grpOther);
-            this.tabChat.Controls.Add(this.chat_grpColors);
-            this.tabChat.Location = new System.Drawing.Point(4, 22);
-            this.tabChat.Name = "tabChat";
-            this.tabChat.Padding = new System.Windows.Forms.Padding(3);
-            this.tabChat.Size = new System.Drawing.Size(498, 521);
-            this.tabChat.TabIndex = 10;
-            this.tabChat.Text = "Chat";
+            this.pageChat.BackColor = System.Drawing.SystemColors.Control;
+            this.pageChat.Controls.Add(this.chat_grpTab);
+            this.pageChat.Controls.Add(this.chat_grpMessages);
+            this.pageChat.Controls.Add(this.chat_grpOther);
+            this.pageChat.Controls.Add(this.chat_grpColors);
+            this.pageChat.Location = new System.Drawing.Point(4, 22);
+            this.pageChat.Name = "pageChat";
+            this.pageChat.Padding = new System.Windows.Forms.Padding(3);
+            this.pageChat.Size = new System.Drawing.Size(498, 521);
+            this.pageChat.TabIndex = 10;
+            this.pageChat.Text = "Chat";
             // 
             // chat_grpTab
             // 
@@ -1156,20 +1156,20 @@ namespace MCGalaxy.Gui
             this.sec_cbChatAuto.UseVisualStyleBackColor = true;
             this.sec_cbChatAuto.CheckedChanged += new System.EventHandler(this.sec_cbChatAuto_Checked);
             // 
-            // tabBlocks
+            // pageBlocks
             // 
-            this.tabBlocks.BackColor = System.Drawing.SystemColors.Control;
-            this.tabBlocks.Controls.Add(this.blk_grpPhysics);
-            this.tabBlocks.Controls.Add(this.blk_grpBehaviour);
-            this.tabBlocks.Controls.Add(this.blk_grpPermissions);
-            this.tabBlocks.Controls.Add(this.blk_btnHelp);
-            this.tabBlocks.Controls.Add(this.blk_list);
-            this.tabBlocks.Location = new System.Drawing.Point(4, 22);
-            this.tabBlocks.Name = "tabBlocks";
-            this.tabBlocks.Padding = new System.Windows.Forms.Padding(3);
-            this.tabBlocks.Size = new System.Drawing.Size(498, 521);
-            this.tabBlocks.TabIndex = 5;
-            this.tabBlocks.Text = "Blocks";
+            this.pageBlocks.BackColor = System.Drawing.SystemColors.Control;
+            this.pageBlocks.Controls.Add(this.blk_grpPhysics);
+            this.pageBlocks.Controls.Add(this.blk_grpBehaviour);
+            this.pageBlocks.Controls.Add(this.blk_grpPermissions);
+            this.pageBlocks.Controls.Add(this.blk_btnHelp);
+            this.pageBlocks.Controls.Add(this.blk_list);
+            this.pageBlocks.Location = new System.Drawing.Point(4, 22);
+            this.pageBlocks.Name = "pageBlocks";
+            this.pageBlocks.Padding = new System.Windows.Forms.Padding(3);
+            this.pageBlocks.Size = new System.Drawing.Size(498, 521);
+            this.pageBlocks.TabIndex = 5;
+            this.pageBlocks.Text = "Blocks";
             // 
             // blk_grpPhysics
             // 
@@ -2285,7 +2285,7 @@ namespace MCGalaxy.Gui
             this.pageServer.Controls.Add(this.lvl_grp);
             this.pageServer.Controls.Add(this.adv_grp);
             this.pageServer.Controls.Add(this.srv_grp);
-            this.pageServer.Controls.Add(this.grpUpdate);
+            this.pageServer.Controls.Add(this.srv_grpUpdate);
             this.pageServer.Controls.Add(this.grpPlayers);
             this.pageServer.Location = new System.Drawing.Point(4, 22);
             this.pageServer.Name = "pageServer";
@@ -2436,33 +2436,33 @@ namespace MCGalaxy.Gui
             this.srv_txtOwner.Size = new System.Drawing.Size(119, 21);
             this.srv_txtOwner.TabIndex = 4;
             // 
-            // grpUpdate
+            // srv_grpUpdate
             // 
-            this.grpUpdate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpUpdate.Controls.Add(this.forceUpdateBtn);
-            this.grpUpdate.Controls.Add(this.updateTimeNumeric);
-            this.grpUpdate.Controls.Add(this.lblUpdateSeconds);
-            this.grpUpdate.Controls.Add(this.notifyInGameUpdate);
-            this.grpUpdate.Controls.Add(this.autoUpdate);
-            this.grpUpdate.Controls.Add(this.chkUpdates);
-            this.grpUpdate.Location = new System.Drawing.Point(220, 271);
-            this.grpUpdate.Name = "grpUpdate";
-            this.grpUpdate.Size = new System.Drawing.Size(271, 120);
-            this.grpUpdate.TabIndex = 44;
-            this.grpUpdate.TabStop = false;
-            this.grpUpdate.Text = "Update Settings";
+            this.srv_grpUpdate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.srv_grpUpdate.Controls.Add(this.srv_btnForceUpdate);
+            this.srv_grpUpdate.Controls.Add(this.updateTimeNumeric);
+            this.srv_grpUpdate.Controls.Add(this.lblUpdateSeconds);
+            this.srv_grpUpdate.Controls.Add(this.notifyInGameUpdate);
+            this.srv_grpUpdate.Controls.Add(this.autoUpdate);
+            this.srv_grpUpdate.Controls.Add(this.chkUpdates);
+            this.srv_grpUpdate.Location = new System.Drawing.Point(220, 271);
+            this.srv_grpUpdate.Name = "srv_grpUpdate";
+            this.srv_grpUpdate.Size = new System.Drawing.Size(271, 120);
+            this.srv_grpUpdate.TabIndex = 44;
+            this.srv_grpUpdate.TabStop = false;
+            this.srv_grpUpdate.Text = "Update Settings";
             // 
-            // forceUpdateBtn
+            // srv_btnForceUpdate
             // 
-            this.forceUpdateBtn.AutoSize = true;
-            this.forceUpdateBtn.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.forceUpdateBtn.Location = new System.Drawing.Point(186, 16);
-            this.forceUpdateBtn.Name = "forceUpdateBtn";
-            this.forceUpdateBtn.Size = new System.Drawing.Size(79, 23);
-            this.forceUpdateBtn.TabIndex = 6;
-            this.forceUpdateBtn.Text = "Force update";
-            this.forceUpdateBtn.UseVisualStyleBackColor = true;
-            this.forceUpdateBtn.Click += new System.EventHandler(this.forceUpdateBtn_Click);
+            this.srv_btnForceUpdate.AutoSize = true;
+            this.srv_btnForceUpdate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.srv_btnForceUpdate.Location = new System.Drawing.Point(186, 16);
+            this.srv_btnForceUpdate.Name = "srv_btnForceUpdate";
+            this.srv_btnForceUpdate.Size = new System.Drawing.Size(79, 23);
+            this.srv_btnForceUpdate.TabIndex = 6;
+            this.srv_btnForceUpdate.Text = "Force update";
+            this.srv_btnForceUpdate.UseVisualStyleBackColor = true;
+            this.srv_btnForceUpdate.Click += new System.EventHandler(this.forceUpdateBtn_Click);
             // 
             // updateTimeNumeric
             // 
@@ -2523,11 +2523,11 @@ namespace MCGalaxy.Gui
             // grpPlayers
             // 
             this.grpPlayers.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpPlayers.Controls.Add(this.label21);
-            this.grpPlayers.Controls.Add(this.numPlayers);
-            this.grpPlayers.Controls.Add(this.chkAgreeToRules);
-            this.grpPlayers.Controls.Add(this.label35);
-            this.grpPlayers.Controls.Add(this.numGuests);
+            this.grpPlayers.Controls.Add(this.srv_lblPlayers);
+            this.grpPlayers.Controls.Add(this.srv_numPlayers);
+            this.grpPlayers.Controls.Add(this.srv_cbMustAgree);
+            this.grpPlayers.Controls.Add(this.srv_lblGuests);
+            this.grpPlayers.Controls.Add(this.srv_numGuests);
             this.grpPlayers.Location = new System.Drawing.Point(8, 160);
             this.grpPlayers.Name = "grpPlayers";
             this.grpPlayers.Size = new System.Drawing.Size(300, 105);
@@ -2535,65 +2535,65 @@ namespace MCGalaxy.Gui
             this.grpPlayers.TabStop = false;
             this.grpPlayers.Text = "Players";
             // 
-            // label21
+            // srv_lblPlayers
             // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 22);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(67, 13);
-            this.label21.TabIndex = 3;
-            this.label21.Text = "Max Players:";
+            this.srv_lblPlayers.AutoSize = true;
+            this.srv_lblPlayers.Location = new System.Drawing.Point(6, 22);
+            this.srv_lblPlayers.Name = "srv_lblPlayers";
+            this.srv_lblPlayers.Size = new System.Drawing.Size(67, 13);
+            this.srv_lblPlayers.TabIndex = 3;
+            this.srv_lblPlayers.Text = "Max Players:";
             // 
-            // numPlayers
+            // srv_numPlayers
             // 
-            this.numPlayers.Location = new System.Drawing.Point(83, 20);
-            this.numPlayers.Maximum = new decimal(new int[] {
+            this.srv_numPlayers.Location = new System.Drawing.Point(83, 20);
+            this.srv_numPlayers.Maximum = new decimal(new int[] {
                                     128,
                                     0,
                                     0,
                                     0});
-            this.numPlayers.Name = "numPlayers";
-            this.numPlayers.Size = new System.Drawing.Size(60, 21);
-            this.numPlayers.TabIndex = 29;
-            this.numPlayers.Value = new decimal(new int[] {
+            this.srv_numPlayers.Name = "srv_numPlayers";
+            this.srv_numPlayers.Size = new System.Drawing.Size(60, 21);
+            this.srv_numPlayers.TabIndex = 29;
+            this.srv_numPlayers.Value = new decimal(new int[] {
                                     12,
                                     0,
                                     0,
                                     0});
-            this.numPlayers.ValueChanged += new System.EventHandler(this.numPlayers_ValueChanged);
+            this.srv_numPlayers.ValueChanged += new System.EventHandler(this.numPlayers_ValueChanged);
             // 
-            // chkAgreeToRules
+            // srv_cbMustAgree
             // 
-            this.chkAgreeToRules.AutoSize = true;
-            this.chkAgreeToRules.Location = new System.Drawing.Point(9, 74);
-            this.chkAgreeToRules.Name = "chkAgreeToRules";
-            this.chkAgreeToRules.Size = new System.Drawing.Size(169, 17);
-            this.chkAgreeToRules.TabIndex = 32;
-            this.chkAgreeToRules.Tag = "Forces guests to use /agree on entry to the server";
-            this.chkAgreeToRules.Text = "Force new guests to read rules";
-            this.chkAgreeToRules.UseVisualStyleBackColor = true;
+            this.srv_cbMustAgree.AutoSize = true;
+            this.srv_cbMustAgree.Location = new System.Drawing.Point(9, 74);
+            this.srv_cbMustAgree.Name = "srv_cbMustAgree";
+            this.srv_cbMustAgree.Size = new System.Drawing.Size(169, 17);
+            this.srv_cbMustAgree.TabIndex = 32;
+            this.srv_cbMustAgree.Tag = "Forces guests to use /agree on entry to the server";
+            this.srv_cbMustAgree.Text = "Force new guests to read rules";
+            this.srv_cbMustAgree.UseVisualStyleBackColor = true;
             // 
-            // label35
+            // srv_lblGuests
             // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(6, 49);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(65, 13);
-            this.label35.TabIndex = 27;
-            this.label35.Text = "Max Guests:";
+            this.srv_lblGuests.AutoSize = true;
+            this.srv_lblGuests.Location = new System.Drawing.Point(6, 49);
+            this.srv_lblGuests.Name = "srv_lblGuests";
+            this.srv_lblGuests.Size = new System.Drawing.Size(65, 13);
+            this.srv_lblGuests.TabIndex = 27;
+            this.srv_lblGuests.Text = "Max Guests:";
             // 
-            // numGuests
+            // srv_numGuests
             // 
-            this.numGuests.Location = new System.Drawing.Point(83, 47);
-            this.numGuests.Maximum = new decimal(new int[] {
+            this.srv_numGuests.Location = new System.Drawing.Point(83, 47);
+            this.srv_numGuests.Maximum = new decimal(new int[] {
                                     128,
                                     0,
                                     0,
                                     0});
-            this.numGuests.Name = "numGuests";
-            this.numGuests.Size = new System.Drawing.Size(60, 21);
-            this.numGuests.TabIndex = 28;
-            this.numGuests.Value = new decimal(new int[] {
+            this.srv_numGuests.Name = "srv_numGuests";
+            this.srv_numGuests.Size = new System.Drawing.Size(60, 21);
+            this.srv_numGuests.TabIndex = 28;
+            this.srv_numGuests.Value = new decimal(new int[] {
                                     10,
                                     0,
                                     0,
@@ -2604,13 +2604,13 @@ namespace MCGalaxy.Gui
             this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
                                     | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.pageServer);
-            this.tabControl.Controls.Add(this.tabChat);
+            this.tabControl.Controls.Add(this.pageChat);
             this.tabControl.Controls.Add(this.pageIRC);
             this.tabControl.Controls.Add(this.pageMisc);
             this.tabControl.Controls.Add(this.pageGames);
             this.tabControl.Controls.Add(this.pageRanks);
             this.tabControl.Controls.Add(this.pageCommands);
-            this.tabControl.Controls.Add(this.tabBlocks);
+            this.tabControl.Controls.Add(this.pageBlocks);
             this.tabControl.Controls.Add(this.pageSecurity);
             this.tabControl.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl.Location = new System.Drawing.Point(0, 0);
@@ -4154,7 +4154,7 @@ namespace MCGalaxy.Gui
             this.Text = "Properties";
             this.Load += new System.EventHandler(this.PropertyWindow_Load);
             this.Disposed += new System.EventHandler(this.PropertyWindow_Unload);
-            this.tabChat.ResumeLayout(false);
+            this.pageChat.ResumeLayout(false);
             this.chat_grpTab.ResumeLayout(false);
             this.chat_grpTab.PerformLayout();
             this.chat_grpMessages.ResumeLayout(false);
@@ -4163,7 +4163,7 @@ namespace MCGalaxy.Gui
             this.chat_grpOther.PerformLayout();
             this.chat_grpColors.ResumeLayout(false);
             this.chat_grpColors.PerformLayout();
-            this.tabBlocks.ResumeLayout(false);
+            this.pageBlocks.ResumeLayout(false);
             this.blk_grpPhysics.ResumeLayout(false);
             this.blk_grpBehaviour.ResumeLayout(false);
             this.blk_grpBehaviour.PerformLayout();
@@ -4201,13 +4201,13 @@ namespace MCGalaxy.Gui
             this.adv_grp.PerformLayout();
             this.srv_grp.ResumeLayout(false);
             this.srv_grp.PerformLayout();
-            this.grpUpdate.ResumeLayout(false);
-            this.grpUpdate.PerformLayout();
+            this.srv_grpUpdate.ResumeLayout(false);
+            this.srv_grpUpdate.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updateTimeNumeric)).EndInit();
             this.grpPlayers.ResumeLayout(false);
             this.grpPlayers.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numPlayers)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numGuests)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.srv_numPlayers)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.srv_numGuests)).EndInit();
             this.tabControl.ResumeLayout(false);
             this.pageGames.ResumeLayout(false);
             this.tabGames.ResumeLayout(false);
@@ -4326,7 +4326,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox gbRankSettings;
         private System.Windows.Forms.GroupBox gbRankGeneral;
         
-        private System.Windows.Forms.TabPage tabChat;
+        private System.Windows.Forms.TabPage pageChat;
         private System.Windows.Forms.GroupBox chat_grpTab;
         private System.Windows.Forms.CheckBox chat_cbTabRank;
         private System.Windows.Forms.CheckBox chat_cbTabLevel;
@@ -4416,7 +4416,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Button main_btnDiscard;
         private System.Windows.Forms.Button main_btnApply;
         private System.Windows.Forms.ToolTip toolTip;
-        private System.Windows.Forms.TabPage tabBlocks;
+        private System.Windows.Forms.TabPage pageBlocks;
         private System.Windows.Forms.Button blk_btnHelp;
         private System.Windows.Forms.Label blk_lblAllow;
         private System.Windows.Forms.Label blk_lblDisallow;
@@ -4473,9 +4473,9 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label irc_lblServer;
         private System.Windows.Forms.Label irc_lblNick;
         private System.Windows.Forms.TabPage pageServer;
-        private System.Windows.Forms.NumericUpDown numPlayers;
-        private System.Windows.Forms.NumericUpDown numGuests;
-        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.NumericUpDown srv_numPlayers;
+        private System.Windows.Forms.NumericUpDown srv_numGuests;
+        private System.Windows.Forms.Label srv_lblGuests;
         private System.Windows.Forms.TextBox lvl_txtMain;
         private System.Windows.Forms.TextBox srv_txtPort;
         private System.Windows.Forms.TextBox srv_txtMOTD;
@@ -4493,12 +4493,12 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox chkUpdates;
         private System.Windows.Forms.CheckBox adv_chkVerify;
         private System.Windows.Forms.Label lvl_lblMain;
-        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label srv_lblPlayers;
         private System.Windows.Forms.Label srv_lblPort;
         private System.Windows.Forms.Label srv_lblMotd;
         private System.Windows.Forms.Label srv_lblName;
         private System.Windows.Forms.TabControl tabControl;
-        private System.Windows.Forms.CheckBox chkAgreeToRules;
+        private System.Windows.Forms.CheckBox srv_cbMustAgree;
         private System.Windows.Forms.ComboBox rank_cmbAdminChat;
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.CheckBox chkAdminsJoinSilent;
@@ -4555,12 +4555,12 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Button lsBtnEndVote;
         private System.Windows.Forms.TextBox sql_txtPort;
         private System.Windows.Forms.Label sql_lblPort;
-        private System.Windows.Forms.GroupBox grpUpdate;
+        private System.Windows.Forms.GroupBox srv_grpUpdate;
         private System.Windows.Forms.CheckBox autoUpdate;
         private System.Windows.Forms.NumericUpDown updateTimeNumeric;
         private System.Windows.Forms.Label lblUpdateSeconds;
         private System.Windows.Forms.CheckBox notifyInGameUpdate;
-        private System.Windows.Forms.Button forceUpdateBtn;
+        private System.Windows.Forms.Button srv_btnForceUpdate;
         private System.Windows.Forms.Label afk_lblKickRank;
         private System.Windows.Forms.ComboBox afk_cmbKickPerm;
         private System.Windows.Forms.CheckBox chkGuestLimitNotify;

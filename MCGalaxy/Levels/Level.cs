@@ -103,7 +103,6 @@ namespace MCGalaxy {
 
         public void Dispose() {
             Extras.Clear();
-            liquids.Clear();
             leaves.Clear();
             ListCheck.Clear(); listCheckExists.Clear();
             ListUpdate.Clear(); listUpdateExists.Clear();

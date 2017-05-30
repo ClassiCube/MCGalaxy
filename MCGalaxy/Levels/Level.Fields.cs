@@ -236,7 +236,6 @@ namespace MCGalaxy {
         
         public List<C4Data> C4list = new List<C4Data>();
         internal readonly Dictionary<int, sbyte> leaves = new Dictionary<int, sbyte>(); // Block state for leaf decay
-        internal readonly Dictionary<int, bool[]> liquids = new Dictionary<int, bool[]>(); // Random flow data for liquid physics
         
         
         // Survival settings

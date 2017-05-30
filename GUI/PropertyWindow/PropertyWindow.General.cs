@@ -29,10 +29,10 @@ namespace MCGalaxy.Gui {
             srv_txtOwner.Text = Server.server_owner;
             srv_chkPublic.Checked = Server.pub;
             
-            numPlayers.Value = Server.players;
-            numGuests.Value = Server.maxGuests;
-            numGuests.Maximum = numPlayers.Value;
-            chkAgreeToRules.Checked = Server.agreetorulesonentry;
+            srv_numPlayers.Value = Server.players;
+            srv_numGuests.Value = Server.maxGuests;
+            srv_numGuests.Maximum = srv_numPlayers.Value;
+            srv_cbMustAgree.Checked = Server.agreetorulesonentry;
             
             lvl_txtMain.Text = Server.level;
             lvl_chkAutoload.Checked = Server.AutoLoad;
@@ -55,9 +55,9 @@ namespace MCGalaxy.Gui {
             Server.server_owner = srv_txtOwner.Text;
             Server.pub = srv_chkPublic.Checked;
             
-            Server.players = (byte)numPlayers.Value;
-            Server.maxGuests = (byte)numGuests.Value;
-            Server.agreetorulesonentry = chkAgreeToRules.Checked;  
+            Server.players = (byte)srv_numPlayers.Value;
+            Server.maxGuests = (byte)srv_numGuests.Value;
+            Server.agreetorulesonentry = srv_cbMustAgree.Checked;  
             
             string main = Player.ValidName(lvl_txtMain.Text) ? lvl_txtMain.Text : "main";
             Server.SetMainLevel(main);
@@ -79,10 +79,10 @@ namespace MCGalaxy.Gui {
         
         void numPlayers_ValueChanged(object sender, EventArgs e) {
             // Ensure that number of guests is never more than number of players
-            if ( numGuests.Value > numPlayers.Value ) {
-                numGuests.Value = numPlayers.Value;
+            if ( srv_numGuests.Value > srv_numPlayers.Value ) {
+                srv_numGuests.Value = srv_numPlayers.Value;
             }
-            numGuests.Maximum = numPlayers.Value;
+            srv_numGuests.Maximum = srv_numPlayers.Value;
         }
         
         void ChkPort_Click(object sender, EventArgs e) {
@@ -94,7 +94,7 @@ namespace MCGalaxy.Gui {
 		void txtPort_TextChanged(object sender, EventArgs e) { OnlyAddDigit(srv_txtPort); }
 
         void forceUpdateBtn_Click(object sender, EventArgs e) {
-            forceUpdateBtn.Enabled = false;
+            srv_btnForceUpdate.Enabled = false;
             DialogResult result = MessageBox.Show("Would you like to force update " + Server.SoftwareName + " now?", "Force Update",
                                                   MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (result == DialogResult.OK) {
@@ -102,7 +102,7 @@ namespace MCGalaxy.Gui {
                 Updater.PerformUpdate();
                 Dispose();
             } else {
-                forceUpdateBtn.Enabled = true;
+                srv_btnForceUpdate.Enabled = true;
             }
         }
     }
