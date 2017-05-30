@@ -127,7 +127,7 @@ namespace MCGalaxy {
             LoadBannedCommands();
         }
         
-        static string ConvertMessage(string message, bool color) {
+        public static string ConvertMessage(string message, bool color) {
             if (String.IsNullOrEmpty(message.Trim()))
                 message = ".";
             message = EmotesHandler.Replace(message);

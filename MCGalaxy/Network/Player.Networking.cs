@@ -99,24 +99,20 @@ namespace MCGalaxy {
         
         public static void SendMessage(Player p, string message, bool colorParse) {
             if (p == null) {
-                if (storeHelp)
-                    storedHelp += message + "\r\n";
-                else
-                    Server.s.Log(message);
+                Server.s.Log(message);
             } else {
-                p.SendMessage(0, Server.DefaultColor + message, colorParse);
+                p.SendMessage(0, message, colorParse);
             }
         }
         
-        public void SendMessage(string message) {
-            SendMessage(0, Server.DefaultColor + message, true);
-        }
-        
-        public void SendMessage(string message, bool colorParse) {
-            SendMessage(0, Server.DefaultColor + message, colorParse);
-        }
+        public void SendMessage(string message) { SendMessage(0, message, true); }        
+        public void SendMessage(string message, bool colorParse) { SendMessage(0, message, colorParse); }
         
         public virtual void SendMessage(byte id, string message, bool colorParse = true) {
+            // Message should start with server colour if no custom colour
+            if (message.Length > 0 && !(message[0] == '&' || message[0] == '%')) {
+                message = Server.DefaultColor + message;
+            }
             message = Chat.Format(message, this, colorParse);
             
             int totalTries = 0;

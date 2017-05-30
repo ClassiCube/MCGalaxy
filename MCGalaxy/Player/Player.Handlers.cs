@@ -815,7 +815,7 @@ namespace MCGalaxy {
                 Player.Message(this, e.GetType() + ": " + e.Message);
                 return false;
             }
-            if (spamChecker.CheckCommandSpam()) return false;
+            if (spamChecker != null && spamChecker.CheckCommandSpam()) return false;
             return true;
         }
         

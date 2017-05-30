@@ -140,13 +140,13 @@ namespace MCGalaxy.Gui {
         }
 
         void OnlyAddDigit(TextBox box) {
-        	if (box.TextLength == 0) return;
-        	
-        	string lastChar = box.Text[box.TextLength - 1].ToString();
-        	byte ignored;
-        	if (byte.TryParse(lastChar, out ignored)) return;
-        	
-        	box.Text = box.Text.Substring(0, box.TextLength - 1);
+            if (box.TextLength == 0) return;
+            
+            string lastChar = box.Text[box.TextLength - 1].ToString();
+            byte ignored;
+            if (byte.TryParse(lastChar, out ignored)) return;
+            
+            box.Text = box.Text.Substring(0, box.TextLength - 1);
         }
 
         void btnSave_Click(object sender, EventArgs e) { SaveChanges(); Dispose(); }
@@ -172,14 +172,24 @@ namespace MCGalaxy.Gui {
 
         void btnDiscard_Click(object sender, EventArgs e) { Dispose(); }
 
-       void GetHelp(string toHelp) {
-            Player.storedHelp = "";
-            Player.storeHelp = true;
-            Command.all.Find("help").Use(null, toHelp);
-            Player.storeHelp = false;
+        void GetHelp(string toHelp) {
+            ConsoleHelpPlayer player = new ConsoleHelpPlayer();
+            Command.all.Find("help").Use(player, toHelp);
             
-            MessageBox.Show(Colors.StripColors(Player.storedHelp),
+            MessageBox.Show(Colors.StripColors(player.HelpOutput),
                             "Help information for " + toHelp);
+        }
+        
+        sealed class ConsoleHelpPlayer : Player {
+            public string HelpOutput = "";
+            
+            public ConsoleHelpPlayer() : base("(console)") {
+                group = Group.NobodyRank;
+            }
+            
+            public override void SendMessage(byte id, string message, bool colorParse = true) {
+                HelpOutput += message + "\r\n";
+            }
         }
     }
 }

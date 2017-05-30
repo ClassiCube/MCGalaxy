@@ -44,7 +44,6 @@ namespace MCGalaxy {
             truename = playername;
             DisplayName = playername;
             SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
-            spamChecker = new SpamChecker(this);
             SuperUser = true;
         }
 
@@ -372,7 +371,8 @@ namespace MCGalaxy {
             if (CopyBuffer != null)
                 CopyBuffer.Clear();
             DrawOps.Clear();
-            spamChecker.Clear();
+            if (spamChecker != null)
+                spamChecker.Clear();
             spyChatRooms.Clear();
         }
 
@@ -550,11 +550,10 @@ namespace MCGalaxy {
                     selCallback = null;
                 }
             }
-        }
-        
+        }        
         
         public void CheckForMessageSpam() {
-            spamChecker.CheckChatSpam();
+            if (spamChecker != null) spamChecker.CheckChatSpam();
         }        
     }
 }

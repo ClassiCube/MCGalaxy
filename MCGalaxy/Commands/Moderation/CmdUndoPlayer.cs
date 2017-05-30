@@ -105,7 +105,6 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             public override void SendMessage(byte id, string message, bool colorParse = true) {
-                message = Chat.Format(message, this, colorParse);
                 Server.s.Log(message);
             }
         }

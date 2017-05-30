@@ -236,7 +236,7 @@ namespace MCGalaxy.Network {
             if (!whoCmd || (DateTime.UtcNow - last).TotalSeconds <= 5) return false;
             
             try {
-                Player p = new IRCPlayer(user.Nick, channel, bot);
+                Player p = new IRCPlayer(channel, user.Nick, bot);
                 p.group = Group.GuestRank;
                 Command.all.Find("players").Use(p, "");
             } catch (Exception e) {
@@ -250,7 +250,7 @@ namespace MCGalaxy.Network {
         
         bool HandleIRCCommand(UserInfo user, string channel, string cmdName, string cmdArgs) {
             Command cmd = Command.all.Find(cmdName);
-            Player p = new IRCPlayer(user.Nick, channel, bot);
+            Player p = new IRCPlayer(channel, user.Nick, bot);
             if (cmd == null) { Player.Message(p, "Unknown command!"); return false; }
 
             string logCmd = cmdArgs == "" ? cmdName : cmdName + " " + cmdArgs;
@@ -306,8 +306,7 @@ namespace MCGalaxy.Network {
             }
             
             public override void SendMessage(byte id, string message, bool colorParse = true) {
-                message = Chat.Format(message, this, colorParse);
-                
+                message = IRCBot.ConvertMessage(message, colorParse);               
                 if (IRCChannel != null) {
                     Bot.Message(IRCChannel, message);
                 } else {

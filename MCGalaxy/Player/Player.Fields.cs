@@ -55,8 +55,6 @@ namespace MCGalaxy {
         internal string senderName = "";
         internal string currentTpa = "";
 
-        public static bool storeHelp = false;
-        public static string storedHelp = "";
         public string truename;
         internal bool dontmindme = false;
         INetworkSocket socket;
