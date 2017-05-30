@@ -30,7 +30,7 @@ using MCGalaxy.SQL;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy {
-    public sealed partial class Player : IDisposable {
+    public partial class Player : IDisposable {
         
         bool removedFromPending = false;
         internal void RemoveFromPending() {

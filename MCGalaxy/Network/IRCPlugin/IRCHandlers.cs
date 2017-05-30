@@ -236,7 +236,7 @@ namespace MCGalaxy.Network {
             if (!whoCmd || (DateTime.UtcNow - last).TotalSeconds <= 5) return false;
             
             try {
-                Player p = MakeIRCPlayer(user.Nick, channel);
+                Player p = new IRCPlayer(user.Nick, channel, bot);
                 p.group = Group.GuestRank;
                 Command.all.Find("players").Use(p, "");
             } catch (Exception e) {
@@ -250,7 +250,7 @@ namespace MCGalaxy.Network {
         
         bool HandleIRCCommand(UserInfo user, string channel, string cmdName, string cmdArgs) {
             Command cmd = Command.all.Find(cmdName);
-            Player p = MakeIRCPlayer(user.Nick, channel);
+            Player p = new IRCPlayer(user.Nick, channel, bot);
             if (cmd == null) { Player.Message(p, "Unknown command!"); return false; }
 
             string logCmd = cmdArgs == "" ? cmdName : cmdName + " " + cmdArgs;
@@ -280,26 +280,40 @@ namespace MCGalaxy.Network {
             
             if (!foundAtAll) {
                 error = "You are not on the bot's list of users for some reason, please leave and rejoin."; return false;
-            }           
+            }
             if (bot.BannedCommands.Contains(cmdName)) {
                 error = "You are not allowed to use this command from IRC.";
             }
             return false;
         }
+
         
-        
-        static Player MakeIRCPlayer(string ircNick, string ircChannel) {
-            Player p = new Player("IRC");
-            p.group = Group.findPerm(Server.ircControllerRank);
-            if (p.group == null) p.group = Group.NobodyRank;
+        sealed class IRCPlayer : Player {
+            public readonly string IRCChannel, IRCNick;
+            public readonly IRCBot Bot;
             
-            p.ircChannel = ircChannel;
-            p.ircNick = ircNick;
-            p.color = "&a";
+            public IRCPlayer(string ircChannel, string ircNick, IRCBot bot) : base("IRC") {
+                group = Group.findPerm(Server.ircControllerRank);
+                if (group == null) group = Group.NobodyRank;
+                
+                IRCChannel = ircChannel;
+                IRCNick = ircNick;
+                color = "&a";
+                Bot = bot;
+                
+                if (ircNick != null)
+                    UserID = NameConverter.InvalidNameID("(IRC " + ircNick + ")");
+            }
             
-            if (ircNick != null)
-                p.UserID = NameConverter.InvalidNameID("(IRC " + ircNick + ")");
-            return p;
+            public override void SendMessage(byte id, string message, bool colorParse = true) {
+                message = Chat.Format(message, this, colorParse);
+                
+                if (IRCChannel != null) {
+                    Bot.Message(IRCChannel, message);
+                } else {
+                    Bot.Pm(IRCNick, message);
+                }
+            }
         }
         
         void Listener_OnRegistered() {
@@ -454,7 +468,7 @@ namespace MCGalaxy.Network {
             if (verify == IRCControllerVerify.None) return true;
             
             if (verify == IRCControllerVerify.HalfOp) {
-            	string prefix = GetPrefix(chanNicks[index]);
+                string prefix = GetPrefix(chanNicks[index]);
                 if (prefix == "" || prefix == "+") {
                     error = "You must be at least a half-op on the channel to use commands from IRC."; return false;
                 }

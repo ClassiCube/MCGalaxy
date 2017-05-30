@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("xundo", null, "all"), 
+            get { return new[] { new CommandAlias("xundo", null, "all"),
                     new CommandAlias("undoarea", "area"), new CommandAlias("ua", "area") }; }
         }
 
@@ -72,7 +72,21 @@ namespace MCGalaxy.Commands.Moderation {
             UndoDrawOp op = new UndoDrawOp();
             op.Start = DateTime.UtcNow.Subtract(delta);
             op.who = names[0]; op.ids = ids;
-            DrawOpPerformer.Do(op, null, p, marks);
+            
+            if (Player.IsSuper(p)) {
+                // undo them across all loaded levels
+                Level[] levels = LevelInfo.Loaded.Items;
+                if (p == null) p = new ConsolePlayer();
+                
+                foreach (Level lvl in levels) {
+                    op.SetMarks(marks);
+                    op.SetLevel(lvl);
+                    op.Player = p; p.level = lvl;
+                    DrawOpPerformer.DoQueuedDrawOp(p, op, null, marks);
+                }
+            } else {
+                DrawOpPerformer.Do(op, null, p, marks);
+            }
 
             string namesStr = names.Join(name => PlayerInfo.GetColoredName(p, name));
             if (op.found) {
@@ -80,6 +94,19 @@ namespace MCGalaxy.Commands.Moderation {
                 Server.s.Log(names.Join() + "'s actions for the past " + delta.Shorten(true) + " were undone.");
             } else {
                 Player.Message(p, "No changes found by {1} %Sin the past &b{0}", delta.Shorten(true), namesStr);
+            }
+        }
+        
+        // TODO: nasty hack, need to find a better way of doing this
+        sealed class ConsolePlayer : Player {
+            public ConsolePlayer() : base("(console)") {
+                group = Group.NobodyRank;
+                UserID = NameConverter.InvalidNameID("(console)");
+            }
+            
+            public override void SendMessage(byte id, string message, bool colorParse = true) {
+                message = Chat.Format(message, this, colorParse);
+                Server.s.Log(message);
             }
         }
         

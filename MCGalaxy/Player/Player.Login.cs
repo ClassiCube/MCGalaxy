@@ -26,7 +26,7 @@ using MCGalaxy.Tasks;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy {
-    public sealed partial class Player : IDisposable {
+    public partial class Player : IDisposable {
         
         void HandleLogin(byte[] packet) {
             LastAction = DateTime.UtcNow;

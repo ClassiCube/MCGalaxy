@@ -28,7 +28,7 @@ namespace MCGalaxy {
     
     public enum VoteKickChoice { NotYetVoted, Yes, No }
     
-    public sealed partial class Player : IDisposable {
+    public partial class Player : IDisposable {
         
         public Dictionary<string, object> ExtraData = new Dictionary<string, object>();
 
@@ -103,7 +103,7 @@ namespace MCGalaxy {
         public DateTime NextReviewTime, NextEat;
         public float ReachDistance = 5;
         public bool hackrank;
-        internal string ircChannel, ircNick;
+        public bool SuperUser;
         
         public string FullName { get { return color + prefix + DisplayName; } }
         
@@ -263,6 +263,6 @@ namespace MCGalaxy {
         public bool verifiedName;
         
         /// <summary> Returns whether the given player is console or IRC. </summary>
-        public static bool IsSuper(Player p) { return p == null || p.ircChannel != null || p.ircNick != null; }
+        public static bool IsSuper(Player p) { return p == null || p.SuperUser; }
     }
 }

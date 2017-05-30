@@ -79,35 +79,20 @@ namespace MCGalaxy.Drawing.Ops {
                 Player.Message(p, format, op.Name, affected);
             }
             
-            AppendDrawOp(p, op, brush, marks, affected);
+            DoQueuedDrawOp(p, op, brush, marks);
             return true;
         }
         
-        static void AppendDrawOp(Player p, DrawOp op, Brush brush, Vec3S32[] marks, long affected) {
-            if (p == null) {
-                BufferedBlockSender buffer = new BufferedBlockSender(op.Level);
-                op.Perform(marks, brush, b => ConsoleOutputBlock(b, op.Level, buffer));
-                buffer.Send(true);
-                return;
-            }
-            
+        internal static void DoQueuedDrawOp(Player p, DrawOp op, Brush brush, Vec3S32[] marks) {
             PendingDrawOp item = new PendingDrawOp();
-            item.Op = op;
-            item.Brush = brush;
-            item.Marks = marks;
-            
+            item.Op = op; item.Brush = brush; item.Marks = marks;
+
             lock (p.pendingDrawOpsLock) {
                 p.PendingDrawOps.Add(item);
                 // Another thread is already processing draw ops.
                 if (p.PendingDrawOps.Count > 1) return;
             }
             ProcessDrawOps(p);
-        }
-        
-        static void ConsoleOutputBlock(DrawOpBlock b, Level lvl, BufferedBlockSender buffer) {
-            int index = lvl.PosToInt(b.X, b.Y, b.Z);
-            if (!lvl.DoPhysicsBlockchange(index, b.Block, false, default(PhysicsArgs))) return;
-            buffer.Add(index, b.Block.BlockID, b.Block.ExtID);
         }
         
         static void ProcessDrawOps(Player p) {
@@ -144,7 +129,7 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 if (item.Op.TotalModified > Server.DrawReloadLimit)
                     DoReload(p, item.Op.Level);
-                item.Op.TotalModified = 0; // reset total modified (as drawop instances are used in static mode)
+                item.Op.TotalModified = 0; // reset total modified (as drawop instances are reused in static mode)
             }
         }
         

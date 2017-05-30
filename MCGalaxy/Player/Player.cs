@@ -33,7 +33,7 @@ namespace MCGalaxy {
         public string username { get; set; }
     }
     
-    public sealed partial class Player : Entity, IDisposable {
+    public partial class Player : Entity, IDisposable {
 
         static int sessionCounter;
 
@@ -45,6 +45,7 @@ namespace MCGalaxy {
             DisplayName = playername;
             SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
             spamChecker = new SpamChecker(this);
+            SuperUser = true;
         }
 
         public Player(Socket s) {

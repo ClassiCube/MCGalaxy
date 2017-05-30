@@ -21,7 +21,7 @@ using MCGalaxy.Events;
 using MCGalaxy.Network;
 
 namespace MCGalaxy {
-    public sealed partial class Player : IDisposable {
+    public partial class Player : IDisposable {
 
         public bool hasCpe, finishedCpeLogin = false;
         public string appName;
@@ -103,11 +103,7 @@ namespace MCGalaxy {
                     storedHelp += message + "\r\n";
                 else
                     Server.s.Log(message);
-            } else if (p.ircChannel != null) {
-                Server.IRC.Message(p.ircChannel, message);
-            } else if (p.ircNick != null) {
-               Server.IRC.Pm(p.ircNick, message);
-            }  else {
+            } else {
                 p.SendMessage(0, Server.DefaultColor + message, colorParse);
             }
         }
@@ -120,7 +116,7 @@ namespace MCGalaxy {
             SendMessage(0, Server.DefaultColor + message, colorParse);
         }
         
-        public void SendMessage(byte id, string message, bool colorParse = true) {
+        public virtual void SendMessage(byte id, string message, bool colorParse = true) {
             message = Chat.Format(message, this, colorParse);
             
             int totalTries = 0;
