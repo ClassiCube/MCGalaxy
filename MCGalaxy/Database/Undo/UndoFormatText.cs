@@ -30,8 +30,6 @@ namespace MCGalaxy.Undo {
         public override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
             UndoFormatEntry pos = default(UndoFormatEntry);
             string[] lines = new StreamReader(s).ReadToEnd().SplitSpaces();
-            Player p = args.Player;
-            bool super = Player.IsSuper(p);
             DateTime start = args.Start;
             
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
@@ -43,8 +41,7 @@ namespace MCGalaxy.Undo {
                 if (pos.Time < start) { args.Stop = true; yield break; }
                 
                 string map = lines[(i * items) - 7];
-                if (!super && !p.level.name.CaselessEq(map)) continue;
-                pos.LevelName = map;
+                if (!args.LevelName.CaselessEq(map)) continue;
                 
                 pos.X = ushort.Parse(lines[(i * items) - 6]);
                 pos.Y = ushort.Parse(lines[(i * items) - 5]);

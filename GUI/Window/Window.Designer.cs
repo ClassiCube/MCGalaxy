@@ -369,21 +369,21 @@ namespace MCGalaxy.Gui
             // 
             this.icon_openConsole.Name = "icon_openConsole";
             this.icon_openConsole.Size = new System.Drawing.Size(157, 22);
-            this.icon_openConsole.Text = "Open Console";
+            this.icon_openConsole.Text = "Open console";
             this.icon_openConsole.Click += new System.EventHandler(this.openConsole_Click);
             // 
             // icon_shutdown
             // 
             this.icon_shutdown.Name = "icon_shutdown";
             this.icon_shutdown.Size = new System.Drawing.Size(157, 22);
-            this.icon_shutdown.Text = "Shutdown Server";
+            this.icon_shutdown.Text = "Shutdown server";
             this.icon_shutdown.Click += new System.EventHandler(this.shutdownServer_Click);
             // 
             // icon_restart
             // 
             this.icon_restart.Name = "icon_restart";
             this.icon_restart.Size = new System.Drawing.Size(157, 22);
-            this.icon_restart.Text = "Restart Server";
+            this.icon_restart.Text = "Restart server";
             this.icon_restart.Click += new System.EventHandler(this.icon_restart_Click);
             // 
             // main_btnProps

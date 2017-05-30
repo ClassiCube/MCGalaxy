@@ -71,7 +71,7 @@ namespace MCGalaxy.Drawing.Ops {
                 }
             }
             
-            UndoFormatArgs args = new UndoFormatArgs(Player, Start);
+            UndoFormatArgs args = new UndoFormatArgs(Level.name, Start);
             DoOldUndo(args);
         }
         
@@ -107,17 +107,13 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         void DoOldUndo(Stream s, UndoFormat format, UndoFormatArgs args) {
-            Level lvl = args.Player == null ? null : args.Player.level;
-            string lastMap = null;
-            DrawOpBlock block;
-            
+            DrawOpBlock block;            
             foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
-                if (P.LevelName != lastMap) lvl = LevelInfo.FindExact(P.LevelName);
-                if (lvl == null || P.Time > End) continue;
+                if (P.Time > End) continue;
                 if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) continue;
                 if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) continue;
                 
-                byte lvlBlock = lvl.GetTile(P.X, P.Y, P.Z);
+                byte lvlBlock = Level.GetTile(P.X, P.Y, P.Z);
                 if (lvlBlock == P.NewBlock.BlockID || Block.Convert(lvlBlock) == Block.water
                     || Block.Convert(lvlBlock) == Block.lava || lvlBlock == Block.grass) {
                     

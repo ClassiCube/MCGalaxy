@@ -74,12 +74,17 @@ namespace MCGalaxy.Gui {
 
         }
         
-        void MakeNotifyIcon() {            
-            notifyIcon.Text =  Server.name.Truncate(63);
+        void UpdateNotifyIconText() {
+            int playerCount = PlayerInfo.Online.Count;
+            string players = " (" + playerCount + " players)";
+            notifyIcon.Text = (Server.name + players).Truncate(63);
+        }
+        
+        void MakeNotifyIcon() {
+            UpdateNotifyIconText();
             notifyIcon.ContextMenuStrip = this.icon_context;
             notifyIcon.Icon = this.Icon;
             notifyIcon.Visible = true;
-            notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(notifyIcon1_MouseClick);
         }
         
         void InitServer() {
@@ -114,11 +119,11 @@ namespace MCGalaxy.Gui {
         public void RunOnUiThread(Action act) { Invoke(act); }
         
         void Player_PlayerConnect(Player p) {
-            UpdatePlayersListBox();
+            UpdatePlayers();
         }
         
         void Player_PlayerDisconnect(Player p, string reason) {
-            UpdatePlayersListBox();
+            UpdatePlayers();
         }
         
         void Player_OnSendMap(Player p, byte[] buffer) {
@@ -149,7 +154,7 @@ namespace MCGalaxy.Gui {
                 Invoke(new VoidDelegate(SettingsUpdate));
             } else {
                 Text = Server.name + " - " + Server.SoftwareNameVersioned;
-                notifyIcon.Text = Server.name.Truncate(63);
+                UpdateNotifyIconText();
             }
         }
 
@@ -193,6 +198,7 @@ namespace MCGalaxy.Gui {
                 Invoke(new PlayerListCallback(UpdateClientList), playerList); return;
             }
             
+            UpdateNotifyIconText();
             if (main_Players.DataSource == null)
                 main_Players.DataSource = pc;
 
@@ -303,7 +309,7 @@ namespace MCGalaxy.Gui {
                 MCGalaxy.Gui.App.ExitProgram(false);
                 notifyIcon.Dispose();
             }
-        	
+            
             if (Server.shuttingDown || MessageBox.Show("Really shutdown the server? All players will be disconnected!", "Exit", MessageBoxButtons.OKCancel) == DialogResult.OK) {
                 if (!Server.shuttingDown) MCGalaxy.Gui.App.ExitProgram(false);
                 notifyIcon.Dispose();
@@ -328,12 +334,6 @@ namespace MCGalaxy.Gui {
             ShowInTaskbar = WindowState != FormWindowState.Minimized;
         }
 
-        void notifyIcon1_MouseClick(object sender, MouseEventArgs e) {
-            Show();
-            BringToFront();
-            WindowState = FormWindowState.Normal;
-        }
-
         void openConsole_Click(object sender, EventArgs e) {
             Show();
             BringToFront();
@@ -347,7 +347,7 @@ namespace MCGalaxy.Gui {
        void tabs_Click(object sender, EventArgs e)  {
             try { UpdateUnloadedList(); }
             catch { }
-            try { UpdatePlayersListBox(); }
+            try { UpdatePlayers(); }
             catch { }
             
             try {

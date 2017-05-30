@@ -22,10 +22,12 @@ namespace MCGalaxy.Gui {
     public partial class Window : Form {
         PlayerProperties playerProps;
          
-        public void UpdatePlayersListBox() {
+        void UpdatePlayers() {
             RunOnUiThread(
                 delegate {
                     pl_listBox.Items.Clear();
+                    UpdateNotifyIconText();
+                    
                     Player[] players = PlayerInfo.Online.Items;
                     foreach (Player p in players)
                         pl_listBox.Items.Add(p.name);

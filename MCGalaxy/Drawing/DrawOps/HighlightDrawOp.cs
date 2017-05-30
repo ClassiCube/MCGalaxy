@@ -67,7 +67,7 @@ namespace MCGalaxy.Drawing.Ops {
                 }
             }
             
-            UndoFormatArgs args = new UndoFormatArgs(Player, Start);
+            UndoFormatArgs args = new UndoFormatArgs(Level.name, Start);
             DoOldHighlight(args);
         }
         

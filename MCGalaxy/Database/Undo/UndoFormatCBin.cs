@@ -31,7 +31,6 @@ namespace MCGalaxy.Undo {
         public override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
             List<ChunkHeader> list = new List<ChunkHeader>();
             UndoFormatEntry pos;
-            bool super = Player.IsSuper(args.Player);
             DateTime start = args.Start;
 
             ReadHeaders(list, s);
@@ -40,8 +39,7 @@ namespace MCGalaxy.Undo {
                 // Can we safely discard the entire chunk?
                 bool inRange = chunk.BaseTime.AddTicks((65536 >> 2) * TimeSpan.TicksPerSecond) >= start;
                 if (!inRange) { args.Stop = true; yield break; }
-                if (!super && !args.Player.level.name.CaselessEq(chunk.LevelName)) continue;
-                pos.LevelName = chunk.LevelName;
+                if (!args.LevelName.CaselessEq(chunk.LevelName)) continue;
                 
                 s.Seek(chunk.DataPosition, SeekOrigin.Begin);
                 if (args.Temp == null)

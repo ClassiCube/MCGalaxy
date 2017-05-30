@@ -101,9 +101,9 @@ namespace MCGalaxy.Undo {
     
     /// <summary> Arguments provided to an UndoFormat for retrieving undo data. </summary>
     public class UndoFormatArgs {
-
-        /// <summary> Player associated with this undo, can be console or IRC. </summary>
-        internal readonly Player Player;
+        
+        /// <summary> Level to retrieve undo data on. </summary>
+        internal readonly string LevelName;
 
         /// <summary> Small work buffer, used to avoid memory allocations. </summary>
         internal byte[] Temp;
@@ -115,15 +115,13 @@ namespace MCGalaxy.Undo {
         /// <summary> First instance in time that undo data should be retrieved back to. </summary>
         internal readonly DateTime Start;
 
-        public UndoFormatArgs(Player p, DateTime start) {
-            Player = p; Start = start;
+        public UndoFormatArgs(string lvlName, DateTime start) {
+            LevelName = lvlName; Start = start;
         }
     }
 
     public struct UndoFormatEntry {
-        public string LevelName;
-        public DateTime Time;
-        
+        public DateTime Time;        
         public ushort X, Y, Z;
         public ExtBlock Block;
         public ExtBlock NewBlock;
