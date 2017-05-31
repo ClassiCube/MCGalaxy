@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Maths;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Fun {
     public abstract class WeaponCmd : Command {
@@ -54,15 +55,16 @@ namespace MCGalaxy.Commands.Fun {
             if (p.aiming) return;
 
             p.aiming = true;
-            Thread aimThread = new Thread(() => DoAim(p));
-            aimThread.Name = "MCG_WeaponAim";
-            aimThread.Start();
+            AimState state = new AimState();
+            state.player = p;
+            SchedulerTask task = new SchedulerTask(AimCallback, state, TimeSpan.Zero, true);
+            p.CriticalTasks.Add(task);
         }
         
         EndType GetEnd(Player p, string mode) {
             if (mode == "") return EndType.Normal;
             if (mode.CaselessEq("destroy")) return EndType.Destroy;
-            if (mode.CaselessEq("tp") || mode.CaselessEq("teleport")) return EndType.Teleport;         
+            if (mode.CaselessEq("tp") || mode.CaselessEq("teleport")) return EndType.Teleport;
             if (mode.CaselessEq("explode")) return EndType.Explode;
             if (mode.CaselessEq("laser")) return EndType.Laser;
             
@@ -70,50 +72,58 @@ namespace MCGalaxy.Commands.Fun {
             return EndType.Invalid;
         }
         
-        void DoAim(Player p) {
-            List<Vec3U16> lastSent = new List<Vec3U16>(), toSend = new List<Vec3U16>();
-            while (p.aiming) {
-                Vec3F32 dir = DirUtils.GetFlatDirVector(p.Rot.RotY, p.Rot.HeadX);
-                try {
-                    ushort x = (ushort)Math.Round(p.Pos.BlockX + dir.X * 3);
-                    ushort y = (ushort)Math.Round(p.Pos.BlockY + dir.Y * 3);
-                    ushort z = (ushort)Math.Round(p.Pos.BlockZ + dir.Z * 3);
-
-                    int signX = Math.Sign(dir.X) >= 0 ? 1 : -1, signZ = Math.Sign(dir.Z) >= 0 ? 1 : -1;
-                    CheckTile(p.level, toSend, x, y, z);
-                    CheckTile(p.level, toSend, x + signX, y, z);
-                    CheckTile(p.level, toSend, x, y, z + signZ);
-                    CheckTile(p.level, toSend, x + signX, y, z + signZ);
-
-                    // Revert all glass blocks now not in the ray from the player's direction
-                    for (int i = 0; i < lastSent.Count; i++) {
-                        Vec3U16 cP = lastSent[i];
-                        if (toSend.Contains(cP)) continue;
-                        
-                        if (p.level.IsValidPos(cP))
-                            p.RevertBlock(cP.X, cP.Y, cP.Z);
-                        lastSent.RemoveAt(i); i--;
-                    }
-
-                    // Place the new glass blocks that are in the ray from the player's direction
-                    foreach (Vec3U16 cP in toSend) {
-                        if (lastSent.Contains(cP)) continue;
-                        lastSent.Add(cP);
-                        p.SendBlockchange(cP.X, cP.Y, cP.Z, (ExtBlock)Block.glass);
-                    }
-                    toSend.Clear();
-                }
-                catch { }
-                Thread.Sleep(20);
-            }
-            
-            foreach (Vec3U16 cP in lastSent) {
-                if (p.level.IsValidPos(cP))
-                    p.RevertBlock(cP.X, cP.Y, cP.Z);
-            }
+        class AimState {
+            public Player player;
+            public Position oldPos = default(Position);
+            public List<Vec3U16> lastSent = new List<Vec3U16>();
+            public List<Vec3U16> toSend = new List<Vec3U16>();
         }
         
-        void CheckTile(Level lvl, List<Vec3U16> toSend, int x, int y, int z) {
+        static void AimCallback(SchedulerTask task) {
+            AimState state = (AimState)task.State;
+            Player p = state.player;
+            if (state.player.aiming) { DoAim(state); return; }
+            
+            foreach (Vec3U16 cP in state.lastSent) {
+                if (!p.level.IsValidPos(cP)) continue;
+                p.RevertBlock(cP.X, cP.Y, cP.Z);
+            }
+            task.Repeating = false;
+        }
+        
+        static void DoAim(AimState state) {
+            Player p = state.player;
+            Vec3F32 dir = DirUtils.GetFlatDirVector(p.Rot.RotY, p.Rot.HeadX);
+            ushort x = (ushort)Math.Round(p.Pos.BlockX + dir.X * 3);
+            ushort y = (ushort)Math.Round(p.Pos.BlockY + dir.Y * 3);
+            ushort z = (ushort)Math.Round(p.Pos.BlockZ + dir.Z * 3);
+
+            int signX = Math.Sign(dir.X) >= 0 ? 1 : -1, signZ = Math.Sign(dir.Z) >= 0 ? 1 : -1;
+            CheckTile(p.level, state.toSend, x, y, z);
+            CheckTile(p.level, state.toSend, x + signX, y, z);
+            CheckTile(p.level, state.toSend, x, y, z + signZ);
+            CheckTile(p.level, state.toSend, x + signX, y, z + signZ);
+
+            // Revert all glass blocks now not in the ray from the player's direction
+            for (int i = 0; i < state.lastSent.Count; i++) {
+                Vec3U16 cP = state.lastSent[i];
+                if (state.toSend.Contains(cP)) continue;
+                
+                if (p.level.IsValidPos(cP))
+                    p.RevertBlock(cP.X, cP.Y, cP.Z);
+                state.lastSent.RemoveAt(i); i--;
+            }
+
+            // Place the new glass blocks that are in the ray from the player's direction
+            foreach (Vec3U16 cP in state.toSend) {
+                if (state.lastSent.Contains(cP)) continue;
+                state.lastSent.Add(cP);
+                p.SendBlockchange(cP.X, cP.Y, cP.Z, (ExtBlock)Block.glass);
+            }
+            state.toSend.Clear();
+        }
+        
+        static void CheckTile(Level lvl, List<Vec3U16> toSend, int x, int y, int z) {
             Vec3U16 pos;
             if (lvl.GetBlock(x, y - 1, z) == Block.air) {
                 pos.X = (ushort)x; pos.Y = (ushort)(y - 1); pos.Z = (ushort)z;
@@ -160,7 +170,7 @@ namespace MCGalaxy.Commands.Fun {
                     return true;
                 }
             } else if (p.level.physics >= 3) {
-        		if (type != Block.glass && doExplode) {
+                if (type != Block.glass && doExplode) {
                     p.level.MakeExplosion(pos.X, pos.Y, pos.Z, 1);
                     return true;
                 }

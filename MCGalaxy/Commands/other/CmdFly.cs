@@ -60,8 +60,7 @@ namespace MCGalaxy.Commands.Misc {
             
             foreach (Vec3U16 cP in state.last) {
                 p.SendBlockchange(cP.X, cP.Y, cP.Z, ExtBlock.Air);
-            }
-            
+            }            
             Player.Message(p, "Stopped flying");
             task.Repeating = false;
         }
