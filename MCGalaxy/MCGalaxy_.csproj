@@ -574,6 +574,7 @@
     <Compile Include="Network\Socket\TcpListen.cs" />
     <Compile Include="Network\Socket\TcpSocket.cs" />
     <Compile Include="Network\Utils\BufferedBlockSender.cs" />
+    <Compile Include="Network\Utils\HttpUtil.cs" />
     <Compile Include="Network\Utils\LevelChunkStream.cs" />
     <Compile Include="Network\Utils\NetUtils.cs" />
     <Compile Include="Player\Group\Group.cs" />

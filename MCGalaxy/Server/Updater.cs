@@ -21,6 +21,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
+using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
@@ -44,10 +45,10 @@ namespace MCGalaxy {
         public static void UpdateCheck(Player p = null) {
             CurrentUpdate = true;
             if (!Server.checkUpdates) return;
-            WebClient Client = new WebClient();
+            WebClient client = HttpUtil.CreateWebClient();
 
             try {
-                string raw = Client.DownloadString(CurrentVersionFile);
+                string raw = client.DownloadString(CurrentVersionFile);
                 Version latestVersion = new Version(raw);
                 if (latestVersion <= Server.Version) {
                     Player.Message(p, "No update found!");
@@ -78,7 +79,7 @@ namespace MCGalaxy {
                 Logger.WriteError(e);
             }
             
-            Client.Dispose();
+            client.Dispose();
             CurrentUpdate = false;
         }
         
@@ -120,7 +121,7 @@ namespace MCGalaxy {
                 } catch {
                 }
                 
-                WebClient client = new WebClient();
+                WebClient client = HttpUtil.CreateWebClient();
                 client.DownloadFile(DLLLocation, "MCGalaxy_.update");
                 client.DownloadFile(EXELocation, "MCGalaxy.update");
                 client.DownloadFile(ChangelogLocation, "Changelog.txt");

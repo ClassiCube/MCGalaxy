@@ -27,6 +27,7 @@ using MCGalaxy.Drawing;
 using MCGalaxy.Eco;
 using MCGalaxy.Events;
 using MCGalaxy.Games;
+using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
 using Newtonsoft.Json;
@@ -50,8 +51,9 @@ namespace MCGalaxy {
             
             Log(file + " doesn't exist, Downloading");
             try {
-                using (WebClient web = new WebClient())
-                    web.DownloadFile(Updater.BaseURL + file + "?raw=true", file);
+                using (WebClient client = HttpUtil.CreateWebClient()) {
+                    client.DownloadFile(Updater.BaseURL + file + "?raw=true", file);
+            	}
                 if (File.Exists(file))
                     Log(file + " download succesful!");
             } catch {

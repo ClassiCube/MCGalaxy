@@ -93,7 +93,7 @@ namespace MCGalaxy.Network {
             return count;
         }
         
-        public override void OnRequest(HttpWebRequest request) {            
+        public override void OnRequest(HttpWebRequest request) {
             #if !NET_20
             request.Host = "www.classicube.net";
             #else

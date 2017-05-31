@@ -19,6 +19,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Net;
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Generator {
     public static class HeightmapGen {
@@ -35,7 +36,7 @@ namespace MCGalaxy.Generator {
             }
             
             try {
-                using (WebClient client = new WebClient()) {
+                using (WebClient client = HttpUtil.CreateWebClient()) {
                     Player.Message(p, "Downloading file from: &f" + url);
                     client.DownloadFile(uri, dir + "tempImage_" + p.name + ".bmp");
                 }

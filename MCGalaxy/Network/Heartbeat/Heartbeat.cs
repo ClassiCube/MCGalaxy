@@ -85,7 +85,7 @@ namespace MCGalaxy.Network {
 
             for (int i = 0; i < MAX_RETRIES; i++) {
                 try {
-                    HttpWebRequest req = WebRequest.Create(beat.URL) as HttpWebRequest;
+                    HttpWebRequest req = HttpUtil.CreateRequest(beat.URL);
                     req.Method = "POST";
                     req.ContentType = "application/x-www-form-urlencoded";
                     req.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
