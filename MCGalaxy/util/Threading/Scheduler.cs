@@ -77,21 +77,26 @@ namespace MCGalaxy.Tasks {
         
         
         SchedulerTask GetNextTask() {
-            DateTime now = DateTime.UtcNow;
+            DateTime minTime = DateTime.UtcNow;
+            SchedulerTask minTask = null;
+            
             lock (taskLock) {
                 foreach (SchedulerTask task in tasks) {
-                    if (task.NextRun < now) return task;
+                    if (task.NextRun > minTime) continue;                    
+                    minTime = task.NextRun; minTask = task;
                 }
             }
-            return null;
+            return minTask;
         }
         
+        SchedulerTask lastTask = null;
         void DoTask(SchedulerTask task) {
             try {
                 task.Callback(task);
             } catch (Exception ex) {
                 MCGalaxy.Server.ErrorLog(ex);
             }
+            lastTask = task;
             
             if (task.Repeating) {
                 task.NextRun = DateTime.UtcNow.Add(task.Delay);

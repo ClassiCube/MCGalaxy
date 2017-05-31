@@ -26,44 +26,49 @@ using MCGalaxy.Maths;
 namespace MCGalaxy.Tasks {
     internal static class ServerTasks {
 
-        internal static void LocationChecks() {
-            while (true) {
-                Player[] players = PlayerInfo.Online.Items;
-                Thread.Sleep(players.Length == 0 ? 20 : 10);
-                players = PlayerInfo.Online.Items;
-                
-                for (int i = 0; i < players.Length; i++) {
-                    try {
-                        Player p = players[i];
+        internal static void LocationChecks(SchedulerTask task) {
+            Player[] players = PlayerInfo.Online.Items;
+            players = PlayerInfo.Online.Items;            
+            int delay = players.Length == 0 ? 100 : 20;
+            task.Delay = TimeSpan.FromMilliseconds(delay);
+            
+            for (int i = 0; i < players.Length; i++) {
+                try {
+                    Player p = players[i];
 
-                        if (p.following != "") {
-                            Player who = PlayerInfo.FindExact(p.following);
-                            if (who == null || who.level != p.level) {
-                                p.following = "";
-                                if (!p.canBuild)
-                                    p.canBuild = true;
-                                if (who != null && who.possess == p.name)
-                                    who.possess = "";
-                                continue;
-                            }
-                            
-                            p.SendPos(Entities.SelfID, who.Pos, who.Rot);
-                        } else if (p.possess != "") {
-                            Player who = PlayerInfo.FindExact(p.possess);
-                            if (who == null || who.level != p.level)
-                                p.possess = "";
+                    if (p.following != "") {
+                        Player who = PlayerInfo.FindExact(p.following);
+                        if (who == null || who.level != p.level) {
+                            p.following = "";
+                            if (!p.canBuild)
+                                p.canBuild = true;
+                            if (who != null && who.possess == p.name)
+                                who.possess = "";
+                            continue;
                         }
                         
-                        Vec3U16 P = (Vec3U16)p.Pos.BlockCoords;
-                        if (p.level.Death)
-                            p.CheckSurvival(P.X, P.Y, P.Z);
-                        p.CheckBlock();
-                        p.oldIndex = p.level.PosToInt(P.X, P.Y, P.Z);
-                    } catch (Exception e) {
-                        Server.ErrorLog(e);
+                        p.SendPos(Entities.SelfID, who.Pos, who.Rot);
+                    } else if (p.possess != "") {
+                        Player who = PlayerInfo.FindExact(p.possess);
+                        if (who == null || who.level != p.level)
+                            p.possess = "";
                     }
+                    
+                    Vec3U16 P = (Vec3U16)p.Pos.BlockCoords;
+                    if (p.level.Death)
+                        p.CheckSurvival(P.X, P.Y, P.Z);
+                    p.CheckBlock();
+                    p.oldIndex = p.level.PosToInt(P.X, P.Y, P.Z);
+                } catch (Exception e) {
+                    Server.ErrorLog(e);
                 }
             }
+        }
+        
+        internal static void UpdateEntityPositions(SchedulerTask task) {
+            Entities.GlobalUpdate();
+            PlayerBot.GlobalUpdatePosition();
+            task.Delay = TimeSpan.FromMilliseconds(Server.PositionInterval);
         }
         
         internal static void CheckState(SchedulerTask task) {

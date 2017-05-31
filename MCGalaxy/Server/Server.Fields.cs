@@ -70,9 +70,7 @@ namespace MCGalaxy {
 
         // URL hash for connecting to the server
         public static string Hash = String.Empty, URL = String.Empty;
-
         public static Socket listen;
-        public static System.Timers.Timer updateTimer = new System.Timers.Timer(100);
 
         //Chatrooms
         public static List<string> Chatrooms = new List<string>();
@@ -123,6 +121,7 @@ namespace MCGalaxy {
         
         public static Scheduler MainScheduler = new Scheduler("MCG_MainScheduler");
         public static Scheduler Background = new Scheduler("MCG_BackgroundScheduler");
+        public static Scheduler Critical = new Scheduler("MCG_CriticalScheduler");
         public static Server s;
 
         public const byte version = 7;

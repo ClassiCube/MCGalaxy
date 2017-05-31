@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Info {
                            up.Shorten(true), Server.SoftwareName, Server.VersionString);
 
             Player.Message(p, "Player positions are updated every &b"
-                           + Server.updateTimer.Interval + " %Smilliseconds.");
+                           + Server.PositionInterval + " %Smilliseconds.");
             string owner = Server.server_owner;
             if (!owner.CaselessEq("Notch"))
                 Player.Message(p, "Owner is &3{0}. %SConsole state: &3{1}", owner, Server.ZallState);

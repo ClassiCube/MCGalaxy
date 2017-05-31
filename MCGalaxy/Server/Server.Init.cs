@@ -102,33 +102,29 @@ namespace MCGalaxy {
         }
         
         void InitTimers() {
-            updateTimer.Elapsed += delegate {
-                Entities.GlobalUpdate();
-                PlayerBot.GlobalUpdatePosition();
-            };
-            updateTimer.Start();
-
             if (File.Exists(Paths.AnnouncementsFile)) {
                 string[] lines = File.ReadAllLines(Paths.AnnouncementsFile);
                 messages = new List<string>(lines);
             } else {
                 using (File.Create(Paths.AnnouncementsFile)) {}
             }
-            Server.MainScheduler.QueueRepeat(RandomMessage, null, TimeSpan.FromMinutes(5));
+            
+            MainScheduler.QueueRepeat(RandomMessage, null, 
+			                          TimeSpan.FromMinutes(5));
+            Critical.QueueRepeat(ServerTasks.UpdateEntityPositions, null,
+			                     TimeSpan.FromMilliseconds(PositionInterval));
         }
         
         void InitRest() {
             IRC = new IRCBot();
             if (Server.irc) IRC.Connect();
-
-            locationChecker = new Thread(ServerTasks.LocationChecks);
-            locationChecker.Name = "MCG_LocationCheck";
-            locationChecker.Start();
              
             InitZombieSurvival();
             InitLavaSurvival();
             MainScheduler.QueueRepeat(BlockQueue.Loop, null, 
                                       TimeSpan.FromMilliseconds(BlockQueue.time));
+            Critical.QueueRepeat(ServerTasks.LocationChecks, null,
+                                 TimeSpan.FromMilliseconds(20));
 
             Log("Finished setting up server, finding classicube.net url..");
             ServerSetupFinished = true;

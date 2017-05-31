@@ -177,7 +177,7 @@ namespace MCGalaxy {
             } catch {
             }
             
-            if (Server.updateTimer.Interval > 1000)
+            if (Server.PositionInterval > 1000)
                 SendMessage("Lowlag mode is currently &aON.");
 
             if (String.IsNullOrEmpty(appName)) {

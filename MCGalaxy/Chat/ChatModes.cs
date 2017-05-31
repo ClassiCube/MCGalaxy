@@ -33,11 +33,11 @@ namespace MCGalaxy {
                 if (text[0] == '@') text = text.Remove(0, 1).Trim();
 
                 if (p == null || p.whisperTo == "") {
-                    int pos = text.IndexOf(' ');
-                    if ( pos != -1 ) {
-                        string to = text.Substring(0, pos);
-                        string msg = text.Substring(pos + 1);
-                        HandleWhisper(p, to, msg);
+                    int sepIndex = text.IndexOf(' ');
+                    if (sepIndex != -1) {
+                        string target = text.Substring(0, sepIndex);
+                        text = text.Substring(sepIndex + 1);
+                        HandleWhisper(p, target, text);
                     } else {
                         Player.Message(p, "No message entered");
                     }
