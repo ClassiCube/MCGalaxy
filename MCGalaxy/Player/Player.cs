@@ -539,15 +539,15 @@ namespace MCGalaxy {
                 selIndex++;
                 if (selIndex != selMarks.Length) return;
                 
+                object state = selState; selState = null;
+                SelectionHandler callback = selCallback; selCallback = null;
+                
                 Blockchange = null;
                 if (!block.IsPhysicsType) block = p.BlockBindings[block.RawID];
-                bool canRepeat = selCallback(this, selMarks, selState, block);
+                bool canRepeat = callback(this, selMarks, state, block);
                 
                 if (canRepeat && staticCommands) {
-                    MakeSelection(selIndex, selState, selCallback);
-                } else {
-                    selState = null;
-                    selCallback = null;
+                    MakeSelection(selIndex, state, callback);
                 }
             }
         }        
