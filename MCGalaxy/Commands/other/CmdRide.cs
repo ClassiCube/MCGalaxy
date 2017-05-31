@@ -15,8 +15,9 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using System.Threading;
+using System;
 using MCGalaxy.Maths;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdRide : Command {
@@ -28,52 +29,56 @@ namespace MCGalaxy.Commands.Misc {
         public override void Use(Player p, string message) {
             p.onTrain = !p.onTrain;
             if (!p.onTrain) return;
-            Thread trainThread = new Thread(() => DoRide(p));
-            trainThread.Name = "MCG_RideTrain";
-            trainThread.Start();
+            
+            p.trainInvincible = true;
             Player.Message(p, "Stand near a train to mount it");
+            
+            SchedulerTask task = new SchedulerTask(RideCallback, p, TimeSpan.Zero, true);
+            p.CriticalTasks.Add(task);            
         }
         
-        void DoRide(Player p) {
-           p.trainInvincible = true;
-            while (p.onTrain && !p.disconnected) {
-                Thread.Sleep(10);
-                Vec3S32 P = p.Pos.BlockCoords;
-
-                for (int dx = -1; dx <= 1; dx++)
-                    for (int dy = -1; dy <= 1; dy++)
-                        for (int dz = -1; dz <= 1; dz++)
-                {
-                    ushort xx = (ushort)(P.X + dx), yy = (ushort)(P.Y + dy), zz = (ushort)(P.Z + dz);
-                    if (p.level.GetTile(xx, yy, zz) != Block.train) continue;
-                    p.trainGrab = true;
-                    
-                    byte yaw, pitch;
-                    Vec3F32 dir = new Vec3F32(dx, 0, dz);
-                    DirUtils.GetYawPitch(dir, out yaw, out pitch);
-                    
-                    if (dy == 1) pitch = 240;
-                    else if (dy == 0) pitch = 0;
-                    else pitch = 8;
-                    
-                    if (dx != 0 || dy != 0 || dz != 0) {
-                        PlayerActions.MoveCoords(p, P.X + dx, P.Y + dy, P.Z + dz, yaw, pitch);
-                    }
-                    goto skip;
-                }
-
-                Thread.Sleep(10);
+        static void RideCallback(SchedulerTask task) {
+            Player p = (Player)task.State;
+            if (!p.onTrain) {
                 p.trainGrab = false;
-            skip:
-                ;
+                Player.Message(p, "Dismounted");
+                
+                Server.MainScheduler.QueueOnce(TrainInvincibleCallback, p, 
+                                               TimeSpan.FromSeconds(1));
+                task.Repeating = false;
+                return;
             }
-
+            
+            Vec3S32 P = p.Pos.BlockCoords;
+            for (int dx = -1; dx <= 1; dx++)
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dz = -1; dz <= 1; dz++)
+            {
+                ushort xx = (ushort)(P.X + dx), yy = (ushort)(P.Y + dy), zz = (ushort)(P.Z + dz);
+                if (p.level.GetTile(xx, yy, zz) != Block.train) continue;
+                p.trainGrab = true;
+                
+                byte yaw, pitch;
+                Vec3F32 dir = new Vec3F32(dx, 0, dz);
+                DirUtils.GetYawPitch(dir, out yaw, out pitch);
+                
+                if (dy == 1) pitch = 240;
+                else if (dy == 0) pitch = 0;
+                else pitch = 8;
+                
+                if (dx != 0 || dy != 0 || dz != 0) {
+                    PlayerActions.MoveCoords(p, P.X + dx, P.Y + dy, P.Z + dz, yaw, pitch);
+                }
+                return;
+            }
             p.trainGrab = false;
-            Player.Message(p, "Dismounted");
-            Thread.Sleep(1000);
+        }
+        
+        static void TrainInvincibleCallback(SchedulerTask task) {
+            Player p = (Player)task.State;
             p.trainInvincible = false;
         }
-        
+
         public override void Help(Player p) {
             Player.Message(p, "%T/ride");
             Player.Message(p, "%HRides a nearby train.");
