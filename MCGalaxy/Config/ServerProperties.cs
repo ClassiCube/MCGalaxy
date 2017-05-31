@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using System.Net;
 using System.Security.Cryptography;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
@@ -48,7 +49,7 @@ namespace MCGalaxy {
             ZombieGameProps.LoadSettings();
             
             Database.Backend = Server.useMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
-            
+
             if (!Directory.Exists(Server.backupLocation))
                 Server.backupLocation = Path.Combine(Utils.FolderPath, "levels/backups");
             Save(givenPath);

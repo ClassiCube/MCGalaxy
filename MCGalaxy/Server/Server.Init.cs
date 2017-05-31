@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Threading;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
@@ -90,7 +91,14 @@ namespace MCGalaxy {
         
         void SetupSocket() {
             Log("Creating listening socket on port " + port + "... ");
-            Setup();
+            Listener = new TcpListen();
+            
+            IPAddress ip;
+            if (!IPAddress.TryParse(Server.listenIP, out ip)) {
+                Server.s.Log("Unable to parse listen IP config key, listening on any IP");
+                ip = IPAddress.Any;
+            }            
+            Listener.Listen(ip, (ushort)port);
         }
         
         void InitHeartbeat() {
@@ -110,9 +118,9 @@ namespace MCGalaxy {
             }
             
             MainScheduler.QueueRepeat(RandomMessage, null, 
-			                          TimeSpan.FromMinutes(5));
+                                      TimeSpan.FromMinutes(5));
             Critical.QueueRepeat(ServerTasks.UpdateEntityPositions, null,
-			                     TimeSpan.FromMilliseconds(PositionInterval));
+                                 TimeSpan.FromMilliseconds(PositionInterval));
         }
         
         void InitRest() {

@@ -119,7 +119,7 @@ namespace MCGalaxy.Gui.Popups {
             MessageBox.Show("Command was successfully unloaded.", "");
         }
         
-        void lstCommands_SelectedIndexChanged ( object sender, EventArgs e ) {
+        void lstCommands_SelectedIndexChanged(object sender, EventArgs e) {
             btnUnload.Enabled = lstCommands.SelectedIndex != -1;
         }
     }

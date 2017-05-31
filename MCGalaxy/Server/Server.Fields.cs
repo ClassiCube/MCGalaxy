@@ -23,6 +23,7 @@ using System.Net.Sockets;
 using System.Threading;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
+using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
@@ -70,7 +71,7 @@ namespace MCGalaxy {
 
         // URL hash for connecting to the server
         public static string Hash = String.Empty, URL = String.Empty;
-        public static Socket listen;
+        public static INetworkListen Listener;
 
         //Chatrooms
         public static List<string> Chatrooms = new List<string>();
@@ -181,6 +182,8 @@ namespace MCGalaxy {
         [ConfigInt("max-guests", "Server", null, 10, 1, 128)]
         public static int maxGuests = 10;
 
+        [ConfigString("listen-ip", "Server", null, "0.0.0.0")]
+        public static string listenIP = "0.0.0.0";
         [ConfigInt("port", "Server", null, 25565, 0, 65535)]
         public static int port = 25565;
         [ConfigBool("public", "Server", null, true)]

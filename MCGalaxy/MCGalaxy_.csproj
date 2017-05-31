@@ -570,7 +570,8 @@
     <Compile Include="Network\Packets\Packet.BlockDefs.cs" />
     <Compile Include="Network\Packets\Packet.CPE.cs" />
     <Compile Include="Network\Packets\Packet.cs" />
-    <Compile Include="Network\Socket\INetworkSocket.cs" />
+    <Compile Include="Network\Socket\Interfaces.cs" />
+    <Compile Include="Network\Socket\TcpListen.cs" />
     <Compile Include="Network\Socket\TcpSocket.cs" />
     <Compile Include="Network\Utils\BufferedBlockSender.cs" />
     <Compile Include="Network\Utils\LevelChunkStream.cs" />

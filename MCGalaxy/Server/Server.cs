@@ -238,37 +238,6 @@ namespace MCGalaxy {
             CommandExtraPerms.Save();
         }
 
-        public static void Setup() {
-            try {
-                IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port);
-                listen = new Socket(endpoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                listen.Bind(endpoint);
-                listen.Listen((int)SocketOptionName.MaxConnections);
-                listen.BeginAccept(Accept, null);
-            }
-            catch (SocketException e) { ErrorLog(e); s.Log("Error Creating listener, socket shutting down"); }
-            catch (Exception e) { ErrorLog(e); s.Log("Error Creating listener, socket shutting down"); }
-        }
-
-        static void Accept(IAsyncResult result) {
-            if (shuttingDown) return;
-
-            Player p = null;
-            bool begin = false;
-            try {
-                p = new Player(listen.EndAccept(result));
-                listen.BeginAccept(Accept, null);
-                begin = true;
-            } catch (SocketException) {
-                if (p != null) p.Disconnect();
-                if (!begin) listen.BeginAccept(Accept, null);
-            } catch (Exception e) {
-                ErrorLog(e);
-                if (p != null) p.Disconnect();
-                if (!begin) listen.BeginAccept(Accept, null);
-            }
-        }
-
         public static void Exit(bool restarting, string msg) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) { p.save(); }
@@ -276,7 +245,8 @@ namespace MCGalaxy {
 
             Player.connections.ForEach(p => p.Leave(msg));
             Plugin.Unload();
-            if (listen != null) listen.Close();
+            if (Listener != null) Listener.Close();
+            
             try {
                 IRC.Disconnect(restarting ? "Server is restarting." : "Server is shutting down.");
             } catch { 
