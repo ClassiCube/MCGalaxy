@@ -276,6 +276,7 @@ namespace MCGalaxy {
             leftServer = true;
             if (chatMsg != null) chatMsg = Colors.EscapeColors(chatMsg);
             discMsg = Colors.EscapeColors(discMsg);
+            CriticalTasks.Clear();
             
             //Umm...fixed?
             if (name == "") {

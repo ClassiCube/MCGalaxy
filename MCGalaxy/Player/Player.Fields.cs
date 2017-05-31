@@ -23,6 +23,7 @@ using MCGalaxy.Undo;
 using MCGalaxy.Maths;
 using MCGalaxy.Events;
 using MCGalaxy.Network;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
     
@@ -146,6 +147,7 @@ namespace MCGalaxy {
 
         public bool staticCommands = false;
         public DateTime ZoneSpam;
+        public VolatileArray<SchedulerTask> CriticalTasks = new VolatileArray<SchedulerTask>(false);
 
         public bool aiming;
         public bool isFlying = false;
