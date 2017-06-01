@@ -60,12 +60,6 @@ namespace MCGalaxy.Tasks {
                     p.possess = "";
             }
             
-            Vec3U16 P = (Vec3U16)p.Pos.BlockCoords;
-            if (p.level.Death)
-                p.CheckSurvival(P.X, P.Y, P.Z);
-            p.CheckBlock();
-            p.oldIndex = p.level.PosToInt(P.X, P.Y, P.Z);
-            
             SchedulerTask[] tasks = p.CriticalTasks.Items;
             for (int i = 0; i < tasks.Length; i++) {
                 SchedulerTask task = tasks[i];

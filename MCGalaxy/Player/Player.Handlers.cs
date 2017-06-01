@@ -301,7 +301,7 @@ namespace MCGalaxy {
         }
         
         void HandleMovement(byte[] packet) {
-            if (!loggedIn || trainGrab || following != "") return;
+            if (!loggedIn || trainGrab || following != "") { CheckBlocks(Pos); return; }
             if (HasCpeExt(CpeExt.HeldBlock)) {
                 RawHeldBlock = ExtBlock.FromRaw(packet[1]);
             }
@@ -320,6 +320,7 @@ namespace MCGalaxy {
             int offset = 8 + (hasExtPositions ? 6 : 0);
             byte yaw = packet[offset + 0], pitch = packet[offset + 1];
             Position next = new Position(x, y, z);
+            CheckBlocks(next);
 
             if (Server.Countdown.HandlesMovement(this, next, yaw, pitch))
                 return;
@@ -338,6 +339,14 @@ namespace MCGalaxy {
             
             LastAction = DateTime.UtcNow;
             if (IsAfk) CmdAfk.ToggleAfk(this, "");
+        }
+        
+        void CheckBlocks(Position pos) {
+            Vec3U16 P = (Vec3U16)pos.BlockCoords;
+            if (level.Death) CheckSurvival(P.X, P.Y, P.Z);
+            
+            CheckBlock();
+            oldIndex = level.PosToInt(P.X, P.Y, P.Z);
         }
         
         bool Moved() { return lastRot.RotY != Rot.RotY || lastRot.HeadX != Rot.HeadX; }
