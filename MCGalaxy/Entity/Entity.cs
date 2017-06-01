@@ -25,7 +25,7 @@ namespace MCGalaxy {
     public abstract class Entity {
         
         // Raw orientation/position - access must be threadsafe
-        int _rot;
+        volatile uint _rot;
         long _pos;
         
         // Last sent orientation/position, for delta calculation
@@ -46,14 +46,14 @@ namespace MCGalaxy {
         
         /// <summary> Gets or sets the orientation of this entity. </summary>
         public Orientation Rot {
-            get { return Orientation.Unpack(Thread.VolatileRead(ref _rot)); }
-            set { Thread.VolatileWrite(ref _rot, value.Pack()); OnSetRot(); }
+            get { return Orientation.Unpack(_rot); }
+            set { _rot = value.Pack(); OnSetRot(); }
         }
         
         /// <summary> Gets or sets the position of this entity. </summary>
         public Position Pos {
-            get { return Position.Unpack(Thread.VolatileRead(ref _pos)); }
-            set { Thread.VolatileWrite(ref _pos, value.Pack()); OnSetPos(); }
+            get { return Position.Unpack(Interlocked.Read(ref _pos)); }
+            set { Interlocked.Exchange(ref _pos, value.Pack()); OnSetPos(); }
         }
         
         /// <summary> Sets only the yaw and pitch of the orientation of this entity. </summary>

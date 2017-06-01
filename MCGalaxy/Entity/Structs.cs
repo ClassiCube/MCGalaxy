@@ -43,7 +43,7 @@ namespace MCGalaxy {
         /// <summary> X block coordinate of this position. </summary>
         public int BlockX { get { return X >> 5; } }
         
-        /// <summary> T block coordinate of this position. </summary>
+        /// <summary> Y block coordinate of this position. </summary>
         public int BlockY { get { return Y >> 5; } }
         
         /// <summary> Z block coordinate of this position. </summary>
@@ -116,11 +116,11 @@ namespace MCGalaxy {
         }
         
         
-        internal int Pack() {
-            return RotX | (RotY << 8) | (RotZ << 16) | (HeadX << 24);
+        internal uint Pack() {
+        	return (uint)(RotX | (RotY << 8) | (RotZ << 16) | (HeadX << 24));
         }
         
-        internal static Orientation Unpack(int raw) {
+        internal static Orientation Unpack(uint raw) {
             Orientation rot;
             rot.RotX = (byte)raw; rot.RotY = (byte)(raw >> 8);
             rot.RotZ = (byte)(raw >> 16); rot.HeadX = (byte)(raw >> 24);
