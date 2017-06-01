@@ -38,33 +38,38 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, extraInfo, DoRestart);
         }
         
-        bool ParseArgs(Player p, string message, ref PhysicsArgs extraInfo) {
+        bool ParseArgs(Player p, string message, ref PhysicsArgs args) {
             string[] parts = message.SplitSpaces();
             if (parts.Length % 2 == 1) {
                 Player.Message(p, "Number of parameters must be even");
                 Help(p); return false;
             }
             byte type = 0, value = 0;
+            bool isExt = false;
             
             if (parts.Length >= 2) {
-                if (!Parse(p, parts[0], parts[1], ref type, ref value)) return false;
-                extraInfo.Type1 = type; extraInfo.Value1 = value;
+                if (!Parse(p, parts[0], parts[1], ref type, ref value, ref isExt)) return false;
+                args.Type1 = type; args.Value1 = value;
             }
             if (parts.Length >= 4) {
-                if (!Parse(p, parts[2], parts[3], ref type, ref value)) return false;
-                extraInfo.Type2 = type; extraInfo.Value2 = value;
+                if (!Parse(p, parts[2], parts[3], ref type, ref value, ref isExt)) return false;
+                args.Type2 = type; args.Value2 = value;
             }
             if (parts.Length >= 6) {
                 Player.Message(p, "You can only use up to two types of physics."); return false;
             }
+            
+            args.ExtBlock = isExt;
             return true;
         }
         
-        bool Parse(Player p, string name, string arg, ref byte type, ref byte value) {
+        bool Parse(Player p, string name, string arg, ref byte type, ref byte value, ref bool isExt) {
             if (name == "revert") {
-                byte block = Block.Byte(arg);
-                if (block == Block.Invalid) { Player.Message(p, "Invalid block type."); return false; }
-                type = PhysicsArgs.Revert; value = block;
+                ExtBlock block;
+                if (!CommandParser.GetBlock(p, arg, out block)) return false;
+
+                type = PhysicsArgs.Revert; value = block.RawID;
+                isExt = block.BlockID == Block.custom_block;
                 return true;
             }
             

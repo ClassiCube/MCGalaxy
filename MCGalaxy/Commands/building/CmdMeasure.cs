@@ -30,20 +30,15 @@ namespace MCGalaxy.Commands.Building {
         
         public override void Use(Player p, string message) {
             if (message.IndexOf(' ') != -1) { Help(p); return; }
-            byte toIgnore = Block.air;
-            if (message != "") {
-                toIgnore = Block.Byte(message);
-                if (toIgnore == Block.Invalid) {
-                    Player.Message(p, "Could not find block specified"); return;
-                }
-            }
+            ExtBlock skip = ExtBlock.Air;
+            if (message != "" && !CommandParser.GetBlock(p, message, out skip)) return;
             
             Player.Message(p, "Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, toIgnore, DoMeasure);
+            p.MakeSelection(2, skip, DoMeasure);
         }
         
         bool DoMeasure(Player p, Vec3S32[] m, object state, ExtBlock block) {
-            byte toIgnore = (byte)state;
+            ExtBlock skip = (ExtBlock)state;
             int minX = Math.Min(m[0].X, m[1].X), maxX = Math.Max(m[0].X, m[1].X);
             int minY = Math.Min(m[0].Y, m[1].Y), maxY = Math.Max(m[0].Y, m[1].Y);
             int minZ = Math.Min(m[0].Z, m[1].Z), maxZ = Math.Max(m[0].Z, m[1].Z);
@@ -53,7 +48,7 @@ namespace MCGalaxy.Commands.Building {
                 for (int z = minZ; z <= maxZ; z++)
                     for (int x = minX; x <= maxX; x++)
             {
-                if (p.level.GetTile((ushort)x, (ushort)y, (ushort)z) != toIgnore)
+                if (p.level.GetExtBlock((ushort)x, (ushort)y, (ushort)z) != skip)
                     found++;
             }
 
@@ -62,7 +57,8 @@ namespace MCGalaxy.Commands.Building {
                            minX, minY, minZ, maxX, maxY, maxZ);
             Player.Message(p, "Area is {0} wide, {1} high, {2} long. Volume is {3} blocks.", 
                            width, height, length, width * height * length);
-            Player.Message(p, "There are {0} {1} blocks in the area.", found, "non-" + Block.Name(toIgnore));
+            Player.Message(p, "There are {0} {1} blocks in the area.", found, 
+                           "non-" + p.level.BlockName(skip));
             return true;
         }
         

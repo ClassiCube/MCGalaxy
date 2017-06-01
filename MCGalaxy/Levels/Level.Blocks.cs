@@ -48,11 +48,10 @@ namespace MCGalaxy {
         }
         
         public ExtBlock GetExtBlock(ushort x, ushort y, ushort z) {
-            int index = PosToInt(x, y, z);
-            if (index < 0 || blocks == null) return ExtBlock.Invalid;
-            
+            if (x >= Width || y >= Height || z >= Length || blocks == null) return ExtBlock.Invalid;
             ExtBlock block;
-            block.BlockID = blocks[index];
+            
+            block.BlockID = blocks[x + Width * (z + y * Length)];
             block.ExtID = block.BlockID == Block.custom_block 
                 ? GetExtTileNoCheck(x, y, z) : Block.air;
             return block;
