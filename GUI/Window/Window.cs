@@ -231,11 +231,9 @@ namespace MCGalaxy.Gui {
             notifyIcon.ShowBalloonTip(3000, Server.name, message, icon);
         }
 
-        public delegate void UpdateList();
-
         public void UpdateMapList() {
             if (InvokeRequired) {
-                Invoke(new UpdateList(UpdateMapList)); return;
+                Invoke(new VoidDelegate(UpdateMapList)); return;
             }
             
             if (main_Maps.DataSource == null)

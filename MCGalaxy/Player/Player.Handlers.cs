@@ -342,11 +342,15 @@ namespace MCGalaxy {
         }
         
         void CheckBlocks(Position pos) {
-            Vec3U16 P = (Vec3U16)pos.BlockCoords;
-            if (level.Death) CheckSurvival(P.X, P.Y, P.Z);
-            
-            CheckBlock();
-            oldIndex = level.PosToInt(P.X, P.Y, P.Z);
+            try {
+                Vec3U16 P = (Vec3U16)pos.BlockCoords;
+                if (level.Death) CheckSurvival(P.X, P.Y, P.Z);
+                
+                CheckBlock();
+                oldIndex = level.PosToInt(P.X, P.Y, P.Z);
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+            }
         }
         
         bool Moved() { return lastRot.RotY != Rot.RotY || lastRot.HeadX != Rot.HeadX; }
@@ -640,7 +644,7 @@ namespace MCGalaxy {
                 if (lastCMD == "") {
                     Player.Message(this, "Cannot repeat command: You haven't used any commands yet.");
                     return true;
-                }                
+                }
                 text = lastCMD;
                 Player.Message(this, "Repeating %T/" + lastCMD);
             } else if (text[0] == '/' || text[0] == '!') {

@@ -90,7 +90,8 @@ namespace MCGalaxy.Blocks.Physics {
                 lvl.AddUpdate(index, Block.wood_float);
             } else {
                 index = lvl.IntOffset(C.b, 0, 1, 0);
-                if (Block.Convert(lvl.GetTile(index)) == Block.water) {
+                byte above = lvl.GetTile(index);
+                if (above == Block.waterstill || Block.Convert(above) == Block.water) {
                     lvl.AddUpdate(C.b, lvl.blocks[index]);
                     lvl.AddUpdate(index, Block.wood_float);
                 }
