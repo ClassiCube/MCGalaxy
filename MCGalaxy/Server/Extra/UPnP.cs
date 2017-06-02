@@ -45,7 +45,7 @@ namespace MCGalaxy.Core {
             IPEndPoint ipe = new IPEndPoint(IPAddress.Parse("239.255.255.250"), 1900);
             byte[] buffer = new byte[0x1000];
 
-            DateTime start = DateTime.Now;
+            DateTime start = DateTime.UtcNow;
             try {
                 do {
                     s.SendTo(data, ipe);
@@ -59,8 +59,8 @@ namespace MCGalaxy.Core {
                             length = s.Receive(buffer);
                         }), null);
                         
-                        while(length == -1){
-                            if ((DateTime.Now - start).TotalSeconds > 10 ) {
+                        while (length == -1) {
+                            if ((DateTime.UtcNow - start).TotalSeconds > 10) {
                                 return false;
                             }
                             Thread.Sleep(1000);
@@ -75,7 +75,7 @@ namespace MCGalaxy.Core {
                             }
                         }
                     } while (length > 0);
-                } while (start.Subtract(DateTime.Now) < _timeout);
+                } while (start.Subtract(DateTime.UtcNow) < _timeout);
                 return false;
             }
             catch {
@@ -167,6 +167,7 @@ namespace MCGalaxy.Core {
             soap +
             "</s:Body>" +
             "</s:Envelope>";
+            
             WebRequest r = HttpWebRequest.Create(url);
             r.Method = "POST";
             byte[] b = Encoding.UTF8.GetBytes(req);
