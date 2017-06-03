@@ -77,12 +77,12 @@ namespace MCGalaxy.Tasks {
         
         
         SchedulerTask GetNextTask() {
-            DateTime minTime = DateTime.UtcNow;
+            DateTime minTime = DateTime.UtcNow.AddMilliseconds(1);
             SchedulerTask minTask = null;
             
             lock (taskLock) {
                 foreach (SchedulerTask task in tasks) {
-                    if (task.NextRun > minTime) continue;                    
+                    if (task.NextRun >= minTime) continue;
                     minTime = task.NextRun; minTask = task;
                 }
             }
