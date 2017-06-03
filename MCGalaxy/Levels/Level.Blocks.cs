@@ -287,7 +287,7 @@ namespace MCGalaxy {
                 if (old == block) return 0;
 
                 if (old.BlockID == Block.sponge && physics > 0 && block.BlockID != Block.sponge)
-                    OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z));
+                    OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), false);
                 if (old.BlockID == Block.lava_sponge && physics > 0 && block.BlockID != Block.lava_sponge)
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), true);
 

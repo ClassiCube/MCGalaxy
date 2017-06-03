@@ -143,6 +143,9 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoSponge(Level lvl, ref Check C, bool lava) {
+            byte target = lava ? Block.lava : Block.water;
+            byte alt    = lava ? Block.lavastill : Block.waterstill;
+            
             for (int y = -2; y <= +2; ++y)
                 for (int z = -2; z <= +2; ++z)
                     for (int x = -2; x <= +2; ++x)
@@ -151,13 +154,16 @@ namespace MCGalaxy.Blocks.Physics {
                 byte block = lvl.GetTile(index);
                 if (block == Block.Invalid) continue;
                 
-                if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
+                if (Block.Convert(block) == target || Block.Convert(block) == alt)
                     lvl.AddUpdate(index, Block.air);
             }
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
-        public static void DoSpongeRemoved(Level lvl, int b, bool lava = false) {
+        public static void DoSpongeRemoved(Level lvl, int b, bool lava) {
+            byte target = lava ? Block.lava : Block.water;
+            byte alt    = lava ? Block.lavastill : Block.waterstill;
+            
             for (int y = -3; y <= +3; ++y)
                 for (int z = -3; z <= +3; ++z)
                     for (int x = -3; x <= +3; ++x)
@@ -168,7 +174,7 @@ namespace MCGalaxy.Blocks.Physics {
                     byte block = lvl.GetTile(index);
                     if (block == Block.Invalid) continue;
                     
-                    if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
+                    if (Block.Convert(block) == target || Block.Convert(block) == alt)
                         lvl.AddCheck(index);
                 }
             }
