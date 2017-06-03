@@ -678,14 +678,13 @@ namespace MCGalaxy.Commands.CPE {
             // TODO: find a nicer way of doing this
             string fullCmd = cmd.Replace("lb", "levelblock")
                 .Replace("gb", "globalblock");
-            
-            Player.Message(p, "%T{0} add/copy/edit/list/remove", fullCmd);
-            Player.Message(p, "%H  {0} add [id] - begins creating a new custom block.", cmd);
-            Player.Message(p, "%H  {0} copy [source id] [new id] - clones a new custom block from an existing custom block.", cmd);
-            Player.Message(p, "%H  {0} edit [id] [property] [value] - edits the given property of that custom block.", cmd);
-            Player.Message(p, "%H  {0} list <offset> - lists all custom blocks.", cmd);
-            Player.Message(p, "%H  {0} remove [id] - removes that custom block.", cmd);
-            Player.Message(p, "%H  {0} info [id] - shows info about that custom block.", cmd);
+
+            Player.Message(p, "%T{0} add [id] %H- begins creating a new custom block.", cmd);
+            Player.Message(p, "%T{0} copy [source id] [new id] %H- clones a new custom block from an existing custom block.", cmd);
+            Player.Message(p, "%T{0} edit [id] [property] [value] %H- edits the given property of that custom block.", cmd);
+            Player.Message(p, "%T{0} list <offset> %H- lists all custom blocks.", cmd);
+            Player.Message(p, "%T{0} remove [id] %H- removes that custom block.", cmd);
+            Player.Message(p, "%T{0} info [id] %H- shows info about that custom block.", cmd);
             Player.Message(p, "%HTo see the list of editable properties, type {0} edit.", cmd);
         }
     }

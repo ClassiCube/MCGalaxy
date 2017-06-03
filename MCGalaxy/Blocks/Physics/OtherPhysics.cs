@@ -133,7 +133,7 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             if (C.data.Data > 20) {
-                ExtBlock above = lvl.GetExtBlock(x, (ushort)(y + 1), z);
+                ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
                 if (lvl.LightPasses(above))
                     lvl.AddUpdate(C.b, Block.grass);
                 C.data.Data = PhysicsArgs.RemoveFromChecks;

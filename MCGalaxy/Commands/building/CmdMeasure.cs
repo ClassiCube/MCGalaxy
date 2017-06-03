@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Building {
                 for (int z = minZ; z <= maxZ; z++)
                     for (int x = minX; x <= maxX; x++)
             {
-                if (p.level.GetExtBlock((ushort)x, (ushort)y, (ushort)z) != skip)
+                if (p.level.GetBlock((ushort)x, (ushort)y, (ushort)z) != skip)
                     found++;
             }
 

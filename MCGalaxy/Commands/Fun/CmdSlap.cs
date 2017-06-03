@@ -15,7 +15,9 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands.Fun {    
+using MCGalaxy.Blocks;
+
+namespace MCGalaxy.Commands.Fun {
     public sealed class CmdSlap : Command {
         public override string name { get { return "slap"; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -53,18 +55,32 @@ namespace MCGalaxy.Commands.Fun {
             Position pos = who.Pos;
 
             string src = p == null ? "(console)" : p.ColoredName;
-            for (; y <= p.level.Height; y++) {
-                if (!Block.Walkthrough(who.level.GetBlock(x, y, z)) && who.level.GetBlock(x, y, z) != Block.Invalid) {
-                    pos.Y = (y - 1) * 32;
-                    who.level.ChatLevel(who.ColoredName + " %Swas slapped into the roof by " + src);
-                    who.SendPos(Entities.SelfID, pos, who.Rot);
-                    return;
-                }
+            for (; y <= who.level.Height; y++) {
+                ExtBlock above = who.level.GetBlock(x, y + 1, z);
+                if (above.IsInvalid) continue;
+                if (Collide(who.level, above) != CollideType.Solid) continue;
+                
+                pos.Y = (y + 1) * 32 - 6;
+                BlockDefinition def = who.level.GetBlockDef(above);
+                if (def != null) pos.Y += def.MinZ * 2;
+                
+                who.level.ChatLevel(who.ColoredName + " %Swas slapped into the roof by " + src);
+                who.SendPos(Entities.SelfID, pos, who.Rot);
+                return;
             }
-              
+            
             pos.Y = 1000 * 32;
             who.level.ChatLevel(who.ColoredName + " %Swas slapped sky high by " + src);
             who.SendPos(Entities.SelfID, pos, who.Rot);
+        }
+        
+        internal static byte Collide(Level lvl, ExtBlock block) {
+            BlockDefinition def = lvl.GetBlockDef(block);            
+            byte collide = def != null ? def.CollideType : CollideType.Solid;
+            
+            if (def == null && !block.IsCustomType)
+                return DefaultSet.Collide(Block.Convert(block.BlockID));
+            return collide;
         }
         
         public override void Help(Player p) {

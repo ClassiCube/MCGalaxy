@@ -445,7 +445,7 @@ namespace MCGalaxy {
         /// <remarks> Vanilla client always assumes block place/delete succeeds, so this method is usually used to echo back the
         /// old block. (e.g. due to insufficient permission to change that block, used as mark for draw operations) </remarks>
         public void RevertBlock(ushort x, ushort y, ushort z) {
-            SendBlockchange(x, y, z, level.GetExtBlock(x, y, z));
+            SendBlockchange(x, y, z, level.GetBlock(x, y, z));
         }
 
         public static bool IPInPrivateRange(string ip) {

@@ -96,5 +96,8 @@ namespace MCGalaxy {
             return (a.BlockID == Block.custom_block && b.BlockID == Block.custom_block) 
                 ? a.ExtID != b.ExtID : a.BlockID != b.BlockID;
         }
+        
+        
+        public override string ToString() { return BlockID + ", " + ExtID; }
     }
 }

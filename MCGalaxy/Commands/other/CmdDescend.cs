@@ -15,6 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using System;
+using MCGalaxy.Blocks;
+using MCGalaxy.Commands.Fun;
+
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdDescend : Command {
         public override string name { get { return "descend"; } }
@@ -35,13 +39,13 @@ namespace MCGalaxy.Commands.Misc {
             y--; // start at block below initially
             
             for (; y > 0; y--) {
-                byte block = p.level.GetBlock(x, y, z);
-                if (!(Block.Convert(block) == Block.air || block == Block.Invalid)) continue;               
-                byte above = p.level.GetBlock(x, y + 1, z);             
-                if (!(Block.Convert(above) == Block.air || above == Block.Invalid)) continue;
-                
-                byte below = p.level.GetBlock(x, y - 1, z);
-                if (Solid(Block.Convert(below))) {
+                ExtBlock block = p.level.GetBlock(x, y, z);
+                if (!block.IsInvalid && CmdSlap.Collide(p.level, block) == CollideType.Solid) continue;            
+                ExtBlock above = p.level.GetBlock(x, y + 1, z);
+                if (!above.IsInvalid && CmdSlap.Collide(p.level, above) == CollideType.Solid) continue;
+
+                ExtBlock below = p.level.GetBlock(x, y - 1, z);
+                if (!below.IsInvalid && CmdSlap.Collide(p.level, below) == CollideType.Solid) {
                     Player.Message(p, "Teleported you down.");
                     
                     Position pos = Position.FromFeet(p.Pos.X, y * 32, p.Pos.Z);
@@ -50,11 +54,6 @@ namespace MCGalaxy.Commands.Misc {
                 }
             }
             Player.Message(p, "No free spaces found below you.");
-        }
-        
-        static bool Solid(byte b) {
-            return b != Block.air && (b < Block.water || b > Block.lavastill) && b != Block.Invalid
-                && b != Block.shrub && (b < Block.yellowflower || b > Block.redmushroom);
         }
         
         public override void Help(Player p) {

@@ -73,17 +73,17 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         void PullBack(Player p, Vec3U16 cur, Vec3U16 target, int dirX, int dirZ) {
-            ExtBlock block = p.level.GetExtBlock(cur.X, cur.Y, cur.Z);
+            ExtBlock block = p.level.GetBlock(cur.X, cur.Y, cur.Z);
             p.level.Blockchange(p, cur.X, cur.Y, cur.Z, block);
             
             while (cur.X != target.X || cur.Z != target.Z) {
-                ExtBlock curBlock = p.level.GetExtBlock(cur.X, cur.Y, cur.Z);                
+                ExtBlock curBlock = p.level.GetBlock(cur.X, cur.Y, cur.Z);                
                 if (curBlock == block) p.level.Blockchange(p, cur.X, cur.Y, cur.Z, ExtBlock.Air);
 
                 cur.X = (ushort)(cur.X - dirX); cur.Z = (ushort)(cur.Z - dirZ);
                 if (cur.X >= p.level.Width || cur.Z >= p.level.Length) return;
                 
-                curBlock = p.level.GetExtBlock(cur.X, cur.Y, cur.Z);
+                curBlock = p.level.GetBlock(cur.X, cur.Y, cur.Z);
                 if (curBlock.BlockID == Block.mushroom)
                     p.level.Blockchange(p, cur.X, cur.Y, cur.Z, block);
                 Thread.Sleep(250);

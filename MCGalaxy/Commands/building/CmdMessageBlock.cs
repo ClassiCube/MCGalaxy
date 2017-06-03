@@ -113,7 +113,7 @@ namespace MCGalaxy.Commands.Building {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             MBData data = (MBData)state;
             
-            ExtBlock old = p.level.GetExtBlock(x, y, z);
+            ExtBlock old = p.level.GetBlock(x, y, z);
             if (p.level.CheckAffectPermissions(p, x, y, z, old, data.Block)) {
                 p.level.UpdateBlock(p, x, y, z, data.Block);
                 UpdateDatabase(p, data, x, y, z);

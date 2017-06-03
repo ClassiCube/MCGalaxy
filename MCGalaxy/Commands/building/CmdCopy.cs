@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands.Building {
                 for (ushort zz = minZ; zz <= maxZ; ++zz)
                     for (ushort xx = minX; xx <= maxX; ++xx)
             {
-                block = p.level.GetExtBlock(xx, yy, zz);
+                block = p.level.GetBlock(xx, yy, zz);
                 if (!p.group.CanModify[block.BlockID]) { index++; continue; } // TODO: will need to fix this when extblock permissions
                 
                 if (block.BlockID != Block.air || cState.PasteAir) 

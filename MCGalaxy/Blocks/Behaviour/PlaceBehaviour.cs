@@ -39,7 +39,7 @@ namespace MCGalaxy.Blocks {
                 p.ChangeBlock(x, y, z, block); return;
             }
             
-            ExtBlock above = lvl.GetExtBlock(x, (ushort)(y + 1), z);
+            ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
             block.BlockID = (above.BlockID == Block.Invalid || lvl.LightPasses(above)) ? Block.grass : Block.dirt;
             p.ChangeBlock(x, y, z, block);
         }
@@ -47,7 +47,7 @@ namespace MCGalaxy.Blocks {
         
         internal static void Stairs(Player p, byte block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)
-                || p.level.GetBlock(x, y - 1, z) != Block.staircasestep) {
+                || p.level.GetBlock(x, y - 1, z) != (ExtBlock)Block.staircasestep) {
                 p.ChangeBlock(x, y, z, (ExtBlock)Block.staircasestep); return;
             }
             
@@ -57,7 +57,7 @@ namespace MCGalaxy.Blocks {
         
         internal static void CobbleStairs(Player p, byte block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)
-                || p.level.GetBlock(x, y - 1, z) != Block.cobblestoneslab) {
+                || p.level.GetBlock(x, y - 1, z) != (ExtBlock)Block.cobblestoneslab) {
                 p.ChangeBlock(x, y, z, (ExtBlock)Block.cobblestoneslab); return;
             }
             

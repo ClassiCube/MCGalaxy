@@ -165,7 +165,7 @@ namespace MCGalaxy {
         /// <remarks> Adds to the BlockDB. Also turns block below to grass/dirt depending on light. </remarks>
         /// <returns> Return code from DoBlockchange </returns>
         public int ChangeBlock(ushort x, ushort y, ushort z, ExtBlock block) {
-            ExtBlock old = level.GetExtBlock(x, y, z);
+            ExtBlock old = level.GetBlock(x, y, z);
             int type = level.DoBlockchange(this, x, y, z, block);
             if (type == 0) return type;                                     // no change performed
             if (type == 2) Player.GlobalBlockchange(level, x, y, z, block); // different visually
@@ -421,7 +421,7 @@ namespace MCGalaxy {
                     for (int x = min.X; x <= max.X; x++)
             {
                 ushort xP = (ushort)x, yP = (ushort)y, zP = (ushort)z;
-                ExtBlock block = level.GetExtBlock(xP, yP, zP);
+                ExtBlock block = level.GetBlock(xP, yP, zP);
                 if (block.BlockID == Block.Invalid) continue;
                 AABB blockBB = Block.BlockAABB(block, level).Offset(x * 32, y * 32, z * 32);
                 if (!bb.Intersects(blockBB)) continue;

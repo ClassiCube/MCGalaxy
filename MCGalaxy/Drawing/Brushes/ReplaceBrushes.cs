@@ -38,7 +38,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override ExtBlock NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;
-            ExtBlock block = op.Level.GetExtBlock(x, y, z);
+            ExtBlock block = op.Level.GetBlock(x, y, z);
             
             for (int i = 0; i < include.Length; i++) {
                 if (block == include[i]) return target;
@@ -63,7 +63,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override ExtBlock NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;
-            ExtBlock block = op.Level.GetExtBlock(x, y, z);
+            ExtBlock block = op.Level.GetBlock(x, y, z);
             
             for (int i = 0; i < exclude.Length; i++) {
                 if (block == exclude[i]) return ExtBlock.Invalid;

@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands.Building {
 
         void EntryChange(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             PortalData data = (PortalData)p.blockchangeObject;
-            ExtBlock old = p.level.GetExtBlock(x, y, z);
+            ExtBlock old = p.level.GetBlock(x, y, z);
             if (!p.level.CheckAffectPermissions(p, x, y, z, old, data.Block)) {
                 p.RevertBlock(x, y, z); return;
             }

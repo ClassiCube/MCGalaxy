@@ -21,9 +21,10 @@ using MCGalaxy.Blocks;
 
 namespace MCGalaxy.Blocks {
     
-    /// <summary> Stores default properties for blocks in Minecraft Classic. </summary>
+    /// <summary> Stores default properties for blocks in Minecraft Classic. (and CPE blocks). </summary>
     public static class DefaultSet {
         
+        /// <summary> Constructs a custom block, with the default properties of the given classic/CPE block. </summary>
         public static BlockDefinition MakeCustomBlock(byte b) {
             BlockDefinition def = new BlockDefinition();
             def.BlockID = b;
@@ -53,19 +54,22 @@ namespace MCGalaxy.Blocks {
             return def;
         }
         
-        internal static byte Height(byte b) {
+        /// <summary> Gets the default height of a block. A value of 16 is full height. </summary>
+        public static byte Height(byte b) {
             if (b == Block.staircasestep) return 8;
             if (b == Block.cobblestoneslab) return 8;
             if (b == Block.snow) return 2;
             return 16;
         }
         
-        static bool FullBright(byte b) {
+        /// <summary> Gets whether a block is full bright / light emitting by default. </summary>
+        public static bool FullBright(byte b) {
             return b == Block.lava || b == Block.lavastill
                 || b == Block.magmablock || b == Block.fire;
         }
         
-        static byte FogDensity(byte b) {
+        /// <summary> Gets the default fog density of a block, in packed form. </summary>
+        public static byte FogDensity(byte b) {
             if (b == Block.water || b == Block.waterstill)
                 return 11; // (128 * 0.1f - 1);
             if (b == Block.lava || b == Block.lavastill)
@@ -73,7 +77,8 @@ namespace MCGalaxy.Blocks {
             return 0;
         }
         
-        static CustomColor FogColor(byte b) {
+        /// <summary> Gets the default fog colour of a block. </summary>
+        public static CustomColor FogColor(byte b) {
             if (b == Block.water || b == Block.waterstill)
                 return new CustomColor(5, 5, 51);
             if (b == Block.lava || b == Block.lavastill)
@@ -81,7 +86,8 @@ namespace MCGalaxy.Blocks {
             return default(CustomColor);
         }
         
-        static byte Collide(byte b) {
+        /// <summary> Gets the default collide type of a block, see CollideType class. </summary>
+        public static byte Collide(byte b) {
             if (b >= Block.water && b <= Block.lavastill)
                 return CollideType.SwimThrough;
             if (b == Block.snow || b == Block.air || Draw(b) == DrawType.Sprite)
@@ -89,13 +95,15 @@ namespace MCGalaxy.Blocks {
             return CollideType.Solid;
         }
         
-        static bool BlocksLight(byte b) {
+        /// <summary> Gets whether a block blocks light (prevents light passing through) by default. </summary>
+        public static bool BlocksLight(byte b) {
             return !(b == Block.glass || b == Block.leaf
                      || b == Block.air || Draw(b) == DrawType.Sprite);
         }
         
 
-        static SoundType StepSound(byte b) {
+        /// <summary> Gets the default step sound of a block. </summary>
+        public static SoundType StepSound(byte b) {
             if (b == Block.glass) return SoundType.Stone;
             if (b == Block.rope) return SoundType.Cloth;
             if (Draw(b) == DrawType.Sprite) return SoundType.None;
@@ -131,8 +139,9 @@ namespace MCGalaxy.Blocks {
             return SoundType.None;
         }
         
-        
-        internal static byte Draw(byte b) {
+
+        /// <summary> Gets the default draw type of a block, see Draw class. </summary>        
+        public static byte Draw(byte b) {
             if (b == Block.air || b == Block.Invalid) return DrawType.Gas;
             if (b == Block.leaf) return DrawType.TransparentThick;
 

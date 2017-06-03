@@ -27,7 +27,7 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             // Make zombie fall down
-            if (lvl.GetTile(x, (ushort)(y - 1), z) == Block.air) {
+            if (lvl.IsAirAt(x, (ushort)(y - 1), z)) {
                 lvl.AddUpdate(C.b, Block.zombiehead);
                 lvl.AddUpdate(lvl.IntOffset(C.b, 0, -1, 0), lvl.blocks[C.b]);
                 lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.air);

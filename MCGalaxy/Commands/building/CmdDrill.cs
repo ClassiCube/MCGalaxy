@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Building {
         
         bool DoDrill(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
-            block = p.level.GetExtBlock(x, y, z);
+            block = p.level.GetBlock(x, y, z);
             int dist = (ushort)state, numBlocks = (3 * 3) * dist;
             
             if (numBlocks > p.group.maxBlocks) {
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         void DoBlock(Player p, Level lvl, ExtBlock block, ushort x, ushort y, ushort z) {
-            ExtBlock cur = lvl.GetExtBlock(x, y, z);
+            ExtBlock cur = lvl.GetBlock(x, y, z);
             if (cur == block) {
                 p.level.UpdateBlock(p, x, y, z, ExtBlock.Air, BlockDBFlags.Drawn, true);
             }

@@ -367,20 +367,17 @@ namespace MCGalaxy.Games {
                 Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
             }
             
-            if (blueteam.members.Contains(p) && x == redbase.x && y == redbase.y && z == redbase.z
-                && mainlevel.GetTile(redbase.x, redbase.y, redbase.z) != Block.air) {
+            if (blueteam.members.Contains(p) && x == redbase.x && y == redbase.y && z == redbase.z && !mainlevel.IsAirAt(x, y, z)) {
                 Chat.MessageLevel(mainlevel, blueteam.color + p.name + " took the " + redteam.color + " red team's FLAG!");
                 GetPlayer(p).hasflag = true;
             }
             
-            if (redteam.members.Contains(p) && x == bluebase.x && y == bluebase.y && z == bluebase.z
-                && mainlevel.GetTile(bluebase.x, bluebase.y, bluebase.z) != Block.air) {
+            if (redteam.members.Contains(p) && x == bluebase.x && y == bluebase.y && z == bluebase.z && !mainlevel.IsAirAt(x, y, z)) {
                 Chat.MessageLevel(mainlevel, redteam.color + p.name + " took the " + blueteam.color + " blue team's FLAG");
                 GetPlayer(p).hasflag = true;
             }
             
-            if (blueteam.members.Contains(p) && x == bluebase.x && y == bluebase.y && z == bluebase.z
-                && mainlevel.GetTile(bluebase.x, bluebase.y, bluebase.z) != Block.air) {
+            if (blueteam.members.Contains(p) && x == bluebase.x && y == bluebase.y && z == bluebase.z && !mainlevel.IsAirAt(x, y, z)) {
                 if (GetPlayer(p).hasflag) {
                     Chat.MessageLevel(mainlevel, blueteam.color + p.name + " RETURNED THE FLAG!");
                     GetPlayer(p).hasflag = false;
@@ -399,8 +396,7 @@ namespace MCGalaxy.Games {
                 }
             }
             
-            if (redteam.members.Contains(p) && x == redbase.x && y == redbase.y && z == redbase.z
-                && mainlevel.GetTile(redbase.x, redbase.y, redbase.z) != Block.air) {
+            if (redteam.members.Contains(p) && x == redbase.x && y == redbase.y && z == redbase.z && !mainlevel.IsAirAt(x, y, z)) {
                 if (GetPlayer(p).hasflag) {
                     Chat.MessageLevel(mainlevel, redteam.color + p.name + " RETURNED THE FLAG!");
                     GetPlayer(p).hasflag = false;

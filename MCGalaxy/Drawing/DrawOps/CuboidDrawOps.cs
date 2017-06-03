@@ -82,7 +82,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         bool Check(ushort x, ushort y, ushort z) {
-            return Level.GetExtBlock(x, y, z) == Target;
+            return Level.GetBlock(x, y, z) == Target;
         }
     }
     
