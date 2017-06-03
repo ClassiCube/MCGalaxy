@@ -113,7 +113,7 @@ namespace MCGalaxy.Drawing.Ops {
                     int startX = i;
                     for (ushort x = p1.X; x <= p2.X; x++) {
                         i = (i + stepX) % 13;
-                        if (Level.GetTile(x, y, z) != Block.air) {
+                        if (!Level.IsAirAt(x, y, z)) {
                             block.BlockID = (byte)(Block.red + i);
                             output(Place(x, y, z, block));
                         }

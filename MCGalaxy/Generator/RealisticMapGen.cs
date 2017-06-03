@@ -133,7 +133,7 @@ namespace MCGalaxy.Generator {
                 }
                 
                 if (genParams.GenTrees && overlay[index] < 0.65f && overlay2[index] < treeDens) {
-                    if (Lvl.GetTile(x, (ushort)(y + 1), z) == Block.air) {
+                    if (Lvl.IsAirAt(x, (ushort)(y + 1), z)) {
                         if (Lvl.GetTile(x, y, z) == Block.grass || genParams.UseCactus) {
                             if (rand.Next(13) == 0 && !Tree.TreeCheck(Lvl, x, y, z, treeDist)) {
                                 Tree tree = null;
@@ -143,7 +143,7 @@ namespace MCGalaxy.Generator {
                                 tree.SetData(rand, tree.DefaultSize(rand));
                                 tree.Generate(x, (ushort)(y + 1), z, (xT, yT, zT, bT) =>
                                             {
-                                                if (Lvl.GetTile(xT, yT, zT) == Block.air)
+                                                if (Lvl.IsAirAt(xT, yT, zT))
                                                     Lvl.SetTile(xT, yT, zT, bT);
                                             });
                             }

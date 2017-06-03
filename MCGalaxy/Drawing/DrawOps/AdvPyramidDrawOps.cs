@@ -17,11 +17,10 @@
  */
 //StormCom Object Generator
 //
-//Full use to all StormCom Server System codes (in regards to minecraft classic) have been granted to MCGalaxy without restriction.
+//Full use to all StormCom Server System codes (in regards to minecraft classic) have been granted to MCForge without restriction.
 //
 // ~Merlin33069
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 
@@ -51,9 +50,7 @@ namespace MCGalaxy.Drawing.Ops {
                 double curRadius = Radius * ((double)curHeight / (double)height);
                 if (Math.Abs(xx) > curRadius || Math.Abs(zz) > curRadius) continue;
                 
-                byte ctile = Level.GetTile(x, y, z);
-                if (ctile != 0) continue;
-                output(Place(x, y, z, brush));
+                if (Level.IsAirAt(x, y, z)) output(Place(x, y, z, brush));
             }
         }
     }
@@ -87,9 +84,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (absx > curRadius || absz > curRadius) continue;
                 if (absx < (curRadius - 1) && absz < (curRadius - 1)) continue;
 
-                byte ctile = Level.GetTile(x, y, z);
-                if (ctile != 0) continue;
-                output(Place(x, y, z, brush));
+                if (Level.IsAirAt(x, y, z)) output(Place(x, y, z, brush));
             }
         }
     }

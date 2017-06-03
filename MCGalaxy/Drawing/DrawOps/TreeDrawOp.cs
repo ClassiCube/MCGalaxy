@@ -49,7 +49,7 @@ namespace MCGalaxy.Drawing.Ops {
             
             Tree.Generate(P.X, P.Y, P.Z, (xT, yT, zT, bT) =>
                         {
-                            if (bT == Block.leaf && lvl.GetTile(xT, yT, zT) != Block.air) return;
+                            if (bT == Block.leaf && !lvl.IsAirAt(xT, yT, zT)) return;
                             
                             if (bT != Block.leaf) {
                                 output(Place(xT, yT, zT, (ExtBlock)bT));

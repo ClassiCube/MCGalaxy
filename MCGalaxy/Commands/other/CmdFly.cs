@@ -48,8 +48,8 @@ namespace MCGalaxy.Commands.Misc {
         class FlyState {
             public Player player;
             public Position oldPos = default(Position);
-            public List<Vec3U16> last = new List<Vec3U16>();
-            public List<Vec3U16> next = new List<Vec3U16>();
+            public List<Vec3U16> lastGlass = new List<Vec3U16>();
+            public List<Vec3U16> glassCoords = new List<Vec3U16>();
         }
         
         static void FlyCallback(SchedulerTask task) {
@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Misc {
             Player p = state.player;
             if (state.player.isFlying) { DoFly(state); return; }
             
-            foreach (Vec3U16 cP in state.last) {
+            foreach (Vec3U16 cP in state.lastGlass) {
                 p.SendBlockchange(cP.X, cP.Y, cP.Z, ExtBlock.Air);
             }            
             Player.Message(p, "Stopped flying");
@@ -76,29 +76,26 @@ namespace MCGalaxy.Commands.Misc {
                 for (int zz = z - 2; zz <= z + 2; zz++)
                     for (int xx = x - 2; xx <= x + 2; xx++)
             {
-                ushort offX = (ushort)xx, offY = (ushort)yy, offZ = (ushort)zz;
-                if (p.level.GetTile(offX, offY, offZ) != Block.air) continue;
-                
                 Vec3U16 pos;
-                pos.X = offX; pos.Y = offY; pos.Z = offZ;
-                state.next.Add(pos);
+                pos.X = (ushort)xx; pos.Y = (ushort)yy; pos.Z = (ushort)zz;
+                if (!p.level.IsAirAt(pos.X, pos.Y, pos.Z)) state.glassCoords.Add(pos);
             }
             
-            foreach (Vec3U16 P in state.next) {
-                if (state.last.Contains(P)) continue;
-                state.last.Add(P);
+            foreach (Vec3U16 P in state.glassCoords) {
+                if (state.lastGlass.Contains(P)) continue;
+                state.lastGlass.Add(P);
                 p.SendBlockchange(P.X, P.Y, P.Z, glass);
             }
             
-            for (int i = 0; i < state.last.Count; i++) {
-                Vec3U16 P = state.last[i];
-                if (state.next.Contains(P)) continue;
+            for (int i = 0; i < state.lastGlass.Count; i++) {
+                Vec3U16 P = state.lastGlass[i];
+                if (state.glassCoords.Contains(P)) continue;
                 
-                p.SendBlockchange(P.X, P.Y, P.Z, ExtBlock.Air);
-                state.last.RemoveAt(i); i--;
+                p.RevertBlock(P.X, P.Y, P.Z);
+                state.lastGlass.RemoveAt(i); i--;
             }
             
-            state.next.Clear();
+            state.glassCoords.Clear();
             state.oldPos = p.Pos;
         }
         

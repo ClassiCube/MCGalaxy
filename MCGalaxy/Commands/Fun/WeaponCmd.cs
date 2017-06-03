@@ -75,8 +75,8 @@ namespace MCGalaxy.Commands.Fun {
         class AimState {
             public Player player;
             public Position oldPos = default(Position);
-            public List<Vec3U16> lastSent = new List<Vec3U16>();
-            public List<Vec3U16> toSend = new List<Vec3U16>();
+            public List<Vec3U16> lastGlass = new List<Vec3U16>();
+            public List<Vec3U16> glassCoords = new List<Vec3U16>();
         }
         
         static void AimCallback(SchedulerTask task) {
@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Fun {
             Player p = state.player;
             if (state.player.aiming) { DoAim(state); return; }
             
-            foreach (Vec3U16 cP in state.lastSent) {
+            foreach (Vec3U16 cP in state.lastGlass) {
                 if (!p.level.IsValidPos(cP)) continue;
                 p.RevertBlock(cP.X, cP.Y, cP.Z);
             }
@@ -99,39 +99,39 @@ namespace MCGalaxy.Commands.Fun {
             ushort z = (ushort)Math.Round(p.Pos.BlockZ + dir.Z * 3);
 
             int signX = Math.Sign(dir.X) >= 0 ? 1 : -1, signZ = Math.Sign(dir.Z) >= 0 ? 1 : -1;
-            CheckTile(p.level, state.toSend, x, y, z);
-            CheckTile(p.level, state.toSend, x + signX, y, z);
-            CheckTile(p.level, state.toSend, x, y, z + signZ);
-            CheckTile(p.level, state.toSend, x + signX, y, z + signZ);
+            CheckTile(p.level, state.glassCoords, x, y, z);
+            CheckTile(p.level, state.glassCoords, x + signX, y, z);
+            CheckTile(p.level, state.glassCoords, x, y, z + signZ);
+            CheckTile(p.level, state.glassCoords, x + signX, y, z + signZ);
 
             // Revert all glass blocks now not in the ray from the player's direction
-            for (int i = 0; i < state.lastSent.Count; i++) {
-                Vec3U16 cP = state.lastSent[i];
-                if (state.toSend.Contains(cP)) continue;
+            for (int i = 0; i < state.lastGlass.Count; i++) {
+                Vec3U16 cP = state.lastGlass[i];
+                if (state.glassCoords.Contains(cP)) continue;
                 
                 if (p.level.IsValidPos(cP))
                     p.RevertBlock(cP.X, cP.Y, cP.Z);
-                state.lastSent.RemoveAt(i); i--;
+                state.lastGlass.RemoveAt(i); i--;
             }
 
             // Place the new glass blocks that are in the ray from the player's direction
-            foreach (Vec3U16 cP in state.toSend) {
-                if (state.lastSent.Contains(cP)) continue;
-                state.lastSent.Add(cP);
+            foreach (Vec3U16 cP in state.glassCoords) {
+                if (state.lastGlass.Contains(cP)) continue;
+                state.lastGlass.Add(cP);
                 p.SendBlockchange(cP.X, cP.Y, cP.Z, (ExtBlock)Block.glass);
             }
-            state.toSend.Clear();
+            state.glassCoords.Clear();
         }
         
-        static void CheckTile(Level lvl, List<Vec3U16> toSend, int x, int y, int z) {
+        static void CheckTile(Level lvl, List<Vec3U16> glassCoords, int x, int y, int z) {
             Vec3U16 pos;
-            if (lvl.GetBlock(x, y - 1, z) == Block.air) {
+            if (lvl.IsAirAt(x, y - 1, z)) {
                 pos.X = (ushort)x; pos.Y = (ushort)(y - 1); pos.Z = (ushort)z;
-                toSend.Add(pos);
+                glassCoords.Add(pos);
             }
-            if (lvl.GetBlock(x, y, z) == Block.air) {
+            if (lvl.IsAirAt(x, y, z)) {
                 pos.X = (ushort)x; pos.Y = (ushort)y; pos.Z = (ushort)z;
-                toSend.Add(pos);
+                glassCoords.Add(pos);
             }
         }
         

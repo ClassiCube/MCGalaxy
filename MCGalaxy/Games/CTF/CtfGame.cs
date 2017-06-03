@@ -63,7 +63,7 @@ namespace MCGalaxy.Games {
     internal sealed class Base {
         public ushort x, y, z;
         public ushort spawnx, spawny, spawnz;
-        public byte block;
+        public ExtBlock block;
         
         public void SendToSpawn(Level mainlevel, CTFGame game, Player p1) {
             Position pos = new Position(spawnx, spawny, spawny);
@@ -74,7 +74,7 @@ namespace MCGalaxy.Games {
                     xx = (ushort)(rand.Next(0, mainlevel.Width));
                     yy = (ushort)(rand.Next(0, mainlevel.Height));
                     zz = (ushort)(rand.Next(0, mainlevel.Length));
-                } while (mainlevel.GetTile(xx, yy, zz) != Block.air && game.OnSide(zz, this));
+                } while (!mainlevel.IsAirAt(xx, yy, zz) && game.OnSide(zz, this));
                 
                 pos.X = xx * 32; pos.Y = yy * 32; pos.Z = zz * 32;
             }
@@ -191,7 +191,7 @@ namespace MCGalaxy.Games {
                     if (GetPlayer(other).hasflag) {
                         Chat.MessageLevel(mainlevel, redteam.color + p.name + " DROPPED THE FLAG!");
                         GetPlayer(other).points -= caplose;
-                        mainlevel.Blockchange(b.x, b.y, b.z, (ExtBlock)b.block);
+                        mainlevel.Blockchange(b.x, b.y, b.z, b.block);
                         GetPlayer(other).hasflag = false;
                     }
                     
@@ -251,8 +251,8 @@ namespace MCGalaxy.Games {
             LoadMap(maps[new Random().Next(maps.Count)]);
             
             if (needSetup) AutoSetup();
-            redbase.block = Block.red;
-            bluebase.block = Block.blue;
+            redbase.block = (ExtBlock)Block.red;
+            bluebase.block = (ExtBlock)Block.blue;
             Server.s.Log("[Auto_CTF] Running...");
             started = true;
             

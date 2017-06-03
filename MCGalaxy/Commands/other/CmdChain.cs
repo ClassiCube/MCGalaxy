@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Misc {
 
                 Thread.Sleep(250);
                 p.level.Blockchange(p, cur.X, cur.Y, cur.Z, (ExtBlock)Block.mushroom);
-                if (p.level.GetTile(next.X, next.Y, next.Z) != 0) {
+                if (!p.level.IsAirAt(next.X, next.Y, next.Z)) {
                     PullBack(p, next, target, dirX, dirZ); 
                     p.level.Blockchange(p, x, y, z, ExtBlock.Air); return;
                 }
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Misc {
                 cur.X = (ushort)(cur.X - dirX); cur.Z = (ushort)(cur.Z - dirZ);
                 if (cur.X >= p.level.Width || cur.Z >= p.level.Length) return;
                 
-                curBlock.BlockID = p.level.GetTile(cur.X, cur.Y, cur.Z);
+                curBlock = p.level.GetExtBlock(cur.X, cur.Y, cur.Z);
                 if (curBlock.BlockID == Block.mushroom)
                     p.level.Blockchange(p, cur.X, cur.Y, cur.Z, block);
                 Thread.Sleep(250);

@@ -55,6 +55,20 @@ namespace MCGalaxy {
             block.ExtID = block.BlockID == Block.custom_block 
                 ? GetExtTileNoCheck(x, y, z) : Block.air;
             return block;
+        }     
+   
+        /// <summary> Gets whether the block at the given coordinates is air. </summary>
+        public bool IsAirAt(ushort x, ushort y, ushort z) {
+            if (x >= Width || y >= Height || z >= Length || blocks == null) return false; 
+            return blocks[x + Width * (z + y * Length)] == Block.air;
+        }
+
+        /// <summary> Gets whether the block at the given coordinates is air. </summary>
+        public bool IsAirAt(int x, int y, int z) {
+            if (x < 0 || y < 0 || z < 0 || blocks == null) return false;
+            if (x >= Width || y >= Height || z >= Length)  return false;
+            
+            return blocks[x + Width * (z + y * Length)] == Block.air;
         }
         
         /// <summary> Gets the block at the given coordinates. </summary>
@@ -97,12 +111,6 @@ namespace MCGalaxy {
             byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
             return chunk == null ? Block.air :
                 chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
-        }
-        
-        public byte GetFallbackExtTile(ushort x, ushort y, ushort z) {
-            byte tile = GetExtTile(x, y, z);
-            BlockDefinition def = CustomBlockDefs[tile];
-            return def == null ? Block.air : def.FallBack;
         }
         
         public byte GetFallbackExtTile(int index) {

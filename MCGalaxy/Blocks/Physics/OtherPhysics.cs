@@ -120,7 +120,7 @@ namespace MCGalaxy.Blocks.Physics {
             tree.SetData(rand, tree.DefaultSize(rand));
             tree.Generate(x, y, z, (xT, yT, zT, bT) =>
                         {
-                            if (bT == Block.leaf && lvl.GetTile(xT, yT, zT) != Block.air) return;
+                            if (bT == Block.leaf && !lvl.IsAirAt(xT, yT, zT)) return;
                             lvl.Blockchange(xT, yT, zT, (ExtBlock)bT);
                         });
             
