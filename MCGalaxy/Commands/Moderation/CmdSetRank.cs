@@ -89,10 +89,11 @@ namespace MCGalaxy.Commands.Moderation {
                 MessageTooHighRank(p, "change the rank of", false); return false;
             }
             if (p != null && newRank.Permission >= p.Rank) {
-                Player.Message(p, "Can only rank up to below {0}", newRank.ColoredName); return false;
+                Player.Message(p, "Cannot rank a player to a rank equal to or higher than yours."); return false;
             }
-            if (p != null && newRank.Permission >= p.Rank) {
-                Player.Message(p, "Cannot change the rank of a player to a rank equal or higher to yours."); return false;
+            if (newRank.Permission == curRank.Permission) {
+                Player.Message(p, "{0} %Sis already ranked {1}.", 
+                               PlayerInfo.GetColoredName(p, name), curRank.ColoredName); return false;
             }
             
             if (who == null) return true;

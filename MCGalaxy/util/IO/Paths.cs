@@ -21,14 +21,15 @@ namespace MCGalaxy {
     
     public static class Paths {
         
-        public const string CustomColorsFile = "text/customcolors.txt";       
-        public const string TempRanksFile = "text/tempranks.txt";       
-        public const string CustomTokensFile = "text/custom$s.txt";        
-        public const string BadWordsFile = "text/badwords.txt";       
-        public const string EatMessagesFile = "text/eatmessages.txt";        
-        public const string RulesFile = "text/rules.txt";        
-        public const string OprulesFile = "text/oprules.txt";        
-        public const string FaqFile = "text/faq.txt";        
+        public const string CustomColorsFile = "text/customcolors.txt";
+        public const string TempRanksFile = "text/tempranks.txt";
+        public const string TempBansFile = "text/tempbans.txt";
+        public const string CustomTokensFile = "text/custom$s.txt";
+        public const string BadWordsFile = "text/badwords.txt";
+        public const string EatMessagesFile = "text/eatmessages.txt";
+        public const string RulesFile = "text/rules.txt";
+        public const string OprulesFile = "text/oprules.txt";
+        public const string FaqFile = "text/faq.txt";
         public const string AnnouncementsFile = "text/messages.txt";
         public const string AliasesFile = "text/aliases.txt";
         public const string NewsFile = "text/news.txt";

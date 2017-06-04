@@ -116,11 +116,12 @@ namespace MCGalaxy {
             Background.QueueOnce(LoadMainLevel);
             Plugin.Load();
             Background.QueueOnce(UpgradeTasks.UpgradeOldBlacklist);
-            Background.QueueOnce(LoadPlayerLists);
             Background.QueueOnce(LoadAutoloadMaps);
             Background.QueueOnce(UpgradeTasks.MovePreviousLevelFiles);
             Background.QueueOnce(UpgradeTasks.UpgradeOldLockdown);
+            Background.QueueOnce(UpgradeTasks.UpgradeOldTempranks);
             Background.QueueOnce(UpgradeTasks.UpgradeDBTimeSpent);
+            Background.QueueOnce(LoadPlayerLists);
             
             Background.QueueOnce(SetupSocket);
             Background.QueueOnce(InitTimers);
@@ -130,16 +131,8 @@ namespace MCGalaxy {
             Devs.Clear();
             Mods.Clear();
             Background.QueueOnce(InitTasks.UpdateStaffList);
-            
-            MainScheduler.QueueRepeat(ServerTasks.TemprankExpiry, 
-                                      null, TimeSpan.FromMinutes(1));
-            MainScheduler.QueueRepeat(ServerTasks.CheckState, 
-                                      null, TimeSpan.FromSeconds(3));
-            
-            Background.QueueRepeat(ServerTasks.AutoSave, 
-                                   1, TimeSpan.FromSeconds(Server.backupInterval));
-            Background.QueueRepeat(ServerTasks.BlockUpdates, 
-                                   null, TimeSpan.FromSeconds(Server.blockInterval));
+
+            ServerTasks.QueueTasks();
             Background.QueueRepeat(ThreadSafeCache.DBCache.CleanupTask, 
                                    null, TimeSpan.FromMinutes(5));
         }
@@ -159,7 +152,6 @@ namespace MCGalaxy {
             if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");
             if (!Directory.Exists("bots")) Directory.CreateDirectory("bots");
             if (!Directory.Exists("text")) Directory.CreateDirectory("text");
-            TempRanks.EnsureExists();
             RankInfo.EnsureExists();
             Ban.EnsureExists();
 

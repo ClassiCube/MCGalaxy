@@ -32,7 +32,8 @@ namespace MCGalaxy {
         public string Path;
         
         List<string> names = new List<string>(), lines = new List<string>();
-        readonly object locker = new object(), saveLocker = new object();
+        internal readonly object locker = new object();
+        readonly object saveLocker = new object();
 
         /// <summary> Returns a copy of all names in the list. </summary>
         public List<string> AllNames() {

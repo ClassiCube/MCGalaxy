@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Moderation {
             TimeSpan duration = TimeSpan.Zero;
             if (!CommandParser.GetTimespan(p, args[2], ref duration, "temp rank for", 'h')) return;
 
-            foreach (string line in Server.TempRanks.Find(target)) {
+            if (Server.tempRanks.Contains(target)) {
                 Player.Message(p, "&cThe player already has a temporary rank assigned!"); return;
             }
             
@@ -78,72 +78,70 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void Delete(Player p, string target) {
-            bool assigned = false;
-            StringBuilder all = new StringBuilder();
+            string line = Server.tempRanks.FindData(target);
+            if (line == null) {
+                Player.Message(p, "{0}&c has not been assigned a temp rank.",
+                               PlayerInfo.GetColoredName(p, target));
+                return;
+            }
+            
+            string[] parts = line.SplitSpaces();
             Player who = PlayerInfo.FindExact(target);
             Group curRank = who != null ? who.group : Group.findPlayerGroup(target);
+            
+            Group oldRank = Group.Find(parts[4 - 1]); // -1 because data, not whole line
+            // Old rank was deleted, can't revert rank
+            if (oldRank == null) {
+                Server.tempRanks.Remove(target);
+                return;
+            }
+            
             string reason = "temp rank unassigned";
+            if (!CmdSetRank.CanChangeRank(target, curRank, oldRank, who, p, ref reason)) return;
             
-            foreach (string line in File.ReadAllLines(Paths.TempRanksFile)) {
-                if (!line.CaselessStarts(target)) { all.AppendLine(line); continue; }
-                
-                string[] parts = line.SplitSpaces();
-                Group newRank = Group.Find(parts[2]);
-                if (!CmdSetRank.CanChangeRank(target, curRank, newRank, who, p, ref reason)) return;
-                
-                ModAction action = new ModAction(target, p, ModActionType.Rank, reason);
-                action.Metadata = newRank;
-                OnModActionEvent.Call(action);
-                assigned = true;
-            }
-            
-            if (!assigned) {
-                Player.Message(p, "&a{0}&c has not been assigned a temp rank.", target); return;
-            }
-            File.WriteAllText(Paths.TempRanksFile, all.ToString());
+            ModAction action = new ModAction(target, p, ModActionType.Rank, reason);
+            action.Metadata = oldRank;
+            action.targetGroup = curRank;
+            OnModActionEvent.Call(action);
         }
         
-        static void Info(Player p, string name) {
-            List<string> rankings = Server.TempRanks.FindMatches(p, name, "temp rank");
-            if (rankings == null) return;
-            
-            foreach (string line in rankings) {
-                PrintTempRankInfo(p, line); return;
+        static void Info(Player p, string target) {
+            string line = Server.tempRanks.FindData(target);
+            if (line == null) {
+                Player.Message(p, "{0}&c has not been assigned a temp rank.",
+                               PlayerInfo.GetColoredName(p, target));
+            } else {
+                PrintTempRankInfo(p, line);
             }
         }
         
         static void List(Player p) {
-            int count = 0;
-            foreach (string line in File.ReadAllLines(Paths.TempRanksFile)) {
-                if (count == 0)
-                    Player.Message(p, "&ePlayers with a temporary rank assigned:");
-                PrintTempRankInfo(p, line);
-                count++;
-            }
-            if (count == 0)
+            List<string> lines = Server.tempRanks.AllLines();
+            if (lines.Count == 0) {
                 Player.Message(p, "&cThere are no players with a temporary rank assigned.");
+            } else {
+                Player.Message(p, "&ePlayers with a temporary rank assigned:");
+                foreach (string line in lines) {
+                    PrintTempRankInfo(p, line);
+                }
+            }
         }
         
         static void PrintTempRankInfo(Player p, string line) {
             string[] args = line.SplitSpaces();
-            string tempRanker = args[9];
-            string tempRank = Group.GetColoredName(args[1]);
-            string oldRank = Group.GetColoredName(args[2]);
+            string assigner = args[1];
+            DateTime assigned = long.Parse(args[2]).FromUnixTime();
+            DateTime expiry   = long.Parse(args[3]).FromUnixTime();
+            string oldRank    = Group.GetColoredName(args[4]);
+            string tempRank   = Group.GetColoredName(args[5]);
             
-            int min = int.Parse(args[4]), hour = int.Parse(args[5]);
-            int day = int.Parse(args[6]), month = int.Parse(args[7]), year = int.Parse(args[8]);
-            int periodH = int.Parse(args[3]), periodM = 0;
-            if (args.Length > 10) periodM = int.Parse(args[10]);
-            
-            DateTime assigned = new DateTime(year, month, day, hour, min, 0);
-            DateTime expiry = assigned.AddHours(periodH).AddMinutes(periodM);
-            TimeSpan delta = DateTime.Now - assigned;
-            TimeSpan expireDelta = expiry - DateTime.Now;
-            
-            Player.Message(p, "Temp rank information for {0}:", PlayerInfo.GetColoredName(p, args[0]));
+            TimeSpan assignDelta = DateTime.UtcNow - assigned;
+            TimeSpan expireDelta = expiry - DateTime.UtcNow;
+            Player.Message(p, "Temp rank information for {0}:",
+                           PlayerInfo.GetColoredName(p, args[0]));
             Player.Message(p, "  From {0} %Sto {1}%S, by {2} &a{3} %Sago, expires in &a{4}",
-                           oldRank, tempRank, tempRanker,
-                           delta.Shorten(), expireDelta.Shorten());
+                           oldRank, tempRank, assigner,
+                           assignDelta.Shorten(), expireDelta.Shorten());
         }
         
         public override void Help(Player p) {

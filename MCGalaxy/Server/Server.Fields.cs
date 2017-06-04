@@ -58,7 +58,6 @@ namespace MCGalaxy {
         
         public static PlayerExtList AutoloadMaps;
         public static PlayerMetaList RankInfo = new PlayerMetaList("text/rankinfo.txt");
-        public static PlayerMetaList TempRanks = new PlayerMetaList("text/tempranks.txt");
         public static PlayerMetaList Notes = new PlayerMetaList("text/notes.txt");
         
         /// <summary> *** DO NOT USE THIS! *** Use VersionString, as this field is a constant and is inlined if used. </summary>
@@ -81,7 +80,7 @@ namespace MCGalaxy {
         public static CTFGame ctf = null;
         public static PlayerList bannedIP, whiteList, ircControllers, muted, invalidIds;
         public static PlayerList ignored, frozen, hidden, agreed, vip, noEmotes, lockdown;
-        public static PlayerExtList jailed, models, skins, reach, tempBans, rotations;
+        public static PlayerExtList jailed, models, skins, reach, tempBans, tempRanks, rotations;
 
         public static readonly List<string> Devs = new List<string>(), Mods = new List<string>();
 

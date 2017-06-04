@@ -17,6 +17,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using MCGalaxy.Commands.Chatting;
@@ -26,6 +27,20 @@ using MCGalaxy.Maths;
 namespace MCGalaxy.Tasks {
     internal static class ServerTasks {
 
+        static SchedulerTask temprankTask;
+        internal static void QueueTasks() {
+            temprankTask = Server.MainScheduler.QueueRepeat(TemprankExpiry,
+                                                            null, TimeSpan.FromHours(1));
+            Server.MainScheduler.QueueRepeat(CheckState,
+                                             null, TimeSpan.FromSeconds(3));
+            
+            Server.Background.QueueRepeat(AutoSave,
+                                          1, TimeSpan.FromSeconds(Server.backupInterval));
+            Server.Background.QueueRepeat(BlockUpdates,
+                                          null, TimeSpan.FromSeconds(Server.blockInterval));
+        }
+        
+        
         internal static void LocationChecks(SchedulerTask task) {
             Player[] players = PlayerInfo.Online.Items;
             players = PlayerInfo.Online.Items;
@@ -159,27 +174,48 @@ namespace MCGalaxy.Tasks {
         }
         
         internal static void TemprankExpiry(SchedulerTask task) {
-            Player[] players = PlayerInfo.Online.Items;
-            
-            foreach (string line in File.ReadAllLines(Paths.TempRanksFile))
-                foreach (Player p in players)
-            {
-                if (!line.CaselessStarts(p.name)) continue;
+            List<string> lines = Server.tempRanks.AllLines();
+            foreach (string line in lines) {
                 string[] args = line.SplitSpaces();
-
-                int min = int.Parse(args[4]), hour = int.Parse(args[5]);
-                int day = int.Parse(args[6]), month = int.Parse(args[7]), year = int.Parse(args[8]);
-                int periodH = int.Parse(args[3]), periodM = 0;
-                if (args.Length > 10) periodM = int.Parse(args[10]);
+                if (args.Length < 4) continue;
                 
-                DateTime expire = new DateTime(year, month, day, hour, min, 0)
-                    .AddHours(periodH).AddMinutes(periodM);
-                if (DateTime.Now >= expire)
-                    Command.all.Find("temprank").Use(null, p.name + " delete");
+                long expiry;
+                if (!long.TryParse(args[3], out expiry)) continue;
+
+                if (DateTime.UtcNow >= expiry.FromUnixTime()) {
+                    Command.all.Find("temprank").Use(null, args[0] + " delete");
+                    Server.tempRanks.Remove(args[0]); // handle case of temp rank being same as current rank
+                }
             }
-            
-            DateTime now = DateTime.UtcNow;
-            task.Delay = TimeSpan.FromSeconds(60 - now.Second); // TODO: down to seconds
+            task.Delay = TemprankNextRun();
+        }
+        
+        internal static void TemprankCalcNextRun() {
+            temprankTask.Delay = TemprankNextRun();
+            temprankTask.NextRun = DateTime.UtcNow.Add(temprankTask.Delay);
+            Server.MainScheduler.Recheck();
+        }
+        
+        static TimeSpan TemprankNextRun() {
+            DateTime nextRun = DateTime.MaxValue;
+            // Lock because we want to ensure list not modified from under us
+            lock (Server.tempRanks.locker) {
+                List<string> lines = Server.tempRanks.AllLines();
+                // Line format: name assigner assigntime expiretime oldRank tempRank
+                
+                foreach (string line in lines) {
+                    string[] args = line.SplitSpaces();
+                    if (args.Length < 4) continue;
+                    
+                    long expiry;
+                    if (!long.TryParse(args[3], out expiry)) continue;
+                    
+                    DateTime expireTime = expiry.FromUnixTime();
+                    if (expireTime < nextRun)
+                        nextRun = expireTime;
+                }
+            }
+            return nextRun - DateTime.UtcNow;
         }
     }
 }

@@ -29,7 +29,8 @@ namespace MCGalaxy {
         public string Path;
         
         List<string> names = new List<string>();        
-        readonly object locker = new object(), saveLocker = new object();
+        internal readonly object locker = new object();
+        readonly object saveLocker = new object();
         
         public PlayerList() { }
         public PlayerList(string path) { Path = path; }

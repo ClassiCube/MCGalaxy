@@ -20,6 +20,7 @@ using System;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.Moderation;
 using MCGalaxy.Events;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Core {
     internal static class ModActionHandler {
@@ -213,10 +214,14 @@ namespace MCGalaxy.Core {
             if (who != null) {
                 who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
             }
+            if (Server.tempRanks.Remove(e.Target)) {
+                ServerTasks.TemprankCalcNextRun();
+                Server.tempRanks.Save();
+            }
             
             WriteRankInfo(e, newRank);
             if (e.Duration != TimeSpan.Zero) AddTempRank(e, newRank);
-            ModActionCmd.ChangeRank(e.Target, e.TargetGroup, newRank, who);            
+            ModActionCmd.ChangeRank(e.Target, e.TargetGroup, newRank, who);
         }
         
         static void WriteRankInfo(ModAction e, Group newRank) {
@@ -233,13 +238,14 @@ namespace MCGalaxy.Core {
         }
         
         static void AddTempRank(ModAction e, Group newRank) {
-            DateTime now = DateTime.Now;
+            long assign = DateTime.UtcNow.ToUnixTime();
+            long expiry = DateTime.UtcNow.Add(e.Duration).ToUnixTime();
             string assigner = e.Actor == null ? "(console)" : e.Actor.name;
-            int hours = (int)e.Duration.TotalHours;
-            
-            string data = e.Target + " " + newRank.name + " " + e.TargetGroup.name + " " + hours + " " + now.Minute + " " +
-                now.Hour + " " + now.Day + " " + now.Month + " " + now.Year + " " + assigner + " " + e.Duration.Minutes;
-            Server.TempRanks.Append(data);
+
+            string data = assigner + " " + assign + " " + expiry + " " + e.TargetGroup.name + " " + newRank.name;
+            Server.tempRanks.AddOrReplace(e.Target, data);
+            ServerTasks.TemprankCalcNextRun();
+            Server.tempRanks.Save();
         }
     }
 }

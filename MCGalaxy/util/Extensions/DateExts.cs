@@ -27,6 +27,16 @@ namespace MCGalaxy {
                                 int.Parse(parts[2]), int.Parse(parts[3]));
         }
         
+        public static DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        
+        public static DateTime FromUnixTime(this long offset) {
+            return UnixEpoch.AddTicks(offset * TimeSpan.TicksPerSecond);
+        }
+        
+        public static long ToUnixTime(this DateTime time) {
+            return (long)(time.ToUniversalTime() - UnixEpoch).TotalSeconds;
+        }
+        
         public static bool AddSpamEntry(this List<DateTime> log, int maxEntries, int checkInterval) {
             DateTime now = DateTime.UtcNow;
             if (log.Count > 0 && log.Count >= maxEntries)

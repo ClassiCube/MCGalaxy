@@ -58,6 +58,14 @@ namespace MCGalaxy.Tasks {
             }
         }
         
+        /// <summary> Rechecks minimum delay for next task. 
+        /// Useful for when external code changes the delay of a scheduled task. </summary>
+        public void Recheck() {
+            lock (taskLock) {
+                handle.Set();
+            }
+        }
+        
         
         SchedulerTask EnqueueTask(SchedulerTask task) {
             lock (taskLock) {

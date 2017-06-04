@@ -151,6 +151,36 @@ namespace MCGalaxy.Tasks {
             Directory.Delete("text/lockdown/map");
         }
         
+        internal static void UpgradeOldTempranks() {
+            if (!File.Exists(Paths.TempRanksFile)) return;
+
+            // Check if empty, or not old form
+            using (StreamReader reader = new StreamReader(Paths.TempRanksFile)) {
+                string line = reader.ReadLine();
+                if (line == null) return;
+                string[] parts = line.SplitSpaces();
+                if (parts.Length < 9) return;
+            }
+
+            string[] lines = File.ReadAllLines(Paths.TempRanksFile);
+            for (int i = 0; i < lines.Length; i++) {
+                string[] args = lines[i].SplitSpaces();
+
+                int min = int.Parse(args[4]), hour = int.Parse(args[5]);
+                int day = int.Parse(args[6]), month = int.Parse(args[7]), year = int.Parse(args[8]);
+                int periodH = int.Parse(args[3]), periodM = 0;
+                if (args.Length > 10) periodM = int.Parse(args[10]);
+                
+                DateTime assigned = new DateTime(year, month, day, hour, min, 0);
+                DateTime expiry = assigned.AddHours(periodH).AddMinutes(periodM);
+                
+                // Line format: name assigner assigntime expiretime oldRank tempRank
+                lines[i] = args[0] + " " + args[9] + " " + assigned.ToUnixTime() +
+                    " " + expiry.ToUnixTime() + " " + args[2] + " " + args[1];
+            }
+            File.WriteAllLines(Paths.TempRanksFile, lines);
+        }
+        
         internal static void UpgradeDBTimeSpent() {
             DataTable table = Database.Backend.GetRows(PlayerData.DBTable, "TimeSpent", "LIMIT 1");
             if (table.Rows.Count == 0) return; // no players
