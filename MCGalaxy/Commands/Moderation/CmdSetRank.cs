@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (newRank == null) return;
             
             if (curRank == newRank) {
-                Player.Message(p, "{0} %Sis already ranked {1}", 
+                Player.Message(p, "{0} %Sis already ranked {1}",
                                PlayerInfo.GetColoredName(p, name), curRank.ColoredName);
                 return;
             }
@@ -69,11 +69,11 @@ namespace MCGalaxy.Commands.Moderation {
             OnModActionEvent.Call(action);
         }
         
-        bool CanChangeRank(string name, Group curRank, Group newRank, 
-                        Player who, Player p, ref string reason) {
+        internal static bool CanChangeRank(string name, Group curRank, Group newRank,
+                                           Player who, Player p, ref string reason) {
             Group banned = Group.BannedRank;
             if (reason == null) {
-                reason = newRank.Permission >= curRank.Permission ? 
+                reason = newRank.Permission >= curRank.Permission ?
                     Server.defaultPromoteMessage : Server.defaultDemoteMessage;
             }
             reason = ModActionCmd.ExpandReason(p, reason);
@@ -85,8 +85,11 @@ namespace MCGalaxy.Commands.Moderation {
             if (curRank == banned) {
                 Player.Message(p, "Use /unban to change a player's rank from %S{0}.", banned.ColoredName); return false;
             }
-            if (p != null && (curRank.Permission >= p.Rank || newRank.Permission >= p.Rank)) {
+            if (p != null && curRank.Permission >= p.Rank) {
                 MessageTooHighRank(p, "change the rank of", false); return false;
+            }
+            if (p != null && newRank.Permission >= p.Rank) {
+                Player.Message(p, "Can only rank up to below {0}", newRank.ColoredName); return false;
             }
             if (p != null && newRank.Permission >= p.Rank) {
                 Player.Message(p, "Cannot change the rank of a player to a rank equal or higher to yours."); return false;

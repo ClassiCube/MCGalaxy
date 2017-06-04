@@ -55,8 +55,8 @@ namespace MCGalaxy.Commands.Moderation {
             if (target == null) return;
             Player who = PlayerInfo.FindExact(target);
 
-            Group group = Matcher.FindRanks(p, args[1]);
-            if (group == null) return;
+            Group newRank = Matcher.FindRanks(p, args[1]);
+            if (newRank == null) return;
             TimeSpan duration = TimeSpan.Zero;
             if (!CommandParser.GetTimespan(p, args[2], ref duration, "temp rank for", 'h')) return;
 
@@ -67,42 +67,38 @@ namespace MCGalaxy.Commands.Moderation {
             if (p != null && who != null && p == who) {
                 Player.Message(p, "&cYou cannot assign yourself a temporary rank."); return;
             }
-            Group pGroup = who != null ? who.group : Group.findPlayerGroup(target);
-            if (p != null && pGroup.Permission >= p.Rank) {
-                Player.Message(p, "Cannot change the temporary rank of someone equal or higher to yourself."); return;
-            }
-            if (p != null && group.Permission >= p.Rank) {
-                Player.Message(p, "Cannot change the temporary rank to a higher rank than yourself."); return;
-            }
-            
+            Group curRank = who != null ? who.group : Group.findPlayerGroup(target);
             string reason = args.Length > 3 ? args[3] : "assigning temp rank";
-            reason = ModActionCmd.ExpandReason(p, reason);
+            if (!CmdSetRank.CanChangeRank(target, curRank, newRank, who, p, ref reason)) return;
             
             ModAction action = new ModAction(target, p, ModActionType.Rank, reason, duration);
-            action.targetGroup = pGroup;
-            action.Metadata = group;
+            action.targetGroup = curRank;
+            action.Metadata = newRank;
             OnModActionEvent.Call(action);
         }
         
-        static void Delete(Player p, string name) {
+        static void Delete(Player p, string target) {
             bool assigned = false;
             StringBuilder all = new StringBuilder();
-            Player who = PlayerInfo.FindExact(name);
+            Player who = PlayerInfo.FindExact(target);
+            Group curRank = who != null ? who.group : Group.findPlayerGroup(target);
+            string reason = "temp rank unassigned";
             
             foreach (string line in File.ReadAllLines(Paths.TempRanksFile)) {
-                if (!line.CaselessStarts(name)) { all.AppendLine(line); continue; }
+                if (!line.CaselessStarts(target)) { all.AppendLine(line); continue; }
                 
                 string[] parts = line.SplitSpaces();
-                Group newgroup = Group.Find(parts[2]);
+                Group newRank = Group.Find(parts[2]);
+                if (!CmdSetRank.CanChangeRank(target, curRank, newRank, who, p, ref reason)) return;
                 
-                ModAction action = new ModAction(name, p, ModActionType.Rank, "temp rank unassigned");
-                action.Metadata = newgroup;
+                ModAction action = new ModAction(target, p, ModActionType.Rank, reason);
+                action.Metadata = newRank;
                 OnModActionEvent.Call(action);
                 assigned = true;
             }
             
             if (!assigned) {
-                Player.Message(p, "&a{0}&c has not been assigned a temp rank.", name); return;
+                Player.Message(p, "&a{0}&c has not been assigned a temp rank.", target); return;
             }
             File.WriteAllText(Paths.TempRanksFile, all.ToString());
         }
