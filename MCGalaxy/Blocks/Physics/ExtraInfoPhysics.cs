@@ -154,7 +154,7 @@ namespace MCGalaxy.Blocks.Physics {
                     lvl.AddUpdate(C.b, next);
                 }
             } else {
-                lvl.AddUpdate(C.b, rand.Next(Block.red, Block.darkpink + 1));
+                lvl.AddUpdate(C.b, (byte)rand.Next(Block.red, Block.darkpink + 1));
             }
         }
         

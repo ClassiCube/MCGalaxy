@@ -231,11 +231,11 @@ namespace MCGalaxy {
             }
         }
 
-        internal bool AddUpdate(int b, int type, bool overRide = false) {
+        internal bool AddUpdate(int b, byte type, bool overRide = false) {
             return AddUpdate(b, type, overRide, default(PhysicsArgs));
         }
         
-        internal bool AddUpdate(int b, int type, bool overRide, PhysicsArgs data) {
+        internal bool AddUpdate(int b, byte type, bool overRide, PhysicsArgs data) {
             try {
                 int x = b % Width;
                 int y = (b / Width) / Length;
@@ -244,7 +244,7 @@ namespace MCGalaxy {
                 
                 if (overRide) {
                     ExtBlock block;
-                    block.BlockID = (byte)type;
+                    block.BlockID = type;
                     block.ExtID = 0;
                 	
                     // Is the Ext flag just an indicator for the block update?
