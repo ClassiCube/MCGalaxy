@@ -90,11 +90,7 @@ namespace MCGalaxy.Commands.Moderation {
             Group curRank = who != null ? who.group : Group.findPlayerGroup(target);
             
             Group oldRank = Group.Find(parts[4 - 1]); // -1 because data, not whole line
-            // Old rank was deleted, can't revert rank
-            if (oldRank == null) {
-                Server.tempRanks.Remove(target);
-                return;
-            }
+            if (oldRank == null) return;
             
             string reason = "temp rank unassigned";
             if (!CmdSetRank.CanChangeRank(target, curRank, oldRank, who, p, ref reason)) return;

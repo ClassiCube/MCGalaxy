@@ -184,7 +184,10 @@ namespace MCGalaxy.Tasks {
 
                 if (DateTime.UtcNow >= expiry.FromUnixTime()) {
                     Command.all.Find("temprank").Use(null, args[0] + " delete");
-                    Server.tempRanks.Remove(args[0]); // handle case of temp rank being same as current rank
+                    // Handle case of old rank no longer existing
+                    if (Server.tempRanks.Remove(args[0])) {
+                        Server.tempRanks.Save();
+                    }
                 }
             }
             task.Delay = TemprankNextRun();
