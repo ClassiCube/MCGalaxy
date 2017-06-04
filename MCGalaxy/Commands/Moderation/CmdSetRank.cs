@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdSetRank : Command {
@@ -34,7 +35,7 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return; }
             string rank = null, name = null;
-            string reason = args.Length > 2 ? args[2] : null, rankMsg = null;
+            string reason = args.Length > 2 ? args[2] : null;
             
             if (args[0].CaselessEq("+up")) {
                 rank = args[0];
@@ -60,20 +61,15 @@ namespace MCGalaxy.Commands.Moderation {
                                PlayerInfo.GetColoredName(p, name), curRank.ColoredName);
                 return;
             }
-            if (!ChangeRank(name, curRank, newRank, who, p, ref reason)) return;
+            if (!CanChangeRank(name, curRank, newRank, who, p, ref reason)) return;
             
-            rankMsg = ModActionCmd.FormatRankChange(curRank, newRank, name, reason);
-            Chat.MessageGlobal(rankMsg);
-            if (who != null)
-                who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
-            
-            if (p == null) Player.Message(p, rankMsg);            
-            ModActionCmd.ChangeRank(name, curRank, newRank, who);
-            WriteRankInfo(p, name, newRank, curRank, reason);
-            Server.IRC.Say(rankMsg);
+            ModAction action = new ModAction(name, p, ModActionType.Rank, reason);
+            action.targetGroup = curRank;
+            action.Metadata = newRank;
+            OnModActionEvent.Call(action);
         }
         
-        bool ChangeRank(string name, Group curRank, Group newRank, 
+        bool CanChangeRank(string name, Group curRank, Group newRank, 
                         Player who, Player p, ref string reason) {
             Group banned = Group.BannedRank;
             if (reason == null) {
@@ -100,19 +96,6 @@ namespace MCGalaxy.Commands.Moderation {
             Group.because(who, newRank);
             if (Group.cancelrank) { Group.cancelrank = false; return false; }
             return true;
-        }
-        
-        static void WriteRankInfo(Player p, string name, Group newRank, Group oldRank, string reason) {
-            string year = DateTime.Now.Year.ToString();
-            string month = DateTime.Now.Month.ToString();
-            string day = DateTime.Now.Day.ToString();
-            string hour = DateTime.Now.Hour.ToString();
-            string minute = DateTime.Now.Minute.ToString();
-            string assigner = p == null ? "(console)" : p.name;
-
-            string line = name + " " + assigner + " " + minute + " " + hour + " " + day + " " + month
-                + " " + year + " " + newRank.name + " " + oldRank.name + " " + reason.Replace(" ", "%20");
-            Server.RankInfo.Append(line);            
         }
         
         static Group TargetRank(Player p, string name, Group curRank) {

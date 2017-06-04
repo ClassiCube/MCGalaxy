@@ -82,11 +82,7 @@ namespace MCGalaxy.Commands.Moderation {
             string direction = newRank.Permission >= curRank.Permission ? " %Swas promoted to " : " %Swas demoted to ";
             Player who = PlayerInfo.FindExact(name);
             
-            if (who == null) {
-                name += " &f(offline)";
-            } else {
-                name = who.ColoredName;
-            }
+            if (who != null) name = who.ColoredName;
             return name + direction + newRank.ColoredName + "%S. (" + reason + "%S)";
         }
         
