@@ -35,7 +35,7 @@ namespace MCGalaxy.Blocks.Physics {
                     ExtBlock block = ExtBlock.FromRaw((byte)lvl.HorizonBlock);
                     PhysicsArgs args = default(PhysicsArgs);
                     args.ExtBlock = block.BlockID == Block.custom_block;
-                    lvl.AddUpdate(C.b, block.BlockID, false, args);
+                    lvl.AddUpdate(C.b, block.RawID, false, args);
                 }
             }
             if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
