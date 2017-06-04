@@ -210,23 +210,36 @@ namespace MCGalaxy.Core {
             string action = newRank.Permission >= e.TargetGroup.Permission ? "promoted to " : "demoted to ";
             LogAction(e, who, action + newRank.ColoredName);
             
-            if (who != null)
+            if (who != null) {
                 who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
-            WriteRankInfo(e.Actor, e.Target, newRank, e.TargetGroup, e.Reason);
-            ModActionCmd.ChangeRank(e.Target, e.TargetGroup, newRank, who);
-        }        
-                
-        static void WriteRankInfo(Player p, string name, Group newRank, Group oldRank, string reason) {
+            }
+            
+            WriteRankInfo(e, newRank);
+            if (e.Duration != TimeSpan.Zero) AddTempRank(e, newRank);
+            ModActionCmd.ChangeRank(e.Target, e.TargetGroup, newRank, who);            
+        }
+        
+        static void WriteRankInfo(ModAction e, Group newRank) {
             string year = DateTime.Now.Year.ToString();
             string month = DateTime.Now.Month.ToString();
             string day = DateTime.Now.Day.ToString();
             string hour = DateTime.Now.Hour.ToString();
             string minute = DateTime.Now.Minute.ToString();
-            string assigner = p == null ? "(console)" : p.name;
+            string assigner = e.Actor == null ? "(console)" : e.Actor.name;
 
-            string line = name + " " + assigner + " " + minute + " " + hour + " " + day + " " + month
-                + " " + year + " " + newRank.name + " " + oldRank.name + " " + reason.Replace(" ", "%20");
-            Server.RankInfo.Append(line);            
+            string line = e.Target + " " + assigner + " " + minute + " " + hour + " " + day + " " + month
+                + " " + year + " " + newRank.name + " " + e.TargetGroup.name + " " + e.Reason.Replace(" ", "%20");
+            Server.RankInfo.Append(line);
+        }
+        
+        static void AddTempRank(ModAction e, Group newRank) {
+            DateTime now = DateTime.Now;
+            string assigner = e.Actor == null ? "(console)" : e.Actor.name;
+            int hours = (int)e.Duration.TotalHours;
+            
+            string data = e.Target + " " + newRank.name + " " + e.TargetGroup.name + " " + hours + " " + now.Minute + " " +
+                now.Hour + " " + now.Day + " " + now.Month + " " + now.Year + " " + assigner + " " + e.Duration.Minutes;
+            Server.TempRanks.Append(data);
         }
     }
 }
