@@ -137,7 +137,7 @@ namespace MCGalaxy.Commands.Fun {
         
         protected abstract void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block);
         
-        protected Player GetPlayer(Player p, Vec3U16 pos, bool skipSelf) {
+        protected static Player GetPlayer(Player p, Vec3U16 pos, bool skipSelf) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level != p.level) continue;
@@ -161,11 +161,10 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        protected bool HandlesHitBlock(Player p, byte type, CatchPos bp, Vec3U16 pos, bool doExplode) {
-            if (p.level.physics < 2 || bp.ending == EndType.Teleport
-                || bp.ending == EndType.Normal) return true;
+        protected static bool HandlesHitBlock(Player p, byte type, EndType ending, Vec3U16 pos, bool doExplode) {
+            if (p.level.physics < 2 || ending == EndType.Teleport || ending == EndType.Normal) return true;
             
-            if (bp.ending == EndType.Destroy) {
+            if (ending == EndType.Destroy) {
                 if ((!Block.FireKill(type) && !Block.NeedRestart(type)) && type != Block.glass) {
                     return true;
                 }

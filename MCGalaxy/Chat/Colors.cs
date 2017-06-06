@@ -291,7 +291,7 @@ namespace MCGalaxy {
             return c;
         }
         
-        static int Hex(char value) {
+        public static int Hex(char value) {
             if (value >= '0' && value <= '9')
                 return (int)(value - '0');
             if (value >= 'a' && value <= 'f')
