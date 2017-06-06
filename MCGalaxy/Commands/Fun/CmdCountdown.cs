@@ -51,10 +51,6 @@ namespace MCGalaxy.Commands.Fun {
             if (args.Length > 3) arg3 = args[3];
             
             switch (cmd) {
-                case "help":
-                    Help(p); return;
-                case "goto":
-                    PlayerActions.ChangeMap(p, "countdown"); return;
                 case "join":
                     HandleJoin(p); return;
                 case "leave":
@@ -63,31 +59,25 @@ namespace MCGalaxy.Commands.Fun {
                     HandlePlayers(p); return;
                 case "rules":
                     HandleRules(p, arg1); return;
+                case "download":
+                case "generate":
+                    HandleGenerate(p, arg1, arg2, arg3); return;
+                case "enable":
+                    HandleEnable(p); return;
+                case "disable":
+                    HandleDisable(p); return;
+                case "cancel":
+                    HandleCancel(p); return;
+                case "start":
+                case "play":
+                    HandleStart(p, arg1, arg2); return;
+                case "reset":
+                    HandleReset(p, arg1); return;
+                case "tutorial":
+                    HandleTutorial(p); return;
                 default:
-                    break;
+                    Help(p); break;
             }
-
-            if (CheckExtraPerm(p, 2)) {
-                switch (cmd) {
-                    case "download":
-                    case "generate":
-                        HandleGenerate(p, arg1, arg2, arg3); return;
-                    case "enable":
-                        HandleEnable(p); return;
-                    case "disable":
-                        HandleDisable(p); return;
-                    case "cancel":
-                        HandleCancel(p); return;
-                    case "start":
-                    case "play":
-                        HandleStart(p, arg1, arg2); return;
-                    case "reset":
-                        HandleReset(p, arg1); return;
-                    case "tutorial":
-                        HandleTutorial(p); return;
-                }
-            }
-            Player.Message(p, "Sorry, you aren't a high enough rank or that wasn't a correct command addition.");
         }
         
         void HandleJoin(Player p) {
@@ -178,47 +168,30 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleRules(Player p, string target) {
-            bool hasPerm = CheckExtraPerm(p, 1);
-            if (target == "" || !hasPerm) {
-                Player.Message(p, "The aim of the game is to stay alive the longest.");
-                Player.Message(p, "Don't fall in the lava!!");
-                Player.Message(p, "Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disappering.");
-                Player.Message(p, "The last person alive will win!!");
-            } else if (hasPerm) {
-                if (target == "all") {
-                    Chat.MessageGlobal("Countdown Rules being sent to everyone by " + p.ColoredName + ":");
-                    Chat.MessageGlobal("The aim of the game is to stay alive the longest.");
-                    Chat.MessageGlobal("Don't fall in the lava!!");
-                    Chat.MessageGlobal("Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disappering.");
-                    Chat.MessageGlobal("The last person alive will win!!");
-                    Player.Message(p, "Countdown rules sent to everyone");
-                    return;
-                } else if (target == "map") {
-                    Chat.MessageLevel(p.level, "Countdown Rules being sent to " + p.level.ColoredName + " %Sby " + p.ColoredName + ":");
-                    Chat.MessageLevel(p.level, "The aim of the game is to stay alive the longest.");
-                    Chat.MessageLevel(p.level, "Don't fall in the lava!!");
-                    Chat.MessageLevel(p.level, "Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disappering.");
-                    Chat.MessageLevel(p.level, "The last person alive will win!!");
-                    Player.Message(p, "Countdown rules sent to: " + p.level.ColoredName);
-                    return;
-                }
-
-                Player who = PlayerInfo.FindMatches(p, target);
+            Player who = p;
+            if (target != "" && CheckExtraPerm(p, 1)) {
+                who = PlayerInfo.FindMatches(p, target);
                 if (who == null) return;
+                
                 if (p.Rank < who.Rank) {
                     MessageTooHighRank(p, "send countdown rules", true); return;
-                } else {
-                    Player.Message(who, "Countdown rules sent to you by " + p.ColoredName);
-                    Player.Message(who, "The aim of the game is to stay alive the longest.");
-                    Player.Message(who, "Don't fall in the lava!!");
-                    Player.Message(who, "Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disawhowhoering.");
-                    Player.Message(who, "The last person alive will win!!");
-                    Player.Message(p, "Countdown rules sent to: " + who.ColoredName);
                 }
+            }            
+            
+            Player.Message(who, "The aim of the game is to stay alive the longest.");
+            Player.Message(who, "Don't fall in the lava!");
+            Player.Message(who, "Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disappearing.");
+            Player.Message(who, "The last person alive wins!");
+            
+            if (p != who) {
+                Player.Message(who, "Countdown rules sent to you by " + p.ColoredName);
+                Player.Message(p, "Countdown rules sent to: " + who.ColoredName);
             }
         }
         
         void HandleGenerate(Player p, string arg1, string arg2, string arg3) {
+            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+            
             int width, height, length;
             if(!int.TryParse(arg1, out width) || !int.TryParse(arg2, out height) || !int.TryParse(arg3, out length)) {
                 width = 32; height = 32; length = 32;
@@ -251,6 +224,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleEnable(Player p) {
+            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+            
             if (Server.Countdown.gamestatus == CountdownGameStatus.Disabled) {
                 CmdLoad.LoadLevel(null, "countdown");
                 Server.Countdown.mapon = LevelInfo.FindExact("countdown");
@@ -274,6 +249,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleDisable(Player p) {
+            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+            
             if (Server.Countdown.gamestatus == CountdownGameStatus.AboutToStart || Server.Countdown.gamestatus == CountdownGameStatus.InProgress) {
                 Player.Message(p, "A game is currently in progress - please wait until it is finished, or use '/cd cancel' to cancel the game"); return;
             } else if (Server.Countdown.gamestatus == CountdownGameStatus.Disabled) {
@@ -288,6 +265,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleCancel(Player p) {
+            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+            
             if (Server.Countdown.gamestatus == CountdownGameStatus.AboutToStart || Server.Countdown.gamestatus == CountdownGameStatus.InProgress) {
                 Server.Countdown.cancel = true;
                 Thread.Sleep(1500);
@@ -303,6 +282,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleStart(Player p, string par1, string par2) {
+            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+            
             if (Server.Countdown.gamestatus != CountdownGameStatus.Enabled) {
                 Player.Message(p, "Either a game is already in progress or it hasn't been enabled"); return;
             }
@@ -332,6 +313,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleReset(Player p, string par1) {
+            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+            
             switch (Server.Countdown.gamestatus) {
                 case CountdownGameStatus.Disabled:
                     Player.Message(p, "Please enable countdown first."); break;
@@ -362,24 +345,20 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/cd join - join the game");
-            Player.Message(p, "/cd leave - leave the game");
-            Player.Message(p, "/cd goto - goto the countdown map");
-            Player.Message(p, "/cd players - view players currently playing");
-            
-            if (CheckExtraPerm(p, 1))
-                Player.Message(p, "/cd rules <all/map/player> - the rules of countdown. with send: all to send to all, map to send to map and have a player's name to send to a player");
-            else
-                Player.Message(p, "/cd rules - view the rules of countdown");
+            Player.Message(p, "%T/cd joins/leave %H- joins/leaves the game");
+            Player.Message(p, "%T/cd players %H- lists players currently playing");
+            Player.Message(p, "%T/cd rules %H- view the rules of countdown");            
+            if (CheckExtraPerm(p, 1)) {
+                Player.Message(p, "%T/cd rules [player] %H- sends rules of countdown to that player.");
+            }           
             
             if (!CheckExtraPerm(p, 2)) return;
-            Player.Message(p, "/cd generate [width] [height] [length] - generates the countdown map (default size is 32x32x32)");
-            Player.Message(p, "/cd enable - enable the game");
-            Player.Message(p, "/cd disable - disable the game");
-            Player.Message(p, "/cd cancel - cancels a game");
-            Player.Message(p, "/cd start [speed] [mode] - start the game, speeds are 'slow', 'normal', 'fast', 'extreme' and 'ultimate', modes are 'normal' and 'freeze'");
-            Player.Message(p, "/cd reset [all/map] - reset the whole game (all) or only the map (map)");
-            Player.Message(p, "/cd tutorial - a tutorial on how to setup countdown");
+            Player.Message(p, "%T/cd generate [width] [height] [length] %H- generates the countdown map (default is 32x32x32)");
+            Player.Message(p, "%T/cd enable/disable %H- enables/disables the game");
+            Player.Message(p, "%T/cd cancel %H- cancels a game");
+            Player.Message(p, "%T/cd start [speed] [mode] %H- start the game, speeds are 'slow', 'normal', 'fast', 'extreme' and 'ultimate', modes are 'normal' and 'freeze'");
+            Player.Message(p, "%T/cd reset [all/map] %H- reset the whole game (all) or only the map (map)");
+            Player.Message(p, "%T/cd tutorial %H- a tutorial on how to setup countdown");
         }
     }
 }
