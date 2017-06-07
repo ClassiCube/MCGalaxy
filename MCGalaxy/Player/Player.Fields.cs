@@ -77,7 +77,6 @@ namespace MCGalaxy {
 
         public string name;
         public string DisplayName;
-        public string realName;
         public int warn = 0;
         public byte id;
         public string ip;
@@ -96,8 +95,6 @@ namespace MCGalaxy {
         public string titlecolor;
         public int TotalMessagesSent = 0;
         public int passtries = 0;
-        public int ponycount = 0;
-        public int rdcount = 0;
         public bool hasreadrules = false;
         public DateTime NextReviewTime, NextEat;
         public float ReachDistance = 5;
@@ -156,7 +153,6 @@ namespace MCGalaxy {
         public bool adminpen = false;
 
         public bool voice = false;
-        public string voicestring = "";
 
         public bool useCheckpointSpawn = false;
         public int lastCheckpointIndex = -1;
@@ -197,8 +193,6 @@ namespace MCGalaxy {
         internal BlockDefinition gbBlock, lbBlock;
         public bool spawned = false;
 
-        public bool Mojangaccount { get { return truename.IndexOf('@') >= 0; } }
-
         //Undo
         internal VolatileArray<UndoDrawOpEntry> DrawOps = new VolatileArray<UndoDrawOpEntry>(false);
         internal readonly object pendingDrawOpsLock = new object();
@@ -234,10 +228,6 @@ namespace MCGalaxy {
         public ushort[] pos = new ushort[3];        
         public byte[] rot = new byte[2];
         internal Position tempPos;
-
-        //ushort[] clippos = new ushort[3] { 0, 0, 0 };
-        //byte[] cliprot = new byte[2] { 0, 0 };
-        public int consecutivemessages;
 
         // CmdVoteKick
         public VoteKickChoice voteKickChoice = VoteKickChoice.NotYetVoted;

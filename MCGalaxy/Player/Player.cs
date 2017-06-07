@@ -99,12 +99,6 @@ namespace MCGalaxy {
             return BlockBindings[RawHeldBlock.RawID];
         }
         
-        public static string CheckPlayerStatus(Player p) {
-            if ( p.hidden ) return "hidden";
-            if ( p.IsAfk ) return "afk";
-            return "active";
-        }
-        
         public void SetPrefix() {
             prefix = Game.Referee ? "&2[Ref] " : "";
             if (group.prefix != "") prefix += "&f" + group.prefix + color;
