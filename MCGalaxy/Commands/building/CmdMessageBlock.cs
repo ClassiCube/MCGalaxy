@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Building {
             string block = args[0].ToLower();
             data.Block = GetBlock(p, block, ref allMessage);
             if (data.Block.IsInvalid) return;
-            if (!CommandParser.IsBlockAllowed(p, "place a message block of ", data.Block)) return;
+            if (!CommandParser.IsBlockAllowed(p, "place a message block of", data.Block)) return;
             
             if (allMessage) {
                 data.Message = message;

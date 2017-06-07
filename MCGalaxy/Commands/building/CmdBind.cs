@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Building {
                 ExtBlock src, dst;
                 if (!CommandParser.GetBlock(p, args[0], out src)) return;
                 if (!CommandParser.GetBlock(p, args[1], out dst)) return;                
-                if (!CommandParser.IsBlockAllowed(p, "bind a block to ", dst)) return;              
+                if (!CommandParser.IsBlockAllowed(p, "bind a block to", dst)) return;              
                 if (src.IsPhysicsType) { 
                     Player.Message(p, "Physics blocks cannot be bound to another block."); return; 
                 }

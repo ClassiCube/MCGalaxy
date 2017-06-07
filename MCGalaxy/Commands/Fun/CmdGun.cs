@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Fun {
         
         protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             p.RevertBlock(x, y, z);
-            if (!CommandParser.IsBlockAllowed(p, "place ", block)) return;
+            if (!CommandParser.IsBlockAllowed(p, "place", block)) return;
 
             Thread gunThread = new Thread(() => DoShoot(p, block));
             gunThread.Name = "MCG_Gun";

@@ -330,7 +330,7 @@ namespace MCGalaxy {
                 OnPlayerDisconnectEvent.Call(this, discMsg);
                 if (PlayerDisconnect != null) PlayerDisconnect(this, discMsg);
                 
-                if (Server.AutoLoad && level.unload && !level.IsMuseum && IsAloneOnCurrentLevel())
+                if (Server.AutoLoad && level.unload && !level.IsMuseum && !level.HasPlayers())
                     level.Unload(true);
                 Dispose();
             } catch ( Exception e ) { 
@@ -355,9 +355,6 @@ namespace MCGalaxy {
                 Server.s.Log(name + " kicked (" + chatMsg + "%S).");
             }
         }
-        
-        [Obsolete]
-        public static void SaveUndo(Player p) { }
 
         public void Dispose() {
             connections.Remove(this);
@@ -369,16 +366,6 @@ namespace MCGalaxy {
             if (spamChecker != null)
                 spamChecker.Clear();
             spyChatRooms.Clear();
-        }
-
-        public bool IsAloneOnCurrentLevel() {
-            lock (PlayerInfo.Online.locker) {
-                Player[] players = PlayerInfo.Online.Items;
-                foreach (Player p in players) {
-                    if (p != this && p.level == level) return false;
-                }
-                return true;
-            }
         }
 
         #endregion

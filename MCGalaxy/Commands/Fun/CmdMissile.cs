@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Fun {
                 p.aiming = false;
             }
             p.RevertBlock(x, y, z);
-            if (!CommandParser.IsBlockAllowed(p, "place ", block)) return;
+            if (!CommandParser.IsBlockAllowed(p, "place", block)) return;
             
             MissileArgs args = new MissileArgs();
             args.player = p;

@@ -151,7 +151,7 @@ namespace MCGalaxy.Commands {
         public static bool GetBlockIfAllowed(Player p, string input, out ExtBlock block, bool allowSkip = false) {
             if (!GetBlock(p, input, out block, allowSkip)) return false;
             if (allowSkip && block == ExtBlock.Invalid) return true;
-            return IsBlockAllowed(p, "draw with ", block);
+            return IsBlockAllowed(p, "draw with", block);
         }
         
         /// <summary> Returns whether the player is allowed to place/modify/delete the given block. </summary>

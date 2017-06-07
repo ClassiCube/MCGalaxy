@@ -107,12 +107,11 @@ namespace MCGalaxy {
                 }
             }
 
+            byte blockRaw = block.BlockID;
+            block = BlockBindings[block.RawID];
             if (!CheckManualChange(oldB, block, doDelete)) {
                 RevertBlock(x, y, z); return;
             }
-
-            byte blockRaw = block.BlockID;
-            block = BlockBindings[block.RawID];
             
             //Ignores updating blocks that are the same and send block only to the player
             byte newB = (painting || action == 1) ? block.BlockID : Block.air;
@@ -135,10 +134,10 @@ namespace MCGalaxy {
         
         internal bool CheckManualChange(byte old, ExtBlock block, bool replaceMode) {
             if (!BlockPerms.CanModify(this, old) && !Block.BuildIn(old) && !Block.AllowBreak(old)) {
-                Formatter.MessageBlock(this, replaceMode ? "replace " : "delete ", old);
+                Formatter.MessageBlock(this, replaceMode ? "replace" : "delete", old);
                 return false;
             }
-            return CommandParser.IsBlockAllowed(this, "place ", block);
+            return CommandParser.IsBlockAllowed(this, "place", block);
         }
         
         bool DeleteBlock(byte old, ushort x, ushort y, ushort z, ExtBlock block) {

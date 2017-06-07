@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Building {
             ExtBlock block;
             if (!CommandParser.GetBlock(p, message, out block)) return;
             if (block == ExtBlock.Air) { Player.Message(p, "Cannot use Air Mode."); return; }
-            if (!CommandParser.IsBlockAllowed(p, "place ", (ExtBlock)block)) return;
+            if (!CommandParser.IsBlockAllowed(p, "place", block)) return;
             
             if (p.ModeBlock == block) {
                 Player.Message(p, "&b{0} %Smode: &cOFF", p.level.BlockName(p.ModeBlock));

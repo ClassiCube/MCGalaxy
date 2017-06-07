@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             byte block = Block.Byte(args[0]);
             if (block == Block.Invalid) { Player.Message(p, "Could not find block entered"); return; }
-            if (!CommandParser.IsBlockAllowed(p, "change permissions of ", (ExtBlock)block)) return;
+            if (!CommandParser.IsBlockAllowed(p, "change permissions of", (ExtBlock)block)) return;
 
             if (args.Length == 2 && args[1][0] == '+') {
                 Group grp = GetGroup(p, args[1].Substring(1));

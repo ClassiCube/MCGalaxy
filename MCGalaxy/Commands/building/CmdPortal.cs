@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Building {
 
             data.Block = GetBlock(p, block);
             if (data.Block == ExtBlock.Invalid) return;
-            if (!CommandParser.IsBlockAllowed(p, "place a portal of ", data.Block)) return;
+            if (!CommandParser.IsBlockAllowed(p, "place a portal of", data.Block)) return;
 
             Player.Message(p, "Place an &aEntry block %Sfor the portal");
             p.ClearBlockchange();

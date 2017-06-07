@@ -202,11 +202,6 @@ namespace MCGalaxy.Commands.Fun {
             if (!CmdNewLvl.CheckMapVolume(p, width, height, length)) return;
             
             Level lvl = CountdownMapGen.Generate(width, height, length);
-            lvl.Deletable = false;
-            lvl.Buildable = false;
-            lvl.permissionbuild = LevelPermission.Nobody;
-            lvl.motd = "Welcome to the Countdown map! -hax";
-            
             Level oldLvl = LevelInfo.FindExact("countdown");
             if (oldLvl != null) LevelActions.Replace(oldLvl, lvl);
             else LevelInfo.Loaded.Add(lvl);

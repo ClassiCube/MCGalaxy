@@ -165,7 +165,7 @@ namespace MCGalaxy.Commands.Info {
                 default:
                     Player.Message(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b))); break;
             }
-            Formatter.MessageBlock(p, "use ", b);
+            Formatter.MessageBlock(p, "use", b);
             return true;
         }
         

@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 if (isNumber) { // e.g. line is: 1) Do not do X
                     if (ruleNum == -1) ruleNum = 0;
-                    ruleNum *= 10; 
+                    ruleNum *= 10;
                     ruleNum += (c - '0');
                 } else {
                     sections[ruleNum] = rule.Substring(i);
@@ -109,13 +109,36 @@ namespace MCGalaxy.Commands.Moderation {
             
             who.SetPrefix();
             who.Send(Packet.UserType(who));
+            who.SendCurrentBlockPermissions();
             Entities.SpawnEntities(who, false);
+            CheckBlockBindings(who);
+        }
+        
+        static void CheckBlockBindings(Player who) {
+            ExtBlock block = who.ModeBlock;
+            if (block != ExtBlock.Air && !CommandParser.IsBlockAllowed(who, "place", block)) {
+                who.ModeBlock = ExtBlock.Air;
+                Player.Message(who, "   Hence, &b{0} %Smode was turned &cOFF",
+                               who.level.BlockName(block));
+            }
+            
+            for (int i = 0; i < who.BlockBindings.Length; i++) {
+                block = who.BlockBindings[i];
+                ExtBlock defaultBinding = ExtBlock.FromRaw((byte)i);
+                if (block == defaultBinding) continue;
+                
+                if (!CommandParser.IsBlockAllowed(who, "place", block)) {
+                    who.BlockBindings[i] = defaultBinding;
+                    Player.Message(who, "   Hence, binding for &b{0} %Swas unbound",
+                                   who.level.BlockName(defaultBinding));
+                }
+            }
         }
         
         
-        /// <summary> Finds the matching name(s) for the input name, 
+        /// <summary> Finds the matching name(s) for the input name,
         /// and requires a confirmation message for non-existent players. </summary>
-        internal static string FindName(Player p, string action, string cmd, 
+        internal static string FindName(Player p, string action, string cmd,
                                         string cmdSuffix, string name, ref string reason) {
             if (!Formatter.ValidName(p, name, "player")) return null;
             string match = MatchName(p, ref name);
@@ -155,7 +178,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         
-        /// <summary> Attempts to either parse the message directly as an IP, 
+        /// <summary> Attempts to either parse the message directly as an IP,
         /// or finds the IP of the account whose name matches the message. </summary>
         /// <remarks> "@input" can be used to always find IP by matching account name. <br/>
         /// Warns the player if the input matches both an IP and an account name. </remarks>
