@@ -22,12 +22,14 @@ using MCGalaxy.Events;
 namespace MCGalaxy.Tasks {
     internal static class ModerationTasks {
 
-        static SchedulerTask temprankTask, freezeTask;
+        static SchedulerTask temprankTask, freezeTask, muteTask;
         internal static void QueueTasks() {
             temprankTask = Server.MainScheduler.QueueRepeat(
                 TemprankCheckTask, null, NextRun(Server.tempRanks));
             freezeTask = Server.MainScheduler.QueueRepeat(
                 FreezeCheckTask, null, NextRun(Server.frozen));
+            muteTask = Server.MainScheduler.QueueRepeat(
+                MuteCheckTask, null, NextRun(Server.muted));
         }
 
         
@@ -35,9 +37,7 @@ namespace MCGalaxy.Tasks {
             DoTask(task, Server.tempRanks, TemprankCallback);
         }
         
-        internal static void TemprankCalcNextRun() {
-            CalcNextRun(temprankTask, Server.tempRanks);
-        }
+        internal static void TemprankCalcNextRun() { CalcNextRun(temprankTask, Server.tempRanks); }
         
         static void TemprankCallback(string[] args) {
             Command.all.Find("temprank").Use(null, args[0] + " delete");
@@ -50,14 +50,24 @@ namespace MCGalaxy.Tasks {
         
         internal static void FreezeCheckTask(SchedulerTask task) {
             DoTask(task, Server.frozen, FreezeCallback);
-        }        
-        
-        internal static void FreezeCalcNextRun() {
-            CalcNextRun(freezeTask, Server.frozen);
         }
+        
+        internal static void FreezeCalcNextRun() { CalcNextRun(freezeTask, Server.frozen); }
         
         static void FreezeCallback(string[] args) {
             ModAction action = new ModAction(args[0], null, ModActionType.Unfrozen, "auto unfreeze");
+            OnModActionEvent.Call(action);
+        }
+        
+        
+        internal static void MuteCheckTask(SchedulerTask task) {
+            DoTask(task, Server.muted, MuteCallback);
+        }
+        
+        internal static void MuteCalcNextRun() { CalcNextRun(muteTask, Server.muted); }
+        
+        static void MuteCallback(string[] args) {
+            ModAction action = new ModAction(args[0], null, ModActionType.Unmuted, "auto unmute");
             OnModActionEvent.Call(action);
         }
         

@@ -60,7 +60,6 @@ namespace MCGalaxy {
             
             bannedIP = PlayerList.Load("banned-ip.txt");
             ircControllers = PlayerList.Load("IRC_Controllers.txt");
-            muted = PlayerList.Load("muted.txt");
             hidden = PlayerList.Load("hidden.txt");
             vip = PlayerList.Load("text/vip.txt");
             noEmotes = PlayerList.Load("text/emotelist.txt");
@@ -72,6 +71,7 @@ namespace MCGalaxy {
             invalidIds = PlayerList.Load("extra/invalidids.txt");
             rotations = PlayerExtList.Load("extra/rotations.txt");
 
+            muted = PlayerExtList.Load("ranks/muted.txt");
             frozen = PlayerExtList.Load("ranks/frozen.txt");            
             tempRanks = PlayerExtList.Load(Paths.TempRanksFile);
             tempBans = PlayerExtList.Load(Paths.TempBansFile);            

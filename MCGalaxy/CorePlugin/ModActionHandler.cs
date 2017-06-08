@@ -61,8 +61,7 @@ namespace MCGalaxy.Core {
             if (who != null) who.frozen = true;
             LogAction(e, who, "&bfrozen");
 
-            string data = FormatModTaskData(e);
-            Server.frozen.AddOrReplace(e.Target, data);
+            Server.frozen.AddOrReplace(e.Target, FormatModTaskData(e));
             ModerationTasks.FreezeCalcNextRun();
             Server.frozen.Save();
         }
@@ -107,21 +106,23 @@ namespace MCGalaxy.Core {
         
         
         static void DoMute(ModAction e) {
-            Player who = PlayerInfo.FindExact(e.Target);
-            Server.muted.AddIfNotExists(e.Target);
-            Server.muted.Save();
-            
+            Player who = PlayerInfo.FindExact(e.Target);         
             if (who != null) who.muted = true;
             LogAction(e, who, "&8muted");
+            
+            Server.muted.AddOrReplace(e.Target, FormatModTaskData(e));
+            ModerationTasks.MuteCalcNextRun();
+            Server.muted.Save();
         }
         
         static void DoUnmute(ModAction e) {
             Player who = PlayerInfo.FindExact(e.Target);
-            Server.muted.Remove(e.Target);
-            Server.muted.Save();
-            
             if (who != null) who.muted = false;
             LogAction(e, who, "&aun-muted");
+            
+            Server.muted.Remove(e.Target);
+            ModerationTasks.MuteCalcNextRun();
+            Server.muted.Save();
         }
         
         
@@ -249,7 +250,11 @@ namespace MCGalaxy.Core {
         
         static string FormatModTaskData(ModAction e) {
             long assign = DateTime.UtcNow.ToUnixTime();
-            long expiry = DateTime.UtcNow.Add(e.Duration).ToUnixTime();
+            DateTime expiryTime = DateTime.UtcNow.Add(e.Duration);
+            if (e.Duration == TimeSpan.Zero)
+                expiryTime = DateTime.MaxValue;
+            
+            long expiry = expiryTime.ToUnixTime();
             string assigner = e.Actor == null ? "(console)" : e.Actor.name;
             return assigner + " " + assign + " " + expiry;
         }

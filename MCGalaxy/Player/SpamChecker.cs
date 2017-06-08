@@ -14,6 +14,7 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Events;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
@@ -59,10 +60,9 @@ namespace MCGalaxy {
                 if (chatLog.AddSpamEntry(Server.spamcounter, Server.spamcountreset)) 
                     return false;
                 
-                Command.all.Find("mute").Use(null, p.name);
-                Chat.MessageGlobal("{0} %Shas been &0muted %Sfor spamming!", p.ColoredName);
-                Server.MainScheduler.QueueOnce(UnmuteTask, p.name,
-                                               TimeSpan.FromSeconds(Server.mutespamtime));
+                TimeSpan duration = TimeSpan.FromSeconds(Server.mutespamtime);
+                ModAction action = new ModAction(p.name, null, ModActionType.Muted, "&0Auto mute for spamming", duration);
+                OnModActionEvent.Call(action);
                 return true;
             }
         }
@@ -78,20 +78,6 @@ namespace MCGalaxy {
                               Server.CmdSpamBlockTime + " seconds due to spamming");
                 p.cmdUnblocked = DateTime.UtcNow.AddSeconds(Server.CmdSpamBlockTime);
                 return true;
-            }
-        }
-        
-        
-        static void UnmuteTask(SchedulerTask task) {
-            string name = (string)task.State;
-            Player who = PlayerInfo.FindExact(name);
-            
-            if (who != null) {
-                if (who.muted) Command.all.Find("mute").Use(null, who.name);
-                Player.Message(who, "Remember, no &cspamming %Snext time!");
-            } else {
-                Server.muted.Remove(name);
-                Server.muted.Save();
             }
         }
     }

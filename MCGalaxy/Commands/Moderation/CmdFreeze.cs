@@ -34,15 +34,15 @@ namespace MCGalaxy.Commands.Moderation {
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             
-            if (p == who) { Player.Message(p, "Cannot freeze yourself."); return; }
-            if (p != null && who.Rank >= p.Rank) { 
-                MessageTooHighRank(p, "freeze", false); return; 
-            }
+            if (p != null && p == who) { Player.Message(p, "Cannot freeze yourself."); return; }
+            if (p != null && who.Rank >= p.Rank) { MessageTooHighRank(p, "freeze", false); return; }
             
             TimeSpan duration = TimeSpan.Zero;
             if (!CommandParser.GetTimespan(p, args[1], ref duration, "freeze for", 'm')) return;
+            
             string reason = args.Length > 2 ? args[2] : "";
             reason = ModActionCmd.ExpandReason(p, reason);
+            if (reason == null) return;
             
             ModActionType actionType = who.frozen ? ModActionType.Unfrozen : ModActionType.Frozen;
             ModAction action = new ModAction(who.name, p, actionType, reason, duration);
@@ -52,6 +52,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Help(Player p) {
             Player.Message(p, "%T/freeze [name] [timespan] <reason>");
             Player.Message(p, "%HStops [name] from moving for [timespan] time, or until manually unfrozen.");
+            Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }
