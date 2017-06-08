@@ -38,7 +38,7 @@ namespace MCGalaxy.Undo {
         public static UndoFormat NewFormat = new UndoFormatCBin();
         
         /// <summary> Enumerates through all the entries in the undo file. </summary>
-        public abstract IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args);
+        public abstract void EnumerateEntries(Stream s, UndoFormatArgs args);
         
         /// <summary> File extension of undo files in this format. </summary>
         protected abstract string Ext { get; }
@@ -113,15 +113,21 @@ namespace MCGalaxy.Undo {
         public bool Stop;        
 
         /// <summary> First instance in time that undo data should be retrieved back to. </summary>
-        internal readonly DateTime Start;
+        internal readonly DateTime Start;      
 
-        public UndoFormatArgs(string lvlName, DateTime start) {
-            LevelName = lvlName; Start = start;
+        /// <summary> Last instance in time that undo data should be retrieved up to. </summary>
+        internal readonly DateTime End;
+        
+        /// <summary> Performs action on the given undo format entry. </summary>
+        public Action<UndoFormatEntry> Output;
+
+        public UndoFormatArgs(string lvlName, DateTime start, DateTime end,
+                              Action<UndoFormatEntry> output) {
+            LevelName = lvlName; Start = start; End = end; Output = output;
         }
     }
 
     public struct UndoFormatEntry {
-        public DateTime Time;        
         public ushort X, Y, Z;
         public ExtBlock Block;
         public ExtBlock NewBlock;

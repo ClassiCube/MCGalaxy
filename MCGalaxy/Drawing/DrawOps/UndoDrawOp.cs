@@ -71,8 +71,8 @@ namespace MCGalaxy.Drawing.Ops {
                 }
             }
             
-            UndoFormatArgs args = new UndoFormatArgs(Level.name, Start);
-            DoOldUndo(args);
+            UndoFormatArgs args = new UndoFormatArgs(Level.name, Start, End, OldUndoBlock);
+            PerformOldUndo(args);
         }
         
         Action<DrawOpBlock> output;
@@ -93,34 +93,31 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         
-        void DoOldUndo(UndoFormatArgs args) {
+        void PerformOldUndo(UndoFormatArgs args) {
             List<string> files = UndoFormat.GetUndoFiles(who.ToLower());
             if (files.Count == 0) return;
             found = true;
             
             foreach (string file in files) {
                 using (Stream s = File.OpenRead(file)) {
-                    DoOldUndo(s, UndoFormat.GetFormat(file), args);
+                    UndoFormat.GetFormat(file).EnumerateEntries(s, args);
                     if (args.Stop) break;
                 }
             }
         }
         
-        void DoOldUndo(Stream s, UndoFormat format, UndoFormatArgs args) {
-            DrawOpBlock block;            
-            foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
-                if (P.Time > End) continue;
-                if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) continue;
-                if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) continue;
+        void OldUndoBlock(UndoFormatEntry P) {            
+            if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) return;
+            if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) return;
+            
+            byte lvlBlock = Level.GetTile(P.X, P.Y, P.Z);
+            if (lvlBlock == P.NewBlock.BlockID || Block.Convert(lvlBlock) == Block.water
+                || Block.Convert(lvlBlock) == Block.lava || lvlBlock == Block.grass) {
                 
-                byte lvlBlock = Level.GetTile(P.X, P.Y, P.Z);
-                if (lvlBlock == P.NewBlock.BlockID || Block.Convert(lvlBlock) == Block.water
-                    || Block.Convert(lvlBlock) == Block.lava || lvlBlock == Block.grass) {
-                    
-                    block.X = P.X; block.Y = P.Y; block.Z = P.Z;
-                    block.Block = P.Block;
-                    output(block);
-                }
+                DrawOpBlock block;
+                block.X = P.X; block.Y = P.Y; block.Z = P.Z;
+                block.Block = P.Block;
+                output(block);
             }
         }
     }

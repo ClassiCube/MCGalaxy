@@ -28,17 +28,17 @@ namespace MCGalaxy.Undo {
         protected override string Ext { get { return ".unbin"; } }
         const int entrySize = 12;
         
-        public override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
+        public override void EnumerateEntries(Stream s, UndoFormatArgs args) {
             List<ChunkHeader> list = new List<ChunkHeader>();
             UndoFormatEntry pos;
-            DateTime start = args.Start;
+            DateTime time;
             
             ReadHeaders(list, s);
             for (int i = list.Count - 1; i >= 0; i--) {
                 ChunkHeader chunk = list[i];
                 // Can we safely discard the entire chunk?
-                bool inRange = chunk.BaseTime.AddTicks(65536 * TimeSpan.TicksPerSecond) >= start;
-                if (!inRange) { args.Stop = true; yield break; }
+                bool inRange = chunk.BaseTime.AddTicks(65536 * TimeSpan.TicksPerSecond) >= args.Start;
+                if (!inRange) { args.Stop = true; return; }
                 if (!args.LevelName.CaselessEq(chunk.LevelName)) continue;
                 
                 s.Seek(chunk.DataPosition, SeekOrigin.Begin);
@@ -49,8 +49,9 @@ namespace MCGalaxy.Undo {
                 
                 for (int j = chunk.Entries - 1; j >= 0; j-- ) {
                     int offset = j * entrySize;
-                    pos.Time = chunk.BaseTime.AddTicks(U16(temp, offset + 0) * TimeSpan.TicksPerSecond);
-                    if (pos.Time < start) { args.Stop = true; yield break; }
+                    time = chunk.BaseTime.AddTicks(U16(temp, offset + 0) * TimeSpan.TicksPerSecond);
+                    if (time < args.Start) { args.Stop = true; return; }
+                    if (time > args.End) continue;
                     
                     pos.X = U16(temp, offset + 2);
                     pos.Y = U16(temp, offset + 4);
@@ -60,10 +61,11 @@ namespace MCGalaxy.Undo {
                     pos.Block.ExtID = temp[offset + 9];
                     pos.NewBlock.BlockID = temp[offset + 10]; 
                     pos.NewBlock.ExtID = temp[offset + 11];
-                    yield return pos;
+                    args.Output(pos);
                 }
             }
         }
+        
         
         static ushort U16(byte[] buffer, int offset) {
             return (ushort)(buffer[offset + 0] | buffer[offset + 1] << 8);

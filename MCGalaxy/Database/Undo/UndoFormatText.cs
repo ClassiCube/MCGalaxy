@@ -27,18 +27,19 @@ namespace MCGalaxy.Undo {
         
         protected override string Ext { get { return ".undo"; } }
         
-        public override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
+        public override void EnumerateEntries(Stream s, UndoFormatArgs args) {
             UndoFormatEntry pos = default(UndoFormatEntry);
             string[] lines = new StreamReader(s).ReadToEnd().SplitSpaces();
-            DateTime start = args.Start;
+            DateTime time;
             
             // because we have space to end of each entry, need to subtract one otherwise we'll start at a "".
             const int items = 7;
             for (int i = (lines.Length - 1) / items; i > 0; i--) {
                 // line format: mapName x y z date oldblock newblock
                 string timeRaw = lines[(i * items) - 3].Replace('&', ' ');
-                pos.Time = DateTime.Parse(timeRaw, CultureInfo.InvariantCulture);
-                if (pos.Time < start) { args.Stop = true; yield break; }
+                time = DateTime.Parse(timeRaw, CultureInfo.InvariantCulture);
+                if (time < args.Start) { args.Stop = true; return; }
+                if (time > args.End) continue;
                 
                 string map = lines[(i * items) - 7];
                 if (!args.LevelName.CaselessEq(map)) continue;
@@ -49,7 +50,7 @@ namespace MCGalaxy.Undo {
                                 
                 pos.Block.BlockID = byte.Parse(lines[(i * items) - 2]);
                 pos.NewBlock.BlockID = byte.Parse(lines[(i * items) - 1]);
-                yield return pos;
+                args.Output(pos);
             }
         }
     }

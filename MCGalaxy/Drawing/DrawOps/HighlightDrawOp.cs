@@ -67,8 +67,8 @@ namespace MCGalaxy.Drawing.Ops {
                 }
             }
             
-            UndoFormatArgs args = new UndoFormatArgs(Level.name, Start);
-            DoOldHighlight(args);
+            UndoFormatArgs args = new UndoFormatArgs(Level.name, Start, DateTime.MaxValue, OldHighlightBlock);
+            PerformOldHighlight(args);
         }
         
         Action<DrawOpBlock> output;
@@ -80,8 +80,8 @@ namespace MCGalaxy.Drawing.Ops {
             ExtBlock newBlock = ExtBlock.FromRaw(e.NewRaw, (e.Flags & BlockDBFlags.NewCustom) != 0);
             
             ExtBlock highlight = (newBlock.BlockID == Block.air
-                              || Block.Convert(oldBlock.BlockID) == Block.water || oldBlock.BlockID == Block.waterstill
-                              || Block.Convert(oldBlock.BlockID) == Block.lava || oldBlock.BlockID == Block.lavastill)
+                                  || Block.Convert(oldBlock.BlockID) == Block.water || oldBlock.BlockID == Block.waterstill
+                                  || Block.Convert(oldBlock.BlockID) == Block.lava || oldBlock.BlockID == Block.lavastill)
                 ? DeleteHighlight : PlaceHighlight;
             
             int x = e.Index % dims.X;
@@ -95,35 +95,32 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         
-        void DoOldHighlight(UndoFormatArgs args) {
-        	List<string> files = UndoFormat.GetUndoFiles(who.ToLower());
+        void PerformOldHighlight(UndoFormatArgs args) {
+            List<string> files = UndoFormat.GetUndoFiles(who.ToLower());
             if (files.Count == 0) return;
             found = true;
             
             foreach (string file in files) {
                 using (Stream s = File.OpenRead(file)) {
-                    DoOldHighlight(s, UndoFormat.GetFormat(file), args);
+                    UndoFormat.GetFormat(file).EnumerateEntries(s, args);
                     if (args.Stop) break;
                 }
             }
         }
         
-        void DoOldHighlight(Stream s, UndoFormat format, UndoFormatArgs args) {
-            DrawOpBlock block;
+        void OldHighlightBlock(UndoFormatEntry P) {
+            ExtBlock old = P.Block, newBlock = P.NewBlock;
+            if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) return;
+            if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) return;
             
-            foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
-                ExtBlock old = P.Block, newBlock = P.NewBlock;
-                if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) continue;
-                if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) continue;
-                
-                block.Block = (newBlock.BlockID == Block.air
-                                       || Block.Convert(old.BlockID) == Block.water || old.BlockID == Block.waterstill
-                                       || Block.Convert(old.BlockID) == Block.lava || old.BlockID == Block.lavastill)
-                    ? DeleteHighlight : PlaceHighlight;
-                
-                block.X = P.X; block.Y = P.Y; block.Z = P.Z;
-                output(block);
-            }
+            DrawOpBlock block;
+            block.Block = (newBlock.BlockID == Block.air
+                           || Block.Convert(old.BlockID) == Block.water || old.BlockID == Block.waterstill
+                           || Block.Convert(old.BlockID) == Block.lava || old.BlockID == Block.lavastill)
+                ? DeleteHighlight : PlaceHighlight;
+                        
+            block.X = P.X; block.Y = P.Y; block.Z = P.Z;
+            output(block);
         }
     }
 }
