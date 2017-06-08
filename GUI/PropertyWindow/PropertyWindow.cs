@@ -34,13 +34,6 @@ namespace MCGalaxy.Gui {
         }
 
         void PropertyWindow_Load(object sender, EventArgs e) {
-            string[] colors = LineFormatter.GetColorsList().ToArray();
-            chat_cmbDefault.Items.AddRange(colors);
-            chat_cmbIRC.Items.AddRange(colors);
-            chat_cmbSyntax.Items.AddRange(colors);
-            chat_cmbDesc.Items.AddRange(colors);
-            cmbColor.Items.AddRange(colors);
-            
             ToggleIrcSettings(Server.irc);
             ToggleMySQLSettings(Server.useMySQL);
             ToggleChatSpamSettings(Server.checkspam);
@@ -105,10 +98,6 @@ namespace MCGalaxy.Gui {
             LoadRankProps();
             LoadSecurityProps();
             zsSettings.LoadFromServer();
-        }
-        
-        void ParseColor(string value, ComboBox target) {
-            target.SelectedIndex = target.Items.IndexOf(Colors.Name(value));
         }
 
         void SaveProperties() {

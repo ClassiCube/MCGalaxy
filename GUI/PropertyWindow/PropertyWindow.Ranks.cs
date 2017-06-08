@@ -67,13 +67,13 @@ namespace MCGalaxy.Gui {
         }
         
 		
-		private void cmbColor_SelectedIndexChanged(object sender, EventArgs e) {
-            lblColor.BackColor = GetColor(cmbColor.Items[cmbColor.SelectedIndex].ToString());
-            storedRanks[listRanks.SelectedIndex].color = Colors.Parse(cmbColor.Items[cmbColor.SelectedIndex].ToString());
+		void btnColor_Click(object sender, EventArgs e) {
+            chat_ShowColorDialog(btnColor, storedRanks[listRanks.SelectedIndex].name + " rank color");
+            storedRanks[listRanks.SelectedIndex].color = Colors.Parse(btnColor.Text);
         }
 
         bool skip = false;
-        private void listRanks_SelectedIndexChanged(object sender, EventArgs e) {
+        void listRanks_SelectedIndexChanged(object sender, EventArgs e) {
             if ( skip ) return;
             Group grp = storedRanks.Find(G => G.trueName == listRanks.Items[listRanks.SelectedIndex].ToString().Split('=')[0].Trim());
             if ( grp.Permission == LevelPermission.Nobody ) { listRanks.SelectedIndex = 0; return; }
@@ -82,7 +82,7 @@ namespace MCGalaxy.Gui {
             txtPermission.Text = ( (int)grp.Permission ).ToString();
             txtLimit.Text = grp.maxBlocks.ToString();
             txtMaxUndo.Text = grp.maxUndo.ToString();
-            cmbColor.SelectedIndex = cmbColor.Items.IndexOf(Colors.Name(grp.color));
+            chat_ParseColor(grp.color, btnColor);
             txtGrpMOTD.Text = String.IsNullOrEmpty(grp.MOTD) ? String.Empty : grp.MOTD;
             txtOSMaps.Text = grp.OverseerMaps.ToString();
             txtPrefix.Text = grp.prefix;

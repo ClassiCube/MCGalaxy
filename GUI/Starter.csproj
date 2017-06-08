@@ -53,6 +53,10 @@
     <Compile Include="GuiPerms.cs" />
     <Compile Include="LineFormatter.cs" />
     <Compile Include="Handlers.cs" />
+    <Compile Include="Popups\ColorSelector.cs" />
+    <Compile Include="Popups\ColorSelector.Designer.cs">
+      <DependentUpon>ColorSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="Popups\CustomCommands.cs" />
     <Compile Include="Popups\CustomCommands.Designer.cs">
       <DependentUpon>CustomCommands.cs</DependentUpon>

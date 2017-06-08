@@ -67,17 +67,13 @@ namespace MCGalaxy.Gui
             this.chat_txtConsole = new System.Windows.Forms.TextBox();
             this.chat_grpColors = new System.Windows.Forms.GroupBox();
             this.chat_lblDefault = new System.Windows.Forms.Label();
-            this.chat_colDefault = new System.Windows.Forms.Label();
-            this.chat_cmbDefault = new System.Windows.Forms.ComboBox();
+            this.chat_btnDefault = new System.Windows.Forms.Button();
             this.chat_lblIRC = new System.Windows.Forms.Label();
-            this.chat_colIRC = new System.Windows.Forms.Label();
-            this.chat_cmbIRC = new System.Windows.Forms.ComboBox();
+            this.chat_btnIRC = new System.Windows.Forms.Button();
             this.chat_lblSyntax = new System.Windows.Forms.Label();
-            this.chat_colSyntax = new System.Windows.Forms.Label();
-            this.chat_cmbSyntax = new System.Windows.Forms.ComboBox();
+            this.chat_btnSyntax = new System.Windows.Forms.Button();
             this.chat_lblDesc = new System.Windows.Forms.Label();
-            this.chat_colDesc = new System.Windows.Forms.Label();
-            this.chat_cmbDesc = new System.Windows.Forms.ComboBox();
+            this.chat_btnDesc = new System.Windows.Forms.Button();
             this.main_btnSave = new System.Windows.Forms.Button();
             this.main_btnDiscard = new System.Windows.Forms.Button();
             this.main_btnApply = new System.Windows.Forms.Button();
@@ -153,11 +149,10 @@ namespace MCGalaxy.Gui
             this.txtPrefix = new System.Windows.Forms.TextBox();
             this.txtLimit = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.lblColor = new System.Windows.Forms.Label();
             this.txtGrpMOTD = new System.Windows.Forms.TextBox();
             this.txtPermission = new System.Windows.Forms.TextBox();
             this.txtRankName = new System.Windows.Forms.TextBox();
-            this.cmbColor = new System.Windows.Forms.ComboBox();
+            this.btnColor = new System.Windows.Forms.Button();
             this.lblMOTD = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -559,6 +554,7 @@ namespace MCGalaxy.Gui
             this.chat_chkCheap.Text = "/invincible message:";
             this.toolTip.SetToolTip(this.chat_chkCheap, "Is immortality cheap and unfair?");
             this.chat_chkCheap.UseVisualStyleBackColor = true;
+            this.chat_chkCheap.CheckedChanged += new System.EventHandler(chat_chkCheap_CheckedChanged);
             // 
             // chat_txtCheap
             // 
@@ -648,17 +644,13 @@ namespace MCGalaxy.Gui
             // chat_grpColors
             // 
             this.chat_grpColors.Controls.Add(this.chat_lblDefault);
-            this.chat_grpColors.Controls.Add(this.chat_colDefault);
-            this.chat_grpColors.Controls.Add(this.chat_cmbDefault);
+            this.chat_grpColors.Controls.Add(this.chat_btnDefault);
             this.chat_grpColors.Controls.Add(this.chat_lblIRC);
-            this.chat_grpColors.Controls.Add(this.chat_colIRC);
-            this.chat_grpColors.Controls.Add(this.chat_cmbIRC);
+            this.chat_grpColors.Controls.Add(this.chat_btnIRC);
             this.chat_grpColors.Controls.Add(this.chat_lblSyntax);
-            this.chat_grpColors.Controls.Add(this.chat_colSyntax);
-            this.chat_grpColors.Controls.Add(this.chat_cmbSyntax);
+            this.chat_grpColors.Controls.Add(this.chat_btnSyntax);
             this.chat_grpColors.Controls.Add(this.chat_lblDesc);
-            this.chat_grpColors.Controls.Add(this.chat_colDesc);
-            this.chat_grpColors.Controls.Add(this.chat_cmbDesc);
+            this.chat_grpColors.Controls.Add(this.chat_btnDesc);
             this.chat_grpColors.Location = new System.Drawing.Point(8, 6);
             this.chat_grpColors.Name = "chat_grpColors";
             this.chat_grpColors.Size = new System.Drawing.Size(221, 145);
@@ -669,110 +661,75 @@ namespace MCGalaxy.Gui
             // chat_lblDefault
             // 
             this.chat_lblDefault.AutoSize = true;
-            this.chat_lblDefault.Location = new System.Drawing.Point(6, 18);
+            this.chat_lblDefault.Location = new System.Drawing.Point(38, 25);
             this.chat_lblDefault.Name = "chat_lblDefault";
             this.chat_lblDefault.Size = new System.Drawing.Size(71, 13);
             this.chat_lblDefault.TabIndex = 11;
             this.chat_lblDefault.Text = "Default color:";
             // 
-            // chat_colDefault
+            // chat_btnDefault
             // 
-            this.chat_colDefault.BackColor = System.Drawing.Color.Black;
-            this.chat_colDefault.Location = new System.Drawing.Point(99, 15);
-            this.chat_colDefault.Name = "chat_colDefault";
-            this.chat_colDefault.Size = new System.Drawing.Size(18, 18);
-            this.chat_colDefault.TabIndex = 26;
-            // 
-            // chat_cmbDefault
-            // 
-            this.chat_cmbDefault.FormattingEnabled = true;
-            this.chat_cmbDefault.Location = new System.Drawing.Point(120, 15);
-            this.chat_cmbDefault.Name = "chat_cmbDefault";
-            this.chat_cmbDefault.Size = new System.Drawing.Size(95, 21);
-            this.chat_cmbDefault.TabIndex = 10;
-            this.toolTip.SetToolTip(this.chat_cmbDefault, "The colour of the default chat used in the server.\nFor example, when you are aske" +
+            this.chat_btnDefault.Location = new System.Drawing.Point(113, 20);
+            this.chat_btnDefault.Name = "chat_btnDefault";
+            this.chat_btnDefault.Size = new System.Drawing.Size(95, 23);
+            this.chat_btnDefault.TabIndex = 10;
+            this.toolTip.SetToolTip(this.chat_btnDefault, "The colour of the default chat used in the server.\nFor example, when you are aske" +
                         "d to select two corners in a cuboid.");
-            this.chat_cmbDefault.SelectedIndexChanged += new System.EventHandler(this.chat_cmbDefault_SelectedIndexChanged);
+            this.chat_btnDefault.Click += new System.EventHandler(this.chat_cmbDefault_Click);
             // 
             // chat_lblIRC
             // 
             this.chat_lblIRC.AutoSize = true;
-            this.chat_lblIRC.Location = new System.Drawing.Point(6, 47);
+            this.chat_lblIRC.Location = new System.Drawing.Point(36, 56);
             this.chat_lblIRC.Name = "chat_lblIRC";
             this.chat_lblIRC.Size = new System.Drawing.Size(74, 13);
             this.chat_lblIRC.TabIndex = 22;
             this.chat_lblIRC.Text = "IRC messages:";
             // 
-            // chat_colIRC
+            // chat_btnIRC
             // 
-            this.chat_colIRC.BackColor = System.Drawing.Color.Black;
-            this.chat_colIRC.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.chat_colIRC.Location = new System.Drawing.Point(99, 44);
-            this.chat_colIRC.Name = "chat_colIRC";
-            this.chat_colIRC.Size = new System.Drawing.Size(18, 18);
-            this.chat_colIRC.TabIndex = 25;
-            // 
-            // chat_cmbIRC
-            // 
-            this.chat_cmbIRC.FormattingEnabled = true;
-            this.chat_cmbIRC.Location = new System.Drawing.Point(120, 44);
-            this.chat_cmbIRC.Name = "chat_cmbIRC";
-            this.chat_cmbIRC.Size = new System.Drawing.Size(95, 21);
-            this.chat_cmbIRC.TabIndex = 24;
-            this.toolTip.SetToolTip(this.chat_cmbIRC, "The colour of the IRC nicks used in the IRC.");
-            this.chat_cmbIRC.SelectedIndexChanged += new System.EventHandler(this.chat_cmbIRC_SelectedIndexChanged);
+            this.chat_btnIRC.Location = new System.Drawing.Point(113, 51);
+            this.chat_btnIRC.Name = "chat_btnIRC";
+            this.chat_btnIRC.Size = new System.Drawing.Size(95, 23);
+            this.chat_btnIRC.TabIndex = 24;
+            this.toolTip.SetToolTip(this.chat_btnIRC, "The colour of the IRC nicks used in the IRC.");
+            this.chat_btnIRC.Click += new System.EventHandler(this.chat_btnIRC_Click);
             // 
             // chat_lblSyntax
             // 
             this.chat_lblSyntax.AutoSize = true;
-            this.chat_lblSyntax.Location = new System.Drawing.Point(6, 74);
+            this.chat_lblSyntax.Location = new System.Drawing.Point(41, 85);
             this.chat_lblSyntax.Name = "chat_lblSyntax";
             this.chat_lblSyntax.Size = new System.Drawing.Size(68, 13);
             this.chat_lblSyntax.TabIndex = 31;
             this.chat_lblSyntax.Text = "/help syntax:";
             // 
-            // chat_colSyntax
+            // chat_btnSyntax
             // 
-            this.chat_colSyntax.Location = new System.Drawing.Point(99, 71);
-            this.chat_colSyntax.Name = "chat_colSyntax";
-            this.chat_colSyntax.Size = new System.Drawing.Size(18, 18);
-            this.chat_colSyntax.TabIndex = 35;
-            // 
-            // chat_cmbSyntax
-            // 
-            this.chat_cmbSyntax.FormattingEnabled = true;
-            this.chat_cmbSyntax.Location = new System.Drawing.Point(120, 71);
-            this.chat_cmbSyntax.Name = "chat_cmbSyntax";
-            this.chat_cmbSyntax.Size = new System.Drawing.Size(95, 21);
-            this.chat_cmbSyntax.TabIndex = 30;
-            this.toolTip.SetToolTip(this.chat_cmbSyntax, "The colour for the description of a command in /help.");
-            this.chat_cmbSyntax.SelectedIndexChanged += new System.EventHandler(this.chat_cmbSyntax_SelectedIndexChanged);
+            this.chat_btnSyntax.Location = new System.Drawing.Point(113, 80);
+            this.chat_btnSyntax.Name = "chat_btnSyntax";
+            this.chat_btnSyntax.Size = new System.Drawing.Size(95, 23);
+            this.chat_btnSyntax.TabIndex = 30;
+            this.toolTip.SetToolTip(this.chat_btnSyntax, "The colour for the description of a command in /help.");
+            this.chat_btnSyntax.Click += new System.EventHandler(this.chat_btnSyntax_Click);
             // 
             // chat_lblDesc
             // 
             this.chat_lblDesc.AutoSize = true;
-            this.chat_lblDesc.Location = new System.Drawing.Point(6, 101);
+            this.chat_lblDesc.Location = new System.Drawing.Point(19, 114);
             this.chat_lblDesc.Name = "chat_lblDesc";
             this.chat_lblDesc.Size = new System.Drawing.Size(90, 13);
             this.chat_lblDesc.TabIndex = 32;
             this.chat_lblDesc.Text = "/help description:";
             // 
-            // chat_colDesc
+            // chat_btnDesc
             // 
-            this.chat_colDesc.Location = new System.Drawing.Point(99, 98);
-            this.chat_colDesc.Name = "chat_colDesc";
-            this.chat_colDesc.Size = new System.Drawing.Size(18, 18);
-            this.chat_colDesc.TabIndex = 34;
-            // 
-            // chat_cmbDesc
-            // 
-            this.chat_cmbDesc.FormattingEnabled = true;
-            this.chat_cmbDesc.Location = new System.Drawing.Point(120, 98);
-            this.chat_cmbDesc.Name = "chat_cmbDesc";
-            this.chat_cmbDesc.Size = new System.Drawing.Size(95, 21);
-            this.chat_cmbDesc.TabIndex = 33;
-            this.toolTip.SetToolTip(this.chat_cmbDesc, "The colour of the /cmdname [args] in /help.");
-            this.chat_cmbDesc.SelectedIndexChanged += new System.EventHandler(this.chat_cmbDesc_SelectedIndexChanged);
+            this.chat_btnDesc.Location = new System.Drawing.Point(113, 109);
+            this.chat_btnDesc.Name = "chat_btnDesc";
+            this.chat_btnDesc.Size = new System.Drawing.Size(95, 23);
+            this.chat_btnDesc.TabIndex = 33;
+            this.toolTip.SetToolTip(this.chat_btnDesc, "The colour of the /cmdname [args] in /help.");
+            this.chat_btnDesc.Click += new System.EventHandler(this.chat_btnDesc_Click);
             // 
             // main_btnSave
             // 
@@ -1496,11 +1453,10 @@ namespace MCGalaxy.Gui
             this.gbRankSettings.Controls.Add(this.txtPrefix);
             this.gbRankSettings.Controls.Add(this.txtLimit);
             this.gbRankSettings.Controls.Add(this.label12);
-            this.gbRankSettings.Controls.Add(this.lblColor);
             this.gbRankSettings.Controls.Add(this.txtGrpMOTD);
             this.gbRankSettings.Controls.Add(this.txtPermission);
             this.gbRankSettings.Controls.Add(this.txtRankName);
-            this.gbRankSettings.Controls.Add(this.cmbColor);
+            this.gbRankSettings.Controls.Add(this.btnColor);
             this.gbRankSettings.Controls.Add(this.lblMOTD);
             this.gbRankSettings.Controls.Add(this.label11);
             this.gbRankSettings.Controls.Add(this.label13);
@@ -1568,13 +1524,6 @@ namespace MCGalaxy.Gui
             this.label12.Text = "Permission:";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // lblColor
-            // 
-            this.lblColor.Location = new System.Drawing.Point(170, 128);
-            this.lblColor.Name = "lblColor";
-            this.lblColor.Size = new System.Drawing.Size(18, 18);
-            this.lblColor.TabIndex = 13;
-            // 
             // txtGrpMOTD
             // 
             this.txtGrpMOTD.Location = new System.Drawing.Point(85, 155);
@@ -1599,15 +1548,13 @@ namespace MCGalaxy.Gui
             this.txtRankName.TabIndex = 5;
             this.txtRankName.TextChanged += new System.EventHandler(this.txtRankName_TextChanged);
             // 
-            // cmbColor
+            // btnColor
             // 
-            this.cmbColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbColor.FormattingEnabled = true;
-            this.cmbColor.Location = new System.Drawing.Point(85, 128);
-            this.cmbColor.Name = "cmbColor";
-            this.cmbColor.Size = new System.Drawing.Size(79, 21);
-            this.cmbColor.TabIndex = 12;
-            this.cmbColor.SelectedIndexChanged += new System.EventHandler(this.cmbColor_SelectedIndexChanged);
+            this.btnColor.Location = new System.Drawing.Point(85, 127);
+            this.btnColor.Name = "btnColor";
+            this.btnColor.Size = new System.Drawing.Size(100, 23);
+            this.btnColor.TabIndex = 12;
+            this.btnColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnColor_Click);
             // 
             // lblMOTD
             // 
@@ -4346,17 +4293,13 @@ namespace MCGalaxy.Gui
         
         private System.Windows.Forms.GroupBox chat_grpColors;
         private System.Windows.Forms.Label chat_lblDefault;
-        private System.Windows.Forms.Label chat_colDefault;
-        private System.Windows.Forms.ComboBox chat_cmbDefault;
+        private System.Windows.Forms.Button chat_btnDefault;
         private System.Windows.Forms.Label chat_lblIRC;
-        private System.Windows.Forms.Label chat_colIRC;
-        private System.Windows.Forms.ComboBox chat_cmbIRC;
+        private System.Windows.Forms.Button chat_btnIRC;
         private System.Windows.Forms.Label chat_lblSyntax;
-        private System.Windows.Forms.Label chat_colSyntax;
-        private System.Windows.Forms.ComboBox chat_cmbSyntax;
+        private System.Windows.Forms.Button chat_btnSyntax;
         private System.Windows.Forms.Label chat_lblDesc;
-        private System.Windows.Forms.Label chat_colDesc;
-        private System.Windows.Forms.ComboBox chat_cmbDesc;
+        private System.Windows.Forms.Button chat_btnDesc;
         
         private System.Windows.Forms.GroupBox chat_grpOther;
         private System.Windows.Forms.Label chat_lblConsole;
@@ -4424,8 +4367,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.ListBox blk_list;
         private System.Windows.Forms.TabPage pageCommands;
         private System.Windows.Forms.TabPage pageRanks;
-        private System.Windows.Forms.Label lblColor;
-        private System.Windows.Forms.ComboBox cmbColor;
+        private System.Windows.Forms.Button btnColor;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox txtLimit;
         private System.Windows.Forms.TextBox txtPermission;
