@@ -61,22 +61,21 @@ namespace MCGalaxy {
             bannedIP = PlayerList.Load("banned-ip.txt");
             ircControllers = PlayerList.Load("IRC_Controllers.txt");
             muted = PlayerList.Load("muted.txt");
-            frozen = PlayerList.Load("frozen.txt");
             hidden = PlayerList.Load("hidden.txt");
             vip = PlayerList.Load("text/vip.txt");
             noEmotes = PlayerList.Load("text/emotelist.txt");
-            lockdown = PlayerList.Load("text/lockdown.txt");
-            
+            lockdown = PlayerList.Load("text/lockdown.txt");            
             jailed = PlayerExtList.Load("ranks/jailed.txt");
             models = PlayerExtList.Load("extra/models.txt");
             skins = PlayerExtList.Load("extra/skins.txt");
             reach = PlayerExtList.Load("extra/reach.txt");
             invalidIds = PlayerList.Load("extra/invalidids.txt");
-            tempBans = PlayerExtList.Load(Paths.TempBansFile);
             rotations = PlayerExtList.Load("extra/rotations.txt");
-            
+
+            frozen = PlayerExtList.Load("ranks/frozen.txt");            
             tempRanks = PlayerExtList.Load(Paths.TempRanksFile);
-            ServerTasks.TemprankCalcNextRun();
+            tempBans = PlayerExtList.Load(Paths.TempBansFile);            
+            ModerationTasks.QueueTasks();
             
             if (useWhitelist)
                 whiteList = PlayerList.Load("whitelist.txt");

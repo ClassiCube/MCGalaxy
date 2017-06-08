@@ -165,6 +165,7 @@ namespace MCGalaxy.Tasks {
             string[] lines = File.ReadAllLines(Paths.TempRanksFile);
             for (int i = 0; i < lines.Length; i++) {
                 string[] args = lines[i].SplitSpaces();
+                if (args.Length < 9) continue;
 
                 int min = int.Parse(args[4]), hour = int.Parse(args[5]);
                 int day = int.Parse(args[6]), month = int.Parse(args[7]), year = int.Parse(args[8]);

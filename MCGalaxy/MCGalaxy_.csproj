@@ -626,6 +626,7 @@
     <Compile Include="Server\Server.Fields.cs" />
     <Compile Include="Server\Server.Init.cs" />
     <Compile Include="Server\Tasks\InitTasks.cs" />
+    <Compile Include="Server\Tasks\ModerationTasks.cs" />
     <Compile Include="Server\Tasks\ServerTasks.cs" />
     <Compile Include="Server\Tasks\UpgradeTasks.cs" />
     <Compile Include="Server\Updater.cs" />

@@ -27,10 +27,7 @@ using MCGalaxy.Maths;
 namespace MCGalaxy.Tasks {
     internal static class ServerTasks {
 
-        static SchedulerTask temprankTask;
         internal static void QueueTasks() {
-            temprankTask = Server.MainScheduler.QueueRepeat(TemprankExpiry,
-                                                            null, TimeSpan.FromHours(1));
             Server.MainScheduler.QueueRepeat(CheckState,
                                              null, TimeSpan.FromSeconds(3));
             
@@ -171,54 +168,6 @@ namespace MCGalaxy.Tasks {
             levels = LevelInfo.Loaded.Items;
             all = levels.Join(l => l.name);
             if (all.Length > 0) Server.s.Log("!LEVELS ONLINE: " + all, true);
-        }
-        
-        internal static void TemprankExpiry(SchedulerTask task) {
-            List<string> lines = Server.tempRanks.AllLines();
-            foreach (string line in lines) {
-                string[] args = line.SplitSpaces();
-                if (args.Length < 4) continue;
-                
-                long expiry;
-                if (!long.TryParse(args[3], out expiry)) continue;
-
-                if (DateTime.UtcNow >= expiry.FromUnixTime()) {
-                    Command.all.Find("temprank").Use(null, args[0] + " delete");
-                    // Handle case of old rank no longer existing
-                    if (Server.tempRanks.Remove(args[0])) {
-                        Server.tempRanks.Save();
-                    }
-                }
-            }
-            task.Delay = TemprankNextRun();
-        }
-        
-        internal static void TemprankCalcNextRun() {
-            temprankTask.Delay = TemprankNextRun();
-            temprankTask.NextRun = DateTime.UtcNow.Add(temprankTask.Delay);
-            Server.MainScheduler.Recheck();
-        }
-        
-        static TimeSpan TemprankNextRun() {
-            DateTime nextRun = DateTime.MaxValue;
-            // Lock because we want to ensure list not modified from under us
-            lock (Server.tempRanks.locker) {
-                List<string> lines = Server.tempRanks.AllLines();
-                // Line format: name assigner assigntime expiretime oldRank tempRank
-                
-                foreach (string line in lines) {
-                    string[] args = line.SplitSpaces();
-                    if (args.Length < 4) continue;
-                    
-                    long expiry;
-                    if (!long.TryParse(args[3], out expiry)) continue;
-                    
-                    DateTime expireTime = expiry.FromUnixTime();
-                    if (expireTime < nextRun)
-                        nextRun = expireTime;
-                }
-            }
-            return nextRun - DateTime.UtcNow;
         }
     }
 }

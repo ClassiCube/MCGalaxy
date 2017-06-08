@@ -61,7 +61,9 @@ namespace MCGalaxy.Core {
             if (who != null) who.frozen = true;
             LogAction(e, who, "&bfrozen");
 
-            Server.frozen.AddIfNotExists(e.Target);
+            string data = FormatModTaskData(e);
+            Server.frozen.AddOrReplace(e.Target, data);
+            ModerationTasks.FreezeCalcNextRun();
             Server.frozen.Save();
         }
         
@@ -71,6 +73,7 @@ namespace MCGalaxy.Core {
             LogAction(e, who, "&adefrosted");
             
             Server.frozen.Remove(e.Target);
+            ModerationTasks.FreezeCalcNextRun();
             Server.frozen.Save();
         }
         
@@ -215,7 +218,7 @@ namespace MCGalaxy.Core {
                 who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
             }
             if (Server.tempRanks.Remove(e.Target)) {
-                ServerTasks.TemprankCalcNextRun();
+                ModerationTasks.TemprankCalcNextRun();
                 Server.tempRanks.Save();
             }
             
@@ -238,14 +241,17 @@ namespace MCGalaxy.Core {
         }
         
         static void AddTempRank(ModAction e, Group newRank) {
+            string data = FormatModTaskData(e) + " " + e.TargetGroup.name + " " + newRank.name;
+            Server.tempRanks.AddOrReplace(e.Target, data);
+            ModerationTasks.TemprankCalcNextRun();
+            Server.tempRanks.Save();
+        }
+        
+        static string FormatModTaskData(ModAction e) {
             long assign = DateTime.UtcNow.ToUnixTime();
             long expiry = DateTime.UtcNow.Add(e.Duration).ToUnixTime();
             string assigner = e.Actor == null ? "(console)" : e.Actor.name;
-
-            string data = assigner + " " + assign + " " + expiry + " " + e.TargetGroup.name + " " + newRank.name;
-            Server.tempRanks.AddOrReplace(e.Target, data);
-            ServerTasks.TemprankCalcNextRun();
-            Server.tempRanks.Save();
+            return assigner + " " + assign + " " + expiry;
         }
     }
 }

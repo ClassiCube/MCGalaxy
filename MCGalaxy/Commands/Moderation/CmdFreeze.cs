@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using MCGalaxy.Events;
+using System;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdFreeze : Command {
@@ -27,7 +28,10 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
-            Player who = PlayerInfo.FindMatches(p, message);
+            string[] args = message.SplitSpaces(3);
+            if (args.Length < 2) { Help(p); return; }
+            
+            Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             
             if (p == who) { Player.Message(p, "Cannot freeze yourself."); return; }
@@ -35,14 +39,19 @@ namespace MCGalaxy.Commands.Moderation {
                 MessageTooHighRank(p, "freeze", false); return; 
             }
             
+            TimeSpan duration = TimeSpan.Zero;
+            if (!CommandParser.GetTimespan(p, args[1], ref duration, "freeze for", 'm')) return;
+            string reason = args.Length > 2 ? args[2] : "";
+            reason = ModActionCmd.ExpandReason(p, reason);
+            
             ModActionType actionType = who.frozen ? ModActionType.Unfrozen : ModActionType.Frozen;
-            ModAction action = new ModAction(who.name, p, actionType);
+            ModAction action = new ModAction(who.name, p, actionType, reason, duration);
             OnModActionEvent.Call(action);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/freeze [name]");
-            Player.Message(p, "%HStops [name] from moving until unfrozen.");
+            Player.Message(p, "%T/freeze [name] [timespan] <reason>");
+            Player.Message(p, "%HStops [name] from moving for [timespan] time, or until manually unfrozen.");
         }
     }
 }
