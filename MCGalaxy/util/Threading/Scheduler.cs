@@ -115,18 +115,20 @@ namespace MCGalaxy.Tasks {
         }
         
         int GetWaitTime() {
-            int wait = int.MaxValue;
+            long wait = int.MaxValue;
             DateTime now = DateTime.UtcNow;
             
             lock (taskLock) {
                 foreach (SchedulerTask task in tasks) {
-                    int remaining = (int)(task.NextRun - now).TotalMilliseconds;
+                    long remaining = (long)(task.NextRun - now).TotalMilliseconds;
+                    if (remaining > int.MaxValue) remaining = int.MaxValue;
+                    
                     // minimum wait time is 1 millisecond
                     remaining = Math.Max(1, remaining);
                     wait = Math.Min(wait, remaining);
                 }
             }
-            return wait == int.MaxValue ? -1 : wait;
+            return wait == int.MaxValue ? -1 : (int)wait;
         }
     }
 

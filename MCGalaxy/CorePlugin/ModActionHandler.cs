@@ -250,9 +250,18 @@ namespace MCGalaxy.Core {
         
         static string FormatModTaskData(ModAction e) {
             long assign = DateTime.UtcNow.ToUnixTime();
-            DateTime expiryTime = DateTime.UtcNow.Add(e.Duration);
-            if (e.Duration == TimeSpan.Zero)
+            DateTime expiryTime;
+            
+            if (e.Duration == TimeSpan.Zero) {
                 expiryTime = DateTime.MaxValue;
+            } else {
+                try {
+                    expiryTime = DateTime.UtcNow.Add(e.Duration);
+                } catch (ArgumentOutOfRangeException) {
+                    // user provided extreme expiry time
+                    expiryTime = DateTime.MaxValue;
+                }
+            }
             
             long expiry = expiryTime.ToUnixTime();
             string assigner = e.Actor == null ? "(console)" : e.Actor.name;
