@@ -22,11 +22,11 @@ namespace MCGalaxy.Blocks {
     
     internal static class PlaceBehaviour {
 
-        internal static void Grass(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static void Grass(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             DirtGrass(p, (ExtBlock)Block.grass, x, y, z);
         }
         
-        internal static void Dirt(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static void Dirt(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             DirtGrass(p, (ExtBlock)Block.dirt, x, y, z);
         }
         
@@ -45,7 +45,7 @@ namespace MCGalaxy.Blocks {
         }
         
         
-        internal static void Stairs(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static void Stairs(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)
                 || p.level.GetBlock(x, y - 1, z) != (ExtBlock)Block.staircasestep) {
                 p.ChangeBlock(x, y, z, (ExtBlock)Block.staircasestep); return;
@@ -55,7 +55,7 @@ namespace MCGalaxy.Blocks {
             p.ChangeBlock(x, (ushort)(y - 1), z, (ExtBlock)Block.staircasefull);
         }
         
-        internal static void CobbleStairs(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static void CobbleStairs(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)
                 || p.level.GetBlock(x, y - 1, z) != (ExtBlock)Block.cobblestoneslab) {
                 p.ChangeBlock(x, y, z, (ExtBlock)Block.cobblestoneslab); return;
@@ -66,7 +66,7 @@ namespace MCGalaxy.Blocks {
         }
         
         
-        internal static void C4(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static void C4(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0 || p.level.physics == 5) {
                 p.RevertBlock(x, y, z); return;
             }
@@ -75,7 +75,7 @@ namespace MCGalaxy.Blocks {
             ExtBlock held = p.GetHeldBlock();
             if (held.BlockID == Block.red) {
                 Player.Message(p, "Placed detonator block, delete it to detonate.");
-                C4Det(p, Block.c4det, x, y, z); return;
+                C4Det(p, (ExtBlock)Block.c4det, x, y, z); return;
             }
             
             if (p.c4circuitNumber == -1) {
@@ -93,7 +93,7 @@ namespace MCGalaxy.Blocks {
             p.ChangeBlock(x, y, z, (ExtBlock)Block.c4);
         }
         
-        internal static void C4Det(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static void C4Det(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0 || p.level.physics == 5) {
                 p.c4circuitNumber = -1;
                 p.RevertBlock(x, y, z); return;

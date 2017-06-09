@@ -65,14 +65,18 @@ namespace MCGalaxy.Blocks.Physics {
             byte block = lvl.blocks[index];
             bool ext = block == Block.custom_block;
             BlockProps[] props = Block.Props;
+            ExtBlock block2 = default(ExtBlock); // TODO: temp hack
+            block2.BlockID = block;
+            
             if (ext) {
                 block = lvl.GetExtTile(x, y, z);
+                block2.ExtID = block;
                 props = lvl.CustomBlockProps;
             }
             
             if (props[block].IsDoor) {
                 byte physForm;
-                PhysicsArgs args = GetDoorArgs(block, ext, out physForm);
+                PhysicsArgs args = GetDoorArgs(block2, out physForm);
                 if (!instant) lvl.AddUpdate(index, physForm, false, args);
                 else lvl.Blockchange(index, (ExtBlock)physForm, false, args);
             } else if (props[block].IsTDoor) {
@@ -86,20 +90,19 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         
-        internal static PhysicsArgs GetDoorArgs(byte raw, bool isExt, out byte physForm) {
+        internal static PhysicsArgs GetDoorArgs(ExtBlock block, out byte physForm) {
             PhysicsArgs args = default(PhysicsArgs);
             args.Type1 = PhysicsArgs.Wait; args.Value1 = 16 - 1;
-            args.Type2 = PhysicsArgs.Revert; args.Value2 = raw;
+            args.Type2 = PhysicsArgs.Revert; args.Value2 = block.RawID;
             args.Door = true;
-            args.ExtBlock = isExt;
+            args.ExtBlock = block.BlockID == Block.custom_block;
             
             physForm = Block.door_tree_air; // air
-            if (isExt) {
-            } else if (raw == Block.air_door || raw == Block.air_switch) {
+            if (block.BlockID == Block.air_door || block.BlockID == Block.air_switch) {
                 args.Value1 = 4 - 1;
-            } else if (raw == Block.door_green) {
+            } else if (block.BlockID == Block.door_green) {
                 physForm = Block.door_green_air; // red wool
-            } else if (raw == Block.door_tnt) {
+            } else if (block.BlockID == Block.door_tnt) {
                 args.Value1 = 4 - 1; physForm = Block.door_tnt_air; // lava
             }
             return args;

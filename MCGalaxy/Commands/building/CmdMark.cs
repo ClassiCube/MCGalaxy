@@ -52,10 +52,10 @@ namespace MCGalaxy.Commands.Building {
                 PlaceMark(p, P.X, P.Y, P.Z);
             } else {
                 // We only want to activate blocks in the world
-                byte old = p.level.GetTile(P.X, P.Y, P.Z);
+                ExtBlock old = p.level.GetBlock(P.X, P.Y, P.Z);
                 if (!p.CheckManualChange(old, ExtBlock.Air, false)) return;
                 
-                HandleDelete handler = BlockBehaviour.deleteHandlers[old];
+                HandleDelete handler = BlockBehaviour.deleteHandlers[old.BlockID];
                 if (handler != null) {
                     handler(p, old, P.X, P.Y, P.Z);
                 } else {

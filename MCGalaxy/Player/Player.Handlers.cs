@@ -52,8 +52,8 @@ namespace MCGalaxy {
         
         public void ManualChange(ushort x, ushort y, ushort z, byte action,
                                  ExtBlock block, bool checkPlaceDist) {
-            byte oldB = level.GetTile(x, y, z);
-            if (oldB == Block.Invalid) return;
+            ExtBlock old = level.GetBlock(x, y, z);
+            if (old.IsInvalid) return;
             
             if (jailed || !agreed || !canBuild) { RevertBlock(x, y, z); return; }
             if (level.IsMuseum && Blockchange == null) return;
@@ -69,7 +69,7 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            if (Server.zombie.Running && Server.zombie.HandlesManualChange(this, x, y, z, action, block.BlockID, oldB))
+            if (Server.zombie.Running && Server.zombie.HandlesManualChange(this, x, y, z, action, block.BlockID, old.BlockID))
                 return;
 
             if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) ) {
@@ -86,7 +86,7 @@ namespace MCGalaxy {
             OnBlockChangeEvent.Call(this, x, y, z, block);
             if (cancelBlock) { cancelBlock = false; return; }
 
-            if (oldB >= Block.air_flood && oldB <= Block.air_door_air) {
+            if (old.BlockID >= Block.air_flood && old.BlockID <= Block.air_door_air) {
                 SendMessage("Block is active, you cannot disturb it.");
                 RevertBlock(x, y, z); return;
             }
@@ -107,43 +107,42 @@ namespace MCGalaxy {
                 }
             }
 
-            byte blockRaw = block.BlockID;
+            ExtBlock held = block;
             block = BlockBindings[block.RawID];
-            if (!CheckManualChange(oldB, block, doDelete)) {
+            if (!CheckManualChange(old, block, doDelete)) {
                 RevertBlock(x, y, z); return;
             }
+            if (!ModeBlock.IsAir) block = ModeBlock;
             
-            //Ignores updating blocks that are the same and send block only to the player
-            byte newB = (painting || action == 1) ? block.BlockID : Block.air;
-            if (oldB == newB && (painting || blockRaw != block.BlockID)) {
-                if (oldB != Block.custom_block || block.ExtID == level.GetExtTile(x, y, z)) {
-                    RevertBlock(x, y, z); return;
-                }
+            //Ignores updating blocks that are the same and revert block back only to the player
+            ExtBlock newB = (painting || action == 1) ? block : ExtBlock.Air;
+            if (old == newB) {
+                if (painting || !old.VisuallyEquals(held)) RevertBlock(x, y, z);
+                return;
             }
             
-            if (!ModeBlock.IsAir) block = ModeBlock;
             if (doDelete) {
-                bool deleted = DeleteBlock(oldB, x, y, z, block);
+                bool deleted = DeleteBlock(old, x, y, z, block);
             } else {
-                bool placed = PlaceBlock(oldB, x, y, z, block);
+                bool placed = PlaceBlock(old, x, y, z, block);
                 // Client always assumes delete succeeds, so we need to echo back the painted over block
                 // if the block was not changed visually (e.g. they paint white with door_white)
                 if (!placed && painting) RevertBlock(x, y, z);
             }
         }
         
-        internal bool CheckManualChange(byte old, ExtBlock block, bool replaceMode) {
-            if (!BlockPerms.CanModify(this, old) && !Block.BuildIn(old) && !Block.AllowBreak(old)) {
-                Formatter.MessageBlock(this, replaceMode ? "replace" : "delete", old);
+        internal bool CheckManualChange(ExtBlock old, ExtBlock block, bool replaceMode) {
+            if (!BlockPerms.CanModify(this, old.BlockID) && !Block.BuildIn(old.BlockID) && !Block.AllowBreak(old.BlockID)) {
+                Formatter.MessageBlock(this, replaceMode ? "replace" : "delete", old.BlockID);
                 return false;
             }
             return CommandParser.IsBlockAllowed(this, "place", block);
         }
         
-        bool DeleteBlock(byte old, ushort x, ushort y, ushort z, ExtBlock block) {
+        bool DeleteBlock(ExtBlock old, ushort x, ushort y, ushort z, ExtBlock block) {
             if (deleteMode) { return ChangeBlock(x, y, z, ExtBlock.Air) == 2; }
 
-            HandleDelete handler = BlockBehaviour.deleteHandlers[old];
+            HandleDelete handler = BlockBehaviour.deleteHandlers[old.BlockID];
             if (handler != null) {
                 handler(this, old, x, y, z);
                 return true;
@@ -151,7 +150,7 @@ namespace MCGalaxy {
             return ChangeBlock(x, y, z, ExtBlock.Air) == 2;
         }
 
-        bool PlaceBlock(byte old, ushort x, ushort y, ushort z, ExtBlock block) {
+        bool PlaceBlock(ExtBlock old, ushort x, ushort y, ushort z, ExtBlock block) {
             HandlePlace handler = BlockBehaviour.placeHandlers[block.BlockID];
             if (handler != null) {
                 handler(this, old, x, y, z);
@@ -424,18 +423,18 @@ namespace MCGalaxy {
                 if (block.BlockID == Block.Invalid) continue;
                 AABB blockBB = Block.BlockAABB(block, level).Offset(x * 32, y * 32, z * 32);
                 if (!bb.Intersects(blockBB)) continue;
-                byte coreID = block.BlockID;
                 
                 // We can activate only one walkthrough block per movement
                 if (!hitWalkthrough) {
-                    HandleWalkthrough handler = BlockBehaviour.walkthroughHandlers[coreID];
-                    if (handler != null && handler(this, coreID, xP, yP, zP)) {
+                    HandleWalkthrough handler = BlockBehaviour.walkthroughHandlers[block.BlockID];
+                    if (handler != null && handler(this, block, xP, yP, zP)) {
                         lastWalkthrough = level.PosToInt(xP, yP, zP);
                         hitWalkthrough = true;
                     }
                 }
                 
                 // Some blocks will cause death of players
+                byte coreID = block.BlockID;
                 if (coreID != Block.custom_block && !Block.Props[coreID].KillerBlock) continue;
                 if (coreID == Block.custom_block && !level.CustomBlockProps[block.ExtID].KillerBlock) continue;
                 
