@@ -102,10 +102,6 @@ namespace MCGalaxy {
             return block >= water && block <= lavastill;
         }
 
-        public static bool Mover(byte block) {
-            return BlockBehaviour.GetWalkthroughHandler(new ExtBlock(block, 0), Block.Props, Walkthrough(Convert(block))) != null;
-        }
-
         public static bool LightPass(byte block) {
             switch (Convert(block)) {
                 case air:
@@ -163,41 +159,6 @@ namespace MCGalaxy {
                     return true;
             }
             return false;
-        }
-
-        public static bool Physics(byte block) { //returns false if placing block cant actualy cause any physics to happen
-            if (Props[block].IsMessageBlock || Props[block].IsPortal) return false;
-            if (Props[block].IsDoor || Props[block].IsTDoor) return false;
-            if (Props[block].OPBlock) return false;
-            
-            switch (block) {
-                case rock:
-                case stone:
-                case blackrock:
-                case waterstill:
-                case lavastill:
-                case goldrock:
-                case ironrock:
-                case coal:
-
-                case goldsolid:
-                case iron:
-                case staircasefull:
-                case brick:
-                case tnt:
-                case stonevine:
-                case obsidian:
-
-                case deathair:
-                case deathlava:
-                case deathwater:
-
-                case flagbase:
-                    return false;
-
-                default:
-                    return true;
-            }
         }
         
         public static AABB BlockAABB(ExtBlock block, Level lvl) {

@@ -350,14 +350,11 @@ namespace MCGalaxy {
         
         
         internal bool ActivatesPhysics(ExtBlock block) {
-            if (block.BlockID != Block.custom_block)
-                return Block.Physics(block.BlockID);
-            
             int i = block.Index;
             if (BlockProps[i].IsMessageBlock || BlockProps[i].IsPortal) return false;
             if (BlockProps[i].IsDoor || BlockProps[i].IsTDoor) return false;
             if (BlockProps[i].OPBlock) return false;
-            return true;
+            return physicsHandlers[i] != null;
         }
         
         internal bool CheckSpongeWater(ushort x, ushort y, ushort z) {

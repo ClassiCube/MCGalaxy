@@ -99,7 +99,8 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "&aEntry block placed");
             } else {
                 p.Blockchange += EntryChange;
-                Player.Message(p, "&aEntry block placed. &c{0} block for exit", Block.Name(Block.red));
+                Player.Message(p, "&aEntry block placed. &c{0} block for exit",
+                               p.Level.BlockName((ExtBlock)Block.red));
             }
         }
         

@@ -134,13 +134,27 @@ namespace MCGalaxy.Blocks.Physics {
             
             if (C.data.Data > 20) {
                 ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
-                if (lvl.LightPasses(above))
-                    lvl.AddUpdate(C.b, Block.grass);
+                if (lvl.LightPasses(above)) lvl.AddUpdate(C.b, Block.grass);
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
             } else {
                 C.data.Data++;
             }
         }
+        
+        public static void DoGrass(Level lvl, ref Check C) {
+            if (!lvl.GrassGrow) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
+            ushort x, y, z;
+            lvl.IntToPos(C.b, out x, out y, out z);
+            
+            if (C.data.Data > 20) {
+                ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                if (!lvl.LightPasses(above)) lvl.AddUpdate(C.b, Block.dirt);
+                C.data.Data = PhysicsArgs.RemoveFromChecks;
+            } else {
+                C.data.Data++;
+            }
+        }
+        
         
         public static void DoSponge(Level lvl, ref Check C, bool lava) {
             byte target = lava ? Block.lava : Block.water;

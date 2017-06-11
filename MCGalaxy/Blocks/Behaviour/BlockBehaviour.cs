@@ -122,8 +122,9 @@ namespace MCGalaxy.Blocks {
                     
                 case Block.air: return AirPhysics.DoAir;
                 case Block.dirt: return OtherPhysics.DoDirt;
+                case Block.grass: return OtherPhysics.DoGrass;
                 case Block.leaf: return LeafPhysics.DoLeaf;
-                    case Block.shrub: return OtherPhysics.DoShrub;
+                case Block.shrub: return OtherPhysics.DoShrub;
                 case Block.fire: return FirePhysics.Do;
                 case Block.lava_fire: return FirePhysics.Do;
                 case Block.sand: return OtherPhysics.DoFalling;
