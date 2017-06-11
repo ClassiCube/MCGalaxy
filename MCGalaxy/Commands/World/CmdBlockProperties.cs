@@ -176,7 +176,7 @@ namespace MCGalaxy.Commands.World {
             scope[block.Index].Changed = true;
             
             if (scope == Block.Props) {
-                BlockProps.Save("core", scope);               
+                BlockProps.Save("core", scope, true);
                 Level[] loaded = LevelInfo.Loaded.Items;
                 
                 foreach (Level lvl in loaded) {
@@ -185,7 +185,7 @@ namespace MCGalaxy.Commands.World {
                 }
             } else if (scope == BlockDefinition.GlobalProps) {
                 Level[] loaded = LevelInfo.Loaded.Items;
-                BlockProps.Save("global", scope);
+                BlockProps.Save("global", scope, false);
                 
                 byte raw = block.RawID;
                 foreach (Level lvl in loaded) {
@@ -194,7 +194,7 @@ namespace MCGalaxy.Commands.World {
                     lvl.SetBlockHandler(block);
                 }                
             } else {
-                BlockProps.Save("lvl_" + level.name, scope);
+                BlockProps.Save("lvl_" + level.name, scope, false);
                 level.SetBlockHandler(block);
             }
         }

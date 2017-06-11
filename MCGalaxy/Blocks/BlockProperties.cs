@@ -29,9 +29,6 @@ namespace MCGalaxy.Blocks {
     /// <summary> Extended and physics properties of a block. </summary>
     public struct BlockProps {
         
-        /// <summary> ID of block these properties are associated with. </summary>
-        public byte BlockId;
-        
         /// <summary> Standard block id sent to clients in map and block update packets. </summary>
         public byte ConvertId;
         
@@ -74,14 +71,13 @@ namespace MCGalaxy.Blocks {
         
         public BlockProps(byte block) {
             this = default(BlockProps);
-            BlockId = block;
             ConvertId = block;
             Name = "unknown";
             ODoorId = Block.Invalid;
         }
         
         
-        public static void Save(string group, BlockProps[] scope) {
+        public static void Save(string group, BlockProps[] scope, bool custom) {
             if (!Directory.Exists("blockprops"))
                 Directory.CreateDirectory("blockprops");
             
@@ -93,8 +89,13 @@ namespace MCGalaxy.Blocks {
                     if (!scope[i].Changed) continue;
                     BlockProps props = scope[i];
                     
+                    // Don't save physics blocks
+                    if (custom && (i > Block.CpeCount && i < Block.Count)) continue;
+                    // Convert ext to raw ids
+                    int id = i >= Block.Count ? (i - 256) : i;
+                    
                     string deathMsg = props.DeathMessage == null ? "" : props.DeathMessage.Replace(":", "\\;");
-                    w.WriteLine(i + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor + ":"
+                    w.WriteLine(id + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor + ":"
                                 + props.IsMessageBlock + ":" + props.IsPortal + ":" + props.WaterKills + ":" 
                                 + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg + ":" 
                                 + (byte)props.AnimalAI);

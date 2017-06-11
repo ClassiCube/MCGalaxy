@@ -69,10 +69,11 @@ namespace MCGalaxy {
             height = Length; depth = Length;
             #pragma warning restore 0612
 
-            CustomBlockDefs = new BlockDefinition[256];
+            CustomBlockDefs = new BlockDefinition[Block.Count];
             for (int i = 0; i < CustomBlockDefs.Length; i++)
                 CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
-            BlockProps = new BlockProps[256];
+            
+            BlockProps = new BlockProps[Block.Count * 2];
             for (int i = 0; i < BlockProps.Length; i++)
                 BlockProps[i] = BlockDefinition.GlobalProps[i];
             

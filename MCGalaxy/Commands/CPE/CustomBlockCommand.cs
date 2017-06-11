@@ -117,7 +117,6 @@ namespace MCGalaxy.Commands.CPE {
             
             BlockProps props = global ? BlockDefinition.GlobalProps[src.Index] : p.level.BlockProps[src.Index];
             dstDef = srcDef.Copy();
-            props.BlockId = (byte)dst.RawID;
             dstDef.BlockID = (byte)dst.RawID;
             
             AddBlock(p, dstDef, global, cmd, props);
@@ -454,10 +453,11 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition old = defs[def.BlockID];
             if (!global && old == BlockDefinition.GlobalDefs[def.BlockID]) old = null;
+            ExtBlock block;
             
             // in case the list is modified before we finish the command.
             if (old != null) {
-                ExtBlock block = GetFreeBlock(global, p == null ? null : p.level);
+                block = GetFreeBlock(global, p == null ? null : p.level);
                 if (block.IsInvalid) {
                     Player.Message(p, "There are no custom block ids left, " +
                                    "you must " + cmd + " remove a custom block first.");
@@ -471,7 +471,9 @@ namespace MCGalaxy.Commands.CPE {
             
             string scope = global ? "global" : "level";
             Player.Message(p, "Created a new " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
-            UpdateBlockProps(global, p, props);
+            
+            block = ExtBlock.FromRaw(def.BlockID);
+            UpdateBlockProps(global, p, block, props);
             BlockDefinition.Add(def, defs, p == null ? null : p.level);
             return true;
         }
@@ -558,17 +560,17 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         
-        static void UpdateBlockProps(bool global, Player p, BlockProps props) {
-            ExtBlock block = ExtBlock.FromRaw(props.BlockId);
+        static void UpdateBlockProps(bool global, Player p, ExtBlock block, BlockProps props) {
             if (!global) {
                 p.level.BlockProps[block.Index] = props;
                 return;
             }           
             BlockDefinition.GlobalProps[block.Index] = props;
             
-            Level[] loaded = LevelInfo.Loaded.Items;            
+            Level[] loaded = LevelInfo.Loaded.Items;
+            byte raw = block.BlockID;
             foreach (Level lvl in loaded) {
-                if (lvl.CustomBlockDefs[props.BlockId] != null) continue;
+                if (lvl.CustomBlockDefs[raw] != null) continue;
                 lvl.BlockProps[block.Index] = props;
             }
         }
