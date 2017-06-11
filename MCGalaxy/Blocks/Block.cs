@@ -216,7 +216,7 @@ namespace MCGalaxy {
         
         public static void SetBlocks() {
             SetCoreProperties();
-            BlockProps.Load("core", Block.Props);
+            BlockProps.Load("core", Block.Props, false);
             BlockPerms.Load();
             
             Level[] loaded = LevelInfo.Loaded.Items;

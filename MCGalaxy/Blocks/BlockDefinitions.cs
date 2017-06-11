@@ -120,9 +120,9 @@ namespace MCGalaxy {
             GlobalDefs[Block.air] = DefaultSet.MakeCustomBlock(Block.air);
             GlobalDefs[Block.air].Name = "Air fallback";
             
-            GlobalProps = new BlockProps[Block.Count];
+            GlobalProps = new BlockProps[Block.Count * 2];
             for (int i = 0; i < Block.Count; i++)
-                GlobalProps[i] = new BlockProps((byte)i);
+                GlobalProps[i] = Block.Props[i];
             
             try {
                 if (File.Exists(GlobalPath)) {
@@ -133,7 +133,7 @@ namespace MCGalaxy {
             }
             
             Save(true, null);
-            BlockProps.Load("global", BlockDefinition.GlobalProps);
+            BlockProps.Load("global", BlockDefinition.GlobalProps, true);
             
             // As the BlockDefinition instances in levels will now be different
             // to the instances in GlobalDefs, we need to update them.

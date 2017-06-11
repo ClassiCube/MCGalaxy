@@ -402,9 +402,12 @@ namespace MCGalaxy {
             for (int i = 0; i < defs.Length; i++) {
                 if (defs[i] == null) continue;
                 lvl.CustomBlockDefs[i] = defs[i];
-                lvl.BlockProps[i] = new BlockProps((byte)i);
             }
-            MCGalaxy.Blocks.BlockProps.Load("lvl_" + lvl.MapName, lvl.BlockProps);
+            
+            for (int i = 0; i < lvl.BlockProps.Length; i++) {
+                lvl.BlockProps[i] = BlockDefinition.GlobalProps[i];
+            }
+            MCGalaxy.Blocks.BlockProps.Load("lvl_" + lvl.MapName, lvl.BlockProps, true);
         }
 
         public static bool CheckLoadOnGoto(string givenName) {

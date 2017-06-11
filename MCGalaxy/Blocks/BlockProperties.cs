@@ -102,7 +102,7 @@ namespace MCGalaxy.Blocks {
             }
         }
         
-        public static void Load(string group, BlockProps[] scope) {
+        public static void Load(string group, BlockProps[] scope, bool custom) {
             if (!Directory.Exists("blockprops")) return;
             if (!File.Exists("blockprops/" + group + ".txt")) return;
             
@@ -116,29 +116,32 @@ namespace MCGalaxy.Blocks {
                     Server.s.Log("Invalid line \"" + line + "\" in " + group + " block properties");
                     continue;
                 }
-                byte id;
-                if (!Byte.TryParse(parts[0], out id)) {
+                
+                byte raw;
+                if (!Byte.TryParse(parts[0], out raw)) {
                     Server.s.Log("Invalid line \"" + line + "\" in " + group + " block properties");
                     continue;                   
                 }
+                int idx = raw;
+                if (custom && raw >= Block.CpeCount) idx += 256;
                 
-                bool.TryParse(parts[1], out scope[id].IsRails);
-                bool.TryParse(parts[2], out scope[id].IsTDoor);
-                bool.TryParse(parts[3], out scope[id].IsDoor);
-                bool.TryParse(parts[4], out scope[id].IsMessageBlock);
-                bool.TryParse(parts[5], out scope[id].IsPortal);
-                bool.TryParse(parts[6], out scope[id].WaterKills);
-                bool.TryParse(parts[7], out scope[id].LavaKills);
-                bool.TryParse(parts[8], out scope[id].KillerBlock);
+                bool.TryParse(parts[1], out scope[idx].IsRails);
+                bool.TryParse(parts[2], out scope[idx].IsTDoor);
+                bool.TryParse(parts[3], out scope[idx].IsDoor);
+                bool.TryParse(parts[4], out scope[idx].IsMessageBlock);
+                bool.TryParse(parts[5], out scope[idx].IsPortal);
+                bool.TryParse(parts[6], out scope[idx].WaterKills);
+                bool.TryParse(parts[7], out scope[idx].LavaKills);
+                bool.TryParse(parts[8], out scope[idx].KillerBlock);
                 
-                scope[id].Changed = true;
-                scope[id].DeathMessage = parts[9].Replace("\\;", ":");
-                if (scope[id].DeathMessage == "")
-                    scope[id].DeathMessage = null;
+                scope[idx].Changed = true;
+                scope[idx].DeathMessage = parts[9].Replace("\\;", ":");
+                if (scope[idx].DeathMessage == "")
+                    scope[idx].DeathMessage = null;
                 
                 if (parts.Length > 10) {
                     byte ai; byte.TryParse(parts[10], out ai);
-                    scope[id].AnimalAI = (AnimalAI)ai;
+                    scope[idx].AnimalAI = (AnimalAI)ai;
                 }
             }
         }
