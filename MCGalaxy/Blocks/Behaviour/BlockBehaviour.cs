@@ -42,138 +42,164 @@ namespace MCGalaxy.Blocks {
         internal static HandlePhysics[] physicsHandlers = new HandlePhysics[Block.Count];
         internal static HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[Block.Count];
         
-        /// <summary> Initalises deleting, placing, and walkthrough handling behaviour for the core blocks. </summary>
-        internal static void InitCoreHandlers() {
+        /// <summary> Initalises default deleting, placing, and walkthrough handling behaviour for the core blocks. </summary>
+        internal static void SetDefaultHandlers() {
             for (int i = 0; i < Block.Count; i++) {
-                deleteHandlers[i] = null;
-                placeHandlers[i] = null;
-                walkthroughHandlers[i] = null;
+                SetDefaultHandler(i);
             }
-            
-            deleteHandlers[Block.rocketstart] = DeleteBehaviour.RocketStart;
-            deleteHandlers[Block.firework] = DeleteBehaviour.Firework;
-            deleteHandlers[Block.c4det] = DeleteBehaviour.C4Det;
-            deleteHandlers[Block.custom_block] = DeleteBehaviour.CustomBlock;
-            
-            placeHandlers[Block.dirt] = PlaceBehaviour.Dirt;
-            placeHandlers[Block.grass] = PlaceBehaviour.Grass;
-            placeHandlers[Block.staircasestep] = PlaceBehaviour.Stairs;
-            placeHandlers[Block.cobblestoneslab] = PlaceBehaviour.CobbleStairs;
-            placeHandlers[Block.c4] = PlaceBehaviour.C4;
-            placeHandlers[Block.c4det] = PlaceBehaviour.C4Det;
-            
-            walkthroughHandlers[Block.checkpoint] = WalkthroughBehaviour.Checkpoint;
-            walkthroughHandlers[Block.air_switch] = WalkthroughBehaviour.Door;
-            walkthroughHandlers[Block.air_door] = WalkthroughBehaviour.Door;
-            walkthroughHandlers[Block.water_door] = WalkthroughBehaviour.Door;
-            walkthroughHandlers[Block.lava_door] = WalkthroughBehaviour.Door;
-            walkthroughHandlers[Block.train] = WalkthroughBehaviour.Train;
-            walkthroughHandlers[Block.custom_block] = WalkthroughBehaviour.CustomBlock;
-            
-            for (int i = 0; i < Block.Count; i++) {
-                bool walkthrough = Block.Walkthrough(Block.Convert((byte)i));
-                if (Block.Props[i].IsMessageBlock) {
-                    if (walkthrough)
-                        walkthroughHandlers[i] = WalkthroughBehaviour.DoMessageBlock;
-                    deleteHandlers[i] = DeleteBehaviour.DoMessageBlock;
-                } else if (Block.Props[i].IsPortal) {
-                    if (walkthrough)
-                        walkthroughHandlers[i] = WalkthroughBehaviour.DoPortal;
-                    deleteHandlers[i] = DeleteBehaviour.DoPortal;
-                }
-                
-                if (Block.Props[i].IsTDoor) {
-                    deleteHandlers[i] = DeleteBehaviour.RevertDoor;
-                } else if (Block.Props[i].ODoorId != Block.Invalid) {
-                    deleteHandlers[i] = DeleteBehaviour.ODoor;
-                } else if (Block.Props[i].IsDoor) {
-                    deleteHandlers[i] = DeleteBehaviour.Door;
-                }
-            }
-            
-            deleteHandlers[Block.door_tree_air] = DeleteBehaviour.RevertDoor;
-            deleteHandlers[Block.door_tnt_air] = DeleteBehaviour.RevertDoor;
-            deleteHandlers[Block.door_green_air] = DeleteBehaviour.RevertDoor;
         }
         
-        /// <summary> Initalise physics handling behaviour for the core blocks. </summary>
-        internal static void InitCorePhysicsHandlers() {
-            for (int i = 0; i < Block.Count; i++) {
-                physicsHandlers[i] = null;
+        internal static void SetDefaultHandler(int i) {
+            ExtBlock block = new ExtBlock((byte)i, 0);
+            deleteHandlers[i] = GetDeleteHandler(block, Block.Props);
+            placeHandlers[i] = GetPlaceHandler(block, Block.Props);
+            
+            bool nonSolid = Block.Walkthrough(Block.Convert((byte)i));
+            walkthroughHandlers[i] = GetWalkthroughHandler(block, Block.Props, nonSolid);
+            
+            physicsHandlers[i] = GetPhysicsHandler(block, Block.Props);
+            physicsDoorsHandlers[i] = GetPhysicsDoorsHandler(block, Block.Props);
+        }
+        
+        
+        /// <summary> Retrieves the default place block handler for the given block. </summary>
+        internal static HandlePlace GetPlaceHandler(ExtBlock block, BlockProps[] props) {
+            switch (block.BlockID) {
+                case Block.dirt: return PlaceBehaviour.Dirt;
+                case Block.grass: return PlaceBehaviour.Grass;
+                case Block.staircasestep: return PlaceBehaviour.Stairs;
+                case Block.cobblestoneslab: return PlaceBehaviour.CobbleStairs;
+                case Block.c4: return PlaceBehaviour.C4;
+                case Block.c4det: return PlaceBehaviour.C4Det;
             }
-            physicsHandlers[Block.snaketail] = SnakePhysics.DoTail;
-            physicsHandlers[Block.snake] = SnakePhysics.Do;
-            physicsHandlers[Block.rockethead] = RocketPhysics.Do;
-            physicsHandlers[Block.firework] = FireworkPhysics.Do;
-            physicsHandlers[Block.zombiebody] = ZombiePhysics.Do;
-            physicsHandlers[Block.zombiehead] = ZombiePhysics.DoHead;
-            physicsHandlers[Block.creeper] = ZombiePhysics.Do;
-            
-            physicsHandlers[Block.water] = SimpleLiquidPhysics.DoWater;
-            physicsHandlers[Block.activedeathwater] = SimpleLiquidPhysics.DoWater;
-            physicsHandlers[Block.lava] = SimpleLiquidPhysics.DoLava;
-            physicsHandlers[Block.activedeathlava] = SimpleLiquidPhysics.DoLava;
-            physicsHandlers[Block.WaterDown] = ExtLiquidPhysics.DoWaterfall;
-            physicsHandlers[Block.LavaDown] = ExtLiquidPhysics.DoLavafall;
-            physicsHandlers[Block.WaterFaucet] = (Level lvl, ref Check C) =>
-                ExtLiquidPhysics.DoFaucet(lvl, ref C, Block.WaterDown);
-            physicsHandlers[Block.LavaFaucet] = (Level lvl, ref Check C) =>
-                ExtLiquidPhysics.DoFaucet(lvl, ref C, Block.LavaDown);
-            physicsHandlers[Block.finiteWater] = FinitePhysics.DoWaterOrLava;
-            physicsHandlers[Block.finiteLava] = FinitePhysics.DoWaterOrLava;
-            physicsHandlers[Block.finiteFaucet] = FinitePhysics.DoFaucet;
-            physicsHandlers[Block.magma] = ExtLiquidPhysics.DoMagma;
-            physicsHandlers[Block.geyser] = ExtLiquidPhysics.DoGeyser;
-            physicsHandlers[Block.lava_fast] = SimpleLiquidPhysics.DoFastLava;
-            physicsHandlers[Block.fastdeathlava] = SimpleLiquidPhysics.DoFastLava;
-            
-            physicsHandlers[Block.air] = AirPhysics.DoAir;
-            physicsHandlers[Block.dirt] = OtherPhysics.DoDirt;
-            physicsHandlers[Block.leaf] = LeafPhysics.DoLeaf;
-            physicsHandlers[Block.shrub] = OtherPhysics.DoShrub;
-            physicsHandlers[Block.fire] = FirePhysics.Do;
-            physicsHandlers[Block.lava_fire] = FirePhysics.Do;
-            physicsHandlers[Block.sand] = OtherPhysics.DoFalling;
-            physicsHandlers[Block.gravel] = OtherPhysics.DoFalling;
-            physicsHandlers[Block.cobblestoneslab] = OtherPhysics.DoStairs;
-            physicsHandlers[Block.staircasestep] = OtherPhysics.DoStairs;
-            physicsHandlers[Block.wood_float] = OtherPhysics.DoFloatwood;
-
-            physicsHandlers[Block.sponge] = (Level lvl, ref Check C) => OtherPhysics.DoSponge(lvl, ref C, false);
-            physicsHandlers[Block.lava_sponge] = (Level lvl, ref Check C) => OtherPhysics.DoSponge(lvl, ref C, true);
-
-            //Special blocks that are not saved
-            physicsHandlers[Block.air_flood] = (Level lvl, ref Check C) =>
-                AirPhysics.DoFlood(lvl, ref C, AirFlood.Full, Block.air_flood);
-            physicsHandlers[Block.air_flood_layer] = (Level lvl, ref Check C) =>
-                AirPhysics.DoFlood(lvl, ref C, AirFlood.Layer, Block.air_flood_layer);
-            physicsHandlers[Block.air_flood_down] = (Level lvl, ref Check C) =>
-                AirPhysics.DoFlood(lvl, ref C, AirFlood.Down, Block.air_flood_down);
-            physicsHandlers[Block.air_flood_up] = (Level lvl, ref Check C) =>
-                AirPhysics.DoFlood(lvl, ref C, AirFlood.Up, Block.air_flood_up);
-            
-            physicsHandlers[Block.smalltnt] = TntPhysics.DoSmallTnt;
-            physicsHandlers[Block.bigtnt] = (Level lvl, ref Check C) => TntPhysics.DoLargeTnt(lvl, ref C, 1);
-            physicsHandlers[Block.nuketnt] = (Level lvl, ref Check C) => TntPhysics.DoLargeTnt(lvl, ref C, 4);
-            physicsHandlers[Block.tntexplosion] = TntPhysics.DoTntExplosion;
-            physicsHandlers[Block.train] = TrainPhysics.Do;
-            
-            for (int i = 0; i < Block.Count; i++) {
-                HandlePhysics animalAI = AnimalAIHandler(Block.Props[i].AnimalAI);
-                if (animalAI != null) { physicsHandlers[i] = animalAI; continue; }
-                
-                //Adv physics updating anything placed next to water or lava
-                if ((i >= Block.red && i <= Block.redmushroom) || i == Block.wood ||
-                    i == Block.trunk || i == Block.bookcase) {
-                    physicsHandlers[i] = OtherPhysics.DoOther;
-                    continue;
-                }
-                
-                if (Block.Props[i].ODoorId != Block.Invalid) {
-                    physicsHandlers[i] = DoorPhysics.oDoor;
-                    physicsDoorsHandlers[i] = DoorPhysics.oDoor;
-                }
+            return null;
+        }
+        
+        /// <summary> Retrieves the default delete block handler for the given block. </summary>
+        internal static HandleDelete GetDeleteHandler(ExtBlock block, BlockProps[] props) {
+            switch (block.BlockID) {
+                case Block.rocketstart: return DeleteBehaviour.RocketStart;
+                case Block.firework: return DeleteBehaviour.Firework;
+                case Block.c4det: return DeleteBehaviour.C4Det;
+                case Block.custom_block: return DeleteBehaviour.CustomBlock;
+                case Block.door_tree_air: return DeleteBehaviour.RevertDoor;
+                case Block.door_tnt_air: return DeleteBehaviour.RevertDoor;
+                case Block.door_green_air: return DeleteBehaviour.RevertDoor;
             }
+            
+            int i = block.Index;
+            if (props[i].IsMessageBlock) return DeleteBehaviour.DoMessageBlock;
+            if (props[i].IsPortal) return DeleteBehaviour.DoPortal;
+            
+            if (props[i].IsTDoor) return DeleteBehaviour.RevertDoor;
+            if (props[i].ODoorId != Block.Invalid) return DeleteBehaviour.ODoor;
+            if (props[i].IsDoor) return DeleteBehaviour.Door;
+            return null;
+        }
+
+        /// <summary> Retrieves the default walkthrough block handler for the given block. </summary>
+        internal static HandleWalkthrough GetWalkthroughHandler(ExtBlock block, BlockProps[] props, bool nonSolid) {
+            switch (block.BlockID) {
+                case Block.checkpoint: return WalkthroughBehaviour.Checkpoint;
+                case Block.air_switch: return WalkthroughBehaviour.Door;
+                case Block.air_door: return WalkthroughBehaviour.Door;
+                case Block.water_door: return WalkthroughBehaviour.Door;
+                case Block.lava_door: return WalkthroughBehaviour.Door;
+                case Block.train: return WalkthroughBehaviour.Train;
+                case Block.custom_block: return WalkthroughBehaviour.CustomBlock;
+            }
+            
+            int i = block.Index;
+            if (props[i].IsMessageBlock && nonSolid) return WalkthroughBehaviour.DoMessageBlock;
+            if (props[i].IsPortal && nonSolid) return WalkthroughBehaviour.DoPortal;
+            return null;
+        }
+
+        
+        /// <summary> Retrieves the default physics block handler for the given block. </summary>
+        internal static HandlePhysics GetPhysicsHandler(ExtBlock block, BlockProps[] props) {
+            switch (block.BlockID) {
+                case Block.snaketail: return SnakePhysics.DoTail;
+                case Block.snake: return SnakePhysics.Do;
+                case Block.rockethead: return RocketPhysics.Do;
+                case Block.firework: return FireworkPhysics.Do;
+                case Block.zombiebody: return ZombiePhysics.Do;
+                case Block.zombiehead: return ZombiePhysics.DoHead;
+                case Block.creeper: return ZombiePhysics.Do;
+                    
+                case Block.water: return SimpleLiquidPhysics.DoWater;
+                case Block.activedeathwater: return SimpleLiquidPhysics.DoWater;
+                case Block.lava: return SimpleLiquidPhysics.DoLava;
+                case Block.activedeathlava: return SimpleLiquidPhysics.DoLava;
+                case Block.WaterDown: return ExtLiquidPhysics.DoWaterfall;
+                case Block.LavaDown: return ExtLiquidPhysics.DoLavafall;
+                
+                case Block.WaterFaucet: return (Level lvl, ref Check C) =>
+                    ExtLiquidPhysics.DoFaucet(lvl, ref C, Block.WaterDown);
+                case Block.LavaFaucet: return (Level lvl, ref Check C) =>
+                    ExtLiquidPhysics.DoFaucet(lvl, ref C, Block.LavaDown);
+                    
+                case Block.finiteWater: return FinitePhysics.DoWaterOrLava;
+                case Block.finiteLava: return FinitePhysics.DoWaterOrLava;
+                case Block.finiteFaucet: return FinitePhysics.DoFaucet;
+                case Block.magma: return ExtLiquidPhysics.DoMagma;
+                case Block.geyser: return ExtLiquidPhysics.DoGeyser;
+                case Block.lava_fast: return SimpleLiquidPhysics.DoFastLava;
+                case Block.fastdeathlava: return SimpleLiquidPhysics.DoFastLava;
+                    
+                case Block.air: return AirPhysics.DoAir;
+                case Block.dirt: return OtherPhysics.DoDirt;
+                case Block.leaf: return LeafPhysics.DoLeaf;
+                    case Block.shrub: return OtherPhysics.DoShrub;
+                case Block.fire: return FirePhysics.Do;
+                case Block.lava_fire: return FirePhysics.Do;
+                case Block.sand: return OtherPhysics.DoFalling;
+                case Block.gravel: return OtherPhysics.DoFalling;
+                case Block.cobblestoneslab: return OtherPhysics.DoStairs;
+                case Block.staircasestep: return OtherPhysics.DoStairs;
+                case Block.wood_float: return OtherPhysics.DoFloatwood;
+
+                case Block.sponge: return (Level lvl, ref Check C) => 
+                    OtherPhysics.DoSponge(lvl, ref C, false);
+                case Block.lava_sponge: return (Level lvl, ref Check C) => 
+                    OtherPhysics.DoSponge(lvl, ref C, true);
+
+                // Special blocks that are not saved
+                case Block.air_flood: return (Level lvl, ref Check C) =>
+                    AirPhysics.DoFlood(lvl, ref C, AirFlood.Full, Block.air_flood);
+                case Block.air_flood_layer: return (Level lvl, ref Check C) =>
+                    AirPhysics.DoFlood(lvl, ref C, AirFlood.Layer, Block.air_flood_layer);
+                case Block.air_flood_down: return (Level lvl, ref Check C) =>
+                    AirPhysics.DoFlood(lvl, ref C, AirFlood.Down, Block.air_flood_down);
+                case Block.air_flood_up: return (Level lvl, ref Check C) =>
+                    AirPhysics.DoFlood(lvl, ref C, AirFlood.Up, Block.air_flood_up);
+                    
+                case Block.smalltnt: return TntPhysics.DoSmallTnt;
+                case Block.bigtnt: return (Level lvl, ref Check C) =>
+                    TntPhysics.DoLargeTnt(lvl, ref C, 1);
+                case Block.nuketnt: return (Level lvl, ref Check C) => 
+                    TntPhysics.DoLargeTnt(lvl, ref C, 4);
+                case Block.tntexplosion: return TntPhysics.DoTntExplosion;
+                case Block.train: return TrainPhysics.Do;
+            }
+
+            int i = block.Index;
+            HandlePhysics animalAI = AnimalAIHandler(props[i].AnimalAI);
+            if (animalAI != null) return animalAI;
+            if (props[i].ODoorId != Block.Invalid) return DoorPhysics.oDoor;
+            
+            i = block.BlockID; // TODO: should this be checking WaterKills/LavaKills
+            // Adv physics updating anything placed next to water or lava
+            if ((i >= Block.red && i <= Block.redmushroom) || i == Block.wood || i == Block.trunk || i == Block.bookcase) {
+                return OtherPhysics.DoOther;
+            }
+            return null;
+        }
+        
+        /// <summary> Retrieves the default physics block handler for the given block. </summary>
+        internal static HandlePhysics GetPhysicsDoorsHandler(ExtBlock block, BlockProps[] props) {
+            if (props[block.Index].ODoorId != Block.Invalid) return DoorPhysics.oDoor;
+            return null;
         }
         
         static HandlePhysics AnimalAIHandler(AnimalAI ai) {
@@ -185,7 +211,7 @@ namespace MCGalaxy.Blocks {
                 return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.water);
             } else if (ai == AnimalAI.FleeLava) {
                 return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.lava);
-            } 
+            }
             
             if (ai == AnimalAI.KillerAir) {
                 return (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.air);

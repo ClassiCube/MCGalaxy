@@ -242,10 +242,8 @@ namespace MCGalaxy {
         public static void SetBlocks() {
             SetCoreProperties();
             BlockProps.Load("core", Block.Props);
-            BlockPerms.Load();
-            
-            BlockBehaviour.InitCorePhysicsHandlers();            
-            BlockBehaviour.InitCoreHandlers();
+            BlockPerms.Load();            
+            BlockBehaviour.SetDefaultHandlers();
         }
         
         [Obsolete("Use BlockPerms.CanModify()")]

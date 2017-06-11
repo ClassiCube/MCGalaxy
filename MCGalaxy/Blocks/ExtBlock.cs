@@ -47,6 +47,9 @@ namespace MCGalaxy {
         /// <summary> Returns whether the type of this extended block is the air block. </summary>
         public bool IsAir { get { return BlockID == Block.air; } }
         
+        /// <summary> Returns the index of this block within an array. </summary>
+        public int Index { get { return BlockID != Block.custom_block ? BlockID : (ExtID + 256); } }
+        
         
         /// <summary> Returns the raw (for client side) block ID of this block. </summary>
         public byte RawID {

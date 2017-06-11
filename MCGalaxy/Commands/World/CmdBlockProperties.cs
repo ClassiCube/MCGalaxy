@@ -173,8 +173,7 @@ namespace MCGalaxy.Commands.World {
             scope[id].Changed = true;
             
             if (scope == Block.Props) {
-                BlockBehaviour.InitCoreHandlers();
-                if (physics) BlockBehaviour.InitCorePhysicsHandlers();
+                BlockBehaviour.SetDefaultHandler(id);
                 BlockProps.Save("core", scope);
             } else if (scope == BlockDefinition.GlobalProps) {
                 Level[] loaded = LevelInfo.Loaded.Items;
