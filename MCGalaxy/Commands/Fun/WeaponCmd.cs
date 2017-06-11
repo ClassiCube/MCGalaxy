@@ -161,15 +161,16 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        protected static bool HandlesHitBlock(Player p, byte type, EndType ending, Vec3U16 pos, bool doExplode) {
+        protected static bool HandlesHitBlock(Player p, ExtBlock block, EndType ending, Vec3U16 pos, bool doExplode) {
             if (p.level.physics < 2 || ending == EndType.Teleport || ending == EndType.Normal) return true;
             
             if (ending == EndType.Destroy) {
-                if ((!Block.FireKill(type) && !Block.NeedRestart(type)) && type != Block.glass) {
+                bool fireKills = block.BlockID != Block.air && p.level.BlockProps[block.Index].LavaKills;
+                if ((!fireKills && !Block.NeedRestart(block.BlockID)) && block.BlockID != Block.glass) {
                     return true;
                 }
             } else if (p.level.physics >= 3) {
-                if (type != Block.glass && doExplode) {
+                if (block.BlockID != Block.glass && doExplode) {
                     p.level.MakeExplosion(pos.X, pos.Y, pos.Z, 1);
                     return true;
                 }

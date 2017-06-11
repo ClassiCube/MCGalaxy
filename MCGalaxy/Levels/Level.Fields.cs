@@ -49,8 +49,14 @@ namespace MCGalaxy {
         public Orientation SpawnRot { get { return new Orientation(rotx, roty); } }
             
         public BlockDefinition[] CustomBlockDefs;
-        public BlockProps[] CustomBlockProps;
+        public BlockProps[] BlockProps;
         public ExtrasCollection Extras = new ExtrasCollection();
+        
+        internal HandleDelete[] deleteHandlers = new HandleDelete[Block.Count * 2];
+        internal HandlePlace[] placeHandlers = new HandlePlace[Block.Count * 2];
+        internal HandleWalkthrough[] walkthroughHandlers = new HandleWalkthrough[Block.Count * 2];
+        internal HandlePhysics[] physicsHandlers = new HandlePhysics[Block.Count * 2];
+        internal HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[Block.Count * 2];
         
         public ushort Width, Height, Length;
         // NOTE: These are for legacy code only, you should use upper case Width/Height/Length

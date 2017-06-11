@@ -52,8 +52,10 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static void MagmaFlow(Level lvl, int x, int y, int z, ref bool flowUp) {
-            int index = lvl.PosToInt((ushort)x, (ushort)y, (ushort)z);
-            if (index >= 0 && Block.LavaKill(lvl.blocks[index])) {
+            int index;
+            ExtBlock block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
+            
+            if (index >= 0 && lvl.BlockProps[block.Index].LavaKills) {
                 lvl.AddUpdate(index, Block.magma);
                 flowUp = true;
             }
@@ -89,8 +91,10 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static void GeyserFlow(Level lvl, int x, int y, int z, ref bool flowUp) {
-            int index = lvl.PosToInt((ushort)x, (ushort)y, (ushort)z);
-            if (index >= 0 && Block.WaterKill(lvl.blocks[index])) {
+            int index;
+            ExtBlock block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
+            
+            if (index >= 0 && lvl.BlockProps[block.Index].WaterKills) {
                 lvl.AddUpdate(index, Block.geyser);
                 flowUp = true;
             }

@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.Building {
             if (name == "show") { ShowMessageBlocks(p); return ExtBlock.Invalid; }
             
             block = BlockDefinition.GetBlock(name, p);
-            if (p.level.CustomBlockProps[block].IsMessageBlock)
+            if (p.level.BlockProps[block].IsMessageBlock)
                 return ExtBlock.FromRaw(block);
             
             // Hardcoded aliases for backwards compatibility
@@ -214,7 +214,7 @@ namespace MCGalaxy.Commands.Building {
             
             string blocks = Block.Props.Join(props => Format(props));
             if (!Player.IsSuper(p)) {
-                string custom = p.level.CustomBlockProps.Join(props => FormatCustom(p.level, props));
+                string custom = p.level.BlockProps.Join(props => FormatCustom(p.level, props));
                 if (blocks != "" && custom != "") 
                     blocks = blocks + ", " + custom;
             }

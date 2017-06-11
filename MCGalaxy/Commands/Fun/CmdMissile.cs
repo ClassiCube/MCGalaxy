@@ -95,10 +95,10 @@ namespace MCGalaxy.Commands.Fun {
                 target.Y = (ushort)Math.Round(start.Y + (double)(dir.Y * i));
                 target.Z = (ushort)Math.Round(start.Z + (double)(dir.Z * i));
 
-                byte tile = p.level.GetTile(target.X, target.Y, target.Z);
-                if (tile == Block.Invalid) break;
+                ExtBlock block = p.level.GetBlock(target.X, target.Y, target.Z);
+                if (block.BlockID == Block.Invalid) break;
 
-                if (tile != Block.air && !args.allBlocks.Contains(target) && HandlesHitBlock(p, tile, args.ending, target, false))
+                if (block.BlockID != Block.air && !args.allBlocks.Contains(target) && HandlesHitBlock(p, block, args.ending, target, false))
                     break;
 
                 Player hit = GetPlayer(p, target, true);
@@ -113,8 +113,8 @@ namespace MCGalaxy.Commands.Fun {
         
         static bool MoveMissile(MissileArgs args, Vec3U16 pos, Vec3U16 target) {
             Player p = args.player;
-            byte tile = p.level.GetTile(pos.X, pos.Y, pos.Z);
-            if (tile != Block.air && !args.allBlocks.Contains(pos) && HandlesHitBlock(p, tile, args.ending, pos, true))
+            ExtBlock block = p.level.GetBlock(pos.X, pos.Y, pos.Z);
+            if (block.BlockID != Block.air && !args.allBlocks.Contains(pos) && HandlesHitBlock(p, block, args.ending, pos, true))
                 return false;
 
             p.level.Blockchange(pos.X, pos.Y, pos.Z, args.block);

@@ -138,13 +138,13 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static bool WaterBlocked(Level lvl, ushort x, ushort y, ushort z) {
-            int b = lvl.PosToInt(x, y, z);
-            if (b == -1)
-                return true;
+            int b;
+            ExtBlock block = lvl.GetBlock(x, y, z, out b);
+            if (b == -1) return true;
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return true;
 
-            switch (lvl.blocks[b]) {
+            switch (block.BlockID) {
                 case Block.air:
                 case Block.lava:
                 case Block.lava_fast:
@@ -158,14 +158,8 @@ namespace MCGalaxy.Blocks.Physics {
                     return false;
                     
                 default:
-                    //Adv physics kills flowers, mushroom blocks in water
-                    byte block = lvl.blocks[b];
-                    if (block != Block.custom_block) {
-                        if (!Block.Props[block].WaterKills) return true;
-                    } else {
-                        block = lvl.GetExtTile(x, y, z);
-                        if (!lvl.CustomBlockProps[block].WaterKills) return true;
-                    }
+                    // Adv physics kills flowers, mushroom blocks in water
+                    if (!lvl.BlockProps[block.Index].WaterKills) break;
                     
                     if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) return false;
                     break;
@@ -256,12 +250,13 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static bool LavaBlocked(Level lvl, ushort x, ushort y, ushort z) {
-            int b = lvl.PosToInt(x, y, z);
+            int b;
+            ExtBlock block = lvl.GetBlock(x, y, z, out b);
             if (b == -1) return true;
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return true;
             
-            switch (lvl.blocks[b]) {
+            switch (block.BlockID) {
                 case Block.air:
                     return false;
 
@@ -275,14 +270,8 @@ namespace MCGalaxy.Blocks.Physics {
                     return false;
 
                 default:
-                    //Adv physics kills flowers, wool, mushrooms, and wood type blocks in lava
-                    byte block = lvl.blocks[b];
-                    if (block != Block.custom_block) {
-                        if (!Block.Props[block].LavaKills) return true;
-                    } else {
-                        block = lvl.GetExtTile(x, y, z);
-                        if (!lvl.CustomBlockProps[block].LavaKills) return true;
-                    }
+                    // Adv physics kills flowers, wool, mushrooms, and wood type blocks in lava
+                    if (!lvl.BlockProps[block.Index].LavaKills) break;
 
                     if (lvl.physics > 1 && !lvl.CheckSpongeLava(x, y, z)) return false;
                     break;

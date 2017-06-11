@@ -33,33 +33,22 @@ namespace MCGalaxy.Blocks.Physics {
                 for (int dy = -dirY; dy != 2 * dirY; dy += dirY)
                     for (int dz = -dirZ; dz != 2 * dirZ; dz += dirZ)
             {
-                byte tileBelow = lvl.GetTile((ushort)(x + dx),(ushort)(y + dy - 1), (ushort)(z + dz));
-                byte tile = lvl.GetTile((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
+                ExtBlock below = lvl.GetBlock((ushort)(x + dx),(ushort)(y + dy - 1), (ushort)(z + dz));
+                ExtBlock block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));                
+                bool isRails = lvl.BlockProps[below.BlockID].IsRails;
                 
-                bool isRails = false;
-                if (tileBelow != Block.custom_block) {
-                    isRails = Block.Props[tileBelow].IsRails;
-                } else {
-                    byte extBelow = lvl.GetExtTile((ushort)(x + dx), (ushort)(y + dy - 1), (ushort)(z + dz));
-                    isRails = lvl.CustomBlockProps[extBelow].IsRails;
-                }
-                
-                if (isRails && (tile == Block.air || tile == Block.water) 
+                if (isRails && (block.BlockID == Block.air || block.BlockID == Block.water) 
                     && !lvl.listUpdateExists.Get(x + dx, y + dy, z + dz)) {
-                    lvl.AddUpdate(lvl.PosToInt((ushort)(x + dx), 
-                                               (ushort)(y + dy), (ushort)(z + dz)), Block.train);
+                    lvl.AddUpdate(lvl.PosToInt((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz)), Block.train);
                     lvl.AddUpdate(C.b, Block.air);                    
-                    byte newBlock = tileBelow == Block.op_air ? Block.glass : Block.obsidian;
+                    byte newBlock = below.BlockID == Block.op_air ? Block.glass : Block.obsidian;
                     
-                    tileBelow = lvl.GetTile(x, (ushort)(y - 1), z);
+                    below = lvl.GetBlock(x, (ushort)(y - 1), z);
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
-                    args.Type2 = PhysicsArgs.Revert; args.Value2 = tileBelow;
+                    args.Type2 = PhysicsArgs.Revert; args.Value2 = below.RawID;
+                    args.ExtBlock = below.BlockID == Block.custom_block;
                     
-                    if (tileBelow == Block.custom_block) {
-                        args.Value2 = lvl.GetExtTile(x, (ushort)(y - 1), z);
-                        args.ExtBlock = true;
-                    }
                     lvl.AddUpdate(lvl.IntOffset(C.b, 0, -1, 0), newBlock, true, args);
                     return;
                 }

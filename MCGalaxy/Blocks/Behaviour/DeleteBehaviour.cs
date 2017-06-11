@@ -91,7 +91,7 @@ namespace MCGalaxy.Blocks {
         
         internal static void ODoor(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (block.BlockID == Block.odoor8 || block.BlockID == Block.odoor8_air) {
-                p.level.Blockchange(x, y, z, (ExtBlock)Block.Props[block.BlockID].ODoorId);
+                p.level.Blockchange(x, y, z, (ExtBlock)p.level.BlockProps[block.Index].ODoorId);
             } else {
                 p.RevertBlock(x, y, z);
             }
@@ -108,21 +108,6 @@ namespace MCGalaxy.Blocks {
         internal static void DoMessageBlock(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (MessageBlock.Handle(p, x, y, z, true)) {
                 p.RevertBlock(x, y, z);
-            } else {
-                p.ChangeBlock(x, y, z, ExtBlock.Air);
-            }
-        }
-        
-        internal static void CustomBlock(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
-            byte extBlock = p.level.GetExtTile(x, y, z);
-            if (p.level.CustomBlockProps[extBlock].IsPortal) {
-                DoPortal(p, block, x, y, z);
-            } else if (p.level.CustomBlockProps[extBlock].IsMessageBlock) {
-                DoMessageBlock(p, block, x, y, z);
-            } else if (p.level.CustomBlockProps[extBlock].IsTDoor) {
-                RevertDoor(p, block, x, y, z);
-            } else if (p.level.CustomBlockProps[extBlock].IsDoor) {
-                Door(p, block, x, y, z);
             } else {
                 p.ChangeBlock(x, y, z, ExtBlock.Air);
             }

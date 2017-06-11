@@ -37,24 +37,7 @@ namespace MCGalaxy.Blocks {
         internal static bool Train(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (!p.trainInvincible) p.HandleDeath((ExtBlock)Block.train);
             return true;
-        }
-        
-        internal static bool CustomBlock(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
-            byte extBlock = p.level.GetExtTile(x, y, z);
-            BlockDefinition def = p.level.CustomBlockDefs[extBlock];
-            if (def == null) return false; // custom block was removed      
-            if (def.CollideType == CollideType.Solid) return false;
-            
-            if (p.level.CustomBlockProps[extBlock].IsPortal) {
-                return DoPortal(p, block, x, y, z);
-            } else if (p.level.CustomBlockProps[extBlock].IsMessageBlock) {
-                return DoMessageBlock(p, block, x, y, z);
-            } else if (p.level.CustomBlockProps[extBlock].IsDoor) {
-                return Door(p, block, x, y, z);
-            }
-            return false;
-        }
-        
+        }       
         
         internal static bool DoPortal(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;

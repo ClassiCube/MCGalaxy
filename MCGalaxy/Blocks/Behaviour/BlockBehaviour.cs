@@ -36,32 +36,7 @@ namespace MCGalaxy.Blocks {
     public delegate void HandlePhysics(Level lvl, ref Check C);
     
     public static class BlockBehaviour {
-        internal static HandleDelete[] deleteHandlers = new HandleDelete[Block.Count];
-        internal static HandlePlace[] placeHandlers = new HandlePlace[Block.Count];
-        internal static HandleWalkthrough[] walkthroughHandlers = new HandleWalkthrough[Block.Count];
-        internal static HandlePhysics[] physicsHandlers = new HandlePhysics[Block.Count];
-        internal static HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[Block.Count];
-        
-        /// <summary> Initalises default deleting, placing, and walkthrough handling behaviour for the core blocks. </summary>
-        internal static void SetDefaultHandlers() {
-            for (int i = 0; i < Block.Count; i++) {
-                SetDefaultHandler(i);
-            }
-        }
-        
-        internal static void SetDefaultHandler(int i) {
-            ExtBlock block = new ExtBlock((byte)i, 0);
-            deleteHandlers[i] = GetDeleteHandler(block, Block.Props);
-            placeHandlers[i] = GetPlaceHandler(block, Block.Props);
-            
-            bool nonSolid = Block.Walkthrough(Block.Convert((byte)i));
-            walkthroughHandlers[i] = GetWalkthroughHandler(block, Block.Props, nonSolid);
-            
-            physicsHandlers[i] = GetPhysicsHandler(block, Block.Props);
-            physicsDoorsHandlers[i] = GetPhysicsDoorsHandler(block, Block.Props);
-        }
-        
-        
+    	
         /// <summary> Retrieves the default place block handler for the given block. </summary>
         internal static HandlePlace GetPlaceHandler(ExtBlock block, BlockProps[] props) {
             switch (block.BlockID) {
@@ -81,7 +56,6 @@ namespace MCGalaxy.Blocks {
                 case Block.rocketstart: return DeleteBehaviour.RocketStart;
                 case Block.firework: return DeleteBehaviour.Firework;
                 case Block.c4det: return DeleteBehaviour.C4Det;
-                case Block.custom_block: return DeleteBehaviour.CustomBlock;
                 case Block.door_tree_air: return DeleteBehaviour.RevertDoor;
                 case Block.door_tnt_air: return DeleteBehaviour.RevertDoor;
                 case Block.door_green_air: return DeleteBehaviour.RevertDoor;
@@ -106,7 +80,6 @@ namespace MCGalaxy.Blocks {
                 case Block.water_door: return WalkthroughBehaviour.Door;
                 case Block.lava_door: return WalkthroughBehaviour.Door;
                 case Block.train: return WalkthroughBehaviour.Train;
-                case Block.custom_block: return WalkthroughBehaviour.CustomBlock;
             }
             
             int i = block.Index;

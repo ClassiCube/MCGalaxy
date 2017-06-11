@@ -142,7 +142,7 @@ namespace MCGalaxy {
         bool DeleteBlock(ExtBlock old, ushort x, ushort y, ushort z, ExtBlock block) {
             if (deleteMode) { return ChangeBlock(x, y, z, ExtBlock.Air) == 2; }
 
-            HandleDelete handler = BlockBehaviour.deleteHandlers[old.BlockID];
+            HandleDelete handler = level.deleteHandlers[old.Index];
             if (handler != null) {
                 handler(this, old, x, y, z);
                 return true;
@@ -151,7 +151,7 @@ namespace MCGalaxy {
         }
 
         bool PlaceBlock(ExtBlock old, ushort x, ushort y, ushort z, ExtBlock block) {
-            HandlePlace handler = BlockBehaviour.placeHandlers[block.BlockID];
+            HandlePlace handler = level.placeHandlers[block.Index];
             if (handler != null) {
                 handler(this, old, x, y, z);
                 return true;
@@ -426,7 +426,7 @@ namespace MCGalaxy {
                 
                 // We can activate only one walkthrough block per movement
                 if (!hitWalkthrough) {
-                    HandleWalkthrough handler = BlockBehaviour.walkthroughHandlers[block.BlockID];
+                    HandleWalkthrough handler = level.walkthroughHandlers[block.Index];
                     if (handler != null && handler(this, block, xP, yP, zP)) {
                         lastWalkthrough = level.PosToInt(xP, yP, zP);
                         hitWalkthrough = true;
@@ -434,12 +434,9 @@ namespace MCGalaxy {
                 }
                 
                 // Some blocks will cause death of players
-                byte coreID = block.BlockID;
-                if (coreID != Block.custom_block && !Block.Props[coreID].KillerBlock) continue;
-                if (coreID == Block.custom_block && !level.CustomBlockProps[block.ExtID].KillerBlock) continue;
-                
-                if (coreID == Block.tntexplosion && PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
-                if (coreID == Block.train && trainInvincible) continue;
+                if (!level.BlockProps[block.Index].KillerBlock) continue;               
+                if (block.BlockID == Block.tntexplosion && PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
+                if (block.BlockID == Block.train && trainInvincible) continue;
                 HandleDeath(block);
             }
             
@@ -463,12 +460,7 @@ namespace MCGalaxy {
             onTrain = false; trainInvincible = false; trainGrab = false;
             ushort x = (ushort)Pos.BlockX, y = (ushort)Pos.BlockY, z = (ushort)Pos.BlockZ;
             
-            string deathMsg = null;
-            if (block.BlockID != Block.custom_block) {
-                deathMsg = Block.Props[block.BlockID].DeathMessage;
-            } else {
-                deathMsg = level.CustomBlockProps[block.ExtID].DeathMessage;
-            }
+            string deathMsg = level.BlockProps[block.Index].DeathMessage;
             if (deathMsg != null) {
                 Chat.MessageLevel(this, deathMsg.Replace("@p", ColoredName), false, level);
             }

@@ -146,7 +146,7 @@ namespace MCGalaxy {
                 for (int i = 0; i < lvl.CustomBlockDefs.Length; i++) {
                     if (lvl.CustomBlockDefs[i] != oldGlobalDefs[i]) continue;
                     lvl.CustomBlockDefs[i] = GlobalDefs[i];
-                    lvl.CustomBlockProps[i] = GlobalProps[i];
+                    lvl.BlockProps[i] = GlobalProps[i];
                 }
             }
         }
@@ -160,11 +160,14 @@ namespace MCGalaxy {
                 foreach (Level lvl in loaded) {
                     if (lvl.CustomBlockDefs[block] == null) {
                         lvl.CustomBlockDefs[block] = def;
+                        lvl.SetBlockHandler(ExtBlock.FromRaw(block));
                     }
                 }
             }
+            
             defs[block] = def;
             if (global) Block.SetDefaultNames();
+            if (!global) level.SetBlockHandler(ExtBlock.FromRaw(block));
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
@@ -194,11 +197,13 @@ namespace MCGalaxy {
                 foreach (Level lvl in loaded) {
                     if (lvl.CustomBlockDefs[block] == GlobalDefs[block]) {
                         lvl.CustomBlockDefs[block] = null;
+                        lvl.SetBlockHandler(ExtBlock.FromRaw(block));
                     }
                 }
             }
             defs[block] = null;
             if (global) Block.SetDefaultNames();
+            if (!global) level.SetBlockHandler(ExtBlock.FromRaw(block));
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {

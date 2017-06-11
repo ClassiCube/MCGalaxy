@@ -31,15 +31,9 @@ namespace MCGalaxy.Blocks.Physics {
         
         static void ExpandDiagonal(Level lvl, ushort x, ushort y, ushort z,
                                    int dx, int dy, int dz) {
-            byte block = lvl.GetTile((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
-            if (block == Block.air) return;
-            
-            if (block == Block.custom_block) {
-                block = lvl.GetExtTile((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
-                if (!lvl.CustomBlockProps[block].LavaKills) return;
-            } else {
-                if (!Block.Props[block].LavaKills) return;
-            }
+            ExtBlock block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
+            if (block.BlockID == Block.air) return;
+            if (!lvl.BlockProps[block.Index].LavaKills) return;
             
             if (dx != 0)
                 lvl.AddUpdate(lvl.PosToInt((ushort)(x + dx), y, z), Block.fire);
@@ -50,19 +44,13 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static void ExpandAvanced(Level lvl, int x, int y, int z) {
-            int index = lvl.PosToInt((ushort)x, (ushort)y, (ushort)z);
-            if (index < 0) return;
+            int index;
+            ExtBlock block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
+            if (index < 0 || block.BlockID == Block.air) return;
             
-            byte block = lvl.blocks[index];
-            if (block == Block.air) return;
-            
-            if (block == Block.tnt) {
+            if (block.BlockID == Block.tnt) {
                 lvl.MakeExplosion((ushort)x, (ushort)y, (ushort)z, -1);
-            } else if (block == Block.custom_block) {
-                block = lvl.GetExtTileNoCheck((ushort)x, (ushort)y, (ushort)z);
-                if (lvl.CustomBlockProps[block].LavaKills) 
-                    lvl.AddUpdate(index, Block.fire);
-            } else if (Block.Props[block].LavaKills) {
+            } else if (lvl.BlockProps[block.Index].LavaKills) {
                 lvl.AddUpdate(index, Block.fire);
             }
         }

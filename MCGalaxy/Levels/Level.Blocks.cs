@@ -54,8 +54,19 @@ namespace MCGalaxy {
             ExtBlock block;
             
             block.BlockID = blocks[x + Width * (z + y * Length)];
-            block.ExtID = block.BlockID == Block.custom_block 
-                ? GetExtTileNoCheck(x, y, z) : Block.air;
+            block.ExtID = block.BlockID == Block.custom_block ? GetExtTileNoCheck(x, y, z) : Block.air;
+            return block;
+        }       
+        
+        /// <summary> Gets the block at the given coordinates. </summary>
+        /// <returns> Block.Invalid if coordinates outside map. </returns>
+        public ExtBlock GetBlock(ushort x, ushort y, ushort z, out int index) {
+            if (x >= Width || y >= Height || z >= Length || blocks == null) { index = -1; return ExtBlock.Invalid; }
+            ExtBlock block;
+            
+            index = x + Width * (z + y * Length);
+            block.BlockID = blocks[index];
+            block.ExtID = block.BlockID == Block.custom_block ? GetExtTileNoCheck(x, y, z) : Block.air;
             return block;
         }
         
@@ -354,9 +365,10 @@ namespace MCGalaxy {
             
             try
             {
-                if (!overRide)
-                    if (Block.Props[old.BlockID].OPBlock || (Block.Props[block.BlockID].OPBlock && data.Raw != 0)) 
+                if (!overRide) {
+                    if (BlockProps[old.Index].OPBlock || (BlockProps[block.Index].OPBlock && data.Raw != 0)) 
                         return false;
+                }
 
                 if (old.BlockID == Block.sponge && physics > 0 && block.BlockID != Block.sponge)
                     OtherPhysics.DoSpongeRemoved(this, b, false);

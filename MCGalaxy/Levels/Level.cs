@@ -72,9 +72,9 @@ namespace MCGalaxy {
             CustomBlockDefs = new BlockDefinition[256];
             for (int i = 0; i < CustomBlockDefs.Length; i++)
                 CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
-            CustomBlockProps = new BlockProps[256];
-            for (int i = 0; i < CustomBlockProps.Length; i++)
-                CustomBlockProps[i] = BlockDefinition.GlobalProps[i];
+            BlockProps = new BlockProps[256];
+            for (int i = 0; i < BlockProps.Length; i++)
+                BlockProps[i] = BlockDefinition.GlobalProps[i];
             
             name = n; MapName = n.ToLower();
             BlockDB = new BlockDB(this);
@@ -91,6 +91,7 @@ namespace MCGalaxy {
             spawny = (ushort)(Height * 0.75f);
             spawnz = (ushort)(Length / 2);
             rotx = 0; roty = 0;
+            SetBlockHandlers();
             
             ZoneList = new List<Zone>();
             VisitAccess = new LevelAccessController(this, true);
@@ -401,9 +402,9 @@ namespace MCGalaxy {
             for (int i = 0; i < defs.Length; i++) {
                 if (defs[i] == null) continue;
                 lvl.CustomBlockDefs[i] = defs[i];
-                lvl.CustomBlockProps[i] = new BlockProps((byte)i);
+                lvl.BlockProps[i] = new BlockProps((byte)i);
             }
-            BlockProps.Load("lvl_" + lvl.MapName, lvl.CustomBlockProps);
+            MCGalaxy.Blocks.BlockProps.Load("lvl_" + lvl.MapName, lvl.BlockProps);
         }
 
         public static bool CheckLoadOnGoto(string givenName) {
@@ -498,6 +499,32 @@ namespace MCGalaxy {
             public string Owner;
             public ushort bigX, bigY, bigZ;
             public ushort smallX, smallY, smallZ;
+        }
+        
+        public void SetBlockHandlers() {            
+            for (int i = 0; i < Block.Count; i++) {
+                SetBlockHandler(new ExtBlock((byte)i, 0));
+                SetBlockHandler(new ExtBlock(Block.custom_block, (byte)i));
+            }
+        }
+        
+        public void SetBlockHandler(ExtBlock block) {
+            bool notCustom = !block.IsCustomType &&
+                (block.BlockID >= Block.CpeCount || CustomBlockDefs[block.BlockID] == null);
+            
+            bool nonSolid;
+            if (notCustom) {
+                nonSolid = Block.Walkthrough(Block.Convert(block.BlockID));
+            } else {
+                nonSolid = CustomBlockDefs[block.BlockID].CollideType != CollideType.Solid;
+            }
+            
+            int i = block.Index;
+            deleteHandlers[i] = BlockBehaviour.GetDeleteHandler(block, BlockProps);
+            placeHandlers[i] = BlockBehaviour.GetPlaceHandler(block, BlockProps);
+            walkthroughHandlers[i] = BlockBehaviour.GetWalkthroughHandler(block, BlockProps, nonSolid);
+            physicsHandlers[i] = BlockBehaviour.GetPhysicsHandler(block, BlockProps);
+            physicsDoorsHandlers[i] = BlockBehaviour.GetPhysicsDoorsHandler(block, BlockProps);
         }
     }
 }

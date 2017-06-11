@@ -55,8 +55,8 @@ namespace MCGalaxy.Commands.Fun {
                 pos.Y = (ushort)Math.Round(start.Y + (double)(dir.Y * t));
                 pos.Z = (ushort)Math.Round(start.Z + (double)(dir.Z * t));
 
-                byte by = p.level.GetTile(pos.X, pos.Y, pos.Z);
-                if (by != Block.air && !allBlocks.Contains(pos) && HandlesHitBlock(p, by, bp.ending, pos, true))
+                ExtBlock cur = p.level.GetBlock(pos.X, pos.Y, pos.Z);
+                if (cur.BlockID != Block.air && !allBlocks.Contains(pos) && HandlesHitBlock(p, cur, bp.ending, pos, true))
                     break;
 
                 p.level.Blockchange(pos.X, pos.Y, pos.Z, block);

@@ -129,10 +129,10 @@ namespace MCGalaxy.Games
                 if (mapOn.GetBlock(x, y, z) != (ExtBlock)Block.flagbase) { 
                     mapOn.Blockchange(x, y, z, (ExtBlock)Block.flagbase); 
                 }
-                if (mapOn.GetBlock(x, y + 1, z) != (ExtBlock)Block.mushroom) { 
+                if (mapOn.GetBlock(x, (ushort)(y + 1), z) != (ExtBlock)Block.mushroom) {
                     mapOn.Blockchange(x, (ushort)(y + 1), z, (ExtBlock)Block.mushroom); 
                 }
-                if (mapOn.GetBlock(x, y + 2, z) != (ExtBlock)GetColorBlock(color)) { 
+                if (mapOn.GetBlock(x, (ushort)(y + 2), z) != (ExtBlock)GetColorBlock(color)) {
                     mapOn.Blockchange(x, (ushort)(y + 2), z, (ExtBlock)GetColorBlock(color)); 
                 }
 

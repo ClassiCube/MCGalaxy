@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands.CPE {
             if (src == null) { MessageNoBlock(p, srcId, global, cmd); return; }
             if (ExistsInScope(dst, dstId, global)) { MessageAlreadyBlock(p, dstId, global, cmd); return; }
             
-            BlockProps props = global ? BlockDefinition.GlobalProps[srcId] : p.level.CustomBlockProps[srcId];
+            BlockProps props = global ? BlockDefinition.GlobalProps[srcId] : p.level.BlockProps[srcId];
             dst = src.Copy();
             props.BlockId = (byte)dstId;
             dst.BlockID = (byte)dstId;
@@ -550,14 +550,14 @@ namespace MCGalaxy.Commands.CPE {
         static void UpdateBlockProps(bool global, Player p, BlockProps props) {
             byte block = props.BlockId;
             if (!global) {
-                p.level.CustomBlockProps[block] = props;
+                p.level.BlockProps[block] = props;
             } else {
                 BlockDefinition.GlobalProps[block] = props;
                 Level[] loaded = LevelInfo.Loaded.Items;
                 
                 foreach (Level lvl in loaded) {
                     if (lvl.CustomBlockDefs[block] != null) continue;
-                    lvl.CustomBlockProps[block] = props;
+                    lvl.BlockProps[block] = props;
                 }
             }
         }
@@ -565,16 +565,16 @@ namespace MCGalaxy.Commands.CPE {
         static void RemoveBlockProps(bool global, byte id, Player p) {
             // Level block reverts to using global block
             if (!global && BlockDefinition.GlobalDefs[id] != null) {
-                p.level.CustomBlockProps[id] = BlockDefinition.GlobalProps[id];
+                p.level.BlockProps[id] = BlockDefinition.GlobalProps[id];
             } else if (!global) {
-                p.level.CustomBlockProps[id] = new BlockProps((byte)id);
+                p.level.BlockProps[id] = new BlockProps((byte)id);
             } else {
                 BlockDefinition.GlobalProps[id] = new BlockProps((byte)id);
                 Level[] loaded = LevelInfo.Loaded.Items;
                 
                 foreach (Level lvl in loaded) {
                     if (lvl.CustomBlockDefs[id] != BlockDefinition.GlobalDefs[id]) continue;
-                    lvl.CustomBlockProps[id] = new BlockProps((byte)id);
+                    lvl.BlockProps[id] = new BlockProps((byte)id);
                 }
             }
         }

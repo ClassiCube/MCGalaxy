@@ -93,16 +93,10 @@ namespace MCGalaxy.Core {
                                               byte entity, ushort x, ushort y, ushort z, TargetBlockFace face) {
             if (p.level.Deletable || action != MouseAction.Pressed || !p.level.IsValidPos(x, y, z)) return;
             
-            byte block = p.level.GetTile(x, y, z);
-            bool isMB = Block.Props[block].IsMessageBlock;
-            bool isPortal = Block.Props[block].IsPortal;
-            
-            if (block == Block.custom_block) {
-                block = p.level.GetExtTile(x, y, z);
-                isMB = p.level.CustomBlockProps[block].IsMessageBlock;
-                isPortal = p.level.CustomBlockProps[block].IsMessageBlock;
-            }
-            
+            ExtBlock block = p.level.GetBlock(x, y, z);
+            bool isMB = p.level.BlockProps[block.Index].IsMessageBlock;
+            bool isPortal = p.level.BlockProps[block.Index].IsPortal;
+
             if (isMB) { MessageBlock.Handle(p, x, y, z, true); }
             if (isPortal) { Portal.Handle(p, x, y, z); }
         }

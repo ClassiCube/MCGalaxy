@@ -137,10 +137,10 @@ namespace MCGalaxy {
             lastCheck = ListCheck.Count;
             const uint mask = PhysicsArgs.TypeMask;
             
-            HandlePhysics[] handlers = BlockBehaviour.physicsHandlers;
+            HandlePhysics[] handlers = physicsHandlers;
             ExtraInfoHandler extraHandler = ExtraInfoPhysics.DoNormal;
             if (physics == 5) {
-                handlers = BlockBehaviour.physicsDoorsHandlers;
+                handlers = physicsDoorsHandlers;
                 extraHandler = ExtraInfoPhysics.DoDoorsOnly;
             }
             
@@ -350,11 +350,10 @@ namespace MCGalaxy {
             if (block.BlockID != Block.custom_block)
                 return Block.Physics(block.BlockID);
             
-            BlockProps[] props = CustomBlockProps;
-            byte extBlock = block.ExtID;
-            if (props[extBlock].IsMessageBlock || props[extBlock].IsPortal) return false;
-            if (props[extBlock].IsDoor || props[extBlock].IsTDoor) return false;
-            if (props[extBlock].OPBlock) return false;
+            int i = block.Index;
+            if (BlockProps[i].IsMessageBlock || BlockProps[i].IsPortal) return false;
+            if (BlockProps[i].IsDoor || BlockProps[i].IsTDoor) return false;
+            if (BlockProps[i].OPBlock) return false;
             return true;
         }
         

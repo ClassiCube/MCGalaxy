@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Building {
                 ExtBlock old = p.level.GetBlock(P.X, P.Y, P.Z);
                 if (!p.CheckManualChange(old, ExtBlock.Air, false)) return;
                 
-                HandleDelete handler = BlockBehaviour.deleteHandlers[old.BlockID];
+                HandleDelete handler = p.level.deleteHandlers[old.Index];
                 if (handler != null) {
                     handler(p, old, P.X, P.Y, P.Z);
                 } else {
