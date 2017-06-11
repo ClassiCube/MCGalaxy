@@ -195,6 +195,7 @@ namespace MCGalaxy {
             Command.InitAll();
             CommandPerms.Load();
             Block.SetBlocks();
+            BlockDefinition.LoadGlobalProps();
             Awards.Load();
             Economy.Load();
             WarpList.Global.Load(null);

@@ -121,7 +121,7 @@ namespace MCGalaxy.Commands.CPE {
             
             AddBlock(p, dstDef, global, cmd, props);
             string scope = global ? "global" : "level";
-            Player.Message(p, "Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", scope, src, dst);
+            Player.Message(p, "Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", scope, src.RawID, dst.RawID);
         }
         
         static void InfoHandler(Player p, string[] parts, bool global, string cmd) {

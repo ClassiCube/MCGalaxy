@@ -154,7 +154,10 @@ namespace MCGalaxy {
                         OnPhysicsUpdateEvent.Call(x, y, z, C.data, this);
                     
                     if ((C.data.Raw & mask) == 0 || extraHandler(this, ref C)) {
-                        HandlePhysics handler = handlers[blocks[C.b]];
+                        int idx = blocks[C.b];
+                        if (idx == Block.custom_block) idx = Block.Count + GetExtTileNoCheck(x, y, z);
+                        
+                        HandlePhysics handler = handlers[idx];
                         if (handler != null) {
                             handler(this, ref C);
                         } else if ((C.data.Raw & mask) == 0 || !C.data.HasWait) {
@@ -246,7 +249,7 @@ namespace MCGalaxy {
                     ExtBlock block;
                     block.BlockID = type;
                     block.ExtID = 0;
-                	
+                    
                     // Is the Ext flag just an indicator for the block update?
                     if (data.ExtBlock && (data.Raw & PhysicsArgs.TypeMask) == 0) {
                         block.ExtID = block.BlockID;

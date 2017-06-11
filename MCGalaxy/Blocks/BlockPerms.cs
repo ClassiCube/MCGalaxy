@@ -48,7 +48,7 @@ namespace MCGalaxy.Blocks {
             return perms;
         }
         
-        public static BlockPerms[] List = new BlockPerms[256];
+        public static BlockPerms[] List = new BlockPerms[Block.Count];
 
 
         /// <summary> Returns whether the given rank can modify the given block. </summary>        

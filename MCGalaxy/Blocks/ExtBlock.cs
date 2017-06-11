@@ -48,7 +48,7 @@ namespace MCGalaxy {
         public bool IsAir { get { return BlockID == Block.air; } }
         
         /// <summary> Returns the index of this block within an array. </summary>
-        public int Index { get { return BlockID != Block.custom_block ? BlockID : (ExtID + 256); } }
+        public int Index { get { return BlockID != Block.custom_block ? BlockID : (ExtID + Block.Count); } }
         
         
         /// <summary> Returns the raw (for client side) block ID of this block. </summary>

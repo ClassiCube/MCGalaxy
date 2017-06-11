@@ -92,7 +92,7 @@ namespace MCGalaxy.Blocks {
                     // Don't save physics blocks
                     if (custom && (i > Block.CpeCount && i < Block.Count)) continue;
                     // Convert ext to raw ids
-                    int id = i >= Block.Count ? (i - 256) : i;
+                    int id = i >= Block.Count ? (i - Block.Count) : i;
                     
                     string deathMsg = props.DeathMessage == null ? "" : props.DeathMessage.Replace(":", "\\;");
                     w.WriteLine(id + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor + ":"
@@ -124,7 +124,7 @@ namespace MCGalaxy.Blocks {
                     continue;                   
                 }
                 int idx = raw;
-                if (custom && raw >= Block.CpeCount) idx += 256;
+                if (custom && raw >= Block.CpeCount) idx += Block.Count;
                 
                 bool.TryParse(parts[1], out scope[idx].IsRails);
                 bool.TryParse(parts[2], out scope[idx].IsTDoor);

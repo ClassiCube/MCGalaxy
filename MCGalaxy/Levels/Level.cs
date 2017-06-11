@@ -76,6 +76,7 @@ namespace MCGalaxy {
             BlockProps = new BlockProps[Block.Count * 2];
             for (int i = 0; i < BlockProps.Length; i++)
                 BlockProps[i] = BlockDefinition.GlobalProps[i];
+            SetBlockHandlers();
             
             name = n; MapName = n.ToLower();
             BlockDB = new BlockDB(this);
@@ -92,7 +93,6 @@ namespace MCGalaxy {
             spawny = (ushort)(Height * 0.75f);
             spawnz = (ushort)(Length / 2);
             rotx = 0; roty = 0;
-            SetBlockHandlers();
             
             ZoneList = new List<Zone>();
             VisitAccess = new LevelAccessController(this, true);
@@ -405,10 +405,8 @@ namespace MCGalaxy {
                 lvl.CustomBlockDefs[i] = defs[i];
             }
             
-            for (int i = 0; i < lvl.BlockProps.Length; i++) {
-                lvl.BlockProps[i] = BlockDefinition.GlobalProps[i];
-            }
             MCGalaxy.Blocks.BlockProps.Load("lvl_" + lvl.MapName, lvl.BlockProps, true);
+            lvl.SetBlockHandlers();
         }
 
         public static bool CheckLoadOnGoto(string givenName) {
@@ -513,11 +511,8 @@ namespace MCGalaxy {
         }
         
         public void SetBlockHandler(ExtBlock block) {
-            bool notCustom = !block.IsCustomType &&
-                (block.BlockID >= Block.CpeCount || CustomBlockDefs[block.BlockID] == null);
-            
             bool nonSolid;
-            if (notCustom) {
+            if (GetBlockDef(block) == null) {
                 nonSolid = Block.Walkthrough(Block.Convert(block.BlockID));
             } else {
                 nonSolid = CustomBlockDefs[block.BlockID].CollideType != CollideType.Solid;
