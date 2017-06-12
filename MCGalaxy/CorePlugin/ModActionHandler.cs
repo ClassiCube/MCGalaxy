@@ -27,26 +27,30 @@ namespace MCGalaxy.Core {
         
         internal static void HandleModAction(ModAction action) {
             switch (action.Type) {
-                    case ModActionType.Frozen: DoFreeze(action); break;
-                    case ModActionType.Unfrozen: DoUnfreeze(action); break;
-                    case ModActionType.Jailed: DoJail(action); break;
-                    case ModActionType.Unjailed: DoUnjail(action); break;
-                    case ModActionType.Muted: DoMute(action); break;
-                    case ModActionType.Unmuted: DoUnmute(action); break;
-                    case ModActionType.Ban: DoBan(action); break;
-                    case ModActionType.Unban: DoUnban(action); break;
-                    case ModActionType.BanIP: DoBanIP(action); break;
-                    case ModActionType.UnbanIP: DoUnbanIP(action); break;
-                    case ModActionType.Warned: DoWarn(action); break;
-                    case ModActionType.Rank: DoRank(action); break;
+                case ModActionType.Frozen: DoFreeze(action); break;
+                case ModActionType.Unfrozen: DoUnfreeze(action); break;
+                case ModActionType.Jailed: DoJail(action); break;
+                case ModActionType.Unjailed: DoUnjail(action); break;
+                case ModActionType.Muted: DoMute(action); break;
+                case ModActionType.Unmuted: DoUnmute(action); break;
+                case ModActionType.Ban: DoBan(action); break;
+                case ModActionType.Unban: DoUnban(action); break;
+                case ModActionType.BanIP: DoBanIP(action); break;
+                case ModActionType.UnbanIP: DoUnbanIP(action); break;
+                case ModActionType.Warned: DoWarn(action); break;
+                case ModActionType.Rank: DoRank(action); break;
             }
         }
         
         static void LogAction(ModAction e, Player who, string action) {
-            if (who != null) {
-                Chat.MessageGlobal(who, e.FormatMessage(e.TargetName, action), false);
+            if (e.Announce) {
+                if (who != null) {
+                    Chat.MessageGlobal(who, e.FormatMessage(e.TargetName, action), false);
+                } else {
+                    Chat.MessageGlobal(e.FormatMessage(e.TargetName, action));
+                }
             } else {
-                Chat.MessageGlobal(e.FormatMessage(e.TargetName, action));
+                Chat.MessageOps(e.FormatMessage(e.TargetName, action));            
             }
             
             action = Colors.StripColors(action);
@@ -106,7 +110,7 @@ namespace MCGalaxy.Core {
         
         
         static void DoMute(ModAction e) {
-            Player who = PlayerInfo.FindExact(e.Target);         
+            Player who = PlayerInfo.FindExact(e.Target);
             if (who != null) who.muted = true;
             LogAction(e, who, "&8muted");
             
@@ -140,7 +144,7 @@ namespace MCGalaxy.Core {
             } else {
                 if (who != null) who.color = "";
                 Ban.DeleteBan(e.Target);
-                Ban.BanPlayer(e.Actor, e.Target, e.Reason, false, e.TargetGroup.name);
+                Ban.BanPlayer(e.Actor, e.Target, e.Reason, !e.Announce, e.TargetGroup.name);
                 ModActionCmd.ChangeRank(e.Target, e.targetGroup, Group.BannedRank, who);
             }
         }

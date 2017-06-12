@@ -57,6 +57,9 @@ namespace MCGalaxy.Events {
         /// <summary> Reason provided for the action, can be empty string. Never null. </summary>
         public string Reason;
         
+        /// <summary> Whether the moderation action should be announced publicly to chat, IRC, etc. </summary>
+        public bool Announce;
+        
         /// <summary> Returns " (reason)" if reason is given, "" if not. </summary>
         public string ReasonSuffixed {
             get { return Reason == "" ? "" : " (" + Reason + "%S)"; }
@@ -88,6 +91,7 @@ namespace MCGalaxy.Events {
             if (reason == null) reason = "";
             Reason = reason;
             Duration = duration;
+            Announce = true;
         }
     }
     

@@ -44,7 +44,8 @@ namespace MCGalaxy.Network {
         
         
         void HandleModerationAction(ModAction e) {
-            if (!Server.IRC.Enabled) return;
+            if (!Server.IRC.Enabled || !e.Announce) return;
+            
             switch (e.Type) {
                 case ModActionType.Warned:
                     Bot.Say(e.FormatMessage(e.TargetName, "&ewarned")); break;
