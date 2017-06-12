@@ -370,7 +370,7 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
-            this.lblOsMap = new System.Windows.Forms.Label();
+            this.rank_lblOsMap = new System.Windows.Forms.Label();
             this.rank_cmbOsMap = new System.Windows.Forms.ComboBox();
             this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
@@ -854,7 +854,7 @@ namespace MCGalaxy.Gui
             this.rank_cbTPHigher.Size = new System.Drawing.Size(136, 17);
             this.rank_cbTPHigher.TabIndex = 42;
             this.rank_cbTPHigher.Text = "Allow tp to higher ranks";
-            this.toolTip.SetToolTip(this.rank_cbTPHigher, "Allows the use of /tp to players of higher rank");
+            this.toolTip.SetToolTip(this.rank_cbTPHigher, "Allows players to /tp to higher ranked players");
             this.rank_cbTPHigher.UseVisualStyleBackColor = true;
             // 
             // rank_cmbDefault
@@ -864,7 +864,7 @@ namespace MCGalaxy.Gui
             this.rank_cmbDefault.Name = "rank_cmbDefault";
             this.rank_cmbDefault.Size = new System.Drawing.Size(81, 21);
             this.rank_cmbDefault.TabIndex = 44;
-            this.toolTip.SetToolTip(this.rank_cmbDefault, "Default rank assigned to new visitors to the server.");
+            this.toolTip.SetToolTip(this.rank_cmbDefault, "Default rank assigned to new players.");
             // 
             // sec_cbWhitelist
             // 
@@ -1353,7 +1353,7 @@ namespace MCGalaxy.Gui
             // 
             // gbRankGeneral
             // 
-            this.gbRankGeneral.Controls.Add(this.lblOsMap);
+            this.gbRankGeneral.Controls.Add(this.rank_lblOsMap);
             this.gbRankGeneral.Controls.Add(this.rank_cmbOsMap);
             this.gbRankGeneral.Controls.Add(this.rank_cbEmpty);
             this.gbRankGeneral.Controls.Add(this.rank_lblDefault);
@@ -1374,13 +1374,13 @@ namespace MCGalaxy.Gui
             this.rank_cbEmpty.Name = "rank_cbEmpty";
             this.rank_cbEmpty.Size = new System.Drawing.Size(135, 17);
             this.rank_cbEmpty.TabIndex = 45;
-            this.rank_cbEmpty.Text = "Empty ranks in /players";
+            this.rank_cbEmpty.Text = "Show empty ranks in /players";
             this.rank_cbEmpty.UseVisualStyleBackColor = true;
             // 
             // rank_lblDefault
             // 
             this.rank_lblDefault.AutoSize = true;
-            this.rank_lblDefault.Location = new System.Drawing.Point(11, 23);
+            this.rank_lblDefault.Location = new System.Drawing.Point(46, 23);
             this.rank_lblDefault.Name = "rank_lblDefault";
             this.rank_lblDefault.Size = new System.Drawing.Size(68, 13);
             this.rank_lblDefault.TabIndex = 43;
@@ -1393,9 +1393,9 @@ namespace MCGalaxy.Gui
             this.rank_cbSilentAdmins.Name = "rank_cbSilentAdmins";
             this.rank_cbSilentAdmins.Size = new System.Drawing.Size(118, 17);
             this.rank_cbSilentAdmins.TabIndex = 41;
-            this.rank_cbSilentAdmins.Tag = "Players who have the adminchat rank join the game silently.";
             this.rank_cbSilentAdmins.Text = "Admins join silently";
             this.rank_cbSilentAdmins.UseVisualStyleBackColor = true;
+            this.toolTip.SetToolTip(this.rank_cbSilentAdmins, "Players who can read adminchat also join the game silently");
             // 
             // gbRankSettings
             // 
@@ -1449,6 +1449,7 @@ namespace MCGalaxy.Gui
             this.rank_txtOSMaps.Size = new System.Drawing.Size(81, 21);
             this.rank_txtOSMaps.TabIndex = 19;
             this.rank_txtOSMaps.TextChanged += new System.EventHandler(this.txtOSMaps_TextChanged);
+            this.toolTip.SetToolTip(this.rank_txtOSMaps, "Maximum number of /os maps players are allowed");
             // 
             // rank_txtPrefix
             // 
@@ -1457,6 +1458,7 @@ namespace MCGalaxy.Gui
             this.rank_txtPrefix.Size = new System.Drawing.Size(81, 21);
             this.rank_txtPrefix.TabIndex = 21;
             this.rank_txtPrefix.TextChanged += new System.EventHandler(this.txtPrefix_TextChanged);
+            this.toolTip.SetToolTip(this.rank_txtPrefix, "Short prefix showed before player names in chat.");
             // 
             // rank_txtLimit
             // 
@@ -1465,6 +1467,7 @@ namespace MCGalaxy.Gui
             this.rank_txtLimit.Size = new System.Drawing.Size(81, 21);
             this.rank_txtLimit.TabIndex = 4;
             this.rank_txtLimit.TextChanged += new System.EventHandler(this.txtLimit_TextChanged);
+            this.toolTip.SetToolTip(this.rank_txtLimit, "Maximum number of blocks players can affect in draw commands.");
             // 
             // rank_lblPerm
             // 
@@ -1483,6 +1486,7 @@ namespace MCGalaxy.Gui
             this.rank_txtMOTD.Size = new System.Drawing.Size(255, 21);
             this.rank_txtMOTD.TabIndex = 17;
             this.rank_txtMOTD.TextChanged += new System.EventHandler(this.txtGrpMOTD_TextChanged);
+            this.toolTip.SetToolTip(this.rank_txtMOTD, "MOTD shown to players of this rank.\r\nIf left blank, the server MOTD is shown to them.");
             // 
             // rank_txtPerm
             // 
@@ -1491,6 +1495,7 @@ namespace MCGalaxy.Gui
             this.rank_txtPerm.Size = new System.Drawing.Size(81, 21);
             this.rank_txtPerm.TabIndex = 6;
             this.rank_txtPerm.TextChanged += new System.EventHandler(this.txtPermission_TextChanged);
+            this.toolTip.SetToolTip(this.rank_txtPerm, "Permission level of this rank.");
             // 
             // rank_txtName
             // 
@@ -1499,6 +1504,7 @@ namespace MCGalaxy.Gui
             this.rank_txtName.Size = new System.Drawing.Size(81, 21);
             this.rank_txtName.TabIndex = 5;
             this.rank_txtName.TextChanged += new System.EventHandler(this.txtRankName_TextChanged);
+            this.toolTip.SetToolTip(this.rank_txtName, "Name of this rank");            
             // 
             // rank_btnColor
             // 
@@ -1507,6 +1513,7 @@ namespace MCGalaxy.Gui
             this.rank_btnColor.Size = new System.Drawing.Size(81, 23);
             this.rank_btnColor.TabIndex = 12;
             this.rank_btnColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnColor_Click);
+            this.toolTip.SetToolTip(this.rank_btnColor, "Color of this rank name in chat and the tab list");
             // 
             // rank_lblMOTD
             // 
@@ -1553,6 +1560,7 @@ namespace MCGalaxy.Gui
             this.rank_txtUndo.Size = new System.Drawing.Size(81, 21);
             this.rank_txtUndo.TabIndex = 15;
             this.rank_txtUndo.TextChanged += new System.EventHandler(this.txtMaxUndo_TextChanged);
+            this.toolTip.SetToolTip(this.rank_txtUndo, "Maximum number of seconds players can undo up to in the past with /undo");
             // 
             // rank_lblUndo
             // 
@@ -4013,14 +4021,14 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
-            // lblOsMap
+            // rank_lblOsMap
             // 
-            this.lblOsMap.AutoSize = true;
-            this.lblOsMap.Location = new System.Drawing.Point(11, 50);
-            this.lblOsMap.Name = "lblOsMap";
-            this.lblOsMap.Size = new System.Drawing.Size(103, 13);
-            this.lblOsMap.TabIndex = 50;
-            this.lblOsMap.Text = "/os default perbuild:";
+            this.rank_lblOsMap.AutoSize = true;
+            this.rank_lblOsMap.Location = new System.Drawing.Point(11, 50);
+            this.rank_lblOsMap.Name = "rank_lblOsMap";
+            this.rank_lblOsMap.Size = new System.Drawing.Size(103, 13);
+            this.rank_lblOsMap.TabIndex = 50;
+            this.rank_lblOsMap.Text = "/os default perbuild:";
             // 
             // rank_cmbOsMap
             // 
@@ -4029,8 +4037,8 @@ namespace MCGalaxy.Gui
             this.rank_cmbOsMap.Name = "rank_cmbOsMap";
             this.rank_cmbOsMap.Size = new System.Drawing.Size(80, 21);
             this.rank_cmbOsMap.TabIndex = 49;
-            this.toolTip.SetToolTip(this.rank_cmbOsMap, "Default min rank that can build on maps made with /os map add.\nIf \'nobody\' is sel" +
-                        "ected, the default min rank used is the min rank that can use /os.");
+            this.toolTip.SetToolTip(this.rank_cmbOsMap, "Default minimum rank required to build on maps made with /os map add.\nIf \'nobody\' is sel" +
+                        "ected, rank required is the minimum rank that can use /os.");
             // 
             // PropertyWindow
             // 
@@ -4212,7 +4220,7 @@ namespace MCGalaxy.Gui
         #endregion
         
         private System.Windows.Forms.ComboBox rank_cmbOsMap;
-        private System.Windows.Forms.Label lblOsMap;
+        private System.Windows.Forms.Label rank_lblOsMap;
         private System.Windows.Forms.PropertyGrid pg_lavaMap;
         private System.Windows.Forms.PropertyGrid pg_lava;
         private System.Windows.Forms.TextBox rank_txtPrefix;

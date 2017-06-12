@@ -137,13 +137,10 @@ namespace MCGalaxy {
         public static int PositionInterval = 100;
         [ConfigBool("classicube-account-plus", "Server", null, true)]
         public static bool ClassicubeAccountPlus = true;
-        [ConfigBool("bufferblocks", "Other", null, false)]
-        public static bool bufferblocks = true;
         
         //auto updater stuff
         [ConfigBool("auto-update", "Update", null, false)]
         public static bool autoupdate;
-        public static bool autonotify;
         [ConfigBool("in-game-update-notify", "Server", null, false)]
         public static bool notifyPlayers;
         [ConfigInt("update-countdown", "Update", null, 10)]

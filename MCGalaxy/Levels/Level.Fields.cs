@@ -88,7 +88,6 @@ namespace MCGalaxy {
         [ConfigBool("WorldChat", "General", null, true)]
         public bool worldChat = true;
         
-        public bool bufferblocks = Server.bufferblocks;
         internal readonly object queueLock = new object(), saveLock = new object(), savePropsLock = new object();
         public List<ulong> blockqueue = new List<ulong>();
         BufferedBlockSender bulkSender;    
