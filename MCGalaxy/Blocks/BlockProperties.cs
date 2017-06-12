@@ -77,7 +77,7 @@ namespace MCGalaxy.Blocks {
         }
         
         
-        public static void Save(string group, BlockProps[] scope, bool custom) {
+        public static void Save(string group, BlockProps[] scope, Predicate<int> selector) {
             if (!Directory.Exists("blockprops"))
                 Directory.CreateDirectory("blockprops");
             
@@ -86,11 +86,8 @@ namespace MCGalaxy.Blocks {
                 w.WriteLine("# id : Is rails : Is tdoor : Is door : Is message block : Is portal : " +
                             "Killed by water : Killed by lava : Kills players : death message : Animal AI type");
                 for (int i = 0; i < scope.Length; i++) {
-                    if (!scope[i].Changed) continue;
+                    if (!scope[i].Changed || !selector(i)) continue;
                     BlockProps props = scope[i];
-                    
-                    // Don't save physics blocks
-                    if (custom && (i > Block.CpeCount && i < Block.Count)) continue;
                     // Convert ext to raw ids
                     int id = i >= Block.Count ? (i - Block.Count) : i;
                     
@@ -121,7 +118,7 @@ namespace MCGalaxy.Blocks {
                 byte raw;
                 if (!Byte.TryParse(parts[0], out raw)) {
                     Server.s.Log("Invalid line \"" + line + "\" in " + group + " block properties");
-                    continue;                   
+                    continue;
                 }
                 int idx = raw;
                 if (custom && raw >= Block.CpeCount) idx += Block.Count;

@@ -176,7 +176,7 @@ namespace MCGalaxy.Commands.World {
             scope[block.Index].Changed = true;
             
             if (scope == Block.Props) {
-                BlockProps.Save("core", scope, true);
+                BlockProps.Save("core", scope, i=> true);
                 Level[] loaded = LevelInfo.Loaded.Items;
                 
                 foreach (Level lvl in loaded) {
@@ -185,7 +185,7 @@ namespace MCGalaxy.Commands.World {
                 }
             } else if (scope == BlockDefinition.GlobalProps) {
                 Level[] loaded = LevelInfo.Loaded.Items;
-                BlockProps.Save("global", scope, false);
+                BlockProps.Save("global", scope, SelectGlobal);
                 
                 byte raw = block.RawID;
                 foreach (Level lvl in loaded) {
@@ -194,9 +194,20 @@ namespace MCGalaxy.Commands.World {
                     lvl.SetBlockHandler(block);
                 }                
             } else {
-                BlockProps.Save("lvl_" + level.name, scope, false);
+                BlockProps.Save("lvl_" + level.name, scope, i => SelectLevel(level, i));
                 level.SetBlockHandler(block);
             }
+        }
+        
+        static bool SelectGlobal(int i) {
+            ExtBlock block = ExtBlock.FromIndex(i);
+            return !block.IsPhysicsType && BlockDefinition.GlobalDefs[block.RawID] != null;
+        }
+        
+        static bool SelectLevel(Level lvl, int i) {
+            ExtBlock block = ExtBlock.FromIndex(i);
+            return !block.IsPhysicsType && 
+                lvl.CustomBlockDefs[block.RawID] != BlockDefinition.GlobalDefs[block.RawID];
         }
         
         static string BlockName(BlockProps[] scope, Level lvl, ExtBlock block) {

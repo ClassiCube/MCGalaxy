@@ -66,6 +66,12 @@ namespace MCGalaxy {
             return new ExtBlock(Block.custom_block, raw);
         }
         
+        public static ExtBlock FromIndex(int index) {
+            if (index < Block.Count)
+                return new ExtBlock((byte)index, 0);
+            return new ExtBlock(Block.custom_block, (byte)(index - Block.Count));
+        }
+        
         /// <summary> Constructs an extended block. </summary>
         public static explicit operator ExtBlock(byte block) { return new ExtBlock(block, 0); }
         

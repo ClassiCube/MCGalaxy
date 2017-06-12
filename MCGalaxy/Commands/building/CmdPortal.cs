@@ -207,7 +207,7 @@ namespace MCGalaxy.Commands.Building {
         static void GetCoreNames(List<string> names, Level lvl) {
             BlockProps[] props = lvl == null ? lvl.BlockProps : Block.Props;
             for (int i = Block.air; i < Block.Count; i++) {
-                ExtBlock block = new ExtBlock((byte)i, 0);
+                ExtBlock block = ExtBlock.FromIndex(i);
                 if (block.BlockID == Block.custom_block) continue;
                 
                 string name = Format(block, lvl, props);

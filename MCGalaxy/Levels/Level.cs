@@ -504,9 +504,8 @@ namespace MCGalaxy {
         }
         
         public void SetBlockHandlers() {            
-            for (int i = 0; i < Block.Count; i++) {
-                SetBlockHandler(new ExtBlock((byte)i, 0));
-                SetBlockHandler(new ExtBlock(Block.custom_block, (byte)i));
+            for (int i = 0; i < BlockProps.Length; i++) {
+                SetBlockHandler(ExtBlock.FromIndex(i));
             }
         }
         
@@ -515,7 +514,7 @@ namespace MCGalaxy {
             if (GetBlockDef(block) == null) {
                 nonSolid = Block.Walkthrough(Block.Convert(block.BlockID));
             } else {
-                nonSolid = CustomBlockDefs[block.BlockID].CollideType != CollideType.Solid;
+                nonSolid = CustomBlockDefs[block.RawID].CollideType != CollideType.Solid;
             }
             
             int i = block.Index;
