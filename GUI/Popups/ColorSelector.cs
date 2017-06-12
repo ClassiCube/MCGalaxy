@@ -83,7 +83,9 @@ namespace MCGalaxy.Gui.Popups {
         
         
         void UpdateBaseLayout() {
-            int rows = 1 + (index / btnsPerCol);
+            int rows = index / btnsPerCol;
+            if ((index % btnsPerCol) != 0) rows++; // round up
+            
             int x = 0;
             // Centre if even count, align under row if odd count
             if ((rows & 1) == 0) {
