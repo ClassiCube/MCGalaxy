@@ -34,7 +34,7 @@ using Newtonsoft.Json;
 
 namespace MCGalaxy {
     public sealed partial class Server {
-       
+        
         public Server() {
             Server.s = this;
         }
@@ -53,7 +53,7 @@ namespace MCGalaxy {
             try {
                 using (WebClient client = HttpUtil.CreateWebClient()) {
                     client.DownloadFile(Updater.BaseURL + file + "?raw=true", file);
-            	}
+                }
                 if (File.Exists(file))
                     Log(file + " download succesful!");
             } catch {
@@ -133,7 +133,7 @@ namespace MCGalaxy {
             Background.QueueOnce(InitTasks.UpdateStaffList);
 
             ServerTasks.QueueTasks();
-            Background.QueueRepeat(ThreadSafeCache.DBCache.CleanupTask, 
+            Background.QueueRepeat(ThreadSafeCache.DBCache.CleanupTask,
                                    null, TimeSpan.FromMinutes(5));
         }
         
@@ -244,7 +244,7 @@ namespace MCGalaxy {
             
             try {
                 IRC.Disconnect(restarting ? "Server is restarting." : "Server is shutting down.");
-            } catch { 
+            } catch {
             }
         }
 
@@ -269,7 +269,7 @@ namespace MCGalaxy {
             if (ServerLog != null)  {
                 ServerLog(message);
                 if (cancellog) { cancellog = false; return; }
-            }         
+            }
             if (!systemMsg) OnServerLogEvent.Call(message);
             
             string now = DateTime.Now.ToString("(HH:mm:ss) ");
@@ -323,7 +323,7 @@ namespace MCGalaxy {
             
             try {
                 s.Log("!!!Error! See " + Logger.ErrorLogPath + " for more information.");
-            } catch { 
+            } catch {
             }
         }
 
@@ -341,14 +341,14 @@ namespace MCGalaxy {
         }
         
         /// <summary> Sets the main level of the server that new players spawn in. </summary>
-        /// <returns> true if main level was changed, false if not 
+        /// <returns> true if main level was changed, false if not
         /// (same map as current main, or given map doesn't exist).</returns>
         public static bool SetMainLevel(string mapName) {
             if (mapName.CaselessEq(level)) return false;
             Level oldMain = mainLevel;
             
             Level lvl = LevelInfo.FindExact(mapName);
-            if (lvl == null) 
+            if (lvl == null)
                 lvl = CmdLoad.LoadLevel(null, mapName);
             if (lvl == null) return false;
             
@@ -365,8 +365,10 @@ namespace MCGalaxy {
             GC.WaitForPendingFinalizers();
             
             long end = GC.GetTotalMemory(false);
-            double delta = (start - end) / 1024.0;
-            Server.s.Log("GC performed (freed " + delta.ToString("F2") + " KB)", true);
+            double deltaKB = (start - end) / 1024.0;
+            if (deltaKB >= 100.0) {
+                Server.s.Log("GC performed (freed " + deltaKB.ToString("F2") + " KB)", true);
+            }
         }
     }
 }
