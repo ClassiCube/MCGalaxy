@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
@@ -62,11 +63,10 @@ namespace MCGalaxy {
                         PerformUpdate();
                     }
                 } else if (!msgOpen && !MCGalaxy.Gui.App.usingConsole) {
-                    msgOpen = true;
-                    if (MessageBox.Show("New version found. Would you like to update?", "Update?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-                        PerformUpdate();
-                    }
-                    msgOpen = false;
+                    // don't want message box blocking background scheduler thread
+                    Thread thread = new Thread(ShowUpdateMessageAsync);
+                    thread.Name = "MCGalaxy_UpdateMsgBox";
+                    thread.Start();
                 } else if (MCGalaxy.Gui.App.usingConsole) {
                     ConsoleColor prevColor = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -81,6 +81,14 @@ namespace MCGalaxy {
             
             client.Dispose();
             CurrentUpdate = false;
+        }
+        
+        static void ShowUpdateMessageAsync() {
+            msgOpen = true;
+            if (MessageBox.Show("New version found. Would you like to update?", "Update?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                PerformUpdate();
+            }
+            msgOpen = false;
         }
         
         static void NotifyPlayersOfUpdate(Player p) {
