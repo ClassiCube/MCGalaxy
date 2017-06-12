@@ -154,7 +154,7 @@ namespace MCGalaxy.Levels.IO {
                 
                 def.SideTex = def.LeftTex;
                 def.Version2 = true;
-                lvl.CustomBlockDefs[def.BlockID] = def;
+                lvl.UpdateCustomBlock(def.BlockID, def);
                 hasBlockDefs = true;
             }
             

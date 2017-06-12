@@ -23,6 +23,7 @@ using MCGalaxy.Blocks.Physics;
 using MCGalaxy.DB;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
+using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.Util;
 
@@ -48,8 +49,8 @@ namespace MCGalaxy {
         public Position SpawnPos { get { return new Position(16 + spawnx * 32, 32 + spawny * 32, 16 + spawnz * 32); } }
         public Orientation SpawnRot { get { return new Orientation(rotx, roty); } }
             
-        public BlockDefinition[] CustomBlockDefs;
-        public BlockProps[] BlockProps;
+        public BlockDefinition[] CustomBlockDefs = new BlockDefinition[Block.Count];
+        public BlockProps[] BlockProps = new BlockProps[Block.Count * 2];
         public ExtrasCollection Extras = new ExtrasCollection();
         
         internal HandleDelete[] deleteHandlers = new HandleDelete[Block.Count * 2];
@@ -57,6 +58,7 @@ namespace MCGalaxy {
         internal HandleWalkthrough[] walkthroughHandlers = new HandleWalkthrough[Block.Count * 2];
         internal HandlePhysics[] physicsHandlers = new HandlePhysics[Block.Count * 2];
         internal HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[Block.Count * 2];
+        internal AABB[] blockAABBs = new AABB[Block.Count * 2];
         
         public ushort Width, Height, Length;
         // NOTE: These are for legacy code only, you should use upper case Width/Height/Length

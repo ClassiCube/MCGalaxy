@@ -28,9 +28,6 @@ using MCGalaxy.Generator;
 using MCGalaxy.Levels.IO;
 using MCGalaxy.Util;
 
-//WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
-//You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
-
 namespace MCGalaxy {
     public enum LevelPermission {
         Banned = -20, Guest = 0, Builder = 30,
@@ -42,22 +39,7 @@ namespace MCGalaxy {
 
     public sealed partial class Level : IDisposable {
         
-        public Level(string n, ushort x, ushort y, ushort z) { Init(n, x, y, z); }
-        
-        [Obsolete("Use MapGen.Generate instead")]
-        public Level(string n, ushort x, ushort y, ushort z, string theme, int seed = 0, bool useSeed = false) {
-            Init(n, x, y, z);
-            string args = useSeed ? seed.ToString() : "";
-            MapGen.Generate(this, theme, args, null);
-        }
-        
-        [Obsolete("Use MapGen.Generate instead")]
-        public Level(string n, ushort x, ushort y, ushort z, string theme, string genArgs) {
-            Init(n, x, y, z);
-            MapGen.Generate(this, theme, genArgs, null);
-        }
-        
-        void Init(string n, ushort x, ushort y, ushort z) {
+        public Level(string n, ushort x, ushort y, ushort z) {
             Width = x; Height = y; Length = z;
             if (Width < 16) Width = 16;
             if (Height < 16) Height = 16;
@@ -69,13 +51,15 @@ namespace MCGalaxy {
             height = Length; depth = Length;
             #pragma warning restore 0612
 
-            CustomBlockDefs = new BlockDefinition[Block.Count];
             for (int i = 0; i < CustomBlockDefs.Length; i++)
                 CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
-            
-            BlockProps = new BlockProps[Block.Count * 2];
             for (int i = 0; i < BlockProps.Length; i++)
                 BlockProps[i] = BlockDefinition.GlobalProps[i];
+            
+            for (int i = 0; i < blockAABBs.Length; i++) {
+                ExtBlock block = ExtBlock.FromIndex(i);
+                blockAABBs[i] = Block.BlockAABB(block, this);
+            }
             SetBlockHandlers();
             
             name = n; MapName = n.ToLower();
@@ -402,7 +386,7 @@ namespace MCGalaxy {
             BlockDefinition[] defs = BlockDefinition.Load(false, lvl);
             for (int i = 0; i < defs.Length; i++) {
                 if (defs[i] == null) continue;
-                lvl.CustomBlockDefs[i] = defs[i];
+                lvl.UpdateCustomBlock((byte)i, defs[i]);
             }
             
             MCGalaxy.Blocks.BlockProps.Load("lvl_" + lvl.MapName, lvl.BlockProps, true);
@@ -523,6 +507,13 @@ namespace MCGalaxy {
             walkthroughHandlers[i] = BlockBehaviour.GetWalkthroughHandler(block, BlockProps, nonSolid);
             physicsHandlers[i] = BlockBehaviour.GetPhysicsHandler(block, BlockProps);
             physicsDoorsHandlers[i] = BlockBehaviour.GetPhysicsDoorsHandler(block, BlockProps);
+        }
+        
+        public void UpdateCustomBlock(byte raw, BlockDefinition def) {
+            CustomBlockDefs[raw] = def;
+            ExtBlock block = ExtBlock.FromRaw(raw);            
+            SetBlockHandler(block);
+            blockAABBs[block.Index] = Block.BlockAABB(block, this);
         }
     }
 }

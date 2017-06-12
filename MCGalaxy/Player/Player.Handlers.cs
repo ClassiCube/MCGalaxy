@@ -421,7 +421,8 @@ namespace MCGalaxy {
                 ushort xP = (ushort)x, yP = (ushort)y, zP = (ushort)z;
                 ExtBlock block = level.GetBlock(xP, yP, zP);
                 if (block.BlockID == Block.Invalid) continue;
-                AABB blockBB = Block.BlockAABB(block, level).Offset(x * 32, y * 32, z * 32);
+                
+                AABB blockBB = level.blockAABBs[block.Index].Offset(x * 32, y * 32, z * 32);
                 if (!bb.Intersects(blockBB)) continue;
                 
                 // We can activate only one walkthrough block per movement
