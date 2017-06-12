@@ -35,7 +35,6 @@ namespace MCGalaxy.Gui {
             
             chkDeath.Checked = Server.deathcount;
             chkSmile.Checked = Server.parseSmiley;
-            chkShowEmptyRanks.Checked = Server.showEmptyRanks;
             chk17Dollar.Checked = Server.dollarNames;
             chkRepeatMessages.Checked = Server.repeatMessage;
             chkRestartTime.Checked = Server.autorestart;
@@ -62,7 +61,6 @@ namespace MCGalaxy.Gui {
             
             Server.deathcount = chkDeath.Checked;
             Server.parseSmiley = chkSmile.Checked;
-            Server.showEmptyRanks = chkShowEmptyRanks.Checked;
             Server.dollarNames = chk17Dollar.Checked;
             Server.repeatMessage = chkRepeatMessages.Checked;
             Server.autorestart = chkRestartTime.Checked;

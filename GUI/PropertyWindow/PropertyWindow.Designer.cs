@@ -85,11 +85,8 @@ namespace MCGalaxy.Gui
             this.sec_cmbVerifyRank = new System.Windows.Forms.ComboBox();
             this.sec_cbVerifyAdmins = new System.Windows.Forms.CheckBox();
             this.chkGuestLimitNotify = new System.Windows.Forms.CheckBox();
-            this.rank_cmbAdminChat = new System.Windows.Forms.ComboBox();
-            this.rank_cmbOpChat = new System.Windows.Forms.ComboBox();
-            this.rank_chkTpToHigherRanks = new System.Windows.Forms.CheckBox();
+            this.rank_cbTPHigher = new System.Windows.Forms.CheckBox();
             this.rank_cmbDefault = new System.Windows.Forms.ComboBox();
-            this.rank_cmbOsMap = new System.Windows.Forms.ComboBox();
             this.sec_cbWhitelist = new System.Windows.Forms.CheckBox();
             this.afk_cmbKickPerm = new System.Windows.Forms.ComboBox();
             this.afk_txtTimer = new System.Windows.Forms.TextBox();
@@ -138,30 +135,29 @@ namespace MCGalaxy.Gui
             this.blk_list = new System.Windows.Forms.ListBox();
             this.pageRanks = new System.Windows.Forms.TabPage();
             this.gbRankGeneral = new System.Windows.Forms.GroupBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.chkAdminsJoinSilent = new System.Windows.Forms.CheckBox();
-            this.lblOpChat = new System.Windows.Forms.Label();
-            this.label37 = new System.Windows.Forms.Label();
+            this.rank_cbEmpty = new System.Windows.Forms.CheckBox();
+            this.rank_lblDefault = new System.Windows.Forms.Label();
+            this.rank_cbSilentAdmins = new System.Windows.Forms.CheckBox();
             this.gbRankSettings = new System.Windows.Forms.GroupBox();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.txtOSMaps = new System.Windows.Forms.TextBox();
-            this.txtPrefix = new System.Windows.Forms.TextBox();
-            this.txtLimit = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.txtGrpMOTD = new System.Windows.Forms.TextBox();
-            this.txtPermission = new System.Windows.Forms.TextBox();
-            this.txtRankName = new System.Windows.Forms.TextBox();
-            this.btnColor = new System.Windows.Forms.Button();
-            this.lblMOTD = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.txtMaxUndo = new System.Windows.Forms.TextBox();
-            this.label52 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.btnAddRank = new System.Windows.Forms.Button();
-            this.listRanks = new System.Windows.Forms.ListBox();
+            this.rank_lblPrefix = new System.Windows.Forms.Label();
+            this.rank_lblOSMaps = new System.Windows.Forms.Label();
+            this.rank_txtOSMaps = new System.Windows.Forms.TextBox();
+            this.rank_txtPrefix = new System.Windows.Forms.TextBox();
+            this.rank_txtLimit = new System.Windows.Forms.TextBox();
+            this.rank_lblPerm = new System.Windows.Forms.Label();
+            this.rank_txtMOTD = new System.Windows.Forms.TextBox();
+            this.rank_txtPerm = new System.Windows.Forms.TextBox();
+            this.rank_txtName = new System.Windows.Forms.TextBox();
+            this.rank_btnColor = new System.Windows.Forms.Button();
+            this.rank_lblMOTD = new System.Windows.Forms.Label();
+            this.rank_lblName = new System.Windows.Forms.Label();
+            this.rank_lblDraw = new System.Windows.Forms.Label();
+            this.rank_lblColor = new System.Windows.Forms.Label();
+            this.rank_txtUndo = new System.Windows.Forms.TextBox();
+            this.rank_lblUndo = new System.Windows.Forms.Label();
+            this.rank_btnDel = new System.Windows.Forms.Button();
+            this.rank_btnAdd = new System.Windows.Forms.Button();
+            this.rank_list = new System.Windows.Forms.ListBox();
             this.label85 = new System.Windows.Forms.Label();
             this.pageMisc = new System.Windows.Forms.TabPage();
             this.economyGroupBox = new System.Windows.Forms.GroupBox();
@@ -169,8 +165,6 @@ namespace MCGalaxy.Gui
             this.grpExtra = new System.Windows.Forms.GroupBox();
             this.nudCooldownTime = new System.Windows.Forms.NumericUpDown();
             this.label84 = new System.Windows.Forms.Label();
-            this.lblOsMap = new System.Windows.Forms.Label();
-            this.chkShowEmptyRanks = new System.Windows.Forms.CheckBox();
             this.chkRepeatMessages = new System.Windows.Forms.CheckBox();
             this.txtRestartTime = new System.Windows.Forms.TextBox();
             this.txtMoneys = new System.Windows.Forms.TextBox();
@@ -307,6 +301,36 @@ namespace MCGalaxy.Gui
             this.TntWarsGamesList = new System.Windows.Forms.ListBox();
             this.tabPage11 = new System.Windows.Forms.TabPage();
             this.propsZG = new System.Windows.Forms.PropertyGrid();
+            this.pageCommands = new System.Windows.Forms.TabPage();
+            this.cmd_grpExtra = new System.Windows.Forms.GroupBox();
+            this.cmd_cmbExtra7 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra7 = new System.Windows.Forms.Label();
+            this.cmd_cmbExtra6 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra6 = new System.Windows.Forms.Label();
+            this.cmd_cmbExtra5 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra5 = new System.Windows.Forms.Label();
+            this.cmd_cmbExtra4 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra4 = new System.Windows.Forms.Label();
+            this.cmd_cmbExtra3 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra3 = new System.Windows.Forms.Label();
+            this.cmd_cmbExtra2 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra2 = new System.Windows.Forms.Label();
+            this.cmd_cmbExtra1 = new System.Windows.Forms.ComboBox();
+            this.cmd_lblExtra1 = new System.Windows.Forms.Label();
+            this.cmd_grpPermissions = new System.Windows.Forms.GroupBox();
+            this.cmd_cmbAlw3 = new System.Windows.Forms.ComboBox();
+            this.cmd_cmbAlw2 = new System.Windows.Forms.ComboBox();
+            this.cmd_cmbDis3 = new System.Windows.Forms.ComboBox();
+            this.cmd_cmbDis2 = new System.Windows.Forms.ComboBox();
+            this.cmd_cmbAlw1 = new System.Windows.Forms.ComboBox();
+            this.cmd_cmbDis1 = new System.Windows.Forms.ComboBox();
+            this.cmd_cmbMin = new System.Windows.Forms.ComboBox();
+            this.cmd_lblMin = new System.Windows.Forms.Label();
+            this.cmd_lblDisallow = new System.Windows.Forms.Label();
+            this.cmd_lblAllow = new System.Windows.Forms.Label();
+            this.cmd_btnCustom = new System.Windows.Forms.Button();
+            this.cmd_btnHelp = new System.Windows.Forms.Button();
+            this.cmd_list = new System.Windows.Forms.ListBox();
             this.pageSecurity = new System.Windows.Forms.TabPage();
             this.sec_grpChat = new System.Windows.Forms.GroupBox();
             this.sec_lblChatOnMute = new System.Windows.Forms.Label();
@@ -346,36 +370,8 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
-            this.pageCommands = new System.Windows.Forms.TabPage();
-            this.cmd_btnHelp = new System.Windows.Forms.Button();
-            this.cmd_list = new System.Windows.Forms.ListBox();
-            this.cmd_btnCustom = new System.Windows.Forms.Button();
-            this.cmd_grpPermissions = new System.Windows.Forms.GroupBox();
-            this.cmd_cmbAlw3 = new System.Windows.Forms.ComboBox();
-            this.cmd_cmbAlw2 = new System.Windows.Forms.ComboBox();
-            this.cmd_cmbDis3 = new System.Windows.Forms.ComboBox();
-            this.cmd_cmbDis2 = new System.Windows.Forms.ComboBox();
-            this.cmd_cmbAlw1 = new System.Windows.Forms.ComboBox();
-            this.cmd_cmbDis1 = new System.Windows.Forms.ComboBox();
-            this.cmd_cmbMin = new System.Windows.Forms.ComboBox();
-            this.cmd_lblMin = new System.Windows.Forms.Label();
-            this.cmd_lblDisallow = new System.Windows.Forms.Label();
-            this.cmd_lblAllow = new System.Windows.Forms.Label();
-            this.cmd_grpExtra = new System.Windows.Forms.GroupBox();
-            this.cmd_cmbExtra1 = new System.Windows.Forms.ComboBox();
-            this.cmd_lblExtra1 = new System.Windows.Forms.Label();
-            this.cmd_cmbExtra2 = new System.Windows.Forms.ComboBox();
-            this.cmd_lblExtra2 = new System.Windows.Forms.Label();
-            this.cmd_cmbExtra3 = new System.Windows.Forms.ComboBox();
-            this.cmd_lblExtra3 = new System.Windows.Forms.Label();
-            this.cmd_cmbExtra4 = new System.Windows.Forms.ComboBox();
-            this.cmd_lblExtra4 = new System.Windows.Forms.Label();
-            this.cmd_cmbExtra5 = new System.Windows.Forms.ComboBox();
-            this.cmd_lblExtra5 = new System.Windows.Forms.Label();
-            this.cmd_cmbExtra6 = new System.Windows.Forms.ComboBox();
-            this.cmd_lblExtra6 = new System.Windows.Forms.Label();
-            this.cmd_cmbExtra7 = new System.Windows.Forms.ComboBox();
-            this.cmd_lblExtra7 = new System.Windows.Forms.Label();
+            this.lblOsMap = new System.Windows.Forms.Label();
+            this.rank_cmbOsMap = new System.Windows.Forms.ComboBox();
             this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
@@ -431,6 +427,9 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.TntWrsScrLmtUpDwn)).BeginInit();
             this.groupBox30.SuspendLayout();
             this.tabPage11.SuspendLayout();
+            this.pageCommands.SuspendLayout();
+            this.cmd_grpExtra.SuspendLayout();
+            this.cmd_grpPermissions.SuspendLayout();
             this.pageSecurity.SuspendLayout();
             this.sec_grpChat.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numChatMsgs)).BeginInit();
@@ -448,8 +447,6 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).BeginInit();
-            this.pageCommands.SuspendLayout();
-            this.cmd_grpPermissions.SuspendLayout();
             this.SuspendLayout();
             // 
             // pageChat
@@ -554,7 +551,6 @@ namespace MCGalaxy.Gui
             this.chat_chkCheap.Text = "/invincible message:";
             this.toolTip.SetToolTip(this.chat_chkCheap, "Is immortality cheap and unfair?");
             this.chat_chkCheap.UseVisualStyleBackColor = true;
-            this.chat_chkCheap.CheckedChanged += new System.EventHandler(chat_chkCheap_CheckedChanged);
             // 
             // chat_txtCheap
             // 
@@ -850,56 +846,25 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.chkGuestLimitNotify, "Notify in-game if a guest can\'t join due to the guest limit being reached.");
             this.chkGuestLimitNotify.UseVisualStyleBackColor = true;
             // 
-            // rank_cmbAdminChat
+            // rank_cbTPHigher
             // 
-            this.rank_cmbAdminChat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.rank_cmbAdminChat.FormattingEnabled = true;
-            this.rank_cmbAdminChat.Location = new System.Drawing.Point(104, 74);
-            this.rank_cmbAdminChat.Name = "rank_cmbAdminChat";
-            this.rank_cmbAdminChat.Size = new System.Drawing.Size(81, 21);
-            this.rank_cmbAdminChat.TabIndex = 38;
-            this.toolTip.SetToolTip(this.rank_cmbAdminChat, "Default rank required to read op chat.");
-            // 
-            // rank_cmbOpChat
-            // 
-            this.rank_cmbOpChat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.rank_cmbOpChat.FormattingEnabled = true;
-            this.rank_cmbOpChat.Location = new System.Drawing.Point(104, 47);
-            this.rank_cmbOpChat.Name = "rank_cmbOpChat";
-            this.rank_cmbOpChat.Size = new System.Drawing.Size(81, 21);
-            this.rank_cmbOpChat.TabIndex = 36;
-            this.toolTip.SetToolTip(this.rank_cmbOpChat, "Default rank required to read op chat.");
-            // 
-            // rank_chkTpToHigherRanks
-            // 
-            this.rank_chkTpToHigherRanks.AutoSize = true;
-            this.rank_chkTpToHigherRanks.Location = new System.Drawing.Point(11, 142);
-            this.rank_chkTpToHigherRanks.Name = "rank_chkTpToHigherRanks";
-            this.rank_chkTpToHigherRanks.Size = new System.Drawing.Size(136, 17);
-            this.rank_chkTpToHigherRanks.TabIndex = 42;
-            this.rank_chkTpToHigherRanks.Text = "Allow tp to higher ranks";
-            this.toolTip.SetToolTip(this.rank_chkTpToHigherRanks, "Allows the use of /tp to players of higher rank");
-            this.rank_chkTpToHigherRanks.UseVisualStyleBackColor = true;
+            this.rank_cbTPHigher.AutoSize = true;
+            this.rank_cbTPHigher.Location = new System.Drawing.Point(11, 102);
+            this.rank_cbTPHigher.Name = "rank_cbTPHigher";
+            this.rank_cbTPHigher.Size = new System.Drawing.Size(136, 17);
+            this.rank_cbTPHigher.TabIndex = 42;
+            this.rank_cbTPHigher.Text = "Allow tp to higher ranks";
+            this.toolTip.SetToolTip(this.rank_cbTPHigher, "Allows the use of /tp to players of higher rank");
+            this.rank_cbTPHigher.UseVisualStyleBackColor = true;
             // 
             // rank_cmbDefault
             // 
-            this.rank_cmbDefault.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.rank_cmbDefault.FormattingEnabled = true;
-            this.rank_cmbDefault.Location = new System.Drawing.Point(104, 20);
+            this.rank_cmbDefault.Location = new System.Drawing.Point(119, 20);
             this.rank_cmbDefault.Name = "rank_cmbDefault";
             this.rank_cmbDefault.Size = new System.Drawing.Size(81, 21);
             this.rank_cmbDefault.TabIndex = 44;
             this.toolTip.SetToolTip(this.rank_cmbDefault, "Default rank assigned to new visitors to the server.");
-            // 
-            // rank_cmbOsMap
-            // 
-            this.rank_cmbOsMap.FormattingEnabled = true;
-            this.rank_cmbOsMap.Location = new System.Drawing.Point(143, 207);
-            this.rank_cmbOsMap.Name = "rank_cmbOsMap";
-            this.rank_cmbOsMap.Size = new System.Drawing.Size(172, 21);
-            this.rank_cmbOsMap.TabIndex = 47;
-            this.toolTip.SetToolTip(this.rank_cmbOsMap, "Default min rank that can build on maps made with /os map add.\nIf \'nobody\' is sel" +
-                        "ected, the default min rank used is the min rank that can use /os.");
             // 
             // sec_cbWhitelist
             // 
@@ -944,8 +909,8 @@ namespace MCGalaxy.Gui
             this.bak_txtTime.Name = "bak_txtTime";
             this.bak_txtTime.Size = new System.Drawing.Size(41, 21);
             this.bak_txtTime.TabIndex = 5;
-            this.bak_txtTime.TextChanged += new System.EventHandler(this.txtBackup_TextChanged);
             this.toolTip.SetToolTip(this.bak_txtTime, "How often should backups be taken, in seconds.\nDefault = 300");
+            this.bak_txtTime.TextChanged += new System.EventHandler(this.txtBackup_TextChanged);
             // 
             // sql_chkUseSQL
             // 
@@ -1376,9 +1341,9 @@ namespace MCGalaxy.Gui
             this.pageRanks.BackColor = System.Drawing.SystemColors.Control;
             this.pageRanks.Controls.Add(this.gbRankGeneral);
             this.pageRanks.Controls.Add(this.gbRankSettings);
-            this.pageRanks.Controls.Add(this.button1);
-            this.pageRanks.Controls.Add(this.btnAddRank);
-            this.pageRanks.Controls.Add(this.listRanks);
+            this.pageRanks.Controls.Add(this.rank_btnDel);
+            this.pageRanks.Controls.Add(this.rank_btnAdd);
+            this.pageRanks.Controls.Add(this.rank_list);
             this.pageRanks.Location = new System.Drawing.Point(4, 22);
             this.pageRanks.Name = "pageRanks";
             this.pageRanks.Padding = new System.Windows.Forms.Padding(3);
@@ -1388,258 +1353,245 @@ namespace MCGalaxy.Gui
             // 
             // gbRankGeneral
             // 
-            this.gbRankGeneral.AutoSize = true;
-            this.gbRankGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gbRankGeneral.Controls.Add(this.label29);
+            this.gbRankGeneral.Controls.Add(this.lblOsMap);
+            this.gbRankGeneral.Controls.Add(this.rank_cmbOsMap);
+            this.gbRankGeneral.Controls.Add(this.rank_cbEmpty);
+            this.gbRankGeneral.Controls.Add(this.rank_lblDefault);
             this.gbRankGeneral.Controls.Add(this.rank_cmbDefault);
-            this.gbRankGeneral.Controls.Add(this.chkAdminsJoinSilent);
-            this.gbRankGeneral.Controls.Add(this.rank_chkTpToHigherRanks);
-            this.gbRankGeneral.Controls.Add(this.lblOpChat);
-            this.gbRankGeneral.Controls.Add(this.rank_cmbAdminChat);
-            this.gbRankGeneral.Controls.Add(this.rank_cmbOpChat);
-            this.gbRankGeneral.Controls.Add(this.label37);
-            this.gbRankGeneral.Location = new System.Drawing.Point(11, 317);
+            this.gbRankGeneral.Controls.Add(this.rank_cbSilentAdmins);
+            this.gbRankGeneral.Controls.Add(this.rank_cbTPHigher);
+            this.gbRankGeneral.Location = new System.Drawing.Point(142, 178);
             this.gbRankGeneral.Name = "gbRankGeneral";
-            this.gbRankGeneral.Size = new System.Drawing.Size(191, 179);
+            this.gbRankGeneral.Size = new System.Drawing.Size(349, 148);
             this.gbRankGeneral.TabIndex = 19;
             this.gbRankGeneral.TabStop = false;
             this.gbRankGeneral.Text = "General settings";
             // 
-            // label29
+            // rank_cbEmpty
             // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(30, 23);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(68, 13);
-            this.label29.TabIndex = 43;
-            this.label29.Text = "Default rank:";
+            this.rank_cbEmpty.AutoSize = true;
+            this.rank_cbEmpty.Location = new System.Drawing.Point(11, 125);
+            this.rank_cbEmpty.Name = "rank_cbEmpty";
+            this.rank_cbEmpty.Size = new System.Drawing.Size(135, 17);
+            this.rank_cbEmpty.TabIndex = 45;
+            this.rank_cbEmpty.Text = "Empty ranks in /players";
+            this.rank_cbEmpty.UseVisualStyleBackColor = true;
             // 
-            // chkAdminsJoinSilent
+            // rank_lblDefault
             // 
-            this.chkAdminsJoinSilent.AutoSize = true;
-            this.chkAdminsJoinSilent.Location = new System.Drawing.Point(11, 119);
-            this.chkAdminsJoinSilent.Name = "chkAdminsJoinSilent";
-            this.chkAdminsJoinSilent.Size = new System.Drawing.Size(118, 17);
-            this.chkAdminsJoinSilent.TabIndex = 41;
-            this.chkAdminsJoinSilent.Tag = "Players who have the adminchat rank join the game silently.";
-            this.chkAdminsJoinSilent.Text = "Admins join silently";
-            this.chkAdminsJoinSilent.UseVisualStyleBackColor = true;
+            this.rank_lblDefault.AutoSize = true;
+            this.rank_lblDefault.Location = new System.Drawing.Point(11, 23);
+            this.rank_lblDefault.Name = "rank_lblDefault";
+            this.rank_lblDefault.Size = new System.Drawing.Size(68, 13);
+            this.rank_lblDefault.TabIndex = 43;
+            this.rank_lblDefault.Text = "Default rank:";
             // 
-            // lblOpChat
+            // rank_cbSilentAdmins
             // 
-            this.lblOpChat.AutoSize = true;
-            this.lblOpChat.Location = new System.Drawing.Point(28, 50);
-            this.lblOpChat.Name = "lblOpChat";
-            this.lblOpChat.Size = new System.Drawing.Size(70, 13);
-            this.lblOpChat.TabIndex = 35;
-            this.lblOpChat.Text = "Op Chat rank:";
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(11, 77);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(87, 13);
-            this.label37.TabIndex = 37;
-            this.label37.Text = "Admin Chat rank:";
+            this.rank_cbSilentAdmins.AutoSize = true;
+            this.rank_cbSilentAdmins.Location = new System.Drawing.Point(11, 79);
+            this.rank_cbSilentAdmins.Name = "rank_cbSilentAdmins";
+            this.rank_cbSilentAdmins.Size = new System.Drawing.Size(118, 17);
+            this.rank_cbSilentAdmins.TabIndex = 41;
+            this.rank_cbSilentAdmins.Tag = "Players who have the adminchat rank join the game silently.";
+            this.rank_cbSilentAdmins.Text = "Admins join silently";
+            this.rank_cbSilentAdmins.UseVisualStyleBackColor = true;
             // 
             // gbRankSettings
             // 
-            this.gbRankSettings.AutoSize = true;
-            this.gbRankSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gbRankSettings.Controls.Add(this.label22);
-            this.gbRankSettings.Controls.Add(this.label10);
-            this.gbRankSettings.Controls.Add(this.txtOSMaps);
-            this.gbRankSettings.Controls.Add(this.txtPrefix);
-            this.gbRankSettings.Controls.Add(this.txtLimit);
-            this.gbRankSettings.Controls.Add(this.label12);
-            this.gbRankSettings.Controls.Add(this.txtGrpMOTD);
-            this.gbRankSettings.Controls.Add(this.txtPermission);
-            this.gbRankSettings.Controls.Add(this.txtRankName);
-            this.gbRankSettings.Controls.Add(this.btnColor);
-            this.gbRankSettings.Controls.Add(this.lblMOTD);
-            this.gbRankSettings.Controls.Add(this.label11);
-            this.gbRankSettings.Controls.Add(this.label13);
-            this.gbRankSettings.Controls.Add(this.label16);
-            this.gbRankSettings.Controls.Add(this.txtMaxUndo);
-            this.gbRankSettings.Controls.Add(this.label52);
-            this.gbRankSettings.Location = new System.Drawing.Point(11, 16);
+            this.gbRankSettings.Controls.Add(this.rank_lblPrefix);
+            this.gbRankSettings.Controls.Add(this.rank_lblOSMaps);
+            this.gbRankSettings.Controls.Add(this.rank_txtOSMaps);
+            this.gbRankSettings.Controls.Add(this.rank_txtPrefix);
+            this.gbRankSettings.Controls.Add(this.rank_txtLimit);
+            this.gbRankSettings.Controls.Add(this.rank_lblPerm);
+            this.gbRankSettings.Controls.Add(this.rank_txtMOTD);
+            this.gbRankSettings.Controls.Add(this.rank_txtPerm);
+            this.gbRankSettings.Controls.Add(this.rank_txtName);
+            this.gbRankSettings.Controls.Add(this.rank_btnColor);
+            this.gbRankSettings.Controls.Add(this.rank_lblMOTD);
+            this.gbRankSettings.Controls.Add(this.rank_lblName);
+            this.gbRankSettings.Controls.Add(this.rank_lblDraw);
+            this.gbRankSettings.Controls.Add(this.rank_lblColor);
+            this.gbRankSettings.Controls.Add(this.rank_txtUndo);
+            this.gbRankSettings.Controls.Add(this.rank_lblUndo);
+            this.gbRankSettings.Location = new System.Drawing.Point(142, 6);
             this.gbRankSettings.Name = "gbRankSettings";
-            this.gbRankSettings.Size = new System.Drawing.Size(194, 291);
+            this.gbRankSettings.Size = new System.Drawing.Size(349, 164);
             this.gbRankSettings.TabIndex = 18;
             this.gbRankSettings.TabStop = false;
             this.gbRankSettings.Text = "Rank settings";
             // 
-            // label22
+            // rank_lblPrefix
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(40, 253);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(37, 13);
-            this.label22.TabIndex = 20;
-            this.label22.Text = "Prefix:";
-            this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.rank_lblPrefix.AutoSize = true;
+            this.rank_lblPrefix.Location = new System.Drawing.Point(42, 77);
+            this.rank_lblPrefix.Name = "rank_lblPrefix";
+            this.rank_lblPrefix.Size = new System.Drawing.Size(37, 13);
+            this.rank_lblPrefix.TabIndex = 20;
+            this.rank_lblPrefix.Text = "Prefix:";
+            this.rank_lblPrefix.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label10
+            // rank_lblOSMaps
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(26, 199);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(53, 13);
-            this.label10.TabIndex = 18;
-            this.label10.Text = "/os maps:";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.rank_lblOSMaps.AutoSize = true;
+            this.rank_lblOSMaps.Location = new System.Drawing.Point(200, 77);
+            this.rank_lblOSMaps.Name = "rank_lblOSMaps";
+            this.rank_lblOSMaps.Size = new System.Drawing.Size(53, 13);
+            this.rank_lblOSMaps.TabIndex = 18;
+            this.rank_lblOSMaps.Text = "/os maps:";
+            this.rank_lblOSMaps.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // txtOSMaps
+            // rank_txtOSMaps
             // 
-            this.txtOSMaps.Location = new System.Drawing.Point(85, 196);
-            this.txtOSMaps.Name = "txtOSMaps";
-            this.txtOSMaps.Size = new System.Drawing.Size(100, 21);
-            this.txtOSMaps.TabIndex = 19;
-            this.txtOSMaps.TextChanged += new System.EventHandler(this.txtOSMaps_TextChanged);
+            this.rank_txtOSMaps.Location = new System.Drawing.Point(259, 74);
+            this.rank_txtOSMaps.Name = "rank_txtOSMaps";
+            this.rank_txtOSMaps.Size = new System.Drawing.Size(81, 21);
+            this.rank_txtOSMaps.TabIndex = 19;
+            this.rank_txtOSMaps.TextChanged += new System.EventHandler(this.txtOSMaps_TextChanged);
             // 
-            // txtPrefix
+            // rank_txtPrefix
             // 
-            this.txtPrefix.Location = new System.Drawing.Point(85, 250);
-            this.txtPrefix.Name = "txtPrefix";
-            this.txtPrefix.Size = new System.Drawing.Size(100, 21);
-            this.txtPrefix.TabIndex = 21;
-            this.txtPrefix.TextChanged += new System.EventHandler(this.txtPrefix_TextChanged);
+            this.rank_txtPrefix.Location = new System.Drawing.Point(85, 74);
+            this.rank_txtPrefix.Name = "rank_txtPrefix";
+            this.rank_txtPrefix.Size = new System.Drawing.Size(81, 21);
+            this.rank_txtPrefix.TabIndex = 21;
+            this.rank_txtPrefix.TextChanged += new System.EventHandler(this.txtPrefix_TextChanged);
             // 
-            // txtLimit
+            // rank_txtLimit
             // 
-            this.txtLimit.Location = new System.Drawing.Point(85, 74);
-            this.txtLimit.Name = "txtLimit";
-            this.txtLimit.Size = new System.Drawing.Size(100, 21);
-            this.txtLimit.TabIndex = 4;
-            this.txtLimit.TextChanged += new System.EventHandler(this.txtLimit_TextChanged);
+            this.rank_txtLimit.Location = new System.Drawing.Point(85, 47);
+            this.rank_txtLimit.Name = "rank_txtLimit";
+            this.rank_txtLimit.Size = new System.Drawing.Size(81, 21);
+            this.rank_txtLimit.TabIndex = 4;
+            this.rank_txtLimit.TextChanged += new System.EventHandler(this.txtLimit_TextChanged);
             // 
-            // label12
+            // rank_lblPerm
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(14, 50);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(63, 13);
-            this.label12.TabIndex = 7;
-            this.label12.Text = "Permission:";
-            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.rank_lblPerm.AutoSize = true;
+            this.rank_lblPerm.Location = new System.Drawing.Point(190, 23);
+            this.rank_lblPerm.Name = "rank_lblPerm";
+            this.rank_lblPerm.Size = new System.Drawing.Size(63, 13);
+            this.rank_lblPerm.TabIndex = 7;
+            this.rank_lblPerm.Text = "Permission:";
+            this.rank_lblPerm.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // txtGrpMOTD
+            // rank_txtMOTD
             // 
-            this.txtGrpMOTD.Location = new System.Drawing.Point(85, 155);
-            this.txtGrpMOTD.Name = "txtGrpMOTD";
-            this.txtGrpMOTD.Size = new System.Drawing.Size(100, 21);
-            this.txtGrpMOTD.TabIndex = 17;
-            this.txtGrpMOTD.TextChanged += new System.EventHandler(this.txtGrpMOTD_TextChanged);
+            this.rank_txtMOTD.Location = new System.Drawing.Point(85, 130);
+            this.rank_txtMOTD.Name = "rank_txtMOTD";
+            this.rank_txtMOTD.Size = new System.Drawing.Size(255, 21);
+            this.rank_txtMOTD.TabIndex = 17;
+            this.rank_txtMOTD.TextChanged += new System.EventHandler(this.txtGrpMOTD_TextChanged);
             // 
-            // txtPermission
+            // rank_txtPerm
             // 
-            this.txtPermission.Location = new System.Drawing.Point(85, 47);
-            this.txtPermission.Name = "txtPermission";
-            this.txtPermission.Size = new System.Drawing.Size(100, 21);
-            this.txtPermission.TabIndex = 6;
-            this.txtPermission.TextChanged += new System.EventHandler(this.txtPermission_TextChanged);
+            this.rank_txtPerm.Location = new System.Drawing.Point(259, 20);
+            this.rank_txtPerm.Name = "rank_txtPerm";
+            this.rank_txtPerm.Size = new System.Drawing.Size(81, 21);
+            this.rank_txtPerm.TabIndex = 6;
+            this.rank_txtPerm.TextChanged += new System.EventHandler(this.txtPermission_TextChanged);
             // 
-            // txtRankName
+            // rank_txtName
             // 
-            this.txtRankName.Location = new System.Drawing.Point(85, 20);
-            this.txtRankName.Name = "txtRankName";
-            this.txtRankName.Size = new System.Drawing.Size(100, 21);
-            this.txtRankName.TabIndex = 5;
-            this.txtRankName.TextChanged += new System.EventHandler(this.txtRankName_TextChanged);
+            this.rank_txtName.Location = new System.Drawing.Point(85, 20);
+            this.rank_txtName.Name = "rank_txtName";
+            this.rank_txtName.Size = new System.Drawing.Size(81, 21);
+            this.rank_txtName.TabIndex = 5;
+            this.rank_txtName.TextChanged += new System.EventHandler(this.txtRankName_TextChanged);
             // 
-            // btnColor
+            // rank_btnColor
             // 
-            this.btnColor.Location = new System.Drawing.Point(85, 127);
-            this.btnColor.Name = "btnColor";
-            this.btnColor.Size = new System.Drawing.Size(100, 23);
-            this.btnColor.TabIndex = 12;
-            this.btnColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnColor_Click);
+            this.rank_btnColor.Location = new System.Drawing.Point(85, 101);
+            this.rank_btnColor.Name = "rank_btnColor";
+            this.rank_btnColor.Size = new System.Drawing.Size(81, 23);
+            this.rank_btnColor.TabIndex = 12;
+            this.rank_btnColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnColor_Click);
             // 
-            // lblMOTD
+            // rank_lblMOTD
             // 
-            this.lblMOTD.AutoSize = true;
-            this.lblMOTD.Location = new System.Drawing.Point(39, 159);
-            this.lblMOTD.Name = "lblMOTD";
-            this.lblMOTD.Size = new System.Drawing.Size(38, 13);
-            this.lblMOTD.TabIndex = 16;
-            this.lblMOTD.Text = "MOTD:";
+            this.rank_lblMOTD.AutoSize = true;
+            this.rank_lblMOTD.Location = new System.Drawing.Point(41, 133);
+            this.rank_lblMOTD.Name = "rank_lblMOTD";
+            this.rank_lblMOTD.Size = new System.Drawing.Size(38, 13);
+            this.rank_lblMOTD.TabIndex = 16;
+            this.rank_lblMOTD.Text = "MOTD:";
             // 
-            // label11
+            // rank_lblName
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(39, 23);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(38, 13);
-            this.label11.TabIndex = 4;
-            this.label11.Text = "Name:";
-            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.rank_lblName.AutoSize = true;
+            this.rank_lblName.Location = new System.Drawing.Point(41, 23);
+            this.rank_lblName.Name = "rank_lblName";
+            this.rank_lblName.Size = new System.Drawing.Size(38, 13);
+            this.rank_lblName.TabIndex = 4;
+            this.rank_lblName.Text = "Name:";
+            this.rank_lblName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label13
+            // rank_lblDraw
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(18, 77);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(59, 13);
-            this.label13.TabIndex = 3;
-            this.label13.Text = "Draw limit:";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.rank_lblDraw.AutoSize = true;
+            this.rank_lblDraw.Location = new System.Drawing.Point(20, 50);
+            this.rank_lblDraw.Name = "rank_lblDraw";
+            this.rank_lblDraw.Size = new System.Drawing.Size(59, 13);
+            this.rank_lblDraw.TabIndex = 3;
+            this.rank_lblDraw.Text = "Draw limit:";
+            this.rank_lblDraw.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label16
+            // rank_lblColor
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(42, 131);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(35, 13);
-            this.label16.TabIndex = 11;
-            this.label16.Text = "Color:";
+            this.rank_lblColor.AutoSize = true;
+            this.rank_lblColor.Location = new System.Drawing.Point(44, 105);
+            this.rank_lblColor.Name = "rank_lblColor";
+            this.rank_lblColor.Size = new System.Drawing.Size(35, 13);
+            this.rank_lblColor.TabIndex = 11;
+            this.rank_lblColor.Text = "Color:";
             // 
-            // txtMaxUndo
+            // rank_txtUndo
             // 
-            this.txtMaxUndo.Location = new System.Drawing.Point(85, 101);
-            this.txtMaxUndo.Name = "txtMaxUndo";
-            this.txtMaxUndo.Size = new System.Drawing.Size(100, 21);
-            this.txtMaxUndo.TabIndex = 15;
-            this.txtMaxUndo.TextChanged += new System.EventHandler(this.txtMaxUndo_TextChanged);
+            this.rank_txtUndo.Location = new System.Drawing.Point(259, 47);
+            this.rank_txtUndo.Name = "rank_txtUndo";
+            this.rank_txtUndo.Size = new System.Drawing.Size(81, 21);
+            this.rank_txtUndo.TabIndex = 15;
+            this.rank_txtUndo.TextChanged += new System.EventHandler(this.txtMaxUndo_TextChanged);
             // 
-            // label52
+            // rank_lblUndo
             // 
-            this.label52.AutoSize = true;
-            this.label52.Location = new System.Drawing.Point(20, 104);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(57, 13);
-            this.label52.TabIndex = 14;
-            this.label52.Text = "Max Undo:";
-            this.label52.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.rank_lblUndo.AutoSize = true;
+            this.rank_lblUndo.Location = new System.Drawing.Point(193, 50);
+            this.rank_lblUndo.Name = "rank_lblUndo";
+            this.rank_lblUndo.Size = new System.Drawing.Size(60, 13);
+            this.rank_lblUndo.TabIndex = 14;
+            this.rank_lblUndo.Text = "Max /undo:";
+            this.rank_lblUndo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // button1
+            // rank_btnDel
             // 
-            this.button1.Location = new System.Drawing.Point(315, 6);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(57, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Del";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.rank_btnDel.Location = new System.Drawing.Point(79, 303);
+            this.rank_btnDel.Name = "rank_btnDel";
+            this.rank_btnDel.Size = new System.Drawing.Size(57, 23);
+            this.rank_btnDel.TabIndex = 2;
+            this.rank_btnDel.Text = "Delete";
+            this.rank_btnDel.UseVisualStyleBackColor = true;
+            this.rank_btnDel.Click += new System.EventHandler(this.button1_Click);
             // 
-            // btnAddRank
+            // rank_btnAdd
             // 
-            this.btnAddRank.Location = new System.Drawing.Point(243, 6);
-            this.btnAddRank.Name = "btnAddRank";
-            this.btnAddRank.Size = new System.Drawing.Size(57, 23);
-            this.btnAddRank.TabIndex = 1;
-            this.btnAddRank.Text = "Add";
-            this.btnAddRank.UseVisualStyleBackColor = true;
-            this.btnAddRank.Click += new System.EventHandler(this.btnAddRank_Click);
+            this.rank_btnAdd.Location = new System.Drawing.Point(6, 303);
+            this.rank_btnAdd.Name = "rank_btnAdd";
+            this.rank_btnAdd.Size = new System.Drawing.Size(57, 23);
+            this.rank_btnAdd.TabIndex = 1;
+            this.rank_btnAdd.Text = "Add";
+            this.rank_btnAdd.UseVisualStyleBackColor = true;
+            this.rank_btnAdd.Click += new System.EventHandler(this.btnAddRank_Click);
             // 
-            // listRanks
+            // rank_list
             // 
-            this.listRanks.FormattingEnabled = true;
-            this.listRanks.Location = new System.Drawing.Point(230, 35);
-            this.listRanks.Name = "listRanks";
-            this.listRanks.Size = new System.Drawing.Size(161, 368);
-            this.listRanks.TabIndex = 0;
-            this.listRanks.SelectedIndexChanged += new System.EventHandler(this.listRanks_SelectedIndexChanged);
+            this.rank_list.FormattingEnabled = true;
+            this.rank_list.Location = new System.Drawing.Point(6, 6);
+            this.rank_list.Name = "rank_list";
+            this.rank_list.Size = new System.Drawing.Size(130, 290);
+            this.rank_list.TabIndex = 0;
+            this.rank_list.SelectedIndexChanged += new System.EventHandler(this.listRanks_SelectedIndexChanged);
             // 
             // label85
             // 
@@ -1693,10 +1645,7 @@ namespace MCGalaxy.Gui
             this.grpExtra.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.grpExtra.Controls.Add(this.nudCooldownTime);
             this.grpExtra.Controls.Add(this.label84);
-            this.grpExtra.Controls.Add(this.lblOsMap);
-            this.grpExtra.Controls.Add(this.rank_cmbOsMap);
             this.grpExtra.Controls.Add(this.chkGuestLimitNotify);
-            this.grpExtra.Controls.Add(this.chkShowEmptyRanks);
             this.grpExtra.Controls.Add(this.chkRepeatMessages);
             this.grpExtra.Controls.Add(this.chkDeath);
             this.grpExtra.Controls.Add(this.txtRestartTime);
@@ -1737,25 +1686,6 @@ namespace MCGalaxy.Gui
             this.label84.Size = new System.Drawing.Size(115, 13);
             this.label84.TabIndex = 49;
             this.label84.Text = "Review cooldown time:";
-            // 
-            // lblOsMap
-            // 
-            this.lblOsMap.AutoSize = true;
-            this.lblOsMap.Location = new System.Drawing.Point(31, 210);
-            this.lblOsMap.Name = "lblOsMap";
-            this.lblOsMap.Size = new System.Drawing.Size(103, 13);
-            this.lblOsMap.TabIndex = 48;
-            this.lblOsMap.Text = "/os default perbuild:";
-            // 
-            // chkShowEmptyRanks
-            // 
-            this.chkShowEmptyRanks.AutoSize = true;
-            this.chkShowEmptyRanks.Location = new System.Drawing.Point(6, 66);
-            this.chkShowEmptyRanks.Name = "chkShowEmptyRanks";
-            this.chkShowEmptyRanks.Size = new System.Drawing.Size(135, 17);
-            this.chkShowEmptyRanks.TabIndex = 41;
-            this.chkShowEmptyRanks.Text = "Empty ranks in /players";
-            this.chkShowEmptyRanks.UseVisualStyleBackColor = true;
             // 
             // chkRepeatMessages
             // 
@@ -3293,6 +3223,307 @@ namespace MCGalaxy.Gui
             this.propsZG.TabIndex = 42;
             this.propsZG.ToolbarVisible = false;
             // 
+            // pageCommands
+            // 
+            this.pageCommands.AutoScroll = true;
+            this.pageCommands.Controls.Add(this.cmd_grpExtra);
+            this.pageCommands.Controls.Add(this.cmd_grpPermissions);
+            this.pageCommands.Controls.Add(this.cmd_btnCustom);
+            this.pageCommands.Controls.Add(this.cmd_btnHelp);
+            this.pageCommands.Controls.Add(this.cmd_list);
+            this.pageCommands.Location = new System.Drawing.Point(4, 22);
+            this.pageCommands.Name = "pageCommands";
+            this.pageCommands.Size = new System.Drawing.Size(498, 521);
+            this.pageCommands.TabIndex = 2;
+            this.pageCommands.Text = "Commands";
+            // 
+            // cmd_grpExtra
+            // 
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra7);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra7);
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra6);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra6);
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra5);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra5);
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra4);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra4);
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra3);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra3);
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra2);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra2);
+            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra1);
+            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra1);
+            this.cmd_grpExtra.Location = new System.Drawing.Point(133, 105);
+            this.cmd_grpExtra.Name = "cmd_grpExtra";
+            this.cmd_grpExtra.Size = new System.Drawing.Size(360, 205);
+            this.cmd_grpExtra.TabIndex = 28;
+            this.cmd_grpExtra.TabStop = false;
+            this.cmd_grpExtra.Text = "Extra permissions";
+            // 
+            // cmd_cmbExtra7
+            // 
+            this.cmd_cmbExtra7.FormattingEnabled = true;
+            this.cmd_cmbExtra7.Location = new System.Drawing.Point(10, 173);
+            this.cmd_cmbExtra7.Name = "cmd_cmbExtra7";
+            this.cmd_cmbExtra7.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra7.TabIndex = 42;
+            this.cmd_cmbExtra7.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra7
+            // 
+            this.cmd_lblExtra7.AutoSize = true;
+            this.cmd_lblExtra7.Location = new System.Drawing.Point(91, 176);
+            this.cmd_lblExtra7.Name = "cmd_lblExtra7";
+            this.cmd_lblExtra7.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra7.TabIndex = 41;
+            this.cmd_lblExtra7.Text = "+";
+            // 
+            // cmd_cmbExtra6
+            // 
+            this.cmd_cmbExtra6.FormattingEnabled = true;
+            this.cmd_cmbExtra6.Location = new System.Drawing.Point(10, 147);
+            this.cmd_cmbExtra6.Name = "cmd_cmbExtra6";
+            this.cmd_cmbExtra6.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra6.TabIndex = 40;
+            this.cmd_cmbExtra6.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra6
+            // 
+            this.cmd_lblExtra6.AutoSize = true;
+            this.cmd_lblExtra6.Location = new System.Drawing.Point(91, 150);
+            this.cmd_lblExtra6.Name = "cmd_lblExtra6";
+            this.cmd_lblExtra6.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra6.TabIndex = 39;
+            this.cmd_lblExtra6.Text = "+";
+            // 
+            // cmd_cmbExtra5
+            // 
+            this.cmd_cmbExtra5.FormattingEnabled = true;
+            this.cmd_cmbExtra5.Location = new System.Drawing.Point(10, 121);
+            this.cmd_cmbExtra5.Name = "cmd_cmbExtra5";
+            this.cmd_cmbExtra5.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra5.TabIndex = 38;
+            this.cmd_cmbExtra5.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra5
+            // 
+            this.cmd_lblExtra5.AutoSize = true;
+            this.cmd_lblExtra5.Location = new System.Drawing.Point(91, 124);
+            this.cmd_lblExtra5.Name = "cmd_lblExtra5";
+            this.cmd_lblExtra5.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra5.TabIndex = 37;
+            this.cmd_lblExtra5.Text = "+";
+            // 
+            // cmd_cmbExtra4
+            // 
+            this.cmd_cmbExtra4.FormattingEnabled = true;
+            this.cmd_cmbExtra4.Location = new System.Drawing.Point(10, 95);
+            this.cmd_cmbExtra4.Name = "cmd_cmbExtra4";
+            this.cmd_cmbExtra4.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra4.TabIndex = 36;
+            this.cmd_cmbExtra4.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra4
+            // 
+            this.cmd_lblExtra4.AutoSize = true;
+            this.cmd_lblExtra4.Location = new System.Drawing.Point(91, 98);
+            this.cmd_lblExtra4.Name = "cmd_lblExtra4";
+            this.cmd_lblExtra4.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra4.TabIndex = 35;
+            this.cmd_lblExtra4.Text = "+";
+            // 
+            // cmd_cmbExtra3
+            // 
+            this.cmd_cmbExtra3.FormattingEnabled = true;
+            this.cmd_cmbExtra3.Location = new System.Drawing.Point(10, 69);
+            this.cmd_cmbExtra3.Name = "cmd_cmbExtra3";
+            this.cmd_cmbExtra3.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra3.TabIndex = 34;
+            this.cmd_cmbExtra3.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra3
+            // 
+            this.cmd_lblExtra3.AutoSize = true;
+            this.cmd_lblExtra3.Location = new System.Drawing.Point(91, 72);
+            this.cmd_lblExtra3.Name = "cmd_lblExtra3";
+            this.cmd_lblExtra3.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra3.TabIndex = 33;
+            this.cmd_lblExtra3.Text = "+";
+            // 
+            // cmd_cmbExtra2
+            // 
+            this.cmd_cmbExtra2.FormattingEnabled = true;
+            this.cmd_cmbExtra2.Location = new System.Drawing.Point(10, 43);
+            this.cmd_cmbExtra2.Name = "cmd_cmbExtra2";
+            this.cmd_cmbExtra2.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra2.TabIndex = 32;
+            this.cmd_cmbExtra2.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra2
+            // 
+            this.cmd_lblExtra2.AutoSize = true;
+            this.cmd_lblExtra2.Location = new System.Drawing.Point(91, 46);
+            this.cmd_lblExtra2.Name = "cmd_lblExtra2";
+            this.cmd_lblExtra2.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra2.TabIndex = 31;
+            this.cmd_lblExtra2.Text = "+";
+            // 
+            // cmd_cmbExtra1
+            // 
+            this.cmd_cmbExtra1.FormattingEnabled = true;
+            this.cmd_cmbExtra1.Location = new System.Drawing.Point(10, 17);
+            this.cmd_cmbExtra1.Name = "cmd_cmbExtra1";
+            this.cmd_cmbExtra1.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbExtra1.TabIndex = 30;
+            this.cmd_cmbExtra1.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
+            // 
+            // cmd_lblExtra1
+            // 
+            this.cmd_lblExtra1.AutoSize = true;
+            this.cmd_lblExtra1.Location = new System.Drawing.Point(91, 20);
+            this.cmd_lblExtra1.Name = "cmd_lblExtra1";
+            this.cmd_lblExtra1.Size = new System.Drawing.Size(12, 13);
+            this.cmd_lblExtra1.TabIndex = 29;
+            this.cmd_lblExtra1.Text = "+";
+            // 
+            // cmd_grpPermissions
+            // 
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbAlw3);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbAlw2);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbDis3);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbDis2);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbAlw1);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbDis1);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbMin);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_lblMin);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_lblDisallow);
+            this.cmd_grpPermissions.Controls.Add(this.cmd_lblAllow);
+            this.cmd_grpPermissions.Location = new System.Drawing.Point(133, 6);
+            this.cmd_grpPermissions.Name = "cmd_grpPermissions";
+            this.cmd_grpPermissions.Size = new System.Drawing.Size(360, 94);
+            this.cmd_grpPermissions.TabIndex = 27;
+            this.cmd_grpPermissions.TabStop = false;
+            this.cmd_grpPermissions.Text = "Permissions";
+            // 
+            // cmd_cmbAlw3
+            // 
+            this.cmd_cmbAlw3.FormattingEnabled = true;
+            this.cmd_cmbAlw3.Location = new System.Drawing.Point(274, 67);
+            this.cmd_cmbAlw3.Name = "cmd_cmbAlw3";
+            this.cmd_cmbAlw3.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbAlw3.TabIndex = 28;
+            this.cmd_cmbAlw3.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
+            // 
+            // cmd_cmbAlw2
+            // 
+            this.cmd_cmbAlw2.FormattingEnabled = true;
+            this.cmd_cmbAlw2.Location = new System.Drawing.Point(187, 67);
+            this.cmd_cmbAlw2.Name = "cmd_cmbAlw2";
+            this.cmd_cmbAlw2.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbAlw2.TabIndex = 27;
+            this.cmd_cmbAlw2.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
+            // 
+            // cmd_cmbDis3
+            // 
+            this.cmd_cmbDis3.FormattingEnabled = true;
+            this.cmd_cmbDis3.Location = new System.Drawing.Point(274, 41);
+            this.cmd_cmbDis3.Name = "cmd_cmbDis3";
+            this.cmd_cmbDis3.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbDis3.TabIndex = 26;
+            this.cmd_cmbDis3.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
+            // 
+            // cmd_cmbDis2
+            // 
+            this.cmd_cmbDis2.FormattingEnabled = true;
+            this.cmd_cmbDis2.Location = new System.Drawing.Point(187, 41);
+            this.cmd_cmbDis2.Name = "cmd_cmbDis2";
+            this.cmd_cmbDis2.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbDis2.TabIndex = 25;
+            this.cmd_cmbDis2.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
+            // 
+            // cmd_cmbAlw1
+            // 
+            this.cmd_cmbAlw1.FormattingEnabled = true;
+            this.cmd_cmbAlw1.Location = new System.Drawing.Point(100, 67);
+            this.cmd_cmbAlw1.Name = "cmd_cmbAlw1";
+            this.cmd_cmbAlw1.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbAlw1.TabIndex = 24;
+            this.cmd_cmbAlw1.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
+            // 
+            // cmd_cmbDis1
+            // 
+            this.cmd_cmbDis1.FormattingEnabled = true;
+            this.cmd_cmbDis1.Location = new System.Drawing.Point(100, 41);
+            this.cmd_cmbDis1.Name = "cmd_cmbDis1";
+            this.cmd_cmbDis1.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbDis1.TabIndex = 23;
+            this.cmd_cmbDis1.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
+            // 
+            // cmd_cmbMin
+            // 
+            this.cmd_cmbMin.FormattingEnabled = true;
+            this.cmd_cmbMin.Location = new System.Drawing.Point(100, 14);
+            this.cmd_cmbMin.Name = "cmd_cmbMin";
+            this.cmd_cmbMin.Size = new System.Drawing.Size(81, 21);
+            this.cmd_cmbMin.TabIndex = 22;
+            this.cmd_cmbMin.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbMin_SelectedIndexChanged);
+            // 
+            // cmd_lblMin
+            // 
+            this.cmd_lblMin.AutoSize = true;
+            this.cmd_lblMin.Location = new System.Drawing.Point(10, 17);
+            this.cmd_lblMin.Name = "cmd_lblMin";
+            this.cmd_lblMin.Size = new System.Drawing.Size(89, 13);
+            this.cmd_lblMin.TabIndex = 16;
+            this.cmd_lblMin.Text = "Min rank needed:";
+            // 
+            // cmd_lblDisallow
+            // 
+            this.cmd_lblDisallow.AutoSize = true;
+            this.cmd_lblDisallow.Location = new System.Drawing.Point(10, 71);
+            this.cmd_lblDisallow.Name = "cmd_lblDisallow";
+            this.cmd_lblDisallow.Size = new System.Drawing.Size(91, 13);
+            this.cmd_lblDisallow.TabIndex = 18;
+            this.cmd_lblDisallow.Text = "Specifically allow:";
+            // 
+            // cmd_lblAllow
+            // 
+            this.cmd_lblAllow.AutoSize = true;
+            this.cmd_lblAllow.Location = new System.Drawing.Point(10, 44);
+            this.cmd_lblAllow.Name = "cmd_lblAllow";
+            this.cmd_lblAllow.Size = new System.Drawing.Size(80, 13);
+            this.cmd_lblAllow.TabIndex = 17;
+            this.cmd_lblAllow.Text = "But don\'t allow:";
+            // 
+            // cmd_btnCustom
+            // 
+            this.cmd_btnCustom.Location = new System.Drawing.Point(370, 485);
+            this.cmd_btnCustom.Name = "cmd_btnCustom";
+            this.cmd_btnCustom.Size = new System.Drawing.Size(121, 29);
+            this.cmd_btnCustom.TabIndex = 26;
+            this.cmd_btnCustom.Text = "Custom commands";
+            this.cmd_btnCustom.UseVisualStyleBackColor = true;
+            this.cmd_btnCustom.Click += new System.EventHandler(this.cmd_btnCustom_Click);
+            // 
+            // cmd_btnHelp
+            // 
+            this.cmd_btnHelp.Location = new System.Drawing.Point(6, 485);
+            this.cmd_btnHelp.Name = "cmd_btnHelp";
+            this.cmd_btnHelp.Size = new System.Drawing.Size(121, 29);
+            this.cmd_btnHelp.TabIndex = 25;
+            this.cmd_btnHelp.Text = "Help information";
+            this.cmd_btnHelp.UseVisualStyleBackColor = true;
+            this.cmd_btnHelp.Click += new System.EventHandler(this.cmd_btnHelp_Click);
+            // 
+            // cmd_list
+            // 
+            this.cmd_list.FormattingEnabled = true;
+            this.cmd_list.Location = new System.Drawing.Point(6, 6);
+            this.cmd_list.Name = "cmd_list";
+            this.cmd_list.Size = new System.Drawing.Size(121, 472);
+            this.cmd_list.TabIndex = 24;
+            this.cmd_list.SelectedIndexChanged += new System.EventHandler(this.cmd_list_SelectedIndexChanged);
+            // 
             // pageSecurity
             // 
             this.pageSecurity.BackColor = System.Drawing.SystemColors.Control;
@@ -3782,306 +4013,24 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
-            // pageCommands
+            // lblOsMap
             // 
-            this.pageCommands.AutoScroll = true;
-            this.pageCommands.Controls.Add(this.cmd_grpExtra);
-            this.pageCommands.Controls.Add(this.cmd_grpPermissions);
-            this.pageCommands.Controls.Add(this.cmd_btnCustom);
-            this.pageCommands.Controls.Add(this.cmd_btnHelp);
-            this.pageCommands.Controls.Add(this.cmd_list);
-            this.pageCommands.Location = new System.Drawing.Point(4, 22);
-            this.pageCommands.Name = "pageCommands";
-            this.pageCommands.Size = new System.Drawing.Size(498, 521);
-            this.pageCommands.TabIndex = 2;
-            this.pageCommands.Text = "Commands";
+            this.lblOsMap.AutoSize = true;
+            this.lblOsMap.Location = new System.Drawing.Point(11, 50);
+            this.lblOsMap.Name = "lblOsMap";
+            this.lblOsMap.Size = new System.Drawing.Size(103, 13);
+            this.lblOsMap.TabIndex = 50;
+            this.lblOsMap.Text = "/os default perbuild:";
             // 
-            // cmd_btnHelp
+            // rank_cmbOsMap
             // 
-            this.cmd_btnHelp.Location = new System.Drawing.Point(6, 485);
-            this.cmd_btnHelp.Name = "cmd_btnHelp";
-            this.cmd_btnHelp.Size = new System.Drawing.Size(121, 29);
-            this.cmd_btnHelp.TabIndex = 25;
-            this.cmd_btnHelp.Text = "Help information";
-            this.cmd_btnHelp.UseVisualStyleBackColor = true;
-            this.cmd_btnHelp.Click += new System.EventHandler(this.cmd_btnHelp_Click);
-            // 
-            // cmd_list
-            // 
-            this.cmd_list.FormattingEnabled = true;
-            this.cmd_list.Location = new System.Drawing.Point(6, 6);
-            this.cmd_list.Name = "cmd_list";
-            this.cmd_list.Size = new System.Drawing.Size(121, 472);
-            this.cmd_list.TabIndex = 24;
-            this.cmd_list.SelectedIndexChanged += new System.EventHandler(this.cmd_list_SelectedIndexChanged);
-            // 
-            // cmd_btnCustom
-            // 
-            this.cmd_btnCustom.Location = new System.Drawing.Point(370, 485);
-            this.cmd_btnCustom.Name = "cmd_btnCustom";
-            this.cmd_btnCustom.Size = new System.Drawing.Size(121, 29);
-            this.cmd_btnCustom.TabIndex = 26;
-            this.cmd_btnCustom.Text = "Custom commands";
-            this.cmd_btnCustom.UseVisualStyleBackColor = true;
-            this.cmd_btnCustom.Click += new System.EventHandler(this.cmd_btnCustom_Click);
-            // 
-            // cmd_grpPermissions
-            // 
-            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbAlw3);
-            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbAlw2);
-            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbDis3);
-            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbDis2);
-            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbAlw1);
-            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbDis1);
-            this.cmd_grpPermissions.Controls.Add(this.cmd_cmbMin);
-            this.cmd_grpPermissions.Controls.Add(this.cmd_lblMin);
-            this.cmd_grpPermissions.Controls.Add(this.cmd_lblDisallow);
-            this.cmd_grpPermissions.Controls.Add(this.cmd_lblAllow);
-            this.cmd_grpPermissions.Location = new System.Drawing.Point(133, 6);
-            this.cmd_grpPermissions.Name = "cmd_grpPermissions";
-            this.cmd_grpPermissions.Size = new System.Drawing.Size(360, 94);
-            this.cmd_grpPermissions.TabIndex = 27;
-            this.cmd_grpPermissions.TabStop = false;
-            this.cmd_grpPermissions.Text = "Permissions";
-            // 
-            // cmd_cmbAlw3
-            // 
-            this.cmd_cmbAlw3.FormattingEnabled = true;
-            this.cmd_cmbAlw3.Location = new System.Drawing.Point(274, 67);
-            this.cmd_cmbAlw3.Name = "cmd_cmbAlw3";
-            this.cmd_cmbAlw3.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbAlw3.TabIndex = 28;
-            this.cmd_cmbAlw3.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
-            // 
-            // cmd_cmbAlw2
-            // 
-            this.cmd_cmbAlw2.FormattingEnabled = true;
-            this.cmd_cmbAlw2.Location = new System.Drawing.Point(187, 67);
-            this.cmd_cmbAlw2.Name = "cmd_cmbAlw2";
-            this.cmd_cmbAlw2.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbAlw2.TabIndex = 27;
-            this.cmd_cmbAlw2.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
-            // 
-            // cmd_cmbDis3
-            // 
-            this.cmd_cmbDis3.FormattingEnabled = true;
-            this.cmd_cmbDis3.Location = new System.Drawing.Point(274, 41);
-            this.cmd_cmbDis3.Name = "cmd_cmbDis3";
-            this.cmd_cmbDis3.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbDis3.TabIndex = 26;
-            this.cmd_cmbDis3.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
-            // 
-            // cmd_cmbDis2
-            // 
-            this.cmd_cmbDis2.FormattingEnabled = true;
-            this.cmd_cmbDis2.Location = new System.Drawing.Point(187, 41);
-            this.cmd_cmbDis2.Name = "cmd_cmbDis2";
-            this.cmd_cmbDis2.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbDis2.TabIndex = 25;
-            this.cmd_cmbDis2.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
-            // 
-            // cmd_cmbAlw1
-            // 
-            this.cmd_cmbAlw1.FormattingEnabled = true;
-            this.cmd_cmbAlw1.Location = new System.Drawing.Point(100, 67);
-            this.cmd_cmbAlw1.Name = "cmd_cmbAlw1";
-            this.cmd_cmbAlw1.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbAlw1.TabIndex = 24;
-            this.cmd_cmbAlw1.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
-            // 
-            // cmd_cmbDis1
-            // 
-            this.cmd_cmbDis1.FormattingEnabled = true;
-            this.cmd_cmbDis1.Location = new System.Drawing.Point(100, 41);
-            this.cmd_cmbDis1.Name = "cmd_cmbDis1";
-            this.cmd_cmbDis1.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbDis1.TabIndex = 23;
-            this.cmd_cmbDis1.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbSpecific_SelectedIndexChanged);
-            // 
-            // cmd_cmbMin
-            // 
-            this.cmd_cmbMin.FormattingEnabled = true;
-            this.cmd_cmbMin.Location = new System.Drawing.Point(100, 14);
-            this.cmd_cmbMin.Name = "cmd_cmbMin";
-            this.cmd_cmbMin.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbMin.TabIndex = 22;
-            this.cmd_cmbMin.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbMin_SelectedIndexChanged);
-            // 
-            // cmd_lblMin
-            // 
-            this.cmd_lblMin.AutoSize = true;
-            this.cmd_lblMin.Location = new System.Drawing.Point(10, 17);
-            this.cmd_lblMin.Name = "cmd_lblMin";
-            this.cmd_lblMin.Size = new System.Drawing.Size(89, 13);
-            this.cmd_lblMin.TabIndex = 16;
-            this.cmd_lblMin.Text = "Min rank needed:";
-            // 
-            // cmd_lblDisallow
-            // 
-            this.cmd_lblDisallow.AutoSize = true;
-            this.cmd_lblDisallow.Location = new System.Drawing.Point(10, 71);
-            this.cmd_lblDisallow.Name = "cmd_lblDisallow";
-            this.cmd_lblDisallow.Size = new System.Drawing.Size(91, 13);
-            this.cmd_lblDisallow.TabIndex = 18;
-            this.cmd_lblDisallow.Text = "Specifically allow:";
-            // 
-            // cmd_lblAllow
-            // 
-            this.cmd_lblAllow.AutoSize = true;
-            this.cmd_lblAllow.Location = new System.Drawing.Point(10, 44);
-            this.cmd_lblAllow.Name = "cmd_lblAllow";
-            this.cmd_lblAllow.Size = new System.Drawing.Size(80, 13);
-            this.cmd_lblAllow.TabIndex = 17;
-            this.cmd_lblAllow.Text = "But don\'t allow:";
-            // 
-            // cmd_grpExtra
-            // 
-            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra7);
-            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra7);
-            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra6);
-            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra6);
-            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra5);
-            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra5);
-            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra4);
-            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra4);
-            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra3);
-            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra3);
-            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra2);
-            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra2);
-            this.cmd_grpExtra.Controls.Add(this.cmd_cmbExtra1);
-            this.cmd_grpExtra.Controls.Add(this.cmd_lblExtra1);
-            this.cmd_grpExtra.Location = new System.Drawing.Point(133, 105);
-            this.cmd_grpExtra.Name = "cmd_grpExtra";
-            this.cmd_grpExtra.Size = new System.Drawing.Size(360, 205);
-            this.cmd_grpExtra.TabIndex = 28;
-            this.cmd_grpExtra.TabStop = false;
-            this.cmd_grpExtra.Text = "Extra permissions";
-            // 
-            // cmd_cmbExtra1
-            // 
-            this.cmd_cmbExtra1.FormattingEnabled = true;
-            this.cmd_cmbExtra1.Location = new System.Drawing.Point(10, 17);
-            this.cmd_cmbExtra1.Name = "cmd_cmbExtra1";
-            this.cmd_cmbExtra1.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbExtra1.TabIndex = 30;
-            this.cmd_cmbExtra1.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
-            // 
-            // cmd_lblExtra1
-            // 
-            this.cmd_lblExtra1.AutoSize = true;
-            this.cmd_lblExtra1.Location = new System.Drawing.Point(91, 20);
-            this.cmd_lblExtra1.Name = "cmd_lblExtra1";
-            this.cmd_lblExtra1.Size = new System.Drawing.Size(12, 13);
-            this.cmd_lblExtra1.TabIndex = 29;
-            this.cmd_lblExtra1.Text = "+";
-            // 
-            // cmd_cmbExtra2
-            // 
-            this.cmd_cmbExtra2.FormattingEnabled = true;
-            this.cmd_cmbExtra2.Location = new System.Drawing.Point(10, 43);
-            this.cmd_cmbExtra2.Name = "cmd_cmbExtra2";
-            this.cmd_cmbExtra2.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbExtra2.TabIndex = 32;
-            this.cmd_cmbExtra2.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
-            // 
-            // cmd_lblExtra2
-            // 
-            this.cmd_lblExtra2.AutoSize = true;
-            this.cmd_lblExtra2.Location = new System.Drawing.Point(91, 46);
-            this.cmd_lblExtra2.Name = "cmd_lblExtra2";
-            this.cmd_lblExtra2.Size = new System.Drawing.Size(12, 13);
-            this.cmd_lblExtra2.TabIndex = 31;
-            this.cmd_lblExtra2.Text = "+";
-            // 
-            // cmd_cmbExtra3
-            // 
-            this.cmd_cmbExtra3.FormattingEnabled = true;
-            this.cmd_cmbExtra3.Location = new System.Drawing.Point(10, 69);
-            this.cmd_cmbExtra3.Name = "cmd_cmbExtra3";
-            this.cmd_cmbExtra3.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbExtra3.TabIndex = 34;
-            this.cmd_cmbExtra3.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
-            // 
-            // cmd_lblExtra3
-            // 
-            this.cmd_lblExtra3.AutoSize = true;
-            this.cmd_lblExtra3.Location = new System.Drawing.Point(91, 72);
-            this.cmd_lblExtra3.Name = "cmd_lblExtra3";
-            this.cmd_lblExtra3.Size = new System.Drawing.Size(12, 13);
-            this.cmd_lblExtra3.TabIndex = 33;
-            this.cmd_lblExtra3.Text = "+";
-            // 
-            // cmd_cmbExtra4
-            // 
-            this.cmd_cmbExtra4.FormattingEnabled = true;
-            this.cmd_cmbExtra4.Location = new System.Drawing.Point(10, 95);
-            this.cmd_cmbExtra4.Name = "cmd_cmbExtra4";
-            this.cmd_cmbExtra4.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbExtra4.TabIndex = 36;
-            this.cmd_cmbExtra4.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
-            // 
-            // cmd_lblExtra4
-            // 
-            this.cmd_lblExtra4.AutoSize = true;
-            this.cmd_lblExtra4.Location = new System.Drawing.Point(91, 98);
-            this.cmd_lblExtra4.Name = "cmd_lblExtra4";
-            this.cmd_lblExtra4.Size = new System.Drawing.Size(12, 13);
-            this.cmd_lblExtra4.TabIndex = 35;
-            this.cmd_lblExtra4.Text = "+";
-            // 
-            // cmd_cmbExtra5
-            // 
-            this.cmd_cmbExtra5.FormattingEnabled = true;
-            this.cmd_cmbExtra5.Location = new System.Drawing.Point(10, 121);
-            this.cmd_cmbExtra5.Name = "cmd_cmbExtra5";
-            this.cmd_cmbExtra5.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbExtra5.TabIndex = 38;
-            this.cmd_cmbExtra5.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
-            // 
-            // cmd_lblExtra5
-            // 
-            this.cmd_lblExtra5.AutoSize = true;
-            this.cmd_lblExtra5.Location = new System.Drawing.Point(91, 124);
-            this.cmd_lblExtra5.Name = "cmd_lblExtra5";
-            this.cmd_lblExtra5.Size = new System.Drawing.Size(12, 13);
-            this.cmd_lblExtra5.TabIndex = 37;
-            this.cmd_lblExtra5.Text = "+";
-            // 
-            // cmd_cmbExtra6
-            // 
-            this.cmd_cmbExtra6.FormattingEnabled = true;
-            this.cmd_cmbExtra6.Location = new System.Drawing.Point(10, 147);
-            this.cmd_cmbExtra6.Name = "cmd_cmbExtra6";
-            this.cmd_cmbExtra6.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbExtra6.TabIndex = 40;
-            this.cmd_cmbExtra6.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
-            // 
-            // cmd_lblExtra6
-            // 
-            this.cmd_lblExtra6.AutoSize = true;
-            this.cmd_lblExtra6.Location = new System.Drawing.Point(91, 150);
-            this.cmd_lblExtra6.Name = "cmd_lblExtra6";
-            this.cmd_lblExtra6.Size = new System.Drawing.Size(12, 13);
-            this.cmd_lblExtra6.TabIndex = 39;
-            this.cmd_lblExtra6.Text = "+";
-            // 
-            // cmd_cmbExtra7
-            // 
-            this.cmd_cmbExtra7.FormattingEnabled = true;
-            this.cmd_cmbExtra7.Location = new System.Drawing.Point(10, 173);
-            this.cmd_cmbExtra7.Name = "cmd_cmbExtra7";
-            this.cmd_cmbExtra7.Size = new System.Drawing.Size(81, 21);
-            this.cmd_cmbExtra7.TabIndex = 42;
-            this.cmd_cmbExtra7.SelectedIndexChanged += new System.EventHandler(this.cmd_cmbExtra_SelectedIndexChanged);
-            // 
-            // cmd_lblExtra7
-            // 
-            this.cmd_lblExtra7.AutoSize = true;
-            this.cmd_lblExtra7.Location = new System.Drawing.Point(91, 176);
-            this.cmd_lblExtra7.Name = "cmd_lblExtra7";
-            this.cmd_lblExtra7.Size = new System.Drawing.Size(12, 13);
-            this.cmd_lblExtra7.TabIndex = 41;
-            this.cmd_lblExtra7.Text = "+";
+            this.rank_cmbOsMap.FormattingEnabled = true;
+            this.rank_cmbOsMap.Location = new System.Drawing.Point(120, 47);
+            this.rank_cmbOsMap.Name = "rank_cmbOsMap";
+            this.rank_cmbOsMap.Size = new System.Drawing.Size(80, 21);
+            this.rank_cmbOsMap.TabIndex = 49;
+            this.toolTip.SetToolTip(this.rank_cmbOsMap, "Default min rank that can build on maps made with /os map add.\nIf \'nobody\' is sel" +
+                        "ected, the default min rank used is the min rank that can use /os.");
             // 
             // PropertyWindow
             // 
@@ -4117,7 +4066,6 @@ namespace MCGalaxy.Gui
             this.blk_grpPermissions.ResumeLayout(false);
             this.blk_grpPermissions.PerformLayout();
             this.pageRanks.ResumeLayout(false);
-            this.pageRanks.PerformLayout();
             this.gbRankGeneral.ResumeLayout(false);
             this.gbRankGeneral.PerformLayout();
             this.gbRankSettings.ResumeLayout(false);
@@ -4184,6 +4132,11 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.TntWrsScrLmtUpDwn)).EndInit();
             this.groupBox30.ResumeLayout(false);
             this.tabPage11.ResumeLayout(false);
+            this.pageCommands.ResumeLayout(false);
+            this.cmd_grpExtra.ResumeLayout(false);
+            this.cmd_grpExtra.PerformLayout();
+            this.cmd_grpPermissions.ResumeLayout(false);
+            this.cmd_grpPermissions.PerformLayout();
             this.pageSecurity.ResumeLayout(false);
             this.sec_grpChat.ResumeLayout(false);
             this.sec_grpChat.PerformLayout();
@@ -4206,9 +4159,6 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
-            this.pageCommands.ResumeLayout(false);
-            this.cmd_grpPermissions.ResumeLayout(false);
-            this.cmd_grpPermissions.PerformLayout();
             this.ResumeLayout(false);
         }
         private System.Windows.Forms.Label cmd_lblExtra1;
@@ -4265,10 +4215,10 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label lblOsMap;
         private System.Windows.Forms.PropertyGrid pg_lavaMap;
         private System.Windows.Forms.PropertyGrid pg_lava;
-        private System.Windows.Forms.TextBox txtPrefix;
-        private System.Windows.Forms.TextBox txtOSMaps;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox rank_txtPrefix;
+        private System.Windows.Forms.TextBox rank_txtOSMaps;
+        private System.Windows.Forms.Label rank_lblOSMaps;
+        private System.Windows.Forms.Label rank_lblPrefix;
         private System.Windows.Forms.Label srv_lblOwner;
         private System.Windows.Forms.GroupBox gbRankSettings;
         private System.Windows.Forms.GroupBox gbRankGeneral;
@@ -4367,17 +4317,17 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.ListBox blk_list;
         private System.Windows.Forms.TabPage pageCommands;
         private System.Windows.Forms.TabPage pageRanks;
-        private System.Windows.Forms.Button btnColor;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.TextBox txtLimit;
-        private System.Windows.Forms.TextBox txtPermission;
-        private System.Windows.Forms.TextBox txtRankName;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button btnAddRank;
-        private System.Windows.Forms.ListBox listRanks;
+        private System.Windows.Forms.Button rank_btnColor;
+        private System.Windows.Forms.Label rank_lblColor;
+        private System.Windows.Forms.TextBox rank_txtLimit;
+        private System.Windows.Forms.TextBox rank_txtPerm;
+        private System.Windows.Forms.TextBox rank_txtName;
+        private System.Windows.Forms.Label rank_lblDraw;
+        private System.Windows.Forms.Label rank_lblPerm;
+        private System.Windows.Forms.Label rank_lblName;
+        private System.Windows.Forms.Button rank_btnDel;
+        private System.Windows.Forms.Button rank_btnAdd;
+        private System.Windows.Forms.ListBox rank_list;
         private System.Windows.Forms.TabPage pageMisc;
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.TextBox hackrank_kick_time;
@@ -4424,10 +4374,8 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox srv_txtName;
         private System.Windows.Forms.Button srv_btnPort;
         private System.Windows.Forms.CheckBox adv_chkLogBeat;
-        private System.Windows.Forms.ComboBox rank_cmbOpChat;
-        private System.Windows.Forms.Label lblOpChat;
         private System.Windows.Forms.ComboBox rank_cmbDefault;
-        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label rank_lblDefault;
         private System.Windows.Forms.CheckBox adv_chkRestart;
         private System.Windows.Forms.CheckBox srv_chkPublic;
         private System.Windows.Forms.CheckBox lvl_chkAutoload;
@@ -4441,11 +4389,9 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label srv_lblName;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.CheckBox srv_cbMustAgree;
-        private System.Windows.Forms.ComboBox rank_cmbAdminChat;
-        private System.Windows.Forms.Label label37;
-        private System.Windows.Forms.CheckBox chkAdminsJoinSilent;
+        private System.Windows.Forms.CheckBox rank_cbSilentAdmins;
         private System.Windows.Forms.Button adv_btnEditTexts;
-        private System.Windows.Forms.CheckBox rank_chkTpToHigherRanks;
+        private System.Windows.Forms.CheckBox rank_cbTPHigher;
         private System.Windows.Forms.GroupBox irc_grp;
         private System.Windows.Forms.GroupBox srv_grp;
         private System.Windows.Forms.GroupBox adv_grp;
@@ -4478,9 +4424,9 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox irc_cbTitles;
         private System.Windows.Forms.Label irc_lblPort;
         private System.Windows.Forms.TextBox irc_txtPort;
-        private System.Windows.Forms.CheckBox chkShowEmptyRanks;
-        private System.Windows.Forms.TextBox txtMaxUndo;
-        private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.CheckBox rank_cbEmpty;
+        private System.Windows.Forms.TextBox rank_txtUndo;
+        private System.Windows.Forms.Label rank_lblUndo;
         private System.Windows.Forms.GroupBox groupBox20;
         private System.Windows.Forms.Label label54;
         private System.Windows.Forms.Label label53;
@@ -4508,8 +4454,8 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox chkGuestLimitNotify;
         private System.Windows.Forms.NumericUpDown nudCooldownTime;
         private System.Windows.Forms.Label label84;
-        private System.Windows.Forms.Label lblMOTD;
-        private System.Windows.Forms.TextBox txtGrpMOTD;
+        private System.Windows.Forms.Label rank_lblMOTD;
+        private System.Windows.Forms.TextBox rank_txtMOTD;
         private System.Windows.Forms.TabPage tabPage14;
         private System.Windows.Forms.TextBox SlctdTntWrdStatus;
         private System.Windows.Forms.Label label86;
