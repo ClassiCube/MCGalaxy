@@ -17,9 +17,9 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdMissile : WeaponCmd {
@@ -42,9 +42,9 @@ namespace MCGalaxy.Commands.Fun {
             args.ending = bp.ending;
             args.pos = MakePos(p);
 
-            Thread gunThread = new Thread(() => DoShoot(args));
-            gunThread.Name = "MCG_Missile";
-            gunThread.Start();
+            SchedulerTask task = new SchedulerTask(MissileCallback, args,
+                                                   TimeSpan.FromMilliseconds(100), true);
+            p.CriticalTasks.Add(task);
         }
         
         class MissileArgs {
@@ -52,6 +52,7 @@ namespace MCGalaxy.Commands.Fun {
             public ExtBlock block;
             public EndType ending;
             public Vec3U16 pos;
+            public bool Moving = true;
             
             public List<Vec3U16> previous = new List<Vec3U16>();
             public List<Vec3U16> allBlocks = new List<Vec3U16>();
@@ -59,29 +60,38 @@ namespace MCGalaxy.Commands.Fun {
             public int iterations;
         }
 
-        void DoShoot(MissileArgs args) {
+        static void MissileCallback(SchedulerTask task) {
+            MissileArgs args = (MissileArgs)task.State;
             Player p = args.player;
+            if (args.Moving) { PerformMove(args); return; }            
             
+            if (args.ending == EndType.Teleport) {
+                args.ending = EndType.Normal;
+                int index = args.previous.Count - 3;
+                if (index >= 0 && index < args.previous.Count)
+                    DoTeleport(p, args.previous[index]);
+            }
+            
+            if (args.previous.Count > 0) {
+                Vec3U16 pos = args.previous[0];
+                args.previous.RemoveAt(0);
+                p.level.Blockchange(pos.X, pos.Y, pos.Z, ExtBlock.Air, true);
+            }
+            task.Repeating = args.previous.Count > 0;
+        }
+        
+        static void PerformMove(MissileArgs args) {
             while (true) {
                 args.iterations++;
                 Vec3U16 target = MissileTarget(args);
                 FindNext(target, ref args.pos, args.buffer);
 
                 if (args.iterations <= 3) continue;
-                if (!MoveMissile(args, args.pos, target)) break;
-                Thread.Sleep(100);
-            }
-
-            if (args.ending == EndType.Teleport) {
-                int index = args.previous.Count - 3;
-                if (index >= 0 && index < args.previous.Count)
-                    DoTeleport(p, args.previous[index]);
-            }
-            foreach (Vec3U16 pos1 in args.previous) {
-                p.level.Blockchange(pos1.X, pos1.Y, pos1.Z, ExtBlock.Air, true);
-                Thread.Sleep(100);
+                args.Moving = MoveMissile(args, args.pos, target);
+                return;
             }
         }
+        
         
         static Vec3U16 MissileTarget(MissileArgs args) {
             Player p = args.player;
@@ -147,7 +157,7 @@ namespace MCGalaxy.Commands.Fun {
             return (Vec3U16)p.Pos.BlockCoords;
         }
         
-        void FindNext(Vec3U16 lookedAt, ref Vec3U16 pos, List<Vec3S32> buffer) {
+        static void FindNext(Vec3U16 lookedAt, ref Vec3U16 pos, List<Vec3S32> buffer) {
             LineDrawOp.DrawLine(pos.X, pos.Y, pos.Z, 2, lookedAt.X, lookedAt.Y, lookedAt.Z, buffer);
             Vec3U16 end = (Vec3U16)buffer[buffer.Count - 1];
             pos.X = end.X; pos.Y = end.Y; pos.Z = end.Z;

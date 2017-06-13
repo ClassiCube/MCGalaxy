@@ -248,11 +248,6 @@ namespace MCGalaxy {
             }
         }
 
-        [Obsolete("Use LevelInfo.Loaded.Add()")]
-        public static void addLevel(Level level) {
-            LevelInfo.Loaded.Add(level);
-        }
-
         public void PlayerListUpdate() {
             if (Server.s.OnPlayerListChange != null) Server.s.OnPlayerListChange(Player.players);
         }
@@ -335,10 +330,6 @@ namespace MCGalaxy {
         internal void SettingsUpdate() {
             if (OnSettingsUpdate != null) OnSettingsUpdate();
         }
-
-        public static string FindColor(string name) {
-            return Group.findPlayerGroup(name).color;
-        }
         
         /// <summary> Sets the main level of the server that new players spawn in. </summary>
         /// <returns> true if main level was changed, false if not
@@ -367,7 +358,9 @@ namespace MCGalaxy {
             long end = GC.GetTotalMemory(false);
             double deltaKB = (start - end) / 1024.0;
             if (deltaKB >= 100.0) {
-                Server.s.Log("GC performed (freed " + deltaKB.ToString("F2") + " KB)", true);
+                string track = (end / 1024.0).ToString("F2");
+                string delta = deltaKB.ToString("F2");
+                Server.s.Log("GC performed (tracking " + track + " KB, freed " + delta + " KB)", true);
             }
         }
     }

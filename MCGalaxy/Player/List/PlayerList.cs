@@ -125,8 +125,5 @@ namespace MCGalaxy {
             }
             return list;
         }
-        
-        [Obsolete("Group parameter is completely ignored.")]
-        public static PlayerList Load(string path, Group grp) { return Load(path); }
     }
 }

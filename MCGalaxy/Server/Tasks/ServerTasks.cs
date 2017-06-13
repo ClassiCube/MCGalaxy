@@ -73,9 +73,13 @@ namespace MCGalaxy.Tasks {
             }
             
             SchedulerTask[] tasks = p.CriticalTasks.Items;
+            DateTime now = DateTime.UtcNow;
             for (int i = 0; i < tasks.Length; i++) {
                 SchedulerTask task = tasks[i];
+                if (now < task.NextRun) continue;
+                
                 task.Callback(task);
+                task.NextRun = now.Add(task.Delay);
                 
                 if (task.Repeating) continue;
                 p.CriticalTasks.Remove(task);
