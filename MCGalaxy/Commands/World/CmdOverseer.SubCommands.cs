@@ -152,24 +152,32 @@ namespace MCGalaxy.Commands.World {
             if (args.Length == 3) value += " flat";
 
             CmdNewLvl newLvl = (CmdNewLvl)Command.all.Find("newlvl"); // TODO: this is a nasty hack, find a better way
-            if (!newLvl.GenerateMap(p, level + " " + value)) return;
-            
-            // Set default perbuild permissions
-            CmdLoad.LoadLevel(null, level);
-            Level lvl = LevelInfo.FindExact(level);
+            args = (level + " " + value).SplitSpaces();
+            Level lvl = newLvl.GenerateMap(p, args);
             if (lvl == null) return;
+            SetBuildPerms(p, lvl);
             
+            try {
+                lvl.Save(true);
+            } finally {
+                lvl.Dispose();
+                Server.DoGC();
+            }
+        }
+        
+        static void SetBuildPerms(Player p, Level lvl) {
             lvl.RealmOwner = p.name;
-            Command.all.Find("perbuild").Use(null, lvl.name + " +" + p.name);
+            lvl.BuildAccess.Whitelist(null, p.name);
             CmdZone.ZoneAll(lvl, p.name);
             
             LevelPermission osPerm = Server.osPerbuildDefault;
             if (osPerm == LevelPermission.Nobody)
                 osPerm = CommandPerms.MinPerm(Command.all.Find("overseer"));
+            
             Group grp = Group.findPerm(osPerm);
             if (grp == null) return;
             
-            Command.all.Find("perbuild").Use(null, lvl.name + " " + grp.name);
+            lvl.BuildAccess.SetMin(null, grp);
             Player.Message(p, "Use %T/os zone add [name] %Sto allow " +
                            "players ranked below " + grp.ColoredName + " %Sto build in the map.");
         }
