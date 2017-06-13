@@ -44,10 +44,10 @@ namespace MCGalaxy.Commands.Fun {
                 return;
             }
 
-            CatchPos cpos = default(CatchPos);
-            cpos.ending = GetEnd(p, message);
-            if (cpos.ending == EndType.Invalid) return;
-            p.blockchangeObject = cpos;
+            WeaponType weaponType = GetWeaponType(p, message);
+            if (weaponType == WeaponType.Invalid) return;
+            
+            p.blockchangeObject = weaponType;
             p.ClearBlockchange();
             p.Blockchange += PlacedMark;
 
@@ -61,15 +61,15 @@ namespace MCGalaxy.Commands.Fun {
             p.CriticalTasks.Add(task);
         }
         
-        EndType GetEnd(Player p, string mode) {
-            if (mode == "") return EndType.Normal;
-            if (mode.CaselessEq("destroy")) return EndType.Destroy;
-            if (mode.CaselessEq("tp") || mode.CaselessEq("teleport")) return EndType.Teleport;
-            if (mode.CaselessEq("explode")) return EndType.Explode;
-            if (mode.CaselessEq("laser")) return EndType.Laser;
+        WeaponType GetWeaponType(Player p, string mode) {
+            if (mode == "") return WeaponType.Normal;
+            if (mode.CaselessEq("destroy")) return WeaponType.Destroy;
+            if (mode.CaselessEq("tp") || mode.CaselessEq("teleport")) return WeaponType.Teleport;
+            if (mode.CaselessEq("explode")) return WeaponType.Explode;
+            if (mode.CaselessEq("laser")) return WeaponType.Laser;
             
             Help(p);
-            return EndType.Invalid;
+            return WeaponType.Invalid;
         }
         
         class AimState {
@@ -137,6 +137,42 @@ namespace MCGalaxy.Commands.Fun {
         
         protected abstract void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block);
         
+        
+        protected class WeaponArgs {
+            public Player player;
+            public ExtBlock block;
+            public WeaponType weaponType;
+            public Vec3U16 pos, start;
+            public Vec3F32 dir;
+            public bool moving = true;
+            
+            public List<Vec3U16> previous = new List<Vec3U16>();
+            public List<Vec3U16> allBlocks = new List<Vec3U16>();
+            public List<Vec3S32> buffer = new List<Vec3S32>();
+            public int iterations;
+            
+            public Vec3U16 PosAt(int i) {
+                Vec3U16 target;
+                target.X = (ushort)Math.Round(start.X + (double)(dir.X * i));
+                target.Y = (ushort)Math.Round(start.Y + (double)(dir.Y * i));
+                target.Z = (ushort)Math.Round(start.Z + (double)(dir.Z * i));
+                return target;
+            }
+            
+            public void TeleportSourcePlayer() {
+                if (weaponType != WeaponType.Teleport) return;
+                weaponType = WeaponType.Normal;
+                
+                int index = previous.Count - 3;
+                if (index >= 0 && index < previous.Count) {
+                    Vec3U16 coords = previous[index];
+                    Position pos = new Position(coords.X * 32, coords.Y * 32 + 32, coords.Z * 32);
+                    player.SendPos(Entities.SelfID, pos, player.Rot);
+                }
+            }
+        }
+        
+        
         protected static Player GetPlayer(Player p, Vec3U16 pos, bool skipSelf) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
@@ -153,18 +189,10 @@ namespace MCGalaxy.Commands.Fun {
             return null;
         }
         
-        protected static void DoTeleport(Player p, Vec3U16 coords) {
-            try {
-                Position pos = new Position(coords.X * 32, coords.Y * 32 + 32, coords.Z * 32);
-                p.SendPos(Entities.SelfID, pos, p.Rot);
-            } catch {
-            }
-        }
-        
-        protected static bool HandlesHitBlock(Player p, ExtBlock block, EndType ending, Vec3U16 pos, bool doExplode) {
-            if (p.level.physics < 2 || ending == EndType.Teleport || ending == EndType.Normal) return true;
+        protected static bool HandlesHitBlock(Player p, ExtBlock block, WeaponType ending, Vec3U16 pos, bool doExplode) {
+            if (p.level.physics < 2 || ending == WeaponType.Teleport || ending == WeaponType.Normal) return true;
             
-            if (ending == EndType.Destroy) {
+            if (ending == WeaponType.Destroy) {
                 bool fireKills = block.BlockID != Block.air && p.level.BlockProps[block.Index].LavaKills;
                 if ((!fireKills && !Block.NeedRestart(block.BlockID)) && block.BlockID != Block.glass) {
                     return true;
@@ -180,7 +208,6 @@ namespace MCGalaxy.Commands.Fun {
             return false;
         }
 
-        protected struct CatchPos { public EndType ending; }
-        protected enum EndType { Invalid, Normal, Destroy, Teleport, Explode, Laser };
+        protected enum WeaponType { Invalid, Normal, Destroy, Teleport, Explode, Laser };
     }
 }

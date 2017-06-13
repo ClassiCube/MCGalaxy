@@ -35,127 +35,102 @@ namespace MCGalaxy.Commands.Fun {
             p.RevertBlock(x, y, z);
             if (!CommandParser.IsBlockAllowed(p, "place", block)) return;
             
-            MissileArgs args = new MissileArgs();
+            WeaponArgs args = new WeaponArgs();
             args.player = p;
             args.block = block;
-            CatchPos bp = (CatchPos)p.blockchangeObject;
-            args.ending = bp.ending;
+            args.weaponType = (WeaponType)p.blockchangeObject;
             args.pos = MakePos(p);
 
             SchedulerTask task = new SchedulerTask(MissileCallback, args,
                                                    TimeSpan.FromMilliseconds(100), true);
             p.CriticalTasks.Add(task);
         }
-        
-        class MissileArgs {
-            public Player player;
-            public ExtBlock block;
-            public EndType ending;
-            public Vec3U16 pos;
-            public bool Moving = true;
-            
-            public List<Vec3U16> previous = new List<Vec3U16>();
-            public List<Vec3U16> allBlocks = new List<Vec3U16>();
-            public List<Vec3S32> buffer = new List<Vec3S32>();
-            public int iterations;
-        }
 
         static void MissileCallback(SchedulerTask task) {
-            MissileArgs args = (MissileArgs)task.State;
-            Player p = args.player;
-            if (args.Moving) { PerformMove(args); return; }            
+            WeaponArgs args = (WeaponArgs)task.State;
+            if (args.moving) { PerformMove(args); return; }
             
-            if (args.ending == EndType.Teleport) {
-                args.ending = EndType.Normal;
-                int index = args.previous.Count - 3;
-                if (index >= 0 && index < args.previous.Count)
-                    DoTeleport(p, args.previous[index]);
-            }
-            
+            args.TeleportSourcePlayer();
             if (args.previous.Count > 0) {
                 Vec3U16 pos = args.previous[0];
                 args.previous.RemoveAt(0);
-                p.level.Blockchange(pos.X, pos.Y, pos.Z, ExtBlock.Air, true);
+                args.player.level.Blockchange(pos.X, pos.Y, pos.Z, ExtBlock.Air, true);
             }
             task.Repeating = args.previous.Count > 0;
         }
         
-        static void PerformMove(MissileArgs args) {
+        static void PerformMove(WeaponArgs args) {
             while (true) {
                 args.iterations++;
                 Vec3U16 target = MissileTarget(args);
                 FindNext(target, ref args.pos, args.buffer);
 
                 if (args.iterations <= 3) continue;
-                args.Moving = MoveMissile(args, args.pos, target);
+                args.moving = MoveMissile(args, args.pos, target);
                 return;
             }
         }
         
         
-        static Vec3U16 MissileTarget(MissileArgs args) {
+        static Vec3U16 MissileTarget(WeaponArgs args) {
             Player p = args.player;
-            Vec3U16 start = MakePos(p);
-            Vec3F32 dir = DirUtils.GetFlatDirVector(p.Rot.RotY, p.Rot.HeadX);
-            Vec3U16 target;
+            args.start = MakePos(p);
+            args.dir = DirUtils.GetFlatDirVector(p.Rot.RotY, p.Rot.HeadX);
             int i;
             
             for (i = 1; ; i++) {
-                target.X = (ushort)Math.Round(start.X + (double)(dir.X * i));
-                target.Y = (ushort)Math.Round(start.Y + (double)(dir.Y * i));
-                target.Z = (ushort)Math.Round(start.Z + (double)(dir.Z * i));
-
+                Vec3U16 target = args.PosAt(i);
                 ExtBlock block = p.level.GetBlock(target.X, target.Y, target.Z);
                 if (block.BlockID == Block.Invalid) break;
 
-                if (block.BlockID != Block.air && !args.allBlocks.Contains(target) && HandlesHitBlock(p, block, args.ending, target, false))
+                if (block.BlockID != Block.air && !args.allBlocks.Contains(target) && HandlesHitBlock(p, block, args.weaponType, target, false))
                     break;
 
                 Player hit = GetPlayer(p, target, true);
                 if (hit != null) return MakePos(hit);
             }
-
-            target.X = (ushort)Math.Round(start.X + (double)(dir.X * (i - 1)));
-            target.Y = (ushort)Math.Round(start.Y + (double)(dir.Y * (i - 1)));
-            target.Z = (ushort)Math.Round(start.Z + (double)(dir.Z * (i - 1)));
-            return target;
+            return args.PosAt(i - 1);
         }
         
-        static bool MoveMissile(MissileArgs args, Vec3U16 pos, Vec3U16 target) {
+        static bool MoveMissile(WeaponArgs args, Vec3U16 pos, Vec3U16 target) {
             Player p = args.player;
             ExtBlock block = p.level.GetBlock(pos.X, pos.Y, pos.Z);
-            if (block.BlockID != Block.air && !args.allBlocks.Contains(pos) && HandlesHitBlock(p, block, args.ending, pos, true))
+            if (block.BlockID != Block.air && !args.allBlocks.Contains(pos) && HandlesHitBlock(p, block, args.weaponType, pos, true))
                 return false;
 
             p.level.Blockchange(pos.X, pos.Y, pos.Z, args.block);
             args.previous.Add(pos);
             args.allBlocks.Add(pos);
+            if (HitsPlayer(args, pos)) return false;
 
-            Player hitP = GetPlayer(p, pos, true);
-            if (hitP != null) {
-                if (p.level.physics >= 3 && args.ending >= EndType.Explode) {
-                    hitP.HandleDeath((ExtBlock)Block.stone, " was blown up by " + p.ColoredName, true);
-                } else {
-                    hitP.HandleDeath((ExtBlock)Block.stone, " was hit a missile from " + p.ColoredName);
-                }
-                return false;
-            }
-
-            if (pos == target && p.level.physics >= 3 && args.ending >= EndType.Explode) {
+            if (pos == target && p.level.physics >= 3 && args.weaponType >= WeaponType.Explode) {
                 p.level.MakeExplosion(target.X, target.Y, target.Z, 2);
                 return false;
             }
 
             if (args.previous.Count > 12) {
-                p.level.Blockchange(args.previous[0].X, args.previous[0].Y, args.previous[0].Z, ExtBlock.Air, true);
+                pos = args.previous[0];
+                p.level.Blockchange(pos.X, pos.Y, pos.Z, ExtBlock.Air, true);
                 args.previous.RemoveAt(0);
+            }
+            return true;
+        }       
+        
+        static bool HitsPlayer(WeaponArgs args, Vec3U16 pos) {
+            Player pl = GetPlayer(args.player, pos, true);
+            if (pl == null) return false;
+            
+            ExtBlock stone = (ExtBlock)Block.stone;
+            Player p = args.player;
+            if (p.level.physics >= 3 && args.weaponType >= WeaponType.Explode) {
+                pl.HandleDeath(stone, " was blown up by " + p.ColoredName, true);
+            } else {
+                pl.HandleDeath(stone, " was hit by a missile from " + p.ColoredName);
             }
             return true;
         }
         
-        static Vec3U16 MakePos(Player p) {
-            return (Vec3U16)p.Pos.BlockCoords;
-        }
+        static Vec3U16 MakePos(Player p) { return (Vec3U16)p.Pos.BlockCoords; }
         
         static void FindNext(Vec3U16 lookedAt, ref Vec3U16 pos, List<Vec3S32> buffer) {
             LineDrawOp.DrawLine(pos.X, pos.Y, pos.Z, 2, lookedAt.X, lookedAt.Y, lookedAt.Z, buffer);
