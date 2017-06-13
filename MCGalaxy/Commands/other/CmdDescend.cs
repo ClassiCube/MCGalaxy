@@ -31,29 +31,38 @@ namespace MCGalaxy.Commands.Misc {
             if (!Hacks.CanUseHacks(p, p.level)) {
                 Player.Message(p, "You cannot use /descend on this map."); return;
             }
-            if (p.Pos.Y < 51 + 4) { Player.Message(p, "No free spaces found below you."); return; }
+        	
             // Move starting position down half a block since players are a little bit above the ground.
-            int x = p.Pos.BlockX, y = (p.Pos.Y - 51 - 4) / 32, z = p.Pos.BlockZ;
-            
+            int x = p.Pos.BlockX, y = (p.Pos.Y - 51 - 4) / 32, z = p.Pos.BlockZ;            
             if (y > p.level.Height) y = p.level.Height;
             y--; // start at block below initially
             
-            for (; y > 0; y--) {
-                ExtBlock block = p.level.GetBlock(x, y, z);
-                if (!block.IsInvalid && CmdSlap.Collide(p.level, block) == CollideType.Solid) continue;            
-                ExtBlock above = p.level.GetBlock(x, y + 1, z);
-                if (!above.IsInvalid && CmdSlap.Collide(p.level, above) == CollideType.Solid) continue;
-
-                ExtBlock below = p.level.GetBlock(x, y - 1, z);
-                if (!below.IsInvalid && CmdSlap.Collide(p.level, below) == CollideType.Solid) {
-                    Player.Message(p, "Teleported you down.");
-                    
-                    Position pos = Position.FromFeet(p.Pos.X, y * 32, p.Pos.Z);
-                    p.SendPos(Entities.SelfID, pos, p.Rot);
-                    return;
-                }
+            int freeY = -1;
+            if (p.level.IsValidPos(x, y, z)) {
+                freeY = FindYBelow(p.level, (ushort)x, (ushort)y, (ushort)z);
             }
-            Player.Message(p, "No free spaces found below you.");
+            
+            if (freeY == -1) {
+                Player.Message(p, "No free spaces found below you.");
+            } else {
+                Player.Message(p, "Teleported you down.");
+                Position pos = Position.FromFeet(p.Pos.X, freeY * 32, p.Pos.Z);
+                p.SendPos(Entities.SelfID, pos, p.Rot);
+            }
+        }
+        
+        static int FindYBelow(Level lvl, ushort x, ushort y, ushort z) {
+            for (; y > 0; y--) {
+                ExtBlock block = lvl.GetBlock(x, y, z);
+                if (!block.IsInvalid && CmdSlap.Collide(lvl, block) == CollideType.Solid) continue;            
+                ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                if (!above.IsInvalid && CmdSlap.Collide(lvl, above) == CollideType.Solid) continue;
+
+                ExtBlock below = lvl.GetBlock(x, (ushort)(y - 1), z);
+                if (!below.IsInvalid && CmdSlap.Collide(lvl, below) == CollideType.Solid)
+                    return y;
+            }
+            return -1;
         }
         
         public override void Help(Player p) {

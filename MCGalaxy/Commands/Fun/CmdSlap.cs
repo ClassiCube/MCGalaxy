@@ -52,21 +52,17 @@ namespace MCGalaxy.Commands.Fun {
         void DoSlap(Player p, Player who) {
             int x = who.Pos.BlockX, y = who.Pos.BlockY, z = who.Pos.BlockZ;
             if (y < 0) y = 0;
+            
             Position pos = who.Pos;
-
             string src = p == null ? "(console)" : p.ColoredName;
-            for (; y <= who.level.Height; y++) {
-                ExtBlock above = who.level.GetBlock(x, y + 1, z);
-                if (above.IsInvalid) continue;
-                if (Collide(who.level, above) != CollideType.Solid) continue;
-                
-                pos.Y = (y + 1) * 32 - 6;
-                BlockDefinition def = who.level.GetBlockDef(above);
-                if (def != null) pos.Y += def.MinZ * 2;
-                
-                who.level.ChatLevel(who.ColoredName + " %Swas slapped into the roof by " + src);
-                who.SendPos(Entities.SelfID, pos, who.Rot);
-                return;
+            
+            if (who.level.IsValidPos(x, y, z)) {
+                pos.Y = FindYAbove(who.level, (ushort)x, (ushort)y, (ushort)z);
+                if (pos.Y != -1) {
+                    who.level.ChatLevel(who.ColoredName + " %Swas slapped into the roof by " + src);
+                    who.SendPos(Entities.SelfID, pos, who.Rot);
+                    return;
+                }
             }
             
             pos.Y = 1000 * 32;
@@ -74,8 +70,23 @@ namespace MCGalaxy.Commands.Fun {
             who.SendPos(Entities.SelfID, pos, who.Rot);
         }
         
+        static int FindYAbove(Level lvl, ushort x, ushort y, ushort z) {
+            for (; y <= lvl.Height; y++) {
+                ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                if (above.IsInvalid) continue;
+                if (Collide(lvl, above) != CollideType.Solid) continue;
+                
+                int posY = (y + 1) * 32 - 6;
+                BlockDefinition def = lvl.GetBlockDef(above);
+                if (def != null) posY += def.MinZ * 2;
+                
+                return posY;
+            }
+            return -1;
+        }
+        
         internal static byte Collide(Level lvl, ExtBlock block) {
-            BlockDefinition def = lvl.GetBlockDef(block);            
+            BlockDefinition def = lvl.GetBlockDef(block);
             byte collide = def != null ? def.CollideType : CollideType.Solid;
             
             if (def == null && !block.IsCustomType)

@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.World {
             if (map == null) return;
             
             Level lvl = LevelInfo.FindExact(map);
-            if (lvl != null && p != null && !lvl.BuildAccess.CheckDetailed(p) > p.Rank) {
+            if (lvl != null && p != null && !lvl.BuildAccess.CheckDetailed(p)) {
                 Player.Message(p, "Hence you cannot delete this level."); return;
             }
             if (lvl == Server.mainLevel) { Player.Message(p, "Cannot delete the main level."); return; }

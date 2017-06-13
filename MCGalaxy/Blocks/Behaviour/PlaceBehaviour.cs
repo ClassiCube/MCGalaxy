@@ -47,7 +47,7 @@ namespace MCGalaxy.Blocks {
         
         internal static void Stairs(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)
-                || p.level.GetBlock(x, y - 1, z) != (ExtBlock)Block.staircasestep) {
+                || p.level.GetBlock(x, (ushort)(y - 1), z) != (ExtBlock)Block.staircasestep) {
                 p.ChangeBlock(x, y, z, (ExtBlock)Block.staircasestep); return;
             }
             
@@ -57,7 +57,7 @@ namespace MCGalaxy.Blocks {
         
         internal static void CobbleStairs(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (!(p.level.physics == 0 || p.level.physics == 5)
-                || p.level.GetBlock(x, y - 1, z) != (ExtBlock)Block.cobblestoneslab) {
+                || p.level.GetBlock(x, (ushort)(y - 1), z) != (ExtBlock)Block.cobblestoneslab) {
                 p.ChangeBlock(x, y, z, (ExtBlock)Block.cobblestoneslab); return;
             }
             

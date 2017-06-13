@@ -68,20 +68,7 @@ namespace MCGalaxy {
             block.BlockID = blocks[index];
             block.ExtID = block.BlockID == Block.custom_block ? GetExtTileNoCheck(x, y, z) : Block.air;
             return block;
-        }
-        
-        /// <summary> Gets the block at the given coordinates. </summary>
-        /// <returns> Block.Invalid if coordinates outside map. </returns>
-        public ExtBlock GetBlock(int x, int y, int z) {
-            if (x < 0 || y < 0 || z < 0 || blocks == null) return ExtBlock.Invalid;
-            if (x >= Width || y >= Height || z >= Length)  return ExtBlock.Invalid;
-            ExtBlock block;
-            
-            block.BlockID = blocks[x + Width * (z + y * Length)];
-            block.ExtID = block.BlockID == Block.custom_block 
-                ? GetExtTileNoCheck((ushort)x, (ushort)y, (ushort)z) : Block.air;
-            return block;
-        }    
+        }   
    
         /// <summary> Gets whether the block at the given coordinates is air. </summary>
         public bool IsAirAt(ushort x, ushort y, ushort z) {
