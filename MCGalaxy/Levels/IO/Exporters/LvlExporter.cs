@@ -53,8 +53,8 @@ namespace MCGalaxy.Levels.IO {
             BitConverter.GetBytes(lvl.spawny).CopyTo(header, 12);
             header[14] = lvl.rotx;
             header[15] = lvl.roty;
-            header[16] = (byte)lvl.permissionvisit;
-            header[17] = (byte)lvl.permissionbuild;
+            header[16] = (byte)lvl.VisitAccess.Min;
+            header[17] = (byte)lvl.BuildAccess.Min;
             gs.Write(header, 0, 18);
         }
         

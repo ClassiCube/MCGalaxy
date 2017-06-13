@@ -36,8 +36,8 @@ namespace MCGalaxy.Commands.World {
             if (map == null) return;
             
             Level lvl = LevelInfo.FindExact(map);
-            if (lvl != null && p != null && lvl.permissionbuild > p.Rank) {
-                Player.Message(p, "%cYou can't delete levels with a perbuild rank higher than yours!"); return;
+            if (lvl != null && p != null && !lvl.BuildAccess.CheckDetailed(p) > p.Rank) {
+                Player.Message(p, "Hence you cannot delete this level."); return;
             }
             if (lvl == Server.mainLevel) { Player.Message(p, "Cannot delete the main level."); return; }
             

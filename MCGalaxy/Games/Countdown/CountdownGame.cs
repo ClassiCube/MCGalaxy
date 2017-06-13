@@ -52,7 +52,7 @@ namespace MCGalaxy.Games {
             
             SetGlassTube(Block.glass, Block.glass);
             mapon.ChatLevel("Countdown is about to start!!");
-            mapon.permissionbuild = LevelPermission.Nobody;
+            mapon.BuildAccess.Min = LevelPermission.Nobody;
             int midX = mapon.Width / 2, midY = mapon.Height / 2, midZ = mapon.Length / 2;
             int xSpawn = (midX * 32 + 16);
             int ySpawn = ((mapon.Height - 2) * 32);

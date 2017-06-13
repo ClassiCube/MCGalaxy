@@ -36,8 +36,8 @@ namespace MCGalaxy {
         
         public string Color {
             get {
-                LevelPermission maxPerm = permissionvisit;
-                if (maxPerm < permissionbuild) maxPerm = permissionbuild;
+                LevelPermission maxPerm = VisitAccess.Min;
+                if (maxPerm < BuildAccess.Min) maxPerm = BuildAccess.Min;
                 return Group.GetColor(maxPerm);
             }
         }

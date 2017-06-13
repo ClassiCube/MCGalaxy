@@ -31,8 +31,8 @@ namespace MCGalaxy.Games {
             MakeChutesAndElevators(lvl);
             MakeSquares(lvl);
             
-            lvl.permissionvisit = LevelPermission.Guest;
-            lvl.permissionbuild = LevelPermission.Nobody;
+            lvl.VisitAccess.Min = LevelPermission.Guest;
+            lvl.BuildAccess.Min = LevelPermission.Nobody;
             lvl.Deletable = false;
             lvl.Buildable = false;
             lvl.motd = "Welcome to the Countdown map! -hax";

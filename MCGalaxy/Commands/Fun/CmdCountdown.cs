@@ -233,7 +233,7 @@ namespace MCGalaxy.Commands.Fun {
                 
                 Server.Countdown.mapon.Deletable = false;
                 Server.Countdown.mapon.Buildable = false;
-                Server.Countdown.mapon.permissionbuild = LevelPermission.Nobody;
+                Server.Countdown.mapon.BuildAccess.Min = LevelPermission.Nobody;
                 Server.Countdown.mapon.motd = "Welcome to the Countdown map! -hax";
                 
                 Server.Countdown.gamestatus = CountdownGameStatus.Enabled;

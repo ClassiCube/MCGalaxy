@@ -28,9 +28,7 @@ namespace MCGalaxy.Commands.Misc {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (p.level.permissionbuild > p.Rank) {
-                Player.Message(p, "You cannot build on this map!"); return;
-            }
+            if (!p.level.BuildAccess.CheckDetailed(p)) return;
             
             Level lvl = p.level;
             int x = p.Pos.BlockX, y = p.Pos.BlockY, z = p.Pos.BlockZ;
