@@ -56,6 +56,11 @@ namespace MCGalaxy.Util {
             return File.ReadAllLines(Filename);
         }
         
+        /// <summary> Updates the text in this text file. </summary>
+        public void SetText(string[] text) {
+            File.WriteAllLines(Filename, text);
+        }
+        
         
         /// <summary> Dictionary of all core text files. </summary>
         public static Dictionary<string, TextFile> Files = new Dictionary<string, TextFile>() {

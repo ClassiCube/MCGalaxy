@@ -28,69 +28,43 @@ namespace MCGalaxy.Gui
         /// </summary>
         private void InitializeComponent()
         {
-            this.cmbList = new System.Windows.Forms.ComboBox();
-            this.btnLoad = new System.Windows.Forms.Button();
-            this.txtEdit = new System.Windows.Forms.TextBox();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.btnDiscard = new System.Windows.Forms.Button();
-            this.SuspendLayout();
-            // 
-            // EdittxtCombo
-            // 
-            this.cmbList.FormattingEnabled = true;
-            this.cmbList.Location = new System.Drawing.Point(94, 13);
-            this.cmbList.Name = "EdittxtCombo";
-            this.cmbList.Size = new System.Drawing.Size(178, 21);
-            this.cmbList.TabIndex = 0;
-            this.cmbList.SelectedIndexChanged += new System.EventHandler(this.EditText_SelectedIndexChanged);
-            // 
-            // EditTextTxtBox
-            // 
-            this.txtEdit.Location = new System.Drawing.Point(13, 43);
-            this.txtEdit.Multiline = true;
-            this.txtEdit.Name = "EditTextTxtBox";
-            this.txtEdit.Size = new System.Drawing.Size(259, 244);
-            this.txtEdit.TabIndex = 2;
-            // 
-            // SaveEditTxtBt
-            // 
-            this.btnSave.Location = new System.Drawing.Point(13, 293);
-            this.btnSave.Name = "SaveEditTxtBt";
-            this.btnSave.Size = new System.Drawing.Size(126, 23);
-            this.btnSave.TabIndex = 3;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.SaveEditTxtBt_Click);
-            // 
-            // DiscardEdittxtBt
-            // 
-            this.btnDiscard.Location = new System.Drawing.Point(145, 293);
-            this.btnDiscard.Name = "DiscardEdittxtBt";
-            this.btnDiscard.Size = new System.Drawing.Size(127, 23);
-            this.btnDiscard.TabIndex = 4;
-            this.btnDiscard.Text = "Discard";
-            this.btnDiscard.UseVisualStyleBackColor = true;
-            this.btnDiscard.Click += new System.EventHandler(this.DiscardEdittxtBt_Click);
-            // 
-            // EditText
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 328);
-            this.Controls.Add(this.btnDiscard);
-            this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.txtEdit);
-            this.Controls.Add(this.btnLoad);
-            this.Controls.Add(this.cmbList);
-            this.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.Name = "EditText";
-            this.Text = "Edit Text";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditTxt_Unload);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+        	this.cmbList = new System.Windows.Forms.ComboBox();
+        	this.txtEdit = new System.Windows.Forms.TextBox();
+        	this.SuspendLayout();
+        	// 
+        	// cmbList
+        	// 
+        	this.cmbList.FormattingEnabled = true;
+        	this.cmbList.Location = new System.Drawing.Point(269, 9);
+        	this.cmbList.Name = "cmbList";
+        	this.cmbList.Size = new System.Drawing.Size(108, 21);
+        	this.cmbList.TabIndex = 0;
+        	this.cmbList.SelectedIndexChanged += new System.EventHandler(this.cmbList_SelectedIndexChanged);
+        	// 
+        	// txtEdit
+        	// 
+        	this.txtEdit.Location = new System.Drawing.Point(7, 39);
+        	this.txtEdit.Multiline = true;
+        	this.txtEdit.Name = "txtEdit";
+        	this.txtEdit.Size = new System.Drawing.Size(370, 382);
+        	this.txtEdit.TabIndex = 2;
+        	// 
+        	// EditText
+        	// 
+        	this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+        	this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+        	this.ClientSize = new System.Drawing.Size(384, 428);
+        	this.Controls.Add(this.txtEdit);
+        	this.Controls.Add(this.cmbList);
+        	this.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        	this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+        	this.Name = "EditText";
+        	this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+        	this.Text = "Editing (none)";
+        	this.ShowIcon = false;
+        	this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditTxt_Unload);
+        	this.ResumeLayout(false);
+        	this.PerformLayout();
         }
 
         #endregion

@@ -79,7 +79,9 @@ namespace MCGalaxy.Gui {
         }
         
         void adv_btnEditTexts_Click(object sender, EventArgs e) {
-            new EditText().Show();
+            using (Form form = new EditText()) {
+                form.ShowDialog();
+            }
         }
         
         void txtBackup_TextChanged(object sender, EventArgs e) { OnlyAddDigit(bak_txtTime); }

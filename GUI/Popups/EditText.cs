@@ -22,57 +22,61 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Gui {
     public partial class EditText : Form {
+        TextFile curFile;
         
-		TextFile currentFile;
-		string currentText;
-		
         public EditText() {
             InitializeComponent();
             foreach (var kvp in TextFile.Files) {
                 cmbList.Items.Add(kvp.Key);
             }
+            cmbList.Text = "Select file..";
         }
-
-        bool loaded = false;
-        string oldtxt;
-        string loadedfile;
-
-        private void LoadTxt_Click(object sender, EventArgs e) {
-            SaveCurrentFile(sender, e);
+        
+        void cmbList_SelectedIndexChanged(object sender, EventArgs e) {
+            if (cmbList.SelectedIndex == -1) return;
+            SaveCurrentFile();
             
+            string selectedName = cmbList.SelectedItem.ToString();
+            curFile = TextFile.Files[selectedName];
             
-            loaded = true;
-            try
-            {
-                if (File.Exists("text/" + loadedfile + ".txt")) { oldtxt = File.ReadAllText("text/" + loadedfile + ".txt"); }
-                else { MessageBox.Show("File doesn't exist!!"); loaded = false; loadedfile = null; return; }
+            try {
+                curFile.EnsureExists();
+                txtEdit.Lines = curFile.GetText();
+                Text = "Editing " + curFile.Filename;
+            } catch (Exception ex) {
+                Server.ErrorLog(ex);
+                MessageBox.Show("Failed to read text from " + curFile.Filename);
+                
+                curFile = null;
+                cmbList.Text = "";
+                Text = "Editing (none)";
             }
-            catch { MessageBox.Show("Something went wrong!!"); loaded = false; loadedfile = null; return; }
-            txtEdit.Text = oldtxt;
-        }
-        
-        
-        void EditText_SelectedIndexChanged(object sender, EventArgs e) {
-        	if (cmbList.SelectedIndex == -1) return;
-        	SaveCurrentFile();
-        	
-        	string selectedName = cmbList.SelectedItem.ToString();
-        	currentFile = TextFile.Files[selectedName];
-        	currentText = 
         }
         
         void SaveCurrentFile() {
-        	if (currentFile == null) return;
-        	
-        	string msg = "Save changes to " + currentFile.Filename + "?";
-            if (MessageBox.Show(msg, MessageBoxButtons.YesNo) == DialogResult.Yes) {
-        		currentFile.SetText(currentText);
-        		MessageBox.Show("Saved " + currentFile.Filename);
+            if (curFile == null) return;
+            string[] userLines = txtEdit.Lines;
+            if (!HasTextChanged(userLines)) return;
+            
+            string msg = "Save changes to " + curFile.Filename + "?";
+            if (MessageBox.Show(msg, "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                curFile.SetText(userLines);
+                MessageBox.Show("Saved " + curFile.Filename);
             }
         }
         
+        bool HasTextChanged(string[] userLines) {
+            string[] lines = curFile.GetText();
+            if (lines.Length != userLines.Length) return true;
+            
+            for (int i = 0; i < lines.Length; i++) {
+                if (userLines[i] != lines[i]) return true;
+            }
+            return false;
+        }
+        
         void EditTxt_Unload(object sender, EventArgs e) {
-            SaveCurrentFile(sender, e);
+            SaveCurrentFile();
         }
     }
 }

@@ -126,6 +126,9 @@
     <EmbeddedResource Include="Eco\EconomyWindow.resx">
       <DependentUpon>EconomyWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Popups\EditText.resx">
+      <DependentUpon>EditText.Designer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Popups\PortTools.resx">
       <DependentUpon>PortTools.cs</DependentUpon>
     </EmbeddedResource>
