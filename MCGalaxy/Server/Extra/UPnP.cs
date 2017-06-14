@@ -26,7 +26,7 @@ namespace MCGalaxy.Core {
 
     public sealed class UPnP {
 
-        public static bool CanUseUpnp { get {return Discover(); } }
+        public static bool CanUseUpnp { get { return Discover(); } }
 
         private const string req = "M-SEARCH * HTTP/1.1\r\n" +
                                                             "HOST: 239.255.255.250:1900\r\n" +

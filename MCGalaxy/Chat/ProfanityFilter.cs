@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using MCGalaxy.Util;
 
 namespace MCGalaxy {
     public static class ProfanityFilter {
@@ -66,19 +67,15 @@ namespace MCGalaxy {
         }
         
         static void LoadBadWords() {
-            if (!File.Exists(Paths.BadWordsFile)) {
-                // No file exists yet, so let's create one
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine("# This file contains a list of bad words to remove via the profanity filter");
-                sb.AppendLine("# Each bad word should be on a new line all by itself");
-                File.WriteAllText(Paths.BadWordsFile, sb.ToString());
-            }
-            
-            string[] lines = File.ReadAllLines(Paths.BadWordsFile);
+        	TextFile filterFile = TextFile.Files["Profanity filter"];
+        	filterFile.EnsureExists();
+        	
+        	string[] lines = filterFile.GetText();        	
+            filters = new List<string>();            
             // Run the badwords through the reducer to ensure things like Ls become Is and everything is lowercase
-            filters = new List<string>();
             foreach (string line in lines) {
                 if (line.StartsWith("#") || line.Trim().Length == 0) continue;
+                
                 string word = Reduce(line.ToLower());
                 filters.Add(word);
             }

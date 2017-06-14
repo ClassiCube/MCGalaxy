@@ -28,6 +28,7 @@ using MCGalaxy.Games;
 using MCGalaxy.Network;
 using MCGalaxy.SQL;
 using MCGalaxy.Maths;
+using MCGalaxy.Util;
 
 namespace MCGalaxy {
     public partial class Player : IDisposable {
@@ -657,15 +658,15 @@ namespace MCGalaxy {
         
         string HandleJoker(string text) {
             if (!joker) return text;
-            if (!File.Exists(Paths.JokerFile)) {
-                File.Create(Paths.JokerFile).Dispose(); return text;
-            }
             Server.s.Log("<JOKER>: " + name + ": " + text);
             Chat.MessageOps("%S<&aJ&bO&cK&5E&9R%S>: " + ColoredName + ":&f " + text);
 
-            List<string> lines = Utils.ReadAllLinesList(Paths.JokerFile);
+            TextFile jokerFile = TextFile.Files["Joker"];
+            jokerFile.EnsureExists();
+            
+            string[] lines = jokerFile.GetText();
             Random rnd = new Random();
-            return lines.Count > 0 ? lines[rnd.Next(lines.Count)] : text;
+            return lines.Length > 0 ? lines[rnd.Next(lines.Length)] : text;
         }
         
         bool IsHandledMessage(string text) {

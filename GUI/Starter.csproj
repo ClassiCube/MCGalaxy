@@ -61,6 +61,12 @@
     <Compile Include="Popups\CustomCommands.Designer.cs">
       <DependentUpon>CustomCommands.cs</DependentUpon>
     </Compile>
+    <Compile Include="Popups\EditText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Popups\EditText.Designer.cs">
+      <DependentUpon>EditText.cs</DependentUpon>
+    </Compile>
     <Compile Include="Popups\PortTools.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -105,12 +111,6 @@
     </Compile>
     <Compile Include="Eco\EconomyWindow.Designer.cs">
       <DependentUpon>EconomyWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="EditText.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="EditText.Designer.cs">
-      <DependentUpon>EditText.cs</DependentUpon>
     </Compile>
     <Compile Include="..\MCGalaxy\properties\AssemblyInfo.cs" />
     <Compile Include="Window\Window.cs">

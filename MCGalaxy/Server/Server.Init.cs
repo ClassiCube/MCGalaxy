@@ -17,14 +17,13 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Threading;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
+using MCGalaxy.Util;
 
 namespace MCGalaxy {
     
@@ -112,12 +111,11 @@ namespace MCGalaxy {
         }
         
         void InitTimers() {
-            if (File.Exists(Paths.AnnouncementsFile)) {
-                string[] lines = File.ReadAllLines(Paths.AnnouncementsFile);
-                messages = new List<string>(lines);
-            } else {
-                using (File.Create(Paths.AnnouncementsFile)) {}
-            }
+		    TextFile announcementsFile = TextFile.Files["Announcements"];
+		    announcementsFile.EnsureExists();
+		    
+		    string[] lines = announcementsFile.GetText();
+		    messages = new List<string>(lines);
             
             MainScheduler.QueueRepeat(RandomMessage, null, 
                                       TimeSpan.FromMinutes(5));

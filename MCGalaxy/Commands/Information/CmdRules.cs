@@ -16,8 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdRules : Command {
@@ -33,21 +32,21 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Use(Player p, string message) {
-            if (!File.Exists(Paths.RulesFile)) {
-                File.WriteAllText(Paths.RulesFile, "No rules entered yet!");
-            }
+            TextFile rulesFile = TextFile.Files["Rules"];
+            rulesFile.EnsureExists();
+            
             if (message.CaselessEq("agree")) { Agree(p); return; }
             if (message.CaselessEq("disagree")) { Disagree(p); return; }
             
-            string[] rules = File.ReadAllLines(Paths.RulesFile);
             Player who = p;
             if (message != "") {
                 if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
                 who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
-            }
-            
+            }           
             if (who != null) who.hasreadrules = true;
+
+            string[] rules = rulesFile.GetText();            
             Player.Message(who, "Server Rules:");
             Player.MessageLines(who, rules);
             

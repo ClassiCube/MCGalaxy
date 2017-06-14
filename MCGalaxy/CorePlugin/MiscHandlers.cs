@@ -16,11 +16,11 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
 using MCGalaxy.Blocks.Extended;
 using MCGalaxy.Events;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Core {
     internal static class MiscHandlers {
@@ -71,18 +71,11 @@ namespace MCGalaxy.Core {
             if (p.showedWelcome) return;
             p.showedWelcome = true;
             p.LastAction = DateTime.UtcNow;
-            
-            if (!File.Exists(Paths.WelcomeFile)) {
-                Server.s.Log("Could not find Welcome.txt. Using default.");
-                try {
-                    File.WriteAllText(Paths.WelcomeFile, "Welcome to my server!");
-                } catch (Exception ex) {
-                    Server.ErrorLog(ex);
-                }
-            }
+            TextFile welcomeFile = TextFile.Files["Welcome"];
             
             try {
-                string[] welcome = File.ReadAllLines(Paths.WelcomeFile);
+                welcomeFile.EnsureExists();
+                string[] welcome = welcomeFile.GetText();
                 Player.MessageLines(p, welcome);
             } catch (Exception ex) {
                 Server.ErrorLog(ex);

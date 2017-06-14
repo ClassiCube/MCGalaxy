@@ -16,9 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
 using MCGalaxy.Eco;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Chatting {  
     public sealed class CmdEat : MessageCmd {
@@ -35,11 +34,10 @@ namespace MCGalaxy.Commands.Chatting {
                                    " %Sto purchase a snack."); return;
             }            
                       
-            if (!File.Exists(Paths.EatMessagesFile)) {
-                File.WriteAllLines(Paths.EatMessagesFile, defMessages);
-            }
+        	TextFile eatFile = TextFile.Files["Eat"];
+        	eatFile.EnsureExists();
             
-            string[] actions = File.ReadAllLines(Paths.EatMessagesFile);
+        	string[] actions = eatFile.GetText();
             string action = "ate some food";
             if (actions.Length > 0)
                 action = actions[new Random().Next(actions.Length)];
@@ -49,9 +47,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (Economy.Enabled)
                 p.SetMoney(p.money - 1);  
         }
-        
-        static string[] defMessages = new string[] { "guzzled a grape", "chewed a cherry", "ate an avocado" };
-        
+     
         public override void Help(Player p) {
             Player.Message(p, "%T/eat %H- Eats a random snack.");
             Player.Message(p, "%HIf economy is enabled, costs 1 &3" + Server.moneys);

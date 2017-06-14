@@ -412,7 +412,7 @@ namespace fNbt {
         public void LoadFromStream(Stream stream) {
             if (stream == null) throw new ArgumentNullException("stream");
 
-            using (var decStream = new GZipStream(stream, CompressionMode.Decompress, true)) {
+            using (GZipStream decStream = new GZipStream(stream, CompressionMode.Decompress, true)) {
                 // Size of buffers that are used to avoid frequent reads from / writes to compressed streams
                 BufferedStream buffered = new BufferedStream(decStream, 8*1024);
                 

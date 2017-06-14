@@ -16,8 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using MCGalaxy.Util;
 
-namespace MCGalaxy {   
+namespace MCGalaxy {
     public static class ChatTokens {
         
         public static string Apply(string text, Player p) {
@@ -53,7 +54,7 @@ namespace MCGalaxy {
         }
         
         
-        internal static Dictionary<string, Func<Player, string>> standardTokens 
+        internal static Dictionary<string, Func<Player, string>> standardTokens
             = new Dictionary<string, Func<Player, string>> {
             { "$name", p => p.DisplayName == null ? null :
                     (Server.dollarNames ? "$" : "") + Colors.StripColors(p.DisplayName) },
@@ -78,32 +79,27 @@ namespace MCGalaxy {
             { "$irc", p => Server.ircServer + " > " + Server.ircChannel },
             
             { "$infected", p => p.Game.TotalInfected.ToString() },
-            { "$survived", p => p.Game.TotalRoundsSurvived.ToString() },            
+            { "$survived", p => p.Game.TotalRoundsSurvived.ToString() },
         };
         
-        public static Dictionary<string, string> CustomTokens = new Dictionary<string, string>();        
+        public static Dictionary<string, string> CustomTokens = new Dictionary<string, string>();
         internal static void LoadCustom() {
             CustomTokens.Clear();
-            if (File.Exists(Paths.CustomTokensFile)) {
-                using (StreamReader r = new StreamReader(Paths.CustomTokensFile)) {
-                    string line;
-                    while ((line = r.ReadLine()) != null)  {
-                        if (line.StartsWith("//")) continue;
-                        string[] split = line.Split(new char[] { ':' }, 2);
-                        if (split.Length == 2 && !String.IsNullOrEmpty(split[0]))
-                            CustomTokens.Add(split[0], split[1]);
-                    }
-                }
-            } else {
-                Server.s.Log("custom$s.txt does not exist, creating");
-                using (StreamWriter w = new StreamWriter(Paths.CustomTokensFile)) {
-                    w.WriteLine("// This is used to create custom $s");
-                    w.WriteLine("// If you start the line with a // it wont be used");
-                    w.WriteLine("// It should be formatted like this:");
-                    w.WriteLine("// $website:http://example.org");
-                    w.WriteLine("// That would replace '$website' in any message to 'http://example.org'");
-                    w.WriteLine("// It must not start with a // and it must not have a space between the 2 sides and the colon (:)");
-                }
+            TextFile tokensFile = TextFile.Files["Custom $s"];
+            tokensFile.EnsureExists();
+            
+            string[] lines = tokensFile.GetText();
+            char[] colon = null;
+            foreach (string line in lines) {
+                if (line.StartsWith("//")) continue;
+                
+                if (colon == null) colon = new char[] { ':' };
+                string[] parts = line.Split(colon, 2);
+                if (parts.Length != 2) continue;
+                
+                string key = parts[0].Trim(), value = parts[1].Trim();
+                if (key.Length == 0) continue;
+                CustomTokens.Add(key, value);
             }
         }
     }
