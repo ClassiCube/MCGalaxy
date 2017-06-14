@@ -1,78 +1,46 @@
+/*
+    Copyright 2015 MCGalaxy
+        
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
 using System.IO;
 using System.Windows.Forms;
+using MCGalaxy.Util;
 
-namespace MCGalaxy.Gui
-{
-    public partial class EditText : Form
-    {
-        public EditText()
-        {
+namespace MCGalaxy.Gui {
+    public partial class EditText : Form {
+        
+		TextFile currentFile;
+		string currentText;
+		
+        public EditText() {
             InitializeComponent();
+            foreach (var kvp in TextFile.Files) {
+                cmbList.Items.Add(kvp.Key);
+            }
         }
 
-        private void EditTxt_Unload(object sender, EventArgs e)
-        {
-            checkforsave(sender, e);
-        }
         bool loaded = false;
         string oldtxt;
         string loadedfile;
 
-        private void LoadTxt_Click(object sender, EventArgs e)
-        {
-            if (EdittxtCombo.Text == null)
-            {
-                MessageBox.Show("Please select a file");
-                return;
-            }
-            checkforsave(sender, e);
-            switch (EdittxtCombo.Text)
-            {
-                case "Autoload":
-                    loadedfile = "autoload";
-                    break;
-                case "AwardsList":
-                    loadedfile = "awardsList";
-                    break;
-                case "Badwords":
-                    loadedfile = "badwords";
-                    break;
-                case "CmdAutoload":
-                    loadedfile = "cmdautoload";
-                    break;
-                case "Custom$s":
-                    loadedfile = "custom$s";
-                    break;
-                case "Emotelist":
-                    loadedfile = "emotelist";
-                    break;
-                case "Joker":
-                    loadedfile = "joker";
-                    break;
-                case "Messages":
-                    loadedfile = "messages";
-                    break;
-                case "PlayerAwards":
-                    loadedfile = "playerAwards";
-                    break;
-                case "Rules":
-                    loadedfile = "rules";
-                    if (!File.Exists("text/rules.txt"))
-                    {
-                        File.Create("text/rules.txt").Dispose();
-                        Server.s.Log("Created rules.txt");
-                    }
-                    break;
-                case "Welcome":
-                    loadedfile = "welcome";
-                    break;
-                default:
-                    loaded = false;
-                    loadedfile = null;
-                    MessageBox.Show("Something went wrong!!");
-                    return;
-            }
+        private void LoadTxt_Click(object sender, EventArgs e) {
+            SaveCurrentFile(sender, e);
+            
+            
             loaded = true;
             try
             {
@@ -80,53 +48,31 @@ namespace MCGalaxy.Gui
                 else { MessageBox.Show("File doesn't exist!!"); loaded = false; loadedfile = null; return; }
             }
             catch { MessageBox.Show("Something went wrong!!"); loaded = false; loadedfile = null; return; }
-            EditTextTxtBox.Text = oldtxt;
+            txtEdit.Text = oldtxt;
         }
-
-        private void checkforsave(object sender, EventArgs e)
-        {
-            if (loaded && EditTextTxtBox.Text != oldtxt)
-            {
-                if (MessageBox.Show("Do you want to save what you were editing?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    save(sender, e);
-                }
-            }
+        
+        
+        void EditText_SelectedIndexChanged(object sender, EventArgs e) {
+        	if (cmbList.SelectedIndex == -1) return;
+        	SaveCurrentFile();
+        	
+        	string selectedName = cmbList.SelectedItem.ToString();
+        	currentFile = TextFile.Files[selectedName];
+        	currentText = 
         }
-
-        private void save(object sender, EventArgs e)
-        {
-            File.WriteAllText("text/" + loadedfile + ".txt", EditTextTxtBox.Text);
-            oldtxt = File.ReadAllText("text/" + loadedfile + ".txt");
-            MessageBox.Show("Saved Text");
-        }
-
-        private void SaveEditTxtBt_Click(object sender, EventArgs e)
-        {
-            if (loaded)
-            {
-                save(sender, e);
-            }
-            else
-            {
-                MessageBox.Show("No file is loaded!!");
-                return;
+        
+        void SaveCurrentFile() {
+        	if (currentFile == null) return;
+        	
+        	string msg = "Save changes to " + currentFile.Filename + "?";
+            if (MessageBox.Show(msg, MessageBoxButtons.YesNo) == DialogResult.Yes) {
+        		currentFile.SetText(currentText);
+        		MessageBox.Show("Saved " + currentFile.Filename);
             }
         }
-
-        private void DiscardEdittxtBt_Click(object sender, EventArgs e)
-        {
-            if (loaded)
-            {
-                File.WriteAllText("text/" + loadedfile + ".txt", oldtxt);
-                EditTextTxtBox.Text = File.ReadAllText("text/" + loadedfile + ".txt");
-                MessageBox.Show("Discarded Text");
-            }
-            else
-            {
-                MessageBox.Show("No file is loaded!!");
-                return;
-            }
+        
+        void EditTxt_Unload(object sender, EventArgs e) {
+            SaveCurrentFile(sender, e);
         }
     }
 }
