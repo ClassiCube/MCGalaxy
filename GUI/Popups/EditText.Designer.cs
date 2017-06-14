@@ -1,4 +1,4 @@
-namespace MCGalaxy.Gui
+namespace MCGalaxy.Gui.Popups
 {
     partial class EditText
     {
@@ -30,6 +30,8 @@ namespace MCGalaxy.Gui
         {
         	this.cmbList = new System.Windows.Forms.ComboBox();
         	this.txtEdit = new System.Windows.Forms.TextBox();
+        	this.btnColor = new System.Windows.Forms.Button();
+        	this.btnToken = new System.Windows.Forms.Button();
         	this.SuspendLayout();
         	// 
         	// cmbList
@@ -45,28 +47,52 @@ namespace MCGalaxy.Gui
         	// 
         	this.txtEdit.Location = new System.Drawing.Point(7, 39);
         	this.txtEdit.Multiline = true;
-        	this.txtEdit.WordWrap = false;
         	this.txtEdit.Name = "txtEdit";
         	this.txtEdit.Size = new System.Drawing.Size(493, 282);
         	this.txtEdit.TabIndex = 2;
+        	this.txtEdit.WordWrap = false;
+        	// 
+        	// btnColor
+        	// 
+        	this.btnColor.Location = new System.Drawing.Point(7, 9);
+        	this.btnColor.Name = "btnColor";
+        	this.btnColor.Size = new System.Drawing.Size(75, 23);
+        	this.btnColor.TabIndex = 3;
+        	this.btnColor.Text = "Insert  color";
+        	this.btnColor.UseVisualStyleBackColor = true;
+        	this.btnColor.Click += new System.EventHandler(this.btnColor_Click);
+        	// 
+        	// btnToken
+        	// 
+        	this.btnToken.Location = new System.Drawing.Point(90, 9);
+        	this.btnToken.Name = "btnToken";
+        	this.btnToken.Size = new System.Drawing.Size(75, 23);
+        	this.btnToken.TabIndex = 4;
+        	this.btnToken.Text = "Insert token";
+        	this.btnToken.UseVisualStyleBackColor = true;
+        	this.btnToken.Enabled = false;
         	// 
         	// EditText
         	// 
         	this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
         	this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         	this.ClientSize = new System.Drawing.Size(507, 328);
+        	this.Controls.Add(this.btnToken);
+        	this.Controls.Add(this.btnColor);
         	this.Controls.Add(this.txtEdit);
         	this.Controls.Add(this.cmbList);
         	this.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         	this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
         	this.Name = "EditText";
+        	this.ShowIcon = false;
         	this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         	this.Text = "Editing (none)";
-        	this.ShowIcon = false;
         	this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditTxt_Unload);
         	this.ResumeLayout(false);
         	this.PerformLayout();
         }
+        private System.Windows.Forms.Button btnToken;
+        private System.Windows.Forms.Button btnColor;
 
         #endregion
 

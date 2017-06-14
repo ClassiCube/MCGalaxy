@@ -20,7 +20,7 @@ using System.IO;
 using System.Windows.Forms;
 using MCGalaxy.Util;
 
-namespace MCGalaxy.Gui {
+namespace MCGalaxy.Gui.Popups {
     public partial class EditText : Form {
         TextFile curFile;
         
@@ -73,6 +73,22 @@ namespace MCGalaxy.Gui {
                 if (userLines[i] != lines[i]) return true;
             }
             return false;
+        }
+        
+
+        void btnColor_Click(object sender, EventArgs e) {
+            using (ColorSelector sel = new ColorSelector("Insert color", '\0')) {
+                DialogResult result = sel.ShowDialog();
+                if (result == DialogResult.Cancel) return;
+                
+                string color = "&" + sel.ColorCode;
+                int selStart = txtEdit.SelectionStart, selLength = txtEdit.SelectionLength;
+                
+                txtEdit.Paste(color);
+                // re highlight now replaced text
+                if (selLength > 0) txtEdit.Select(selStart, 2);
+                txtEdit.Focus();
+            }
         }
         
         void EditTxt_Unload(object sender, EventArgs e) {

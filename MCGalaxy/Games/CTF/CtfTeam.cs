@@ -112,11 +112,11 @@ namespace MCGalaxy.Games
             ushort y = flagLocation[1];
             ushort z = flagLocation[2];
 
-            if (mapOn.IsAirAt(x, y - 1, z)) {
+            if (mapOn.IsAirAt(x, (ushort)(y - 1), z)) {
                 flagLocation[1] = (ushort)(flagLocation[1] - 1);
             }
 
-            mapOn.Blockchange(tfb.x, tfb.y, tfb.z, (ExtBlock)tfb.type);
+            mapOn.Blockchange(tfb.x, tfb.y, tfb.z, tfb.type);
             mapOn.Blockchange(tfb.x, (ushort)(tfb.y + 1), tfb.z, ExtBlock.Air);
             mapOn.Blockchange(tfb.x, (ushort)(tfb.y + 2), tfb.z, ExtBlock.Air);
 
@@ -124,7 +124,7 @@ namespace MCGalaxy.Games
             {
                 //DRAW ON GROUND SHIT HERE
 
-                tfb.type = mapOn.GetTile(x, y, z);
+                tfb.type = mapOn.GetBlock(x, y, z);
 
                 if (mapOn.GetBlock(x, y, z) != (ExtBlock)Block.flagbase) { 
                     mapOn.Blockchange(x, y, z, (ExtBlock)Block.flagbase); 
@@ -151,9 +151,9 @@ namespace MCGalaxy.Games
                 if (tempFlagblock.x == x && tempFlagblock.y == y && tempFlagblock.z == z) { return; }
 
 
-                mapOn.Blockchange(tempFlagblock.x, tempFlagblock.y, tempFlagblock.z, (ExtBlock)tempFlagblock.type);
+                mapOn.Blockchange(tempFlagblock.x, tempFlagblock.y, tempFlagblock.z, tempFlagblock.type);
 
-                tempFlagblock.type = mapOn.GetTile(x, y, z);
+                tempFlagblock.type = mapOn.GetBlock(x, y, z);
 
                 mapOn.Blockchange(x, y, z, (ExtBlock)GetColorBlock(color));
 
@@ -183,7 +183,7 @@ namespace MCGalaxy.Games
                 return Block.air;
         }
 
-        public struct CatchPos { public ushort x, y, z; public byte type; }
+        public struct CatchPos { public ushort x, y, z; public ExtBlock type; }
         public struct Spawn { public ushort x, y, z, rotx, roty; }
     }
 }
