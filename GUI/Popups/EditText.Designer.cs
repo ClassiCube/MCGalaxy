@@ -35,7 +35,7 @@ namespace MCGalaxy.Gui
         	// cmbList
         	// 
         	this.cmbList.FormattingEnabled = true;
-        	this.cmbList.Location = new System.Drawing.Point(269, 9);
+        	this.cmbList.Location = new System.Drawing.Point(392, 9);
         	this.cmbList.Name = "cmbList";
         	this.cmbList.Size = new System.Drawing.Size(108, 21);
         	this.cmbList.TabIndex = 0;
@@ -45,15 +45,16 @@ namespace MCGalaxy.Gui
         	// 
         	this.txtEdit.Location = new System.Drawing.Point(7, 39);
         	this.txtEdit.Multiline = true;
+        	this.txtEdit.WordWrap = false;
         	this.txtEdit.Name = "txtEdit";
-        	this.txtEdit.Size = new System.Drawing.Size(370, 382);
+        	this.txtEdit.Size = new System.Drawing.Size(493, 282);
         	this.txtEdit.TabIndex = 2;
         	// 
         	// EditText
         	// 
         	this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
         	this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        	this.ClientSize = new System.Drawing.Size(384, 428);
+        	this.ClientSize = new System.Drawing.Size(507, 328);
         	this.Controls.Add(this.txtEdit);
         	this.Controls.Add(this.cmbList);
         	this.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
