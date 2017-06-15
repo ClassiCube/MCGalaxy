@@ -82,9 +82,14 @@ namespace MCGalaxy.Gui {
         
         void MakeNotifyIcon() {
             UpdateNotifyIconText();
-            notifyIcon.ContextMenuStrip = this.icon_context;
-            notifyIcon.Icon = this.Icon;
+            notifyIcon.ContextMenuStrip = icon_context;
+            notifyIcon.Icon = Icon;
             notifyIcon.Visible = true;
+            notifyIcon.MouseClick += notifyIcon_MouseClick;
+        }
+
+        void notifyIcon_MouseClick(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Left) openConsole_Click(sender, e);
         }
         
         void InitServer() {
