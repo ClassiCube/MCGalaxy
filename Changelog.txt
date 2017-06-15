@@ -1,3 +1,41 @@
+v 1.8.9.2
+Added: Listening on a specific IP
+Added: Color selector to GUI
+Fixed: /undoplayer not working from console or IRC
+Fixed: Don't spam GC performed, only show message when mem freed is >= 100 KB
+Fixed: /os map add keeping level in memory. 
+Improved: IRC bot can now join multiple channels and opchannels.
+Improved: Reduce memory usage of CopyState by around ~43%
+Improved: Blocks, Commands, Rank GUI rewritten to be more user friendly
+Improved: Color codes are no longer in server log files
+Improved: EditText GUI design, files supported
+Added: Implement /highlight area
+Added: /circleh (/sphere hollowcircle) for drawing hollow circles
+Added: Grass dying physics on physics level >= 1
+Fixed: Make sure custom plugins are properly unloaded then reloaded when doing /server reload
+Fixed: /server reset setting server salt to blank instead of new random value
+Fixed: /copy @
+Fixed: mistakes in fc_island implementation
+Fixed: /slap, /ascend, /descend with custom blocks
+Fixed: snakes groefing through solid blocks
+Fixed: sponge/lava_sponge with still water/lava
+Fixed: Don't allow core commands to be unloaded by using their shortcut
+Fixed: After rank change, resend block permissions, and reset mode types and block bindings
+Fixed: Various block behaviour not working for /lb that replaced core blocks
+Improved: Allow binding custom blocks, and binding to custom blocks
+Improved: Now /mode supports custom blocks
+Improved: Allow reasons in mute/jail
+Improved: ZS uses separate config file now
+Improved: Support custom blocks in /measure and /rp
+Improved: loatwood floats up through still water now
+Improved: Secret commands now log who used them to server logs and can't be used when muted
+Improved: Now /setrank shows who did the rank
+Improved: /tempranks can have reasons, duration is accurate to seconds
+Improved: Now /map edge floods in actual edge block
+Improved: /freeze and /mute require timespans
+Improved: Optimise getting block AABB for bot and player movement
+Improved: Various things (Guns, missiles, /ride) no longer run on separate threads
+
 v 1.8.9.1
 Fixed: colour bleeding in /who when on a museum map (Thanks fam0r)
 Improved: /top supports timespent now
