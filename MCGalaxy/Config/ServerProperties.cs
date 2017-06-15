@@ -78,7 +78,7 @@ namespace MCGalaxy {
                         if (ConfigElement.Parse(Server.zombieConfig, key, value, null)) {
                             perms.saveZS = true;
                         } else {
-                            Logger.Log(LogType.Warning, "\"{0}\" was not a recognised server property key.");
+                            Logger.Log(LogType.Warning, "\"{0}\" was not a recognised server property key.", key);
                         }
                     }
                     break;
