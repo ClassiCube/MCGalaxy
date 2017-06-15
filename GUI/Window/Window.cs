@@ -110,7 +110,8 @@ namespace MCGalaxy.Gui {
                     LogErrorMessage(message); 
                     break;
                 case LogType.BackgroundActivity:
-                    LogSystemMessage(message); 
+                    string now = DateTime.Now.ToString("(HH:mm:ss) ");
+                    LogSystemMessage(now + message); 
                     break;
                 case LogType.CommandUsage:
                     WriteCommand(message); 

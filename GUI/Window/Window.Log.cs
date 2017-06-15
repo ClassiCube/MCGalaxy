@@ -43,7 +43,10 @@ namespace MCGalaxy.Gui {
                 if (logs_txtError.InvokeRequired) {
                     Invoke(new LogDelegate(LogErrorMessage), new object[] { message });
                 } else {
-                    logs_txtError.AppendText(Environment.NewLine + message);
+                    string date = "----" + DateTime.Now + "----";
+                    message = date + Environment.NewLine + message;
+                    message = message + Environment.NewLine + "-------------------------";
+                    logs_txtError.AppendText(message + Environment.NewLine);
                 }
             } catch { 
             }
@@ -54,7 +57,7 @@ namespace MCGalaxy.Gui {
                 if (logs_txtSystem.InvokeRequired) {
                     Invoke(new LogDelegate(LogSystemMessage), new object[] { message });
                 } else {
-                    logs_txtSystem.AppendText(Environment.NewLine + message);
+                    logs_txtSystem.AppendText(message + Environment.NewLine);
                 }
             } catch { 
             }
