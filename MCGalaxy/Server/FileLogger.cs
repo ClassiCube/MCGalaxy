@@ -63,12 +63,13 @@ namespace MCGalaxy {
 				StringBuilder sb = new StringBuilder();
 				sb.AppendLine("----" + DateTime.Now + " ----");
 				sb.AppendLine(message);
-				sb.Append('-', 25); sb.AppendLine();
+				sb.Append('-', 25);
 				
 				string output = sb.ToString();
 				lock (logLock) errCache.Enqueue(output);
 			} else {
-				lock (logLock) msgCache.Enqueue(message);
+				string now = DateTime.Now.ToString("(HH:mm:ss) ");
+				lock (logLock) msgCache.Enqueue(now + message);
 			}
 		}
 		
@@ -88,7 +89,7 @@ namespace MCGalaxy {
 				while (cache.Count > 0) {
 					string item = cache.Dequeue();
 					item = Colors.StripColors(item);
-					w.Write(item);
+					w.WriteLine(item);
 				}
 			}
 		}

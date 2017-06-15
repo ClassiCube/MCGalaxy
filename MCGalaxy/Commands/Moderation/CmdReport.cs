@@ -125,7 +125,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             Player.Message(p, "%aYou have cleared all reports!");
             Chat.MessageOps(p.ColoredName + "%c cleared ALL reports!");
-            Logger.Log(LogType.UserActivity, "{0} cleared ALL reports!", p.name);
+            Logger.Log(LogType.UserActivity, p.name + " cleared ALL reports!");
         }
         
         void HandleAdd(Player p, string[] args) {
