@@ -20,6 +20,7 @@ using System.IO;
 using MCGalaxy;
 using MCGalaxy.Commands;
 using MCGalaxy.Network;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Core {
     internal static class ConnectHandler {
@@ -97,7 +98,10 @@ namespace MCGalaxy.Core {
             
             try {
                 PlayerActions.ChangeMap(p, level);
-                Command.all.Find("jail").Use(null, p.name);
+                ModAction action = new ModAction(p.name, null, ModActionType.Jailed, "Auto jail");
+                action.Announce = false;
+                OnModActionEvent.Call(action);
+                Chat.MessageGlobal(p, p.DisplayName + " &cis still jailed from previously.", false);
             } catch (Exception ex) {
                 p.Leave("Error occured", "Error occured", true);
                 Logger.LogError(ex);
