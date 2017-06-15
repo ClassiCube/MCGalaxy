@@ -88,12 +88,12 @@ namespace MCGalaxy.Tasks {
                     try {
                         File.Move(file, newFile);
                     } catch (Exception ex) {
-                        Server.s.Log("Error while trying to move .lvl.prev file");
-                        Server.ErrorLog(ex);
+                        Logger.Log(LogType.Warning, "Error while trying to move .lvl.prev file");
+                        Logger.LogError(ex);
                     }
                 }
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
         
@@ -103,18 +103,18 @@ namespace MCGalaxy.Tasks {
                 string[] files = Directory.GetFiles("levels/level properties", "*.env");
                 if (files.Length == 0) return;
                 
-                Server.s.Log("Combining " + files.Length + " .env and .properties files..");
+                Logger.Log(LogType.SystemActivity, "Combining {0} .env and .properties files..", files.Length);
                 foreach (string envFile in files) {
                     try {
                         Combine(envFile);
                     } catch (Exception ex) {
-                        Server.s.Log("Error while trying to combine .env and .properties file");
-                        Server.ErrorLog(ex);
+                        Logger.Log(LogType.Warning, "Error while trying to combine .env and .properties file");
+                        Logger.LogError(ex);
                     }
                 }
-                Server.s.Log("Finished combining .env and .properties files.");
+                Logger.Log(LogType.SystemActivity, "Finished combining .env and .properties files.");
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
         
@@ -189,10 +189,10 @@ namespace MCGalaxy.Tasks {
             string time = table.Rows[0]["TimeSpent"].ToString();
             if (time.IndexOf(' ') == -1) return; // already upgraded
             
-            Server.s.Log("Upgrading TimeSpent column in database to new format..");
+            Logger.Log(LogType.SystemActivity, "Upgrading TimeSpent column in database to new format..");
             DumpPlayerTimeSpents();
             UpgradePlayerTimeSpents();
-            Server.s.Log("Upgraded " + playerCount + " rows. (" + playerFailed + " rows failed)");
+            Logger.Log(LogType.SystemActivity, "Upgraded {0} rows. ({1} rows failed)", playerCount, playerFailed);
         }
         
         static List<int> playerIds;

@@ -16,124 +16,115 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text;
-using System.Windows.Forms;
-using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
     
+    public enum LogType {
+        
+        /// <summary> Background system activity, such as auto-saving maps, performing GC, etc. </summary>
+        BackgroundActivity,
+        
+        /// <summary> Normal system activity, such as loading maps, etc. </summary>
+        SystemActivity,
+        
+        /// <summary> Activity causes by games such as lava survival, TNT wars, etc. </summary>
+        GameActivity,
+        
+        /// <summary> User activity by players or console, such as connecting, banning players, etc. </summary>
+        UserActivity,
+        
+        /// <summary> User performs a suspicious activity, such as triggering block spam kick, noclipping in a game, etc. </summary>
+        SuspiciousActivity,
+        
+        /// <summary> Activity on IRC. </summary>
+        IRCCActivity,
+        
+        
+        /// <summary> Warning message, such as failure to save a file. </summary>
+        Warning,
+        
+        /// <summary> Handled or unhandled exception occurs. </summary>
+        Error,
+        
+        /// <summary> Command used by a player. </summary>
+        CommandUsage,
+        
+        
+        /// <summary> Chat globally or only on player's level. </summary>
+        PlayerChat,
+        
+        /// <summary> Chat from IRC. </summary>
+        IRCChat,      
+        
+        /// <summary> Chat to all players in a particular chatroom, or across all chatrooms. </summary>
+        ChatroomChat,
+        
+        /// <summary> Chat to all players who have permission to read certain chat group (/opchat, /adminchat). </summary>
+        StaffChat,
+        
+        /// <summary> Chat from one player to another. </summary>
+        PrivateChat,
+        
+        /// <summary> Chat to all players of a rank. </summary>
+        RankChat,
+        
+        
+        /// <summary> Debug messages. </summary>
+        Debug,
+        
+        /// <summary> Message shown to console. </summary>
+        ConsoleMessage,
+    }
+    
+    public delegate void LogHandler(LogType type, string message);
+    
+    
+    /// <summary> Logs message to file and/or console. </summary>
     public static class Logger {
         
-        public static string LogPath { get { return msgPath; } set { msgPath = value; } }
-        public static string ErrorLogPath { get { return errPath; } set { errPath = value; } }
-
-        static bool disposed;
-        static DateTime last;
-
-        static object logLock = new object();
-        static string errPath, msgPath;
-        static Queue<string> errCache = new Queue<string>(), msgCache = new Queue<string>();
-        static SchedulerTask logTask;
-
-        public static void Init() {
-            if (!Directory.Exists("logs")) Directory.CreateDirectory("logs");
-            if (!Directory.Exists("logs/errors")) Directory.CreateDirectory("logs/errors");
-            UpdatePaths();
-            
-            logTask = Server.MainScheduler.QueueRepeat(LogTask, null,
-                                                       TimeSpan.FromMilliseconds(500));
+        public static LogHandler LogHandler;
+        static readonly object logLock = new object();
+        
+        public static void Log(LogType type, string message) {
+            lock (logLock) {
+                if (LogHandler != null) LogHandler(type, message);
+            }
         }
         
-        // Update paths only if a new date
-        static void UpdatePaths() {
-            DateTime now = DateTime.Now;
-            if (now.Year == last.Year && now.Month == last.Month && now.Day == last.Day) return;
-            
-            last = now;
-            msgPath = "logs/" + now.ToString("yyyy-MM-dd").Replace("/", "-") + ".txt";
-            errPath = "logs/errors/" + now.ToString("yyyy-MM-dd").Replace("/", "-") + "error.log";
-        }
-
-        public static void Write(string str) { LogMessage(str); }
-        public static void LogMessage(string message) {
-            if (String.IsNullOrEmpty(message)) return;
-            lock (logLock) msgCache.Enqueue(message);
+        public static void Log(LogType type, string format, object arg0) {
+            Log(type, String.Format(format, arg0));
         }
         
-        public static void WriteError(Exception ex) { LogError(ex); }
+        public static void Log(LogType type, string format, object arg0, object arg1) {
+            Log(type, String.Format(format, arg0, arg1));
+        }
+        
+        public static void Log(LogType type, string format, object arg0, object arg1, object arg2) {
+            Log(type, String.Format(format, arg0, arg1, arg2));
+        }
+        
+        public static void Log(LogType type, string format, params object[] args) {
+            Log(type, String.Format(format, args));
+        }
+        
+        
         public static void LogError(Exception ex) {
-            try {
-                StringBuilder sb = new StringBuilder();
-                Exception e = ex;
-                sb.AppendLine("----" + DateTime.Now + " ----");
-                while (e != null) {
-                    DescribeError(e, sb);
-                    e = e.InnerException;
-                }
-
-                sb.AppendLine();
-                sb.Append('-', 25); sb.AppendLine();
-                string output = sb.ToString();
-                if (Server.s != null) Server.s.ErrorCase(output);
-                lock (logLock) errCache.Enqueue(output);
-            } catch (Exception e) {
-                LogErrorError(e);
+            StringBuilder sb = new StringBuilder();
+            while (ex != null) {
+                DescribeError(ex, sb);
+                ex = ex.InnerException;
             }
-        }
-        
-        static void LogErrorError(Exception e) {
-            try {
-                StringBuilder temp = new StringBuilder();
-                DescribeError(e, temp);
-                File.AppendAllText("ErrorLogError.log", temp.ToString());
-            } catch (Exception _ex) {
-                MessageBox.Show("ErrorLogError Error:\n Could not log the error logs error. This is a big error. \n" + _ex.Message);
-            }
+            Log(LogType.Error, sb.ToString());
         }
 
-        static void LogTask(SchedulerTask task) {
-            lock (logLock) {
-                if (errCache.Count > 0 || msgCache.Count > 0) UpdatePaths();
-                
-                if (errCache.Count > 0) FlushCache(errPath, errCache);
-                if (msgCache.Count > 0) FlushCache(msgPath, msgCache);
-            }
-        }
-
-        static void FlushCache(string path, Queue<string> cache) {
-            //TODO: not happy about constantly opening and closing a stream like this but I suppose its ok (Pidgeon)
-            using (StreamWriter w = new StreamWriter(path, true)) {
-                while (cache.Count > 0) {
-                    string item = cache.Dequeue();
-                    item = Colors.StripColors(item);
-                    w.Write(item);
-                }
-            }
-        }
-        
-        static void DescribeError(Exception e, StringBuilder sb) {
-            if (e == null) return;
-
+        static void DescribeError(Exception ex, StringBuilder sb) {
             // Attempt to gather this info.  Skip anything that you can't read for whatever reason
-            try { sb.AppendLine("Type: " + e.GetType().Name); } catch { }
-            try { sb.AppendLine("Source: " + e.Source); } catch { }
-            try { sb.AppendLine("Message: " + e.Message); } catch { }
-            try { sb.AppendLine("Target: " + e.TargetSite.Name); } catch { }
-            try { sb.AppendLine("Trace: " + e.StackTrace); } catch { }
-        }
-
-        public static void Dispose() {
-            if (disposed) return;
-            disposed = true;
-            Server.MainScheduler.Cancel(logTask);
-            
-            lock (logLock) {
-                if (errCache.Count > 0)
-                    FlushCache(errPath, errCache);
-                msgCache.Clear();
-            }
+            try { sb.AppendLine("Type: " + ex.GetType().Name); } catch { }
+            try { sb.AppendLine("Source: " + ex.Source); } catch { }
+            try { sb.AppendLine("Message: " + ex.Message); } catch { }
+            try { sb.AppendLine("Target: " + ex.TargetSite.Name); } catch { }
+            try { sb.AppendLine("Trace: " + ex.StackTrace); } catch { }
         }
     }
 }

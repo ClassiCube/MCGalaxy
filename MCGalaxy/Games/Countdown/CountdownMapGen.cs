@@ -19,7 +19,7 @@ using System;
 
 namespace MCGalaxy.Games {
     
-	/// <summary> Generates a map for countdown. </summary>
+    /// <summary> Generates a map for countdown. </summary>
     public static class CountdownMapGen {
         
         public static Level Generate(int width, int height, int length) {

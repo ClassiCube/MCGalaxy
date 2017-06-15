@@ -55,7 +55,7 @@ namespace MCGalaxy.Drawing {
         }
 
         static CopyState Rotate(CopyState state, CopyState flipped, int[] m) {
-		    int volume = state.Volume;
+            int volume = state.Volume;
             for (int i = 0; i < volume; i++) {
                 ushort x, y, z;
                 state.GetCoords(i, out x, out y, out z);

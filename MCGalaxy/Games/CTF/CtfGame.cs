@@ -219,7 +219,7 @@ namespace MCGalaxy.Games {
 
         void HandleLevelUnload(Level l) {
             if (started && l == mainlevel) {
-                Server.s.Log("Failed!, A ctf game is currently going on!");
+                Logger.Log(LogType.GameActivity, "Unload Failed!, A ctf game is currently going on!");
                 Plugin.CancelLevelEvent(LevelEvents.LevelUnload, l);
             }
         }
@@ -253,7 +253,7 @@ namespace MCGalaxy.Games {
             if (needSetup) AutoSetup();
             redbase.block = (ExtBlock)Block.red;
             bluebase.block = (ExtBlock)Block.blue;
-            Server.s.Log("[Auto_CTF] Running...");
+            Logger.Log(LogType.GameActivity, "[Auto_CTF] Running...");
             started = true;
             
             Database.Backend.CreateTable("CTF", createSyntax);

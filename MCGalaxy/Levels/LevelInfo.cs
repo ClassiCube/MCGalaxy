@@ -116,7 +116,7 @@ namespace MCGalaxy {
                     string key = line.Substring(0, index).ToLower();
                     if (key == propKey) return line.Substring(index + 3);
                 } catch (Exception e) {
-                    Server.ErrorLog(e);
+                    Logger.LogError(e);
                 }
             }
             return null;

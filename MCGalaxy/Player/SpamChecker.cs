@@ -46,8 +46,10 @@ namespace MCGalaxy {
 
             TimeSpan oldestDelta = DateTime.UtcNow - blockLog[0];
             Chat.MessageOps(p.ColoredName + " &cwas kicked for suspected griefing.");
-            Server.s.Log(p.name + " was kicked for block spam (" + blockLog.Count
-                         + " blocks in " + oldestDelta + " seconds)");
+
+            Logger.Log(LogType.SuspiciousActivity, 
+                       "{0} was kicked for block spam ({1} blocks in {2} seconds)",
+                       p.name, blockLog.Count, oldestDelta);
             p.Kick("You were kicked by antigrief system. Slow down.");
             return true;            
         }

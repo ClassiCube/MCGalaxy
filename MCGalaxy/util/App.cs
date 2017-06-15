@@ -59,7 +59,7 @@ namespace MCGalaxy.Gui {
                     p.Leave(msg);
                 }
             } catch (Exception ex) { 
-                Server.ErrorLog(ex); 
+                Logger.LogError(ex); 
             }
 
             try {
@@ -76,7 +76,7 @@ namespace MCGalaxy.Gui {
                     File.WriteAllText("text/autoload.txt", level);
                 }
             } catch (Exception ex) {
-                Server.ErrorLog(ex); 
+                Logger.LogError(ex); 
             }
         }
     }

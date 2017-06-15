@@ -600,7 +600,6 @@
     <Compile Include="Plugins\Events\LevelEvents.cs" />
     <Compile Include="Plugins\Events\ModActionEvent.cs" />
     <Compile Include="Plugins\Events\PlayerEvents.cs" />
-    <Compile Include="Plugins\Events\ServerEvents.cs" />
     <Compile Include="Network\Player.Networking.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\Plugin.Events.cs" />
@@ -617,6 +616,7 @@
     <Compile Include="Server\BackupDB.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="Levels\Level.cs" />
+    <Compile Include="Server\FileLogger.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Scripting\Backends.cs" />

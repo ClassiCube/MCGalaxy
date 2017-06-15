@@ -44,7 +44,7 @@ namespace MCGalaxy.Games {
             try {
                 PropertiesFile.Read("properties/lavasurvival.properties", ProcessSettingsLine);
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
         }
         
@@ -98,7 +98,7 @@ namespace MCGalaxy.Games {
             try {
                 PropertiesFile.Read(path, ref settings, ProcessMapLine);
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
             return settings;
         }

@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Scripting {
             try {
                 success = engine.Compile(args[0]);
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 Player.Message(p, "An exception was thrown during compilation.");
                 return;
             }

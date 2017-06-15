@@ -49,15 +49,16 @@ namespace MCGalaxy {
         void CheckFile(string file) {
             if (File.Exists(file)) return;
             
-            Log(file + " doesn't exist, Downloading");
+            Logger.Log(LogType.SystemActivity, file + " doesn't exist, Downloading..");
             try {
                 using (WebClient client = HttpUtil.CreateWebClient()) {
                     client.DownloadFile(Updater.BaseURL + file + "?raw=true", file);
                 }
-                if (File.Exists(file))
-                    Log(file + " download succesful!");
+            	if (File.Exists(file)) {
+            	    Logger.Log(LogType.SystemActivity, file + " download succesful!");
+            	}
             } catch {
-                Log("Downloading " + file + " failed, please try again later");
+                Logger.Log(LogType.Warning, "Downloading {0} failed, please try again later", file);
             }
         }
         
@@ -77,7 +78,7 @@ namespace MCGalaxy {
             StartTime = DateTime.UtcNow;
             StartTimeLocal = StartTime.ToLocalTime();
             shuttingDown = false;
-            Log("Starting Server");
+            Logger.Log(LogType.SystemActivity, "Starting Server");
             try {
                 if (File.Exists("Restarter.exe"))
                     File.Delete("Restarter.exe");
@@ -190,7 +191,7 @@ namespace MCGalaxy {
             BlockDefinition.LoadGlobal();
             ImagePalette.Load();
             
-            SrvProperties.Load(Paths.ServerPropsFile);
+            SrvProperties.Load();
             Group.InitAll();
             Command.InitAll();
             CommandPerms.Load();
@@ -260,68 +261,6 @@ namespace MCGalaxy {
             if (OnURLChange != null) OnURLChange(url);
         }
 
-        public void Log(string message, bool systemMsg = false) {
-            if (ServerLog != null)  {
-                ServerLog(message);
-                if (cancellog) { cancellog = false; return; }
-            }
-            if (!systemMsg) OnServerLogEvent.Call(message);
-            
-            string now = DateTime.Now.ToString("(HH:mm:ss) ");
-            if (!systemMsg && OnLog != null) OnLog(now + message);
-            if (systemMsg && OnSystem != null) OnSystem(now + message);
-            Logger.Write(now + message + Environment.NewLine);
-        }
-        
-        public void OpLog(string message, bool systemMsg = false) {
-            if (ServerOpLog != null) {
-                ServerOpLog(message);
-                if (canceloplog) { canceloplog = false; return; }
-            }
-            
-            string now = DateTime.Now.ToString("(HH:mm:ss) ");
-            if (OnOp != null) {
-                if (!systemMsg) OnOp(now + message);
-                else OnSystem(now + message);
-            }
-            Logger.Write(now + message + Environment.NewLine);
-        }
-
-        public void AdminLog(string message, bool systemMsg = false) {
-            if (ServerAdminLog != null) {
-                ServerAdminLog(message);
-                if (canceladmin) { canceladmin = false; return; }
-            }
-            
-            string now = DateTime.Now.ToString("(HH:mm:ss) ");
-            if (OnAdmin != null) {
-                if (!systemMsg) OnAdmin(now + message);
-                else OnSystem(now + message);
-            }
-            Logger.Write(now + message + Environment.NewLine);
-        }
-
-        public void ErrorCase(string message) {
-            if (OnError != null) OnError(message);
-        }
-
-        public void CommandUsed(string message) {
-            string now = DateTime.Now.ToString("(HH:mm:ss) ");
-            if (OnCommand != null) OnCommand(now + message);
-            Logger.Write(now + message + Environment.NewLine);
-        }
-
-        public static void ErrorLog(Exception ex) {
-            if (ServerError != null) ServerError(ex);
-            OnServerErrorEvent.Call(ex);
-            Logger.WriteError(ex);
-            
-            try {
-                s.Log("!!!Error! See " + Logger.ErrorLogPath + " for more information.");
-            } catch {
-            }
-        }
-
         static void RandomMessage(SchedulerTask task) {
             if (Player.number != 0 && messages.Count > 0)
                 Chat.MessageGlobal(messages[new Random().Next(0, messages.Count)]);
@@ -360,7 +299,7 @@ namespace MCGalaxy {
             if (deltaKB >= 100.0) {
                 string track = (end / 1024.0).ToString("F2");
                 string delta = deltaKB.ToString("F2");
-                Server.s.Log("GC performed (tracking " + track + " KB, freed " + delta + " KB)", true);
+                Logger.Log(LogType.BackgroundActivity, "GC performed (tracking {0} KB, freed {1} KB)", track, delta);
             }
         }
     }

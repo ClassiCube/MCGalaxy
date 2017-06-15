@@ -81,7 +81,7 @@ namespace MCGalaxy {
             try {
                 File.Move(src, dst);
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
         
@@ -161,7 +161,7 @@ namespace MCGalaxy {
             try {
                 File.Delete(src);
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
         
@@ -252,7 +252,7 @@ namespace MCGalaxy {
             try {
                 File.Copy(src, dst, true);
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
     }

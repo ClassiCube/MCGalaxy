@@ -73,7 +73,7 @@ namespace MCGalaxy.DB {
                 entriesWritten++;
                 if (entriesWritten == 10) {
                     string progress = " (" + DBUpgrader.Progress + ")";
-                    Server.s.Log("Dumping BlockDB for " + mapName + progress);
+                    Logger.Log(LogType.SystemActivity, "Dumping BlockDB for " + mapName + progress);
                 }
                 
                 UpdateBlock(reader);
@@ -84,7 +84,7 @@ namespace MCGalaxy.DB {
                 buffer.Add(entry);
                 WriteBuffer(false);
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 errorOccurred = true;
             }
         }

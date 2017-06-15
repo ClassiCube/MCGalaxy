@@ -37,8 +37,8 @@ namespace MCGalaxy.Network {
                 IPAddress[] addresses = Dns.GetHostAddresses("www.classicube.net");
                 EnsureIPv4Url(addresses);
             } catch (Exception ex) {
-                Server.s.Log("Error while trying to retrieve DNS information for classicube.net");
-                Server.ErrorLog(ex);
+                Logger.Log(LogType.Warning, "Error while trying to retrieve DNS information for classicube.net");
+                Logger.LogError(ex);
             }
         }
         
@@ -118,7 +118,7 @@ namespace MCGalaxy.Network {
                 if (!response.Contains("\"errors\": [")) {
                     Server.s.UpdateUrl(Server.URL);
                     File.WriteAllText("text/externalurl.txt", Server.URL);
-                    Server.s.Log("ClassiCube URL found: " + Server.URL);
+                    Logger.Log(LogType.SystemActivity, "ClassiCube URL found: " + Server.URL);
                 } else {
                     Response resp = JsonConvert.DeserializeObject<Response>(Server.URL);
                     if (resp.errors != null && resp.errors.Length > 0 && resp.errors[0].Length > 0)
@@ -126,7 +126,7 @@ namespace MCGalaxy.Network {
                     else
                         Server.URL = "Error while finding URL. Is the port open?";
                     Server.s.UpdateUrl(Server.URL);
-                    Server.s.Log(response);
+                    Logger.Log(LogType.Warning, response);
                 }
             }
         }        

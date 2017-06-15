@@ -49,7 +49,7 @@ namespace MCGalaxy.Gui.Popups {
             try {
                 engine.CreateNew(cmdName);
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 MessageBox.Show("An error occurred creating the class file.", "", MessageBoxButtons.OK);
                 return;
             }
@@ -78,12 +78,12 @@ namespace MCGalaxy.Gui.Popups {
 
                     if (result.Errors.HasErrors) {
                         foreach (CompilerError err in result.Errors) {
-                            Server.s.ErrorCase("Error #" + err.ErrorNumber);
-                            Server.s.ErrorCase("Message: " + err.ErrorText);
-                            Server.s.ErrorCase("Line: " + err.Line);
-                            Server.s.ErrorCase( "=================================" );
+                            Logger.Log(LogType.Warning, "Error #" + err.ErrorNumber);
+                            Logger.Log(LogType.Warning, "Message: " + err.ErrorText);
+                            Logger.Log(LogType.Warning, "Line: " + err.Line);
+                            Logger.Log(LogType.Warning, "=================================");
                         }
-                        MessageBox.Show("Error compiling from source. Check logs for error");
+                        MessageBox.Show("Error compiling from source. Check logs for more details.");
                         return;
                     }
                     commands = IScripting.LoadFrom(result.CompiledAssembly).ToArray();
@@ -101,7 +101,7 @@ namespace MCGalaxy.Gui.Popups {
 
                 lstCommands.Items.Add(cmd.name);
                 Command.all.Add(cmd);
-                Server.s.Log("Added " + cmd.name + " to commands");
+                Logger.Log(LogType.SystemActivity, "Added " + cmd.name + " to commands");
             }
             CommandPerms.Load();
         }

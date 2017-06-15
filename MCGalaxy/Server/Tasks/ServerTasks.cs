@@ -48,7 +48,7 @@ namespace MCGalaxy.Tasks {
                 try {
                     TickPlayer(players[i]);
                 } catch (Exception e) {
-                    Server.ErrorLog(e);
+                    Logger.LogError(e);
                 }
             }
         }
@@ -126,7 +126,7 @@ namespace MCGalaxy.Tasks {
                 try {
                     lvl.saveChanges();
                 } catch (Exception e) {
-                    Server.ErrorLog(e);
+                    Logger.LogError(e);
                 }
             }
         }
@@ -145,11 +145,12 @@ namespace MCGalaxy.Tasks {
                         int backupNumber = lvl.Backup();
                         if (backupNumber != -1) {
                             lvl.ChatLevel("Backup " + backupNumber + " saved.");
-                            Server.s.Log("Backup " + backupNumber + " saved for " + lvl.name);
+                            Logger.Log(LogType.BackgroundActivity, "Backup {0} saved for {1}", backupNumber, lvl.name);
                         }
                     }
-                } catch {
-                    Server.s.Log("Backup for " + lvl.name + " has caused an error.");
+                } catch (Exception ex) {
+                    Logger.Log(LogType.Warning, "Backup for {0} has caused an error.", lvl.name);
+                    Logger.LogError(ex);
                 }
             }
 
@@ -161,17 +162,21 @@ namespace MCGalaxy.Tasks {
             try {
                 foreach (Player p in players) p.save();
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
             
             players = PlayerInfo.Online.Items;
             if (players.Length <= 0) return;
             string all = players.Join(p => p.name);
-            if (all.Length > 0) Server.s.Log("!PLAYERS ONLINE: " + all, true);
+            if (all.Length > 0) {
+                Logger.Log(LogType.BackgroundActivity, "!PLAYERS ONLINE: " + all);
+            }
 
             levels = LevelInfo.Loaded.Items;
             all = levels.Join(l => l.name);
-            if (all.Length > 0) Server.s.Log("!LEVELS ONLINE: " + all, true);
+            if (all.Length > 0) {
+                Logger.Log(LogType.BackgroundActivity, "!LEVELS ONLINE: " + all);
+            }
         }
     }
 }

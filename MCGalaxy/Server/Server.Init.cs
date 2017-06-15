@@ -37,12 +37,12 @@ namespace MCGalaxy {
                 mainLevel.unload = false;
                 LevelInfo.Loaded.Add(mainLevel);
             } catch (Exception e) {
-                ErrorLog(e);
+                Logger.LogError(e);
             }
         }
         
         void GenerateMain() {
-            Log("main level not found, generating..");
+            Logger.Log(LogType.SystemActivity, "main level not found, generating..");
             mainLevel = new Level(level, 128, 64, 128);
             MapGen.Generate(mainLevel, "flat", "", null);
             mainLevel.Save();
@@ -54,7 +54,7 @@ namespace MCGalaxy {
                 UpgradeTasks.UpgradeOldAgreed();
                 agreed = PlayerList.Load("agreed.txt");
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
             
             bannedIP = PlayerList.Load("banned-ip.txt");
@@ -91,12 +91,12 @@ namespace MCGalaxy {
         }
         
         void SetupSocket() {
-            Log("Creating listening socket on port " + port + "... ");
+		    Logger.Log(LogType.SystemActivity, "Creating listening socket on port {0}... ", port);
             Listener = new TcpListen();
             
             IPAddress ip;
             if (!IPAddress.TryParse(Server.listenIP, out ip)) {
-                Server.s.Log("Unable to parse listen IP config key, listening on any IP");
+                Logger.Log(LogType.Warning, "Unable to parse listen IP config key, listening on any IP");
                 ip = IPAddress.Any;
             }            
             Listener.Listen(ip, (ushort)port);
@@ -106,16 +106,16 @@ namespace MCGalaxy {
             try {
                 Heartbeat.InitHeartbeats();
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
         }
         
         void InitTimers() {
-		    TextFile announcementsFile = TextFile.Files["Announcements"];
-		    announcementsFile.EnsureExists();
-		    
-		    string[] lines = announcementsFile.GetText();
-		    messages = new List<string>(lines);
+            TextFile announcementsFile = TextFile.Files["Announcements"];
+            announcementsFile.EnsureExists();
+
+            string[] lines = announcementsFile.GetText();
+            messages = new List<string>(lines);
             
             MainScheduler.QueueRepeat(RandomMessage, null, 
                                       TimeSpan.FromMinutes(5));
@@ -134,7 +134,7 @@ namespace MCGalaxy {
             Critical.QueueRepeat(ServerTasks.LocationChecks, null,
                                  TimeSpan.FromMilliseconds(20));
 
-            Log("Finished setting up server, finding classicube.net url..");
+            Logger.Log(LogType.SystemActivity, "Finished setting up server, finding classicube.net url..");
             ServerSetupFinished = true;
         }
         
@@ -146,14 +146,14 @@ namespace MCGalaxy {
                 // Did zombie survival change the main world?
                 if (oldMain != null && oldMain != Server.mainLevel)
                     oldMain.Unload(true, false);
-            } catch (Exception e) { Server.ErrorLog(e); }
+            } catch (Exception e) { Logger.LogError(e); }
         }
 
         void InitLavaSurvival() {
             if (!Server.lava.startOnStartup) return;
             try {
                 Server.lava.Start();
-            } catch (Exception e) { Server.ErrorLog(e); }
+            } catch (Exception e) { Logger.LogError(e); }
         }
     }
 }

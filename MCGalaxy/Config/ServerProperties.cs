@@ -40,9 +40,9 @@ namespace MCGalaxy {
             Server.salt = new string(chars);
         }
         
-        public static void Load(string givenPath, bool ignored = false) {
+        public static void Load() {
             oldPerms = new OldPerms();
-            if (PropertiesFile.Read(givenPath, ref oldPerms, LineProcessor))
+            if (PropertiesFile.Read(Paths.ServerPropsFile, ref oldPerms, LineProcessor))
                 Server.s.SettingsUpdate();
             if (oldPerms.saveZS)
                 ZombieGameProps.SaveSettings();
@@ -52,7 +52,7 @@ namespace MCGalaxy {
 
             if (!Directory.Exists(Server.backupLocation))
                 Server.backupLocation = Path.Combine(Utils.FolderPath, "levels/backups");
-            Save(givenPath);
+            Save();
         }
         
         static void LineProcessor(string key, string value, ref OldPerms perms) {
@@ -78,7 +78,7 @@ namespace MCGalaxy {
                         if (ConfigElement.Parse(Server.zombieConfig, key, value, null)) {
                             perms.saveZS = true;
                         } else {
-                            Server.s.Log("\"" + key + "\" was not a recognised server property key.");
+                            Logger.Log(LogType.Warning, "\"{0}\" was not a recognised server property key.");
                         }
                     }
                     break;
@@ -88,17 +88,16 @@ namespace MCGalaxy {
         internal class OldPerms { public int viewPerm = -1, nextPerm = -1,
             clearPerm = -1, opchatPerm = -1, adminchatPerm = -1; public bool saveZS; }
         
-        public static void Save() { Save(Paths.ServerPropsFile); }
         static readonly object saveLock = new object();
-        public static void Save(string givenPath) {
+        public static void Save() {
             try {
                 lock (saveLock) {
-                    using (StreamWriter w = new StreamWriter(givenPath))
+                    using (StreamWriter w = new StreamWriter(Paths.ServerPropsFile))
                         SaveProps(w);
                 }
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                Server.s.Log("SAVE FAILED! " + givenPath);
+                Logger.LogError(ex);
+                Logger.Log(LogType.Warning, "SAVE FAILED! " + Paths.ServerPropsFile);
             }
         }
         

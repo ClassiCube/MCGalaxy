@@ -124,7 +124,7 @@ namespace MCGalaxy.Gui {
                 string cmdArgs = args == "" ? p.name : p.name + " " + args;
                 Command.all.Find(cmd).Use(null, cmdArgs);
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
             return args;
         }

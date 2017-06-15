@@ -56,7 +56,9 @@ namespace MCGalaxy.Core {
             action = Colors.StripColors(action);
             string suffix = "";
             if (e.Duration.Ticks != 0) suffix = " %Sfor " + e.Duration.Shorten();
-            Server.s.Log(e.Target + " was " + action + " by " + e.ActorName + suffix);
+            
+            Logger.Log(LogType.UserActivity, "{0} was {1} by {2}", 
+                       e.Target, action, e.ActorName + suffix);
         }
 
         
@@ -173,7 +175,7 @@ namespace MCGalaxy.Core {
             Chat.MessageWhere(e.FormatMessage("An IP", "&8IP banned"), pl => pl.Rank < perm);
             Chat.MessageWhere(e.FormatMessage(e.TargetName, "&8IP banned"), pl => pl.Rank >= perm);
             
-            Server.s.Log("IP-BANNED: " + e.Target + " by " + e.ActorName + ".");
+            Logger.Log(LogType.UserActivity, "IP-BANNED: {0} by {1}.", e.Target, e.ActorName);
             Server.bannedIP.Add(e.Target);
             Server.bannedIP.Save();
         }
@@ -183,7 +185,7 @@ namespace MCGalaxy.Core {
             Chat.MessageWhere(e.FormatMessage("An IP", "&8IP unbanned"), pl => pl.Rank < perm);
             Chat.MessageWhere(e.FormatMessage(e.TargetName, "&8IP unbanned"), pl => pl.Rank >= perm);
             
-            Server.s.Log("IP-UNBANNED: " + e.Target + " by " + e.ActorName + ".");
+            Logger.Log(LogType.UserActivity, "IP-UNBANNED: {0} by {1}.", e.Target, e.ActorName);
             Server.bannedIP.Remove(e.Target);
             Server.bannedIP.Save();
         }

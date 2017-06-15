@@ -78,7 +78,7 @@ namespace MCGalaxy.Core {
                 string[] welcome = welcomeFile.GetText();
                 Player.MessageLines(p, welcome);
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
         

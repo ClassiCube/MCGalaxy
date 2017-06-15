@@ -33,11 +33,11 @@ namespace MCGalaxy.Commands.Chatting {
                 Player.Message(p, "You need to have at least 1 &3" + Server.moneys + 
                                    " %Sto purchase a snack."); return;
             }            
-                      
-        	TextFile eatFile = TextFile.Files["Eat"];
-        	eatFile.EnsureExists();
+
+            TextFile eatFile = TextFile.Files["Eat"];
+            eatFile.EnsureExists();
             
-        	string[] actions = eatFile.GetText();
+            string[] actions = eatFile.GetText();
             string action = "ate some food";
             if (actions.Length > 0)
                 action = actions[new Random().Next(actions.Length)];

@@ -95,14 +95,14 @@ namespace MCGalaxy.Network {
                     req.ContentLength = data.Length;
                     using (Stream w = req.GetRequestStream()) {
                         w.Write(data, 0, data.Length);
-                        if (Server.logbeat) Server.s.Log("Beat " + beat + " was sent");
+                        if (Server.logbeat) Logger.Log(LogType.Debug, "Beat " + beat + " was sent");
                     }
 
                     using (StreamReader r = new StreamReader(req.GetResponse().GetResponseStream())) {
                         string response = r.ReadToEnd().Trim();
                         beat.OnResponse(response);
 
-                        if (Server.logbeat) Server.s.Log("Beat: \"" + response + "\" was recieved");
+                        if (Server.logbeat) Logger.Log(LogType.Debug, "Beat: \"" + response + "\" was recieved");
                     }
                     return;
                 } catch (Exception ex) {
@@ -115,7 +115,7 @@ namespace MCGalaxy.Network {
                 }            
             }
             
-            if (Server.logbeat) Server.s.Log("Beat: " + beat + " failed.");
+            if (Server.logbeat) Logger.Log(LogType.Debug, "Beat: " + beat + " failed.");
         }
     }
 }

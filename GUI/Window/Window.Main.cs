@@ -111,11 +111,11 @@ namespace MCGalaxy.Gui {
                 inputLog.RemoveAt(20);
             
             if (text[0] == '/' && text.Length > 1 && text[1] == '/') {
-                Handlers.HandleChat(text.Substring(1), WriteLine);
+                Handlers.HandleChat(text.Substring(1));
             } else if (text[0] == '/') {
-                Handlers.HandleCommand(text.Substring(1), WriteCommand);
+                Handlers.HandleCommand(text.Substring(1));
             } else {
-                Handlers.HandleChat(text, WriteLine);
+                Handlers.HandleChat(text);
             }
             main_txtInput.Clear();
         }

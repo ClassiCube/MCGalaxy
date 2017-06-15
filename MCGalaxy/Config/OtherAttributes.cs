@@ -36,17 +36,16 @@ namespace MCGalaxy.Config {
         public override object Parse(string value) {
             int intValue;
             if (!int.TryParse(value, out intValue)) {
-                Server.s.Log("Config key \"" + Name + "\" is not a valid integer, " +
-                             "using default of " + DefaultValue);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid integer, using default of {1}", Name, DefaultValue);
                 return DefaultValue;
             }
             
             if (intValue < MinValue) {
-                Server.s.Log("Config key \"" + Name + "\" is too small an integer, using " + MinValue);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is too small an integer, using {1}", Name, MinValue);
                 return MinValue;
             }
             if (intValue > MaxValue) {
-                Server.s.Log("Config key \"" + Name + "\" is too big an integer, using " + MaxValue);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is too big an integer, using {1}", Name, MaxValue);
                 return MaxValue;
             }
             return intValue;
@@ -62,8 +61,7 @@ namespace MCGalaxy.Config {
         public override object Parse(string value) {
             bool boolValue;
             if (!bool.TryParse(value, out boolValue)) {
-                Server.s.Log("Config key \"" + Name + "\" is not a valid boolean, " +
-                             "using default of " + DefaultValue);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid boolean, using default of {1}", Name, DefaultValue);
                 return DefaultValue;
             }
             return boolValue;
@@ -83,8 +81,7 @@ namespace MCGalaxy.Config {
                 // Try parse the permission as name for backwards compatibility
                 Group grp = Group.Find(value);
                 if (grp == null) {
-                    Server.s.Log("Config key \"" + Name + "\" is not a valid permission, " +
-                                 "using default of " + DefaultValue);
+                    Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid permission, using default of {1}", Name, DefaultValue);
                     return DefaultValue;
                 }
                 perm = grp.Permission;
@@ -93,11 +90,11 @@ namespace MCGalaxy.Config {
             }
             
             if (perm < LevelPermission.Banned) {
-                Server.s.Log("Config key \"" + Name + "\" cannot be below banned rank.");
+                Logger.Log(LogType.Warning, "Config key \"{0}\" cannot be below banned rank.", Name);
                 return LevelPermission.Banned;
             }
             if (perm > LevelPermission.Nobody) {
-                Server.s.Log("Config key \"" + Name + "\" cannot be above nobody rank.");
+                Logger.Log(LogType.Warning, "Config key \"{0}\" cannot be above nobody rank.", Name);
                 return LevelPermission.Nobody;
             }
             return perm;
@@ -118,8 +115,7 @@ namespace MCGalaxy.Config {
         public override object Parse(string value) {
             DateTime time;
             if (!DateTime.TryParse(value, out time)) {
-                Server.s.Log("Config key \"" + Name + "\" is not a valid datetime, " +
-                             "using default of " + DefaultValue);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid datetime, using default of {1}", Name, DefaultValue);
                 return DefaultValue;
             }
             return time;
@@ -147,8 +143,7 @@ namespace MCGalaxy.Config {
             try {
                 result = Enum.Parse(EnumType, value, true);
             } catch {
-                Server.s.Log("Config key \"" + Name + "\" is not a valid enum member, " +
-                                 "using default of " + DefaultValue);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid enum member, using default of {1}", Name, DefaultValue);
                 return DefaultValue;
             }
             return result;

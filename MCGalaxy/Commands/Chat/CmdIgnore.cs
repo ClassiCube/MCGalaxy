@@ -116,8 +116,8 @@ namespace MCGalaxy.Commands.Chatting {
                         w.WriteLine(line);
                 }
             } catch (IOException ex) {
-                Server.ErrorLog(ex);
-                Server.s.Log("Failed to save ignored list for player: " + p.name);
+                Logger.LogError(ex);
+                Logger.Log(LogType.Warning, "Failed to save ignored list for player: {0}", p.name);
             }
         }
 

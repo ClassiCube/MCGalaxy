@@ -30,12 +30,12 @@ namespace MCGalaxy {
 
             using (IDisposable wLock = lvl.BlockDB.Locker.AccquireWrite(60 * 1000)) {
                 if (wLock == null) {
-                    Server.s.ErrorCase("!!! couldn't accquire BlockDB write lock on " + lvl.name + ", skipping save !!!");
+            	    Logger.Log(LogType.Warning, "Couldn't accquire BlockDB write lock on {0}, skipping save", lvl.name);
                     return;
                 }
                 lvl.BlockDB.WriteEntries();
             }
-            Server.s.Log("Saved BlockDB changes for:" + lvl.name, true);
+            Logger.Log(LogType.BackgroundActivity, "Saved BlockDB changes for: {0}", lvl.name);
         }
 
         internal static void LoadZones(Level level, string name) {

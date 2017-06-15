@@ -101,8 +101,9 @@ namespace MCGalaxy {
             if (checkPlaceDist && group.Permission == LevelPermission.Guest) {
                 int dx = Pos.BlockX - x, dy = Pos.BlockY - y, dz = Pos.BlockZ - z;
                 int diff = (int)Math.Sqrt(dx * dx + dy * dy + dz * dz);
+                
                 if (diff > ReachDistance + 4) {
-                    Server.s.Log(name + " attempted to build with a " + diff + " distance offset");
+                    Logger.Log(LogType.Warning, "{0} attempted to build with a {1} distance offset", name, diff);
                     SendMessage("You can't build that far away.");
                     RevertBlock(x, y, z); return;
                 }
@@ -206,7 +207,7 @@ namespace MCGalaxy {
                 Buffer.BlockCopy(buffer, size, remaining, 0, remaining.Length);
                 return ProcessReceived(remaining);
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
             return buffer;
         }
@@ -295,7 +296,7 @@ namespace MCGalaxy {
                 // Don't ya just love it when the server tattles?
                 Chat.MessageOps(DisplayName + " has triggered a block change error");
                 Chat.MessageOps(e.GetType().ToString() + ": " + e.Message);
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
         }
         
@@ -348,7 +349,7 @@ namespace MCGalaxy {
                 CheckBlock();
                 oldIndex = level.PosToInt(P.X, P.Y, P.Z);
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
         
@@ -559,7 +560,8 @@ namespace MCGalaxy {
                         if ( pl.Red && p.Red ) SendMessage(p.p, "To Team " + Colors.red + "-" + color + name + Colors.red + "- " + Server.DefaultColor + newtext);
                         if ( pl.Blue && p.Blue ) SendMessage(p.p, "To Team " + Colors.blue + "-" + color + name + Colors.blue + "- " + Server.DefaultColor + newtext);
                     }
-                    Server.s.Log("[TNT Wars] [TeamChat (" + ( pl.Red ? "Red" : "Blue" ) + ") " + name + " " + newtext);
+                    
+                    Logger.Log(LogType.GameActivity, "[TNT Wars] [TeamChat (" + ( pl.Red ? "Red" : "Blue" ) + ") " + name + " " + newtext);
                     return;
                 }
             }
@@ -568,10 +570,10 @@ namespace MCGalaxy {
             if (Chatroom != null) { Chat.MessageChatRoom(this, text, true, Chatroom); return; }
 
             if (!level.worldChat) {
-                Server.s.Log("<" + name + ">[level] " + text);
+                Logger.Log(LogType.PlayerChat, "<{0}>[level] {1}", name, text);
                 Chat.MessageLevel(this, text, true, level);
             } else {
-                Server.s.Log("<" + name + "> " + text);
+                Logger.Log(LogType.PlayerChat, "<{0}> {1}", name, text);
                 if (OnChat != null) OnChat(this, text);
                 if (PlayerChat != null) PlayerChat(this, text);
                 OnPlayerChatEvent.Call(this, text);
@@ -590,8 +592,6 @@ namespace MCGalaxy {
             // handles the /womid client message, which displays the WoM vrersion
             if (text.Truncate(6) == "/womid") {
                 string version = (text.Length <= 21 ? text.Substring(text.IndexOf(' ') + 1) : text.Substring(7, 15));
-                Server.s.Log(Colors.red + "[INFO] " + ColoredName + "%f is using wom client");
-                Server.s.Log(Colors.red + "[INFO] %fVersion: " + version);
                 UsingWom = true;
                 return true;
             }
@@ -658,7 +658,7 @@ namespace MCGalaxy {
         
         string HandleJoker(string text) {
             if (!joker) return text;
-            Server.s.Log("<JOKER>: " + name + ": " + text);
+            Logger.Log(LogType.PlayerChat, "<JOKER>: {0}: {1}", name, text);
             Chat.MessageOps("%S<&aJ&bO&cK&5E&9R%S>: " + ColoredName + ":&f " + text);
 
             TextFile jokerFile = TextFile.Files["Joker"];
@@ -709,7 +709,7 @@ namespace MCGalaxy {
                 thread.IsBackground = true;
                 thread.Start();
             } catch (Exception e) {
-                Server.ErrorLog(e); SendMessage("Command failed.");
+                Logger.LogError(e); SendMessage("Command failed.");
             }
         }
         
@@ -734,7 +734,7 @@ namespace MCGalaxy {
                 thread.IsBackground = true;
                 thread.Start();
             } catch (Exception e) {
-                Server.ErrorLog(e); SendMessage("Command failed.");
+                Logger.LogError(e); SendMessage("Command failed.");
             }
         }
         
@@ -781,7 +781,7 @@ namespace MCGalaxy {
                     cmdArgs = cmd.ToLower(); cmd = "mode";
                     command = Command.all.Find("mode");
                 } else {
-                    Server.s.CommandUsed(name + " tried to use unknown command: /" + cmd + " " + cmdArgs);
+                    Logger.Log(LogType.CommandUsage, "{0} tried to use unknown command: /{1} {2}", name, cmd, cmdArgs);
                     SendMessage("Unknown command \"" + cmd + "\"."); return null;
                 }
             }
@@ -803,7 +803,7 @@ namespace MCGalaxy {
                 lastCMD = message == "" ? cmd : cmd + " " + message;
                 lastCmdTime = DateTime.UtcNow;
             }
-            if (cmd != "pass") Server.s.CommandUsed(name + " used /" + cmd + " " + message);
+            if (cmd != "pass") Logger.Log(LogType.CommandUsage, "{0} used /{1} {2}", name, cmd, message);
 
             try { //opstats patch (since 5.5.11)
                 if (Server.opstats.Contains(cmd) || (cmd == "review" && message.ToLower() == "next" && Server.reviewlist.Count > 0)) {
@@ -815,7 +815,7 @@ namespace MCGalaxy {
             try {
                 command.Use(this, message);
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 Player.Message(this, "An error occured when using the command!");
                 Player.Message(this, e.GetType() + ": " + e.Message);
                 return false;

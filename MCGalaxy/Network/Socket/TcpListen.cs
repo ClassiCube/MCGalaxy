@@ -29,7 +29,7 @@ namespace MCGalaxy.Network {
         
         public void Listen(IPAddress ip, ushort port) {
             try {
-        	    this.ip = ip; this.port = port;
+                this.ip = ip; this.port = port;
                 IPEndPoint ep = new IPEndPoint(ip, port);
                 socket = new Socket(ep.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 
@@ -37,8 +37,8 @@ namespace MCGalaxy.Network {
                 socket.Listen((int)SocketOptionName.MaxConnections);
                 AcceptNextAsync();
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                Server.s.Log("Failed to start listening on port " + port + " (" + ex.Message + ")");
+                Logger.LogError(ex);
+                Logger.Log(LogType.Warning, "Failed to start listening on port {0} ({1})", port, ex.Message);
                 socket = null;
             }
         }
@@ -59,7 +59,7 @@ namespace MCGalaxy.Network {
                 listen.AcceptNextAsync();
                 accepted = true;
             } catch (Exception ex) {
-                if (!(ex is SocketException)) Server.ErrorLog(ex);
+                if (!(ex is SocketException)) Logger.LogError(ex);
                 
                 if (p != null) p.Disconnect();
                 if (!accepted) listen.AcceptNextAsync();

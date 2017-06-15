@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Scripting {
             try {
                 engine.CreateNew(args[0]);
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 Player.Message(p, "An error occurred creating the class file.");
                 return;
             }

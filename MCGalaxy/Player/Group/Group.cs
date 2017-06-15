@@ -199,7 +199,7 @@ namespace MCGalaxy {
                 fileName = newFile;
                 return true;
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 return false;
             }
         }

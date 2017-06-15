@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             string src = p == null ? "(console)" : p.name;
-            Server.s.Log("Zombie Survival ended forcefully by " + src);
+            Logger.Log(LogType.GameActivity, "Zombie Survival ended forcefully by " + src);
             Server.zombie.ResetState();
         }
         

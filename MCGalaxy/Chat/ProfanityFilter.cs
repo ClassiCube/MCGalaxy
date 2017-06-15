@@ -67,10 +67,10 @@ namespace MCGalaxy {
         }
         
         static void LoadBadWords() {
-        	TextFile filterFile = TextFile.Files["Profanity filter"];
-        	filterFile.EnsureExists();
-        	
-        	string[] lines = filterFile.GetText();        	
+            TextFile filterFile = TextFile.Files["Profanity filter"];
+            filterFile.EnsureExists();
+
+            string[] lines = filterFile.GetText();
             filters = new List<string>();            
             // Run the badwords through the reducer to ensure things like Ls become Is and everything is lowercase
             foreach (string line in lines) {

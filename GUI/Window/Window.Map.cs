@@ -47,7 +47,7 @@ namespace MCGalaxy.Gui {
                     if (!String.IsNullOrEmpty(seed)) args += " " + seed;
                     Command.all.Find("newlvl").Use(null, args);
                 } catch (Exception ex) {
-                    Server.ErrorLog(ex);
+                    Logger.LogError(ex);
                     MessageBox.Show("Failed to generate level. Check error logs for details.");
                     mapgen = false;
                     return;

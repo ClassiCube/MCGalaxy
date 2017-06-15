@@ -53,7 +53,7 @@ namespace MCGalaxy {
                 socket = new TcpSocket(this, s);
                 ip = socket.RemoteIP;
                 SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
-                Server.s.Log(ip + " connected to the server.");
+                Logger.Log(LogType.UserActivity, ip + " connected to the server.");
 
                 for (int i = 0; i < BlockBindings.Length; i++) {
                     BlockBindings[i] = ExtBlock.FromRaw((byte)i);
@@ -62,7 +62,7 @@ namespace MCGalaxy {
                 socket.ReceiveNextAsync();
                 connections.Add(this);
             }
-            catch ( Exception e ) { Leave("Login failed!"); Server.ErrorLog(e); }
+            catch ( Exception e ) { Leave("Login failed!"); Logger.LogError(e); }
         }
         
         public override byte EntityID { get { return id; } }
@@ -305,7 +305,7 @@ namespace MCGalaxy {
                     PlayerInfo.Online.Remove(this);
                     
                     string user = String.IsNullOrEmpty(name) ? ip : name + " (" + ip + ")";
-                    Server.s.Log(user + " disconnected. (" + discMsg + ")");
+                    Logger.Log(LogType.UserActivity, "{0} disconnected. ({1})", user, discMsg);
                     return;
                 }
 
@@ -322,7 +322,7 @@ namespace MCGalaxy {
                 ShowDisconnectInChat(chatMsg, isKick);
 
                 try { save(); }
-                catch ( Exception e ) { Server.ErrorLog(e); }
+                catch ( Exception e ) { Logger.LogError(e); }
 
                 PlayerInfo.Online.Remove(this);
                 Server.s.PlayerListUpdate();
@@ -334,7 +334,7 @@ namespace MCGalaxy {
                     level.Unload(true);
                 Dispose();
             } catch ( Exception e ) { 
-                Server.ErrorLog(e); 
+                Logger.LogError(e); 
             } finally {
                 CloseSocket();
             }
@@ -349,10 +349,10 @@ namespace MCGalaxy {
                 if (group.Permission > perm || (Server.guestLeaveNotify && group.Permission <= perm)) {
                     Chat.MessageGlobal(this, leavem, false, true);
                 }
-                Server.s.Log(name + " disconnected (" + chatMsg + "%S).");
+                Logger.Log(LogType.UserActivity, "{0} disconnected ({1}%S).", name, chatMsg);
             } else {
-                 Chat.MessageGlobal(this, "&c- " + FullName + " %Skicked %S" + chatMsg, false);
-                Server.s.Log(name + " kicked (" + chatMsg + "%S).");
+                Chat.MessageGlobal(this, "&c- " + FullName + " %Skicked %S" + chatMsg, false);
+                Logger.Log(LogType.UserActivity, "{0} kicked ({1}%S).", name, chatMsg);
             }
         }
 

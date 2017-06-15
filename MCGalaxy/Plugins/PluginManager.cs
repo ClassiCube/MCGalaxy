@@ -70,33 +70,33 @@ namespace MCGalaxy {
                     }
                 } catch { }
                 if (instance == null) {
-                    Server.s.Log("The plugin " + name + " couldn't be loaded!");
+                    Logger.Log(LogType.Warning, "The plugin {0} couldn't be loaded!", name);
                     return;
                 }
                 creator = instance.creator;
                 
                 string ver = instance.MCGalaxy_Version;
                 if (!String.IsNullOrEmpty(ver) && new Version(ver) > Server.Version) {
-                    Server.s.Log("This plugin (" + instance.name + ") isn't compatible with this version of " + Server.SoftwareName + "!");
+                    Logger.Log(LogType.Warning, "This plugin ({0}) isn't compatible with this version of {1}!", instance.name, Server.SoftwareName);
                     Thread.Sleep(1000);
                     if (!Server.unsafe_plugin) return;
                     
-                    Server.s.Log("Will attempt to load!");
+                    Logger.Log(LogType.Warning, "Will attempt to load plugin anyways!");
                 }
 
                 Plugin.all.Add(instance);
                 
                 if (instance.LoadAtStartup) {
                     instance.Load(startup);
-                    Server.s.Log("Plugin: " + instance.name + " loaded...build: " + instance.build);
+                    Logger.Log(LogType.SystemActivity, "Plugin: {0} loaded...build: {1}", instance.name, instance.build);
                 } else {
-                    Server.s.Log("Plugin: " + instance.name + " was not loaded, you can load it with /pload");
+                	Logger.Log(LogType.SystemActivity, "Plugin: {0} was not loaded, you can load it with /pload", instance.name);
                 }
-                Server.s.Log(instance.welcome);
+                Logger.Log(LogType.SystemActivity, instance.welcome);
             } catch (Exception e) {
-                Server.ErrorLog(e);
-                Server.s.Log("The plugin " + name + " failed to load!");
-                if (creator != "") Server.s.Log("You can go bug " + creator + " about it.");
+                Logger.LogError(e);
+                Logger.Log(LogType.Warning, "The plugin {0} failed to load!", name);
+                if (creator != "") Logger.Log(LogType.Warning, "You can go bug {0} about it.", creator);
                 Thread.Sleep(1000);
             }
         }
@@ -107,10 +107,10 @@ namespace MCGalaxy {
         public static void Unload(Plugin p, bool shutdown) {
             try {
                 p.Unload(shutdown);             
-                Server.s.Log(p.name + " was unloaded.");
+                Logger.Log(LogType.SystemActivity, p.name + " was unloaded.");
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                Server.s.Log("An error occurred while unloading a plugin.");
+                Logger.LogError(ex);
+                Logger.Log(LogType.Warning, "An error occurred while unloading a plugin.");
             }
             all.Remove(p);
         }

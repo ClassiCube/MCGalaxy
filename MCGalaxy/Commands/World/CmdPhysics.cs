@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.World {
             
             stateDesc = stateDesc.Substring( 2 );
             string logInfo = "Physics are now " + stateDesc + " on " + lvl.name + ".";
-            Server.s.Log(logInfo);
+            Logger.Log(LogType.SystemActivity, logInfo);
             lvl.changed = true;
         }
 

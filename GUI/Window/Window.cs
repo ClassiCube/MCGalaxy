@@ -89,16 +89,31 @@ namespace MCGalaxy.Gui {
         
         void InitServer() {
             Server s = new Server();
-            s.OnLog += WriteLine;
-            s.OnCommand += WriteCommand;
-            s.OnError += LogErrorMessage;
-            s.OnSystem += LogSystemMessage;
+            Logger.LogHandler += LogMessage;
 
             s.HeartBeatFail += HeartBeatFail;
             s.OnURLChange += UpdateUrl;
             s.OnPlayerListChange += UpdateClientList;
             s.OnSettingsUpdate += SettingsUpdate;
             Server.Background.QueueOnce(InitServerTask);
+        }
+        
+        void LogMessage(LogType type, string message) {
+            switch (type) {
+                case LogType.Error:
+                    WriteLine("!!!Error! See " + FileLogger.ErrorLogPath + " for more information.");
+                    LogErrorMessage(message); 
+                    break;
+                case LogType.BackgroundActivity:
+                    LogSystemMessage(message); 
+                    break;
+                case LogType.CommandUsage:
+                    WriteCommand(message); 
+                    break;
+                default:
+                    WriteLine(message);
+                    break;
+            }
         }
         
         void InitServerTask() {
@@ -172,11 +187,6 @@ namespace MCGalaxy.Gui {
             if (InvokeRequired) {
                 Invoke(new LogDelegate(WriteLine), new object[] { s });
             } else {
-                //Begin substring of crappy date stamp
-                int index = s.IndexOf(')');
-                s = index == -1 ? s : s.Substring(index + 1);
-                //end substring
-
                 main_txtLog.AppendLog(s + Environment.NewLine);
             }
         }

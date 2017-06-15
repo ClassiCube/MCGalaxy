@@ -75,8 +75,8 @@ namespace MCGalaxy {
                     Console.WriteLine("Also update using the file at " + EXELocation + ", and replace MCGalaxy.exe");
                     Console.ForegroundColor = prevColor;
                 }
-            } catch(Exception e) {
-                Logger.WriteError(e);
+            } catch (Exception e) {
+                Logger.LogError(e);
             }
             
             client.Dispose();
@@ -93,7 +93,7 @@ namespace MCGalaxy {
         
         static void NotifyPlayersOfUpdate(Player p) {
             Chat.MessageAll("Update found. Prepare for restart in &f" + Server.restartcountdown + " %Sseconds.");
-            Server.s.Log("Update found. Prepare for restart in " + Server.restartcountdown + " seconds.");
+            Logger.Log(LogType.SystemActivity, "Update found. Prepare for restart in {0} seconds.", Server.restartcountdown);
             
             int timeLeft = Server.restartcountdown;
             System.Timers.Timer countDown = new System.Timers.Timer();
@@ -103,18 +103,19 @@ namespace MCGalaxy {
             countDown.Elapsed += delegate {
                 if (Server.autoupdate || p != null) {
                     Chat.MessageAll("Updating in &f" + timeLeft + " %Sseconds.");
-                    Server.s.Log("Updating in " + timeLeft + " seconds.");
+                    Logger.Log(LogType.SystemActivity, "Updating in {0} seconds.", timeLeft);
+                    
                     timeLeft = timeLeft - 1;
                     if (timeLeft < 0) {
                         Chat.MessageAll("---UPDATING SERVER---");
-                        Server.s.Log("---UPDATING SERVER---");
+                        Logger.Log(LogType.SystemActivity, "---UPDATING SERVER---");
                         countDown.Stop();
                         countDown.Dispose();
                         PerformUpdate();
                     }
                 } else {
                     Chat.MessageGlobal("Stopping auto restart.");
-                    Server.s.Log("Stopping auto restart.");
+                    Logger.Log(LogType.SystemActivity, "Stopping auto restart.");
                     countDown.Stop();
                     countDown.Dispose();
                 }
@@ -154,7 +155,7 @@ namespace MCGalaxy {
                 }
                 MCGalaxy.Gui.App.ExitProgram(false, "Updating server.");
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
         }
         

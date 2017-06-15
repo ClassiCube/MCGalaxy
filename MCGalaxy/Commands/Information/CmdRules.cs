@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         void Agree(Player p) {
-        	if (Player.IsSuper(p)) { Player.Message(p, "Only in-game players can agree to the rules."); return; }
+            if (Player.IsSuper(p)) { Player.Message(p, "Only in-game players can agree to the rules."); return; }
             if (!Server.agreetorulesonentry) { Player.Message(p, "agree-to-rules-on-entry is not enabled."); return; }            
             if (!p.hasreadrules) { Player.Message(p, "&9You must read %T/rules &9before agreeing."); return; }
             if (Server.agreed.Contains(p.name)) { Player.Message(p, "You have already agreed to the rules."); return; }

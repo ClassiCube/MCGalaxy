@@ -45,7 +45,7 @@ namespace MCGalaxy.Games.ZS {
                 if (!game.Running || game.Status == ZombieGameStatus.LastRound) return;
                 MoveToNextLevel(r, maps, game);
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
         
@@ -140,16 +140,14 @@ namespace MCGalaxy.Games.ZS {
                 maps.Remove(ignore);
             
             bool useLevelList = ZombieGameProps.LevelList.Count > 0;
-            if (ZombieGameProps.ChangeLevels) {
-                if (maps.Count <= 3 && !useLevelList) {
-                    Server.s.Log("You must have more than 3 levels to change levels in Zombie Survival"); return null; }
-                if (maps.Count <= 3 && useLevelList) {
-                    Server.s.Log("You must have more than 3 levels in your level list to change levels in Zombie Survival"); return null; }
-            } else {
-                if (maps.Count == 0 && !useLevelList) {
-                    Server.s.Log("You must have at least 1 level to play Zombie Survival"); return null; }
-                if (maps.Count == 0 && useLevelList) {
-                    Server.s.Log("You must have at least 1 levels in your level list to play Zombie Survival"); return null; }                
+            if (ZombieGameProps.ChangeLevels && maps.Count <= 3) {
+                string group = useLevelList ? "in your level list " : "";
+                Logger.Log(LogType.Warning, "You must have more than 3 levels {0}to change levels in Zombie Survival", group);
+                return null;
+            } else if (!ZombieGameProps.ChangeLevels && maps.Count == 0) {
+                string group = useLevelList ? "in your level list " : "";
+                Logger.Log(LogType.Warning, "You must have at least 1 level {0}to play Zombie Survival", group);
+                return null;
             }
             return maps;
         }

@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.World {
                     Server.DoGC();
                 }
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 Player.Message(p, "The map conversion failed."); 
                 return;
             }

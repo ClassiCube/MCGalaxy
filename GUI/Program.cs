@@ -49,7 +49,7 @@ namespace MCGalaxy.Gui {
             }
             
             DateTime startTime = DateTime.UtcNow;
-            Logger.Init();
+            FileLogger.Init();
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;
             useHighQualityGui = false;
             
@@ -66,19 +66,35 @@ namespace MCGalaxy.Gui {
                 }
                 WriteToConsole("Completed in " + (DateTime.UtcNow - startTime).Milliseconds + "ms");
             }
-            catch (Exception e) { Server.ErrorLog(e); }
+            catch (Exception e) { Logger.LogError(e); }
         }
         
         static void RunCli() {
             Server s = new Server();
-            s.OnLog += WriteToConsole;
-            s.OnCommand += WriteToConsole;
-            s.OnSystem += delegate { };
+            Logger.LogHandler += LogMessage;
             MCGalaxy.Gui.App.usingConsole = true;
             
             s.Start();
             Console.Title = Server.name + " - " + Server.SoftwareNameVersioned;
             ConsoleLoop();
+        }
+        
+        
+        static void LogMessage(LogType type, string message) {
+            switch (type) {
+                case LogType.Error:
+                    WriteToConsole("!!!Error! See " + FileLogger.ErrorLogPath + " for more information.");
+                    break;
+                case LogType.BackgroundActivity:
+                    break;
+                case LogType.CommandUsage:
+                    WriteToConsole(message);
+                    break;
+                default:
+                    string now = DateTime.Now.ToString("(HH:mm:ss) ");
+                    WriteToConsole(now + message); 
+                    break;
+            }
         }
         
         static void RunGui() {
@@ -113,9 +129,9 @@ namespace MCGalaxy.Gui {
         static void ViewmodeLineProcessor(string key, string value) {
             switch (key.ToLower()) {
                 case "cli":
-        	        useConsole = value.CaselessEq("true"); break;
+                    useConsole = value.CaselessEq("true"); break;
                 case "high-quality":
-        	        useHighQualityGui = value.CaselessEq("true"); break;
+                    useHighQualityGui = value.CaselessEq("true"); break;
             }
         }
 
@@ -131,13 +147,13 @@ namespace MCGalaxy.Gui {
                     string msg = Console.ReadLine().Trim(); // Make sure we have no whitespace!
                     if (msg.Length > 0 && msg[0] == '/') {
                         msg = msg.Remove(0, 1);
-                        Thread t = Handlers.HandleCommand(msg, Console.WriteLine);
+                        Thread t = Handlers.HandleCommand(msg);
                         if (msg.CaselessEq("restart")) { t.Join(); break; }
                     } else {
-                        Handlers.HandleChat(msg, WriteToConsole);
+                        Handlers.HandleChat(msg);
                     }
                 } catch (Exception ex) {
-                    Server.ErrorLog(ex);
+                    Logger.LogError(ex);
                 }
             }
         }
@@ -145,18 +161,20 @@ namespace MCGalaxy.Gui {
         
         static void GlobalExHandler(object sender, UnhandledExceptionEventArgs e) {
             Exception ex = (Exception)e.ExceptionObject;
-            Server.ErrorLog(ex);
+            Logger.LogError(ex);
+            FileLogger.Flush(null);
+            
             Thread.Sleep(500);
-
             if (Server.restartOnError)
                 App.ExitProgram(true);
         }
 
         static void ThreadExHandler(object sender, ThreadExceptionEventArgs e) {
             Exception ex = e.Exception;
-            Server.ErrorLog(ex);
+            Logger.LogError(ex);
+            FileLogger.Flush(null);
+            
             Thread.Sleep(500);
-
             if (Server.restartOnError)
                 App.ExitProgram(true);
         }

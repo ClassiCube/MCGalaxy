@@ -159,7 +159,7 @@ namespace MCGalaxy {
                 LevelUnload(this);
             OnLevelUnloadEvent.Call(this);
             if (cancelunload) {
-                Server.s.Log("Unload canceled by Plugin! (Map: " + name + ")");
+                Logger.Log(LogType.SystemActivity, "Unload canceled by Plugin! (Map: {0})", name);
                 cancelunload = false; return false;
             }
             MovePlayersToMain();
@@ -175,7 +175,7 @@ namespace MCGalaxy {
                     pl.p.canBuild = true;
                     TntWarsGame.SetTitlesAndColor(pl, true);
                 }
-                Server.s.Log("TNT Wars: Game deleted on " + name);
+                Logger.Log(LogType.GameActivity, "TNT Wars: Game deleted on " + name);
                 TntWarsGame.GameList.Remove(TntWarsGame.Find(this));
 
             }
@@ -192,7 +192,7 @@ namespace MCGalaxy {
                 Server.DoGC();
 
                 if (!silent) Chat.MessageOps(ColoredName + " %Swas unloaded.");
-                Server.s.Log(name + " was unloaded.");
+                Logger.Log(LogType.SystemActivity, name + " was unloaded.");
             }
             return true;
         }
@@ -251,12 +251,12 @@ namespace MCGalaxy {
                     
                     if (clearPhysics) ClearPhysics();
                 } else {
-                    Server.s.Log("Skipping level save for " + name + ".");
+                    Logger.Log(LogType.SystemActivity, "Skipping level save for " + name + ".");
                 }
             } catch (Exception e) {
-                Server.s.Log("FAILED TO SAVE :" + name);
+                Logger.Log(LogType.Warning, "FAILED TO SAVE :" + name);
                 Chat.MessageGlobal("FAILED TO SAVE {0}", ColoredName);
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
             Server.DoGC();
         }
@@ -274,8 +274,8 @@ namespace MCGalaxy {
             File.Copy(path + ".backup", path);
             SaveSettings(this);
 
-            Server.s.Log(string.Format("SAVED: Level \"{0}\". ({1}/{2}/{3})", name, players.Count,
-                                       PlayerInfo.Online.Count, Server.players));
+            Logger.Log(LogType.SystemActivity, "SAVED: Level \"{0}\". ({1}/{2}/{3})", 
+                       name, players.Count, PlayerInfo.Online.Count, Server.players);
             changed = false;
         }
 
@@ -297,12 +297,12 @@ namespace MCGalaxy {
                     backedup = true;
                     return backupNumber;
                 } catch (Exception e) {
-                    Server.ErrorLog(e);
-                    Server.s.Log("FAILED TO INCREMENTAL BACKUP :" + name);
+                    Logger.LogError(e);
+                    Logger.Log(LogType.Warning, "FAILED TO INCREMENTAL BACKUP :" + name);
                     return -1;
                 }
             }
-            Server.s.Log("Level unchanged, skipping backup");
+            Logger.Log(LogType.SystemActivity, "Level unchanged, skipping backup");
             return -1;
         }
         
@@ -332,7 +332,7 @@ namespace MCGalaxy {
             if (cancelload) { cancelload = false; return null; }
 
             if (!File.Exists(path)) {
-                Server.s.Log("Attempted to load " + name + ", but the level file does not exist.");
+                Logger.Log(LogType.Warning, "Attempted to load {0}, but the level file does not exist.", name);
                 return null;
             }
             
@@ -356,13 +356,13 @@ namespace MCGalaxy {
                     LevelDB.LoadMessages(lvl, name);
                 }
 
-                Server.s.Log(string.Format("Level \"{0}\" loaded.", lvl.name));
+                Logger.Log(LogType.SystemActivity, "Level \"{0}\" loaded.", lvl.name);
                 if (LevelLoaded != null)
                     LevelLoaded(lvl);
                 OnLevelLoadedEvent.Call(lvl);
                 return lvl;
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 return null;
             }
         }
@@ -373,13 +373,13 @@ namespace MCGalaxy {
                 if (propsPath != null) {
                     LvlProperties.Load(lvl, propsPath);
                 } else {
-                    Server.s.Log(".properties file for level " + lvl.MapName + " was not found.");
+                    Logger.Log(LogType.ConsoleMessage, ".properties file for level {0} was not found.", lvl.MapName);
                 }
                 
                 // Backwards compatibility for older levels which had .env files.
                 LvlProperties.LoadEnv(lvl);
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
             lvl.BlockDB.Cache.Enabled = lvl.UseBlockDB;
             

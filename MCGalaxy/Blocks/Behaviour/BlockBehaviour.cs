@@ -36,7 +36,7 @@ namespace MCGalaxy.Blocks {
     public delegate void HandlePhysics(Level lvl, ref Check C);
     
     public static class BlockBehaviour {
-    	
+
         /// <summary> Retrieves the default place block handler for the given block. </summary>
         internal static HandlePlace GetPlaceHandler(ExtBlock block, BlockProps[] props) {
             switch (block.BlockID) {

@@ -31,8 +31,7 @@ namespace MCGalaxy.Config {
             if (color == "") {
                 color = Colors.Name(value);
                 if (color != "") return value;
-                Server.s.Log("Config key \"" + Name + "\" is not a valid color, " +
-                             "using default of " + DefaultValue);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid color, using default of {1}", Name, DefaultValue);
                 return DefaultValue;
             }
             return color;
@@ -81,7 +80,7 @@ namespace MCGalaxy.Config {
         public override object Parse(string value) {
             if (value == "") {
                 if (!AllowEmpty) {
-                    Server.s.Log("Config key \"" + Name + "\" has no value, using default of " + DefaultValue);
+                    Logger.Log(LogType.Warning, "Config key \"{0}\" has no value, using default of {1}", Name, DefaultValue);
                     return DefaultValue;
                 }
                 return "";
@@ -94,8 +93,7 @@ namespace MCGalaxy.Config {
                     continue;
                 
                 if (AllowedChars.IndexOf(c) == -1) {
-                    Server.s.Log("Config key \"" + Name + "\" contains " +
-                                 "a non-allowed character, using default of " + DefaultValue);
+                    Logger.Log(LogType.Warning, "Config key \"{0}\" contains non-allowed characters, using default of {1}", Name, DefaultValue);
                     return DefaultValue;
                 }
             }
@@ -105,7 +103,7 @@ namespace MCGalaxy.Config {
         string Truncate(string value) {
             if (MaxLength > 0 && value.Length > MaxLength) {
                 value = value.Substring(0, MaxLength);
-                Server.s.Log("Config key \"" + Name + "\" is too long, truncating to " + value);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid color, truncating to {1}", Name, value);
             }
             return value;
         }

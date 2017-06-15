@@ -72,7 +72,7 @@ namespace MCGalaxy {
         /// and are not ignoring source player. </summary>
         /// <remarks> Optionally prefixes message by &lt;GlobalChatRoom&gt; [source name]: </remarks>
         public static void MessageAllChatRooms(Player source, string message, bool showPrefix) {
-            Server.s.Log("<GlobalChatRoom>" + source.name + ": " + message);
+            Logger.Log(LogType.ChatroomChat, "<GlobalChatRoom>{0}: {1}", source.name, message);
             if (showPrefix)
                 message = "<GlobalChatRoom> " + source.FullName + ": &f" + message;
 
@@ -89,7 +89,8 @@ namespace MCGalaxy {
         /// and are not ignoring source player. </summary>
         /// <remarks> Optionally prefixes message by &lt;ChatRoom: [chatRoom]&gt; [source name]: </remarks>
         public static void MessageChatRoom(Player source, string message, bool showPrefix, string chatRoom) {
-            Server.s.Log("<ChatRoom " + chatRoom + ">" + source.name + ": " + message);
+            Logger.Log(LogType.ChatroomChat, "<ChatRoom {0}>{1}: {2}", 
+        	           chatRoom, source.name, message);
             string spyMessage = "<ChatRoomSPY: " + chatRoom + "> " + source.FullName + ": &f" + message;
             if (showPrefix)
                 message = "<ChatRoom: " + chatRoom + "> " + source.FullName + ": &f" + message;

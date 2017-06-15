@@ -94,7 +94,7 @@ namespace MCGalaxy {
                 using (StreamWriter w = new StreamWriter(Path))
                     SaveEntries(w);
             }
-            if (log) Server.s.Log("SAVED: " + Path, true);
+            if (log) Logger.Log(LogType.BackgroundActivity, "SAVED: " + Path);
         }
         
         void SaveEntries(StreamWriter w) {
@@ -113,7 +113,7 @@ namespace MCGalaxy {
             
             if (!File.Exists(list.Path)) {
                 File.Create(list.Path).Close();
-                Server.s.Log("CREATED NEW: " + list.Path);
+                Logger.Log(LogType.SystemActivity, "CREATED NEW: " + list.Path);
                 return list;
             }
             

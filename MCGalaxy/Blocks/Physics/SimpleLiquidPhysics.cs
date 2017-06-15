@@ -33,7 +33,7 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoLava(Level lvl, ref Check C) {
-        	// upper 3 bits are time delay
+            // upper 3 bits are time delay
             if (C.data.Data < (4 << 5)) {
                 C.data.Data += (1 << 5); return;
             }

@@ -46,7 +46,7 @@ namespace MCGalaxy.Generator {
         }
 
         void ReportProgress( int relativeIncrease, string message ) {
-            Server.s.Log( message );
+            Logger.Log(LogType.SystemActivity, message );
         }
         
 

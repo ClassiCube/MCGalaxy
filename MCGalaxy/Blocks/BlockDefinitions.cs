@@ -78,7 +78,7 @@ namespace MCGalaxy {
                     defs = JsonConvert.DeserializeObject<BlockDefinition[]>(json);
                 }
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 defs = new BlockDefinition[Block.Count];
             }
             
@@ -125,7 +125,7 @@ namespace MCGalaxy {
                     File.Copy(GlobalPath, GlobalBackupPath, true);
                 }
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
             
             Save(true, null);

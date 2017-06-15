@@ -44,7 +44,7 @@ namespace MCGalaxy.Gui.Popups {
                 txtEdit.Lines = curFile.GetText();
                 Text = "Editing " + curFile.Filename;
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 MessageBox.Show("Failed to read text from " + curFile.Filename);
                 
                 curFile = null;

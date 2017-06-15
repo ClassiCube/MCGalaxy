@@ -40,7 +40,7 @@ namespace MCGalaxy.Generator {
         
         public bool GenerateMap(MapGenArgs args) {
             DateTime start = DateTime.UtcNow;
-            Server.s.Log("Attempting map gen");
+            Logger.Log(LogType.SystemActivity, "Attempting map gen");
             rand = args.UseSeed ? new Random(args.Seed) : new Random();
             Level lvl = args.Level;
             
@@ -55,15 +55,15 @@ namespace MCGalaxy.Generator {
 
                 GenerateFault(terrain, lvl, rand);
                 FilterAverage(lvl);
-                Server.s.Log("Creating overlay");
+                Logger.Log(LogType.SystemActivity, "Creating overlay");
                 GeneratePerlinNoise(overlay, lvl, rand);
 
                 if (genParams.GenerateOverlay2) {
-                    Server.s.Log("Planning trees");
+                    Logger.Log(LogType.SystemActivity, "Planning trees");
                     GeneratePerlinNoise(overlay2, lvl, rand);
                 }
 
-                Server.s.Log("Converting height map, and applying overlays");
+                Logger.Log(LogType.SystemActivity, "Converting height map, and applying overlays");
                 float rangeLo = genParams.RangeLow;
                 float rangeHi = genParams.RangeHigh;
                 treeDens = genParams.TreeDens;
@@ -86,9 +86,9 @@ namespace MCGalaxy.Generator {
                     else
                         GenLavaColumn(x, y, z, lvl, index);
                 }
-                Server.s.Log("Total time was " + (DateTime.UtcNow - start).TotalSeconds + " seconds.");
+                Logger.Log(LogType.SystemActivity, "Total time was {0} seconds.", (DateTime.UtcNow - start).TotalSeconds);
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 Player.Message(args.Player, "Generation failed.");
                 return false;
             }
@@ -223,7 +223,7 @@ namespace MCGalaxy.Generator {
             ushort halfX = (ushort)(Lvl.Width / 2), halfZ = (ushort)(Lvl.Length / 2);
             float d = (float)Math.Sqrt(halfX * halfX + halfZ * halfZ);
             int numIterations = Lvl.Width + Lvl.Length;
-            Server.s.Log("Iterations = " + numIterations);
+            Logger.Log(LogType.SystemActivity, "Iterations = " + numIterations);
             
             for (int iter = 0; iter < numIterations; iter++) {            
                 float phi = (float)(rand.NextDouble() * 360);
@@ -263,7 +263,7 @@ namespace MCGalaxy.Generator {
 
         //applys the average filter
         void FilterAverage(Level Lvl) {
-            Server.s.Log("Applying average filtering");
+            Logger.Log(LogType.SystemActivity, "Applying average filtering");
             float[] filtered = new float[terrain.Length];
 
             for (int index = 0; index < terrain.Length; index++) {

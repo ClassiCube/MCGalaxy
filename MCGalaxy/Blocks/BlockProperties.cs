@@ -111,13 +111,13 @@ namespace MCGalaxy.Blocks {
                 
                 string[] parts = line.Split(':');
                 if (parts.Length < 10) {
-                    Server.s.Log("Invalid line \"" + line + "\" in " + group + " block properties");
+                    Logger.Log(LogType.Warning, "Invalid line \"{0}\" in {1} block properties", line, group);
                     continue;
                 }
                 
                 byte raw;
                 if (!Byte.TryParse(parts[0], out raw)) {
-                    Server.s.Log("Invalid line \"" + line + "\" in " + group + " block properties");
+                    Logger.Log(LogType.Warning, "Invalid line \"{0}\" in {1} block properties", line, group);
                     continue;
                 }
                 int idx = raw;

@@ -312,9 +312,10 @@ namespace MCGalaxy {
                 
                 return old.VisuallyEquals(block) ? 1 : 2;
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 Chat.MessageOps(p.name + " triggered a non-fatal error on " + ColoredName + ", %Sat location: " + errorLocation);
-                Server.s.Log(p.name + " triggered a non-fatal error on " + ColoredName + ", %Sat location: " + errorLocation);
+                Logger.Log(LogType.Warning, "{0} triggered a non-fatal error on {1}, %Sat location: {2}", 
+                           p.name, ColoredName, errorLocation);
                 return 0;
             }
         }

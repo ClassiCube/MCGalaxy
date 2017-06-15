@@ -49,14 +49,14 @@ namespace MCGalaxy.Gui {
             cmd_cmbMin.Items.AddRange(GuiPerms.RankNames);
 
             //Load server stuff
-            LoadProperties("properties/server.properties");
+            LoadProperties();
             LoadRanks();
             try {
                 LoadCommands();
                 LoadBlocks();
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                Server.s.Log("Failed to load commands and blocks!");
+                Logger.LogError(ex);
+                Logger.Log(LogType.Warning, "Failed to load commands and blocks!");
             }
 
             try {
@@ -64,8 +64,8 @@ namespace MCGalaxy.Gui {
                 UpdateLavaMapList();
                 UpdateLavaControls();
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
-                Server.s.Log("Failed to load Lava Survival settings!");
+                Logger.LogError(ex);
+                Logger.Log(LogType.Warning, "Failed to load Lava Survival settings!");
             }
 
             try {
@@ -75,9 +75,8 @@ namespace MCGalaxy.Gui {
                     UpdateLavaMapList(false);
                 };
                 lavaUpdateTimer.Start();
-            }
-            catch {
-                Server.s.Log("Failed to start lava control update timer!");
+            } catch {
+                Logger.Log(LogType.Warning, "Failed to start lava control update timer!");
             }
         }
 
@@ -87,8 +86,8 @@ namespace MCGalaxy.Gui {
             TntWarsGame.GuiLoaded = null;
         }
 
-        void LoadProperties(string givenPath) {
-            SrvProperties.Load(givenPath);
+        void LoadProperties() {
+            SrvProperties.Load();
             LoadGeneralProps();
             LoadChatProps();
             LoadIrcSqlProps();
@@ -112,8 +111,8 @@ namespace MCGalaxy.Gui {
                 SrvProperties.Save();
                 CommandExtraPerms.Save();
             } catch( Exception ex ) {
-                Server.ErrorLog(ex);
-                Server.s.Log("SAVE FAILED! properties/server.properties");
+                Logger.LogError(ex);
+                Logger.Log(LogType.Warning, "SAVE FAILED! properties/server.properties");
             }
         }
         
@@ -145,11 +144,11 @@ namespace MCGalaxy.Gui {
             SaveCommands();
             SaveBlocks();
             try { SaveLavaSettings(); }
-            catch { Server.s.Log("Error saving Lava Survival settings!"); }
+            catch { Logger.Log(LogType.Warning, "Error saving Lava Survival settings!"); }
             try { ZombieGameProps.SaveSettings(); }
-            catch { Server.s.Log("Error saving Zombie Survival settings!"); }
+            catch { Logger.Log(LogType.Warning, "Error saving Zombie Survival settings!"); }
 
-            SrvProperties.Load("properties/server.properties"); // loads when saving?
+            SrvProperties.Load(); // loads when saving?
             CommandPerms.Load();
 
             // Trigger profanity filter reload

@@ -116,7 +116,7 @@ namespace MCGalaxy.Games
                     GameStatus = TntWarsGameStatus.Finished;
                     return;
                 }
-                Server.s.Log("Backed up " + lvl.name + " (" + BackupNumber.ToString() + ") for TNT Wars");
+                Logger.Log(LogType.SystemActivity, "Backed up {0} ({1}) for TNT Wars", lvl.name, BackupNumber);
             }
             //Map stuff
             lvl.setPhysics(3);
@@ -376,7 +376,7 @@ namespace MCGalaxy.Games
             if (lvl.overload == 2501)
             {
                 lvl.overload = 1500;
-                Server.s.Log("TNT Wars: Set level physics overload back to 1500");
+                Logger.Log(LogType.GameActivity, "TNT Wars: Set level physics overload back to 1500");
             }
         }
 
@@ -390,7 +390,7 @@ namespace MCGalaxy.Games
                 }
             }
             catch { };
-            Server.s.Log("[TNT Wars] [" + lvl.name + "] " + Message);
+            Logger.Log(LogType.GameActivity, "[TNT Wars] [" + lvl.name + "] " + Message);
         }
 
         public void HandleKill(Player Killer, List<Player> Killed)

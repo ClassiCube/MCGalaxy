@@ -80,8 +80,8 @@ namespace MCGalaxy {
                             lock (physStepLock)
                                 CalcPhysics();
                         } catch (Exception ex) {
-                            Server.s.Log("Level physics error");
-                            Server.ErrorLog(ex);
+                            Logger.Log(LogType.Warning, "Level physics error");
+                            Logger.LogError(ex);
                         }
                     }
 
@@ -95,7 +95,7 @@ namespace MCGalaxy {
                             ClearPhysics();
 
                             Chat.MessageGlobal("Physics shutdown on {0}", ColoredName);
-                            Server.s.Log("Physics shutdown on " + name);
+                            Logger.Log(LogType.Warning, "Physics shutdown on " + name);
                             if (PhysicsStateChanged != null)
                                 PhysicsStateChanged(this, PhysicsState.Stopped);
 
@@ -106,7 +106,7 @@ namespace MCGalaxy {
                                 if (p.level != this) continue;
                                 Player.Message(p, "Physics warning!");
                             }
-                            Server.s.Log("Physics warning on " + name);
+                            Logger.Log(LogType.Warning, "Physics warning on " + name);
 
                             if (PhysicsStateChanged != null)
                                 PhysicsStateChanged(this, PhysicsState.Warning);
@@ -193,7 +193,7 @@ namespace MCGalaxy {
                     if (DoPhysicsBlockchange(C.b, block, false, C.data, true))
                         bulkSender.Add(C.b, block.BlockID, block.ExtID);
                 } catch {
-                    Server.s.Log("Phys update issue");
+                    Logger.Log(LogType.Warning, "Phys update issue");
                 }
             }
             
@@ -344,7 +344,7 @@ namespace MCGalaxy {
                     Blockchange(C.b, block, true, default(PhysicsArgs));
                 }
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
         }
         

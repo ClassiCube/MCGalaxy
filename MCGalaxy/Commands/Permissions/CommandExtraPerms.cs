@@ -106,8 +106,8 @@ namespace MCGalaxy.Commands {
                 try {
                     SaveCore();
                 } catch (Exception ex) {
-                    Server.s.Log("Saving " + Paths.CmdExtraPermsFile + " failed.");
-                    Server.ErrorLog(ex);
+                    Logger.Log(LogType.Warning, "Saving {0} failed.", Paths.CmdExtraPermsFile);
+                    Logger.LogError(ex);
                 }
             }
         }
@@ -148,8 +148,8 @@ namespace MCGalaxy.Commands {
                         string[] parts = line.Split(':');
                         LoadExtraPerm(parts);
                     } catch (Exception ex) {
-                        Server.s.Log("Loading an additional command permission failed!!");
-                        Server.ErrorLog(ex);
+                        Logger.Log(LogType.Warning, "Loading an additional command permission failed!!");
+                        Logger.LogError(ex);
                     }
                 }
             }

@@ -99,7 +99,7 @@ namespace MCGalaxy {
         
         public static void SendMessage(Player p, string message, bool colorParse) {
             if (p == null) {
-                Server.s.Log(message);
+        	    Logger.Log(LogType.ConsoleMessage, message);
             } else {
                 p.SendMessage(0, message, colorParse);
             }
@@ -135,7 +135,7 @@ namespace MCGalaxy {
                 message = "&f" + message;
                 totalTries++;
                 if ( totalTries < 10 ) goto retryTag;
-                else Server.ErrorLog(e);
+                else Logger.LogError(e);
             }
         }
         
@@ -215,7 +215,7 @@ namespace MCGalaxy {
                 success = false;
                 PlayerActions.ChangeMap(this, Server.mainLevel);
                 SendMessage("There was an error sending the map data, you have been sent to the main level.");
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             } finally {
                 Server.DoGC();
             }

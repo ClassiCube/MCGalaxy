@@ -36,8 +36,8 @@ namespace MCGalaxy.Tasks {
                     }
                 }
             } catch (Exception e) {
-                Server.ErrorLog(e);
-                Server.s.Log("Failed to update " + Server.SoftwareName + " staff list.");
+                Logger.LogError(e);
+                Logger.Log(LogType.Warning, "Failed to update {0} staff list.", Server.SoftwareName);
                 Server.Devs.Clear();
                 Server.Mods.Clear();
             }

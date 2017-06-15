@@ -63,7 +63,7 @@ namespace MCGalaxy.Core {
                 p.Waypoints.Load(p);
             } catch (IOException ex) {
                 Player.Message(p, "Error loading waypoints.");
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
         
@@ -83,8 +83,8 @@ namespace MCGalaxy.Core {
                     else p.listignored.Add(line);
                 }
             } catch (IOException ex) {
-                Server.ErrorLog(ex);
-                Server.s.Log("Failed to load ignore list for: " + p.name);
+                Logger.LogError(ex);
+                Logger.Log(LogType.Warning, "Failed to load ignore list for: " + p.name);
             }
             
             if (p.ignoreAll || p.ignoreIRC || p.ignoreTitles || p.ignoreNicks || p.listignored.Count > 0)
@@ -100,7 +100,7 @@ namespace MCGalaxy.Core {
                 Command.all.Find("jail").Use(null, p.name);
             } catch (Exception ex) {
                 p.Leave("Error occured", "Error occured", true);
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
     }

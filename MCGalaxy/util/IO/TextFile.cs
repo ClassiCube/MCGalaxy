@@ -41,7 +41,7 @@ namespace MCGalaxy.Util {
         public void EnsureExists() {
             if (File.Exists(Filename)) return;
             
-            Server.s.Log(Filename + " does not exist, creating");
+            Logger.Log(LogType.SystemActivity, Filename + " does not exist, creating");
             using (StreamWriter w = new StreamWriter(Filename)) {
                 if (DefaultText == null) return;
 

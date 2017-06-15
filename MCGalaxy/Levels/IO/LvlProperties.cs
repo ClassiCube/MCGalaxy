@@ -26,8 +26,8 @@ namespace MCGalaxy.Levels.IO {
                 using (StreamWriter writer = new StreamWriter(path))
                     WriteLevelProperties(level, writer);
             } catch (Exception ex) {
-                Server.s.Log("Failed to save level properties!");
-                Logger.WriteError(ex);
+                Logger.Log(LogType.Warning, "Failed to save level properties!");
+                Logger.LogError(ex);
                 return;
             }
         }
@@ -69,8 +69,9 @@ namespace MCGalaxy.Levels.IO {
                 case "physics":
                     level.setPhysics(int.Parse(value)); break;
                 default:
-                    if (!ConfigElement.Parse(Server.levelConfig, key, value, level))
-                        Server.s.Log("\"" + key + "\" was not a recognised level property key.");
+                    if (!ConfigElement.Parse(Server.levelConfig, key, value, level)) {
+                        Logger.Log(LogType.Warning, "\"{0}\" was not a recognised level property key.", key);
+                    }
                     break;
             }
         }

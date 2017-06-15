@@ -20,7 +20,7 @@ using System.Threading;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Misc {
-	public sealed class CmdChain : Command {
+    public sealed class CmdChain : Command {
         public override string name { get { return "chain"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }

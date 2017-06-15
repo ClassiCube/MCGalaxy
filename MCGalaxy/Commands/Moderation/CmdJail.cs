@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (p != null && who.Rank >= p.Rank) { 
                     MessageTooHighRank(p, "jail", false); return;
                 }
-            	ModAction action = new ModAction(who.name, p, ModActionType.Jailed, reason);
+                ModAction action = new ModAction(who.name, p, ModActionType.Jailed, reason);
                 OnModActionEvent.Call(action);
             } else {
                 ModAction action = new ModAction(who.name, p, ModActionType.Unjailed, reason);

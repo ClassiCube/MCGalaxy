@@ -276,7 +276,7 @@ namespace MCGalaxy.Commands.CPE {
                 ExtBlock block = ExtBlock.FromRaw(bd.BlockID);
                 BlockProps props = BlockDefinition.GlobalProps[block.Index];
                 if (!AddBlock(p, bd, global, cmd, props)) return;
-                	    
+                
                 SetBD(p, global, null);
                 SetStep(p, global, 0);
                 return;

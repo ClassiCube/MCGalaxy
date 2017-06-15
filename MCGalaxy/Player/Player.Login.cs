@@ -181,9 +181,9 @@ namespace MCGalaxy {
                 SendMessage("Lowlag mode is currently &aON.");
 
             if (String.IsNullOrEmpty(appName)) {
-                Server.s.Log(name + " [" + ip + "] connected.");
+                Logger.Log(LogType.UserActivity, "{0} [{1}] connected.", name, ip);
             } else {
-                Server.s.Log(name + " [" + ip + "] connected using " + appName + ".");
+                Logger.Log(LogType.UserActivity, "{0} [{1}] connected using {2}.", name, ip, appName);
             }
             Game.InfectMessages = PlayerDB.GetInfectMessages(this);
             Server.zombie.PlayerJoinedServer(this);
@@ -255,7 +255,7 @@ namespace MCGalaxy {
                 Chat.MessageOps(altsMsg);
                 //IRCBot.Say(temp, true); //Tells people in op channel on IRC
             }
-            Server.s.Log(altsMsg);
+            Logger.Log(LogType.UserActivity, altsMsg);
         }
     }
 }

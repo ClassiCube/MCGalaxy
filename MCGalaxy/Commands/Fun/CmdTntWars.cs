@@ -419,7 +419,7 @@ namespace MCGalaxy.Commands.Fun {
                                 if (it.lvl.overload < 2500) {
                                     it.lvl.overload = 2501;
                                     Player.Message(p, "TNT Wars: Increasing physics overload to 2500");
-                                    Server.s.Log("TNT Wars: Increasing physics overload to 2500");
+                                    Logger.Log(LogType.GameActivity, "TNT Wars: Increasing physics overload to 2500");
                                 }
                                 Thread t = new Thread(it.Start);
                                 t.Name = "MCG_TntGame";

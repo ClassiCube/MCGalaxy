@@ -25,7 +25,7 @@ namespace MCGalaxy {
                 
                 Player.Message(p, "[<] Console: &f" + text);
                 string name = p == null ? "(console)" : p.name;
-                Server.s.Log("[>] " + name + ": " + text);
+                Logger.Log(LogType.PrivateChat, "{0} @(console): {1}", name, text);
                 return true;
             }
             
@@ -80,7 +80,7 @@ namespace MCGalaxy {
                               pl => (p == pl || pl.Rank >= perm) && Chat.NotIgnoring(p, pl),
                               displayName, message);
             
-            Server.s.Log("(" + group + "): " + name + ": " + message);
+            Logger.Log(LogType.StaffChat, "({0}): {1}: {2}", group, name, message);
             Server.IRC.Say(displayName + "%S: " + message, true);
         }
         
@@ -100,7 +100,7 @@ namespace MCGalaxy {
         
         static void DoFakePM(Player p, Player who, string message) {
             string name = p == null ? "(console)" : p.name;
-            Server.s.Log(name + " @" + who.name + ": " + message);
+            Logger.Log(LogType.PrivateChat, "{0} @{1}: {2}", name, who.name, message);
             Player.Message(p, "[<] {0}: &f{1}", who.ColoredName, message);
         }
         
@@ -108,7 +108,7 @@ namespace MCGalaxy {
             string name = p == null ? "(console)" : p.name;
             string fullName = p == null ? "%S(console)" : p.ColoredName;
             
-            Server.s.Log(name + " @" + who.name + ": " + message);
+            Logger.Log(LogType.PrivateChat, "{0} @{1}: {2}", name, who.name, message);
             Player.Message(p, "[<] {0}: &f{1}", who.ColoredName, message);
             Player.Message(who, "&9[>] {0}: &f{1}", fullName, message);
         }

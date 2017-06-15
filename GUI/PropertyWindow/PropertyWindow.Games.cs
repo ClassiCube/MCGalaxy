@@ -89,7 +89,7 @@ namespace MCGalaxy.Gui {
                 }
             }
             catch ( ObjectDisposedException ) { }  //Y U BE ANNOYING 
-            catch ( Exception ex ) { Server.ErrorLog(ex); }
+            catch ( Exception ex ) { Logger.LogError(ex); }
         }
 
         private void lsAddMap_Click(object sender, EventArgs e) {
@@ -124,7 +124,7 @@ namespace MCGalaxy.Gui {
 
                 UpdateLavaMapList();
             }
-            catch ( Exception ex ) { Server.ErrorLog(ex); }
+            catch ( Exception ex ) { Logger.LogError(ex); }
         }
 
         private void lsRemoveMap_Click(object sender, EventArgs e) {
@@ -151,7 +151,7 @@ namespace MCGalaxy.Gui {
 
                 UpdateLavaMapList();
             }
-            catch ( Exception ex ) { Server.ErrorLog(ex); }
+            catch ( Exception ex ) { Logger.LogError(ex); }
         }
 
         private void lsMapUse_SelectedIndexChanged(object sender, EventArgs e) {
@@ -169,7 +169,7 @@ namespace MCGalaxy.Gui {
                 LavaSurvival.MapSettings m = Server.lava.LoadMapSettings(name);
                 pg_lavaMap.SelectedObject = new LavaMapProperties(m);
             } catch (Exception ex) { 
-                Server.ErrorLog(ex); 
+                Logger.LogError(ex); 
                 pg_lavaMap.SelectedObject = null;
             }
         }

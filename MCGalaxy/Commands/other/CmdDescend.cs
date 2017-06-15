@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Misc {
             if (!Hacks.CanUseHacks(p, p.level)) {
                 Player.Message(p, "You cannot use /descend on this map."); return;
             }
-        	
+
             // Move starting position down half a block since players are a little bit above the ground.
             int x = p.Pos.BlockX, y = (p.Pos.Y - 51 - 4) / 32, z = p.Pos.BlockZ;            
             if (y > p.level.Height) y = p.level.Height;

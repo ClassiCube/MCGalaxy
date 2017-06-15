@@ -21,21 +21,20 @@ using System.Threading;
 namespace MCGalaxy.Gui {
     public static class Handlers {
         
-        public static void HandleChat(string text, Action<string> output) {
+        public static void HandleChat(string text) {
             if (text != null) text = text.Trim();
             if (String.IsNullOrEmpty(text)) return;
             if (ChatModes.Handle(null, text)) return;
             
             Chat.MessageGlobal("Console [&a{0}%S]:&f {1}", Server.ZallState, text);
             Server.IRC.Say("Console [&a" + Server.ZallState + "%S]: " + text);
-            Server.s.Log("(Console): " + text, true);
-            output("<CONSOLE>: " + text);
+            Logger.Log(LogType.PlayerChat, "(console): " + text);
         }
         
-        public static Thread HandleCommand(string text, Action<string> output) {
+        public static Thread HandleCommand(string text) {
             if (text != null) text = text.Trim();
             if (String.IsNullOrEmpty(text)) {
-                output("CONSOLE: Whitespace commands are not allowed."); return null;
+                Logger.Log(LogType.CommandUsage, "(console): Whitespace commands are not allowed."); return null; 
             }
             if (text[0] == '/' && text.Length > 1)
                 text = text.Substring(1);
@@ -52,19 +51,22 @@ namespace MCGalaxy.Gui {
             if (Server.Check(name, args)) { Server.cancelcommand = false; return null; }
             
             Command cmd = Command.all.Find(name);
-            if (cmd == null) { output("CONSOLE: No such command."); return null; }
-            if (!cmd.SuperUseable) { output("CONSOLE: /" + cmd.name + " can only be used in-game."); return null; }
+            if (cmd == null) { 
+                Logger.Log(LogType.CommandUsage, "(console): Unknown command \"{0}\"", name); return null; 
+            }
+            if (!cmd.SuperUseable) { 
+                Logger.Log(LogType.CommandUsage, "(console): /{0} can only be used in-game.", cmd.name); return null; 
+            }
             
             Thread thread = new Thread(
                 () =>
                 {
                     try {
                         cmd.Use(null, args);
-                        output("CONSOLE: USED /" + text);
-                        Server.s.Log("(Console) used /" + text, true);
+                        Logger.Log(LogType.CommandUsage, "(console) used /" + text);
                     } catch (Exception ex) {
-                        Server.ErrorLog(ex);
-                        output("CONSOLE: Failed command");
+                        Logger.LogError(ex);
+                        Logger.Log(LogType.CommandUsage, "(console): FAILED COMMAND");
                     }
                 });
             thread.Name = "MCG_ConsoleCommand";

@@ -74,8 +74,8 @@ namespace MCGalaxy {
                 bulkSender.Send(true);
                 lvl.blockqueue.RemoveRange(0, count);
             } catch (Exception e)  {
-                Server.s.ErrorCase("error:" + e);
-                Server.s.Log(String.Format("Block cache failed for map: {0}. {1} lost.", lvl.name, lvl.blockqueue.Count));
+                Logger.LogError(e);
+                Logger.Log(LogType.Warning, "Block cache failed for map: {0}. {1} lost.", lvl.name, lvl.blockqueue.Count);
                 lvl.blockqueue.Clear();
             }
         }

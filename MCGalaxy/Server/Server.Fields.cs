@@ -36,17 +36,11 @@ namespace MCGalaxy {
         
         public delegate void OnConsoleCommand(string cmd, string message);
         public static event OnConsoleCommand ConsoleCommand;
-        public delegate void OnServerError(Exception error);
-        public static event OnServerError ServerError;
-        public delegate void OnServerLog(string message);
-        public static event OnServerLog ServerLog, ServerAdminLog, ServerOpLog;
         public delegate void HeartBeatHandler();
         public delegate void MessageEventHandler(string message);
         public delegate void PlayerListHandler(List<Player> playerList);
         public delegate void VoidHandler();
-        public delegate void LogHandler(string message);
         
-        public event LogHandler OnLog, OnSystem, OnCommand, OnError, OnOp, OnAdmin;
         public event HeartBeatHandler HeartBeatFail;
         public event MessageEventHandler OnURLChange;
         public event PlayerListHandler OnPlayerListChange;
@@ -234,7 +228,6 @@ namespace MCGalaxy {
         public static string level = "main";
         [ConfigString("xjail-map-name", "Other", null, "(main)", false, "()._+")]
         public static string xjailLevel = "(main)";
-        public static string errlog = "error.log";
 
         [ConfigBool("report-back", "Error handling", null, true)]
         public static bool reportBack = true;

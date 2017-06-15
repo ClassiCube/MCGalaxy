@@ -50,12 +50,15 @@ namespace MCGalaxy.Commands.World {
         
         static void SaveAll() {
             Level[] loaded = LevelInfo.Loaded.Items;
-            foreach (Level l in loaded) {
+            foreach (Level lvl in loaded) {
                 try {
-                    if (l.ShouldSaveChanges()) l.Save();
-                    else { Server.s.Log("Level \"" + l.name + "\" is running a game, skipping save."); }
+                    if (lvl.ShouldSaveChanges()) {
+                        lvl.Save();
+                    } else { 
+                        Logger.Log(LogType.SystemActivity, "Level \"{0}\" is running a game, skipping save.", lvl.name);
+                    }
                 } catch (Exception ex) {
-                    Server.ErrorLog(ex);
+                    Logger.LogError(ex);
                 }
             }
             Chat.MessageGlobal("All levels have been saved.");
@@ -68,10 +71,10 @@ namespace MCGalaxy.Commands.World {
             if (num == -1) return;
             
             if (restoreName == "") {
-                Server.s.Log("Backup " + num + " saved for " + lvl.name);
+                Logger.Log(LogType.SystemActivity, "Backup {1} saved for {0}", lvl.name, num);
                 lvl.ChatLevel("Backup " + num + " saved for " + lvl.ColoredName);
             } else {
-                Server.s.Log(lvl.name + " had a backup created named &b" + restoreName);
+                Logger.Log(LogType.SystemActivity, "{0} had a backup created named &b{1}", lvl.name, restoreName);
                 lvl.ChatLevel(lvl.ColoredName + " %Shad a backup created named &b" + restoreName);
             }
         }

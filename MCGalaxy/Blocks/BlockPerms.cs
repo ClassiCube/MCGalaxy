@@ -89,7 +89,7 @@ namespace MCGalaxy.Blocks {
                 lock (saveLock)
                     SaveCore(List);
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
         }
         
@@ -155,7 +155,7 @@ namespace MCGalaxy.Blocks {
                     perms.Allowed = CommandPerms.ExpandPerms(allowRaw);
                     perms.Disallowed = CommandPerms.ExpandPerms(disallowRaw);
                 } catch {
-                    Server.s.Log("Hit an error on the block " + line);
+                    Logger.Log(LogType.Warning, "Hit an error on the block " + line);
                     continue;
                 }
                 List[perms.BlockID] = perms;
@@ -174,8 +174,9 @@ namespace MCGalaxy.Blocks {
                         List[block].MinRank = group.Permission;
                     else
                         throw new InvalidDataException("Line " + line + " is invalid.");
+                } catch { 
+                    Logger.Log(LogType.Warning, "Could not find the rank given on {0}. Using default", line);
                 }
-                catch { Server.s.Log("Could not find the rank given on " + line + ". Using default"); }
             }
         }
         

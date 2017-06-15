@@ -102,7 +102,7 @@ namespace MCGalaxy.Tasks {
             try {
                 task.Callback(task);
             } catch (Exception ex) {
-                MCGalaxy.Server.ErrorLog(ex);
+                MCGalaxy.Logger.LogError(ex);
             }
             lastTask = task;
             
