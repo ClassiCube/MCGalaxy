@@ -48,7 +48,6 @@ namespace MCGalaxy {
         internal static object pendingLock = new object();        
         public static List<Player> connections = new List<Player>(Server.players);
         public List<string> listignored = new List<string>();
-        public static byte number { get { return (byte)PlayerInfo.Online.Count; } }
         public static string lastMSG = "";
         
         //TpA

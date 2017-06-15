@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Info {
             
             Player.Message(p, "Server's name: &b{0}%S", Server.name);
             Player.Message(p, "&a{0} %Splayers total. (&a{1} %Sonline, &8{2} banned%S)",
-                           GetPlayerCount(), Player.number, Player.GetBannedCount());
+                           GetPlayerCount(), PlayerInfo.Online.Count, Group.BannedRank.PlayerCount);
             Player.Message(p, "&a{0} %Slevels currently loaded. Currency is &3{1}%S.",
                            LevelInfo.Loaded.Count, Server.moneys);
             

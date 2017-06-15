@@ -411,10 +411,6 @@ namespace MCGalaxy {
             return true;
         }
 
-        public static int GetBannedCount() {
-            Group group = Group.BannedRank;
-            return group == null ? 0 : group.playerList.Count;
-        }
         #endregion
 
         public void BlockUntilLoad(int sleep) {

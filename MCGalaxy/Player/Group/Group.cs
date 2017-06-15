@@ -55,6 +55,7 @@ namespace MCGalaxy {
         public PlayerList playerList;
         public string MOTD = "";
         public bool[] CanModify = new bool[256];
+        public int PlayerCount { get { return playerList.Count; } }
         
         public static Group BannedRank { get { return findPerm(LevelPermission.Banned); } }
         public static Group GuestRank { get { return findPerm(LevelPermission.Guest); } }

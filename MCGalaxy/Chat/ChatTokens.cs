@@ -75,7 +75,7 @@ namespace MCGalaxy {
             { "$kicked", p => p.totalKicked.ToString() },
             { "$server", p => Server.name },
             { "$motd", p => Server.motd },
-            { "$banned", p => Player.GetBannedCount().ToString() },
+            { "$banned", p => Group.BannedRank.PlayerCount.ToString() },
             { "$irc", p => Server.ircServer + " > " + Server.ircChannel },
             
             { "$infected", p => p.Game.TotalInfected.ToString() },
