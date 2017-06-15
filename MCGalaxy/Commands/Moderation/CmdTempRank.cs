@@ -125,6 +125,8 @@ namespace MCGalaxy.Commands.Moderation {
         
         static void PrintTempRankInfo(Player p, string line) {
             string[] args = line.SplitSpaces();
+            if (args.Length < 4) return;
+            
             string assigner = args[1];
             DateTime assigned = long.Parse(args[2]).FromUnixTime();
             DateTime expiry   = long.Parse(args[3]).FromUnixTime();
