@@ -94,7 +94,7 @@ namespace MCGalaxy.Tasks {
         }
         
         static TimeSpan NextRun(PlayerExtList list) {
-            DateTime nextRun = DateTime.MaxValue;
+            DateTime nextRun = DateTime.MaxValue.AddYears(-1);
             // Lock because we want to ensure list not modified from under us
             lock (list.locker) {
                 List<string> lines = list.AllLines();

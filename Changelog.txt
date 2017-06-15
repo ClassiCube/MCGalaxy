@@ -1,4 +1,4 @@
-v 1.8.9.2
+v 1.8.9.3
 Added: Listening on a specific IP
 Added: Color selector to GUI
 Fixed: /undoplayer not working from console or IRC
