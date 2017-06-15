@@ -49,7 +49,7 @@ namespace MCGalaxy.Drawing.Ops {
             return true;
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             ushort x, y, z;
             for (int i = 0; i < Positions.Count; i++) {
                 int pos = Positions[i];

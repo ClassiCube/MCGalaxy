@@ -42,7 +42,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         int dirX, dirZ;
         Vec3U16 pos;
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(marks[0]), p2 = Clamp(marks[1]);
             if (Math.Abs(p2.X - p1.X) > Math.Abs(p2.Z - p1.Z))
                 dirX = p2.X > p1.X? 1 : -1;
@@ -55,7 +55,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
         
-        void DrawLetter(Player p, Level lvl, char c, Brush brush, Action<DrawOpBlock> output) {
+        void DrawLetter(Player p, Level lvl, char c, Brush brush, DrawOpOutput output) {
             if ((int)c >= 256 || letters[(int)c] == null) {
                 Player.Message(p, "\"" + c + "\" is not currently supported, replacing with space.");
                 pos.X = (ushort)(pos.X + dirX * 4 * Scale);

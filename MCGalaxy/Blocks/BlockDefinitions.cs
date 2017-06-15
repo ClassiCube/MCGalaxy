@@ -138,7 +138,7 @@ namespace MCGalaxy {
             GlobalProps = new BlockProps[Block.Count * 2];
             for (int i = 0; i < Block.Count; i++) {
                 GlobalProps[i] = Block.Props[i];
-                GlobalProps[i + Block.Count] = new BlockProps((byte)i);
+                GlobalProps[i + Block.Count] = BlockProps.MakeDefault();
             }
             BlockProps.Load("global", GlobalProps, true);
         }
@@ -163,7 +163,7 @@ namespace MCGalaxy {
             
             defs[raw] = def;
             if (global) Block.SetDefaultNames();
-            if (!global) level.SetBlockHandler(ExtBlock.FromRaw(raw));
+            if (!global) level.UpdateBlockHandler(ExtBlock.FromRaw(raw));
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
@@ -192,7 +192,7 @@ namespace MCGalaxy {
             
             defs[raw] = null;
             if (global) Block.SetDefaultNames();
-            if (!global) level.SetBlockHandler(ExtBlock.FromRaw(raw));
+            if (!global) level.UpdateBlockHandler(ExtBlock.FromRaw(raw));
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {

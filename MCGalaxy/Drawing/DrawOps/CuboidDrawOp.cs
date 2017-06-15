@@ -29,7 +29,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
@@ -51,7 +51,7 @@ namespace MCGalaxy.Drawing.Ops {
             return xQuadsVol + yQuadsVol + zQuadzVol;
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             int lenX = (p2.X - p1.X + 1), lenY = (p2.Y - p1.Y + 1);
             QuadY(p1.Y, p1.X, p1.Z, p2.X, p2.Z, brush, output);
@@ -70,7 +70,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         protected void QuadX(ushort x, ushort y1, ushort z1, ushort y2, ushort z2, 
-                             Brush brush, Action<DrawOpBlock> output) {
+                             Brush brush, DrawOpOutput output) {
             for (ushort y = y1; y <= y2; y++)
                 for (ushort z = z1; z <= z2; z++)
             {
@@ -79,7 +79,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         protected void QuadY(ushort y, ushort x1, ushort z1, ushort x2, ushort z2, 
-                             Brush brush, Action<DrawOpBlock> output) {
+                             Brush brush, DrawOpOutput output) {
             for (ushort z = z1; z <= z2; z++)
                 for (ushort x = x1; x <= x2; x++)
             {
@@ -88,7 +88,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         protected void QuadZ(ushort z, ushort y1, ushort x1, ushort y2, ushort x2,
-                             Brush brush, Action<DrawOpBlock> output) {
+                             Brush brush, DrawOpOutput output) {
             for (ushort y = y1; y <= y2; y++)
                 for (ushort x = x1; x <= x2; x++)
             {
@@ -107,7 +107,7 @@ namespace MCGalaxy.Drawing.Ops {
             return xQuadsVol + zQuadsVol;
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             int lenX = (p2.X - p1.X + 1);
             QuadX(p1.X, p1.Y, p1.Z, p2.Y, p2.Z, brush, output);
@@ -129,7 +129,7 @@ namespace MCGalaxy.Drawing.Ops {
             return horSidesvol + verSidesVol;
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++ ) {
                 output(Place(p1.X, y, p1.Z, brush));

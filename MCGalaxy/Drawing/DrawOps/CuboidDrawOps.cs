@@ -26,7 +26,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Hollow"; } }
         public byte Skip;
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             ExtBlock air = ExtBlock.Air;
             
@@ -62,7 +62,7 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Outline"; } }
         public ExtBlock Target;
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
@@ -90,7 +90,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Rainbow"; } }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             int dx = Math.Abs(p1.X - p2.X), dy = Math.Abs(p1.Y - p2.Y), dz = Math.Abs(p1.Z - p2.Z);
             byte stepX = 0, stepY = 0, stepZ = 0;

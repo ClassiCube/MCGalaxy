@@ -38,7 +38,7 @@ namespace MCGalaxy.Drawing.Ops {
             return lenX * lenZ * 3;
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             width = Max.X - Min.X;
             if (width % 2 != 0) { width++; Min.X--; }
             width -= 2;

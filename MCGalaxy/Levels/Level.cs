@@ -60,7 +60,7 @@ namespace MCGalaxy {
                 ExtBlock block = ExtBlock.FromIndex(i);
                 blockAABBs[i] = Block.BlockAABB(block, this);
             }
-            SetBlockHandlers();
+            UpdateBlockHandlers();
             
             name = n; MapName = n.ToLower();
             BlockDB = new BlockDB(this);
@@ -390,7 +390,7 @@ namespace MCGalaxy {
             }
             
             MCGalaxy.Blocks.BlockProps.Load("lvl_" + lvl.MapName, lvl.BlockProps, true);
-            lvl.SetBlockHandlers();
+            lvl.UpdateBlockHandlers();
         }
 
         public static bool CheckLoadOnGoto(string givenName) {
@@ -487,13 +487,13 @@ namespace MCGalaxy {
             public ushort smallX, smallY, smallZ;
         }
         
-        public void SetBlockHandlers() {            
+        public void UpdateBlockHandlers() {            
             for (int i = 0; i < BlockProps.Length; i++) {
-                SetBlockHandler(ExtBlock.FromIndex(i));
+                UpdateBlockHandler(ExtBlock.FromIndex(i));
             }
         }
         
-        public void SetBlockHandler(ExtBlock block) {
+        public void UpdateBlockHandler(ExtBlock block) {
             bool nonSolid;
             if (GetBlockDef(block) == null) {
                 nonSolid = Block.Walkthrough(Block.Convert(block.BlockID));
@@ -512,7 +512,7 @@ namespace MCGalaxy {
         public void UpdateCustomBlock(byte raw, BlockDefinition def) {
             CustomBlockDefs[raw] = def;
             ExtBlock block = ExtBlock.FromRaw(raw);            
-            SetBlockHandler(block);
+            UpdateBlockHandler(block);
             blockAABBs[block.Index] = Block.BlockAABB(block, this);
         }
     }

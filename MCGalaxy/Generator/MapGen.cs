@@ -20,6 +20,7 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Generator {
     
+	/// <summary> Holds arguments for a map generator. </summary>
     public struct MapGenArgs {
         public Player Player;
         public Level Level;
@@ -27,6 +28,9 @@ namespace MCGalaxy.Generator {
         public bool UseSeed;
         public int Seed;
     }
+	
+	/// <summary> Represents a map generator, returning whether map generation succeeded or not. </summary>
+	public delegate bool MapGenerator(MapGenArgs args);
     
     /// <summary> Maintains a list of map generator instances. </summary>
     public static class MapGen {
@@ -67,7 +71,7 @@ namespace MCGalaxy.Generator {
             genArgs.UseSeed = args != "";
             if (genArgs.UseSeed && !int.TryParse(args, out genArgs.Seed))
                 genArgs.Seed = args.GetHashCode();
-            Func<MapGenArgs, bool> generator = null;
+            MapGenerator generator = null;
             
             simpleGens.TryGetValue(theme, out generator);
             if (generator != null) return generator(genArgs);
@@ -77,18 +81,18 @@ namespace MCGalaxy.Generator {
         }
         
         
-        static Dictionary<string, Func<MapGenArgs, bool>> simpleGens, advGens;        
-        public static void RegisterSimpleGen(string theme, Func<MapGenArgs, bool> gen) {
+        static Dictionary<string, MapGenerator> simpleGens, advGens;        
+        public static void RegisterSimpleGen(string theme, MapGenerator gen) {
             simpleGens[theme.ToLower()] = gen;
         }
         
-        public static void RegisterAdvancedGen(string theme, Func<MapGenArgs, bool> gen) {
+        public static void RegisterAdvancedGen(string theme, MapGenerator gen) {
             advGens[theme.ToLower()] = gen;
         }
         
         static MapGen() {
-            simpleGens = new Dictionary<string, Func<MapGenArgs, bool>>();
-            advGens = new Dictionary<string, Func<MapGenArgs, bool>>();
+            simpleGens = new Dictionary<string, MapGenerator>();
+            advGens = new Dictionary<string, MapGenerator>();
             SimpleGen.RegisterGenerators();
             fCraftMapGenerator.RegisterGenerators();
             

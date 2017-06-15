@@ -35,6 +35,6 @@ namespace MCGalaxy.Drawing.Transforms {
         public virtual void Configure(DrawOp op, Player p) { }
         
         public abstract void Perform(Vec3S32[] marks, Player p, Level lvl, 
-                                     DrawOp op, Brush brush, Action<DrawOpBlock> output);
+                                     DrawOp op, Brush brush, DrawOpOutput output);
     }
 }

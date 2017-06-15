@@ -570,7 +570,7 @@ namespace MCGalaxy.Commands.CPE {
             Level[] loaded = LevelInfo.Loaded.Items;
             byte raw = block.BlockID;
             foreach (Level lvl in loaded) {
-                if (lvl.CustomBlockDefs[raw] != null) continue;
+                if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
                 lvl.BlockProps[block.Index] = props;
             }
         }
@@ -585,7 +585,7 @@ namespace MCGalaxy.Commands.CPE {
             if (block.BlockID < Block.CpeCount) {
                 BlockDefinition.GlobalProps[block.Index] = Block.Props[block.Index];
             } else {
-                BlockDefinition.GlobalProps[block.Index] = new BlockProps(block.RawID);
+                BlockDefinition.GlobalProps[block.Index] = BlockProps.MakeDefault();
             }
             
             Level[] loaded = LevelInfo.Loaded.Items;

@@ -54,7 +54,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             this.output = output;
             PerformUndo();
             this.output = null;
@@ -75,7 +75,7 @@ namespace MCGalaxy.Drawing.Ops {
             PerformOldUndo(args);
         }
         
-        Action<DrawOpBlock> output;
+        DrawOpOutput output;
         Vec3U16 dims;
         
         void UndoBlock(BlockDBEntry e) {

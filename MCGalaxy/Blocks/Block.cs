@@ -182,7 +182,7 @@ namespace MCGalaxy {
             
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
-                lvl.SetBlockHandlers();
+                lvl.UpdateBlockHandlers();
             }
         }
         

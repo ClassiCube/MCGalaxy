@@ -50,7 +50,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             this.output = output;
             PerformHighlight();
             this.output = null;
@@ -71,7 +71,7 @@ namespace MCGalaxy.Drawing.Ops {
             PerformOldHighlight(args);
         }
         
-        Action<DrawOpBlock> output;
+        DrawOpOutput output;
         Vec3U16 dims;
         
         void HighlightBlock(BlockDBEntry e) {

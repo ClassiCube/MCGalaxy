@@ -36,7 +36,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public Level Source;
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Max.X = Math.Min(Max.X, Source.Width - 1);
             Max.Y = Math.Min(Max.Y, Source.Height - 1);
             Max.Z = Math.Min(Max.Z, Source.Length - 1);

@@ -38,7 +38,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(marks[0]), p2 = Clamp(marks[1]);
             List<Vec3S32> buffer = new List<Vec3S32>();
             DrawLine(p1.X, p1.Y, p1.Z, MaxLength, p2.X, p2.Y, p2.Z, buffer);

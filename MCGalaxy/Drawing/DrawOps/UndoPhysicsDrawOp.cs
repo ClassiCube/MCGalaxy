@@ -30,7 +30,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             if (Level.UndoBuffer.Count != Server.physUndo) {
                 int count = Level.currentUndo;
                 for (int i = count; i >= 0; i--) {

@@ -29,9 +29,6 @@ namespace MCGalaxy.Blocks {
     /// <summary> Extended and physics properties of a block. </summary>
     public struct BlockProps {
         
-        /// <summary> Standard block id sent to clients in map and block update packets. </summary>
-        public byte ConvertId;
-        
         /// <summary> Block name used for in commands. </summary>
         public string Name;
         
@@ -69,11 +66,11 @@ namespace MCGalaxy.Blocks {
         /// <summary> Whether the properties for this block have been modified and hence require saving. </summary>
         public bool Changed;
         
-        public BlockProps(byte block) {
-            this = default(BlockProps);
-            ConvertId = block;
-            Name = "unknown";
-            ODoorId = Block.Invalid;
+        public static BlockProps MakeDefault() {
+            BlockProps props = default(BlockProps);
+            props.Name = "unknown";
+            props.ODoorId = Block.Invalid;
+            return props;
         }
         
         

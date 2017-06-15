@@ -30,6 +30,9 @@ namespace MCGalaxy {
 }
 
 namespace MCGalaxy.Drawing.Ops {
+	
+	/// <summary> Performs on action on a block output from a draw operation. </summary>
+	public delegate void DrawOpOutput(DrawOpBlock block);
     
     public abstract partial class DrawOp {
         
@@ -77,7 +80,7 @@ namespace MCGalaxy.Drawing.Ops {
         /// Note that this estimate assumes that all possibly affected blocks will be changed by the drawing command. </summary>
         public abstract long BlocksAffected(Level lvl, Vec3S32[] marks);
         
-        public abstract void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output);
+        public abstract void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output);
         
         public virtual bool CanDraw(Vec3S32[] marks, Player p, long affected) {
             if (p != null && affected > p.group.maxBlocks) {
