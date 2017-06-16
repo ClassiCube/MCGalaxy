@@ -87,9 +87,6 @@ namespace MCGalaxy.Gui {
                     break;
                 case LogType.BackgroundActivity:
                     break;
-                case LogType.CommandUsage:
-                    WriteToConsole(message);
-                    break;
                 default:
                     string now = DateTime.Now.ToString("(HH:mm:ss) ");
                     WriteToConsole(now + message); 

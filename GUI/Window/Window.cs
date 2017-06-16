@@ -104,17 +104,19 @@ namespace MCGalaxy.Gui {
         }
         
         void LogMessage(LogType type, string message) {
+            string now;
             switch (type) {
                 case LogType.Error:
                     WriteLine("!!!Error! See " + FileLogger.ErrorLogPath + " for more information.");
                     LogErrorMessage(message); 
                     break;
                 case LogType.BackgroundActivity:
-                    string now = DateTime.Now.ToString("(HH:mm:ss) ");
+                    now = DateTime.Now.ToString("(HH:mm:ss) ");
                     LogSystemMessage(now + message); 
                     break;
                 case LogType.CommandUsage:
-                    WriteCommand(message); 
+                    now = DateTime.Now.ToString("(HH:mm:ss) ");
+                    WriteCommand(now + message); 
                     break;
                 default:
                     WriteLine(message);
