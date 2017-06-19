@@ -146,6 +146,11 @@ namespace MCGalaxy.Commands.CPE {
                                def.FogDensity, Utils.Hex(def.FogR, def.FogG, def.FogB));
             }
             
+            bool tinted = (def.FogR != 0 || def.FogG != 0 || def.FogB != 0) && def.Name.IndexOf('#') >= 0;
+            if (tinted) {
+                Player.Message(p, "  Tint color: {0}", Utils.Hex(def.FogR, def.FogG, def.FogB));                
+            }
+            
             if (def.Shape == 0) {
                 Player.Message(p, "  Block is a sprite");
                 Player.Message(p, "  Texture ID: {0}", def.SideTex);
