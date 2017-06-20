@@ -13,20 +13,19 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
 */
 using System;
-using System.Diagnostics;
-using System.IO;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Xml;
+
 //This upnp class comes from http://www.codeproject.com/Articles/27992/NAT-Traversal-with-UPnP-in-C, Modified for use with MCForge
 
 namespace MCGalaxy.Core {
 
     public sealed class UPnP {
 
-        public static bool CanUseUpnp { get { return Discover(); } }
         public static TimeSpan Timeout = TimeSpan.FromSeconds(3);
         
         const string req = 
@@ -38,41 +37,40 @@ namespace MCGalaxy.Core {
             "\r\n";
 
         static string _serviceUrl;
+        static List<string> visitedLocations = new List<string>();
         
-        private static bool Discover() {
+        
+        public static bool Discover() {
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
+            
             byte[] data = Encoding.ASCII.GetBytes(req);
-            IPEndPoint ipe = new IPEndPoint(IPAddress.Parse("239.255.255.250"), 1900);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Broadcast, 1900);
             byte[] buffer = new byte[0x1000];
 
             DateTime start = DateTime.UtcNow;
+            s.ReceiveTimeout = 3000;
+            visitedLocations.Clear();
+            
             try {
                 do {
-                    s.SendTo(data, ipe);
-                    s.SendTo(data, ipe);
-                    s.SendTo(data, ipe);
+                    s.SendTo(data, ep);
+                    s.SendTo(data, ep);
+                    s.SendTo(data, ep);
 
                     int length = -1;
                     do {
-                        SocketError error;
-                        s.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, out error, new AsyncCallback((result) => {
-                            length = s.Receive(buffer);
-                        }), null);
-                        
-                        while (length == -1) {
-                            if ((DateTime.UtcNow - start).TotalSeconds > 10) {
-                                return false;
-                            }
-                            Thread.Sleep(1000);
-                        }
-
+                        length = s.Receive(buffer);
                         string resp = Encoding.ASCII.GetString(buffer, 0, length);
+                        
                         if (resp.Contains("upnp:rootdevice")) {
-                            resp = resp.Substring(resp.ToLower().IndexOf("location:") + 9);
-                            resp = resp.Substring(0, resp.IndexOf("\r")).Trim();
-                            if (!string.IsNullOrEmpty(_serviceUrl = GetServiceUrl(resp))) {
-                                return true;
+                            string location = resp.Substring(resp.ToLower().IndexOf("location:") + 9);
+                            location = location.Substring(0, location.IndexOf("\r")).Trim();
+                            
+                            if (!visitedLocations.Contains(location)) {
+                                visitedLocations.Add(location);
+                                _serviceUrl = GetServiceUrl(location);
+                                if (!String.IsNullOrEmpty(_serviceUrl)) return true;
                             }
                         }
                     } while (length > 0);
@@ -113,31 +111,39 @@ namespace MCGalaxy.Core {
         }
         
 
-        static string GetServiceUrl(string resp) {
+        static string GetServiceUrl(string location) {
 #if !DEBUG
             try {
 #endif
-                XmlDocument desc = new XmlDocument();
-                WebRequest request = WebRequest.CreateDefault(new Uri(resp));
-                desc.Load(request.GetResponse().GetResponseStream());
-                XmlNamespaceManager nsMgr = new XmlNamespaceManager(desc.NameTable);
+                XmlDocument doc = new XmlDocument();
+                WebRequest request = WebRequest.CreateDefault(new Uri(location));
+                doc.Load(request.GetResponse().GetResponseStream());
+                
+                XmlNamespaceManager nsMgr = new XmlNamespaceManager(doc.NameTable);
                 nsMgr.AddNamespace("tns", "urn:schemas-upnp-org:device-1-0");
-                XmlNode typen = desc.SelectSingleNode("//tns:device/tns:deviceType/text()", nsMgr);
-                if ( !typen.Value.Contains("InternetGatewayDevice") )
+                XmlNode node;
+                
+                node = doc.SelectSingleNode("//tns:device/tns:deviceType/text()", nsMgr);                
+                if (node == null || !node.Value.Contains("InternetGatewayDevice"))
                     return null;
-                XmlNode node = desc.SelectSingleNode("//tns:service[tns:serviceType=\"urn:schemas-upnp-org:service:WANIPConnection:1\"]/tns:controlURL/text()", nsMgr);
-                if ( node == null )
-                    return null;
-                return CombineUrls(resp, node.Value);
+                
+                node = doc.SelectSingleNode("//tns:service[tns:serviceType=\"urn:schemas-upnp-org:service:WANIPConnection:1\"]/tns:controlURL/text()", nsMgr);
+                if (node != null) return CombineUrls(location, node.Value);
+                
+                // Try again with version 2
+                node = doc.SelectSingleNode("//tns:service[tns:serviceType=\"urn:schemas-upnp-org:service:WANIPConnection:2\"]/tns:controlURL/text()", nsMgr);
+                if (node != null) return CombineUrls(location, node.Value);
+                
+                return null;
 #if !DEBUG
             } catch { return null; }
 #endif
         }        
 
-        static string CombineUrls(string resp, string p) {
-            int n = resp.IndexOf("://");
-            n = resp.IndexOf('/', n + 3);
-            return resp.Substring(0, n) + p;
+        static string CombineUrls(string location, string p) {
+            int n = location.IndexOf("://");
+            n = location.IndexOf('/', n + 3);
+            return location.Substring(0, n) + p;
         }
         
         static string GetLocalIP() {
@@ -161,15 +167,14 @@ namespace MCGalaxy.Core {
             r.Headers.Add("SOAPACTION", "\"urn:schemas-upnp-org:service:WANIPConnection:1#" + function + "\"");
             r.ContentType = "text/xml; charset=\"utf-8\"";
             
-            byte[] b = Encoding.UTF8.GetBytes(req);
-            r.ContentLength = b.Length;
-            r.GetRequestStream().Write(b, 0, b.Length);
+            byte[] data = Encoding.UTF8.GetBytes(req);
+            r.ContentLength = data.Length;
+            r.GetRequestStream().Write(data, 0, data.Length);
             
-            XmlDocument resp = new XmlDocument();
-            WebResponse wres = r.GetResponse();
-            Stream ress = wres.GetResponseStream();
-            resp.Load(ress);
-            return resp;
+            XmlDocument doc = new XmlDocument();
+            WebResponse res = r.GetResponse();
+            doc.Load(res.GetResponseStream());
+            return doc;
         }
     }
 }

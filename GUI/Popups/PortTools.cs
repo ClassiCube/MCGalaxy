@@ -26,13 +26,12 @@ using MCGalaxy.Core;
 namespace MCGalaxy.Gui.Popups {
     public partial class PortTools : Form {
 
-        private readonly BackgroundWorker mWorkerForwarder;
-
+        readonly BackgroundWorker worker;
         public PortTools() {
             InitializeComponent();
-            mWorkerForwarder = new BackgroundWorker { WorkerSupportsCancellation = true };
-            mWorkerForwarder.DoWork += mWorkerForwarder_DoWork;
-            mWorkerForwarder.RunWorkerCompleted += mWorkerForwarder_RunWorkerCompleted;
+            worker = new BackgroundWorker { WorkerSupportsCancellation = true };
+            worker.DoWork += mWorkerForwarder_DoWork;
+            worker.RunWorkerCompleted += mWorkerForwarder_RunWorkerCompleted;
         }
 
         private void linkManually_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
@@ -41,7 +40,7 @@ namespace MCGalaxy.Gui.Popups {
         }
 
         private void PortChecker_FormClosing(object sender, FormClosingEventArgs e) {
-            mWorkerForwarder.CancelAsync();
+            worker.CancelAsync();
         }
 
         private void linkHelpForward_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
@@ -56,14 +55,12 @@ namespace MCGalaxy.Gui.Popups {
 
             try {
                 port = int.Parse(txtPortForward.Text);
-            }
-            catch {
+            } catch {
                 txtPortForward.Text = "25565";
             }
-            btnDelete.Enabled = false;
-            btnForward.Enabled = false;
-            txtPortForward.Enabled = false;
-            mWorkerForwarder.RunWorkerAsync(new object[] { port, true });
+            
+            SetUPnPEnabled(false);
+            worker.RunWorkerAsync(new object[] { port, true });
         }
 
         private void btnDelete_Click(object sender, EventArgs e) {
@@ -73,57 +70,42 @@ namespace MCGalaxy.Gui.Popups {
 
             try {
                 port = int.Parse(txtPortForward.Text);
-            }
-            catch {
+            } catch {
                 txtPortForward.Text = "25565";
             }
 
-            btnDelete.Enabled = false;
-            btnForward.Enabled = false;
-            txtPortForward.Enabled = false;
-            mWorkerForwarder.RunWorkerAsync(new object[] { port, false });
-
+            SetUPnPEnabled(false);
+            worker.RunWorkerAsync(new object[] { port, false });
         }
 
         void mWorkerForwarder_DoWork(object sender, DoWorkEventArgs e) {
             int tries = 0;
             int port = (int)((object[])e.Argument)[0];
             bool adding = (bool)((object[])e.Argument)[1];
+            
             retry:
             try {
-                if (!UPnP.CanUseUpnp) {
+                if (!UPnP.Discover()) {
                     e.Result = 0;
+                } else if (adding) {
+                    tries++;
+                    UPnP.ForwardPort(port, ProtocolType.Tcp, Server.SoftwareName + "Server");
+                    e.Result = 1;
+                } else {
+                    UPnP.DeleteForwardingRule(port, ProtocolType.Tcp);
+                    e.Result = 3;
                 }
-                else {
-
-                    if (adding) {
-                        tries++;
-                        UPnP.ForwardPort(port, ProtocolType.Tcp, Server.SoftwareName + "Server");
-                        e.Result = 1;
-                    }
-                    else {
-                        UPnP.DeleteForwardingRule(port, ProtocolType.Tcp);
-                        e.Result = 3;
-                    }
-                }
-            }
-            catch {
+            } catch {
                 if (tries < 2) goto retry;
-
                 e.Result = 2;
             }
         }
 
         void mWorkerForwarder_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
-            if (e.Cancelled)
-                return;
-
-            btnDelete.Enabled = true;
-            btnForward.Enabled = true;
-            txtPortForward.Enabled = true;
+            if (e.Cancelled) return;
+            SetUPnPEnabled(true);
 
             int result = (int)e.Result;
-
             switch (result) {
                 case 0:
                     lblForward.Text = "Error contacting router.";
@@ -143,6 +125,11 @@ namespace MCGalaxy.Gui.Popups {
                     return;
             }
         }
-
+        
+        void SetUPnPEnabled(bool enabled) {
+            btnDelete.Enabled = enabled;
+            btnForward.Enabled = enabled;
+            txtPortForward.Enabled = enabled;            
+        }
     }
 }
