@@ -55,8 +55,8 @@ namespace MCGalaxy {
         static void RenameDatabaseTables(string src, string dst) {
             if (Database.Backend.TableExists("Block" + src))
                 Database.Backend.RenameTable("Block" + src, "Block" + dst);
-            object srcLocker = ThreadSafeCache.DBCache.Get(src);
-            object dstLockder = ThreadSafeCache.DBCache.Get(dst);
+            object srcLocker = ThreadSafeCache.DBCache.GetLocker(src);
+            object dstLockder = ThreadSafeCache.DBCache.GetLocker(dst);
             
             lock (srcLocker)
                 lock (dstLockder)
@@ -142,7 +142,7 @@ namespace MCGalaxy {
             if (Database.Backend.TableExists("Block" + name))
                 Database.Backend.DeleteTable("Block" + name);
             
-            object locker = ThreadSafeCache.DBCache.Get(name);
+            object locker = ThreadSafeCache.DBCache.GetLocker(name);
             lock (locker) {
                 if (Database.TableExists("Portals" + name)) {
                     Database.Backend.DeleteTable("Portals" + name);
@@ -223,8 +223,8 @@ namespace MCGalaxy {
         }
         
         static void CopyDatabaseTables(string src, string dst) {
-            object srcLocker = ThreadSafeCache.DBCache.Get(src);
-            object dstLockder = ThreadSafeCache.DBCache.Get(dst);
+            object srcLocker = ThreadSafeCache.DBCache.GetLocker(src);
+            object dstLockder = ThreadSafeCache.DBCache.GetLocker(dst);
             
             lock (srcLocker)
                 lock (dstLockder)

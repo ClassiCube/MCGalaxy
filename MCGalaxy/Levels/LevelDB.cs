@@ -92,7 +92,7 @@ namespace MCGalaxy {
         }
         
         public static void DeleteZone(string level, Level.Zone zn) {
-            object locker = ThreadSafeCache.DBCache.Get(level);
+            object locker = ThreadSafeCache.DBCache.GetLocker(level);
             lock (locker) {
                 if (!Database.TableExists("Zone" + level)) return;
                 Database.Backend.DeleteRows("Zone" + level, "WHERE Owner=@0 AND SmallX=@1 AND SMALLY=@2 " +
@@ -102,7 +102,7 @@ namespace MCGalaxy {
         }
         
         public static void CreateZone(string level, Level.Zone zn) {
-            object locker = ThreadSafeCache.DBCache.Get(level);
+            object locker = ThreadSafeCache.DBCache.GetLocker(level);
             lock (locker) {
                 Database.Backend.CreateTable("Zone" + level, LevelDB.createZones);
                 Database.Backend.AddRow("Zone" + level, "Owner, SmallX, SmallY, SmallZ, BigX, BigY, BigZ",

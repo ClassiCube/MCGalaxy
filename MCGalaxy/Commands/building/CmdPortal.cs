@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands.Building {
 
             foreach (PortalPos P in bp.Entries) {
                 string lvlName = P.Map;
-                object locker = ThreadSafeCache.DBCache.Get(lvlName);
+                object locker = ThreadSafeCache.DBCache.GetLocker(lvlName);
                 
                 lock (locker) {
                     Database.Backend.CreateTable("Portals" + lvlName, LevelDB.createPortals);

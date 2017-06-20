@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands.Building {
             data.Message = data.Message.UnicodeToCp437();
             
             string lvlName = p.level.name;
-            object locker = ThreadSafeCache.DBCache.Get(lvlName);
+            object locker = ThreadSafeCache.DBCache.GetLocker(lvlName);
             
             lock (locker) {
                 Database.Backend.CreateTable("Messages" + lvlName, LevelDB.createMessages);

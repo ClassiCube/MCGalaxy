@@ -349,7 +349,7 @@ namespace MCGalaxy {
                 LoadMetadata(lvl);
                 Bots.BotsFile.LoadBots(lvl);
 
-                object locker = ThreadSafeCache.DBCache.Get(name);
+                object locker = ThreadSafeCache.DBCache.GetLocker(name);
                 lock (locker) {
                     LevelDB.LoadZones(lvl, name);
                     LevelDB.LoadPortals(lvl, name);

@@ -88,8 +88,7 @@ namespace MCGalaxy.Gui.Popups {
                 tries++;
                 if (!UPnP.Discover()) {
                     e.Result = 0;
-                } else if (adding) {
-                   
+                } else if (adding) {                   
                     UPnP.ForwardPort(port, ProtocolType.Tcp, Server.SoftwareName + "Server");
                     e.Result = 1;
                 } else {
