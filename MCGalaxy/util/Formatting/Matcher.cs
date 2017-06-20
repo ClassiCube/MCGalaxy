@@ -86,7 +86,7 @@ namespace MCGalaxy {
         /// <summary> Finds partial matches of 'name' against the names of the items in the 'items' enumerable. </summary>
         /// <returns> If exactly one match, the matching item. </returns>
         public static T Find<T>(Player p, string name, out int matches, IEnumerable items,
-                                Predicate<T> filter, Func<T, string> nameGetter, string group, int limit = 5)  {
+                                Predicate<T> filter, StringFormatter<T> nameGetter, string group, int limit = 5)  {
             T match = default(T); matches = 0;
             StringBuilder nameMatches = new StringBuilder();
 
@@ -117,7 +117,7 @@ namespace MCGalaxy {
         /// <remarks> Outputs multiple matching entries, as 'items' enumerable may have multiple entries. </remarks>
         /// <returns> If exactly one match, the matching list of items. </returns>
         public static List<T> FindMulti<T>(Player p, string name, out int matches, IEnumerable items,
-                                           Predicate<T> filter, Func<T, string> nameGetter, string group, int limit = 5)  {
+                                           Predicate<T> filter, StringFormatter<T> nameGetter, string group, int limit = 5)  {
             List<T> matchItems = null; matches = 0;
             StringBuilder nameMatches = new StringBuilder();
             List<string> outputtedNames = new List<string>(limit);

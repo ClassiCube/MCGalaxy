@@ -24,6 +24,9 @@ using System.IO.Compression;
 using System.Text;
 
 namespace MCGalaxy {
+	
+    /// <summary> Converts an object into a string. </summary>
+    public delegate string StringFormatter<T>(T value);
     
     public static class Extensions {
         
@@ -87,8 +90,8 @@ namespace MCGalaxy {
             return builder.ToString();
         }
         
-        public static string Join<T>(this IEnumerable<T> items, 
-                                           Func<T, string> formatter, string separator = ", ") {
+        public static string Join<T>(this IEnumerable<T> items,
+                                     StringFormatter<T> formatter, string separator = ", ") {
             StringBuilder builder = new StringBuilder();
             bool first = true;
             foreach (T item in items) {
