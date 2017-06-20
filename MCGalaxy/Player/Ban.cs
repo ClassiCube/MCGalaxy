@@ -137,7 +137,7 @@ namespace MCGalaxy {
                     success = true;
             }
             File.WriteAllText(list.file, sb.ToString());
-            return success;            
+            return success;
         }
         
         

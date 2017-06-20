@@ -49,8 +49,8 @@ namespace MCGalaxy {
                     try {
                         processor(key.Trim(), value, ref state);
                     } catch (Exception ex) {
-                        Server.ErrorLog(ex);
-                        Server.s.Log("Line \"" + line + "\" in " + path + " caused an error");
+                        Logger.LogError(ex);
+                        Logger.Log(LogType.Warning, "Line \"{0}\" in {1} caused an error", line, path);
                     }
                 }
             }
@@ -61,7 +61,7 @@ namespace MCGalaxy {
             if (line == "" || line[0] == '#') return -1;
             int index = line.IndexOf(separator);
             if (index == -1) {
-                Server.s.Log("Line \"" + line + "\" in " + path + " is missing a value");
+                Logger.Log(LogType.Warning, "Line \"{0}\" in {1} is missing a value", line, path);
                 return -1;
             }
             return index;

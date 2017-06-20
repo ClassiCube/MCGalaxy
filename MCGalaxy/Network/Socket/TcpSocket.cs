@@ -53,7 +53,6 @@ namespace MCGalaxy.Network {
                 s.leftBuffer = p.ProcessReceived(allData);
                 
                 if (p.dontmindme && s.leftBuffer.Length == 0) {
-                    Server.s.Log("Disconnected");
                     s.Close();
                     p.disconnected = true;
                     return;
@@ -68,7 +67,7 @@ namespace MCGalaxy.Network {
                 p.RemoveFromPending();
                 p.disconnected = true;
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 p.Leave("Error!");
             }
         }
@@ -89,7 +88,7 @@ namespace MCGalaxy.Network {
                 buffer = null;
                 player.Disconnect();
                 #if DEBUG
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 #endif
             } catch (ObjectDisposedException) {
                 // socket was already closed by another thread.
@@ -106,7 +105,7 @@ namespace MCGalaxy.Network {
             } catch (SocketException e) {
                 s.player.Disconnect();
                 #if DEBUG
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 #endif
             } catch (ObjectDisposedException) {
                 // socket was already closed by another thread.
@@ -115,33 +114,28 @@ namespace MCGalaxy.Network {
         
         
         public void Close() {
-            // Try to close the socket.
-            // Sometimes its already closed so these lines will cause an error
-            // We just trap them and hide them from view :P
+            // Try to close the socket. Sometimes socket is already closed, so just hide this.
+            #if !DEBUG
+            try { socket.Shutdown(SocketShutdown.Both); } catch { }
+            try { socket.Close(); } catch { }
+            
+            #else
             try {
-                // Close the damn socket connection!
                 socket.Shutdown(SocketShutdown.Both);
-                #if DEBUG
-                Server.s.Log("Socket was shutdown for " + name ?? ip);
-                #endif
+                Logger.Log(LogType.Debug, "Socket was shutdown for " + name ?? ip);
             } catch (Exception e) {
-                #if DEBUG
                 Exception ex = new Exception("Failed to shutdown socket for " + name ?? ip, e);
-                Server.ErrorLog(ex);
-                #endif
+                Logger.LogError(ex);
             }
-
+            
             try {
                 socket.Close();
-                #if DEBUG
-                Server.s.Log("Socket was closed for " + name ?? ip);
-                #endif
+                Logger.Log(LogType.Debug, "Socket was closed for " + name ?? ip);
             } catch (Exception e) {
-                #if DEBUG
                 Exception ex = new Exception("Failed to close socket for " + name ?? ip, e);
-                Server.ErrorLog(ex);
-                #endif
+                Logger.LogError(ex);
             }
+            #endif
         }
     }
 }

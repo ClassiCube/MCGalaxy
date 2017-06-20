@@ -29,7 +29,8 @@ namespace MCGalaxy {
         public string Path;
         
         List<string> names = new List<string>();        
-        readonly object locker = new object(), saveLocker = new object();
+        internal readonly object locker = new object();
+        readonly object saveLocker = new object();
         
         public PlayerList() { }
         public PlayerList(string path) { Path = path; }
@@ -93,7 +94,7 @@ namespace MCGalaxy {
                 using (StreamWriter w = new StreamWriter(Path))
                     SaveEntries(w);
             }
-            if (log) Server.s.Log("SAVED: " + Path, true);
+            if (log) Logger.Log(LogType.BackgroundActivity, "SAVED: " + Path);
         }
         
         void SaveEntries(StreamWriter w) {
@@ -112,7 +113,7 @@ namespace MCGalaxy {
             
             if (!File.Exists(list.Path)) {
                 File.Create(list.Path).Close();
-                Server.s.Log("CREATED NEW: " + list.Path);
+                Logger.Log(LogType.SystemActivity, "CREATED NEW: " + list.Path);
                 return list;
             }
             
@@ -124,8 +125,5 @@ namespace MCGalaxy {
             }
             return list;
         }
-        
-        [Obsolete("Group parameter is completely ignored.")]
-        public static PlayerList Load(string path, Group grp) { return Load(path); }
     }
 }

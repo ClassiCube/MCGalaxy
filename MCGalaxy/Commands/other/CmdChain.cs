@@ -20,7 +20,7 @@ using System.Threading;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Misc {
-	public sealed class CmdChain : Command {
+    public sealed class CmdChain : Command {
         public override string name { get { return "chain"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
@@ -28,9 +28,7 @@ namespace MCGalaxy.Commands.Misc {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (p.level.permissionbuild > p.Rank) {
-                Player.Message(p, "You cannot build on this map!"); return;
-            }
+            if (!p.level.BuildAccess.CheckDetailed(p)) return;
             
             Level lvl = p.level;
             int x = p.Pos.BlockX, y = p.Pos.BlockY, z = p.Pos.BlockZ;
@@ -65,7 +63,7 @@ namespace MCGalaxy.Commands.Misc {
 
                 Thread.Sleep(250);
                 p.level.Blockchange(p, cur.X, cur.Y, cur.Z, (ExtBlock)Block.mushroom);
-                if (p.level.GetTile(next.X, next.Y, next.Z) != 0) {
+                if (!p.level.IsAirAt(next.X, next.Y, next.Z)) {
                     PullBack(p, next, target, dirX, dirZ); 
                     p.level.Blockchange(p, x, y, z, ExtBlock.Air); return;
                 }
@@ -73,17 +71,17 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         void PullBack(Player p, Vec3U16 cur, Vec3U16 target, int dirX, int dirZ) {
-            ExtBlock block = p.level.GetExtBlock(cur.X, cur.Y, cur.Z);
+            ExtBlock block = p.level.GetBlock(cur.X, cur.Y, cur.Z);
             p.level.Blockchange(p, cur.X, cur.Y, cur.Z, block);
             
             while (cur.X != target.X || cur.Z != target.Z) {
-                ExtBlock curBlock = p.level.GetExtBlock(cur.X, cur.Y, cur.Z);                
+                ExtBlock curBlock = p.level.GetBlock(cur.X, cur.Y, cur.Z);                
                 if (curBlock == block) p.level.Blockchange(p, cur.X, cur.Y, cur.Z, ExtBlock.Air);
 
                 cur.X = (ushort)(cur.X - dirX); cur.Z = (ushort)(cur.Z - dirZ);
                 if (cur.X >= p.level.Width || cur.Z >= p.level.Length) return;
                 
-                curBlock.BlockID = p.level.GetTile(cur.X, cur.Y, cur.Z);
+                curBlock = p.level.GetBlock(cur.X, cur.Y, cur.Z);
                 if (curBlock.BlockID == Block.mushroom)
                     p.level.Blockchange(p, cur.X, cur.Y, cur.Z, block);
                 Thread.Sleep(250);

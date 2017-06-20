@@ -23,6 +23,7 @@ using MCGalaxy.Blocks.Physics;
 using MCGalaxy.DB;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
+using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.Util;
 
@@ -35,8 +36,8 @@ namespace MCGalaxy {
         
         public string Color {
             get {
-                LevelPermission maxPerm = permissionvisit;
-                if (maxPerm < permissionbuild) maxPerm = permissionbuild;
+                LevelPermission maxPerm = VisitAccess.Min;
+                if (maxPerm < BuildAccess.Min) maxPerm = BuildAccess.Min;
                 return Group.GetColor(maxPerm);
             }
         }
@@ -48,9 +49,16 @@ namespace MCGalaxy {
         public Position SpawnPos { get { return new Position(16 + spawnx * 32, 32 + spawny * 32, 16 + spawnz * 32); } }
         public Orientation SpawnRot { get { return new Orientation(rotx, roty); } }
             
-        public BlockDefinition[] CustomBlockDefs;
-        public BlockProps[] CustomBlockProps;
+        public BlockDefinition[] CustomBlockDefs = new BlockDefinition[Block.Count];
+        public BlockProps[] BlockProps = new BlockProps[Block.Count * 2];
         public ExtrasCollection Extras = new ExtrasCollection();
+        
+        internal HandleDelete[] deleteHandlers = new HandleDelete[Block.Count * 2];
+        internal HandlePlace[] placeHandlers = new HandlePlace[Block.Count * 2];
+        internal HandleWalkthrough[] walkthroughHandlers = new HandleWalkthrough[Block.Count * 2];
+        internal HandlePhysics[] physicsHandlers = new HandlePhysics[Block.Count * 2];
+        internal HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[Block.Count * 2];
+        internal AABB[] blockAABBs = new AABB[Block.Count * 2];
         
         public ushort Width, Height, Length;
         // NOTE: These are for legacy code only, you should use upper case Width/Height/Length
@@ -82,7 +90,6 @@ namespace MCGalaxy {
         [ConfigBool("WorldChat", "General", null, true)]
         public bool worldChat = true;
         
-        public bool bufferblocks = Server.bufferblocks;
         internal readonly object queueLock = new object(), saveLock = new object(), savePropsLock = new object();
         public List<ulong> blockqueue = new List<ulong>();
         BufferedBlockSender bulkSender;    
@@ -236,7 +243,6 @@ namespace MCGalaxy {
         
         public List<C4Data> C4list = new List<C4Data>();
         internal readonly Dictionary<int, sbyte> leaves = new Dictionary<int, sbyte>(); // Block state for leaf decay
-        internal readonly Dictionary<int, bool[]> liquids = new Dictionary<int, bool[]>(); // Random flow data for liquid physics
         
         
         // Survival settings

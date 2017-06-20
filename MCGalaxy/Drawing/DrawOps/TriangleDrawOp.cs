@@ -33,7 +33,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (int)Math.Sqrt(s * (s - a) * (s - b) * (s - c));
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3F32 V1 = marks[0], V2 = marks[1], V3 = marks[2];
             Vec3F32 N = Vec3F32.Cross(V2 - V1, V3 - V1);
             N = Vec3F32.Normalise(N);

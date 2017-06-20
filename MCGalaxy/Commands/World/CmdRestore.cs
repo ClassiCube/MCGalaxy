@@ -15,6 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System;
 using System.IO;
 using System.Text;
 
@@ -45,8 +46,9 @@ namespace MCGalaxy.Commands.World {
             if (File.Exists(LevelInfo.BackupPath(lvl.name, args[0]))) {
                 try {
                     DoRestore(lvl, args[0]);
-                } catch {
-                    Server.s.Log("Restore fail");
+            	} catch (Exception ex) {
+            	    Logger.LogError(ex);
+            	    Logger.Log(LogType.Warning, "Restore failed");
                 }
             } else { 
                 Player.Message(p, "Backup " + args[0] + " does not exist."); 
@@ -63,7 +65,7 @@ namespace MCGalaxy.Commands.World {
             if (restore != null) {
                 LevelActions.Replace(lvl, restore);
             } else {
-                Server.s.Log("Restore nulled");
+                Logger.Log(LogType.Warning, "Restore nulled");
                 File.Copy(LevelInfo.MapPath(lvl.name) + ".backup", LevelInfo.MapPath(lvl.name), true);
             }
         }

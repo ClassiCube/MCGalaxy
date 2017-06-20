@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands.Building {
             try {
                 DoDrawImageCore(p, m, dArgs);
             } catch (Exception ex) {
-                Server.ErrorLog(ex); // Do not want it taking down the whole server if error occurs
+                Logger.LogError(ex); // Do not want it taking down the whole server if error occurs
             }
         }
         
@@ -109,7 +109,7 @@ namespace MCGalaxy.Commands.Building {
             try {
                 bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 bmp.Dispose();
                 return;
             }

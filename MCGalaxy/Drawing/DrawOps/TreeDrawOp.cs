@@ -42,14 +42,14 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return Tree.EstimateBlocksAffected(); }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             if (brush == null) brush = defBrush;
             Vec3U16 P = Clamp(marks[0]);
             Level lvl = Level;
             
             Tree.Generate(P.X, P.Y, P.Z, (xT, yT, zT, bT) =>
                         {
-                            if (bT == Block.leaf && lvl.GetTile(xT, yT, zT) != Block.air) return;
+                            if (bT == Block.leaf && !lvl.IsAirAt(xT, yT, zT)) return;
                             
                             if (bT != Block.leaf) {
                                 output(Place(xT, yT, zT, (ExtBlock)bT));

@@ -19,6 +19,7 @@ using System;
 
 namespace MCGalaxy.Games {
     
+    /// <summary> Generates a map for countdown. </summary>
     public static class CountdownMapGen {
         
         public static Level Generate(int width, int height, int length) {
@@ -30,8 +31,12 @@ namespace MCGalaxy.Games {
             MakeChutesAndElevators(lvl);
             MakeSquares(lvl);
             
-            lvl.permissionvisit = LevelPermission.Guest;
-            lvl.permissionbuild = LevelPermission.Admin;
+            lvl.VisitAccess.Min = LevelPermission.Guest;
+            lvl.BuildAccess.Min = LevelPermission.Nobody;
+            lvl.Deletable = false;
+            lvl.Buildable = false;
+            lvl.motd = "Welcome to the Countdown map! -hax";
+            
             lvl.spawnx = (ushort)(lvl.Width / 2);
             lvl.spawny = (ushort)(lvl.Height / 2 + 4);
             lvl.spawnz = (ushort)(lvl.Length / 2);

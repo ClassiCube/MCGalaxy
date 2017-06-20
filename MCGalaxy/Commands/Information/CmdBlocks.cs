@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands.Info {
 
             if (Block.LightPass(b))
                 Player.Message(p, "Block will allow light through");
-            if (Block.Physics(b))
+            if (Physics(b))
                 Player.Message(p, "Block affects physics in some way"); //AFFECT!
             else
                 Player.Message(p, "Block will not affect physics in any way"); //It's AFFECT!
@@ -131,7 +131,20 @@ namespace MCGalaxy.Commands.Info {
             if (props.IsTDoor) Player.Message(p, "Block is a tdoor, which allows other blocks through when open");
             if (props.ODoorId != Block.Invalid) Player.Message(p, "Block is an odoor, which can be toggled by doors and toggles other odoors");
 
-            if (Block.Mover(b)) Player.Message(p, "Block can be activated by walking through it");
+            if (Mover(b)) Player.Message(p, "Block can be activated by walking through it");
+        }
+        
+        static bool Mover(byte b) {
+            bool nonSolid = Block.Walkthrough(Block.Convert(b));
+            return BlockBehaviour.GetWalkthroughHandler(new ExtBlock(b, 0), Block.Props, nonSolid) != null;
+        }
+        
+        static bool Physics(byte b) {
+            if (Block.Props[b].IsMessageBlock || Block.Props[b].IsPortal) return false;
+            if (Block.Props[b].IsDoor || Block.Props[b].IsTDoor) return false;
+            if (Block.Props[b].OPBlock) return false;
+            
+            return BlockBehaviour.GetPhysicsHandler(new ExtBlock(b, 0), Block.Props) != null;
         }
         
         public override void Help(Player p) {

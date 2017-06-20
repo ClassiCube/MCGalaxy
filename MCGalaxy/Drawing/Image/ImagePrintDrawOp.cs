@@ -40,7 +40,7 @@ namespace MCGalaxy.Drawing.Ops {
         Vec3S32 dx, dy, adj;
         IPaletteMatcher selector;
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             CalcState(Direction);
             selector = new RgbPaletteMatcher();
             CalcLayerColors();
@@ -108,7 +108,7 @@ namespace MCGalaxy.Drawing.Ops {
             return entry;
         }
         
-        void OutputPixel(Pixel P, Action<DrawOpBlock> output) {
+        void OutputPixel(Pixel P, DrawOpOutput output) {
             ushort x = (ushort)(Origin.X + dx.X * P.X + dy.X * P.Y);
             ushort y = (ushort)(Origin.Y + dx.Y * P.X + dy.Y * P.Y);
             ushort z = (ushort)(Origin.Z + dx.Z * P.X + dy.Z * P.Y);

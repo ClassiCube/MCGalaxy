@@ -327,7 +327,6 @@
     <Compile Include="Commands\Moderation\CmdWhitelist.cs" />
     <Compile Include="Commands\Moderation\CmdXban.cs" />
     <Compile Include="Commands\Moderation\CmdXJail.cs" />
-    <Compile Include="Commands\Moderation\CmdXmute.cs" />
     <Compile Include="Commands\Moderation\CmdZone.cs" />
     <Compile Include="Commands\Moderation\ModActionCmd.cs" />
     <Compile Include="Commands\other\CmdAscend.cs" />
@@ -570,9 +569,11 @@
     <Compile Include="Network\Packets\Packet.BlockDefs.cs" />
     <Compile Include="Network\Packets\Packet.CPE.cs" />
     <Compile Include="Network\Packets\Packet.cs" />
-    <Compile Include="Network\Socket\INetworkSocket.cs" />
+    <Compile Include="Network\Socket\Interfaces.cs" />
+    <Compile Include="Network\Socket\TcpListen.cs" />
     <Compile Include="Network\Socket\TcpSocket.cs" />
     <Compile Include="Network\Utils\BufferedBlockSender.cs" />
+    <Compile Include="Network\Utils\HttpUtil.cs" />
     <Compile Include="Network\Utils\LevelChunkStream.cs" />
     <Compile Include="Network\Utils\NetUtils.cs" />
     <Compile Include="Player\Group\Group.cs" />
@@ -599,12 +600,10 @@
     <Compile Include="Plugins\Events\LevelEvents.cs" />
     <Compile Include="Plugins\Events\ModActionEvent.cs" />
     <Compile Include="Plugins\Events\PlayerEvents.cs" />
-    <Compile Include="Plugins\Events\ServerEvents.cs" />
     <Compile Include="Network\Player.Networking.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\Plugin.Events.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
-    <Compile Include="properties\GlobalSuppressions.cs" />
     <Compile Include="Scripting\Scripting.cs" />
     <Compile Include="Player\Ban.cs" />
     <Compile Include="Games\CTF\Setup.cs" />
@@ -616,6 +615,7 @@
     <Compile Include="Server\BackupDB.cs" />
     <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="Levels\Level.cs" />
+    <Compile Include="Server\FileLogger.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Scripting\Backends.cs" />
@@ -624,6 +624,7 @@
     <Compile Include="Server\Server.Fields.cs" />
     <Compile Include="Server\Server.Init.cs" />
     <Compile Include="Server\Tasks\InitTasks.cs" />
+    <Compile Include="Server\Tasks\ModerationTasks.cs" />
     <Compile Include="Server\Tasks\ServerTasks.cs" />
     <Compile Include="Server\Tasks\UpgradeTasks.cs" />
     <Compile Include="Server\Updater.cs" />
@@ -637,6 +638,7 @@
     <Compile Include="util\Formatting\Matcher.cs" />
     <Compile Include="util\Formatting\MultiPageOutput.cs" />
     <Compile Include="util\IO\Paths.cs" />
+    <Compile Include="util\IO\TextFile.cs" />
     <Compile Include="util\Math\AABB.cs" />
     <Compile Include="util\Math\DirUtils.cs" />
     <Compile Include="util\Math\Vectors.cs" />

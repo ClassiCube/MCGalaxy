@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Info {
 
         bool PlacedMark(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
-            block = p.level.GetExtBlock(x, y, z);
+            block = p.level.GetBlock(x, y, z);
             p.RevertBlock(x, y, z);            
             Dictionary<int, string> names = new Dictionary<int, string>();
 

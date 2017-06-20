@@ -50,8 +50,8 @@ namespace MCGalaxy.Bots {
             try {
                 File.WriteAllText(Paths.BotsFile, json);
             } catch (Exception ex) {
-                Server.s.Log("Error when trying to save bots.");
-                Server.ErrorLog(ex);
+                Logger.Log(LogType.Warning, "Failed to save bots file");
+                Logger.LogError(ex);
             }
         }
 
@@ -83,7 +83,7 @@ namespace MCGalaxy.Bots {
             try {
                 ScriptFile.Parse(null, bot, "bots/" + props.AI);
             } catch (Exception ex)  {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
             
             bot.cur = props.CurInstruction;

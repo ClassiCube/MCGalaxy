@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Building {
 
             data.Block = GetBlock(p, block);
             if (data.Block == ExtBlock.Invalid) return;
-            if (!CommandParser.IsBlockAllowed(p, "place a portal of ", data.Block)) return;
+            if (!CommandParser.IsBlockAllowed(p, "place a portal of", data.Block)) return;
 
             Player.Message(p, "Place an &aEntry block %Sfor the portal");
             p.ClearBlockchange();
@@ -55,30 +55,27 @@ namespace MCGalaxy.Commands.Building {
         }
         
         ExtBlock GetBlock(Player p, string name) {
-            byte block = Block.Byte(name);
-            if (Block.Props[block].IsPortal) return (ExtBlock)block;
             if (name == "show") { ShowPortals(p); return ExtBlock.Invalid; }
-
-            block = BlockDefinition.GetBlock(name, p);
-            if (p.level.CustomBlockProps[block].IsPortal)
-                return ExtBlock.FromRaw(block);
+            ExtBlock block = CommandParser.RawGetBlock(p, name);
+            if (!block.IsInvalid && p.level.BlockProps[block.Index].IsPortal)
+                return block;
             
             // Hardcoded aliases for backwards compatibility
-            block = Block.Invalid;
-            if (name == "") block = Block.blue_portal;
-            if (name == "blue") block = Block.blue_portal;
-            if (name == "orange") block = Block.orange_portal;
-            if (name == "air") block = Block.air_portal;
-            if (name == "water") block = Block.water_portal;
-            if (name == "lava") block = Block.lava_portal;
+            block.BlockID = Block.Invalid; block.ExtID = 0;
+            if (name == "") block.BlockID = Block.blue_portal;
+            if (name == "blue") block.BlockID = Block.blue_portal;
+            if (name == "orange") block.BlockID = Block.orange_portal;
+            if (name == "air") block.BlockID = Block.air_portal;
+            if (name == "water") block.BlockID = Block.water_portal;
+            if (name == "lava") block.BlockID = Block.lava_portal;
             
-            if (!Block.Props[block].IsPortal) { Help(p); return ExtBlock.Invalid; }
-            return (ExtBlock)block;
+            if (p.level.BlockProps[block.Index].IsPortal) return block;            
+            Help(p); return ExtBlock.Invalid;
         }
 
         void EntryChange(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             PortalData data = (PortalData)p.blockchangeObject;
-            ExtBlock old = p.level.GetExtBlock(x, y, z);
+            ExtBlock old = p.level.GetBlock(x, y, z);
             if (!p.level.CheckAffectPermissions(p, x, y, z, old, data.Block)) {
                 p.RevertBlock(x, y, z); return;
             }
@@ -102,7 +99,8 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "&aEntry block placed");
             } else {
                 p.Blockchange += EntryChange;
-                Player.Message(p, "&aEntry block placed. &c{0} block for exit", Block.Name(Block.red));
+                Player.Message(p, "&aEntry block placed. &c{0} block for exit",
+                               p.Level.BlockName((ExtBlock)Block.red));
             }
         }
         
@@ -113,7 +111,7 @@ namespace MCGalaxy.Commands.Building {
 
             foreach (PortalPos P in bp.Entries) {
                 string lvlName = P.Map;
-                object locker = ThreadSafeCache.DBCache.Get(lvlName);
+                object locker = ThreadSafeCache.DBCache.GetLocker(lvlName);
                 
                 lock (locker) {
                     Database.Backend.CreateTable("Portals" + lvlName, LevelDB.createPortals);
@@ -184,30 +182,37 @@ namespace MCGalaxy.Commands.Building {
         static ushort U16(object x) { return Convert.ToUInt16(x); }
         
         
-        static string Format(BlockProps props) {
-            if (!props.IsPortal) return null;
+        static string Format(ExtBlock block, Level lvl, BlockProps[] props) {
+            if (!props[block.Index].IsPortal) return null;
             
             // We want to use the simple aliases if possible
-            if (Check(props, Block.orange_portal, "orange")) return "orange";
-            if (Check(props, Block.blue_portal, "blue")) return "blue";
-            if (Check(props, Block.air_portal, "air")) return "air";
-            if (Check(props, Block.lava_portal, "lava")) return "lava";
-            if (Check(props, Block.water_portal, "water")) return "water";
-            return props.Name;
-        }
-        
-        static bool Check(BlockProps props, byte block, string name) {
-            if (props.BlockId != block) return false;
-            if (props.Name == "unknown") return false; // custom blocks
+            if (block.BlockID == Block.orange_portal) return "orange";
+            if (block.BlockID == Block.blue_portal)   return "blue";
+            if (block.BlockID == Block.air_portal)    return "air";
+            if (block.BlockID == Block.lava_portal)   return "lava";
+            if (block.BlockID == Block.water_portal)  return "water";
             
-            block = Block.Byte(name);
-            return !Block.Props[block].IsPortal;
+            return lvl == null ? Block.Name(block.BlockID) : lvl.BlockName(block);
         }
         
-        static string FormatCustom(Level lvl, BlockProps props) {
-            if (!props.IsPortal) return null;
-            BlockDefinition def = lvl.CustomBlockDefs[props.BlockId];
-            return def == null ? null : def.Name.Replace(" ", "");
+        static void GetAllNames(Player p, List<string> names) {
+            GetCoreNames(names, p.level);          
+            for (int i = Block.CpeCount; i < Block.Count; i++) {
+                ExtBlock block = ExtBlock.FromRaw((byte)i);
+                string name = Format(block, p.level, p.level.BlockProps);
+                if (name != null) names.Add(name);
+            }
+        }
+        
+        static void GetCoreNames(List<string> names, Level lvl) {
+            BlockProps[] props = lvl == null ? lvl.BlockProps : Block.Props;
+            for (int i = Block.air; i < Block.Count; i++) {
+                ExtBlock block = ExtBlock.FromIndex(i);
+                if (block.BlockID == Block.custom_block) continue;
+                
+                string name = Format(block, lvl, props);
+                if (name != null) names.Add(name);
+            }
         }
         
         public override void Help(Player p) {
@@ -216,14 +221,11 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%T/portal [block] multi");
             Player.Message(p, "%HPlace multiple blocks for entries, then a red block for exit.");
             
-            string blocks = Block.Props.Join(props => Format(props));
-            if (!Player.IsSuper(p)) {
-                string custom = p.level.CustomBlockProps.Join(props => FormatCustom(p.level, props));
-                if (blocks != "" && custom != "")
-                    blocks = blocks + ", " + custom;
-            }
-
-            Player.Message(p, "%H  Supported blocks: %S{0}", blocks);
+            List<string> names = new List<string>();
+            if (Player.IsSuper(p)) GetCoreNames(names, null);
+            else GetAllNames(p, names);
+            
+            Player.Message(p, "%H  Supported blocks: %S{0}", names.Join());
             Player.Message(p, "%T/portal show %H- Shows portals (green = entry, red = exit)");
         }
     }

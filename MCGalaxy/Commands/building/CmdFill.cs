@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Building {
         protected override bool DoDraw(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             DrawArgs dArgs = (DrawArgs)state;
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
-            ExtBlock old = p.level.GetExtBlock(x, y, z);
+            ExtBlock old = p.level.GetBlock(x, y, z);
             if (!CommandParser.IsBlockAllowed(p, "fill over", old)) return false;
             
             FillDrawOp op = (FillDrawOp)dArgs.Op;

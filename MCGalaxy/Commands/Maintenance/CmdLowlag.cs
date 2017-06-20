@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Maintenance {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
-            if (message == "" && Server.updateTimer.Interval > 1000) {
+            if (message == "" && Server.PositionInterval > 1000) {
                 Server.PositionInterval = 100;
                 Chat.MessageGlobal("&dLow lag %Sturned &cOFF %S- positions update every &b100 %Sms.");
             } else if (message == "") {
@@ -36,7 +36,6 @@ namespace MCGalaxy.Commands.Maintenance {
                 Server.PositionInterval = interval;
                 Chat.MessageGlobal("Positions now update every &b{0} %Smilliseconds.", interval);
             }
-            Server.updateTimer.Interval = Server.PositionInterval;
             SrvProperties.Save();
         }
 

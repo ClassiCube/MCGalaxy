@@ -52,8 +52,7 @@ namespace MCGalaxy.Blocks.Physics {
                     int i = indices[j];
                     ushort posX = (ushort)(x + (i / 5) - 2);
                     ushort posZ = (ushort)(z + (i % 5) - 2);
-                    if (lvl.GetTile(posX, (ushort)(y - 1), posZ) == Block.air &&
-                        lvl.GetTile(posX, y, posZ) == Block.air)
+                    if (lvl.IsAirAt(posX, (ushort)(y - 1), posZ) && lvl.IsAirAt(posX, y, posZ))
                     {
                         if (posX < x) {
                             posX = (ushort)((posX + x) / 2);

@@ -78,7 +78,7 @@ namespace MCGalaxy {
                     defs = JsonConvert.DeserializeObject<BlockDefinition[]>(json);
                 }
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 defs = new BlockDefinition[Block.Count];
             }
             
@@ -120,24 +120,27 @@ namespace MCGalaxy {
             GlobalDefs[Block.air] = DefaultSet.MakeCustomBlock(Block.air);
             GlobalDefs[Block.air].Name = "Air fallback";
             
-            GlobalProps = new BlockProps[Block.Count];
-            for (int i = 0; i < Block.Count; i++)
-                GlobalProps[i] = new BlockProps((byte)i);
-            
             try {
                 if (File.Exists(GlobalPath)) {
                     File.Copy(GlobalPath, GlobalBackupPath, true);
                 }
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
             
             Save(true, null);
-            BlockProps.Load("global", BlockDefinition.GlobalProps);
-            
             // As the BlockDefinition instances in levels will now be different
             // to the instances in GlobalDefs, we need to update them.
             if (oldDefs != null) UpdateLoadedLevels(oldDefs);
+        }
+        
+        public static void LoadGlobalProps() {
+            GlobalProps = new BlockProps[Block.Count * 2];
+            for (int i = 0; i < Block.Count; i++) {
+                GlobalProps[i] = Block.Props[i];
+                GlobalProps[i + Block.Count] = BlockProps.MakeDefault();
+            }
+            BlockProps.Load("global", GlobalProps, true);
         }
         
         static void UpdateLoadedLevels(BlockDefinition[] oldGlobalDefs) {
@@ -145,32 +148,28 @@ namespace MCGalaxy {
             foreach (Level lvl in loaded) {
                 for (int i = 0; i < lvl.CustomBlockDefs.Length; i++) {
                     if (lvl.CustomBlockDefs[i] != oldGlobalDefs[i]) continue;
-                    lvl.CustomBlockDefs[i] = GlobalDefs[i];
-                    lvl.CustomBlockProps[i] = GlobalProps[i];
+                    
+                    lvl.BlockProps[i] = GlobalProps[i];
+                    lvl.UpdateCustomBlock((byte)i, GlobalDefs[i]);
                 }
             }
         }
         
         
         public static void Add(BlockDefinition def, BlockDefinition[] defs, Level level) {
-            byte block = def.BlockID;
+            byte raw = def.BlockID;
             bool global = defs == GlobalDefs;
-            if (global) {
-                Level[] loaded = LevelInfo.Loaded.Items;
-                foreach (Level lvl in loaded) {
-                    if (lvl.CustomBlockDefs[block] == null) {
-                        lvl.CustomBlockDefs[block] = def;
-                    }
-                }
-            }
-            defs[block] = def;
+            if (global) UpdateGlobalCustom(def);
+            
+            defs[raw] = def;
             if (global) Block.SetDefaultNames();
+            if (!global) level.UpdateBlockHandler(ExtBlock.FromRaw(raw));
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
                 if (!pl.hasBlockDefs) continue;
-                if (global && pl.level.CustomBlockDefs[block] != GlobalDefs[block]) continue;
+                if (global && pl.level.CustomBlockDefs[raw] != GlobalDefs[raw]) continue;
                 
                 if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
                     pl.Send(Packet.DefineBlockExt(def, true, pl.hasCP437));
@@ -187,28 +186,33 @@ namespace MCGalaxy {
         }
         
         public static void Remove(BlockDefinition def, BlockDefinition[] defs, Level level) {
-            byte block = def.BlockID;
+            byte raw = def.BlockID;
             bool global = defs == GlobalDefs;
-            if (global) {
-                Level[] loaded = LevelInfo.Loaded.Items;
-                foreach (Level lvl in loaded) {
-                    if (lvl.CustomBlockDefs[block] == GlobalDefs[block]) {
-                        lvl.CustomBlockDefs[block] = null;
-                    }
-                }
-            }
-            defs[block] = null;
+            if (global) UpdateGlobalCustom(def);
+            
+            defs[raw] = null;
             if (global) Block.SetDefaultNames();
+            if (!global) level.UpdateBlockHandler(ExtBlock.FromRaw(raw));
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
-                if (global && pl.level.CustomBlockDefs[block] != null) continue;
+                if (global && pl.level.CustomBlockDefs[raw] != null) continue;
                 
                 if (pl.hasBlockDefs)
-                    pl.Send(Packet.UndefineBlock(block));
+                    pl.Send(Packet.UndefineBlock(raw));
             }
             Save(global, level);
+        }
+        
+        static void UpdateGlobalCustom(BlockDefinition def) {
+            byte raw = def.BlockID;
+            Level[] loaded = LevelInfo.Loaded.Items;
+            
+            foreach (Level lvl in loaded) {
+                if (lvl.CustomBlockDefs[raw] != GlobalDefs[raw]) continue;
+                lvl.UpdateCustomBlock(raw, def);
+            }
         }
         
         
@@ -240,7 +244,7 @@ namespace MCGalaxy {
             LeftTex = id; RightTex = id; FrontTex = id; BackTex = id;
         }
         
-                
+        
         internal static void SendLevelCustomBlocks(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;
             for (int i = 1; i < defs.Length; i++) {
@@ -257,14 +261,14 @@ namespace MCGalaxy {
             }
         }
         
-        public static void UpdateFallback(bool global, byte block, Level level) {         
-            Player[] players = PlayerInfo.Online.Items;            
+        public static void UpdateFallback(bool global, byte block, Level level) {
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
                 if (pl.hasBlockDefs) continue;
                 
                 // if custom block is replacing core block, need to always reload for fallback
-                if (block >= Block.CpeCount && !pl.level.HasCustomBlocks) continue;
+                if (block >= Block.CpeCount && !pl.level.MayHaveCustomBlocks) continue;
                 
                 LevelActions.ReloadMap(pl, pl, false);
             }

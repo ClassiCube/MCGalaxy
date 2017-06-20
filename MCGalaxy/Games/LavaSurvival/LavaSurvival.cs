@@ -104,9 +104,10 @@ namespace MCGalaxy.Games
 
             deaths.Clear();
             active = true;
-            Server.s.Log("[Lava Survival] Game started.");
+            Logger.Log(LogType.GameActivity, "[Lava Survival] Game started.");
+            
             try { LoadMap(String.IsNullOrEmpty(mapName) ? maps[rand.Next(maps.Count)] : mapName); }
-            catch (Exception e) { Server.ErrorLog(e); active = false; return 4; }
+            catch (Exception e) { Logger.LogError(e); active = false; return 4; }
             if (OnGameStart != null)
                 OnGameStart(map);
             return 0;
@@ -131,7 +132,7 @@ namespace MCGalaxy.Games
             catch { }
             map.Unload(true, false);
             map = null;
-            Server.s.Log("[Lava Survival] Game stopped.");
+            Logger.Log(LogType.GameActivity, "[Lava Survival] Game stopped.");
             return 0;
         }
 
@@ -151,9 +152,9 @@ namespace MCGalaxy.Games
                 announceTimer.Start();
                 startTime = DateTime.Now;
                 roundActive = true;
-                Server.s.Log("[Lava Survival] Round started. Map: " + map.ColoredName);
+                Logger.Log(LogType.GameActivity, "[Lava Survival] Round started. Map: " + map.ColoredName);
             }
-            catch (Exception e) { Server.ErrorLog(e); }
+            catch (Exception e) { Logger.LogError(e); }
         }
 
         public void EndRound()
@@ -170,10 +171,10 @@ namespace MCGalaxy.Games
                 catch { }
                 map.setPhysics(5);
                 map.ChatLevel("The round has ended!");
-                Server.s.Log("[Lava Survival] Round ended. Voting...");
+                Logger.Log(LogType.GameActivity, "[Lava Survival] Round ended. Voting...");
                 StartVote();
             }
-            catch (Exception e) { Server.ErrorLog(e); }
+            catch (Exception e) { Logger.LogError(e); }
         }
 
         public void DoFlood()
@@ -185,7 +186,7 @@ namespace MCGalaxy.Games
             {
                 announceTimer.Stop();
                 map.ChatLevel("&4Look out, here comes the flood!");
-                Server.s.Log("[Lava Survival] Map flooding.");
+                Logger.Log(LogType.GameActivity, "[Lava Survival] Map flooding.");
                 if (mapData.layer)
                 {
                     DoFloodLayer();
@@ -207,13 +208,13 @@ namespace MCGalaxy.Games
                         OnLavaFlood(mapSettings.blockFlood.X, mapSettings.blockFlood.Y, mapSettings.blockFlood.Z);
                 }
             }
-            catch (Exception e) { Server.ErrorLog(e); }
+            catch (Exception e) { Logger.LogError(e); }
         }
 
         public void DoFloodLayer()
         {
             map.ChatLevel("&4Layer " + mapData.currentLayer + " flooding...");
-            Server.s.Log("[Lava Survival] Layer " + mapData.currentLayer + " flooding.");
+            Logger.Log(LogType.GameActivity, "[Lava Survival] Layer " + mapData.currentLayer + " flooding.");
             map.Blockchange(mapSettings.blockLayer.X, (ushort)(mapSettings.blockLayer.Y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), mapSettings.blockLayer.Z, mapData.block, true);
             if (OnLayerFlood != null)
                 OnLayerFlood(mapSettings.blockLayer.X, (ushort)(mapSettings.blockLayer.Y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), mapSettings.blockLayer.Z);
@@ -347,7 +348,7 @@ namespace MCGalaxy.Games
                     EndVote();
                     voteTimer.Dispose();
                 }
-                catch (Exception e) { Server.ErrorLog(e); }
+                catch (Exception e) { Logger.LogError(e); }
             };
             voteTimer.Start();
             voteActive = true;
@@ -365,7 +366,7 @@ namespace MCGalaxy.Games
             if (!voteActive) return;
 
             voteActive = false;
-            Server.s.Log("[Lava Survival] Vote ended.");
+            Logger.Log(LogType.GameActivity, "[Lava Survival] Vote ended.");
             KeyValuePair<string, int> most = new KeyValuePair<string, int>(String.Empty, -1);
             foreach (KeyValuePair<string, int> kvp in votes)
             {
@@ -388,7 +389,7 @@ namespace MCGalaxy.Games
                     LoadMap(most.Key);
                     transferTimer.Dispose();
                 }
-                catch (Exception e) { Server.ErrorLog(e); }
+                catch (Exception e) { Logger.LogError(e); }
             };
             transferTimer.Start();
         }

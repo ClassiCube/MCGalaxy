@@ -46,7 +46,7 @@ namespace MCGalaxy.Generator {
         }
 
         void ReportProgress( int relativeIncrease, string message ) {
-            Server.s.Log( message );
+            Logger.Log(LogType.SystemActivity, message );
         }
         
 
@@ -291,7 +291,7 @@ namespace MCGalaxy.Generator {
                     for( int dz = -args.BeachExtent; !found && dz <= args.BeachExtent; dz++ )
                         for( int dy = -args.BeachHeight; dy <= 0; dy++ )
                 {
-                    if( dx * dx + dy * dy + dy * dy > beachExtentSqr ) continue;
+                    if( dx * dx + dy * dy + dz * dz > beachExtentSqr ) continue;
                     int xx = x + dx, yy = y + dy, zz = z + dz;
                     if( xx < 0 || xx >= map.Width || yy < 0 || yy >= map.Height || zz < 0 || zz >= map.Length ) continue;
                     
@@ -304,8 +304,8 @@ namespace MCGalaxy.Generator {
                 
                 if( found ) {
                     map.SetTile( (ushort)x, (ushort)y, (ushort)z, bSeaFloor );
-                    if( y > 0 && map.GetTile( (ushort)x, (ushort)y, (ushort)(z - 1) ) == bGround ) {
-                        map.SetTile( (ushort)x, (ushort)y, (ushort)(z - 1), bSeaFloor );
+                    if( y > 0 && map.GetTile( (ushort)x, (ushort)(y - 1), (ushort)z ) == bGround ) {
+                        map.SetTile( (ushort)x, (ushort)(y - 1), (ushort)z, bSeaFloor );
                     }
                 }
             }
@@ -410,9 +410,9 @@ namespace MCGalaxy.Generator {
             Level map = genArgs.Level;
             
             float ratio = map.Height / 96.0f;
-            args.MaxHeight = (int) Math.Round(args.MaxHeight*ratio);
-            args.MaxDepth = (int) Math.Round(args.MaxDepth*ratio);
-            args.SnowAltitude = (int) Math.Round(args.SnowAltitude*ratio);
+            args.MaxHeight = (int)Math.Round(args.MaxHeight * ratio);
+            args.MaxDepth = (int)Math.Round(args.MaxDepth * ratio);
+            args.SnowAltitude = (int)Math.Round(args.SnowAltitude * ratio);
             
             args.Theme = theme;
             args.AddTrees = theme == MapGenTheme.Forest;

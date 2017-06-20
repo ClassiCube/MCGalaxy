@@ -108,6 +108,6 @@ namespace MCGalaxy.Commands.Building {
         up, down, layer, verticalX, verticalZ, // fill
         cone, hcone, icone, hicone, volcano,   // draw
         pyramid, hpyramid, ipyramid, hipyramid,// draw
-        sphere, hsphere, circle,               // draw
+        sphere, hsphere, circle, hcircle       // draw
     }
 }

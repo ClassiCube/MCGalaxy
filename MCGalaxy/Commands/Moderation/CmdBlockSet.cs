@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             byte block = Block.Byte(args[0]);
             if (block == Block.Invalid) { Player.Message(p, "Could not find block entered"); return; }
-            if (!CommandParser.IsBlockAllowed(p, "change permissions of ", (ExtBlock)block)) return;
+            if (!CommandParser.IsBlockAllowed(p, "change permissions of", (ExtBlock)block)) return;
 
             if (args.Length == 2 && args[1][0] == '+') {
                 Group grp = GetGroup(p, args[1].Substring(1));
@@ -82,9 +82,11 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void UpdatePermissions(byte block, Player p, string message) {
-            BlockPerms.Save(BlockPerms.List);
+            BlockPerms.Save();
             BlockPerms.Load();
-            BlockPerms.ResendBlockPermissions(block);
+            if (block < Block.CpeCount) {
+                BlockPerms.ResendBlockPermissions(block);
+            }
             
             Chat.MessageGlobal("&d{0}%S{1}", Block.Name(block), message);
             if (Player.IsSuper(p))

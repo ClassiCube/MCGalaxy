@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing.Ops {
             Max.X += cState.Width - 1; Max.Y += cState.Height - 1; Max.Z += cState.Length - 1;
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             CopyState state = CopyState;
             bool pasteAir = state.PasteAir;            
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);

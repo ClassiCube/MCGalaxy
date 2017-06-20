@@ -27,12 +27,12 @@ namespace MCGalaxy.Blocks.Physics {
 
             switch (rand.Next(1, 15)) {
                 case 1:
-                    if (lvl.GetTile(x, (ushort)(y - 1), z) == Block.air)
+                    if (lvl.IsAirAt(x, (ushort)(y - 1), z))
                         lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), lvl.blocks[C.b]);
                     else goto case 3;
                     break;
                 case 2:
-                    if (lvl.GetTile(x, (ushort)(y + 1), z) == Block.air)
+                    if (lvl.IsAirAt(x, (ushort)(y + 1), z))
                         lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y + 1), z), lvl.blocks[C.b]);
                     else goto case 6;
                     break;

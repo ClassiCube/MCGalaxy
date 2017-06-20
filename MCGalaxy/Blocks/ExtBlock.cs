@@ -47,6 +47,9 @@ namespace MCGalaxy {
         /// <summary> Returns whether the type of this extended block is the air block. </summary>
         public bool IsAir { get { return BlockID == Block.air; } }
         
+        /// <summary> Returns the index of this block within an array. </summary>
+        public int Index { get { return BlockID != Block.custom_block ? BlockID : (ExtID + Block.Count); } }
+        
         
         /// <summary> Returns the raw (for client side) block ID of this block. </summary>
         public byte RawID {
@@ -61,6 +64,12 @@ namespace MCGalaxy {
         public static ExtBlock FromRaw(byte raw, bool customBit) {
             if (!customBit) return (ExtBlock)raw;
             return new ExtBlock(Block.custom_block, raw);
+        }
+        
+        public static ExtBlock FromIndex(int index) {
+            if (index < Block.Count)
+                return new ExtBlock((byte)index, 0);
+            return new ExtBlock(Block.custom_block, (byte)(index - Block.Count));
         }
         
         /// <summary> Constructs an extended block. </summary>
@@ -96,5 +105,8 @@ namespace MCGalaxy {
             return (a.BlockID == Block.custom_block && b.BlockID == Block.custom_block) 
                 ? a.ExtID != b.ExtID : a.BlockID != b.BlockID;
         }
+        
+        
+        public override string ToString() { return BlockID + ", " + ExtID; }
     }
 }

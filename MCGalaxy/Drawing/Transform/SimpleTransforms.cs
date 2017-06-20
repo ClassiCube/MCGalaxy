@@ -28,7 +28,7 @@ namespace MCGalaxy.Drawing.Transforms {
         public static NoTransform Instance = new NoTransform();
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, 
-                                     DrawOp op, Brush brush, Action<DrawOpBlock> output) {
+                                     DrawOp op, Brush brush, DrawOpOutput output) {
             op.Perform(marks, brush, output);
         }
     }
@@ -50,7 +50,7 @@ namespace MCGalaxy.Drawing.Transforms {
         }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, 
-                                     DrawOp op, Brush brush, Action<DrawOpBlock> output) {
+                                     DrawOp op, Brush brush, DrawOpOutput output) {
             P = (op.Min + op.Max) / 2;
             dirX = 1; dirY = 1; dirZ = 1;
             width = lvl.Width; height = lvl.Height; length = lvl.Length;
@@ -66,7 +66,7 @@ namespace MCGalaxy.Drawing.Transforms {
             op.Perform(marks, brush, b => OutputBlock(b, output));
         }
         
-        void OutputBlock(DrawOpBlock b, Action<DrawOpBlock> output) {
+        void OutputBlock(DrawOpBlock b, DrawOpOutput output) {
             int dx = b.X - P.X, dy = b.Y - P.Y, dz = b.Z - P.Z;
             
             // Scale out until we hit the next block

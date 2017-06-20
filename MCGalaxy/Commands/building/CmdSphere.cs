@@ -26,11 +26,12 @@ namespace MCGalaxy.Commands.Building {
         public override string shortcut { get { return "sp"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("sphereh", null, "hollow"), 
-                    new CommandAlias("sph", null, "hollow"), new CommandAlias("circle", null, "circle" ) }; }
+            get { return new[] { new CommandAlias("sphereh", null, "hollow"),
+                    new CommandAlias("sph", null, "hollow"), new CommandAlias("circle", null, "circle" ),
+                    new CommandAlias("circleh", null, "hollowcircle") }; }
         }
-        protected override string PlaceMessage { 
-            get { return "Place a block for the centre, then another for the radius."; } 
+        protected override string PlaceMessage {
+            get { return "Place a block for the centre, then another for the radius."; }
         }
         
         protected override DrawMode GetMode(string[] parts) {
@@ -38,6 +39,7 @@ namespace MCGalaxy.Commands.Building {
             if (msg == "solid") return DrawMode.solid;
             else if (msg == "hollow") return DrawMode.hollow;
             else if (msg == "circle") return DrawMode.circle;
+            else if (msg == "hollowcircle") return DrawMode.hcircle;
             return DrawMode.normal;
         }
         
@@ -45,6 +47,7 @@ namespace MCGalaxy.Commands.Building {
             switch (dArgs.Mode) {
                 case DrawMode.hollow: return new AdvHollowSphereDrawOp();
                 case DrawMode.circle: return new EllipsoidDrawOp();
+                case DrawMode.hcircle: return new EllipsoidHollowDrawOp();
             }
             return new AdvSphereDrawOp();
         }
@@ -66,7 +69,8 @@ namespace MCGalaxy.Commands.Building {
             int dy = Math.Abs(m[0].Y - m[1].Y);
             int dz = Math.Abs(m[0].Z - m[1].Z);
 
-            if (mode != DrawMode.circle) {
+            bool circle = mode == DrawMode.circle || mode == DrawMode.hcircle;
+            if (!circle) {
                 int R = (int)Math.Sqrt(dx * dx + dy * dy + dz * dz);
                 return new Vec3S32(R, R, R);
             } else if (dx >= dy && dz >= dy) {
@@ -85,7 +89,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%T/sphere <brush args> <mode>");
             Player.Message(p, "%HCreates a sphere, with the first point as the centre, " +
                            "and second being the radius.");
-            Player.Message(p, "   %HModes: &fsolid/hollow/circle");
+            Player.Message(p, "   %HModes: &fsolid/hollow/circle/hollowcircle");
             Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
         }
     }

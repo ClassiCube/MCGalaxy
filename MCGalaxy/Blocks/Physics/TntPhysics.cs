@@ -121,8 +121,10 @@ namespace MCGalaxy.Blocks.Physics {
                                          bool force = false, TntWarsGame game = null) {
             Random rand = new Random();
             if ((lvl.physics < 2 || lvl.physics == 5) && !force) return;
-            int index = lvl.PosToInt(x, y, z);
-            if (index >= 0 && !Block.Props[lvl.blocks[index]].OPBlock)
+            
+            int index;
+            ExtBlock block = lvl.GetBlock(x, y, z, out index);
+            if (index >= 0 && !lvl.BlockProps[block.Index].OPBlock)
                 lvl.AddUpdate(index, Block.tntexplosion, true);
 
             Explode(lvl, x, y, z, size + 1, rand, -1, game);

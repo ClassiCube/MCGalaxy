@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Backup of {0} does not exist.", name); return null;
             }
             
-            Server.s.Log("Attempting to load backup");
+            Logger.Log(LogType.Warning, "Attempting to load backup map for " + name);
             level = Level.Load(name, LevelInfo.MapPath(name) + ".backup");
             if (level != null) return level;
             
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.World {
             
             if (Directory.Exists(backupPath + "/" + name)) {
                 int num = Directory.GetDirectories(backupPath + "/" + name).Length;
-                Server.s.Log("Attempting to load latest backup, number " + num + " instead.");
+                Logger.Log(LogType.Warning, "Attempting to load latest backup of {0}, number {1} instead.", name, num);
                 
                 string path = LevelInfo.BackupPath(name, num.ToString());
                 level = Level.Load(name, path);

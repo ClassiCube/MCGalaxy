@@ -49,10 +49,15 @@ namespace MCGalaxy.Scripting {
         public IScripting() {
             compiler = CodeDomProvider.CreateProvider(ProviderName);
             if (compiler == null) {
-                Server.s.Log("WARNING: Provider " + ProviderName + 
-                             " is missing, you will be unable to compile " + Ext + " commands.");
+                Logger.Log(LogType.Warning, 
+            	           "WARNING: Provider {0} is missing, you will be unable to compile {1} commands.", 
+            	           ProviderName, Ext);
                 // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
             }
+        }
+        
+        public bool SourceFileExists(string cmdName) {
+            return File.Exists(SourceDir + "Cmd" + cmdName + Ext);
         }
         
         public void CreateNew(string cmdName) {
@@ -154,8 +159,9 @@ namespace MCGalaxy.Scripting {
             foreach (string cmdName in list) {
                 if (cmdName == "") continue;
                 string error = IScripting.Load("Cmd" + cmdName);
-                if (error != null) { Server.s.Log(error); continue; }
-                Server.s.Log("AUTOLOAD: Loaded Cmd" + cmdName + ".dll");
+                if (error != null) { Logger.Log(LogType.Warning, error); continue; }
+                
+                Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded Cmd{0}.dll", cmdName);
             }
         }
         
@@ -173,22 +179,22 @@ namespace MCGalaxy.Scripting {
                 foreach (Command cmd in commands)
                     Command.all.Add(cmd);
             } catch (FileNotFoundException e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 return command + ".dll does not exist in the DLL folder, or is missing a dependency. Details in the error log.";
             } catch (BadImageFormatException e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 return command + ".dll is not a valid assembly, or has an invalid dependency. Details in the error log.";
             } catch (PathTooLongException) {
                 return "Class name is too long.";
             } catch (FileLoadException e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 return command + ".dll or one of its dependencies could not be loaded. Details in the error log.";
             } catch (InvalidCastException e) {
                 //if the structure of the code is wrong, or it has syntax error or other code problems
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 return command + ".dll has invalid code structure, please check code again for errors.";
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 return "An unknown error occured and has been logged.";
             }
             return null;
@@ -203,7 +209,7 @@ namespace MCGalaxy.Scripting {
                 object instance = Activator.CreateInstance(t);
                 
                 if (instance == null) {
-                    Server.s.Log("Command \"" + t.Name + "\" could not be loaded.");
+                    Logger.Log(LogType.Warning, "Command \"{0}\" could not be loaded.", t.Name);
                     throw new BadImageFormatException();
                 }
                 commands.Add((Command)instance);

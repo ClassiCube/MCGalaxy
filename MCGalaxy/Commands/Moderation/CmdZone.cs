@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Moderation {
                 } else { //if they cant, it warns them, the ops and logs it on the server!
                     Player.Message(p, "You can't delete a zone which is above your rank!");
                     Chat.MessageOps(p.name + " tried to delete a zone that is above their rank!");
-                    Server.s.Log(p.name + " tried to delete a zone that is above their rank!");
+                    Logger.Log(LogType.SuspiciousActivity, "{0} tried to delete a zone that is above their rank!", p.name);
                 }
             } else {
                 Help(p);

@@ -90,11 +90,11 @@ namespace MCGalaxy.Commands.Misc {
                 return false;
             } else if (result == AccessResult.BelowMinRank) {
                 Player.Message(p, "Only {0}%S+ may normally visit this map. {1}%S is ranked {2}",
-                               Group.GetColoredName(p.level.permissionvisit),
+                               Group.GetColoredName(p.level.VisitAccess.Min),
                                who.ColoredName, who.group.ColoredName);
             } else if (result == AccessResult.AboveMaxRank) {
                 Player.Message(p, "Only {0}%S and below may normally visit this map. {1}%S is ranked {2}",
-                               Group.GetColoredName(p.level.pervisitmax),
+                               Group.GetColoredName(p.level.VisitAccess.Max),
                                who.ColoredName, who.group.ColoredName);
             }
             

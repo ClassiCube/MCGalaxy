@@ -22,7 +22,6 @@ using MCGalaxy.Drawing.Ops;
 namespace MCGalaxy.Drawing.Brushes {
     public sealed class SimplePasteBrush : Brush {
         readonly CopyState state;
-        int index;
         
         public SimplePasteBrush(CopyState state) { this.state = state; }
         
@@ -41,18 +40,12 @@ namespace MCGalaxy.Drawing.Brushes {
             int z = (op.Coords.Z - op.Min.Z) % state.Length;
             if (z < 0) z += state.Length;
             
-            index = state.GetIndex(x, y, z);
-            ExtBlock block;
-            block.BlockID = state.Blocks[index];
-            block.ExtID = state.ExtBlocks[index];
-            return block;
+            return state.Get(x, y, z);
         }
     }
     
     public sealed class PasteBrush : Brush {
-        readonly CopyState state;
-        int index;
-        
+        readonly CopyState state;     
         public ExtBlock[] Include, Exclude;
         
         public PasteBrush(CopyState state) { this.state = state; }
@@ -72,11 +65,7 @@ namespace MCGalaxy.Drawing.Brushes {
             int z = (op.Coords.Z - op.Min.Z) % state.Length;
             if (z < 0) z += state.Length;
             
-            index = state.GetIndex(x, y, z);
-            ExtBlock block;
-            block.BlockID = state.Blocks[index];
-            block.ExtID = state.ExtBlocks[index];
-            
+            ExtBlock block = state.Get(x, y, z);            
             if (Exclude != null) {
                 for (int i = 0; i < Exclude.Length; i++) {
                     if (block == Exclude[i]) return ExtBlock.Invalid;

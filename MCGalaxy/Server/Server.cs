@@ -19,21 +19,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Net.Sockets;
-using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Drawing;
 using MCGalaxy.Eco;
-using MCGalaxy.Events;
 using MCGalaxy.Games;
+using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
-using Newtonsoft.Json;
 
 namespace MCGalaxy {
     public sealed partial class Server {
-       
+        
         public Server() {
             Server.s = this;
         }
@@ -45,17 +42,25 @@ namespace MCGalaxy {
             return cancelcommand;
         }
         
+        [Obsolete("Use Logger.LogError(Exception)")]
+        public static void ErrorLog(Exception ex) { Logger.LogError(ex); }
+        
+        [Obsolete("Use Logger.Log(LogType, String)")]
+        public void Log(string message) { Logger.Log(LogType.SystemActivity, message); }
+        
         void CheckFile(string file) {
             if (File.Exists(file)) return;
             
-            Log(file + " doesn't exist, Downloading");
+            Logger.Log(LogType.SystemActivity, file + " doesn't exist, Downloading..");
             try {
-                using (WebClient web = new WebClient())
-                    web.DownloadFile(Updater.BaseURL + file + "?raw=true", file);
-                if (File.Exists(file))
-                    Log(file + " download succesful!");
+                using (WebClient client = HttpUtil.CreateWebClient()) {
+                    client.DownloadFile(Updater.BaseURL + file + "?raw=true", file);
+                }
+            	if (File.Exists(file)) {
+            	    Logger.Log(LogType.SystemActivity, file + " download succesful!");
+            	}
             } catch {
-                Log("Downloading " + file + " failed, please try again later");
+                Logger.Log(LogType.Warning, "Downloading {0} failed, please try again later", file);
             }
         }
         
@@ -75,7 +80,7 @@ namespace MCGalaxy {
             StartTime = DateTime.UtcNow;
             StartTimeLocal = StartTime.ToLocalTime();
             shuttingDown = false;
-            Log("Starting Server");
+            Logger.Log(LogType.SystemActivity, "Starting Server");
             try {
                 if (File.Exists("Restarter.exe"))
                     File.Delete("Restarter.exe");
@@ -114,11 +119,12 @@ namespace MCGalaxy {
             Background.QueueOnce(LoadMainLevel);
             Plugin.Load();
             Background.QueueOnce(UpgradeTasks.UpgradeOldBlacklist);
-            Background.QueueOnce(LoadPlayerLists);
             Background.QueueOnce(LoadAutoloadMaps);
             Background.QueueOnce(UpgradeTasks.MovePreviousLevelFiles);
             Background.QueueOnce(UpgradeTasks.UpgradeOldLockdown);
+            Background.QueueOnce(UpgradeTasks.UpgradeOldTempranks);
             Background.QueueOnce(UpgradeTasks.UpgradeDBTimeSpent);
+            Background.QueueOnce(LoadPlayerLists);
             
             Background.QueueOnce(SetupSocket);
             Background.QueueOnce(InitTimers);
@@ -128,17 +134,9 @@ namespace MCGalaxy {
             Devs.Clear();
             Mods.Clear();
             Background.QueueOnce(InitTasks.UpdateStaffList);
-            
-            MainScheduler.QueueRepeat(ServerTasks.TemprankExpiry, 
-                                      null, TimeSpan.FromMinutes(1));
-            MainScheduler.QueueRepeat(ServerTasks.CheckState, 
-                                      null, TimeSpan.FromSeconds(3));
-            
-            Background.QueueRepeat(ServerTasks.AutoSave, 
-                                   1, TimeSpan.FromSeconds(Server.backupInterval));
-            Background.QueueRepeat(ServerTasks.BlockUpdates, 
-                                   null, TimeSpan.FromSeconds(Server.blockInterval));
-            Background.QueueRepeat(ThreadSafeCache.DBCache.CleanupTask, 
+
+            ServerTasks.QueueTasks();
+            Background.QueueRepeat(ThreadSafeCache.DBCache.CleanupTask,
                                    null, TimeSpan.FromMinutes(5));
         }
         
@@ -157,13 +155,10 @@ namespace MCGalaxy {
             if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");
             if (!Directory.Exists("bots")) Directory.CreateDirectory("bots");
             if (!Directory.Exists("text")) Directory.CreateDirectory("text");
-            TempRanks.EnsureExists();
             RankInfo.EnsureExists();
             Ban.EnsureExists();
 
             if (!Directory.Exists("extra")) Directory.CreateDirectory("extra");
-            if (!Directory.Exists("extra/copy/")) Directory.CreateDirectory("extra/copy/");
-            if (!Directory.Exists("extra/copyBackup/")) Directory.CreateDirectory("extra/copyBackup/");
             if (!Directory.Exists("extra/Waypoints")) Directory.CreateDirectory("extra/Waypoints");
             if (!Directory.Exists("blockdefs")) Directory.CreateDirectory("blockdefs");
         }
@@ -198,11 +193,12 @@ namespace MCGalaxy {
             BlockDefinition.LoadGlobal();
             ImagePalette.Load();
             
-            SrvProperties.Load(Paths.ServerPropsFile);
+            SrvProperties.Load();
             Group.InitAll();
             Command.InitAll();
             CommandPerms.Load();
             Block.SetBlocks();
+            BlockDefinition.LoadGlobalProps();
             Awards.Load();
             Economy.Load();
             WarpList.Global.Load(null);
@@ -240,38 +236,6 @@ namespace MCGalaxy {
             CommandExtraPerms.Save();
         }
 
-        public static void Setup() {
-            try {
-                IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port);
-                listen = new Socket(endpoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                listen.Bind(endpoint);
-                listen.Listen((int)SocketOptionName.MaxConnections);
-                listen.BeginAccept(Accept, null);
-            }
-            catch (SocketException e) { ErrorLog(e); s.Log("Error Creating listener, socket shutting down"); }
-            catch (Exception e) { ErrorLog(e); s.Log("Error Creating listener, socket shutting down"); }
-        }
-
-        static void Accept(IAsyncResult result) {
-            if (shuttingDown) return;
-
-            Player p = null;
-            bool begin = false;
-            try {
-                p = new Player(listen.EndAccept(result));
-                //new Thread(p.Start).Start();
-                listen.BeginAccept(Accept, null);
-                begin = true;
-            } catch (SocketException) {
-                if (p != null) p.Disconnect();
-                if (!begin) listen.BeginAccept(Accept, null);
-            } catch (Exception e) {
-                ErrorLog(e);
-                if (p != null) p.Disconnect();
-                if (!begin) listen.BeginAccept(Accept, null);
-            }
-        }
-
         public static void Exit(bool restarting, string msg) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) { p.save(); }
@@ -279,16 +243,12 @@ namespace MCGalaxy {
 
             Player.connections.ForEach(p => p.Leave(msg));
             Plugin.Unload();
-            if (listen != null) listen.Close();
+            if (Listener != null) Listener.Close();
+            
             try {
                 IRC.Disconnect(restarting ? "Server is restarting." : "Server is shutting down.");
-            } catch { 
+            } catch {
             }
-        }
-
-        [Obsolete("Use LevelInfo.Loaded.Add()")]
-        public static void addLevel(Level level) {
-            LevelInfo.Loaded.Add(level);
         }
 
         public void PlayerListUpdate() {
@@ -303,90 +263,25 @@ namespace MCGalaxy {
             if (OnURLChange != null) OnURLChange(url);
         }
 
-        public void Log(string message, bool systemMsg = false) {
-            if (ServerLog != null)  {
-                ServerLog(message);
-                if (cancellog) { cancellog = false; return; }
-            }         
-            if (!systemMsg) OnServerLogEvent.Call(message);
-            
-            string now = DateTime.Now.ToString("(HH:mm:ss) ");
-            if (!systemMsg && OnLog != null) OnLog(now + message);
-            if (systemMsg && OnSystem != null) OnSystem(now + message);
-            Logger.Write(now + message + Environment.NewLine);
-        }
-        
-        public void OpLog(string message, bool systemMsg = false) {
-            if (ServerOpLog != null) {
-                ServerOpLog(message);
-                if (canceloplog) { canceloplog = false; return; }
-            }
-            
-            string now = DateTime.Now.ToString("(HH:mm:ss) ");
-            if (OnOp != null) {
-                if (!systemMsg) OnOp(now + message);
-                else OnSystem(now + message);
-            }
-            Logger.Write(now + message + Environment.NewLine);
-        }
-
-        public void AdminLog(string message, bool systemMsg = false) {
-            if (ServerAdminLog != null) {
-                ServerAdminLog(message);
-                if (canceladmin) { canceladmin = false; return; }
-            }
-            
-            string now = DateTime.Now.ToString("(HH:mm:ss) ");
-            if (OnAdmin != null) {
-                if (!systemMsg) OnAdmin(now + message);
-                else OnSystem(now + message);
-            }
-            Logger.Write(now + message + Environment.NewLine);
-        }
-
-        public void ErrorCase(string message) {
-            if (OnError != null) OnError(message);
-        }
-
-        public void CommandUsed(string message) {
-            string now = DateTime.Now.ToString("(HH:mm:ss) ");
-            if (OnCommand != null) OnCommand(now + message);
-            Logger.Write(now + message + Environment.NewLine);
-        }
-
-        public static void ErrorLog(Exception ex) {
-            if (ServerError != null) ServerError(ex);
-            OnServerErrorEvent.Call(ex);
-            Logger.WriteError(ex);
-            
-            try {
-                s.Log("!!!Error! See " + Logger.ErrorLogPath + " for more information.");
-            } catch { 
-            }
-        }
-
         static void RandomMessage(SchedulerTask task) {
-            if (Player.number != 0 && messages.Count > 0)
+        	if (PlayerInfo.Online.Count > 0 && messages.Count > 0) {
                 Chat.MessageGlobal(messages[new Random().Next(0, messages.Count)]);
+            }
         }
 
         internal void SettingsUpdate() {
             if (OnSettingsUpdate != null) OnSettingsUpdate();
         }
-
-        public static string FindColor(string name) {
-            return Group.findPlayerGroup(name).color;
-        }
         
         /// <summary> Sets the main level of the server that new players spawn in. </summary>
-        /// <returns> true if main level was changed, false if not 
+        /// <returns> true if main level was changed, false if not
         /// (same map as current main, or given map doesn't exist).</returns>
         public static bool SetMainLevel(string mapName) {
             if (mapName.CaselessEq(level)) return false;
             Level oldMain = mainLevel;
             
             Level lvl = LevelInfo.FindExact(mapName);
-            if (lvl == null) 
+            if (lvl == null)
                 lvl = CmdLoad.LoadLevel(null, mapName);
             if (lvl == null) return false;
             
@@ -403,8 +298,12 @@ namespace MCGalaxy {
             GC.WaitForPendingFinalizers();
             
             long end = GC.GetTotalMemory(false);
-            double delta = (start - end) / 1024.0;
-            Server.s.Log("GC performed (freed " + delta.ToString("F2") + " KB)", true);
+            double deltaKB = (start - end) / 1024.0;
+            if (deltaKB >= 100.0) {
+                string track = (end / 1024.0).ToString("F2");
+                string delta = deltaKB.ToString("F2");
+                Logger.Log(LogType.BackgroundActivity, "GC performed (tracking {0} KB, freed {1} KB)", track, delta);
+            }
         }
     }
 }

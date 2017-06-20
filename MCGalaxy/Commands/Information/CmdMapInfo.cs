@@ -244,12 +244,12 @@ namespace MCGalaxy.Commands.Info {
                 RealmOwner = lvl.RealmOwner;
                 BlockDBEntries = lvl.BlockDB.TotalEntries();
                 
-                visit = lvl.permissionvisit; build = lvl.permissionbuild;
-                visitmax = lvl.pervisitmax; buildmax = lvl.perbuildmax;
-                VisitWhitelist = new List<string>(lvl.VisitWhitelist);
-                VisitBlacklist = new List<string>(lvl.VisitBlacklist);
-                BuildWhitelist = new List<string>(lvl.BuildWhitelist);
-                BuildBlacklist = new List<string>(lvl.BuildBlacklist);
+                visit = lvl.VisitAccess.Min; visitmax = lvl.VisitAccess.Max;
+                build = lvl.BuildAccess.Min; buildmax = lvl.BuildAccess.Max;
+                VisitWhitelist = new List<string>(lvl.VisitAccess.Whitelisted);
+                VisitBlacklist = new List<string>(lvl.VisitAccess.Blacklisted);
+                BuildWhitelist = new List<string>(lvl.BuildAccess.Whitelisted);
+                BuildBlacklist = new List<string>(lvl.BuildAccess.Blacklisted);
                 
                 Fog = lvl.FogColor; Sky = lvl.SkyColor; Clouds = lvl.CloudColor;
                 Light = lvl.LightColor; Shadow = lvl.ShadowColor;

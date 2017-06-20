@@ -151,9 +151,9 @@ namespace MCGalaxy.Maths {
                     for (int x = min.X; x <= max.X; x++)
             {
                 ushort xP = (ushort)x, yP = (ushort)y, zP = (ushort)z;
-                ExtBlock block = lvl.GetExtBlock(xP, yP, zP);
+                ExtBlock block = lvl.GetBlock(xP, yP, zP);
                 
-                AABB blockBB = Block.BlockAABB(block, lvl).Offset(x * 32, y * 32, z * 32);
+                AABB blockBB = lvl.blockAABBs[block.Index].Offset(x * 32, y * 32, z * 32);
                 if (!bb.Intersects(blockBB)) continue;
                 
                 BlockDefinition def = lvl.GetBlockDef(block);

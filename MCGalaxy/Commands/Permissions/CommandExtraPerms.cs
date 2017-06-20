@@ -35,7 +35,18 @@ namespace MCGalaxy.Commands {
         public string Description = "";
         
         /// <summary> The number / identifier of this extra permission. </summary>
-        public int Number;        
+        public int Number;
+        
+        
+        /// <summary> Creates a copy of this instance. </summary>
+        public CommandExtraPerms Copy() {
+            CommandExtraPerms perms = new CommandExtraPerms();
+            perms.CmdName = CmdName;
+            perms.MinRank = MinRank;
+            perms.Description = Description;
+            perms.Number = Number;
+            return perms;
+        }
         
         static List<CommandExtraPerms> list = new List<CommandExtraPerms>();
         
@@ -95,8 +106,8 @@ namespace MCGalaxy.Commands {
                 try {
                     SaveCore();
                 } catch (Exception ex) {
-                    Server.s.Log("Saving " + Paths.CmdExtraPermsFile + " failed.");
-                    Server.ErrorLog(ex);
+                    Logger.Log(LogType.Warning, "Saving {0} failed.", Paths.CmdExtraPermsFile);
+                    Logger.LogError(ex);
                 }
             }
         }
@@ -137,8 +148,8 @@ namespace MCGalaxy.Commands {
                         string[] parts = line.Split(':');
                         LoadExtraPerm(parts);
                     } catch (Exception ex) {
-                        Server.s.Log("Loading an additional command permission failed!!");
-                        Server.ErrorLog(ex);
+                        Logger.Log(LogType.Warning, "Loading an additional command permission failed!!");
+                        Logger.LogError(ex);
                     }
                 }
             }

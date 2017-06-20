@@ -234,7 +234,7 @@ namespace MCGalaxy.Games {
 
                 infectMessages = Utils.ReadAllLinesList("text/infectmessages.txt");
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
             if (infectMessages.Count == 0)
                 infectMessages = new List<string>(defMessages);

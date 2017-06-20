@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands.Moderation {
             File.Move("extra/reported/" + args[1] + ".txt", "extra/reportedbackups/" + args[1] + ".txt");
             Player.Message(p, "&a" + args[1] + "'s report has been deleted.");
             Chat.MessageOps(p.ColoredName + " %Sdeleted " + args[1] + "'s report.");
-            Server.s.Log(args[1] + "'s report has been deleted by " + p.name);
+            Logger.Log(LogType.UserActivity, "{1}'s report has been deleted by {0}", p.name, args[1]);
         }
         
         void HandleClear(Player p, string[] args) {
@@ -122,9 +122,10 @@ namespace MCGalaxy.Commands.Moderation {
                     File.Delete("extra/reportedbackups/" + name);
                 File.Move(path, "extra/reportedbackups/" + name);
             }
+            
             Player.Message(p, "%aYou have cleared all reports!");
             Chat.MessageOps(p.ColoredName + "%c cleared ALL reports!");
-            Server.s.Log(p.name + " cleared ALL reports!");
+            Logger.Log(LogType.UserActivity, p.name + " cleared ALL reports!");
         }
         
         void HandleAdd(Player p, string[] args) {

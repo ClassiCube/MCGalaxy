@@ -32,7 +32,8 @@ namespace MCGalaxy {
         public string Path;
         
         List<string> names = new List<string>(), lines = new List<string>();
-        readonly object locker = new object(), saveLocker = new object();
+        internal readonly object locker = new object();
+        readonly object saveLocker = new object();
 
         /// <summary> Returns a copy of all names in the list. </summary>
         public List<string> AllNames() {
@@ -104,12 +105,12 @@ namespace MCGalaxy {
         public void Save() { Save(true); }
         
         /// <summary> Saves the list of names to disc, optionally logging to console. </summary>
-        public void Save(bool console) {
+        public void Save(bool log) {
             lock (saveLocker) {
                 using (StreamWriter w = new StreamWriter(Path))
                     SaveEntries(w);
             }
-            if (console) Server.s.Log("SAVED: " + Path, true);
+            if (log) Logger.Log(LogType.BackgroundActivity, "SAVED: " + Path);
         }
         
         void SaveEntries(StreamWriter w) {
@@ -126,7 +127,7 @@ namespace MCGalaxy {
             
             if (!File.Exists(path)) {
                 File.Create(path).Close();
-                Server.s.Log("CREATED NEW: " + path);
+                Logger.Log(LogType.SystemActivity, "CREATED NEW: " + path);
                 return list;
             }
             

@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (message[0] == '#') {
                 message = message.Remove(0, 1).Trim();
                 stealth = true;
-                Server.s.Log("Stealth joker attempted");
+                Logger.Log(LogType.UserActivity, "Stealth joker attempted");
             }
 
             Player who = PlayerInfo.FindMatches(p, message);

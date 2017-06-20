@@ -32,10 +32,10 @@ namespace MCGalaxy.Commands.World {
             if (args.Length < 3) { Help(p); return; }
             
             BlockProps[] scope = GetScope(p, args[0]);
-            if (scope == null) return;
+            if (scope == null) return;            
+            ExtBlock block = GetBlock(p, scope, args[1]);
+            if (block.IsInvalid) return;
             
-            byte block = GetBlock(p, scope, args[1]);
-            if (block == Block.Invalid) return;
             string prop = args[2].ToLower();
             SetProperty(p, scope, block, prop, args);
         }
@@ -50,79 +50,82 @@ namespace MCGalaxy.Commands.World {
                     Player.Message(p, "Cannot use level scope from {0}.",  src);
                     return null;
                 }
-                return p.level.CustomBlockProps;
+                return p.level.BlockProps;
             }
             
             Player.Message(p, "&cScope must \"core\", \"global\", or \"level\"");
             return null;
         }
         
-        byte GetBlock(Player p, BlockProps[] scope, string input) {
-            byte block = 0;
+        ExtBlock GetBlock(Player p, BlockProps[] scope, string input) {
             if (scope == Block.Props) {
-                if (!byte.TryParse(input, out block))
-                    block = Block.Byte(input);
+                byte raw;
+                if (!byte.TryParse(input, out  raw))
+                    raw = Block.Byte(input);
                 
-                if (Block.Name(block).CaselessEq("unknown")) {
+                if (Block.Name(raw).CaselessEq("unknown")) {
                     Player.Message(p, "&cThere is no block with id or name \"{0}\"", input);
-                    block = Block.Invalid;
+                    return ExtBlock.Invalid;
                 }
+                return new ExtBlock(raw, 0);
             } else if (scope == BlockDefinition.GlobalProps) {
-                block = BlockDefinition.GetBlock(input, BlockDefinition.GlobalDefs);
-                if (block == Block.Invalid)
+                byte raw = BlockDefinition.GetBlock(input, BlockDefinition.GlobalDefs);
+                if (raw == Block.Invalid)
                     Player.Message(p, "&cThere is no global custom block with id or name \"{0}\"", input);
+                return ExtBlock.FromRaw(raw);
             } else {
-                block = BlockDefinition.GetBlock(input, p.level.CustomBlockDefs);
-                if (block == Block.Invalid)
+                byte raw = BlockDefinition.GetBlock(input, p.level.CustomBlockDefs);
+                if (raw == Block.Invalid)
                     Player.Message(p, "&cThere is no level custom block with id or name \"{0}\"", input);
-                if (p.level.CustomBlockDefs[block] == BlockDefinition.GlobalDefs[block]) {
-                    Player.Message(p, "&cUse %T/blockprops global &cto modify this custom block."); return Block.Invalid;
+                
+                if (p.level.CustomBlockDefs[raw] == BlockDefinition.GlobalDefs[raw]) {
+                    Player.Message(p, "&cUse %T/blockprops global &cto modify this custom block."); return ExtBlock.Invalid;
                 }
+                return ExtBlock.FromRaw(raw);
             }
-            return block;
         }
         
         
-        void SetProperty(Player p, BlockProps[] scope, byte id,
+        void SetProperty(Player p, BlockProps[] scope, ExtBlock block,
                          string prop, string[] args) {
             if (prop == "portal") {
-                Toggle(p, scope, id, "a portal",
+                Toggle(p, scope, block, "a portal",
                        (ref BlockProps props) => props.IsPortal = !props.IsPortal,
                        (BlockProps props) => props.IsPortal);
             } else if (prop == "mb" || prop == "messageblock") {
-                Toggle(p, scope, id, "a message block",
+                Toggle(p, scope, block, "a message block",
                        (ref BlockProps props) => props.IsMessageBlock = !props.IsMessageBlock,
                        (BlockProps props) => props.IsMessageBlock);
             } else if (prop == "rails") {
-                Toggle(p, scope, id, "train rails",
+                Toggle(p, scope, block, "train rails",
                        (ref BlockProps props) => props.IsRails = !props.IsRails,
                        (BlockProps props) => props.IsRails);
             } else if (prop == "waterkills") {
-                Toggle(p, scope, id, "killed by water",
+                Toggle(p, scope, block, "killed by water",
                        (ref BlockProps props) => props.WaterKills = !props.WaterKills,
                        (BlockProps props) => props.WaterKills);
             } else if (prop == "lavakills") {
-                Toggle(p, scope, id, "killed by lava",
+                Toggle(p, scope, block, "killed by lava",
                        (ref BlockProps props) => props.LavaKills = !props.LavaKills,
                        (BlockProps props) => props.LavaKills);
             } else if (prop == "door") {
-                Toggle(p, scope, id, "a door",
+                Toggle(p, scope, block, "a door",
                        (ref BlockProps props) => props.IsDoor = !props.IsDoor,
                        (BlockProps props) => props.IsDoor);
             } else if (prop == "tdoor") {
-                Toggle(p, scope, id, "a tdoor",
+                Toggle(p, scope, block, "a tdoor",
                        (ref BlockProps props) => props.IsTDoor = !props.IsTDoor,
                        (BlockProps props) => props.IsTDoor);
             } else if (prop == "killer" || prop == "death") {
-                Toggle(p, scope, id, "a killer block",
+                Toggle(p, scope, block, "a killer block",
                        (ref BlockProps props) => props.KillerBlock = !props.KillerBlock,
                        (BlockProps props) => props.KillerBlock);
             } else if (prop == "deathmsg" || prop == "deathmessage") {
                 string msg = args.Length > 3 ? args[3] : null;
-                SetDeathMessage(p, scope, id, msg);
+                SetDeathMessage(p, scope, block, msg);
             } else if (prop == "animalai" || prop == "animal") {
                 string msg = args.Length > 3 ? args[3] : null;
-                SetEnum(p, scope, id, msg);
+                SetEnum(p, scope, block, msg);
             } else {
                 Help(p);
             }
@@ -130,74 +133,93 @@ namespace MCGalaxy.Commands.World {
         
         
         delegate void BoolSetter(ref BlockProps props);
-        static void Toggle(Player p, BlockProps[] scope, byte id, string type,
+        static void Toggle(Player p, BlockProps[] scope, ExtBlock block, string type,
                            BoolSetter setter, Func<BlockProps, bool> getter) {
-            BlockProps props = scope[id];
+            BlockProps props = scope[block.Index];
             setter(ref props);
-            scope[id] = props;
+            scope[block.Index] = props;
             Level lvl = Player.IsSuper(p) ? null : p.level;
             
             Player.Message(p, "Block {0} is {1}: {2}",
-                           BlockName(scope, lvl, id),
+                           BlockName(scope, lvl, block),
                            type, getter(props) ? "&aYes" : "&cNo");
-            OnPropsChanged(scope, lvl, id, false);
+            OnPropsChanged(scope, lvl, block, false);
         }
         
-        static void SetEnum(Player p, BlockProps[] scope, byte id, string msg) {
+        static void SetEnum(Player p, BlockProps[] scope, ExtBlock block, string msg) {
             Level lvl = Player.IsSuper(p) ? null : p.level;            
             AnimalAI ai = AnimalAI.None;
             if (!CommandParser.GetEnum(p, msg, "Animal AI", ref ai)) return;
             
-            scope[id].AnimalAI = ai;
+            scope[block.Index].AnimalAI = ai;
             Player.Message(p, "Animal AI for {0} set to: {1}",
-                               BlockName(scope, lvl, id), ai);
-            OnPropsChanged(scope, lvl, id, true);
+                               BlockName(scope, lvl, block), ai);
+            OnPropsChanged(scope, lvl, block, true);
         }
         
-        static void SetDeathMessage(Player p, BlockProps[] scope, byte id, string msg) {
-            scope[id].DeathMessage = msg;
+        static void SetDeathMessage(Player p, BlockProps[] scope, ExtBlock block, string msg) {
+            scope[block.Index].DeathMessage = msg;
             Level lvl = Player.IsSuper(p) ? null : p.level;
             
             if (msg == null) {
                 Player.Message(p, "Death message for {0} removed.",
-                               BlockName(scope, lvl, id));
+                               BlockName(scope, lvl, block));
             } else {
                 Player.Message(p, "Death message for {0} set to: {1}",
-                               BlockName(scope, lvl, id), msg);
+                               BlockName(scope, lvl, block), msg);
             }
-            OnPropsChanged(scope, lvl, id, false);
+            OnPropsChanged(scope, lvl, block, false);
         }
         
 
-        static void OnPropsChanged(BlockProps[] scope, Level level, byte id, bool physics) {
-            scope[id].Changed = true;
+        static void OnPropsChanged(BlockProps[] scope, Level level, ExtBlock block, bool physics) {
+            scope[block.Index].Changed = true;
             
             if (scope == Block.Props) {
-                BlockBehaviour.InitCoreHandlers();
-                if (physics) BlockBehaviour.InitCorePhysicsHandlers();
-                BlockProps.Save("core", scope);
+                BlockProps.Save("core", scope, i=> true);
+                Level[] loaded = LevelInfo.Loaded.Items;
+                
+                foreach (Level lvl in loaded) {
+                    lvl.UpdateBlockHandler(block);
+                    lvl.BlockProps[block.Index] = BlockDefinition.GlobalProps[block.Index];
+                }
             } else if (scope == BlockDefinition.GlobalProps) {
                 Level[] loaded = LevelInfo.Loaded.Items;
+                BlockProps.Save("global", scope, SelectGlobal);
+                
+                byte raw = block.RawID;
                 foreach (Level lvl in loaded) {
-                    if (lvl.CustomBlockDefs[id] != BlockDefinition.GlobalDefs[id]) continue;
-                    lvl.CustomBlockProps[id] = BlockDefinition.GlobalProps[id];
-                }
-                BlockProps.Save("global", scope);
+                    if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;                    
+                    lvl.BlockProps[block.Index] = BlockDefinition.GlobalProps[block.Index];
+                    lvl.UpdateBlockHandler(block);
+                }                
             } else {
-                BlockProps.Save("lvl_" + level.name, scope);
+                BlockProps.Save("lvl_" + level.name, scope, i => SelectLevel(level, i));
+                level.UpdateBlockHandler(block);
             }
         }
         
-        static string BlockName(BlockProps[] scope, Level lvl, byte raw) {
-            if (scope == Block.Props) return Block.Name(raw);
+        static bool SelectGlobal(int i) {
+            ExtBlock block = ExtBlock.FromIndex(i);
+            return !block.IsPhysicsType && BlockDefinition.GlobalDefs[block.RawID] != null;
+        }
+        
+        static bool SelectLevel(Level lvl, int i) {
+            ExtBlock block = ExtBlock.FromIndex(i);
+            return !block.IsPhysicsType && 
+                lvl.CustomBlockDefs[block.RawID] != BlockDefinition.GlobalDefs[block.RawID];
+        }
+        
+        static string BlockName(BlockProps[] scope, Level lvl, ExtBlock block) {
+            if (scope == Block.Props) return Block.Name(block.RawID);
             BlockDefinition def = null;
             
             if (scope == BlockDefinition.GlobalProps) {
-                def = BlockDefinition.GlobalDefs[raw];
+                def = BlockDefinition.GlobalDefs[block.RawID];
             } else {
-                def = lvl.CustomBlockDefs[raw];
+                def = lvl.CustomBlockDefs[block.RawID];
             }
-            return def == null ? raw.ToString() : def.Name.Replace(" ", "");
+            return def == null ? block.RawID.ToString() : def.Name.Replace(" ", "");
         }
         
         

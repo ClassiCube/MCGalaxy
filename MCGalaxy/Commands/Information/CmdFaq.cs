@@ -15,8 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using System.Collections.Generic;
-using System.IO;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdFaq : Command {        
@@ -26,11 +25,10 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
 
         public override void Use(Player p, string message) {
-            if (!File.Exists(Paths.FaqFile)) {
-                File.WriteAllText(Paths.FaqFile, "Example: What does this server run on? This server runs on &b" + Server.SoftwareName);
-            }
+            TextFile faqFile = TextFile.Files["FAQ"];
+            faqFile.EnsureExists();
             
-            string[] faq = File.ReadAllLines(Paths.FaqFile);
+            string[] faq = faqFile.GetText();
             Player.Message(p, "&cFAQ&f:");
             foreach (string line in faq)
                 Player.Message(p, "&f" + line);

@@ -90,7 +90,8 @@ namespace MCGalaxy.Blocks.Physics {
                 lvl.AddUpdate(index, Block.wood_float);
             } else {
                 index = lvl.IntOffset(C.b, 0, 1, 0);
-                if (Block.Convert(lvl.GetTile(index)) == Block.water) {
+                byte above = lvl.GetTile(index);
+                if (above == Block.waterstill || Block.Convert(above) == Block.water) {
                     lvl.AddUpdate(C.b, lvl.blocks[index]);
                     lvl.AddUpdate(index, Block.wood_float);
                 }
@@ -119,7 +120,7 @@ namespace MCGalaxy.Blocks.Physics {
             tree.SetData(rand, tree.DefaultSize(rand));
             tree.Generate(x, y, z, (xT, yT, zT, bT) =>
                         {
-                            if (bT == Block.leaf && lvl.GetTile(xT, yT, zT) != Block.air) return;
+                            if (bT == Block.leaf && !lvl.IsAirAt(xT, yT, zT)) return;
                             lvl.Blockchange(xT, yT, zT, (ExtBlock)bT);
                         });
             
@@ -132,16 +133,33 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             if (C.data.Data > 20) {
-                ExtBlock above = lvl.GetExtBlock(x, (ushort)(y + 1), z);
-                if (lvl.LightPasses(above))
-                    lvl.AddUpdate(C.b, Block.grass);
+                ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                if (lvl.LightPasses(above)) lvl.AddUpdate(C.b, Block.grass);
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
             } else {
                 C.data.Data++;
             }
         }
         
+        public static void DoGrass(Level lvl, ref Check C) {
+            if (!lvl.GrassGrow) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
+            ushort x, y, z;
+            lvl.IntToPos(C.b, out x, out y, out z);
+            
+            if (C.data.Data > 20) {
+                ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                if (!lvl.LightPasses(above)) lvl.AddUpdate(C.b, Block.dirt);
+                C.data.Data = PhysicsArgs.RemoveFromChecks;
+            } else {
+                C.data.Data++;
+            }
+        }
+        
+        
         public static void DoSponge(Level lvl, ref Check C, bool lava) {
+            byte target = lava ? Block.lava : Block.water;
+            byte alt    = lava ? Block.lavastill : Block.waterstill;
+            
             for (int y = -2; y <= +2; ++y)
                 for (int z = -2; z <= +2; ++z)
                     for (int x = -2; x <= +2; ++x)
@@ -150,13 +168,16 @@ namespace MCGalaxy.Blocks.Physics {
                 byte block = lvl.GetTile(index);
                 if (block == Block.Invalid) continue;
                 
-                if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
+                if (Block.Convert(block) == target || Block.Convert(block) == alt)
                     lvl.AddUpdate(index, Block.air);
             }
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
-        public static void DoSpongeRemoved(Level lvl, int b, bool lava = false) {
+        public static void DoSpongeRemoved(Level lvl, int b, bool lava) {
+            byte target = lava ? Block.lava : Block.water;
+            byte alt    = lava ? Block.lavastill : Block.waterstill;
+            
             for (int y = -3; y <= +3; ++y)
                 for (int z = -3; z <= +3; ++z)
                     for (int x = -3; x <= +3; ++x)
@@ -167,7 +188,7 @@ namespace MCGalaxy.Blocks.Physics {
                     byte block = lvl.GetTile(index);
                     if (block == Block.Invalid) continue;
                     
-                    if ((!lava && Block.Convert(block) == Block.water) || (lava && Block.Convert(block) == Block.lava))
+                    if (Block.Convert(block) == target || Block.Convert(block) == alt)
                         lvl.AddCheck(index);
                 }
             }

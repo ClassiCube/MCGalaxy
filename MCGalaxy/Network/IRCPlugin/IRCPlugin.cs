@@ -44,7 +44,8 @@ namespace MCGalaxy.Network {
         
         
         void HandleModerationAction(ModAction e) {
-            if (!Server.IRC.Enabled) return;
+            if (!Server.IRC.Enabled || !e.Announce) return;
+            
             switch (e.Type) {
                 case ModActionType.Warned:
                     Bot.Say(e.FormatMessage(e.TargetName, "&ewarned")); break;
@@ -58,7 +59,15 @@ namespace MCGalaxy.Network {
                 case ModActionType.UnbanIP:
                     Bot.Say(e.FormatMessage(e.TargetName, "&8IP unbanned"), true);
                     Bot.Say(e.FormatMessage("An IP", "&8IP unbanned")); break;
+                case ModActionType.Rank:
+                    Bot.Say(e.FormatMessage(e.TargetName, GetRankAction(e))); break;
             }
+        }
+        
+        static string GetRankAction(ModAction action) {
+            Group newRank = (Group)action.Metadata;
+            string prefix = newRank.Permission >= action.TargetGroup.Permission ? "promoted to " : "demoted to ";
+            return prefix + newRank.ColoredName;
         }
         
         void Player_PlayerAction(Player p, PlayerAction action,

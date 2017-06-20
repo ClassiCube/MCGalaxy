@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Events;
+using MCGalaxy.Commands.Chatting;
 
 namespace MCGalaxy.Core {
 
@@ -27,23 +28,33 @@ namespace MCGalaxy.Core {
 
             //DO NOT REMOVE THE TWO COMMANDS BELOW, /PONY AND /RAINBOWDASHLIKESCOOLTHINGS. -EricKilla
             if (cmd == "pony") {
-                if (p.ponycount < 2) {
+                Plugin.CancelPlayerEvent(PlayerEvents.PlayerCommand, p);
+                if (!MessageCmd.CanSpeak(p, cmd)) return;
+                int ponycount = p.Extras.GetInt("MCGalaxy_Core_Pony", 0);                
+                            
+                if (ponycount < 2) {
                     Chat.MessageGlobal("{0} %Sjust so happens to be a proud brony! Everyone give {0} %Sa brohoof!", p.ColoredName);
+                    Logger.Log(LogType.CommandUsage, "{0} used /{1}", p.name, cmd);
                 } else {
                     Player.Message(p, "You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
                 }
                 
-                p.ponycount++;
-                Plugin.CancelPlayerEvent(PlayerEvents.PlayerCommand, p);
+                ponycount++;
+                p.Extras.PutInt("MCGalaxy_Core_RD", ponycount);
             } else if (cmd == "rainbowdashlikescoolthings") {
-                if (p.rdcount < 2) {
-                    Chat.MessageGlobal("&4T&6H&eI&aS&3 S&9E&1R&4V&6E&eR &aJ&3U&9S&1T &4G&6O&eT &a2&30 &9P&1E&4R&6C&eE&aN&3T &9C&1O&4O&6L&eE&aR&3!");                   
+                Plugin.CancelPlayerEvent(PlayerEvents.PlayerCommand, p);
+                if (!MessageCmd.CanSpeak(p, cmd)) return;
+                int rdcount = p.Extras.GetInt("MCGalaxy_Core_RD", 0);
+                
+                if (rdcount < 2) {
+                    Chat.MessageGlobal("&4T&6H&eI&aS&3 S&9E&1R&4V&6E&eR &aJ&3U&9S&1T &4G&6O&eT &a2&30 &9P&1E&4R&6C&eE&aN&3T &9C&1O&4O&6L&eE&aR&3!");
+                    Logger.Log(LogType.CommandUsage, "{0} used /{1}", p.name, cmd);
                 } else {
                     Player.Message(p, "You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
                 }
                 
-                p.rdcount++;
-                Plugin.CancelPlayerEvent(PlayerEvents.PlayerCommand, p);
+                rdcount++;
+                p.Extras.PutInt("MCGalaxy_Core_RD", rdcount);
             }
         }
     }

@@ -34,7 +34,7 @@ namespace MCGalaxy.SQL {
             try {
                 transaction.Commit();
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 Rollback();
             } finally {
                 connection.Close();
@@ -46,7 +46,7 @@ namespace MCGalaxy.SQL {
                 transaction.Rollback();
                 return true;
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 return false;
             }
         }
@@ -66,7 +66,7 @@ namespace MCGalaxy.SQL {
                 }
             } catch (Exception e) {
                 System.IO.File.AppendAllText("MySQL_error.log", DateTime.Now + " " + query + "\r\n");
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 return false;
             }
         }

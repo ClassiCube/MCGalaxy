@@ -39,14 +39,14 @@ namespace MCGalaxy.Commands.Scripting {
                 Help(p); return;
             }
 
-            if (!File.Exists(IScripting.SourceDir + "Cmd" + args[0] + engine.Ext)) {
+            if (!engine.SourceFileExists(args[0])) {
                 Player.Message(p, "File &9Cmd" + args[0] + engine.Ext + " %Snot found."); return;
             }
             bool success = false;
             try {
                 success = engine.Compile(args[0]);
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 Player.Message(p, "An exception was thrown during compilation.");
                 return;
             }

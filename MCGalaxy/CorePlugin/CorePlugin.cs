@@ -46,8 +46,8 @@ namespace MCGalaxy.Core {
                                         Priority.Critical, this);
             OnEcoTransactionEvent.Register(EcoHandlers.HandleEcoTransaction,
                                            Priority.Critical, this);
-        	OnModActionEvent.Register(ModActionHandler.HandleModAction, 
-        	                          Priority.Critical, this);
+            OnModActionEvent.Register(ModActionHandler.HandleModAction, 
+                                      Priority.Critical, this);
             
             clearTask = Server.Background.QueueRepeat(IPThrottler.CleanupTask, null, 
                                                       TimeSpan.FromMinutes(10));

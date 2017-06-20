@@ -18,6 +18,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing {
     
@@ -40,14 +41,14 @@ namespace MCGalaxy.Drawing {
             data = bmp.LockBits(r, ImageLockMode.ReadOnly, bmp.PixelFormat);
         }
         
-        public void Iterate(Action<DrawOpBlock> output,
-                            Action<Pixel, Action<DrawOpBlock>> callback) {
+        public void Iterate(DrawOpOutput output,
+                            Action<Pixel, DrawOpOutput> callback) {
             if (data == null) IterateSlow(output, callback);
             else IterateFast(output, callback);
         }
         
-        unsafe void IterateFast(Action<DrawOpBlock> output,
-                                Action<Pixel, Action<DrawOpBlock>> callback) {
+        unsafe void IterateFast(DrawOpOutput output,
+                                Action<Pixel, DrawOpOutput> callback) {
             Pixel pixel;
             int width = bmp.Width, height = bmp.Height;
             byte* scan0 = (byte*)data.Scan0;
@@ -68,8 +69,8 @@ namespace MCGalaxy.Drawing {
             }
         }
         
-        void IterateSlow(Action<DrawOpBlock> output,
-                         Action<Pixel, Action<DrawOpBlock>> callback) {
+        void IterateSlow(DrawOpOutput output,
+                         Action<Pixel, DrawOpOutput> callback) {
             Pixel pixel;
             int width = bmp.Width, height = bmp.Height;
             for (int y = 0; y < height; y++)

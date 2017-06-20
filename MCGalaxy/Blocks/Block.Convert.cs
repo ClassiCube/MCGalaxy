@@ -29,7 +29,7 @@ namespace MCGalaxy
                 return block;
             if (Aliases.TryGetValue(type.ToLower(), out block))
                 return block;
-            return Block.Invalid;
+            return Invalid;
         }
         
         public static byte ConvertCPE(byte block) {
@@ -73,7 +73,7 @@ namespace MCGalaxy
                 case lava_fast: return lava;
                 case 71:
                 case 72:
-                    return Block.white;
+                    return white;
                 case door_tree: return trunk;
                 case door_obsidian: return obsidian;
                 case door_glass: return glass;
@@ -90,10 +90,10 @@ namespace MCGalaxy
                 case door_blue: return blue;
                 case door_book: return bookcase;
                 case door_gold: return goldsolid;
-                case door_cobblestone: return 4;
+                case door_cobblestone: return stone;
                 case door_red: return red;
 
-                case door_orange: return Block.orange;
+                case door_orange: return orange;
                 case door_yellow: return yellow;
                 case door_lightgreen: return lightgreen;
                 case door_aquagreen: return aquagreen;
@@ -142,8 +142,8 @@ namespace MCGalaxy
 
                 case WaterDown: return water;
                 case LavaDown: return lava;
-                case WaterFaucet: return Block.cyan;
-                case LavaFaucet: return Block.orange;
+                case WaterFaucet: return cyan;
+                case LavaFaucet: return orange;
 
                 case finiteWater: return water;
                 case finiteLava: return lava;
@@ -174,16 +174,16 @@ namespace MCGalaxy
                 case rockethead: return goldsolid;
                 case firework: return iron;
 
-                case Block.deathwater: return waterstill;
-                case Block.deathlava: return lavastill;
-                case Block.deathair: return air;
+                case deathwater: return waterstill;
+                case deathlava: return lavastill;
+                case deathair: return air;
                 case activedeathwater: return water;
                 case activedeathlava: return lava;
                 case fastdeathlava: return lava;
 
-                case Block.magma: return Block.lava;
-                case Block.geyser: return Block.water;
-                case Block.checkpoint: return Block.air;
+                case magma: return lava;
+                case geyser: return water;
+                case checkpoint: return air;
 
                 case air_flood:
                 case door_tree_air:

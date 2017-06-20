@@ -33,7 +33,7 @@ namespace MCGalaxy.Eco {
 
         public static void Load() {
             if (!File.Exists(Paths.EconomyPropsFile)) {
-                Server.s.Log("Economy properties don't exist, creating");
+                Logger.Log(LogType.SystemActivity, "Economy properties don't exist, creating");
                 Save();
             }
             
@@ -44,7 +44,7 @@ namespace MCGalaxy.Eco {
                     try {
                         ParseLine(line);
                     } catch (Exception ex) {
-                        Server.ErrorLog(ex);
+                        Logger.LogError(ex);
                     }
                 }
             }

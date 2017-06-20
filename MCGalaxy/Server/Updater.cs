@@ -20,7 +20,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
+using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
@@ -44,10 +46,10 @@ namespace MCGalaxy {
         public static void UpdateCheck(Player p = null) {
             CurrentUpdate = true;
             if (!Server.checkUpdates) return;
-            WebClient Client = new WebClient();
+            WebClient client = HttpUtil.CreateWebClient();
 
             try {
-                string raw = Client.DownloadString(CurrentVersionFile);
+                string raw = client.DownloadString(CurrentVersionFile);
                 Version latestVersion = new Version(raw);
                 if (latestVersion <= Server.Version) {
                     Player.Message(p, "No update found!");
@@ -61,30 +63,37 @@ namespace MCGalaxy {
                         PerformUpdate();
                     }
                 } else if (!msgOpen && !MCGalaxy.Gui.App.usingConsole) {
-                    msgOpen = true;
-                    if (MessageBox.Show("New version found. Would you like to update?", "Update?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-                        PerformUpdate();
-                    }
-                    msgOpen = false;
+                    // don't want message box blocking background scheduler thread
+                    Thread thread = new Thread(ShowUpdateMessageAsync);
+                    thread.Name = "MCGalaxy_UpdateMsgBox";
+                    thread.Start();
                 } else if (MCGalaxy.Gui.App.usingConsole) {
                     ConsoleColor prevColor = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("An update was found!");
-                    Console.WriteLine("Update using the file at " + DLLLocation + " and placing it over the top of your current MCGalaxy_.dll!");
-                    Console.WriteLine("Also update using the file at " + EXELocation + " and placing it over the top of your current MCGalaxy.exe");
+                    Console.WriteLine("Update using the file at " + DLLLocation + ", and replace MCGalaxy_.dll");
+                    Console.WriteLine("Also update using the file at " + EXELocation + ", and replace MCGalaxy.exe");
                     Console.ForegroundColor = prevColor;
                 }
-            } catch(Exception e) {
-                Logger.WriteError(e);
+            } catch (Exception e) {
+                Logger.LogError(e);
             }
             
-            Client.Dispose();
+            client.Dispose();
             CurrentUpdate = false;
+        }
+        
+        static void ShowUpdateMessageAsync() {
+            msgOpen = true;
+            if (MessageBox.Show("New version found. Would you like to update?", "Update?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                PerformUpdate();
+            }
+            msgOpen = false;
         }
         
         static void NotifyPlayersOfUpdate(Player p) {
             Chat.MessageAll("Update found. Prepare for restart in &f" + Server.restartcountdown + " %Sseconds.");
-            Server.s.Log("Update found. Prepare for restart in " + Server.restartcountdown + " seconds.");
+            Logger.Log(LogType.SystemActivity, "Update found. Prepare for restart in {0} seconds.", Server.restartcountdown);
             
             int timeLeft = Server.restartcountdown;
             System.Timers.Timer countDown = new System.Timers.Timer();
@@ -94,18 +103,19 @@ namespace MCGalaxy {
             countDown.Elapsed += delegate {
                 if (Server.autoupdate || p != null) {
                     Chat.MessageAll("Updating in &f" + timeLeft + " %Sseconds.");
-                    Server.s.Log("Updating in " + timeLeft + " seconds.");
+                    Logger.Log(LogType.SystemActivity, "Updating in {0} seconds.", timeLeft);
+                    
                     timeLeft = timeLeft - 1;
                     if (timeLeft < 0) {
                         Chat.MessageAll("---UPDATING SERVER---");
-                        Server.s.Log("---UPDATING SERVER---");
+                        Logger.Log(LogType.SystemActivity, "---UPDATING SERVER---");
                         countDown.Stop();
                         countDown.Dispose();
                         PerformUpdate();
                     }
                 } else {
                     Chat.MessageGlobal("Stopping auto restart.");
-                    Server.s.Log("Stopping auto restart.");
+                    Logger.Log(LogType.SystemActivity, "Stopping auto restart.");
                     countDown.Stop();
                     countDown.Dispose();
                 }
@@ -120,7 +130,7 @@ namespace MCGalaxy {
                 } catch {
                 }
                 
-                WebClient client = new WebClient();
+                WebClient client = HttpUtil.CreateWebClient();
                 client.DownloadFile(DLLLocation, "MCGalaxy_.update");
                 client.DownloadFile(EXELocation, "MCGalaxy.update");
                 client.DownloadFile(ChangelogLocation, "Changelog.txt");
@@ -145,7 +155,7 @@ namespace MCGalaxy {
                 }
                 MCGalaxy.Gui.App.ExitProgram(false, "Updating server.");
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
         }
         

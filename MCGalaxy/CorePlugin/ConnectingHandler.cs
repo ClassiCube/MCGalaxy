@@ -140,7 +140,7 @@ namespace MCGalaxy.Core {
             if (guests < Server.maxGuests) return true;
             
             if (Server.guestLimitNotify) Chat.MessageOps("Guest " + p.truename + " couldn't log in - too many guests.");
-            Server.s.Log("Guest " + p.truename + " couldn't log in - too many guests.");
+            Logger.Log(LogType.Warning, "Guest {0} couldn't log in - too many guests.", p.truename);
             p.Leave(null, "Server has reached max number of guests", true);
             return false;
         }

@@ -28,9 +28,6 @@ using MCGalaxy.Generator;
 using MCGalaxy.Levels.IO;
 using MCGalaxy.Util;
 
-//WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
-//You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
-
 namespace MCGalaxy {
     public enum LevelPermission {
         Banned = -20, Guest = 0, Builder = 30,
@@ -42,22 +39,7 @@ namespace MCGalaxy {
 
     public sealed partial class Level : IDisposable {
         
-        public Level(string n, ushort x, ushort y, ushort z) { Init(n, x, y, z); }
-        
-        [Obsolete("Use MapGen.Generate instead")]
-        public Level(string n, ushort x, ushort y, ushort z, string theme, int seed = 0, bool useSeed = false) {
-            Init(n, x, y, z);
-            string args = useSeed ? seed.ToString() : "";
-            MapGen.Generate(this, theme, args, null);
-        }
-        
-        [Obsolete("Use MapGen.Generate instead")]
-        public Level(string n, ushort x, ushort y, ushort z, string theme, string genArgs) {
-            Init(n, x, y, z);
-            MapGen.Generate(this, theme, genArgs, null);
-        }
-        
-        void Init(string n, ushort x, ushort y, ushort z) {
+        public Level(string n, ushort x, ushort y, ushort z) {
             Width = x; Height = y; Length = z;
             if (Width < 16) Width = 16;
             if (Height < 16) Height = 16;
@@ -69,12 +51,16 @@ namespace MCGalaxy {
             height = Length; depth = Length;
             #pragma warning restore 0612
 
-            CustomBlockDefs = new BlockDefinition[256];
             for (int i = 0; i < CustomBlockDefs.Length; i++)
                 CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
-            CustomBlockProps = new BlockProps[256];
-            for (int i = 0; i < CustomBlockProps.Length; i++)
-                CustomBlockProps[i] = BlockDefinition.GlobalProps[i];
+            for (int i = 0; i < BlockProps.Length; i++)
+                BlockProps[i] = BlockDefinition.GlobalProps[i];
+            
+            for (int i = 0; i < blockAABBs.Length; i++) {
+                ExtBlock block = ExtBlock.FromIndex(i);
+                blockAABBs[i] = Block.BlockAABB(block, this);
+            }
+            UpdateBlockHandlers();
             
             name = n; MapName = n.ToLower();
             BlockDB = new BlockDB(this);
@@ -103,7 +89,6 @@ namespace MCGalaxy {
 
         public void Dispose() {
             Extras.Clear();
-            liquids.Clear();
             leaves.Clear();
             ListCheck.Clear(); listCheckExists.Clear();
             ListUpdate.Clear(); listUpdateExists.Clear();
@@ -174,7 +159,7 @@ namespace MCGalaxy {
                 LevelUnload(this);
             OnLevelUnloadEvent.Call(this);
             if (cancelunload) {
-                Server.s.Log("Unload canceled by Plugin! (Map: " + name + ")");
+                Logger.Log(LogType.SystemActivity, "Unload canceled by Plugin! (Map: {0})", name);
                 cancelunload = false; return false;
             }
             MovePlayersToMain();
@@ -190,7 +175,7 @@ namespace MCGalaxy {
                     pl.p.canBuild = true;
                     TntWarsGame.SetTitlesAndColor(pl, true);
                 }
-                Server.s.Log("TNT Wars: Game deleted on " + name);
+                Logger.Log(LogType.GameActivity, "TNT Wars: Game deleted on " + name);
                 TntWarsGame.GameList.Remove(TntWarsGame.Find(this));
 
             }
@@ -207,7 +192,7 @@ namespace MCGalaxy {
                 Server.DoGC();
 
                 if (!silent) Chat.MessageOps(ColoredName + " %Swas unloaded.");
-                Server.s.Log(name + " was unloaded.");
+                Logger.Log(LogType.SystemActivity, name + " was unloaded.");
             }
             return true;
         }
@@ -266,12 +251,12 @@ namespace MCGalaxy {
                     
                     if (clearPhysics) ClearPhysics();
                 } else {
-                    Server.s.Log("Skipping level save for " + name + ".");
+                    Logger.Log(LogType.SystemActivity, "Skipping level save for " + name + ".");
                 }
             } catch (Exception e) {
-                Server.s.Log("FAILED TO SAVE :" + name);
+                Logger.Log(LogType.Warning, "FAILED TO SAVE :" + name);
                 Chat.MessageGlobal("FAILED TO SAVE {0}", ColoredName);
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
             Server.DoGC();
         }
@@ -289,8 +274,8 @@ namespace MCGalaxy {
             File.Copy(path + ".backup", path);
             SaveSettings(this);
 
-            Server.s.Log(string.Format("SAVED: Level \"{0}\". ({1}/{2}/{3})", name, players.Count,
-                                       PlayerInfo.Online.Count, Server.players));
+            Logger.Log(LogType.SystemActivity, "SAVED: Level \"{0}\". ({1}/{2}/{3})", 
+                       name, players.Count, PlayerInfo.Online.Count, Server.players);
             changed = false;
         }
 
@@ -312,12 +297,12 @@ namespace MCGalaxy {
                     backedup = true;
                     return backupNumber;
                 } catch (Exception e) {
-                    Server.ErrorLog(e);
-                    Server.s.Log("FAILED TO INCREMENTAL BACKUP :" + name);
+                    Logger.LogError(e);
+                    Logger.Log(LogType.Warning, "FAILED TO INCREMENTAL BACKUP :" + name);
                     return -1;
                 }
             }
-            Server.s.Log("Level unchanged, skipping backup");
+            Logger.Log(LogType.SystemActivity, "Level unchanged, skipping backup");
             return -1;
         }
         
@@ -347,7 +332,7 @@ namespace MCGalaxy {
             if (cancelload) { cancelload = false; return null; }
 
             if (!File.Exists(path)) {
-                Server.s.Log("Attempted to load " + name + ", but the level file does not exist.");
+                Logger.Log(LogType.Warning, "Attempted to load {0}, but the level file does not exist.", name);
                 return null;
             }
             
@@ -364,20 +349,20 @@ namespace MCGalaxy {
                 LoadMetadata(lvl);
                 Bots.BotsFile.LoadBots(lvl);
 
-                object locker = ThreadSafeCache.DBCache.Get(name);
+                object locker = ThreadSafeCache.DBCache.GetLocker(name);
                 lock (locker) {
                     LevelDB.LoadZones(lvl, name);
                     LevelDB.LoadPortals(lvl, name);
                     LevelDB.LoadMessages(lvl, name);
                 }
 
-                Server.s.Log(string.Format("Level \"{0}\" loaded.", lvl.name));
+                Logger.Log(LogType.SystemActivity, "Level \"{0}\" loaded.", lvl.name);
                 if (LevelLoaded != null)
                     LevelLoaded(lvl);
                 OnLevelLoadedEvent.Call(lvl);
                 return lvl;
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 return null;
             }
         }
@@ -388,23 +373,24 @@ namespace MCGalaxy {
                 if (propsPath != null) {
                     LvlProperties.Load(lvl, propsPath);
                 } else {
-                    Server.s.Log(".properties file for level " + lvl.MapName + " was not found.");
+                    Logger.Log(LogType.ConsoleMessage, ".properties file for level {0} was not found.", lvl.MapName);
                 }
                 
                 // Backwards compatibility for older levels which had .env files.
                 LvlProperties.LoadEnv(lvl);
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
             lvl.BlockDB.Cache.Enabled = lvl.UseBlockDB;
             
             BlockDefinition[] defs = BlockDefinition.Load(false, lvl);
             for (int i = 0; i < defs.Length; i++) {
                 if (defs[i] == null) continue;
-                lvl.CustomBlockDefs[i] = defs[i];
-                lvl.CustomBlockProps[i] = new BlockProps((byte)i);
+                lvl.UpdateCustomBlock((byte)i, defs[i]);
             }
-            BlockProps.Load("lvl_" + lvl.MapName, lvl.CustomBlockProps);
+            
+            MCGalaxy.Blocks.BlockProps.Load("lvl_" + lvl.MapName, lvl.BlockProps, true);
+            lvl.UpdateBlockHandlers();
         }
 
         public static bool CheckLoadOnGoto(string givenName) {
@@ -499,6 +485,35 @@ namespace MCGalaxy {
             public string Owner;
             public ushort bigX, bigY, bigZ;
             public ushort smallX, smallY, smallZ;
+        }
+        
+        public void UpdateBlockHandlers() {            
+            for (int i = 0; i < BlockProps.Length; i++) {
+                UpdateBlockHandler(ExtBlock.FromIndex(i));
+            }
+        }
+        
+        public void UpdateBlockHandler(ExtBlock block) {
+            bool nonSolid;
+            if (GetBlockDef(block) == null) {
+                nonSolid = Block.Walkthrough(Block.Convert(block.BlockID));
+            } else {
+                nonSolid = CustomBlockDefs[block.RawID].CollideType != CollideType.Solid;
+            }
+            
+            int i = block.Index;
+            deleteHandlers[i] = BlockBehaviour.GetDeleteHandler(block, BlockProps);
+            placeHandlers[i] = BlockBehaviour.GetPlaceHandler(block, BlockProps);
+            walkthroughHandlers[i] = BlockBehaviour.GetWalkthroughHandler(block, BlockProps, nonSolid);
+            physicsHandlers[i] = BlockBehaviour.GetPhysicsHandler(block, BlockProps);
+            physicsDoorsHandlers[i] = BlockBehaviour.GetPhysicsDoorsHandler(block, BlockProps);
+        }
+        
+        public void UpdateCustomBlock(byte raw, BlockDefinition def) {
+            CustomBlockDefs[raw] = def;
+            ExtBlock block = ExtBlock.FromRaw(raw);            
+            UpdateBlockHandler(block);
+            blockAABBs[block.Index] = Block.BlockAABB(block, this);
         }
     }
 }

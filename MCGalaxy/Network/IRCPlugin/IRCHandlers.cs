@@ -152,7 +152,7 @@ namespace MCGalaxy.Network {
         }
 
         void DoJoinLeaveMessage(string who, string verb, string channel) {
-            Server.s.Log(String.Format("{0} {1} channel {2}", who, verb, channel));
+            Logger.Log(LogType.IRCCActivity, "{0} {1} channel {2}", who, verb, channel);
             string which = bot.opchannels.CaselessContains(channel) ? " operator" : "";
             Player.GlobalIRCMessage(String.Format("%I(IRC) {0} {1} the{2} channel", who, verb, which));
         }
@@ -166,12 +166,12 @@ namespace MCGalaxy.Network {
             }
             
             if (user.Nick == bot.nick) return;
-            Server.s.Log(user.Nick + " left IRC");
+            Logger.Log(LogType.IRCCActivity, user.Nick + " left IRC");
             Player.GlobalIRCMessage("%I(IRC) " + user.Nick + " left");
         }
 
         void Listener_OnError(ReplyCode code, string message) {
-            Server.s.Log("IRC Error: " + message);
+            Logger.Log(LogType.IRCCActivity, "IRC Error: " + message);
         }
 
         void Listener_OnPrivate(UserInfo user, string message) {
@@ -206,11 +206,11 @@ namespace MCGalaxy.Network {
             if (ircCmd == Server.ircCommandPrefix && !HandleChannelCommand(user, channel, message, parts)) return;
 
             if (opchat) {
-                Server.s.Log(String.Format("(OPs): (IRC) {0}: {1}", user.Nick, message));
+                Logger.Log(LogType.IRCChat, "(OPs): (IRC) {0}: {1}", user.Nick, message);
                 Chat.MessageOps(String.Format("To Ops &f-%I(IRC) {0}&f- {1}", user.Nick,
                                               Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
             } else {
-                Server.s.Log(String.Format("(IRC) {0}: {1}", user.Nick, message));
+                Logger.Log(LogType.IRCChat, "(IRC) {0}: {1}", user.Nick, message);
                 Player.GlobalIRCMessage(String.Format("%I(IRC) {0}: &f{1}", user.Nick,
                                                       Server.profanityFilter ? ProfanityFilter.Parse(message) : message));
             }
@@ -236,11 +236,11 @@ namespace MCGalaxy.Network {
             if (!whoCmd || (DateTime.UtcNow - last).TotalSeconds <= 5) return false;
             
             try {
-                Player p = MakeIRCPlayer(user.Nick, channel);
+                Player p = new IRCPlayer(channel, user.Nick, bot);
                 p.group = Group.GuestRank;
                 Command.all.Find("players").Use(p, "");
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
             
             if (opchat) lastOpWho = DateTime.UtcNow;
@@ -250,11 +250,11 @@ namespace MCGalaxy.Network {
         
         bool HandleIRCCommand(UserInfo user, string channel, string cmdName, string cmdArgs) {
             Command cmd = Command.all.Find(cmdName);
-            Player p = MakeIRCPlayer(user.Nick, channel);
+            Player p = new IRCPlayer(channel, user.Nick, bot);
             if (cmd == null) { Player.Message(p, "Unknown command!"); return false; }
 
             string logCmd = cmdArgs == "" ? cmdName : cmdName + " " + cmdArgs;
-            Server.s.Log("IRC Command: /" + logCmd + " (by " + user.Nick + ")");
+            Logger.Log(LogType.CommandUsage, "/{0} (by {1} from IRC)", logCmd, user.Nick);
             
             try {
                 if (!p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return false; }
@@ -280,35 +280,48 @@ namespace MCGalaxy.Network {
             
             if (!foundAtAll) {
                 error = "You are not on the bot's list of users for some reason, please leave and rejoin."; return false;
-            }           
+            }
             if (bot.BannedCommands.Contains(cmdName)) {
                 error = "You are not allowed to use this command from IRC.";
             }
             return false;
         }
+
         
-        
-        static Player MakeIRCPlayer(string ircNick, string ircChannel) {
-            Player p = new Player("IRC");
-            p.group = Group.findPerm(Server.ircControllerRank);
-            if (p.group == null) p.group = Group.NobodyRank;
+        sealed class IRCPlayer : Player {
+            public readonly string IRCChannel, IRCNick;
+            public readonly IRCBot Bot;
             
-            p.ircChannel = ircChannel;
-            p.ircNick = ircNick;
-            p.color = "&a";
+            public IRCPlayer(string ircChannel, string ircNick, IRCBot bot) : base("IRC") {
+                group = Group.findPerm(Server.ircControllerRank);
+                if (group == null) group = Group.NobodyRank;
+                
+                IRCChannel = ircChannel;
+                IRCNick = ircNick;
+                color = "&a";
+                Bot = bot;
+                
+                if (ircNick != null)
+                    UserID = NameConverter.InvalidNameID("(IRC " + ircNick + ")");
+            }
             
-            if (ircNick != null)
-                p.UserID = NameConverter.InvalidNameID("(IRC " + ircNick + ")");
-            return p;
+            public override void SendMessage(byte id, string message, bool colorParse = true) {
+                message = IRCBot.ConvertMessage(message, colorParse);               
+                if (IRCChannel != null) {
+                    Bot.Message(IRCChannel, message);
+                } else {
+                    Bot.Pm(IRCNick, message);
+                }
+            }
         }
         
         void Listener_OnRegistered() {
-            Server.s.Log("Connected to IRC!");
+            Logger.Log(LogType.IRCCActivity, "Connected to IRC!");
             bot.reset = false;
             bot.retries = 0;
             
             Authenticate();
-            Server.s.Log("Joining channels...");
+            Logger.Log(LogType.IRCCActivity, "Joining channels...");
             JoinChannels();
         }
         
@@ -323,13 +336,13 @@ namespace MCGalaxy.Network {
         
         void Listener_OnPrivateNotice(UserInfo user, string notice) {
             if (!notice.CaselessStarts("You are now identified")) return;
-            Server.s.Log("Joining channels...");
+            Logger.Log(LogType.IRCCActivity, "Joining channels...");
             JoinChannels();
         }
         
         void Authenticate() {
             if (Server.ircIdentify && Server.ircPassword != "") {
-                Server.s.Log("Identifying with NickServ");
+                Logger.Log(LogType.IRCCActivity, "Identifying with NickServ");
                 bot.connection.Sender.PrivateMessage("NickServ", "IDENTIFY " + Server.ircPassword);
             }
         }
@@ -374,7 +387,7 @@ namespace MCGalaxy.Network {
             RemoveNick(user.Nick, chanNicks);
             
             if (reason != "") reason = " (" + reason + ")";
-            Server.s.Log(user.Nick + " kicked " + kickee + " from IRC" + reason);
+            Logger.Log(LogType.IRCCActivity, "{0} kicked {1} from IRC{2}", user.Nick, kickee, user.Nick);
             Player.GlobalIRCMessage("%I(IRC) " + user.Nick + " kicked " + kickee + reason);
         }
         
@@ -454,7 +467,7 @@ namespace MCGalaxy.Network {
             if (verify == IRCControllerVerify.None) return true;
             
             if (verify == IRCControllerVerify.HalfOp) {
-            	string prefix = GetPrefix(chanNicks[index]);
+                string prefix = GetPrefix(chanNicks[index]);
                 if (prefix == "" || prefix == "+") {
                     error = "You must be at least a half-op on the channel to use commands from IRC."; return false;
                 }

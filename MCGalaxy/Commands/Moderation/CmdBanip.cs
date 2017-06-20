@@ -64,7 +64,9 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 Player.Message(p, "You can only IP ban IPs used by players with a lower rank.");
                 Player.Message(p, name + "(" + grp.ColoredName + "%S) uses that IP.");
-                Server.s.Log(p.name + "failed to ipban " + ip + " - IP is also used by: " + name + "(" + grp.name + ")");
+                
+                Logger.Log(LogType.SuspiciousActivity, 
+                           "{0} failed to ipban {1} - IP is also used by: {2}({3})", p.name, ip, name, grp.name);
                 return false;
             }
             return true;

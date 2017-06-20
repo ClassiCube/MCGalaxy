@@ -15,8 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using System.Collections.Generic;
-using System.IO;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdOpRules : Command {
@@ -26,10 +25,8 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
 
         public override void Use(Player p, string message) {
-            if (!File.Exists(Paths.OprulesFile)) {
-                File.WriteAllText(Paths.OprulesFile, "No oprules entered yet!");
-            }
-            string[] oprules = File.ReadAllLines(Paths.OprulesFile);
+            TextFile oprulesFile = TextFile.Files["OpRules"];
+            oprulesFile.EnsureExists();
 
             Player who = p;
             if (message != "") {
@@ -40,6 +37,7 @@ namespace MCGalaxy.Commands.Info {
                 }
             }
 
+            string[] oprules = oprulesFile.GetText();
             Player.Message(who, "Server OPRules:");
             Player.MessageLines(who, oprules);
         }

@@ -228,7 +228,7 @@ namespace MCGalaxy {
         /// and finally saves the level properties file. </summary>
         public override void OnPermissionChanged(Player p, Group grp, string type) {
             Update();
-            Server.s.Log(type + " rank changed to " + grp.trueName + " on " + lvl.name + ".");
+            Logger.Log(LogType.UserActivity, "{0} rank changed to {1} on {2}.", type, grp.trueName, lvl.name);
             Chat.MessageLevel(lvl, type + " rank changed to " + grp.ColoredName + "%S.");
             if (p != null && p.level != lvl)
                 Player.Message(p, "{0} rank changed to {1} %Son {2}%S.", type, grp.ColoredName, lvl.ColoredName);
@@ -247,7 +247,7 @@ namespace MCGalaxy {
             }
             
             Update();
-            Server.s.Log(msg + " on " + lvl.name);
+            Logger.Log(LogType.UserActivity, "{0} on {1}", msg, lvl.name);
             Chat.MessageLevel(lvl, msg);
             if (p != null && p.level != lvl)
                 Player.Message(p, "{0} on %S{1}", msg, lvl.ColoredName);

@@ -123,6 +123,8 @@ namespace MCGalaxy.Blocks.Physics {
                 lvl.GetTile(lvl.IntOffset(index, 0, 2, 0)) == Block.air &&
                 lvl.GetTile(lvl.IntOffset(index, 0, 1, 0)) == Block.air) {
                 index = lvl.IntOffset(index, 0, 1, 0);
+            } else {
+                return false;
             }
 
             if (lvl.AddUpdate(index, lvl.blocks[C.b])) {

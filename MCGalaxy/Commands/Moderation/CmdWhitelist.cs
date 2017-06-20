@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Moderation {
             string src = p == null ? "(console)" : p.ColoredName;
             Chat.MessageOps(src + " %Sadded &f" + player + " %Sto the whitelist.");
             Server.whiteList.Save();
-            Server.s.Log("WHITELIST: Added " + player);
+            Logger.Log(LogType.UserActivity, "WHITELIST: Added " + player);
         }
         
         static void Remove(Player p, string player) {
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Moderation {
             string src = p == null ? "(console)" : p.ColoredName;
             Chat.MessageOps(src + " %Sremoved &f" + player + " %Sfrom the whitelist.");
             Server.whiteList.Save();
-            Server.s.Log("WHITELIST: Removed " + player);
+            Logger.Log(LogType.UserActivity, "WHITELIST: Removed " + player);
         }
         
         static void List(Player p, string[] args) {

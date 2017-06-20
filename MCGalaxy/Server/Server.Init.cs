@@ -17,14 +17,13 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Threading;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
-using MCGalaxy.Tasks;
 using MCGalaxy.Network;
+using MCGalaxy.Tasks;
+using MCGalaxy.Util;
 
 namespace MCGalaxy {
     
@@ -38,12 +37,12 @@ namespace MCGalaxy {
                 mainLevel.unload = false;
                 LevelInfo.Loaded.Add(mainLevel);
             } catch (Exception e) {
-                ErrorLog(e);
+                Logger.LogError(e);
             }
         }
         
         void GenerateMain() {
-            Log("main level not found, generating..");
+            Logger.Log(LogType.SystemActivity, "main level not found, generating..");
             mainLevel = new Level(level, 128, 64, 128);
             MapGen.Generate(mainLevel, "flat", "", null);
             mainLevel.Save();
@@ -55,25 +54,27 @@ namespace MCGalaxy {
                 UpgradeTasks.UpgradeOldAgreed();
                 agreed = PlayerList.Load("agreed.txt");
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
             
             bannedIP = PlayerList.Load("banned-ip.txt");
             ircControllers = PlayerList.Load("IRC_Controllers.txt");
-            muted = PlayerList.Load("muted.txt");
-            frozen = PlayerList.Load("frozen.txt");
             hidden = PlayerList.Load("hidden.txt");
             vip = PlayerList.Load("text/vip.txt");
             noEmotes = PlayerList.Load("text/emotelist.txt");
-            lockdown = PlayerList.Load("text/lockdown.txt");
-            
+            lockdown = PlayerList.Load("text/lockdown.txt");            
             jailed = PlayerExtList.Load("ranks/jailed.txt");
             models = PlayerExtList.Load("extra/models.txt");
             skins = PlayerExtList.Load("extra/skins.txt");
             reach = PlayerExtList.Load("extra/reach.txt");
             invalidIds = PlayerList.Load("extra/invalidids.txt");
-            tempBans = PlayerExtList.Load("text/tempbans.txt");
             rotations = PlayerExtList.Load("extra/rotations.txt");
+
+            muted = PlayerExtList.Load("ranks/muted.txt");
+            frozen = PlayerExtList.Load("ranks/frozen.txt");            
+            tempRanks = PlayerExtList.Load(Paths.TempRanksFile);
+            tempBans = PlayerExtList.Load(Paths.TempBansFile);            
+            ModerationTasks.QueueTasks();
             
             if (useWhitelist)
                 whiteList = PlayerList.Load("whitelist.txt");
@@ -90,48 +91,50 @@ namespace MCGalaxy {
         }
         
         void SetupSocket() {
-            Log("Creating listening socket on port " + port + "... ");
-            Setup();
+		    Logger.Log(LogType.SystemActivity, "Creating listening socket on port {0}... ", port);
+            Listener = new TcpListen();
+            
+            IPAddress ip;
+            if (!IPAddress.TryParse(Server.listenIP, out ip)) {
+                Logger.Log(LogType.Warning, "Unable to parse listen IP config key, listening on any IP");
+                ip = IPAddress.Any;
+            }            
+            Listener.Listen(ip, (ushort)port);
         }
         
         void InitHeartbeat() {
             try {
                 Heartbeat.InitHeartbeats();
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
         }
         
         void InitTimers() {
-            updateTimer.Elapsed += delegate {
-                Entities.GlobalUpdate();
-                PlayerBot.GlobalUpdatePosition();
-            };
-            updateTimer.Start();
+            TextFile announcementsFile = TextFile.Files["Announcements"];
+            announcementsFile.EnsureExists();
 
-            if (File.Exists(Paths.AnnouncementsFile)) {
-                string[] lines = File.ReadAllLines(Paths.AnnouncementsFile);
-                messages = new List<string>(lines);
-            } else {
-                using (File.Create(Paths.AnnouncementsFile)) {}
-            }
-            Server.MainScheduler.QueueRepeat(RandomMessage, null, TimeSpan.FromMinutes(5));
+            string[] lines = announcementsFile.GetText();
+            messages = new List<string>(lines);
+            
+            MainScheduler.QueueRepeat(RandomMessage, null, 
+                                      TimeSpan.FromMinutes(5));
+            Critical.QueueRepeat(ServerTasks.UpdateEntityPositions, null,
+                                 TimeSpan.FromMilliseconds(PositionInterval));
         }
         
         void InitRest() {
             IRC = new IRCBot();
             if (Server.irc) IRC.Connect();
-
-            locationChecker = new Thread(ServerTasks.LocationChecks);
-            locationChecker.Name = "MCG_LocationCheck";
-            locationChecker.Start();
              
             InitZombieSurvival();
             InitLavaSurvival();
             MainScheduler.QueueRepeat(BlockQueue.Loop, null, 
                                       TimeSpan.FromMilliseconds(BlockQueue.time));
+            Critical.QueueRepeat(ServerTasks.LocationChecks, null,
+                                 TimeSpan.FromMilliseconds(20));
 
-            Log("Finished setting up server, finding classicube.net url..");
+            Logger.Log(LogType.SystemActivity, "Finished setting up server, finding classicube.net url..");
             ServerSetupFinished = true;
         }
         
@@ -143,14 +146,14 @@ namespace MCGalaxy {
                 // Did zombie survival change the main world?
                 if (oldMain != null && oldMain != Server.mainLevel)
                     oldMain.Unload(true, false);
-            } catch (Exception e) { Server.ErrorLog(e); }
+            } catch (Exception e) { Logger.LogError(e); }
         }
 
         void InitLavaSurvival() {
             if (!Server.lava.startOnStartup) return;
             try {
                 Server.lava.Start();
-            } catch (Exception e) { Server.ErrorLog(e); }
+            } catch (Exception e) { Logger.LogError(e); }
         }
     }
 }

@@ -23,6 +23,7 @@ using System.Net.Sockets;
 using System.Threading;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
+using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
@@ -35,17 +36,11 @@ namespace MCGalaxy {
         
         public delegate void OnConsoleCommand(string cmd, string message);
         public static event OnConsoleCommand ConsoleCommand;
-        public delegate void OnServerError(Exception error);
-        public static event OnServerError ServerError;
-        public delegate void OnServerLog(string message);
-        public static event OnServerLog ServerLog, ServerAdminLog, ServerOpLog;
         public delegate void HeartBeatHandler();
         public delegate void MessageEventHandler(string message);
         public delegate void PlayerListHandler(List<Player> playerList);
         public delegate void VoidHandler();
-        public delegate void LogHandler(string message);
         
-        public event LogHandler OnLog, OnSystem, OnCommand, OnError, OnOp, OnAdmin;
         public event HeartBeatHandler HeartBeatFail;
         public event MessageEventHandler OnURLChange;
         public event PlayerListHandler OnPlayerListChange;
@@ -57,11 +52,10 @@ namespace MCGalaxy {
         
         public static PlayerExtList AutoloadMaps;
         public static PlayerMetaList RankInfo = new PlayerMetaList("text/rankinfo.txt");
-        public static PlayerMetaList TempRanks = new PlayerMetaList("text/tempranks.txt");
         public static PlayerMetaList Notes = new PlayerMetaList("text/notes.txt");
         
         /// <summary> *** DO NOT USE THIS! *** Use VersionString, as this field is a constant and is inlined if used. </summary>
-        public const string InternalVersion = "1.8.9.1";
+        public const string InternalVersion = "1.8.9.3";
         public static Version Version { get { return new Version(InternalVersion); } }
         public static string VersionString { get { return InternalVersion; } }
         
@@ -70,9 +64,7 @@ namespace MCGalaxy {
 
         // URL hash for connecting to the server
         public static string Hash = String.Empty, URL = String.Empty;
-
-        public static Socket listen;
-        public static System.Timers.Timer updateTimer = new System.Timers.Timer(100);
+        public static INetworkListen Listener;
 
         //Chatrooms
         public static List<string> Chatrooms = new List<string>();
@@ -80,10 +72,11 @@ namespace MCGalaxy {
         public static bool UseCTF = false;
         public static bool ServerSetupFinished = false;
         public static CTFGame ctf = null;
-        public static PlayerList bannedIP, whiteList, ircControllers, muted, invalidIds;
-        public static PlayerList ignored, frozen, hidden, agreed, vip, noEmotes, lockdown;
-        public static PlayerExtList jailed, models, skins, reach, tempBans, rotations;
-
+        public static PlayerList bannedIP, whiteList, ircControllers, invalidIds;
+        public static PlayerList ignored, hidden, agreed, vip, noEmotes, lockdown;
+        public static PlayerExtList models, skins, reach, rotations;
+        public static PlayerExtList frozen, muted, jailed, tempBans, tempRanks;
+        
         public static readonly List<string> Devs = new List<string>(), Mods = new List<string>();
 
         internal static readonly List<string> opstats = new List<string>(
@@ -123,6 +116,7 @@ namespace MCGalaxy {
         
         public static Scheduler MainScheduler = new Scheduler("MCG_MainScheduler");
         public static Scheduler Background = new Scheduler("MCG_BackgroundScheduler");
+        public static Scheduler Critical = new Scheduler("MCG_CriticalScheduler");
         public static Server s;
 
         public const byte version = 7;
@@ -137,13 +131,10 @@ namespace MCGalaxy {
         public static int PositionInterval = 100;
         [ConfigBool("classicube-account-plus", "Server", null, true)]
         public static bool ClassicubeAccountPlus = true;
-        [ConfigBool("bufferblocks", "Other", null, false)]
-        public static bool bufferblocks = true;
         
         //auto updater stuff
         [ConfigBool("auto-update", "Update", null, false)]
         public static bool autoupdate;
-        public static bool autonotify;
         [ConfigBool("in-game-update-notify", "Server", null, false)]
         public static bool notifyPlayers;
         [ConfigInt("update-countdown", "Update", null, 10)]
@@ -182,6 +173,8 @@ namespace MCGalaxy {
         [ConfigInt("max-guests", "Server", null, 10, 1, 128)]
         public static int maxGuests = 10;
 
+        [ConfigString("listen-ip", "Server", null, "0.0.0.0")]
+        public static string listenIP = "0.0.0.0";
         [ConfigInt("port", "Server", null, 25565, 0, 65535)]
         public static int port = 25565;
         [ConfigBool("public", "Server", null, true)]
@@ -235,7 +228,6 @@ namespace MCGalaxy {
         public static string level = "main";
         [ConfigString("xjail-map-name", "Other", null, "(main)", false, "()._+")]
         public static string xjailLevel = "(main)";
-        public static string errlog = "error.log";
 
         [ConfigBool("report-back", "Error handling", null, true)]
         public static bool reportBack = true;

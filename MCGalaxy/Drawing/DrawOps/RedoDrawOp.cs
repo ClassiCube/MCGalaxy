@@ -39,7 +39,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             int[] ids = NameConverter.FindIds(Player.name);
             if (ids.Length == 0) return;
             
@@ -54,7 +54,7 @@ namespace MCGalaxy.Drawing.Ops {
             this.output = null;
         }
         
-        Action<DrawOpBlock> output;
+        DrawOpOutput output;
         Vec3U16 dims;
         
         void RedoBlock(BlockDBEntry e) {

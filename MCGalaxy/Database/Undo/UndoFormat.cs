@@ -38,7 +38,7 @@ namespace MCGalaxy.Undo {
         public static UndoFormat NewFormat = new UndoFormatCBin();
         
         /// <summary> Enumerates through all the entries in the undo file. </summary>
-        public abstract IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args);
+        public abstract void EnumerateEntries(Stream s, UndoFormatArgs args);
         
         /// <summary> File extension of undo files in this format. </summary>
         protected abstract string Ext { get; }
@@ -101,9 +101,9 @@ namespace MCGalaxy.Undo {
     
     /// <summary> Arguments provided to an UndoFormat for retrieving undo data. </summary>
     public class UndoFormatArgs {
-
-        /// <summary> Player associated with this undo, can be console or IRC. </summary>
-        internal readonly Player Player;
+        
+        /// <summary> Level to retrieve undo data on. </summary>
+        internal readonly string LevelName;
 
         /// <summary> Small work buffer, used to avoid memory allocations. </summary>
         internal byte[] Temp;
@@ -113,17 +113,21 @@ namespace MCGalaxy.Undo {
         public bool Stop;        
 
         /// <summary> First instance in time that undo data should be retrieved back to. </summary>
-        internal readonly DateTime Start;
+        internal readonly DateTime Start;      
 
-        public UndoFormatArgs(Player p, DateTime start) {
-            Player = p; Start = start;
+        /// <summary> Last instance in time that undo data should be retrieved up to. </summary>
+        internal readonly DateTime End;
+        
+        /// <summary> Performs action on the given undo format entry. </summary>
+        public Action<UndoFormatEntry> Output;
+
+        public UndoFormatArgs(string lvlName, DateTime start, DateTime end,
+                              Action<UndoFormatEntry> output) {
+            LevelName = lvlName; Start = start; End = end; Output = output;
         }
     }
 
     public struct UndoFormatEntry {
-        public string LevelName;
-        public DateTime Time;
-        
         public ushort X, Y, Z;
         public ExtBlock Block;
         public ExtBlock NewBlock;

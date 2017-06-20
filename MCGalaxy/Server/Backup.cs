@@ -30,33 +30,33 @@ namespace MCGalaxy {
         }
         
         public static void CreatePackage(Player p, bool files, bool db, bool lite) {
-            if (db)  {
-                Server.s.Log("Backing up the database...");
+            if (db) {
+                Logger.Log(LogType.SystemActivity, "Backing up the database...");
                 using (StreamWriter sql = new StreamWriter("SQL.sql"))
                     BackupDatabase(sql,lite);
-                Server.s.Log("Backed up the database to SQL.sql");
+                Logger.Log(LogType.SystemActivity, "Backed up the database to SQL.sql");
             }
             
             List<Uri> filesList = null;
             if (files) {
-                Server.s.Log("Determining which files to backup...");
+                Logger.Log(LogType.SystemActivity, "Determining which files to backup...");
                 string dir = Directory.GetCurrentDirectory() + "\\";
                 filesList = GetAllFiles(new DirectoryInfo("./"), new Uri(dir), lite);
-                Server.s.Log("Finished determining included files");
+                Logger.Log(LogType.SystemActivity, "Finished determining included files");
             }
 
-            Server.s.Log("Creating compressed backup...");
+            Logger.Log(LogType.SystemActivity, "Creating compressed backup...");
             using (ZipPackage package = (ZipPackage)ZipPackage.Open(path, FileMode.Create)) {
                 if (files) {
-                    Server.s.Log("Compressing files...");
+                    Logger.Log(LogType.SystemActivity, "Compressing files...");
                     SaveFiles(package, filesList);
                 }
                 
                 if (db) SaveDatabase(package);
-                Server.s.Log("Compressed all data!");
+                Logger.Log(LogType.SystemActivity, "Compressed all data!");
             }
             Player.Message(p, "Backup of (" + (files ? "everything" + (db ? "" : " but database") : "database") + ") complete!");
-            Server.s.Log("Server backed up!");
+            Logger.Log(LogType.SystemActivity, "Server backed up!");
         }
 
         const string undo1 = "extra/undo/", undo2 = @"extra\undo\";
@@ -97,19 +97,19 @@ namespace MCGalaxy {
                     using (Stream src = new FileStream("./" + file, FileMode.Open, FileAccess.Read))
                         CopyStream(src, part.GetStream());
                 } catch (Exception ex) {
-                    Server.s.Log("Failed to save file: " + file);
-                    Server.ErrorLog(ex);
+                    Logger.Log(LogType.Warning, "Failed to save file: " + file);
+                    Logger.LogError(ex);
                 }
             }
         }
         
         static void SaveDatabase(ZipPackage package) {
-            Server.s.Log("Compressing Database...");
+            Logger.Log(LogType.SystemActivity, "Compressing Database...");
             Uri uri = new Uri("/SQL.sql", UriKind.Relative);
             
             PackagePart part = package.CreatePart(uri, "", CompressionOption.Normal);
             CopyStream(File.OpenRead("SQL.sql"), part.GetStream());
-            Server.s.Log("Database compressed");
+            Logger.Log(LogType.SystemActivity, "Database compressed");
         }
 
         static void CopyStream(Stream source, Stream target) {
@@ -154,8 +154,8 @@ namespace MCGalaxy {
                         using (Stream dst = File.Create(file))
                             CopyStream(src, dst);
                     } catch (IOException e) {
-                        Server.ErrorLog(e);
-                        Server.s.Log("Caught ignoreable Error. See log for more details. Will continue with rest of files.");
+                        Logger.LogError(e);
+                        Logger.Log(LogType.Warning, "Caught ignoreable Error. See log for more details. Will continue with rest of files.");
                         errors++;
                     }
                 }

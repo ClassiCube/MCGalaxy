@@ -96,7 +96,7 @@ namespace MCGalaxy {
             BlockPerms perms = BlockPerms.List[block];
             PrintRanks(perms.MinRank, perms.Allowed, perms.Disallowed, builder);
             
-            builder.Append( " %Scan ").Append(action);
+            builder.Append( " %Scan ").Append(action).Append(' ');
             builder.Append(Block.Name(block)).Append(".");
             Player.Message(p, builder.ToString());
         }

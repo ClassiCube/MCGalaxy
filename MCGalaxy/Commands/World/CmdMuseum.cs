@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.World {
         static void SetLevelProps(Level lvl) {
             lvl.setPhysics(0);
             lvl.backedup = true;
-            lvl.permissionbuild = LevelPermission.Nobody;
+            lvl.BuildAccess.Min = LevelPermission.Nobody;
 
             lvl.jailx = lvl.spawnx * 32;
             lvl.jaily = lvl.spawny * 32;

@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Tasks {   
     internal static class InitTasks {
@@ -25,8 +26,8 @@ namespace MCGalaxy.Tasks {
         const string staffUrl = Updater.BaseURL + "Uploads/devs.txt";       
         internal static void UpdateStaffList() {
             try {
-                using (WebClient web = new WebClient()) {
-                    string[] result = web.DownloadString(staffUrl).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+                using (WebClient client = HttpUtil.CreateWebClient()) {
+                    string[] result = client.DownloadString(staffUrl).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
                     foreach (string line in result) {
                         string type = line.Split(':')[0].ToLower();
                         List<string> list = (type == "devs") ? Server.Devs : (type == "mods") ? Server.Mods : null;
@@ -35,8 +36,8 @@ namespace MCGalaxy.Tasks {
                     }
                 }
             } catch (Exception e) {
-                Server.ErrorLog(e);
-                Server.s.Log("Failed to update " + Server.SoftwareName + " staff list.");
+                Logger.LogError(e);
+                Logger.Log(LogType.Warning, "Failed to update {0} staff list.", Server.SoftwareName);
                 Server.Devs.Clear();
                 Server.Mods.Clear();
             }

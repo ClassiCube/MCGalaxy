@@ -53,7 +53,7 @@ namespace MCGalaxy.Games {
             if (now >= last) {
                 Player.Message(p, "%4Do not {0} &c- ops have been warned.", action);
                 Chat.MessageOps(p.ColoredName + " &4appears to be " + action + "ing");
-                Server.s.Log(p.name + " appears to be " + action + "ing");
+                Logger.Log(LogType.SuspiciousActivity, "{0} appears to be {1}ing", p.name, action);
                 last = now.AddSeconds(5);
             }
         }

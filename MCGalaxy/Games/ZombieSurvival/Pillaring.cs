@@ -73,8 +73,7 @@ namespace MCGalaxy.Games.ZS {
                     Command.all.Find("take").Use(null, p.name + " 10 Auto fine for pillaring");
                     Player.Message(p, "  &cThe next time you pillar, you will be &4kicked&c.");
                 } else {                   
-                    ModAction action = new ModAction(p.name, null, 
-					                                               ModActionType.Kicked, "Auto kick for pillaring");
+                    ModAction action = new ModAction(p.name, null, ModActionType.Kicked, "Auto kick for pillaring");
                     OnModActionEvent.Call(action);
                     p.Kick("No pillaring allowed!");
                 }

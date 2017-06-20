@@ -57,9 +57,12 @@ namespace MCGalaxy.Events {
         /// <summary> Reason provided for the action, can be empty string. Never null. </summary>
         public string Reason;
         
+        /// <summary> Whether the moderation action should be announced publicly to chat, IRC, etc. </summary>
+        public bool Announce;
+        
         /// <summary> Returns " (reason)" if reason is given, "" if not. </summary>
         public string ReasonSuffixed {
-            get { return Reason == "" ? "" : " (" + Reason + ")"; }
+            get { return Reason == "" ? "" : " (" + Reason + "%S)"; }
         }
         
         /// <summary> Returns a formatted moderation action message. </summary>
@@ -88,6 +91,7 @@ namespace MCGalaxy.Events {
             if (reason == null) reason = "";
             Reason = reason;
             Duration = duration;
+            Announce = true;
         }
     }
     
@@ -96,31 +100,32 @@ namespace MCGalaxy.Events {
     /// <summary> Types of moderation actions that can occur. </summary>
     public enum ModActionType {
         
-        /// <summary> Player is banned. </summary>
+        /// <summary> Player was banned. </summary>
         Ban,
-        /// <summary> Player is unbanned. </summary>
+        /// <summary> Player was unbanned. </summary>
         Unban,
-        /// <summary> IP address is banned. </summary>
+        /// <summary> IP address was banned. </summary>
         BanIP,
-        /// <summary> IP address is unbanned. </summary>
+        /// <summary> IP address was unbanned. </summary>
         UnbanIP,
-        /// <summary> Player is muted. </summary>
+        /// <summary> Player was muted. </summary>
         Muted,
-        /// <summary> Player is unmuted. </summary>
+        /// <summary> Player was unmuted. </summary>
         Unmuted,
-        /// <summary> Player is frozen. </summary>
+        /// <summary> Player was frozen. </summary>
         Frozen,
-        /// <summary> Player is unfrozen. </summary>
+        /// <summary> Player was unfrozen. </summary>
         Unfrozen,
-        /// <summary> Player is jailed. </summary>
+        /// <summary> Player was jailed. </summary>
         Jailed,
-        /// <summary> Player is unjailed. </summary>
+        /// <summary> Player was unjailed. </summary>
         Unjailed,
-        /// <summary> Player is given a warning. </summary>
+        /// <summary> Player was given a warning. </summary>
         Warned,
-        /// <summary> Player has their block changes undone. </summary>
-        Undone,
-        /// <summary> Player is kicked from the server. </summary>
+        /// <summary> Player has their rank changed. </summary>
+        /// <remarks> Metadata is Group of new rank. </remarks>
+        Rank,
+        /// <summary> Player was kicked from the server. </summary>
         Kicked,
     }
     

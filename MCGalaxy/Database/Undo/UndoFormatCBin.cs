@@ -28,20 +28,18 @@ namespace MCGalaxy.Undo {
         protected override string Ext { get { return ".uncbin"; } }
         const int entrySize = 8;
 
-        public override IEnumerable<UndoFormatEntry> GetEntries(Stream s, UndoFormatArgs args) {
+        public override void EnumerateEntries(Stream s, UndoFormatArgs args) {
             List<ChunkHeader> list = new List<ChunkHeader>();
             UndoFormatEntry pos;
-            bool super = Player.IsSuper(args.Player);
-            DateTime start = args.Start;
+            DateTime time;
 
             ReadHeaders(list, s);
             for (int i = list.Count - 1; i >= 0; i--) {
                 ChunkHeader chunk = list[i];
                 // Can we safely discard the entire chunk?
-                bool inRange = chunk.BaseTime.AddTicks((65536 >> 2) * TimeSpan.TicksPerSecond) >= start;
-                if (!inRange) { args.Stop = true; yield break; }
-                if (!super && !args.Player.level.name.CaselessEq(chunk.LevelName)) continue;
-                pos.LevelName = chunk.LevelName;
+                bool inRange = chunk.BaseTime.AddTicks((65536 >> 2) * TimeSpan.TicksPerSecond) >= args.Start;
+                if (!inRange) { args.Stop = true; return; }
+                if (!args.LevelName.CaselessEq(chunk.LevelName)) continue;
                 
                 s.Seek(chunk.DataPosition, SeekOrigin.Begin);
                 if (args.Temp == null)
@@ -57,8 +55,9 @@ namespace MCGalaxy.Undo {
                     // TODO: should this be instead:
                     // int delta = Flags & 0x3FFF;
                     // timeDeltaSeconds = delta >= 0x2000 ? (short)(delta - 16384) : (short)delta;
-                    pos.Time = chunk.BaseTime.AddTicks((flags & 0x3FFF) * TimeSpan.TicksPerSecond);
-                    if (pos.Time < start) { args.Stop = true; yield break; }
+                    time = chunk.BaseTime.AddTicks((flags & 0x3FFF) * TimeSpan.TicksPerSecond);
+                    if (time < args.Start) { args.Stop = true; return; }
+                    if (time > args.End) continue;
                     
                     int index = I32(temp, offset + 2);
                     pos.X = (ushort)(index % chunk.Width);
@@ -67,10 +66,11 @@ namespace MCGalaxy.Undo {
                     
                     pos.Block = ExtBlock.FromRaw(temp[offset + 6],    (flags & (1 << 14)) != 0);
                     pos.NewBlock = ExtBlock.FromRaw(temp[offset + 7], (flags & (1 << 15)) != 0);
-                    yield return pos;
+                    args.Output(pos);
                 }
             }
         }
+        
         
         static ushort U16(byte[] buffer, int offset) {
             return (ushort)(buffer[offset + 0] | buffer[offset + 1] << 8);

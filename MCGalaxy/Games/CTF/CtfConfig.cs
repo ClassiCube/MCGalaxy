@@ -46,9 +46,9 @@ namespace MCGalaxy.Games {
                 case "base.red.z":
                     redbase.z = ushort.Parse(value); break;
                 case "base.red.block":
-                    redbase.block = Block.Byte(value); break;
+                    redbase.block = ExtBlock.FromRaw(byte.Parse(value)); break;
                 case "base.blue.block":
-                    bluebase.block = Block.Byte(value); break;
+                    bluebase.block = ExtBlock.FromRaw(byte.Parse(value)); break;
                 case "base.blue.spawnx":
                     bluebase.spawnx = ushort.Parse(value); break;
                 case "base.blue.spawny":

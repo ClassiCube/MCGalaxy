@@ -39,13 +39,13 @@ namespace MCGalaxy.Drawing.Ops {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                ExtBlock block = Level.GetExtBlock(x, y, z);
+                ExtBlock block = Level.GetBlock(x, y, z);
                 if (block == Include) output(Place(x, y, z, brush));
             }
         }
@@ -67,13 +67,13 @@ namespace MCGalaxy.Drawing.Ops {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                ExtBlock block = Level.GetExtBlock(x, y, z);
+                ExtBlock block = Level.GetBlock(x, y, z);
                 if (block != Exclude) output(Place(x, y, z, brush));
             }
         }

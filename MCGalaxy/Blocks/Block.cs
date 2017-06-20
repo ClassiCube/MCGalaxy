@@ -95,29 +95,12 @@ namespace MCGalaxy {
             return block >= water && block <= lavastill;
         }
 
-        [Obsolete]
-        public static bool OPBlocks(byte block) { return Props[block].OPBlock; }
-
-        [Obsolete]
-        public static bool Death(byte block) { return Props[block].KillerBlock; }
-
         public static bool BuildIn(byte block) {
             if (block == op_water || block == op_lava
                 || Props[block].IsPortal || Props[block].IsMessageBlock) return false;
             block = Convert(block);
             return block >= water && block <= lavastill;
         }
-
-        public static bool Mover(byte block) { return BlockBehaviour.walkthroughHandlers[block] != null; }
-
-        [Obsolete]
-        public static bool FireKill(byte block) { return block != air && Props[block].LavaKills; }
-
-        [Obsolete]
-        public static bool LavaKill(byte block) { return Props[block].LavaKills; }
-
-        [Obsolete]
-        public static bool WaterKill(byte block) { return Props[block].WaterKills; }
 
         public static bool LightPass(byte block) {
             switch (Convert(block)) {
@@ -177,53 +160,6 @@ namespace MCGalaxy {
             }
             return false;
         }
-
-        [Obsolete]
-        public static bool portal(byte block) { return Props[block].IsPortal; }
-        
-        [Obsolete]
-        public static bool mb(byte block) { return Props[block].IsMessageBlock; }
-
-        public static bool Physics(byte block) { //returns false if placing block cant actualy cause any physics to happen
-            if (Props[block].IsMessageBlock || Props[block].IsPortal) return false;
-            if (Props[block].IsDoor || Props[block].IsTDoor) return false;
-            if (Props[block].OPBlock) return false;
-            
-            switch (block) {
-                case rock:
-                case stone:
-                case blackrock:
-                case waterstill:
-                case lavastill:
-                case goldrock:
-                case ironrock:
-                case coal:
-
-                case goldsolid:
-                case iron:
-                case staircasefull:
-                case brick:
-                case tnt:
-                case stonevine:
-                case obsidian:
-
-                case deathair:
-                case deathlava:
-                case deathwater:
-
-                case flagbase:
-                    return false;
-
-                default:
-                    return true;
-            }
-        }
-
-        [Obsolete]
-        public static bool tDoor(byte block) { return Props[block].IsTDoor; }
-
-        [Obsolete]
-        public static byte odoor(byte block) { return Props[block].ODoorId; }
         
         public static AABB BlockAABB(ExtBlock block, Level lvl) {
             BlockDefinition def = lvl.GetBlockDef(block);
@@ -241,11 +177,13 @@ namespace MCGalaxy {
         
         public static void SetBlocks() {
             SetCoreProperties();
-            BlockProps.Load("core", Block.Props);
+            BlockProps.Load("core", Block.Props, false);
             BlockPerms.Load();
             
-            BlockBehaviour.InitCorePhysicsHandlers();            
-            BlockBehaviour.InitCoreHandlers();
+            Level[] loaded = LevelInfo.Loaded.Items;
+            foreach (Level lvl in loaded) {
+                lvl.UpdateBlockHandlers();
+            }
         }
         
         [Obsolete("Use BlockPerms.CanModify()")]

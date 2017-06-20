@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands.Maintenance {
         
         static void Log(string message) {
             Chat.MessageAll("&4" + message);
-            Server.s.Log(message);
+            Logger.Log(LogType.SystemActivity, message);
         }
         
         static void ShutdownCallback(SchedulerTask task) {

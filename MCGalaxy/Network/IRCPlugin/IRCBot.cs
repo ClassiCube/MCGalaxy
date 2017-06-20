@@ -93,15 +93,15 @@ namespace MCGalaxy {
             InitConnectionState();
             handlers.Hook();
             
-            Server.s.Log("Connecting to IRC...");
+            Logger.Log(LogType.IRCCActivity, "Connecting to IRC...");
             UpdateState();
             connection.connectionArgs = args;
             
             try {
                 connection.Connect();
             } catch (Exception e) {
-                Server.s.Log("Failed to connect to IRC!");
-                Server.ErrorLog(e);
+                Logger.Log(LogType.IRCCActivity, "Failed to connect to IRC!");
+                Logger.LogError(e);
             }
         }
         
@@ -111,7 +111,7 @@ namespace MCGalaxy {
             handlers.Unhook();
             
             connection.Disconnect(reason);
-            Server.s.Log("Disconnected from IRC!");
+            Logger.Log(LogType.IRCCActivity, "Disconnected from IRC!");
         }
         
         /// <summary> Returns whether this bot is connected to IRC. </summary>
@@ -127,7 +127,7 @@ namespace MCGalaxy {
             LoadBannedCommands();
         }
         
-        static string ConvertMessage(string message, bool color) {
+        public static string ConvertMessage(string message, bool color) {
             if (String.IsNullOrEmpty(message.Trim()))
                 message = ".";
             message = EmotesHandler.Replace(message);

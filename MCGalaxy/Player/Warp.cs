@@ -113,7 +113,7 @@ namespace MCGalaxy {
                         wp.roty = byte.Parse(parts[6]);                        
                         Items.Add(wp);
                     } catch {
-                        Server.s.Log("Couldn't load a warp.");
+                        Logger.Log(LogType.Warning, "Failed loading a warp from " + file);
                     }
                 }
             }

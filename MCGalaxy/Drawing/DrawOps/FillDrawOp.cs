@@ -49,7 +49,7 @@ namespace MCGalaxy.Drawing.Ops {
             return true;
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             ushort x, y, z;
             for (int i = 0; i < Positions.Count; i++) {
                 int pos = Positions[i];
@@ -83,36 +83,36 @@ namespace MCGalaxy.Drawing.Ops {
                 buffer.Add(index);
                 
                 if (mode != DrawMode.verticalX) { // x
-                    if (lvl.GetExtBlock((ushort)(x + 1), y, z) == block) {
+                    if (lvl.GetBlock((ushort)(x + 1), y, z) == block) {
                         if (count == max) { temp.Enqueue(index + 1); }
                         else { pos[count] = index + 1; count++; }
                     }
-                    if (lvl.GetExtBlock((ushort)(x - 1), y, z) == block) {
+                    if (lvl.GetBlock((ushort)(x - 1), y, z) == block) {
                         if (count == max) { temp.Enqueue(index - 1); }
                         else { pos[count] = index - 1; count++; }
                     }
                 }
 
                 if (mode != DrawMode.verticalZ) { // z
-                    if (lvl.GetExtBlock(x, y, (ushort)(z + 1)) == block) {
+                    if (lvl.GetBlock(x, y, (ushort)(z + 1)) == block) {
                         if (count == max) { temp.Enqueue(index + lvl.Width); }
                         else { pos[count] = index + lvl.Width; count++; }
                     }
-                    if (lvl.GetExtBlock(x, y, (ushort)(z - 1)) == block) {
+                    if (lvl.GetBlock(x, y, (ushort)(z - 1)) == block) {
                         if (count == max) { temp.Enqueue(index - lvl.Width); }
                         else { pos[count] = index - lvl.Width; count++; }
                     }
                 }
 
                 if (!(mode == DrawMode.down || mode == DrawMode.layer)) { // y up
-                    if (lvl.GetExtBlock(x, (ushort)(y + 1), z) == block) {
+                    if (lvl.GetBlock(x, (ushort)(y + 1), z) == block) {
                         if (count == max) { temp.Enqueue(index + oneY); }
                         else { pos[count] = index + oneY; count++; }
                     }
                 }
 
                 if (!(mode == DrawMode.up || mode == DrawMode.layer)) { // y down
-                    if (lvl.GetExtBlock(x, (ushort)(y - 1), z) == block) {
+                    if (lvl.GetBlock(x, (ushort)(y - 1), z) == block) {
                         if (count == max) { temp.Enqueue(index - oneY); }
                         else { pos[count] = index - oneY; count++; }
                     }

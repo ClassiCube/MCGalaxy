@@ -38,12 +38,12 @@ namespace MCGalaxy {
                 string name = value.ToLower();
 
                 if (name == "adv" || name == "op" || name == "super" || name == "nobody" || name == "noone") {
-                    Server.s.Log("Cannot have a rank named \"" + name + "\", this rank is hard-coded.");
+                    Logger.Log(LogType.Warning, "Cannot have a rank named \"{0}\", this rank is hard-coded.", name);
                 } else if (Group.GroupList.Find(g => g.name == name) == null) {
                     grp = new Group();
                     grp.trueName = value;
                 } else {
-                    Server.s.Log("Cannot add the rank " + value + " twice");
+                    Logger.Log(LogType.Warning, "Cannot add the rank {0} twice", value);
                 }
                 return;
             }
@@ -54,15 +54,15 @@ namespace MCGalaxy {
                     int perm;
                     
                     if (!int.TryParse(value, out perm)) {
-                        Server.s.Log("Invalid permission: " + value);
+                        Logger.Log(LogType.Warning, "Invalid permission: " + value);
                         grp = null;
                     } if (perm > 119 || perm < -50) {
-                        Server.s.Log("Permission must be between -50 and 119 for ranks");
+                        Logger.Log(LogType.Warning, "Permission must be between -50 and 119 for ranks");
                         grp = null;
                     } else if (Group.findPermInt(perm) == null) {
                         grp.Permission = (LevelPermission)perm;
                     } else {
-                        Server.s.Log("Cannot have 2 ranks set at permission level " + value);
+                        Logger.Log(LogType.Warning, "Cannot have 2 ranks set at permission level " + value);
                         grp = null;
                     } break;
                 case "limit":
@@ -78,12 +78,12 @@ namespace MCGalaxy {
                     if (Colors.IsStandardColor(col) || Colors.GetFallback(col) != '\0') {
                         grp.color = col.ToString(CultureInfo.InvariantCulture);
                     } else {
-                        Server.s.Log("Invalid color code: " + value);
+                        Logger.Log(LogType.Warning, "Invalid color code: " + value);
                         grp = null;
                     } break;
                 case "filename":
                     if (value.Contains("\\") || value.Contains("/")) {
-                        Server.s.Log("Invalid filename: " + value);
+                        Logger.Log(LogType.Warning, "Invalid filename: " + value);
                         grp = null;
                     } else {
                         grp.fileName = value;
@@ -102,7 +102,7 @@ namespace MCGalaxy {
                         grp.prefix = raw.TrimStart();
                     
                     if (Colors.StripColors(grp.prefix).Length > 3) {
-                        Server.s.Log("Prefixes may only consist of color codes and three letters");
+                        Logger.Log(LogType.Warning, "Prefixes may only consist of color codes and three letters");
                         grp.prefix = grp.prefix.Substring(0, 3);
                     }
                     break;

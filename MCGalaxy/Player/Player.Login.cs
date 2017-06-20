@@ -26,7 +26,7 @@ using MCGalaxy.Tasks;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy {
-    public sealed partial class Player : IDisposable {
+    public partial class Player : IDisposable {
         
         void HandleLogin(byte[] packet) {
             LastAction = DateTime.UtcNow;
@@ -46,12 +46,12 @@ namespace MCGalaxy {
             isDev = Server.Devs.CaselessContains(truename);
             isMod = Server.Mods.CaselessContains(truename);
             
-            byte type = packet[130];
+            byte protocolType = packet[130];
             Loading = true;
             if (disconnected) return;
             
-            if (type == 0x42) { hasCpe = true; SendCpeExtensions(); }
-            if (type != 0x42) CompleteLoginProcess();
+            if (protocolType == 0x42) { hasCpe = true; SendCpeExtensions(); }
+            if (protocolType != 0x42) CompleteLoginProcess();
         }
         
         void SendCpeExtensions() {
@@ -168,7 +168,7 @@ namespace MCGalaxy {
             }
             
            try {
-                if (group.commands.Contains("inbox") && Database.TableExists("Inbox" + name) ) {
+                if (group.CanExecute("inbox") && Database.TableExists("Inbox" + name) ) {
                     using (DataTable table = Database.Backend.GetRows("Inbox" + name, "*")) {
                         if (table.Rows.Count > 0)
                             SendMessage("You have &a" + table.Rows.Count + " %Smessages in /inbox");
@@ -177,13 +177,13 @@ namespace MCGalaxy {
             } catch {
             }
             
-            if (Server.updateTimer.Interval > 1000)
+            if (Server.PositionInterval > 1000)
                 SendMessage("Lowlag mode is currently &aON.");
 
             if (String.IsNullOrEmpty(appName)) {
-                Server.s.Log(name + " [" + ip + "] connected.");
+                Logger.Log(LogType.UserActivity, "{0} [{1}] connected.", name, ip);
             } else {
-                Server.s.Log(name + " [" + ip + "] connected using " + appName + ".");
+                Logger.Log(LogType.UserActivity, "{0} [{1}] connected using {2}.", name, ip, appName);
             }
             Game.InfectMessages = PlayerDB.GetInfectMessages(this);
             Server.zombie.PlayerJoinedServer(this);
@@ -255,7 +255,7 @@ namespace MCGalaxy {
                 Chat.MessageOps(altsMsg);
                 //IRCBot.Say(temp, true); //Tells people in op channel on IRC
             }
-            Server.s.Log(altsMsg);
+            Logger.Log(LogType.UserActivity, altsMsg);
         }
     }
 }

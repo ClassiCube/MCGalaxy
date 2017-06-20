@@ -69,13 +69,13 @@ namespace MCGalaxy.Events {
                     try {
                         action(pl.method);
                     } catch (Exception ex) {
-                        Server.s.Log("Plugin " + pl.plugin.name + " errored when calling " + typeof(IMethod).Name + " event"); 
-                        Server.ErrorLog(ex);
+                        Logger.Log(LogType.Warning, "Plugin {0} errored when calling {1} event", pl.plugin.name, typeof(IMethod).Name);
+                        Logger.LogError(ex);
                     }
                 }
             } catch (Exception ex) {
-                Server.s.Log("Error when calling " + typeof(IMethod).Name + " event"); 
-                Server.ErrorLog(ex);
+                Logger.Log(LogType.Warning, "Error when calling {0} event", typeof(IMethod).Name);
+                Logger.LogError(ex);
             }
         }
     }

@@ -17,11 +17,10 @@
  */
 //StormCom Object Generator
 //
-//Full use to all StormCom Server System codes (in regards to minecraft classic) have been granted to MCGalaxy without restriction.
+//Full use to all StormCom Server System codes (in regards to minecraft classic) have been granted to MCForge without restriction.
 //
 // ~Merlin33069
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 
@@ -35,7 +34,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (long)(Math.PI / 3 * (R * R * H));
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
@@ -52,9 +51,7 @@ namespace MCGalaxy.Drawing.Ops {
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius) continue;
                 
-                byte ctile = Level.GetTile(x, y, z);
-                if (ctile != 0) continue;
-                output(Place(x, y, z, brush));
+                if (Level.IsAirAt(x, y, z)) output(Place(x, y, z, brush));
             }
         }
     }
@@ -70,7 +67,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (long)(outer - inner);
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
@@ -88,9 +85,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (dist > curRadius * curRadius || dist < (curRadius - 1) * (curRadius - 1))
                     continue;
                 
-                byte ctile = Level.GetTile(x, y, z);
-                if (ctile != 0) continue;
-                output(Place(x, y, z, brush));
+                if (Level.IsAirAt(x, y, z)) output(Place(x, y, z, brush));
             }
         }
     }
@@ -103,7 +98,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (long)(Math.PI / 3 * (R * R * H));
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
@@ -120,9 +115,7 @@ namespace MCGalaxy.Drawing.Ops {
                 double curRadius = Radius * ((double)curHeight / (double)height);
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius) continue;
-                
-                byte ctile = Level.GetTile(x, y, z);
-                if (ctile != 0) continue;
+                if (!Level.IsAirAt(x, y, z)) continue;
                 
                 bool layer = dist >= (curRadius - 1) * (curRadius - 1);
                 block.BlockID = layer ? Block.grass : Block.lavastill;

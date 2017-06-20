@@ -50,7 +50,7 @@ namespace MCGalaxy.Drawing.Ops {
             return total;
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3S32 p1 = Min, p2 = Max;
             baseOp.SetLevel(Level);
             baseOp.Player = Player;
@@ -93,7 +93,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override string Name { get { return "Pyramid reverse"; } }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             wallOp.Min = Min; wallOp.Max = Max;
             baseOp.Min = Min; baseOp.Max = Max;

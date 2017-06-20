@@ -53,8 +53,8 @@ namespace MCGalaxy.Commands.Moderation {
             Command mute = Command.all.Find("mute");
             
             if (!Server.jailed.Contains(who.name)) {
-                if (!who.muted) mute.Use(p, message);
-                if (!who.frozen) freeze.Use(p, message);
+                if (!who.muted) mute.Use(p, message + " 10000d");
+                if (!who.frozen) freeze.Use(p, message + " 10000d");
                 
                 PlayerActions.ChangeMap(who, xjailMap);
                 who.BlockUntilLoad(10);

@@ -147,7 +147,7 @@ namespace MCGalaxy.Gui.Eco {
         }
 
         private void comboBoxRank_SelectionChangeCommitted(object sender, EventArgs e) {
-            Economy.Ranks.MaxRank = Program.GetPermission(comboBoxRank, LevelPermission.AdvBuilder);
+            Economy.Ranks.MaxRank = GuiPerms.GetPermission(comboBoxRank, LevelPermission.AdvBuilder);
             UpdateRanks();
         }
 

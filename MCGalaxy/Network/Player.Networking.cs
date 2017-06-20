@@ -21,7 +21,7 @@ using MCGalaxy.Events;
 using MCGalaxy.Network;
 
 namespace MCGalaxy {
-    public sealed partial class Player : IDisposable {
+    public partial class Player : IDisposable {
 
         public bool hasCpe, finishedCpeLogin = false;
         public string appName;
@@ -99,28 +99,20 @@ namespace MCGalaxy {
         
         public static void SendMessage(Player p, string message, bool colorParse) {
             if (p == null) {
-                if (storeHelp)
-                    storedHelp += message + "\r\n";
-                else
-                    Server.s.Log(message);
-            } else if (p.ircChannel != null) {
-                Server.IRC.Message(p.ircChannel, message);
-            } else if (p.ircNick != null) {
-               Server.IRC.Pm(p.ircNick, message);
-            }  else {
-                p.SendMessage(0, Server.DefaultColor + message, colorParse);
+        	    Logger.Log(LogType.ConsoleMessage, message);
+            } else {
+                p.SendMessage(0, message, colorParse);
             }
         }
         
-        public void SendMessage(string message) {
-            SendMessage(0, Server.DefaultColor + message, true);
-        }
+        public void SendMessage(string message) { SendMessage(0, message, true); }        
+        public void SendMessage(string message, bool colorParse) { SendMessage(0, message, colorParse); }
         
-        public void SendMessage(string message, bool colorParse) {
-            SendMessage(0, Server.DefaultColor + message, colorParse);
-        }
-        
-        public void SendMessage(byte id, string message, bool colorParse = true) {
+        public virtual void SendMessage(byte id, string message, bool colorParse = true) {
+            // Message should start with server colour if no custom colour
+            if (message.Length > 0 && !(message[0] == '&' || message[0] == '%')) {
+                message = Server.DefaultColor + message;
+            }
             message = Chat.Format(message, this, colorParse);
             
             int totalTries = 0;
@@ -143,7 +135,7 @@ namespace MCGalaxy {
                 message = "&f" + message;
                 totalTries++;
                 if ( totalTries < 10 ) goto retryTag;
-                else Server.ErrorLog(e);
+                else Logger.LogError(e);
             }
         }
         
@@ -223,7 +215,7 @@ namespace MCGalaxy {
                 success = false;
                 PlayerActions.ChangeMap(this, Server.mainLevel);
                 SendMessage("There was an error sending the map data, you have been sent to the main level.");
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             } finally {
                 Server.DoGC();
             }

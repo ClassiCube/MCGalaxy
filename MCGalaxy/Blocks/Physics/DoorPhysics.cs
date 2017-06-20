@@ -67,28 +67,22 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             int oneY = lvl.Width * lvl.Length;
-            if (x > 0) ActivateTDoor(lvl, C.b - 1);
-            if (x < lvl.Width - 1) ActivateTDoor(lvl, C.b + 1);
-            if (y > 0) ActivateTDoor(lvl, C.b - oneY);
-            if (y < lvl.Height - 1) ActivateTDoor(lvl, C.b + oneY);
-            if (z > 0) ActivateTDoor(lvl, C.b - lvl.Width);
-            if (z < lvl.Length - 1) ActivateTDoor(lvl, C.b + lvl.Width);
+            ActivateTDoor(lvl, (ushort)(x - 1), y, z);
+            ActivateTDoor(lvl, (ushort)(x + 1), y, z);
+            ActivateTDoor(lvl, x, (ushort)(y - 1), z);
+            ActivateTDoor(lvl, x, (ushort)(y + 1), z);
+            ActivateTDoor(lvl, x, y, (ushort)(z -1));
+            ActivateTDoor(lvl, x, y, (ushort)(z + 1));
         }
         
-        static void ActivateTDoor(Level lvl, int index) {
-            byte block = lvl.blocks[index];
-            if (block != Block.custom_block) {
-                if (!Block.Props[block].IsTDoor) return;
-                
-                PhysicsArgs args = ActivateablePhysics.GetTDoorArgs(block, false);
+        static void ActivateTDoor(Level lvl, ushort x, ushort y, ushort z) {
+            int index;
+            ExtBlock block = lvl.GetBlock(x, y, z, out index);
+            
+            if (index >= 0 && lvl.BlockProps[block.Index].IsTDoor) {
+                PhysicsArgs args = ActivateablePhysics.GetTDoorArgs(block);
                 lvl.AddUpdate(index, Block.air, false, args);
-            } else {
-                block = lvl.GetExtTile(index);
-                if (!lvl.CustomBlockProps[block].IsTDoor) return;    
-                
-                PhysicsArgs args = ActivateablePhysics.GetTDoorArgs(block, true);
-                lvl.AddUpdate(index, Block.air, false, args);
-            }            
+            }         
         }
     }
 }

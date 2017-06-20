@@ -80,8 +80,8 @@ namespace MCGalaxy {
                             lock (physStepLock)
                                 CalcPhysics();
                         } catch (Exception ex) {
-                            Server.s.Log("Level physics error");
-                            Server.ErrorLog(ex);
+                            Logger.Log(LogType.Warning, "Level physics error");
+                            Logger.LogError(ex);
                         }
                     }
 
@@ -95,7 +95,7 @@ namespace MCGalaxy {
                             ClearPhysics();
 
                             Chat.MessageGlobal("Physics shutdown on {0}", ColoredName);
-                            Server.s.Log("Physics shutdown on " + name);
+                            Logger.Log(LogType.Warning, "Physics shutdown on " + name);
                             if (PhysicsStateChanged != null)
                                 PhysicsStateChanged(this, PhysicsState.Stopped);
 
@@ -106,7 +106,7 @@ namespace MCGalaxy {
                                 if (p.level != this) continue;
                                 Player.Message(p, "Physics warning!");
                             }
-                            Server.s.Log("Physics warning on " + name);
+                            Logger.Log(LogType.Warning, "Physics warning on " + name);
 
                             if (PhysicsStateChanged != null)
                                 PhysicsStateChanged(this, PhysicsState.Warning);
@@ -137,10 +137,10 @@ namespace MCGalaxy {
             lastCheck = ListCheck.Count;
             const uint mask = PhysicsArgs.TypeMask;
             
-            HandlePhysics[] handlers = BlockBehaviour.physicsHandlers;
+            HandlePhysics[] handlers = physicsHandlers;
             ExtraInfoHandler extraHandler = ExtraInfoPhysics.DoNormal;
             if (physics == 5) {
-                handlers = BlockBehaviour.physicsDoorsHandlers;
+                handlers = physicsDoorsHandlers;
                 extraHandler = ExtraInfoPhysics.DoDoorsOnly;
             }
             
@@ -154,7 +154,10 @@ namespace MCGalaxy {
                         OnPhysicsUpdateEvent.Call(x, y, z, C.data, this);
                     
                     if ((C.data.Raw & mask) == 0 || extraHandler(this, ref C)) {
-                        HandlePhysics handler = handlers[blocks[C.b]];
+                        int idx = blocks[C.b];
+                        if (idx == Block.custom_block) idx = Block.Count + GetExtTileNoCheck(x, y, z);
+                        
+                        HandlePhysics handler = handlers[idx];
                         if (handler != null) {
                             handler(this, ref C);
                         } else if ((C.data.Raw & mask) == 0 || !C.data.HasWait) {
@@ -190,7 +193,7 @@ namespace MCGalaxy {
                     if (DoPhysicsBlockchange(C.b, block, false, C.data, true))
                         bulkSender.Add(C.b, block.BlockID, block.ExtID);
                 } catch {
-                    Server.s.Log("Phys update issue");
+                    Logger.Log(LogType.Warning, "Phys update issue");
                 }
             }
             
@@ -231,11 +234,11 @@ namespace MCGalaxy {
             }
         }
 
-        internal bool AddUpdate(int b, int type, bool overRide = false) {
+        internal bool AddUpdate(int b, byte type, bool overRide = false) {
             return AddUpdate(b, type, overRide, default(PhysicsArgs));
         }
         
-        internal bool AddUpdate(int b, int type, bool overRide, PhysicsArgs data) {
+        internal bool AddUpdate(int b, byte type, bool overRide, PhysicsArgs data) {
             try {
                 int x = b % Width;
                 int y = (b / Width) / Length;
@@ -244,9 +247,9 @@ namespace MCGalaxy {
                 
                 if (overRide) {
                     ExtBlock block;
-                    block.BlockID = (byte)type;
+                    block.BlockID = type;
                     block.ExtID = 0;
-                	
+                    
                     // Is the Ext flag just an indicator for the block update?
                     if (data.ExtBlock && (data.Raw & PhysicsArgs.TypeMask) == 0) {
                         block.ExtID = block.BlockID;
@@ -341,21 +344,17 @@ namespace MCGalaxy {
                     Blockchange(C.b, block, true, default(PhysicsArgs));
                 }
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
             }
         }
         
         
         internal bool ActivatesPhysics(ExtBlock block) {
-            if (block.BlockID != Block.custom_block)
-                return Block.Physics(block.BlockID);
-            
-            BlockProps[] props = CustomBlockProps;
-            byte extBlock = block.ExtID;
-            if (props[extBlock].IsMessageBlock || props[extBlock].IsPortal) return false;
-            if (props[extBlock].IsDoor || props[extBlock].IsTDoor) return false;
-            if (props[extBlock].OPBlock) return false;
-            return true;
+            int i = block.Index;
+            if (BlockProps[i].IsMessageBlock || BlockProps[i].IsPortal) return false;
+            if (BlockProps[i].IsDoor || BlockProps[i].IsTDoor) return false;
+            if (BlockProps[i].OPBlock) return false;
+            return physicsHandlers[i] != null;
         }
         
         internal bool CheckSpongeWater(ushort x, ushort y, ushort z) {

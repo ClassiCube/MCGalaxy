@@ -48,13 +48,13 @@ namespace MCGalaxy.Commands.Maintenance {
         void SetPublic(Player p, string[] args) {
             Server.pub = true;
             Player.Message(p, "Server is now public!");
-            Server.s.Log("Server is now public!");
+            Logger.Log(LogType.SystemActivity, "Server is now public!");
         }
         
         void SetPrivate(Player p, string[] args) {
             Server.pub = false;
             Player.Message(p, "Server is now private!");
-            Server.s.Log("Server is now private!");
+            Logger.Log(LogType.SystemActivity, "Server is now private!");
         }
         
         void DoReset(Player p, string[] args) {

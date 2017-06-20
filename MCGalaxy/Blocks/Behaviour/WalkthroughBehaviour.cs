@@ -25,53 +25,31 @@ using MCGalaxy.SQL;
 namespace MCGalaxy.Blocks {
     internal static class WalkthroughBehaviour {
 
-        internal static bool Door(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static bool Door(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0) return true;
-            bool isExt = false;
-            if (block == Block.custom_block) {
-                isExt = true;
-                block = p.level.GetExtTile(x, y, z);
-            }
-            
+
             byte physForm;
-            PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, isExt, out physForm);
+            PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, out physForm);
             p.level.Blockchange(x, y, z, (ExtBlock)physForm, false, args);
             return true;
         }
         
-        internal static bool Train(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static bool Train(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (!p.trainInvincible) p.HandleDeath((ExtBlock)Block.train);
             return true;
-        }
+        }       
         
-        internal static bool CustomBlock(Player p, byte block, ushort x, ushort y, ushort z) {
-            byte extBlock = p.level.GetExtTile(x, y, z);
-            BlockDefinition def = p.level.CustomBlockDefs[extBlock];
-            if (def == null) return false; // custom block was removed      
-            if (def.CollideType == CollideType.Solid) return false;
-            
-            if (p.level.CustomBlockProps[extBlock].IsPortal) {
-                return DoPortal(p, block, x, y, z);
-            } else if (p.level.CustomBlockProps[extBlock].IsMessageBlock) {
-                return DoMessageBlock(p, block, x, y, z);
-            } else if (p.level.CustomBlockProps[extBlock].IsDoor) {
-                return Door(p, block, x, y, z);
-            }
-            return false;
-        }
-        
-        
-        internal static bool DoPortal(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static bool DoPortal(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
             return Portal.Handle(p, x, y, z);
         }
         
-        internal static bool DoMessageBlock(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static bool DoMessageBlock(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
             return MessageBlock.Handle(p, x, y, z, false);
         }
         
-        internal static bool Checkpoint(Player p, byte block, ushort x, ushort y, ushort z) {
+        internal static bool Checkpoint(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             p.useCheckpointSpawn = true;
             p.checkpointX = x; p.checkpointY = (ushort)(y + 1); p.checkpointZ = z;
             p.checkpointRotX = p.Rot.RotY; p.checkpointRotY = p.Rot.HeadX;

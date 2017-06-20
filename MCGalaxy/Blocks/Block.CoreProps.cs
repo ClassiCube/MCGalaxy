@@ -28,11 +28,8 @@ namespace MCGalaxy {
         
         static void SetCoreProperties() {
             for (int i = 0; i < Block.Count; i++)
-                Props[i] = new BlockProps((byte)i);
-            for (int i = 0; i < Block.Count; i++) {
-                // Fallback for unrecognised physics blocks
-                if (i >= CpeCount) Props[i].ConvertId = Block.orange;
-                
+                Props[i] = BlockProps.MakeDefault();
+            for (int i = 0; i < Block.Count; i++) {                
                 if ((i >= op_glass && i <= op_lava) || i == Invalid || i == rocketstart || i == blackrock)
                     Props[i].OPBlock = true;
                 

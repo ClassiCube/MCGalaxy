@@ -40,13 +40,13 @@ namespace MCGalaxy.Drawing.Transforms {
         }
         
         public override void Perform(Vec3S32[] marks, Player p, Level lvl, 
-                                     DrawOp op, Brush brush, Action<DrawOpBlock> output) {
+                                     DrawOp op, Brush brush, DrawOpOutput output) {
             P = (op.Min + op.Max) / 2;
             if (!CentreOrigin) P = op.Origin;
             op.Perform(marks, brush, b => OutputBlock(b, output));
         }
         
-        void OutputBlock(DrawOpBlock b, Action<DrawOpBlock> output) {
+        void OutputBlock(DrawOpBlock b, DrawOpOutput output) {
             double dx = b.X - P.X, dy = b.Y - P.Y, dz = b.Z - P.Z;
             double rotX = 0, rotY = 0, rotZ = 0;
             

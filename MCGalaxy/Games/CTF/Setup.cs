@@ -51,7 +51,7 @@ namespace MCGalaxy.Games {
                     cache[p].bx = x;
                     cache[p].by = y;
                     cache[p].bz = z;
-                    cache[p].blue = p.level.GetTile(x, y, z);
+                    cache[p].blue = p.level.GetBlock(x, y, z);
                     Player.Message(p, "Ok! I got the blue flag, now can you show me the red flag?");
                     Player.Message(p, "Just hit it");
                     cache[p].s = Step.GetRedFlag;
@@ -60,7 +60,7 @@ namespace MCGalaxy.Games {
                     cache[p].rx = x;
                     cache[p].ry = y;
                     cache[p].rz = z;
-                    cache[p].red = p.level.GetTile(x, y, z);
+                    cache[p].red = p.level.GetBlock(x, y, z);
                     Player.Message(p, "Got it!");
                     Player.Message(p, "Now I can do random spawns, or do you have a spawn in mind?");
                     Player.Message(p, "Say - (Random/Set)");
@@ -172,7 +172,7 @@ namespace MCGalaxy.Games {
         public int middle = 0;
         public int bx, by, bz;
         public int rx, ry, rz;
-        public byte blue, red;
+        public ExtBlock blue, red;
         public int bluex, bluey, bluez;
     }
     

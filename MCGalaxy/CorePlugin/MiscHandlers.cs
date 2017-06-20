@@ -16,11 +16,11 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
 using MCGalaxy.Blocks.Extended;
 using MCGalaxy.Events;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Core {
     internal static class MiscHandlers {
@@ -71,21 +71,14 @@ namespace MCGalaxy.Core {
             if (p.showedWelcome) return;
             p.showedWelcome = true;
             p.LastAction = DateTime.UtcNow;
-            
-            if (!File.Exists(Paths.WelcomeFile)) {
-                Server.s.Log("Could not find Welcome.txt. Using default.");
-                try {
-                    File.WriteAllText(Paths.WelcomeFile, "Welcome to my server!");
-                } catch (Exception ex) {
-                    Server.ErrorLog(ex);
-                }
-            }
+            TextFile welcomeFile = TextFile.Files["Welcome"];
             
             try {
-                string[] welcome = File.ReadAllLines(Paths.WelcomeFile);
+                welcomeFile.EnsureExists();
+                string[] welcome = welcomeFile.GetText();
                 Player.MessageLines(p, welcome);
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
         
@@ -93,16 +86,10 @@ namespace MCGalaxy.Core {
                                               byte entity, ushort x, ushort y, ushort z, TargetBlockFace face) {
             if (p.level.Deletable || action != MouseAction.Pressed || !p.level.IsValidPos(x, y, z)) return;
             
-            byte block = p.level.GetTile(x, y, z);
-            bool isMB = Block.Props[block].IsMessageBlock;
-            bool isPortal = Block.Props[block].IsPortal;
-            
-            if (block == Block.custom_block) {
-                block = p.level.GetExtTile(x, y, z);
-                isMB = p.level.CustomBlockProps[block].IsMessageBlock;
-                isPortal = p.level.CustomBlockProps[block].IsMessageBlock;
-            }
-            
+            ExtBlock block = p.level.GetBlock(x, y, z);
+            bool isMB = p.level.BlockProps[block.Index].IsMessageBlock;
+            bool isPortal = p.level.BlockProps[block.Index].IsPortal;
+
             if (isMB) { MessageBlock.Handle(p, x, y, z, true); }
             if (isPortal) { Portal.Handle(p, x, y, z); }
         }

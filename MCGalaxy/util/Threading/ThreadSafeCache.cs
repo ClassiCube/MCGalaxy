@@ -21,22 +21,17 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Util {
     public sealed class ThreadSafeCache {
-        public static ThreadSafeCache DBCache = new ThreadSafeCache(key => new object());
+        public static ThreadSafeCache DBCache = new ThreadSafeCache();
             
         readonly object locker = new object();
         readonly Dictionary<string, object> items = new Dictionary<string, object>();
         readonly Dictionary<string, DateTime> access = new Dictionary<string, DateTime>();
-        readonly Func<string, object> constructor;
         
-        public ThreadSafeCache(Func<string, object> constructor) {
-            this.constructor = constructor;
-        }
-        
-        public object Get(string key) {
+        public object GetLocker(string key) {
             lock (locker) {
                 object value;
                 if (!items.TryGetValue(key, out value)) {
-                    value = constructor(key);
+                    value = new object();
                     items[key] = value;
                 }
                 

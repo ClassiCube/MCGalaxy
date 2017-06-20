@@ -18,9 +18,10 @@
 using System;
 using System.IO;
 using System.Net;
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Moderation {
-    public class CmdLocation : Command {        
+    public class CmdLocation : Command {
         public override string name { get { return "location"; } }
         public override string shortcut { get { return "lo"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -44,8 +45,11 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, Colors.red + "Player has an internal IP, cannot trace"); return;
             }
 
-            string country = new WebClient().DownloadString("http://ipinfo.io/" + ip + "/country");
-            country = country.Replace("\n", "");
+            string country = null;
+            using (WebClient client = HttpUtil.CreateWebClient()) {
+                country = client.DownloadString("http://ipinfo.io/" + ip + "/country");
+                country = country.Replace("\n", "");
+            }
             Player.Message(p, "The IP of &a" + target + " %Shas been traced to: &b" + country);
         }
         

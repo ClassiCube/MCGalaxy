@@ -20,13 +20,14 @@ using System.IO;
 using MCGalaxy;
 using MCGalaxy.Commands;
 using MCGalaxy.Network;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Core {
     internal static class ConnectHandler {
         
         internal static void HandleConnect(Player p) {
             CheckReviewList(p);
-            if (p.group.commands.Contains("reachdistance"))
+            if (p.group.CanExecute("reachdistance"))
                 LoadReach(p);
             
             LoadWaypoints(p);
@@ -63,7 +64,7 @@ namespace MCGalaxy.Core {
                 p.Waypoints.Load(p);
             } catch (IOException ex) {
                 Player.Message(p, "Error loading waypoints.");
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
         
@@ -83,8 +84,8 @@ namespace MCGalaxy.Core {
                     else p.listignored.Add(line);
                 }
             } catch (IOException ex) {
-                Server.ErrorLog(ex);
-                Server.s.Log("Failed to load ignore list for: " + p.name);
+                Logger.LogError(ex);
+                Logger.Log(LogType.Warning, "Failed to load ignore list for: " + p.name);
             }
             
             if (p.ignoreAll || p.ignoreIRC || p.ignoreTitles || p.ignoreNicks || p.listignored.Count > 0)
@@ -97,10 +98,13 @@ namespace MCGalaxy.Core {
             
             try {
                 PlayerActions.ChangeMap(p, level);
-                Command.all.Find("jail").Use(null, p.name);
+                ModAction action = new ModAction(p.name, null, ModActionType.Jailed, "Auto jail");
+                action.Announce = false;
+                OnModActionEvent.Call(action);
+                Chat.MessageGlobal(p, p.DisplayName + " &cis still jailed from previously.", false);
             } catch (Exception ex) {
                 p.Leave("Error occured", "Error occured", true);
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
     }

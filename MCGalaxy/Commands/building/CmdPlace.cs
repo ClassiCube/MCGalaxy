@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "Invalid parameters"); return; 
             }
 
-            if (!CommandParser.IsBlockAllowed(p, "place ", block)) return;
+            if (!CommandParser.IsBlockAllowed(p, "place", block)) return;
             
             x = Clamp(x, p.level.Width);
             y = Clamp(y, p.level.Height);

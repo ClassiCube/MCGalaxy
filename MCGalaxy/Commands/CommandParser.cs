@@ -132,18 +132,21 @@ namespace MCGalaxy.Commands {
                 block = ExtBlock.Invalid; return true;
             }
             
+            block = RawGetBlock(p, input);
+            return !block.IsInvalid;
+        }
+        
+        /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
+        /// <remarks> This does not output any messages to the player. </remarks>
+        public static ExtBlock RawGetBlock(Player p, string input) {
+            ExtBlock block = default(ExtBlock);
             block.BlockID = Block.Byte(input);
-            if (block.BlockID != Block.Invalid) return true;
+            if (!block.IsInvalid) return block;
             
             // find custom block
             byte raw = BlockDefinition.GetBlock(input, p);
-            if (raw == Block.Invalid) {
-                Player.Message(p, "&cThere is no block \"{0}\".", input);
-                return false;
-            } else {
-                block = ExtBlock.FromRaw(raw);
-                return true;
-            }
+            if (raw != Block.Invalid) return ExtBlock.FromRaw(raw);
+            return ExtBlock.Invalid;
         }
 
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
@@ -151,7 +154,7 @@ namespace MCGalaxy.Commands {
         public static bool GetBlockIfAllowed(Player p, string input, out ExtBlock block, bool allowSkip = false) {
             if (!GetBlock(p, input, out block, allowSkip)) return false;
             if (allowSkip && block == ExtBlock.Invalid) return true;
-            return IsBlockAllowed(p, "draw with ", block);
+            return IsBlockAllowed(p, "draw with", block);
         }
         
         /// <summary> Returns whether the player is allowed to place/modify/delete the given block. </summary>

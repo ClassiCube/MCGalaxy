@@ -23,12 +23,13 @@ using MCGalaxy.Undo;
 using MCGalaxy.Maths;
 using MCGalaxy.Events;
 using MCGalaxy.Network;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
     
     public enum VoteKickChoice { NotYetVoted, Yes, No }
     
-    public sealed partial class Player : IDisposable {
+    public partial class Player : IDisposable {
         
         public Dictionary<string, object> ExtraData = new Dictionary<string, object>();
 
@@ -47,7 +48,6 @@ namespace MCGalaxy {
         internal static object pendingLock = new object();        
         public static List<Player> connections = new List<Player>(Server.players);
         public List<string> listignored = new List<string>();
-        public static byte number { get { return (byte)PlayerInfo.Online.Count; } }
         public static string lastMSG = "";
         
         //TpA
@@ -55,8 +55,6 @@ namespace MCGalaxy {
         internal string senderName = "";
         internal string currentTpa = "";
 
-        public static bool storeHelp = false;
-        public static string storedHelp = "";
         public string truename;
         internal bool dontmindme = false;
         INetworkSocket socket;
@@ -78,7 +76,6 @@ namespace MCGalaxy {
 
         public string name;
         public string DisplayName;
-        public string realName;
         public int warn = 0;
         public byte id;
         public string ip;
@@ -97,13 +94,11 @@ namespace MCGalaxy {
         public string titlecolor;
         public int TotalMessagesSent = 0;
         public int passtries = 0;
-        public int ponycount = 0;
-        public int rdcount = 0;
         public bool hasreadrules = false;
         public DateTime NextReviewTime, NextEat;
         public float ReachDistance = 5;
         public bool hackrank;
-        internal string ircChannel, ircNick;
+        public bool SuperUser;
         
         public string FullName { get { return color + prefix + DisplayName; } }
         
@@ -148,6 +143,7 @@ namespace MCGalaxy {
 
         public bool staticCommands = false;
         public DateTime ZoneSpam;
+        public VolatileArray<SchedulerTask> CriticalTasks = new VolatileArray<SchedulerTask>(false);
 
         public bool aiming;
         public bool isFlying = false;
@@ -156,7 +152,6 @@ namespace MCGalaxy {
         public bool adminpen = false;
 
         public bool voice = false;
-        public string voicestring = "";
 
         public bool useCheckpointSpawn = false;
         public int lastCheckpointIndex = -1;
@@ -197,8 +192,6 @@ namespace MCGalaxy {
         internal BlockDefinition gbBlock, lbBlock;
         public bool spawned = false;
 
-        public bool Mojangaccount { get { return truename.IndexOf('@') >= 0; } }
-
         //Undo
         internal VolatileArray<UndoDrawOpEntry> DrawOps = new VolatileArray<UndoDrawOpEntry>(false);
         internal readonly object pendingDrawOpsLock = new object();
@@ -235,10 +228,6 @@ namespace MCGalaxy {
         public byte[] rot = new byte[2];
         internal Position tempPos;
 
-        //ushort[] clippos = new ushort[3] { 0, 0, 0 };
-        //byte[] cliprot = new byte[2] { 0, 0 };
-        public int consecutivemessages;
-
         // CmdVoteKick
         public VoteKickChoice voteKickChoice = VoteKickChoice.NotYetVoted;
 
@@ -263,6 +252,6 @@ namespace MCGalaxy {
         public bool verifiedName;
         
         /// <summary> Returns whether the given player is console or IRC. </summary>
-        public static bool IsSuper(Player p) { return p == null || p.ircChannel != null || p.ircNick != null; }
+        public static bool IsSuper(Player p) { return p == null || p.SuperUser; }
     }
 }

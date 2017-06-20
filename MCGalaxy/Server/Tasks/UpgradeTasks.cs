@@ -88,12 +88,12 @@ namespace MCGalaxy.Tasks {
                     try {
                         File.Move(file, newFile);
                     } catch (Exception ex) {
-                        Server.s.Log("Error while trying to move .lvl.prev file");
-                        Server.ErrorLog(ex);
+                        Logger.Log(LogType.Warning, "Error while trying to move .lvl.prev file");
+                        Logger.LogError(ex);
                     }
                 }
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
         
@@ -103,18 +103,18 @@ namespace MCGalaxy.Tasks {
                 string[] files = Directory.GetFiles("levels/level properties", "*.env");
                 if (files.Length == 0) return;
                 
-                Server.s.Log("Combining " + files.Length + " .env and .properties files..");
+                Logger.Log(LogType.SystemActivity, "Combining {0} .env and .properties files..", files.Length);
                 foreach (string envFile in files) {
                     try {
                         Combine(envFile);
                     } catch (Exception ex) {
-                        Server.s.Log("Error while trying to combine .env and .properties file");
-                        Server.ErrorLog(ex);
+                        Logger.Log(LogType.Warning, "Error while trying to combine .env and .properties file");
+                        Logger.LogError(ex);
                     }
                 }
-                Server.s.Log("Finished combining .env and .properties files.");
+                Logger.Log(LogType.SystemActivity, "Finished combining .env and .properties files.");
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
             }
         }
         
@@ -151,6 +151,37 @@ namespace MCGalaxy.Tasks {
             Directory.Delete("text/lockdown/map");
         }
         
+        internal static void UpgradeOldTempranks() {
+            if (!File.Exists(Paths.TempRanksFile)) return;
+
+            // Check if empty, or not old form
+            using (StreamReader reader = new StreamReader(Paths.TempRanksFile)) {
+                string line = reader.ReadLine();
+                if (line == null) return;
+                string[] parts = line.SplitSpaces();
+                if (parts.Length < 9) return;
+            }
+
+            string[] lines = File.ReadAllLines(Paths.TempRanksFile);
+            for (int i = 0; i < lines.Length; i++) {
+                string[] args = lines[i].SplitSpaces();
+                if (args.Length < 9) continue;
+
+                int min = int.Parse(args[4]), hour = int.Parse(args[5]);
+                int day = int.Parse(args[6]), month = int.Parse(args[7]), year = int.Parse(args[8]);
+                int periodH = int.Parse(args[3]), periodM = 0;
+                if (args.Length > 10) periodM = int.Parse(args[10]);
+                
+                DateTime assigned = new DateTime(year, month, day, hour, min, 0);
+                DateTime expiry = assigned.AddHours(periodH).AddMinutes(periodM);
+                
+                // Line format: name assigner assigntime expiretime oldRank tempRank
+                lines[i] = args[0] + " " + args[9] + " " + assigned.ToUnixTime() +
+                    " " + expiry.ToUnixTime() + " " + args[2] + " " + args[1];
+            }
+            File.WriteAllLines(Paths.TempRanksFile, lines);
+        }
+        
         internal static void UpgradeDBTimeSpent() {
             DataTable table = Database.Backend.GetRows(PlayerData.DBTable, "TimeSpent", "LIMIT 1");
             if (table.Rows.Count == 0) return; // no players
@@ -158,10 +189,10 @@ namespace MCGalaxy.Tasks {
             string time = table.Rows[0]["TimeSpent"].ToString();
             if (time.IndexOf(' ') == -1) return; // already upgraded
             
-            Server.s.Log("Upgrading TimeSpent column in database to new format..");
+            Logger.Log(LogType.SystemActivity, "Upgrading TimeSpent column in database to new format..");
             DumpPlayerTimeSpents();
             UpgradePlayerTimeSpents();
-            Server.s.Log("Upgraded " + playerCount + " rows. (" + playerFailed + " rows failed)");
+            Logger.Log(LogType.SystemActivity, "Upgraded {0} rows. ({1} rows failed)", playerCount, playerFailed);
         }
         
         static List<int> playerIds;

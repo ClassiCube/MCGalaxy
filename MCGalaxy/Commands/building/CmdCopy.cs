@@ -110,22 +110,19 @@ namespace MCGalaxy.Commands.Building {
                 for (ushort zz = minZ; zz <= maxZ; ++zz)
                     for (ushort xx = minX; xx <= maxX; ++xx)
             {
-                byte b = p.level.GetTile(xx, yy, zz), extB = 0;
-                if (!p.group.CanModify[b]) { index++; continue; }
-                if (b == Block.custom_block)
-                    extB = p.level.GetExtTile(xx, yy, zz);
+                block = p.level.GetBlock(xx, yy, zz);
+                if (!p.group.CanModify[block.BlockID]) { index++; continue; } // TODO: will need to fix this when extblock permissions
                 
-                if (b != Block.air || cState.PasteAir)
+                if (block.BlockID != Block.air || cState.PasteAir) 
                     cState.UsedBlocks++;
-                cState.Blocks[index] = b;
-                cState.ExtBlocks[index] = extB;
+                cState.Set(block, index);
                 index++;
             }
             
             if (cState.UsedBlocks > p.group.maxBlocks) {
                 Player.Message(p, "You tried to copy {0} blocks. You cannot copy more than {1} blocks.", 
                                cState.UsedBlocks, p.group.maxBlocks);
-                cState.Blocks = null; cState.ExtBlocks = null; cState = null;
+                cState.Clear(); cState = null;
                 return false;
             }
             
@@ -189,7 +186,7 @@ namespace MCGalaxy.Commands.Building {
             using (FileStream fs = File.OpenRead(path))
                 using (GZipStream gs = new GZipStream(fs, CompressionMode.Decompress))
             {
-                CopyState state = new CopyState(0, 0, 0, 0, 0, 0, null, null);
+                CopyState state = new CopyState(0, 0, 0, 0, 0, 0);
                 if (path.CaselessEnds(".cpb")) {
                     state.LoadFrom(gs);
                 } else {

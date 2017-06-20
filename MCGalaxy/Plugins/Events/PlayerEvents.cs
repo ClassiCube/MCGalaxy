@@ -103,7 +103,7 @@ namespace MCGalaxy.Events {
     /// <summary> This event is called whenever a player clicks their mouse </summary>
     public sealed class OnPlayerClickEvent : IPluginEvent<Player.PlayerClickHandler> {
         public static void Call(Player p, MouseButton button, MouseAction action, 
-    	                        ushort yaw, ushort pitch, byte entity, ushort x, ushort y, ushort z, TargetBlockFace face) {
+                                ushort yaw, ushort pitch, byte entity, ushort x, ushort y, ushort z, TargetBlockFace face) {
             if (handlers.Count == 0) return;
             CallImpl(pl => pl(p, button, action, yaw,
                 pitch, entity, x, y, z, face));

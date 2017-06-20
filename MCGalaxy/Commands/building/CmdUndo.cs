@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands.Building {
             DrawOpPerformer.Do(op, null, p, new Vec3S32[] { Vec3U16.MinVal, Vec3U16.MaxVal } );
             
             Chat.MessageGlobal("Physics were undone &b{0}", delta.Shorten());
-            Server.s.Log("Physics were undone &b" + delta.Shorten());
+            Logger.Log(LogType.UserActivity, "Physics were undone &b" + delta.Shorten());
             p.level.Save(true);
         }
         
@@ -99,7 +99,8 @@ namespace MCGalaxy.Commands.Building {
             DrawOpPerformer.Do(op, null, p, new Vec3S32[] { Vec3U16.MinVal, Vec3U16.MaxVal });
             if (op.found) {
                 Player.Message(p, "Undid your changes for the past &b{0}", delta.Shorten(true));
-                Server.s.Log(p.name + "'s actions for the past " + delta.Shorten(true) + " were undone.");
+                Logger.Log(LogType.UserActivity, "{0} undid their own actions for the past {1}", 
+                           p.name, delta.Shorten(true));
             } else {
                 Player.Message(p, "No changes found by you in the past &b{0}", delta.Shorten(true));
             }

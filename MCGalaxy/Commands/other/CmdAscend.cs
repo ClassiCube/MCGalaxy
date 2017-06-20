@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Blocks;
+using MCGalaxy.Commands.Fun;
 
 namespace MCGalaxy.Commands.Misc {
     public class CmdAscend : Command {
@@ -32,27 +34,32 @@ namespace MCGalaxy.Commands.Misc {
             int x = p.Pos.BlockX, y = p.Pos.BlockY, z = p.Pos.BlockZ;
             if (y < 0) y = 0;
             
-            for (; y < p.level.Height; y++) {
-                byte block = p.level.GetBlock(x, y, z);
-                if (!(Block.Convert(block) == Block.air || block == Block.Invalid)) continue;               
-                byte above = p.level.GetBlock(x, y + 1, z);             
-                if (!(Block.Convert(above) == Block.air || above == Block.Invalid)) continue;
-
-                byte below = p.level.GetBlock(x, y - 1, z);
-                if (Solid(Block.Convert(below))) {
-                    Player.Message(p, "Teleported you up.");
-                    
-                    Position pos = Position.FromFeet(p.Pos.X, y * 32, p.Pos.Z);
-                    p.SendPos(Entities.SelfID, pos, p.Rot);
-                    return;
-                }
+            int freeY = -1;
+            if (p.level.IsValidPos(x, y, z)) {
+                freeY = FindYAbove(p.level, (ushort)x, (ushort)y, (ushort)z);
             }
-            Player.Message(p, "No free spaces found above you");
+            
+            if (freeY == -1) {
+                Player.Message(p, "No free spaces found above you.");
+            } else {
+                Player.Message(p, "Teleported you up.");
+                Position pos = Position.FromFeet(p.Pos.X, freeY * 32, p.Pos.Z);
+                p.SendPos(Entities.SelfID, pos, p.Rot);
+            }
         }
         
-        static bool Solid(byte b) {
-            return b != Block.air && (b < Block.water || b > Block.lavastill) && b != Block.Invalid
-                && b != Block.shrub && (b < Block.yellowflower || b > Block.redmushroom);
+        static int FindYAbove(Level lvl, ushort x, ushort y, ushort z) {
+            for (; y < lvl.Height; y++) {
+                ExtBlock block = lvl.GetBlock(x, y, z);
+                if (!block.IsInvalid && CmdSlap.Collide(lvl, block) == CollideType.Solid) continue;
+                ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                if (!above.IsInvalid && CmdSlap.Collide(lvl, above) == CollideType.Solid) continue;
+
+                ExtBlock below = lvl.GetBlock(x, (ushort)(y - 1), z);
+                if (!below.IsInvalid && CmdSlap.Collide(lvl, below) == CollideType.Solid)
+                    return y;
+            }
+            return -1;
         }
         
         public override void Help(Player p) {

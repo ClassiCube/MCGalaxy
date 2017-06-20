@@ -19,6 +19,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Net;
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Generator {
     public static class HeightmapGen {
@@ -35,14 +36,14 @@ namespace MCGalaxy.Generator {
             }
             
             try {
-                using (WebClient client = new WebClient()) {
+                using (WebClient client = HttpUtil.CreateWebClient()) {
                     Player.Message(p, "Downloading file from: &f" + url);
                     client.DownloadFile(uri, dir + "tempImage_" + p.name + ".bmp");
                 }
                 Player.Message(p, "Finished downloading image.");
                 return true;
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 Player.Message(p, "&cFailed to download the image from the given url.");
                 Player.Message(p, "&cThe url may need to end with its extension (such as .jpg).");
                 return false;
@@ -58,7 +59,7 @@ namespace MCGalaxy.Generator {
                 // so we make sure to check for that here rather than later.
                 return bmp;
             } catch (Exception ex) {
-                Server.ErrorLog(ex);
+                Logger.LogError(ex);
                 if (bmp != null) bmp.Dispose();
                 Player.Message(p, "&cThere was an error reading the downloaded image.");
                 Player.Message(p, "&cThe url may need to end with its extension (such as .jpg).");

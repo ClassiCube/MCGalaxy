@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Net;
 
 namespace MCGalaxy.Network {
     
@@ -23,13 +24,32 @@ namespace MCGalaxy.Network {
     public interface INetworkSocket {
         
         /// <summary> Gets the remote IP of this socket. </summary>
-         string RemoteIP { get; }
+        string RemoteIP { get; }
         
         /// <summary> Receives next block of received data, asynchronously. </summary>
         void ReceiveNextAsync();
         
         /// <summary> Sends a block of data, either synchronously or asynchronously. </summary>
         void Send(byte[] buffer, bool sync = false);
+        
+        /// <summary> Closes this network socket. </summary>
+        void Close();
+    }
+            
+    /// <summary> Abstracts listening on network socket. </summary>
+    public interface INetworkListen {
+
+        /// <summary> Gets the IP address this network socket is listening on. </summary>
+        IPAddress LocalIP { get; }
+        
+        /// <summary> Gets the port this network socket is listening on. </summary>
+        ushort LocalPort { get; }
+
+        /// <summary> Begins listening on the given local IP and port. </summary>
+        void Listen(IPAddress ip, ushort port);
+        
+        /// <summary> Accepts the next client connection, asynchronously. </summary>
+        void AcceptNextAsync();
         
         /// <summary> Closes this network socket. </summary>
         void Close();

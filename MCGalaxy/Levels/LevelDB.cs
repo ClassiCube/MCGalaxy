@@ -30,12 +30,12 @@ namespace MCGalaxy {
 
             using (IDisposable wLock = lvl.BlockDB.Locker.AccquireWrite(60 * 1000)) {
                 if (wLock == null) {
-                    Server.s.ErrorCase("!!! couldn't accquire BlockDB write lock on " + lvl.name + ", skipping save !!!");
+            	    Logger.Log(LogType.Warning, "Couldn't accquire BlockDB write lock on {0}, skipping save", lvl.name);
                     return;
                 }
                 lvl.BlockDB.WriteEntries();
             }
-            Server.s.Log("Saved BlockDB changes for:" + lvl.name, true);
+            Logger.Log(LogType.BackgroundActivity, "Saved BlockDB changes for: {0}", lvl.name);
         }
 
         internal static void LoadZones(Level level, string name) {
@@ -65,13 +65,8 @@ namespace MCGalaxy {
                     ushort y = ushort.Parse(row["EntryY"].ToString());
                     ushort z = ushort.Parse(row["EntryZ"].ToString());
                     
-                    byte block = level.GetTile(x, y, z);
-                    if (block == Block.custom_block) {
-                        block = level.GetExtTile(x, y, z);
-                        if (level.CustomBlockProps[block].IsPortal) continue;
-                    } else {
-                        if (Block.Props[block].IsPortal) continue;
-                    }
+                    ExtBlock block = level.GetBlock(x, y, z);
+                    if (level.BlockProps[block.Index].IsPortal) continue;
                     
                     Database.Backend.DeleteRows("Portals" + name, "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
                 }
@@ -88,13 +83,8 @@ namespace MCGalaxy {
                     ushort y = ushort.Parse(row["Y"].ToString());
                     ushort z = ushort.Parse(row["Z"].ToString());
                     
-                    byte block = level.GetTile(x, y, z);
-                    if (block == Block.custom_block) {
-                        block = level.GetExtTile(x, y, z);
-                        if (level.CustomBlockProps[block].IsMessageBlock) continue;
-                    } else {
-                        if (Block.Props[block].IsMessageBlock) continue;
-                    }
+                    ExtBlock block = level.GetBlock(x, y, z);
+                    if (level.BlockProps[block.Index].IsMessageBlock) continue;
 
                     Database.Backend.DeleteRows("Messages" + name, "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
                 }
@@ -102,7 +92,7 @@ namespace MCGalaxy {
         }
         
         public static void DeleteZone(string level, Level.Zone zn) {
-            object locker = ThreadSafeCache.DBCache.Get(level);
+            object locker = ThreadSafeCache.DBCache.GetLocker(level);
             lock (locker) {
                 if (!Database.TableExists("Zone" + level)) return;
                 Database.Backend.DeleteRows("Zone" + level, "WHERE Owner=@0 AND SmallX=@1 AND SMALLY=@2 " +
@@ -112,7 +102,7 @@ namespace MCGalaxy {
         }
         
         public static void CreateZone(string level, Level.Zone zn) {
-            object locker = ThreadSafeCache.DBCache.Get(level);
+            object locker = ThreadSafeCache.DBCache.GetLocker(level);
             lock (locker) {
                 Database.Backend.CreateTable("Zone" + level, LevelDB.createZones);
                 Database.Backend.AddRow("Zone" + level, "Owner, SmallX, SmallY, SmallZ, BigX, BigY, BigZ",

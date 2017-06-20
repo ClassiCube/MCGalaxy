@@ -55,8 +55,8 @@ namespace MCGalaxy {
             try {
                 Database.Backend.CreateDatabase();
             } catch (Exception e) {
-                ErrorLog(e);
-                s.Log("MySQL settings have not been set! Please Setup using the properties window.");
+                Logger.LogError(e);
+                Logger.Log(LogType.Warning, "MySQL settings have not been set! Please Setup using the properties window.");
                 return;
             }
 

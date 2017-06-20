@@ -33,7 +33,7 @@ namespace MCGalaxy {
         public string username { get; set; }
     }
     
-    public sealed partial class Player : Entity, IDisposable {
+    public partial class Player : Entity, IDisposable {
 
         static int sessionCounter;
 
@@ -44,7 +44,7 @@ namespace MCGalaxy {
             truename = playername;
             DisplayName = playername;
             SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
-            spamChecker = new SpamChecker(this);
+            SuperUser = true;
         }
 
         public Player(Socket s) {
@@ -53,7 +53,7 @@ namespace MCGalaxy {
                 socket = new TcpSocket(this, s);
                 ip = socket.RemoteIP;
                 SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
-                Server.s.Log(ip + " connected to the server.");
+                Logger.Log(LogType.UserActivity, ip + " connected to the server.");
 
                 for (int i = 0; i < BlockBindings.Length; i++) {
                     BlockBindings[i] = ExtBlock.FromRaw((byte)i);
@@ -62,7 +62,7 @@ namespace MCGalaxy {
                 socket.ReceiveNextAsync();
                 connections.Add(this);
             }
-            catch ( Exception e ) { Leave("Login failed!"); Server.ErrorLog(e); }
+            catch ( Exception e ) { Leave("Login failed!"); Logger.LogError(e); }
         }
         
         public override byte EntityID { get { return id; } }
@@ -97,12 +97,6 @@ namespace MCGalaxy {
         public ExtBlock GetHeldBlock() {
             if (!ModeBlock.IsAir) return ModeBlock;
             return BlockBindings[RawHeldBlock.RawID];
-        }
-        
-        public static string CheckPlayerStatus(Player p) {
-            if ( p.hidden ) return "hidden";
-            if ( p.IsAfk ) return "afk";
-            return "active";
         }
         
         public void SetPrefix() {
@@ -276,6 +270,7 @@ namespace MCGalaxy {
             leftServer = true;
             if (chatMsg != null) chatMsg = Colors.EscapeColors(chatMsg);
             discMsg = Colors.EscapeColors(discMsg);
+            CriticalTasks.Clear();
             
             //Umm...fixed?
             if (name == "") {
@@ -310,7 +305,7 @@ namespace MCGalaxy {
                     PlayerInfo.Online.Remove(this);
                     
                     string user = String.IsNullOrEmpty(name) ? ip : name + " (" + ip + ")";
-                    Server.s.Log(user + " disconnected. (" + discMsg + ")");
+                    Logger.Log(LogType.UserActivity, "{0} disconnected. ({1})", user, discMsg);
                     return;
                 }
 
@@ -327,7 +322,7 @@ namespace MCGalaxy {
                 ShowDisconnectInChat(chatMsg, isKick);
 
                 try { save(); }
-                catch ( Exception e ) { Server.ErrorLog(e); }
+                catch ( Exception e ) { Logger.LogError(e); }
 
                 PlayerInfo.Online.Remove(this);
                 Server.s.PlayerListUpdate();
@@ -335,11 +330,11 @@ namespace MCGalaxy {
                 OnPlayerDisconnectEvent.Call(this, discMsg);
                 if (PlayerDisconnect != null) PlayerDisconnect(this, discMsg);
                 
-                if (Server.AutoLoad && level.unload && !level.IsMuseum && IsAloneOnCurrentLevel())
+                if (Server.AutoLoad && level.unload && !level.IsMuseum && !level.HasPlayers())
                     level.Unload(true);
                 Dispose();
             } catch ( Exception e ) { 
-                Server.ErrorLog(e); 
+                Logger.LogError(e); 
             } finally {
                 CloseSocket();
             }
@@ -354,15 +349,12 @@ namespace MCGalaxy {
                 if (group.Permission > perm || (Server.guestLeaveNotify && group.Permission <= perm)) {
                     Chat.MessageGlobal(this, leavem, false, true);
                 }
-                Server.s.Log(name + " disconnected (" + chatMsg + "%S).");
+                Logger.Log(LogType.UserActivity, "{0} disconnected ({1}%S).", name, chatMsg);
             } else {
-                 Chat.MessageGlobal(this, "&c- " + FullName + " %Skicked %S" + chatMsg, false);
-                Server.s.Log(name + " kicked (" + chatMsg + "%S).");
+                Chat.MessageGlobal(this, "&c- " + FullName + " %Skicked %S" + chatMsg, false);
+                Logger.Log(LogType.UserActivity, "{0} kicked ({1}%S).", name, chatMsg);
             }
         }
-        
-        [Obsolete]
-        public static void SaveUndo(Player p) { }
 
         public void Dispose() {
             connections.Remove(this);
@@ -371,18 +363,9 @@ namespace MCGalaxy {
             if (CopyBuffer != null)
                 CopyBuffer.Clear();
             DrawOps.Clear();
-            spamChecker.Clear();
+            if (spamChecker != null)
+                spamChecker.Clear();
             spyChatRooms.Clear();
-        }
-
-        public bool IsAloneOnCurrentLevel() {
-            lock (PlayerInfo.Online.locker) {
-                Player[] players = PlayerInfo.Online.Items;
-                foreach (Player p in players) {
-                    if (p != this && p.level == level) return false;
-                }
-                return true;
-            }
         }
 
         #endregion
@@ -428,10 +411,6 @@ namespace MCGalaxy {
             return true;
         }
 
-        public static int GetBannedCount() {
-            Group group = Group.BannedRank;
-            return group == null ? 0 : group.playerList.Count;
-        }
         #endregion
 
         public void BlockUntilLoad(int sleep) {
@@ -443,7 +422,7 @@ namespace MCGalaxy {
         /// <remarks> Vanilla client always assumes block place/delete succeeds, so this method is usually used to echo back the
         /// old block. (e.g. due to insufficient permission to change that block, used as mark for draw operations) </remarks>
         public void RevertBlock(ushort x, ushort y, ushort z) {
-            SendBlockchange(x, y, z, level.GetExtBlock(x, y, z));
+            SendBlockchange(x, y, z, level.GetBlock(x, y, z));
         }
 
         public static bool IPInPrivateRange(string ip) {
@@ -538,22 +517,21 @@ namespace MCGalaxy {
                 selIndex++;
                 if (selIndex != selMarks.Length) return;
                 
+                object state = selState; selState = null;
+                SelectionHandler callback = selCallback; selCallback = null;
+                
                 Blockchange = null;
                 if (!block.IsPhysicsType) block = p.BlockBindings[block.RawID];
-                bool canRepeat = selCallback(this, selMarks, selState, block);
+                bool canRepeat = callback(this, selMarks, state, block);
                 
                 if (canRepeat && staticCommands) {
-                    MakeSelection(selIndex, selState, selCallback);
-                } else {
-                    selState = null;
-                    selCallback = null;
+                    MakeSelection(selIndex, state, callback);
                 }
             }
-        }
-        
+        }        
         
         public void CheckForMessageSpam() {
-            spamChecker.CheckChatSpam();
+            if (spamChecker != null) spamChecker.CheckChatSpam();
         }        
     }
 }

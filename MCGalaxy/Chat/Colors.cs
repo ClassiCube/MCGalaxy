@@ -114,10 +114,10 @@ namespace MCGalaxy {
             input = IrcTwoColorCode.Replace(input, "$1");
             StringBuilder sb = new StringBuilder(input);
             
-            foreach (KeyValuePair<string, string> kvp in ircColors) {
+            foreach (var kvp in ircColors) {
                 sb.Replace(kvp.Value, kvp.Key);
             }
-            foreach (KeyValuePair<string, string> kvp in ircSingleColors) {
+            foreach (var kvp in ircSingleColors) {
                 sb.Replace(kvp.Value, kvp.Key);
             }
             
@@ -138,7 +138,7 @@ namespace MCGalaxy {
                 sb.Replace("&" + col.Code, "&" + col.Fallback);
             }
             
-            foreach (KeyValuePair<string, string> kvp in ircColors) {
+            foreach (var kvp in ircColors) {
                 sb.Replace(kvp.Key, kvp.Value);
             }
             return sb.ToString();
@@ -291,7 +291,7 @@ namespace MCGalaxy {
             return c;
         }
         
-        static int Hex(char value) {
+        public static int Hex(char value) {
             if (value >= '0' && value <= '9')
                 return (int)(value - '0');
             if (value >= 'a' && value <= 'f')

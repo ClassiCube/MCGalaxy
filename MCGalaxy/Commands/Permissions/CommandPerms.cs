@@ -46,6 +46,16 @@ namespace MCGalaxy.Commands {
         /// <summary> Ranks specifically prevented from using the command. </summary>
         public List<LevelPermission> Disallowed = new List<LevelPermission>();
         
+        /// <summary> Creates a copy of this instance. </summary>
+        public CommandPerms Copy() {
+            CommandPerms perms = new CommandPerms();
+            perms.CmdName = CmdName;
+            perms.MinRank = MinRank;
+            perms.Allowed = new List<LevelPermission>(Allowed);
+            perms.Disallowed = new List<LevelPermission>(Disallowed);
+            return perms;
+        }
+        
         static List<CommandPerms> list = new List<CommandPerms>();
         
         
@@ -146,8 +156,9 @@ namespace MCGalaxy.Commands {
                         w.WriteLine(perms.CmdName + " : " + (int)perms.MinRank + " : " + JoinPerms(perms.Disallowed) + " : " + JoinPerms(perms.Allowed));
                     }
                 }
-            } catch {
-                Server.s.Log("SAVE FAILED! command.properties");
+            } catch (Exception ex) {
+                Logger.Log(LogType.Warning, "SAVE FAILED! command.properties");
+                Logger.LogError(ex);
             }
         }
         
@@ -190,7 +201,7 @@ namespace MCGalaxy.Commands {
                     List<LevelPermission> disallow = ExpandPerms(disallowRaw);
                     Set(args[0], minRank, allow, disallow);
                 } catch {
-                    Server.s.Log("Hit an error on the command " + line); continue;
+                    Logger.Log(LogType.Warning, "Hit an error on the command " + line); continue;
                 }
             }
         }
@@ -203,7 +214,7 @@ namespace MCGalaxy.Commands {
                 string value = line.Split('=')[1].Trim();
 
                 if (Group.Find(value) == null) {
-                    Server.s.Log("No group found for command " + cmd + ", using default value.");
+                    Logger.Log(LogType.Warning, "No group found for command {0}, using default value.", cmd);
                 } else {
                     LevelPermission lowestRank = Group.Find(value).Permission;
                     Set(cmd, lowestRank, null, null);

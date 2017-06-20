@@ -54,7 +54,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             this.output = output;
             PerformUndo();
             this.output = null;
@@ -71,11 +71,11 @@ namespace MCGalaxy.Drawing.Ops {
                 }
             }
             
-            UndoFormatArgs args = new UndoFormatArgs(Player, Start);
-            DoOldUndo(args);
+            UndoFormatArgs args = new UndoFormatArgs(Level.name, Start, End, OldUndoBlock);
+            PerformOldUndo(args);
         }
         
-        Action<DrawOpBlock> output;
+        DrawOpOutput output;
         Vec3U16 dims;
         
         void UndoBlock(BlockDBEntry e) {
@@ -93,38 +93,31 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         
-        void DoOldUndo(UndoFormatArgs args) {
+        void PerformOldUndo(UndoFormatArgs args) {
             List<string> files = UndoFormat.GetUndoFiles(who.ToLower());
             if (files.Count == 0) return;
             found = true;
             
             foreach (string file in files) {
                 using (Stream s = File.OpenRead(file)) {
-                    DoOldUndo(s, UndoFormat.GetFormat(file), args);
+                    UndoFormat.GetFormat(file).EnumerateEntries(s, args);
                     if (args.Stop) break;
                 }
             }
         }
         
-        void DoOldUndo(Stream s, UndoFormat format, UndoFormatArgs args) {
-            Level lvl = args.Player == null ? null : args.Player.level;
-            string lastMap = null;
-            DrawOpBlock block;
+        void OldUndoBlock(UndoFormatEntry P) {            
+            if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) return;
+            if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) return;
             
-            foreach (UndoFormatEntry P in format.GetEntries(s, args)) {
-                if (P.LevelName != lastMap) lvl = LevelInfo.FindExact(P.LevelName);
-                if (lvl == null || P.Time > End) continue;
-                if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) continue;
-                if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) continue;
+            byte lvlBlock = Level.GetTile(P.X, P.Y, P.Z);
+            if (lvlBlock == P.NewBlock.BlockID || Block.Convert(lvlBlock) == Block.water
+                || Block.Convert(lvlBlock) == Block.lava || lvlBlock == Block.grass) {
                 
-                byte lvlBlock = lvl.GetTile(P.X, P.Y, P.Z);
-                if (lvlBlock == P.NewBlock.BlockID || Block.Convert(lvlBlock) == Block.water
-                    || Block.Convert(lvlBlock) == Block.lava || lvlBlock == Block.grass) {
-                    
-                    block.X = P.X; block.Y = P.Y; block.Z = P.Z;
-                    block.Block = P.Block;
-                    output(block);
-                }
+                DrawOpBlock block;
+                block.X = P.X; block.Y = P.Y; block.Z = P.Z;
+                block.Block = P.Block;
+                output(block);
             }
         }
     }

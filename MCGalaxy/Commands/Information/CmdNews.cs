@@ -15,8 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using System.Collections.Generic;
-using System.IO;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdNews : Command {
@@ -26,11 +25,10 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         
         public override void Use(Player p, string message) {
-            if (!File.Exists(Paths.NewsFile)) {
-                File.WriteAllText(Paths.NewsFile, "News have not been created. Put News in '" + Paths.NewsFile + "'."); return;
-            }
+            TextFile newsText = TextFile.Files["News"];
+            newsText.EnsureExists();
             
-            string[] lines = File.ReadAllLines(Paths.NewsFile);
+            string[] lines = newsText.GetText();
             Player.MessageLines(p, lines);
         }
         

@@ -312,49 +312,49 @@ namespace MCGalaxy.Gui
             this.tsPlayer_whois.Name = "tsPlayer_whois";
             this.tsPlayer_whois.Size = new System.Drawing.Size(114, 22);
             this.tsPlayer_whois.Text = "Whois";
-            this.tsPlayer_whois.Click += new System.EventHandler(this.whoisToolStripMenuItem_Click);
+            this.tsPlayer_whois.Click += new System.EventHandler(this.tsPlayer_Whois_Click);
             // 
             // tsPlayer_kick
             // 
             this.tsPlayer_kick.Name = "tsPlayer_kick";
             this.tsPlayer_kick.Size = new System.Drawing.Size(114, 22);
             this.tsPlayer_kick.Text = "Kick";
-            this.tsPlayer_kick.Click += new System.EventHandler(this.kickToolStripMenuItem_Click);
+            this.tsPlayer_kick.Click += new System.EventHandler(this.tsPlayer_Kick_Click);
             // 
             // tsPlayer_ban
             // 
             this.tsPlayer_ban.Name = "tsPlayer_ban";
             this.tsPlayer_ban.Size = new System.Drawing.Size(114, 22);
             this.tsPlayer_ban.Text = "Ban";
-            this.tsPlayer_ban.Click += new System.EventHandler(this.banToolStripMenuItem_Click);
+            this.tsPlayer_ban.Click += new System.EventHandler(this.tsPlayer_Ban_Click);
             // 
             // tsPlayer_voice
             // 
             this.tsPlayer_voice.Name = "tsPlayer_voice";
             this.tsPlayer_voice.Size = new System.Drawing.Size(114, 22);
             this.tsPlayer_voice.Text = "Voice";
-            this.tsPlayer_voice.Click += new System.EventHandler(this.voiceToolStripMenuItem_Click);
+            this.tsPlayer_voice.Click += new System.EventHandler(this.tsPlayer_Voice_Click);
             // 
             // tsPlayer_clones
             // 
             this.tsPlayer_clones.Name = "tsPlayer_clones";
             this.tsPlayer_clones.Size = new System.Drawing.Size(114, 22);
             this.tsPlayer_clones.Text = "Clones";
-            this.tsPlayer_clones.Click += new System.EventHandler(this.clonesToolStripMenuItem_Click);
+            this.tsPlayer_clones.Click += new System.EventHandler(this.tsPlayer_Clones_Click);
             // 
             // tsPlayer_promote
             // 
             this.tsPlayer_promote.Name = "tsPlayer_promote";
             this.tsPlayer_promote.Size = new System.Drawing.Size(114, 22);
             this.tsPlayer_promote.Text = "Promote";
-            this.tsPlayer_promote.Click += new System.EventHandler(this.tsPlayer_promote_Click);
+            this.tsPlayer_promote.Click += new System.EventHandler(this.tsPlayer_Promote_Click);
             // 
             // tsPlayer_demote
             // 
             this.tsPlayer_demote.Name = "tsPlayer_demote";
             this.tsPlayer_demote.Size = new System.Drawing.Size(114, 22);
             this.tsPlayer_demote.Text = "Demote";
-            this.tsPlayer_demote.Click += new System.EventHandler(this.tsPlayer_demote_Click);
+            this.tsPlayer_demote.Click += new System.EventHandler(this.tsPlayer_Demote_Click);
             // 
             // icon_context
             // 
@@ -369,21 +369,21 @@ namespace MCGalaxy.Gui
             // 
             this.icon_openConsole.Name = "icon_openConsole";
             this.icon_openConsole.Size = new System.Drawing.Size(157, 22);
-            this.icon_openConsole.Text = "Open Console";
+            this.icon_openConsole.Text = "Open console";
             this.icon_openConsole.Click += new System.EventHandler(this.openConsole_Click);
             // 
             // icon_shutdown
             // 
             this.icon_shutdown.Name = "icon_shutdown";
             this.icon_shutdown.Size = new System.Drawing.Size(157, 22);
-            this.icon_shutdown.Text = "Shutdown Server";
+            this.icon_shutdown.Text = "Shutdown server";
             this.icon_shutdown.Click += new System.EventHandler(this.shutdownServer_Click);
             // 
             // icon_restart
             // 
             this.icon_restart.Name = "icon_restart";
             this.icon_restart.Size = new System.Drawing.Size(157, 22);
-            this.icon_restart.Text = "Restart Server";
+            this.icon_restart.Text = "Restart server";
             this.icon_restart.Click += new System.EventHandler(this.icon_restart_Click);
             // 
             // main_btnProps
@@ -396,7 +396,7 @@ namespace MCGalaxy.Gui
             this.main_btnProps.TabIndex = 34;
             this.main_btnProps.Text = "Properties";
             this.main_btnProps.UseVisualStyleBackColor = true;
-            this.main_btnProps.Click += new System.EventHandler(this.btnProperties_Click_1);
+            this.main_btnProps.Click += new System.EventHandler(this.btnProperties_Click);
             // 
             // main_btnClose
             // 
@@ -408,7 +408,7 @@ namespace MCGalaxy.Gui
             this.main_btnClose.TabIndex = 35;
             this.main_btnClose.Text = "Close";
             this.main_btnClose.UseVisualStyleBackColor = true;
-            this.main_btnClose.Click += new System.EventHandler(this.btnClose_Click_1);
+            this.main_btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // main_btnRestart
             // 

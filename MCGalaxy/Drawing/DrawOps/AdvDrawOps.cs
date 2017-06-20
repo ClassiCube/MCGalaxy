@@ -42,7 +42,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (long)(Math.PI * 4.0 / 3.0 * (R * R * R));
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             int upper = (Radius + 1) * (Radius + 1);
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;
@@ -69,7 +69,7 @@ namespace MCGalaxy.Drawing.Ops {
             return (long)(outer - inner);
         }
         
-        public override void Perform(Vec3S32[] marks, Brush brush, Action<DrawOpBlock> output) {
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             int upper = (Radius + 1) * (Radius + 1), inner = (Radius - 1) * (Radius - 1);
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C = (Min + Max) / 2;

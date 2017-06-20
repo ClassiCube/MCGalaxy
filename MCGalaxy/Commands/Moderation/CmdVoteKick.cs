@@ -71,7 +71,8 @@ namespace MCGalaxy.Commands.Moderation {
             int netVotesYes = votesYes - votesNo;
             // Should we also send this to players?
             Chat.MessageOps("Vote Ended. Results: &aY: " + votesYes + " &cN: " + votesNo);
-            Server.s.Log("VoteKick results for " + who.DisplayName + ": " + votesYes + " yes and " + votesNo + " no votes.");
+            Logger.Log(LogType.UserActivity, "VoteKick results for {0}: {1} yes and {2} no votes.", 
+                       who.DisplayName, votesYes, votesNo);
 
             if (votesYes + votesNo < Server.voteKickVotesNeeded) {
                 Chat.MessageGlobal("Not enough votes were made. {0} %Sshall remain!", who.ColoredName);

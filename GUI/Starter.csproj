@@ -50,28 +50,53 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Descriptors.cs" />
+    <Compile Include="GuiPerms.cs" />
     <Compile Include="LineFormatter.cs" />
     <Compile Include="Handlers.cs" />
+    <Compile Include="Popups\ColorSelector.cs" />
+    <Compile Include="Popups\ColorSelector.Designer.cs">
+      <DependentUpon>ColorSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\CustomCommands.cs" />
+    <Compile Include="Popups\CustomCommands.Designer.cs">
+      <DependentUpon>CustomCommands.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\EditText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Popups\EditText.Designer.cs">
+      <DependentUpon>EditText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\PortTools.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Popups\PortTools.Designer.cs">
+      <DependentUpon>PortTools.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="PropertyWindow.Adapter.cs">
+    <Compile Include="PropertyWindow\PropertyWindow.Blocks.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.Chat.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.Commands.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertyWindow\PropertyWindow.Designer.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="PropertyWindow\PropertyWindow.Games.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertyWindow\PropertyWindow.General.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.IRCSql.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.Misc.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.Ranks.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.Security.cs" />
     <Compile Include="Settings\LavaMapProperties.cs" />
     <Compile Include="Settings\LevelProperties.cs" />
     <Compile Include="Settings\LavaProperties.cs" />
     <Compile Include="Settings\PlayerProperties.cs" />
     <Compile Include="Settings\TypeConverters.cs" />
     <Compile Include="Settings\ZombieProperties.cs" />
-    <Compile Include="Window.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Window.Designer.cs">
-      <DependentUpon>Window.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyWindow.Games.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="ColoredTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -87,32 +112,27 @@
     <Compile Include="Eco\EconomyWindow.Designer.cs">
       <DependentUpon>EconomyWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="PortTools.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PortTools.Designer.cs">
-      <DependentUpon>PortTools.cs</DependentUpon>
-    </Compile>
-    <Compile Include="EditText.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="EditText.Designer.cs">
-      <DependentUpon>EditText.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PropertyWindow.Designer.cs">
-      <DependentUpon>PropertyWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="..\MCGalaxy\properties\AssemblyInfo.cs" />
+    <Compile Include="Window\Window.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Window\Window.Designer.cs">
+      <DependentUpon>Window.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Window\Window.Log.cs" />
+    <Compile Include="Window\Window.Main.cs" />
+    <Compile Include="Window\Window.Map.cs" />
+    <Compile Include="Window\Window.Players.cs" />
     <EmbeddedResource Include="Eco\EconomyWindow.resx">
       <DependentUpon>EconomyWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PortTools.resx">
+    <EmbeddedResource Include="Popups\EditText.resx">
+      <DependentUpon>EditText.Designer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Popups\PortTools.resx">
       <DependentUpon>PortTools.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Window.resx">
+    <EmbeddedResource Include="Window\Window.resx">
       <DependentUpon>Window.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -130,7 +150,11 @@
   <ItemGroup>
     <Content Include="Galaxy.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Popups" />
+    <Folder Include="PropertyWindow" />
+    <Folder Include="Window" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

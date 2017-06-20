@@ -26,13 +26,13 @@ namespace MCGalaxy.Commands.Scripting {
             if (message == "") { Help(p); return; }
             string cmdName = message.SplitSpaces()[0];
             
-            if (Command.core.Contains(cmdName)) {
-                Player.Message(p, "/{0} is a core command, you cannot unload it.", cmdName); return;
-            }
-            
             Command cmd = Command.all.Find(cmdName);
             if (cmd == null) {
                 Player.Message(p, "\"{0}\" is not a valid or loaded command.", cmdName); return;
+            }
+            
+            if (Command.core.Contains(cmd)) {
+                Player.Message(p, "/{0} is a core command, you cannot unload it.", cmdName); return;
             }
             
             Command.all.Remove(cmd);

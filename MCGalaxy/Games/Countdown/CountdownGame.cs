@@ -52,7 +52,7 @@ namespace MCGalaxy.Games {
             
             SetGlassTube(Block.glass, Block.glass);
             mapon.ChatLevel("Countdown is about to start!!");
-            mapon.permissionbuild = LevelPermission.Nobody;
+            mapon.BuildAccess.Min = LevelPermission.Nobody;
             int midX = mapon.Width / 2, midY = mapon.Height / 2, midZ = mapon.Length / 2;
             int xSpawn = (midX * 32 + 16);
             int ySpawn = ((mapon.Height - 2) * 32);
@@ -185,25 +185,25 @@ namespace MCGalaxy.Games {
             //beneath this is checking the glass next to the square
             bool up = false, left = false, right = false, down = false;
             //directly next to
-            if (mapon.GetBlock(x1, y, z2 + 2) == Block.air) //right
+            if (mapon.IsAirAt(x1, y, z2 + 2)) //right
             {
                 mapon.Blockchange(x1, y, (ushort)(z2 + 1), ExtBlock.Air);
                 mapon.Blockchange(x2, y, (ushort)(z2 + 1), ExtBlock.Air);
                 right = true;
             }
-            if (mapon.GetBlock(x1, y, z1 - 2) == Block.air) //left
+            if (mapon.IsAirAt(x1, y, z1 - 2)) //left
             {
                 mapon.Blockchange(x1, y, (ushort)(z1 - 1), ExtBlock.Air);
                 mapon.Blockchange(x2, y, (ushort)(z1 - 1), ExtBlock.Air);
                 left = true;
             }
-            if (mapon.GetBlock(x2 + 2, y, z1) == Block.air) //up
+            if (mapon.IsAirAt(x2 + 2, y, z1)) //up
             {
                 mapon.Blockchange((ushort)(x2 + 1), y, z1, ExtBlock.Air);
                 mapon.Blockchange((ushort)(x2 + 1), y, z2, ExtBlock.Air);
                 up = true;
             }
-            if (mapon.GetBlock(x1 - 2, y, z1) == Block.air) //down
+            if (mapon.IsAirAt(x1 - 2, y, z1)) //down
             {
                 mapon.Blockchange((ushort)(x1 - 1), y, z1, ExtBlock.Air);
                 mapon.Blockchange((ushort)(x1 - 1), y, z2, ExtBlock.Air);
@@ -211,19 +211,19 @@ namespace MCGalaxy.Games {
             }
             
             //diagonal >:(
-            if ((mapon.GetBlock(x1 - 2, y, z1 - 2) == Block.air) && left && down) //bottom left
+            if (mapon.IsAirAt(x1 - 2, y, z1 - 2) && left && down) //bottom left
             {
                 mapon.Blockchange((ushort)(x1 - 1), y, (ushort)(z1 - 1), ExtBlock.Air);
             }
-            if ((mapon.GetBlock(x1 - 2, y, z2 + 2) == Block.air) && right && down) //bottom right
+            if (mapon.IsAirAt(x1 - 2, y, z2 + 2) && right && down) //bottom right
             {
                 mapon.Blockchange((ushort)(x1 - 1), y, (ushort)(z2 + 1), ExtBlock.Air);
             }
-            if ((mapon.GetBlock(x2 + 2, y, z1 - 2) == Block.air) && left && up) //top left
+            if (mapon.IsAirAt(x2 + 2, y, z1 - 2) && left && up) //top left
             {
                 mapon.Blockchange((ushort)(x2 + 1), y, (ushort)(z1 - 1), ExtBlock.Air);
             }
-            if ((mapon.GetBlock(x2 + 2, y, z2 + 2) == Block.air) && right && up) //top right
+            if (mapon.IsAirAt(x2 + 2, y, z2 + 2) && right && up) //top right
             {
                 mapon.Blockchange((ushort)(x2 + 1), y, (ushort)(z2 + 1), ExtBlock.Air);
             }

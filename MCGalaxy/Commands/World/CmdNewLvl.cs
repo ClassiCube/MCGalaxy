@@ -30,44 +30,54 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can generate maps with advanced themes") }; }
         }
 
-        public override void Use(Player p, string message) { GenerateMap(p, message); }
-        
-        internal bool GenerateMap(Player p, string message) {
+        public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
-            if (args.Length < 5 || args.Length > 6) { Help(p); return false; }
-            if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return false; }
+            if (args.Length < 5 || args.Length > 6) { Help(p); return; }
+            
+            Level lvl = null;
+            try {
+                lvl = GenerateMap(p, args);
+                if (lvl == null) return;
+                
+                lvl.Save(true);
+            } finally {
+                if (lvl != null) lvl.Dispose();
+                Server.DoGC();
+            }
+        }
+        
+        internal Level GenerateMap(Player p, string[] args) {
+            if (args.Length < 5) return null;
+            if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return null; }
 
             ushort x = 0, y = 0, z = 0;
             string name = args[0].ToLower();
-            if (!CheckMapAxis(p, args[1], "Width",  ref x)) return false;
-            if (!CheckMapAxis(p, args[2], "Height", ref y)) return false;
-            if (!CheckMapAxis(p, args[3], "Length", ref z)) return false;
-            if (!CheckMapVolume(p, x, y, z)) return true;
+            if (!CheckMapAxis(p, args[1], "Width",  ref x)) return null;
+            if (!CheckMapAxis(p, args[2], "Height", ref y)) return null;
+            if (!CheckMapAxis(p, args[3], "Length", ref z)) return null;
+            if (!CheckMapVolume(p, x, y, z)) return null;
             string seed = args.Length == 6 ? args[5] : "";
             
-            if (!Formatter.ValidName(p, name, "level")) return false;
+            if (!Formatter.ValidName(p, name, "level")) return null;
             if (LevelInfo.MapExists(name)) {
-                Player.Message(p, "Level \"{0}\" already exists", name); return false;
+                Player.Message(p, "Level \"{0}\" already exists", name); return null;
             }
             if (!MapGen.IsSimpleTheme(args[4]) && !CheckExtraPerm(p)) { 
-                MessageNeedExtra(p, 1); return false;
+                MessageNeedExtra(p, 1); return null;
             }
 
             if (p != null && Interlocked.CompareExchange(ref p.GeneratingMap, 1, 0) == 1) {
                 Player.Message(p, "You are already generating a map, please wait until that map has finished generating first.");
-                return false;
+                return null;
             }
             
+            Level lvl;
             try {
                 Player.Message(p, "Generating map \"{0}\"..", name);
-                using (Level lvl = new Level(name, x, y, z)) {
-                    if (!MapGen.Generate(lvl, args[4], seed, p)) return false;
-                    
-                    lvl.Save(true);
-                    lvl.Dispose();
-                    name = lvl.ColoredName;
-                }
-                
+                lvl = new Level(name, x, y, z);
+                if (!MapGen.Generate(lvl, args[4], seed, p)) { lvl.Dispose(); return null; }
+
+                name = lvl.ColoredName;
                 string format = seed != "" ? "{0}%S created level {1}%S with seed \"{2}\"" : "{0}%S created level {1}";
                 string pName = p == null ? "(console)" : p.ColoredName;
                 Chat.MessageGlobal(format, pName, name, seed);
@@ -75,7 +85,7 @@ namespace MCGalaxy.Commands.World {
                 if (p != null) Interlocked.Exchange(ref p.GeneratingMap, 0);
                 Server.DoGC();
             }
-            return true;
+            return lvl;
         }
         
         

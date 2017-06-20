@@ -16,8 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdRules : Command {
@@ -33,21 +32,21 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Use(Player p, string message) {
-            if (!File.Exists(Paths.RulesFile)) {
-                File.WriteAllText(Paths.RulesFile, "No rules entered yet!");
-            }
+            TextFile rulesFile = TextFile.Files["Rules"];
+            rulesFile.EnsureExists();
+            
             if (message.CaselessEq("agree")) { Agree(p); return; }
             if (message.CaselessEq("disagree")) { Disagree(p); return; }
             
-            string[] rules = File.ReadAllLines(Paths.RulesFile);
             Player who = p;
             if (message != "") {
                 if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
                 who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
-            }
-            
+            }           
             if (who != null) who.hasreadrules = true;
+
+            string[] rules = rulesFile.GetText();            
             Player.Message(who, "Server Rules:");
             Player.MessageLines(who, rules);
             
@@ -58,7 +57,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         void Agree(Player p) {
-        	if (Player.IsSuper(p)) { Player.Message(p, "Only in-game players can agree to the rules."); return; }
+            if (Player.IsSuper(p)) { Player.Message(p, "Only in-game players can agree to the rules."); return; }
             if (!Server.agreetorulesonentry) { Player.Message(p, "agree-to-rules-on-entry is not enabled."); return; }            
             if (!p.hasreadrules) { Player.Message(p, "&9You must read %T/rules &9before agreeing."); return; }
             if (Server.agreed.Contains(p.name)) { Player.Message(p, "You have already agreed to the rules."); return; }

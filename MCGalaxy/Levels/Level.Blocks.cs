@@ -32,7 +32,7 @@ namespace MCGalaxy {
         public byte[][] CustomBlocks;
         public int ChunksX, ChunksY, ChunksZ;
         
-        public bool HasCustomBlocks {
+        public bool MayHaveCustomBlocks {
             get {
                 if (CustomBlocks == null) return false;
                 for (int i = 0; i < CustomBlocks.Length; i++)
@@ -47,24 +47,41 @@ namespace MCGalaxy {
             return blocks[index];
         }
         
-        public ExtBlock GetExtBlock(ushort x, ushort y, ushort z) {
-            int index = PosToInt(x, y, z);
-            if (index < 0 || blocks == null) return ExtBlock.Invalid;
-            
+        /// <summary> Gets the block at the given coordinates. </summary>
+        /// <returns> Block.Invalid if coordinates outside map. </returns>
+        public ExtBlock GetBlock(ushort x, ushort y, ushort z) {
+            if (x >= Width || y >= Height || z >= Length || blocks == null) return ExtBlock.Invalid;
             ExtBlock block;
-            block.BlockID = blocks[index];
-            block.ExtID = block.BlockID == Block.custom_block 
-                ? GetExtTileNoCheck(x, y, z) : Block.air;
+            
+            block.BlockID = blocks[x + Width * (z + y * Length)];
+            block.ExtID = block.BlockID == Block.custom_block ? GetExtTileNoCheck(x, y, z) : Block.air;
             return block;
-        }
+        }       
         
         /// <summary> Gets the block at the given coordinates. </summary>
         /// <returns> Block.Invalid if coordinates outside map. </returns>
-        public byte GetBlock(int x, int y, int z) {
-            if (x < 0 || y < 0 || z < 0 || blocks == null) return Block.Invalid;
-            if (x >= Width || y >= Height || z >= Length)  return Block.Invalid;
+        public ExtBlock GetBlock(ushort x, ushort y, ushort z, out int index) {
+            if (x >= Width || y >= Height || z >= Length || blocks == null) { index = -1; return ExtBlock.Invalid; }
+            ExtBlock block;
             
-            return blocks[x + Width * (z + y * Length)];
+            index = x + Width * (z + y * Length);
+            block.BlockID = blocks[index];
+            block.ExtID = block.BlockID == Block.custom_block ? GetExtTileNoCheck(x, y, z) : Block.air;
+            return block;
+        }   
+   
+        /// <summary> Gets whether the block at the given coordinates is air. </summary>
+        public bool IsAirAt(ushort x, ushort y, ushort z) {
+            if (x >= Width || y >= Height || z >= Length || blocks == null) return false; 
+            return blocks[x + Width * (z + y * Length)] == Block.air;
+        }
+
+        /// <summary> Gets whether the block at the given coordinates is air. </summary>
+        public bool IsAirAt(int x, int y, int z) {
+            if (x < 0 || y < 0 || z < 0 || blocks == null) return false;
+            if (x >= Width || y >= Height || z >= Length)  return false;
+            
+            return blocks[x + Width * (z + y * Length)] == Block.air;
         }
 
         public byte GetTile(int b) {
@@ -98,12 +115,6 @@ namespace MCGalaxy {
             byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
             return chunk == null ? Block.air :
                 chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
-        }
-        
-        public byte GetFallbackExtTile(ushort x, ushort y, ushort z) {
-            byte tile = GetExtTile(x, y, z);
-            BlockDefinition def = CustomBlockDefs[tile];
-            return def == null ? Block.air : def.FallBack;
         }
         
         public byte GetFallbackExtTile(int index) {
@@ -265,7 +276,7 @@ namespace MCGalaxy {
             try
             {
                 if (x >= Width || y >= Height || z >= Length) return 0;
-                ExtBlock old = GetExtBlock(x, y, z);
+                ExtBlock old = GetBlock(x, y, z);
 
                 errorLocation = "Permission checking";
                 if (!CheckAffectPermissions(p, x, y, z, old, block)) {
@@ -274,7 +285,7 @@ namespace MCGalaxy {
                 if (old == block) return 0;
 
                 if (old.BlockID == Block.sponge && physics > 0 && block.BlockID != Block.sponge)
-                    OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z));
+                    OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), false);
                 if (old.BlockID == Block.lava_sponge && physics > 0 && block.BlockID != Block.lava_sponge)
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), true);
 
@@ -301,9 +312,10 @@ namespace MCGalaxy {
                 
                 return old.VisuallyEquals(block) ? 1 : 2;
             } catch (Exception e) {
-                Server.ErrorLog(e);
+                Logger.LogError(e);
                 Chat.MessageOps(p.name + " triggered a non-fatal error on " + ColoredName + ", %Sat location: " + errorLocation);
-                Server.s.Log(p.name + " triggered a non-fatal error on " + ColoredName + ", %Sat location: " + errorLocation);
+                Logger.Log(LogType.Warning, "{0} triggered a non-fatal error on {1}, %Sat location: {2}", 
+                           p.name, ColoredName, errorLocation);
                 return 0;
             }
         }
@@ -334,16 +346,17 @@ namespace MCGalaxy {
         
         internal bool DoPhysicsBlockchange(int b, ExtBlock block, bool overRide = false, 
                                            PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) {
-            if (b < 0 || b >= blocks.Length || blocks == null) return false;
+            if (blocks == null || b < 0 || b >= blocks.Length) return false;
             ExtBlock old;
             old.BlockID = blocks[b];
             old.ExtID = old.BlockID == Block.custom_block ? GetExtTile(b) : Block.air;
             
             try
             {
-                if (!overRide)
-                    if (Block.Props[old.BlockID].OPBlock || (Block.Props[block.BlockID].OPBlock && data.Raw != 0)) 
+                if (!overRide) {
+                    if (BlockProps[old.Index].OPBlock || (BlockProps[block.Index].OPBlock && data.Raw != 0)) 
                         return false;
+                }
 
                 if (old.BlockID == Block.sponge && physics > 0 && block.BlockID != Block.sponge)
                     OtherPhysics.DoSpongeRemoved(this, b, false);
@@ -417,7 +430,7 @@ namespace MCGalaxy {
         
         public void UpdateBlock(Player p, ushort x, ushort y, ushort z, ExtBlock block,
                                 ushort flags = BlockDBFlags.ManualPlace, bool buffered = false) {
-            ExtBlock old = GetExtBlock(x, y, z);
+            ExtBlock old = GetBlock(x, y, z);
             bool drawn = (flags & BlockDBFlags.ManualPlace) != 0;
             int type = DoBlockchange(p, x, y, z, block, drawn);
             if (type == 0) return; // no block change performed

@@ -33,7 +33,7 @@ namespace MCGalaxy.DB {
         
         public static void Lock() {
             Upgrading = true;
-            Server.s.Log("Kicking players and unloading levels..");
+            Logger.Log(LogType.SystemActivity, "Kicking players and unloading levels..");
             Player.PlayerConnecting += ConnectingHandler;
             
             Player[] players = PlayerInfo.Online.Items;
@@ -45,13 +45,13 @@ namespace MCGalaxy.DB {
             foreach (Level lvl in levels) {
                 lvl.Unload();
             }
-            Server.s.Log("Kicked all players and unloaded levels.");
+            Logger.Log(LogType.SystemActivity, "Kicked all players and unloaded levels.");
         }
         
         public static void Unlock() {
             Player.PlayerConnecting -= ConnectingHandler;
             Player.MessageLines(null, CompactMessages);
-            Server.s.Log("&aUpgrade finished!");
+            Logger.Log(LogType.SystemActivity, "&aUpgrade finished!");
             Upgrading = false;
         }
         
@@ -76,7 +76,7 @@ namespace MCGalaxy.DB {
             
             current = 0;
             count = blockDBTables.Count;
-            Server.s.Log("Upgrading " + count + " tables. this may take several hours..");
+            Logger.Log(LogType.SystemActivity, "Upgrading {0} tables. This may take several hours.", count);
             
             BlockDBTableDumper dumper = new BlockDBTableDumper();
             foreach (string table in blockDBTables) {
@@ -84,7 +84,7 @@ namespace MCGalaxy.DB {
                 try {
                     dumper.DumpTable(table);
                 } catch (Exception ex) {
-                    Server.ErrorLog(ex);
+                    Logger.LogError(ex);
                 }
             }
         }
