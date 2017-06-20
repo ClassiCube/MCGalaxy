@@ -78,11 +78,40 @@ namespace MCGalaxy.Core {
                     } while (length > 0);
                 } while (start.Subtract(DateTime.UtcNow) < Timeout);
                 return false;
-            }
-            catch {
+            } catch {
                 return false;
             }
         }
+
+        public static void ForwardPort(int port, ProtocolType protocol, string description) {
+            if (String.IsNullOrEmpty(_serviceUrl) )
+                throw new InvalidOperationException("No UPnP service available or Discover() has not been called");
+            
+            XmlDocument xdoc = SOAPRequest(_serviceUrl, 
+                "<u:AddPortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
+                "<NewRemoteHost></NewRemoteHost>" +
+                "<NewExternalPort>" + port + "</NewExternalPort>" +
+                "<NewProtocol>" + protocol.ToString().ToUpper() + "</NewProtocol>" +
+                "<NewInternalPort>" + port + "</NewInternalPort>" +
+                "<NewInternalClient>" + GetLocalIP() + "</NewInternalClient>" +
+                "<NewEnabled>1</NewEnabled>" +
+                "<NewPortMappingDescription>" + description + "</NewPortMappingDescription>" +
+                "<NewLeaseDuration>0</NewLeaseDuration>" +
+                "</u:AddPortMapping>", "AddPortMapping");
+        }
+
+        public static void DeleteForwardingRule(int port, ProtocolType protocol) {
+            if (String.IsNullOrEmpty(_serviceUrl) )
+                throw new InvalidOperationException("No UPnP service available or Discover() has not been called");
+            
+            XmlDocument xdoc = SOAPRequest(_serviceUrl,
+            "<u:DeletePortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
+            "<NewRemoteHost></NewRemoteHost>" +
+            "<NewExternalPort>" + port + "</NewExternalPort>" +
+            "<NewProtocol>" + protocol.ToString().ToUpper() + "</NewProtocol>" +
+            "</u:DeletePortMapping>", "DeletePortMapping");
+        }
+        
 
         static string GetServiceUrl(string resp) {
 #if !DEBUG
@@ -103,55 +132,23 @@ namespace MCGalaxy.Core {
 #if !DEBUG
             } catch { return null; }
 #endif
-        }
+        }        
 
         static string CombineUrls(string resp, string p) {
             int n = resp.IndexOf("://");
             n = resp.IndexOf('/', n + 3);
             return resp.Substring(0, n) + p;
         }
-
-        public static void ForwardPort(int port, ProtocolType protocol, string description) {
-            if (String.IsNullOrEmpty(_serviceUrl) )
-                throw new InvalidOperationException("No UPnP service available or Discover() has not been called");
-            
-            XmlDocument xdoc = SOAPRequest(_serviceUrl, 
-                "<u:AddPortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
-                "<NewRemoteHost></NewRemoteHost>" +
-                "<NewExternalPort>" + port.ToString() + "</NewExternalPort>" +
-                "<NewProtocol>" + protocol.ToString().ToUpper() + "</NewProtocol>" +
-                "<NewInternalPort>" + port.ToString() + "</NewInternalPort>" +
-                "<NewInternalClient>" + GetLocalIP() + "</NewInternalClient>" +
-                "<NewEnabled>1</NewEnabled>" +
-                "<NewPortMappingDescription>" + description + "</NewPortMappingDescription>" +
-                "<NewLeaseDuration>0</NewLeaseDuration>" +
-                "</u:AddPortMapping>", "AddPortMapping");
-        }
-
-        public static void DeleteForwardingRule(int port, ProtocolType protocol) {
-            if (String.IsNullOrEmpty(_serviceUrl) )
-                throw new InvalidOperationException("No UPnP service available or Discover() has not been called");
-            
-            XmlDocument xdoc = SOAPRequest(_serviceUrl,
-            "<u:DeletePortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
-            "<NewRemoteHost>"</NewRemoteHost>" +
-            "<NewExternalPort>" + port + "</NewExternalPort>" +
-            "<NewProtocol>" + protocol.ToString().ToUpper() + "</NewProtocol>" +
-            "</u:DeletePortMapping>", "DeletePortMapping");
-        }
-
-        public static string GetLocalIP() {
-            string localIP = "?";
-            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-            
+        
+        static string GetLocalIP() {
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());        
             foreach (IPAddress ip in host.AddressList) {
                 if (ip.AddressFamily == AddressFamily.InterNetwork) {
-                    localIP = ip.ToString();
+                    return ip.ToString();
                 }
             }
-            return localIP;
-        }
-        
+            return "?";
+        }        
 
         static XmlDocument SOAPRequest(string url, string soap, string function) {
             string req = "<?xml version=\"1.0\"?>" +
