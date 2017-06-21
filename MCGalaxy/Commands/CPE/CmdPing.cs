@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (!message.CaselessEq("all")) {
                 if (Player.IsSuper(p)) { Player.Message(p, "Super users cannot measure their own ping."); return; }
                 
-                if (p.Ping.AveragePingMilliseconds() == 0) {
+                if (!p.HasCpeExt(CpeExt.TwoWayPing)) {
                     Player.Message(p, "Your client does not support measuring ping.");
                 } else {
                      Player.Message(p, p.Ping.Format());
