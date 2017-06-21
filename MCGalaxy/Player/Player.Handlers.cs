@@ -230,6 +230,7 @@ namespace MCGalaxy {
                     case Opcode.CpeCustomBlockSupportLevel: return 2;
                     case Opcode.CpePlayerClick: return 15;
                     case Opcode.Ping: return 1;
+                    case Opcode.CpeTwoWayPing: return 4;
 
                 default:
                     if (!dontmindme) {
@@ -262,6 +263,8 @@ namespace MCGalaxy {
                     customBlockSupportLevel = buffer[1]; break;
                 case Opcode.CpePlayerClick:
                     HandlePlayerClicked(buffer); break;
+                case Opcode.CpeTwoWayPing:
+                    HandleTwoWayPing(buffer); break;
             }
         }
 

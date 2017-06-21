@@ -58,6 +58,19 @@ namespace MCGalaxy {
             if (OnPlayerClick != null) OnPlayerClick(this, Button, Action, Yaw, Pitch, EntityID, X, Y, Z, face);
             OnPlayerClickEvent.Call(this, Button, Action, Yaw, Pitch, EntityID, X, Y, Z, face);
         }
+        
+        void HandleTwoWayPing(byte[] packet) {
+            bool serverToClient = packet[1] != 0;
+            ushort data = NetUtils.ReadU16(packet, 2);
+            
+            if (!serverToClient) {
+                // Client-> server ping, immediately send reply.
+                Send(Packet.TwoWayPing(false, data));
+            } else {
+                // Server -> client ping, set time received for reply.
+                Ping.Update(data);
+            }
+        }
 
         void CheckReadAllExtensions() {
             if (extensionCount <= 0 && !finishedCpeLogin) {
@@ -99,7 +112,7 @@ namespace MCGalaxy {
         
         public static void SendMessage(Player p, string message, bool colorParse) {
             if (p == null) {
-        	    Logger.Log(LogType.ConsoleMessage, message);
+                Logger.Log(LogType.ConsoleMessage, message);
             } else {
                 p.SendMessage(0, message, colorParse);
             }
