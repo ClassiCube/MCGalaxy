@@ -22,6 +22,8 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing {
     
+    public delegate void PixelGetterCallback(Pixel pixel, DrawOpOutput output);
+	
     public sealed class PixelGetter : IDisposable {
         
         Bitmap bmp;
@@ -41,14 +43,12 @@ namespace MCGalaxy.Drawing {
             data = bmp.LockBits(r, ImageLockMode.ReadOnly, bmp.PixelFormat);
         }
         
-        public void Iterate(DrawOpOutput output,
-                            Action<Pixel, DrawOpOutput> callback) {
+        public void Iterate(DrawOpOutput output, PixelGetterCallback callback) {
             if (data == null) IterateSlow(output, callback);
             else IterateFast(output, callback);
         }
         
-        unsafe void IterateFast(DrawOpOutput output,
-                                Action<Pixel, DrawOpOutput> callback) {
+        unsafe void IterateFast(DrawOpOutput output, PixelGetterCallback callback) {
             Pixel pixel;
             int width = bmp.Width, height = bmp.Height;
             byte* scan0 = (byte*)data.Scan0;
@@ -69,8 +69,7 @@ namespace MCGalaxy.Drawing {
             }
         }
         
-        void IterateSlow(DrawOpOutput output,
-                         Action<Pixel, DrawOpOutput> callback) {
+        void IterateSlow(DrawOpOutput output, PixelGetterCallback callback) {
             Pixel pixel;
             int width = bmp.Width, height = bmp.Height;
             for (int y = 0; y < height; y++)

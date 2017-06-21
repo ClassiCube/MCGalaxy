@@ -20,15 +20,23 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.DB {
     
+    /// <summary> Retrieves a title for a column. </summary>
+    /// <remarks> Title is displayed on a line before the values of that column. </remarks>
+    public delegate string TopStatTitle();
+    
+    /// <summary> Formats a value in a column. </summary>
+    public delegate string TopStatFormatter(string input);
+    
+	
     /// <summary> Outputs ordered stats from a column in a database table. </summary>
     public sealed class TopStat {
         
         public readonly string Identifier, Table, Column, OrderBy;
-        public readonly Func<string> Title;
-        public readonly Func<string, string> Formatter;
+        public readonly TopStatTitle Title;
+        public readonly TopStatFormatter Formatter;
         
-        public TopStat(string identifier, string table, string col, Func<string> title,
-                       Func<string, string> formatter, bool ascending = false, string orderBy = null) {
+        public TopStat(string identifier, string table, string col, TopStatTitle title,
+                       TopStatFormatter formatter, bool ascending = false, string orderBy = null) {
             Identifier = identifier;
             Table = table;
             Column = col;

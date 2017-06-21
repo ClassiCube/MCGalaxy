@@ -18,7 +18,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Generator {   
+namespace MCGalaxy.Generator {
+	
+    public delegate ushort CalcLiquidLevel(ushort lvlHeight);
+	
     public sealed class RealisticGenParams {        
         public float RangeLow = 0.2f;
         public float RangeHigh = 0.8f;
@@ -26,7 +29,7 @@ namespace MCGalaxy.Generator {
         public bool FalloffEdges = false;
         public bool UseLavaLiquid = false;
         public bool GenerateOverlay2 = true;
-        public Func<ushort, ushort> GetLiquidLevel = (height) => (ushort)(height / 2 + 2);
+        public CalcLiquidLevel GetLiquidLevel = (lvlHeight) => (ushort)(lvlHeight / 2 + 2);
         
         // Decoration parameters
         public float TreeDens = 0.35f;

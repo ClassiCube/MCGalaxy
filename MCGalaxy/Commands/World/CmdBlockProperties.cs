@@ -133,8 +133,10 @@ namespace MCGalaxy.Commands.World {
         
         
         delegate void BoolSetter(ref BlockProps props);
+        delegate bool BoolGetter(BlockProps props);
+        
         static void Toggle(Player p, BlockProps[] scope, ExtBlock block, string type,
-                           BoolSetter setter, Func<BlockProps, bool> getter) {
+                           BoolSetter setter, BoolGetter getter) {
             BlockProps props = scope[block.Index];
             setter(ref props);
             scope[block.Index] = props;

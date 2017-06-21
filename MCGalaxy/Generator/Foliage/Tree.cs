@@ -23,6 +23,8 @@ namespace MCGalaxy.Generator.Foliage {
 
     public delegate void TreeOutput(ushort x, ushort y, ushort z, byte block);
     
+    public delegate Tree TreeConstructor();
+    
     public abstract class Tree {
         protected internal int height, size;
         protected Random rnd;
@@ -60,8 +62,8 @@ namespace MCGalaxy.Generator.Foliage {
         }
         
         
-        public static Dictionary<string, Func<Tree>> TreeTypes = 
-            new Dictionary<string, Func<Tree>>() {
+        public static Dictionary<string, TreeConstructor> TreeTypes = 
+            new Dictionary<string, TreeConstructor>() {
             { "Fern", () => new NormalTree() }, { "Cactus", () => new CactusTree() },
             { "Notch", () => new ClassicTree() }, { "Swamp", () => new SwampTree() },
             { "Bamboo", () => new BambooTree() }, { "Palm", () => new PalmTree() },

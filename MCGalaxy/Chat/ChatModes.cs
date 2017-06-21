@@ -76,6 +76,8 @@ namespace MCGalaxy {
             string name = p == null ? "(console)" : p.name;
             string format = "To " + group + " &f-{0}&f- {1}";
             
+            if (message == "") { Player.Message(p, "No message to send."); return; }
+            
             Chat.MessageWhere(format, 
                               pl => (p == pl || pl.Rank >= perm) && Chat.NotIgnoring(p, pl),
                               displayName, message);
