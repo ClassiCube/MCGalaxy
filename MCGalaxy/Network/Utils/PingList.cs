@@ -67,7 +67,8 @@ namespace MCGalaxy.Network {
             foreach (PingEntry ping in Entries) {
                 if (ping.TimeSent.Ticks == 0 || ping.TimeReceived.Ticks == 0) continue;
                 
-                totalMs += (ping.TimeReceived - ping.TimeSent).TotalMilliseconds;
+                // Half, because received->reply time is actually twice time it takes to send data
+                totalMs += (ping.TimeReceived - ping.TimeSent).TotalMilliseconds * 0.5;
                 measures++;
             }
             return measures == 0 ? 0 : (totalMs / measures);
@@ -81,7 +82,7 @@ namespace MCGalaxy.Network {
             foreach (PingEntry ping in Entries) {
                 if (ping.TimeSent.Ticks == 0 || ping.TimeReceived.Ticks == 0) continue;
                 
-                double ms = (ping.TimeReceived - ping.TimeSent).TotalMilliseconds;
+                double ms = (ping.TimeReceived - ping.TimeSent).TotalMilliseconds * 0.5;
                 totalMs = Math.Max(totalMs, ms);
             }
             return totalMs;
