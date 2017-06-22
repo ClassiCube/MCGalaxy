@@ -26,6 +26,8 @@ namespace MCGalaxy {
         
         public delegate void OptionSetter(Player p, Level lvl, string value);
         
+        public delegate bool OptionIntValidator(Player p, int value);
+        
         public static Dictionary<string, OptionSetter> Options = new Dictionary<string, OptionSetter>() {
             { "motd", SetMotd },
             { "RealmOwner", SetRealmOwner },
@@ -153,7 +155,7 @@ namespace MCGalaxy {
         }
         
         static void SetInt(Player p, Level lvl, ref int target, string value, string name,
-                           Func<Player, int, bool> validator = null) {
+                           OptionIntValidator validator = null) {
             if (value == "") { Player.Message(p, "You must provide an integer."); return; }
             int raw = 0;
             if (!CommandParser.GetInt(p, value, name, ref raw)) return;

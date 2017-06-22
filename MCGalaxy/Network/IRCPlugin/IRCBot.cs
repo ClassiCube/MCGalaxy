@@ -52,7 +52,7 @@ namespace MCGalaxy {
         /// <summary> Sends an IRC message to either the normal or operator IRC channel. </summary>
         public void Say(string message, bool opchat = false, bool color = true) {
             string[] chans = opchat ? opchannels : channels;
-            foreach (string chan in channels) {
+            foreach (string chan in chans) {
                 Message(chan, message, color);
             }
         }

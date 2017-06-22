@@ -60,7 +60,7 @@ namespace MCGalaxy.Games.ZS {
             
             string group = count == 1 ? " zombie " : " zombies ";
             string suffix = maxKills == 1 ? " %Skill" : " %Skills";
-            Func<Player, string> formatter = p => p.Game.CurrentInfected == maxKills ? p.ColoredName : null;
+            StringFormatter<Player> formatter = p => p.Game.CurrentInfected == maxKills ? p.ColoredName : null;
             
             game.CurLevel.ChatLevel("&8Best" + group + "%S(&b" + maxKills
                                     + suffix + "%S)&8: " + dead.Join(formatter));

@@ -25,15 +25,7 @@ namespace System.Runtime.CompilerServices {
     public sealed class ExtensionAttribute : Attribute {}
 }
 
-namespace System {
-    public delegate TReturn Func<TReturn>();
-    public delegate TReturn Func<T1, TReturn>(T1 arg1);
-    public delegate TReturn Func<T1, T2, TReturn>(T1 arg1, T2 arg2);
-    public delegate TReturn Func<T1, T2, T3, TReturn>(T1 arg1, T2 arg2, T3 arg3);
-    
-    public delegate void Action();
-    public delegate void Action<T1, T2>(T1 arg1, T2 arg2);
-}
+namespace System { public delegate void Action(); }
 
 namespace MCGalaxy.Util {
 

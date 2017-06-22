@@ -58,6 +58,7 @@ namespace MCGalaxy {
         public string truename;
         internal bool dontmindme = false;
         INetworkSocket socket;
+        public PingList Ping = new PingList();
         
         public DateTime LastAction, AFKCooldown;
         public bool IsAfk = false, AutoAfk;

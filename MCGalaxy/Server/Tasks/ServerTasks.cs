@@ -95,7 +95,12 @@ namespace MCGalaxy.Tasks {
         internal static void CheckState(SchedulerTask task) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                p.Send(Packet.Ping());
+                if (p.hasTwoWayPing) {
+            		p.Send(Packet.TwoWayPing(true, p.Ping.NextTwoWayPingData()));                    
+                } else {
+                    p.Send(Packet.Ping());
+                }
+                
                 if (Server.afkminutes <= 0) return;
                 if (DateTime.UtcNow < p.AFKCooldown) return;
                 

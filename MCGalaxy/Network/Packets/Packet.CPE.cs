@@ -247,5 +247,13 @@ namespace MCGalaxy.Network {
             NetUtils.WriteI32(value, buffer, 3);
             return buffer;
         }
+        
+        public static byte[] TwoWayPing(bool serverToClient, ushort data) {
+            byte[] buffer = new byte[4];
+            buffer[0] = Opcode.CpeTwoWayPing;
+            buffer[1] = (byte)(serverToClient ? 1 : 0);
+            NetUtils.WriteU16(data, buffer, 2);
+            return buffer;
+        }
     }
 }

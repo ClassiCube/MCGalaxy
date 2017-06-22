@@ -25,7 +25,7 @@ namespace MCGalaxy {
 
         /// <summary> Outputs a large range of values across a number of 'pages'. (Pagination) </summary>
         /// <param name="lines">true if each item is printed on a separate line, false if combined. </param>
-        public static void Output<T>(Player p, IList<T> items, Func<T, string> formatter,
+        public static void Output<T>(Player p, IList<T> items, StringFormatter<T> formatter,
                                      string cmd, string type, string modifier, bool lines) {
             int page = 0, total = items.Count;
             int perPage = lines ? 10 : 30;
@@ -44,7 +44,7 @@ namespace MCGalaxy {
             }
         }
         
-        static void OutputPage<T>(Player p, IList<T> items, Func<T, string> formatter,
+        static void OutputPage<T>(Player p, IList<T> items, StringFormatter<T> formatter,
                                   string cmd, string type, int start, bool lines) {
             int perPage = lines ? 10 : 30;
             start = Utils.Clamp(start - 1, 0, items.Count - 1); // want item numbers to start at 1         
@@ -64,7 +64,7 @@ namespace MCGalaxy {
         
         static void OutputItems<T>(Player p, IList<T> items,
                                    int start, int end, bool lines,
-                                   Func<T, string> formatter) {
+                                   StringFormatter<T> formatter) {
             if (lines) {
                 for (int i = start; i < end; i++)
                     Player.Message(p, formatter(items[i]));
@@ -75,7 +75,7 @@ namespace MCGalaxy {
         }
         
         static IEnumerable<string> Subset<T>(IList<T> items, int start, int end,
-                                             Func<T, string> formatter) {
+                                             StringFormatter<T> formatter) {
             for (int i = start; i < end; i++)
                 yield return formatter(items[i]);
             yield break;

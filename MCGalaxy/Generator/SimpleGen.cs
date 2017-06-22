@@ -21,6 +21,8 @@ using System.Collections.Generic;
 namespace MCGalaxy.Generator { 
     public static class SimpleGen {
 
+		delegate byte NextBlock();
+		
         public static void RegisterGenerators() {
             MapGen.RegisterSimpleGen("island", GenSimple);
             MapGen.RegisterSimpleGen("mountains", GenSimple);
@@ -59,13 +61,13 @@ namespace MCGalaxy.Generator {
         
         static bool GenPixel(MapGenArgs args) {
             int maxX = args.Level.Width - 1, maxY = args.Level.Height - 1, maxZ = args.Level.Length - 1;
-            Func<byte> block = () => Block.white;
+            NextBlock nextBlock = () => Block.white;
             
             // Cuboid the four walls
-            Cuboid(args, 0, 1, 0,    maxX, maxY, 0, block);
-            Cuboid(args, 0, 1, maxZ, maxX, maxY, maxZ, block);
-            Cuboid(args, 0, 1, 0,    0, maxY, maxZ, block);
-            Cuboid(args, maxX, 1, 0, maxX, maxY, maxZ, block);
+            Cuboid(args, 0, 1, 0,    maxX, maxY, 0, nextBlock);
+            Cuboid(args, 0, 1, maxZ, maxX, maxY, maxZ, nextBlock);
+            Cuboid(args, 0, 1, 0,    0, maxY, maxZ, nextBlock);
+            Cuboid(args, maxX, 1, 0, maxX, maxY, maxZ, nextBlock);
             
             // Cuboid base
             Cuboid(args, 0, 0, 0, maxX, 0, maxZ, () => Block.blackrock);
@@ -75,35 +77,35 @@ namespace MCGalaxy.Generator {
         static bool GenSpace(MapGenArgs args) {
             int maxX = args.Level.Width - 1, maxY = args.Level.Height - 1, maxZ = args.Level.Length - 1;
             Random rand = args.UseSeed ? new Random(args.Seed) : new Random();
-            Func<byte> block = () => rand.Next(100) == 0 ? Block.iron : Block.obsidian;
+            NextBlock nextBlock = () => rand.Next(100) == 0 ? Block.iron : Block.obsidian;
 
             // Cuboid the four walls
-            Cuboid(args, 0, 2, 0,    maxX, maxY, 0, block);
-            Cuboid(args, 0, 2, maxZ, maxX, maxY, maxZ, block);
-            Cuboid(args, 0, 2, 0,    0, maxY, maxZ, block);
-            Cuboid(args, maxX, 2, 0, maxX, maxY, maxZ, block);
+            Cuboid(args, 0, 2, 0,    maxX, maxY, 0, nextBlock);
+            Cuboid(args, 0, 2, maxZ, maxX, maxY, maxZ, nextBlock);
+            Cuboid(args, 0, 2, 0,    0, maxY, maxZ, nextBlock);
+            Cuboid(args, maxX, 2, 0, maxX, maxY, maxZ, nextBlock);
             
             // Cuboid base and top
             Cuboid(args, 0, 0, 0,    maxX, 0, maxZ, () => Block.blackrock);
-            Cuboid(args, 0, 1, 0,    maxX, 1, maxZ, block);
-            Cuboid(args, 0, maxY, 0, maxX, maxY, maxZ, block);
+            Cuboid(args, 0, 1, 0,    maxX, 1, maxZ, nextBlock);
+            Cuboid(args, 0, maxY, 0, maxX, maxY, maxZ, nextBlock);
             return true;
         }
         
         static bool GenRainbow(MapGenArgs args) {
             int maxX = args.Level.Width - 1, maxY = args.Level.Height - 1, maxZ = args.Level.Length - 1;
             Random rand = args.UseSeed ? new Random(args.Seed) : new Random();
-            Func<byte> block = () => (byte)rand.Next(Block.red, Block.white);
+            NextBlock nextBlock = () => (byte)rand.Next(Block.red, Block.white);
 
             // Cuboid the four walls
-            Cuboid(args, 0, 1, 0,    maxX, maxY, 0, block);
-            Cuboid(args, 0, 1, maxZ, maxX, maxY, maxZ, block);
-            Cuboid(args, 0, 1, 0,    0, maxY, maxZ, block);
-            Cuboid(args, maxX, 1, 0, maxX, maxY, maxZ, block);
+            Cuboid(args, 0, 1, 0,    maxX, maxY, 0, nextBlock);
+            Cuboid(args, 0, 1, maxZ, maxX, maxY, maxZ, nextBlock);
+            Cuboid(args, 0, 1, 0,    0, maxY, maxZ, nextBlock);
+            Cuboid(args, maxX, 1, 0, maxX, maxY, maxZ, nextBlock);
             
             // Cuboid base and top
-            Cuboid(args, 0, 0, 0,    maxX, 0, maxZ, block);
-            Cuboid(args, 0, maxY, 0, maxX, maxY, maxZ, block);
+            Cuboid(args, 0, 0, 0,    maxX, 0, maxZ, nextBlock);
+            Cuboid(args, 0, maxY, 0, maxX, maxY, maxZ, nextBlock);
             return true;
         }
         
@@ -148,7 +150,7 @@ namespace MCGalaxy.Generator {
         }
         
         static void Cuboid(MapGenArgs args, int minX, int minY, int minZ,
-                           int maxX, int maxY, int maxZ, Func<byte> block) {
+                           int maxX, int maxY, int maxZ, NextBlock nextBlock) {
             int width = args.Level.Width, length = args.Level.Length;
             byte[] blocks = args.Level.blocks;
             
@@ -156,7 +158,7 @@ namespace MCGalaxy.Generator {
                 for (int z = minZ; z <= maxZ; z++)
                     for (int x = minX; x <= maxX; x++)
             {
-                blocks[x + width * (z + y * length)] = block();
+                blocks[x + width * (z + y * length)] = nextBlock();
             }
         }
     }

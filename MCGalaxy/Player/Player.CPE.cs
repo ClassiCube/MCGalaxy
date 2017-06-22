@@ -26,11 +26,11 @@ namespace MCGalaxy {
         public int ChangeModel, EnvMapAppearance, EnvWeatherType, HackControl;
         public int EmoteFix, MessageTypes, LongerMessages, FullCP437;
         public int BlockDefinitions, BlockDefinitionsExt, TextColors, BulkBlockUpdate;
-        public int EnvMapAspect, PlayerClick, EntityProperty, ExtEntityPositions;
+        public int EnvMapAspect, PlayerClick, EntityProperty, ExtEntityPositions, TwoWayPing;
 
-        // these are checked frequently, so avoid overhead of HasCpeExt
+        // these are checked very frequently, so avoid overhead of HasCpeExt
         public bool hasCustomBlocks, hasBlockDefs,
-        hasTextColors, hasChangeModel, hasExtList, hasCP437;
+        hasTextColors, hasChangeModel, hasExtList, hasCP437, hasTwoWayPing;
 
         public void AddExtension(string ext, int version) {
             switch (ext.Trim()) {
@@ -96,6 +96,9 @@ namespace MCGalaxy {
                 case CpeExt.ExtEntityPositions:
                     ExtEntityPositions = version;
                     hasExtPositions = true; break;
+                case CpeExt.TwoWayPing:
+                    TwoWayPing = version; 
+                    hasTwoWayPing = true; break;
             }
         }
 
@@ -126,6 +129,7 @@ namespace MCGalaxy {
                     case CpeExt.PlayerClick: return PlayerClick == version;
                     case CpeExt.EntityProperty: return EntityProperty == version;
                     case CpeExt.ExtEntityPositions: return ExtEntityPositions == version;
+                    case CpeExt.TwoWayPing: return TwoWayPing == version;
                     default: return false;
             }
         }
@@ -253,6 +257,7 @@ namespace MCGalaxy {
         public const string PlayerClick = "PlayerClick";
         public const string EntityProperty = "EntityProperty";
         public const string ExtEntityPositions = "ExtEntityPositions";
+        public const string TwoWayPing = "TwoWayPing";
     }
     
     public enum CpeMessageType : byte {

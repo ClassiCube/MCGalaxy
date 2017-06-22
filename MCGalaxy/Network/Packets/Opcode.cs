@@ -66,5 +66,6 @@ namespace MCGalaxy.Network {
         public const byte CpeSetMapEnvUrl = 40;
         public const byte CpeSetMapEnvProperty = 41;
         public const byte CpeSetEntityProperty = 42;
+        public const byte CpeTwoWayPing = 43;
     }
 }

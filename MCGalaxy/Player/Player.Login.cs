@@ -55,7 +55,7 @@ namespace MCGalaxy {
         }
         
         void SendCpeExtensions() {
-            Send(Packet.ExtInfo(25), true);
+            Send(Packet.ExtInfo(26), true);
             
             Send(Packet.ExtEntry(CpeExt.EnvMapAppearance, 1), true); // fix for classicube client, doesn't reply if only send EnvMapAppearance with version 2
             Send(Packet.ExtEntry(CpeExt.ClickDistance, 1), true);
@@ -90,6 +90,7 @@ namespace MCGalaxy {
             Send(Packet.ExtEntry(CpeExt.EntityProperty, 1), true);
             
             Send(Packet.ExtEntry(CpeExt.ExtEntityPositions, 1), true);
+            Send(Packet.ExtEntry(CpeExt.TwoWayPing, 1), true);
         }
         
         void CompleteLoginProcess() {

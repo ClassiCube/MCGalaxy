@@ -54,8 +54,8 @@ namespace MCGalaxy {
         }
         
         
-        internal static Dictionary<string, Func<Player, string>> standardTokens
-            = new Dictionary<string, Func<Player, string>> {
+        internal static Dictionary<string, StringFormatter<Player>> standardTokens
+            = new Dictionary<string, StringFormatter<Player>> {
             { "$name", p => p.DisplayName == null ? null :
                     (Server.dollarNames ? "$" : "") + Colors.StripColors(p.DisplayName) },
             { "$truename", p => p.truename == null ? null :

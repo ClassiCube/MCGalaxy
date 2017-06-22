@@ -125,7 +125,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void OutputList<T>(Player p, string keyword, string cmd, string type, string modifier,
-                                  List<T> items, Func<T, string> formatter) {
+                                  List<T> items, StringFormatter<T> formatter) {
             if (items.Count == 0) {
                 Player.Message(p, "No {0} found containing \"{1}\"", type, keyword);
             } else {

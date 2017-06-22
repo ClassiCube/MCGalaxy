@@ -199,6 +199,7 @@
     <Compile Include="Commands\CPE\CmdEntityRot.cs" />
     <Compile Include="Commands\CPE\CmdEnvironment.cs" />
     <Compile Include="Commands\CPE\CmdModel.cs" />
+    <Compile Include="Commands\CPE\CmdPing.cs" />
     <Compile Include="Commands\CPE\CmdReachDistance.cs" />
     <Compile Include="Commands\CPE\CmdSkin.cs" />
     <Compile Include="Commands\CPE\CmdTexture.cs" />
@@ -576,6 +577,7 @@
     <Compile Include="Network\Utils\HttpUtil.cs" />
     <Compile Include="Network\Utils\LevelChunkStream.cs" />
     <Compile Include="Network\Utils\NetUtils.cs" />
+    <Compile Include="Network\Utils\PingList.cs" />
     <Compile Include="Player\Group\Group.cs" />
     <Compile Include="Player\Group\GroupProperties.cs" />
     <Compile Include="Player\List\PlayerExtList.cs" />
