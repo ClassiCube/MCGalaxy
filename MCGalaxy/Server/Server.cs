@@ -121,10 +121,10 @@ namespace MCGalaxy {
             Background.QueueOnce(UpgradeTasks.UpgradeOldBlacklist);
             Background.QueueOnce(LoadAutoloadMaps);
             Background.QueueOnce(UpgradeTasks.MovePreviousLevelFiles);
-            Background.QueueOnce(UpgradeTasks.UpgradeOldLockdown);
             Background.QueueOnce(UpgradeTasks.UpgradeOldTempranks);
             Background.QueueOnce(UpgradeTasks.UpgradeDBTimeSpent);
             Background.QueueOnce(LoadPlayerLists);
+            Background.QueueOnce(UpgradeTasks.UpgradeOldLockdown);
             
             Background.QueueOnce(SetupSocket);
             Background.QueueOnce(InitTimers);
