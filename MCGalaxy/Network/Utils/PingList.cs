@@ -23,7 +23,12 @@ namespace MCGalaxy.Network {
         public struct PingEntry {
             public DateTime TimeSent, TimeReceived;
             public ushort Data;
+            public double Latency { get {
+                    // Half, because received->reply time is actually twice time it takes to send data
+                    return (TimeReceived - TimeSent).TotalMilliseconds * 0.5;
+                } }
         }
+        
         public PingEntry[] Entries = new PingEntry[10];
         
         
@@ -45,9 +50,9 @@ namespace MCGalaxy.Network {
         }
         
         ushort SetTwoWayPing(int i, ushort prev) {
-             Entries[i].Data = (ushort)(prev + 1);
-             Entries[i].TimeSent = DateTime.UtcNow;
-             return (ushort)(prev + 1);
+            Entries[i].Data = (ushort)(prev + 1);
+            Entries[i].TimeSent = DateTime.UtcNow;
+            return (ushort)(prev + 1);
         }
         
         public void Update(ushort data) {
@@ -59,39 +64,42 @@ namespace MCGalaxy.Network {
         }
         
         
+        /// <summary> Gets best ping in milliseconds, or 0 if no ping measures. </summary>
+        public double BestPingMilliseconds() {
+            double totalMs = 100000000;
+            foreach (PingEntry ping in Entries) {
+                if (ping.TimeSent.Ticks == 0 || ping.TimeReceived.Ticks == 0) continue;
+                totalMs = Math.Min(totalMs, ping.Latency);
+            }
+            return totalMs;
+        }
+        
         /// <summary> Gets average ping in milliseconds, or 0 if no ping measures. </summary>
         public double AveragePingMilliseconds() {
             double totalMs = 0;
             int measures = 0;
-            
             foreach (PingEntry ping in Entries) {
                 if (ping.TimeSent.Ticks == 0 || ping.TimeReceived.Ticks == 0) continue;
-                
-                // Half, because received->reply time is actually twice time it takes to send data
-                totalMs += (ping.TimeReceived - ping.TimeSent).TotalMilliseconds * 0.5;
-                measures++;
+                totalMs += ping.Latency; measures++;
             }
             return measures == 0 ? 0 : (totalMs / measures);
         }
         
-        
         /// <summary> Gets worst ping in milliseconds, or 0 if no ping measures. </summary>
         public double WorstPingMilliseconds() {
             double totalMs = 0;
-            
             foreach (PingEntry ping in Entries) {
                 if (ping.TimeSent.Ticks == 0 || ping.TimeReceived.Ticks == 0) continue;
-                
-                double ms = (ping.TimeReceived - ping.TimeSent).TotalMilliseconds * 0.5;
-                totalMs = Math.Max(totalMs, ms);
+                totalMs = Math.Max(totalMs, ping.Latency);
             }
             return totalMs;
         }
         
         public string Format() {
-            return String.Format("Worst ping {0}ms, average {1}ms",
-                                 WorstPingMilliseconds().ToString("N0"),
-                                 AveragePingMilliseconds().ToString("N0"));
+            return String.Format("Lowest ping {0}ms, average {1} ms, highest {2}ms",
+                                 (int)BestPingMilliseconds(),
+                                 (int)AveragePingMilliseconds(),
+                                 (int)WorstPingMilliseconds());
         }
     }
 }
