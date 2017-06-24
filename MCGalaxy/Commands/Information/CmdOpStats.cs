@@ -96,16 +96,6 @@ namespace MCGalaxy.Commands.Info {
             return value == "today" || value == "yesterday" || value == "thismonth" || value == "lastmonth" || value == "all";
         }
         
-        static void DoQuery(Player p, string group, string start, string end, string name, string cmd, string msg) {
-            DataTable table = Database.Backend.GetRows(
-                "Opstats", "COUNT(ID)" ,"WHERE Time >= @0 AND Time < @1 AND " +
-                "Name LIKE @2 AND Cmd LIKE @3 AND Cmdmsg " + msg, start, end, name, cmd);
-            
-            // don't use colour codes in cli or gui
-            Player.Message(p, (p == null ? "" : "&a") + group + (p == null ? "" : "&5") + table.Rows[0]["COUNT(id)"]);
-            table.Dispose();
-        }
-        
         static int Query(string start, string end, string name, string cmd, string msg = "!=''") {
             using (DataTable table = Database.Backend.GetRows(
                 "Opstats", "COUNT(ID)" ,"WHERE Time >= @0 AND Time < @1 AND " +

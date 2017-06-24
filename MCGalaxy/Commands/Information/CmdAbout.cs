@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Info {
 
             Player.Message(p, "Retrieving block change records..");
             bool foundAny = false;            
-            ListFromDatabase(p, ref foundAny, names, x, y, z);
+            ListFromDatabase(p, ref foundAny, x, y, z);
             using (IDisposable rLock = p.level.BlockDB.Locker.AccquireRead(30 * 1000)) {
                 if (rLock != null) {
                     p.level.BlockDB.FindChangesAt(x, y, z,
@@ -70,8 +70,7 @@ namespace MCGalaxy.Commands.Info {
             return true;
         }
         
-        static void ListFromDatabase(Player p, ref bool foundAny, Dictionary<int, string> names,
-                                     ushort x, ushort y, ushort z) {
+        static void ListFromDatabase(Player p, ref bool foundAny, ushort x, ushort y, ushort z) {
             if (!Database.TableExists("Block" + p.level.name)) return;
             using (DataTable Blocks = Database.Backend.GetRows("Block" + p.level.name, "*",
                                                                "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z)) {
@@ -115,8 +114,6 @@ namespace MCGalaxy.Commands.Info {
             foundAny = true;
             BlockDBChange.Output(p, name, entry);
         }
-        
-        static ushort U16(object x) { return ushort.Parse(x.ToString()); }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/about");

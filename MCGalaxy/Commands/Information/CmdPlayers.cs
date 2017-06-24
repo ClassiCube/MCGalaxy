@@ -114,8 +114,6 @@ namespace MCGalaxy.Commands.Info {
             }
         }
         
-        static Section MakeSection(string title) { return MakeSection(Group.standard, title); }
-        
         static Section MakeSection(Group group, string title) {
             Section sec;
             sec.group = group;

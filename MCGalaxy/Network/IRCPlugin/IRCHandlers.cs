@@ -85,55 +85,6 @@ namespace MCGalaxy.Network {
             bot.connection.Listener.OnPrivateNotice -= Listener_OnPrivateNotice;
         }
         
-
-        #region In-game event handlers
-        
-        void Player_PlayerAction(Player p, PlayerAction action,
-                                 string message, bool stealth) {
-            if (!bot.Enabled) return;
-            string msg = null;
-            
-            if (action == PlayerAction.AFK && !p.hidden)
-                msg = p.ColoredName + " %Sis AFK " + message;
-            else if (action == PlayerAction.UnAFK && !p.hidden)
-                msg = p.ColoredName + " %Sis no longer AFK";
-            else if (action == PlayerAction.Joker)
-                msg = p.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S";
-            else if (action == PlayerAction.Unjoker)
-                msg = p.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S";
-            else if (action == PlayerAction.Me)
-                msg = "*" + p.DisplayName + " " + message;
-            else if (action == PlayerAction.Review)
-                msg = p.ColoredName + " %Sis requesting a review.";
-            else if (action == PlayerAction.JoinWorld && Server.ircShowWorldChanges && !p.hidden)
-                msg = p.ColoredName + " %Swent to &8" + message;
-            
-            if (msg != null) bot.Say(msg, stealth);
-        }
-        
-        void Player_PlayerDisconnect(Player p, string reason) {
-            if (!bot.Enabled || p.hidden) return;
-            if (!Server.guestLeaveNotify && p.Rank <= LevelPermission.Guest) return;
-            
-            bot.Say(p.DisplayName + " %Sleft the game (" + reason + "%S)", false);
-        }
-
-        void Player_PlayerConnect(Player p) {
-            if (!bot.Enabled || p.hidden) return;
-            if (!Server.guestJoinNotify && p.Rank <= LevelPermission.Guest) return;
-            
-            bot.Say(p.DisplayName + " %Sjoined the game", false);
-        }
-        
-        void Player_PlayerChat(Player p, string message) {
-            if (!bot.Enabled) return;
-            if (message.Trim(trimChars) == "") return;
-            
-            string name = Server.ircPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;
-            bot.Say(name + "%S: " + message, p.opchat);
-        }
-        #endregion
-        
         
         void Listener_OnAction(UserInfo user, string channel, string description) {
             Player.GlobalIRCMessage(String.Format("%I(IRC) * {0} {1}", user.Nick, description));
