@@ -48,7 +48,7 @@ namespace MCGalaxy {
         [Obsolete("Use Logger.Log(LogType, String)")]
         public void Log(string message) { Logger.Log(LogType.SystemActivity, message); }
         
-        void CheckFile(string file) {
+        static void CheckFile(string file) {
             if (File.Exists(file)) return;
             
             Logger.Log(LogType.SystemActivity, file + " doesn't exist, Downloading..");
@@ -65,7 +65,7 @@ namespace MCGalaxy {
         }
         
         internal static ConfigElement[] serverConfig, levelConfig, zombieConfig;
-        public void Start() {
+        public static void Start() {
             serverConfig = ConfigElement.GetAll(typeof(Server));
             zombieConfig = ConfigElement.GetAll(typeof(ZombieGameProps));
             levelConfig = ConfigElement.GetAll(typeof(Level));
@@ -140,7 +140,7 @@ namespace MCGalaxy {
                                    null, TimeSpan.FromMinutes(5));
         }
         
-        void MoveSqliteDll() {
+        static void MoveSqliteDll() {
             try {
                 if (File.Exists("sqlite3_x32.dll") && IntPtr.Size == 4)
                     File.Copy("sqlite3_x32.dll", "sqlite3.dll", true);
@@ -150,7 +150,7 @@ namespace MCGalaxy {
             } catch { }
         }
         
-        void EnsureFilesExist() {
+        static void EnsureFilesExist() {
             if (!Directory.Exists("properties")) Directory.CreateDirectory("properties");
             if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");
             if (!Directory.Exists("bots")) Directory.CreateDirectory("bots");
@@ -163,7 +163,7 @@ namespace MCGalaxy {
             if (!Directory.Exists("blockdefs")) Directory.CreateDirectory("blockdefs");
         }
         
-        void MoveOutdatedFiles() {
+        static void MoveOutdatedFiles() {
             try {
                 if (File.Exists("blocks.json")) File.Move("blocks.json", "blockdefs/global.json");
                 if (File.Exists("server.properties")) File.Move("server.properties", Paths.ServerPropsFile);
@@ -251,15 +251,15 @@ namespace MCGalaxy {
             }
         }
 
-        public void PlayerListUpdate() {
-            if (Server.s.OnPlayerListChange != null) Server.s.OnPlayerListChange(Player.players);
+        public static void PlayerListUpdate() {
+            if (OnPlayerListChange != null) OnPlayerListChange();
         }
 
-        public void FailBeat()  {
+        public static void FailBeat()  {
             if (HeartBeatFail != null) HeartBeatFail();
         }
 
-        public void UpdateUrl(string url) {
+        public static void UpdateUrl(string url) {
             if (OnURLChange != null) OnURLChange(url);
         }
 
@@ -269,7 +269,7 @@ namespace MCGalaxy {
             }
         }
 
-        internal void SettingsUpdate() {
+        internal static void SettingsUpdate() {
             if (OnSettingsUpdate != null) OnSettingsUpdate();
         }
         

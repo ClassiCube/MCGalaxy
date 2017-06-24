@@ -104,7 +104,7 @@ namespace MCGalaxy {
             loggedIn = true;
             connections.Remove(this);
             RemoveFromPending();
-            Server.s.PlayerListUpdate();
+            Server.PlayerListUpdate();
             
             timeLogged = DateTime.Now;
             lastLogin = DateTime.Now;

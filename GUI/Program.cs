@@ -70,11 +70,10 @@ namespace MCGalaxy.Gui {
         }
         
         static void RunCli() {
-            Server s = new Server();
             Logger.LogHandler += LogMessage;
             MCGalaxy.Gui.App.usingConsole = true;
             
-            s.Start();
+            Server.Start();
             Console.Title = Server.name + " - " + Server.SoftwareNameVersioned;
             ConsoleLoop();
         }
