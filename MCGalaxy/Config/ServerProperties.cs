@@ -43,7 +43,7 @@ namespace MCGalaxy {
         public static void Load() {
             oldPerms = new OldPerms();
             if (PropertiesFile.Read(Paths.ServerPropsFile, ref oldPerms, LineProcessor))
-                Server.s.SettingsUpdate();
+                Server.SettingsUpdate();
             if (oldPerms.saveZS)
                 ZombieGameProps.SaveSettings();
             ZombieGameProps.LoadSettings();

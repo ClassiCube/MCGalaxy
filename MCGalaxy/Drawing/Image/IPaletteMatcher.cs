@@ -99,7 +99,7 @@ namespace MCGalaxy.Drawing {
         
         public byte BestMatch(byte R, byte G, byte B, out bool backLayer) {
             backLayer = false;
-            return BestMatch(R, G, B, out backLayer);
+            return BestMatch(R, G, B);
         }
         
         

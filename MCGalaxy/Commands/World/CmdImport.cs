@@ -61,8 +61,6 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "Converted map!");
         }
         
-        enum FileType { Mcf, Fcm, Dat, Cw };
-        
         public override void Help(Player p) {
             Player.Message(p, "%T/import [name]");
             Player.Message(p, "%HImports a map file with that name.");

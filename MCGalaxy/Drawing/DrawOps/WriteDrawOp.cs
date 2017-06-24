@@ -51,11 +51,11 @@ namespace MCGalaxy.Drawing.Ops {
             pos = p1;
             
             foreach (char c in Text) {
-                DrawLetter(Player, Level, c, brush, output);
+                DrawLetter(Player, c, brush, output);
             }
         }
         
-        void DrawLetter(Player p, Level lvl, char c, Brush brush, DrawOpOutput output) {
+        void DrawLetter(Player p, char c, Brush brush, DrawOpOutput output) {
             if ((int)c >= 256 || letters[(int)c] == null) {
                 Player.Message(p, "\"" + c + "\" is not currently supported, replacing with space.");
                 pos.X = (ushort)(pos.X + dirX * 4 * Scale);

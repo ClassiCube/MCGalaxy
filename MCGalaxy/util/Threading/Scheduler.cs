@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.Threading;
 
 namespace MCGalaxy.Tasks {
+    public delegate void SchedulerCallback(SchedulerTask task);
+    
     public sealed partial class Scheduler {
 
         readonly List<SchedulerTask> tasks = new List<SchedulerTask>();
@@ -36,17 +38,17 @@ namespace MCGalaxy.Tasks {
         
 
         /// <summary> Queues an action that is asynchronously executed one time, as soon as possible. </summary>
-        public SchedulerTask QueueOnce(Action callback) {
-            return EnqueueTask(new SchedulerTask(obj => callback(), null, TimeSpan.Zero, false));
+        public SchedulerTask QueueOnce(SchedulerCallback callback) {
+            return EnqueueTask(new SchedulerTask(callback, null, TimeSpan.Zero, false));
         }
 
         /// <summary> Queues an action that is asynchronously executed one time, after a certain delay. </summary>
-        public SchedulerTask QueueOnce(Action<SchedulerTask> callback, object state, TimeSpan delay) {
+        public SchedulerTask QueueOnce(SchedulerCallback callback, object state, TimeSpan delay) {
             return EnqueueTask(new SchedulerTask(callback, state, delay, false));
         }
         
         /// <summary> Queues an action that is asynchronously executed repeatedly, after a certain delay. </summary>
-        public SchedulerTask QueueRepeat(Action<SchedulerTask> callback, object state, TimeSpan delay) {
+        public SchedulerTask QueueRepeat(SchedulerCallback callback, object state, TimeSpan delay) {
             return EnqueueTask(new SchedulerTask(callback, state, delay, true));
         }
         
@@ -133,7 +135,7 @@ namespace MCGalaxy.Tasks {
     }
 
     public class SchedulerTask {
-        public Action<SchedulerTask> Callback;
+        public SchedulerCallback Callback;
         public object State;
         
         /// <summary> Interval between executions of this task. </summary>
@@ -145,7 +147,7 @@ namespace MCGalaxy.Tasks {
         /// <summary> Whether this task should continue repeating. </summary>
         public bool Repeating;
         
-        public SchedulerTask(Action<SchedulerTask> callback, object state,
+        public SchedulerTask(SchedulerCallback callback, object state,
                              TimeSpan delay, bool repeating) {
             Callback = callback;
             State = state;

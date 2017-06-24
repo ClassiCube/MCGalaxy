@@ -49,7 +49,7 @@ namespace MCGalaxy {
             new ColumnDesc("Cmdmsg", ColumnType.VarChar, 40),
         };
                 
-        void InitDatabase() {
+        static void InitDatabase() {
             if (!Directory.Exists("blockdb")) Directory.CreateDirectory("blockdb");
             
             try {

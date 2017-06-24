@@ -116,7 +116,7 @@ namespace MCGalaxy.Network {
                 Server.URL = response;
                 
                 if (!response.Contains("\"errors\": [")) {
-                    Server.s.UpdateUrl(Server.URL);
+                    Server.UpdateUrl(Server.URL);
                     File.WriteAllText("text/externalurl.txt", Server.URL);
                     Logger.Log(LogType.SystemActivity, "ClassiCube URL found: " + Server.URL);
                 } else {
@@ -125,7 +125,7 @@ namespace MCGalaxy.Network {
                         Server.URL = resp.errors[0][0];
                     else
                         Server.URL = "Error while finding URL. Is the port open?";
-                    Server.s.UpdateUrl(Server.URL);
+                    Server.UpdateUrl(Server.URL);
                     Logger.Log(LogType.Warning, response);
                 }
             }

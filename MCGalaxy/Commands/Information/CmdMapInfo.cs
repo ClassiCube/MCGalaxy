@@ -154,10 +154,6 @@ namespace MCGalaxy.Commands.Info {
                            data.Likes, data.Dislikes);
         }
         
-        static string JoinNames(List<string> items, Player p) {
-            return items.Join(name => PlayerInfo.GetColoredName(p, name));
-        }
-        
         static string GetRealmMapOwner(string lvlName) {
             bool plus = Server.ClassicubeAccountPlus;
             // Early out when accounts have + and map doesn't.

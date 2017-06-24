@@ -145,7 +145,7 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "Block {0} is {1}: {2}",
                            BlockName(scope, lvl, block),
                            type, getter(props) ? "&aYes" : "&cNo");
-            OnPropsChanged(scope, lvl, block, false);
+            OnPropsChanged(scope, lvl, block);
         }
         
         static void SetEnum(Player p, BlockProps[] scope, ExtBlock block, string msg) {
@@ -156,7 +156,7 @@ namespace MCGalaxy.Commands.World {
             scope[block.Index].AnimalAI = ai;
             Player.Message(p, "Animal AI for {0} set to: {1}",
                                BlockName(scope, lvl, block), ai);
-            OnPropsChanged(scope, lvl, block, true);
+            OnPropsChanged(scope, lvl, block);
         }
         
         static void SetDeathMessage(Player p, BlockProps[] scope, ExtBlock block, string msg) {
@@ -170,11 +170,11 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Death message for {0} set to: {1}",
                                BlockName(scope, lvl, block), msg);
             }
-            OnPropsChanged(scope, lvl, block, false);
+            OnPropsChanged(scope, lvl, block);
         }
         
 
-        static void OnPropsChanged(BlockProps[] scope, Level level, ExtBlock block, bool physics) {
+        static void OnPropsChanged(BlockProps[] scope, Level level, ExtBlock block) {
             scope[block.Index].Changed = true;
             
             if (scope == Block.Props) {

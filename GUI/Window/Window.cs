@@ -22,6 +22,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using MCGalaxy.Generator;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Gui {
     public partial class Window : Form {
@@ -96,10 +97,10 @@ namespace MCGalaxy.Gui {
             Server s = new Server();
             Logger.LogHandler += LogMessage;
 
-            s.HeartBeatFail += HeartBeatFail;
-            s.OnURLChange += UpdateUrl;
-            s.OnPlayerListChange += UpdateClientList;
-            s.OnSettingsUpdate += SettingsUpdate;
+            Server.HeartBeatFail += HeartBeatFail;
+            Server.OnURLChange += UpdateUrl;
+            Server.OnPlayerListChange += UpdateClientList;
+            Server.OnSettingsUpdate += SettingsUpdate;
             Server.Background.QueueOnce(InitServerTask);
         }
         
@@ -124,8 +125,8 @@ namespace MCGalaxy.Gui {
             }
         }
         
-        void InitServerTask() {
-            Server.s.Start();
+        void InitServerTask(SchedulerTask task) {
+            Server.Start();
             // The first check for updates is run after 10 seconds, subsequent ones every two hours
             Server.Background.QueueRepeat(Updater.UpdaterTask, null, TimeSpan.FromSeconds(10));
 
@@ -211,10 +212,8 @@ namespace MCGalaxy.Gui {
 
         /// <summary> Updates the list of client names in the window </summary>
         /// <param name="players">The list of players to add</param>
-        public void UpdateClientList(List<Player> playerList) {
-            if (InvokeRequired) {
-                Invoke(new PlayerListCallback(UpdateClientList), playerList); return;
-            }
+        public void UpdateClientList() {
+            if (InvokeRequired) { Invoke(new VoidDelegate(UpdateClientList)); return; }
             
             UpdateNotifyIconText();
             if (main_Players.DataSource == null)

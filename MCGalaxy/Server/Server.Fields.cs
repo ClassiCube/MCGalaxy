@@ -38,13 +38,12 @@ namespace MCGalaxy {
         public static event OnConsoleCommand ConsoleCommand;
         public delegate void HeartBeatHandler();
         public delegate void MessageEventHandler(string message);
-        public delegate void PlayerListHandler(List<Player> playerList);
         public delegate void VoidHandler();
         
-        public event HeartBeatHandler HeartBeatFail;
-        public event MessageEventHandler OnURLChange;
-        public event PlayerListHandler OnPlayerListChange;
-        public event VoidHandler OnSettingsUpdate;
+        public static event HeartBeatHandler HeartBeatFail;
+        public static event MessageEventHandler OnURLChange;
+        public static event VoidHandler OnPlayerListChange;
+        public static event VoidHandler OnSettingsUpdate;
         
         public static IRCBot IRC;
         public static Thread locationChecker;
@@ -103,7 +102,7 @@ namespace MCGalaxy {
         public static int voteKickVotesNeeded = 0;
 
         // Extra storage for custom commands
-        public ExtrasCollection Extras = new ExtrasCollection();
+        public static ExtrasCollection Extras = new ExtrasCollection();
 
         // Games
         public static ZombieGame zombie;
@@ -117,7 +116,7 @@ namespace MCGalaxy {
         public static Scheduler MainScheduler = new Scheduler("MCG_MainScheduler");
         public static Scheduler Background = new Scheduler("MCG_BackgroundScheduler");
         public static Scheduler Critical = new Scheduler("MCG_CriticalScheduler");
-        public static Server s;
+        public static Server s = new Server();
 
         public const byte version = 7;
         public static string salt = "";

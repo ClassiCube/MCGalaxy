@@ -126,15 +126,6 @@ namespace MCGalaxy.Commands.World {
                            GetBool(lvl.Buildable), GetBool(lvl.Deletable));
         }
         
-        internal static void SetBool(Player p, Level lvl, ref bool target, string name, bool negate = false) {
-            target = !target;
-            bool display = negate ? !target : target;
-            lvl.ChatLevel(name + GetBool(display));
-            
-            if (p == null || p.level != lvl)
-                Player.Message(p, name + GetBool(display, p == null));
-        }
-        
         static string GetBool(bool value, bool console = false) {
             return console ? (value ? "ON" : "OFF") : (value ? "&aON" : "&cOFF");
         }

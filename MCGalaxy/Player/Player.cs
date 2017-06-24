@@ -325,7 +325,7 @@ namespace MCGalaxy {
                 catch ( Exception e ) { Logger.LogError(e); }
 
                 PlayerInfo.Online.Remove(this);
-                Server.s.PlayerListUpdate();
+                Server.PlayerListUpdate();
                 
                 OnPlayerDisconnectEvent.Call(this, discMsg);
                 if (PlayerDisconnect != null) PlayerDisconnect(this, discMsg);
