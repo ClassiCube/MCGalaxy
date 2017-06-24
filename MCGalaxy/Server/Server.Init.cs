@@ -29,7 +29,7 @@ namespace MCGalaxy {
     
     public sealed partial class Server {
 
-        void LoadMainLevel() {
+        static void LoadMainLevel(SchedulerTask task) {
             try {
                 mainLevel = CmdLoad.LoadLevel(null, level);                
                 if (mainLevel == null) GenerateMain();
@@ -41,14 +41,14 @@ namespace MCGalaxy {
             }
         }
         
-        void GenerateMain() {
+        static void GenerateMain() {
             Logger.Log(LogType.SystemActivity, "main level not found, generating..");
             mainLevel = new Level(level, 128, 64, 128);
             MapGen.Generate(mainLevel, "flat", "", null);
             mainLevel.Save();
         }
         
-        void LoadPlayerLists() {
+        static void LoadPlayerLists(SchedulerTask task) {
             agreed = new PlayerList("ranks/agreed.txt");
             try {
                 UpgradeTasks.UpgradeOldAgreed();
@@ -80,7 +80,7 @@ namespace MCGalaxy {
                 whiteList = PlayerList.Load("whitelist.txt");
         }
         
-        void LoadAutoloadMaps() {
+        static void LoadAutoloadMaps(SchedulerTask task) {
             AutoloadMaps = PlayerExtList.Load("text/autoload.txt", '=');
             List<string> maps = AutoloadMaps.AllNames();
             
@@ -90,7 +90,7 @@ namespace MCGalaxy {
             }
         }
         
-        void SetupSocket() {
+        static void SetupSocket(SchedulerTask task) {
 		    Logger.Log(LogType.SystemActivity, "Creating listening socket on port {0}... ", port);
             Listener = new TcpListen();
             
@@ -102,7 +102,7 @@ namespace MCGalaxy {
             Listener.Listen(ip, (ushort)port);
         }
         
-        void InitHeartbeat() {
+        static void InitHeartbeat(SchedulerTask task) {
             try {
                 Heartbeat.InitHeartbeats();
             } catch (Exception e) {
@@ -110,7 +110,7 @@ namespace MCGalaxy {
             }
         }
         
-        void InitTimers() {
+        static void InitTimers(SchedulerTask task) {
             TextFile announcementsFile = TextFile.Files["Announcements"];
             announcementsFile.EnsureExists();
 
@@ -123,9 +123,9 @@ namespace MCGalaxy {
                                  TimeSpan.FromMilliseconds(PositionInterval));
         }
         
-        void InitRest() {
+        static void InitRest(SchedulerTask task) {
             IRC = new IRCBot();
-            if (Server.irc) IRC.Connect();
+            if (irc) IRC.Connect();
              
             InitZombieSurvival();
             InitLavaSurvival();
@@ -138,7 +138,7 @@ namespace MCGalaxy {
             ServerSetupFinished = true;
         }
         
-        void InitZombieSurvival() {
+        static void InitZombieSurvival() {
             if (!ZombieGameProps.StartImmediately) return;
             try {
                 Level oldMain = Server.mainLevel;
@@ -149,7 +149,7 @@ namespace MCGalaxy {
             } catch (Exception e) { Logger.LogError(e); }
         }
 
-        void InitLavaSurvival() {
+        static void InitLavaSurvival() {
             if (!Server.lava.startOnStartup) return;
             try {
                 Server.lava.Start();

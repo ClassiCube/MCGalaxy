@@ -24,7 +24,7 @@ namespace MCGalaxy.Tasks {
     internal static class InitTasks {
 
         const string staffUrl = Updater.BaseURL + "Uploads/devs.txt";       
-        internal static void UpdateStaffList() {
+        internal static void UpdateStaffList(SchedulerTask task) {
             try {
                 using (WebClient client = HttpUtil.CreateWebClient()) {
                     string[] result = client.DownloadString(staffUrl).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);

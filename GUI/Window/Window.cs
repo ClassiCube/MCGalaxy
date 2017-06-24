@@ -22,6 +22,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using MCGalaxy.Generator;
+using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Gui {
     public partial class Window : Form {
@@ -124,7 +125,7 @@ namespace MCGalaxy.Gui {
             }
         }
         
-        void InitServerTask() {
+        void InitServerTask(SchedulerTask task) {
             Server.s.Start();
             // The first check for updates is run after 10 seconds, subsequent ones every two hours
             Server.Background.QueueRepeat(Updater.UpdaterTask, null, TimeSpan.FromSeconds(10));

@@ -31,7 +31,7 @@ using MCGalaxy.SQL;
 namespace MCGalaxy.Tasks {
     internal static class UpgradeTasks {
         
-        internal static void UpgradeOldBlacklist() {
+        internal static void UpgradeOldBlacklist(SchedulerTask task) {
             if (!Directory.Exists("levels/blacklists")) return;
             string[] files = Directory.GetFiles("levels/blacklists");
             for (int i = 0; i < files.Length; i++) {
@@ -71,7 +71,7 @@ namespace MCGalaxy.Tasks {
             File.WriteAllText("ranks/agreed.txt", data);
         }
         
-        internal static void MovePreviousLevelFiles() {
+        internal static void MovePreviousLevelFiles(SchedulerTask task) {
             if (!Directory.Exists("levels")) return;
             if (Directory.Exists("levels/prev")) return;
             
@@ -97,7 +97,7 @@ namespace MCGalaxy.Tasks {
             }
         }
         
-        internal static void CombineEnvFiles() {
+        internal static void CombineEnvFiles(SchedulerTask task) {
             if (!Directory.Exists("levels/level properties")) return;
             try {
                 string[] files = Directory.GetFiles("levels/level properties", "*.env");
@@ -137,7 +137,7 @@ namespace MCGalaxy.Tasks {
             File.Delete(envFile);
         }
         
-        internal static void UpgradeOldLockdown() {
+        internal static void UpgradeOldLockdown(SchedulerTask task) {
             if (!Directory.Exists("text/lockdown/map")) return;
             
             string[] files = Directory.GetFiles("text/lockdown/map");
@@ -151,7 +151,7 @@ namespace MCGalaxy.Tasks {
             Directory.Delete("text/lockdown/map");
         }
         
-        internal static void UpgradeOldTempranks() {
+        internal static void UpgradeOldTempranks(SchedulerTask task) {
             if (!File.Exists(Paths.TempRanksFile)) return;
 
             // Check if empty, or not old form
@@ -182,7 +182,7 @@ namespace MCGalaxy.Tasks {
             File.WriteAllLines(Paths.TempRanksFile, lines);
         }
         
-        internal static void UpgradeDBTimeSpent() {
+        internal static void UpgradeDBTimeSpent(SchedulerTask task) {
             DataTable table = Database.Backend.GetRows(PlayerData.DBTable, "TimeSpent", "LIMIT 1");
             if (table.Rows.Count == 0) return; // no players
             
