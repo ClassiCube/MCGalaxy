@@ -802,11 +802,12 @@ namespace MCGalaxy {
         
         bool UseCommand(Command command, string message) {
             string cmd = command.name;
+            string shortcut = command.shortcut;
             if (cmd != "repeat" && cmd != "pass") {
                 lastCMD = message == "" ? cmd : cmd + " " + message;
                 lastCmdTime = DateTime.UtcNow;
             }
-            if (cmd != "pass") Logger.Log(LogType.CommandUsage, "{0} used /{1} {2}", name, cmd, message);
+            if (cmd != "pass") Logger.Log(LogType.CommandUsage, "{0} used /{1} {2} using the alias /{3} ", name, cmd, message, shortcut);
 
             try { //opstats patch (since 5.5.11)
                 if (Server.opstats.Contains(cmd) || (cmd == "review" && message.ToLower() == "next" && Server.reviewlist.Count > 0)) {

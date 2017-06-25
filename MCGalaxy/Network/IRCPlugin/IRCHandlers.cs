@@ -103,9 +103,9 @@ namespace MCGalaxy.Network {
         }
 
         void DoJoinLeaveMessage(string who, string verb, string channel) {
-            Logger.Log(LogType.IRCCActivity, "{0} {1} channel {2}", who, verb, channel);
+            Logger.Log(LogType.IRCCActivity, "(IRC Event) {0} {1} channel {2}", who, verb, channel);
             string which = bot.opchannels.CaselessContains(channel) ? " operator" : "";
-            Player.GlobalIRCMessage(String.Format("%I(IRC) {0} {1} the{2} channel", who, verb, which));
+            Player.GlobalIRCMessage(String.Format("%I(IRC Event) {0} {1} the{2} channel", who, verb, which));
         }
 
         void Listener_OnQuit(UserInfo user, string reason) {
@@ -117,8 +117,8 @@ namespace MCGalaxy.Network {
             }
             
             if (user.Nick == bot.nick) return;
-            Logger.Log(LogType.IRCCActivity, user.Nick + " left IRC");
-            Player.GlobalIRCMessage("%I(IRC) " + user.Nick + " left");
+            Logger.Log(LogType.IRCCActivity, "(IRC Event) " + user.Nick + " left IRC");
+            Player.GlobalIRCMessage("%I(IRC Event) " + user.Nick + " left");
         }
 
         void Listener_OnError(ReplyCode code, string message) {
@@ -267,7 +267,9 @@ namespace MCGalaxy.Network {
         }
         
         void Listener_OnRegistered() {
-            Logger.Log(LogType.IRCCActivity, "Connected to IRC!");
+            string ircserver = Server.ircServer;
+            string ircchannel = Server.ircChannel;
+            Logger.Log(LogType.IRCCActivity, "Connected to IRC! at {0} on {1}",ircserver , ircchannel);
             bot.reset = false;
             bot.retries = 0;
             
@@ -320,7 +322,7 @@ namespace MCGalaxy.Network {
                 }
             }
 
-            Player.GlobalIRCMessage("%I(IRC) " + user.Nick + " %Sis now known as %I" + newNick);
+            Player.GlobalIRCMessage("%I(IRC Notice) " + user.Nick + " %Sis now known as %I" + newNick);
         }
         
         void Listener_OnNames(string channel, string[] nicks, bool last) {
@@ -339,7 +341,7 @@ namespace MCGalaxy.Network {
             
             if (reason != "") reason = " (" + reason + ")";
             Logger.Log(LogType.IRCCActivity, "{0} kicked {1} from IRC{2}", user.Nick, kickee, user.Nick);
-            Player.GlobalIRCMessage("%I(IRC) " + user.Nick + " kicked " + kickee + reason);
+            Player.GlobalIRCMessage("%I(IRC Event) " + user.Nick + " kicked " + kickee + reason);
         }
         
         void Listener_OnKill(UserInfo user, string nick, string reason) {
