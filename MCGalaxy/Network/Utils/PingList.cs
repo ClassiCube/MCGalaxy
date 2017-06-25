@@ -52,6 +52,7 @@ namespace MCGalaxy.Network {
         ushort SetTwoWayPing(int i, ushort prev) {
             Entries[i].Data = (ushort)(prev + 1);
             Entries[i].TimeSent = DateTime.UtcNow;
+            Entries[i].TimeReceived = default(DateTime);
             return (ushort)(prev + 1);
         }
         
@@ -64,42 +65,42 @@ namespace MCGalaxy.Network {
         }
         
         
-        /// <summary> Gets best ping in milliseconds, or 0 if no ping measures. </summary>
-        public double BestPingMilliseconds() {
+        /// <summary> Gets lowest (best) ping in milliseconds, or 0 if no ping measures. </summary>
+        public int LowestPingMilliseconds() {
             double totalMs = 100000000;
             foreach (PingEntry ping in Entries) {
                 if (ping.TimeSent.Ticks == 0 || ping.TimeReceived.Ticks == 0) continue;
                 totalMs = Math.Min(totalMs, ping.Latency);
             }
-            return totalMs;
+            return (int)totalMs;
         }
         
         /// <summary> Gets average ping in milliseconds, or 0 if no ping measures. </summary>
-        public double AveragePingMilliseconds() {
+        public int AveragePingMilliseconds() {
             double totalMs = 0;
             int measures = 0;
             foreach (PingEntry ping in Entries) {
                 if (ping.TimeSent.Ticks == 0 || ping.TimeReceived.Ticks == 0) continue;
                 totalMs += ping.Latency; measures++;
             }
-            return measures == 0 ? 0 : (totalMs / measures);
+            return measures == 0 ? 0 : (int)(totalMs / measures);
         }
         
         /// <summary> Gets worst ping in milliseconds, or 0 if no ping measures. </summary>
-        public double WorstPingMilliseconds() {
+        public double HighestPingMilliseconds() {
             double totalMs = 0;
             foreach (PingEntry ping in Entries) {
                 if (ping.TimeSent.Ticks == 0 || ping.TimeReceived.Ticks == 0) continue;
                 totalMs = Math.Max(totalMs, ping.Latency);
             }
-            return totalMs;
+            return (int)totalMs;
         }
         
         public string Format() {
             return String.Format("Lowest ping {0}ms, average {1}ms, highest {2}ms",
-                                 (int)BestPingMilliseconds(),
-                                 (int)AveragePingMilliseconds(),
-                                 (int)WorstPingMilliseconds());
+                                 LowestPingMilliseconds(),
+                                 AveragePingMilliseconds(),
+                                 HighestPingMilliseconds());
         }
     }
 }
