@@ -89,8 +89,8 @@ namespace MCGalaxy.Games {
             config.Add("base.blue.y=" + cache[p].by);
             config.Add("base.blue.z=" + cache[p].bz);
             config.Add("map.line.z=" + cache[p].middle);
-            config.Add("base.red.block=" + cache[p].red);
-            config.Add("base.blue.block=" + cache[p].blue);
+            config.Add("base.red.block=" + cache[p].red.RawID);
+            config.Add("base.blue.block=" + cache[p].blue.RawID);
             config.Add("game.maxpoints=3");
             config.Add("game.tag.points-gain=5");
             config.Add("game.tag.points-lose=5");
