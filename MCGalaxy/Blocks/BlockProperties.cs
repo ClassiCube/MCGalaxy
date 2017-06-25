@@ -63,6 +63,10 @@ namespace MCGalaxy.Blocks {
         /// <summary> Animal AI behaviour of this block. </summary>
         public AnimalAI AnimalAI;
         
+        /// <summary> ID of the block that is placed when two of this block are placed on top of each other. </summary>
+        /// <remarks> e.g. slabs and cobblestone slabs. </remarks>
+        public byte StackId;
+        
         /// <summary> Whether the properties for this block have been modified and hence require saving. </summary>
         public bool Changed;
         
@@ -92,7 +96,7 @@ namespace MCGalaxy.Blocks {
                     w.WriteLine(id + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor + ":"
                                 + props.IsMessageBlock + ":" + props.IsPortal + ":" + props.WaterKills + ":" 
                                 + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg + ":" 
-                                + (byte)props.AnimalAI);
+                                + (byte)props.AnimalAI + ":" + props.StackId);
                 }
             }
         }
@@ -137,6 +141,10 @@ namespace MCGalaxy.Blocks {
                 if (parts.Length > 10) {
                     byte ai; byte.TryParse(parts[10], out ai);
                     scope[idx].AnimalAI = (AnimalAI)ai;
+                }
+                if (parts.Length > 11) {
+                    byte stackId; byte.TryParse(parts[11], out stackId);
+                    scope[idx].StackId = stackId;
                 }
             }
         }

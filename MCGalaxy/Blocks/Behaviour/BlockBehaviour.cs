@@ -42,11 +42,11 @@ namespace MCGalaxy.Blocks {
             switch (block.BlockID) {
                 case Block.dirt: return PlaceBehaviour.Dirt;
                 case Block.grass: return PlaceBehaviour.Grass;
-                case Block.staircasestep: return PlaceBehaviour.Stairs;
-                case Block.cobblestoneslab: return PlaceBehaviour.CobbleStairs;
                 case Block.c4: return PlaceBehaviour.C4;
                 case Block.c4det: return PlaceBehaviour.C4Det;
             }
+        	
+        	if (props[block.Index].StackId != Block.air) return PlaceBehaviour.Stack(block);
             return null;
         }
         
@@ -129,8 +129,6 @@ namespace MCGalaxy.Blocks {
                 case Block.lava_fire: return FirePhysics.Do;
                 case Block.sand: return OtherPhysics.DoFalling;
                 case Block.gravel: return OtherPhysics.DoFalling;
-                case Block.cobblestoneslab: return OtherPhysics.DoStairs;
-                case Block.staircasestep: return OtherPhysics.DoStairs;
                 case Block.wood_float: return OtherPhysics.DoFloatwood;
 
                 case Block.sponge: return (Level lvl, ref Check C) => 

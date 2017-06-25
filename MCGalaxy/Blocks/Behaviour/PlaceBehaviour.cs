@@ -44,27 +44,18 @@ namespace MCGalaxy.Blocks {
             p.ChangeBlock(x, y, z, block);
         }
         
-        
-        internal static void Stairs(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
-            if (!(p.level.physics == 0 || p.level.physics == 5)
-                || p.level.GetBlock(x, (ushort)(y - 1), z) != (ExtBlock)Block.staircasestep) {
-                p.ChangeBlock(x, y, z, (ExtBlock)Block.staircasestep); return;
+        internal static HandlePlace Stack(ExtBlock block) {
+            return (p, b, x, y, z) => Stack(p, block, x, y, z);
+        }
+        static void Stack(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+            if (p.level.GetBlock(x, (ushort)(y - 1), z) != block) {
+                p.ChangeBlock(x, y, z, block); return;
             }
             
             p.SendBlockchange(x, y, z, ExtBlock.Air); // send the air block back only to the user
-            p.ChangeBlock(x, (ushort)(y - 1), z, (ExtBlock)Block.staircasefull);
-        }
-        
-        internal static void CobbleStairs(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
-            if (!(p.level.physics == 0 || p.level.physics == 5)
-                || p.level.GetBlock(x, (ushort)(y - 1), z) != (ExtBlock)Block.cobblestoneslab) {
-                p.ChangeBlock(x, y, z, (ExtBlock)Block.cobblestoneslab); return;
-            }
-            
-            p.SendBlockchange(x, y, z, ExtBlock.Air); // send the air block back only to the user
-            p.ChangeBlock(x, (ushort)(y - 1), z, (ExtBlock)Block.stone);
-        }
-        
+            byte stack = p.level.BlockProps[block.Index].StackId;
+            p.ChangeBlock(x, (ushort)(y - 1), z, ExtBlock.FromRaw(stack));
+        }        
         
         internal static void C4(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0 || p.level.physics == 5) {

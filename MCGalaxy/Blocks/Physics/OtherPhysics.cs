@@ -66,22 +66,6 @@ namespace MCGalaxy.Blocks.Physics {
             }
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
-
-        public static void DoStairs(Level lvl, ref Check C) {
-            int indexBelow = lvl.IntOffset(C.b, 0, -1, 0);
-            byte block = lvl.blocks[C.b];
-            byte below = Block.Invalid;
-            if (indexBelow >= 0) below = lvl.blocks[indexBelow];
-            
-            if (below == Block.staircasestep && block == Block.staircasestep) {
-                lvl.AddUpdate(C.b, Block.air);
-                lvl.AddUpdate(indexBelow, Block.staircasefull);
-            } else if (below == Block.cobblestoneslab && block == Block.cobblestoneslab) {
-                lvl.AddUpdate(C.b, Block.air);
-                lvl.AddUpdate(indexBelow, Block.stone);
-            }
-            C.data.Data = PhysicsArgs.RemoveFromChecks;
-        }
         
         public static void DoFloatwood(Level lvl, ref Check C) {
             int index = lvl.IntOffset(C.b, 0, -1, 0);

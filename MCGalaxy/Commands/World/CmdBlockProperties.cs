@@ -126,6 +126,9 @@ namespace MCGalaxy.Commands.World {
             } else if (prop == "animalai" || prop == "animal") {
                 string msg = args.Length > 3 ? args[3] : null;
                 SetEnum(p, scope, block, msg);
+            }  else if (prop == "stackid" || prop == "stackblock") {
+                string msg = args.Length > 3 ? args[3] : null;
+                SetStackId(p, scope, block, msg);
             } else {
                 Help(p);
             }
@@ -171,6 +174,20 @@ namespace MCGalaxy.Commands.World {
                                BlockName(scope, lvl, block), msg);
             }
             OnPropsChanged(scope, lvl, block);
+        }
+        
+        static void SetStackId(Player p, BlockProps[] scope, ExtBlock block, string msg) {
+            Level lvl = Player.IsSuper(p) ? null : p.level;            
+            ExtBlock stackBlock;
+            if (!CommandParser.GetBlock(p, msg, out stackBlock)) return;
+            
+            scope[block.Index].StackId = stackBlock.RawID;
+            string stackBlockName = Player.IsSuper(p) ? 
+                BlockName(scope, lvl, stackBlock) : p.level.BlockName(stackBlock);
+            
+            Player.Message(p, "Stack block for {0} set to: {1}",
+                           BlockName(scope, lvl, block), stackBlockName);
+            OnPropsChanged(scope, lvl, block);    
         }
         
 
@@ -231,7 +248,7 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "%H[scope] can be: %Score, global, level");
             
             Player.Message(p, "%Hproperties: %Sportal, messageblock, rails, waterkills, " +
-                           "lavakills, door, tdoor, killer, deathmessage, animalai");
+                           "lavakills, door, tdoor, killer, deathmessage, animalai, stackblock");
             Player.Message(p, "%HType %T/help blockprops [property] %Hfor more details");
         }
         

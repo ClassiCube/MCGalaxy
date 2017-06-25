@@ -83,6 +83,8 @@ namespace MCGalaxy {
             Props[sponge].LavaKills = true; Props[bookcase].LavaKills = true;
             Props[leaf].LavaKills = true; Props[crate].LavaKills = true;
             Props[red].IsRails = true; Props[op_air].IsRails = true;
+            Props[staircasestep].StackId = staircasefull;
+            Props[cobblestoneslab].StackId = stone;
             
             // Block specific physics properties
             Props[Block.birdblack].AnimalAI = AnimalAI.Fly;
