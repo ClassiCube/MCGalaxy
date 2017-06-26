@@ -142,9 +142,24 @@ namespace MCGalaxy.Commands.World {
                 if (!help.Key.CaselessEq(opt)) continue;
                 Player.Message(p, "%T/map [level] {0}{1}", opt, Suffix(opt));
                 Player.Message(p, "%H" + help.Value);
+                
+                if (help.Key.CaselessEq("motd")) ShowMotdRules(p);
                 return;
             }
             Player.Message(p, "Unrecognised option \"{0}\".", opt);
+        }
+        
+        static void ShowMotdRules(Player p) {
+            Player.Message(p, "%HSpecial rules that can be put in a motd:");
+            Player.Message(p, "%T-/+hax %H- disallows/allows all hacks");
+            Player.Message(p, "%T-/+fly %H- disallows/allows flying");
+            Player.Message(p, "%T-/+noclip %H- disallows/allows noclipping");
+            Player.Message(p, "%T-/+respawn %H- disallows/allows respawning");
+            Player.Message(p, "%T-/+speed %H- disallows/allows speeding");            
+            Player.Message(p, "%T-/+ophax %H- disallows/allows hacks for {0}%S+", 
+                           Group.GetColoredName(LevelPermission.Operator));
+            Player.Message(p, "%Tjumpheight=[height] %H- sets max height users can jump up to");
+            Player.Message(p, "%Thorspeed=[speed] %H- sets max speed users can move at, when speeding is disallowed");
         }
         
         static string Suffix(string opt) {

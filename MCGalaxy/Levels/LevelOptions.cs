@@ -55,7 +55,7 @@ namespace MCGalaxy {
         };
         
         public static Dictionary<string, string> Help = new Dictionary<string, string>() {
-            { "motd", "%HSets the custom motd for this map. (leave blank to use server default)" },
+            { "motd", "%HSets the motd for this map. (leave blank to use default motd)" },
             { "RealmOwner", "%HSets the players allowed to use /realm on this map." },
             { "TreeType", "%HSets the type of trees saplings grow into." },
             { "PhysicSpeed", "%HSets the delay (in milliseconds) between physics ticks." },
