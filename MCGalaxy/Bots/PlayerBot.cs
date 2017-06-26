@@ -17,9 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Timers;
 using MCGalaxy.Bots;
 using MCGalaxy.Maths;
 
@@ -51,9 +48,6 @@ namespace MCGalaxy {
         public int movementSpeed = 3;
         internal bool jumping = false;
         internal int currentjump = 0;
-
-        System.Timers.Timer botTimer = new System.Timers.Timer(100);
-
         
         public PlayerBot(string n, Level lvl) { Init(n, lvl); }
         
@@ -71,9 +65,7 @@ namespace MCGalaxy {
             level = lvl;
             id = NextFreeId(this);
             hasExtPositions = true;
-
-            botTimer.Elapsed += BotTimerFunc;
-            botTimer.Start();
+            BotsScheduler.Activate();
         }
         
         public override bool CanSeeEntity(Entity other) { return true; }
@@ -101,8 +93,6 @@ namespace MCGalaxy {
         public static void Remove(PlayerBot bot, bool save = true) {
             Bots.Remove(bot);
             bot.GlobalDespawn();
-            
-            bot.botTimer.Stop();
             bot.jumping = false;
             if (save) BotsFile.RemoveBot(bot);
         }
@@ -207,38 +197,7 @@ namespace MCGalaxy {
             }
             return Entities.SelfID;
         }
-        
-        
-        // Script handling
-        void BotTimerFunc(object sender, ElapsedEventArgs e) {
-            if (kill) {
-                InstructionData data = default(InstructionData);
-                BotInstruction.Find("kill").Execute(this, data);
-            }
-            movement = false;
 
-            if (Instructions.Count == 0) {
-                if (hunt) {
-                    InstructionData data = default(InstructionData);
-                    BotInstruction.Find("hunt").Execute(this, data);
-                }
-            } else {
-                bool doNextInstruction = !DoInstruction();
-                if (cur == Instructions.Count) cur = 0;
-                if (doNextInstruction) {
-                    DoInstruction();
-                    if (cur == Instructions.Count) cur = 0;
-                }
-            }
-            
-            if (jumping) DoJump();
-        }
-        
-        bool DoInstruction() {
-            BotInstruction ins = BotInstruction.Find(Instructions[cur].Name);
-            if (ins == null) return false;
-            return ins.Execute(this, Instructions[cur]);
-        }
         
         public void AdvanceRotation() {
             if (!movement && Instructions.Count > 0) {
@@ -303,19 +262,6 @@ namespace MCGalaxy {
                         pos[1] = (ushort)(pos[1] + (Math.Sign(foundPos[1] - pos[1])));
                     }
                 }*/
-        }
-        
-        void DoJump() {
-            currentjump++;
-            Position pos = Pos;
-            switch (currentjump) {
-                 case 1: pos.Y += 24; break;
-                 case 2: pos.Y += 12; break;
-                 case 3: break;
-                 case 4: pos.Y -= 12; break;
-                 case 5: pos.Y -= 24; jumping = false; currentjump = 0; break;
-            }
-            Pos = pos;
         }
     }
 }
