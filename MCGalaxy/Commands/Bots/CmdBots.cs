@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Bots {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
 
         public override void Use(Player p, string message) { 
-            Level lvl = p.level;
+            Level lvl = p == null ? null : p.level;
             string[] args = message.SplitSpaces(2);
             int ignored, offset = 0;
             
@@ -39,13 +39,15 @@ namespace MCGalaxy.Commands.Bots {
             PlayerBot[] bots = PlayerBot.Bots.Items;
             List<PlayerBot> inScope = new List<PlayerBot>();
             foreach (PlayerBot bot in bots) {
-                if (bot.level != lvl) continue;
+                if (lvl != null && bot.level != lvl) continue;
                 inScope.Add(bot);
             }
             
-            string cmd = lvl == p.level ? "bots" : "bots " + lvl.name;
+            string cmd = (lvl == null || lvl == p.level) ? "bots" : "bots " + lvl.name;
             string modifier = args.Length > offset ? args[offset] : "";
-            Player.Message(p, "Bots in {0}:", lvl.ColoredName);
+            
+            string group = lvl == null ? "All bots:" : "Bots in " + lvl.ColoredName + ":";
+            Player.Message(p, group);
             MultiPageOutput.Output(p, inScope, FormatBot, cmd, "bots", modifier, false);
         }
         

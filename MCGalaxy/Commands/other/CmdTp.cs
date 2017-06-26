@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Misc {
                 Help(p); return;
             }
             
-            p.beforeTeleportMap = p.level.name;
+            p.lastTeleportMap = p.level.name;
             p.beforeTeleportPos = p.Pos;
             Level lvl = bot != null ? bot.level : target.level;
 

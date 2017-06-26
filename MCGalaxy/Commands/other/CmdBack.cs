@@ -23,11 +23,12 @@ namespace MCGalaxy.Commands.Misc {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
-            if (p.beforeTeleportMap == "") {
+            if (p.lastTeleportMap == "") {
                 Player.Message(p, "You have not teleported anywhere yet"); return;
             }
-            if (!p.level.name.CaselessEq(p.beforeTeleportMap))
-                PlayerActions.ChangeMap(p, p.beforeTeleportMap);
+        	
+            if (!p.level.name.CaselessEq(p.lastTeleportMap))
+                PlayerActions.ChangeMap(p, p.lastTeleportMap);
             p.SendPos(Entities.SelfID, p.beforeTeleportPos, new Orientation(0, 0));
         }
         
