@@ -32,7 +32,6 @@ namespace MCGalaxy.Network {
         volatile bool hookedEvents = false;
         Dictionary<string, List<string>> userMap = new Dictionary<string, List<string>>();
         DateTime lastWho, lastOpWho;
-        static char[] trimChars = new char[] { ' ' };
         IRCPlugin plugin = new IRCPlugin();
         
         /// <summary> Hooks IRC events so they are handled. </summary>

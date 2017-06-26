@@ -98,15 +98,13 @@ namespace MCGalaxy.Tasks {
             }
             return minTask;
         }
-        
-        SchedulerTask lastTask = null;
+
         void DoTask(SchedulerTask task) {
             try {
                 task.Callback(task);
             } catch (Exception ex) {
                 MCGalaxy.Logger.LogError(ex);
             }
-            lastTask = task;
             
             if (task.Repeating) {
                 task.NextRun = DateTime.UtcNow.Add(task.Delay);

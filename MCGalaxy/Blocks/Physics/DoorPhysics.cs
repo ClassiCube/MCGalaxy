@@ -66,7 +66,6 @@ namespace MCGalaxy.Blocks.Physics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
-            int oneY = lvl.Width * lvl.Length;
             ActivateTDoor(lvl, (ushort)(x - 1), y, z);
             ActivateTDoor(lvl, (ushort)(x + 1), y, z);
             ActivateTDoor(lvl, x, (ushort)(y - 1), z);

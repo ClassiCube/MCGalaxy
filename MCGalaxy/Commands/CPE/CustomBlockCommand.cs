@@ -697,10 +697,6 @@ namespace MCGalaxy.Commands.CPE {
         };
         
         internal static void Help(Player p, string cmd) {
-            // TODO: find a nicer way of doing this
-            string fullCmd = cmd.Replace("lb", "levelblock")
-                .Replace("gb", "globalblock");
-
             Player.Message(p, "%T{0} add [id] %H- begins creating a new custom block.", cmd);
             Player.Message(p, "%T{0} copy [source id] [new id] %H- clones a new custom block from an existing custom block.", cmd);
             Player.Message(p, "%T{0} edit [id] [property] [value] %H- edits the given property of that custom block.", cmd);
